@@ -1405,10 +1405,11 @@ class Field(typing.Generic[T]):
     #
 
     def _invalidate_cache(self, transaction: Transaction, ids: Collection[IdType] | None) -> None:
-        """ Invalidate the cache for the given ids. """
-        if ids is None:
-            transaction.data.pop(self, None)
-            return
+        """ Invalidate the cache for the given ids.
+
+        We must keep the references or invalidate the cached values by
+        `_get_cache`.
+        """
         cache = transaction.data.get(self)
         if not cache:
             return
@@ -1417,6 +1418,9 @@ class Field(typing.Generic[T]):
         else:
             caches = (cache,)
         for field_cache in caches:
+            if ids is None:
+                field_cache.clear()
+                continue
             for id_ in ids:
                 field_cache.pop(id_, None)
 
@@ -1432,6 +1436,22 @@ class Field(typing.Generic[T]):
         if self in env._field_depends_context:
             cache = cache.get(env.cache_key(self)) or {}
         return cache
+
+    def _get_cache(self, env: Environment) -> dict[IdType, typing.Any]:
+        """ A mutable mapping from id to a cache value for the given environment.
+
+        Calling this function multiple times, always returns the same mapping
+        instance for a given environment, unless the transaction was entirely
+        invalidated.
+
+        This is `_get_cache_impl` but cached on the environment.
+        """
+        try:
+            return env._cache_field_internal[self]
+        except KeyError:
+            cache = self._get_cache_impl(env)
+            env._cache_field_internal[self] = cache
+            return cache
 
     def _get_cache_impl(self, env: Environment) -> dict[IdType, typing.Any]:
         """ A mutable mapping from id to a cache value for the given environment.

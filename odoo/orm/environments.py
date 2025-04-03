@@ -9,7 +9,7 @@ import typing
 import warnings
 from collections import defaultdict
 from collections.abc import Mapping
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from pprint import pformat
 from weakref import WeakSet
 
@@ -482,6 +482,12 @@ class Environment(Mapping[str, "BaseModel"]):
             return result
 
     @lazy_property
+    def _cache_field_internal(self) -> dict[Field, dict[IdType, typing.Any]]:
+        """Cache for `Field._get_cache`."""
+        # memo {field: cache_data}
+        return {}
+
+    @lazy_property
     def _field_dirty(self):
         """ Map fields to set of dirty ids. """
         return self.transaction.dirty
@@ -577,7 +583,7 @@ class Transaction:
 
     def clear(self):
         """ Clear the caches and pending computations and updates in the transactions. """
-        self.data.clear()
+        self.invalidate()
         self.data_patches.clear()
         self.dirty.clear()
         self.tocompute.clear()
@@ -608,6 +614,10 @@ class Transaction:
         """
         if spec is None:
             self.data.clear()
+            # reset Field._get_cache()
+            for env in self.envs:
+                with suppress(AttributeError):
+                    del env._cache_field_internal
             return
         for field, ids in spec:
             field._invalidate_cache(self, ids)
@@ -668,7 +678,7 @@ class Cache:
 
     def _set_field_cache(self, model: BaseModel, field: Field) -> dict[IdType, typing.Any]:
         """ Return the field cache of the given field for modifying it. """
-        return field._get_cache_impl(model.env)
+        return field._get_cache(model.env)
 
     def contains(self, record: BaseModel, field: Field) -> bool:
         """ Return whether ``record`` has a value for ``field``. """
@@ -1001,7 +1011,7 @@ class Cache:
 
     def clear(self):
         """ Invalidate the cache and its dirty flags. """
-        self.transaction.data.clear()
+        self.transaction.invalidate()
         self.transaction.dirty.clear()
         self.transaction.data_patches.clear()
 
