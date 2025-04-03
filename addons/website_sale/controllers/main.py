@@ -866,21 +866,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return request.redirect(redirect_url or self._get_shop_path())
 
-    @route('/shop/pricelist', type='http', auth='public', website=True, sitemap=False)
-    def pricelist(self, promo, **post):
-        redirect = post.get('r', '/shop/cart')
-        if promo:
-            pricelist_sudo = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
-            if not (pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id)):
-                return request.redirect("%s?code_not_available=1" % redirect)
-
-            self._apply_pricelist(pricelist=pricelist_sudo)
-        else:
-            # Reset the pricelist if empty promo code is given
-            self._apply_pricelist(pricelist=None)
-
-        return request.redirect(redirect)
-
     def _apply_selectable_pricelist(self, pricelist_id):
         """ Change the request pricelist if selectable on the website.
 

@@ -357,6 +357,15 @@ class ProductTemplate(models.Model):
                     round=False,
                 )
 
+            if (
+                'base_price' in template_price_vals
+                and template_price_vals['base_price'] > template_price_vals['price_reduce']
+            ):
+                template_price_vals['price_reduce_percentage'] = (
+                    round(template_price_vals['base_price'] - template_price_vals['price_reduce'], 2)
+                ) * 100 / template_price_vals['base_price']
+                template_price_vals['price_reduce_percentage'] = int(template_price_vals['price_reduce_percentage'])
+            template_price_vals['pricelist_comparison'] = pricelist.comparison
             res[template.id] = template_price_vals
 
         return res
@@ -539,6 +548,7 @@ class ProductTemplate(models.Model):
             'has_discounted_price': has_discounted_price,
             'discount_start_date': pricelist_item.date_start,
             'discount_end_date': pricelist_item.date_end,
+            'pricelist_comparison': pricelist.comparison,
         }
 
         if (
@@ -557,6 +567,18 @@ class ProductTemplate(models.Model):
                 date=date,
                 round=False,
             )
+            combination_info['price_reduce_percentage'] = (
+                round(combination_info['compare_list_price'] - combination_info['list_price'], 2)
+            ) * 100 / combination_info["compare_list_price"]
+            combination_info['price_reduce_percentage'] = int(combination_info['price_reduce_percentage'])
+        elif (
+                combination_info.get('list_price')
+                and combination_info['list_price'] > combination_info['price']
+            ):
+            combination_info['price_reduce_percentage'] = (
+                round(combination_info['list_price'] - combination_info['price'], 2)
+            ) * 100 / combination_info['list_price']
+            combination_info['price_reduce_percentage'] = int(combination_info['price_reduce_percentage'])
 
         # Apply taxes
         product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(self.env.company)

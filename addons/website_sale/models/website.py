@@ -390,7 +390,6 @@ class Website(models.Model):
         :param str country_code: code iso or False, If set, we search only price list available for this country
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :param int current_pl_id: The current pricelist used on the website
-            (If not selectable but currently used anyway, e.g. pricelist with promo code)
         :param tuple website_pricelist_ids: List of ids of pricelists available for this website
         :param int partner_pl_id: the partner pricelist
         :returns: list of product.pricelist ids
@@ -443,7 +442,7 @@ class Website(models.Model):
     def get_pricelist_available(self, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
         Country restrictions will be detected with GeoIP (if installed).
-        :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
+        :param bool show_visible: if True, we don't display pricelist where selectable is False
         :returns: pricelist recordset
         """
         self.ensure_one()
