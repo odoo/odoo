@@ -480,17 +480,6 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
             'selectable': True,
             'website_id': False,
         })
-        cls.generic_pl_code = Pricelist.create({
-            'name': 'Generic Code Pricelist',
-            'code': 'GENERICCODE',
-            'website_id': False,
-        })
-        cls.generic_pl_code_select = Pricelist.create({
-            'name': 'Generic Code Selectable Pricelist',
-            'code': 'GENERICCODESELECT',
-            'selectable': True,
-            'website_id': False,
-        })
         cls.w1_pl = Pricelist.create({
             'name': 'Website 1 Pricelist',
             'website_id': cls.website.id,
@@ -499,17 +488,6 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
             'name': 'Website 1 Pricelist Selectable',
             'website_id': cls.website.id,
             'selectable': True,
-        })
-        cls.w1_pl_code_select = Pricelist.create({
-            'name': 'Website 1 Pricelist Code Selectable',
-            'website_id': cls.website.id,
-            'code': 'W1CODESELECT',
-            'selectable': True,
-        })
-        cls.w1_pl_code = Pricelist.create({
-            'name': 'Website 1 Pricelist Code',
-            'website_id': cls.website.id,
-            'code': 'W1CODE',
         })
         cls.w2_pl = Pricelist.create({
             'name': 'Website 2 Pricelist',
@@ -522,15 +500,15 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
         simulate_frontend_context(self)
 
     def test_get_pricelist_available(self):
-        # all_pl = self.backend_pl + self.generic_pl_select + self.generic_pl_code + self.generic_pl_code_select + self.w1_pl + self.w1_pl_select + self.w1_pl_code + self.w1_pl_code_select + self.w2_pl
+        # all_pl = self.backend_pl + self.generic_pl_select + self.w1_pl + self.w1_pl_select + self.w2_pl
 
         # Test get all available pricelists
-        pls_to_return = self.generic_pl_select + self.generic_pl_code + self.generic_pl_code_select + self.w1_pl + self.w1_pl_select + self.w1_pl_code + self.w1_pl_code_select
+        pls_to_return = self.generic_pl_select + self.w1_pl + self.w1_pl_select
         pls = self.website.get_pricelist_available()
-        self.assertEqual(pls, pls_to_return, "Every pricelist having the correct website_id set or (no website_id but a code or selectable) should be returned")
+        self.assertEqual(pls, pls_to_return, "Every pricelist having the correct website_id set or (no website_id but selectable) should be returned")
 
         # Test get all available and visible pricelists
-        pls_to_return = self.generic_pl_select + self.generic_pl_code_select + self.w1_pl_select + self.w1_pl_code_select
+        pls_to_return = self.generic_pl_select + self.w1_pl_select
         pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(pls, pls_to_return, "Only selectable pricelists website compliant (website_id False or current website) should be returned")
 
@@ -594,25 +572,41 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
             {'name': 'Netherlands', 'country_ids': [(6, 0, [NL.id])]},
         ])
 
-        (self.backend_pl + self.generic_pl_select + self.generic_pl_code + self.w1_pl_select).write({'country_group_ids': [Command.set(c_BE.ids)]})
-        (self.generic_pl_code_select + self.w1_pl + self.w2_pl).write({'country_group_ids': [Command.set(c_BENELUX.ids)]})
-        (self.w1_pl_code).write({'country_group_ids': [Command.set(c_EUR.ids)]})
-        (self.w1_pl_code_select).write({'country_group_ids': [Command.set(c_NL.ids)]})
+        Pricelist = self.env['product.pricelist']
+        self.generic_pl_benelux = Pricelist.create({
+            'name': 'Generic Code Selectable Pricelist',
+            'selectable': True,
+            'website_id': False,
+            'country_group_ids': [Command.set(c_BENELUX.ids)],
+        })
+        self.w1_pl_select_nl = Pricelist.create({
+            'name': 'Website 1 Pricelist Code Selectable',
+            'website_id': self.website.id,
+            'selectable': True,
+            'country_group_ids': [Command.set(c_NL.ids)],
+        })
+        self.w1_pl_eur = Pricelist.create({
+            'name': 'Website 1 Pricelist Code',
+            'website_id': self.website.id,
+            'country_group_ids': [Command.set(c_EUR.ids)],
+        })
 
-        #        pricelist        | selectable | website | code | country group |
-        # ----------------------------------------------------------------------|
-        # backend_pl              |            |         |      |            BE |
-        # generic_pl_select       |      V     |         |      |            BE |
-        # generic_pl_code         |            |         |   V  |            BE |
-        # generic_pl_code_select  |      V     |         |   V  |       BENELUX |
-        # w1_pl                   |            |    1    |      |       BENELUX |
-        # w1_pl_select            |      V     |    1    |      |            BE |
-        # w1_pl_code_select       |      V     |    1    |   V  |            NL |
-        # w1_pl_code              |            |    1    |   V  |           EUR |
-        # w2_pl                   |            |    2    |      |       BENELUX |
+        (self.backend_pl + self.generic_pl_select + self.w1_pl_select).write({'country_group_ids': [Command.set(c_BE.ids)]})
+        (self.w1_pl + self.w2_pl).write({'country_group_ids': [Command.set(c_BENELUX.ids)]})
+
+        #        pricelist        | selectable | website | country group |
+        # ---------------------------------------------------------------|
+        # backend_pl              |            |         |            BE |
+        # generic_pl_select       |      V     |         |            BE |
+        # generic_pl_benelux      |      V     |         |       BENELUX |
+        # w1_pl                   |            |    1    |       BENELUX |
+        # w1_pl_select            |      V     |    1    |            BE |
+        # w1_pl_select_nl         |      V     |    1    |            NL |
+        # w1_pl_eur               |            |    1    |           EUR |
+        # w2_pl                   |            |    2    |       BENELUX |
 
         # available pl for website 1 for GeoIP BE (anything except website 2, backend and NL)
-        self.website1_be_pl = self.generic_pl_select + self.generic_pl_code + self.w1_pl_select + self.generic_pl_code_select + self.w1_pl + self.w1_pl_code
+        self.website1_be_pl = self.generic_pl_select + self.w1_pl_select + self.generic_pl_benelux + self.w1_pl + self.w1_pl_eur
 
     def test_get_pricelist_available_geoip(self):
         # Test get all available pricelists with geoip and no partner pricelist
@@ -633,18 +627,18 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
 
     def test_get_pricelist_available_geoip3(self):
         # Test get all available pricelists with geoip and a partner pricelist website compliant (but not geoip compliant)
-        self.env.user.partner_id.property_product_pricelist = self.w1_pl_code_select
+        self.env.user.partner_id.property_product_pricelist = self.w1_pl_select_nl
         with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
             pls = self.website.get_pricelist_available()
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, but not the partner pricelist as it is website compliant but not GeoIP compliant.")
 
     def test_get_pricelist_available_geoip4(self):
         # Test get all available with geoip and visible pricelists + promo pl
-        pls_to_return = self.generic_pl_select + self.w1_pl_select + self.generic_pl_code_select
+        pls_to_return = self.generic_pl_select + self.w1_pl_select + self.generic_pl_benelux
         # property_product_pricelist will also be returned in the available pricelists
         pls_to_return += self.env.user.partner_id.property_product_pricelist
 
-        current_pl = self.w1_pl_code
+        current_pl = self.w1_pl_eur
         with (
             patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code),
             MockRequest(self.env, website=self.website, website_sale_current_pl=current_pl.id),
@@ -662,7 +656,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     def test_get_pricelist_available_geoip6(self):
         """Remove country group from certain pricelists, and check that pricelists
         with country group get prioritized when geoip is available."""
-        exclude = self.backend_pl + self.generic_pl_code + self.w1_pl_select + self.w1_pl_code
+        exclude = self.backend_pl + self.w1_pl_select + self.w1_pl_eur
         exclude.country_group_ids = False
         self.website1_be_pl -= exclude
 
@@ -842,7 +836,6 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
         user_pricelist = self.env['product.pricelist'].create({
             'name': 'User Pricelist',
             'website_id': website.id,
-            'code': 'User_pricelist',
         })
         test_user.partner_id.property_product_pricelist = user_pricelist
         self.start_tour("/shop", 'website_sale.website_sale_shop_pricelist_tour', login="")

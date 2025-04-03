@@ -9,6 +9,20 @@ from odoo.addons.website.models import ir_http
 class ProductPricelist(models.Model):
     _inherit = 'product.pricelist'
 
+    comparison = fields.Selection(
+        string="Comparison",
+        help="Comparaison will be displayed if the product price is less than the base price. "
+            "Fixed price comparaison will be displayed if the pricelist is in the same currency as "
+            "the default sale price.",
+        selection=[
+            ('none', "None"),
+            ('strike', "Strike price"),
+            ('strike_and_percentage', "Strike + Percentage"),
+        ],
+        required=True,
+        default='strike',
+    )
+
     #=== DEFAULT METHODS ===#
 
     def _default_website(self):
@@ -34,7 +48,6 @@ class ProductPricelist(models.Model):
              "you must fill in this field or make it selectable."
              "Otherwise, the pricelist will not apply to any website."
     )
-    code = fields.Char(string="E-commerce Promotional Code", groups='base.group_user')
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     #=== CONSTRAINT METHODS ===#
@@ -99,18 +112,16 @@ class ProductPricelist(models.Model):
         """ To be able to be used on a website, a pricelist should either:
         - Have its `website_id` set to current website (specific pricelist).
         - Have no `website_id` set and should be `selectable` (generic pricelist)
-          or should have a `code` (generic promotion).
         - Have no `company_id` or a `company_id` matching its website one.
 
-        Note: A pricelist without a website_id, not selectable and without a
-              code is a backend pricelist.
+        Note: A pricelist without a website_id and not selectable
 
         Change in this method should be reflected in `_get_website_pricelists_domain`.
         """
         self.ensure_one()
         if self.company_id and self.company_id != website.company_id:
             return False
-        return self.active and self.website_id.id == website.id or (not self.website_id and (self.selectable or self.sudo().code))
+        return self.active and self.website_id.id == website.id or (not self.website_id and self.selectable)
 
     def _is_available_in_country(self, country_code):
         self.ensure_one()
@@ -126,6 +137,5 @@ class ProductPricelist(models.Model):
             ('active', '=', True),
             ('company_id', 'in', [False, website.company_id.id]),
             '|', ('website_id', '=', website.id),
-            '&', ('website_id', '=', False),
-            '|', ('selectable', '=', True), ('code', '!=', False),
+            '&', ('website_id', '=', False), ('selectable', '=', True),
         ]
