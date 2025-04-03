@@ -7,16 +7,14 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
-    TestSaleProductAttributeValueCommon,
-)
+from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
 @tagged('post_install', '-at_install')
-class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
+class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -35,6 +33,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         })
         cls.env.ref('base.user_admin').sudo().partner_id.company_id = cls.env.company
         cls.env.ref('website.default_website').company_id = cls.env.company
+        cls.public_category = cls.env['product.public.category'].create({'name': 'Public Category'})
 
     def test_01_admin_shop_sale_loyalty_tour(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
@@ -48,16 +47,13 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
-        # pre enable "Show # found" option to avoid race condition...
-        public_category = self.env['product.public.category'].create({'name': 'Public Category'})
-
         large_cabinet = self.env['product.product'].create({
             'name': 'Small Cabinet',
             'list_price': 320.0,
             'type': 'consu',
             'is_published': True,
             'sale_ok': True,
-            'public_categ_ids': [(4, public_category.id)],
+            'public_categ_ids': [(4, self.public_category.id)],
             'taxes_id': False,
         })
 
@@ -144,16 +140,13 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         self.start_tour("/", 'shop_sale_loyalty', login="admin")
 
     def test_02_admin_shop_gift_card_tour(self):
-        # pre enable "Show # found" option to avoid race condition...
-        public_category = self.env['product.public.category'].create({'name': 'Public Category'})
-
         gift_card = self.env['product.product'].create({
             'name': 'TEST - Gift Card',
             'list_price': 50,
             'type': 'service',
             'is_published': True,
             'sale_ok': True,
-            'public_categ_ids': [(4, public_category.id)],
+            'public_categ_ids': [(4, self.public_category.id)],
             'taxes_id': False,
         })
         self.env['product.product'].create({
@@ -162,7 +155,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'type': 'consu',
             'is_published': True,
             'sale_ok': True,
-            'public_categ_ids': [(4, public_category.id)],
+            'public_categ_ids': [(4, self.public_category.id)],
             'taxes_id': False,
         })
         # Disable any other program
@@ -219,14 +212,13 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         self.assertEqual(len(gift_card_program.coupon_ids.filtered('points')), 1, 'There should be two coupons, one with points, one without')
 
     def test_03_admin_shop_ewallet_tour(self):
-        public_category = self.env['product.public.category'].create({'name': 'Public Category'})
         self.env['product.product'].create({
             'name': "TEST - Gift Card",
             'list_price': 50,
             'type': 'service',
             'is_published': True,
             'sale_ok': True,
-            'public_categ_ids': [(4, public_category.id)],
+            'public_categ_ids': [(4, self.public_category.id)],
             'taxes_id': False,
         })
         # Disable any other program
