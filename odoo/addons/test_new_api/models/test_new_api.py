@@ -450,6 +450,7 @@ class Test_New_ApiRelated(models.Model):
     message_currency = fields.Many2one(related="message.author", string='Message Author')
 
     foo_id = fields.Many2one('test_new_api.related_foo')
+    foo_ids = fields.Many2many('test_new_api.related_foo', string='Foos')
 
     foo_name = fields.Char('foo_name', related='foo_id.name', related_sudo=False)
     foo_name_sudo = fields.Char('foo_name_sudo', related='foo_id.name', related_sudo=True)
@@ -472,6 +473,7 @@ class Test_New_ApiRelated_Foo(models.Model):
 
     name = fields.Char()
     bar_id = fields.Many2one('test_new_api.related_bar')
+    foo_ids = fields.One2many('test_new_api.related', 'foo_id', string='Foos')
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
 
 
