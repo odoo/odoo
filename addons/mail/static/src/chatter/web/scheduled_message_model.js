@@ -18,8 +18,7 @@ export class ScheduledMessage extends Record {
     body = Record.html("");
     /** @type {boolean} */
     composition_batch;
-    /** @type {luxon.DateTime} */
-    scheduled_date = Record.attr(undefined, { type: "datetime" });
+    scheduled_date = Record.datetime();
     /** @type {boolean} */
     is_note;
     textContent = Record.attr(false, {

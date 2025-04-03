@@ -51,8 +51,7 @@ export class Message extends Record {
         },
     });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
-    /** @type {DateTime} */
-    date = Record.attr(undefined, { type: "datetime" });
+    date = Record.datetime();
     /** @type {string} */
     default_subject;
     /** @type {boolean} */
@@ -122,8 +121,7 @@ export class Message extends Record {
             }
         },
     });
-    /** @type {DateTime} */
-    scheduledDatetime = Record.attr(undefined, { type: "datetime" });
+    scheduledDatetime = Record.datetime();
     onlyEmojis = Record.attr(false, {
         compute() {
             const bodyWithoutTags = createElementWithContent("div", this.body).textContent;
@@ -151,10 +149,8 @@ export class Message extends Record {
     message_type;
     /** @type {string|undefined} */
     notificationType;
-    /** @type {luxon.DateTime} */
-    create_date = Record.attr(undefined, { type: "datetime" });
-    /** @type {luxon.DateTime} */
-    write_date = Record.attr(undefined, { type: "datetime" });
+    create_date = Record.datetime();
+    write_date = Record.datetime();
     /** @type {undefined|Boolean} */
     needaction;
     starred = false;

@@ -84,16 +84,14 @@ export class Persona extends Record {
             }
         },
     });
-    /** @type {luxon.DateTime} */
-    last_poll = Record.attr(undefined, { type: "datetime" });
+    last_poll = Record.datetime();
     /** @type {boolean} */
     is_public;
     /** @type {'email' | 'inbox'} */
     notification_preference;
     isAdmin = false;
     isInternalUser = false;
-    /** @type {luxon.DateTime} */
-    write_date = Record.attr(undefined, { type: "datetime" });
+    write_date = Record.datetime();
     group_ids = Record.many("res.groups", { inverse: "personas" });
 
     get emailWithoutDomain() {

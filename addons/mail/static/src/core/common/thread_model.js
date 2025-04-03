@@ -254,8 +254,7 @@ export class Thread extends Record {
      * @type {false|"all"|"mentions"|"no_notif"}
      */
     custom_notifications = false;
-    /** @type {luxon.DateTime} */
-    mute_until_dt = Record.attr(undefined, { type: "datetime" });
+    mute_until_dt = Record.datetime();
     /** @type {Boolean} */
     isLocallyPinned = Record.attr(false, {
         onUpdate() {

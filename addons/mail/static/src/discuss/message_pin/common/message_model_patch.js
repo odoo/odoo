@@ -8,8 +8,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 patch(Message.prototype, {
     setup() {
         super.setup();
-        /** @type {luxon.DateTime} */
-        this.pinned_at = Record.attr(undefined, { type: "datetime" });
+        this.pinned_at = Record.datetime();
     },
     /** @returns {Deferred<boolean>} */
     pin() {

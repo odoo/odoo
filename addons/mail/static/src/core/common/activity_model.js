@@ -39,14 +39,11 @@ export class Activity extends Record {
     can_write;
     /** @type {'suggest'|'trigger'} */
     chaining_type;
-    /** @type {luxon.DateTime} */
-    create_date = Record.attr(undefined, { type: "datetime" });
+    create_date = Record.datetime();
     /** @type {[number, string]} */
     create_uid;
-    /** @type {luxon.DateTime} */
-    date_deadline = Record.attr(undefined, { type: "date" });
-    /** @type {luxon.DateTime} */
-    date_done = Record.attr(undefined, { type: "date" });
+    date_deadline = Record.date();
+    date_done = Record.date();
     /** @type {string} */
     display_name;
     /** @type {boolean} */

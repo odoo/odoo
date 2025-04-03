@@ -57,7 +57,7 @@ export class Settings extends Record {
             }
         },
     });
-    mute_until_dt = Record.attr(false, { type: "datetime" });
+    mute_until_dt = Record.datetime();
 
     // Voice settings
     // DeviceId of the audio input selected by the user
