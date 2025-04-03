@@ -898,6 +898,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
                 return result;
             },
+            getNewId() {
+                return uuid(model);
+            },
             // aliases
             getAllBy() {
                 return this.readAllBy(...arguments);
