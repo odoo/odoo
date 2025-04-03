@@ -9,7 +9,7 @@ import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
     static dependencies = ["builderActions", "history", "savePlugin"];
-    static shared = ["customizeWebsiteColors", "makeSCSSCusto", "stuffHappened"];
+    static shared = ["customizeWebsiteColors", "makeSCSSCusto", "withHistoryFromLoad"];
 
     resources = {
         builder_actions: this.getActions(),
@@ -22,7 +22,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     resolves = {};
     getActions() {
         return {
-            customizeWebsiteVariable: {
+            customizeWebsiteVariable: this.withHistoryFromLoad({
                 isApplied: ({ param: { mainParam: variable } = {}, value }) => {
                     const currentValue = this.getWebsiteVariableValue(variable);
                     return currentValue === `'${value}'`;
@@ -39,9 +39,8 @@ export class CustomizeWebsitePlugin extends Plugin {
                         nullValue
                     );
                 },
-                apply: () => this.stuffHappened(),
-            },
-            customizeWebsiteColor: {
+            }),
+            customizeWebsiteColor: this.withHistoryFromLoad({
                 getValue: ({ param: { mainParam: color, colorType, gradientColor } }) => {
                     const style = this.document.defaultView.getComputedStyle(
                         this.document.documentElement
@@ -55,10 +54,6 @@ export class CustomizeWebsitePlugin extends Plugin {
                     return getCSSVariableValue(color, style);
                 },
                 load: async ({ param: { mainParam: color, colorType, gradientColor }, value }) => {
-                    const getAction = this.dependencies.builderActions.getAction;
-                    const oldValue = getAction("customizeWebsiteColor").getValue({
-                        param: { mainParam: color, colorType, gradientColor },
-                    });
                     if (gradientColor) {
                         let colorValue = "";
                         let gradientValue = "";
@@ -80,33 +75,8 @@ export class CustomizeWebsitePlugin extends Plugin {
                         await this.customizeWebsiteColors({ [color]: value }, { colorType });
                         await this.reloadBundles();
                     }
-                    return oldValue;
                 },
-                apply: ({ param, value, loadResult: oldValue }) => {
-                    this.dependencies.history.addCustomMutation({
-                        apply: () => {
-                            this.services.ui.block({ delay: 2500 });
-                            const getAction = this.dependencies.builderActions.getAction;
-                            getAction("customizeWebsiteColor")
-                                .load({ param, value })
-                                .then(() => {
-                                    this.dispatchTo("trigger_dom_updated");
-                                })
-                                .finally(() => this.services.ui.unblock());
-                        },
-                        revert: () => {
-                            this.services.ui.block({ delay: 2500 });
-                            const getAction = this.dependencies.builderActions.getAction;
-                            getAction("customizeWebsiteColor")
-                                .load({ param, value: oldValue })
-                                .then(() => {
-                                    this.dispatchTo("trigger_dom_updated");
-                                })
-                                .finally(() => this.services.ui.unblock());
-                        },
-                    });
-                },
-            },
+            }),
             switchTheme: {
                 load: async () => {
                     const save = await new Promise((resolve) => {
@@ -157,7 +127,8 @@ export class CustomizeWebsitePlugin extends Plugin {
                 isApplied: ({ value }) => {
                     const getAction = this.dependencies.builderActions.getAction;
                     const currentValue = getAction("customizeBodyBgType").getValue();
-                    return currentValue === value;
+                    // NONE has no extra quote, other values have
+                    return [`'${value}'`, value].includes(currentValue);
                 },
                 getValue: () => {
                     const bgImage = getComputedStyle(this.document.querySelector("#wrapwrap"))[
@@ -171,7 +142,10 @@ export class CustomizeWebsitePlugin extends Plugin {
                     );
                     return getCSSVariableValue("body-image-type", style);
                 },
-                load: async ({ editingElement: el, value }) => {
+                load: async ({ editingElement: el, param, value, historyImageSrc }) => {
+                    const getAction = this.dependencies.builderActions.getAction;
+                    const oldValue = getAction("customizeBodyBgType").getValue({ param });
+                    const oldImageSrc = this.getWebsiteVariableValue("body-image");
                     let imageSrc = "";
                     if (value === "NONE") {
                         await this.customizeWebsiteVariables({
@@ -179,16 +153,54 @@ export class CustomizeWebsitePlugin extends Plugin {
                             "body-image": "",
                         });
                     } else {
-                        const getAction = this.dependencies.builderActions.getAction;
-                        imageSrc = await getAction("replaceBgImage").load({ el });
+                        imageSrc =
+                            historyImageSrc || (await getAction("replaceBgImage").load({ el }));
                         await this.customizeWebsiteVariables({
                             "body-image-type": `'${value}'`,
                             "body-image": `'${imageSrc}'`,
                         });
                     }
-                    return imageSrc;
+                    return { imageSrc, oldImageSrc, oldValue };
                 },
-                apply: () => this.stuffHappened(),
+                apply: ({
+                    editingElement,
+                    param,
+                    value,
+                    loadResult: { imageSrc, oldImageSrc, oldValue },
+                }) => {
+                    if (oldImageSrc) {
+                        oldImageSrc = oldImageSrc.substring(1, oldImageSrc.length - 1); // Unquote
+                    }
+                    if (oldValue !== "NONE") {
+                        oldValue = oldValue.substring(1, oldValue.length - 1); // Unquote
+                    }
+                    const getAction = this.dependencies.builderActions.getAction;
+                    this.dependencies.history.addCustomMutation({
+                        apply: () => {
+                            this.services.ui.block({ delay: 2500 });
+                            getAction("customizeBodyBgType")
+                                .load({ editingElement, param, value, historyImageSrc: imageSrc })
+                                .then(() => {
+                                    this.dispatchTo("trigger_dom_updated");
+                                })
+                                .finally(() => this.services.ui.unblock());
+                        },
+                        revert: () => {
+                            this.services.ui.block({ delay: 2500 });
+                            getAction("customizeBodyBgType")
+                                .load({
+                                    editingElement,
+                                    param,
+                                    value: oldValue,
+                                    historyImageSrc: oldImageSrc,
+                                })
+                                .then(() => {
+                                    this.dispatchTo("trigger_dom_updated");
+                                })
+                                .finally(() => this.services.ui.unblock());
+                        },
+                    });
+                },
             },
             removeFont: {
                 load: async ({ param }) => {
@@ -201,7 +213,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     });
                 },
             },
-            customizeButtonStyle: {
+            customizeButtonStyle: this.withHistoryFromLoad({
                 isApplied: ({ param, value }) => {
                     const getAction = this.dependencies.builderActions.getAction;
                     const currentValue = getAction("customizeButtonStyle").getValue({ param });
@@ -224,8 +236,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                         nullValue
                     );
                 },
-                apply: () => this.stuffHappened(),
-            },
+            }),
             websiteConfig: {
                 isReload: true,
                 prepare: async ({ actionParam }) => this.loadConfigKey(actionParam),
@@ -241,14 +252,6 @@ export class CustomizeWebsitePlugin extends Plugin {
                 clean: (action) => this.toggleConfig(action, false),
             },
         };
-    }
-    stuffHappened() {
-        // TODO Once applyCustomMutation supports an async mode, actually
-        // implement correct apply and revert in each caller.
-        this.dependencies.history.applyCustomMutation({
-            apply: () => {},
-            revert: () => {},
-        });
     }
     getWebsiteVariableValue(variable) {
         const style = this.document.defaultView.getComputedStyle(this.document.documentElement);
@@ -461,6 +464,29 @@ export class CustomizeWebsitePlugin extends Plugin {
             return !this.activeRecords[key.substring(1)];
         }
         return this.activeRecords[key];
+    }
+    withHistoryFromLoad(action) {
+        const loadFn = action.load;
+        const load = async ({ param, value }) => {
+            const oldValue = action.getValue({ param });
+            await loadFn({ param, value });
+            return oldValue;
+        };
+        const apply = ({ param, value, loadResult: oldValue }) => {
+            const blockedLoad = (v) => {
+                this.services.ui.block({ delay: 2500 });
+                loadFn({ param, value: v })
+                    .then(() => {
+                        this.dispatchTo("trigger_dom_updated");
+                    })
+                    .finally(() => this.services.ui.unblock());
+            };
+            this.dependencies.history.addCustomMutation({
+                apply: () => blockedLoad(value),
+                revert: () => blockedLoad(oldValue),
+            });
+        };
+        return { ...action, load, apply };
     }
 }
 
