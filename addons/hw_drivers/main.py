@@ -8,9 +8,10 @@ from threading import Thread
 import time
 
 from odoo.addons.hw_drivers.tools import helpers, wifi
+from odoo.addons.hw_drivers.tools.iot_system import IOT_SYSTEM, IS_IOT_TEST, IS_IOT_BOX, IS_WINDOWS
 from odoo.addons.hw_drivers.websocket_client import WebsocketClient
 
-if platform.system() == 'Linux':
+if IS_IOT_BOX:
     from dbus.mainloop.glib import DBusGMainLoop
     DBusGMainLoop(set_as_default=True) # Must be started from main thread
 
@@ -75,13 +76,14 @@ class Manager(Thread):
         """Thread that will load interfaces and drivers and contact the odoo server
         with the updates. It will also reconnect to the Wi-Fi if the connection is lost.
         """
-        if platform.system() == 'Linux':
+        if IS_IOT_BOX:
             wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
 
-        helpers.start_nginx_server()
+        if not IS_IOT_TEST:
+            helpers.start_nginx_server()
 
         _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
-        if platform.system() == 'Linux' and helpers.get_odoo_server_url():
+        if IS_IOT_BOX and helpers.get_odoo_server_url():
             helpers.check_git_branch()
             helpers.generate_password()
         is_certificate_ok, certificate_details = helpers.get_certificate_status()
@@ -99,8 +101,9 @@ class Manager(Thread):
             interface().start()
 
         # Set scheduled actions
-        schedule.every().day.at("00:00").do(helpers.get_certificate_status)
-        schedule.every().day.at("00:00").do(helpers.reset_log_level)
+        if not IS_IOT_TEST:
+            schedule.every().day.at("00:00").do(helpers.get_certificate_status)
+            schedule.every().day.at("00:00").do(helpers.reset_log_level)
 
         # Set up the websocket connection
         ws_client = WebsocketClient(self.ws_channel)
@@ -115,7 +118,7 @@ class Manager(Thread):
                 if iot_devices != previous_iot_devices:
                     previous_iot_devices = iot_devices.copy()
                     self.send_all_devices()
-                if platform.system() == 'Linux' and helpers.get_ip() != '10.11.12.1':
+                if IS_IOT_BOX and helpers.get_ip() != '10.11.12.1':
                     wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
                 time.sleep(3)
                 schedule.run_pending()

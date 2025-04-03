@@ -6,6 +6,7 @@ import threading
 import time
 
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools.iot_system import IS_IOT_TEST
 from odoo.netsvc import DBFormatter
 
 _logger = logging.getLogger(__name__)
@@ -126,7 +127,8 @@ def close_server_log_sender_handler():
 
 
 def get_odoo_config_log_to_server_option():
-    return helpers.get_conf(IOT_LOG_TO_SERVER_CONFIG_NAME, section='options') or True  # Enabled by default
+    # Enabled by default if not in test mode
+    return not IS_IOT_TEST and (helpers.get_conf(IOT_LOG_TO_SERVER_CONFIG_NAME, section='options') or True)
 
 
 def check_and_update_odoo_config_log_to_server_option(new_state):
@@ -150,7 +152,6 @@ def _server_log_sender_handler_filter(log_record):
         return log_record.name == 'werkzeug' and log_record.args and len(log_record.args) > 0 and log_record.args[0].startswith('GET /hw_proxy/hello ')
 
     return not (_filter_my_logs() or _filter_frequent_irrelevant_calls())
-
 
 # The server URL is set once at initlialisation as the IoT will always restart if the URL is changed
 # The only other possible case is when the server URL value is "Cleared",

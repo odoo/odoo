@@ -1,8 +1,9 @@
-import platform
 import subprocess
 import time
 from threading import Thread, Timer
+
 from odoo.addons.hw_drivers.tools import helpers, wifi
+from odoo.addons.hw_drivers.tools.iot_system import IS_IOT_BOX
 
 STATUS_UPDATE_DELAY_SECONDS = 10.0
 BLINK_DELAY_SECONDS = 1.0
@@ -71,6 +72,6 @@ class LedManager(Thread):
             self._set_green_led(value == "green")
 
 
-if platform.system() == 'Linux':
+if IS_IOT_BOX:
     led_manager = LedManager()
     led_manager.start()
