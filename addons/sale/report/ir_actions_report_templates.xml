@@ -61,6 +61,15 @@
                     <strong>Expiration</strong>
                     <div t-field="doc.validity_date">2023-12-31</div>
                 </div>
+                <div t-if="doc.commitment_date" class="col" name="delivery_date">
+                    <strong>Delivery Date</strong>
+                    <div
+                        t-field="doc.commitment_date"
+                        t-options="{'widget': 'date'}"
+                    >
+                        2023-12-31
+                    </div>
+                </div>
                 <div t-if="doc.user_id.name" class="col">
                     <strong>Salesperson</strong>
                     <div t-field="doc.user_id">Mitchell Admin</div>

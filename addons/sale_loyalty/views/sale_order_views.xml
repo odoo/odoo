@@ -19,15 +19,38 @@
                 </button>
             </div>
             <button name="action_open_discount_wizard" position="before">
-                <button name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
-                        type="action"
-                        string="Coupon Code"
-                        class="btn btn-secondary"/>
-                <button name="action_open_reward_wizard"
-                        type="object"
-                        string="Reward"
-                        help="Update current promotional lines and select new rewards if applicable."
-                        class="btn btn-secondary"/>
+                <button
+                    string="Coupon Code"
+                    name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
+                    type="action"
+                    class="btn btn-secondary"
+                    invisible="locked or state == 'cancel'"
+                />
+                <button
+                    string="Coupon Code"
+                    name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
+                    type="action"
+                    class="btn btn-secondary"
+                    disabled="1"
+                    invisible="not (locked or state == 'cancel')"
+                />
+                <button
+                    string="Reward"
+                    name="action_open_reward_wizard"
+                    type="object"
+                    class="btn btn-secondary"
+                    help="Update current promotional lines and select new rewards if applicable."
+                    invisible="locked or state == 'cancel'"
+                />
+                <button
+                    string="Reward"
+                    name="action_open_reward_wizard"
+                    type="object"
+                    class="btn btn-secondary"
+                    help="Update current promotional lines and select new rewards if applicable."
+                    disabled="1"
+                    invisible="not (locked or state == 'cancel')"
+                />
             </button>
             <xpath expr="//list//field[@name='product_uom_qty']" position="before">
                 <field name="is_reward_line" column_invisible="True"/>
