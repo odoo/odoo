@@ -12,8 +12,8 @@ class L10n_FrFecExportWizard(models.TransientModel):
     _name = 'l10n_fr.fec.export.wizard'
     _description = 'Fichier Echange Informatise'
 
-    date_from = fields.Date(string='Start Date', required=True, default=lambda self: self._context.get('report_dates', {}).get('date_from'))
-    date_to = fields.Date(string='End Date', required=True, default=lambda self: self._context.get('report_dates', {}).get('date_to'))
+    date_from = fields.Date(string='Start Date', required=True, default=lambda self: self.env.context.get('report_dates', {}).get('date_from'))
+    date_to = fields.Date(string='End Date', required=True, default=lambda self: self.env.context.get('report_dates', {}).get('date_to'))
     filename = fields.Char(string='Filename', size=256, readonly=True)
     test_file = fields.Boolean()
     exclude_zero = fields.Boolean(string="Exclude lines at 0")
@@ -73,8 +73,8 @@ class L10n_FrFecExportWizard(models.TransientModel):
             formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
         ))
         self.env.flush_all()
-        self._cr.execute(sql_query)
-        return list(self._cr.fetchone())
+        self.env.cr.execute(sql_query)
+        return list(self.env.cr.fetchone())
 
     def _get_company_legal_data(self, company):
         """
@@ -173,10 +173,10 @@ class L10n_FrFecExportWizard(models.TransientModel):
             aa_code=aa_code,
             aa_name=aa_name,
         ))
-        self._cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
+        self.env.cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
 
         currency_digits = 2
-        for row in self._cr.fetchall():
+        for row in self.env.cr.fetchall():
             listrow = list(row)
             account_id = listrow.pop()
             if not unaffected_earnings_line:
@@ -246,9 +246,9 @@ class L10n_FrFecExportWizard(models.TransientModel):
             aa_code=aa_code,
             aa_name=aa_name,
         ))
-        self._cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
+        self.env.cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
 
-        for row in self._cr.fetchall():
+        for row in self.env.cr.fetchall():
             listrow = list(row)
             listrow.pop()
             rows_to_write.append(listrow)
@@ -326,10 +326,10 @@ class L10n_FrFecExportWizard(models.TransientModel):
             # Write current period's data
             has_more_results = True
             while has_more_results:
-                self._cr.execute(query.select(columns))
+                self.env.cr.execute(query.select(columns))
                 query.offset += query_limit
-                has_more_results = self._cr.rowcount > query_limit # we load one more result than the limit to check if there is more
-                query_results = self._cr.fetchall()
+                has_more_results = self.env.cr.rowcount > query_limit # we load one more result than the limit to check if there is more
+                query_results = self.env.cr.fetchall()
                 csv_writer.writerows(query_results[:query_limit])
             content = fecfile.getvalue()[:-2].encode()
 

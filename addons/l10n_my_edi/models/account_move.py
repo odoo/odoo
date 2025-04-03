@@ -361,7 +361,7 @@ class AccountMove(models.Model):
                     move.write(updated_values)
 
             if self._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
         # For successful moves, we log the sending here. Any errors will be handled by the send & print wizard.
         if success_messages:
@@ -427,7 +427,7 @@ class AccountMove(models.Model):
                     move._update_validation_fields(status_info)
 
             if self._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
         # We don't consider these errors per-say. From my understanding an invalid invoice is considered as cancelled,
         # so a new one must be issued.
@@ -483,7 +483,7 @@ class AccountMove(models.Model):
             )
 
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
     @api.model
     def _cron_l10n_my_edi_synchronize_myinvois(self):
@@ -554,7 +554,7 @@ class AccountMove(models.Model):
             # Commit if we can, in case an issue arises later.
             if self._can_commit():
                 self.env['ir.cron']._notify_progress(done=processed_invoices, remaining=invoice_count - processed_invoices)
-                self._cr.commit()
+                self.env.cr.commit()
 
             time.sleep(0.3)  # There is a limit of how many calls we can do, so we pace ourselves
         self.env['ir.cron']._notify_progress(done=processed_invoices, remaining=invoice_count - processed_invoices)
@@ -793,7 +793,7 @@ class AccountMove(models.Model):
 
             # At this point we will need to commit as we reached the api, and we could have a mix of failed and valid invoice.
             if moves._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
             # We already logged the details on the invoice(s) and saved the api results. If we send a single invoice, we can safely raise now.
             if errors and len(moves) == 1:
@@ -819,7 +819,7 @@ class AccountMove(models.Model):
             }))
         # We commit again if possible, to ensure that the invoice status is set in the database in case of errors later.
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
     def _generate_myinvois_qr_code(self):
         """ Generate the qr code which should be embedded into the invoices PDF """

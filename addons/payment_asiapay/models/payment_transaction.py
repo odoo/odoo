@@ -83,7 +83,7 @@ class PaymentTransaction(models.Model):
         base_url = self.provider_id.get_base_url()
         # The lang is taken from the context rather than from the partner because it is not required
         # to be logged in to make a payment, and because the lang is not always set on the partner.
-        lang = self._context.get('lang') or 'en_US'
+        lang = self.env.context.get('lang') or 'en_US'
         rendering_values = {
             'merchant_id': self.provider_id.asiapay_merchant_id,
             'amount': self.amount,

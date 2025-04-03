@@ -13,11 +13,11 @@ class ProjectCreateInvoice(models.TransientModel):
     def default_get(self, fields):
         result = super().default_get(fields)
 
-        active_model = self._context.get('active_model')
+        active_model = self.env.context.get('active_model')
         if active_model != 'project.project':
             raise UserError(_('You can only apply this action from a project.'))
 
-        active_id = self._context.get('active_id')
+        active_id = self.env.context.get('active_id')
         if 'project_id' in fields and active_id:
             result['project_id'] = active_id
         return result

@@ -117,7 +117,7 @@ class AccountMoveSend(models.AbstractModel):
                     }
 
                 if self._can_commit():
-                    self._cr.commit()
+                    self.env.cr.commit()
 
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
@@ -178,4 +178,4 @@ class AccountMoveSend(models.AbstractModel):
                 )
 
             if self._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()

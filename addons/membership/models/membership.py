@@ -50,13 +50,13 @@ class MembershipMembership_Line(models.Model):
         if not self:
             return
 
-        self._cr.execute('''
+        self.env.cr.execute('''
             SELECT reversed_entry_id, COUNT(id)
             FROM account_move
             WHERE reversed_entry_id IN %s
             GROUP BY reversed_entry_id
         ''', [tuple(self.mapped('account_invoice_id.id'))])
-        reverse_map = dict(self._cr.fetchall())
+        reverse_map = dict(self.env.cr.fetchall())
         for line in self:
             move_state = line.account_invoice_id.state
             payment_state = line.account_invoice_id.payment_state

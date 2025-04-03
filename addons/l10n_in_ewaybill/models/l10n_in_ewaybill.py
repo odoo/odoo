@@ -477,7 +477,7 @@ class L10nInEwaybill(models.Model):
             is_cancel=True
         )
         self._write_successfully_response({'state': 'cancel'})
-        self._cr.commit()
+        self.env.cr.commit()
 
     def _generate_ewaybill(self):
         self.ensure_one()
@@ -503,7 +503,7 @@ class L10nInEwaybill(models.Model):
             ),
             **self._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response_data)
         })
-        self._cr.commit()
+        self.env.cr.commit()
 
     @api.model
     def _indian_timezone_to_odoo_utc(self, str_date, time_format='%d/%m/%Y %I:%M:%S %p'):

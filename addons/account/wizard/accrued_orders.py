@@ -14,9 +14,9 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     _check_company_auto = True
 
     def _get_default_company(self):
-        if not self._context.get('active_model'):
+        if not self.env.context.get('active_model'):
             return
-        orders = self.env[self._context['active_model']].browse(self._context['active_ids'])
+        orders = self.env[self.env.context['active_model']].browse(self.env.context['active_ids'])
         return orders and orders[0].company_id.id
 
     def _get_default_date(self):
@@ -56,7 +56,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
     @api.depends('date', 'amount')
     def _compute_display_amount(self):
-        single_order = len(self._context['active_ids']) == 1
+        single_order = len(self.env.context['active_ids']) == 1
         for record in self:
             preview_data = json.loads(self.preview_data)
             lines = preview_data.get('groups_vals', [])[0].get('items_vals', [])
@@ -135,7 +135,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         self.ensure_one()
         move_lines = []
         is_purchase = self.env.context.get('active_model') == 'purchase.order'
-        orders = self.env[self._context['active_model']].with_company(self.company_id).browse(self._context['active_ids'])
+        orders = self.env[self.env.context['active_model']].with_company(self.company_id).browse(self.env.context['active_ids'])
 
         if orders.filtered(lambda o: o.company_id != self.company_id):
             raise UserError(_('Entries can only be created for a single company at a time.'))

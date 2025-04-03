@@ -24,8 +24,8 @@ class StockMoveLine(models.Model):
         and 'product_id.use_expiration_date' are new fields introduced in this module,
         there is no need for an UPDATE statement here.
         """
-        if not column_exists(self._cr, "stock_move_line", "expiration_date"):
-            create_column(self._cr, "stock_move_line", "expiration_date", "timestamp")
+        if not column_exists(self.env.cr, "stock_move_line", "expiration_date"):
+            create_column(self.env.cr, "stock_move_line", "expiration_date", "timestamp")
         return super()._auto_init()
 
     @api.depends('product_id', 'lot_id.expiration_date', 'picking_id.scheduled_date')

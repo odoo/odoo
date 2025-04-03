@@ -2081,7 +2081,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         return new_move_vals
 
     def _recompute_state(self):
-        if self._context.get('preserve_state'):
+        if self.env.context.get('preserve_state'):
             return
         moves_state_to_write = defaultdict(set)
         for move in self:

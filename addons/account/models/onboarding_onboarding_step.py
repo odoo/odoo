@@ -10,7 +10,7 @@ class OnboardingOnboardingStep(models.Model):
     @api.model
     def action_open_step_company_data(self):
         """Set company's basic information."""
-        company = self.env['account.journal'].browse(self._context.get('journal_id', None)).company_id or self.env.company
+        company = self.env['account.journal'].browse(self.env.context.get('journal_id', None)).company_id or self.env.company
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Set your company data'),
@@ -59,7 +59,7 @@ class OnboardingOnboardingStep(models.Model):
     # DASHBOARD ONBOARDING
     @api.model
     def action_open_step_fiscal_year(self):
-        company = self.env['account.journal'].browse(self._context.get('journal_id', None)).company_id or self.env.company
+        company = self.env['account.journal'].browse(self.env.context.get('journal_id', None)).company_id or self.env.company
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
@@ -79,7 +79,7 @@ class OnboardingOnboardingStep(models.Model):
     @api.model
     def action_open_step_chart_of_accounts(self):
         """ Called by the 'Chart of Accounts' button of the dashboard onboarding panel."""
-        company = self.env['account.journal'].browse(self._context.get('journal_id', None)).company_id or self.env.company
+        company = self.env['account.journal'].browse(self.env.context.get('journal_id', None)).company_id or self.env.company
         self.sudo().with_company(company).action_validate_step('account.onboarding_onboarding_step_chart_of_accounts')
 
         # If an opening move has already been posted, we open the list view showing all the accounts

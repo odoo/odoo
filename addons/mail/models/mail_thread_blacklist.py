@@ -73,8 +73,8 @@ class MailThreadBlacklist(models.AbstractModel):
                     WHERE bl.id IS NULL
             """, SQL.identifier(self._table))
 
-        self._cr.execute(SQL("%s FETCH FIRST ROW ONLY", sql))
-        res = self._cr.fetchall()
+        self.env.cr.execute(SQL("%s FETCH FIRST ROW ONLY", sql))
+        res = self.env.cr.fetchall()
         if not res:
             return [(0, '=', 1)]
         return [('id', 'in', SQL("(%s)", sql))]
