@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
 export class Activity extends Record {
@@ -39,11 +39,11 @@ export class Activity extends Record {
     can_write;
     /** @type {'suggest'|'trigger'} */
     chaining_type;
-    create_date = Record.datetime();
+    create_date = fields.Datetime();
     /** @type {[number, string]} */
     create_uid;
-    date_deadline = Record.date();
-    date_done = Record.date();
+    date_deadline = fields.Date();
+    date_done = fields.Date();
     /** @type {string} */
     display_name;
     /** @type {boolean} */
@@ -54,8 +54,8 @@ export class Activity extends Record {
     icon = "fa-tasks";
     /** @type {Object[]} */
     mail_template_ids;
-    note = Record.html("");
-    persona = Record.one("Persona");
+    note = fields.Html("");
+    persona = fields.One("Persona");
     /** @type {number|false} */
     previous_activity_type_id;
     /** @type {number|false} */

@@ -1,4 +1,4 @@
-import { AND, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { assignDefined } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
@@ -54,10 +54,10 @@ export class Thread extends Record {
     uuid;
     /** @type {string} */
     model;
-    allMessages = Record.many("mail.message", {
+    allMessages = fields.Many("mail.message", {
         inverse: "thread",
     });
-    storeAsAllChannels = Record.one("Store", {
+    storeAsAllChannels = fields.One("Store", {
         compute() {
             if (this.model === "discuss.channel") {
                 return this.store;
@@ -67,8 +67,8 @@ export class Thread extends Record {
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
-    group_public_id = Record.one("res.groups");
-    attachments = Record.many("ir.attachment", {
+    group_public_id = fields.One("res.groups");
+    attachments = fields.Many("ir.attachment", {
         /**
          * @param {import("models").Attachment} a1
          * @param {import("models").Attachment} a2
@@ -86,7 +86,7 @@ export class Thread extends Record {
     get canUnpin() {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
-    close_chat_window = Record.attr(undefined, {
+    close_chat_window = fields.Attr(undefined, {
         /** @this {import("models").Thread} */
         onUpdate() {
             if (this.close_chat_window) {
@@ -95,12 +95,12 @@ export class Thread extends Record {
             }
         },
     });
-    composer = Record.one("Composer", {
+    composer = fields.One("Composer", {
         compute: () => ({}),
         inverse: "thread",
         onDelete: (r) => r.delete(),
     });
-    correspondentCountry = Record.one("res.country", {
+    correspondentCountry = fields.One("res.country", {
         /** @this {import("models").Thread} */
         compute() {
             return this.correspondent?.persona?.country ?? this.anonymous_country;
@@ -117,7 +117,7 @@ export class Thread extends Record {
     description;
     /** @type {string} */
     display_name;
-    displayToSelf = Record.attr(false, {
+    displayToSelf = fields.Attr(false, {
         compute() {
             return (
                 this.is_pinned ||
@@ -130,14 +130,14 @@ export class Thread extends Record {
             this.onPinStateUpdated();
         },
     });
-    followers = Record.many("mail.followers", {
+    followers = fields.Many("mail.followers", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             r.thread = this;
         },
         onDelete: (r) => r.delete(),
     });
-    selfFollower = Record.one("mail.followers", {
+    selfFollower = fields.One("mail.followers", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             r.thread = this;
@@ -154,7 +154,7 @@ export class Thread extends Record {
         }
         return this.message_needaction_counter;
     }
-    isDisplayed = Record.attr(false, {
+    isDisplayed = fields.Attr(false, {
         compute() {
             return this.computeIsDisplayed();
         },
@@ -165,7 +165,7 @@ export class Thread extends Record {
     isDisplayedOnUpdate() {}
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
-    isLoaded = Record.attr(false, {
+    isLoaded = fields.Attr(false, {
         /** @this {import("models").Thread} */
         onUpdate() {
             if (this.isLoaded) {
@@ -177,16 +177,16 @@ export class Thread extends Record {
             }
         },
     });
-    is_pinned = Record.attr(undefined, {
+    is_pinned = fields.Attr(undefined, {
         /** @this {import("models").Thread} */
         onUpdate() {
             this.onPinStateUpdated();
         },
     });
-    mainAttachment = Record.one("ir.attachment");
+    mainAttachment = fields.One("ir.attachment");
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
-    messageInEdition = Record.one("mail.message", { inverse: "threadAsInEdition" });
+    messageInEdition = fields.One("mail.message", { inverse: "threadAsInEdition" });
     /**
      * Contains continuous sequence of messages to show in message list.
      * Messages are ordered from older to most recent.
@@ -196,7 +196,7 @@ export class Thread extends Record {
      *
      * Content should be fetched and inserted in a controlled way.
      */
-    messages = Record.many("mail.message");
+    messages = fields.Many("mail.message");
     /** @type {string} */
     modelName;
     /** @type {string} */
@@ -206,8 +206,8 @@ export class Thread extends Record {
      * `messages` list. This is a temporary storage to ensure nothing is lost
      * when fetching newer messages.
      */
-    pendingNewMessages = Record.many("mail.message");
-    needactionMessages = Record.many("mail.message", {
+    pendingNewMessages = fields.Many("mail.message");
+    needactionMessages = fields.Many("mail.message", {
         inverse: "threadAsNeedaction",
         sort: (message1, message2) => message1.id - message2.id,
     });
@@ -218,10 +218,10 @@ export class Thread extends Record {
      * @type {number|'bottom'}
      */
     scrollTop = "bottom";
-    transientMessages = Record.many("mail.message");
+    transientMessages = fields.Many("mail.message");
     /* The additional recipients are the recipients that are manually added
      * by the user by using the "To" field of the Chatter. */
-    additionalRecipients = Record.attr([], {
+    additionalRecipients = fields.Attr([], {
         onUpdate() {
             for (const recipient of this.additionalRecipients) {
                 recipient.persona = recipient.partner_id
@@ -233,7 +233,7 @@ export class Thread extends Record {
     /* The suggested recipients are the recipients that are suggested by the
      * current model and includes the recipients of the last message. (e.g: for
      * a crm lead, the model will suggest the customer associated to the lead). */
-    suggestedRecipients = Record.attr([], {
+    suggestedRecipients = fields.Attr([], {
         onUpdate() {
             for (const recipient of this.suggestedRecipients) {
                 recipient.persona = recipient.partner_id
@@ -244,7 +244,6 @@ export class Thread extends Record {
     });
     hasLoadingFailed = false;
     canPostOnReadonly;
-    /** @type {luxon.DateTime} */
     /** @type {Boolean} */
     is_editable;
     /**
@@ -254,9 +253,9 @@ export class Thread extends Record {
      * @type {false|"all"|"mentions"|"no_notif"}
      */
     custom_notifications = false;
-    mute_until_dt = Record.datetime();
+    mute_until_dt = fields.Datetime();
     /** @type {Boolean} */
-    isLocallyPinned = Record.attr(false, {
+    isLocallyPinned = fields.Attr(false, {
         onUpdate() {
             this.onPinStateUpdated();
         },
@@ -264,7 +263,7 @@ export class Thread extends Record {
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
     /** @type {integer|null} */
-    highlightMessage = Record.one("mail.message", {
+    highlightMessage = fields.One("mail.message", {
         onAdd(msg) {
             msg.thread = this;
         },
@@ -369,7 +368,7 @@ export class Thread extends Record {
         return this.message_needaction_counter;
     }
 
-    newestMessage = Record.one("mail.message", {
+    newestMessage = fields.One("mail.message", {
         inverse: "threadAsNewest",
         compute() {
             return this.messages.at(-1);
@@ -380,7 +379,7 @@ export class Thread extends Record {
         return this.messages.findLast((msg) => Number.isInteger(msg.id));
     }
 
-    newestPersistentAllMessages = Record.many("mail.message", {
+    newestPersistentAllMessages = fields.Many("mail.message", {
         compute() {
             const allPersistentMessages = this.allMessages.filter((message) =>
                 Number.isInteger(message.id)
@@ -390,7 +389,7 @@ export class Thread extends Record {
         },
     });
 
-    newestPersistentOfAllMessage = Record.one("mail.message", {
+    newestPersistentOfAllMessage = fields.One("mail.message", {
         compute() {
             return this.newestPersistentAllMessages[0];
         },

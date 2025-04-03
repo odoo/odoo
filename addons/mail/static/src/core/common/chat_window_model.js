@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /** @typedef {{ thread?: import("models").Thread }} ChatWindowData */
@@ -8,14 +8,14 @@ export class ChatWindow extends Record {
 
     actionsDisabled = false;
     bypassCompact = false;
-    thread = Record.one("Thread");
+    thread = fields.One("Thread");
     autofocus = 0;
     jumpToNewMessage = 0;
     hidden = false;
     /** Whether the chat window was created from the messaging menu */
     fromMessagingMenu = false;
-    hubAsOpened = Record.one("ChatHub", { inverse: "opened" });
-    hubAsFolded = Record.one("ChatHub", { inverse: "folded" });
+    hubAsOpened = fields.One("ChatHub", { inverse: "opened" });
+    hubAsFolded = fields.One("ChatHub", { inverse: "folded" });
 
     get displayName() {
         return this.thread?.displayName;

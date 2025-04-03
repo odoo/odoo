@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
 
 import { patch } from "@web/core/utils/patch";
@@ -13,7 +13,7 @@ const storeServicePatch = {
         this.inPublicPage;
         /** @type {boolean|undefined} */
         this.isChannelTokenSecret;
-        this.discuss_public_thread = Record.one("Thread");
+        this.discuss_public_thread = fields.One("Thread");
         /** @type {boolean|undefined} */
         this.shouldDisplayWelcomeViewInitially;
     },

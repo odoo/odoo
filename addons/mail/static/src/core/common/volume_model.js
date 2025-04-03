@@ -1,9 +1,9 @@
-import { Record } from "./record";
+import { fields, Record } from "./record";
 
 export class Volume extends Record {
     static id = "persona";
 
-    persona = Record.one("Persona");
+    persona = fields.One("Persona");
     volume = 1;
 }
 

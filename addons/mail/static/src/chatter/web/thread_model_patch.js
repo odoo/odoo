@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import "@mail/chatter/web_portal/thread_model_patch";
 
@@ -8,7 +8,7 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup();
-        this.scheduledMessages = Record.many("mail.scheduled.message", {
+        this.scheduledMessages = fields.Many("mail.scheduled.message", {
             sort: (a, b) => {
                 if (a.scheduled_date === b.scheduled_date) {
                     return a.id - b.id;

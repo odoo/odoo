@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { browser } from "@web/core/browser/browser";
 
@@ -8,7 +8,7 @@ import { patch } from "@web/core/utils/patch";
 const ThreadPatch = {
     setup() {
         super.setup(...arguments);
-        this.activeRtcSession = Record.one("discuss.channel.rtc.session", {
+        this.activeRtcSession = fields.One("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onAdd(r) {
                 this.store.allActiveRtcSessions.add(r);
@@ -23,7 +23,7 @@ const ThreadPatch = {
         this.lastSessionIds = new Set();
         /** @type {number|undefined} */
         this.cancelRtcInvitationTimeout;
-        this.rtcInvitingSession = Record.one("discuss.channel.rtc.session", {
+        this.rtcInvitingSession = fields.One("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onAdd(r) {
                 this.rtcSessions.add(r);
@@ -38,7 +38,7 @@ const ThreadPatch = {
                 this.store.ringingThreads.delete(this);
             },
         });
-        this.rtcSessions = Record.many("discuss.channel.rtc.session", {
+        this.rtcSessions = fields.Many("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onDelete(r) {
                 this.store.env.services["discuss.rtc"].deleteSession(r.id);

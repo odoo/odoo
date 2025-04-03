@@ -1,5 +1,5 @@
 import { Message } from "@mail/core/common/message_model";
-import { Record } from "@mail/model/record";
+import { fields } from "@mail/core/common/record";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     setup() {
         super.setup(...arguments);
-        this.chatbotStep = Record.one("ChatbotStep", { inverse: "message" });
+        this.chatbotStep = fields.One("ChatbotStep", { inverse: "message" });
     },
     canReplyTo(thread) {
         return (

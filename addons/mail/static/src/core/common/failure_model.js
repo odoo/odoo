@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { markRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -7,7 +7,7 @@ export class Failure extends Record {
     static nextId = markRaw({ value: 1 });
     static id = "id";
 
-    notifications = Record.many("mail.notification", {
+    notifications = fields.Many("mail.notification", {
         /** @this {import("models").Failure} */
         onUpdate() {
             if (this.notifications.length === 0) {
@@ -30,7 +30,7 @@ export class Failure extends Record {
                 .filter((id) => !!id),
         ]);
     }
-    lastMessage = Record.one("mail.message", {
+    lastMessage = fields.One("mail.message", {
         /** @this {import("models").Failure} */
         compute() {
             let lastMsg = this.notifications[0]?.mail_message_id;

@@ -1,5 +1,5 @@
 import { Message } from "@mail/core/common/message_model";
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -7,20 +7,20 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     setup() {
         super.setup();
-        this.hasEveryoneSeen = Record.attr(false, {
+        this.hasEveryoneSeen = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
                 return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
             },
         });
-        this.hasNewMessageSeparator = Record.attr(false, {
+        this.hasNewMessageSeparator = fields.Attr(false, {
             compute() {
                 // compute for caching the value and not re-rendering all
                 // messages when new_message_separator changes
                 return this.thread?.selfMember?.new_message_separator === this.id;
             },
         });
-        this.hasSomeoneFetched = Record.attr(false, {
+        this.hasSomeoneFetched = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
                 return this.thread?.channel_member_ids.some(
@@ -28,7 +28,7 @@ const messagePatch = {
                 );
             },
         });
-        this.hasSomeoneSeen = Record.attr(false, {
+        this.hasSomeoneSeen = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
                 return this.thread?.membersThatCanSeen
@@ -36,7 +36,7 @@ const messagePatch = {
                     .some((m) => m.hasSeen(this));
             },
         });
-        this.isMessagePreviousToLastSelfMessageSeenByEveryone = Record.attr(false, {
+        this.isMessagePreviousToLastSelfMessageSeenByEveryone = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
                 if (!this.thread?.lastSelfMessageSeenByEveryone) {
@@ -47,7 +47,7 @@ const messagePatch = {
         });
         /** @type {Promise<Thread>[]} */
         this.mentionedChannelPromises = [];
-        this.threadAsFirstUnread = Record.one("Thread", { inverse: "firstUnreadMessage" });
+        this.threadAsFirstUnread = fields.One("Thread", { inverse: "firstUnreadMessage" });
     },
     /** @returns {import("models").ChannelMember[]} */
     get channelMemberHaveSeen() {

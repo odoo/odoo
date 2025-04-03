@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
@@ -19,10 +19,10 @@ export class Attachment extends FileModelMixin(Record) {
         return attachment;
     }
 
-    thread = Record.one("Thread", { inverse: "attachments" });
+    thread = fields.One("Thread", { inverse: "attachments" });
     res_name;
-    message = Record.one("mail.message", { inverse: "attachment_ids" });
-    create_date = Record.datetime();
+    message = fields.One("mail.message", { inverse: "attachment_ids" });
+    create_date = fields.Datetime();
 
     get isDeletable() {
         if (this.message && !this.store.self.isInternalUser) {

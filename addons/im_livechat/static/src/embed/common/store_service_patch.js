@@ -1,6 +1,6 @@
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import { Store } from "@mail/core/common/store_service";
-import { Record } from "@mail/model/record";
+import { fields } from "@mail/model/export";
 
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
@@ -10,9 +10,9 @@ export const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.activeLivechats = Record.many("Thread", { inverse: "storeAsActiveLivechats" });
+        this.activeLivechats = fields.Many("Thread", { inverse: "storeAsActiveLivechats" });
         expirableStorage.onChange(GUEST_TOKEN_STORAGE_KEY, (value) => (this.guest_token = value));
-        this.guest_token = Record.attr(null, {
+        this.guest_token = fields.Attr(null, {
             compute() {
                 return expirableStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
             },
@@ -29,7 +29,7 @@ const StorePatch = {
             },
             eager: true,
         });
-        this.livechat_rule = Record.one("im_livechat.channel.rule");
+        this.livechat_rule = fields.One("im_livechat.channel.rule");
         /** @type {boolean} */
         this.livechat_available = session.livechatData?.isAvailable;
     },

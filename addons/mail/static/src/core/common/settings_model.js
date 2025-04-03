@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { browser } from "@web/core/browser/browser";
-import { Record } from "./record";
+import { fields, Record } from "./record";
 import { debounce } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
 
@@ -39,12 +39,12 @@ export class Settings extends Record {
     /**
      * @type {"mentions"|"all"|"no_notif"}
      */
-    channel_notifications = Record.attr("mentions", {
+    channel_notifications = fields.Attr("mentions", {
         compute() {
             return this.channel_notifications === false ? "mentions" : this.channel_notifications;
         },
     });
-    messageSound = Record.attr(true, {
+    messageSound = fields.Attr(true, {
         compute() {
             return browser.localStorage.getItem(MESSAGE_SOUND) !== "false";
         },
@@ -57,14 +57,14 @@ export class Settings extends Record {
             }
         },
     });
-    mute_until_dt = Record.datetime();
+    mute_until_dt = fields.Datetime();
 
     // Voice settings
     // DeviceId of the audio input selected by the user
     audioInputDeviceId = "";
     use_push_to_talk = false;
     voice_active_duration = 200;
-    volumes = Record.many("Volume");
+    volumes = fields.Many("Volume");
     volumeSettingsTimeouts = new Map();
     // Normalized [0, 1] volume at which the voice activation system must consider the user as "talking".
     voiceActivationThreshold = 0.05;

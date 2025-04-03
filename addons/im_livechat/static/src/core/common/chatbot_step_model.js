@@ -1,18 +1,18 @@
-import { AND, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/core/common/record";
 
 export class ChatbotStep extends Record {
     static id = AND("scriptStep", "message");
 
     operatorFound = false;
-    scriptStep = Record.one("chatbot.script.step");
-    message = Record.one("mail.message", { inverse: "chatbotStep" });
-    answers = Record.many("chatbot.script.answer", {
+    scriptStep = fields.One("chatbot.script.step");
+    message = fields.One("mail.message", { inverse: "chatbotStep" });
+    answers = fields.Many("chatbot.script.answer", {
         compute() {
             return this.scriptStep?.answers;
         },
     });
-    selectedAnswer = Record.one("chatbot.script.answer");
-    type = Record.attr("", {
+    selectedAnswer = fields.One("chatbot.script.answer");
+    type = fields.Attr("", {
         compute() {
             return this.scriptStep?.type;
         },

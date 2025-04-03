@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 
 import { Deferred } from "@web/core/utils/concurrency";
 
@@ -38,7 +38,7 @@ export class DataResponse extends Record {
      *
      * @type {boolean}
      */
-    _resolve = Record.attr(undefined, {
+    _resolve = fields.Attr(undefined, {
         /** @this {import("models").DataResponse} */
         onUpdate() {
             if (this._resolve) {
@@ -53,13 +53,13 @@ export class DataResponse extends Record {
      * Existing fields defined here should be used in new data requests if they fit the purpose, and
      * other fields can be added if necessary.
      */
-    attachments = Record.many("ir.attachment");
-    channel = Record.one("Thread");
-    channels = Record.many("Thread");
+    attachments = fields.Many("ir.attachment");
+    channel = fields.One("Thread");
+    channels = fields.Many("Thread");
     /** @type {number} */
     count;
-    message = Record.one("mail.message");
-    partners = Record.many("Persona");
+    message = fields.One("mail.message");
+    partners = fields.Many("Persona");
 }
 
 DataResponse.register();

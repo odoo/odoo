@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Store, storeService } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -16,7 +16,7 @@ const StorePatch = {
         this.activityCounter = 0;
         this.activity_counter_bus_id = 0;
         /** @type {Object[]} */
-        this.activityGroups = Record.attr([], {
+        this.activityGroups = fields.Attr([], {
             onUpdate() {
                 this.onUpdateActivityGroups();
             },
@@ -30,9 +30,9 @@ const StorePatch = {
                 return getSortId(g1) - getSortId(g2);
             },
         });
-        this.inbox = Record.one("Thread");
-        this.starred = Record.one("Thread");
-        this.history = Record.one("Thread");
+        this.inbox = fields.One("Thread");
+        this.starred = fields.One("Thread");
+        this.history = fields.One("Thread");
     },
     async initialize() {
         await Promise.all([

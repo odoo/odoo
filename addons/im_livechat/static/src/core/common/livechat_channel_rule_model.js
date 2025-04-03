@@ -1,3 +1,4 @@
+import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
 
 export class LivechatChannelRule extends Record {
@@ -8,7 +9,7 @@ export class LivechatChannelRule extends Record {
     action;
     /** @type {number} */
     autopopup_timer;
-    chatbot_script_id = Record.one("chatbot.script");
+    chatbot_script_id = fields.One("chatbot.script");
     /** @type {number} */
     id;
 }

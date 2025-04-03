@@ -1,5 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -15,21 +15,21 @@ export class ChannelMember extends Record {
     create_date;
     /** @type {number} */
     id;
-    last_interest_dt = Record.datetime();
-    last_seen_dt = Record.datetime();
-    persona = Record.one("Persona", { inverse: "channelMembers" });
-    thread = Record.one("Thread", { inverse: "channel_member_ids" });
-    threadAsSelf = Record.one("Thread", {
+    last_interest_dt = fields.Datetime();
+    last_seen_dt = fields.Datetime();
+    persona = fields.One("Persona", { inverse: "channelMembers" });
+    thread = fields.One("Thread", { inverse: "channel_member_ids" });
+    threadAsSelf = fields.One("Thread", {
         compute() {
             if (this.store.self?.eq(this.persona)) {
                 return this.thread;
             }
         },
     });
-    fetched_message_id = Record.one("mail.message");
-    seen_message_id = Record.one("mail.message");
+    fetched_message_id = fields.One("mail.message");
+    seen_message_id = fields.One("mail.message");
     syncUnread = true;
-    _syncUnread = Record.attr(false, {
+    _syncUnread = fields.Attr(false, {
         compute() {
             if (!this.syncUnread || !this.eq(this.thread?.selfMember)) {
                 return false;
@@ -46,7 +46,7 @@ export class ChannelMember extends Record {
             }
         },
     });
-    unreadSynced = Record.attr(true, {
+    unreadSynced = fields.Attr(true, {
         compute() {
             return this.localNewMessageSeparator === this.new_message_separator;
         },
@@ -62,7 +62,7 @@ export class ChannelMember extends Record {
     message_unread_counter = 0;
     message_unread_counter_bus_id = 0;
     new_message_separator = null;
-    threadAsTyping = Record.one("Thread", {
+    threadAsTyping = fields.One("Thread", {
         compute() {
             return this.isTyping ? this.thread : undefined;
         },

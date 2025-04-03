@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import {
     EMOJI_REGEX,
     convertBrToLineBreak,
@@ -31,10 +31,10 @@ export class Message extends Record {
         }
     }
 
-    attachment_ids = Record.many("ir.attachment", { inverse: "message" });
-    author = Record.one("Persona");
-    body = Record.html("");
-    richBody = Record.html("", {
+    attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
+    author = fields.One("Persona");
+    body = fields.Html("");
+    richBody = fields.Html("", {
         compute() {
             if (!this.store.emojiLoader.loaded) {
                 loadEmoji();
@@ -42,7 +42,7 @@ export class Message extends Record {
             return decorateEmojis(this.body) ?? "";
         },
     });
-    richTranslationValue = Record.html("", {
+    richTranslationValue = fields.Html("", {
         compute() {
             if (!this.store.emojiLoader.loaded) {
                 loadEmoji();
@@ -50,12 +50,12 @@ export class Message extends Record {
             return decorateEmojis(this.translationValue) ?? "";
         },
     });
-    composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
-    date = Record.datetime();
+    composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r.delete() });
+    date = fields.Datetime();
     /** @type {string} */
     default_subject;
     /** @type {boolean} */
-    edited = Record.attr(false, {
+    edited = fields.Attr(false, {
         compute() {
             return Boolean(
                 // ".o-mail-Message-edited" is the class added by the mail.thread in _message_update_content
@@ -64,7 +64,7 @@ export class Message extends Record {
             );
         },
     });
-    hasLink = Record.attr(false, {
+    hasLink = fields.Attr(false, {
         compute() {
             if (this.isBodyEmpty) {
                 return false;
@@ -85,9 +85,9 @@ export class Message extends Record {
     is_note;
     /** @type {boolean} */
     is_transient;
-    message_link_preview_ids = Record.many("mail.message.link.preview", { inverse: "message_id" });
+    message_link_preview_ids = fields.Many("mail.message.link.preview", { inverse: "message_id" });
     /** @type {number[]} */
-    parentMessage = Record.one("mail.message");
+    parentMessage = fields.One("mail.message");
     /**
      * When set, this temporary/pending message failed message post, and the
      * value is a callback to re-attempt to post the message.
@@ -95,7 +95,7 @@ export class Message extends Record {
      * @type {() => {} | undefined}
      */
     postFailRedo = undefined;
-    reactions = Record.many("MessageReactions", {
+    reactions = fields.Many("MessageReactions", {
         inverse: "message",
         /**
          * @param {import("models").MessageReactions} r1
@@ -103,26 +103,26 @@ export class Message extends Record {
          */
         sort: (r1, r2) => r1.sequence - r2.sequence,
     });
-    notification_ids = Record.many("mail.notification", { inverse: "mail_message_id" });
-    recipients = Record.many("Persona");
-    thread = Record.one("Thread");
-    threadAsNeedaction = Record.one("Thread", {
+    notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
+    recipients = fields.Many("Persona");
+    thread = fields.One("Thread");
+    threadAsNeedaction = fields.One("Thread", {
         compute() {
             if (this.needaction) {
                 return this.thread;
             }
         },
     });
-    threadAsNewest = Record.one("Thread");
-    threadAsInEdition = Record.one("Thread", {
+    threadAsNewest = fields.One("Thread");
+    threadAsInEdition = fields.One("Thread", {
         compute() {
             if (this.composer) {
                 return this.thread;
             }
         },
     });
-    scheduledDatetime = Record.datetime();
-    onlyEmojis = Record.attr(false, {
+    scheduledDatetime = fields.Datetime();
+    onlyEmojis = fields.Attr(false, {
         compute() {
             const bodyWithoutTags = createElementWithContent("div", this.body).textContent;
             const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
@@ -149,8 +149,8 @@ export class Message extends Record {
     message_type;
     /** @type {string|undefined} */
     notificationType;
-    create_date = Record.datetime();
-    write_date = Record.datetime();
+    create_date = fields.Datetime();
+    write_date = fields.Datetime();
     /** @type {undefined|Boolean} */
     needaction;
     starred = false;
@@ -234,7 +234,7 @@ export class Message extends Record {
         return this.isSelfMentioned && this.thread?.model === "discuss.channel";
     }
 
-    isSelfAuthored = Record.attr(false, {
+    isSelfAuthored = fields.Attr(false, {
         compute() {
             if (!this.author) {
                 return false;
@@ -287,7 +287,7 @@ export class Message extends Record {
         return !this.isBodyEmpty;
     }
 
-    isEmpty = Record.attr(false, {
+    isEmpty = fields.Attr(false, {
         /** @this {import("models").Message} */
         compute() {
             return (
@@ -298,7 +298,7 @@ export class Message extends Record {
             );
         },
     });
-    isBodyEmpty = Record.attr(undefined, {
+    isBodyEmpty = fields.Attr(undefined, {
         compute() {
             return (
                 !this.body ||
@@ -349,7 +349,7 @@ export class Message extends Record {
         return false;
     }
 
-    inlineBody = Record.html("", {
+    inlineBody = fields.Html("", {
         /** @this {import("models").Message} */
         compute() {
             if (this.notificationType === "call") {
@@ -398,7 +398,7 @@ export class Message extends Record {
         return this.isBodyEmpty && this.attachment_ids.length > 0;
     }
 
-    previewText = Record.html("", {
+    previewText = fields.Html("", {
         /** @this {import("models").Message} */
         compute() {
             if (!this.hasOnlyAttachments) {

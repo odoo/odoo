@@ -1,5 +1,5 @@
-import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
+import { fields } from "@mail/model/misc";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup();
-        this.collaborator_ids = Record.many("Persona");
+        this.collaborator_ids = fields.Many("Persona");
     },
 };
 patch(Thread.prototype, threadPatch);

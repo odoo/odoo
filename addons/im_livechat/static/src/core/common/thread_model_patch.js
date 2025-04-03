@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { _t } from "@web/core/l10n/translation";
@@ -7,8 +7,8 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.livechat_operator_id = Record.one("Persona");
-        this.livechatVisitorMember = Record.one("discuss.channel.member", {
+        this.livechat_operator_id = fields.One("Persona");
+        this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
                 if (this.channel_type !== "livechat") {
                     return;
@@ -28,7 +28,7 @@ patch(Thread.prototype, {
             },
         });
         /** @type {true|undefined} */
-        this.open_chat_window = Record.attr(undefined, {
+        this.open_chat_window = fields.Attr(undefined, {
             /** @this {import("models").Thread} */
             onUpdate() {
                 if (this.open_chat_window) {

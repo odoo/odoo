@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
 
 import { patch } from "@web/core/utils/patch";
@@ -7,12 +7,12 @@ import { patch } from "@web/core/utils/patch";
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.rtc = Record.one("Rtc", {
+        this.rtc = fields.One("Rtc", {
             compute() {
                 return {};
             },
         });
-        this.ringingThreads = Record.many("Thread", {
+        this.ringingThreads = fields.Many("Thread", {
             /** @this {import("models").Store} */
             onUpdate() {
                 if (this.ringingThreads.length > 0) {
@@ -24,7 +24,7 @@ const StorePatch = {
                 }
             },
         });
-        this.allActiveRtcSessions = Record.many("discuss.channel.rtc.session");
+        this.allActiveRtcSessions = fields.Many("discuss.channel.rtc.session");
         this.nextTalkingTime = 1;
     },
     onStarted() {

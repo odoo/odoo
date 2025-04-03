@@ -1,4 +1,4 @@
-import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
+import { Store as BaseStore, fields, makeStore, Record } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 
@@ -44,8 +44,8 @@ export class Store extends BaseStore {
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
     /** This is the current logged partner / guest */
-    self = Record.one("Persona");
-    allChannels = Record.many("Thread", {
+    self = fields.One("Persona");
+    allChannels = fields.Many("Thread", {
         inverse: "storeAsAllChannels",
         onUpdate() {
             const busService = this.store.env.services.bus_service;
@@ -59,7 +59,7 @@ export class Store extends BaseStore {
      * public page.
      */
     inPublicPage = false;
-    odoobot = Record.one("Persona");
+    odoobot = fields.One("Persona");
     users = {};
     /** @type {number} */
     internalUserGroupId;
@@ -67,22 +67,22 @@ export class Store extends BaseStore {
     mt_comment_id;
     /** @type {boolean} */
     hasMessageTranslationFeature;
-    imStatusTrackedPersonas = Record.many("Persona", {
+    imStatusTrackedPersonas = fields.Many("Persona", {
         inverse: "storeAsTrackedImStatus",
     });
     hasLinkPreviewFeature = true;
     // messaging menu
     menu = { counter: 0 };
-    chatHub = Record.one("ChatHub", { compute: () => ({}) });
-    failures = Record.many("Failure", {
+    chatHub = fields.One("ChatHub", { compute: () => ({}) });
+    failures = fields.Many("Failure", {
         /**
          * @param {import("models").Failure} f1
          * @param {import("models").Failure} f2
          */
         sort: (f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id,
     });
-    settings = Record.one("Settings");
-    openInviteThread = Record.one("Thread");
+    settings = fields.One("Settings");
+    openInviteThread = fields.One("Thread");
     emojiLoader = loader;
 
     /** @type {[[string, any, import("models").DataResponse]]} */
@@ -102,7 +102,7 @@ export class Store extends BaseStore {
         },
     ];
 
-    isNotificationPermissionDismissed = Record.attr(false, {
+    isNotificationPermissionDismissed = fields.Attr(false, {
         compute() {
             return (
                 browser.localStorage.getItem("mail.user_setting.push_notification_dismissed") ===
@@ -124,7 +124,7 @@ export class Store extends BaseStore {
 
     messagePostMutex = new Mutex();
 
-    menuThreads = Record.many("Thread", {
+    menuThreads = fields.Many("Thread", {
         /** @this {import("models").Store} */
         compute() {
             /** @type {import("models").Thread[]} */

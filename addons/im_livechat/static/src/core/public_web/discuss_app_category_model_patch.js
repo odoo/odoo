@@ -1,12 +1,12 @@
 import { patch } from "@web/core/utils/patch";
 import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app_category_model";
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 patch(DiscussAppCategory.prototype, {
     setup() {
         super.setup(...arguments);
-        this.livechatChannel = Record.one("im_livechat.channel", {
+        this.livechatChannel = fields.One("im_livechat.channel", {
             inverse: "appCategory",
             onDelete() {
                 this.delete();

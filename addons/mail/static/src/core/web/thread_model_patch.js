@@ -1,7 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
-import { Record } from "../common/record";
+import { fields } from "../common/record";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 /** @type {import("models").Thread} */
@@ -10,8 +10,8 @@ const threadPatch = {
         super.setup();
         /** @type {number|undefined} */
         this.recipientsCount = undefined;
-        this.recipients = Record.many("mail.followers");
-        this.activities = Record.many("mail.activity", {
+        this.recipients = fields.Many("mail.followers");
+        this.activities = fields.Many("mail.activity", {
             sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
             onDelete(r) {
                 r.remove();
