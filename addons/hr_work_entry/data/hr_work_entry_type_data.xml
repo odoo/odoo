@@ -179,9 +179,6 @@
 <!-- BE : Belgium -->
     <record id="l10n_be_work_entry_type_bank_holiday" model="hr.work.entry.type">
         <field name="name">Public Holiday</field>
-        <field name="name@nl">Feestdag</field>
-        <field name="name@fr">Jour férié</field>
-        <field name="name@de">Gesetzlicher Feiertag</field>
         <field name="code">LEAVE500</field>
         <field name="color">3</field>
         <field name="country_id" ref="base.be"/>
@@ -189,26 +186,18 @@
 
     <record id="l10n_be_work_entry_type_solicitation_time_off" model="hr.work.entry.type">
         <field name="name">Solicitation Time Off</field>
-        <field name="name@nl">Verzoek verlof</field>
-        <field name="name@fr">Congé de sollicitation</field>
         <field name="code">LEAVE600</field>
         <field name="country_id" ref="base.be"/>
     </record>
 
     <record id="l10n_be_work_entry_type_unjustified_reason" model="hr.work.entry.type">
         <field name="name">Unjustified Reason</field>
-        <field name="name@nl">Ongerechtvaardigde reden</field>
-        <field name="name@fr">Raison non justifiée</field>
-        <field name="name@de">Ungerechtfertigte Begründung</field>
         <field name="code">LEAVE700</field>
         <field name="country_id" ref="base.be"/>
     </record>
 
     <record id="l10n_be_work_entry_type_small_unemployment" model="hr.work.entry.type">
         <field name="name">Small Unemployment (Brief Holiday)</field>
-        <field name="name@nl">Klein verlet (korte vakantie)</field>
-        <field name="name@fr">Petit chômage</field>
-        <field name="name@de">Sonderurlaub (kurz)</field>
         <field name="code">LEAVE205</field>   <!-- YTI: 1 as it is paid, would be 70 otherwise -->
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -216,8 +205,6 @@
 
     <record id="l10n_be_work_entry_type_economic_unemployment" model="hr.work.entry.type">
         <field name="name">Economic Unemployment</field>
-        <field name="name@nl">Economische werkloosheid</field>
-        <field name="name@fr">Chômage économique</field>
         <field name="code">LEAVE6665</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -225,8 +212,6 @@
 
     <record id="l10n_be_work_entry_type_corona" model="hr.work.entry.type">
         <field name="name">Corona Unemployment</field>
-        <field name="name@nl">Corona werkloosheid</field>
-        <field name="name@fr">Chômage Corona</field>
         <field name="code">LEAVE6666</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -234,9 +219,6 @@
 
     <record id="l10n_be_work_entry_type_maternity" model="hr.work.entry.type">
         <field name="name">Maternity Time Off</field>
-        <field name="name@nl">Moederschapsverlof</field>
-        <field name="name@fr">Congé maternité</field>
-        <field name="name@de">Mutterschaftsurlaub</field>
         <field name="code">LEAVE210</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -244,9 +226,6 @@
 
     <record id="l10n_be_work_entry_type_paternity_company" model="hr.work.entry.type">
         <field name="name">Paternity Time Off (Paid by Company)</field>
-        <field name="name@nl">Vaderschapsverlof (betaald door bedrijf)</field>
-        <field name="name@fr">Congé de paternité (Payé par la société)</field>
-        <field name="name@de">Vaterschaftsfreizeit (bezahlt durch Unternehmen)</field>
         <field name="code">LEAVE220</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -254,9 +233,6 @@
 
     <record id="l10n_be_work_entry_type_paternity_legal" model="hr.work.entry.type">
         <field name="name">Paternity Time Off (Legal)</field>
-        <field name="name@nl">Vaderschapsverlof (wettelijk)</field>
-        <field name="name@fr">Congé de paternité (Légal)</field>
-        <field name="name@de">Vaterschaftsfreizeit (Legal)</field>
         <field name="code">LEAVE230</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -264,9 +240,6 @@
 
     <record id="l10n_be_work_entry_type_unpredictable" model="hr.work.entry.type">
         <field name="name">Unpredictable Reason</field>
-        <field name="name@nl">Onvoorspelbare reden</field>
-        <field name="name@fr">Raison impérieuse</field>
-        <field name="name@de">Unvorhersehbarer Grund</field>
         <field name="code">LEAVE250</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -274,9 +247,6 @@
 
     <record id="l10n_be_work_entry_type_training" model="hr.work.entry.type">
         <field name="name">Training</field>
-        <field name="name@nl">Opleiding</field>
-        <field name="name@fr">Formation</field>
-        <field name="name@de">Ausbildung</field>
         <field name="code">LEAVE265</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -284,8 +254,6 @@
 
     <record id="l10n_be_work_entry_type_training_time_off" model="hr.work.entry.type">
         <field name="name">Educational Time Off</field>
-        <field name="name@nl">Educatief verlof</field>
-        <field name="name@fr">Congé éducation</field>
         <field name="code">LEAVE260</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -293,8 +261,6 @@
 
     <record id="l10n_be_work_entry_type_flemish_training_time_off" model="hr.work.entry.type">
         <field name="name">Flemish Educational Time Off</field>
-        <field name="name@nl">Vlaams educatief verlof</field>
-        <field name="name@fr">Congé éducation flamand</field>
         <field name="code">LEAVE261</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -302,9 +268,6 @@
 
     <record id="l10n_be_work_entry_type_long_sick" model="hr.work.entry.type">
         <field name="name">Long Term Sick</field>
-        <field name="name@nl">Langdurig ziek</field>
-        <field name="name@fr">Maladie de longue durée</field>
-        <field name="name@de">Langfristig krank</field>
         <field name="code">LEAVE280</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -312,9 +275,6 @@
 
     <record id="l10n_be_work_entry_type_breast_feeding" model="hr.work.entry.type">
         <field name="name">Breastfeeding Break</field>
-        <field name="name@nl">Borstvoedingspauze</field>
-        <field name="name@fr">Congé allaitement</field>
-        <field name="name@de">Stillpause</field>
         <field name="code">LEAVE290</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -322,9 +282,6 @@
 
     <record id="l10n_be_work_entry_type_medical_assistance" model="hr.work.entry.type">
         <field name="name">Medical Assistance</field>
-        <field name="name@nl">Medische hulp</field>
-        <field name="name@fr">Assistance médicale</field>
-        <field name="name@de">Medizinische Hilfe</field>
         <field name="code">MEDIC01</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -332,9 +289,6 @@
 
     <record id="l10n_be_work_entry_type_youth_time_off" model="hr.work.entry.type">
         <field name="name">Youth Time Off</field>
-        <field name="name@nl">Jeugdverlof</field>
-        <field name="name@fr">Vacances jeunes</field>
-        <field name="name@de">Youth Time Off</field>
         <field name="code">YOUNG01</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -342,9 +296,6 @@
 
     <record id="l10n_be_work_entry_type_recovery_additional" model="hr.work.entry.type">
         <field name="name">Recovery Additional Time</field>
-        <field name="name@nl">Recuperatie extra tijd</field>
-        <field name="name@fr">Temps de récupération supplémentaire</field>
-        <field name="name@de">Wiederherstellung Zusätzliche Zeit</field>
         <field name="code">LEAVE295</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -352,9 +303,6 @@
 
     <record id="l10n_be_work_entry_type_additional_paid" model="hr.work.entry.type">
         <field name="name">Additional Time (Paid)</field>
-        <field name="name@nl">Extra tijd (betaald)</field>
-        <field name="name@fr">Temps supplémentaire (payé)</field>
-        <field name="name@de">Zusätzliche Zeit (bezahlt)</field>
         <field name="code">LEAVE297</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -362,9 +310,6 @@
 
     <record id="l10n_be_work_entry_type_notice" model="hr.work.entry.type">
         <field name="name">Notice (Unprovided)</field>
-        <field name="name@nl">Opzeg (Niet opgegeven)</field>
-        <field name="name@fr">Préavis (non fourni)</field>
-        <field name="name@de">Hinweis (nicht bereitgestellt)</field>
         <field name="code">LEAVE211</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -372,9 +317,6 @@
 
     <record id="l10n_be_work_entry_type_phc" model="hr.work.entry.type">
         <field name="name">Public Holiday Compensation</field>
-        <field name="name@nl">Compensatie feestdag</field>
-        <field name="name@fr">Récupération de jour férié</field>
-        <field name="name@de">Ausgleich Gesetzlicher Feiertage</field>
         <field name="code">PHC1</field>
         <field name="color">3</field>
         <field name="country_id" ref="base.be"/>
@@ -382,9 +324,6 @@
 
     <record id="l10n_be_work_entry_type_extra_legal" model="hr.work.entry.type">
         <field name="name">Extra Legal Time Off</field>
-        <field name="name@nl">Extra wettelijk verlof</field>
-        <field name="name@fr">Congé extra-légal</field>
-        <field name="name@de">Zusätzliche gesetzliche Abwesenheit</field>
         <field name="code">LEAVE213</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -392,9 +331,6 @@
 
     <record id="l10n_be_work_entry_type_part_sick" model="hr.work.entry.type">
         <field name="name">Sick Time Off (Without Guaranteed Salary)</field>
-        <field name="name@nl">Ziekteverlof (zonder salarisgarantie)</field>
-        <field name="name@fr">Congé maladie (Sans salaire garanti)</field>
-        <field name="name@de">Krankheitsbedingte Fehlzeiten (ohne Gehaltsgarantie)</field>
         <field name="code">LEAVE214</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -402,9 +338,6 @@
 
     <record id="l10n_be_work_entry_type_recovery" model="hr.work.entry.type">
         <field name="name">Recovery Bank Holiday</field>
-        <field name="name@nl">Recuperatie feestdag</field>
-        <field name="name@fr">Récupération de jour férié</field>
-        <field name="name@de">Erholungsbank Holiday</field>
         <field name="code">LEAVE215</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -412,9 +345,6 @@
 
     <record id="l10n_be_work_entry_type_european" model="hr.work.entry.type">
         <field name="name">European Time Off</field>
-        <field name="name@nl">Europees verlof</field>
-        <field name="name@fr">Congé européen</field>
-        <field name="name@de">Europäische Abwesenheit</field>
         <field name="code">LEAVE216</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -422,9 +352,6 @@
 
     <record id="l10n_be_work_entry_type_credit_time" model="hr.work.entry.type">
         <field name="name">Credit Time</field>
-        <field name="name@nl">Tijdskrediet</field>
-        <field name="name@fr">Crédit-temps</field>
-        <field name="name@de">Kreditzeit</field>
         <field name="code">LEAVE300</field>
         <field name="color">8</field>
         <field name="country_id" ref="base.be"/>
@@ -432,9 +359,6 @@
 
     <record id="l10n_be_work_entry_type_parental_time_off" model="hr.work.entry.type">
         <field name="name">Parental Time Off</field>
-        <field name="name@nl">Ouderschapsverlof</field>
-        <field name="name@fr">Congé parental</field>
-        <field name="name@de">Elternzeit</field>
         <field name="code">LEAVE301</field>
         <field name="color">8</field>
         <field name="country_id" ref="base.be"/>
@@ -442,9 +366,6 @@
 
     <record id="l10n_be_work_entry_type_simple_holiday_pay_variable_salary" model="hr.work.entry.type">
         <field name="name">Simple Holiday Pay - Variable Salary</field>
-        <field name="name@nl">Enkel vakantiegeld - Variabel loon</field>
-        <field name="name@fr">Simple pécule de vacances - Salaire variable</field>
-        <field name="name@de">Einfaches Urlaubsgeld - variables Gehalt</field>
         <field name="code">LEAVE1731</field>
         <field name="color">3</field>
         <field name="country_id" ref="base.be"/>
@@ -452,8 +373,6 @@
 
     <record id="l10n_be_work_entry_type_work_accident" model="hr.work.entry.type">
         <field name="name">Work Accident</field>
-        <field name="name@nl">Werkongeval</field>
-        <field name="name@fr">Accident de travail</field>
         <field name="code">LEAVE115</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -461,8 +380,6 @@
 
     <record id="l10n_be_work_entry_type_partial_incapacity" model="hr.work.entry.type">
         <field name="name">Partial Incapacity (due to illness)</field>
-        <field name="name@nl">Gedeeltelijke arbeidsongeschiktheid (wegens ziekte)</field>
-        <field name="name@fr">Incapacité partielle (pour cause de maladie)</field>
         <field name="code">LEAVE281</field>
         <field name="color">4</field>
         <field name="country_id" ref="base.be"/>
@@ -470,8 +387,6 @@
 
     <record id="l10n_be_work_entry_type_strike" model="hr.work.entry.type">
         <field name="name">Strike</field>
-        <field name="name@nl">Staking</field>
-        <field name="name@fr">Grève</field>
         <field name="code">LEAVE251</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
@@ -487,7 +402,6 @@
 <!-- CH : Switzerland -->
     <record id="l10n_ch_work_entry_type_bank_holiday" model="hr.work.entry.type">
         <field name="name">Public Holiday</field>
-        <field name="name@fr">Jour férié</field>
         <field name="code">CHPUBHOL</field>
         <field name="color">3</field>
         <field name="country_id" ref="base.ch"/>
@@ -722,7 +636,6 @@
 <!-- LU : Luxemburg -->
     <record id="l10n_lu_work_entry_type_situational_unemployment" model="hr.work.entry.type">
         <field name="name">Situational Unemployment</field>
-        <field name="name@fr">Chômage conjoncturel</field>
         <field name="color">5</field>
         <field name="code">LEAVE400</field>
         <field name="country_id" ref="base.lu"/>
