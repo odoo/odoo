@@ -156,7 +156,9 @@ export class ThemeTabPlugin extends Plugin {
     }
     getActions() {
         return {
-            customizeGray: {
+            customizeGray: this.dependencies.customizeWebsite.withHistoryFromLoad({
+                getValue: ({ param: { mainParam: grayParamName } }) =>
+                    this.grayParams[grayParamName],
                 load: async ({ param: { mainParam: grayParamName }, value }) => {
                     // Gray parameters are used *on the JS side* to compute the grays that
                     // will be saved in the database. We indeed need those grays to be
@@ -177,10 +179,7 @@ export class ThemeTabPlugin extends Plugin {
                         colorType: "gray",
                     });
                 },
-                apply: () => this.dependencies.customizeWebsite.stuffHappened(),
-                getValue: ({ param: { mainParam: grayParamName } }) =>
-                    this.grayParams[grayParamName],
-            },
+            }),
         };
     }
     buildGray(id) {
