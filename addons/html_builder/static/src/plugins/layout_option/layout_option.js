@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { AddElementOption } from "./add_element_option";
 import { SelectNumberColumn } from "./select_number_column";
-import { SpacingOption } from "./spacing_option_plugin";
+import { SpacingOption } from "./spacing_option";
 
 export class LayoutOption extends BaseOptionComponent {
     static template = "html_builder.LayoutOption";
