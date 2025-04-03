@@ -608,7 +608,6 @@ test(`check the avatar of the attendee in the calendar filter panel`, async () =
     CalendarPartner._views = {
         list: `<list><field name="name"/></list>`,
         kanban: `<kanban><templates><t name="card"><field name="name"/></t></templates></kanban>`,
-        search: `<search/>`,
     };
     CalendarPartner._records.push(
         { id: 5, name: "foo partner 5" },
@@ -653,7 +652,6 @@ test.tags("desktop");
 test(`Select multiple attendees in the calendar filter panel autocomplete on desktop`, async () => {
     CalendarPartner._views = {
         list: `<list><field name="name"/></list>`,
-        search: `<search/>`,
     };
     CalendarPartner._records.push(
         { id: 5, name: "foo partner 5" },
@@ -720,7 +718,6 @@ test.tags("desktop");
 test(`add a filter with the search more dialog on desktop`, async () => {
     CalendarPartner._views = {
         list: `<list><field name="name"/></list>`,
-        search: `<search/>`,
     };
     CalendarPartner._records.push(
         { id: 5, name: "foo partner 5" },
@@ -890,7 +887,6 @@ test.tags("desktop");
 test(`add a filter with the search more dialog (field with a context)`, async () => {
     CalendarPartner._views = {
         list: `<list><field name="name"/></list>`,
-        search: `<search/>`,
     };
     CalendarPartner._records.push(
         { id: 5, name: "foo partner 5" },
@@ -936,7 +932,6 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     CalendarPartner._views = {
         list: `<list><field name="name"/></list>`,
         kanban: `<kanban><templates><t t-name="card"><field class="o_data_row" name="name"/></t></templates></kanban>`,
-        search: `<search/>`,
     };
     CalendarPartner._records.push(
         { id: 5, name: "foo partner 5" },
@@ -3169,7 +3164,6 @@ test(`Update event with filters on mobile`, async () => {
     CalendarUsers._records.push({ id: 5, name: "user 5", partner_id: 3 });
     CalendarUsers._views = {
         kanban: `<kanban><templates><t t-name="card"><field name="name"/></t></templates></kanban>`,
-        search: `<search/>`,
     };
     Event._views = {
         form: `
@@ -3960,7 +3954,6 @@ test(`fullcalendar initializes with right locale`, async () => {
 test(`initial_date given in the context`, async () => {
     Event._views = {
         "calendar,1": `<calendar date_start="start" date_stop="stop" mode="day"/>`,
-        search: `<search/>`,
     };
 
     defineActions([
@@ -5189,7 +5182,6 @@ test("sample data are not removed when switching back from calendar view", async
                 <field name="stop"/>
             </list>
         `,
-        search: `<search/>`,
     };
 
     defineActions([
@@ -5225,7 +5217,7 @@ test(`Scale: scale default is fetched from localStorage`, async () => {
             }
         },
         setItem(key, value) {
-            if (key === "scaleOf-viewId-123456789") {
+            if (key === "scaleOf-viewId-19") {
                 expect.step(`scale_${value}`);
             }
         },
@@ -5235,6 +5227,7 @@ test(`Scale: scale default is fetched from localStorage`, async () => {
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" mode="month"/>`,
+        viewId: 19,
     });
     expect.verifySteps(["scale_week"]);
     expect(`.scale_button_selection`).toHaveText("Week");
@@ -5282,7 +5275,6 @@ test("save selected date during view switching", async () => {
                 <field name="stop"/>
             </list>
         `,
-        search: `<search />`,
     };
 
     await mountWithCleanup(WebClient);

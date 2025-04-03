@@ -47,7 +47,7 @@ class Partner extends models.Model {
         { id: 5, display_name: "Fifth record", o2m: [] },
     ];
     _views = {
-        "form,false": `
+        form: `
             <form>
                 <header>
                     <button name="object" string="Call method" type="object"/>
@@ -65,9 +65,8 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
-        "list,false": `<list><field name="display_name"/></list>`,
+        list: `<list><field name="display_name"/></list>`,
         "list,2": `<list limit="3"><field name="display_name"/></list>`,
-        "search,false": `<search/>`,
     };
 }
 
@@ -80,9 +79,8 @@ class Pony extends models.Model {
         { id: 9, name: "Fluttershy" },
     ];
     _views = {
-        "list,false": '<list><field name="name"/></list>',
-        "form,false": `<form><field name="name"/></form>`,
-        "search,false": `<search/>`,
+        list: '<list><field name="name"/></list>',
+        form: `<form><field name="name"/></form>`,
     };
 }
 
@@ -510,7 +508,7 @@ test("stores and restores scroll position (in list)", async () => {
 
 test.tags("desktop");
 test('executing an action with target != "new" closes all dialogs', async () => {
-    Partner._views["form,false"] = `
+    Partner._views["form"] = `
         <form>
             <field name="o2m">
                 <list><field name="display_name"/></list>
@@ -531,7 +529,7 @@ test('executing an action with target != "new" closes all dialogs', async () => 
 
 test.tags("desktop");
 test('executing an action with target "new" does not close dialogs', async () => {
-    Partner._views["form,false"] = `
+    Partner._views["form"] = `
         <form>
             <field name="o2m">
                 <list><field name="display_name"/></list>
@@ -552,8 +550,6 @@ test('executing an action with target "new" does not close dialogs', async () =>
 test.tags("desktop");
 test("search defaults are removed from context when switching view", async () => {
     expect.assertions(1);
-    Partner._views["pivot,false"] = `<pivot/>`;
-    Partner._views["list,false"] = `<list/>`;
     const context = {
         search_default_x: true,
         searchpanel_default_y: true,

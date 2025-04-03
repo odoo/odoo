@@ -32,13 +32,13 @@ class Partner extends models.Model {
         { id: 5, display_name: "Fifth record" },
     ];
     _views = {
-        "form,false": `
+        form: /* xml */ `
             <form>
                 <group>
                     <field name="display_name"/>
                 </group>
             </form>`,
-        "kanban,false": `
+        kanban: /* xml */ `
             <kanban>
                 <templates>
                     <t t-name="card">
@@ -46,7 +46,6 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
-        "search,false": `<search></search>`,
     };
 }
 

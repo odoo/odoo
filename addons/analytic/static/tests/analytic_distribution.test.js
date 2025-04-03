@@ -1,3 +1,5 @@
+import { expect, test } from "@odoo/hoot";
+import { animationFrame, edit, getActiveElement, press } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -6,8 +8,6 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { animationFrame, edit, getActiveElement, press } from "@odoo/hoot-dom";
 import { defineAnalyticModels } from "./analytic_test_helpers";
 
 defineAnalyticModels();
@@ -15,8 +15,8 @@ defineAnalyticModels();
 class AccountAnalyticAccount extends models.Model {
     _name = "account.analytic.account";
     name = fields.Char({ string: "Name" });
-    plan_id = fields.Many2one({ string: "Plan", relation: "plan" });
-    root_plan_id = fields.Many2one({ string: "Root Plan", relation: "plan" });
+    plan_id = fields.Many2one({ string: "Plan", relation: "account.analytic.plan" });
+    root_plan_id = fields.Many2one({ string: "Root Plan", relation: "account.analytic.plan" });
     color = fields.Integer({ string: "Color" });
     code = fields.Char({ string: "Ref" });
     partner_id = fields.Many2one({ string: "Partner", relation: "partner" });
@@ -53,6 +53,7 @@ class AccountAnalyticAccount extends models.Model {
 }
 
 class Plan extends models.Model {
+    _name = "account.analytic.plan";
     name = fields.Char();
     applicability = fields.Selection({
         string: "Applicability",
@@ -64,7 +65,7 @@ class Plan extends models.Model {
     });
     color = fields.Integer({ string: "Color" });
     all_account_count = fields.Integer();
-    parent_id = fields.Many2one({ relation: "plan" });
+    parent_id = fields.Many2one({ relation: "account.analytic.plan" });
     _records = [
         { id: 1, name: "Internal", applicability: "optional", all_account_count: 2 },
         { id: 2, name: "Departments", applicability: "mandatory", all_account_count: 3 },
@@ -112,12 +113,8 @@ defineModels([Aml, AccountAnalyticAccount, Move, Plan]);
 
 test.tags("desktop");
 test("analytic field in form view basic features", async () => {
-    onRpc("account.analytic.plan", "get_relevant_plans", function (args) {
-        return Promise.resolve(
-            this.env["plan"]._records.filter(
-                (r) => !r.parent_id && r.applicability !== "unavailable"
-            )
-        );
+    onRpc("account.analytic.plan", "get_relevant_plans", function ({ model }) {
+        return this.env[model].filter((r) => !r.parent_id && r.applicability !== "unavailable");
     });
     await mountView({
         type: "form",
@@ -196,16 +193,18 @@ test("analytic field in form view basic features", async () => {
 
 test.tags("desktop");
 test("analytic field in multi_edit list view + search more", async () => {
-    onRpc("account.analytic.plan", "get_relevant_plans", function (args) {
-        return Promise.resolve(
-            this.env["plan"]._records
-                .filter((r) => !r.parent_id && r.applicability !== "unavailable")
-                .map((r) => ({ ...r, applicability: "optional" }))
-        );
+    onRpc("account.analytic.plan", "get_relevant_plans", function ({ model, kwargs }) {
+        return this.env[model]
+            .filter((r) => !r.parent_id && r.applicability !== "unavailable")
+            .map((r) => ({ ...r, applicability: kwargs.applicability }));
     });
-    onRpc("account.analytic.account", "web_search_read", () => ({
-        records: AccountAnalyticAccount._records.filter((record) => record.root_plan_id === 5),
-    }));
+    onRpc("account.analytic.account", "web_search_read", function ({ model, kwargs }) {
+        const records = this.env[model]._filter(kwargs.domain);
+        return {
+            length: records.length,
+            records,
+        };
+    });
     await mountView({
         type: "list",
         resModel: "aml",
@@ -250,11 +249,9 @@ test("analytic field in multi_edit list view + search more", async () => {
 
 test.tags("desktop");
 test("Rounding, value suggestions, keyboard only", async () => {
-    onRpc("account.analytic.plan", "get_relevant_plans", function () {
-        return Promise.resolve(
-            this.env["plan"]._records.filter(
-                (r) => !r.parent_id && r.applicability !== "unavailable" && r.all_account_count
-            )
+    onRpc("account.analytic.plan", "get_relevant_plans", function ({ model }) {
+        return this.env[model].filter(
+            (r) => !r.parent_id && r.applicability !== "unavailable" && r.all_account_count
         );
     });
     await mountView({

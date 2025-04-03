@@ -34,8 +34,8 @@ export function getMenuServerData() {
             res_model: "ir.ui.menu",
             type: "ir.actions.act_window",
             views: [
-                [1, "list"],
-                [2, "form"],
+                [false, "list"],
+                [false, "form"],
             ],
         },
         action2: {

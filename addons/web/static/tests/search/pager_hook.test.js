@@ -13,11 +13,8 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { usePager } from "@web/search/pager_hook";
 import { animationFrame } from "@odoo/hoot-mock";
 
-class Foo extends models.Model {
-    _views = {
-        search: `<search/>`,
-    };
-}
+class Foo extends models.Model {}
+
 defineModels([Foo]);
 
 test("pager is correctly displayed", async () => {

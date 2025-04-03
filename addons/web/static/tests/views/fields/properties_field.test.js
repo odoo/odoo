@@ -1145,7 +1145,6 @@ test("properties: many2one 'Search more...'", async () => {
             <field name="id"/>
             <field name="display_name"/>
         </list>`;
-    User._views[["search", false]] = /* xml */ `<search/>`;
 
     // Patch the Many2XAutocomplete default search limit options
     patchWithCleanup(Many2XAutocomplete.defaultProps, {
@@ -1649,7 +1648,6 @@ test("properties: kanban view without properties", async () => {
  */
 test.tags("desktop");
 test("properties: switch view on desktop", async () => {
-    Partner._views[["search", false]] = /* xml */ `<search/>`;
     Partner._views[["kanban", 99]] = /* xml */ `<kanban>
                 <templates>
                     <t t-name="card">
@@ -1683,7 +1681,6 @@ test("properties: switch view on desktop", async () => {
 
 test.tags("mobile");
 test("properties: switch view on mobile", async () => {
-    Partner._views[["search", false]] = /* xml */ `<search/>`;
     Partner._views[["kanban", 99]] = /* xml */ `<kanban>
                 <templates>
                     <t t-name="card">

@@ -1,6 +1,6 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, queryAll, queryOne } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-dom";
 import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
 class Survey extends models.Model {
@@ -35,8 +35,6 @@ class SurveyQuestion extends models.Model {
             id: 1,
             sequence: 1,
             title: "Question 1",
-            triggering_question_ids: null,
-            triggering_answer_ids: null,
         },
         {
             id: 2,
@@ -47,7 +45,7 @@ class SurveyQuestion extends models.Model {
         },
     ];
     _views = {
-        "form,false": `
+        form: /* xml */ `
             <form>
                 <group>
                     <field name="title"/>
@@ -95,40 +93,35 @@ test("dynamic rendering of surveyQuestionTriggerError rows", async () => {
         `,
     });
 
+    const firstDataRow = ".o_data_row:eq(0)";
+    const secondDataRow = ".o_data_row:eq(1)";
+    const q1TriggerDiv = `${firstDataRow} td.o_data_cell div.o_widget_survey_question_trigger`;
+    const q2TriggerDiv = `${secondDataRow} td.o_data_cell div.o_widget_survey_question_trigger`;
+
     expect(".o_field_x2many .o_list_renderer table.o_list_table").toHaveCount(1);
     expect(".o_data_row").toHaveCount(2);
-    let rows = queryAll(".o_data_row");
 
-    expect(rows[0]).toHaveText("Question 1");
-    expect(
-        ".o_data_row:eq(0) td.o_data_cell div.o_widget_survey_question_trigger button"
-    ).toHaveCount(0);
+    expect(firstDataRow).toHaveText("Question 1");
+    expect(`${q1TriggerDiv} button`).toHaveCount(0);
 
-    expect(rows[1]).toHaveText("Question 2");
-    let q2TriggerDiv = queryOne("td.o_data_cell div.o_widget_survey_question_trigger", {
-        root: rows[1],
-    });
-    expect(queryAll("button", { root: q2TriggerDiv })).toHaveCount(1);
+    expect(secondDataRow).toHaveText("Question 2");
+    expect(`${q2TriggerDiv} button`).toHaveCount(1);
     // Question 2 is correctly placed after Question 1
-    let triggerIcon = queryOne("button i", { root: q2TriggerDiv });
-    expect(triggerIcon).not.toHaveClass("text-warning");
-    expect(triggerIcon).toHaveAttribute("data-tooltip", 'Displayed if "Question 1: Answer 1".', {
-        message: "Trigger tooltip should be 'Displayed if \"Question 1: Answer 1\".'.",
-    });
+    expect(`${q2TriggerDiv} button i`).not.toHaveClass("text-warning");
+    expect(`${q2TriggerDiv} button i`).toHaveAttribute(
+        "data-tooltip",
+        'Displayed if "Question 1: Answer 1".',
+        { message: "Trigger tooltip should be 'Displayed if \"Question 1: Answer 1\".'." }
+    );
 
     // drag and drop Question 2 (triggered) before Question 1 (trigger)
     await contains("tbody tr:nth-child(2) .o_handle_cell").dragAndDrop("tbody tr:nth-child(1)");
     await animationFrame();
-    rows = queryAll(".o_data_row");
 
-    expect(rows[0]).toHaveText("Question 2");
-    q2TriggerDiv = queryOne("td.o_data_cell div.o_widget_survey_question_trigger", {
-        root: rows[0],
-    });
-    expect(queryAll("button", { root: q2TriggerDiv })).toHaveCount(1);
-    triggerIcon = queryOne("button i", { root: q2TriggerDiv });
-    expect(triggerIcon).toHaveClass("text-warning");
-    expect(triggerIcon).toHaveAttribute(
+    expect(firstDataRow).toHaveText("Question 2");
+    expect(`${q1TriggerDiv} button`).toHaveCount(1);
+    expect(`${q1TriggerDiv} button i`).toHaveClass("text-warning");
+    expect(`${q1TriggerDiv} button i`).toHaveAttribute(
         "data-tooltip",
         '⚠ Triggers based on the following questions will not work because they are positioned after this question:\n"Question 1".',
         { message: "Trigger tooltip should have been changed to misplacement error message." }
@@ -138,13 +131,11 @@ test("dynamic rendering of surveyQuestionTriggerError rows", async () => {
     await contains("tbody tr:nth-child(2) .o_handle_cell").dragAndDrop("tbody tr:nth-child(1)");
     await animationFrame();
 
-    rows = queryAll(".o_data_row");
-
-    expect(rows[1]).toHaveText("Question 2");
-    expect(
-        queryOne("td.o_data_cell div.o_widget_survey_question_trigger button i", { root: rows[1] })
-    ).not.toHaveClass("text-warning");
-    expect(triggerIcon).toHaveAttribute("data-tooltip", 'Displayed if "Question 1: Answer 1".', {
-        message: "Trigger tooltip should be back to 'Displayed if \"Question 1: Answer 1\".'.",
-    });
+    expect(".o_data_row:eq(1)").toHaveText("Question 2");
+    expect(`${q2TriggerDiv} button i`).not.toHaveClass("text-warning");
+    expect(`${q2TriggerDiv} button i`).toHaveAttribute(
+        "data-tooltip",
+        'Displayed if "Question 1: Answer 1".',
+        { message: "Trigger tooltip should be back to 'Displayed if \"Question 1: Answer 1\".'." }
+    );
 });

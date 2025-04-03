@@ -618,7 +618,6 @@ describe("board_desktop", () => {
     });
 
     test("pivot view with property in pivot_column_groupby", async function () {
-        Partner._views["pivot,false"] = `<pivot/>`;
         Partner._fields.properties_definition = fields.PropertiesDefinition();
         Partner._fields.properties_definition = fields.PropertiesDefinition();
         Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
@@ -633,7 +632,10 @@ describe("board_desktop", () => {
         onRpc(({ method, kwargs }) => {
             if (method === "get_property_definition") {
                 return {};
-            } else if (method === "formatted_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+            } else if (
+                method === "formatted_read_group" &&
+                kwargs.groupby?.includes("properties.my_char")
+            ) {
                 return [
                     {
                         "properties.my_char": false,

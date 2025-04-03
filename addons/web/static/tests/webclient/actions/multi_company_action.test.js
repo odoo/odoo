@@ -31,7 +31,6 @@ class Partner extends models.Model {
                 </group>
             </form>
         `,
-        search: `<search></search>`,
     };
 }
 
@@ -140,7 +139,11 @@ test("form view in dialog shows wrong company error", async () => {
         });
     });
     onRpc("has_group", () => true);
-    Partner._views["list,false"] = `<list><field name="display_name"/></list>`;
+    Partner._views.list = /* xml */ `
+        <list>
+            <field name="display_name" />
+        </list>
+    `;
 
     await mountWebClient();
 

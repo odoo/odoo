@@ -20,7 +20,7 @@ class Partner extends models.Model {
         { id: 2, display_name: "Second record" },
     ];
     _views = {
-        "form,false": `
+        form: `
         <form>
             <header>
                 <button name="object" string="Call method" type="object"/>
@@ -38,7 +38,6 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
-        "search,false": `<search/>`,
     };
 }
 

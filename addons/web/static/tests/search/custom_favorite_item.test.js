@@ -28,10 +28,6 @@ class Foo extends models.Model {
     date_field = fields.Date();
     float_field = fields.Float();
     foo = fields.Char();
-
-    _views = {
-        search: `<search/>`,
-    };
 }
 
 class Partner extends models.Model {}
