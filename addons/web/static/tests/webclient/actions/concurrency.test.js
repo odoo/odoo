@@ -40,7 +40,7 @@ class Partner extends models.Model {
         { id: 2, display_name: "Second record" },
     ];
     _views = {
-        "form,false": `
+        form: /* xml */ `
             <form>
                 <header>
                     <button name="object" string="Call method" type="object"/>
@@ -48,17 +48,22 @@ class Partner extends models.Model {
                 <group>
                     <field name="display_name"/>
                 </group>
-            </form>`,
-        "kanban,1": `
+            </form>
+        `,
+        "kanban,1": /* xml */ `
             <kanban>
                 <templates>
                     <t t-name="card">
                         <field name="display_name"/>
                     </t>
                 </templates>
-            </kanban>`,
-        "list,false": `<list><field name="display_name"/></list>`,
-        "search,false": `<search/>`,
+            </kanban>
+        `,
+        "list,2": /* xml */ `
+            <list>
+                <field name="display_name" />
+            </list>
+        `,
     };
 }
 
@@ -71,9 +76,8 @@ class Pony extends models.Model {
         { id: 9, name: "Fluttershy" },
     ];
     _views = {
-        "list,false": `<list><field name="name"/></list>`,
-        "form,false": `<form><field name="name"/></form>`,
-        "search,false": `<search/>`,
+        list: `<list><field name="name"/></list>`,
+        form: `<form><field name="name"/></form>`,
     };
 }
 
@@ -683,9 +687,9 @@ test("local state, global state, and race conditions", async () => {
         toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
     });
     Partner._views = {
-        "toy,false": `<toy/>`,
-        "list,false": `<list><field name="display_name"/></list>`,
-        "search,false": `<search><filter name="display_name" string="Foo" domain="[]"/></search>`,
+        toy: `<toy/>`,
+        list: `<list><field name="display_name"/></list>`,
+        search: `<search><filter name="display_name" string="Foo" domain="[]"/></search>`,
     };
 
     let def = Promise.resolve();

@@ -22,7 +22,7 @@ defineMailModels();
 describe.current.tags("desktop");
 
 beforeEach(() => {
-    ResPartner._views["form,false"] = `
+    ResPartner._views.form = /* xml */ `
         <form>
             <field name="name"/>
             <field name="email"/>
