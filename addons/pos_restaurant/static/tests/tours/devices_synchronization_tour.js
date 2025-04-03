@@ -63,6 +63,7 @@ registry.category("web_tour.tours").add("test_devices_synchronization", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
@@ -70,6 +71,7 @@ registry.category("web_tour.tours").add("test_devices_synchronization", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
 
             // product_screen

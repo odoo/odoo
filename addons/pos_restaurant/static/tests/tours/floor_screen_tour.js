@@ -176,6 +176,7 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
             Utils.negateStep(FloorScreen.isChildTable("5")),
 

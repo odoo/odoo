@@ -137,6 +137,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order
@@ -145,6 +146,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             ProductScreen.clickPayButton(true),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
             // Check if there is no more order to continue
             ReceiptScreen.clickNextOrder(),
         ].flat(),
@@ -194,6 +196,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
             ...ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order
@@ -235,6 +238,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
 
             // Add products in order
@@ -252,6 +256,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickContinueOrder(),
 
             // Check if redirect to split bill screen of original order
@@ -260,6 +265,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
