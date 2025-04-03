@@ -21,6 +21,17 @@ export class BuilderOptionsPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         post_undo_handlers: this.restoreContainer.bind(this),
         post_redo_handlers: this.restoreContainer.bind(this),
+        // Resources definitions:
+        remove_disabled_reason_providers: [
+            // ({ el, reasons }) => {
+            //     reasons.push(`I hate ${el.dataset.name}`);
+            // }
+        ],
+        clone_disabled_reason_providers: [
+            // ({ el, reasons }) => {
+            //     reasons.push(`I hate ${el.dataset.name}`);
+            // }
+        ],
     };
 
     setup() {
@@ -144,7 +155,9 @@ export class BuilderOptionsPlugin extends Plugin {
                 headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
                 hasOverlayOptions: this.hasOverlayOptions(element),
                 isRemovable: isRemovable(element),
+                removeDisabledReason: this.getRemoveDisabledReason(element),
                 isClonable: isClonable(element),
+                cloneDisabledReason: this.getCloneDisabledReason(element),
                 optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
             }));
     }
@@ -199,6 +212,16 @@ export class BuilderOptionsPlugin extends Plugin {
         if (revertedStep && revertedStep.extraStepInfos.optionSelection) {
             this.updateContainers(revertedStep.extraStepInfos.optionSelection);
         }
+    }
+    getRemoveDisabledReason(el) {
+        const reasons = [];
+        this.dispatchTo("remove_disabled_reason_providers", { el, reasons });
+        return reasons.length ? reasons.join(" ") : undefined;
+    }
+    getCloneDisabledReason(el) {
+        const reasons = [];
+        this.dispatchTo("clone_disabled_reason_providers", { el, reasons });
+        return reasons.length ? reasons.join(" ") : undefined;
     }
 }
 

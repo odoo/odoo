@@ -23,7 +23,9 @@ export class OptionsContainer extends BaseOptionComponent {
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
+        removeDisabledReason: { type: String, optional: true },
         isClonable: false,
+        cloneDisabledReason: { type: String, optional: true },
         containerTopButtons: { type: Array },
         headerMiddleButtons: { type: Array, optional: true },
     };

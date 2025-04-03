@@ -25,17 +25,25 @@
                             t-att-title="button.title" t-att-aria-label="button.title"
                             t-on-click="() => button.handler(props.editingElement)"/>
                 </t>
-                <t t-if="props.isClonable">
-                    <button class="fa fa-fw fa-clone oe_snippet_clone o_we_link o_we_hover_success btn btn-outline-success border-0 px-0 me-1"
-                            title="Duplicate this block"
-                            aria-label="Duplicate this block"
-                            t-on-click="cloneElement"/>
+                <t t-if="props.isClonable || props.cloneDisabledReason">
+                    <!-- Disabled buttons do not display their title -->
+                    <span t-att-title="props.cloneDisabledReason" t-att-aria-label="props.cloneDisabledReason">
+	                    <button class="fa fa-fw fa-clone oe_snippet_clone o_we_link o_we_hover_success btn btn-outline-success border-0 px-0 me-1"
+	                            title="Duplicate this block"
+	                            aria-label="Duplicate this block"
+                                t-att-disabled="!!props.cloneDisabledReason"
+	                            t-on-click="cloneElement"/>
+	                </span>
                 </t>
-                <t t-if="props.isRemovable">
-                    <button class="fa fa-fw fa-trash oe_snippet_remove o_we_link o_we_hover_danger btn btn-outline-danger border-0 px-0 me-1 "
-                            title="Remove this block"
-                            aria-label="Remove this block"
-                            t-on-click="removeElement"/>
+                <t t-if="props.isRemovable || props.removeDisabledReason">
+                    <!-- Disabled buttons do not display their title -->
+                    <span t-att-title="props.removeDisabledReason" t-att-aria-label="props.removeDisabledReason">
+	                    <button class="fa fa-fw fa-trash oe_snippet_remove o_we_link o_we_hover_danger btn btn-outline-danger border-0 px-0 me-1 "
+	                            title="Remove this block"
+	                            aria-label="Remove this block"
+	                            t-att-disabled="!!props.removeDisabledReason"
+	                            t-on-click="removeElement"/>
+	                </span>
                 </t>
             </div>
         </div>
