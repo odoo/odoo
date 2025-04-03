@@ -132,9 +132,6 @@ class ExhibitorController(WebsiteEventController):
             raise Forbidden()
         sponsor = sponsor.sudo()
 
-        if 'widescreen' not in options and sponsor.chat_room_id and sponsor.is_in_opening_hours:
-            options['widescreen'] = True
-
         return request.render(
             "website_event_exhibitor.event_exhibitor_main",
             self._event_exhibitor_get_values(event, sponsor, **options)
