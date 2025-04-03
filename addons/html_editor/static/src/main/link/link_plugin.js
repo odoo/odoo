@@ -11,7 +11,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
-import { closestBlock, isBlock } from "@html_editor/utils/blocks";
+import { isBlock } from "@html_editor/utils/blocks";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -575,12 +575,14 @@ export class LinkPlugin extends Plugin {
 
                 // Handle selection movement.
                 if (isCursorAtStartOfLink || isCursorAtEndOfLink) {
-                    const block = closestBlock(linkElement);
-                    const linkIndex = [...block.childNodes].indexOf(linkElement);
+                    const [targetNode, targetOffset] = isCursorAtStartOfLink
+                        ? leftPos(linkElement)
+                        : rightPos(linkElement);
                     this.dependencies.selection.setSelection({
-                        anchorNode: block,
-                        anchorOffset: isCursorAtStartOfLink ? linkIndex - 1 : linkIndex + 2,
+                        anchorNode: targetNode,
+                        anchorOffset: isCursorAtStartOfLink ? targetOffset - 1 : targetOffset + 1,
                     });
+                    return;
                 }
             }
         }
