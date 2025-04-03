@@ -72,6 +72,10 @@ class _Relational(Field[M], typing.Generic[M]):
 
         return self.convert_to_record_multi(vals, records)
 
+    def _update_inverse(self, records: BaseModel, value: BaseModel):
+        """ Update the cached value of ``self`` for ``records`` with ``value``. """
+        raise NotImplementedError
+
     def convert_to_record_multi(self, values, records):
         """ Convert a list of (relational field) values from the cache format to
         the record format, for the sake of optimization.
@@ -268,11 +272,9 @@ class Many2one(_Relational[M]):
             model, self._module
         )
 
-    def _update(self, records, value):
-        """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        cache = records.env.cache
+    def _update_inverse(self, records, value):
         for record in records:
-            cache.set(record, self, self.convert_to_cache(value, record, validate=False))
+            self._cache_update(record, self.convert_to_cache(value, record, validate=False))
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return value or None
@@ -485,10 +487,31 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
     # including inactive records.  Inactive records are filtered out by
     # convert_to_record(), depending on the context.
 
-    def _update(self, records, value):
-        """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        records.env.cache.patch(records, self, value.id)
+    def _update_inverse(self, records, value):
+        new_id = value.id
+        assert not new_id, "Field._update_inverse can only be called with a new id"
+        field_cache = self._get_cache(records.env)
+        for record_id in records._ids:
+            assert not record_id, "Field._update_inverse can only be called with new records"
+            cache_value = field_cache.get(record_id, SENTINEL)
+            if cache_value is SENTINEL:
+                records.env.transaction.data_patches[self][record_id].append(new_id)
+            else:
+                field_cache[record_id] = tuple(unique(itertools.chain(cache_value, (new_id,))))
         records.modified([self.name])
+
+    def _cache_update(self, records, cache_value, dirty=False):
+        field_patches = records.env.transaction.data_patches.get(self)
+        if field_patches and records:
+            for record in records:
+                ids = field_patches.pop(record.id, ())
+                if ids:
+                    value = tuple(unique(itertools.chain(cache_value, ids)))
+                else:
+                    value = cache_value
+                super()._cache_update(record, value, dirty)
+            return value
+        return super()._cache_update(records, cache_value, dirty)
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
@@ -1603,14 +1626,14 @@ class PrefetchMany2one(Reversible):
         self.field = field
 
     def __iter__(self):
-        field_cache = self.field._cache_view(self.record.env)
+        field_cache = self.field._get_cache(self.record.env)
         return unique(
             coid for record_id in self.record._prefetch_ids
             if (coid := field_cache.get(record_id)) is not None
         )
 
     def __reversed__(self):
-        field_cache = self.field._cache_view(self.record.env)
+        field_cache = self.field._get_cache(self.record.env)
         return unique(
             coid for record_id in reversed(self.record._prefetch_ids)
             if (coid := field_cache.get(record_id)) is not None
@@ -1626,7 +1649,7 @@ class PrefetchX2many(Reversible):
         self.field = field
 
     def __iter__(self):
-        field_cache = self.field._cache_view(self.record.env)
+        field_cache = self.field._get_cache(self.record.env)
         return unique(
             coid
             for record_id in self.record._prefetch_ids
@@ -1634,7 +1657,7 @@ class PrefetchX2many(Reversible):
         )
 
     def __reversed__(self):
-        field_cache = self.field._cache_view(self.record.env)
+        field_cache = self.field._get_cache(self.record.env)
         return unique(
             coid
             for record_id in reversed(self.record._prefetch_ids)

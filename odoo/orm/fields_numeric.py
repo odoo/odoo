@@ -48,7 +48,7 @@ class Integer(Field[int]):
             return float(value)
         return value
 
-    def _update(self, records, value):
+    def _update_inverse(self, records: BaseModel, value: BaseModel):
         self._cache_update(records, value.id or 0)
 
     def convert_to_export(self, value, record):

@@ -750,27 +750,19 @@ class Cache:
         yet, it will be applied once the value is put in cache with method
         :meth:`patch_and_set`.
         """
-        assert not new_id, "Cache.patch can only be called with a new id"
-        field_cache = self._set_field_cache(records, field)
-        for id_ in records._ids:
-            assert not id_, "Cache.patch can only be called with new records"
-            if id_ in field_cache:
-                field_cache[id_] = tuple(dict.fromkeys(field_cache[id_] + (new_id,)))
-            else:
-                self.transaction.data_patches[field][id_].append(new_id)
+        warnings.warn("Since 19.0, this method is internal", DeprecationWarning)
+        from .fields_relational import _RelationalMulti  # noqa: PLC0415
+        assert isinstance(field, _RelationalMulti)
+        value = records.env[field.comodel_name].browse((new_id,))
+        field._update_inverse(records, value)
 
     def patch_and_set(self, record: BaseModel, field: Field, value: typing.Any) -> typing.Any:
         """ Set the value of ``field`` for ``record``, like :meth:`set`, but
         apply pending patches to ``value`` and return the value actually put
         in cache.
         """
-        field_patches = self.transaction.data_patches.get(field)
-        if field_patches:
-            ids = field_patches.pop(record.id, ())
-            if ids:
-                value = tuple(dict.fromkeys(value + tuple(ids)))
-        self.set(record, field, value)
-        return value
+        warnings.warn("Since 19.0, this method is internal", DeprecationWarning)
+        return field._cache_update(record, value)
 
     def remove(self, record: BaseModel, field: Field) -> None:
         """ Remove the value of ``field`` for ``record``. """

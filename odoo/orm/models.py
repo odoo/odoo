@@ -5755,7 +5755,7 @@ class BaseModel(metaclass=MetaModel):
                 # we need to adapt the value of the inverse fields to integrate self into it:
                 # x2many fields should add self, while many2one fields should replace with self
                 for invf in self.pool.field_inverses[field]:
-                    invf._update(inv_recs, self)
+                    invf._update_inverse(inv_recs, self)
 
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the

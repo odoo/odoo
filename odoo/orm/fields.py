@@ -1623,13 +1623,13 @@ class Field(typing.Generic[T]):
                 for rec in recs:
                     if (rec_origin := rec._origin):
                         value = self.convert_to_cache(rec_origin[self.name], rec, validate=False)
-                        env.cache.patch_and_set(rec, self, value)
-                value = env.cache.get(record, self)
-            except (AccessError, MissingError):
+                        self._cache_update(rec, value)
+                value = field_cache[record_id]
+            except (AccessError, KeyError, MissingError):
                 if len(recs) == 1:
                     raise
                 value = self.convert_to_cache(record._origin[self.name], record, validate=False)
-                value = env.cache.patch_and_set(record, self, value)
+                value = self._cache_update(record, value)
 
         elif self.compute:
             # non-stored field or new record without origin: compute
@@ -1678,7 +1678,7 @@ class Field(typing.Generic[T]):
         else:
             # non-stored field or stored field on new record: default value
             value = self.convert_to_cache(False, record, validate=False)
-            value = env.cache.patch_and_set(record, self, value)
+            value = self._cache_update(record, value)
             defaults = record.default_get([self.name])
             if self.name in defaults:
                 # The null value above is necessary to convert x2many field
@@ -1688,7 +1688,7 @@ class Field(typing.Generic[T]):
                 # to determine the field's value, and generates an infinite
                 # recursion.
                 value = self.convert_to_cache(defaults[self.name], record)
-                env.cache.set(record, self, value)
+                self._cache_update(record, value)
 
         return self.convert_to_record(value, record)
 
