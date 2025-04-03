@@ -300,7 +300,7 @@ class MailActivity(models.Model):
         # send notifications about activity creation
         todo_activities = activities.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
-            activity.user_id._bus_send("mail.activity/updated", {"activity_created": True})
+            todo_activities.user_id._bus_send("mail.activity/updated", {"activity_created": True})
         return activities
 
     def write(self, values):
