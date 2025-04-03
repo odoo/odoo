@@ -355,9 +355,9 @@ test("Systray icon shows latest action", async () => {
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone");
-    await click("[title='Mute']");
+    await click("[title='Mute (shift+m)']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
-    await click("[title='Deafen']");
+    await click("[title='Deafen (shift+d)']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-deaf");
     await click("[title='Turn camera on']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
@@ -386,10 +386,10 @@ test("Systray icon keeps track of earlier actions", async () => {
     await click("[title='Turn camera on']");
     // stack: ["video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
-    await click("[title='Mute']");
+    await click("[title='Mute (shift+m)']");
     // stack: ["mute", "video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
-    await click("[title='Unmute']");
+    await click("[title='Unmute (shift+m)']");
     // stack: ["video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
     await click("[title='Stop camera']");
@@ -601,8 +601,8 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
     await start();
     await openDiscuss(channelId);
     expect("[title='Disconnect']").not.toBeVisible();
-    expect("[title='Mute']").not.toBeVisible();
-    expect("[title='Deafen']").not.toBeVisible();
+    expect("[title='Mute (shift+m)']").not.toBeVisible();
+    expect("[title='Deafen (shift+d)']").not.toBeVisible();
     broadcastChannel.postMessage({
         type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
         hostedChannelId: channelId,
@@ -615,14 +615,14 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
         },
     });
     await contains("[title='Disconnect']");
-    await contains("[title='Deafen']");
+    await contains("[title='Deafen (shift+d)']");
 
     broadcastChannel.onmessage = (event) => {
         if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.REQUEST_ACTION) {
             asyncStep(`is_muted:${event.data.changes["is_muted"]}`);
         }
     };
-    await click("[title='Mute']");
+    await click("[title='Mute (shift+m)']");
     await waitForSteps(["is_muted:true"]);
 });
 
