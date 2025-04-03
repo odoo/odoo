@@ -63,6 +63,9 @@ export class FormOptionPlugin extends Plugin {
             if (el.classList.contains("s_website_form_model_required")) {
                 reasons.push(_t("You cannot duplicate this field."));
             }
+            if (el.classList.contains("s_website_form_submit")) {
+                reasons.push(_t("You can't duplicate the submit button of the form."));
+            }
         },
         remove_disabled_reason_providers: ({ el, reasons }) => {
             if (el.classList.contains("s_website_form_model_required")) {
@@ -71,6 +74,9 @@ export class FormOptionPlugin extends Plugin {
                         "This field is mandatory for this action. You cannot remove it. Try hiding it with the 'Visibility' option instead and add it a default value."
                     )
                 );
+            }
+            if (el.classList.contains("s_website_form_submit")) {
+                reasons.push(_t("You can't remove the submit button of the form"));
             }
         },
         builder_options: [
