@@ -88,7 +88,8 @@
                     </div>
                     <button t-if="state.embeddedInfos.embeddedActions?.length and !env.isSmall" class="btn btn-secondary"
                             t-att-class="{active: state.embeddedInfos.showEmbedded}"
-                            t-on-click="onClickShowEmbedded">
+                            t-on-click="onClickShowEmbedded"
+                            title="View related documents">
                         <i class="fa fa-sliders" />
                     </button>
                     <t t-if="env.config.viewSwitcherEntries?.length > 1">
