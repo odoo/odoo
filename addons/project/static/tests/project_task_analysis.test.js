@@ -10,7 +10,7 @@ import {
     mockService,
     models,
     mountWithCleanup,
- } from "@web/../tests/web_test_helpers";
+} from "@web/../tests/web_test_helpers";
 
 import { defineProjectModels, projectModels } from "./project_models";
 
@@ -26,24 +26,23 @@ class ReportProjectTaskUser extends models.Model {
         { id: 9, project_id: 2 },
     ];
     _views = {
-        "graph,false": `
+        graph: /* xml */ `
             <graph string="Tasks Analysis" sample="1" js_class="project_task_analysis_graph">
                 <field name="project_id"/>
             </graph>
         `,
-        "pivot,false": `
+        pivot: /* xml */ `
             <pivot string="Tasks Analysis" display_quantity="1" sample="1" js_class="project_task_analysis_pivot">
                 <field name="project_id"/>
             </pivot>
         `,
-        "search,false": `<search/>`,
     };
 }
 projectModels.ReportProjectTaskUser = ReportProjectTaskUser;
 projectModels.ProjectTask._views = {
-    "form,false": `<form><field name="name"/></form>`,
-    "list,false": `<list><field name="name"/></list>`,
-    "search,false": `<search><field name="name"/></search>`,
+    form: /* xml */ `<form><field name="name"/></form>`,
+    list: /* xml */ `<list><field name="name"/></list>`,
+    search: /* xml */ `<search><field name="name"/></search>`,
 };
 defineProjectModels();
 setupChartJsForTests();
@@ -73,9 +72,11 @@ test("report.project.task.user (graph): clicking on a bar leads to project.task 
     await clickOnDataset(view);
     await animationFrame();
 
-    expect(".o_list_renderer").toBeDisplayed({ message: "Clicking on a bar should open a list view" });
+    expect(".o_list_renderer").toBeDisplayed({
+        message: "Clicking on a bar should open a list view",
+    });
     // The model of the list view that is opened consequently should be "project.task"
-    expect.verifySteps([ "report.project.task.user", "project.task" ]);
+    expect.verifySteps(["report.project.task.user", "project.task"]);
 });
 
 test("report.project.task.user (pivot): clicking on a cell leads to project.task list", async () => {
@@ -91,7 +92,9 @@ test("report.project.task.user (pivot): clicking on a cell leads to project.task
     await contains(".o_pivot_cell_value").click();
     await animationFrame();
 
-    expect(".o_list_renderer").toBeDisplayed({ message: "Clicking on a cell should open a list view" });
+    expect(".o_list_renderer").toBeDisplayed({
+        message: "Clicking on a cell should open a list view",
+    });
     // The model of the list view that is opened consequently should be "project.task"
-    expect.verifySteps([ "report.project.task.user", "project.task" ]);
+    expect.verifySteps(["report.project.task.user", "project.task"]);
 });

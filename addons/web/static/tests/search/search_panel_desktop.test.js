@@ -459,7 +459,11 @@ test("use category (on selection) to refine search", async () => {
 test("category has been archived", async () => {
     Company._fields.active = fields.Boolean({ string: "Archived" });
     Company._records = [
-        { id: 3, name: "asustek" },
+        {
+            name: "asustek",
+            id: 3,
+            active: false,
+        },
         {
             name: "Company 5",
             id: 5,
@@ -1589,9 +1593,7 @@ test("tests conservation of category record order", async () => {
 });
 
 test("search panel is available on list and kanban by default", async () => {
-    Partner._views = {
-        ...Partner._views,
-        [["search", false]]: /* xml */ `
+    Partner._views.search = /* xml */ `
             <search>
                 <filter name="false_domain" string="False Domain" domain="[(0, '=', 1)]"/>
                 <filter name="filter" string="Filter" domain="[('bar', '=', true)]"/>
@@ -1602,8 +1604,7 @@ test("search panel is available on list and kanban by default", async () => {
                     <field name="category_id" select="multi" enable_counters="1" expand="1"/>
                 </searchpanel>
             </search>
-        `,
-    };
+        `;
 
     onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
@@ -1625,9 +1626,7 @@ test("search panel is available on list and kanban by default", async () => {
 });
 
 test("search panel with view_types attribute", async () => {
-    Partner._views = {
-        ...Partner._views,
-        [["search", false]]: /* xml */ `
+    Partner._views.search = /* xml */ `
             <search>
                 <filter name="false_domain" string="False Domain" domain="[(0, '=', 1)]"/>
                 <filter name="filter" string="Filter" domain="[('bar', '=', true)]"/>
@@ -1638,8 +1637,7 @@ test("search panel with view_types attribute", async () => {
                     <field name="category_id" select="multi" enable_counters="1" expand="1"/>
                 </searchpanel>
             </search>
-        `,
-    };
+        `;
 
     onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
@@ -3008,31 +3006,28 @@ test("hide search panel if there is no records", async () => {
     expect(`.o_search_panel`).toHaveCount(0);
 });
 
-test("search panel with sample data", async (assert) => {
+test("search panel with sample data", async () => {
     Partner._records = [];
-    Partner._views = {
-        ...Partner._views,
-        [["kanban", false]]: /* xml */ `
+    Partner._views.kanban = /* xml */ `
         <kanban sample="1">
             <templates>
                 <div t-name="card" class="oe_kanban_global_click">
                     <field name="foo"/>
                 </div>
             </templates>
-        </kanban>`,
-        [["list", false]]: /* xml */ `
+        </kanban>`;
+    Partner._views.list = /* xml */ `
         <list sample="1">
             <field name="foo"/>
-        </list>`,
-    };
+        </list>`;
 
     onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
 
     await getService("action").switchView("kanban");
-    expect(getComputedStyle(queryAll(`.o_search_panel_filter_value:eq(0) input`)[0]).pointerEvents).toEqual('auto');
+    expect(`.o_search_panel_filter_value:eq(0) input`).toHaveStyle({ "pointer-events": "auto" });
 
     await getService("action").switchView("list");
-    expect(getComputedStyle(queryAll(`.o_search_panel_filter_value:eq(0) input`)[0]).pointerEvents).toEqual('auto');
+    expect(`.o_search_panel_filter_value:eq(0) input`).toHaveStyle({ "pointer-events": "auto" });
 });

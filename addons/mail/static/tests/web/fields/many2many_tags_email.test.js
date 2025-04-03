@@ -22,7 +22,7 @@ defineMailModels();
 describe.current.tags("desktop");
 
 beforeEach(() => {
-    ResPartner._views["form,false"] = `
+    ResPartner._views.form = /* xml */ `
         <form>
             <field name="name"/>
             <field name="email"/>
@@ -71,7 +71,7 @@ test("fieldmany2many tags email (edition)", async () => {
         "coucou@petite.perruche"
     );
     // should have read Partner_2 2 times: when opening the dropdown and when saving the new email.
-    await waitForSteps([`[${partnerId_2}]`,`[${partnerId_1},${partnerId_2}]`]);
+    await waitForSteps([`[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
 });
 
 test("fieldmany2many tags email popup close without filling", async () => {

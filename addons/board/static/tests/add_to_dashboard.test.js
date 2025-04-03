@@ -80,7 +80,6 @@ test("save actions to dashboard", async () => {
 
     Partner._views = {
         list: '<list><field name="foo"/></list>',
-        search: "<search></search>",
     };
 
     onRpc("/board/add_to_dashboard", async (request) => {
@@ -172,7 +171,7 @@ test("save two searches to dashboard", async () => {
         views: [[false, "list"]],
     });
 
-    var filter_count = 0;
+    let filter_count = 0;
     // Add a first filter
     await toggleSearchBarMenu();
     await toggleMenuItem("Filter on a");
@@ -199,10 +198,10 @@ test("save an action domain to dashboard", async () => {
     // View domains are to be added to the dashboard domain
     expect.assertions(1);
 
-    var view_domain = ["name", "ilike", "a"];
-    var filter_domain = ["name", "ilike", "b"];
+    const viewDomain = ["name", "ilike", "a"];
+    const filterDomain = ["name", "ilike", "b"];
 
-    var expected_domain = ["&", view_domain, filter_domain];
+    const expectedDomain = ["&", viewDomain, filterDomain];
 
     Partner._views = {
         list: '<list><field name="foo"/></list>',
@@ -215,7 +214,7 @@ test("save an action domain to dashboard", async () => {
 
     onRpc("/board/add_to_dashboard", async (request) => {
         const { params: args } = await request.json();
-        expect(args.domain).toEqual(expected_domain, {
+        expect(args.domain).toEqual(expectedDomain, {
             message: "the correct domain should be sent",
         });
         return true;
@@ -228,7 +227,7 @@ test("save an action domain to dashboard", async () => {
         res_model: "partner",
         type: "ir.actions.act_window",
         views: [[false, "list"]],
-        domain: [view_domain],
+        domain: [viewDomain],
     });
 
     // Add a filter
@@ -247,7 +246,6 @@ test("add to dashboard with no action id", async () => {
 
     Partner._views = {
         pivot: '<pivot><field name="foo"/></pivot>',
-        search: "<search/>",
     };
     await mountWithCleanup(WebClient);
 
@@ -274,7 +272,6 @@ test("add to dashboard with no action id", async () => {
 test("Add a view to dashboard (keynav)", async () => {
     Partner._views = {
         pivot: '<pivot><field name="foo"/></pivot>',
-        search: "<search/>",
     };
 
     // makes mouseEnter work
@@ -407,7 +404,6 @@ test("Add to my dashboard is not available in form views", async () => {
     Partner._views = {
         list: '<list><field name="foo"/></list>',
         form: '<form><field name="foo"/></form>',
-        search: "<search></search>",
     };
 
     await mountWithCleanup(WebClient);

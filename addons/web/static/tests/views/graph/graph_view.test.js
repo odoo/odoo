@@ -156,7 +156,6 @@ class Foo extends models.Model {
         },
     ];
     _views = {
-        graph: /* xml */ `<graph />`,
         search: /* xml */ `
             <search>
                 <filter name="false_domain" string="False Domain" domain="[(0, '=', 1)]" />
