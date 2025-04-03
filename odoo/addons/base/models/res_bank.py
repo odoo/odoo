@@ -46,6 +46,18 @@ class ResBank(models.Model):
             return domain
         return super()._search_display_name(operator, value)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('bic', False):
+                vals['bic'] = vals['bic'].upper()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if vals.get('bic', False):
+            vals['bic'] = vals['bic'].upper()
+        return super().write(vals)
+
     @api.onchange('country')
     def _onchange_country_id(self):
         if self.country and self.country != self.state.country_id:
