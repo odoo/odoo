@@ -892,6 +892,15 @@ class ResPartner(models.Model):
         """
         return []
 
+    def action_open_business_doc(self):
+        """
+        This method is called by the <x2many_buttons> widget. It's used when the user clicks on a link that redirects
+        to a partner.
+        :return: ir.actions.act_window for the concerned partner
+        """
+        self.ensure_one()
+        return self._get_records_action()
+
     # -------------------------------------------------------------------------
     # EDI
     # -------------------------------------------------------------------------
