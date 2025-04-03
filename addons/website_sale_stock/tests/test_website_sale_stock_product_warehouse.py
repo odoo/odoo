@@ -3,14 +3,16 @@
 
 from odoo.tests import tagged
 
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
+from odoo.addons.product.tests.test_product_attribute_value_config import (
+    TestProductAttributeValueCommon,
+)
 from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockProductWarehouse(
-    TestSaleProductAttributeValueCommon, WebsiteSaleStockCommon
+    TestProductAttributeValueCommon, WebsiteSaleStockCommon
 ):
 
     @classmethod
