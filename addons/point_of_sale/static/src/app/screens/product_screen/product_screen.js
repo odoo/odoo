@@ -394,7 +394,7 @@ export class ProductScreen extends Component {
             }
         }
 
-        return this.searchWord === ""
+        return this.searchWord !== ""
             ? filteredList
             : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
     }
@@ -405,9 +405,13 @@ export class ProductScreen extends Component {
             ? this.getProductsByCategory(this.pos.selectedCategory)
             : this.products;
 
-        return products.filter((p) =>
-            unaccent(p.searchString, false).toLowerCase().includes(words)
-        );
+        const filteredProducts = products.filter((p) => unaccent(p.searchString).includes(words));
+        return filteredProducts.sort((a, b) => {
+            const nameA = unaccent(a.searchString);
+            const nameB = unaccent(b.searchString);
+            // Sort by match index, push non-matching items to the end, and use alphabetical order as a tiebreaker
+            return nameA.indexOf(words) - nameB.indexOf(words) || nameA.localeCompare(nameB);
+        });
     }
 
     addMainProductsToDisplay(products) {

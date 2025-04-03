@@ -62,7 +62,9 @@ export default class IndexedDB {
                     }
 
                     if (!alreadyExists || JSON.stringify(alreadyExists) !== JSON.stringify(data)) {
-                        arrData[idx].write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
+                        arrData[idx].write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss", {
+                            numberingSystem: "latn",
+                        });
                     } else {
                         delete arrData[idx];
                     }

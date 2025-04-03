@@ -134,6 +134,9 @@ export class TourStepAutomatic extends TourStep {
     }
 
     get parentFrameIsReady() {
+        if (this.trigger.match(/\[is-ready=(true|false)\]/)) {
+            return true;
+        }
         const parentFrame = hoot.getParentFrame(this.element);
         return parentFrame && parentFrame.hasAttribute("is-ready")
             ? parentFrame.getAttribute("is-ready") === "true"

@@ -4,7 +4,6 @@ import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category('web_tour.tours').add('website_sale_collect_buy_product', {
     url: '/shop',
-    checkDelay: 50,
     steps: () => [
         ...tourUtils.searchProduct("Test CAC Product"),
         clickOnElement("Test Product", 'a:contains("Test CAC Product")'),

@@ -10,7 +10,7 @@ export const imStatusServicePatch = {
 
         bus_service.subscribe(
             "bus.bus/im_status_updated",
-            ({ im_status, partner_id, guest_id }) => {
+            ({ presence_status, im_status, partner_id, guest_id }) => {
                 const store = env.services["mail.store"];
                 if (!store) {
                     return;
@@ -27,7 +27,7 @@ export const imStatusServicePatch = {
                     return; // Partners are already handled by the original service
                 }
                 const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
-                if ((im_status === "away" && isOnline) || im_status === "offline") {
+                if ((presence_status === "away" && isOnline) || presence_status === "offline") {
                     this.updateBusPresence();
                 }
             }

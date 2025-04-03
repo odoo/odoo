@@ -16,6 +16,7 @@ import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/comm
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
+import { delay } from "@odoo/hoot-dom";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -185,7 +186,14 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
 
             // Test transfering an order
             ProductScreen.clickControlButton("Transfer"),
-            FloorScreen.clickTable("4"),
+            {
+                trigger: ".table:contains(4)",
+                async run(helpers) {
+                    await delay(500);
+                    await helpers.click();
+                },
+            },
+            Chrome.activeTableOrOrderIs("4"),
 
             // Test if products still get merged after transfering the order
             ProductScreen.totalAmountIs("4.40"),
@@ -199,11 +207,25 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ReceiptScreen.clickNextOrder(),
             // At this point, there are no draft orders.
 
-            FloorScreen.clickTable("2"),
+            {
+                trigger: ".table:contains(2)",
+                async run(helpers) {
+                    await delay(500);
+                    await helpers.click();
+                },
+            },
+            Chrome.activeTableOrOrderIs("2"),
             ProductScreen.isShown(),
             ProductScreen.orderIsEmpty(),
             ProductScreen.clickControlButton("Transfer"),
-            FloorScreen.clickTable("4"),
+            {
+                trigger: ".table:contains(4)",
+                async run(helpers) {
+                    await delay(500);
+                    await helpers.click();
+                },
+            },
+            Chrome.activeTableOrOrderIs("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.totalAmountIs("2.20"),
             Chrome.clickPlanButton(),
