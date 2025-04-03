@@ -128,7 +128,8 @@ class AccountMoveSend(models.AbstractModel):
             return
 
         # Read pdf content.
-        pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        pdf_values = (not self.env.context.get('custom_template_facturx') and invoice.invoice_pdf_report_id) or \
+            invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
         reader_buffer = io.BytesIO(pdf_values['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
