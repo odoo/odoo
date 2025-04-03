@@ -997,3 +997,21 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'sale_line_id': sale_order_line.id,
         })
         self.assertEqual(sale_order.state, 'sale')
+
+    def test_sale_order_milestone_with_no_project_rights(self):
+        milestone_user = new_test_user(
+            self.env, groups='project.group_project_milestone,sales_team.group_sale_salesman',
+            login='Milestone user', name='Milestone user',
+        )
+
+        group_project_user = self.env.ref('project.group_project_user').id
+        self.assertNotIn(group_project_user, milestone_user.groups_id.ids)
+
+        sale_order = self.env['sale.order'].with_user(milestone_user)
+
+        has_access = sale_order._fields['project_ids'].is_accessible(sale_order.env)
+        self.assertTrue(has_access, "'project_ids' field is not readable for milestone users")
+
+        so_form = Form(sale_order, view='sale_project.view_order_form_inherit_sale_project')
+        project_ids = so_form._view['fields'].get('project_ids')
+        self.assertTrue(project_ids and project_ids.get('type'), "'project_ids' field should be present for milestone users in the sale order form")
