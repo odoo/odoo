@@ -12,7 +12,7 @@ defineProjectModels();
 beforeEach(() => {
     mockDate("2024-01-03 12:00:00", +0);
 
-    ProjectTask._views["form,false"] = `
+    ProjectTask._views["form"] = `
         <form>
             <field name="id"/>
             <field name="name"/>
