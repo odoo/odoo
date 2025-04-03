@@ -302,6 +302,50 @@ export class Record {
         definition.html = true;
         return definition;
     }
+    /**
+     * @param {Object} [param0={}]
+     * @param {(this: Record) => any} [param0.compute] if set, the value of this date field is declarative and
+     *   is computed automatically. All reactive accesses recalls that function. The context of
+     *   the function is the record. Returned value is new value assigned to this field.
+     * @param {boolean} [param0.eager=false] when field is computed, determines whether the computation
+     *   of this field is eager or lazy. By default, fields are computed lazily, which means that
+     *   they are computed when dependencies change AND when this field is being used. In eager mode,
+     *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
+     *   behaviour of OWL reactive.
+     * @param {(this: Record) => void} [param0.onUpdate] function that is called when the field value is updated.
+     *   This is called at least once at record creation.
+     * @returns {luxon.DateTime}
+     */
+    static date(param0) {
+        return {
+            ...param0,
+            [FIELD_DEFINITION_SYM]: true,
+            [ATTR_SYM]: true,
+            type: "date",
+        };
+    }
+    /**
+     * @param {Object} [param0={}]
+     * @param {(this: Record) => any} [param0.compute] if set, the value of this datetime field is declarative and
+     *   is computed automatically. All reactive accesses recalls that function. The context of
+     *   the function is the record. Returned value is new value assigned to this field.
+     * @param {boolean} [param0.eager=false] when field is computed, determines whether the computation
+     *   of this field is eager or lazy. By default, fields are computed lazily, which means that
+     *   they are computed when dependencies change AND when this field is being used. In eager mode,
+     *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
+     *   behaviour of OWL reactive.
+     * @param {(this: Record) => void} [param0.onUpdate] function that is called when the field value is updated.
+     *   This is called at least once at record creation.
+     * @returns {luxon.DateTime}
+     */
+    static datetime(param0) {
+        return {
+            ...param0,
+            [FIELD_DEFINITION_SYM]: true,
+            [ATTR_SYM]: true,
+            type: "datetime",
+        };
+    }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
         const ModelFullProxy = this;
