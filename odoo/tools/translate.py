@@ -147,11 +147,15 @@ TRANSLATED_ELEMENTS = {
 
 # Which attributes must be translated. This is a dict, where the value indicates
 # a condition for a node to have the attribute translatable.
+# ⚠ Note that it implicitly includes their t-attf-* equivalent.
 TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
     'value_label', 'data-tooltip', 'data-editor-message', 'label',
 }, lambda e: True)
+
+# This should match the list defined in OWL (TRANSLATABLE_ATTRS)
+OWL_TRANSLATED_ATTRS = {"label", "title", "placeholder", "alt"}
 
 def translate_attrib_value(node):
     # check if the value attribute of a node must be translated
@@ -900,7 +904,7 @@ def _extract_translatable_qweb_terms(element, callback):
             # https://www.w3schools.com/html/html5_syntax.asp
             # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
             if not el.tag[0].isupper() and 't-component' not in el.attrib and 't-set-slot' not in el.attrib:
-                for att in TRANSLATED_ATTRS:
+                for att in OWL_TRANSLATED_ATTRS:
                     if att in el.attrib:
                         _push(callback, el.attrib[att], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
