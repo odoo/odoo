@@ -13,6 +13,7 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("mobile");
 defineMailModels();
@@ -65,4 +66,16 @@ test("enter key should create a newline in composer", async () => {
     await insertText(".o-mail-Composer-input", "Other");
     await click(".o-mail-Composer-send");
     await contains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
+});
+
+test("close chat window using back button on mobile", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow-command", { text: "General" });
+    browser.dispatchEvent(new PopStateEvent("popstate"));
+    await contains(".o-mail-ChatWindow", { count: 0 });
 });
