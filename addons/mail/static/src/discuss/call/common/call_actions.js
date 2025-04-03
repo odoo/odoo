@@ -2,6 +2,7 @@ import { useComponent, useState } from "@odoo/owl";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
 
@@ -152,9 +153,22 @@ function transformAction(component, id, action) {
 export function useCallActions() {
     const component = useComponent();
     const state = useState({ actions: [] });
-    state.actions = callActionsRegistry
+    const actions = callActionsRegistry
         .getEntries()
         .map(([id, action]) => transformAction(component, id, action));
+
+    if (component.rtc?.selfSession) {
+        const muteAction = actions.find((a) => a.id === "mute");
+        if (muteAction) {
+            useHotkey("control+shift+m", () => muteAction.select());
+        }
+        const deafenAction = actions.find((a) => a.id === "deafen");
+        if (deafenAction) {
+            useHotkey("control+shift+d", () => deafenAction.select());
+        }
+    }
+
+    state.actions = actions;
     return {
         get actions() {
             return state.actions
