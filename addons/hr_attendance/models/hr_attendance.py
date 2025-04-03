@@ -79,7 +79,22 @@ class HrAttendance(models.Model):
     @api.depends("worked_hours", "overtime_hours")
     def _compute_expected_hours(self):
         for attendance in self:
-            attendance.expected_hours = attendance.worked_hours - attendance.overtime_hours
+            check_in_date = attendance.check_in.date()
+            week_start = check_in_date - timedelta(days=check_in_date.weekday())
+            calculated_hours = attendance.worked_hours - attendance.overtime_hours
+            # Filter for previous attendances in the same week
+            previous_attendances = self.search([
+                ('employee_id', '=', attendance.employee_id.id),
+                ('check_in', '>=', week_start),
+                ('check_in', '<', attendance.check_in),
+            ])
+            previous_total = sum(prev.expected_hours for prev in previous_attendances)
+            full_time_hours = attendance.employee_id.resource_calendar_id.full_time_required_hours or 0.0
+
+            if previous_total + calculated_hours > full_time_hours:
+                attendance.expected_hours = 0.0
+            else:
+                attendance.expected_hours = calculated_hours
 
     def _compute_color(self):
         for attendance in self:
