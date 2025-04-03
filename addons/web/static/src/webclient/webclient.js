@@ -10,6 +10,7 @@ import { NavBar } from "./navbar/navbar";
 import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
 import { router, routerBus } from "@web/core/browser/router";
 import { browser } from "@web/core/browser/browser";
+import { rpcBus } from "@web/core/network/rpc";
 
 export class WebClient extends Component {
     static template = "web.WebClient";
@@ -156,6 +157,14 @@ export class WebClient extends Component {
         if (navigator.serviceWorker) {
             navigator.serviceWorker
                 .register("/web/service-worker.js", { scope: "/odoo" })
+                .then(() => {
+                    navigator.serviceWorker.ready.then(() => {
+                        if (!navigator.serviceWorker.controller) {
+                            // https://stackoverflow.com/questions/51597231/register-service-worker-after-hard-refresh
+                            rpcBus.trigger("CLEAR-CACHES");
+                        }
+                    });
+                })
                 .catch((error) => {
                     console.error("Service worker registration failed, error:", error);
                 });

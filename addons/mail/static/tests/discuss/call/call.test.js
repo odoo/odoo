@@ -505,6 +505,7 @@ test("expand call participants when joining a call", async () => {
 test("start call when accepting from push notification", async () => {
     const serviceWorker = Object.assign(new EventTarget(), {
         register: () => Promise.resolve(),
+        ready: Promise.resolve(),
     });
     patchWithCleanup(window.navigator, { serviceWorker });
     const pyEnv = await startServer();

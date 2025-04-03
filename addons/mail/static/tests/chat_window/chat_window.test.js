@@ -944,7 +944,10 @@ test("Notification settings rendering in chatwindow", async () => {
 
 test("open channel in chat window from push notification", async () => {
     patchWithCleanup(window.navigator, {
-        serviceWorker: Object.assign(new EventBus(), { register: () => Promise.resolve() }),
+        serviceWorker: Object.assign(new EventBus(), {
+            register: () => Promise.resolve(),
+            ready: Promise.resolve(),
+        }),
     });
     const pyEnv = await startServer();
     const [channelId, salesId] = pyEnv["discuss.channel"].create([
