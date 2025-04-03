@@ -4,11 +4,10 @@ from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict, mute_logger, date_utils, SQL
+from odoo.tools import frozendict, date_utils, SQL
 
 import re
 from collections import defaultdict
-from psycopg2 import errors as pgerrors
 
 
 class SequenceMixin(models.AbstractModel):
@@ -125,15 +124,16 @@ class SequenceMixin(models.AbstractModel):
                     sequence=sequence,
                 ))
 
+    def _get_split_sequence(self, sequence):
+        regex = self._make_regex_non_capturing(self._sequence_fixed_regex.replace(r"?P<seq>", ""))
+        matching = re.match(regex, sequence)
+        return sequence[:matching.start(1)], int(matching.group(1) or 0)
+
     @api.depends(lambda self: [self._sequence_field])
     def _compute_split_sequence(self):
         for record in self:
             sequence = record[record._sequence_field] or ''
-            # make the seq the only matching group
-            regex = self._make_regex_non_capturing(record._sequence_fixed_regex.replace(r"?P<seq>", ""))
-            matching = re.match(regex, sequence)
-            record.sequence_prefix = sequence[:matching.start(1)]
-            record.sequence_number = int(matching.group(1) or 0)
+            record.sequence_prefix, record.sequence_number = record._get_split_sequence(sequence)
 
     @api.model
     def _deduce_sequence_number_reset(self, name):
@@ -316,18 +316,38 @@ class SequenceMixin(models.AbstractModel):
                     continue
                 for field in registry.field_inverses[inverse_field[0]] if inverse_field else [None]:
                     self.env.add_to_compute(triggered_field, self[field.name] if field else self)
-        self.flush_recordset()
-        with self.env.cr.savepoint(flush=False) as sp:
-            while True:
-                format_values['seq'] = format_values['seq'] + 1
-                sequence = format_string.format(**format_values)
-                try:
-                    with mute_logger('odoo.sql_db'):
-                        self[self._sequence_field] = sequence
-                        self.flush_recordset([self._sequence_field])
-                        break
-                except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
-                    sp.rollback()
+
+        prefix, _number = self._get_split_sequence(format_string.format(**format_values))
+        series_conditions = [(SQL.identifier('sequence_prefix'), prefix)]
+        if self._sequence_index:
+            series_conditions += [(SQL.identifier(self._sequence_index), self[self._sequence_index].id)]
+
+        query = SQL(
+            """
+              SELECT sequence_number
+                FROM %(table)s
+               WHERE %(where_clause)s
+            ORDER BY sequence_number DESC
+               LIMIT 1
+            """,
+            table=SQL.identifier(self._table),
+            where_clause=SQL(" AND ").join(
+                SQL("%s = %s", fname, val)
+                for fname, val in series_conditions
+            ),
+        )
+
+        if self.env.registry.ready:
+            self.env.cr.execute(SQL("%s FOR UPDATE", query))  # lock the last number
+            with self.env.registry.cursor() as cr:
+                cr.execute(query)  # fetch data possibly committed in concurrent transactions
+                if result := cr.fetchone():
+                    format_values['seq'] = result[0]
+
+        format_values['seq'] = format_values['seq'] + 1
+        sequence = format_string.format(**format_values)
+        self[self._sequence_field] = sequence
+        self.made_sequence_gap = False
 
     def _get_next_sequence_format(self):
         """Get the next sequence format and its values.
