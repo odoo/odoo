@@ -164,7 +164,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     content: 'Convert the todo to a task',
     run: "click",
 }, {
-    trigger: ".o_project_task_form_view .breadcrumb-item:last-child",
+    trigger: ".o_form_view .breadcrumb-item:last-child",
     content: markup("Let's go back to the <b>kanban view</b> to have an overview of tasks linked to project chosen."),
     run: "click",
 }, {
