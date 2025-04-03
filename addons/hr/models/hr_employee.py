@@ -369,7 +369,11 @@ class HrEmployee(models.Model):
         if new_users:
             self.env['res.users'].create(new_users)
             message = _('Users %s creation successful', ', '.join([user['name'] for user in new_users]))
-            next_action = _get_user_creation_notification_action(message, 'success', next_action)
+            next_action = _get_user_creation_notification_action(message, 'success', {
+                "type": "ir.actions.client",
+                "tag": "soft_reload",
+                "params": {"next": next_action},
+            })
 
         if old_users:
             message = _('User already exists for Those Employees %s', ', '.join(old_users))
