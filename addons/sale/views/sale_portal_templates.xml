@@ -101,7 +101,7 @@
                             <span class='d-block d-md-none'>Ref.</span>
                         </th>
                         <th class="text-end">Order Date</th>
-                        <th class="text-end">Total</th>
+                        <th name="order_total" class="text-end">Total</th>
                     </tr>
                 </thead>
                 <t t-foreach="orders" t-as="order">
@@ -111,7 +111,9 @@
                             <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
                             <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
                         </td>
-                        <td class="text-end"><span t-field="order.amount_total"/></td>
+                        <td name="order_amount_total" class="text-end">
+                            <span t-field="order.amount_total"/>
+                        </td>
                     </tr>
                 </t>
             </t>
@@ -604,6 +606,15 @@
                             <tr t-if="sale_order.client_order_ref">
                                 <th class="ps-0 pb-0">Your Reference:</th>
                                 <td class="w-100 pb-0 text-wrap"><span t-field="sale_order.client_order_ref"/></td>
+                            </tr>
+                            <tr t-if="sale_order.commitment_date">
+                                <th class="ps-0 pb-0">Delivery Date:</th>
+                                <td class="w-100 pb-0 text-wrap">
+                                    <span
+                                        t-field="sale_order.commitment_date"
+                                        t-options="{'widget': 'date'}"
+                                    />
+                                </td>
                             </tr>
                         </tbody>
                     </table>
