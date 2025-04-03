@@ -1658,7 +1658,7 @@ class Field(typing.Generic[T]):
                 field_cache = self._get_cache(env)
                 value = field_cache[record_id]
 
-        elif self.type == 'many2one' and self.delegate and not record.id:
+        elif self.type == 'many2one' and self.delegate and not record_id:
             # parent record of a new record: new record, with the same
             # values as record for the corresponding inherited fields
             def is_inherited_field(name):
@@ -1672,8 +1672,13 @@ class Field(typing.Generic[T]):
             })
             # in case the delegate field has inverse one2many fields, this
             # updates the inverse fields as well
-            record._update_cache({self.name: parent}, validate=False)
-            value = env.cache.get(record, self)
+            value = self.convert_to_cache(parent, record, validate=False)
+            self._cache_update(record, value)
+            # set inverse fields on new records in the comodel
+            # TODO move this logic to _cache_update?
+            if inv_recs := parent.filtered(lambda r: not r.id):
+                for invf in env.registry.field_inverses[self]:
+                    invf._update_inverse(inv_recs, record)
 
         else:
             # non-stored field or stored field on new record: default value
