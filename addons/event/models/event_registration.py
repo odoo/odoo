@@ -172,11 +172,16 @@ class EventRegistration(models.Model):
         for registration in self:
             registration.event_has_tickets = bool(registration.event_id.event_ticket_ids)
 
-    @api.depends('event_id')
+    @api.depends('event_id', 'event_ticket_id', 'event_ticket_id.slot_id')
     def _compute_event_slot_id(self):
-        """ Resets the selected slot if the event is changed in the attendee form. """
         for registration in self:
+            # Resets the selected slot if the event is changed in the attendee form.
             if registration.event_id != registration.event_slot_id.event_id:
+                registration.event_slot_id = False
+            # Sync the registration slot to the selected slot ticket
+            if registration.event_ticket_id.slot_id:
+                registration.event_slot_id = registration.event_ticket_id.slot_id
+            elif registration.event_ticket_id and not registration.event_ticket_id.slot_id:
                 registration.event_slot_id = False
 
     @api.constrains('event_id', 'event_ticket_id')

@@ -31,7 +31,7 @@ class TestEventSpecific(TestEventSaleCommon):
             event_event_form.date_end = datetime.datetime.now() + relativedelta(days=3)
             event_event_form.event_type_id = event_type  # Set the template
             # Create second ticket (VIP)
-            with event_event_form.event_ticket_ids.new() as ticket_line:
+            with event_event_form.no_slot_ticket_ids.new() as ticket_line:
                 ticket_line.name = 'VIP (Very Important Pastafarian)'
                 ticket_line.price = 10
             event_event = event_event_form.save()
@@ -46,7 +46,7 @@ class TestEventSpecific(TestEventSaleCommon):
         # Edit the maximum
         before_confirmed = [t.seats_reserved for t in event_event.event_ticket_ids]
         with Form(event_event) as event_event_form:
-            with event_event_form.event_ticket_ids.edit(0) as ticket_line:
+            with event_event_form.no_slot_ticket_ids.edit(0) as ticket_line:
                 ticket_line.seats_max = ticket_line.seats_max + 1
         after_confirmed = [t.seats_reserved for t in event_event.event_ticket_ids]
         self.assertEqual(before_confirmed, after_confirmed)

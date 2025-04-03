@@ -127,9 +127,12 @@ class EventEvent(models.Model):
         store=False, readonly=True, compute='_compute_seats')
     # Registration fields
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
+    no_slot_ticket_ids = fields.One2many("event.event.ticket", "event_id", string="No Slot Tickets", copy=True,
+        domain=[('slot_id', '=', False)],
+        compute="_compute_no_slot_ticket_ids", readonly=False, store=True, precompute=True)
     event_ticket_ids = fields.One2many(
-        'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
-        compute='_compute_event_ticket_ids', readonly=False, store=True, precompute=True)
+        'event.event.ticket', 'event_ticket_event_id', string='Event Tickets',
+        compute='_compute_event_ticket_ids', readonly=False, store=True)  # Can't precompute because need 'no_slot_ticket_ids'
     event_registrations_started = fields.Boolean(
         'Registrations started', compute='_compute_event_registrations_started',
         help="registrations have started if the current datetime is after the earliest starting date of tickets."
@@ -327,12 +330,12 @@ class EventEvent(models.Model):
                 (not event.seats_limited or not event.seats_max or event.seats_available) and \
                 (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
-    @api.depends('event_ticket_ids.start_sale_datetime')
+    @api.depends('no_slot_ticket_ids.start_sale_datetime')
     def _compute_start_sale_date(self):
         """ Compute the start sale date of an event. Currently lowest starting sale
         date of tickets if they are used, of False. """
         for event in self:
-            start_dates = [ticket.start_sale_datetime for ticket in event.event_ticket_ids if not ticket.is_expired]
+            start_dates = [ticket.start_sale_datetime for ticket in event.no_slot_ticket_ids if not ticket.is_expired]
             event.start_sale_datetime = min(start_dates) if start_dates and all(start_dates) else False
 
     @api.depends('event_ticket_ids.sale_available', 'seats_available', 'seats_limited')
@@ -491,7 +494,7 @@ class EventEvent(models.Model):
                 event.tag_ids = event.event_type_id.tag_ids
 
     @api.depends('event_type_id')
-    def _compute_event_ticket_ids(self):
+    def _compute_no_slot_ticket_ids(self):
         """ Update event configuration from its event type. Depends are set only
         on event_type_id itself, not its sub fields. Purpose is to emulate an
         onchange: if event type is changed, update event configuration. Changing
@@ -502,16 +505,19 @@ class EventEvent(models.Model):
           * lines that have no registrations linked are remove;
           * type lines are added;
 
-        Note that updating event_ticket_ids triggers _compute_start_sale_date
+        Note that updating no_slot_ticket_ids triggers _compute_start_sale_date
         (start_sale_datetime computation) so ensure result to avoid cache miss.
         """
         for event in self:
-            if not event.event_type_id and not event.event_ticket_ids:
-                event.event_ticket_ids = False
+            if not event.event_type_id and not event.no_slot_ticket_ids:
+                event.no_slot_ticket_ids = False
                 continue
 
             # lines to keep: those with existing registrations
-            tickets_to_remove = event.event_ticket_ids.filtered(lambda ticket: not ticket._origin.registration_ids)
+            tickets_to_remove = event.no_slot_ticket_ids.filtered(lambda ticket:
+                not ticket._origin.registration_ids and
+                (not ticket._origin.slot_ticket_ids or not ticket._origin.slot_ticket_ids.registration_ids)
+            )
             command = [Command.unlink(ticket.id) for ticket in tickets_to_remove]
             if event.event_type_id.event_type_ticket_ids:
                 command += [
@@ -520,7 +526,42 @@ class EventEvent(models.Model):
                         for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
                     }) for line in event.event_type_id.event_type_ticket_ids
                 ]
-            event.event_ticket_ids = command
+            event.no_slot_ticket_ids = command
+
+    @api.depends("is_multi_slots", "slot_ids", "no_slot_ticket_ids")
+    def _compute_event_ticket_ids(self):
+        """ Compute the event effective tickets using the declared slots and tickets. """
+        effective_slot_tickets_per_event = self.env['event.event.ticket'].search(
+            [('slot_id', '!=', False)]).grouped("event_ticket_event_id")
+        for event in self:
+            # Effective tickets = no-slot tickets
+            if not event.id or not event.is_multi_slots or not event.slot_ids or not event.no_slot_ticket_ids:
+                event.event_ticket_ids = event.no_slot_ticket_ids
+                continue
+            # Effective tickets = slot tickets
+            effective_slot_tickets = effective_slot_tickets_per_event.get(event, self.env['event.event.ticket'])
+            expected_combinations = {(slot.id, ticket.id) for ticket in event.no_slot_ticket_ids for slot in event.slot_ids}
+            existing_combinations = {
+                (slot_ticket.slot_id.id, slot_ticket.parent_ticket_id.id)
+                for slot_ticket in effective_slot_tickets
+            }
+            combinations_to_add = expected_combinations - existing_combinations
+            combinations_to_keep = expected_combinations & existing_combinations
+            slot_tickets_to_keep = effective_slot_tickets.filtered(lambda st:
+                (st.slot_id.id, st.parent_ticket_id.id) in combinations_to_keep
+            )
+            event.event_ticket_ids = (
+                # Clear to unlink past no slot tickets or non expected slot tickets
+                [Command.clear()] +
+                # Add relations to existing and expected slot tickets
+                [Command.link(slot_ticket.id) for slot_ticket in slot_tickets_to_keep] +
+                # Create missing slot - ticket combinations
+                [Command.create({
+                    'event_id': event.id,
+                    'slot_id': slot_id,
+                    'parent_ticket_id': ticket_id,
+                }) for slot_id, ticket_id in combinations_to_add]
+            )
 
     @api.depends('event_type_id')
     def _compute_note(self):
