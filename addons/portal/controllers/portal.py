@@ -716,7 +716,7 @@ class CustomerPortal(Controller):
             ResLang = request.env['res.lang']
             try:
                 lang_id = int(address_values.get('lang'))
-            except Exception as e:
+            except Exception:
                 lang_id = None
             supported_langs = ResLang._get_frontend().values()
 
