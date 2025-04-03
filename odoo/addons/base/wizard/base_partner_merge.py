@@ -99,6 +99,20 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         self._cr.execute(query, (table,))
         return self._cr.fetchall()
 
+    def _has_check_or_unique_constraint(self, table, column):
+        self._cr.execute("""
+            SELECT 1
+            FROM pg_constraint c
+            JOIN pg_class r ON (c.conrelid = r.oid)
+            CROSS JOIN LATERAL unnest(c.conkey) AS cattr(attnum)
+            JOIN pg_attribute a ON (a.attrelid = c.conrelid AND a.attnum = cattr.attnum)
+            WHERE c.contype IN ('c', 'u')
+                AND r.relname = %s
+                AND a.attname = %s
+            LIMIT 1
+        """, (table, column))
+        return bool(self._cr.rowcount)
+
     @api.model
     def _update_foreign_keys_generic(self, model, src_records, dst_record):
         """ Update all foreign key from the src_records to dst_record for any model.
@@ -131,6 +145,12 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 'column': column,
                 'value': columns[0],
             }
+
+            self._cr.execute('SELECT FROM "%(table)s" WHERE "%(column)s" IN %%s LIMIT 1' % query_dic,
+                                (tuple(src_records.ids),))
+            if self._cr.fetchone() is None:
+                continue  # no record
+
             if len(columns) <= 1:
                 # unique key treated
                 query = """
@@ -147,6 +167,10 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                         )""" % query_dic
                 for record in src_records:
                     self._cr.execute(query, (dst_record.id, record.id, dst_record.id))
+            elif not self._has_check_or_unique_constraint(table, column):
+                # if there is no CHECK or UNIQUE constraint, we do it without a savepoint
+                query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
+                self._cr.execute(query, (dst_record.id, tuple(src_records.ids)))
             else:
                 try:
                     with mute_logger('odoo.sql_db'), self._cr.savepoint():
@@ -173,6 +197,12 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             if Model is None:
                 return
             records = Model.sudo().search([(field_model, '=', referenced_model), (field_id, '=', src.id)])
+            if not records:
+                return
+            if not self._has_check_or_unique_constraint(records._table, field_id):
+                records.sudo().write({field_id: dst_record.id})
+                records.env.flush_all()
+                return
             try:
                 with mute_logger('odoo.sql_db'), self._cr.savepoint():
                     records.sudo().write({field_id: dst_record.id})
@@ -259,34 +289,34 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         self.env.flush_all()
 
         # company_dependent fields of merged records
-        with self._cr.savepoint():
-            for fname, field in dst_record._fields.items():
-                if field.company_dependent:
-                    self.env.execute_query(SQL(
-                        # use the specific company dependent value of sources
-                        # to fill the non-specific value of destination. Source
-                        # values for rows with larger id have higher priority
-                        # when aggregated
-                        """
-                        WITH source AS (
-                            SELECT %(field)s
-                            FROM  %(table)s
-                            WHERE id IN %(source_ids)s
-                            ORDER BY id
-                        ), source_agg AS (
-                            SELECT jsonb_object_agg(key, value) AS value
-                            FROM  source, jsonb_each(%(field)s)
-                        )
-                        UPDATE %(table)s
-                        SET %(field)s = source_agg.value || COALESCE(%(table)s.%(field)s, '{}'::jsonb)
-                        FROM source_agg
-                        WHERE id = %(destination_id)s AND source_agg.value IS NOT NULL
-                        """,
-                        table=SQL.identifier(dst_record._table),
-                        field=SQL.identifier(fname),
-                        destination_id=dst_record.id,
-                        source_ids=tuple(src_records.ids),
-                    ))
+        for fname, field in dst_record._fields.items():
+            if not field.company_dependent:
+                continue
+            self.env.execute_query(SQL(
+                # use the specific company dependent value of sources
+                # to fill the non-specific value of destination. Source
+                # values for rows with larger id have higher priority
+                # when aggregated
+                """
+                WITH source AS (
+                    SELECT %(field)s
+                    FROM  %(table)s
+                    WHERE id IN %(source_ids)s
+                    ORDER BY id
+                ), source_agg AS (
+                    SELECT jsonb_object_agg(key, value) AS value
+                    FROM  source, jsonb_each(%(field)s)
+                )
+                UPDATE %(table)s
+                SET %(field)s = source_agg.value || COALESCE(%(table)s.%(field)s, '{}'::jsonb)
+                FROM source_agg
+                WHERE id = %(destination_id)s AND source_agg.value IS NOT NULL
+                """,
+                table=SQL.identifier(dst_record._table),
+                field=SQL.identifier(fname),
+                destination_id=dst_record.id,
+                source_ids=tuple(src_records.ids),
+            ))
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):
