@@ -14,6 +14,7 @@
             <field name="subject">{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})</field>
             <field name="description">Sent to customers with their invoices in attachment</field>
             <field name="email_layout_xmlid">mail.mail_notification_layout_with_responsible_signature</field>
+            <field name="force_footer" eval="True"/>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
