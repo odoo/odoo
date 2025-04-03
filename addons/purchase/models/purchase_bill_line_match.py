@@ -106,7 +106,7 @@ class PurchaseBillLineMatch(models.Model):
                    NULL as pol_id,
                    aml.id as aml_id,
                    aml.company_id as company_id,
-                   aml.partner_id as partner_id,
+                   am.partner_id as partner_id,
                    aml.product_id as product_id,
                    aml.quantity as line_qty,
                    aml.product_uom_id as line_uom_id,
