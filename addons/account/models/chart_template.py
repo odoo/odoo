@@ -1097,17 +1097,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template(model='account.reconcile.model')
     def _get_account_reconcile_model(self, template_code):
         return {
-            "reconcile_bill": {
-                "name": 'Create Bill',
-                "sequence": 5,
-                'counterpart_type': 'purchase',
-                'line_ids': [
-                    Command.create({
-                        'amount_type': 'percentage_st_line',
-                        'amount_string': '100',
-                    }),
-                ],
-            },
             'internal_transfer_reco': {
                 'name': _('Internal Transfers'),
                 'line_ids': [
