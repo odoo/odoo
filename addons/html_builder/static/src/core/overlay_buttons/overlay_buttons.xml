@@ -3,9 +3,13 @@
 <t t-name="html_builder.OverlayButtons">
     <div t-if="state.showUi and state.isVisible" class="o_overlay_options">
         <t t-foreach="state.buttons" t-as="button" t-key="button_index">
+            <!-- Disabled buttons do not display their title -->
+            <span t-att-title="button.disabledReason" t-att-aria-label="button.disabledReason">
                 <button class="btn btn-primary" t-att-class="button.class"
                         t-att-title="button.title" t-att-aria-label="button.title"
+                        t-att-disabled="!!button.disabledReason"
                         t-on-click="button.handler"/>
+            </span>
         </t>
     </div>
 </t>

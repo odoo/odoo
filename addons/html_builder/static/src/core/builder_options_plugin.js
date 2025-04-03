@@ -15,7 +15,13 @@ export class BuilderOptionsPlugin extends Plugin {
         "builderOverlay",
         "overlayButtons",
     ];
-    static shared = ["getContainers", "updateContainers", "getPageContainers"];
+    static shared = [
+        "getContainers",
+        "updateContainers",
+        "getPageContainers",
+        "getRemoveDisabledReason",
+        "getCloneDisabledReason",
+    ];
     resources = {
         step_added_handlers: () => this.updateContainers(),
         clean_for_save_handlers: this.cleanForSave.bind(this),
