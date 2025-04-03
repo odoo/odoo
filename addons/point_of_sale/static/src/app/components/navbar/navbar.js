@@ -171,8 +171,8 @@ export class Navbar extends Component {
             if (order.preset_id.id != data.presetId) {
                 await this.pos.selectPreset(this.pos.models["pos.preset"].get(data.presetId));
             }
-
-            order.preset_time = data.slot.sql_datetime;
+            order.preset_time =
+                order.preset_time === data.slot.sql_datetime ? false : data.slot.sql_datetime;
             if (data.slot.datetime > DateTime.now()) {
                 this.pos.addPendingOrder([order.id]);
                 await this.pos.syncAllOrders();
