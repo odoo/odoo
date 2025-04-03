@@ -72,7 +72,7 @@ class TestEventTicketData(TestEventSaleCommon):
         """ Test event ticket fields synchronization """
         event = self.event_0.with_user(self.env.user)
         event.write({
-            'event_ticket_ids': [
+            'no_slot_ticket_ids': [
                 (5, 0),
                 (0, 0, {
                     'name': 'First Ticket',

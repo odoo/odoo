@@ -31,7 +31,7 @@ class TestEventSale(TestEventSaleCommon):
         })
 
         cls.event_0.write({
-            'event_ticket_ids': [
+            'no_slot_ticket_ids': [
                 (6, 0, cls.ticket.ids),
                 (0, 0, {
                     'name': 'Second Ticket',

@@ -34,6 +34,7 @@ class EventSlot(models.Model):
         "Sold Out", compute="_compute_is_sold_out",
         help="Whether seats are sold out for this slot.")
     registration_ids = fields.One2many("event.registration", "event_slot_id", string="Attendees")
+    slot_ticket_ids = fields.One2many("event.event.ticket", "slot_id", string="Slot Tickets")
     seats_available = fields.Integer(
         string="Available Seats",
         store=False, readonly=True, compute="_compute_seats")
@@ -140,9 +141,15 @@ class EventSlot(models.Model):
             slot.seats_taken = slot.seats_reserved + slot.seats_used
 
     def unlink(self):
-        """ Archive the slot instead of deleting it if it's linked to existing registrations. """
-        slots_w_registrations = self.filtered(lambda slot: slot.registration_ids)
+        """ Archive the slot instead of deleting it if it's linked to existing
+        registrations from a direct relation or from its related slot tickets.
+        Archive the related slot tickets to prevent any further registrations.
+        Also archive the existing registrations as they're not relevant anymore.
+        """
+        slots_w_registrations = self.filtered(lambda slot: slot.registration_ids or slot.slot_ticket_ids.registration_ids)
+        slots_w_registrations.registration_ids.action_archive()
         slots_w_registrations.action_archive()
+        slots_w_registrations.slot_ticket_ids.action_archive()
         return super(EventSlot, self - slots_w_registrations).unlink()
 
     @staticmethod

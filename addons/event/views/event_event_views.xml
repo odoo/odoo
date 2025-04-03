@@ -88,8 +88,9 @@
                     </group>
                     <notebook>
                         <page string="Tickets" name="tickets">
-                            <field name="event_ticket_ids" context="{
+                            <field name="no_slot_ticket_ids" context="{
                                 'default_event_name': name,
+                                'is_event_multi_slots': is_multi_slots,
                                 'list_view_ref': 'event.event_event_ticket_view_tree_from_event',
                                 'form_view_ref': 'event.event_event_ticket_view_form_from_event',
                                 'kanban_view_ref': 'event.event_event_ticket_view_kanban_from_event'}" mode="list,kanban"/>

@@ -27,10 +27,17 @@
                     />
                     <field
                         name="event_ticket_id"
-                        domain="[('event_id', '=', event_id), ('product_id', '=', product_id)]"
-                        invisible="not event_id"
+                        domain="[('event_id', '=', event_id), ('slot_id', '=', False), ('product_id', '=', product_id)]"
+                        invisible="not event_id or is_multi_slots"
                         required="event_id"
                         context="{'name_with_seats_availability': True}"
+                        options="{'no_open': True, 'no_create': True}"/>
+                    <field
+                        name="event_ticket_id"
+                        domain="[('event_id', '=', event_id), ('slot_id', '!=', False), ('product_id', '=', product_id)]"
+                        invisible="not event_id or not is_multi_slots"
+                        required="event_id"
+                        context="{'name_with_seats_availability': True, 'name_with_slot_date': True}"
                         options="{'no_open': True, 'no_create': True}"/>
                     <field name="product_id" invisible="1"/>
                 </group>
@@ -51,7 +58,7 @@
         <field name="res_model">event.event.configurator</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="context">{'name_with_seats_availability': True}</field>
+        <field name="context">{'name_with_seats_availability': True, 'name_with_slot_date': True}</field>
         <field name="view_id" ref="event_configurator_view_form"/>
     </record>
 </odoo>

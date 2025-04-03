@@ -17,7 +17,7 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
     def test_event_registration_utm_values(self):
         self.event_0.registration_ids.unlink()
         self.event_0.write({
-            'event_ticket_ids': [
+            'no_slot_ticket_ids': [
                 (5, 0),
                 (0, 0, {
                     'name': 'First Ticket',
@@ -86,7 +86,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             'name': 'Design Fair New York',
             'date_begin': fields.Datetime.now() - relativedelta(days=15),
             'date_end': fields.Datetime.now() + relativedelta(days=15),
-            'event_ticket_ids': [(0, 0, {
+            'no_slot_ticket_ids': [(0, 0, {
                 'name': 'Free',
                 'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15)
             }), (0, 0, {

@@ -33,7 +33,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'date_end': datetime.datetime.now() + datetime.timedelta(days=2),
             'seats_limited': True,
             'seats_max': 2,
-            'event_ticket_ids': [(0, 0, {
+            'no_slot_ticket_ids': [(0, 0, {
                 'name': 'Ticket Basic',
                 'product_id': cls.product_event.id,
                 'seats_max': 1,

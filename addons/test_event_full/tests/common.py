@@ -441,7 +441,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'date_begin': datetime.combine(self.reference_now, time(5, 0)) - timedelta(days=1),
             'date_end': datetime.combine(self.reference_now, time(15, 0)) + timedelta(days=1),
             # ticket informations
-            'event_ticket_ids': [
+            'no_slot_ticket_ids': [
                 (0, 0, {
                     'name': 'Standard',
                     'product_id': self.event_product.id,

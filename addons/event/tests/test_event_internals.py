@@ -298,7 +298,7 @@ class TestEventData(TestEventInternalsCommon):
             'event_type_id': event_type_default.id
         })
         event.write({
-            'event_ticket_ids': [
+            'no_slot_ticket_ids': [
                 Command.clear(),
                 Command.create({
                     'name': 'Registration Ticket',
@@ -314,21 +314,21 @@ class TestEventData(TestEventInternalsCommon):
         event_form = Form(event)
         # verify that the ticket is linked to the event in the form
         self.assertEqual(
-            set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
+            {m.get('name', None) for m in event_form.no_slot_ticket_ids._records},
             set(['Registration Ticket'])
         )
         # switch to an event_type with a ticket template which should be computed
         event_form.event_type_id = event_type_tickets
         # verify that both tickets are computed
         self.assertEqual(
-            set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
+            {m.get('name', None) for m in event_form.no_slot_ticket_ids._records},
             set(['Registration Ticket', 'Default Ticket'])
         )
         # switch back to an event_type without default tickets
         event_form.event_type_id = event_type_default
         # verify that the ticket linked to the registration was kept, and the other removed
         self.assertEqual(
-            set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
+            {m.get('name', None) for m in event_form.no_slot_ticket_ids._records},
             set(['Registration Ticket'])
         )
 
@@ -852,7 +852,7 @@ class TestEventTicketData(TestEventInternalsCommon):
         INITIAL_TICKET_SEATS_MAX = 30
         event = self.event_0.with_user(self.env.user)
         event.write({
-            'event_ticket_ids': [
+            'no_slot_ticket_ids': [
                 (5, 0),
                 (0, 0, {
                     'name': 'First Ticket',
