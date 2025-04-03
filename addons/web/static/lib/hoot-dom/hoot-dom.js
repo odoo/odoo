@@ -14,6 +14,7 @@ import { interactor } from "./hoot_dom_utils";
  * @typedef {import("./helpers/dom").Target} Target
  *
  * @typedef {import("./helpers/events").DragHelpers} DragHelpers
+ * @typedef {import("./helpers/events").DragOptions} DragOptions
  * @typedef {import("./helpers/events").EventType} EventType
  * @typedef {import("./helpers/events").FillOptions} FillOptions
  * @typedef {import("./helpers/events").InputValue} InputValue
