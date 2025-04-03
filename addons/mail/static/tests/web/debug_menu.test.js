@@ -8,7 +8,6 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { asyncStep, onRpc, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
-import { MailMessage } from "../mock_server/mock_models/mail_message";
 
 defineMailModels();
 describe.current.tags("desktop");
@@ -16,11 +15,6 @@ describe.current.tags("desktop");
 test("Manage messages", async () => {
     serverState.debug = "1";
     const pyEnv = await startServer();
-    MailMessage._views = {
-        "list,false": "<list/>",
-        "form,false": "<form/>",
-        "search,false": "<search/>",
-    };
     onRpc("mail.message", "web_search_read", (params) => {
         expect(params.kwargs.context.default_res_id).toBe(partnerId);
         expect(params.kwargs.context.default_res_model).toBe("res.partner");
