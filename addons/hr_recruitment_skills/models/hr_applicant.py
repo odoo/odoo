@@ -119,7 +119,7 @@ class HrApplicant(models.Model):
         self.with_context(just_moved=True).write(
             {
                 "job_id": self.env["hr.job"].browse(self.env.context.get("active_id")).id,
-                "stage_id": self.env.ref("hr_recruitment.stage_job0"),
+                "stage_id": self.env.ref("hr_recruitment.stage_job0").id,
             }
         )
         action = self.env["ir.actions.actions"]._for_xml_id("hr_recruitment.action_hr_job_applications")
