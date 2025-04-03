@@ -1598,35 +1598,45 @@ class PrefetchMany2one(Reversible):
     """ Iterable for the values of a many2one field on the prefetch set of a given record. """
     __slots__ = 'record', 'field'
 
-    def __init__(self, record, field):
+    def __init__(self, record: BaseModel, field: Many2one):
         self.record = record
         self.field = field
 
     def __iter__(self):
-        records = self.record.browse(self.record._prefetch_ids)
-        ids = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for id_ in ids if id_ is not None)
+        field_cache = self.field._cache_view(self.record.env)
+        return unique(
+            coid for record_id in self.record._prefetch_ids
+            if (coid := field_cache.get(record_id)) is not None
+        )
 
     def __reversed__(self):
-        records = self.record.browse(reversed(self.record._prefetch_ids))
-        ids = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for id_ in ids if id_ is not None)
+        field_cache = self.field._cache_view(self.record.env)
+        return unique(
+            coid for record_id in reversed(self.record._prefetch_ids)
+            if (coid := field_cache.get(record_id)) is not None
+        )
 
 
 class PrefetchX2many(Reversible):
     """ Iterable for the values of an x2many field on the prefetch set of a given record. """
     __slots__ = 'record', 'field'
 
-    def __init__(self, record, field):
+    def __init__(self, record: BaseModel, field: _RelationalMulti):
         self.record = record
         self.field = field
 
     def __iter__(self):
-        records = self.record.browse(self.record._prefetch_ids)
-        ids_list = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for ids in ids_list for id_ in ids)
+        field_cache = self.field._cache_view(self.record.env)
+        return unique(
+            coid
+            for record_id in self.record._prefetch_ids
+            for coid in field_cache.get(record_id, ())
+        )
 
     def __reversed__(self):
-        records = self.record.browse(reversed(self.record._prefetch_ids))
-        ids_list = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for ids in ids_list for id_ in ids)
+        field_cache = self.field._cache_view(self.record.env)
+        return unique(
+            coid
+            for record_id in reversed(self.record._prefetch_ids)
+            for coid in field_cache.get(record_id, ())
+        )
