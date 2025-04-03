@@ -10,15 +10,15 @@
 }
 
 .pos-receipt-preview {
-    border: 2px solid lightgrey;
     padding: 8px;
 }
 
 #wrapwrap {
-    font-size: 0.875rem;
-    overflow-y: scroll;
-    padding-right: 17px;
-    box-sizing: content-box;
+    display: inline-block;
+    border: 2px solid #dee2e6;
+    border-radius: 0.25rem;
+    text-align: left;
+    overflow-y: auto;
 }
 
 .pos-receipt-background-image {
@@ -79,6 +79,7 @@
     text-align: start;
     width: 40%;
     display: flex;
+    font-weight: bolder;
 }
 
 .pos-receipt .pos-receipt-title {
@@ -200,17 +201,31 @@
 
 .pos-receipt-lined-layout {
     .pos-receipt-amount {
-        padding: 8px;
-        padding-top: 0;
-    }
-    .receipt-total {
-        border-top: 1px dashed var(--dark-rgb);
-        padding-top: 8px;
-    }
-    .total-qty {
-        padding: 8px;
+        padding: 4px 0;
     }
     td, th {
         padding: 8px 2px;
+    }
+    .pos-receipt-total-container {
+        border-top: 1px solid var(--dark-rgb);
+        padding-top: 4px;
+    }
+    .tax-table tr *{
+        text-align: end;
+    }
+    .tax-table tr *:first-child {
+        text-align: start;
+    }
+    .tax-table tr {
+        padding: 0 4px;
+    }
+    .receipt-total {
+        background-color: var(--dark-rgb);
+        color: #ffffff;
+        padding: 2px 8px;
+        border-radius: 6px;
+    }
+    .paymentlines {
+        padding: 2px 8px;
     }
 }

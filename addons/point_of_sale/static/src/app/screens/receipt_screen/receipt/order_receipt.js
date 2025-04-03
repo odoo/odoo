@@ -71,13 +71,13 @@ export class OrderReceipt extends Component {
     }
 
     get bgImageUrl() {
-        const { receipt_bg_layout, receipt_bg_image } = this.order.config;
+        const { receipt_bg_layout, receipt_bg_image, receipt_logo } = this.order.config;
 
         if (receipt_bg_layout == "blank") {
             return false;
         }
-        if (receipt_bg_layout == "demo_logo") {
-            return `/web/image?model=res.company&id=${this.order.company?.id}&field=logo`;
+        if (receipt_bg_layout == "config_logo") {
+            return receipt_logo ? imageDataUri(receipt_logo) : false;
         }
         return receipt_bg_image ? imageDataUri(receipt_bg_image) : false;
     }
@@ -117,14 +117,6 @@ export class OrderReceipt extends Component {
             boxes: ["index", "name", "price"],
             light: ["qty", "name", "price"],
         };
-    }
-    get getFontSize() {
-        const fontSizeMap = {
-            Fira_Mono: 90,
-            Montserrat: 95,
-            Raleway: 95,
-        };
-        return fontSizeMap[this.order.config.receipt_font] || 100;
     }
     get headerColumnsData() {
         return {
@@ -216,7 +208,7 @@ export class OrderReceipt extends Component {
             });
         }
         line.packLotLines?.forEach((lotLine) => {
-            info.push({ class: "pack-lot-line", value: lotLine });
+            info.push({ class: "lot-number", value: lotLine });
         });
         if (line.combo_line_ids?.length) {
             let combo_info = _t("Combo Choice:");
@@ -291,8 +283,9 @@ export class OrderReceipt extends Component {
             payment_ids: paymentLines,
             pos_reference: "2504-003-0001",
             formatDateOrTime: () => DateTime.now().toLocaleString(DateTime.DATETIME_SHORT),
-            getCashierName: () => "Mitchell Admin",
+            getCashierName: () => false,
             session: {},
+            tracking_number: "021",
         };
     }
 }

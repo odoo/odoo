@@ -53,9 +53,9 @@ class PosReceiptLayout(models.TransientModel):
         }
 
     def _get_preview_products(self):
-        excluded_product_ids = self.env['pos.config']._get_special_products().product_tmpl_id.ids + self.pos_config_id.tip_product_id.product_tmpl_id.ids
+        excluded_product_ids = self.env['pos.config']._get_special_products().product_tmpl_id.ids
         unit_uom = self.env.ref('uom.product_uom_unit')
-        domain = [('id', 'not in', excluded_product_ids)]
+        domain = [('id', 'not in', excluded_product_ids), ('list_price', 'not in', [0.0])]
         if self.pos_config_id.iface_available_categ_ids:
             domain += [('pos_categ_ids', 'in', self.pos_config_id.iface_available_categ_ids.ids)]
         return self.env['product.template'].search_read(domain, ['name', 'list_price', 'uom_id'], limit=3) or [

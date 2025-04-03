@@ -7,7 +7,7 @@
             <t t-set="showTaxGroupLabels" t-value="doesAnyOrderlineHaveTaxLabel()"/>
             <ReceiptHeader order="order" previewMode="previewMode"/>
             <!-- Orderlines -->
-            <table t-att-class="receiptClasses.table" t-attf-style="font-size: #{this.getFontSize}%;">
+            <table t-att-class="receiptClasses.table" >
                 <thead>
                     <tr t-att-class="receiptClasses.thr">
                         <th t-foreach="headerInfo" t-as="headerName" t-key="headerName_index" t-out="headerName.value" t-att-class="headerName.class" class="fw-bolder"/>
@@ -48,10 +48,9 @@
                 <t t-set="taxTotals" t-value="order.taxTotals"/>
 
                 <!-- Total -->
-                <div t-if="isLightLayout" class="text-center">--------------------------------</div>
                 <div class="pos-receipt-total-container">
                     <div t-if="!isLightLayout" class="pos-receipt-amount total-qty">
-                        <span class="label-total-qty">Total Qty: </span>
+                        <span class="label-total-qty pe-1">Total Qty: </span>
                         <span t-out="orderQuantity"/>
                     </div>
                     <div class="pos-receipt-amount pos-receipt-amount-container">
@@ -96,7 +95,6 @@
                 </div>
 
                 <!-- Tax Details -->
-                <div t-if="isLightLayout" class="text-center">--------------------------------</div>
                 <div t-if="taxTotals and taxTotals.has_tax_groups" class="pos-receipt-taxes">
                     <t t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name">
                         <t t-if="isLightLayout">
@@ -121,9 +119,9 @@
                                 <span t-out="formatCurrency(tax_group.tax_amount_currency)" class="ms-auto"/>
                             </div>
                         </t>
-                        <table t-else="" class="mt-3 tax-table" t-att-class="receiptClasses.table"  t-attf-style="font-size: #{this.getFontSize}%;">
+                        <table t-else="" class="mt-3 tax-table" t-att-class="receiptClasses.table">
                             <thead>
-                                <tr class="text-center">
+                                <tr t-att-class="receiptClasses.thr">
                                     <th>Tax</th>
                                     <th>Amount</th>
                                     <th>Base</th>
@@ -131,8 +129,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id" class="text-center">
-                                    <td t-out="tax_group.group_name" />
+                                <tr t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id">
+                                    <td>
+                                        <span t-if="showTaxGroupLabels and tax_group.group_label" t-out="tax_group.group_label" class="me-2"/>
+                                        <span t-out="tax_group.group_name"/>
+                                    </td>
                                     <td t-out="formatCurrency(tax_group.tax_amount_currency)" />
                                     <td t-out="formatCurrency(tax_group.base_amount_currency)" />
                                     <td t-out="formatCurrency(tax_group.tax_amount_currency + tax_group.base_amount_currency)" />
@@ -174,7 +175,6 @@
 
             <!-- Footer -->
            <div t-if="order.config.receipt_footer" class="pos-receipt-center-align" style="white-space:pre-line">
-                <br/>
                 <t t-out="this.footerMarkup" />
             </div>
 
@@ -189,8 +189,8 @@
                 </t>
             </div>
 
-            <br/>
             <t t-if="order.shipping_date">
+                <br/>
                 <div class="pos-receipt-order-data">
                     Expected delivery:
                     <div><t t-esc="order.formatDateOrTime('shipping_date', 'date')" /></div>

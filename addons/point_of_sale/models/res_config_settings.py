@@ -91,7 +91,6 @@ class ResConfigSettings(models.TransientModel):
     pos_picking_type_id = fields.Many2one(related='pos_config_id.picking_type_id', readonly=False)
     pos_pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', compute='_compute_pos_pricelist_id', readonly=False, store=True)
     pos_proxy_ip = fields.Char(string='IP Address', related="pos_config_id.proxy_ip", readonly=False)
-    pos_receipt_layout = fields.Selection(related='pos_config_id.receipt_layout', readonly=False)
     pos_restrict_price_control = fields.Boolean(related='pos_config_id.restrict_price_control', readonly=False)
     pos_rounding_method = fields.Many2one(related='pos_config_id.rounding_method', readonly=False)
     pos_route_id = fields.Many2one(related='pos_config_id.route_id', readonly=False)
@@ -336,7 +335,7 @@ class ResConfigSettings(models.TransientModel):
     def action_view_pos_receipt_layout(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Configure your pos receipt'),
+            'name': _('Configure receipt'),
             'res_model': 'pos.receipt.layout',
             'view_mode': 'form',
             'target': 'new',
