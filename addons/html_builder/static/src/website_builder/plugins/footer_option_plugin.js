@@ -23,6 +23,12 @@ class FooterOptionPlugin extends Plugin {
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
             }),
+            {
+                template: "html_builder.FooterScrollToTopOption",
+                selector: "#wrapwrap > footer",
+                editableOnly: false,
+                groups: ["website.group_website_designer"],
+            },
         ],
         builder_actions: {
             websiteConfigFooter: {
