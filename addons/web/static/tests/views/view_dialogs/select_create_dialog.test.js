@@ -342,7 +342,6 @@ test("SelectCreateDialog list view is readonly", async () => {
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search"] = /* xml */ `<search/>`;
 
     await mountWithCleanup(WebClient);
 
@@ -805,7 +804,6 @@ test("SelectCreateDialog empty list, default no content helper", async () => {
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search"] = /* xml */ `<search/>`;
     await mountWithCleanup(WebClient);
     getService("dialog").add(SelectCreateDialog, { resModel: "partner" });
     await animationFrame();
@@ -843,7 +841,6 @@ test("SelectCreateDialog empty list, noContentHelp props", async () => {
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search"] = /* xml */ `<search/>`;
 
     await mountWithCleanup(WebClient);
     const template = xml`

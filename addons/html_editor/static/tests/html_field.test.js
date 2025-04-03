@@ -522,7 +522,7 @@ test("create new record and load it correctly", async () => {
 
         // Necessary for mobile
         _views = {
-            "kanban,false": `
+            kanban: `
                 <kanban>
                     <templates>
                         <t t-name="card">
