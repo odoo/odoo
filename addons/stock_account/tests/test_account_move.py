@@ -362,3 +362,55 @@ class TestAccountMove(TestAccountMoveStockCommon):
         })
 
         self.assertEqual(bill.invoice_line_ids.account_id, test_account)
+
+
+@tagged("post_install", "-at_install")
+class TestValuatedStockMove(TestAccountMoveStockCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        user_admin = cls.env.ref('base.user_admin')
+        cls.env = cls.env(user=user_admin)
+
+    def test_deliveries_with_minimal_access_rights(self):
+        """
+        Check that an inventory user is able to process a delivery.
+        """
+        product_lot = self.env['product.product'].create({
+            'name': 'Lovely Product',
+            'is_storable': True,
+            'tracking': 'lot',
+            'lot_valuated': True,
+        })
+        lot = self.env['stock.lot'].create({
+            'name': 'LOT0001',
+            'product_id': product_lot.id,
+        })
+        self.env['stock.quant']._update_available_quantity(product_lot, self.env.ref('stock.warehouse0').lot_stock_id, 10.0, lot_id=lot)
+        inventory_user = self.env['res.users'].create({
+            'name': 'Inventory user',
+            'login': 'inventory_user',
+            'email': 'inventory_user@gmail.com',
+            'groups_id': [Command.set(self.env.ref('stock.group_stock_user').ids)],
+        })
+        delivery = self.env['stock.picking'].create({
+            'name': 'Lovely delivery',
+            'partner_id': self.partner.id,
+            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': self.env.ref('stock.warehouse0').out_type_id.id,
+            'move_ids': [Command.create({
+                'name': 'lovely move',
+                'product_id': product_lot.id,
+                'product_uom_qty': 5.0,
+                'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })]
+        })
+        self.env.invalidate_all()
+        delivery.with_user(inventory_user).action_confirm()
+        delivery.with_user(inventory_user).button_validate()
+        self.assertEqual(delivery.state, 'done')
+        self.assertRecordValues(delivery.move_ids, [
+            {'quantity': 5.0, 'state': 'done', 'lot_ids': lot.ids}
+        ])
