@@ -1,16 +1,16 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 
 export class Follower extends Record {
     static _name = "mail.followers";
     static id = "id";
 
-    thread = Record.one("Thread");
+    thread = fields.One("Thread");
     /** @type {number} */
     id;
     /** @type {boolean} */
     is_active;
-    partner = Record.one("Persona");
+    partner = fields.One("Persona");
 
     /** @returns {boolean} */
     get isEditable() {

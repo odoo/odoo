@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 
@@ -13,15 +13,15 @@ export class ScheduledMessage extends Record {
     }
     /** @type {number} */
     id;
-    attachment_ids = Record.many("ir.attachment");
-    author = Record.one("Persona");
-    body = Record.html("");
+    attachment_ids = fields.Many("ir.attachment");
+    author = fields.One("Persona");
+    body = fields.Html("");
     /** @type {boolean} */
     composition_batch;
-    scheduled_date = Record.datetime();
+    scheduled_date = fields.Datetime();
     /** @type {boolean} */
     is_note;
-    textContent = Record.attr(false, {
+    textContent = fields.Attr(false, {
         compute() {
             if (!this.body) {
                 return "";
@@ -29,7 +29,7 @@ export class ScheduledMessage extends Record {
             return htmlToTextContentInline(this.body);
         },
     });
-    thread = Record.one("Thread");
+    thread = fields.One("Thread");
     // Editors of the records can delete scheduled messages
     get deletable() {
         return this.store.self.isAdmin || this.thread.hasWriteAccess;

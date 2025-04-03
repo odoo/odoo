@@ -1,5 +1,5 @@
 import { browser } from "@web/core/browser/browser";
-import { Record } from "./record";
+import { fields, Record } from "./record";
 
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
 
@@ -35,7 +35,7 @@ export class ChatHub extends Record {
         return chatHub;
     }
 
-    compact = Record.attr(false, {
+    compact = fields.Attr(false, {
         compute() {
             return browser.localStorage.getItem(CHAT_HUB_COMPACT_LS) === "true";
         },
@@ -49,7 +49,7 @@ export class ChatHub extends Record {
         },
     });
     /** From left to right. Right-most will actually be folded */
-    opened = Record.many("ChatWindow", {
+    opened = fields.Many("ChatWindow", {
         inverse: "hubAsOpened",
         /** @this {import("models").ChatHub} */
         onAdd(r) {
@@ -57,7 +57,7 @@ export class ChatHub extends Record {
         },
     });
     /** From top to bottom. Bottom-most will actually be hidden */
-    folded = Record.many("ChatWindow", { inverse: "hubAsFolded" });
+    folded = fields.Many("ChatWindow", { inverse: "hubAsFolded" });
     initPromise = new Deferred();
     preFirstFetchPromise = new Deferred();
     loadMutex = new Mutex();

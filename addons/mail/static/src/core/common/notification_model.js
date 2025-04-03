@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -8,7 +8,7 @@ export class Notification extends Record {
 
     /** @type {number} */
     id;
-    mail_message_id = Record.one("mail.message", {
+    mail_message_id = fields.One("mail.message", {
         onDelete() {
             this.delete();
         },
@@ -17,7 +17,7 @@ export class Notification extends Record {
     notification_status;
     /** @type {string} */
     notification_type;
-    failure = Record.one("Failure", {
+    failure = fields.One("Failure", {
         inverse: "notifications",
         /** @this {import("models").Notification} */
         compute() {
@@ -59,7 +59,7 @@ export class Notification extends Record {
                 return _t("Exception");
         }
     }
-    persona = Record.one("Persona");
+    persona = fields.One("Persona");
 
     get isFailure() {
         return ["exception", "bounce"].includes(this.notification_status);

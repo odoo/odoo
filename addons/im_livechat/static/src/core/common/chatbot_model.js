@@ -1,4 +1,4 @@
-import { AND, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
@@ -15,23 +15,23 @@ export class Chatbot extends Record {
     forwarded;
     isTyping = false;
     isProcessingAnswer = false;
-    script = Record.one("chatbot.script");
-    currentStep = Record.one("ChatbotStep", {
+    script = fields.One("chatbot.script");
+    currentStep = fields.One("ChatbotStep", {
         onUpdate() {
             if (this.currentStep?.operatorFound) {
                 this.forwarded = true;
             }
         },
     });
-    steps = Record.many("ChatbotStep");
-    thread = Record.one("Thread", {
+    steps = fields.Many("ChatbotStep");
+    thread = fields.One("Thread", {
         inverse: "chatbot",
         onDelete() {
             this.delete();
         },
     });
     tmpAnswer = "";
-    typingMessage = Record.one("mail.message", {
+    typingMessage = fields.One("mail.message", {
         compute() {
             if (this.isTyping && this.thread) {
                 return {
@@ -45,7 +45,7 @@ export class Chatbot extends Record {
     /**
      * @type {(message: import("models").Message) => Promise<void>}
      */
-    _processAnswerDebounced = Record.attr(null, {
+    _processAnswerDebounced = fields.Attr(null, {
         compute() {
             return debounce(this._processAnswer, Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY);
         },

@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { convertToEmbedURL } from "@mail/utils/common/misc";
 
 const VIDEO_EXTENSIONS = new Set(["mp4", "mov", "avi", "mkv", "webm", "mpeg", "mpg", "ogv", "3gp"]);
@@ -9,7 +9,9 @@ export class LinkPreview extends Record {
 
     /** @type {number} */
     id;
-    message_link_preview_ids = Record.many("mail.message.link.preview", { inverse: "link_preview_id"})
+    message_link_preview_ids = fields.Many("mail.message.link.preview", {
+        inverse: "link_preview_id",
+    });
     /** @type {string} */
     image_mimetype;
     /** @type {string} */

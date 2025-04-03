@@ -1,4 +1,4 @@
-import { AND, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 
 export class MessageReactions extends Record {
@@ -10,8 +10,8 @@ export class MessageReactions extends Record {
     count;
     /** @type {number} */
     sequence;
-    personas = Record.many("Persona");
-    message = Record.one("mail.message");
+    personas = fields.Many("Persona");
+    message = fields.One("mail.message");
 
     async remove() {
         this.store.insert(
