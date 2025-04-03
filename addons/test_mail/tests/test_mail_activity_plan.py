@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.addons.mail.tests.test_mail_activity import ActivityScheduleCase
+from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged, users
 from odoo.tools.misc import format_date
@@ -203,6 +203,12 @@ class TestActivitySchedule(ActivityScheduleCase):
         self.assertEqual(len(self.test_records[3].activity_ids), 0)
         self.assertEqual(len(self.test_records[4].activity_ids), 0)
 
+    def test_plan_copy(self):
+        """Test plan copy"""
+        copied_plan = self.plan_onboarding.copy()
+        self.assertEqual(copied_plan.name, f'{self.plan_onboarding.name} (copy)')
+        self.assertEqual(len(copied_plan.template_ids), len(self.plan_onboarding.template_ids))
+
     @users('employee')
     def test_plan_mode(self):
         """ Test the plan_mode that allows to preselect a compatible plan. """
@@ -371,9 +377,3 @@ class TestActivitySchedule(ActivityScheduleCase):
                 ValidationError, msg='When selecting responsible "other", you must specify a responsible.'):
             template.responsible_type = 'other'
         template.write({'responsible_type': 'other', 'responsible_id': self.user_admin})
-
-    def test_plan_copy(self):
-        """Test plan copy"""
-        copied_plan = self.plan_onboarding.copy()
-        self.assertEqual(copied_plan.name, f'{self.plan_onboarding.name} (copy)')
-        self.assertEqual(len(copied_plan.template_ids), len(self.plan_onboarding.template_ids))
