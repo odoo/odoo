@@ -1,6 +1,13 @@
-import { before, createJobScopedGetter, expect, getCurrent, registerDebugInfo } from "@odoo/hoot";
+import {
+    after,
+    before,
+    createJobScopedGetter,
+    expect,
+    getCurrent,
+    registerDebugInfo,
+} from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
-import { RPCError } from "@web/core/network/rpc";
+import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
@@ -14,6 +21,7 @@ import {
     makeServerError,
     safeSplit,
 } from "./mock_server_utils";
+import { PersistentCache } from "@web/core/utils/persistent_cache";
 
 const { DateTime } = luxon;
 
@@ -390,6 +398,10 @@ export class MockServer {
     websockets = [];
 
     constructor() {
+        // Add RPC cache
+        rpc.setCache(new PersistentCache("mockRpc", 1));
+        after(() => rpc.setCache(null));
+
         // Set default routes
         this._onRoute(["/web/action/load"], this.loadAction);
         this._onRoute(["/web/action/load_breadcrumbs"], this.loadActionBreadcrumbs);

@@ -141,19 +141,15 @@ export function makeActionManager(env, router = _router) {
     const keepLast = new KeepLast();
     let id = 0;
     let controllerStack = [];
-    let actionCache = {};
     let dialog = null;
     let nextDialog = null;
 
     router.hideKeyFromUrl("globalState");
 
-    env.bus.addEventListener("CLEAR-CACHES", () => {
-        actionCache = {};
-    });
     rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
         const { model, method } = ev.detail.data.params;
         if (model === "ir.actions.act_window" && UPDATE_METHODS.includes(method)) {
-            actionCache = {};
+            rpcBus.trigger("CLEAR-CACHES", "/web/action/load");
             const virtualStack = await _controllersFromState();
             const nextStack = [...virtualStack, controllerStack[controllerStack.length - 1]];
             nextStack[nextStack.length - 1].config.breadcrumbs.splice(
@@ -353,17 +349,16 @@ export function makeActionManager(env, router = _router) {
             // actionRequest is an id or an xmlid
             const ctx = makeContext([user.context, context]);
             delete ctx.params;
-            const key = `${JSON.stringify(actionRequest)},${JSON.stringify(ctx)}`;
-            let action = await actionCache[key];
-            if (!action) {
-                actionCache[key] = rpc("/web/action/load", {
+            const action = await rpc(
+                "/web/action/load",
+                {
                     action_id: actionRequest,
                     context: ctx,
-                });
-                action = await actionCache[key];
-                if (action.help) {
-                    action.help = markup(action.help);
-                }
+                },
+                { cached: true }
+            );
+            if (action.help) {
+                action.help = markup(action.help);
             }
             return Object.assign({}, action);
         }

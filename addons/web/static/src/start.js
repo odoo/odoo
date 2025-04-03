@@ -4,6 +4,8 @@ import { session } from "@web/session";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { user } from "@web/core/user";
 import { Component, whenReady } from "@odoo/owl";
+import { rpc } from "./core/network/rpc";
+import { PersistentCache } from "./core/utils/persistent_cache";
 
 /**
  * Function to start a webclient.
@@ -21,6 +23,8 @@ export async function startWebClient(Webclient) {
         isEnterprise: session.server_version_info.slice(-1)[0] === "e",
     };
     odoo.isReady = false;
+
+    rpc.setCache(new PersistentCache("rpc", session.server_version));
 
     await whenReady();
     const app = await mountComponent(Webclient, document.body, { name: "Odoo Web Client" });

@@ -22,6 +22,7 @@ import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_se
 import { _t } from "@web/core/l10n/translation";
 import { domainFromTree, treeFromDomain } from "@web/core/tree_editor/condition_tree";
 import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
+import { rpcBus } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
 const SPECIAL = Symbol("special");
@@ -518,7 +519,7 @@ export class SearchModel extends EventBus {
 
     async _createIrFilters(irFilter) {
         const serverSideIds = await this.orm.call("ir.filters", "create_filter", [irFilter]);
-        this.env.bus.trigger("CLEAR-CACHES");
+        rpcBus.trigger("CLEAR-CACHES", "get_views");
         return serverSideIds[0];
     }
 
