@@ -294,6 +294,201 @@ export class ProductScreen extends Component {
         return this.pos.searchProductWord.trim();
     }
 
+<<<<<<< 7041a962e52aec4becfe2621ef5db887a51b0328
+||||||| 6cefdac40a97e85c1a549cfad6d17458eea43a0a
+    get products() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            const productIds = new Set([]);
+            for (const categ of iface_available_categ_ids) {
+                const categoryProducts =
+                    this.pos.models["product.product"].getBy("pos_categ_ids", categ.id) || [];
+                for (const p of categoryProducts) {
+                    productIds.add(p.id);
+                }
+            }
+            return this.pos.models["product.product"].filter((p) => productIds.has(p.id));
+        }
+        return this.pos.models["product.product"].getAll();
+    }
+
+    get productsToDisplay() {
+        let list = [];
+
+        if (this.searchWord !== "") {
+            if (!this._searchTriggered) {
+                this.pos.setSelectedCategory(0);
+                this._searchTriggered = true;
+            }
+            list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
+        } else {
+            this._searchTriggered = false;
+            if (this.pos.selectedCategory?.id) {
+                list = this.getProductsByCategory(this.pos.selectedCategory);
+            } else {
+                list = this.products;
+            }
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
+        const filteredList = [];
+        for (const product of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+            if (!excludedProductIds.includes(product.id) && product.canBeDisplayed) {
+                filteredList.push(product);
+            }
+        }
+
+        return this.searchWord !== ""
+            ? filteredList
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    }
+
+    getProductsBySearchWord(searchWord) {
+        const words = unaccent(searchWord.toLowerCase(), false);
+        const products = this.pos.selectedCategory?.id
+            ? this.getProductsByCategory(this.pos.selectedCategory)
+            : this.products;
+
+        const filteredProducts = products.filter((p) => unaccent(p.searchString).includes(words));
+        return filteredProducts.sort((a, b) => {
+            const nameA = unaccent(a.searchString);
+            const nameB = unaccent(b.searchString);
+            // Sort by match index, push non-matching items to the end, and use alphabetical order as a tiebreaker
+            return nameA.indexOf(words) - nameB.indexOf(words) || nameA.localeCompare(nameB);
+        });
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.pos.mainProductVariant) {
+                const mainProduct = this.pos.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    getProductsByCategory(category) {
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        const products = allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+        );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products));
+    }
+
+=======
+    get products() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            const productIds = new Set([]);
+            for (const categ of iface_available_categ_ids) {
+                const categoryProducts = this.getProductsByCategory(categ);
+                for (const p of categoryProducts) {
+                    productIds.add(p.id);
+                }
+            }
+            return this.pos.models["product.product"].filter((p) => productIds.has(p.id));
+        }
+        return this.pos.models["product.product"].getAll();
+    }
+
+    get productsToDisplay() {
+        let list = [];
+
+        if (this.searchWord !== "") {
+            if (!this._searchTriggered) {
+                this.pos.setSelectedCategory(0);
+                this._searchTriggered = true;
+            }
+            list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
+        } else {
+            this._searchTriggered = false;
+            if (this.pos.selectedCategory?.id) {
+                list = this.getProductsByCategory(this.pos.selectedCategory);
+            } else {
+                list = this.products;
+            }
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
+        const filteredList = [];
+        for (const product of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+            if (!excludedProductIds.includes(product.id) && product.canBeDisplayed) {
+                filteredList.push(product);
+            }
+        }
+
+        return this.searchWord !== ""
+            ? filteredList
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    }
+
+    getProductsBySearchWord(searchWord) {
+        const words = unaccent(searchWord.toLowerCase(), false);
+        const products = this.pos.selectedCategory?.id
+            ? this.getProductsByCategory(this.pos.selectedCategory)
+            : this.products;
+
+        const filteredProducts = products.filter((p) => unaccent(p.searchString).includes(words));
+        return filteredProducts.sort((a, b) => {
+            const nameA = unaccent(a.searchString);
+            const nameB = unaccent(b.searchString);
+            // Sort by match index, push non-matching items to the end, and use alphabetical order as a tiebreaker
+            return nameA.indexOf(words) - nameB.indexOf(words) || nameA.localeCompare(nameB);
+        });
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.pos.mainProductVariant) {
+                const mainProduct = this.pos.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    getProductsByCategory(category) {
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        const products = allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+        );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products));
+    }
+
+>>>>>>> 765d744c868a4c2a76e6271790cfa9e8179851d6
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {
