@@ -1430,6 +1430,7 @@ test("message sound on receiving new message (push notif enabled)", async () => 
     patchWithCleanup(window.navigator, {
         serviceWorker: Object.assign(new EventBus(), {
             register: () => Promise.resolve(),
+            ready: Promise.resolve(),
             getRegistration: async () => ({
                 get pushManager() {
                     return Promise.resolve({ getSubscription: async () => ({}) });
