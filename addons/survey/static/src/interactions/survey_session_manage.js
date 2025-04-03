@@ -1,7 +1,6 @@
 import { preloadBackground } from "@survey/js/survey_preload_image_mixin";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import SurveySessionChart from "@survey/interactions/survey_session_chart";
-import SurveySessionTextAnswers from "@survey/interactions/survey_session_text_answers";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
@@ -49,7 +48,6 @@ export class SurveySessionManage extends Interaction {
      */
     async willStart() {
         const setupPromises = [];
-        setupPromises.push(this._setupTextAnswers());
         setupPromises.push(this._setupChart());
         await Promise.all(setupPromises);
     }
@@ -62,6 +60,7 @@ export class SurveySessionManage extends Interaction {
             return;
         }
         this.leaderboardEl = this.el.querySelector(".o_survey_session_leaderboard");
+        this.textAnswersEl = this.el.querySelector(".o_survey_session_text_answers_container");
         // general survey props
         this.surveyId = parseInt(this.el.dataset["surveyId"]);
         this.surveyHasConditionalQuestions = this.el.dataset["surveyHasConditionalQuestions"];
@@ -575,31 +574,6 @@ export class SurveySessionManage extends Interaction {
     }
 
     /**
-     * Shows attendees answers for char_box/date and datetime questions.
-     * see SurveySessionTextAnswers widget doc for more information.
-     * TODO: refactor when converting SurveySessionTextAnswers widget
-     */
-    _setupTextAnswers() {
-        if (this.textAnswers) {
-            this.textAnswers.setElement(null);
-            this.textAnswers.destroy();
-            delete this.textAnswers;
-        }
-
-        if (!this.isStartScreen && this.showTextAnswers) {
-            this.textAnswers = new SurveySessionTextAnswers(this, {
-                questionType: this.el.dataset["questionType"],
-            });
-
-            return this.textAnswers.attachTo(
-                this.el.querySelector(".o_survey_session_text_answers_container")
-            );
-        } else {
-            return Promise.resolve();
-        }
-    }
-
-    /**
      * Setup the 2 refresh intervals of 2 seconds for our widget:
      * - The refresh of attendees count (only on the start screen)
      * - The refresh of results (used for chart/text answers/progress bar)
@@ -686,8 +660,15 @@ export class SurveySessionManage extends Interaction {
                         if (parsedStatistics.length > 0) {
                             this.resultsChart.updateChart(parsedStatistics);
                         }
-                    } else if (this.textAnswers) {
-                        this.textAnswers.updateTextAnswers(questionResults.input_line_values);
+                    } else if (!this.isStartScreen && this.showTextAnswers) {
+                        this.textAnswersEl.dispatchEvent(
+                            new CustomEvent("updateTextAnswers", {
+                                detail: {
+                                    questionType: this.el.dataset["questionType"],
+                                    inputLineValues: questionResults.input_line_values,
+                                },
+                            })
+                        );
                     }
 
                     // Update the last question next screen tooltip depending on the selected answers.

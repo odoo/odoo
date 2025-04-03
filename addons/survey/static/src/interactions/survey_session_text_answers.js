@@ -1,20 +1,20 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
-import { renderToElement } from "@web/core/utils/render";
-import SESSION_CHART_COLORS from "@survey/interactions/survey_session_colors";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { registry } from "@web/core/registry";
+import { renderToElement } from "@web/core/utils/render";
+import { Interaction } from "@web/public/interaction";
+import SESSION_CHART_COLORS from "@survey/interactions/survey_session_colors";
 const { DateTime } = luxon;
 
-publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
+export class SurveySessionTextAnswers extends Interaction {
+    static selector = ".o_survey_session_text_answers_container";
 
+    setup() {
         this.answerIds = [];
-        this.questionType = options.questionType;
-    },
+    }
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+    start() {
+        this.addListener(this.el, "updateTextAnswers", this.updateTextAnswers);
+    }
 
     /**
      * Adds the attendees answers on the screen.
@@ -25,45 +25,46 @@ publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
      * - set the actual width of the answer, and enable a css width animation
      * - set the opacity to 1, and enable a css opacity animation
      *
-     * @param {Array} inputLineValues array of survey.user_input.line records in the form
-     *   {id: line.id, value: line.[value_char_box/value_date/value_datetime]}
+     * @param {CustomEvent} ev Custom event containing the questionType and
+     * the array of survey.user_input.line records in the form
+     * {id: line.id, value: line.[value_char_box/value_date/value_datetime]}
      */
-    updateTextAnswers: function (inputLineValues) {
-        var self = this;
+    updateTextAnswers(ev) {
+        const inputLineValues = ev.detail.inputLineValues;
+        const questionType = ev.detail.questionType;
 
-        inputLineValues.forEach(function (inputLineValue) {
-            if (!self.answerIds.includes(inputLineValue.id) && inputLineValue.value) {
-                var textValue = inputLineValue.value;
-                if (self.questionType === 'char_box') {
-                    textValue = textValue.length > 25 ?
-                        textValue.substring(0, 22) + '...' :
-                        textValue;
-                } else if (self.questionType === 'date') {
+        inputLineValues.forEach((inputLineValue) => {
+            if (!this.answerIds.includes(inputLineValue.id) && inputLineValue.value) {
+                let textValue = inputLineValue.value;
+                if (questionType === "char_box") {
+                    textValue =
+                        textValue.length > 25 ? textValue.substring(0, 22) + "..." : textValue;
+                } else if (questionType === "date") {
                     textValue = formatDate(DateTime.fromFormat(textValue, "yyyy-MM-dd"));
-                } else if (self.questionType === 'datetime') {
+                } else if (questionType === "datetime") {
                     textValue = formatDateTime(
                         DateTime.fromFormat(textValue, "yyyy-MM-dd HH:mm:ss")
                     );
                 }
-
-                var $textAnswer = $(renderToElement('survey.survey_session_text_answer', {
+                const textAnswerEl = renderToElement("survey.survey_session_text_answer", {
                     value: textValue,
-                    borderColor: `rgb(${SESSION_CHART_COLORS[self.answerIds.length % 10]})`
-                }));
-                self.$el.append($textAnswer);
-                var spanWidth = $textAnswer.find('span').width();
-                var calculatedWidth = `calc(${spanWidth}px + 1.2rem)`;
-                $textAnswer.css('width', calculatedWidth);
-                setTimeout(function () {
-                    // setTimeout to force jQuery rendering
-                    $textAnswer.find('.o_survey_session_text_answer_container')
-                        .css('width', calculatedWidth)
-                        .css('opacity', '1');
-                }, 1);
-                self.answerIds.push(inputLineValue.id);
+                    borderColor: `rgb(${SESSION_CHART_COLORS[this.answerIds.length % 10]})`,
+                });
+                this.el.appendChild(textAnswerEl);
+                const spanWidth = textAnswerEl.querySelector("span").offsetWidth;
+                textAnswerEl.style.width = `calc(${spanWidth}px + 1.2rem)`;
+                textAnswerEl.querySelector(
+                    ".o_survey_session_text_answer_container"
+                ).style.width = `calc(${spanWidth}px + 1.2rem)`;
+                textAnswerEl.querySelector(
+                    ".o_survey_session_text_answer_container"
+                ).style.opacity = "1";
+                this.answerIds.push(inputLineValue.id);
             }
         });
-    },
-});
+    }
+}
 
-export default publicWidget.registry.SurveySessionTextAnswers;
+registry
+    .category("public.interactions")
+    .add("survey.survey_session_text_answers", SurveySessionTextAnswers);
