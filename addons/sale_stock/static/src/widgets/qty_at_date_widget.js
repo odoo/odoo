@@ -92,6 +92,7 @@ export const qtyAtDateWidget = {
         { name: 'free_qty_today', type: 'float'},
         { name: 'forecast_expected_date', type: 'datetime'},
         { name: 'is_mto', type: 'boolean'},
+        { name: 'move_ids', type: 'one2many'},
         { name: 'qty_available_today', type: 'float'},
         { name: 'qty_to_deliver', type: 'float'},
         { name: 'scheduled_date', type: 'datetime'},
