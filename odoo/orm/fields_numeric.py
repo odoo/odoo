@@ -49,9 +49,7 @@ class Integer(Field[int]):
         return value
 
     def _update(self, records, value):
-        cache = records.env.cache
-        for record in records:
-            cache.set(record, self, value.id or 0)
+        self._cache_update(records, value.id or 0)
 
     def convert_to_export(self, value, record):
         if value or value == 0:

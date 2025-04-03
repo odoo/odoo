@@ -1401,7 +1401,6 @@ class Field(typing.Generic[T]):
         records.env.remove_to_compute(self, records)
 
         # discard the records that are not modified
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
         records = self._cache_filter_different_from(records, cache_value)
         if not records:
@@ -1409,7 +1408,7 @@ class Field(typing.Generic[T]):
 
         # update the cache
         dirty = self.store and any(records._ids)
-        cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+        self._cache_update(records, cache_value, dirty=dirty)
 
     ############################################################################
     #
@@ -1512,6 +1511,35 @@ class Field(typing.Generic[T]):
             for record_id in records._ids
             if field_cache.get(record_id, SENTINEL) != cache_value
         )
+
+    def _cache_update(self, records: BaseModel, cache_value: typing.Any, dirty: bool = False) -> typing.Any:
+        """ Update the value in the cache for the given records.
+
+        One can normally make a clean field dirty but not the other way around.
+        Updating a dirty field without ``dirty=True`` is a programming error and
+        logs an error.
+
+        :param dirty: whether ``field`` must be made dirty on ``record`` after
+            the update
+        """
+        env = records.env
+        field_cache = self._get_cache(env)
+        assign = dict.fromkeys(records._ids, cache_value)
+        field_cache.update(assign)
+
+        if dirty:
+            assert self.column_type and self.store and all(assign)
+            env._field_dirty[self].update(assign)
+            # XXX remove self.translate from here
+            if not self.translate and not self.company_dependent and self in env._field_depends_context:
+                # put the values under conventional context key values {'context_key': None},
+                # in order to ease the retrieval of those values to flush them
+                self._get_cache(env(context={})).update(assign)
+        else:
+            dirty_ids = env._field_dirty.get(self)
+            if dirty_ids and not dirty_ids.isdisjoint(assign):
+                _logger.error("Field._cache_update() updating the value on %s.%s where dirty flag is already set", records, self.name, stack_info=True)
+        return cache_value
 
     ############################################################################
     #

@@ -186,7 +186,6 @@ class Binary(Field):
         records.env.remove_to_compute(self, records)
 
         # update the cache, and discard the records that are not modified
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
         records = self._cache_filter_different_from(records, cache_value)
         if not records:
@@ -195,7 +194,7 @@ class Binary(Field):
             # determine records that are known to be not null
             not_null = self._cache_filter_different_from(records, None)
 
-        cache.update(records, self, itertools.repeat(cache_value))
+        self._cache_update(records, cache_value)
 
         # retrieve the attachments that store the values, and adapt them
         if self.store and any(records._ids):
@@ -277,7 +276,7 @@ class Image(Binary):
             # cache to let the inverse method use the original image; the image
             # will be resized once the inverse has been applied
             cache_value = self.convert_to_cache(value if self.related else new_value, record)
-            record.env.cache.update(record, self, itertools.repeat(cache_value))
+            self._cache_update(record, cache_value)
         super().create(new_record_values)
 
     def write(self, records, value):
@@ -296,7 +295,7 @@ class Image(Binary):
         super().write(records, new_value)
         cache_value = self.convert_to_cache(value if self.related else new_value, records)
         dirty = self.column_type and self.store and any(records._ids)
-        records.env.cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+        self._cache_update(records, cache_value, dirty=dirty)
 
     def _inverse_related(self, records):
         super()._inverse_related(records)
@@ -304,9 +303,10 @@ class Image(Binary):
             return
         # the inverse has been applied with the original image; now we fix the
         # cache with the resized value
+        dirty = self.column_type and self.store
         for record in records:
             value = self._process_related(record[self.name], record.env)
-            record.env.cache.set(record, self, value, dirty=(self.store and self.column_type))
+            self._cache_update(record, value, dirty=dirty)
 
     def _image_process(self, value, env):
         if self.readonly and not self.max_width and not self.max_height:

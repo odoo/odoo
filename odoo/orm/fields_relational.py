@@ -353,7 +353,6 @@ class Many2one(_Relational[M]):
         records.env.remove_to_compute(self, records)
 
         # discard the records that are not modified
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
         records = self._cache_filter_different_from(records, cache_value)
         if not records:
@@ -364,7 +363,7 @@ class Many2one(_Relational[M]):
 
         # update the cache of self
         dirty = self.store and any(records._ids)
-        cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+        self._cache_update(records, cache_value, dirty=dirty)
 
         # update the cache of one2many fields of new corecord
         self._update_inverses(records, cache_value)

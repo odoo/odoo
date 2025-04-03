@@ -263,6 +263,16 @@ class BaseString(Field[str | typing.Literal[False]]):
             records = records.with_context(prefetch_langs=False)
         return super()._cache_missing_ids(records)
 
+    def _cache_update(self, records, cache_value, dirty=False):
+        if self.translate and cache_value is not None and records.env.context.get('prefetch_langs'):
+            assert isinstance(cache_value, dict), f"invalid cache value for {self}"
+            if len(records) > 1:
+                # new dict for each record
+                for record in records:
+                    super()._cache_update(record, dict(cache_value), dirty)
+                return cache_value
+        return super()._cache_update(records, cache_value, dirty)
+
     def _cache_view(self, env):
         cache = super()._cache_view(env)
         if not self.translate or env.context.get('prefetch_langs'):
@@ -281,16 +291,16 @@ class BaseString(Field[str | typing.Literal[False]]):
         if not self.translate or value is False or value is None:
             super().write(records, value)
             return
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
         records = self._cache_filter_different_from(records, cache_value)
         if not records:
             return
+        field_cache = self._get_cache(records.env)
         dirty_ids = records.env._field_dirty.get(self, ())
 
         # flush dirty None values
         dirty_records = records.filtered(lambda rec: rec.id in dirty_ids)
-        if any(v is None for v in cache.get_values(dirty_records, self)):
+        if any(field_cache.get(record_id, SENTINEL) is None for record_id in dirty_records._ids):
             dirty_records.flush_recordset([self.name])
 
         dirty = self.store and any(records._ids)
@@ -298,7 +308,7 @@ class BaseString(Field[str | typing.Literal[False]]):
 
         # not dirty fields
         if not dirty:
-            cache.update_raw(records, self, [{lang: cache_value} for _id in records._ids], dirty=False)
+            self._cache_update(records.with_context(prefetch_langs=True), {lang: cache_value}, dirty=False)
             return
 
         # model translation
@@ -306,10 +316,10 @@ class BaseString(Field[str | typing.Literal[False]]):
             # invalidate clean fields because them may contain fallback value
             clean_records = records.filtered(lambda rec: rec.id not in dirty_ids)
             clean_records.invalidate_recordset([self.name])
-            cache.update(records, self, itertools.repeat(cache_value), dirty=True)
+            self._cache_update(records, cache_value, dirty=True)
             if lang != 'en_US' and not records.env['res.lang']._get_data(code='en_US'):
                 # if 'en_US' is not active, we always write en_US to make sure value_en is meaningful
-                cache.update(records.with_context(lang='en_US'), self, itertools.repeat(cache_value), dirty=True)
+                self._cache_update(records.with_context(lang='en_US'), cache_value, dirty=True)
             return
 
         # model term translation
@@ -376,8 +386,8 @@ class BaseString(Field[str | typing.Literal[False]]):
                 new_store_translations['en_US'] = cache_value
                 new_store_translations.pop('_en_US', None)
             new_translations_list.append(new_store_translations)
-        # Maybe we can use Cache.update(records.with_context(cache_update_raw=True), self, new_translations_list, dirty=True)
-        cache.update_raw(records, self, new_translations_list, dirty=True)
+        for record, new_translation in zip(records.with_context(prefetch_langs=True), new_translations_list, strict=True):
+            self._cache_update(record, new_translation, dirty=True)
 
     def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
         sql_field = super().to_sql(model, alias, flush)

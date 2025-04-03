@@ -713,21 +713,7 @@ class Cache:
         :param dirty: whether ``field`` must be made dirty on ``record`` after
             the update
         """
-        field_cache = self._set_field_cache(record, field)
-        record_id = record.id
-        field_cache[record_id] = value
-
-        if dirty:
-            assert field.column_type and field.store and record_id
-            self.transaction.dirty[field].add(record_id)
-            if field in record.pool.field_depends_context:
-                # put the values under conventional context key values {'context_key': None},
-                # in order to ease the retrieval of those values to flush them
-                record = record.with_env(record.env(context={}))
-                field_cache = self._set_field_cache(record, field)
-                field_cache[record_id] = value
-        elif record_id in self.transaction.dirty.get(field, ()):
-            _logger.error("cache.set() removing flag dirty on %s.%s", record, field.name, stack_info=True)
+        field._cache_update(record, value, dirty=dirty)
 
     def update(self, records: BaseModel, field: Field, values: Iterable, dirty: bool = False) -> None:
         """ Set the values of ``field`` for several ``records``.
@@ -738,21 +724,8 @@ class Cache:
         :param dirty: whether ``field`` must be made dirty on ``record`` after
             the update
         """
-        if field.translate:
-            # only for model translated fields
-            lang = records.env.lang or 'en_US'
-            field_cache = records.with_context(prefetch_langs=True).env._field_cache(field)
-            cache_values = []  # type: ignore
-            for id_, value in zip(records._ids, values):
-                if value is None:
-                    cache_values.append(None)
-                else:
-                    cache_value = field_cache.get(id_) or {}
-                    cache_value[lang] = value
-                    cache_values.append(cache_value)
-            values = cache_values
-
-        self.update_raw(records, field, values, dirty)
+        for record, value in zip(records, values):
+            field._cache_update(record, value, dirty=dirty)
 
     def update_raw(self, records: BaseModel, field: Field, values: Iterable, dirty: bool = False) -> None:
         """ This is a variant of method :meth:`~update` without the logic for
@@ -760,21 +733,8 @@ class Cache:
         """
         if field.translate:
             records = records.with_context(prefetch_langs=True)
-        field_cache = records.env._field_cache(field)
-        field_cache.update(zip(records._ids, values))
-        if dirty:
-            assert field.column_type and field.store and all(records._ids)
-            self.transaction.dirty[field].update(records._ids)
-            if not field.translate and not field.company_dependent and field in records.pool.field_depends_context:
-                # put the values under conventional context key values {'context_key': None},
-                # in order to ease the retrieval of those values to flush them
-                records = records.with_env(records.env(context={}))
-                field_cache = self._set_field_cache(records, field)
-                field_cache.update(zip(records._ids, values))
-        else:
-            dirty_ids = self.transaction.dirty.get(field)
-            if dirty_ids and not dirty_ids.isdisjoint(records._ids):
-                _logger.error("cache.update() removing flag dirty on %s.%s", records, field.name, stack_info=True)
+        for record, value in zip(records, values):
+            field._cache_update(record, value, dirty=dirty)
 
     def insert_missing(self, records: BaseModel, field: Field, values: Iterable) -> None:
         """ Set the values of ``field`` for the records in ``records`` that
