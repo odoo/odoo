@@ -21,4 +21,16 @@
         <field name="street">Galera 1234</field>
     </record>
 
+    <record id="res_partner_el_cordobes" model="res.partner">
+        <field name="name">El Cordobés</field>
+        <field name="is_company">1</field>
+        <field name="city">Córdoba</field>
+        <field name="zip">5000</field>
+        <field name="state_id" ref="base.state_ar_x"/>
+        <field name="country_id" ref="base.ar"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>30708310065</field>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVARI"/>
+    </record>
+
 </odoo>
