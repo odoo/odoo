@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.tests import common, Form
 from odoo.exceptions import UserError
-from odoo.tools import mute_logger, float_compare
-from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
+from odoo.tests import Form, common
+from odoo.tools import float_compare, mute_logger
+
+from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import (
+    ValuationReconciliationTestCommon,
+)
 
 
 # these tests create accounting entries, and therefore need a chart of accounts
-class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
+class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
         # Required for `uom_id` to be visible in the view
-        cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+        cls._enable_uom()
         cls.env.ref('stock.route_warehouse0_mto').active = True
 
         # Useful models
@@ -26,10 +29,8 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
         cls.Quant = cls.env['stock.quant']
         cls.ProductCategory = cls.env['product.category']
 
-        cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
-        cls.uom_gm = cls.env.ref('uom.product_uom_gram')
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
+        cls.uom_kg = cls.uom_kgm
+        cls.uom_gm = cls.uom_gram
         cls.uom_ten = cls.UoM.create({
             'name': 'Test-Ten',
             'relative_factor': 10,
