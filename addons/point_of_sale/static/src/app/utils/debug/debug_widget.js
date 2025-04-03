@@ -144,6 +144,8 @@ export class DebugWidget extends Component {
             );
 
             for (const order of jsonData) {
+                const orderId = this.pos.models["pos.order"].getNewId();
+                order.id = orderId;
                 for (const rel of manyRel) {
                     const model = this.pos.models[rel.relation];
 
@@ -164,6 +166,11 @@ export class DebugWidget extends Component {
                         data[rel.relation] = [];
                     }
 
+                    for (const record of records) {
+                        record.id = this.pos.models[rel.relation].getNewId();
+                        record[rel.inverse_name] = orderId;
+                    }
+
                     data[rel.relation].push(...records);
                 }
 
@@ -171,7 +178,14 @@ export class DebugWidget extends Component {
             }
 
             const missing = await this.pos.data.missingRecursive(data);
+<<<<<<< b8994c071f25f37788a9cc860dde494db42e5007
             this.pos.data.models.loadData(missing, [], true);
+||||||| f85e30901a61a6f0b040fe939e7c23bc0503affd
+            this.pos.data.models.loadData(this.models, missing, [], true);
+=======
+            const records = this.pos.data.models.loadData(this.pos.models, missing, [], true);
+            this.pos.addPendingOrder(records["pos.order"].map((order) => order.id));
+>>>>>>> 4808f69cba405bc9c3c9e779fffbf7a0db57a29e
             this.notification.add(_t("%s orders imported", data["pos.order"].length));
         }
     }
