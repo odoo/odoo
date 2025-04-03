@@ -452,6 +452,7 @@ class TestOrmRelated(models.Model):
     message_currency = fields.Many2one(related="message.author", string='Message Author')
 
     foo_id = fields.Many2one('test_orm.related_foo')
+    foo_ids = fields.Many2many('test_orm.related_foo', string='Foos')
 
     foo_name = fields.Char('foo_name', related='foo_id.name', related_sudo=False)
     foo_name_sudo = fields.Char('foo_name_sudo', related='foo_id.name', related_sudo=True)
@@ -474,6 +475,7 @@ class TestOrmRelated_Foo(models.Model):
 
     name = fields.Char()
     bar_id = fields.Many2one('test_orm.related_bar')
+    foo_ids = fields.One2many('test_orm.related', 'foo_id', string='Foos')
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
     bar_alias = fields.Many2one(related='bar_id', string='bar_alias')
 
