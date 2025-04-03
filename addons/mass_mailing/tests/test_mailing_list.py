@@ -36,10 +36,7 @@ class TestMailingContactToList(MassMailCommon):
         wizard = wizard_form.save()
         action = wizard.action_add_contacts()
         self.assertEqual(contacts.list_ids, mailing)
-        self.assertEqual(action["type"], "ir.actions.client")
-        self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
-        subaction = action["params"]["next"]
-        self.assertEqual(subaction["type"], "ir.actions.act_window_close")
+        self.assertEqual(action["type"], "ir.actions.act_window")
 
         # set mailing list, add contacts and redirect to mailing view
         mailing2 = self.env['mailing.list'].create({
@@ -50,11 +47,8 @@ class TestMailingContactToList(MassMailCommon):
         wizard = wizard_form.save()
         action = wizard.action_add_contacts_and_send_mailing()
         self.assertEqual(contacts.list_ids, mailing + mailing2)
-        self.assertEqual(action["type"], "ir.actions.client")
-        self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
-        subaction = action["params"]["next"]
-        self.assertEqual(subaction["type"], "ir.actions.act_window")
-        self.assertEqual(subaction["context"]["default_contact_list_ids"], [mailing2.id])
+        self.assertEqual(action["type"], "ir.actions.act_window")
+        self.assertEqual(action["context"]["default_contact_list_ids"], [mailing2.id])
 
 
 @tagged('mailing_list')

@@ -24,12 +24,12 @@
         <field name="arch" type="xml">
             <list string="Mailing Lists" sample="1">
                 <field name="name"/>
+                <field name="contact_count" string="Recipients"/>
                 <field name="is_public"/>
                 <field name="mailing_count" string="Mailings"/>
                 <field name="contact_pct_bounce" string="Bounce (%)"/>
                 <field name="contact_pct_opt_out" string="Opt-out (%)"/>
                 <field name="contact_pct_blacklisted" string="Blacklist (%s)"/>
-                <field name="contact_count" string="Recipients"/>
             </list>
         </field>
     </record>
