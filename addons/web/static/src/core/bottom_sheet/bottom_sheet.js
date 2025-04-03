@@ -118,11 +118,25 @@ export class BottomSheet extends Component {
         };
         useExternalListener(window, "popstate", this.handlePopState);
 
+        // Temporary workaround to make it easy to identify when layout mutations occur
+        // Remove when a more robust system will be implemented in the future.
+        this.contentObserver = null;
+
         onMounted(() => {
             this.initializeSheet();
             document.body.classList.add("bottom-sheet-open");
             compensateScrollbar(this.scrollRailRef.el, true, true, "padding-right");
+
+            // Initialize content observer after initial setup
+            this.initializeContentObserver();
         });
+
+        useEffect(() => {
+            return () => {
+                // Clean up observer when component is unmounted
+                this.disconnectContentObserver();
+            };
+        }, () => []);
     }
 
     /**
@@ -596,6 +610,136 @@ export class BottomSheet extends Component {
             this.props.onBack();
         } else {
             this.slideOut();
+        }
+    }
+
+    /**
+    * Initializes a MutationObserver to monitor height changes in sheet body
+    * TEMPORARY SOLUTION: This observer will be replaced with a more robust system in the future
+    */
+    initializeContentObserver() {
+        if (!this.sheetBodyRef.el) return;
+
+        // Disconnect any existing observer to prevent duplicates
+        this.disconnectContentObserver();
+
+        // Create new MutationObserver
+        this.contentObserver = new MutationObserver(this.handleContentMutation.bind(this));
+
+        // Configure observer to watch for:
+        // 1. Direct changes to element attributes (like style.height)
+        // 2. Changes to child elements (additions, removals)
+        // 3. Changes to text content that might affect layout
+        this.contentObserver.observe(this.sheetBodyRef.el, {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+    }
+
+    /**
+    * Handles mutations detected in the sheet body content
+    * Recomputes dimensions and restores appropriate position
+    *
+    * TEMPORARY SOLUTION: This handler will be replaced with a more robust system in the future
+    *
+    * @param {MutationRecord[]} mutations - List of mutation records
+    */
+    handleContentMutation(mutations) {
+        // Skip if sheet is not ready or being dismissed
+        if (!this.state.isPositionedReady || this.state.isDismissing) return;
+
+        // Skip if no scroll rail reference (needed for position)
+        if (!this.scrollRailRef.el) return;
+
+        // Check if any relevant mutations occurred that might affect height
+        const hasRelevantMutations = mutations.some(mutation => {
+            // Check for style attribute changes
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                return true;
+            }
+
+            // Check for added/removed nodes
+            if (mutation.type === 'childList' &&
+                (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0)) {
+                return true;
+            }
+
+            // Text content changes in subtree might affect layout
+            if (mutation.type === 'characterData') {
+                return true;
+            }
+
+            return false;
+        });
+
+        // Exit early if no relevant mutations found
+        if (!hasRelevantMutations) return;
+
+        // Store current positions and state
+        const currentScrollTop = this.scrollRailRef.el.scrollTop;
+        const wasExtended = this.state.isExtended;
+        const initialPosition = this.snapPoints.initial;
+
+        // Temporarily disable snapping during update
+        const wasSnappingEnabled = this.state.isSnappingEnabled;
+        this.state.isSnappingEnabled = false;
+
+        // Cancel any pending snapping operations
+        this.enableSnapping.cancel();
+
+        // Update dimensions after a small delay to ensure DOM is settled
+        setTimeout(() => {
+            // Recalculate measurements and snap points
+            this.measureDimensions();
+            this.calculateSnapPoints();
+            this.applyDimensions();
+
+            // Determine target position based on previous state
+            let targetScrollTop;
+
+            if (currentScrollTop <= (initialPosition / 2)) {
+                // Sheet was near dismiss position - keep it there
+                targetScrollTop = currentScrollTop;
+            } else if (wasExtended && this.snapPoints.extended) {
+                // Sheet was extended - restore to extended position
+                targetScrollTop = this.snapPoints.extended;
+            } else if (this.snapPoints.initial && currentScrollTop >= (initialPosition / 2)) {
+                // Sheet was at or near initial position - restore to initial
+                targetScrollTop = this.snapPoints.initial;
+            } else {
+                // Default to current position
+                targetScrollTop = currentScrollTop;
+            }
+
+            // Update scroll position
+            this.scrollRailRef.el.scrollTop = targetScrollTop;
+
+            // Update progress value
+            this.updateProgressValue(targetScrollTop);
+
+            // Restore snapping state after a delay
+            setTimeout(() => {
+                this.state.isSnappingEnabled = wasSnappingEnabled;
+
+                // Re-enable snapping after a short delay if it was enabled
+                if (wasSnappingEnabled) {
+                    this.enableSnapping();
+                }
+            }, 50);
+        }, 50);
+    }
+
+    /**
+    * Disconnects the content observer if it exists
+    *
+    * TEMPORARY SOLUTION: This cleanup will be removed with the observer in the future
+    */
+    disconnectContentObserver() {
+        if (this.contentObserver) {
+            this.contentObserver.disconnect();
+            this.contentObserver = null;
         }
     }
 }
