@@ -31,10 +31,20 @@ import { microTick } from "./time";
  * @typedef {"auto" | "blur" | "enter" | "tab" | false} ConfirmAction
  *
  * @typedef {{
+ *  dataTransfer?: DataTransfer;
+ *  dropEffect: "none" | "copy" | "link" | "move";
+ *  effectAllowed?: "none" | "copy" | "copyLink" | "copyMove" | "link" | "linkMove" | "move" | "all" | "uninitialized";
+ *  files?: File[];
+ *  items?: [string, string][];
+ * }} DataTransferOptions
+ *
+ * @typedef {{
  *  cancel: (options?: EventOptions) => Promise<EventList>;
- *  drop: (to?: AsyncTarget, options?: PointerOptions) => Promise<EventList>;
- *  moveTo: (to?: AsyncTarget, options?: PointerOptions) => Promise<DragHelpers>;
+ *  drop: (to?: AsyncTarget, options?: DragOptions) => Promise<EventList>;
+ *  moveTo: (to?: AsyncTarget, options?: DragOptions) => Promise<DragHelpers>;
  * }} DragHelpers
+ *
+ * @typedef {PointerOptions & DataTransferOptions} DragOptions
  *
  * @typedef {import("./dom").Position} Position
  *
@@ -122,12 +132,18 @@ const {
     DragEvent,
     ErrorEvent,
     Event,
+    File,
     FocusEvent,
     KeyboardEvent,
     Math: { ceil: $ceil, max: $max, min: $min },
     MouseEvent,
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
-    Object: { assign: $assign, create: $create, values: $values },
+    Object: {
+        assign: $assign,
+        create: $create,
+        defineProperties: $defineProperties,
+        values: $values,
+    },
     PointerEvent,
     PromiseRejectionEvent,
     String,
@@ -205,6 +221,34 @@ const constrainScrollY = (target, y) => {
         }
     }
     return $min($max(y, 0), scrollHeight - offsetHeight);
+};
+
+/**
+ * @param {DataTransferOptions} options
+ */
+const createDataTransfer = (options) => {
+    const dataTransfer =
+        options?.dataTransfer instanceof DataTransfer ? options.dataTransfer : new DataTransfer();
+    const types = new Set();
+    for (const file of options?.files || []) {
+        if (!(file instanceof File)) {
+            throw new TypeError(`'DataTransfer.files' list only accepts 'File' objects`);
+        }
+        dataTransfer.items.add(file);
+        types.add("Files");
+    }
+    for (const [data, type] of options?.items || []) {
+        dataTransfer.items.add(data, type);
+        types.add(type);
+    }
+
+    $defineProperties(dataTransfer, {
+        dropEffect: { value: options?.dropEffect || "none", writable: true },
+        effectAllowed: { value: options?.effectAllowed || "all", writable: true },
+        types: { value: [...types], writable: true },
+    });
+
+    return dataTransfer;
 };
 
 /**
@@ -298,6 +342,12 @@ const getCurrentEvents = () => {
 const getDefaultRunTimeValue = () => ({
     // Composition
     isComposing: false,
+
+    // Data transfers
+    /** @type {DataTransfer | null} */
+    clipboardData: null,
+    /** @type {DataTransfer | null} */
+    dataTransfer: null,
 
     // Drag & drop
     canStartDrag: false,
@@ -420,7 +470,7 @@ const getEventConstructor = (eventType) => {
         case "dragleave":
         case "dragover":
         case "drop":
-            return [DragEvent, mapEvent, BUBBLES];
+            return [DragEvent, mapEvent, BUBBLES | CANCELABLE];
 
         // Input events
         case "beforeinput":
@@ -806,7 +856,9 @@ const setPointerTarget = async (target, options) => {
          *  On: unprevented 'pointerdown' on a draggable element (DESKTOP ONLY)
          *  Do: triggers a 'dragstart' event
          */
-        const dragStartEvent = await dispatch(runTime.previousPointerTarget, "dragstart");
+        const dragStartEvent = await dispatch(runTime.previousPointerTarget, "dragstart", {
+            dataTransfer: runTime.dataTransfer,
+        });
 
         runTime.isDragging = !isPrevented(dragStartEvent);
         runTime.canStartDrag = false;
@@ -955,7 +1007,7 @@ const triggerDrag = async (target, eventInit) => {
     await dispatch(target, "drag", eventInit);
     // Only "dragover" being prevented is taken into account for "drop" events
     const dragOverEvent = await dispatch(target, "dragover", eventInit);
-    runTime.lastDragOverCancelled = isPrevented(dragOverEvent);
+    return isPrevented(dragOverEvent);
 };
 
 /**
@@ -1034,18 +1086,11 @@ const _fill = async (target, value, options) => {
                 return;
             }
             case "file": {
-                const dataTransfer = new DataTransfer();
                 const files = ensureArray(value);
                 if (files.length > 1 && !target.multiple) {
                     throw new HootDomError(`input[type="file"] does not support multiple files`);
                 }
-                for (const file of files) {
-                    if (!(file instanceof File)) {
-                        throw new TypeError(`file input only accept 'File' objects`);
-                    }
-                    dataTransfer.items.add(file);
-                }
-                target.files = dataTransfer.files;
+                target.files = createDataTransfer({ files }).files;
 
                 await dispatch(target, "change");
                 return;
@@ -1109,8 +1154,9 @@ const _hover = async (target, options) => {
 
         if (runTime.isDragging) {
             // If dragging, only drag events are triggered
-            await triggerDrag(previous, leaveEventInit);
-            await dispatch(previous, "dragleave", leaveEventInit);
+            const leaveEventInitWithDT = { ...leaveEventInit, dataTransfer: runTime.dataTransfer };
+            runTime.lastDragOverCancelled = await triggerDrag(previous, leaveEventInitWithDT);
+            await dispatch(previous, "dragleave", leaveEventInitWithDT);
         } else {
             // Regular case: pointer events are triggered
             await dispatchPointerEvent(previous, "pointermove", leaveEventInit, {
@@ -1139,10 +1185,13 @@ const _hover = async (target, options) => {
         };
         if (runTime.isDragging) {
             // If dragging, only drag events are triggered
+            const enterEventInitWithDT = { ...enterEventInit, dataTransfer: runTime.dataTransfer };
+            runTime.lastDragOverCancelled = false;
             if (isDifferentTarget) {
-                await dispatch(target, "dragenter", enterEventInit);
+                const dragEnterEvent = await dispatch(target, "dragenter", enterEventInitWithDT);
+                runTime.lastDragOverCancelled = isPrevented(dragEnterEvent);
             }
-            await triggerDrag(target, enterEventInit);
+            runTime.lastDragOverCancelled ||= await triggerDrag(target, enterEventInitWithDT);
         } else {
             // Regular case: pointer events are triggered
             if (isDifferentTarget) {
@@ -1331,9 +1380,8 @@ const _keyDown = async (target, eventInit) => {
                 const text = globalThis.getSelection().toString();
                 globalThis.navigator.clipboard.writeText(text).catch();
 
-                await dispatch(target, "copy", {
-                    clipboardData: eventInit.dataTransfer || new DataTransfer(),
-                });
+                runTime.clipboardData = createDataTransfer(eventInit);
+                await dispatch(target, "copy", { clipboardData: runTime.clipboardData });
             }
             break;
         }
@@ -1362,6 +1410,7 @@ const _keyDown = async (target, eventInit) => {
             break;
         }
         case "Escape": {
+            runTime.dataTransfer = null;
             runTime.isDragging = false;
             break;
         }
@@ -1393,8 +1442,9 @@ const _keyDown = async (target, eventInit) => {
                 inputType = "insertFromPaste";
 
                 await dispatch(target, "paste", {
-                    clipboardData: eventInit.dataTransfer || new DataTransfer(),
+                    clipboardData: runTime.clipboardData || createDataTransfer(eventInit),
                 });
+                runTime.clipboardData = null;
             }
             break;
         }
@@ -1412,9 +1462,8 @@ const _keyDown = async (target, eventInit) => {
                 nextValue = deleteSelection(target);
                 inputType = "deleteByCut";
 
-                await dispatch(target, "cut", {
-                    clipboardData: eventInit.dataTransfer || new DataTransfer(),
-                });
+                runTime.clipboardData = createDataTransfer(eventInit);
+                await dispatch(target, "cut", { clipboardData: runTime.clipboardData });
             }
             break;
         }
@@ -1463,10 +1512,13 @@ const _keyUp = async (target, eventInit) => {
 
 /**
  * @param {EventTarget} target
- * @param {PointerOptions} [options]
+ * @param {DragOptions} [options]
  */
 const _pointerDown = async (target, options) => {
     setPointerDownTarget(target);
+    if (options?.dataTransfer || options?.files || options?.items) {
+        runTime.dataTransfer = createDataTransfer(options);
+    }
 
     const pointerDownTarget = runTime.pointerDownTarget;
     const eventInit = {
@@ -1498,7 +1550,11 @@ const _pointerDown = async (target, options) => {
     // Focus the element (if focusable)
     await triggerFocus(target);
 
-    if (eventInit.button === btn.LEFT && !hasTouch() && pointerDownTarget.draggable) {
+    if (
+        eventInit.button === btn.LEFT &&
+        !hasTouch() &&
+        (pointerDownTarget.draggable || runTime.dataTransfer)
+    ) {
         runTime.canStartDrag = true;
     } else if (eventInit.button === btn.RIGHT) {
         /**
@@ -1528,17 +1584,19 @@ const _pointerUp = async (target, options) => {
 
     if (runTime.isDragging) {
         // If dragging, only drag events are triggered
+        const eventInitWithDT = { ...eventInit, dataTransfer: runTime.dataTransfer };
+        runTime.dataTransfer = null;
         runTime.isDragging = false;
         if (runTime.lastDragOverCancelled) {
             /**
              * Special action: drop
-             * - On: prevented 'dragover'
+             * - On: pointer up after a prevented 'dragover' or 'dragenter'
              * - Do: triggers a 'drop' event on the target
              */
-            await dispatch(target, "drop", eventInit);
+            await dispatch(target, "drop", eventInitWithDT);
         }
 
-        await dispatch(target, "dragend", eventInit);
+        await dispatch(target, "dragend", eventInitWithDT);
         return;
     }
 
@@ -2017,7 +2075,7 @@ export async function dispatch(target, type, eventInit) {
  * - `cancel`: cancels the drag sequence.
  *
  * @param {AsyncTarget} target
- * @param {PointerOptions} [options]
+ * @param {DragOptions} [options]
  * @returns {Promise<DragHelpers>}
  * @example
  *  drag(".card:first").drop(".card:last"); // Drags the first card onto the last one
@@ -2359,7 +2417,7 @@ export function on(target, type, listener, options) {
  *  - [target is focusable] `focus`
  *
  * @param {AsyncTarget} target
- * @param {PointerOptions} [options]
+ * @param {PointerOptions | DragOptions} [options]
  * @returns {Promise<EventList>}
  * @example
  *  pointerDown("button"); // Focuses to the first <button> element
