@@ -40,8 +40,8 @@ import { microTick } from "./time";
  *
  * @typedef {{
  *  cancel: (options?: EventOptions) => Promise<EventList>;
- *  drop: (to?: AsyncTarget, options?: DragOptions) => Promise<EventList>;
- *  moveTo: (to?: AsyncTarget, options?: DragOptions) => Promise<DragHelpers>;
+ *  drop: (to?: AsyncTarget | DragOptions, options?: DragOptions) => Promise<EventList>;
+ *  moveTo: (to?: AsyncTarget | DragOptions, options?: DragOptions) => Promise<DragHelpers>;
  * }} DragHelpers
  *
  * @typedef {PointerOptions & DataTransferOptions} DragOptions
@@ -155,6 +155,7 @@ const {
 } = globalThis;
 /** @type {Document["createRange"]} */
 const $createRange = document.createRange.bind(document);
+const $toString = Object.prototype.toString;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -654,6 +655,11 @@ const isDifferentPosition = (target, options) => {
 };
 
 /**
+ * @param {unknown} object
+ */
+const isDictionary = (object) => $toString.call(object) === "[object Object]";
+
+/**
  * @param {unknown} value
  */
 const isNil = (value) => value === null || value === undefined;
@@ -850,7 +856,7 @@ const setPointerTarget = async (target, options) => {
     runTime.previousPointerTarget = runTime.pointerTarget;
     runTime.pointerTarget = target;
 
-    if (runTime.pointerTarget !== runTime.previousPointerTarget && runTime.canStartDrag) {
+    if (runTime.canStartDrag) {
         /**
          * Special action: drag start
          *  On: unprevented 'pointerdown' on a draggable element (DESKTOP ONLY)
@@ -875,7 +881,7 @@ const setupEvents = (type, options) => {
     currentEventTypes.push(type);
     $assign(currentEventInit, options?.eventInit);
 
-    return async () => {
+    return () => {
         for (const eventType in currentEventInit) {
             delete currentEventInit[eventType];
         }
@@ -2114,14 +2120,14 @@ export async function drag(target, options) {
         /** @type {DragHelpers["cancel"]} */
         async function cancel(options) {
             const finalizeEvents = setupEvents("drag & drop: cancel", options);
-            const element = getDocument().body;
+            const bodyElement = getDocument(initialElement).body;
 
             // Reset buttons
             runTime.buttons = 0;
 
-            await _press(element, { key: "Escape" });
+            await _press(bodyElement, { key: "Escape" });
 
-            dragEvents.push(...(await finalizeEvents()));
+            dragEvents.push(...finalizeEvents());
 
             return dragEvents;
         },
@@ -2133,13 +2139,17 @@ export async function drag(target, options) {
         async function drop(to, options) {
             if (to) {
                 await moveTo(to, options);
+
+                if (isDictionary(to)) {
+                    options = to;
+                }
             }
 
             const finalizeEvents = setupEvents("drag & drop: drop", options);
 
             await _pointerUp(runTime.pointerTarget, options);
 
-            dragEvents.push(...(await finalizeEvents()));
+            dragEvents.push(...finalizeEvents());
 
             return dragEvents;
         },
@@ -2149,11 +2159,15 @@ export async function drag(target, options) {
     const moveTo = expectIsDragging(
         /** @type {DragHelpers["moveTo"]} */
         async function moveTo(to, options) {
+            if (isDictionary(to)) {
+                [to, options] = [null, to];
+            }
             const finalizeEvents = setupEvents("drag & drop: move", options);
 
-            await _hover(queryFirst(await to), options);
+            const nextElement = to ? queryFirst(await to) : initialElement;
+            await _hover(nextElement, options);
 
-            dragEvents.push(...(await finalizeEvents()));
+            dragEvents.push(...finalizeEvents());
 
             return dragHelpers;
         },
@@ -2162,15 +2176,15 @@ export async function drag(target, options) {
 
     const finalizeEvents = setupEvents("drag & drop: start", options);
     const dragHelpers = { cancel, drop, moveTo };
-    const element = queryFirst(await target);
+    const initialElement = queryFirst(await target);
 
     let dragEndReason = null;
 
     // Pointer down on main target
-    await _implicitHover(element, options);
-    await _pointerDown(element, options);
+    await _implicitHover(initialElement, options);
+    await _pointerDown(initialElement, options);
 
-    const dragEvents = await finalizeEvents();
+    const dragEvents = finalizeEvents();
 
     return dragHelpers;
 }
