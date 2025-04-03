@@ -1,13 +1,11 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame, click, queryOne } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
 import { onceAllImagesLoaded } from "@website/utils/images";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.gallery_slider");
 
@@ -16,7 +14,7 @@ describe.current.tags("interaction_dev");
 const SLIDE_DURATION = 1000;
 
 // TODO Obtain rendering from `website.s_images_gallery` template ?
-const defaultGallery = `
+const defaultGallery = markup`
     <div id="wrapwrap">
         <section class="s_image_gallery o_slideshow pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default" data-vcss="002" data-columns="3">
             <div class="o_container_small overflow-hidden">
@@ -54,7 +52,7 @@ const defaultGallery = `
 `;
 
 // TODO Obtain rendering from `website.gallery.s_image_gallery_mirror.lightbox` template ?
-const defaultLightbox = `
+const defaultLightbox = markup`
     <main class="modal-body o_slideshow bg-transparent">
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 10px; top: 10px;">
         </button>
@@ -102,7 +100,7 @@ const defaultLightbox = `
 `;
 
 // TODO Obtain rendering from `website.gallery.slideshow` template.
-const defaultOldLightbox = `
+const defaultOldLightbox = markup`
     <main class="modal-body o_slideshow bg-transparent">
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 10px; top: 10px;">
         </button>
@@ -145,7 +143,7 @@ const defaultOldLightbox = `
 `;
 
 test("gallery_slider does nothing if there is no o_slideshow s_image_gallery", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <section class="s_image_gallery"/>
         </div>

@@ -407,7 +407,7 @@ test("insert on html field", async () => {
     message2.body = ["markup", false];
     expect(message2.body).toBe("");
     expect(message2.body).not.toBeInstanceOf(Markup);
-    const message3 = store.Message.insert({ body: markup("<p>hello 3</p>") });
+    const message3 = store.Message.insert({ body: markup`<p>hello 3</p>` });
     expect(message3.body?.toString()).toBe("<p>hello 3</p>");
     expect(message3.body).toBeInstanceOf(Markup);
     message3.body = false;

@@ -91,9 +91,9 @@ function websiteEditEventTourSteps() {
         {
             content: "edit the short description of the event",
             trigger: ":iframe .opt_events_list_columns small",
-            run: function () {
-                this.anchor.innerHTML = "new short description";
-            }
+            run() {
+                this.anchor.textContent = "new short description";
+            },
         },
         ...clickOnSave(),
         {

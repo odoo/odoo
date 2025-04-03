@@ -1,3 +1,5 @@
+import { markup } from "@odoo/owl";
+
 import { patch } from "@web/core/utils/patch";
 import {
     parseTextualSelection,
@@ -7,6 +9,7 @@ import {
 } from '@web_editor/js/editor/odoo-editor/test/utils';
 import { Wysiwyg, stripHistoryIds } from '@web_editor/js/wysiwyg/wysiwyg';
 import { Mutex } from '@web/core/utils/concurrency';
+import { setElementContent } from "@web/core/utils/html";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { mount, getFixture } from "@web/../tests/helpers/utils";
@@ -159,7 +162,10 @@ export async function createPeers(peers) {
         }
         getFixture().append(iframe);
         patchEditorIframe(iframe);
-        iframe.contentDocument.body.innerHTML = `<div class="peer_wysiwyg_wrapper client_${peerId}"></div>`;
+        setElementContent(
+            iframe.contentDocument.body,
+            markup`<div class="peer_wysiwyg_wrapper client_${peerId}"></div>`
+        );
         const peerWysiwygWrapper = iframe.contentDocument.querySelector('.peer_wysiwyg_wrapper');
         iframe.contentWindow.$ = $;
 

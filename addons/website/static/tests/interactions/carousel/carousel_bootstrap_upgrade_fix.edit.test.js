@@ -1,10 +1,8 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 import { switchToEditMode } from "../../helpers";
 
@@ -13,7 +11,7 @@ setupInteractionWhiteList("website.carousel_bootstrap_upgrade_fix");
 describe.current.tags("interaction_dev");
 
 test("[EDIT] carousel_bootstrap_upgrade_fix prevents ride", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <section class="s_image_gallery o_slideshow pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default" data-snippet="s_image_gallery" data-vcss="002" data-columns="3">
             <div class="o_container_small overflow-hidden">
                 <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-interval="5000">

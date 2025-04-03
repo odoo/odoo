@@ -9,8 +9,11 @@ import {
     normalizeColors,
     normalizeRem,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
+
 import { afterEach, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { enableTransitions } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
+
 import {
     getGridHtml,
     getRegularGridHtml,
@@ -19,12 +22,14 @@ import {
     getTdHtml,
 } from "./utils";
 
+import { setElementContent } from "@web/core/utils/html";
+
 const TEST_WIDTH = 800;
 const TEST_HEIGHT = 600;
 
 let editable;
 function testConvertGrid({ before, after, title, stepFunction }) {
-    editable.innerHTML = before;
+    setElementContent(editable, before);
     (stepFunction || bootstrapToTable)(editable);
     // Remove class that is added by `bootstrapToTable` for use in
     // further methods of `toInline`, and removed at the end of it.
@@ -34,7 +39,7 @@ function testConvertGrid({ before, after, title, stepFunction }) {
             node.removeAttribute("class");
         }
     });
-    expect(editable).toHaveInnerHTML(after, { message: title, type: "html" });
+    expect(editable).toHaveInnerHTML(after.toString(), { message: title, type: "html" });
 }
 
 describe("Convert Bootstrap grids to tables", () => {
@@ -80,58 +85,68 @@ describe("Convert Bootstrap grids to tables", () => {
         // 1x13
         testConvertGrid({
             before: getRegularGridHtml(1, 13),
-            after:
-                getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH).slice(0, -8) +
-                `<tr>` +
-                getTdHtml(1, "(0, 12)", TEST_WIDTH) +
-                getTdHtml(11, "", TEST_WIDTH) +
-                `</tr></table>`,
+            after: markup`
+                ${getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH, { closeTable: false })}
+                    <tr>
+                        ${getTdHtml(1, "(0, 12)", TEST_WIDTH)}
+                        ${getTdHtml(11, "", TEST_WIDTH)}
+                    </tr>
+                </table>
+            `,
             title: "should have converted a 1x13 grid to an equivalent table (overflowing)",
         });
 
         // 1x14
         testConvertGrid({
             before: getRegularGridHtml(1, 14),
-            after:
-                getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH).slice(0, -8) +
-                `<tr>` +
-                getTdHtml(1, "(0, 12)", TEST_WIDTH) +
-                getTdHtml(1, "(0, 13)", TEST_WIDTH) +
-                getTdHtml(10, "", TEST_WIDTH) +
-                `</tr></table>`,
+            after: markup`
+                ${getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH, { closeTable: false })}
+                    <tr>
+                        ${getTdHtml(1, "(0, 12)", TEST_WIDTH)}
+                        ${getTdHtml(1, "(0, 13)", TEST_WIDTH)}
+                        ${getTdHtml(10, "", TEST_WIDTH)}
+                    </tr>
+                </table>
+            `,
             title: "should have converted a 1x14 grid to an equivalent table (overflowing)",
         });
 
         // 1x25
         testConvertGrid({
             before: getRegularGridHtml(1, 25),
-            after:
-                getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH).slice(0, -8) +
-                getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH)
-                    .replace(/\(0, (\d+)\)/g, (s, c) => `(0, ${+c + 12})`)
-                    .replace(/^<table[^<]*>/, "")
-                    .slice(0, -8) +
-                `<tr>` +
-                getTdHtml(1, "(0, 24)", TEST_WIDTH) +
-                getTdHtml(11, "", TEST_WIDTH) +
-                `</tr></table>`,
+            after: markup`
+                ${getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH, { closeTable: false })}
+                ${getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH, {
+                    closeTable: false,
+                    colOffset: { 0: 12 },
+                    openTable: false,
+                })}
+                    <tr>
+                        ${getTdHtml(1, "(0, 24)", TEST_WIDTH)}
+                        ${getTdHtml(11, "", TEST_WIDTH)}
+                    </tr>
+                </table>
+            `,
             title: "should have converted a 1x25 grid to an equivalent table (overflowing)",
         });
 
         // 1x26
         testConvertGrid({
             before: getRegularGridHtml(1, 26),
-            after:
-                getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH).slice(0, -8) +
-                getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH)
-                    .replace(/\(0, (\d+)\)/g, (s, c) => `(0, ${+c + 12})`)
-                    .replace(/^<table[^<]*>/, "")
-                    .slice(0, -8) +
-                `<tr>` +
-                getTdHtml(1, "(0, 24)", TEST_WIDTH) +
-                getTdHtml(1, "(0, 25)", TEST_WIDTH) +
-                getTdHtml(10, "", TEST_WIDTH) +
-                `</tr></table>`,
+            after: markup`
+                ${getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH, { closeTable: false })}
+                ${getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH, {
+                    closeTable: false,
+                    colOffset: { 0: 12 },
+                    openTable: false,
+                })}
+                    <tr>
+                        ${getTdHtml(1, "(0, 24)", TEST_WIDTH)}
+                        ${getTdHtml(1, "(0, 25)", TEST_WIDTH)}
+                        ${getTdHtml(10, "", TEST_WIDTH)}
+                    </tr>
+                </table>
+            `,
             title: "should have converted a 1x26 grid to an equivalent table (overflowing)",
         });
     });
@@ -170,25 +185,36 @@ describe("Convert Bootstrap grids to tables", () => {
         // 2x[13,1]
         testConvertGrid({
             before: getRegularGridHtml(2, [13, 1]),
-            after:
-                getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH).slice(0, -8) +
-                `<tr>` +
-                getTdHtml(1, "(0, 12)", TEST_WIDTH) +
-                getTdHtml(11, "", TEST_WIDTH) + // 13 overflowed the row by 1 -> fill up
-                `</tr>` +
-                `<tr>${getTdHtml(12, "(1, 0)", TEST_WIDTH)}</tr></table>`, // 1 col with no size == col-12
+            // 13 overflowed the row by 1 -> fill up
+            // 1 col with no size == col-12
+            after: markup`
+                ${getRegularTableHtml(1, 12, 1, 8.33, TEST_WIDTH, { closeTable: false })}
+                    <tr>
+                        ${getTdHtml(1, "(0, 12)", TEST_WIDTH)}
+                        ${getTdHtml(11, "", TEST_WIDTH)}
+                    </tr>
+                    <tr>
+                        ${getTdHtml(12, "(1, 0)", TEST_WIDTH)}
+                    </tr>
+                </table>
+            `,
             title: "should have converted a 2x[13,1] grid to an equivalent table (overflowing)",
         });
 
         // 2x[1,13]
         testConvertGrid({
             before: getRegularGridHtml(2, [1, 13]),
-            after:
-                getRegularTableHtml(2, [1, 12], [12, 1], [100, 8.33], TEST_WIDTH).slice(0, -8) +
-                `<tr>` +
-                getTdHtml(1, "(1, 12)", TEST_WIDTH) +
-                getTdHtml(11, "", TEST_WIDTH) + // 13 overflowed the row by 1 -> fill up
-                `</tr></table>`,
+            // 13 overflowed the row by 1 -> fill up
+            after: markup`
+                ${getRegularTableHtml(2, [1, 12], [12, 1], [100, 8.33], TEST_WIDTH, {
+                    closeTable: false,
+                })}
+                    <tr>
+                        ${getTdHtml(1, "(1, 12)", TEST_WIDTH)}
+                        ${getTdHtml(11, "", TEST_WIDTH)}
+                    </tr>
+                </table>
+            `,
             title: "should have converted a 2x[1,13] grid to an equivalent table (overflowing)",
         });
 
@@ -196,14 +222,17 @@ describe("Convert Bootstrap grids to tables", () => {
         testConvertGrid({
             before: getRegularGridHtml(3, [1, 13, 6]),
             after:
-                getRegularTableHtml(2, [1, 12], [12, 1], [100, 8.33], TEST_WIDTH).slice(0, -8) +
+                getRegularTableHtml(2, [1, 12], [12, 1], [100, 8.33], TEST_WIDTH, {
+                    closeTable: false,
+                }) +
                 `<tr>` +
                 getTdHtml(1, "(1, 12)", TEST_WIDTH) +
                 getTdHtml(11, "", TEST_WIDTH) + // 13 overflowed the row by 1 -> fill up
                 `</tr>` +
-                getRegularTableHtml(1, 6, 2, 16.67, TEST_WIDTH)
-                    .replace(/\(0,/g, `(2,`)
-                    .replace(/^<table[^<]*>/, ""),
+                getRegularTableHtml(1, 6, 2, 16.67, TEST_WIDTH, { openTable: false }).replace(
+                    /\(0,/g,
+                    `(2,`
+                ),
             title: "should have converted a 3x[1,13,6] grid to an equivalent table (overflowing)",
         });
 
@@ -211,13 +240,9 @@ describe("Convert Bootstrap grids to tables", () => {
         testConvertGrid({
             before: getRegularGridHtml(3, [1, 6, 13]),
             after:
-                getRegularTableHtml(
-                    3,
-                    [1, 6, 12],
-                    [12, 2, 1],
-                    [100, 16.67, 8.33],
-                    TEST_WIDTH
-                ).slice(0, -8) +
+                getRegularTableHtml(3, [1, 6, 12], [12, 2, 1], [100, 16.67, 8.33], TEST_WIDTH, {
+                    closeTable: false,
+                }) +
                 `<tr>` +
                 getTdHtml(1, "(2, 12)", TEST_WIDTH) +
                 getTdHtml(11, "", TEST_WIDTH) + // 13 overflowed the row by 1 -> fill up
@@ -439,19 +464,20 @@ describe("Convert Bootstrap grids to tables", () => {
     test("convert a card to a table", async () => {
         testConvertGrid({
             title: "should have converted a card structure into a table",
-            before:
-                `<div class="card">` +
-                `<div class="card-header">` +
-                `<span>HEADER</span>` +
-                `</div>` +
-                `<div class="card-body">` +
-                `<h2 class="card-title">TITLE</h2>` +
-                `<small>BODY <img></small>` +
-                `</div>` +
-                `<div class="card-footer">` +
-                `<a href="#" class="btn">FOOTER</a>` +
-                `</div>` +
-                `</div>`,
+            before: markup`
+                <div class="card">
+                    <div class="card-header">
+                        <span>HEADER</span>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">TITLE</h2>
+                        <small>BODY <img></small>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn">FOOTER</a>
+                    </div>
+                </div>
+            `,
             stepFunction: cardToTable,
             after: getRegularTableHtml(3, 1, 12, 100)
                 .replace('role="presentation"', 'role="presentation" class="card"')
@@ -488,19 +514,14 @@ describe("Convert Bootstrap grids to tables", () => {
     test("convert a list group to a table", async () => {
         testConvertGrid({
             title: "should have converted a list group structure into a table",
-            before:
-                `<ul class="list-group list-group-flush">` +
-                `<li class="list-group-item">` +
-                `<strong>(0, 0)</strong>` +
-                `</li>` +
-                `<li class="list-group-item a">` +
-                `(1, 0)` +
-                `</li>` +
-                `<li><img></li>` +
-                `<li class="list-group-item">` +
-                `<strong class="b">(2, 0)</strong>` +
-                `</li>` +
-                `</ul>`,
+            before: markup`
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>(0, 0)</strong></li>
+                    <li class="list-group-item a">(1, 0)</li>
+                    <li><img></li>
+                    <li class="list-group-item"><strong class="b">(2, 0)</strong></li>
+                </ul>
+            `,
             stepFunction: listGroupToTable,
             after: getRegularTableHtml(3, 1, 12, 100)
                 .split('style="')
@@ -516,7 +537,13 @@ describe("Convert Bootstrap grids to tables", () => {
 
     test("convert a grid with offsets to a table", async () => {
         testConvertGrid({
-            before: '<div class="container"><div class="row"><div class="col-6 offset-4">(0, 0)</div></div>',
+            before: markup`
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6 offset-4">(0, 0)</div>
+                    </div>
+                </div>
+            `,
             after: getTableHtml(
                 [
                     [
@@ -531,7 +558,14 @@ describe("Convert Bootstrap grids to tables", () => {
         });
 
         testConvertGrid({
-            before: '<div class="container"><div class="row"><div class="col-6 offset-4">(0, 0)</div><div class="col-6 offset-1">(0, 1)</div></div>',
+            before: markup`
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6 offset-4">(0, 0)</div>
+                        <div class="col-6 offset-1">(0, 1)</div>
+                    </div>
+                </div>
+            `,
             after: getTableHtml(
                 [
                     [
@@ -558,12 +592,15 @@ describe("Normalize styles", () => {
     });
     // Test normalizeColors, normalizeRem and formatTables
     test("convert rgb color to hexadecimal", async () => {
-        editable.innerHTML = `
+        setElementContent(
+            editable,
+            markup`
         <div style="color: rgb(0, 0, 0);">
             <div class="a" style="padding: 0; background-color:rgb(255,255,255)" width="100%">
                 <p style="border: 1px rgb(50, 100,200 ) solid; color: rgb(35, 134, 54);">Test</p>
             </div>
-        </div>`;
+        </div>`
+        );
         normalizeColors(editable);
         expect(editable).toHaveInnerHTML(
             `<div style="color: #000000;">
@@ -576,13 +613,13 @@ describe("Normalize styles", () => {
     });
 
     test("convert rem sizes to px", async () => {
-        const testDom = `
+        const testDom = markup`
         <div style="font-size: 2rem;">
             <div class="a" style="color: #000000; padding: 2.5 rem" width="100%">
                 <p style="border: 1.2rem #aaaaaa solid; margin: 3.79rem;">Test</p>
             </div>
         </div>`;
-        editable.innerHTML = testDom;
+        setElementContent(editable, testDom);
         normalizeRem(editable);
         expect(editable).toHaveInnerHTML(
             `<div style="font-size: 32px;">` +
@@ -595,7 +632,7 @@ describe("Normalize styles", () => {
             }
         );
 
-        editable.innerHTML = testDom;
+        setElementContent(editable, testDom);
         normalizeRem(editable, 20);
         expect(editable).toHaveInnerHTML(
             `<div style="font-size: 40px;">` +
@@ -610,7 +647,7 @@ describe("Normalize styles", () => {
     });
 
     test("move padding from snippet containers to cells", async () => {
-        const testTable = `
+        const testTable = markup`
         <table class="o_mail_snippet_general" style="padding: 10px 20px 30px 40px;">
             <tbody>
                 <tr>
@@ -679,7 +716,7 @@ describe("Normalize styles", () => {
             `</table>`;
 
         // table.o_mail_snippet_general
-        editable.innerHTML = testTable;
+        setElementContent(editable, testTable);
         formatTables(editable);
         expect(editable).toHaveInnerHTML(expectedTable, {
             message:
@@ -688,7 +725,10 @@ describe("Normalize styles", () => {
     });
 
     test("add a tbody to any table that doesn't have one", async () => {
-        editable.innerHTML = `<table><tr><td>I don't have a body :'(</td></tr></table>`;
+        setElementContent(
+            editable,
+            markup`<table><tr><td>I don't have a body :'(</td></tr></table>`
+        );
         // unwrap tr (remove <body>)
         const tr = editable.querySelector("tr");
         const body = tr.parentElement;
@@ -702,21 +742,30 @@ describe("Normalize styles", () => {
     });
 
     test("add number heights to parents of elements with percent heights", async () => {
-        editable.innerHTML = `<table><tbody><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`;
+        setElementContent(
+            editable,
+            markup`<table><tbody><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`
+        );
         formatTables(editable);
         expect(editable).toHaveInnerHTML(
             `<table><tbody style="height: 0px;"><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`,
             { message: "should have added a 0 height to the parent of a 100% height element" }
         );
 
-        editable.innerHTML = `<table><tbody style="height: 200px;"><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`;
+        setElementContent(
+            editable,
+            markup`<table><tbody style="height: 200px;"><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`
+        );
         formatTables(editable);
         expect(editable).toHaveInnerHTML(
             `<table><tbody style="height: 200px;"><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`,
             { message: "should have added a 0 height to the parent of a 100% height element" }
         );
 
-        editable.innerHTML = `<table><tbody style="height: 50%;"><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`;
+        setElementContent(
+            editable,
+            markup`<table><tbody style="height: 50%;"><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`
+        );
         formatTables(editable);
         expect(editable).toHaveInnerHTML(
             `<table style="height: 0px;"><tbody style="height: 50%;"><tr style="height: 100%;"><td>yup</td></tr></tbody></table>`,
@@ -728,21 +777,30 @@ describe("Normalize styles", () => {
     });
 
     test("express align-self with vertical-align on table cells", async () => {
-        editable.innerHTML = `<table><tbody><tr><td style="align-self: start;">yup</td></tr></tbody></table>`;
+        setElementContent(
+            editable,
+            markup`<table><tbody><tr><td style="align-self: start;">yup</td></tr></tbody></table>`
+        );
         formatTables(editable);
         expect(editable).toHaveInnerHTML(
             `<table><tbody><tr><td style="align-self: start; vertical-align: top;">yup</td></tr></tbody></table>`,
             { message: "should have added a top vertical alignment" }
         );
 
-        editable.innerHTML = `<table><tbody><tr><td style="align-self: center;">yup</td></tr></tbody></table>`;
+        setElementContent(
+            editable,
+            markup`<table><tbody><tr><td style="align-self: center;">yup</td></tr></tbody></table>`
+        );
         formatTables(editable);
         expect(editable).toHaveInnerHTML(
             `<table><tbody><tr><td style="align-self: center; vertical-align: middle;">yup</td></tr></tbody></table>`,
             { message: "should have added a middle vertical alignment" }
         );
 
-        editable.innerHTML = `<table><tbody><tr><td style="align-self: end;">yup</td></tr></tbody></table>`;
+        setElementContent(
+            editable,
+            markup`<table><tbody><tr><td style="align-self: end;">yup</td></tr></tbody></table>`
+        );
         formatTables(editable);
         expect(editable).toHaveInnerHTML(
             `<table><tbody><tr><td style="align-self: end; vertical-align: bottom;">yup</td></tr></tbody></table>`,
@@ -757,7 +815,10 @@ describe("Convert snippets and mailing bodies to tables", () => {
     });
 
     test("convert snippets to tables", async () => {
-        editable.innerHTML = `<div class="o_mail_snippet_general"><div>Snippet</div></div>`;
+        setElementContent(
+            editable,
+            markup`<div class="o_mail_snippet_general"><div>Snippet</div></div>`
+        );
         addTables(editable);
         expect(editable).toHaveInnerHTML(
             getRegularTableHtml(1, 1, 12, 100)
@@ -777,10 +838,13 @@ describe("Convert snippets and mailing bodies to tables", () => {
             }
         );
 
-        editable.innerHTML = `
+        setElementContent(
+            editable,
+            markup`
             <div class="o_mail_snippet_general">
                 <table><tbody><tr><td>Snippet</td></tr></tbody></table>
-            </div>`;
+            </div>`
+        );
         addTables(editable);
         expect(editable).toHaveInnerHTML(
             getRegularTableHtml(1, 1, 12, 100)
@@ -798,7 +862,7 @@ describe("Convert snippets and mailing bodies to tables", () => {
     });
 
     test("convert mailing bodies to tables", async () => {
-        editable.innerHTML = `<div class="o_layout"><div>Mailing</div></div>`;
+        setElementContent(editable, markup`<div class="o_layout"><div>Mailing</div></div>`);
         addTables(editable);
         expect(editable).toHaveInnerHTML(
             getRegularTableHtml(1, 1, 12, 100)
@@ -819,10 +883,13 @@ describe("Convert snippets and mailing bodies to tables", () => {
             }
         );
 
-        editable.innerHTML = `
+        setElementContent(
+            editable,
+            markup`
             <div class="o_layout">
                 <table><tbody><tr><td>Mailing</td></tr></tbody></table>
-            </div>`;
+            </div>`
+        );
         addTables(editable);
         expect(editable).toHaveInnerHTML(
             getRegularTableHtml(1, 1, 12, 100)
@@ -861,8 +928,11 @@ describe("Convert classes to inline styles", () => {
 
     test("convert Bootstrap classes to inline styles", async () => {
         enableTransitions();
-        editable.innerHTML = `
-            <div class="container"><div class="row"><div class="col">Hello</div></div></div>`;
+        setElementContent(
+            editable,
+            markup`
+            <div class="container"><div class="row"><div class="col">Hello</div></div></div>`
+        );
         getFixture().append(editable); // editable needs to be in the DOM to compute its dynamic styles.
 
         classToStyle(editable, getCSSRules(editable.ownerDocument));
@@ -896,7 +966,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-border-radius"></div>`;
+        setElementContent(editable, markup`<div class="test-border-radius"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-border-radius" style="border-radius:30%;box-sizing:border-box;"></div>`,
@@ -919,7 +989,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-border"></div>`;
+        setElementContent(editable, markup`<div class="test-border"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-border" style="border-style:dotted dashed none solid;box-sizing:border-box;"></div>`,
@@ -940,7 +1010,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-margin"></div>`;
+        setElementContent(editable, markup`<div class="test-margin"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-margin" style="margin:0 20px 30px 40px;box-sizing:border-box;"></div>`,
@@ -958,7 +1028,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-padding"></div>`;
+        setElementContent(editable, markup`<div class="test-padding"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-padding" style="padding:10px 0 30px 40px;box-sizing:border-box;"></div>`,
@@ -979,7 +1049,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-border-uniform"></div>`;
+        setElementContent(editable, markup`<div class="test-border-uniform"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-border-uniform" style="border-style:dotted;box-sizing:border-box;"></div>`,
@@ -1001,7 +1071,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-margin-uniform"></div>`;
+        setElementContent(editable, markup`<div class="test-margin-uniform"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-margin-uniform" style="margin:10px;box-sizing:border-box;"></div>`,
@@ -1023,7 +1093,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-padding-uniform"></div>`;
+        setElementContent(editable, markup`<div class="test-padding-uniform"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-padding-uniform" style="padding:10px;box-sizing:border-box;"></div>`,
@@ -1047,7 +1117,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-border-inherit"></div>`;
+        setElementContent(editable, markup`<div class="test-border-inherit"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-border-inherit" style="box-sizing:border-box;border-left-style:solid;border-bottom-style:inherit;border-right-style:dashed;border-top-style:dotted;"></div>`,
@@ -1069,7 +1139,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-margin-inherit"></div>`;
+        setElementContent(editable, markup`<div class="test-margin-inherit"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-margin-inherit" style="box-sizing:border-box;margin-left:40px;margin-bottom:30px;margin-right:inherit;margin-top:10px;"></div>`,
@@ -1091,7 +1161,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-padding-inherit"></div>`;
+        setElementContent(editable, markup`<div class="test-padding-inherit"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-padding-inherit" style="box-sizing:border-box;padding-left:40px;padding-bottom:inherit;padding-right:20px;padding-top:10px;"></div>`,
@@ -1117,7 +1187,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-margin-initial"></div>`;
+        setElementContent(editable, markup`<div class="test-margin-initial"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-margin-initial" style="box-sizing:border-box;margin-left:40px;margin-bottom:30px;margin-right:20px;margin-top:initial;"></div>`,
@@ -1139,7 +1209,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-padding-initial"></div>`;
+        setElementContent(editable, markup`<div class="test-padding-initial"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-padding-initial" style="box-sizing:border-box;padding-left:initial;padding-bottom:30px;padding-right:20px;padding-top:10px;"></div>`,
@@ -1166,7 +1236,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-decoration"></div>`;
+        setElementContent(editable, markup`<div class="test-decoration"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-decoration" style="text-decoration:underline;box-sizing:border-box;"></div>`,
@@ -1189,7 +1259,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-border-initial"></div>`;
+        setElementContent(editable, markup`<div class="test-border-initial"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-border-initial" style="box-sizing:border-box;border-bottom-style:double;border-right-style:dashed;border-top-style:dotted;"></div>`,
@@ -1206,7 +1276,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-block"></div>`;
+        setElementContent(editable, markup`<div class="test-block"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-block" style="box-sizing:border-box;"></div>`,
@@ -1223,7 +1293,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-unimportant-color"></div>`;
+        setElementContent(editable, markup`<div class="test-unimportant-color"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-unimportant-color" style="box-sizing:border-box;color:blue;"></div>`,
@@ -1237,7 +1307,10 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-important-color test-unimportant-color"></div>`;
+        setElementContent(
+            editable,
+            markup`<div class="test-important-color test-unimportant-color"></div>`
+        );
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-important-color test-unimportant-color" style="box-sizing:border-box;color:red;"></div>`,
@@ -1255,7 +1328,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-animation"></div>`;
+        setElementContent(editable, markup`<div class="test-animation"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-animation" style="box-sizing:border-box;"></div>`,
@@ -1275,7 +1348,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-animation-specific"></div>`;
+        setElementContent(editable, markup`<div class="test-animation-specific"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-animation-specific" style="box-sizing:border-box;"></div>`,
@@ -1293,7 +1366,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-flex"></div>`;
+        setElementContent(editable, markup`<div class="test-flex"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-flex" style="box-sizing:border-box;"></div>`,
@@ -1313,7 +1386,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-flex-specific"></div>`;
+        setElementContent(editable, markup`<div class="test-flex-specific"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-flex-specific" style="box-sizing:border-box;"></div>`,
@@ -1348,7 +1421,10 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        iframeEditable.innerHTML = `<div class="o_layout" style="padding: 50px;"></div>`;
+        setElementContent(
+            iframeEditable,
+            markup`<div class="o_layout" style="padding: 50px;"></div>`
+        );
         classToStyle(iframeEditable, getCSSRules(iframeEditable.ownerDocument));
         expect(iframeEditable).toHaveInnerHTML(
             `<div class="o_layout" style="border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
@@ -1382,21 +1458,21 @@ describe("Convert classes to inline styles", () => {
             2
         );
 
-        editable.innerHTML = `<span class="test-color"></span>`;
+        setElementContent(editable, markup`<span class="test-color"></span>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<span class="test-color" style="box-sizing:border-box;color:blue;"></span>`,
             { message: "should have prioritized the last defined style" }
         );
 
-        editable.innerHTML = `<div class="test-color"></div>`;
+        setElementContent(editable, markup`<div class="test-color"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-color" style="box-sizing:border-box;color:green;"></div>`,
             { message: "should have prioritized the more specific style" }
         );
 
-        editable.innerHTML = `<div class="test-color" style="color: yellow;"></div>`;
+        setElementContent(editable, markup`<div class="test-color" style="color: yellow;"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-color" style="box-sizing:border-box;color: yellow;"></div>`,
@@ -1411,7 +1487,7 @@ describe("Convert classes to inline styles", () => {
         `,
             0
         );
-        editable.innerHTML = `<div class="test-color"></div>`;
+        setElementContent(editable, markup`<div class="test-color"></div>`);
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
             `<div class="test-color" style="box-sizing:border-box;color:black;"></div>`,

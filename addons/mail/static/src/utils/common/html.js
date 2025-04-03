@@ -1,6 +1,4 @@
-import { markup } from "@odoo/owl";
-
-import { htmlEscape } from "@web/core/utils/html";
+import { htmlEscape, markup } from "@odoo/owl";
 
 /**
  * Safely creates a Document fragment from content. If content was flagged as safe HTML using
@@ -10,16 +8,6 @@ import { htmlEscape } from "@web/core/utils/html";
  */
 export function createDocumentFragmentFromContent(content) {
     return new document.defaultView.DOMParser().parseFromString(htmlEscape(content), "text/html");
-}
-
-/**
- * Applies list join on content and returns a markup result built for HTML.
- *
- * @param {Array<string|ReturnType<markup>>} args
- * @returns {ReturnType<markup>}
- */
-export function htmlJoin(...args) {
-    return markup(args.map((arg) => htmlEscape(arg)).join(""));
 }
 
 /**
@@ -34,7 +22,6 @@ export function htmlReplace(content, search, replacement) {
     if (search instanceof RegExp && !(replacement instanceof Function)) {
         throw new Error("htmlReplace: replacement must be a function when search is a RegExp.");
     }
-    content = htmlEscape(content);
     if (typeof search === "string" || search instanceof String) {
         search = htmlEscape(search);
     }
@@ -42,7 +29,8 @@ export function htmlReplace(content, search, replacement) {
         replacement instanceof Function
             ? (...args) => htmlEscape(replacement(...args))
             : htmlEscape(replacement);
-    return markup(content.replace(search, safeReplacement));
+    // markup: escaped (or safe) content with escaped (or safe) replacements
+    return markup(htmlEscape(content).replace(search, safeReplacement));
 }
 
 /**
@@ -57,7 +45,6 @@ export function htmlReplaceAll(content, search, replacement) {
     if (search instanceof RegExp && !(replacement instanceof Function)) {
         throw new Error("htmlReplaceAll: replacement must be a function when search is a RegExp.");
     }
-    content = htmlEscape(content);
     if (typeof search === "string" || search instanceof String) {
         search = htmlEscape(search);
     }
@@ -65,7 +52,8 @@ export function htmlReplaceAll(content, search, replacement) {
         replacement instanceof Function
             ? (...args) => htmlEscape(replacement(...args))
             : htmlEscape(replacement);
-    return markup(content.replaceAll(search, safeReplacement));
+    // markup: escaped (or safe) content with escaped (or safe) replacements
+    return markup(htmlEscape(content).replaceAll(search, safeReplacement));
 }
 
 /**
@@ -75,6 +63,6 @@ export function htmlReplaceAll(content, search, replacement) {
  * @returns {string|ReturnType<markup>}
  */
 export function htmlTrim(content) {
-    content = htmlEscape(content);
-    return markup(content.trim());
+    // markup: escaped (or safe) content
+    return markup(htmlEscape(content).trim());
 }

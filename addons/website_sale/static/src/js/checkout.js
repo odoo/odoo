@@ -1,8 +1,10 @@
 import {
     LocationSelectorDialog
 } from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
+import { markup } from '@odoo/owl';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
+import { setElementContent } from '@web/core/utils/html';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
@@ -61,9 +63,9 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
                 await this._selectMatchingBillingAddress(selectedPartnerId);
             }
             // Update the available delivery methods.
-            document.getElementById('o_delivery_form').innerHTML = await rpc(
-                '/shop/delivery_methods'
-            );
+            // markup: the RPC returns the render of view website_sale.delivery_form
+            const content = markup(await rpc("/shop/delivery_methods"));
+            setElementContent(document.getElementById("o_delivery_form"), content);
             await this._prepareDeliveryMethods();
         }
         this._enableMainButton();  // Try to enable the main button.
@@ -315,13 +317,13 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     _updateAmountBadge(radio, rateData) {
         const deliveryPriceBadge = this._getDeliveryPriceBadge(radio);
         if (rateData.success) {
-             // If it's a free delivery (`free_over` field), show 'Free', not '$ 0'.
-             if (rateData.is_free_delivery) {
-                 deliveryPriceBadge.textContent = _t("Free");
-             } else {
-                 deliveryPriceBadge.innerHTML = rateData.amount_delivery;
-             }
-             this._toggleDeliveryMethodRadio(radio);
+            // If it's a free delivery (`free_over` field), show 'Free', not '$ 0'.
+            if (rateData.is_free_delivery) {
+                deliveryPriceBadge.textContent = _t("Free");
+            } else {
+               setElementContent(deliveryPriceBadge, rateData.amount_delivery);
+            }
+            this._toggleDeliveryMethodRadio(radio);
         } else {
             deliveryPriceBadge.textContent = rateData.error_message;
             this._toggleDeliveryMethodRadio(radio, true);
@@ -347,10 +349,10 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
             document.querySelector('#message_no_dm_set').classList.add('d-none');
             amountDelivery.classList.remove('d-none');
         }
-        amountDelivery.innerHTML = result.amount_delivery;
-        amountUntaxed.innerHTML = result.amount_untaxed;
-        amountTax.innerHTML = result.amount_tax;
-        amountTotal.forEach(total => total.innerHTML = result.amount_total);
+        setElementContent(amountDelivery, result.amount_delivery);
+        setElementContent(amountUntaxed, result.amount_untaxed);
+        setElementContent(amountTax, result.amount_tax);
+        amountTotal.forEach((total) => setElementContent(total, result.amount_total));
     },
 
     /**
@@ -476,7 +478,16 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {Object} The result values.
      */
     async _setDeliveryMethod(dmId) {
-        return await rpc('/shop/set_delivery_method', {'dm_id': dmId});
+        const result = await rpc('/shop/set_delivery_method', {'dm_id': dmId});
+        /**
+         * markup: amount_delivery, amount_untaxed, amount_tax and amount_total are coming from
+         * Monetary.value_to_html in _order_summary_values
+         */
+        result.amount_delivery = markup(result.amount_delivery);
+        result.amount_untaxed = markup(result.amount_untaxed);
+        result.amount_tax = markup(result.amount_tax);
+        result.amount_total = markup(result.amount_total);
+        return result;
     },
 
     /**

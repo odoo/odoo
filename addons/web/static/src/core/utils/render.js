@@ -1,6 +1,7 @@
-import { App, blockDom, Component, markup } from "@odoo/owl";
+import { App, blockDom, Component } from "@odoo/owl";
 import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
+import { getInnerHtml } from "@web/core/utils/html";
 
 export function renderToElement(template, context = {}) {
     const el = render(template, context).firstElementChild;
@@ -26,12 +27,13 @@ export function renderToFragment(template, context = {}) {
 /**
  * renders a template with an (optional) context and outputs it as a string
  *
+ * @deprecated use renderToMarkup instead, as HTML string should always be stored in a markup
  * @param {string} template
  * @param {Object} context
  * @returns string: the html of the template
  */
 export function renderToString(template, context = {}) {
-    return render(template, context).innerHTML;
+    return renderToMarkup(template, context).toString();
 }
 let app;
 Object.defineProperty(renderToString, "app", {
@@ -66,5 +68,5 @@ function render(template, context = {}) {
  * @returns {ReturnType<markup>} the html of the template, as a markup string
  */
 export function renderToMarkup(template, context = {}) {
-    return markup(renderToString(template, context));
+    return getInnerHtml(render(template, context));
 }

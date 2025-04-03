@@ -1,11 +1,12 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { markup } from "@odoo/owl";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { switchToEditMode } from "../../helpers";
 
 describe.current.tags("interaction_dev");
 
-const formXml = `
+const formXml = markup`
     <div id="wrapwrap">
         <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
             <div class="container-fluid">

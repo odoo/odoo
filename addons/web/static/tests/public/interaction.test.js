@@ -8,34 +8,34 @@ import { Interaction } from "@web/public/interaction";
 import { patchDynamicContent } from "@web/public/utils";
 import { patch } from "@web/core/utils/patch";
 import { startInteraction } from "./helpers";
-import { Component, onWillDestroy, xml } from "@odoo/owl";
+import { Component, markup, onWillDestroy, xml } from "@odoo/owl";
 
 describe.current.tags("interaction_dev");
 
-const TemplateBase = `
+const TemplateBase = markup`
     <div>
         <span>coucou</span>
     </div>`;
 
-const TemplateTest = `
+const TemplateTest = markup`
     <div class="test">
         <span>coucou</span>
     </div>`;
 
-const TemplateTestDoubleSpan = `
+const TemplateTestDoubleSpan = markup`
     <div class="test">
         <span>span1</span>
         <span>span2</span>
     </div>`;
 
-const TemplateTestDoubleButton = `
+const TemplateTestDoubleButton = markup`
     <div class="test">
         <button>button1</button>
         <button>button2</button>
     </div>`;
 
 const getTemplateWithAttribute = function (attribute) {
-    return `
+    return markup`
     <div>
         <span ${attribute}">coucou</span>
     </div>`;
@@ -156,7 +156,7 @@ describe("adding listeners", () => {
                 spanEl.click();
             }
         }
-        await startInteraction(Test, `<iframe src="about:blank"/>`);
+        await startInteraction(Test, markup`<iframe src="about:blank"/>`);
         expect.verifySteps(["click"]);
     });
 
@@ -172,7 +172,7 @@ describe("adding listeners", () => {
                 spanEl.click();
             }
         }
-        await startInteraction(Test, `<iframe src="about:blank"/>`);
+        await startInteraction(Test, markup`<iframe src="about:blank"/>`);
         expect.verifySteps(["click"]);
     });
     test("updateContent after async listener", async () => {
@@ -271,7 +271,7 @@ describe("using selectors", () => {
                 _modal: { "t-on-click": () => clicked++ },
             };
         }
-        await startInteraction(Test, `<div class="modal">${TemplateTest}</div>`);
+        await startInteraction(Test, markup`<div class="modal">${TemplateTest}</div>`);
         expect(clicked).toBe(0);
         await click(".modal");
         expect(clicked).toBe(1);
@@ -296,7 +296,7 @@ describe("using selectors", () => {
         }
         await startInteraction(
             Test,
-            `
+            markup`
             <div class="test">
                 <span class="me">span1</span>
                 <span>span2</span>
@@ -344,7 +344,7 @@ describe("using selectors", () => {
         }
         await startInteraction(
             Test,
-            `
+            markup`
             <div class="test">
                 <span class="btn"></span>
                 <span class="btn off"></span>
@@ -369,7 +369,7 @@ describe("using selectors", () => {
         }
         await startInteraction(
             Test,
-            `
+            markup`
             <div class="test">
                 <span class="my-selector">coucou</span>
             </div>`
@@ -667,7 +667,7 @@ describe("using qualifiers", () => {
         }
         await startInteraction(
             Test,
-            `
+            markup`
             <div class="test">
                 <span>
                     <strong>coucou</strong>
@@ -689,7 +689,7 @@ describe("using qualifiers", () => {
         }
         await startInteraction(
             Test,
-            `
+            markup`
             <div class="test">
                 <span>
                     <strong>coucou</strong>
@@ -1192,7 +1192,7 @@ describe("t-att-class", () => {
                 _root: { "t-att-class": () => ({ a: false }) },
             };
         }
-        await startInteraction(Test, getTemplateWithAttribute("class='a'"));
+        await startInteraction(Test, getTemplateWithAttribute(markup`class='a'`));
         expect("span").not.toHaveClass("a");
     });
 
@@ -1215,7 +1215,7 @@ describe("t-att-class", () => {
                 _root: { "t-att-class": () => ({ b: true }) },
             };
         }
-        const { core } = await startInteraction(Test, getTemplateWithAttribute("class='a'"));
+        const { core } = await startInteraction(Test, getTemplateWithAttribute(markup`class='a'`));
         expect("span").toHaveClass("a b");
         core.stopInteractions();
         expect("span").toHaveClass("a");
@@ -1255,7 +1255,10 @@ describe("t-att-class", () => {
                 _root: { "t-att-class": () => ({ b: undefined }) },
             };
         }
-        const { core } = await startInteraction(Test, getTemplateWithAttribute("class='a b'"));
+        const { core } = await startInteraction(
+            Test,
+            getTemplateWithAttribute(markup`class='a b'`)
+        );
         expect("span").toHaveClass("a");
         expect("span").not.toHaveClass("b");
         core.interactions[0].interaction.updateContent();
@@ -1296,7 +1299,7 @@ describe("t-att-class", () => {
             };
         }
 
-        const { core } = await startInteraction(Test, getTemplateWithAttribute("class='a'"));
+        const { core } = await startInteraction(Test, getTemplateWithAttribute(markup`class='a'`));
         const span = queryOne("span");
         expect(span).toHaveClass(["a", "b"]);
         span.classList.add("c");
@@ -1326,7 +1329,7 @@ describe("t-att-style", () => {
                 _root: { "t-att-style": () => ({ color: undefined }) },
             };
         }
-        await startInteraction(Test, getTemplateWithAttribute("style='color: red;'"));
+        await startInteraction(Test, getTemplateWithAttribute(markup`style='color: red;'`));
         expect("span").not.toHaveStyle({ color: "rgb(255, 0, 0)" });
     });
 
@@ -1357,7 +1360,7 @@ describe("t-att-style", () => {
 
         const { core } = await startInteraction(
             Test,
-            getTemplateWithAttribute("style='background-color: blue'")
+            getTemplateWithAttribute(markup`style='background-color: blue'`)
         );
         const span = queryOne("span");
         expect(span).toHaveStyle({ "background-color": "rgb(0, 0, 0)", color: "rgb(255, 0, 0)" });
@@ -1412,7 +1415,7 @@ describe("t-att-style", () => {
         }
         const { core } = await startInteraction(
             Test,
-            getTemplateWithAttribute("style='background-color: blue;'")
+            getTemplateWithAttribute(markup`style='background-color: blue;'`)
         );
         expect("span").toHaveStyle({ backgroundColor: "rgb(0, 0, 255)", color: "rgb(255, 0, 0)" });
         core.stopInteractions();
@@ -1616,7 +1619,7 @@ describe("t-att and t-out", () => {
         }
         const { core } = await startInteraction(
             Test,
-            `
+            markup`
             <div>
                 <span data-animal="colibri">1</span>
                 <span data-animal="owlet">2</span>
@@ -1639,7 +1642,7 @@ describe("t-att and t-out", () => {
         }
         const { core } = await startInteraction(
             Test,
-            `
+            markup`
             <div>
                 <span data-animal="colibri">1</span>
                 <span data-animal="owlet">2</span>
@@ -1685,7 +1688,7 @@ describe("components", () => {
                 _root: { "t-component": C },
             };
         }
-        const { core } = await startInteraction(Test, `<div class="test"></div>`);
+        const { core } = await startInteraction(Test, markup`<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
             `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"></owl-component></div>`
         );
@@ -1718,7 +1721,7 @@ describe("components", () => {
                 _root: { "t-component": () => [C, { prop: "hello" }] },
             };
         }
-        const { core } = await startInteraction(Test, `<div class="test"></div>`);
+        const { core } = await startInteraction(Test, markup`<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
             `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"></owl-component></div>`
         );
@@ -1745,7 +1748,7 @@ describe("components", () => {
                 this.mountComponent(this.el, C);
             }
         }
-        await startInteraction(Test, `<div class="test"></div>`);
+        await startInteraction(Test, markup`<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
             `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"></owl-component></div>`
         );
@@ -1770,7 +1773,7 @@ describe("components", () => {
                 this.mountComponent(this.el, C, { prop: "with prop" });
             }
         }
-        await startInteraction(Test, `<div class="test"></div>`);
+        await startInteraction(Test, markup`<div class="test"></div>`);
         expect(".test").toHaveOuterHTML(
             `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"></owl-component></div>`
         );

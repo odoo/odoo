@@ -2,6 +2,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 import { switchToEditMode } from "../../helpers";
 
@@ -10,7 +11,7 @@ setupInteractionWhiteList("website.carousel_slider");
 describe.current.tags("interaction_dev");
 
 test("[EDIT] carousel_slider prevents ride", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <section>
             <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="ride" data-bs-interval="0">
                 <div class="carousel-inner">
@@ -57,7 +58,7 @@ test("[EDIT] carousel_slider prevents ride", async () => {
 });
 
 test("[EDIT] carousel_slider updates min height on content_changed", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="ride" data-bs-interval="0">
             <div class="carousel-inner">
                 <div class="carousel-item active">

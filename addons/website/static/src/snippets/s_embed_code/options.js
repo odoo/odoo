@@ -1,6 +1,9 @@
+import { htmlTrim } from "@mail/utils/common/html";
+
 import { Dialog } from "@web/core/dialog/dialog";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { useService } from "@web/core/utils/hooks";
+import { getInnerHtml } from "@web/core/utils/html";
 import options from '@web_editor/js/editor/snippets.options';
 import { _t } from "@web/core/l10n/translation";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
@@ -47,12 +50,12 @@ options.registry.EmbedCode = options.Class.extend({
     async editCode() {
         const $container = this.$target.find('.s_embed_code_embedded');
         const templateEl = this.$target[0].querySelector("template.s_embed_code_saved");
-        const embedContent = templateEl.innerHTML.trim();
+        const embedContent = htmlTrim(getInnerHtml(templateEl));
 
         await new Promise(resolve => {
             this.dialog.add(CodeEditorDialog, {
                 title: _t("Edit embedded code"),
-                value: embedContent,
+                value: embedContent.toString(),
                 mode: "xml",
                 confirm: (newValue) => {
                     // Removes scripts tags from the DOM as we don't want them

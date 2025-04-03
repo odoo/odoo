@@ -1,10 +1,8 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, queryOne, queryRect, scroll } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.bottom_fixed_element");
 
@@ -19,26 +17,26 @@ const scrollTo = async function (el, scrollTarget, bottomFixedElement) {
     bottomFixedElement.style.left = `calc(50% - ${queryRect(bottomFixedElement).width / 2}px)`;
     // Dispatch the scroll event
     await manuallyDispatchProgrammaticEvent(document, "scroll");
-}
+};
 
 const scrollToMiddle = async function (el, bottomFixedElement) {
     // 2550 = headerHeight + mainHeight + footerHeight
-    await scrollTo(el, 2550 / 2 - queryRect(bottomFixedElement).height, bottomFixedElement)
-}
+    await scrollTo(el, 2550 / 2 - queryRect(bottomFixedElement).height, bottomFixedElement);
+};
 
 const scrollToBottom = async function (el, bottomFixedElement) {
     // 2550 = headerHeight + mainHeight + footerHeight
-    await scrollTo(el, 2550 - queryRect(bottomFixedElement).height, bottomFixedElement)
-}
+    await scrollTo(el, 2550 - queryRect(bottomFixedElement).height, bottomFixedElement);
+};
 
 const getTemplate = function (options = {}) {
     const withButtonLeft = options.withButtonLeft || false;
     const withButtonCenter = options.withButtonCenter || false;
 
-    const emptyDiv = `<div style="height: 50px; width: 150px;"></div>`;
-    const buttonEl = `<a href="#" style="background-color: white; border: solid; height: 50px; width: 150px;"></a>`;
+    const emptyDiv = markup`<div style="height: 50px; width: 150px;"></div>`;
+    const buttonEl = markup`<a href="#" style="background-color: white; border: solid; height: 50px; width: 150px;"></a>`;
 
-    return `
+    return markup`
         <header style="height: 50px; background-color: #CCCCFF;"></header>
         <main style="height: 2000px; background-color: #CCFFCC;">
             <div class="o_bottom_fixed_element" style="height: 100px; width: 100px; background-color: black;"></div>
@@ -49,7 +47,7 @@ const getTemplate = function (options = {}) {
             ${emptyDiv}
         </footer>
     `;
-}
+};
 
 test("bottom_fixed_element is started when there is an element #wrapwrap", async () => {
     const { core } = await startInteractions(getTemplate());

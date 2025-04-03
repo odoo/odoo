@@ -3,6 +3,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryOne, scroll } from "@odoo/hoot-dom";
 import { enableTransitions } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.animation");
 beforeEach(enableTransitions);
@@ -10,7 +11,7 @@ beforeEach(enableTransitions);
 describe.current.tags("interaction_dev");
 
 test("onAppearance animation starts once visible", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap" style="overflow: scroll; max-height: 100%;">
             <a href="#target">Get there</a>
             <div style="min-height: 2000px;">Tall stuff</div>
@@ -33,7 +34,7 @@ test("onAppearance animation starts once visible", async () => {
 });
 
 test("on scroll animation changes based on scroll", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap" style="overflow: scroll; max-height: 100%;">
             <div style="min-height: 2000px;">Tall stuff</div>
             <div class="o_anim_fade_in o_animate o_animate_on_scroll"
@@ -67,7 +68,7 @@ test("on scroll animation changes based on scroll", async () => {
 });
 
 test("onAppearance animation in modal starts once visible", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <div class="modal" style="display: none;" data-show-after="1000" data-display="afterDelay" data-bs-backdrop="false">
                 <div class="modal-dialog">

@@ -600,6 +600,7 @@ export class DiscussChannel extends models.ServerModel {
                 channel_type: "channel",
                 group_public_id: self.group_public_id,
                 from_message_id: message?.id,
+                // markup: limitation of mock server, html fields are not markup by default
                 name: message
                     ? convertBrToLineBreak(markup(message.body)).substring(0, 30)
                     : name || "New Thread",

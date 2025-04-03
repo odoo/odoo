@@ -3,12 +3,18 @@ import {
     TABLE_STYLES,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
 
-const tableAttributesString = Object.keys(TABLE_ATTRIBUTES)
-    .map((key) => `${key}="${TABLE_ATTRIBUTES[key]}"`)
-    .join(" ");
-const tableStylesString = Object.keys(TABLE_STYLES)
-    .map((key) => `${key}: ${TABLE_STYLES[key]};`)
-    .join(" ");
+import { markup } from "@odoo/owl";
+
+import { htmlJoin } from "@web/core/utils/html";
+
+const tableAttributesString = htmlJoin(
+    Object.keys(TABLE_ATTRIBUTES).map((key) => markup`${key}="${TABLE_ATTRIBUTES[key]}"`),
+    " "
+);
+const tableStylesString = htmlJoin(
+    Object.keys(TABLE_STYLES).map((key) => markup`${key}: ${TABLE_STYLES[key]};`),
+    " "
+);
 /**
  * Take a matrix representing a grid and return an HTML string of the Bootstrap
  * grid. The matrix is an array of rows, with each row being an array of cells.
@@ -29,31 +35,27 @@ const tableStylesString = Object.keys(TABLE_STYLES)
  * @returns {string}
  */
 export function getGridHtml(matrix) {
-    return (
-        `<div class="container">` +
-        matrix
-            .map(
-                (row, iRow) =>
-                    `<div class="row">` +
-                    row
-                        .map(
-                            (col, iCol) =>
-                                `<div class="${
-                                    col ? "col-" + col : "col"
-                                }">(${iRow}, ${iCol})</div>`
-                        )
-                        .join("") +
-                    `</div>`
-            )
-            .join("") +
-        `</div>`
-    );
+    return markup`<div class="container">${htmlJoin(
+        matrix.map(
+            (row, iRow) =>
+                markup`<div class="row">${htmlJoin(
+                    row.map(
+                        (col, iCol) =>
+                            markup`<div class="${
+                                col ? "col-" + col : "col"
+                            }">(${iRow}, ${iCol})</div>`
+                    )
+                )}</div>`
+        )
+    )}</div>`;
 }
 export function getTdHtml(colspan, text, containerWidth) {
     const style = containerWidth
-        ? ` style="max-width: ${Math.round(((containerWidth * colspan) / 12) * 100) / 100}px;"`
+        ? markup` style="max-width: ${
+              Math.round(((containerWidth * colspan) / 12) * 100) / 100
+          }px;"`
         : "";
-    return `<td colspan="${colspan}"${style}>${text}</td>`;
+    return markup`<td colspan="${colspan}"${style}>${text}</td>`;
 }
 /**
  * Take a matrix representing a table and return an HTML string of the table.
@@ -76,29 +78,41 @@ export function getTdHtml(colspan, text, containerWidth) {
  *
  * @param {Array<Array<Array<[Number, Number, string?, number?]>>>} matrix
  * @param {Number} [containerWidth]
+ * @param {Object} [options={}]
+ * @param {boolean} [options.closeTable=true]
+ * @param {Object} [options.colOffset={}]
+ * @param {boolean} [options.openTable=true]
  * @returns {string}
  */
-export function getTableHtml(matrix, containerWidth) {
-    return (
-        `<table ${tableAttributesString} style="width: 100% !important; ${tableStylesString}">` +
-        matrix
-            .map(
-                (row, iRow) =>
-                    `<tr>` +
-                    row
-                        .map((col, iCol) =>
-                            getTdHtml(
-                                col[0],
-                                typeof col[2] === "string" ? col[2] : `(${iRow}, ${iCol})`,
-                                containerWidth
+export function getTableHtml(
+    matrix,
+    containerWidth,
+    { closeTable = true, colOffset = {}, openTable = true } = {}
+) {
+    return markup`
+        ${
+            openTable
+                ? markup`<table ${tableAttributesString} style="width: 100% !important; ${tableStylesString}">`
+                : ""
+        }
+            ${htmlJoin(
+                matrix.map(
+                    (row, iRow) =>
+                        markup`<tr>${htmlJoin(
+                            row.map((col, iCol) =>
+                                getTdHtml(
+                                    col[0],
+                                    typeof col[2] === "string"
+                                        ? col[2]
+                                        : `(${iRow}, ${(colOffset[iRow] ?? 0) + iCol})`,
+                                    containerWidth
+                                )
                             )
-                        )
-                        .join("") +
-                    `</tr>`
-            )
-            .join("") +
-        `</table>`
-    );
+                        )}</tr>`
+                )
+            )}
+        ${closeTable ? markup`</table>` : ""}
+    `;
 }
 /**
  * Take a number of rows and a number of columns (or number of columns per
@@ -132,9 +146,20 @@ export function getRegularGridHtml(nRows, nCols) {
  * @param {Number|Number[]} colspan
  * @param {Number|Number[]} width
  * @param {Number} containerWidth
+ * @param {Object} [options={}]
+ * @param {boolean} [options.closeTable=true]
+ * @param {Object} [options.colOffset={}]
+ * @param {boolean} [options.openTable=true]
  * @returns {string}
  */
-export function getRegularTableHtml(nRows, nCols, colspan, width, containerWidth) {
+export function getRegularTableHtml(
+    nRows,
+    nCols,
+    colspan,
+    width,
+    containerWidth,
+    { colOffset = {}, closeTable = true, openTable = true } = {}
+) {
     const matrix = new Array(nRows)
         .fill()
         .map((_, iRow) =>
@@ -145,5 +170,5 @@ export function getRegularTableHtml(nRows, nCols, colspan, width, containerWidth
                     Array.isArray(width) ? width[iRow] : width,
                 ])
         );
-    return getTableHtml(matrix, containerWidth);
+    return getTableHtml(matrix, containerWidth, { closeTable, colOffset, openTable });
 }

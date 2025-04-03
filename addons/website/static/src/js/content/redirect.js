@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentUrl = new URL(window.location.href);
         currentUrl.pathname = `/@${currentUrl.pathname}`;
         if (currentUrl.searchParams.get('enable_editor') || currentUrl.searchParams.get('edit_translations')) {
-            document.body.innerHTML = '';
+            document.body.textContent = "";
             window.location.replace(currentUrl.href);
             return;
         }

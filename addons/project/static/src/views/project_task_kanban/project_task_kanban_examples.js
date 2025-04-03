@@ -1,12 +1,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { renderToMarkup } from '@web/core/utils/render';
+import { renderToMarkup } from "@web/core/utils/render";
 import { markup } from "@odoo/owl";
 
-const greenBullet = markup(`<span class="o_status d-inline-block o_status_green"></span>`);
-const orangeBullet = markup(`<span class="o_status d-inline-block text-warning"></span>`);
-const star = markup(`<a style="color: gold;" class="fa fa-star"></a>`);
-const clock = markup(`<a class="fa fa-clock-o"></a>`);
+const greenBullet = markup`<span class="o_status d-inline-block o_status_green"></span>`;
+const orangeBullet = markup`<span class="o_status d-inline-block text-warning"></span>`;
+const star = markup`<a style="color: gold;" class="fa fa-star"></a>`;
+const clock = markup`<a class="fa fa-clock-o"></a>`;
 
 const exampleData = {
     ghostColumns: [_t('New'), _t('Assigned'), _t('In Progress'), _t('Done')],

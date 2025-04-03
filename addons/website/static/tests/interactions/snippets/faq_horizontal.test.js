@@ -4,6 +4,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, queryOne } from "@odoo/hoot-dom";
 
 import { setupTest, simpleScroll, doubleScroll } from "./helpers";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList([
     "website.header_standard",
@@ -16,7 +17,7 @@ setupInteractionWhiteList([
 describe.current.tags("interaction_dev");
 
 const getTemplate = function (headerType) {
-    return `
+    return markup`
         <header class="${headerType}" style="background-color:#CCFFCC">
             <div style="height: 50px; background-color:#33FFCC;"></div>
         </header>

@@ -2680,7 +2680,7 @@ test("empty pivot view with action helper", async () => {
         type: "pivot",
         resModel: "partner",
         context: { search_default_small_than_0: true },
-        noContentHelp: markup(`<p class="abc">click to add a foo</p>`),
+        noContentHelp: markup`<p class="abc">click to add a foo</p>`,
         config: {
             views: [[false, "search"]],
         },
@@ -2707,7 +2707,7 @@ test("empty pivot view with sample data", async () => {
         type: "pivot",
         resModel: "partner",
         context: { search_default_small_than_0: true },
-        noContentHelp: markup('<p class="abc">click to add a foo</p>'),
+        noContentHelp: markup`<p class="abc">click to add a foo</p>`,
         config: {
             views: [[false, "search"]],
         },
@@ -2733,7 +2733,7 @@ test("non empty pivot view with sample data", async () => {
     await mountView({
         type: "pivot",
         resModel: "partner",
-        noContentHelp: markup('<p class="abc">click to add a foo</p>'),
+        noContentHelp: markup`<p class="abc">click to add a foo</p>`,
         config: {
             views: [[false, "search"]],
         },

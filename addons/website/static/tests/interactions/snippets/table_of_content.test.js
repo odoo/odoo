@@ -6,6 +6,7 @@ import {
 
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryOne, scroll } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 import { setupTest, simpleScroll, doubleScroll } from "./helpers";
 
@@ -20,7 +21,7 @@ setupInteractionWhiteList([
 describe.current.tags("interaction_dev");
 
 // TODO Maybe recover from `website.s_table_of_content`.
-const tableTemplate = `
+const tableTemplate = markup`
     <section class="s_table_of_content pt24 pb24 o_cc o_cc1">
         <div class="container">
             <div class="row s_nb_column_fixed">
@@ -88,7 +89,7 @@ const tableTemplate = `
 `;
 
 const getTemplate = function (headerType) {
-    return `
+    return markup`
     <header class="${headerType}" style="background-color:#CCFFCC">
         <div style="height: 50px; background-color:#33FFCC;"></div>
     </header>
@@ -116,7 +117,7 @@ const checkVisibility = function (aEls, h2Els, wrapEl) {
 
 test.tags("desktop");
 test("table_of_content is correctly started (desktop)", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
         </div>
@@ -132,7 +133,7 @@ test("table_of_content is correctly started (desktop)", async () => {
 
 test.tags("mobile");
 test("table_of_content is correctly started (mobile)", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
         </div>
@@ -147,7 +148,7 @@ test("table_of_content is correctly started (mobile)", async () => {
 
 test.tags("desktop");
 test("table_of_content scrolls to targetted location (desktop)", async () => {
-    await startInteractions(`
+    await startInteractions(markup`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
         </div>
@@ -164,7 +165,7 @@ test("table_of_content scrolls to targetted location (desktop)", async () => {
 
 test.tags("mobile");
 test("table_of_content scrolls to targetted location (mobile)", async () => {
-    await startInteractions(`
+    await startInteractions(markup`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
         </div>
@@ -180,7 +181,7 @@ test("table_of_content scrolls to targetted location (mobile)", async () => {
 
 test.tags("desktop");
 test("table_of_content highlights reached header (desktop)", async () => {
-    await startInteractions(`
+    await startInteractions(markup`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
         </div>
@@ -197,7 +198,7 @@ test("table_of_content highlights reached header (desktop)", async () => {
 
 test.tags("mobile");
 test("table_of_content highlights reached header (mobile)", async () => {
-    await startInteractions(`
+    await startInteractions(markup`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
         </div>

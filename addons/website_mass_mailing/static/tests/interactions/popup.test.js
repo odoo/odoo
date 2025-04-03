@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, tick } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 import { defineStyle } from "@web/../tests/web_test_helpers";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
@@ -7,7 +8,7 @@ setupInteractionWhiteList("website.popup");
 describe.current.tags("interaction_dev");
 
 function getTemplate(disabled = false) {
-    return `
+    return markup`
         <div class="s_popup o_newsletter_popup o_snippet_invisible"
              data-name="Newsletter Popup" data-vcss="001" data-snippet="s_newsletter_subscribe_popup" id="sPopup" data-invisible="1">
             <div class="modal fade s_popup_middle o_newsletter_modal modal_shown"
@@ -37,7 +38,7 @@ function getTemplate(disabled = false) {
 }
 
 describe("mail popup", () => {
-    beforeEach(() => defineStyle(/* css */`* { transition: none !important; }`));
+    beforeEach(() => defineStyle(/* css */ `* { transition: none !important; }`));
     test("popup is shown if user is not subscribed (mail input not disabled)", async () => {
         const { core } = await startInteractions(getTemplate());
         expect(core.interactions).toHaveLength(1);

@@ -1,19 +1,18 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 
 import { switchToEditMode } from "../../helpers";
 import { queryAll } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.carousel_section_slider");
 
 describe.current.tags("interaction_dev");
 
 test("carousel_section_slider resets slide to attributes", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(
+        markup`
         <section>
             <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="ride" data-bs-interval="0">
                 <div class="carousel-inner">
@@ -44,7 +43,9 @@ test("carousel_section_slider resets slide to attributes", async () => {
                 </div>
             </div>
         </section>
-    `, { waitForStart: true, editMode: true });
+    `,
+        { waitForStart: true, editMode: true }
+    );
     await switchToEditMode(core);
 
     expect(core.interactions).toHaveLength(1);

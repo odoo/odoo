@@ -7,7 +7,9 @@
  * - Click the restore button and check that the content is correctly restored
  */
 
+import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { getInnerHtml } from "@web/core/utils/html";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 const baseDescriptionContent = "Test project task history version";
@@ -108,9 +110,9 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         content: "Verify comparaison text",
         trigger: ".modal .history-container .tab-pane",
         run: function () {
-            const comparaisonHtml = this.anchor.innerHTML;
-            const correctHtml = `<added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed>`;
-            if (!comparaisonHtml.includes(correctHtml)) {
+            const comparaisonHtml = getInnerHtml(this.anchor);
+            const correctHtml = markup`<added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed>`;
+            if (!comparaisonHtml.toString().includes(correctHtml.toString())) {
                 console.error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
             }
         },

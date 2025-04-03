@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             run: "click",
         }, {
             trigger: 'input#subject_0',
-            content: markup('Pick the <b>email subject</b>.'),
+            content: markup`Pick the <b>email subject</b>.`,
             tooltipPosition: 'bottom',
             run: "edit Test",
         }, {
@@ -27,11 +27,11 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             run: 'click',
         }, {
             trigger: 'div[name="body_arch"] :iframe #default',
-            content: markup('Choose this <b>theme</b>.'),
+            content: `Choose this <b>theme</b>.`,
             run: 'click',
         }, {
             trigger: '.o_codeview_btn',
-            content: markup('Click here to switch to <b>code view</b>'),
+            content: `Click here to switch to <b>code view</b>`,
             run: 'click'
         }, {
             trigger: ':iframe .o_codeview',
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             }
         }, {
             trigger: '.o_codeview_btn',
-            content: markup('Click here to switch back from <b>code view</b>'),
+            content: markup`Click here to switch back from <b>code view</b>`,
             run: 'click'
         }, {
             trigger: '[name="body_arch"] :iframe .o_mail_wrapper_td',

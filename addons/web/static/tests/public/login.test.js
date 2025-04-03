@@ -2,13 +2,14 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("public.login");
 
 describe.current.tags("interaction_dev");
 
 test("add and remove loading effect", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div class="oe_login_form">
             <button type="submit">log in</button>
         </div>`);

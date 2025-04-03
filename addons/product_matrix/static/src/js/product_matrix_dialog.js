@@ -1,7 +1,7 @@
 import { Dialog } from '@web/core/dialog/dialog';
 import { formatMonetary } from "@web/views/fields/formatters";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { Component, onMounted, markup, useRef } from "@odoo/owl";
+import { Component, markup, onMounted, useRef } from "@odoo/owl";
 
 export class ProductMatrixDialog extends Component {
     static template = "product_matrix.dialog";
@@ -60,7 +60,7 @@ export class ProductMatrixDialog extends Component {
                 currencyId: currency_id,
             },
         );
-        return markup(`&nbsp;${sign}&nbsp;${formatted}&nbsp;`);
+        return markup`&nbsp;${sign}&nbsp;${formatted}&nbsp;`;
     }
 
     _onConfirm() {

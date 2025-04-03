@@ -13,6 +13,7 @@ import {
     tick,
 } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
@@ -41,7 +42,7 @@ function removeTransitions() {
  * @param {string} [options.extraPrimaryBtnClasses]
  * @param {string} [options.modalId]
  * @param {boolean} [options.focusableElements]
- * @returns {string} - popup template
+ * @returns {ReturnType<import("@odoo/owl").markup>} - popup template
  */
 function getPopupTemplate(options = {}) {
     const {
@@ -52,7 +53,7 @@ function getPopupTemplate(options = {}) {
         modalId = "",
         focusableElements = false,
     } = options;
-    return `
+    return markup`
         <div class="s_popup o_snippet_invisible" data-vcss="001" data-snippet="s_popup"
              data-name="Popup" id="sPopup" data-invisible="1">
             <div class="modal fade s_popup_middle modal_shown ${
@@ -86,7 +87,7 @@ function getPopupTemplate(options = {}) {
 const modal = "#sPopup .modal";
 
 test("popup interaction does not activate without .s_popup", async () => {
-    const { core } = await startInteractions(``);
+    const { core } = await startInteractions(markup``);
     expect(core.interactions).toHaveLength(0);
 });
 
@@ -159,7 +160,7 @@ describe("show popup", () => {
     });
 
     test("show popup after click on link", async () => {
-        const { core } = await startInteractions(`
+        const { core } = await startInteractions(markup`
             <a href="#modal">Show popup</a>
             ${getPopupTemplate({ display: "onClick", modalId: "modal" })}
         `);
@@ -189,7 +190,7 @@ describe("trap focus", () => {
     beforeEach(removeTransitions);
 
     test("focus is trapped when popup opens", async () => {
-        const { core } = await startInteractions(`
+        const { core } = await startInteractions(markup`
             <a href="#">Link</a>
             ${getPopupTemplate({ modalId: "modal", focusableElements: true })}
         `);
@@ -210,7 +211,7 @@ describe("trap focus", () => {
     });
 
     test("reset focus on the previous active element when popup is closed", async () => {
-        const { core } = await startInteractions(`
+        const { core } = await startInteractions(markup`
             <a id="showLink" href="#">Link</a>
             ${getPopupTemplate({ modalId: "modal" })}
         `);
@@ -231,7 +232,7 @@ describe("trap focus", () => {
     });
 
     test("trap & reset focus when popup opens on click", async () => {
-        const { core } = await startInteractions(`
+        const { core } = await startInteractions(markup`
             <a href="#modal">Show popup</a>
             ${getPopupTemplate({ display: "onClick", modalId: "modal", focusableElements: true })}
         `);
@@ -262,7 +263,7 @@ describe("trap focus", () => {
     });
 
     test("intercept & reset focus with no backdrop popup", async () => {
-        const { core } = await startInteractions(`
+        const { core } = await startInteractions(markup`
             <a id="link1" href="#">Link</a>
             ${getPopupTemplate({ modalId: "modal", backdrop: false })}
         `);
@@ -282,7 +283,7 @@ describe("trap focus", () => {
     });
 
     test("don't trap focus if no backdrop", async () => {
-        const { core } = await startInteractions(`
+        const { core } = await startInteractions(markup`
             <a id="link1" href="#">Link before</a>
             ${getPopupTemplate({ modalId: "modal", backdrop: false, focusableElements: true })}
             <a id="link2" href="#">Link after</a>

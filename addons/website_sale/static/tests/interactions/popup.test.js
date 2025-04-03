@@ -1,5 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, tick } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 import { defineStyle } from "@web/../tests/web_test_helpers";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
@@ -8,7 +9,7 @@ describe.current.tags("interaction_dev");
 
 test("click on primary button which is add to cart button doesn't close popup", async () => {
     defineStyle(/* css */`* { transition: none !important; }`);
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div class="s_popup o_snippet_invisible" data-vcss="001" data-snippet="s_popup"
              data-name="Popup" id="sPopup" data-invisible="1">
             <div class="modal fade s_popup_middle modal_shown"

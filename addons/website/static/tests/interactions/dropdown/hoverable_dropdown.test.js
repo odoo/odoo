@@ -2,12 +2,13 @@ import { startInteractions, setupInteractionWhiteList } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { hover, leave } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.hoverable_dropdown");
 
 describe.current.tags("interaction_dev");
 
-const dropdownTemplate = `
+const dropdownTemplate = markup`
     <header class="o_hoverable_dropdown" style="display: flex; height: 50px; background-color: #CCFFCC;">
         <div class="dropdown" style="margin: auto;">
             <a class="dropdown-toggle">Dropdown</a>

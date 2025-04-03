@@ -1,18 +1,16 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, queryAll } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.gallery");
 
 describe.current.tags("interaction_dev");
 
 // TODO Obtain rendering from `website.s_images_wall` template ?
-const defaultGallery = `
+const defaultGallery = markup`
     <div id="wrapwrap">
         <section class="s_image_gallery o_spc-small o_masonry pt24 pb24 o_colored_level" data-vcss="002" data-columns="3" style="overflow: hidden;" data-snippet="s_images_wall" data-name="Images Wall">
             <div class="container">
@@ -36,7 +34,7 @@ const defaultGallery = `
 `;
 
 test("gallery does nothing if there is no non-slideshow s_image_gallery", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <section class="s_image_gallery o_slideshow"/>
         </div>
@@ -91,6 +89,7 @@ test("gallery interaction opens lightbox on click, then use mouse", async () => 
     await checkLightbox({
         close: async (lightboxEl) => await click(lightboxEl.querySelector(".btn-close")),
         next: async (lightboxEl) => await click(lightboxEl.querySelector(".carousel-control-next")),
-        previous: async (lightboxEl) => await click(lightboxEl.querySelector(".carousel-control-prev")),
+        previous: async (lightboxEl) =>
+            await click(lightboxEl.querySelector(".carousel-control-prev")),
     });
 });

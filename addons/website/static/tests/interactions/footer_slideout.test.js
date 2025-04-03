@@ -1,18 +1,16 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
 import { mockUserAgent } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.footer_slideout");
 
 describe.current.tags("interaction_dev");
 
 test("footer_slideout does nothing if the effect is not enabled", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <main style="min-height: 1000px">Main Content</main>
             <footer>Footer Content</footer>
@@ -23,7 +21,7 @@ test("footer_slideout does nothing if the effect is not enabled", async () => {
 
 test("footer_slideout only adds a class if the effect is enabled on non-safari", async () => {
     mockUserAgent("android");
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <main style="min-height: 1000px">Main Content</main>
             <footer class="o_footer_slideout">Footer Content</footer>
@@ -35,7 +33,7 @@ test("footer_slideout only adds a class if the effect is enabled on non-safari",
 
 test("footer_slideout adds a class and a pixel if the effect is enabled on safari", async () => {
     mockUserAgent("safari");
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <main style="min-height: 1000px">Main Content</main>
             <footer class="o_footer_slideout">Footer Content</footer>
@@ -44,7 +42,7 @@ test("footer_slideout adds a class and a pixel if the effect is enabled on safar
     expect(core.interactions).toHaveLength(1);
     expect("#wrapwrap").toHaveClass("o_footer_effect_enable");
     expect(queryAll("#wrapwrap > div")).toHaveLength(1);
-    expect("#wrapwrap > div").toHaveStyle({ "width": "1px" });
+    expect("#wrapwrap > div").toHaveStyle({ width: "1px" });
     core.stopInteractions();
     expect(core.interactions).toHaveLength(0);
     expect(queryFirst("#wrapwrap > div")).toBe(null);

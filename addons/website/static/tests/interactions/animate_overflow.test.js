@@ -1,17 +1,15 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.animate_overflow");
 
 describe.current.tags("interaction_dev");
 
 test("animate_overflow adds class during animations", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <div class="o_animate"/>
         </div>
@@ -29,7 +27,7 @@ test("animate_overflow adds class during animations", async () => {
 });
 
 test("animate_overflow always adds class if there are transforms", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <div class="o_animate" style="transform: translateY(10px)"/>
         </div>

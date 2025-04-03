@@ -1,11 +1,9 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -15,7 +13,7 @@ describe.current.tags("interaction_dev");
 
 test("listing_layout toggle to list mode", async () => {
     const deferred = new Deferred();
-    await startInteractions(`
+    await startInteractions(markup`
         <div class="container o_website_listing_layout">
             <section>
                 <div class="listing_layout_switcher btn-group" data-active-classes="border-primary" data-view-id="123">
@@ -39,7 +37,9 @@ test("listing_layout toggle to list mode", async () => {
         </div>
     `);
     onRpc("/website/save_session_layout_mode", async (request) => {
-        const jsonParams = JSON.parse(new TextDecoder("utf-8").decode(await request.arrayBuffer())).params;
+        const jsonParams = JSON.parse(
+            new TextDecoder("utf-8").decode(await request.arrayBuffer())
+        ).params;
         expect.step("rpc");
         expect(jsonParams.layout_mode).toBe("list");
         expect(jsonParams.view_id).toBe("123");
@@ -49,14 +49,20 @@ test("listing_layout toggle to list mode", async () => {
     await click("#apply_list");
     expect(gridEl).toHaveClass("o_website_list");
     expect(gridEl).not.toHaveClass("o_website_grid");
-    expect(queryOne(".o_website_list > div")).not.toHaveClass(["col-lg-3", "col-md-4", "col-sm-6", "px-2", "col-xs-12"]);
+    expect(queryOne(".o_website_list > div")).not.toHaveClass([
+        "col-lg-3",
+        "col-md-4",
+        "col-sm-6",
+        "px-2",
+        "col-xs-12",
+    ]);
     await deferred;
     expect.verifySteps(["rpc"]);
 });
 
 test("listing_layout toggle to grid mode", async () => {
     const deferred = new Deferred();
-    await startInteractions(`
+    await startInteractions(markup`
         <div class="container o_website_listing_layout">
             <section>
                 <div class="listing_layout_switcher btn-group" data-active-classes="border-primary" data-view-id="123">
@@ -80,7 +86,9 @@ test("listing_layout toggle to grid mode", async () => {
         </div>
     `);
     onRpc("/website/save_session_layout_mode", async (request) => {
-        const jsonParams = JSON.parse(new TextDecoder("utf-8").decode(await request.arrayBuffer())).params;
+        const jsonParams = JSON.parse(
+            new TextDecoder("utf-8").decode(await request.arrayBuffer())
+        ).params;
         expect.step("rpc");
         expect(jsonParams.layout_mode).toBe("grid");
         expect(jsonParams.view_id).toBe("123");
@@ -90,7 +98,13 @@ test("listing_layout toggle to grid mode", async () => {
     await click("#apply_grid");
     expect(listEl).toHaveClass("o_website_grid");
     expect(listEl).not.toHaveClass("o_website_list");
-    expect(queryOne(".o_website_grid > div")).toHaveClass(["col-lg-3", "col-md-4", "col-sm-6", "px-2", "col-xs-12"]);
+    expect(queryOne(".o_website_grid > div")).toHaveClass([
+        "col-lg-3",
+        "col-md-4",
+        "col-sm-6",
+        "px-2",
+        "col-xs-12",
+    ]);
     await deferred;
     expect.verifySteps(["rpc"]);
 });

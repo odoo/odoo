@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { escape } from "@web/core/utils/strings";
 
 import { markup } from "@odoo/owl";
 
@@ -25,11 +24,11 @@ export const iapNotificationService = {
         }
 
         function displayCreditErrorNotification(params) {
-            const message = markup(`
+            const message = markup`
             <a class='btn btn-link' href='${params.get_credits_url}' target='_blank'>
                 <i class='oi oi-arrow-right'></i>
-                ${escape(_t("Buy more credits"))}
-            </a>`);
+                ${_t("Buy more credits")}
+            </a>`;
             notification.add(message, {
                 title: params.title,
                 type: 'danger',

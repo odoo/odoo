@@ -3,6 +3,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
 import { enableTransitions } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.carousel_slider");
 beforeEach(enableTransitions);
@@ -10,7 +11,7 @@ beforeEach(enableTransitions);
 describe.current.tags("interaction_dev");
 
 test("carousel_slider updates min height of carousel items", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <section>
             <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="false" data-bs-interval="0">
                 <div class="carousel-inner">

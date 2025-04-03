@@ -2,6 +2,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, Deferred } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ImageLazyLoading } from "@website/interactions/image_lazy_loading";
@@ -22,7 +23,7 @@ test("images lazy loading removes height then restores it", async () => {
         },
     });
     const { core } = await startInteractions(
-        `
+        markup`
         <div>Fake surrounding
             <div id="wrapwrap">
                 <img src="/web/image/website.library_image_08" loading="lazy" style="min-height: 100px;"/>

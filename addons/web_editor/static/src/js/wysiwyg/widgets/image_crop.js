@@ -7,7 +7,6 @@ import {
     onMounted,
     onWillDestroy,
     onWillUpdateProps,
-    markup,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { closestScrollableY } from "@web/core/utils/scrolling";
@@ -163,7 +162,9 @@ export class ImageCrop extends Component {
 
         if (this.uncroppable) {
             this.notification.add(
-                markup(_t("This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo.")),
+                _t("This type of image is not supported for cropping.%(new_line)sIf you want to crop it, please first download it from the original source and upload it in Odoo.", {
+                    new_line: '<br/>',
+                }),
                 {
                     title: _t("This image is an external image"),
                     type: 'warning',

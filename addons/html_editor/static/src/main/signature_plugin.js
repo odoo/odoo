@@ -48,11 +48,12 @@ export class SignaturePlugin extends Plugin {
             ["signature"]
         );
         if (currentUser && currentUser.signature) {
-            // User signature is sanitized in backend.
+            // markup: signature is coming from HTML field on res.users
+            currentUser.signature = markup(currentUser.signature);
             const signatureFragment = parseHTML(
                 this.document,
                 renderToString("html_editor.Signature", {
-                    signature: markup(currentUser.signature),
+                    signature: currentUser.signature,
                     signatureClass: SIGNATURE_CLASS,
                 })
             );

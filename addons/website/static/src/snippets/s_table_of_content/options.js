@@ -145,7 +145,7 @@ options.registry.TableOfContent = options.Class.extend({
         const headingIds = headingsEls.map(headingEl => this._getTocAndHeadingId(headingEl).headingId);
         let maxHeadingIds = Math.max(0, ...headingIds);
 
-        navEl.innerHTML = '';
+        navEl.textContent = "";
         const uniqueHeadingIds = new Set();
         headingsEls.forEach((el) => {
             const $el = $(el);

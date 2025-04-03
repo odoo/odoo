@@ -3,6 +3,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, enableTransitions } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -32,7 +33,7 @@ beforeEach(() => {
 
 describe.current.tags("interaction_dev");
 
-const testTemplate = /* xml */ `
+const testTemplate = markup`
     <div id="wrapwrap">
         <section data-snippet="s_dynamic_snippet_carousel" class="s_dynamic_snippet_carousel s_dynamic s_dynamic_empty pt32 pb32 o_colored_level" data-custom-template-data="{}" data-name="Dynamic Carousel"
                 data-filter-id="1"

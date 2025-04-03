@@ -2,6 +2,7 @@ import { startInteractions, setupInteractionWhiteList } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { hover, leave } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 import { switchToEditMode } from "../../helpers";
 
@@ -12,7 +13,7 @@ describe.current.tags("interaction_dev");
 test.tags("desktop");
 test("[EDIT] onMouseLeave doesn't work in edit mode", async () => {
     const { core } = await startInteractions(
-        `
+        markup`
         <header class="o_hoverable_dropdown" style="display: flex; height: 50px; background-color: #CCFFCC;">
             <div class="dropdown" style="margin: auto;">
                 <a class="dropdown-toggle">Dropdown</a>
@@ -40,7 +41,7 @@ test("[EDIT] onMouseLeave doesn't work in edit mode", async () => {
 test.tags("desktop");
 test("[EDIT] onMouseEnter doesn't work in edit mode if another dropdown is opened", async () => {
     const { core } = await startInteractions(
-        `
+        markup`
         <header class="o_hoverable_dropdown" style="display: flex; height: 50px; background-color: #CCFFCC;">
             <div id="D1" class="dropdown" style="margin: auto;">
                 <a class="dropdown-toggle">Dropdown 1</a>

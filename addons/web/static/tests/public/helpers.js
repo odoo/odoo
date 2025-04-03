@@ -1,6 +1,8 @@
 import { getFixture, after } from "@odoo/hoot";
+import { markup } from "@odoo/owl";
 import { clearRegistry, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
+import { setElementContent } from "@web/core/utils/html";
 
 let activeInteractions = null;
 const elementRegistry = registry.category("public.interactions");
@@ -35,10 +37,10 @@ export async function startInteractions(
         defineMailModels();
     }
     const fixture = getFixture();
-    if (!html.includes("wrapwrap")) {
-        html = `<div id="wrapwrap">${html}</div>`;
+    if (!html.toString().includes("wrapwrap")) {
+        html = markup`<div id="wrapwrap">${html}</div>`;
     }
-    fixture.innerHTML = html;
+    setElementContent(fixture, html);
     if (options.translateMode) {
         fixture.closest("html").dataset.edit_translations = "1";
     }

@@ -1,11 +1,12 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryAll, queryOne } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.search_bar_results");
 describe.current.tags("interaction_dev");
 
-const searchTemplate = `
+const searchTemplate = markup`
     <form method="get" class="o_searchbar_form s_searchbar_input" action="/website/search" data-snippet="s_searchbar_input">
         <div role="search" class="input-group input-group-lg">
             <input type="search" name="search" class="search-query form-control oe_search_box" placeholder="Search..."

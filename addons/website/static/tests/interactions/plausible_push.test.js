@@ -1,16 +1,14 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.plausible_push");
 
 describe.current.tags("interaction_dev");
 
 test("plausible _ush does nothing if there is no .js_plausible_push", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <input type='hidden' data-event-name='Lead Generation' data-event-params='{"CTA": "Contact Us"}' />
         </div>
@@ -20,7 +18,7 @@ test("plausible _ush does nothing if there is no .js_plausible_push", async () =
 
 test("plausible_push interaction notifies plausible if .js_plausible_push", async () => {
     expect(window.plausible).toBe(undefined);
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <input type='hidden' class='js_plausible_push' data-event-name='Lead Generation' data-event-params='{"CTA": "Contact Us"}' />
         </div>

@@ -1,16 +1,14 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.show_password");
 
 describe.current.tags("interaction_dev");
 
-const template = `
+const template = markup`
     <div class="input-group">
         <input type="password" id="password" class="form-control" required="required" name="visibility_password" />
         <button class="btn btn-secondary" type="button" id="showPass">

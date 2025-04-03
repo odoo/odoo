@@ -444,6 +444,7 @@ export class Message extends Component {
             const { error, lang_name, body } = await rpc("/mail/message/translate", {
                 message_id: message.id,
             });
+            // markup: body is coming from sanitized field on mail.message.translation
             message.translationValue = body && markup(body);
             message.translationSource = lang_name;
             message.translationErrors = error;

@@ -2,6 +2,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.full_screen_height");
 
@@ -9,7 +10,7 @@ describe.current.tags("interaction_dev");
 
 test.tags("desktop");
 test("full_screen_height is not set on visible section", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <main>
             <section class="o_full_screen_height">content</section>
         </main>
@@ -20,7 +21,7 @@ test("full_screen_height is not set on visible section", async () => {
 });
 
 test("full_screen_height is set on hidden section", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <main>
             <section class="o_full_screen_height d-none">content</section>
         </main>

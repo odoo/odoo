@@ -1,13 +1,14 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, click, edit, fill, queryAll, tick } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 setupInteractionWhiteList("website_forum.website_forum_spam");
 describe.current.tags("interaction_dev");
 
-const template = (options = {}) => `
+const template = (options = {}) => markup`
  <div id="wrap" class="o_wforum_wrapper o_wforum_moderation_queue">
     <div class="modal fade show modal_shown" id="markAllAsSpam" data-spam-ids="${options.spamIds ? "[1,2]" : ""}" style="display: block;">
         <div class="modal-dialog">
@@ -47,14 +48,14 @@ test("keep last spam input search", async () => {
     await edit("hello");
     await advanceTime(201); // debounced
     expect.verifySteps([]);
-    def.resolve([{ content: "<div>hello</div>"}]);
+    def.resolve([{ content: "<div>hello</div>" }]);
     await tick();
     expect.verifySteps(["rpc"]);
     expect(".post_spam").toHaveText("hello");
 });
 
 test("select all checkboxes", async () => {
-    await startInteractions(`
+    await startInteractions(markup`
     <div id="wrap" class="o_wforum_wrapper o_wforum_moderation_queue">
         <div class="modal fade show modal_shown" id="markAllAsSpam" data-spam-ids="[1,2]" style="display: block;">
             <div class="modal-dialog">

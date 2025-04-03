@@ -1,19 +1,20 @@
 import {
     createDocumentFragmentFromContent,
-    htmlJoin,
     htmlReplace,
     htmlReplaceAll,
     htmlTrim,
 } from "@mail/utils/common/html";
 
-import { markup } from "@odoo/owl";
+import { htmlEscape, markup } from "@odoo/owl";
 
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 import {
     createElementWithContent,
-    htmlEscape,
+    getInnerHtml,
+    getOuterHtml,
     htmlFormatList,
+    htmlJoin,
     setElementContent,
 } from "@web/core/utils/html";
 import { escapeRegExp, unaccent } from "@web/core/utils/strings";
@@ -21,25 +22,6 @@ import { setAttributes } from "@web/core/utils/xml";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
-
-/**
- * Escape < > & as html entities
- *
- * @param {string}
- * @return {string}
- */
-const _escapeEntities = (function () {
-    const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;" };
-    const escaper = function (match) {
-        return map[match];
-    };
-    const testRegexp = RegExp("(?:&|<|>)");
-    const replaceRegexp = RegExp("(?:&|<|>)", "g");
-    return function (string) {
-        string = string == null ? "" : "" + string;
-        return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
-    };
-})();
 
 /**
  * @param {string|ReturnType<markup>} rawBody
@@ -51,8 +33,8 @@ export async function prettifyMessageContent(
     { validMentions = [], allowEmojiLoading = true } = {}
 ) {
     let body = htmlTrim(rawBody);
-    body = htmlReplace(body, /(\r|\n){2,}/g, () => markup("<br/><br/>"));
-    body = htmlReplace(body, /(\r|\n)/g, () => markup("<br/>"));
+    body = htmlReplace(body, /(\r|\n){2,}/g, () => markup`<br/><br/>`);
+    body = htmlReplace(body, /(\r|\n)/g, () => markup`<br/>`);
     body = htmlReplace(body, /&nbsp;/g, () => " ");
     body = htmlTrim(body);
     // This message will be received from the mail composer as html content
@@ -101,7 +83,7 @@ function _parseAndTransform(nodes, transformFunction) {
         return;
     }
     return htmlJoin(
-        ...Object.values(nodes).map((node) =>
+        Object.values(nodes).map((node) =>
             transformFunction(node, function () {
                 return _parseAndTransform(node.childNodes, transformFunction);
             })
@@ -118,21 +100,14 @@ function linkify(text) {
     let result = "";
     let match;
     while ((match = urlRegexp.exec(text)) !== null) {
-        result = htmlJoin(result, text.slice(curIndex, match.index));
+        result = markup`${result}${text.slice(curIndex, match.index)}`;
         // Decode the url first, in case it's already an encoded url
         const url = decodeURI(match[0]);
         const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
-        result = htmlJoin(
-            result,
-            markup(
-                `<a target="_blank" rel="noreferrer noopener" href="${href}">${_escapeEntities(
-                    url
-                )}</a>`
-            )
-        );
+        result = markup`${result}<a target="_blank" rel="noreferrer noopener" href="${href}">${url}</a>`;
         curIndex = match.index + match[0].length;
     }
-    return htmlJoin(result, text.slice(curIndex));
+    return markup`${result}${text.slice(curIndex)}`;
 }
 
 /**
@@ -155,17 +130,17 @@ export function addLink(node, transformChildren) {
         return node.textContent;
     }
     if (node.tagName === "A") {
-        return markup(node.outerHTML);
+        return getOuterHtml(node);
     }
     transformChildren();
-    return markup(node.outerHTML);
+    return getOuterHtml(node);
 }
 
 /**
  * @param body {string|ReturnType<markup>}
  * @param validRecords {Object}
  * @param validRecords.partners {Array}
- * @return {ReturnType<markup>}
+ * @return {string|ReturnType<markup>}
  */
 function generateMentionsLinks(
     body,
@@ -207,7 +182,7 @@ function generateMentionsLinks(
         body = htmlReplace(
             body,
             `@${special}`,
-            markup(`<a href="#" class="o-discuss-mention">@${htmlEscape(special)}</a>`)
+            markup`<a href="#" class="o-discuss-mention">@${special}</a>`
         );
     }
     for (const role of roles) {
@@ -233,15 +208,15 @@ function generateMentionsLinks(
             contenteditable: "false",
         });
         link.textContent = mention.text;
-        body = htmlReplace(body, mention.placeholder, markup(link.outerHTML));
+        body = htmlReplace(body, mention.placeholder, getOuterHtml(link));
     }
-    return htmlEscape(body);
+    return body;
 }
 
 /**
  * @private
  * @param {string|ReturnType<markup>} htmlString
- * @returns {ReturnType<markup>}
+ * @returns {Promise<string|ReturnType<markup>>}
  */
 async function _generateEmojisOnHtml(htmlString) {
     const { emojis } = await loadEmoji();
@@ -252,7 +227,7 @@ async function _generateEmojisOnHtml(htmlString) {
             htmlString = htmlReplace(htmlString, regexp, (_, group1) => group1 + emoji.codepoints);
         }
     }
-    return htmlEscape(htmlString);
+    return htmlString;
 }
 
 /**
@@ -272,7 +247,7 @@ export function getNonEditableMentions(body) {
     for (const mention of doc.body.querySelectorAll(".o_channel_redirect")) {
         mention.setAttribute("contenteditable", false);
     }
-    return markup(doc.body.innerHTML);
+    return getInnerHtml(doc.body);
 }
 
 /**
@@ -350,16 +325,17 @@ export function wrapEmojisWithTitles(content) {
         const span = document.createElement("span");
         setElementContent(
             span,
-            htmlReplaceAll(node.textContent, loader.loaded.emojiRegex, (codepoints) =>
-                markup(
-                    `<span title="${htmlFormatList(
+            htmlReplaceAll(
+                node.textContent,
+                loader.loaded.emojiRegex,
+                (codepoints) =>
+                    markup`<span title="${htmlFormatList(
                         loader.loaded.emojiValueToShortcodes[codepoints],
                         { style: "unit-narrow" }
-                    )}">${htmlEscape(codepoints)}</span>`
-                )
+                    )}">${codepoints}</span>`
             )
         );
         node.replaceWith(...span.childNodes);
     }
-    return markup(doc.body.innerHTML);
+    return getInnerHtml(doc.body);
 }

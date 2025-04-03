@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { getOuterHtml } from "@web/core/utils/html";
 import { RainbowMan } from "./rainbow_man";
 
 const effectRegistry = registry.category("effects");
@@ -38,7 +39,7 @@ function rainbowMan(env, params = {}) {
         console.log(
             "Providing an HTML element to an effect is deprecated. Note that all event handlers will be lost."
         );
-        message = message.outerHTML;
+        message = getOuterHtml(message);
     } else if (!message) {
         message = _t("Well Done!");
     }

@@ -21,6 +21,7 @@ import { isIconElement, isSelectionInSelectors, peek } from '@web_editor/js/edit
 import { PeerToPeer, RequestError } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { rpc } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
+import { getOuterHtml } from "@web/core/utils/html";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
@@ -42,7 +43,6 @@ import {
     onMounted,
     onWillDestroy,
     onWillUpdateProps,
-    markup,
     status,
 } from "@odoo/owl";
 import { isCSSColor } from '@web/core/utils/colors';
@@ -3038,7 +3038,7 @@ export class Wysiwyg extends Component {
     }
     _showConflictDialog() {
         if (this._conflictDialogOpened) return;
-        const content = markup(this.odooEditor.editable.cloneNode(true).outerHTML);
+        const content = getOuterHtml(this.odooEditor.editable.cloneNode(true));
         this._conflictDialogOpened = true;
         this.env.services.dialog.add(ConflictDialog, {
             content,

@@ -6,8 +6,7 @@ import { handleCheckIdentity } from "@portal/interactions/portal_security";
 import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
 import { _t } from "@web/core/l10n/translation";
-
-import { markup } from "@odoo/owl";
+import { getOuterHtml } from "@web/core/utils/html";
 
 /**
  * Replaces specific <field> elements by normal HTML, strip out the rest entirely
@@ -156,7 +155,7 @@ export class TOTPEnable extends Interaction {
         const [body, ,] = fixupViewBody(xmlBody, record);
 
         this.services.dialog.add(InputConfirmationDialog, {
-            body: markup(body.outerHTML),
+            body: getOuterHtml(body),
             onInput: ({ inputEl }) => { inputEl.setCustomValidity("") },
             confirmLabel: _t("Activate"),
             confirm: async ({ inputEl }) => {

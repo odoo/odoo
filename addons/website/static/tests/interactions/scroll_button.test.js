@@ -7,18 +7,19 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.scroll_button");
 
 describe.current.tags("interaction_dev");
 
 test("scroll button does nothing if there is o_scroll_button", async () => {
-    const { core } = await startInteractions(`<div id="wrapwrap"></div>`);
+    const { core } = await startInteractions(markup`<div id="wrapwrap"></div>`);
     expect(core.interactions).toHaveLength(0);
 });
 
 test("scroll button scrolls to next section", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap" style="overflow: scroll; max-height: 500px;">
             <section style="min-height: 500px;">
                 <a class="o_scroll_button">First</a>

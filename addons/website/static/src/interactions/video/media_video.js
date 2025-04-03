@@ -1,8 +1,9 @@
-import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
-
 import { _t } from "@web/core/l10n/translation";
-import { escape } from "@web/core/utils/strings";
+import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
+
+import { htmlEscape } from "@odoo/owl";
+
 import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
 
 export class MediaVideo extends Interaction {
@@ -38,7 +39,7 @@ export class MediaVideo extends Interaction {
     generateIframe() {
         // Bug fix / compatibility: empty the <div/> element as all information
         // to rebuild the iframe should have been saved on the <div/> element
-        this.el.innerHTML = "";
+        this.el.textContent = "";
 
         // Add extra content for size / edition
         const div1 = document.createElement("div");
@@ -55,7 +56,7 @@ export class MediaVideo extends Interaction {
         // 'data-oe-expression' one (the latter is used as a workaround in 10.0
         // system but should obviously be reviewed in master).
 
-        let src = escape(this.el.getAttribute("data-oe-expression") || this.el.getAttribute("data-src"));
+        let src = htmlEscape(this.el.getAttribute("data-oe-expression") || this.el.getAttribute("data-src"));
         // Validate the src to only accept supported domains we can trust
 
         let m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);

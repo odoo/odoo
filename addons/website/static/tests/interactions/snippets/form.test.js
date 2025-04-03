@@ -3,6 +3,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 import { describe, expect, test } from "@odoo/hoot";
 import { click, fill, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -25,7 +26,7 @@ function checkField(inputEl, isVisible, hasError) {
         : expect(fieldEl).not.toHaveClass("o_has_error");
 }
 
-const formTemplate = `
+const formTemplate = markup`
     <div id="wrapwrap">
         <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
             <div class="container-fluid">
@@ -139,9 +140,7 @@ test("(name) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(nameEl, true, false);
     // Submit
-    onRpc("/website/form/mail.mail", async () => {
-        return {};
-    });
+    onRpc("/website/form/mail.mail", async () => ({}));
     await click("a.s_website_form_send");
     checkField(nameEl, true, false);
 });
@@ -176,9 +175,7 @@ test("(mail) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(mailEl, true, false);
     // Submit
-    onRpc("/website/form/mail.mail", async () => {
-        return {};
-    });
+    onRpc("/website/form/mail.mail", async () => ({}));
     await click("a.s_website_form_send");
     checkField(mailEl, true, false);
 });
@@ -213,9 +210,7 @@ test("(subject) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(subjectEl, true, false);
     // Submit
-    onRpc("/website/form/mail.mail", async () => {
-        return {};
-    });
+    onRpc("/website/form/mail.mail", async () => ({}));
     await click("a.s_website_form_send");
     checkField(subjectEl, true, false);
 });
@@ -250,9 +245,7 @@ test("(question) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(questionEl, true, true);
     // Submit
-    onRpc("/website/form/mail.mail", async () => {
-        return {};
-    });
+    onRpc("/website/form/mail.mail", async () => ({}));
     await click("a.s_website_form_send");
     checkField(questionEl, true, false);
 });
@@ -305,7 +298,7 @@ test("form prefilled conditional", async () => {
     });
 
     // Phone number is only visible if name is filled.
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
                 <div class="container-fluid">

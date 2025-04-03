@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
@@ -43,7 +44,7 @@ test("dynamic snippet loads items and displays them through template", async () 
         `,
         ];
     });
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
       <div id="wrapwrap">
           <section data-snippet="s_events" class="s_events s_event_upcoming_snippet s_event_event_picture s_dynamic s_dynamic_empty pt32 pb32 o_colored_level"
                   data-custom-template-data="{&quot;events_event_time_active&quot;:true}"

@@ -1,6 +1,6 @@
-import { markup } from "@odoo/owl";
+import { htmlEscape, markup } from "@odoo/owl";
 
-import { escape } from "@web/core/utils/strings";
+import { sprintf } from "@web/core/utils/strings";
 import { formatList } from "../l10n/utils";
 
 const Markup = markup().constructor;
@@ -20,13 +20,27 @@ export function createElementWithContent(elementName, content) {
 }
 
 /**
- * Escapes content for HTML. Content is unchanged if it is already a Markup.
+ * Gets innerHTML of the given Element, and wraps it in a Markup object as innerHTML always returns
+ * safe text (assuming the element was safely built).
  *
- * @param {string|ReturnType<markup>} content
+ * @param {Element} element
  * @returns {ReturnType<markup>}
  */
-export function htmlEscape(content) {
-    return content instanceof Markup ? content : markup(escape(content));
+export function getInnerHtml(element) {
+    // markup: innerHTML is safe (assuming element was safely built)
+    return markup(element?.innerHTML ?? "");
+}
+
+/**
+ * Gets outerHTML of the given Element, and wraps it in a Markup object as outerHTML always returns
+ * safe text (assuming the element was safely built).
+ *
+ * @param {Element} element
+ * @returns {ReturnType<markup>}
+ */
+export function getOuterHtml(element) {
+    // markup: outerHTML is safe (assuming element was safely built)
+    return markup(element?.outerHTML ?? "");
 }
 
 /**
@@ -40,10 +54,59 @@ export function htmlEscape(content) {
  * @returns {ReturnType<markup>} The formatted list.
  */
 export function htmlFormatList(list, ...args) {
+    // markup: escaped values (assuming formatList itself is safe)
     return markup(
         formatList(
             Array.from(list, (val) => htmlEscape(val).toString()),
             ...args
+        )
+    );
+}
+
+/**
+ * Applies list join on content and returns a markup result built for HTML.
+ *
+ * @param {Array<string|ReturnType<markup>>} args
+ * @returns {ReturnType<markup>}
+ */
+export function htmlJoin(list, separator = "") {
+    // markup: escaped values and separator (assuming join itself is safe)
+    return markup(list.map((arg) => htmlEscape(arg)).join(htmlEscape(separator)));
+}
+
+/**
+ * Same behavior as sprintf, but produces safe HTML. If the string or values are flagged as safe HTML
+ * using `markup()` they are set as it is. Otherwise they are escaped.
+ *
+ * @param {string} str The string with placeholders (%s) to insert values into.
+ * @param  {...any} values Primitive values to insert in place of placeholders.
+ * @returns {string|Markup}
+ */
+export function htmlSprintf(str, ...values) {
+    const valuesDict = values[0];
+    if (
+        valuesDict &&
+        Object.prototype.toString.call(valuesDict) === "[object Object]" &&
+        !(valuesDict instanceof Markup)
+    ) {
+        // markup: escaped base string and values (assuming sprintf itself is safe)
+        return markup(
+            sprintf(
+                htmlEscape(str).toString(),
+                Object.fromEntries(
+                    Object.entries(valuesDict).map(([key, value]) => [
+                        key,
+                        htmlEscape(value).toString(),
+                    ])
+                )
+            )
+        );
+    }
+    // markup: escaped base string and values (assuming sprintf itself is safe)
+    return markup(
+        sprintf(
+            htmlEscape(str).toString(),
+            values.map((value) => htmlEscape(value).toString())
         )
     );
 }
@@ -72,6 +135,7 @@ export function isHtmlEmpty(content = "") {
  */
 export function setElementContent(element, content) {
     if (content instanceof Markup) {
+        // innerHTML: only Markup content is allowed
         element.innerHTML = content;
     } else {
         element.textContent = content;

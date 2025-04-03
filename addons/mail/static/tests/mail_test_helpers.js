@@ -23,12 +23,13 @@ import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { contains } from "./mail_test_helpers_contains";
 
 import { mailGlobal } from "@mail/utils/common/misc";
-import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
+import { Component, markup, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
+import { setElementContent } from "@web/core/utils/html";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
@@ -273,14 +274,17 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
         dropdownDiv.style.position = "absolute";
         dropdownDiv.classList.add("dropdown");
         dropdownDiv.classList.add("o-mail-multi-tab-dropdown");
-        dropdownDiv.innerHTML = `
-            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Switch Tab (${tabs.length})
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item">Hoot</a></li>
-            </ul>
-        `;
+        setElementContent(
+            dropdownDiv,
+            markup`
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Switch Tab (${tabs.length})
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item">Hoot</a></li>
+                </ul>
+            `
+        );
         dropdownDiv.querySelector("a").onclick = onClickDropdownItem;
         rootTarget.appendChild(dropdownDiv);
     }

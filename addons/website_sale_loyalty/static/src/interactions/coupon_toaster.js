@@ -5,18 +5,18 @@ export class CouponToaster extends Interaction {
     static selector = ".coupon-message";
 
     start() {
-        let options = {};
+        const options = {};
         const titleEl = this.el.querySelector(".coupon-message-title");
         const contentEl = this.el.querySelector(".coupon-message-content");
         let message = null;
 
         if (contentEl) {
-            message = contentEl.innerHTML;
+            message = contentEl.textContent;
             if (titleEl) {
-                Object.assign(options, { title: titleEl.innerHTML });
+                Object.assign(options, { title: titleEl.textContent });
             }
         } else if (titleEl) {
-            message = titleEl.innerHTML;
+            message = titleEl.textContent;
         }
 
         if (this.el.classList.contains("coupon-info-message")) {

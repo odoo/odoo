@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
@@ -66,7 +67,7 @@ test("dynamic snippet products loads items and displays them through template", 
         `,
         ];
     });
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
       <div id="wrapwrap">
           <section data-snippet="s_dynamic_snippet_products" class="s_dynamic_snippet_products s_dynamic s_dynamic_empty pt32 pb32 o_colored_level s_product_product_borderless_1"
                   data-name="Products"

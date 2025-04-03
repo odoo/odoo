@@ -45,6 +45,7 @@ export class DiscussCoreCommon {
             const lastMessageId = this.store.getLastMessageId();
             const message = this.store["mail.message"].insert({
                 author: this.store.odoobot,
+                // markup: body is coming from _bus_send_transient_message which uses Markup
                 body: markup(body),
                 id: lastMessageId + 0.01,
                 is_note: true,

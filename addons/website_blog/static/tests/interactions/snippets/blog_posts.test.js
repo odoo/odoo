@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
@@ -43,7 +44,7 @@ test("dynamic snippet blog posts loads items and displays them through template"
         `,
         ];
     });
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
       <div id="wrapwrap">
           <section data-snippet="s_blog_posts" class="s_blog_posts s_dynamic_snippet_blog_posts s_blog_post_big_picture s_blog_posts_effect_marley s_blog_posts_post_picture_size_default s_dynamic s_dynamic_empty pt32 pb32 o_colored_level"
                   data-custom-template-data="{&quot;blog_posts_post_author_active&quot;:true, &quot;blog_posts_post_teaser_active&quot;:true, &quot;blog_posts_post_date_active&quot;:true}"

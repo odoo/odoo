@@ -1,5 +1,6 @@
 import { expect } from "@odoo/hoot";
 import { scroll } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 import { endTransition } from "@website/../tests/interactions/snippets/helpers";
 
@@ -41,7 +42,7 @@ export function checkHeader(header, main, core, expectedStatus) {
  * @param {string} className
  */
 export function getTemplateWithoutHideOnScroll(className) {
-    return /* xml */ `
+    return markup`
         <header class="${className}" style="height:50px; background-color:#CCFFCC;">
         </header>
         <main style="height:2000px;  background-color:#CCCCFF;">
@@ -56,7 +57,7 @@ export function getTemplateWithoutHideOnScroll(className) {
  * @param {string} className
  */
 export function getTemplateWithHideOnScroll(className) {
-    return /* xml */ `
+    return markup`
         <header class="${className}" style="background-color:#CCFFCC">
             <div class="o_header_hide_on_scroll h20" style="background-color:#CCFF33;"></div>
             <div style="height: 30px; background-color:#33FFCC;"></div>

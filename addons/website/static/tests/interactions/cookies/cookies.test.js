@@ -1,19 +1,21 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { click, queryOne, waitFor } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 import { cookie } from "@web/core/browser/cookie";
 
-setupInteractionWhiteList(["website.cookies_bar", "website.cookies_approval", "website.cookies_warning"]);
+setupInteractionWhiteList([
+    "website.cookies_bar",
+    "website.cookies_approval",
+    "website.cookies_warning",
+]);
 
 describe.current.tags("interaction_dev");
 
-const cookiesBarTemplate = `
+const cookiesBarTemplate = markup`
     <div id="website_cookies_bar" class="s_popup o_snippet_invisible" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
         <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete modal_shown"
                 style="display: none;"
@@ -40,7 +42,7 @@ const cookiesBarTemplate = `
     </div>
 `;
 
-const cookiesApprovalTemplate = `
+const cookiesApprovalTemplate = markup`
     <div data-need-cookies-approval="true">
         <iframe src="about:blank" data-nocookie-src="/"></iframe>
     </div>
@@ -80,7 +82,7 @@ test("consent for optional cookies given if click on #cookies-consent-all", asyn
     await click("#cookies-consent-all");
     expect(cookiesBarEl).not.toBeVisible();
     expect(cookie.get("website_cookies_bar")).toBe('{"required": true, "optional": true}');
-})
+});
 
 test("show warning instead of iframe if no consent", async () => {
     const { core } = await startInteractions(cookiesApprovalTemplate);
@@ -93,7 +95,7 @@ test("show warning instead of iframe if no consent", async () => {
 });
 
 test("show cookies bar after clicking on warning", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div>
             ${cookiesApprovalTemplate}
             ${cookiesBarTemplate}
@@ -115,7 +117,7 @@ test("show cookies bar after clicking on warning", async () => {
 });
 
 test("remove warning, show and update iframe src after accepting cookies", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div>
             ${cookiesApprovalTemplate}
             ${cookiesBarTemplate}

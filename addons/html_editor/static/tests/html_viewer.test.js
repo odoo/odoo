@@ -13,7 +13,7 @@ test(`XML-like self-closing elements are fixed in a standalone HtmlViewer`, asyn
         Component: HtmlViewer,
         props: {
             config: {
-                value: markup(`<a href="#"/>outside<a href="#">inside</a>`),
+                value: markup`<a href="#"/>outside<a href="#">inside</a>`,
             },
         },
     });

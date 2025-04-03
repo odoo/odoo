@@ -2,6 +2,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -35,7 +36,7 @@ test("dynamic snippet loads items and displays them through template", async () 
             `<div class="s_test_dynamic_item" data-test-param="test2">Another test record</div>`,
         ];
     });
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
         <div id="wrapwrap">
             <section data-snippet="s_dynamic_snippet" class="s_dynamic_snippet s_dynamic s_dynamic_empty pt32 pb32 o_colored_level" data-custom-template-data="{}" data-name="Dynamic Snippet"
                     data-filter-id="1"

@@ -1,8 +1,8 @@
-import { Component, useState, markup, onWillDestroy, status } from "@odoo/owl";
+import { Component, useState, onWillDestroy, status } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
+import { getOuterHtml, htmlJoin } from "@web/core/utils/html";
 
 /**
  * General component for common logic between different dialogs.
@@ -32,16 +32,11 @@ export class ChatGPTDialog extends Component {
         this._confirm();
     }
     formatContent(content) {
-        return markup([...this._postprocessGeneratedContent(content).childNodes].map(child => {
-            // Escape all text.
-            const nodes = new Set([...child.querySelectorAll('*')].flatMap(node => node.childNodes));
-            nodes.forEach(node => {
-                if (node.nodeType === Node.TEXT_NODE) {
-                    node.textContent = escape(node.textContent);
-                }
-            });
-            return child.outerHTML;
-        }).join(''));
+        return htmlJoin(
+            [...this._postprocessGeneratedContent(content).childNodes].map((child) =>
+                getOuterHtml(child)
+            )
+        );
     }
 
     //--------------------------------------------------------------------------

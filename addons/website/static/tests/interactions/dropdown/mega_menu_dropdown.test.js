@@ -2,6 +2,7 @@ import { startInteractions, setupInteractionWhiteList } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { hover, pointerDown, queryFirst } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.mega_menu_dropdown");
 
@@ -10,7 +11,7 @@ describe.current.tags("interaction_dev");
 const getTemplate = function (options = {}) {
     const contentInDesktop = options.contentInDesktop || true;
     const dropdownHoverable = options.dropdownHoverable || false;
-    return `
+    return markup`
     <header id="top">
         <nav class="o_header_desktop ${dropdownHoverable ? "o_hoverable_dropdown" : ""}">
             <div class="dropdown">

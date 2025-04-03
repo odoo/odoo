@@ -1,16 +1,14 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAll, queryFirst } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("website.text_highlight");
 
 describe.current.tags("interaction_dev");
 
-const highlightTemplate = `
+const highlightTemplate = markup`
     <p>
         Great stories have a <b>personality</b>.
         <span class="o_text_highlight o_translate_inline o_text_highlight_circle_1" style="--text-highlight-width: 2px;">

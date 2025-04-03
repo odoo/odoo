@@ -1,9 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useAutofocus, useService } from '@web/core/utils/hooks';
+import { setElementContent } from "@web/core/utils/html";
 import { debounce } from '@web/core/utils/timing';
 
-import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
+import { Component, useState, useRef, onMounted, onWillStart, markup } from "@odoo/owl";
 
 class VideoOption extends Component {
     static template = "web_editor.VideoOption";
@@ -236,11 +237,14 @@ export class VideoSelector extends Component {
         return selectedMedia.map(video => {
             const div = document.createElement('div');
             div.dataset.oeExpression = video.src;
-            div.innerHTML = `
-                <div class="css_editable_mode_display"></div>
-                <div class="media_iframe_video_size" contenteditable="false"></div>
-                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
-            `;
+            setElementContent(
+                div,
+                markup`
+                    <div class="css_editable_mode_display"></div>
+                    <div class="media_iframe_video_size" contenteditable="false"></div>
+                    <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
+                `
+            );
             div.querySelector('iframe').src = video.src;
             return div;
         });

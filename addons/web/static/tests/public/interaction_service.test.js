@@ -2,7 +2,8 @@ import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, markup, xml } from "@odoo/owl";
+import { setElementContent } from "@web/core/utils/html";
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
 import { Interaction } from "@web/public/interaction";
 import { startInteraction } from "./helpers";
@@ -22,7 +23,7 @@ test("wait for translation before starting interactions", async () => {
             expect("localization" in this.services).toBe(true);
         }
     }
-    await startInteraction(Test, `<div class="test"></div>`);
+    await startInteraction(Test, markup`<div class="test"></div>`);
 });
 
 test("starting interactions twice should only actually do it once", async () => {
@@ -35,7 +36,7 @@ test("starting interactions twice should only actually do it once", async () => 
         }
     }
 
-    const { core } = await startInteraction(Test, `<div class="test"></div>`);
+    const { core } = await startInteraction(Test, markup`<div class="test"></div>`);
 
     expect(n).toBe(1);
     core.startInteractions();
@@ -66,7 +67,7 @@ test("start interactions even if there is a crash", async () => {
         }
     }
 
-    const { core } = await startInteraction([Boom, NotBoom], `<div class="test"></div>`, {
+    const { core } = await startInteraction([Boom, NotBoom], markup`<div class="test"></div>`, {
         waitForStart: false,
     });
     await expect(core.isReady).rejects.toThrow("boom");
@@ -94,7 +95,7 @@ test("start interactions even if there is a crash when evaluating selector", asy
         }
     }
 
-    const { core } = await startInteraction([Boom, NotBoom], `<div class="test"></div>`, {
+    const { core } = await startInteraction([Boom, NotBoom], markup`<div class="test"></div>`, {
         waitForStart: false,
     });
 
@@ -126,7 +127,7 @@ test("start interactions even if there is a crash when evaluating selectorHas", 
 
     const { core } = await startInteraction(
         [Boom, NotBoom],
-        `<div class="test"><div></div></div>`,
+        markup`<div class="test"><div></div></div>`,
         {
             waitForStart: false,
         }
@@ -150,10 +151,10 @@ test("start interactions with selectorHas", async () => {
 
     const { core } = await startInteraction(
         Test,
+        markup`
+            <div class="test"><div class="inner"></div></div>
+            <div class="test"><div class="not-inner"></div></div>
         `
-        <div class="test"><div class="inner"></div></div>
-        <div class="test"><div class="not-inner"></div></div>
-    `
     );
     expect(core.interactions).toHaveLength(1);
     expect.verifySteps(["start"]);
@@ -185,7 +186,7 @@ test("recover from error as much as possible when applying dynamiccontent", asyn
         }
     }
 
-    await startInteraction(Test, `<div class="test"></div>`);
+    await startInteraction(Test, markup`<div class="test"></div>`);
     expect(".test").toHaveOuterHTML(`<div class="test" a="a" b="b" c="c"></div>`);
 
     a = "aa";
@@ -213,7 +214,7 @@ test("interactions are stopped in reverse order", async () => {
 
     const { core } = await startInteraction(
         Test,
-        `<div class="test"></div><div class="test"></div>`
+        markup`<div class="test"></div><div class="test"></div>`
     );
     expect.verifySteps(["setup 1", "setup 2"]);
     core.stopInteractions();
@@ -226,7 +227,7 @@ test("can mount a component", async () => {
         static template = xml`owl component`;
         static props = {};
     }
-    const { core } = await startInteraction(Test, `<div class="test"></div>`);
+    const { core } = await startInteraction(Test, markup`<div class="test"></div>`);
     expect(".test").toHaveInnerHTML(
         `<owl-component contenteditable="false" data-oe-protected="true">owl component</owl-component>`
     );
@@ -247,11 +248,11 @@ test("can start interaction in specific el", async () => {
         }
     }
 
-    const { core } = await startInteraction(Test, `<p></p>`);
+    const { core } = await startInteraction(Test, markup`<p></p>`);
 
     expect(n).toBe(0);
     const p = queryOne("p");
-    p.innerHTML = `<div class="test">hello</div>`;
+    setElementContent(p, markup`<div class="test">hello</div>`);
     core.startInteractions(queryOne(".test"));
     await animationFrame();
     expect(n).toBe(1);
@@ -275,7 +276,7 @@ test("can start and stop interaction in specific el", async () => {
 
     const { core } = await startInteraction(
         Test,
-        `
+        markup`
         <p>
             <span class="a test"></span>
             <span class="b"></span>
@@ -314,7 +315,7 @@ test("does not start interaction in el if not attached", async () => {
         }
     }
 
-    const { core } = await startInteraction(Test, `<p><span class="test"></span></p>`);
+    const { core } = await startInteraction(Test, markup`<p><span class="test"></span></p>`);
     expect(n).toBe(1);
     const span = queryOne("span.test");
     core.stopInteractions(span);

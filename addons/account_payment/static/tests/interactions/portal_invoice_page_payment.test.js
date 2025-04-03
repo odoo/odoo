@@ -5,6 +5,7 @@ import {
 
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, queryOne } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 
 setupInteractionWhiteList("account_payment.portal_invoice_page_payment");
 
@@ -16,7 +17,7 @@ test("portal_invoice_page_payment is not started without #portal_pay", async () 
 });
 
 test("portal_invoice_page_payment is started with #portal_pay", async () => {
-    const { core } = await startInteractions(`
+    const { core } = await startInteractions(markup`
     <div id="wrapwrap" class="o_portal">
         <header style="height: 50px;"></header>
         <main>
