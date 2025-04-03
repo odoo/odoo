@@ -1637,7 +1637,7 @@ class Field(typing.Generic[T]):
             # non-stored field or new record without origin: compute
             if env.is_protected(self, record):
                 value = self.convert_to_cache(False, record, validate=False)
-                env.cache.set(record, self, value)
+                self._cache_update(record, value)
             else:
                 recs = record if self.recursive else self._cache_to_prefetch(record)
                 try:
@@ -1653,9 +1653,12 @@ class Field(typing.Generic[T]):
                         raise ValueError(f"Compute method failed to assign {missing_recs}.{self.name}")
                     # fallback to null value if compute gives nothing, do it for every unset record
                     false_value = self.convert_to_cache(False, record, validate=False)
-                    env.cache.update(missing_recs, self, itertools.repeat(false_value))
+                    self._cache_update(missing_recs, false_value)
 
-                value = env.cache.get(record, self)
+                # cache could have been entirely invalidated by compute
+                # as some compute methods call indirectly env.invalidate_all()
+                field_cache = self._get_cache(env)
+                value = field_cache[record_id]
 
         elif self.type == 'many2one' and self.delegate and not record.id:
             # parent record of a new record: new record, with the same
