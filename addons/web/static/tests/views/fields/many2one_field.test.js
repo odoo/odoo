@@ -1582,7 +1582,6 @@ test("many2one inside one2many form view, with domain", async () => {
     ];
     Partner._views = {
         list: '<list><field name="name"/></list>',
-        search: "<search></search>",
     };
     onRpc("name_search", ({ kwargs }) => {
         expect(kwargs.args).toEqual([["id", ">", 1]]);
@@ -3230,7 +3229,6 @@ test("search more in many2one: no text in input", async () => {
             <list>
                 <field name="name" />
             </list>`,
-        search: `<search />`,
     };
 
     onRpc(({ method }) => {
@@ -3276,7 +3274,6 @@ test("search more in many2one: text in input", async () => {
             <list>
                 <field name="name" />
             </list>`,
-        search: `<search />`,
     };
 
     let expectedDomain;
@@ -3328,7 +3325,6 @@ test("search more in many2one: dropdown click", async () => {
             <list>
                 <field name="name" />
             </list>`,
-        search: `<search />`,
     };
 
     await mountView({
@@ -3370,6 +3366,7 @@ test("updating a many2one from a many2many", async () => {
         type: "form",
         resModel: "partner",
         resId: 1,
+        viewId: 1,
         arch: `
             <form>
                 <field name="turtles">
@@ -3410,7 +3407,6 @@ test("search more in many2one: resequence inside dialog", async () => {
                 <field name="sequence" widget="handle" />
                 <field name="name" />
             </list>`,
-        search: `<search />`,
     };
 
     onRpc("web_search_read", ({ kwargs }) => {
@@ -3552,7 +3548,6 @@ test("focus when closing many2one modal in many2one modal", async () => {
         type: "form",
         resModel: "partner",
         resId: 2,
-        arch: '<form><field name="trululu"/></form>',
     });
 
     expect(".o_dialog").toHaveCount(1);
@@ -3640,17 +3635,12 @@ test("click on many2one link in list view", async () => {
     Turtle._records[1].product_id = 37;
     Partner._views = {
         form: '<form> <field name="turtles"/> </form>',
-        search: "<search></search>",
     };
     Turtle._views = {
         list: `
             <list readonly="1">
                 <field name="product_id" widget="many2one" context="{'field': 'Yes'}"/>
             </list>`,
-    };
-    Product._views = {
-        search: "<search></search>",
-        form: "<form></form>",
     };
     onRpc("get_formview_action", (args) => {
         expect.step("get_formview_action");
@@ -3697,7 +3687,6 @@ test("Many2oneField with placeholder", async () => {
 test("external_button performs a doAction by default", async () => {
     Partner._views = {
         form: '<form><field name="trululu"/></form>',
-        search: "<search></search>",
     };
     onRpc("get_formview_action", () => {
         expect.step("get_formview_action");

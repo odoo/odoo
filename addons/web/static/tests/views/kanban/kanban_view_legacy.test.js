@@ -9,8 +9,7 @@ import {
     queryText,
     setInputFiles,
 } from "@odoo/hoot-dom";
-import { FileInput } from "@web/core/file_input/file_input";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, onRendered, xml } from "@odoo/owl";
 import {
     contains,
@@ -22,6 +21,7 @@ import {
     getKanbanRecord,
     getKanbanRecordTexts,
     getService,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -34,6 +34,7 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
+import { FileInput } from "@web/core/file_input/file_input";
 
 import { currencies } from "@web/core/currency";
 import { registry } from "@web/core/registry";
@@ -837,7 +838,7 @@ test("Do not open record when clicking on `a` with `href`", async () => {
 test("Open record when clicking on widget field", async function (assert) {
     expect.assertions(2);
 
-    Product._views["form,false"] = `<form string="Product"><field name="display_name"/></form>`;
+    Product._views["form"] = `<form string="Product"><field name="display_name"/></form>`;
 
     await mountView({
         type: "kanban",
@@ -1035,13 +1036,13 @@ test("button executes action and reloads", async () => {
 
 test("button executes action and check domain", async () => {
     Partner._fields.active = fields.Boolean({ default: true });
-    for (let i = 0; i < Partner.length; i++) {
+    for (let i = 0; i < Partner._records.length; i++) {
         Partner._records[i].active = true;
     }
 
     mockService("action", {
         doActionButton({ onClose }) {
-            Partner._records[0].active = false;
+            MockServer.env["partner"][0].active = false;
             onClose();
         },
     });
@@ -2244,9 +2245,8 @@ test("kanbans with basic and custom compiler, same arch", async () => {
 
     Partner._fields.one2many = fields.One2many({ relation: "partner" });
     Partner._records[0].one2many = [1];
-    Partner._views["form,false"] = `<form><field name="one2many" mode="kanban"/></form>`;
-    Partner._views["search,false"] = `<search/>`;
-    Partner._views["kanban,false"] = `
+    Partner._views["form"] = `<form><field name="one2many" mode="kanban"/></form>`;
+    Partner._views["kanban"] = `
         <kanban js_class="my_kanban">
             <templates>
                 <t t-name="kanban-box">
