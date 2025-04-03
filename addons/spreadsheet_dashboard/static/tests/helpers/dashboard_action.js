@@ -1,11 +1,16 @@
-import { WebClient } from "@web/webclient/webclient";
-import { mountWithCleanup, getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
-import { loadBundle } from "@web/core/assets";
 import { getFixture } from "@odoo/hoot";
-import { Spreadsheet } from "@odoo/o-spreadsheet";
 import { animationFrame } from "@odoo/hoot-mock";
-import { SpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/data";
+import { Spreadsheet } from "@odoo/o-spreadsheet";
+import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
+import {
+    getService,
+    makeMockServer,
+    MockServer,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { loadBundle } from "@web/core/assets";
+import { WebClient } from "@web/webclient/webclient";
 /**
  * @param {object} params
  * @param {object} [params.serverData]
@@ -37,8 +42,11 @@ export async function createSpreadsheetDashboard(params = {}) {
 }
 
 export async function createDashboardActionWithData(data) {
+    if (!MockServer.env) {
+        await makeMockServer();
+    }
     const json = JSON.stringify(data);
-    const dashboard = SpreadsheetDashboard._records[0];
+    const [dashboard] = MockServer.env["spreadsheet.dashboard"];
     dashboard.spreadsheet_data = json;
     dashboard.json_data = json;
     const { fixture, model } = await createSpreadsheetDashboard({ spreadsheetId: dashboard.id });

@@ -1,13 +1,11 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
-
 import {
     fields,
     getKwArgs,
     makeKwArgs,
-    webModels,
     serverState,
+    webModels,
 } from "@web/../tests/web_test_helpers";
-import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
 
 /** @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord */
 
@@ -23,8 +21,7 @@ export class ResPartner extends webModels.ResPartner {
     is_in_call = fields.Boolean({ compute: "_compute_is_in_call" });
 
     _views = {
-        [`search, ${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
-        [`form,${DEFAULT_MAIL_VIEW_ID}`]: /* xml */ `
+        form: /* xml */ `
             <form>
                 <sheet>
                     <field name="name"/>

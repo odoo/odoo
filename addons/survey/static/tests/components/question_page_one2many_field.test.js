@@ -46,7 +46,7 @@ class SurveyQuestion extends models.Model {
         },
     ];
     _views = {
-        "form,false": `
+        form: /* xml */ `
             <form>
                 <field name="title" />
             </form>
