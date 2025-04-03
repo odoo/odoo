@@ -51,10 +51,7 @@ class StockQuant(TransactionCase):
             'type': 'product',
             'tracking': 'serial',
         })
-        cls.stock_location = cls.env['stock.location'].create({
-            'name': 'stock_location',
-            'usage': 'internal',
-        })
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.stock_subloc3 = cls.env['stock.location'].create({
             'name': 'subloc3',
             'usage': 'internal',
