@@ -799,7 +799,7 @@ class AccountMove(models.Model):
     @api.depends('invoice_date', 'company_id')
     def _compute_date(self):
         for move in self:
-            if not move.invoice_date:
+            if not move.invoice_date or not move.is_invoice():
                 if not move.date:
                     move.date = fields.Date.context_today(self)
                 continue
