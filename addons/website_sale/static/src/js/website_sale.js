@@ -27,7 +27,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'submit': '_onClickConfirmOrder',
         'input .o_wsale_attribute_search_bar': '_searchAttributeValues',
         'click .o_wsale_variant_pills_shop': '_onClickPillsAttribute',
-        'click .o_wsale_view_more_btn': '_onToggleViewMore',
+        'click .o_wsale_view_more_btn': '_onToggleViewMoreLabel',
     }),
 
     /**
@@ -387,7 +387,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @private
      * @param {MouseEvent} ev
      */
-    _onToggleViewMore(ev) {
+    _onToggleViewMoreLabel(ev) {
         const button = ev.target;
         const isExpanded = button.getAttribute('aria-expanded') === 'true';
 
