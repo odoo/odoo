@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
-# Manon Rondou, 2025
 # Martin Trigaux, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,7 +114,7 @@ msgstr "'Productlabels - %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.uom_id.name)"
-msgstr ""
+msgstr "'Productverpakking - %s' % (object.uom_id.name)"
 
 #. module: product
 #. odoo-python
@@ -270,7 +270,7 @@ msgstr "<span class=\"o_stat_text\"> Producten</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
 msgid "<span class=\"o_stat_text\">Packaging Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Barcodes Verpakking</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -513,6 +513,7 @@ msgstr "Toevoegen aan producten"
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Additional packagings for this product which can be used for sales"
 msgstr ""
+"Extra verpakkingen voor dit product die gebruikt kunnen worden voor verkoop"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -826,6 +827,8 @@ msgid ""
 "Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name."
 msgstr ""
+"Het wijzigen van de maateenheid van je product zorgt voor een conversie: 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Alle bestaande records (zoals verkooporders, inkooporders, etc.) die dit product gebruiken, worden bijgewerkt door de eenheidsnaam te vervangen."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -1890,7 +1893,7 @@ msgstr "Voorraad"
 #: model:ir.model.fields,field_description:product.field_product_product__is_dynamically_created
 #: model:ir.model.fields,field_description:product.field_product_template__is_dynamically_created
 msgid "Is Dynamically Created"
-msgstr ""
+msgstr "Dynamisch Gecreëerd"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_is_follower
@@ -2028,7 +2031,7 @@ msgstr "Regels"
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "Koppeling tussen producten en hun eenheden"
 
 #. module: product
 #: model:product.template,name:product.product_product_local_delivery_product_template
@@ -2391,12 +2394,12 @@ msgstr "Verpassing soort A"
 #: model:ir.model.fields,field_description:product.field_uom_uom__packaging_barcodes_count
 #: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
 msgid "Packaging Barcodes"
-msgstr ""
+msgstr "Barcodes Verpakking"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Packaging Barcodes (PDF)"
-msgstr ""
+msgstr "Barcodes Verpakking (pdf)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_ids
@@ -3427,6 +3430,10 @@ msgid ""
 " a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
+"De minimale hoeveelheid die bij deze leverancier moet worden gekocht om de "
+"eenheidsprijs te verkrijgen. Als er een leverancierseenheid is ingesteld, "
+"moet de hoeveelheid in deze eenheid worden opgegeven. Anders geldt de "
+"standaardeenheid van het product."
 
 #. module: product
 #. odoo-python
@@ -3577,7 +3584,7 @@ msgstr "Eenheid"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_uom_ids
 msgid "Unit Barcode"
-msgstr ""
+msgstr "Eenheid Barcode"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_uom_name
@@ -3611,7 +3618,7 @@ msgstr "Maateenheden"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure & Packagings"
-msgstr ""
+msgstr "Maateenheden & Verpakkingen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -3679,7 +3686,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid "Used for sales to the current partner"
-msgstr ""
+msgstr "Gebruikt voor verkoop aan de huidige partner"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3940,7 +3947,7 @@ msgstr "Gewicht maateenheid label"
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "What to expect ?"
-msgstr ""
+msgstr "Wat kun je verwachten?"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3

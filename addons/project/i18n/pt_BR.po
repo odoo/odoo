@@ -342,14 +342,14 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
+"    Olá <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Tenho o prazer de informar que concluímos o projeto \"<strong t-out=\"object.name or ''\">Renovações</strong>\".\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Você está recebendo este e-mail porque seu projeto foi movido para a etapa <b t-out=\"object.stage_id.name or ''\">Concluído</b></span>\n"
 "            "
 
 #. module: project
@@ -370,12 +370,12 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
-"    Thank you for contacting us. We appreciate your interest in our products/services.<br/>\n"
-"    Our team is currently reviewing your inquiry and will respond to your email as soon as possible.<br/>\n"
-"    If you have any further questions or concerns in the meantime, please do not hesitate to let us know. We are here to help.<br/><br/>\n"
-"    Thank you for your patience.<br/>\n"
-"    Best regards,\n"
+"    Prezado <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"    Obrigado por entrar em contato conosco. Seu interesse em nossos produtos/serviços é muito importante para nós.<br/>\n"
+"    Estamos analisando sua pergunta no momento e responderemos ao seu e-mail assim que possível.<br/>\n"
+"    Enquanto isso, se você tiver mais perguntas ou preocupações, não hesite em nos informar. Estamos aqui para ajudar!<br/><br/>\n"
+"    Agradecemos pela paciência.<br/>\n"
+"    Cordialmente,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
@@ -748,7 +748,7 @@ msgstr "Administrador"
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
 msgid "Administrator can manage the employees' schedule"
-msgstr "Administrator can manage the employees' schedule"
+msgstr "O administrador pode gerenciar a agenda dos funcionários"
 
 #. module: project
 #. odoo-javascript
@@ -1108,7 +1108,7 @@ msgstr "Saldo"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 msgid "Billed"
-msgstr "Cobrado"
+msgstr "Faturado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__dependent_ids
@@ -2208,7 +2208,7 @@ msgstr "Olá"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Hide Sub-tasks"
-msgstr "Hide Sub-tasks"
+msgstr "Ocultar subtarefas"
 
 #. module: project
 #. odoo-javascript
@@ -5292,7 +5292,7 @@ msgstr "Usuário"
 #. module: project
 #: model:res.groups,comment:project.group_project_user
 msgid "User can user the your employees' schedule"
-msgstr "User can user the your employees' schedule"
+msgstr "O usuário pode usar a agenda de seus funcionários"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5482,7 +5482,9 @@ msgstr "Você pode abrir subtarefas a partir do cartão Kanban."
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "You cannot convert this task into a sub-task because it is recurrent."
-msgstr "You cannot convert this task into a sub-task because it is recurrent."
+msgstr ""
+"Não é possível converter essa tarefa em uma subtarefa porque ela é "
+"recorrente."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard

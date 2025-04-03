@@ -52,6 +52,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"De verwerkte hoeveelheid voor het product %(product)s voldoet niet aan de afrondingsprecisie die in het systeem is gedefinieerd.\n"
+"Pas de verwerkte hoeveelheid aan of wijzig de afrondingsprecisie in je instellingen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -326,6 +329,10 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Nieuw: De voorraadbeweging is aangemaakt maar nog niet bevestigd. * In afwachting van een andere beweging: Een gekoppelde voorraadbeweging moet eerst worden uitgevoerd.\n"
+"* In afwachting : De voorraadbeweging is bevestigd maar het product kan niet worden gereserveerd.\n"
+"* Beschikbaar: Het product van de voorraadbeweging is gereserveerd.\n"
+"* Gereed: Het product is overgedragen en de overdracht is bevestigd."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -784,7 +791,7 @@ msgstr "<strong>Geleverd</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
-msgstr ""
+msgstr "<strong>Afleveradres:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1193,7 +1200,7 @@ msgstr "Toegestane locatie"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
 msgid "Allowed Replenishment Uom"
-msgstr ""
+msgstr "Toegestane aanvullingseenheid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
@@ -1212,7 +1219,7 @@ msgstr "Toegestane maateenheid"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
 msgid "Alternative (2.00\" x 1.00\")"
-msgstr ""
+msgstr "Alternatief (2,00\" x 1,00\")"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1274,7 +1281,7 @@ msgstr "Toepasbaar op"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
 msgid "Applicable on Package Type"
-msgstr ""
+msgstr "Van toepassing op verpakkingssoort"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -2727,6 +2734,12 @@ msgid ""
 "Least Packages: products/lots that were stocked in package with least amount of qty will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Bepaalt de standaardmethode voor het voorstellen van de exacte locatie (schap) waar producten moeten worden genomen, welke partijnummers, etc., voor deze locatie. Deze methode kan worden afgedwongen op productcategorieniveau, en als er geen is ingesteld, wordt teruggevallen op de bovenliggende locaties.\n"
+"FIFO: producten/partijen die het eerst op voorraad waren, gaan als eerste de deur uit.\n"
+"LIFO: producten/partijen die het laatst op voorraad waren, gaan als eerste de deur uit.\n"
+"Dichtstbijzijnde locatie: producten/partijen die zich het dichtst bij de doelbestemming bevinden, gaan als eerste de deur uit.\n"
+"Minste verpakkingen: producten/partijen in verpakkingen met de minste hoeveelheid gaan als eerste de deur uit.\n"
+"FEFO: producten/partijen met de eerstvolgende vervaldatum gaan als eerste de deur uit (de beschikbaarheid van deze methode hangt af van de instelling 'Vervaldatums')."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -4715,7 +4728,7 @@ msgstr "Januari"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__jewelry
 msgid "Jewelry (2.20\" x 0.50\")"
-msgstr ""
+msgstr "Sieraden (2,20\" x 0,50\")"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5837,7 +5850,7 @@ msgstr "Normaal"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__normal
 msgid "Normal (2.25\" x 1.25\")"
-msgstr ""
+msgstr "Normaal (2,25\" x 1,25\")"
 
 #. module: stock
 #. odoo-javascript
@@ -6479,7 +6492,7 @@ msgstr "Verpakking"
 #. module: stock
 #: model:ir.actions.report,name:stock.label_packaging_barcode
 msgid "Packaging Barcodes (ZPL)"
-msgstr ""
+msgstr "Barcodes Verpakking (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -6504,7 +6517,7 @@ msgstr "Verpakkingsbreedte"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "Verpakkingseenheid uit verkoop- of inkooporders"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6658,7 +6671,7 @@ msgstr "Planningsproblemen"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Please contact your administrator to configure your warehouse."
-msgstr ""
+msgstr "Neem contact op met je beheerder om je magazijn te configureren."
 
 #. module: stock
 #. odoo-python
@@ -7328,7 +7341,7 @@ msgstr "Aantal in de standaard maateenheid van het product"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "Hoeveelheid in de verpakkingseenheid"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7737,7 +7750,7 @@ msgstr "Aanvullingsinformatie voor %(product)s in %(warehouse)s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid "Replenishment Multiple"
-msgstr ""
+msgstr "Veelvoud aanvulling"
 
 #. module: stock
 #. odoo-python
@@ -8000,7 +8013,7 @@ msgstr "Op dit product kunnen routes worden geselecteerd"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
 msgid "Routes propagated from the package type"
-msgstr ""
+msgstr "Routes die worden overgenomen van de verpakkingssoort"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8612,7 +8625,7 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 msgid "Show details"
-msgstr ""
+msgstr "Details weergeven"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
@@ -8660,7 +8673,7 @@ msgstr "Maat: Lengte × Breedte × Hoogte"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__small
 msgid "Small (1.25\" x 1.00\")"
-msgstr ""
+msgstr "Klein (1,25\" x 1,00\")"
 
 #. module: stock
 #. odoo-javascript
@@ -9350,6 +9363,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this "
 "unit/packaging. If it is not set, it is not rounded."
 msgstr ""
+"De inkoophoeveelheid wordt afgerond op een veelvoud van deze "
+"eenheid/verpakking. Als dit niet is ingesteld, wordt er niet afgerond."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9657,6 +9672,8 @@ msgid ""
 "This order point has been created automatically.\n"
 "snoozing it will not affect future ones created for the same product."
 msgstr ""
+"Dit bestelpunt is automatisch aangemaakt.\n"
+"Uitstellen heeft geen invloed op toekomstige bestellingen voor dit product."
 
 #. module: stock
 #. odoo-python
@@ -10733,6 +10750,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
 msgid "When checked, the route will be selectable on package types"
 msgstr ""
+"Als deze optie is aangevinkt, kan de route worden geselecteerd voor "
+"verpakkingssoorten"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
@@ -11183,6 +11202,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
 msgstr ""
+"Je kunt producten niet in hetzelfde pakket verpakken wanneer ze uit "
+"verschillende overdrachten komen met verschillende bewerkingstypes"
 
 #. module: stock
 #. odoo-python
@@ -11429,12 +11450,12 @@ msgstr "ZPL-labels met prijs"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_preview
 msgid "ZPL Preview"
-msgstr ""
+msgstr "Voorbeeld ZPL"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_template
 msgid "ZPL Template"
-msgstr ""
+msgstr "Sjabloon ZBL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
