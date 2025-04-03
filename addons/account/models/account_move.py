@@ -1744,7 +1744,7 @@ class AccountMove(models.Model):
                 AND move2.journal_id = move.journal_id
                 AND move2.move_type = move.move_type
                 AND move2.id != move.id
-            WHERE move.id IN %s AND move2.state = 'posted'
+            WHERE move.id IN %s AND move2.state = 'posted' AND move2.name != '/'
         ''', [tuple(moves.ids)])
         res = self._cr.fetchall()
         if res:
