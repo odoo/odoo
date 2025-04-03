@@ -1818,7 +1818,9 @@ test("onchange on one2many containing x2many in form view", async () => {
             obj.turtles = [[0, false, { turtle_foo: "new record" }]];
         },
     };
-    Partner._views = { list: '<list><field name="foo"/></list>', search: "<search></search>" };
+    Partner._views = {
+        list: '<list><field name="foo"/></list>',
+    };
 
     await mountView({
         type: "form",
@@ -6246,9 +6248,8 @@ test("many2many list in a one2many opened by a many2one", async () => {
     Partner._views = { form: '<form><field name="timmy"/></form>' };
     PartnerType._views = {
         list: '<list editable="bottom"><field name="name"/></list>',
-        search: "<search></search>",
     };
-    onRpc("/web/dataset/call_kw/partner/get_formview_id", () => false);
+    onRpc("partner", "get_formview_id", () => false);
     onRpc("web_save", (args) => {
         expect(args.args[1].timmy).toEqual([[4, 12]], {
             message: "should properly add id",
@@ -10338,7 +10339,6 @@ test("x2many default_order multiple fields with limit", async () => {
 test("one2many from a model that has been sorted", async () => {
     Partner._views = {
         list: `<list><field name="int_field"/></list>`,
-        search: `<search/>`,
         form: `
             <form>
                 <field name="turtles">
@@ -11405,7 +11405,14 @@ test("does not crash when you parse a tree arch containing another tree arch", a
 });
 test("open a one2many record containing a one2many", async () => {
     Partner._views = {
-        [["form", 1234]]: `
+        [["form", 5]]: /* xml */ `
+            <form>
+                <field name="p" context="{ 'form_view_ref': 1234 }">
+                    <list><field name="name" /></list>
+                </field>
+            </form>
+        `,
+        [["form", 1234]]: /* xml */ `
             <form>
                 <field name="turtles" >
                     <list>
@@ -11417,10 +11424,10 @@ test("open a one2many record containing a one2many", async () => {
 
     patchWithCleanup(browser.localStorage, {
         setItem(args) {
-            expect.step(`localStorage setItem ${args}`);
+            expect.step(`setItem: ${args}`);
         },
         getItem(args) {
-            expect.step(`localStorage getItem ${args}`);
+            expect.step(`getItem: ${args}`);
             return null;
         },
     });
@@ -11429,28 +11436,24 @@ test("open a one2many record containing a one2many", async () => {
     rec.p = [1];
     await mountView({
         type: "form",
-        arch: `<form>
-            <field name="p" context="{ 'form_view_ref': 1234 }">
-                <list><field name="name" /></list>
-            </field>
-        </form>`,
         resModel: "partner",
         resId: 2,
+        viewId: 5,
     });
 
     expect.verifySteps([
-        "localStorage getItem pwaService.installationState",
-        "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
-        "localStorage getItem debug_open_view,partner,form,123456789,p,list,name",
+        "getItem: pwaService.installationState",
+        "getItem: optional_fields,partner,form,5,p,list,name",
+        "getItem: debug_open_view,partner,form,5,p,list,name",
     ]);
 
     await contains(".o_data_cell").click();
     expect(".modal .o_data_row").toHaveCount(1);
     expect.verifySteps([
-        "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
-        "localStorage getItem debug_open_view,partner,form,123456789,p,list,name",
-        "localStorage getItem optional_fields,partner,form,123456789,turtles,list,name",
-        "localStorage getItem debug_open_view,partner,form,123456789,turtles,list,name",
+        "getItem: optional_fields,partner,form,5,p,list,name",
+        "getItem: debug_open_view,partner,form,5,p,list,name",
+        "getItem: optional_fields,partner,form,5,turtles,list,name",
+        "getItem: debug_open_view,partner,form,5,turtles,list,name",
     ]);
 });
 
@@ -12416,7 +12419,6 @@ test("add a row to an x2many and ask canBeRemoved twice", async () => {
     const def = new Deferred();
     Partner._views = {
         list: `<list><field name="int_field"/></list>`,
-        search: `<search/>`,
         form: `
             <form>
                 <field name="p">

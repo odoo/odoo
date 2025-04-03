@@ -1582,9 +1582,7 @@ test("tests conservation of category record order", async () => {
 });
 
 test("search panel is available on list and kanban by default", async () => {
-    Partner._views = {
-        ...Partner._views,
-        [["search", false]]: /* xml */ `
+    Partner._views.search = /* xml */ `
             <search>
                 <filter name="false_domain" string="False Domain" domain="[(0, '=', 1)]"/>
                 <filter name="filter" string="Filter" domain="[('bar', '=', true)]"/>
@@ -1595,8 +1593,7 @@ test("search panel is available on list and kanban by default", async () => {
                     <field name="category_id" select="multi" enable_counters="1" expand="1"/>
                 </searchpanel>
             </search>
-        `,
-    };
+        `;
 
     onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
@@ -1618,9 +1615,7 @@ test("search panel is available on list and kanban by default", async () => {
 });
 
 test("search panel with view_types attribute", async () => {
-    Partner._views = {
-        ...Partner._views,
-        [["search", false]]: /* xml */ `
+    Partner._views.search = /* xml */ `
             <search>
                 <filter name="false_domain" string="False Domain" domain="[(0, '=', 1)]"/>
                 <filter name="filter" string="Filter" domain="[('bar', '=', true)]"/>
@@ -1631,8 +1626,7 @@ test("search panel with view_types attribute", async () => {
                     <field name="category_id" select="multi" enable_counters="1" expand="1"/>
                 </searchpanel>
             </search>
-        `,
-    };
+        `;
 
     onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
