@@ -422,7 +422,7 @@ class AccountBankStatementLine(models.Model):
                     line_vals
                     for line_vals in st_line._prepare_move_line_default_vals(counterpart_account_ids[i])
                 )
-            to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration, 'name': False}
+            to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration, 'name': False, "date": st_line.date}
             with self.env.protecting(self.env['account.move']._get_protected_vals(vals, st_line)):
                 st_line.move_id.write(to_write)
         self.env['account.move.line'].create(to_create_lines_vals)
