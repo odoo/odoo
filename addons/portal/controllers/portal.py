@@ -711,6 +711,21 @@ class CustomerPortal(Controller):
                 invalid_fields.add('vat')
                 error_messages.append(exception.args[0])
 
+        # Validate the lang
+        if 'lang' in address_values:
+            ResLang = request.env['res.lang']
+            try:
+                lang_id = int(address_values.get('lang'))
+            except Exception as e:
+                lang_id = None
+            supported_langs = ResLang._get_frontend().values()
+
+            if not any(lang.id == lang_id for lang in supported_langs):
+                invalid_fields.add('lang')
+                error_messages.append(_('Invalid Language! Please enter a valid language.'))
+            else:
+                address_values.update({'lang': ResLang.search([('id', '=', lang_id)]).code})
+
         # Build the set of required fields from the address form's requirements.
         required_field_set = {f for f in required_fields.split(',') if f}
 

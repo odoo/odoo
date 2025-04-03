@@ -333,6 +333,28 @@
                 />
             </select>
         </div>
+        <div class="w-100"/>
+        <t t-set="language_selector_visible" t-value="len(frontend_languages) &gt; 1"/>
+        <div t-if="language_selector_visible" id="div_lang" class="col-lg-6 mb-2">
+            <label class="col-form-label" for="o_lang">
+                Language
+            </label>
+            <select
+                id="o_lang"
+                name="lang"
+                class="form-select"
+            >
+                <option value="">Language...</option>
+                <option
+                    t-foreach="frontend_languages.values()"
+                    t-as="lg"
+                    t-att-value="lg.id"
+                    t-att-selected="lg.code == partner_sudo.lang"
+                    t-att-code="lg.code"
+                    t-out="lg.name"
+                />
+            </select>
+        </div>
         <input
             type="hidden"
             name="csrf_token"
