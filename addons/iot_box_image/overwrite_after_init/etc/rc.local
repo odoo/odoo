@@ -11,6 +11,9 @@
 #
 # By default this script does nothing.
 
+# Ensure Wi-Fi radio is enabled
+nmcli radio wifi on
+
 # Print the IP address
 _IP=$(hostname -I) || true
 if [ "$_IP" ]; then
