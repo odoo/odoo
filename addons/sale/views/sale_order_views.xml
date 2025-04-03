@@ -809,7 +809,18 @@
                                 name="action_open_discount_wizard"
                                 type="object"
                                 class="btn btn-secondary"
-                                groups="sale.group_discount_per_so_line"/>
+                                groups="sale.group_discount_per_so_line"
+                                invisible="locked or state == 'cancel'"
+                            />
+                            <button
+                                string="Discounts"
+                                name="action_open_discount_wizard"
+                                type="object"
+                                class="btn btn-secondary"
+                                groups="sale.group_discount_per_so_line"
+                                disabled="1"
+                                invisible="not (locked or state == 'cancel')"
+                            />
                         </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4" class="order-1 order-lg-0">

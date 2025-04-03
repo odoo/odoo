@@ -79,13 +79,13 @@
 
     <record id="loyalty_program_rule" model="loyalty.rule">
         <field name="reward_point_mode">money</field>
-        <field name="reward_point_amount">10</field>
+        <field name="reward_point_amount">1</field>
         <field name="program_id" ref="pos_loyalty.loyalty_program"/>
     </record>
 
     <record id="loyalty_program_reward" model="loyalty.reward">
         <field name="reward_type">product</field>
-        <field name="required_points">5</field>
+        <field name="required_points">50</field>
         <field name="reward_product_id" ref="pos_loyalty.simple_pen"/>
         <field name="program_id" ref="pos_loyalty.loyalty_program"/>
     </record>
