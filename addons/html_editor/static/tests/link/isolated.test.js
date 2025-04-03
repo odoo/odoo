@@ -91,6 +91,20 @@ describe("should position the cursor outside the link", () => {
         expect(getContent(el)).toBe('<p>[]\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</p>');
     });
 
+    test("clicking at the start of the link when format is applied on link", async () => {
+        const { el } = await setupEditor('<p><strong><a href="#/">test</a></strong></p>');
+        expect(getContent(el)).toBe('<p><strong>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</strong></p>');
+
+        const aElement = queryOne("p a");
+        await pointerDown(el);
+        // Simulate the selection with mousedown
+        setSelection({ anchorNode: aElement.childNodes[0], anchorOffset: 0 });
+        expect(getContent(el)).toBe('<p><strong>\ufeff<a href="#/">[]\ufefftest\ufeff</a>\ufeff</strong></p>');
+        await animationFrame(); // selection change
+        await pointerUp(el);
+        expect(getContent(el)).toBe('<p><strong>[]\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</strong></p>');
+    });
+
     test("clicking at the end of the link", async () => {
         const { el } = await setupEditor('<p><a href="#/">test</a></p>');
         expect(getContent(el)).toBe('<p>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</p>');
