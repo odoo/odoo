@@ -167,7 +167,7 @@ class MailingMailing(models.Model):
         index='btree_not_null',
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
-    contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists')
+    contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists', context={'active_test': False})
     use_exclusion_list = fields.Boolean(
         'Use Exclusion List', default=True, copy=False, store=True,
         readonly=False, compute='_compute_use_exclusion_list',

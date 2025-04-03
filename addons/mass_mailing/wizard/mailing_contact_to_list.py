@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class MailingContactToList(models.TransientModel):
@@ -12,10 +11,18 @@ class MailingContactToList(models.TransientModel):
     mailing_list_id = fields.Many2one('mailing.list', string='Mailing List', required=True)
 
     def action_add_contacts(self):
-        """ Simply add contacts to the mailing list and close wizard. """
-        return self._add_contacts_to_mailing_list({'type': 'ir.actions.act_window_close'})
+        """Simply add contacts to the mailing list and go to the list."""
+        self._add_contacts_to_mailing_list()
 
-    def _add_contacts_to_mailing_list(self, action):
+        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.action_view_mass_mailing_lists')
+        action.update({
+            'res_id': self.mailing_list_id.id,
+            'target': 'current',
+            'views': [[False, 'form']],
+        })
+        return action
+
+    def _add_contacts_to_mailing_list(self):
         self.ensure_one()
 
         contacts_to_add = self.contact_ids.filtered(lambda c: c not in self.mailing_list_id.contact_ids)
@@ -27,18 +34,3 @@ class MailingContactToList(models.TransientModel):
                 }) for contact in contacts_to_add
             ]
         })
-        already_on_list_count = len(self.contact_ids) - len(contacts_to_add)
-        message = _("%(added_contacts_count)s Mailing Contacts have been added.", added_contacts_count=len(contacts_to_add))
-        if already_on_list_count:
-            message += _("\n\n%(already_on_list_count)s Mailing Contacts were already on this list.", already_on_list_count=already_on_list_count)
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': 'info',
-                'message': message,
-                'sticky': False,
-                'next': action,
-            }
-        }
