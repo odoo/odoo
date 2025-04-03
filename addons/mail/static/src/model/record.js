@@ -275,6 +275,33 @@ export class Record {
     static attr(def, param1) {
         return { ...param1, [FIELD_DEFINITION_SYM]: true, [ATTR_SYM]: true, default: def };
     }
+    /**
+     * HTML fields are ATTR that are automatically markup when the data being inserted is a markup.
+     *
+     * @param {string} def
+     * @param {Object} [param1={}]
+     * @param {(this: Record) => any} [param1.compute] if set, the value of this html field is declarative and
+     *   is computed automatically. All reactive accesses recalls that function. The context of
+     *   the function is the record. Returned value is new value assigned to this field.
+     * @param {boolean} [param1.eager=false] when field is computed, determines whether the computation
+     *   of this field is eager or lazy. By default, fields are computed lazily, which means that
+     *   they are computed when dependencies change AND when this field is being used. In eager mode,
+     *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
+     *   behaviour of OWL reactive.
+     * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
+     *   This is called at least once at record creation.
+     * @returns {string|markup }
+     */
+    static html(def, param1) {
+        const definition = {
+            ...param1,
+            [FIELD_DEFINITION_SYM]: true,
+            [ATTR_SYM]: true,
+            default: def,
+        };
+        definition.html = true;
+        return definition;
+    }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
         const ModelFullProxy = this;

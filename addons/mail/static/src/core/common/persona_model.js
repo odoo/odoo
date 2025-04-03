@@ -39,7 +39,7 @@ export class Persona extends Record {
     phone;
     debouncedSetImStatus;
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
-    signature = Record.attr(undefined, { html: true });
+    signature = Record.html(undefined);
     storeAsTrackedImStatus = Record.one("Store", {
         /** @this {import("models").Persona} */
         compute() {
