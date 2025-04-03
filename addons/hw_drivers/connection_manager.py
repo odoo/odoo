@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import platform
 import requests
 from threading import Thread
 import time
 
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers, upgrade, wifi
+from odoo.addons.hw_drivers.tools.iot_system import IS_RPI, IS_TEST_LOCAL
 
 _logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class ConnectionManager(Thread):
         if all(key in req for key in ['pairing_code', 'pairing_uuid']):
             self.pairing_code = req['pairing_code']
             self.pairing_uuid = req['pairing_uuid']
-            if platform.system() == 'Linux':
+            if IS_RPI:
                 self._try_print_pairing_code()
             self.iot_box_registered = True
 
@@ -60,7 +60,7 @@ class ConnectionManager(Thread):
         return (
             not helpers.get_odoo_server_url() and
             helpers.get_ip() and
-            not (platform.system() == 'Linux' and wifi.is_access_point()) and
+            not (IS_RPI and wifi.is_access_point()) and
             not self.pairing_code_expired
         )
 
@@ -108,4 +108,7 @@ class ConnectionManager(Thread):
 
 
 connection_manager = ConnectionManager()
-connection_manager.start()
+
+if not IS_TEST_LOCAL:
+    # We don't want a pairing token in test mode
+    connection_manager.start()

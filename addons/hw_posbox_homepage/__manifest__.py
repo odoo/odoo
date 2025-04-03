@@ -20,7 +20,7 @@ regular Odoo interface anymore.
 
 """,
     'assets': {
-        'web.assets_backend': [
+        'iot_homepage.assets': [  # dummy asset name to make sure it does not load outside of IoT homepage
             'hw_posbox_homepage/static/**/*',
         ],
     },
