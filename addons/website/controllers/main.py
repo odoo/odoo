@@ -677,23 +677,22 @@ class Website(Home):
             return json.dumps({'view_id': page.get('view_id')})
         return json.dumps({'url': url})
 
-    def get_filtered_page_template(self, page):
+    def get_filtered_page_template(self, view):
         """
-        Retrieves and extracts the relevant arch from an ir.ui.view associated
-        with a page record.
+        Retrieves and extracts the relevant arch from an ir.ui.view record.
 
-        :param page: Record of website.page to fetch and filter its view's XML.
+        :param view: Record of ir.ui.view to fetch and filter its view's XML.
         :return: Processed arch or False if not found.
         """
-        if not page.exists() or not page.view_id or (page.view_id and not page.view_id.arch):
+        if not (view and view.arch):
             return False
-        page_view = page.view_id.arch
+        page_view = view.arch
         try:
             tree = html.fromstring(page_view)
             wrap_el = tree.xpath("//div[@id='wrap']")
             return html.tostring(wrap_el[0], encoding="unicode") if wrap_el else page_view
-        except Exception as e:
-            logger.warning(f"Error parsing XML content for page ID {page.id}: {e}")
+        except etree.XMLSyntaxError as e:
+            logger.warning("XML parsing error for view ID %s: %s", view.id, e)
             return page_view
 
     @http.route('/website/get_new_page_templates', type='jsonrpc', auth='user', website=True, readonly=True)
@@ -705,12 +704,12 @@ class Website(Home):
 
         website = self.env['website'].get_current_website()
         param_key = f'website.untouched_configurator_pages.{website.id}'
-        page_ids = json.loads(self.env['ir.config_parameter'].sudo().get_param(param_key, '[]'))
-        current_website_pages = self.env['website.page'].search([
-            ('id', 'in', page_ids),
+        view_ids = json.loads(self.env['ir.config_parameter'].sudo().get_param(param_key, '[]'))
+        current_website_views = self.env['ir.ui.view'].search([
+            ('id', 'in', view_ids),
             ('website_id', '=', website.id)
         ])
-        filtered_configurator_templates = [self.get_filtered_page_template(page) for page in current_website_pages]
+        filtered_configurator_templates = [self.get_filtered_page_template(view) for view in current_website_views]
 
         for group_el in groups_el.getchildren():
             group = {

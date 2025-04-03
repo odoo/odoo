@@ -10,7 +10,6 @@ from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
-from odoo.tools.json import scriptsafe as json
 
 _logger = logging.getLogger(__name__)
 
@@ -483,15 +482,6 @@ class IrUiView(models.Model):
     def save(self, value, xpath=None):
         self.ensure_one()
         current_website = self.env['website'].get_current_website()
-        page_ids = self.sudo().page_ids.ids if self.sudo().page_ids else []
-        if page_ids:
-            # Remove matching page IDs from untouched configurator pages as the
-            # configurator page has been modified
-            param_key = f'website.untouched_configurator_pages.{current_website.id}'
-            untouched_configurator_pages = json.loads(self.env['ir.config_parameter'].sudo().get_param(param_key, '[]'))
-            untouched_configurator_pages = [page_id for page_id in untouched_configurator_pages if page_id not in page_ids]
-            self.env['ir.config_parameter'].sudo().set_param(param_key, json.dumps(untouched_configurator_pages))
-
         # xpath condition is important to be sure we are editing a view and not
         # a field as in that case `self` might not exist (check commit message)
         if xpath and self.key and current_website:
