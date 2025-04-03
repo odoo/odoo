@@ -6,9 +6,10 @@ export class ProductCombo {
      * @param {string} name
      * @param {ProductComboItem[]|object[]} combo_items
      */
-    constructor({id, name, combo_items}) {
+    constructor({id, name, combo_items, max_qty = false}) {
         this.id = id;
         this.name = name;
+        this.max_qty = max_qty;
         this.combo_items = combo_items.map(item => new ProductComboItem(item));
     }
 
