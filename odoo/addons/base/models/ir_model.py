@@ -496,7 +496,7 @@ class IrModel(models.Model):
 
 
 # retrieve field types defined by the framework only (not extensions)
-FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
+FIELD_TYPES = [(key, key) for key in sorted(fields.Field._by_type__)]
 
 
 class IrModelFields(models.Model):
@@ -2413,7 +2413,7 @@ class IrModelData(models.Model):
                     else:
                         # the field is shared across registries; don't modify it
                         Field = type(field)
-                        field_ = Field(_base_fields=[field, Field(prefetch=False)])
+                        field_ = Field(_base_fields__=(field, Field(prefetch=False)))
                         add_field(self.env[ir_field.model], ir_field.name, field_)
                         field_.setup(model)
                         has_shared_field = True

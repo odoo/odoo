@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 from collections import defaultdict
 
-from odoo.tools.misc import SENTINEL, Sentinel, merge_sequences
+from odoo.tools.misc import ReadonlyDict, SENTINEL, Sentinel, merge_sequences
 from odoo.tools.sql import pg_varchar
 
 from .fields import Field, _logger, determine, resolve_mro
@@ -92,19 +92,19 @@ class Selection(Field[str | typing.Literal[False]]):
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
-        if not self._base_fields:
+        if not self._base_fields__:
             return
 
         # determine selection (applying 'selection_add' extensions) as a dict
         values = None
 
-        for field in self._base_fields:
+        for field in self._base_fields__:
             # We cannot use field.selection or field.selection_add here
             # because those attributes are overridden by ``_setup_attrs__``.
-            if 'selection' in field.args:
+            if 'selection' in field._args__:
                 if self.related:
                     _logger.warning("%s: selection attribute will be ignored as the field is related", self)
-                selection = field.args['selection']
+                selection = field._args__['selection']
                 if isinstance(selection, (list, tuple)):
                     if values is not None and list(values) != [kv[0] for kv in selection]:
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
@@ -117,17 +117,17 @@ class Selection(Field[str | typing.Literal[False]]):
                 else:
                     raise ValueError(f"{self!r}: selection={selection!r} should be a list, a callable or a method name")
 
-            if 'selection_add' in field.args:
+            if 'selection_add' in field._args__:
                 if self.related:
                     _logger.warning("%s: selection_add attribute will be ignored as the field is related", self)
-                selection_add = field.args['selection_add']
+                selection_add = field._args__['selection_add']
                 assert isinstance(selection_add, list), \
                     "%s: selection_add=%r must be a list" % (self, selection_add)
                 assert values is not None, \
                     "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
 
                 values_add = {kv[0]: (kv[1] if len(kv) > 1 else None) for kv in selection_add}
-                ondelete = field.args.get('ondelete') or {}
+                ondelete = field._args__.get('ondelete') or {}
                 new_values = [key for key in values_add if key not in values]
                 for key in new_values:
                     ondelete.setdefault(key, 'set null')
@@ -185,13 +185,13 @@ class Selection(Field[str | typing.Literal[False]]):
             module = field._module
             if not module:
                 continue
-            if 'selection' in field.args:
+            if 'selection' in field._args__:
                 value_modules.clear()
-                if isinstance(field.args['selection'], list):
-                    for value, _label in field.args['selection']:
+                if isinstance(field._args__['selection'], list):
+                    for value, _label in field._args__['selection']:
                         value_modules[value].add(module)
-            if 'selection_add' in field.args:
-                for value_label in field.args['selection_add']:
+            if 'selection_add' in field._args__:
+                for value_label in field._args__['selection_add']:
                     if len(value_label) > 1:
                         value_modules[value_label[0]].add(module)
         return value_modules
