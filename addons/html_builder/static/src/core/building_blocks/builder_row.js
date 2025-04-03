@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import {
     useVisibilityObserver,
     useApplyVisibility,
@@ -27,6 +27,7 @@ export class BuilderRow extends Component {
 
         this.state = useState({
             expanded: this.props.expand,
+            tooltip: this.props.tooltip,
         });
 
         if (this.props.slots.collapse) {
@@ -34,6 +35,16 @@ export class BuilderRow extends Component {
 
             this.collapseContentId = uniqueId("builder_collapse_content_");
         }
+
+        this.labelRef = useRef("label");
+        useEffect(
+            (labelEl) => {
+                if (!this.state.tooltip && labelEl && labelEl.clientWidth < labelEl.scrollWidth) {
+                    this.state.tooltip = this.props.label;
+                }
+            },
+            () => [this.labelRef.el]
+        );
     }
 
     getLevelClass() {
