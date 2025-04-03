@@ -100,6 +100,7 @@ patch(PosStore.prototype, {
                         ) {
                             this.addLineToCurrentOrder({
                                 product_id: reward.reward_product_id,
+                                product_tmpl_id: reward.reward_product_id.product_tmpl_id,
                                 qty: reward.reward_product_qty || 1,
                             });
                         }
