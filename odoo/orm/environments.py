@@ -704,7 +704,7 @@ class Cache:
                 raise CacheMiss(record, field) from None
             return default
 
-    def set(self, record: BaseModel, field: Field, value: typing.Any, dirty: bool = False, check_dirty: bool = True) -> None:
+    def set(self, record: BaseModel, field: Field, value: typing.Any, dirty: bool = False) -> None:
         """ Set the value of ``field`` for ``record``.
         One can normally make a clean field dirty but not the other way around.
         Updating a dirty field without ``dirty=True`` is a programming error and
@@ -712,15 +712,10 @@ class Cache:
 
         :param dirty: whether ``field`` must be made dirty on ``record`` after
             the update
-        :param check_dirty: whether updating a dirty field without making it
-            dirty must raise an exception
         """
         field_cache = self._set_field_cache(record, field)
         record_id = record.id
         field_cache[record_id] = value
-
-        if not check_dirty:
-            return
 
         if dirty:
             assert field.column_type and field.store and record_id
@@ -734,7 +729,7 @@ class Cache:
         elif record_id in self.transaction.dirty.get(field, ()):
             _logger.error("cache.set() removing flag dirty on %s.%s", record, field.name, stack_info=True)
 
-    def update(self, records: BaseModel, field: Field, values: Iterable, dirty: bool = False, check_dirty: bool = True) -> None:
+    def update(self, records: BaseModel, field: Field, values: Iterable, dirty: bool = False) -> None:
         """ Set the values of ``field`` for several ``records``.
         One can normally make a clean field dirty but not the other way around.
         Updating a dirty field without ``dirty=True`` is a programming error and
@@ -742,8 +737,6 @@ class Cache:
 
         :param dirty: whether ``field`` must be made dirty on ``record`` after
             the update
-        :param check_dirty: whether updating a dirty field without making it
-            dirty must raise an exception
         """
         if field.translate:
             # only for model translated fields
@@ -759,9 +752,9 @@ class Cache:
                     cache_values.append(cache_value)
             values = cache_values
 
-        self.update_raw(records, field, values, dirty, check_dirty)
+        self.update_raw(records, field, values, dirty)
 
-    def update_raw(self, records: BaseModel, field: Field, values: Iterable, dirty: bool = False, check_dirty: bool = True) -> None:
+    def update_raw(self, records: BaseModel, field: Field, values: Iterable, dirty: bool = False) -> None:
         """ This is a variant of method :meth:`~update` without the logic for
         translated fields.
         """
@@ -769,8 +762,6 @@ class Cache:
             records = records.with_context(prefetch_langs=True)
         field_cache = records.env._field_cache(field)
         field_cache.update(zip(records._ids, values))
-        if not check_dirty:
-            return
         if dirty:
             assert field.column_type and field.store and all(records._ids)
             self.transaction.dirty[field].update(records._ids)

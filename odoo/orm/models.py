@@ -5734,7 +5734,6 @@ class BaseModel(metaclass=MetaModel):
             :param validate: whether values must be checked
         """
         self.ensure_one()
-        cache = self.env.cache
         fields = self._fields
         try:
             field_values = [(fields[name], value) for name, value in values.items() if name != 'id']
@@ -5744,7 +5743,9 @@ class BaseModel(metaclass=MetaModel):
         # convert monetary fields after other columns for correct value rounding
         for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
             value = field.convert_to_cache(value, self, validate)
-            cache.set(self, field, value, check_dirty=False)
+            # bypasses cache abstraction (Field._cache_update)
+            field_cache = field._get_cache(self.env)
+            field_cache[self.id] = value
 
             # set inverse fields on new records in the comodel
             if field.relational:
