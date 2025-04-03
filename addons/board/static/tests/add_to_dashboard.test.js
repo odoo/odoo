@@ -81,7 +81,6 @@ test("save actions to dashboard", async () => {
 
     Partner._views = {
         list: '<list><field name="foo"/></list>',
-        search: "<search></search>",
     };
 
     onRpc("/board/add_to_dashboard", async (request) => {
@@ -248,7 +247,6 @@ test("add to dashboard with no action id", async () => {
 
     Partner._views = {
         pivot: '<pivot><field name="foo"/></pivot>',
-        search: "<search/>",
     };
     await mountWithCleanup(WebClient);
 
@@ -334,7 +332,6 @@ test("correctly save the time ranges of a reporting view in comparison mode", as
 test("Add a view to dashboard (keynav)", async () => {
     Partner._views = {
         pivot: '<pivot><field name="foo"/></pivot>',
-        search: "<search/>",
     };
 
     // makes mouseEnter work
@@ -467,7 +464,6 @@ test("Add to my dashboard is not available in form views", async () => {
     Partner._views = {
         list: '<list><field name="foo"/></list>',
         form: '<form><field name="foo"/></form>',
-        search: "<search></search>",
     };
 
     await mountWithCleanup(WebClient);

@@ -18,8 +18,7 @@ class HrApplicant extends models.ServerModel {
         },
     ];
     _views = {
-        "form,false": `<form><field name="id"/></form>`,
-        "search,false": `<search/>`,
+        form: `<form><field name="id"/></form>`,
     };
 }
 defineMailModels();

@@ -115,8 +115,6 @@ export function generateListDefinition(model, columns) {
 export function getBasicListArchs() {
     return {
         "partner,false,list": getBasicListArch(),
-        "partner,false,search": /* xml */ `<search/>`,
-        "partner,false,form": /* xml */ `<form/>`,
     };
 }
 
@@ -427,8 +425,6 @@ export class Partner extends models.Model {
         list: getBasicListArch(),
         pivot: getBasicPivotArch(),
         graph: getBasicGraphArch(),
-        form: /* xml */ `<Form/>`,
-        search: /* xml */ `<search/>`,
     };
 }
 

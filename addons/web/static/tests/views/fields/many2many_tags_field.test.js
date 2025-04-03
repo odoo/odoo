@@ -1065,7 +1065,6 @@ test("Many2ManyTagsField: conditional create/delete actions", async () => {
 
     Partner._views = {
         list: '<list><field name="name"/></list>',
-        search: "<search/>",
     };
 
     await mountView({

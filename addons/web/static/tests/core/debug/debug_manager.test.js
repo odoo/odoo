@@ -1,31 +1,31 @@
-import { browser } from "@web/core/browser/browser";
-import { user } from "@web/core/user";
-import { regenerateAssets, becomeSuperuser } from "@web/core/debug/debug_menu_items";
-import { openViewItem } from "@web/webclient/debug/debug_items";
-import { describe, test, expect, beforeEach } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { click, queryAll, queryAllProperties, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { DebugMenu } from "@web/core/debug/debug_menu";
-import { ActionDialog } from "@web/webclient/actions/action_dialog";
-import { WebClient } from "@web/webclient/webclient";
-import { registry } from "@web/core/registry";
-import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
+import { Component, xml } from "@odoo/owl";
 import {
-    mountWithCleanup,
+    clearRegistry,
     contains,
+    defineModels,
+    defineWebModels,
+    fields,
+    getService,
+    makeDialogMockEnv,
+    models,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
-    fields,
-    models,
-    webModels,
-    defineWebModels,
-    getService,
-    defineModels,
-    clearRegistry,
     serverState,
-    makeDialogMockEnv,
+    webModels,
 } from "@web/../tests/web_test_helpers";
-import { Component, xml } from "@odoo/owl";
-import { queryOne, queryAll, queryAllTexts, click, queryAllProperties } from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
+import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
+import { DebugMenu } from "@web/core/debug/debug_menu";
+import { becomeSuperuser, regenerateAssets } from "@web/core/debug/debug_menu_items";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
+import { ActionDialog } from "@web/webclient/actions/action_dialog";
+import { openViewItem } from "@web/webclient/debug/debug_items";
+import { WebClient } from "@web/webclient/webclient";
 
 class DebugMenuParent extends Component {
     static template = xml`<DebugMenu/>`;
@@ -246,9 +246,7 @@ describe("DebugMenu", () => {
         serverState.debug = "1";
 
         webModels.IrUiView._views.list = `<list><field name="name"/><field name="type"/></list>`;
-        webModels.IrUiView._views.search = `<search/>`;
         webModels.ResPartner._views["form,1"] = `<form><div class="some_view"/></form>`;
-        webModels.ResPartner._views.search = `<search/>`;
 
         webModels.IrUiView._records.push({
             id: 1,
@@ -274,7 +272,6 @@ describe("DebugMenu", () => {
         serverState.debug = "1";
 
         webModels.ResPartner._views.list = `<list><field name="name"/></list>`;
-        webModels.ResPartner._views.search = `<search/>`;
 
         defineWebModels();
 
@@ -296,10 +293,8 @@ describe("DebugMenu", () => {
         serverState.debug = "1";
 
         webModels.ResPartner._views["pivot,18"] = "<pivot></pivot>";
-        webModels.ResPartner._views.search = `<search/>`;
         webModels.IrUiView._records.push({ id: 18, name: "Edit View" });
         webModels.IrUiView._views.form = `<form><field name="id"/></form>`;
-        webModels.IrUiView._views.search = `<search/>`;
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -329,7 +324,6 @@ describe("DebugMenu", () => {
         webModels.ResPartner._views["search,293"] = "<search></search>";
         webModels.IrUiView._records.push({ id: 293, name: "Edit View" });
         webModels.IrUiView._views.form = `<form><field name="id"/></form>`;
-        webModels.IrUiView._views.search = `<search/>`;
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -355,7 +349,6 @@ describe("DebugMenu", () => {
         webModels.ResPartner._views["search,293"] = "<search></search>";
         webModels.IrUiView._records.push({ id: 293, name: "Edit View" });
         webModels.IrUiView._views.form = `<form><field name="id"/></form>`;
-        webModels.IrUiView._views.search = `<search/>`;
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -378,7 +371,6 @@ describe("DebugMenu", () => {
         serverState.debug = "1";
 
         webModels.ResPartner._views.form = `<form><field name="id"/></form>`;
-        webModels.ResPartner._views.search = `<search/>`;
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -401,7 +393,6 @@ describe("DebugMenu", () => {
             <form>
                 <field name="name"/>
             </form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 1000, name: "p1" });
         webModels.IrUiView._records.push({ id: 24 });
 
@@ -435,7 +426,6 @@ describe("DebugMenu", () => {
             <form>
                 <field name="name"/>
             </form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 1001, name: "p1" });
         webModels.IrUiView._records.push({ id: 25 });
 
@@ -468,7 +458,6 @@ describe("DebugMenu", () => {
             <form>
                 <field name="name"/>
             </form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 1002, name: "p1" });
         webModels.IrUiView._records.push({ id: 26 });
 
@@ -504,11 +493,6 @@ describe("DebugMenu", () => {
                     name: "custom1",
                 },
             ];
-
-            _views = {
-                form: "<form></form>",
-                search: "<search/>",
-            };
         }
 
         defineWebModels();
@@ -547,8 +531,6 @@ describe("DebugMenu", () => {
             ];
         });
 
-        webModels.ResPartner._views.form = `<form></form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 1003, name: "p1" });
 
         defineWebModels();
@@ -610,13 +592,13 @@ describe("DebugMenu", () => {
             ];
 
             _views = {
-                form: `
+                "form,18": /* xml */ `
                     <form>
                         <field name="datetime"/>
                         <field name="reference"/>
                         <field name="m2o"/>
-                    </form>`,
-                search: "<search/>",
+                    </form>
+                `,
             };
         }
 
@@ -672,14 +654,12 @@ describe("DebugMenu", () => {
     test("display model view in developer tools", async () => {
         serverState.debug = "1";
         webModels.ResPartner._views.form = `<form><field name="name"/></form>`;
-        webModels.ResPartner._views.search = "<search/>";
         webModels.ResPartner._records.push({ id: 88, name: "p1" });
         webModels.IrModel._views.form = `
             <form>
                 <field name="name"/>
                 <field name="model"/>
             </form>`;
-        webModels.IrModel._views.search = "<search/>";
 
         defineWebModels();
         await mountWithCleanup(WebClient);
@@ -727,7 +707,6 @@ describe("DebugMenu", () => {
                     <form>
                         <field name="foo"/>
                     </form>`,
-                search: "<search/>",
             };
         }
 
@@ -749,7 +728,7 @@ describe("DebugMenu", () => {
             res_model: "partner",
             res_id: 1,
             type: "ir.actions.act_window",
-            views: [[18, "form"]],
+            views: [[false, "form"]],
         });
         await contains(".o_debug_manager button").click();
         await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();

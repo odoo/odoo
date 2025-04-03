@@ -29,7 +29,6 @@ class Animal extends models.Model {
     });
 
     _views = {
-        search: `<search/>`,
         [["search", 1]]: `
             <search>
                 <filter name="filter" string="True domain" domain="[(1, '=', 1)]"/>
