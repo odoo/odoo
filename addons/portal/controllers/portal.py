@@ -714,6 +714,8 @@ class CustomerPortal(Controller):
         # Validate the lang
         if 'lang' in address_values:
             ResLang = request.env['res.lang']
+
+            lang_value = address_values.get('lang')
             lang_id = int(lang_value) if isinstance(lang_value, int) or (
                         isinstance(lang_value, str) and lang_value.isdigit()) else None
 
