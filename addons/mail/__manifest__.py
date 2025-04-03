@@ -98,7 +98,7 @@ For more specific needs, you may also assign custom-defined actions
         'data/mail_templates_email_layouts.xml',
         'data/mail_templates_mailgateway.xml',
         'data/discuss_channel_data.xml',
-        'data/mail_activity_data.xml',
+        'data/mail_activity_type_data.xml',
         'data/security_notifications_templates.xml',
         'data/ir_cron_data.xml',
         'data/ir_actions_client.xml',
@@ -126,6 +126,7 @@ For more specific needs, you may also assign custom-defined actions
         'data/web_tour_tour.xml',
     ],
     'demo': [
+        'demo/mail_activity_demo.xml',
         'demo/discuss_channel_demo.xml',
         'demo/discuss/public_channel_demo.xml',
         "demo/mail_canned_response_demo.xml",

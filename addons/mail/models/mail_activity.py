@@ -38,10 +38,9 @@ class MailActivity(models.Model):
     @api.model
     def _default_activity_type(self):
         default_vals = self.default_get(['res_model_id', 'res_model'])
-        if not default_vals.get('res_model_id'):
-            return False
-
-        current_model = self.env["ir.model"].sudo().browse(default_vals['res_model_id']).model
+        current_model = default_vals.get('res_model')
+        if default_vals.get('res_model_id'):
+            current_model = self.env["ir.model"].sudo().browse(default_vals['res_model_id']).model
         return self._default_activity_type_for_model(current_model)
 
     @api.model
@@ -51,16 +50,17 @@ class MailActivity(models.Model):
         if activity_type_todo and activity_type_todo.active and \
                 (activity_type_todo.res_model == model or not activity_type_todo.res_model):
             return activity_type_todo
-        activity_type_model = self.env['mail.activity.type'].search([('res_model', '=', model)], limit=1)
-        if activity_type_model:
-            return activity_type_model
-        activity_type_generic = self.env['mail.activity.type'].search([('res_model', '=', False)], limit=1)
-        return activity_type_generic
+        default_type = self.env['mail.activity_type']
+        if model:
+            default_type = self.env['mail.activity.type'].search([('res_model', '=', model)], limit=1)
+        if not default_type:
+            default_type = self.env['mail.activity.type'].search([('res_model', '=', False)], limit=1)
+        return default_type
 
     # owner
     res_model_id = fields.Many2one(
         'ir.model', 'Document Model',
-        index=True, ondelete='cascade', required=True)
+        index=True, ondelete='cascade', required=False)
     res_model = fields.Char(
         'Related Document Model',
         index=True, related='res_model_id.model', precompute=True, store=True, readonly=True)
@@ -111,8 +111,12 @@ class MailActivity(models.Model):
     can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
     active = fields.Boolean(default=True)
 
-    _check_res_id_is_set = models.Constraint(
-        'CHECK(res_id IS NOT NULL AND res_id !=0 )',
+    # if model: valid res_id
+    _check_res_id_is_set_if_model = models.Constraint(
+        """CHECK(
+            (COALESCE(res_model, '') <> '' AND (res_id IS NOT NULL AND res_id != 0)) OR
+            (COALESCE(res_model, '') = '' AND (res_id IS NULL OR res_id = 0))
+        )""",
         'Activities have to be linked to records with a not null res_id.',
     )
 
@@ -137,7 +141,9 @@ class MailActivity(models.Model):
 
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
-        for activity in self:
+        free = self.filtered(lambda a: not a.res_model or not a.res_id)
+        free.res_name = False
+        for activity in (self - free):
             activity.res_name = activity.res_model and \
                 self.env[activity.res_model].browse(activity.res_id).display_name
 
@@ -223,12 +229,15 @@ class MailActivity(models.Model):
             return result
 
         # now check access on related document of 'activities', and collect the
-        # ids of forbidden activities
+        # ids of forbidden activities; free activities are checked against user_id
         model_docid_actids = defaultdict(lambda: defaultdict(list))
-        for activity in activities.sudo():
-            model_docid_actids[activity.res_model][activity.res_id].append(activity.id)
-
         forbidden_ids = []
+        for activity in activities.sudo():
+            if activity.res_model:
+                model_docid_actids[activity.res_model][activity.res_id].append(activity.id)
+            elif activity.user_id.id != self.env.uid:
+                forbidden_ids.append(activity.id)
+
         for doc_model, docid_actids in model_docid_actids.items():
             documents = self.env[doc_model].browse(docid_actids)
             doc_operation = getattr(
@@ -286,7 +295,7 @@ class MailActivity(models.Model):
             other.action_notify()
 
         # subscribe (batch by model and user to speedup)
-        for model, activity_data in activities._classify_by_model().items():
+        for model, activity_data in activities.filtered('res_model')._classify_by_model().items():
             per_user = dict()
             for activity in activity_data['activities'].filtered(lambda act: act.user_id):
                 if activity.user_id not in per_user:
@@ -314,7 +323,8 @@ class MailActivity(models.Model):
                 if not self.env.context.get('mail_activity_quick_update', False):
                     user_changes.action_notify()
             for activity in user_changes:
-                self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+                if activity.res_model:
+                    self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
 
             # send bus notifications
             todo_activities = user_changes.filtered(lambda act: act.date_deadline <= fields.Date.today())
@@ -355,7 +365,7 @@ class MailActivity(models.Model):
         # Note: the user can read all activities assigned to him (see at the end of the method)
         model_ids = defaultdict(set)
         for __, res_model, res_id, user_id in rows:
-            if user_id != self.env.uid:
+            if user_id != self.env.uid and res_model:
                 model_ids[res_model].add(res_id)
 
         allowed_ids = defaultdict(set)
@@ -384,9 +394,7 @@ class MailActivity(models.Model):
     # ------------------------------------------------------
 
     def action_notify(self):
-        if not self:
-            return
-        for activity in self:
+        for activity in self.filtered('res_model'):
             if activity.user_id.lang:
                 # Send the notification in the assigned user's language
                 activity = activity.with_context(lang=activity.user_id.lang)
@@ -504,7 +512,7 @@ class MailActivity(models.Model):
             activity_id = attachment['res_id']
             activity_attachments[activity_id].append(attachment['id'])
 
-        for model, activity_data in self._classify_by_model().items():
+        for model, activity_data in self.filtered('res_model')._classify_by_model().items():
             # Allow user without access to the record to "mark as done" activities assigned to them. At the end of the
             # method, the activity is unlinked or archived which ensure the user has enough right on the activities.
             records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])
@@ -563,6 +571,8 @@ class MailActivity(models.Model):
     def action_open_document(self):
         """ Opens the related record based on the model and ID """
         self.ensure_one()
+        if not self.res_model:
+            raise ValueError('Invalid path, UPDATE ME')
         return {
             'res_id': self.res_id,
             'res_model': self.res_model,
@@ -785,7 +795,7 @@ class MailActivity(models.Model):
             'previous_activity_type_id': self.activity_type_id.id,
             'res_id': self.res_id,
             'res_model': self.res_model,
-            'res_model_id': self.env['ir.model']._get(self.res_model).id,
+            'res_model_id': self.env['ir.model']._get(self.res_model).id if self.res_model else False,
         })
         virtual_activity = self.new(vals)
         virtual_activity._onchange_previous_activity_type_id()

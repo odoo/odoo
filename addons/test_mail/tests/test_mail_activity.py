@@ -276,6 +276,7 @@ class TestActivityFlow(TestActivityCommon):
 
         test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
 
+        # document should be complete: both model and res_id
         with self.assertRaises(IntegrityError):
             self.env['mail.activity'].create({
                 'res_model_id': self.env['ir.model']._get_id(test_record._name),
@@ -289,6 +290,8 @@ class TestActivityFlow(TestActivityCommon):
             self.env['mail.activity'].create({
                 'res_id': test_record.id,
             })
+        # free activity is ok (no model, no res_id)
+        self.env['mail.activity'].create({})
 
         activity = self.env['mail.activity'].create({
             'res_id': test_record.id,
@@ -328,7 +331,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             "test_mail.mail_act_test_todo",
             user_id=self.user_employee.id,
         )
-        # record 2 and leads
+        # record 2 and leads and free activities
         for summary in ["Summary1", "Summary2"]:
             for record in [self.test_record_2, self.test_lead_records[0], self.test_lead_records[1]]:
                 record.activity_schedule(
@@ -336,6 +339,10 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
                     summary=summary,
                     user_id=self.user_employee.id,
                 )
+            self.env['mail.activity'].with_user(self.user_employee).create({
+                'summary': summary,
+                'user_id': self.user_employee.id,
+            })
 
         self.authenticate(self.user_employee.login, self.user_employee.login)
         data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]})
@@ -351,7 +358,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             if record.get("model") == self.test_lead_records._name
         )
         self.assertEqual(total_lead_count, 4)
-        self.assertEqual(data["Store"]["activityCounter"], 7)
+        self.assertEqual(data["Store"]["activityCounter"], 9)
 
 
 @tests.tagged('mail_activity')
