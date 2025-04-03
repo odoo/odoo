@@ -516,9 +516,9 @@ def html_to_inner_content(html):
     processed = re.sub(HTML_NEWLINES_REGEX, ' ', html)
     processed = re.sub(HTML_TAGS_REGEX, '', processed)
     processed = re.sub(r' {2,}|\t', ' ', processed)
+    processed = processed.replace("\xa0", " ")
     processed = htmllib.unescape(processed)
-    processed = processed.strip()
-    return processed
+    return processed.strip()
 
 
 def create_link(url, label):
