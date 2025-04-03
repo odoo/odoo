@@ -10,6 +10,7 @@ from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
+from odoo.addons.website_sale.const import SHOP_PATH
 
 _logger = logging.getLogger(__name__)
 
@@ -817,7 +818,11 @@ class ProductTemplate(models.Model):
             if with_category and categ_ids:
                 data['category'] = self.env['ir.ui.view'].sudo()._render_template(
                     "website_sale.product_category_extra_link",
-                    {'categories': categ_ids, 'slug': self.env['ir.http']._slug}
+                    {
+                        'categories': categ_ids,
+                        'slug': self.env['ir.http']._slug,
+                        'shop_path': SHOP_PATH,
+                    }
                 )
         return results_data
 

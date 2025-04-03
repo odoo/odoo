@@ -25,6 +25,7 @@ from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.web_editor.tools import get_video_thumbnail
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website_sale.const import SHOP_PATH
 from odoo.addons.website_sale.models.website import (
     PRICELIST_SESSION_CACHE_KEY,
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
@@ -157,14 +158,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # and no autocomplete query string is provided
             return
 
-        if not qs or qs.lower() in '/shop':
-            yield {'loc': '/shop'}
+        if not qs or qs.lower() in SHOP_PATH:
+            yield {'loc': SHOP_PATH}
 
         Category = env['product.public.category']
-        dom = sitemap_qs2dom(qs, '/shop/category', Category._rec_name)
+        dom = sitemap_qs2dom(qs, f'{SHOP_PATH}/category', Category._rec_name)
         dom += website.website_domain()
         for cat in Category.search(dom):
-            loc = '/shop/category/%s' % env['ir.http']._slug(cat)
+            loc = f'{SHOP_PATH}/category/{env["ir.http"]._slug(cat)}'
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -176,10 +177,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return
 
         ProductTemplate = env['product.template']
-        dom = sitemap_qs2dom(qs, '/shop', ProductTemplate._rec_name)
+        dom = sitemap_qs2dom(qs, SHOP_PATH, ProductTemplate._rec_name)
         dom += website.sale_product_domain()
         for product in ProductTemplate.search(dom):
-            loc = '/shop/%s' % env['ir.http']._slug(product)
+            loc = f'{SHOP_PATH}/{env["ir.http"]._slug(product)}'
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -238,12 +239,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """ Hook to set the product page URL's query string. """
         return ''
 
-    @route([
-        '/shop',
-        '/shop/page/<int:page>',
-        '/shop/category/<model("product.public.category"):category>',
-        '/shop/category/<model("product.public.category"):category>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_shop)
+    @route(
+        [
+            SHOP_PATH,
+            f'{SHOP_PATH}/page/<int:page>',
+            f'{SHOP_PATH}/category/<model("product.public.category"):category>',
+            f'{SHOP_PATH}/category/<model("product.public.category"):category>/page/<int:page>',
+        ],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=sitemap_shop,
+    )
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
@@ -442,6 +449,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'products_prices': products_prices,
             'get_product_prices': lambda product: lazy(lambda: products_prices[product.id]),
             'float_round': float_round,
+            'shop_path': SHOP_PATH,
             'product_query_string': self._get_product_query_string(**post),
         }
         if filter_by_price_enabled:
@@ -458,8 +466,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @route(
         [
-            '/shop/<model("product.template"):product>',
-            '/shop/<model("product.public.category"):category>/<model("product.template"):product>',
+            f'{SHOP_PATH}/<model("product.template"):product>',
+            f'{SHOP_PATH}/<model("product.public.category"):category>/<model("product.template"):product>',
         ],
         type='http',
         auth='public',
@@ -528,7 +536,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             document.ir_attachment_id,
         ).get_response(as_attachment=True)
 
-    @route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
+    @route(
+        [f'{SHOP_PATH}/product/<model("product.template"):product>'],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+    )
     def old_product(self, product, category='', **kwargs):
         # Compatibility pre-v14
         # Redirect to the "correct" product URL, which doesn't include `/product`, and where the
@@ -727,6 +741,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product': product,
             'view_track': view_track,
             'product_markup_data': json_scriptsafe.dumps(product_markup_data, indent=2),
+            'shop_path': SHOP_PATH,
         }
 
     def _prepare_breadcrumb_markup_data(self, base_url, category, product_name):
@@ -1800,18 +1815,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The validated category.
         :rtype: product.public.category
         """
-        Category = request.env['product.public.category']
+        ProductCategory = request.env['product.public.category']
         if (
             (category := ProductCategory.browse(category and int(category)).exists())
             and category.can_access_from_current_website()
         ):
             return category
         else:
-            return Category
+            return ProductCategory
 
     @staticmethod
     def _get_shop_path(category=None, page=0):
-        path = '/shop'
+        path = SHOP_PATH
         if category:
             slug = request.env['ir.http']._slug
             path += f'/category/{slug(category)}'
@@ -1822,7 +1837,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @staticmethod
     def _get_product_path(product, category=None):
         slug = request.env['ir.http']._slug
-        path = '/shop'
+        path = SHOP_PATH
         if category:
             path += f'/{slug(category)}'
         path += f'/{slug(product)}'
