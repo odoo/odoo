@@ -57,7 +57,7 @@ export class Activity extends Record {
     icon = "fa-tasks";
     /** @type {Object[]} */
     mail_template_ids;
-    note = Record.attr("", { html: true });
+    note = Record.html("");
     persona = Record.one("Persona");
     /** @type {number|false} */
     previous_activity_type_id;

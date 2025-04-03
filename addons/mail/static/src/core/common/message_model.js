@@ -33,24 +33,22 @@ export class Message extends Record {
 
     attachment_ids = Record.many("ir.attachment", { inverse: "message" });
     author = Record.one("Persona");
-    body = Record.attr("", { html: true });
-    richBody = Record.attr("", {
+    body = Record.html("");
+    richBody = Record.html("", {
         compute() {
             if (!this.store.emojiLoader.loaded) {
                 loadEmoji();
             }
             return decorateEmojis(this.body) ?? "";
         },
-        html: true,
     });
-    richTranslationValue = Record.attr("", {
+    richTranslationValue = Record.html("", {
         compute() {
             if (!this.store.emojiLoader.loaded) {
                 loadEmoji();
             }
             return decorateEmojis(this.translationValue) ?? "";
         },
-        html: true,
     });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {DateTime} */
@@ -355,7 +353,7 @@ export class Message extends Record {
         return false;
     }
 
-    inlineBody = Record.attr("", {
+    inlineBody = Record.html("", {
         /** @this {import("models").Message} */
         compute() {
             if (this.notificationType === "call") {
@@ -369,7 +367,6 @@ export class Message extends Record {
             }
             return decorateEmojis(htmlToTextContentInline(this.body));
         },
-        html: true,
     });
 
     get notificationIcon() {
@@ -405,7 +402,7 @@ export class Message extends Record {
         return this.isBodyEmpty && this.attachment_ids.length > 0;
     }
 
-    previewText = Record.attr("", {
+    previewText = Record.html("", {
         /** @this {import("models").Message} */
         compute() {
             if (!this.hasOnlyAttachments) {
@@ -431,7 +428,6 @@ export class Message extends Record {
                     });
             }
         },
-        html: true,
     });
 
     get previewIcon() {

@@ -15,7 +15,7 @@ export class ScheduledMessage extends Record {
     id;
     attachment_ids = Record.many("ir.attachment");
     author = Record.one("Persona");
-    body = Record.attr("", { html: true });
+    body = Record.html("");
     /** @type {boolean} */
     composition_batch;
     /** @type {luxon.DateTime} */
