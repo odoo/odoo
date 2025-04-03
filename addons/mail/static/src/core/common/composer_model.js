@@ -1,4 +1,4 @@
-import { OR, Record } from "@mail/core/common/record";
+import { fields, OR, Record } from "@mail/core/common/record";
 
 export class Composer extends Record {
     static id = OR("thread", "message");
@@ -14,16 +14,16 @@ export class Composer extends Record {
         });
     }
 
-    attachments = Record.many("ir.attachment");
+    attachments = fields.Many("ir.attachment");
     /** @type {boolean} */
     emailAddSignature = true;
-    message = Record.one("mail.message");
-    mentionedPartners = Record.many("Persona");
-    mentionedRoles = Record.many("res.role");
-    mentionedChannels = Record.many("Thread");
-    cannedResponses = Record.many("mail.canned.response");
+    message = fields.One("mail.message");
+    mentionedPartners = fields.Many("Persona");
+    mentionedRoles = fields.Many("res.role");
+    mentionedChannels = fields.Many("Thread");
+    cannedResponses = fields.Many("mail.canned.response");
     text = "";
-    thread = Record.one("Thread");
+    thread = fields.One("Thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {
         start: 0,
@@ -34,7 +34,7 @@ export class Composer extends Record {
     forceCursorMove;
     isFocused = false;
     autofocus = 0;
-    replyToMessage = Record.one("mail.message");
+    replyToMessage = fields.One("mail.message");
 }
 
 Composer.register();

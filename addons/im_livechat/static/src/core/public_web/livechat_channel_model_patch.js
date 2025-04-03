@@ -1,12 +1,12 @@
 import { LivechatChannel } from "@im_livechat/core/common/livechat_channel_model";
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 
 import { patch } from "@web/core/utils/patch";
 
 const livechatChannelPatch = {
     setup() {
         super.setup(...arguments);
-        this.appCategory = Record.one("DiscussAppCategory", {
+        this.appCategory = fields.One("DiscussAppCategory", {
             compute() {
                 return {
                     extraClass: "o-mail-DiscussSidebarCategory-livechat",
@@ -20,7 +20,7 @@ const livechatChannelPatch = {
             eager: true,
             inverse: "livechatChannel",
         });
-        this.threads = Record.many("Thread", { inverse: "livechatChannel" });
+        this.threads = fields.Many("Thread", { inverse: "livechatChannel" });
     },
 };
 patch(LivechatChannel.prototype, livechatChannelPatch);

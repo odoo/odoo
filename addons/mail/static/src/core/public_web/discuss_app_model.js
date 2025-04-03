@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { browser } from "@web/core/browser/browser";
 
 const NO_MEMBERS_DEFAULT_OPEN_LS = "mail.user_setting.no_members_default_open";
@@ -10,7 +10,7 @@ export class DiscussApp extends Record {
     activeTab = "main";
     searchTerm = "";
     isActive = false;
-    isMemberPanelOpenByDefault = Record.attr(true, {
+    isMemberPanelOpenByDefault = fields.Attr(true, {
         compute() {
             return browser.localStorage.getItem(NO_MEMBERS_DEFAULT_OPEN_LS) !== "true";
         },
@@ -23,7 +23,7 @@ export class DiscussApp extends Record {
             }
         },
     });
-    isSidebarCompact = Record.attr(false, {
+    isSidebarCompact = fields.Attr(false, {
         compute() {
             return browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS) === "true";
         },
@@ -39,7 +39,7 @@ export class DiscussApp extends Record {
             }
         },
     });
-    thread = Record.one("Thread");
+    thread = fields.One("Thread");
     hasRestoredThread = false;
 
     static new() {

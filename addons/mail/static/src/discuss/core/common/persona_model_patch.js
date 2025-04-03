@@ -1,5 +1,5 @@
 import { Persona } from "@mail/core/common/persona_model";
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 const personaPatch = {
     setup() {
         super.setup();
-        this.channelMembers = Record.many("discuss.channel.member");
+        this.channelMembers = fields.Many("discuss.channel.member");
     },
 };
 patch(Persona.prototype, personaPatch);

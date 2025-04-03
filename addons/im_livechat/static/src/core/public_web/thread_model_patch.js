@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { _t } from "@web/core/l10n/translation";
 
@@ -7,13 +7,13 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup(...arguments);
-        this.appAsLivechats = Record.one("DiscussApp", {
+        this.appAsLivechats = fields.One("DiscussApp", {
             compute() {
                 return this.channel_type === "livechat" ? this.store.discuss : null;
             },
         });
-        this.livechatChannel = Record.one("im_livechat.channel", { inverse: "threads" });
-        this.anonymous_country = Record.one("res.country");
+        this.livechatChannel = fields.One("im_livechat.channel", { inverse: "threads" });
+        this.anonymous_country = fields.One("res.country");
     },
     _computeDiscussAppCategory() {
         if (this.channel_type !== "livechat") {

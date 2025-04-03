@@ -1,12 +1,12 @@
 import { Store, storeService } from "@mail/core/common/store_service";
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { router } from "@web/core/browser/router";
 import { patch } from "@web/core/utils/patch";
 
 patch(Store.prototype, {
     setup() {
         super.setup(...arguments);
-        this.discuss = Record.one("DiscussApp");
+        this.discuss = fields.One("DiscussApp");
         /** @type {number|undefined} */
         this.action_discuss_id;
     },

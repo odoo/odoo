@@ -1,4 +1,4 @@
-import { AND, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/core/common/record";
 import { imageUrl } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
@@ -39,8 +39,8 @@ export class Persona extends Record {
     phone;
     debouncedSetImStatus;
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
-    signature = Record.html(undefined);
-    storeAsTrackedImStatus = Record.one("Store", {
+    signature = fields.Html(undefined);
+    storeAsTrackedImStatus = fields.One("Store", {
         /** @this {import("models").Persona} */
         compute() {
             if (
@@ -71,28 +71,28 @@ export class Persona extends Record {
     type;
     /** @type {string} */
     name;
-    country = Record.one("res.country");
+    country = fields.One("res.country");
     /** @type {string} */
     email;
     /** @type {number} */
     userId;
     /** @type {ImStatus} */
-    im_status = Record.attr(null, {
+    im_status = fields.Attr(null, {
         onUpdate() {
             if (this.eq(this.store.self) && this.im_status === "offline") {
                 this.store.env.services.im_status.updateBusPresence();
             }
         },
     });
-    last_poll = Record.datetime();
+    last_poll = fields.Datetime();
     /** @type {boolean} */
     is_public;
     /** @type {'email' | 'inbox'} */
     notification_preference;
     isAdmin = false;
     isInternalUser = false;
-    write_date = Record.datetime();
-    group_ids = Record.many("res.groups", { inverse: "personas" });
+    write_date = fields.Datetime();
+    group_ids = fields.Many("res.groups", { inverse: "personas" });
 
     get emailWithoutDomain() {
         return this.email.substring(0, this.email.lastIndexOf("@"));

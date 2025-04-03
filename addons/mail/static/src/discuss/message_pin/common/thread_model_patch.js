@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { rpc } from "@web/core/network/rpc";
@@ -10,7 +10,7 @@ patch(Thread.prototype, {
 
         /** @type {'loaded'|'loading'|'error'|undefined} */
         this.pinnedMessagesState = undefined;
-        this.pinnedMessages = Record.many("mail.message", {
+        this.pinnedMessages = fields.Many("mail.message", {
             compute() {
                 return this.allMessages.filter((m) => m.pinned_at);
             },

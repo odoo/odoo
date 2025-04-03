@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { rpc } from "@web/core/network/rpc";
@@ -220,13 +220,13 @@ export class Rtc extends Record {
     /** @type {Map<number, number>} timeoutId by sessionId for download pausing delay */
     downloadTimeouts = new Map();
     /** @type {{urls: string[]}[]} */
-    iceServers = Record.attr(undefined, {
+    iceServers = fields.Attr(undefined, {
         compute() {
             return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
         },
     });
-    localSession = Record.one("discuss.channel.rtc.session");
-    selfSession = Record.one("discuss.channel.rtc.session", {
+    localSession = fields.One("discuss.channel.rtc.session");
+    selfSession = fields.One("discuss.channel.rtc.session", {
         compute() {
             return (
                 this.localSession ||
@@ -234,7 +234,7 @@ export class Rtc extends Record {
             );
         },
     });
-    channel = Record.one("Thread", {
+    channel = fields.One("Thread", {
         compute() {
             if (this.state.channel) {
                 return this.state.channel;
@@ -304,7 +304,7 @@ export class Rtc extends Record {
         return Boolean(this.localSession);
     }
 
-    callActions = Record.attr([], {
+    callActions = fields.Attr([], {
         compute() {
             return callActionsRegistry
                 .getEntries()
