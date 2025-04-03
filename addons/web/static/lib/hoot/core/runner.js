@@ -987,7 +987,14 @@ export class Runner {
                 if (timeout && !this.debug) {
                     // Set timeout
                     timeoutId = setTimeout(
-                        () => reject(new HootError(`test timed out after ${timeout} milliseconds`)),
+                        () =>
+                            reject(
+                                new HootError(
+                                    `test ${stringify(
+                                        test.name
+                                    )} timed out after ${timeout} milliseconds`
+                                )
+                            ),
                         timeout
                     );
                 }
