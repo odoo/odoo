@@ -18,6 +18,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 /**
  * @typedef CardData
@@ -69,6 +70,8 @@ export class Call extends Component {
             browser.clearTimeout(this.overlayTimeout);
         });
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
+        useHotkey("shift+d", () => this.rtc.toggleDeafen());
+        useHotkey("shift+m", () => this.rtc.toggleMicrophone());
     }
 
     get isActiveCall() {

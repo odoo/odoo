@@ -5,10 +5,11 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useCallActions } from "./call_actions";
+import { useCallActions } from "@mail/discuss/call/common/call_actions";
+import { CallActionButton } from "@mail/discuss/call/common/call_action_button";
 
 export class CallActionList extends Component {
-    static components = { Dropdown, DropdownItem };
+    static components = { Dropdown, DropdownItem, CallActionButton };
     static props = ["thread", "fullscreen", "compact?"];
     static template = "discuss.CallActionList";
 
