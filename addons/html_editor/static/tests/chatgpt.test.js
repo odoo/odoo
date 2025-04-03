@@ -142,6 +142,16 @@ test("Translate/ChatGPT should be disabled if selection spans across non editabl
     await animationFrame();
     await tick();
     expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
+
+    setContent(el, '<div>a[b</div><div>c]d</div><div class="oe_unbreakable">e</div>');
+    await animationFrame();
+    await tick();
+    expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
+
+    setContent(el, '<div>a[b</div><div>cd</div><div class="oe_unbreakable">e]</div>');
+    await animationFrame();
+    await tick();
+    expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
 });
 
 test("ChatGPT alternatives dialog generates alternatives for each button", async () => {
