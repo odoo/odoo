@@ -1275,8 +1275,9 @@ export class Callbacks {
      */
     add(type, callback, once) {
         if (callback instanceof Promise) {
+            const promiseValue = callback;
             callback = () =>
-                Promise.resolve(callback).then((result) => {
+                Promise.resolve(promiseValue).then((result) => {
                     if (typeof result === "function") {
                         result();
                     }
