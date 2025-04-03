@@ -3311,6 +3311,7 @@ class AccountMoveLine(models.Model):
         return {
             'name': self.name,
             'account_id': self.account_id.id,
+            # TODO flg
             # 'currency_id': self.currency_id.id,
             # 'amount_currency': self.amount_currency,
             'balance': self.balance,
