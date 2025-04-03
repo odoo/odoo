@@ -370,6 +370,18 @@
         />
     </record>
 
+    <record id="payment_provider_redsys" model="payment.provider">
+        <field name="name">Redsys</field>
+        <field name="image_128" type="base64" file="payment_redsys/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_redsys"/>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_bizum'),
+                         ref('payment.payment_method_card'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_provider_sepa_direct_debit" model="payment.provider">
         <field name="name">SEPA Direct Debit</field>
         <field name="sequence">20</field>
