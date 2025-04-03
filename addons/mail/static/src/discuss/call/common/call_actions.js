@@ -1,9 +1,34 @@
-import { useComponent, useState } from "@odoo/owl";
+import { useComponent, useState, useExternalListener } from "@odoo/owl";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
+
+const keyboardShortcuts = {};
+/**
+ * Binds a keyboard shortcut to a specific action for a given component.
+ *
+ * @param {string} shortcutId - A unique identifier for the keyboard shortcut.
+ * @param {string} keyCode - The code of the key to bind the action to.
+ * @param {Object} action - The action to be executed when the shortcut is triggered.
+ * @param {Object} component - The component context in which the action operates.
+ */
+ function bindKeyboardShortcut(shortcutId, keyCode, action, component) {
+     if (!keyboardShortcuts[shortcutId]) {
+         const onKeyDown = (ev) => {
+             if (ev.ctrlKey && ev.shiftKey && ev.code === keyCode && component.rtc?.selfSession) {
+                 ev.preventDefault();
+                 ev.stopPropagation();
+                 action.select(component);
+             }
+         };
+         keyboardShortcuts[shortcutId] = { id: shortcutId, action, component };
+         useExternalListener(document, "keydown", onKeyDown, { capture: true });
+     } else {
+         Object.assign(keyboardShortcuts[shortcutId], { action, component });
+     }
+ }
 
 callActionsRegistry
     .add("mute", {
@@ -25,6 +50,10 @@ callActionsRegistry
                 component.rtc.mute();
             }
         },
+        setup(action) {
+            const component = useComponent();
+            bindKeyboardShortcut("toggle-mute", "KeyM", action, component);
+        },
         sequence: 10,
     })
     .add("deafen", {
@@ -36,6 +65,10 @@ callActionsRegistry
         activeClass: "text-danger",
         select: (component) =>
             component.rtc.selfSession.is_deaf ? component.rtc.undeafen() : component.rtc.deafen(),
+        setup(action) {
+            const component = useComponent();
+            bindKeyboardShortcut("toggle-deafen", "KeyD", action, component);
+        },
         sequence: 20,
     })
     .add("camera-on", {
@@ -146,15 +179,21 @@ function transformAction(component, id, action) {
                 ? action.sequence(component)
                 : action.sequence;
         },
+        /** Component setup to execute when this action is registered. */
+        setup: action.setup,
     };
 }
 
 export function useCallActions() {
     const component = useComponent();
     const state = useState({ actions: [] });
-    state.actions = callActionsRegistry
+    const actions = callActionsRegistry
         .getEntries()
         .map(([id, action]) => transformAction(component, id, action));
+    for (const action of actions) {
+        action.setup?.(action);
+    }
+    state.actions = actions;
     return {
         get actions() {
             return state.actions
