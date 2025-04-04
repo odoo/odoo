@@ -128,6 +128,7 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
         vals = {
             'name': product.name or order_line.name,
             'description': order_line.name or product.description,
+            'sellers_item_identification': product.default_code,
             'standard_item_identification': product.barcode,
             'classified_tax_category_vals': self._get_tax_category_vals(order, order_line)
         }
