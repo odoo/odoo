@@ -103,7 +103,12 @@ class MailAlias(models.Model):
         domain should match the one used on the related record. """
 
         # in sudo, to be able to read alias_parent_model_id (ir.model)
-        tocheck = self.sudo().filtered(lambda domain: domain.alias_domain_id.company_ids)
+        tocheck = self.sudo().filtered(lambda alias: alias.alias_domain_id.company_ids)
+        # transient check, mainly for tests / install
+        tocheck = tocheck.filtered(lambda alias:
+            (not alias.alias_model_id.model or alias.alias_model_id.model in self.env) and
+            (not alias.alias_parent_model_id.model or alias.alias_parent_model_id.model in self.env)
+        )
         if not tocheck:
             return
 
