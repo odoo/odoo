@@ -23,7 +23,7 @@ function getTemplate(disabled = false) {
                                     <div class="js_subscribe_wrap">
                                         <div class="input-group">
                                             <input type="email" name="email" class="js_subscribe_value form-control" ${disabled ? "disabled='true'" : ""}>
-                                            <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+                                            <a role="button" href="#test" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
                                         </div>
                                     </div>
                                 </div>

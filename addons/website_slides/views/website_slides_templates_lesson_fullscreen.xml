@@ -187,9 +187,9 @@
                                 t-att-data-is-member-or-invited="is_member_or_invited"
                                 t-att-data-session-answers="session_answers"
                                 t-att-data-website-share-url="slide.website_share_url">
-                                <a t-if="can_access" class="o_wslides_fs_slide_quiz o_wslides_fs_slide_name" href="#" t-att-index="i">
+                                <button t-if="can_access" class="o_wslides_fs_slide_quiz o_wslides_fs_slide_name border-0 bg-transparent" t-att-index="i">
                                     <i class="fa fa-flag-checkered text-warning"/>Quiz
-                                </a>
+                                </button>
                                 <span t-else="" class="text-600">
                                     <i class="fa fa-flag-checkered text-warning"/>Quiz
                                 </span>
