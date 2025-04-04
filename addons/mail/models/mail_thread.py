@@ -4746,7 +4746,7 @@ class MailThread(models.AbstractModel):
         message._bus_send_store(message, res)
 
     def _clean_empty_message(self, message):
-        pass
+        message.link_preview_ids._unlink_and_notify()
 
     def _get_store_message_update_extra_fields(self):
         return []
