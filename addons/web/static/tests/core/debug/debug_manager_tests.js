@@ -823,6 +823,7 @@ QUnit.module("DebugMenu", (hooks) => {
         registry.category("debug").category("form").add("setDefaults", setDefaults);
 
         const serverData = getActionManagerServerData();
+        serverData.models.partner.fields.description = { string: "Description", type: "html" };
         serverData.actions[1234] = {
             id: 1234,
             xml_id: "action_1234",
@@ -833,7 +834,17 @@ QUnit.module("DebugMenu", (hooks) => {
             views: [[18, "form"]],
         };
         const fooValue = "12".repeat(250);
+        serverData.views["partner,18,form"] = `
+            <form>
+                <group>
+                    <field name="display_name"/>
+                    <field name="description"/>
+                    <field name="foo"/>
+                </group>
+            </form>
+        `;
         serverData.models.partner.records[0].foo = fooValue;
+        serverData.models.partner.records[0].description = fooValue;
         const mockRPC = async (route, args) => {
             if (args.method === "check_access_rights") {
                 return Promise.resolve(true);
@@ -860,6 +871,8 @@ QUnit.module("DebugMenu", (hooks) => {
             "": "",
             display_name: "Display Name = First record",
             foo: "Foo = 121212121212121212121212121212121212121212121212121212121...",
+            description:
+                "Description = 121212121212121212121212121212121212121212121212121212121...",
         });
 
         select.value = "foo";
