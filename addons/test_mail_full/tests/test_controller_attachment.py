@@ -35,3 +35,19 @@ class TestPortalAttachmentController(MailControllerAttachmentCommon):
                 (self.user_admin, True, sign),
             ),
         )
+
+    def test_mail_attachment_company(self):
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        record = self.env['mail.test.attachment.company'].create({})
+
+        self.env.user.company_ids = self.company_2 | self.company_3
+        self.opener.cookies['cids'] = f'{self.company_2.id}-{self.company_3.id}'
+
+        attachment_id = self._upload_attachment(record, {})
+        attachment = self.env['ir.attachment'].sudo().browse(attachment_id)
+        self.assertEqual(attachment.company_id, self.company_2, "Attachment should be assigned to company_2")
+
+        record.company_id = self.company_3
+        attachment_id = self._upload_attachment(record, {})
+        attachment = self.env['ir.attachment'].sudo().browse(attachment_id)
+        self.assertEqual(attachment.company_id, self.company_3, "Attachment should be assigned to company_3")
