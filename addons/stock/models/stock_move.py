@@ -52,7 +52,7 @@ class StockMove(models.Model):
         'move_id', 'template_attribute_value_id',
         string="Never attribute Values"
     )
-    description_picking = fields.Text('Description of Picking')
+    description_picking = fields.Text('Description of Picking', readonly=False, store=True, compute='_compute_description_picking')
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
         digits=0, store=True, compute_sudo=True,
@@ -2494,3 +2494,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         return self.location_dest_id.usage in ('customer', 'supplier') or (
             self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id
         )
+
+    @api.depends('description_picking')
+    def _compute_description_picking(self):
+        for move in self:
+            move.description_picking = move.product_id.description_picking
