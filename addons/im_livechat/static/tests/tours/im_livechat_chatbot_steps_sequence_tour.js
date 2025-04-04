@@ -25,7 +25,7 @@ const commonSteps = [
         run: "edit Test Chatbot Sequence",
     },
     {
-        trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',
+        trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add button',
         run: "click",
     },
     {
@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
             run: 'drag_and_drop(div[name="script_step_ids"] tr:nth-child(2))',
         },
         {
-            trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',
+            trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add button',
             run: "click",
         },
         {

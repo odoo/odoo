@@ -2732,7 +2732,7 @@ test(`add record in list grouped by m2m`, async () => {
     await contains(`.o_group_header`).click();
     expect(`.o_data_row`).toHaveCount(3);
 
-    await contains(`.o_group_field_row_add a`).click();
+    await contains(`.o_group_field_row_add button`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_selected_row .o_field_tags .o_tag`).toHaveCount(1);
     expect(`.o_selected_row .o_field_tags .o_tag`).toHaveText("Value 1");
@@ -3274,7 +3274,7 @@ test(`editable list view: click on last element after creation empty new line`, 
         `,
         resId: 1,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_data_row:last td.o_list_char`).click();
     // This test ensure that they aren't traceback when clicking on the last row.
     expect(`.o_data_row`).toHaveCount(2, { message: "list should have exactly 2 rows" });
@@ -3374,13 +3374,13 @@ test(`grouped editable list: edit a record and click on "Add a line"`, async () 
     // edit an existing row and click on "Add a line" => edited record should not be discarded
     await contains(".o_data_row .o_data_cell").click();
     await contains(".o_data_row .o_data_cell .o_field_widget[name=foo] input").edit("coucou");
-    await contains(".o_group_field_row_add a").click();
+    await contains(".o_group_field_row_add button").click();
     expect(".o_data_row .o_data_cell:first").toHaveText("coucou");
     expect(".o_data_row").toHaveCount(3);
 
     // edit the new line, and click again on "Add a line" => created record should not be discarded
     await contains(".o_data_row .o_data_cell .o_field_widget[name=foo] input").edit("new line");
-    await contains(".o_group_field_row_add a").click();
+    await contains(".o_group_field_row_add button").click();
     expect(".o_data_row").toHaveCount(4);
 });
 
@@ -6498,7 +6498,7 @@ test(`use default_order on editable tree: sort on save`, async () => {
     });
     expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual(["Value 1", "Value 3"]);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_field_widget[name=o2m] .o_field_widget input`).edit("Value 2");
     await contains(`.o_form_view`).click();
     expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual([
@@ -6539,7 +6539,7 @@ test(`use default_order on editable tree: sort on demand`, async () => {
     });
     expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual(["Value 1", "Value 3"]);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_field_widget[name=o2m] .o_field_widget input`).edit("Value 2");
     await contains(`.o_form_view`).click();
     expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual([
@@ -11908,7 +11908,7 @@ test(`editable form alongside html field: click out to unselect the row`, async 
     });
     expect(`.o_data_row`).toHaveCount(0);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.o_data_row`).toHaveCount(1);
     expect(`.o_data_row`).toHaveClass("o_selected_row");
 
@@ -12895,7 +12895,7 @@ test(`add and discard a record in a multi-level grouped list view`, async () => 
     expect(`.o_data_row`).toHaveCount(1);
 
     // add a record to first subgroup
-    await contains(`.o_group_field_row_add a`).click();
+    await contains(`.o_group_field_row_add button`).click();
     expect(`.o_data_row`).toHaveCount(2);
 
     // discard
@@ -13846,14 +13846,14 @@ test(`editable grouped list: adding a second record pass the first in readonly`,
     expect(`.o_group_header:eq(1)`).toHaveText("Yes (3)");
 
     // add a row in first group
-    await contains(`.o_group_field_row_add:eq(0) a`).click();
+    await contains(`.o_group_field_row_add:eq(0) button`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_group_header:eq(0)`).toHaveText("No (2)");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // add a row in second group
-    await contains(`.o_group_field_row_add:eq(1) a`).click();
+    await contains(`.o_group_field_row_add:eq(1) button`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_group_header:eq(1)`).toHaveText("Yes (4)");
@@ -13885,7 +13885,7 @@ test(`removing a groupby while adding a line from list`, async () => {
     // expand group
     await contains(`th.o_group_name`).click();
     expect(`.o_selected_row`).toHaveCount(0);
-    await contains(`td.o_group_field_row_add a`).click();
+    await contains(`td.o_group_field_row_add button`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     await contains(`.o_searchview_facet .o_facet_remove`).click();
     expect(`.o_selected_row`).toHaveCount(0);
@@ -13968,7 +13968,7 @@ test("cell-level keyboard navigation in editable grouped list", async () => {
     await press("ArrowDown");
     await press("ArrowDown");
 
-    expect(`.o_group_field_row_add a`).toBeFocused();
+    expect(`.o_group_field_row_add button`).toBeFocused();
 
     await press("ArrowDown");
 
@@ -13987,16 +13987,16 @@ test("cell-level keyboard navigation in editable grouped list", async () => {
 
     await press("ArrowDown");
 
-    expect(`.o_group_field_row_add:eq(1) a`).toBeFocused();
+    expect(`.o_group_field_row_add:eq(1) button`).toBeFocused();
 
     await press("ArrowDown");
 
-    expect(`.o_group_field_row_add:eq(1) a`).toBeFocused();
+    expect(`.o_group_field_row_add:eq(1) button`).toBeFocused();
 
     // default Enter on a A tag
     await press("Enter");
     await animationFrame();
-    await click(`.o_group_field_row_add a:eq(1)`);
+    await click(`.o_group_field_row_add button:eq(1)`);
     await animationFrame();
 
     expect(`.o_data_row:eq(4) [name=foo] input`).toBeFocused();
@@ -14010,7 +14010,7 @@ test("cell-level keyboard navigation in editable grouped list", async () => {
     await press("Escape");
     await animationFrame();
 
-    expect(`.o_group_field_row_add:eq(1) a`).toBeFocused();
+    expect(`.o_group_field_row_add:eq(1) button`).toBeFocused();
 
     // come back to the top
     for (let i = 0; i < 9; i++) {
@@ -14078,7 +14078,7 @@ test("cell-level keyboard navigation in editable grouped list", async () => {
 
     await press("ArrowDown");
 
-    expect(`.o_group_field_row_add a`).toBeFocused();
+    expect(`.o_group_field_row_add button`).toBeFocused();
 
     await press("ArrowUp");
 
@@ -14177,7 +14177,7 @@ test(`add a new row in grouped editable="top" list`, async () => {
     });
 
     await contains(`.o_group_header`).click(); // open group "No"
-    await contains(`.o_group_field_row_add a`).click(); // add a new row
+    await contains(`.o_group_field_row_add button`).click(); // add a new row
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_selected_row [name=foo] input`).toBeFocused({
         message: "The first input of the line should have the focus",
@@ -14188,7 +14188,7 @@ test(`add a new row in grouped editable="top" list`, async () => {
     await contains(`.o_group_header:eq(1)`).click();
     expect(`.o_data_row`).toHaveCount(4);
 
-    await contains(`.o_group_field_row_add a:eq(1)`).click(); // create row in second group "Yes"
+    await contains(`.o_group_field_row_add button:eq(1)`).click(); // create row in second group "Yes"
     expect(`.o_group_name:eq(1)`).toHaveText("Yes (4)", {
         message: "group should have correct name and count",
     });
@@ -14209,7 +14209,7 @@ test(`add a new row in grouped editable="bottom" list`, async () => {
         groupBy: ["bar"],
     });
     await contains(`.o_group_header`).click(); // open group "No"
-    await contains(`.o_group_field_row_add a`).click(); // add a new row
+    await contains(`.o_group_field_row_add button`).click(); // add a new row
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row`).toHaveCount(2);
 
@@ -14217,7 +14217,7 @@ test(`add a new row in grouped editable="bottom" list`, async () => {
     await contains(`.o_group_header:eq(1)`).click();
     expect(`.o_data_row`).toHaveCount(4);
 
-    await contains(`.o_group_field_row_add a:eq(1)`).click(); // create row in second group "Yes"
+    await contains(`.o_group_field_row_add button:eq(1)`).click(); // create row in second group "Yes"
     expect(`.o_data_row:eq(4)`).toHaveClass("o_selected_row");
 
     await contains(`.o_selected_row [name=foo] input`).edit("pla", { confirm: false });
@@ -14254,7 +14254,7 @@ test("editable grouped list: add row with edited row", async () => {
     expect(".o_data_row").toHaveCount(1);
     await contains(".o_data_row .o_data_cell").click();
     await contains(".o_selected_row [name=foo] input").edit("some change");
-    await contains(".o_group_field_row_add a").click();
+    await contains(".o_group_field_row_add button").click();
     expect(".o_data_row").toHaveCount(2);
     expect(".o_data_row:first .o_data_cell").toHaveText("some change");
 });
@@ -14273,10 +14273,10 @@ test(`add and discard a line through keyboard navigation without crashing`, asyn
     expect(`.o_data_row`).toHaveCount(3);
 
     // Can trigger ENTER on "Add a line" link ?
-    expect(`.o_group_field_row_add a`).toHaveCount(1);
+    expect(`.o_group_field_row_add button`).toHaveCount(1);
 
-    queryFirst(`.o_group_field_row_add a`).focus();
-    expect(`.o_group_field_row_add a`).toBeFocused();
+    queryFirst(`.o_group_field_row_add button`).focus();
+    expect(`.o_group_field_row_add button`).toBeFocused();
     await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(4);
@@ -14319,7 +14319,7 @@ test(`editable grouped list with create="0"`, async () => {
     });
 
     await contains(`.o_group_header`).click(); // open group
-    expect(`.o_group_field_row_add a`).toHaveCount(0, {
+    expect(`.o_group_field_row_add button`).toHaveCount(0, {
         message: "Add a line should not be available in readonly",
     });
 });
@@ -14362,7 +14362,7 @@ test(`add a new row in (selection) grouped editable list`, async () => {
         groupBy: ["priority"],
     });
     await contains(`.o_group_header`).click(); // open group
-    await contains(`.o_group_field_row_add a`).click(); // add a new row
+    await contains(`.o_group_field_row_add button`).click(); // add a new row
     await contains(`[name=foo] input`).edit("xyz", { confirm: false }); // make record dirty
     await contains(`.o_list_view`).click(); // unselect row
     expect.verifySteps(["1"]);
@@ -14371,7 +14371,7 @@ test(`add a new row in (selection) grouped editable list`, async () => {
     });
 
     await contains(`.o_group_header:eq(1)`).click();
-    await contains(`.o_group_field_row_add a:eq(1)`).click(); // create row in second group
+    await contains(`.o_group_field_row_add button:eq(1)`).click(); // create row in second group
     await contains(`.o_list_view`).click(); // unselect row
     expect(`.o_data_row:eq(5) .o_data_cell:eq(1)`).toHaveText("Medium", {
         message: "should have a column name with a value from the groupby",
@@ -14396,7 +14396,7 @@ test(`add a new row in (m2o) grouped editable list`, async () => {
         groupBy: ["m2o"],
     });
     await contains(`.o_group_header`).click(); // open group
-    await contains(`.o_group_field_row_add a`).click(); // add a new row
+    await contains(`.o_group_field_row_add button`).click(); // add a new row
     await contains(`.o_list_view`).click(); // unselect row
     expect(`.o_data_row:eq(0) .o_data_cell:eq(1)`).toHaveText("Value 1", {
         message: "should have a column name with a value from the groupby",
@@ -14404,7 +14404,7 @@ test(`add a new row in (m2o) grouped editable list`, async () => {
     expect.verifySteps(["1"]);
 
     await contains(`.o_group_header:eq(1)`).click();
-    await contains(`.o_group_field_row_add a:eq(1)`).click(); // create row in second group
+    await contains(`.o_group_field_row_add button:eq(1)`).click(); // create row in second group
     await contains(`.o_list_view`).click(); // unselect row
     expect(`.o_data_row:eq(3) .o_data_cell:eq(1)`).toHaveText("Value 2", {
         message: "should have a column name with a value from the groupby",
@@ -15847,7 +15847,7 @@ test(`create a record with the correct context in a group`, async () => {
         },
     });
     await contains(`.o_group_name:eq(1)`).click();
-    await contains(`.o_group_field_row_add a`).click();
+    await contains(`.o_group_field_row_add button`).click();
     await contains(`[name='foo'] input`).edit("blop", { confirm: false });
     expect(`.o_selected_row`).toHaveCount(1);
 
@@ -17436,7 +17436,7 @@ test(`search nested many2one field with early option selection`, async () => {
             </form>
         `,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
 
     await edit("alu", { confirm: false });
     await runAllTimers();

@@ -649,32 +649,28 @@ test("resIds should contains only 1 id", async () => {
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
-    onRpc("get_installed", () => {
-        return [
-            ["en_US", "English"],
-            ["fr_BE", "French (Belgium)"],
-        ];
-    });
-    onRpc("get_field_translations", () => {
-        return [
-            [
-                {
-                    lang: "en_US",
-                    source: "My little Foo Value",
-                    value: "My little Foo Value",
-                },
-                {
-                    lang: "fr_BE",
-                    source: "My little Foo Value",
-                    value: "Valeur de mon petit Foo",
-                },
-            ],
+    onRpc("get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+    onRpc("get_field_translations", () => [
+        [
             {
-                translation_type: "char",
-                translation_show_source: true,
+                lang: "en_US",
+                source: "My little Foo Value",
+                value: "My little Foo Value",
             },
-        ];
-    });
+            {
+                lang: "fr_BE",
+                source: "My little Foo Value",
+                value: "Valeur de mon petit Foo",
+            },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: true,
+        },
+    ]);
     onRpc("execute", ({ args }) => {
         expect(args[0].length).toBe(1);
         return true;
@@ -1608,7 +1604,7 @@ test("settings can contain one2many fields", async () => {
         `,
     });
 
-    await click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add button");
     await animationFrame();
     await click(".modal-body input");
     await edit("Added Task");

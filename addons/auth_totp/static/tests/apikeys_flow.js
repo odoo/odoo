@@ -12,7 +12,7 @@ const openUserPreferenceSecurity = () => [{
     run: 'click',
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
+    trigger: 'button[role=tab]:contains("Account Security")',
     run: 'click',
 }]
 
@@ -79,7 +79,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: "click",
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
+    trigger: 'button[role=tab]:contains("Account Security")',
     run: 'click',
 }, {
     content: "delete key",
@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: "click",
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
+    trigger: 'button[role=tab]:contains("Account Security")',
     run: 'click',
 }, {
     content: "Check that there's no more keys",

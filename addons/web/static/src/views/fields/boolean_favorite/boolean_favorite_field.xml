@@ -3,10 +3,10 @@
 
     <t t-name="web.BooleanFavoriteField">
         <div class="o_favorite" t-att-class="{'o_disabled': props.readonly}" t-on-click.prevent.stop="update">
-            <a href="#" t-att-class="{'pe-none' : props.readonly}">
+            <button t-att-class="{'pe-none' : props.readonly, 'border-0 bg-transparent p-0' : props.noLabel, 'btn btn-link fw-normal p-0': !props.noLabel}">
                 <i t-att-class="iconClass" role="img" t-att-title="label" t-att-aria-label="label"/>
                 <t t-if="!props.readonly and !props.noLabel" t-esc="label"/>
-            </a>
+            </button>
         </div>
     </t>
 

@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () => [
     {
-        trigger: '.o_field_x2many_list_row_add > a',
+        trigger: '.o_field_x2many_list_row_add > button',
         run: "click",
     },
     {
@@ -97,7 +97,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () =
 
 registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () => [
     {
-        trigger: '.o_field_x2many_list_row_add > a',
+        trigger: '.o_field_x2many_list_row_add > button',
         run: "click",
     },
     {
@@ -302,7 +302,7 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
             trigger: ".modal-content",
         },
         {
-            trigger: ".modal-content .o_field_x2many_list_row_add > a",
+            trigger: ".modal-content .o_field_x2many_list_row_add > button",
             run: "click",
         },
         {
@@ -325,7 +325,7 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
                 ".modal-content .o_data_row:nth-child(1):has(.o_data_cell[name=quant_id]:contains(WH/Stock - LOT001)):has(.o_data_cell[name=quantity]:contains(0.00))",
         },
         {
-            trigger: ".modal-content .o_field_x2many_list_row_add > a",
+            trigger: ".modal-content .o_field_x2many_list_row_add > button",
             run: "click",
         },
         {
@@ -402,7 +402,7 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
             trigger: ".modal-content .o_list_number:contains(18.00)",
         },
         {
-            trigger: ".modal-content .o_field_x2many_list_row_add > a",
+            trigger: ".modal-content .o_field_x2many_list_row_add > button",
             run: "click",
         },
         {
@@ -489,7 +489,7 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
             trigger: ".modal-content .o_list_number:contains(17.00)",
         },
         {
-            trigger: ".modal-content .o_field_x2many_list_row_add > a",
+            trigger: ".modal-content .o_field_x2many_list_row_add > button",
             run: "click",
         },
         {

@@ -4302,7 +4302,7 @@ test("Do not open record when clicking on `a` with `href`", async () => {
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
-                        <a class="o_test_link" href="#">test link</a>
+                        <a class="o_test_link" href="#test">test link</a>
                     </t>
                 </templates>
             </kanban>`,
@@ -7948,7 +7948,7 @@ test("edit the kanban color with the colorpicker", async () => {
         })
     ).toHaveCount(12, { message: "the color picker should have 12 children (the colors)" });
 
-    await contains(".o_kanban_colorpicker a.o_kanban_color_9").click();
+    await contains(".o_kanban_colorpicker button.o_kanban_color_9").click();
 
     // should write on the color field
     expect.verifySteps(["write-color-9"]);
@@ -7980,7 +7980,7 @@ test("kanban with colorpicker and node with color attribute", async () => {
     });
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_3");
     await toggleKanbanRecordDropdown(0);
-    await contains(`.o_kanban_colorpicker li[title="Raspberry"] a.o_kanban_color_9`).click();
+    await contains(`.o_kanban_colorpicker li[title="Raspberry"] button.o_kanban_color_9`).click();
     // should write on the color field
     expect.verifySteps(["write-color-9"]);
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
@@ -8012,7 +8012,7 @@ test("edit the kanban color with translated colors resulting in the same terms",
     });
 
     await toggleKanbanRecordDropdown(0);
-    await contains(".o_kanban_colorpicker a.o_kanban_color_9").click();
+    await contains(".o_kanban_colorpicker button.o_kanban_color_9").click();
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 
@@ -9861,7 +9861,7 @@ test("keynav: down, with focus is inside a card", async () => {
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
-                        <a href="#" class="o-this-is-focussable">ho! this is focussable</a>
+                        <a href="#test" class="o-this-is-focussable">ho! this is focussable</a>
                     </t>
                 </templates>
             </kanban>`,

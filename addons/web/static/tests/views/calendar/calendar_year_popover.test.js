@@ -91,7 +91,7 @@ test(`click on create button`, async () => {
 test(`group records`, async () => {
     await start();
     expect(`.o_cw_body > div`).toHaveCount(4);
-    expect(`.o_cw_body > a`).toHaveCount(1);
+    expect(`.o_cw_body > button`).toHaveCount(1);
     expect(queryAllTexts`.o_cw_body > div`).toEqual([
         "July 16, 2021\nR1\n14:00\nR2",
         "July 13-17, 2021\nR4",
@@ -108,8 +108,8 @@ test(`click on record`, async () => {
         records: [FAKE_RECORDS[3]],
         editRecord: () => expect.step("edit"),
     });
-    expect(`.o_cw_body a.o_cw_popover_link`).toHaveCount(1);
+    expect(`.o_cw_body button.o_cw_popover_link`).toHaveCount(1);
 
-    await contains(`.o_cw_body a.o_cw_popover_link`).click();
+    await contains(`.o_cw_body button.o_cw_popover_link`).click();
     expect.verifySteps(["edit"]);
 });
