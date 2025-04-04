@@ -695,6 +695,8 @@ async function mail_message_update_content(request) {
     const BusBus = this.env["bus.bus"];
     /** @type {import("mock_models").IrAttachment} */
     const IrAttachment = this.env["ir.attachment"];
+    /** @type {import("mock_models").MailLinkPreview} */
+    const MailLinkPreview = this.env["mail.link.preview"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
@@ -722,6 +724,9 @@ async function mail_message_update_content(request) {
         );
         msg_values.attachment_ids = attachment_ids;
     }
+    if (body === "") {
+        MailLinkPreview.unlink(message.link_preview_ids);
+    }
     if (!body && attachment_ids.length === 0) {
         msg_values.partner_ids = false;
         msg_values.parent_id = false;
@@ -738,6 +743,7 @@ async function mail_message_update_content(request) {
                 this.env["res.partner"].browse(message.partner_ids),
                 makeKwArgs({ fields: ["avatar_128", "name"] })
             ),
+            link_preview_ids: message.link_preview_ids,
             parentMessage: mailDataHelpers.Store.one(MailMessage.browse(message.parent_id)),
         }).get_result()
     );
