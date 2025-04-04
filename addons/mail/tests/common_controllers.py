@@ -9,6 +9,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.http import Request
 from odoo.tests import JsonRpcException
 from odoo.tools import file_open, mute_logger
+from odoo.tools.misc import limited_field_access_token
 
 
 class MessagePostSubTestData:
@@ -86,7 +87,7 @@ class MailControllerCommon(HttpCase, MailCommon):
 
 class MailControllerAttachmentCommon(MailControllerCommon):
 
-    def _execute_subtests(self, document, subtests):
+    def _execute_subtests_upload(self, document, subtests):
         for data_user, allowed, *args in subtests:
             route_kw = args[0] if args else {}
             user, guest = self._authenticate_pseudo_user(data_user)
@@ -95,13 +96,32 @@ class MailControllerAttachmentCommon(MailControllerCommon):
                     attachment_id = self._upload_attachment(document, route_kw)
                     attachment = self.env["ir.attachment"].sudo().search([("id", "=", attachment_id)])
                     self.assertTrue(attachment)
-                    self._delete_attachment(attachment, route_kw)
-                    self.assertFalse(attachment.exists())
                 else:
                     with self.assertRaises(
                         HTTPError, msg="upload attachment should raise NotFound"
                     ):
                         self._upload_attachment(document, route_kw)
+
+    def _execute_subtests_delete(self, subtests, thread=None, message=None):
+        for data_user, token, allowed in subtests:
+            user, guest = self._authenticate_pseudo_user(data_user)
+            with self.subTest(user=user.name, guest=guest.name, token=token):
+                attachment = self.env["ir.attachment"].create({"name": "sample attachment"})
+                if thread:
+                    attachment.write(
+                        {
+                            "res_model": thread._name,
+                            "res_id": thread.id,
+                        }
+                    )
+                if message:
+                    message.write({"attachment_ids": [(6, 0, attachment.ids)]})
+                if allowed:
+                    self._delete_attachment(attachment, token)
+                    self.assertFalse(attachment.exists())
+                else:
+                    with self.assertRaises(JsonRpcException, msg="Wrong access token"):
+                        self._delete_attachment(attachment, token)
 
     def _upload_attachment(self, document, route_kw):
         with mute_logger("odoo.http"), file_open("addons/web/__init__.py") as file:
@@ -119,15 +139,19 @@ class MailControllerAttachmentCommon(MailControllerCommon):
             res.raise_for_status()
             return json.loads(res.content.decode("utf-8"))["data"]["ir.attachment"][0]["id"]
 
-    def _delete_attachment(self, attachment, route_kw):
-        self.make_jsonrpc_request(
-            route="/mail/attachment/delete",
-            params={
-                "attachment_id": attachment.id,
-                "access_token": attachment.access_token,
-                **route_kw,
-            },
-        )
+    def _delete_attachment(self, attachment, token):
+        with mute_logger("odoo.http"):
+            self.make_jsonrpc_request(
+                route="/mail/attachment/delete",
+                params={
+                    "attachment_id": attachment.id,
+                    "access_token": (
+                        limited_field_access_token(attachment, "as_author_access_token")
+                        if token
+                        else None
+                    ),
+                },
+            )
 
 
 class MailControllerBinaryCommon(MailControllerCommon):

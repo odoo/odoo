@@ -3,6 +3,7 @@ import json
 
 from odoo.exceptions import UserError
 from odoo.tests.common import users, HttpCase, tagged
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from odoo.addons.mail.controllers.thread import ThreadController
@@ -74,7 +75,6 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'res_model': 'mail.compose.message',
             'datas': 'test',
             'type': 'binary',
-            'access_token': 'azerty',
         })
 
         with MockRequest(self.env):
@@ -82,7 +82,9 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
                 'blog.post',
                 self.test_blog_post.id,
                 {'body': 'Test message blog post', 'attachment_ids': [attachment.id]},
-                attachment_tokens=[attachment.access_token]
+                attachment_tokens=[
+                    limited_field_access_token(attachment, "as_author_access_token")
+                ],
             )
 
         self.assertTrue(self.env['mail.message'].sudo().search(
@@ -93,7 +95,6 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'res_model': 'mail.compose.message',
             'datas': 'test',
             'type': 'binary',
-            'access_token': 'azerty',
         })
 
         with self.assertRaises(UserError), MockRequest(self.env):

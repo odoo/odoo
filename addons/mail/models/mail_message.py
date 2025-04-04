@@ -1100,6 +1100,9 @@ class MailMessage(models.Model):
                     not self.env.user._is_public() and current_partner in notifications_partners
                 )
                 data["trackingValues"] = displayed_tracking_ids._tracking_value_format()
+                if message.is_current_user_or_guest_author:
+                    # sudo: mail.message - reading attachments on accessible message is allowed
+                    store.add(message.sudo().attachment_ids, "as_author_access_token")
             store.add(message, data)
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)

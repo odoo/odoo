@@ -401,7 +401,7 @@ test("img file has proper src in discuss.channel", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(
-        `.o-mail-AttachmentImage[title='test.png'] img[data-src*='${getOrigin()}/discuss/channel/${channelId}/image/${attachmentId}?filename=test.png']`
+        `.o-mail-AttachmentImage[title='test.png'] img[data-src*='${getOrigin()}/web/image/${attachmentId}?filename=test.png']`
     );
 });
 

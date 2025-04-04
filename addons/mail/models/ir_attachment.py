@@ -4,7 +4,8 @@ import contextlib
 
 from odoo import _, models, SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError, UserError
-from odoo.tools import consteq
+from odoo.tools.misc import limited_field_access_token, verify_limited_field_access_token
+
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -25,10 +26,10 @@ class IrAttachment(models.Model):
                 try:
                     attachment.check('write')
                 except AccessError:
-                    if not access_token or not attachment_sudo.access_token or not consteq(attachment_sudo.access_token, access_token):
-                        message_sudo = self.env['mail.message'].sudo().search([('attachment_ids', 'in', attachment_sudo.ids)], limit=1)
-                        if not message_sudo or not message_sudo.is_current_user_or_guest_author:
-                            raise
+                    if not access_token or not verify_limited_field_access_token(
+                        attachment, "as_author_access_token", access_token
+                    ):
+                        raise
             except (AccessError, MissingError):
                 raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.", attachment.id))
 
@@ -76,12 +77,23 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
+    def _field_store_repr(self, field_name):
+        if field_name == "as_author_access_token":
+            return [
+                Store.Attr(
+                    "as_author_access_token",
+                    lambda a: limited_field_access_token(a, "as_author_access_token"),
+                ),
+            ]
+        return [field_name]
+
     def _to_store_defaults(self):
         return [
             "checksum",
             "create_date",
             "mimetype",
             "name",
+            Store.Attr("raw_access_token", lambda a: limited_field_access_token(a, "raw")),
             "res_name",
             Store.One("thread", [], as_thread=True),
             "type",

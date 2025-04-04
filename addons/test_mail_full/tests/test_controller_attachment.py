@@ -9,7 +9,7 @@ class TestPortalAttachmentController(MailControllerAttachmentCommon):
         """Test access to upload an attachment on portal"""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
         token, bad_token, sign, bad_sign, _ = self._get_sign_token_params(record)
-        self._execute_subtests(
+        self._execute_subtests_upload(
             record,
             (
                 (self.user_public, False),
