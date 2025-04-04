@@ -61,6 +61,15 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
 
     def test_self_order_language_changes(self):
         self.env['res.lang']._activate_lang('fr_FR')
+
+        product = self.env['product.product'].create({
+            'name': "Test Product",
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        product.with_context(lang='fr_FR').name = "Produit Test"
+
         self.pos_config.write({
             'self_ordering_available_language_ids': [Command.link(lang.id) for lang in self.env['res.lang'].search([])],
             'self_ordering_takeaway': False,
@@ -68,6 +77,11 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
             'self_ordering_pay_after': 'each'
         })
 
+        link = self.env['pos_self_order.custom_link'].search(
+            [('pos_config_ids', '=', self.pos_config.id), ('name', '=', 'Order Now')]
+        )
+        link.with_context(lang='fr_FR').name = "Commander maintenant"
+
         self.pos_config.with_user(self.pos_user).open_ui()
         self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_order_language_changes")
+        self.start_tour(self_route, 'self_order_language_changes')
