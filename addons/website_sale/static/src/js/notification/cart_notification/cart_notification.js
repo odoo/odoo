@@ -17,7 +17,7 @@ export class CartNotification extends Component {
                     id: Number,
                     linked_line_id: { type: Number, optional: true },
                     image_url: String,
-                    quantity: Number,
+                    added_qty: Number,
                     name: String,
                     description: { type: String, optional: true },
                     added_qty_price_total: Number,

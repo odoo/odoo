@@ -182,8 +182,7 @@ class Cart(PaymentPortal):
                     **kwargs,
                 )
                 line_ids[product_data['product_template_id']] = product_values['line_id']
-                added_qty_per_line[product_values['line_id']] = product['quantity']
-
+                added_qty_per_line[product_values['line_id']] = product_values['quantity']
 
         # The validity of a combo product line can only be checked after creating all of its combo
         # item lines.
@@ -192,7 +191,7 @@ class Cart(PaymentPortal):
             main_product_line._check_validity()
 
         values['notification_info'] = self._get_cart_notification_information(
-            order_sudo, line_ids.values(), added_qty_per_line
+            order_sudo, added_qty_per_line
         )
         values['notification_info']['warning'] = values.pop('warning', '')
         values['tracking_info'] = self._get_tracking_information(order_sudo, line_ids.values())
@@ -274,11 +273,11 @@ class Cart(PaymentPortal):
     def clear_cart(self):
         request.cart.order_line.unlink()
 
-    def _get_cart_notification_information(self, order, line_ids, added_qty_per_line):
+    def _get_cart_notification_information(self, order, added_qty_per_line):
         """ Get the information about the sales order lines to show in the notification.
 
         :param sale.order order: The sales order.
-        :param list[int] line_ids: The ids of the lines to display in the notification.
+        :param dict added_qty_per_line: The added qty per product.
         :rtype: dict
         :return: A dict with the following structure:
             {
@@ -293,7 +292,7 @@ class Cart(PaymentPortal):
                 }],
             }
         """
-        lines = order.order_line.filtered(lambda line: line.id in line_ids)
+        lines = order.order_line.filtered(lambda line: line.id in set(added_qty_per_line))
         if not lines:
             return {}
 
@@ -303,11 +302,10 @@ class Cart(PaymentPortal):
                 { # For the cart_notification
                     'id': line.id,
                     'image_url': order.website_id.image_url(line.product_id, 'image_128'),
-                    'quantity': line._get_displayed_quantity(),
                     'added_qty': added_qty_per_line[line.id],
                     'name': line.name_short,
                     'description': line._get_sale_order_line_multiline_description_variants(),
-                    'added_qty_price_total': line.price_unit *  added_qty_per_line[line.id],
+                    'added_qty_price_total': line.price_unit * added_qty_per_line[line.id],
                     **self._get_additional_cart_notification_information(line),
                 } for line in lines
             ],
