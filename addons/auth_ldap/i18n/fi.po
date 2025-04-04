@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"    Suodatin, jota käytetään käyttäjätilien etsimiseen LDAP-tietokannasta. Tämä on mikälainen tahansa LDAP-suodatin merkkijonomuodossa. Mikä tahansa `%s`-tunniste korvataan käyttäjän antamalla kirjautumistunnuksella (tunnisteella), suodattimen on sisällettävä vähintään yksi tällainen tunniste.\n"
+"    Suodatin, jota käytetään käyttäjätilien etsimiseen LDAP-tietokannasta. Tämä on sattumanvarainen LDAP-suodatin merkkijonomuodossa. Mikä tahansa `%s`-tunniste korvataan käyttäjän antamalla kirjautumistunnuksella (tunnisteella), suodattimen on sisällettävä vähintään yksi tällainen tunniste.\n"
 "\n"
 "    Suodattimen on annettava täsmälleen yksi (1) tulos, muutoin kirjautumista pidetään virheellisenä.\n"
 "\n"
@@ -54,7 +55,7 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Luo uusille LDAPin kautta kirjautuville käyttäjille paikallinen käyttäjä "
+"Luo uusille LDAP:in kautta kirjautuville käyttäjille paikallinen käyttäjä "
 "automaattisesti"
 
 #. module: auth_ldap
@@ -121,13 +122,13 @@ msgstr "ID"
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr "LDAP konfiguraatio"
+msgstr "LDAP-konfiguraatio"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
-msgstr "LDAP parametrit"
+msgstr "LDAP-parametrit"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
@@ -137,32 +138,32 @@ msgstr "LDAP-palvelin"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr "LDAP palvelimen osoite"
+msgstr "LDAP-palvelimen osoite"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr "LDAP palvelimen portti"
+msgstr "LDAP-palvelimen portti"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr "LDAP base"
+msgstr "LDAP-kanta"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr "LDAP binddn"
+msgstr "LDAP-binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
-msgstr "LDAP suodin"
+msgstr "LDAP-suodatin"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
-msgstr "LDAP salasana"
+msgstr "LDAP-salasana"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
@@ -185,7 +186,7 @@ msgstr "Kirjautumistiedot"
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
 "LDAP-kirjautumiseen ei löydetty paikallista käyttäjää, eikä uuden käyttäjän "
-"luonti ole käytössä"
+"luontia ei ole konfiguroitu"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -200,8 +201,8 @@ msgid ""
 " attempts will fail."
 msgstr ""
 "Vaadi suojattu TLS/SSL-salaus yhdistäessä LDAP-palvelimeen. Tämä valinta "
-"vaatii, että palvelimella on käytössä STARTTLS-protokolla päällä. Muussa "
-"tapauksessa kaikki yhteyspyynnöt tulevat epäonnistumaan."
+"vaatii, että palvelin käyttää STARTTLS-protokollaa. Muussa tapauksessa "
+"kaikki yhteyspyynnöt tulevat epäonnistumaan."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -216,7 +217,7 @@ msgstr "Palvelimen tiedot"
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr "Määrittele LDAP palvelin"
+msgstr "Määrittele LDAP-palvelin"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
@@ -229,7 +230,8 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
-"Salasana LDAP käyttäjätunnukselle jota käytetään hakuihin LDAP hakemistosta."
+"Salasana LDAP-palvelimen käyttäjätunnukselle jota käytetään hakuihin LDAP-"
+"hakemistosta."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
@@ -237,13 +239,13 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
-"Käyttäjätunnus, jota käytetään LDAP hakemistokyselyihin. Jätä tyhjäksi niin "
-"otetaan yhteyttä anonyymisti."
+"Käyttäjätunnus, jota käytetään LDAP-hakemistokyselyihin. Jätä tyhjäksi, jos "
+"haluat yhdistää anonyymisti."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
-msgstr "Käytä TLSää"
+msgstr "Käytä TLS-salausta"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users

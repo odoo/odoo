@@ -5,7 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Jesse Järvi <me@jessejarvi.net>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Jessica Jakara, 2025
 # 
 msgid ""
@@ -54,14 +54,14 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hyvä <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> pyysi sinua aktivoimaan kaksivaiheisen tunnistuksen tilisi suojaamiseksi.<br/><br/>\n"
-"        Kaksivaiheinen tunnistus (\"2FA\") on kaksinkertaisen todennuksen järjestelmä.\n"
-"        Ensimmäinen tehdään salasanallasi ja toinen koodilla, jonka saat erityisestä mobiilisovelluksesta.\n"
-"        Suosittuja ovat Authy, Google Authenticator tai Microsoft Authenticator.\n"
+"        <t t-out=\"user.name  or ''\"/> pyysi sinua aktivoimaan kaksivaiheisen tunnistautumisen tilisi suojaamiseksi.<br/><br/>\n"
+"        Kaksivaiheinen tunnistautuminen (\"2FA\") on kaksinkertainen todennusjärjestelmä.\n"
+"        Ensimmäinen tehdään salasanallasi ja toinen koodilla, jonka saat mobiilisovelluksesta.\n"
+"        Suosittuja mobiilisovelluksia ovat Authy, Google Authenticator tai Microsoft Authenticator.\n"
 "\n"
 "        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                Aktivoi kaksivaiheinen tunnistus\n"
+"                Aktivoi kaksivaiheinen tunnistautuminen\n"
 "            </a>\n"
 "        </p>\n"
 "    \n"
@@ -108,7 +108,7 @@ msgid ""
 "        "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"Arvoisa <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"Hyvä <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
 "<p>Tilillesi yritetään kirjautua uudelta laitteelta.</p>\n"
 "<ul>\n"
 "    <t t-set=\"not_available\">N/A</t>\n"
@@ -127,12 +127,12 @@ msgstr ""
 "<small>Huomioithan, että koodi vanhenee <t t-out=\"expiration\"/>.</small>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px;\">\n"
-"    Jos ET yrittänyt tätä sisäänkirjautumista',\n"
+"    Jos et ole yrittänyt tätä sisäänkirjautumista,\n"
 "    vaihda salasanasi välittömästi, jotta tilisi turvallisuus voidaan taata.\n"
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px;\">\n"
-"    Suosittelemme myös kaksivaiheisen todennuksen käyttöönottoa autentikointisovelluksen avulla tilisi suojaamiseksi.\n"
+"    Suosittelemme myös kaksivaiheisen tunnistautumisen käyttöönottoa varmennussovelluksen avulla tilisi suojaamiseksi.\n"
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
@@ -150,7 +150,7 @@ msgid ""
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
 "<i class=\"fa fa-envelope-o\"/>\n"
-"                Kirjautuaksesi sisään, syötä kuusinumeroinen vahvistuskoodi joka lähetettiin sähköpostiosoitteeseen "
+"                Kirjautuaksesi sisään, syötä kuusinumeroinen vahvistuskoodi, joka lähetettiin sähköpostiosoitteeseen "
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
@@ -174,7 +174,7 @@ msgstr "Luotettu laite on juuri poistettu tililtäsi: %(device_names)s"
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Account Security"
-msgstr "Tilin tietoturva"
+msgstr "Tilin suojaus"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
@@ -184,7 +184,7 @@ msgstr "Kaikki käyttäjät"
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_auth_totp_device
 msgid "Authentication Device"
-msgstr "Vahvistuslaite"
+msgstr "Varmennuslaite"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -233,14 +233,14 @@ msgid ""
 "users (including portal users) if they didn't enable any other two-factor "
 "authentication method."
 msgstr ""
-"Ota kaksivaiheinen tunnistus käyttöön sähköpostitse työntekijöille tai "
-"kaikille käyttäjille (myös portaalin käyttäjille), jos he eivät ole ottaneet"
-" käyttöön mitään muuta kaksivaiheisen tunnistuksen tapaa."
+"Ota kaksivaiheinen tunnistautuminen käyttöön sähköpostilla työntekijöille "
+"tai kaikille käyttäjille (myös portaalin käyttäjille), jos he eivät ole "
+"ottaneet käyttöön mitään muuta kaksivaiheisen tunnistautumistapaa."
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr "Kaksivaiheisen tunnistuksen käyttöönotto"
+msgstr "Kaksivaiheisen tunnistautumisen käyttöönotto"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
@@ -248,7 +248,7 @@ msgstr "Kaksivaiheisen tunnistuksen käyttöönotto"
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
@@ -268,12 +268,12 @@ msgstr ""
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
 msgid "Invite to use 2FA"
-msgstr "Kutsu käyttämään kaksivaiheista tunnistautumista"
+msgstr "Kutsu kaksivaiheisen tunnistautumisen käyttöön"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
-msgstr "Kutsu käyttämään kaksivaiheista tunnistautumista"
+msgstr "Kutsu kaksivaiheisen tunnistautumisen käyttöön"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_rate_limit_log__ip
@@ -367,19 +367,19 @@ msgstr "TOTP-rajoituslokit"
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr "Kaksivaiheisen tunnistuksen pakollinen käyttöönotto"
+msgstr "Kaksivaiheisen tunnistautumisen vahvistuspolitiikka"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been activated on your account"
-msgstr "Kaksivaiheinen tunnistus on aktivoitu tilillesi"
+msgstr "Kaksivaiheinen tunnistus on aktivoitu tililläsi"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been deactivated on your account"
-msgstr "Kaksivaiheinen tunnistus on poistettu tililtäsi käytöstä"
+msgstr "Kaksivaiheinen tunnistus on poistettu käytöstä tililläsi"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
@@ -391,7 +391,7 @@ msgstr "Käyttäjä"
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr "Vahvistus epäonnistui, tarkista kuusinumeroinen koodi"
+msgstr "Varmennus epäonnistui, tarkista kuusinumeroinen koodi"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -399,28 +399,27 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
-"Suosittelemme, että otat käyttöön kaksivaiheisen tunnistuksen matkapuhelinohjelmiston tilisi suojaamiseksi.\n"
+"Suosittelemme, että otat käyttöön kaksivaiheisen tunnistautumisen käyttämällä varmennussovellusta tilisi suojaamiseksi.\n"
 "               <br/>"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "You reached the limit of authentication mails sent for your account"
-msgstr ""
-"Saavutit tilillesi lähetettyjen tunnistautumisviestien määrän ylärajan"
+msgstr "Saavutit tilillesi lähetettyjen tunnistautumisviestien ylärajan"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "You reached the limit of code verifications for your account"
-msgstr "Saavutit tilisi koodivarmennusten enimmäismäärän"
+msgstr "Saavutit tilisi koodivarmennusten ylärajan"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr "Kaksivaiheisen tunnistuksesi koodi"
+msgstr "Kaksivaiheinen tunnistautumiskoodisi"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
 msgid "activating Two-factor Authentication"
-msgstr "otetaan käyttöön kaksivaiheinen tunnistus"
+msgstr "aktivoidaan kaksivaiheista tunnistautumista"

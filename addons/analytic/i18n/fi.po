@@ -302,12 +302,12 @@ msgstr "Kustannuspaikkojen kartta"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr "Alatasojen suunnitelmat lasketaan"
+msgstr "Alitasojen suunnitelmien määrä"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
 msgid "Childrens"
-msgstr "Alatasot"
+msgstr "Alitasot"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
@@ -333,7 +333,7 @@ msgstr "Väri-indeksi"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_commercial_marketing
 msgid "Commercial & Marketing"
-msgstr "Kaupallinen ja markkinointi"
+msgstr "Kaupallinen & markkinointi"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
@@ -346,12 +346,12 @@ msgstr "Yritys"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__complete_name
 msgid "Complete Name"
-msgstr "Täydellinen nimi"
+msgstr "Koko nimi"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Conditions to meet"
-msgstr "Täytettävät ehdot"
+msgstr "Edellytykset, jotka tulee täyttää"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
@@ -365,8 +365,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Tehdessäsi ostolaskuja, kuluja tai työaikakirjauksia, luodaan kulut \n"
-"automaattisesti."
+"Rekisteröidessäsi ostolaskuja, kuluja tai työaikakirjauksia, kulut \n"
+"luodaan automaattisesti."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -390,7 +390,7 @@ msgstr "Luotu"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
-msgstr "Kredit"
+msgstr "Luotto"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
@@ -412,13 +412,13 @@ msgstr "Päivämäärä"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr "Deaktivoi tili."
+msgstr "Poista tili käytöstä."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
-msgstr "Debit"
+msgstr "Debet"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_agrolait
@@ -478,12 +478,12 @@ msgstr "Jakelun kustannuspaikka"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Distribution to apply"
-msgstr "Jakelu sovellettavaksi"
+msgstr "Sovellettava jakelu"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
 msgid "Domain"
-msgstr "Verkkotunnus"
+msgstr "Domain"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
@@ -537,7 +537,7 @@ msgstr "Henkilöstöhallinto"
 #: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__id
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
@@ -698,7 +698,7 @@ msgstr "Käyttökustannukset"
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "Operation not supported"
-msgstr "Toiminto ei ole tuettu"
+msgstr "Toiminto ei tueta"
 
 #. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
@@ -741,7 +741,7 @@ msgstr "Kumppanin luokka"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Percentage"
-msgstr "Prosenttia"
+msgstr "Prosentti"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
@@ -757,7 +757,7 @@ msgstr "Tuotekenttä"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_production
 msgid "Production"
-msgstr "Valmistus"
+msgstr "Tuotanto"
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_projects
@@ -797,7 +797,7 @@ msgid ""
 msgstr ""
 "Tulot luodaan automaattisesti, kun luot asiakkaan\n"
 "                laskuja. Asiakaslaskut voidaan luoda myyntitilausten perusteella\n"
-"                (kiinteähintaiset laskut), työaikataulujen perusteella (tehdyn työn perusteella) tai\n"
+"                (kiinteähintaiset laskut), työaikakirjausten perusteella (tehdyn työn perusteella) tai\n"
 "                kulujen perusteella (esim. matkakulujen uudelleen laskuttaminen)."
 
 #. module: analytic
@@ -808,13 +808,13 @@ msgstr "Juuri"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr "Pääsuunnitelma"
+msgstr "Juurisuunnitelma"
 
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "Save as new analytic distribution model"
-msgstr "Tallenna uudeksi analyyttiseksi jakelumalliksi"
+msgstr "Tallenna uutena analyyttisena jakelumallina"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
@@ -879,12 +879,12 @@ msgstr "Spark Systems"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
-msgstr "Osayleiskaavat"
+msgstr "Osasuunnitelmat"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
 msgid "Time Off"
-msgstr "Vapaa"
+msgstr "Vapaat"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree

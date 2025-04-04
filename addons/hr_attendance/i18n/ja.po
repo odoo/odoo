@@ -247,7 +247,7 @@ msgstr "添付数"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
-msgstr "出勤"
+msgstr "出勤記録"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_manager_id
@@ -261,47 +261,47 @@ msgstr "勤怠承認者"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_from_systray
 msgid "Attendance From Systray"
-msgstr "Systrayからの勤怠"
+msgstr "Systrayからの出勤記録"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_install_kiosk_pwa
 msgid "Attendance Kiosk"
-msgstr "勤怠キオスク"
+msgstr "打刻キオスク"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_delay
 msgid "Attendance Kiosk Delay"
-msgstr "勤怠キオスク遅延"
+msgstr "打刻キオスク遅延許容時間"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_key
 msgid "Attendance Kiosk Key"
-msgstr "勤怠キオスクキー"
+msgstr "打刻キオスクキー"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_url
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_url
 msgid "Attendance Kiosk Url"
-msgstr "勤怠キオスクUrl"
+msgstr "打刻キオスクUrl"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_mode
 msgid "Attendance Mode"
-msgstr "勤怠モード"
+msgstr "出勤モード"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
 msgid "Attendance Overtime"
-msgstr "勤怠残業"
+msgstr "出勤残業"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
-msgstr "勤怠ステータス"
+msgstr "出勤ステータス"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -312,12 +312,12 @@ msgstr "バーコードによる勤怠管理"
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.hr_attendance_check_out_cron_ir_actions_server
 msgid "Attendance: Automatically check-out employees"
-msgstr "勤怠: 自動的に従業員をチェックアウト"
+msgstr "勤怠: 従業員を自動退勤させる"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.hr_attendance_absence_cron_ir_actions_server
 msgid "Attendance: Detect Absences for employees"
-msgstr "勤怠: 従業員の欠勤を検知します"
+msgstr "勤怠:  従業員の欠勤を検出する"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
@@ -326,53 +326,53 @@ msgstr "勤怠: 従業員の欠勤を検知します"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
-msgstr "勤怠"
+msgstr "出勤記録"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #: code:addons/hr_attendance/models/res_users.py:0
 msgid "Attendances This Month"
-msgstr "当月勤怠"
+msgstr "今月の出勤記録"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances from Backend"
-msgstr "Backendからの勤怠"
+msgstr "バックエンドからの出勤記録"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
 msgid "Auto Check Out Tolerance"
-msgstr "自動チェックアウト許容範囲"
+msgstr "自動退勤の猶予時間"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out
 msgid "Automatic Check Out"
-msgstr "自動チェックアウト"
+msgstr "自動退勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__auto_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Automatic Check-Out"
-msgstr "自動チェックアウト"
+msgstr "自動退勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_overtime_validation__no_validation
 msgid "Automatically Approved"
-msgstr "自動的に承認されました"
+msgstr "自動承認済"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "Automatically Check-Out Employees based on their working schedule with an "
 "additional tolerance."
-msgstr "追加の許容範囲での従業員の勤務スケジュールに基づいて、従業員を自動的にチェックアウトします。"
+msgstr "勤務スケジュールと追加の猶予時間に基づいて、従業員を自動的に退勤させます。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Automatically Checked-Out"
-msgstr "自動チェックアウト済"
+msgstr "自動退勤済"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -545,7 +545,7 @@ msgstr "挨拶メッセージの表示時間を選択"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Choose how to record attendances"
-msgstr "勤怠の記録方法を選択"
+msgstr "出退勤の記録方法を選択"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_city
@@ -748,7 +748,7 @@ msgstr "従業員PIN認証"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Employee attendances"
-msgstr "従業員の勤怠"
+msgstr "従業員の出退勤"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
@@ -1154,7 +1154,7 @@ msgstr "モード"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
-msgstr "自分の勤怠"
+msgstr "自分の出退勤"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
@@ -1337,7 +1337,7 @@ msgstr "評価"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "Ready to track attendances ?"
-msgstr "勤怠を追跡しますか？"
+msgstr "出退勤を追跡しますか？"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -1476,7 +1476,7 @@ msgstr "ユーザは、勤怠管理者として設定された従業員の勤怠
 msgid ""
 "This attendance was automatically checked out because the employee exceeded "
 "the allowed time for their scheduled work hours."
-msgstr "従業員の予定勤務時間を超過したため、この勤務は自動的にチェックアウトされました。"
+msgstr "この出退勤記録は、従業員が予定された勤務時間の許容範囲を超えたため、自動的に退勤処理されました。"
 
 #. module: hr_attendance
 #. odoo-python
@@ -1578,7 +1578,7 @@ msgstr "ユーザ"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_own_reader
 msgid "User: Read his own attendances"
-msgstr "ユーザ: 自分の勤怠を見る"
+msgstr "ユーザ: 自分の出勤記録を見る"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
