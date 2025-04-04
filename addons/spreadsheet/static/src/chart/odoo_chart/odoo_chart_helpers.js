@@ -58,6 +58,7 @@ function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
         if (!env) {
             return;
         }
+        event.native.preventDefault();
         const { name, domain } = getDomainFromChartItem(items[0]);
         await navigateTo(
             env,
