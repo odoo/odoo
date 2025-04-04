@@ -51,9 +51,9 @@
         <t t-set="extra_popup_options">
             <we-colorpicker string="Close Button Color" data-select-style="true" data-css-property="color" data-color-prefix="text-" data-apply-to=".s_popup_close"/>
             <we-select string="Display" data-attribute-name="display" data-attribute-default-value="always">
-                <we-button data-select-data-attribute="afterDelay" data-name="show_delay">Delay</we-button>
-                <we-button data-select-data-attribute="mouseExit">On Exit</we-button>
-                <we-button data-select-data-attribute="onClick" data-name="onclick_opt">On Click (via link)</we-button>
+                <we-button data-select-data-attribute="afterDelay" data-name="show_delay" title="Automatically opens the pop-up if the user stays on a page longer than the specified time.">Delay</we-button>
+                <we-button data-select-data-attribute="mouseExit" data-name="show_on_exit" title="Pop up appears when a user is about to leave the website.">On Exit</we-button>
+                <we-button data-select-data-attribute="onClick" data-name="onclick_opt" title="Use the link generated to open the pop up.">On Click (via link)</we-button>
             </we-select>
             <we-input string="&#8985; Delay" title="Automatically opens the pop-up if the user stays on a page longer than the specified time." data-select-data-attribute="" data-attribute-name="showAfter" data-unit="s" data-save-unit="ms" data-dependencies="show_delay"/>
             <we-input string="Hide For" title="Once the user closes the popup, it won't be shown again for that period of time." data-select-data-attribute.translate="7 days" data-attribute-name="consentsDuration" data-unit.translate="days" data-dependencies="!onclick_opt"/>
