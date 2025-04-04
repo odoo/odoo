@@ -138,21 +138,22 @@ export class FileViewer extends Component {
     }
 
     /**
-     * @param {DragEvent} ev
+     * @param {MouseEvent | TouchEvent} ev
      */
-    onMousedownImage(ev) {
+    onStartImageDrag(ev) {
         if (this.isDragging) {
             return;
         }
-        if (ev.button !== 0) {
+        if (ev instanceof MouseEvent && ev.button !== 0) {
             return;
         }
         this.isDragging = true;
-        this.dragStartX = ev.clientX;
-        this.dragStartY = ev.clientY;
+        const { clientX, clientY } = ev instanceof TouchEvent ? ev.touches[0] : ev;
+        this.dragStartX = clientX;
+        this.dragStartY = clientY;
     }
 
-    onMouseupImage() {
+    onEndImageDrag() {
         if (!this.isDragging) {
             return;
         }
@@ -165,14 +166,15 @@ export class FileViewer extends Component {
     }
 
     /**
-     * @param {DragEvent}
+     * @param {MouseEvent | TouchEvent} ev
      */
-    onMousemoveView(ev) {
+    onMoveImageDrag(ev) {
         if (!this.isDragging) {
             return;
         }
-        this.translate.dx = ev.clientX - this.dragStartX;
-        this.translate.dy = ev.clientY - this.dragStartY;
+        const { clientX, clientY } = ev instanceof TouchEvent ? ev.touches[0] : ev;
+        this.translate.dx = clientX - this.dragStartX;
+        this.translate.dy = clientY - this.dragStartY;
         this.updateZoomerStyle();
     }
 
