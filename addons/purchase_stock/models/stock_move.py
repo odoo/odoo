@@ -63,7 +63,7 @@ class StockMove(models.Model):
                 if invoice_line.move_id.state != 'posted':
                     continue
                 # Discount applied on bill prior to reception
-                if invoice_line.discount and not move_layer:
+                if invoice_line.discount:
                     price_unit = invoice_line.price_subtotal / invoice_line.quantity
                 else:
                     price_unit = invoice_line.price_unit
