@@ -278,3 +278,18 @@ class TestLinkPreview(MailCommon):
                 [("link_preview_id", "=", link_preview.id)]
             )
             self.assertEqual(link_preview_count, 1)
+
+    def test_link_preview_delete_with_message(self):
+        with patch.object(requests.Session, "get", self._patch_with_og_properties), patch.object(
+            requests.Session, "head", self._patch_head_html
+        ):
+            message = self.test_partner.message_post(
+                body=Markup('<a href="%s">Test link</a>') % self.source_url,
+                message_type="comment"
+            )
+            self.env["mail.link.preview"]._create_from_message_and_notify(message)
+            preview = message.message_link_preview_ids
+            self.assertTrue(preview)
+            self.assertEqual(preview.link_preview_id.source_url, self.source_url)
+            self.test_partner._message_update_content(message, body="")
+            self.assertFalse(message.message_link_preview_ids)
