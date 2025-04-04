@@ -11,6 +11,9 @@
     'data': [
         'views/hr_employee_views.xml',
     ],
+    'demo': [
+        'data/l10n_mx_hr_demo.xml',
+    ],
     'installable': True,
     'license': 'LGPL-3',
 }
