@@ -16,8 +16,9 @@ export class CustomizeWebsitePlugin extends Plugin {
     };
 
     cache = {};
-    activeViews = {};
-    pendingRequests = new Set();
+    activeRecords = {};
+    pendingViewRequests = new Set();
+    pendingAssetRequests = new Set();
     resolves = {};
     getActions() {
         return {
@@ -225,29 +226,16 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
                 apply: () => this.stuffHappened(),
             },
-            customizeWebsiteVariableAndAssets: {
-                isApplied: ({ param: { variable, assets } }) => {
-                    console.log("customizeWebsiteVariableAndAssets.get", variable, assets);
-                    return "outline";
-                },
-                clean: ({ param: { variable, assets } }) => {
-                    console.log("customizeWebsiteVariableAndAssets.clean", variable, assets);
-                },
-                load: async ({ param: { variable, assets }, value }) => {
-                    console.log("customizeWebsiteVariableAndAssets.apply", variable, assets, value);
-                },
-                apply: () => this.stuffHappened(),
-            },
             websiteConfig: {
                 isReload: true,
                 prepare: async ({ actionParam }) => this.loadConfigKey(actionParam),
                 getPriority: ({ param }) => {
-                    const views = param.views || [];
-                    return views.length;
+                    const records = [...(param.views || []), ...(param.assets || [])];
+                    return records.length;
                 },
                 isApplied: ({ param }) => {
-                    const views = param.views || [];
-                    return views.every((v) => this.getConfigKey(v));
+                    const records = [...(param.views || []), ...(param.assets || [])];
+                    return records.every((v) => this.getConfigKey(v));
                 },
                 apply: (action) => this.toggleConfig(action, true),
                 clean: (action) => this.toggleConfig(action, false),
@@ -357,36 +345,41 @@ export class CustomizeWebsitePlugin extends Plugin {
     // customize website action
     // -------------------------------------------------------------------------
     loadConfigKey(actionParam) {
-        if (actionParam.views) {
-            return Promise.all(
-                actionParam.views.map((view) => {
-                    if (view.startsWith("!")) {
-                        view = view.substring(1);
-                    }
-                    if (!(view in this.cache)) {
-                        this.cache[view] = this._loadBatchKey(view);
-                    }
-                    return this.cache[view];
-                })
-            );
+        const promises = [];
+        for (const paramName of ["views", "assets"]) {
+            if (actionParam[paramName]) {
+                promises.push(
+                    ...actionParam[paramName].map((record) => {
+                        if (record.startsWith("!")) {
+                            record = record.substring(1);
+                        }
+                        if (!(record in this.cache)) {
+                            this.cache[record] = this._loadBatchKey(record, paramName === "views");
+                        }
+                        return this.cache[record];
+                    })
+                );
+            }
         }
+        return Promise.all(promises);
     }
 
-    _loadBatchKey(key) {
-        this.pendingRequests.add(key);
+    _loadBatchKey(key, isViewData) {
+        const pendingRequests = isViewData ? this.pendingViewRequests : this.pendingAssetRequests;
+        pendingRequests.add(key);
         return new Promise((resolve) => {
             this.resolves[key] = resolve;
             setTimeout(() => {
-                if (this.pendingRequests.size && !this.isDestroyed) {
-                    const keys = [...this.pendingRequests];
-                    this.pendingRequests.clear();
+                if (pendingRequests.size && !this.isDestroyed) {
+                    const keys = [...pendingRequests];
+                    pendingRequests.clear();
                     rpc("/website/theme_customize_data_get", {
                         keys,
-                        is_view_data: true,
+                        is_view_data: isViewData,
                     }).then((r) => {
                         if (!this.isDestroyed) {
                             for (const key of keys) {
-                                this.activeViews[key] = r.includes(key);
+                                this.activeRecords[key] = r.includes(key);
                                 this.resolves[key]();
                             }
                         }
@@ -397,21 +390,39 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
 
     async toggleConfig(action, apply) {
-        // step 1: enable and disable views
+        // step 1: enable and disable records
+        const updateViews = this.toggleTheme(action, "views", apply);
+        const updateAssets = this.toggleTheme(action, "assets", apply);
+        // step 2: customize vars
+        const updateVars = action.param.vars
+            ? this.customizeWebsiteVariables(action.param.vars)
+            : Promise.resolve();
+
+        await Promise.all([updateViews, updateAssets, updateVars]);
+        if (this.isDestroyed) {
+            return true;
+        }
+    }
+
+    toggleTheme(action, paramName, apply) {
+        if (!action.param[paramName]) {
+            return;
+        }
+        const isViewData = paramName === "views";
         const toEnable = new Set();
         const toDisable = new Set();
-        const prepareView = (view, disable) => {
-            if (view.startsWith("!")) {
-                const viewKey = view.substring(1);
-                (disable ? toEnable : toDisable).add(viewKey);
-                (disable ? toDisable : toEnable).delete(viewKey);
+        const prepareRecord = (record, disable) => {
+            if (record.startsWith("!")) {
+                const recordKey = record.substring(1);
+                (disable ? toEnable : toDisable).add(recordKey);
+                (disable ? toDisable : toEnable).delete(recordKey);
             } else {
-                (disable ? toEnable : toDisable).delete(view);
-                (disable ? toDisable : toEnable).add(view);
+                (disable ? toEnable : toDisable).delete(record);
+                (disable ? toDisable : toEnable).add(record);
             }
         };
-        const shouldReset = !!action.param.resetViewArch;
-        const views = action.param.views;
+        const shouldReset = isViewData && !!action.param.resetViewArch;
+        const records = action.param[paramName] || [];
         if (action.selectableContext) {
             if (!apply) {
                 // do nothing, we will do it anyway in the apply call
@@ -420,45 +431,36 @@ export class CustomizeWebsitePlugin extends Plugin {
             for (const item of action.selectableContext.items) {
                 for (const a of item.getActions()) {
                     if (a.actionId === "websiteConfig") {
-                        for (const view of a.actionParam.views || []) {
+                        for (const record of a.actionParam[paramName] || []) {
                             // disable all
-                            prepareView(view, true);
+                            prepareRecord(record, true);
                         }
                     }
                 }
             }
-            for (const view of views) {
+            for (const record of records) {
                 // enable selected one
-                prepareView(view, false);
+                prepareRecord(record, false);
             }
         } else {
-            for (const view of views) {
+            for (const record of records) {
                 // enable on apply, disable on clear
-                prepareView(view, !apply);
+                prepareRecord(record, !apply);
             }
         }
-        const updateTheme = rpc("/website/theme_customize_data", {
-            is_view_data: true,
+        return rpc("/website/theme_customize_data", {
+            is_view_data: isViewData,
             enable: [...toEnable],
             disable: [...toDisable],
             reset_view_arch: shouldReset,
         });
-        // step 2: customize vars
-        const updateVars = action.param.vars
-            ? this.customizeWebsiteVariables(action.param.vars)
-            : Promise.resolve();
-
-        await Promise.all([updateTheme, updateVars]);
-        if (this.isDestroyed) {
-            return true;
-        }
     }
 
     getConfigKey(key) {
         if (key.startsWith("!")) {
-            return !this.activeViews[key.substring(1)];
+            return !this.activeRecords[key.substring(1)];
         }
-        return this.activeViews[key];
+        return this.activeRecords[key];
     }
 }
 
