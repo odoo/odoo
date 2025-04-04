@@ -93,7 +93,7 @@ patch(PortalComposer.prototype, {
         if (this.options.force_submit_url === "/mail/message/update_content") {
             return {
                 attachment_ids: this.options.post_data.attachment_ids,
-                attachment_tokens: this.attachments.map((a) => a.access_token),
+                attachment_tokens: this.attachments.map((a) => a.ownership_token),
                 body: this.options.post_data.body,
                 hash: this.options.hash,
                 message_id: parseInt(this.options.default_message_id),

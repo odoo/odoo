@@ -1,4 +1,4 @@
-from werkzeug.exceptions import Forbidden
+from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.fields import Domain
@@ -69,11 +69,17 @@ class PortalChatter(ThreadController):
         # Check access
         Message = request.env['mail.message']
         if kw.get('token'):
-            access_as_sudo = self._get_thread_with_access(
+            thread = ThreadController._get_thread_with_access(
                 thread_model, thread_id, token=kw.get("token"),
             )
-            if not access_as_sudo:  # if token is not correct, raise Forbidden
-                raise Forbidden()
+            if not thread:  # if token is not correct, raise NotFound
+                raise NotFound()
+            if portal_partner := get_portal_partner(
+                thread, _hash=None, pid=None, token=kw.get("token"),
+            ):
+                request.update_context(
+                    portal_data={"portal_partner": portal_partner, "portal_thread": thread}
+                )
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
             if not request.env.user._is_internal():
                 domain = Message._get_search_domain_share() & domain

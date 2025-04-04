@@ -525,7 +525,7 @@ export class Message extends Record {
                 .map((attachment) => attachment.id),
             attachment_tokens: attachments
                 .concat(this.attachment_ids)
-                .map((attachment) => attachment.access_token),
+                .map((attachment) => attachment.ownership_token),
             body: await prettifyMessageContent(body, { validMentions }),
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
