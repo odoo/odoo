@@ -57,6 +57,7 @@ class Website(models.Model):
                     wrap = tree.xpath('//div[@id="wrap"]')[0]
                     content_container = content_container[0]
                     content_container.attrib.pop('t-att-data-editor-sub-message', None)
+                    content_container.attrib.pop('data-editor-sub-message.translate', None)
                     content_container.attrib.pop('id', None)
 
                     if sections_arch:
