@@ -366,7 +366,7 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_create_acti
                     document.querySelector("div[name='action_server_ids']").innerText,
                     "Create Contact with name NameX"
                 );
-                assertEqual(document.querySelectorAll(".fa.fa-edit").length, 1);
+                assertEqual(document.querySelectorAll(".fa.fa-plus-square").length, 1);
             },
         },
     ],
