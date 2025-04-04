@@ -7,6 +7,7 @@ import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
+import { formatDate } from "@web/core/l10n/dates";
 
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
@@ -949,7 +950,7 @@ export class PosOrder extends Base {
     }
     //FIXME remove this
     getShippingDate() {
-        return this.shipping_date;
+        return formatDate(this.shipping_date);
     }
 
     getHasRefundLines() {
