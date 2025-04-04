@@ -55,11 +55,10 @@ test("fieldmany2many tags email (edition)", async () => {
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
     await clickFieldDropdown("partner_ids");
     await clickFieldDropdownItem("partner_ids", "silver");
-    await contains(".modal-content .o_form_view .o_input#name_0", { value: "silver" });
-    await contains(".modal-content .o_form_view .o_input#email_0");
-    // set the email and save the modal (will rerender the form view)
-    await insertText(".modal-content .o_form_view .o_input#email_0", "coucou@petite.perruche");
-    await click(".modal-content .o_form_button_save");
+    await contains(".o-mail-RecipientsInputTagsListPopover");
+    // set the email
+    await insertText(".o-mail-RecipientsInputTagsListPopover input", "coucou@petite.perruche");
+    await click(".o-mail-RecipientsInputTagsListPopover .btn-primary");
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0', {
         count: 2,
     });
@@ -71,9 +70,8 @@ test("fieldmany2many tags email (edition)", async () => {
         "title",
         "coucou@petite.perruche"
     );
-    // should have read Partner_1 three times: when opening the dropdown, when opening the modal, and
-    // after the save
-    await waitForSteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
+    // should have read Partner_2 2 times: when opening the dropdown and when saving the new email.
+    await waitForSteps([`[${partnerId_2}]`,`[${partnerId_1},${partnerId_2}]`]);
 });
 
 test("fieldmany2many tags email popup close without filling", async () => {
@@ -95,15 +93,16 @@ test("fieldmany2many tags email popup close without filling", async () => {
     // add an other existing tag
     await clickFieldDropdown("partner_ids");
     await clickFieldDropdownItem("partner_ids", "Deficient Denise");
-    await contains(".modal-content .o_form_view");
-    await contains(".modal-content .o_form_view .o_input#name_0", { value: "Deficient Denise" });
-    await contains(".modal-content .o_form_view .o_input#email_0", { value: "" });
+    await contains(".o-mail-RecipientsInputTagsListPopover");
+    // set the email
+    await insertText(".o-mail-RecipientsInputTagsListPopover input", "coucou@petite.perruche");
     // Close the modal dialog without saving (should remove partner from invalid records)
-    await click(".modal-content .o_form_button_cancel");
+    await click(".o-mail-RecipientsInputTagsListPopover .btn-secondary");
     // Selecting a partner with a valid email shouldn't open the modal dialog for the previous partner
+    await contains(".o_field_widget[name='partner_ids'] .badge", { count: 0 });
     await clickFieldDropdown("partner_ids");
     await clickFieldDropdownItem("partner_ids", "Valid Valeria");
-    await contains(".modal-content .o_forw_view", { count: 0 });
+    await contains(".o-mail-RecipientsInputTagsListPopover", { count: 0 });
 });
 
 test("many2many_tags_email widget can load more than 40 records", async () => {

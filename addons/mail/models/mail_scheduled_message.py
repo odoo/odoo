@@ -47,7 +47,7 @@ class MailScheduledMessage(models.Model):
         string='Comment Options')  # mainly used for view in specific comment modes
     notified_bcc = fields.Many2many(
         string='Bcc', comodel_name='res.partner', compute='_compute_notified_bcc', readonly=True, store=False)
-    show_notified_bcc = fields.Boolean('Show BCC', store=False)
+    show_notified_bcc = fields.Boolean('Show BCC', store=False)  # TODO: remove field in master
 
     # related document
     model = fields.Char('Related Document Model', required=True)
@@ -160,7 +160,7 @@ class MailScheduledMessage(models.Model):
     # Compute Methods
     # ------------------------------------------------------
 
-    @api.depends('model', 'notification_parameters', 'partner_ids', 'res_id')
+    @api.depends('model', 'notification_parameters', 'res_id')
     def _compute_notified_bcc(self):
         """ Compute 'bcc' which are followers that are going to be 'silently'
         notified by the scheduled message. """
@@ -192,8 +192,7 @@ class MailScheduledMessage(models.Model):
                 pid
                 for pid, pdata in recipients_data.items()
                 if (pid and pdata['active']
-                    and pid != self.env.user.partner_id.id
-                    and pdata['id'] not in composer.partner_ids.ids)
+                    and pid != self.env.user.partner_id.id)
             ]
             composer.notified_bcc = self.env['res.partner'].search([('id', 'in', partner_ids)])
 
