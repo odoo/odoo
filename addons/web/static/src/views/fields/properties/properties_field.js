@@ -595,6 +595,17 @@ export class PropertiesField extends Component {
     }
 
     async onPropertyCreate() {
+        if (!this.definitionRecordId) {
+            this.notification.add(
+                _t(
+                    "You must set the '%s' field to create a property field.",
+                    this.props.record.fields[this.definitionRecordField].string
+                ),
+                { type: "warning" }
+            );
+            return;
+        }
+
         if (!this.state.canChangeDefinition || !(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
                 _t("You need edit access on the parent document to update these property fields"),
