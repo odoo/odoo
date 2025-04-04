@@ -2605,6 +2605,36 @@ class TestSinglePicking(TestStockCommon):
             ('Shell 2', 'LOT004', 2.0),
         ])
 
+    def test_validate_picking_twice(self):
+        """
+        Check that validating an already validated picking bypasses the call.
+        """
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_out,
+            'move_ids': [
+                Command.create({
+                    'name': 'Lovely Move',
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 50,
+                    'location_id': self.stock_location,
+                    'location_dest_id': self.customer_location,
+                    'product_uom': self.productA.uom_id.id,
+                }),
+            ],
+        })
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        self.assertRecordValues(picking.move_ids, [
+            {'quantity': 50.0, 'state': 'done'}
+        ])
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        self.assertRecordValues(picking.move_ids, [
+            {'quantity': 50.0, 'state': 'done'}
+        ])
+
 
 class TestStockUOM(TestStockCommon):
     @classmethod
