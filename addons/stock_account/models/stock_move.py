@@ -20,6 +20,16 @@ class StockMove(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
     analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('picking_id'):
+                continue
+            picking = self.env['stock.picking'].browse(vals['picking_id'])
+            if picking.return_id and 'to_refund' not in vals:
+                vals['to_refund'] = True
+        return super().create(vals_list)
+
     def _inverse_picked(self):
         super()._inverse_picked()
         self._account_analytic_entry_move()
