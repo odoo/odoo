@@ -136,7 +136,17 @@
         <field name="arch" type="xml">
             <form class="o_form_project_tasks">
                 <group>
-                    <field name="name" string="To-do Title" placeholder="e.g. Send Invitations"/>
+                    <field
+                        name="display_name"
+                        string="To-do Title"
+                        placeholder="e.g. Send Invitations"
+                        help='Use these keywords in the title to streamline your to-dos:&#10;&#10;
+                            #tags: Add tags to categorize the to-do&#10;
+                            @user: Assign the to-do to a specific user&#10;
+                            !: Mark the to-do as medium priority&#10;
+                            !!: Mark the to-do as high priority&#10;
+                            !!!: Mark the to-do as urgent&#10;&#10;
+                            Ensure you follow the correct format and order. For example: "Send invitations #event @Mitchell !"'/>
                     <field name="date_deadline" decoration-danger="date_deadline &lt; current_date"/>
                 </group>
             </form>
