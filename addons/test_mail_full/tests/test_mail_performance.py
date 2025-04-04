@@ -232,7 +232,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_norating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=15):
+        with self.assertQueryCount(employee=14):
             # res = messages_all.portal_message_format(options=None)
             res = messages_all.portal_message_format(options={'rating_include': False})
 
@@ -244,7 +244,6 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                 format_res['attachment_ids'],
                 [
                     {
-                        'access_token': message.attachment_ids[0].access_token,
                         'checksum': message.attachment_ids[0].checksum,
                         'filename': 'Test file 1',
                         'id': message.attachment_ids[0].id,
@@ -254,7 +253,6 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'res_id': record.id,
                         'res_model': record._name,
                     }, {
-                        'access_token': message.attachment_ids[1].access_token,
                         'checksum': message.attachment_ids[1].checksum,
                         'filename': 'Test file 0',
                         'id': message.attachment_ids[1].id,
@@ -286,7 +284,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=29):  # sometimes +1
+        with self.assertQueryCount(employee=28):  # sometimes +1
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
@@ -308,10 +306,26 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_monorecord(self):
         message = self.messages_all[0].with_user(self.env.user)
 
-        with self.assertQueryCount(employee=20):  # randomness: 19+1
+        with self.assertQueryCount(employee=19):  # randomness: 18+1
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)
+
+    @mute_logger("odoo.tests", "odoo.addons.mail.models.mail_mail", "odoo.models.unlink")
+    @users("employee")
+    @warmup
+    def test_portal_attachment_as_author(self):
+        message = self.env["mail.message"].create(
+            {
+                "attachment_ids": [Command.create({"name": "test attachment"})],
+                "author_id": self.user_employee.partner_id.id,
+            }
+        )
+        res = message.portal_message_format()
+        self.assertEqual(
+            res[0]["attachment_ids"][0]["ownership_token"],
+            message.attachment_ids[0]._get_ownership_token(),
+        )
 
 
 @tagged('rating', 'mail_performance', 'post_install', '-at_install')

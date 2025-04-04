@@ -30,13 +30,11 @@ class TestMessageController(HttpCaseWithUserDemo):
             .create(
                 [
                     {
-                        "access_token": cls.env["ir.attachment"]._generate_access_token(),
                         "name": "File 1",
                         "res_id": 0,
                         "res_model": "mail.compose.message",
                     },
                     {
-                        "access_token": cls.env["ir.attachment"]._generate_access_token(),
                         "name": "File 2",
                         "res_id": 0,
                         "res_model": "mail.compose.message",
@@ -71,7 +69,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         )
         self.assertEqual(res1.status_code, 200)
         self.assertIn(
-            f"The attachment {self.attachments[0].id} does not exist or you do not have the rights to access it",
+            "One or more attachments do not exist, or you do not have the rights to access them.",
             res1.text,
             "guest should not be allowed to add attachment without token when posting message",
         )
@@ -88,7 +86,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                             "attachment_ids": [self.attachments[0].id],
                             "message_type": "comment",
                         },
-                        "attachment_tokens": [self.attachments[0].access_token],
+                        "attachment_tokens": [self.attachments[0]._get_ownership_token()],
                     },
                 }
             ),
@@ -99,12 +97,13 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(
             data1["ir.attachment"],
             [
-                    {
+                {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "file_size": 0,
                     "id": self.attachments[0].id,
                     "name": "File 1",
+                    "ownership_token": self.attachments[0]._get_ownership_token(),
                     "raw_access_token": self.attachments[0]._get_raw_access_token(),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
@@ -133,7 +132,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         )
         self.assertEqual(res3.status_code, 200)
         self.assertIn(
-            f"The attachment {self.attachments[1].id} does not exist or you do not have the rights to access it",
+            "One or more attachments do not exist, or you do not have the rights to access them.",
             res3.text,
             "guest should not be allowed to add attachment without token when updating message",
         )
@@ -146,7 +145,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "message_id": data1["mail.message"][0]["id"],
                         "body": "test",
                         "attachment_ids": [self.attachments[1].id],
-                        "attachment_tokens": [self.attachments[1].access_token],
+                        "attachment_tokens": [self.attachments[1]._get_ownership_token()],
                     },
                 }
             ),
@@ -163,6 +162,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "file_size": 0,
                     "id": self.attachments[0].id,
                     "name": "File 1",
+                    "ownership_token": self.attachments[0]._get_ownership_token(),
                     "raw_access_token": self.attachments[0]._get_raw_access_token(),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
@@ -177,6 +177,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "file_size": 0,
                     "id": self.attachments[1].id,
                     "name": "File 2",
+                    "ownership_token": self.attachments[1]._get_ownership_token(),
                     "raw_access_token": self.attachments[1]._get_raw_access_token(),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
@@ -187,56 +188,6 @@ class TestMessageController(HttpCaseWithUserDemo):
                 },
             ],
             "guest should be allowed to add attachment with token when updating message",
-        )
-        # test message update: own attachment ok
-        res5 = self.url_open(
-            url="/mail/message/update_content",
-            data=json.dumps(
-                {
-                    "params": {
-                        "message_id": data2["mail.message"][0]["id"],
-                        "body": "test",
-                        "attachment_ids": [self.attachments[1].id],
-                    },
-                }
-            ),
-            headers={"Content-Type": "application/json"},
-        )
-        self.assertEqual(res5.status_code, 200)
-        data3 = res5.json()["result"]
-        self.assertEqual(
-            data3["ir.attachment"],
-            [
-                {
-                    "checksum": False,
-                    "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
-                    "file_size": 0,
-                    "id": self.attachments[0].id,
-                    "name": "File 1",
-                    "raw_access_token": self.attachments[0]._get_raw_access_token(),
-                    "res_name": "Test channel",
-                    "mimetype": "application/octet-stream",
-                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
-                    "voice": False,
-                    'type': 'binary',
-                    'url': False,
-                },
-                {
-                    "checksum": False,
-                    "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
-                    "file_size": 0,
-                    "id": self.attachments[1].id,
-                    "name": "File 2",
-                    "raw_access_token": self.attachments[1]._get_raw_access_token(),
-                    "res_name": "Test channel",
-                    "mimetype": "application/octet-stream",
-                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
-                    "voice": False,
-                    'type': 'binary',
-                    'url': False,
-                },
-            ],
-            "guest should be allowed to add own attachment without token when updating message",
         )
 
     @mute_logger("odoo.addons.http_routing.models.ir_http", "odoo.http")

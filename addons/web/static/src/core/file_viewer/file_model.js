@@ -9,6 +9,8 @@ export const FileModelMixin = (T) =>
         mimetype;
         name;
         /** @type {string} */
+        ownership_token;
+        /** @type {string} */
         raw_access_token;
         /** @type {"binary"|"url"} */
         type;

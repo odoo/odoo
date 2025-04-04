@@ -541,7 +541,7 @@ export class Store extends BaseStore {
             thread_model: thread.model,
         };
         if (attachments.length) {
-            params.attachment_tokens = attachments.map((attachment) => attachment.access_token);
+            params.attachment_tokens = attachments.map((attachment) => attachment.ownership_token);
         }
         if (cannedResponseIds?.length) {
             params.canned_response_ids = cannedResponseIds;

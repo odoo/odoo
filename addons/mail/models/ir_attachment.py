@@ -3,34 +3,38 @@
 import contextlib
 
 from odoo import _, models, SUPERUSER_ID
-from odoo.exceptions import AccessError, MissingError, UserError
-from odoo.tools import consteq
+from odoo.exceptions import AccessError, UserError
+from odoo.tools.misc import limited_field_access_token, verify_limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
-    def _check_attachments_access(self, attachment_tokens):
-        """This method relies on access rules/rights and therefore it should not be called from a sudo env."""
-        self = self.sudo(False)
+    def _has_attachments_ownership(self, attachment_tokens):
+        """ Checks if the current user has ownership of all attachments in the recordset.
+            Ownership is defined as either:
+            - Having 'write' access to the attachment.
+            - Providing a valid, scoped 'attachment_ownership' access token.
+
+            :param list attachment_tokens: A list of access tokens
+        """
         attachment_tokens = attachment_tokens or ([None] * len(self))
         if len(attachment_tokens) != len(self):
             raise UserError(_("An access token must be provided for each attachment."))
-        for attachment, access_token in zip(self, attachment_tokens):
+
+        def is_owned(attachment, token):
+            if not attachment.with_user(SUPERUSER_ID).exists():
+                return False
             try:
-                attachment_sudo = attachment.with_user(SUPERUSER_ID).exists()
-                if not attachment_sudo:
-                    raise MissingError(_("The attachment %s does not exist.", attachment.id))
-                try:
-                    attachment.check('write')
-                except AccessError:
-                    if not access_token or not attachment_sudo.access_token or not consteq(attachment_sudo.access_token, access_token):
-                        message_sudo = self.env['mail.message'].sudo().search([('attachment_ids', 'in', attachment_sudo.ids)], limit=1)
-                        if not message_sudo or not message_sudo.is_current_user_or_guest_author:
-                            raise
-            except (AccessError, MissingError):
-                raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.", attachment.id))
+                attachment.sudo(False).check("write")
+                return True
+            except AccessError:
+                return token and verify_limited_field_access_token(
+                    attachment, "id", token, scope="attachment_ownership"
+                )
+
+        return all(is_owned(att, tok) for att, tok in zip(self, attachment_tokens, strict=True))
 
     def _post_add_create(self, **kwargs):
         """ Overrides behaviour when the attachment is created through the controller
@@ -76,6 +80,9 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
+    def _get_store_ownership_fields(self):
+        return [Store.Attr("ownership_token", lambda a: a._get_ownership_token())]
+
     def _to_store_defaults(self, target):
         return [
             "checksum",
@@ -89,3 +96,13 @@ class IrAttachment(models.Model):
             "type",
             "url",
         ]
+
+    def _get_ownership_token(self):
+        """ Returns a scoped limited access token that indicates ownership of the attachment when
+            using _has_attachments_ownership. If verified by verify_limited_field_access_token,
+            accessing the attachment bypasses the ACLs.
+
+            :rtype: str
+        """
+        self.ensure_one()
+        return limited_field_access_token(self, field_name="id", scope="attachment_ownership")
