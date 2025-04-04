@@ -12,12 +12,10 @@
     'depends': ['l10n_us', 'account'],
     'data': [
         'views/res_bank_views.xml',
+        'data/uom_data.xml',
     ],
     'installable': True,
     'auto_install': ['account'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
-    'data': [
-        'data/uom_data.xml',
-    ],
 }
