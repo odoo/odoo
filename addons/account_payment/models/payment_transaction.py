@@ -163,6 +163,11 @@ class PaymentTransaction(models.Model):
             'ref': reference,
             **extra_create_values,
         }
+
+        payment_term_lines = self.invoice_ids.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        if payment_term_lines:
+            payment_values['destination_account_id'] = payment_term_lines[0].account_id.id
+
         payment = self.env['account.payment'].create(payment_values)
         payment.action_post()
 
