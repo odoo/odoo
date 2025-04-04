@@ -1,21 +1,23 @@
 import ast
 import typing
+import logging
 from collections import defaultdict
 from typing import Collection
 
-from .diff_case import DiffCase
+from odoo.tests.diffcase import DiffCase
 from odoo.modules.module import get_manifest
 
 if typing.TYPE_CHECKING:
     from lxml.etree import _Element
-    from .diff_case import FileInfo
+    from odoo.tests.diffcase import FileInfo
 
+
+_logger = logging.getLogger(__name__)
 
 class EvalRefVisitor(ast.NodeVisitor):
-    def __init__(self, filepath, line=0, protected_xml_ids=None):
-        self.issues = []
+    def __init__(self, line=(0, 0), protected_xml_ids=None):
+        self.issues: list[tuple[int, int]] = []
         self.line = line
-        self.filepath = filepath
         self.protected_xml_ids = protected_xml_ids
 
     def _is_ref_risky(self, node):
@@ -34,14 +36,14 @@ class EvalRefVisitor(ast.NodeVisitor):
         if isinstance(node.func, ast.Name) and node.func.id == 'ref':
             if self._is_ref_risky(node):
                 # for ref() calls, check if the ref is for another module
-                self.issues.append(f'"{self.filepath}", line {self.line}')
+                self.issues.append(self.line)
         
         self.generic_visit(node)
 
 
 class FileEnvRefVisitor(EvalRefVisitor):
     def __init__(self, filepath, diff_linenos, protected_xml_ids=None):
-        self.issues = []
+        self.issues: list[tuple[int, int]] = []
         self.filepath = filepath
         self.diff_linenos = diff_linenos
         self.env_ref_names = set()  # Track variables that store env.ref
@@ -88,16 +90,16 @@ class FileEnvRefVisitor(EvalRefVisitor):
                 is_env_ref = True
 
             if is_env_ref and self._is_node_in_diff(node) and self._is_ref_risky(node):
-                self.issues.append(f'"{self.filepath}", line {node.lineno}')
+                self.issues.append((node.lineno, node.end_lineno))
         elif isinstance(node.func, ast.Name) and node.func.id in self.env_ref_names:
             # Handle stored env.ref calls
             if self._is_node_in_diff(node) and self._is_ref_risky(node):
-                self.issues.append(f'"{self.filepath}", line {node.lineno}')
+                self.issues.append((node.lineno, node.end_lineno))
 
         self.generic_visit(node)
 
 
-def check_ref_for_python_file(abs_path: str, diff_linenos: set[int], protected_xml_ids: Collection[str] = ()) -> list[str]:
+def check_ref_for_python_file(abs_path: str, diff_linenos: set[int], protected_xml_ids: Collection[str] = ()) -> list[tuple[int, int]]:
     with open(abs_path, 'r') as f:
         content = f.read()
     try:
@@ -109,7 +111,7 @@ def check_ref_for_python_file(abs_path: str, diff_linenos: set[int], protected_x
         return []
 
 
-def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', init: bool = True, protected_xml_ids: Collection[str] = ()) -> tuple[str, str] | None:
+def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', init: bool = True, protected_xml_ids: Collection[str] = ()) -> tuple[str, int, int] | None:
     """Check for references in xml files
     
     :param element: the xml element to check
@@ -132,28 +134,28 @@ def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', i
         if not id_attr:
             return None
         if is_ref_risky(id_attr) and 'forcecreate' not in record.attrib:
-            return 'inherit_id', f'{file_info.abs_path}, line {record.sourceline}'
+            return 'inherit_id', record.sourceline, record.sourceline
     elif element.tag == 'field':
         field = element
         ref_attr = field.attrib.get('ref')
         if ref_attr:
             if is_ref_risky(ref_attr) and 'forcecreate' not in field.attrib:
-                return 'ref', f'{file_info.abs_path}, line {field.sourceline}'
+                return 'ref', field.sourceline, field.sourceline
         elif eval_attr := field.attrib.get('eval'):
             # parse as python ast, check function ref
             # add to issues if ref for another module without raise_if_not_found=False
             tree = ast.parse(eval_attr)
-            visitor = EvalRefVisitor(file_info.abs_path, line=field.sourceline, protected_xml_ids=protected_xml_ids)
+            visitor = EvalRefVisitor(line=(field.sourceline, field.sourceline), protected_xml_ids=protected_xml_ids)
             visitor.visit(tree)
             if visitor.issues:
-                return 'eval', visitor.issues[0]
+                return 'eval', visitor.issues[0][0], visitor.issues[0][1]
     elif element.tag == 'template':
         template = element
         id_attr = template.attrib.get('inherit_id')
         if not id_attr:
             return None
         if is_ref_risky(id_attr) and 'forcecreate' not in template.attrib:
-            return 'inherit_id', f'{file_info.abs_path}, line {template.sourceline}'
+            return 'inherit_id', template.sourceline, template.sourceline
 
 
 def _get_protected_xml_ids():
@@ -181,6 +183,7 @@ def _get_protected_xml_ids():
         return python_files
 
     protected = set()
+    _logger.info("Getting protected records from Python files")
     for addons_path in odoo.addons.__path__:
         for addon_path in Path(addons_path).glob('*'):
             if not addon_path.is_dir():
@@ -202,8 +205,10 @@ def _get_protected_xml_ids():
 
 
 class TestRef(DiffCase):
-    # protected_xml_ids = set()
-    protected_xml_ids = _get_protected_xml_ids()
+    def __init__(self):
+        super().__init__()
+        # self.protected_xml_ids = set()
+        self.protected_xml_ids = _get_protected_xml_ids()
 
     def test_env_ref_usage(self):
         """Check for env.ref calls without raise_if_not_found=False"""
@@ -213,12 +218,22 @@ class TestRef(DiffCase):
                 continue
             file_issues = check_ref_for_python_file(file_info.abs_path, file_info.diff_linenos, self.protected_xml_ids)
             if file_issues:
-                issues.extend(file_issues)
+                issues.extend((file_info.abs_path, *issue) for issue in file_issues)
 
-        self.assertFalse(
-            bool(issues),
-            "Found env.ref calls without raise_if_not_found=False\n" + "\n".join(issues)
-        )
+        for issue in issues:
+            self.report.append({
+                'code': 'code_for_env_ref',
+                'location': {
+                    'row': issue[1],
+                    'column': 1,
+                },
+                'end_location': {
+                    'row': issue[2],
+                    'column': 1,
+                },
+                'filename': issue[0],
+                'message': 'Found env.ref calls without raise_if_not_found=False'
+            })
 
     def test_data_xml_ref_usage(self):
         """Check for ref for other modules"""
@@ -227,7 +242,7 @@ class TestRef(DiffCase):
             if file_info.module_name and file_info.module_name != 'base' and not file_info.module_name.startswith('test_'):
                 module_files[file_info.module_name].append(file_info)
 
-        issues: dict[str, list[str]] = defaultdict(list)
+        issues: dict[str, list[tuple[str, int, int]]] = defaultdict(list)
         for module_name, file_infos in module_files.items():
             manifest = get_manifest(module_name)
             data_files = set(manifest['data'])
@@ -236,18 +251,34 @@ class TestRef(DiffCase):
                 if file_info.module_path in demo_files:
                     continue
                 init = file_info.module_path in data_files
-                for element in self.yield_xml_diff_elements(file_info.abs_path):
+                for element in self.get_xml_diff_elements(file_info.abs_path):
                     if issue := check_ref_for_data_xml_element(element, file_info, init, self.protected_xml_ids):
-                        issues[issue[0]].append(issue[1])
+                        issues[issue[0]].append((file_info.abs_path, *issue[1:]))
 
-        messages = ''
-        if issues['id']:
-            messages += '\n\nFound id= for another module without force_create:\n' + "\n".join(issues['id'])
-        if issues['ref']:
-            messages += "\n\nFound ref= for another module:\n" + "\n".join(issues['ref'])
-        if issues['eval']:
-            messages += "\n\nFound eval uses ref( for another module without raise_if_not_found=False:\n" + "\n".join(issues['eval'])
-        if issues['inherit_id']:
-            messages += '\n\nFound inherit_id= for another module without force_create:\n' + "\n".join(issues['inherit_id'])
-
-        self.assertFalse(bool(messages), messages)
+        for error_type, issues_ in issues.items():
+            if error_type == 'id':
+                code = 'code_for_id'
+                message = 'Found id= for another module without force_create:'
+            elif error_type == 'ref':
+                code = 'code_for_ref'
+                message = 'Found ref= for another module:'
+            elif error_type == 'eval':
+                code = 'code_for_eval'
+                message = 'Found eval uses ref( for another module without raise_if_not_found=False:'
+            elif error_type == 'inherit_id':
+                code = 'code_for_inherit_id'
+                message = 'Found inherit_id= for another module without force_create:'
+            for issue in issues_:
+                self.report.append({
+                    'code': code,
+                    'location': {
+                        'row': issue[1],
+                        'column': 1,
+                    },
+                    'end_location': {
+                        'row': issue[2],
+                        'column': 1,
+                    },
+                    'filename': issue[0],
+                    'message': message
+                })

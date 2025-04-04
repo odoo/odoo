@@ -1,8 +1,9 @@
-from .diff_case import DiffCase
+from odoo.tests import BaseCase
+from odoo.tests.diffcase import DiffCase
 from odoo.tools import file_path
 
 
-class TestDiffCase(DiffCase):
+class TestDiffCase(BaseCase):
     def get_diff_linenos(self, filepath: str, *args, expected_lines: int | None = None) -> set[int]:
         modified_lines: set[str] = set(l.strip() for l in args)
         diff_linenos: set[int] = set()
@@ -22,7 +23,7 @@ class TestDiffCase(DiffCase):
             expected_lines=1,
         )
 
-        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        elements = list(DiffCase.get_xml_diff_elements(abs_path, diff_linenos))
         self.assertEqual(len(elements), 1)
         self.assertEqual(elements[0].tag, 'record')
         self.assertEqual(elements[0].get('model', None), 'res.users.settings')
@@ -32,7 +33,7 @@ class TestDiffCase(DiffCase):
             '<field name="login">admin</field><field name="password">admin</field>',
             expected_lines=1,
         )
-        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        elements = list(DiffCase.get_xml_diff_elements(abs_path, diff_linenos))
         self.assertEqual(len(elements), 2)
         self.assertEqual(elements[0].tag, 'field')
         self.assertEqual(elements[0].get('name', None), 'login')
@@ -44,7 +45,7 @@ class TestDiffCase(DiffCase):
             '/> <!-- end of user admin -->',
             expected_lines=1,
         )
-        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        elements = list(DiffCase.get_xml_diff_elements(abs_path, diff_linenos))
         self.assertEqual(len(elements), 1)
         self.assertEqual(elements[0].tag, 'field')
         self.assertEqual(elements[0].get('ref', None), 'base.partner_admin')
@@ -54,7 +55,7 @@ class TestDiffCase(DiffCase):
             'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://www.sbr.gov.au/ato/payevnt"',
             expected_lines=1,
         )
-        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        elements = list(DiffCase.get_xml_diff_elements(abs_path, diff_linenos))
         self.assertEqual(len(elements), 1)
         self.assertEqual(elements[0].tag, '{http://www.sbr.gov.au/ato/payevnt}PAYEVNT')
 
@@ -63,7 +64,7 @@ class TestDiffCase(DiffCase):
             '<tns:Rp>',
             expected_lines=1,
         )
-        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        elements = list(DiffCase.get_xml_diff_elements(abs_path, diff_linenos))
         self.assertEqual(len(elements), 1)
         self.assertEqual(elements[0].tag, '{http://www.sbr.gov.au/ato/payevnt}Rp')
 
@@ -74,7 +75,7 @@ class TestDiffCase(DiffCase):
             'second line -->',
             expected_lines=3,
         )
-        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        elements = list(DiffCase.get_xml_diff_elements(abs_path, diff_linenos))
         self.assertFalse(elements)
 
         # The <?xml version="1.0" encoding="utf-8"?> won't be parsed by iterparse
@@ -84,6 +85,6 @@ class TestDiffCase(DiffCase):
             '<?xml version="1.0" encoding="utf-8"?>',
             expected_lines=1,
         )
-        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        elements = list(DiffCase.get_xml_diff_elements(abs_path, diff_linenos))
         self.assertEqual(len(elements), 1)
         self.assertEqual(elements[0].tag, 'odoo')
