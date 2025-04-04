@@ -15,6 +15,12 @@ registry.category("services").add("google_map", {
         const notification = deps["notification"];
         let gmapAPIKeyProm;
         let gmapAPILoading;
+        const promiseKeys = {};
+        const promiseKeysResolves = {};
+        let lastKey;
+        window.odoo_gmap_api_post_load = (async function odoo_gmap_api_post_load() {
+            promiseKeysResolves[lastKey]?.();
+        }).bind(this);
         return {
             /**
              * @param {boolean} [refetch=false]
@@ -38,14 +44,24 @@ registry.category("services").add("google_map", {
                 // that the key changes meanwhile... it will not work but we can
                 // agree the user can bother to reload the page at that moment.
                 if (refetch || !gmapAPILoading) {
-                    gmapAPILoading = new Promise(async (resolve) => {
+                    gmapAPILoading = new Promise(async resolve => {
                         const key = await this.getGMapAPIKey(refetch);
+                        lastKey = key;
 
-                        window.odoo_gmap_api_post_load = (async function odoo_gmap_api_post_load() {
+                        if (key) {
+                            if (!promiseKeys[key]) {
+                                promiseKeys[key] = new Promise((resolve) => {
+                                    promiseKeysResolves[key] = resolve;
+                                });
+                                await loadJS(
+                                    `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmap_api_post_load&key=${encodeURIComponent(
+                                        key
+                                    )}`
+                                );
+                            }
+                            await promiseKeys[key];
                             resolve(key);
-                        }).bind(this);
-
-                        if (!key) {
+                        } else {
                             if (!editableMode && user.isAdmin) {
                                 const message = _t("Cannot load google map.");
                                 const urlTitle = _t("Check your configuration.");
@@ -54,18 +70,11 @@ registry.category("services").add("google_map", {
                                         <span>${escape(message)}</span><br/>
                                         <a href="/odoo/action-website.action_website_configuration">${escape(urlTitle)}</a>
                                     </div>`),
-                                    { type: "warning", sticky: true }
+                                    { type: 'warning', sticky: true }
                                 );
                             }
                             resolve(false);
-                            gmapAPILoading = false;
-                            return;
                         }
-                        await loadJS(
-                            `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmap_api_post_load&key=${encodeURIComponent(
-                                key
-                            )}`
-                        );
                     });
                 }
                 return gmapAPILoading;

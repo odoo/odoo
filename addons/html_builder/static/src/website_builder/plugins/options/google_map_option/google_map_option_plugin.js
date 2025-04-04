@@ -146,10 +146,13 @@ export class GoogleMapOptionPlugin extends Plugin {
      * @returns {Promise<Place | undefined>}
      */
     async getPlace(editingElement, coordinates) {
-        const place = await this.nearbySearch(editingElement, coordinates);
-        if (!place && !this.isGoogleMapsErrorBeingHandled) {
+        const place = await this.nearbySearch(coordinates);
+        if (place?.error && !this.isGoogleMapsErrorBeingHandled) {
+            this.notifyGMapError(editingElement);
+        } else if (!place && !this.isGoogleMapsErrorBeingHandled) {
             // Somehow the search failed but Google didn't trigger an error.
-            // @TODO mysterious-egg should we keep this? Seems radical.
+            // @TODO mysterious-egg should we keep this? Seems radical. Not sure
+            // we even ever get to this in the new flow.
             this.dependencies.remove.removeElement(editingElement);
         } else {
             return place;
@@ -284,12 +287,10 @@ export class GoogleMapOptionPlugin extends Plugin {
     }
 
     /**
-     * @param {Element} editingElement
      * @param {Coordinates} coordinates
-     * @param {boolean} [notify=true]
-     * @returns {Promise<Place|undefined>}
+     * @returns {Promise<Place|{ error: string }|undefined>}
      */
-    async nearbySearch(editingElement, coordinates, notify = true) {
+    async nearbySearch(coordinates) {
         const place = this.gpsMapCache.get(coordinates);
         if (place) {
             return place;
@@ -324,18 +325,14 @@ export class GoogleMapOptionPlugin extends Plugin {
                                     this.gpsMapCache.set(coordinates, place);
                                     resolve(place);
                                 } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
-                                    if (notify) {
-                                        this.notifyGMapError(editingElement);
-                                    }
+                                    resolve({ error: status });
+                                } else {
                                     resolve();
                                 }
                             }
                         );
                     } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
-                        if (notify) {
-                            this.notifyGMapError(editingElement);
-                        }
-                        resolve();
+                        resolve({ error: status });
                     } else {
                         resolve();
                     }

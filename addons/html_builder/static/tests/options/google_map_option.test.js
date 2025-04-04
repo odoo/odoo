@@ -2,6 +2,7 @@ import { describe, test, expect } from "@odoo/hoot";
 import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "../website_helpers";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { GoogleMapOptionPlugin } from "@html_builder/website_builder/plugins/options/google_map_option/google_map_option_plugin";
+import { GoogleMapOption } from "@html_builder/website_builder/plugins/options/google_map_option/google_map_option";
 import { queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
@@ -43,12 +44,19 @@ describe("API key validation", () => {
                 google_maps_api_key: key,
             })
         );
+        patchWithCleanup(GoogleMapOption.prototype, {
+            // Can't do anything since we're not loading the API.
+            initializeAutocomplete() {},
+        });
         patchWithCleanup(GoogleMapOptionPlugin.prototype, {
             /**
              * Return the key again instead of actually loading the API, which
              * wouldn't work given we don't have a real key.
              */
             async loadGoogleMapAPIFromService() {
+                window.google = {
+                    maps: { places: {} },
+                };
                 return key;
             },
             /**
@@ -72,9 +80,9 @@ describe("API key validation", () => {
              * OR, mock a failed call to Google Maps' nearby search calling the
              * error handler.
              */
-            nearbySearch(editingElement) {
+            async nearbySearch() {
                 if (isFakeValidKey) {
-                    this.notifyGMapError(editingElement);
+                    return { error: "CRITICAL" };
                 } else {
                     return {
                         formatted_address:
