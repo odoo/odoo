@@ -351,7 +351,12 @@ export class Interaction {
      * @returns {Function} removes the listeners
      */
     addListener(target, event, fn, options) {
-        const nodes = target[Symbol.iterator] ? target : [target];
+        let nodes;
+        if (target.nodeName && ["FORM", "SELECT"].includes(target.nodeName)) {
+            nodes = [target];
+        } else {
+            nodes = target[Symbol.iterator] ? target : [target];
+        }
         const [ev, handler, opts] = this.__colibri__.addListener(nodes, event, fn, options);
         return () => nodes.forEach((node) => node.removeEventListener(ev, handler, opts));
     }

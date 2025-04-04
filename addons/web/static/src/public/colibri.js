@@ -234,8 +234,15 @@ export class Colibri {
     getNodes(sel) {
         const selectors = this.interaction.dynamicSelectors;
         if (sel in selectors) {
-            const elem = selectors[sel]();
-            return elem ? [elem] : [];
+            const elems = selectors[sel]();
+            if (elems) {
+                if (elems.nodeName && ["FORM", "SELECT"].includes(elems.nodeName)) {
+                    return [elems];
+                }
+                return elems[Symbol.iterator] ? elems : [elems];
+            } else {
+                return [];
+            }
         }
         return this.interaction.el.querySelectorAll(sel);
     }
