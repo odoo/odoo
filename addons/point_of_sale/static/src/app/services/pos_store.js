@@ -1287,6 +1287,12 @@ export class PosStore extends WithLazyGetterTrap {
                     .forEach((order) => (order.session_id = this.session));
             }
 
+<<<<<<< 348d9cada46ef616ef8177e3d8aa805857e0bae6:addons/point_of_sale/static/src/app/services/pos_store.js
+||||||| 0d0c1bc7c075f49a461c66a433e20b431276ff12:addons/point_of_sale/static/src/app/store/pos_store.js
+            this.clearPendingOrder();
+=======
+            // Remove only synced orders from the pending orders
+>>>>>>> 44557d15d16ef23267baaf769000ba8ac06c2ee5:addons/point_of_sale/static/src/app/store/pos_store.js
             orders.forEach((o) => this.removePendingOrder(o));
             return newData["pos.order"];
         } catch (error) {
