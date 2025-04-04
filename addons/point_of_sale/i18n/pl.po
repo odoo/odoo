@@ -4,8 +4,8 @@
 # 
 # Translators:
 # przemekjaroc, 2024
-# Marta Wacławek, 2025
 # Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -907,12 +907,14 @@ msgid ""
 "An error occurred while closing the session. Unsynced orders will be "
 "available in the next session. The page will be reloaded."
 msgstr ""
+"Podczas zamykania sesji wystąpił błąd. Niezsynchronizowane zamówienia będą "
+"dostępne w następnej sesji. Strona zostanie załadowana ponownie."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/data_service.js:0
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "Podczas ładowania Punktu Sprzedaży wystąpił błąd \n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1668,7 +1670,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/generic_components/list_container/list_container.js:0
 msgid "Choose an order"
-msgstr ""
+msgstr "Wybierz zamówienie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
@@ -4217,7 +4219,7 @@ msgstr "Nie"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No PoS configuration found"
-msgstr ""
+msgstr "Nie znaleziono żadnej konfiguracji PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4307,6 +4309,8 @@ msgstr ""
 msgid ""
 "No open session available. Please open a new session to capture the order."
 msgstr ""
+"Nie ma dostępnych żadnych otwartych sesji. Otwórz nową sesję, aby przyjąć "
+"zamówienie."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -7275,7 +7279,7 @@ msgstr "Bez podatku"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 msgid "Tax ID: %(vatId)s"
-msgstr ""
+msgstr "NIP: %(vatId)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
@@ -7719,6 +7723,7 @@ msgstr "Sesja była otwarta przez wyjątkowo długi czas. Rozważ jej zamknięci
 msgid ""
 "The session is being closed by another user. The page will be reloaded."
 msgstr ""
+"Sesja jest zamykana przez innego użytkownika. Ta strona zostanie odświeżona."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
@@ -8873,6 +8878,18 @@ msgstr "Musisz najpierw usunąć produkt z kombinacji %s"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You must have 'Administration Settings' access to load clothes data."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You must have 'Administration Settings' access to load furniture data."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You must have at least one payment method configured to launch a session."
 msgstr ""
@@ -9163,3 +9180,5 @@ msgid ""
 "This journal is associated with payment method %s that is being used by "
 "order %s in the active pos session %s"
 msgstr ""
+"Ten dziennik jest powiązany z metodą płatności %s, która jest używana przez "
+"zamówienie %s w aktywnej sesji pos %s"
