@@ -183,13 +183,20 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
 test("Chat bubble preview works on author as email address", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    const testPartnerChannelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
     const messageId = pyEnv["mail.message"].create({
         author_id: null,
         body: "Some email message",
         email_from: "md@oilcompany.fr",
-        model: "res.partner",
+        model: "discuss.channel",
         needaction: true,
-        res_id: partnerId,
+        res_id: testPartnerChannelId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,

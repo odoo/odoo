@@ -120,7 +120,7 @@ patch(MessagingMenu.prototype, {
         }
     },
     async openThread(thread) {
-        if (this.store.discuss.isActive) {
+        if (this.store.discuss.isActive || !["mail.box", "discuss.channel"].includes(thread.model)) {
             this.action.doAction({
                 type: "ir.actions.act_window",
                 res_model: thread.model,

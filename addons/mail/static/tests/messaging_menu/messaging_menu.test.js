@@ -326,6 +326,13 @@ test("grouped notifications by document", async () => {
             notification_type: "email",
         },
     ]);
+    mockService("action", {
+        doAction(action) {
+            asyncStep("do_action");
+            expect(action.res_id).toBe(partnerId);
+            expect(action.res_model).toBe("res.partner");
+        },
+    });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
@@ -333,7 +340,7 @@ test("grouped notifications by document", async () => {
         text: "Email Failure: Contact",
         contains: [".badge", { text: "2" }],
     });
-    await contains(".o-mail-ChatWindow");
+    await waitForSteps(["do_action"]);
 });
 
 test("grouped notifications by document model", async () => {
@@ -837,12 +844,19 @@ test("Group chat should be displayed inside the chat section of the messaging me
 test("click on preview should mark as read and open the thread", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
+    const testPartnerChannelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
     const messageId = pyEnv["mail.message"].create({
-        model: "res.partner",
+        model: "discuss.channel",
         body: "not empty",
         author_id: serverState.odoobotId,
         needaction: true,
-        res_id: partnerId,
+        res_id: testPartnerChannelId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
@@ -858,42 +872,6 @@ test("click on preview should mark as read and open the thread", async () => {
     await contains(".o-mail-ChatWindow");
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 0, text: "Frodo Baggins" });
-});
-
-test("click on expand from chat window should close the chat window and open the form view", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
-    const messageId = pyEnv["mail.message"].create({
-        model: "res.partner",
-        body: "not empty",
-        author_id: serverState.odoobotId,
-        needaction: true,
-        res_id: partnerId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_status: "sent",
-        notification_type: "inbox",
-        res_partner_id: serverState.partnerId,
-    });
-    mockService("action", {
-        doAction(action) {
-            asyncStep("do_action");
-            expect(action.res_id).toBe(partnerId);
-            expect(action.res_model).toBe("res.partner");
-        },
-    });
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "Frodo Baggins" });
-    // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Open Form View" });
-    await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["do_action"], {
-        message: "should have done an action to open the form view",
-    });
 });
 
 test("preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread", async () => {
