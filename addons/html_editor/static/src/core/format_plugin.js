@@ -20,6 +20,7 @@ import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { isFakeLineBreak } from "../utils/dom_state";
+import { getColor } from "@html_editor/utils/color";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -96,6 +97,12 @@ export class FormatPlugin extends Plugin {
                 icon: "fa-eraser",
                 run: this.removeFormat.bind(this),
             },
+            {
+                id: "paintFormat",
+                description: _t("Copy and appy format"),
+                run: this.paintFormat.bind(this),
+                icon: "oe-paint-format-icon",
+            },
         ],
         shortcuts: [
             { hotkey: "control+b", commandId: "formatBold" },
@@ -140,6 +147,12 @@ export class FormatPlugin extends Plugin {
                 commandId: "removeFormat",
                 isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
             }),
+            withSequence(30, {
+                id: "paint_format",
+                groupId: "decoration",
+                commandId: "paintFormat",
+                isActive: () => !!this._copiedFormats.length,
+            }),
         ],
         /** Handlers */
         beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
@@ -148,6 +161,10 @@ export class FormatPlugin extends Plugin {
 
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
+
+    setup() {
+        this._copiedFormats = [];
+    }
 
     removeFormat() {
         const traversedNodes = this.dependencies.selection.getTraversedNodes();
@@ -162,6 +179,46 @@ export class FormatPlugin extends Plugin {
         }
         this.dispatchTo("remove_format_handlers");
         this.dependencies.history.addStep();
+    }
+
+    paintFormat() {
+        if (this._copiedFormats.length) {
+            while (this._copiedFormats.length) {
+                const { format, value } = this._copiedFormats.shift();
+                if (formatsSpecs[format]) {
+                    this._formatSelection(format, { applyStyle: true });
+                } else {
+                    this.dispatchTo("apply_format_handlers", format, value);
+                }
+            }
+            this.dependencies.history.addStep();
+        } else {
+            const traversedNodes = this.dependencies.selection.getTraversedNodes();
+            if (traversedNodes.length > 1) {
+                return;
+            }
+            const node = traversedNodes[0];
+            for (const format of Object.keys(formatsSpecs)) {
+                if (this.hasSelectionFormat(format, [node])) {
+                    this._copiedFormats.push({ format });
+                }
+            }
+            const el = closestElement(node);
+            const textColor = getColor(el, "color");
+            if (textColor) {
+                this._copiedFormats.push({
+                    format: "color",
+                    value: textColor,
+                });
+            }
+            const bgColor = getColor(el, "backgroundColor");
+            if (bgColor) {
+                this._copiedFormats.push({
+                    format: "backgroundColor",
+                    value: bgColor,
+                });
+            }
+        }
     }
 
     /**
