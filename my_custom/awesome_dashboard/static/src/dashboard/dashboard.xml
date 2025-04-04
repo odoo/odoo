@@ -1,49 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="awesome_dashboard.AwesomeDashboard">
+    <t t-name="awesome_dashboard.AwesomeDashboard" owl="1">
         <Layout display="display" className="'o_dashboard h-100'">
             <t t-set-slot="layout-buttons">
                 <button class="btn btn-primary" t-on-click="openCustomerView">Customers</button>
                 <button class="btn btn-primary" t-on-click="openLeads">Leads</button>
             </t>
+
+            <t t-set-slot="control-panel-additional-actions">
+                <button t-on-click="openConfiguration" class="btn p-0 ms-1 border-0">
+                    <i class="fa fa-cog"></i>
+                </button>
+            </t>
+
             <div class="d-flex flex-wrap" t-if="statistics.isReady">
-                <DashboardItem>
-                    Average amount of t-shirt by order this month
-                    <div class="fs-1 fw-bold text-success text-center">
-                        <t t-esc="statistics.average_quantity"/>
-                    </div>
-                </DashboardItem>
-                <DashboardItem>
-                    Average time for an order to go from 'new' to 'sent' or 'cancelled'
-                    <div class="fs-1 fw-bold text-success text-center">
-                        <t t-esc="statistics.average_time"/>
-                    </div>
-                </DashboardItem>
-                <DashboardItem>
-                    Number of new orders this month
-                    <div class="fs-1 fw-bold text-success text-center">
-                        <t t-esc="statistics.nb_new_orders"/>
-                    </div>
-                </DashboardItem>
-                <DashboardItem>
-                    Number of cancelled orders this month
-                    <div class="fs-1 fw-bold text-success text-center">
-                        <t t-esc="statistics.nb_cancelled_orders"/>
-                    </div>
-                </DashboardItem>
-                <DashboardItem>
-                    Total amount of new orders this month
-                    <div class="fs-1 fw-bold text-success text-center">
-                        <t t-esc="statistics.total_amount"/>
-                    </div>
-                </DashboardItem>
-                <DashboardItem size="2">
-                    Shirt orders by size
-                    <PieChart data="statistics['orders_by_size']" label="'Shirt orders by size'"/>
-                </DashboardItem>
+                <t t-foreach="items" t-as="item" t-key="item.id">
+                    <DashboardItem size="item.size || 1" t-if="!state.disabledItems.includes(item.id)">
+                        <t t-set="itemProp" t-value="item.props ? item.props(statistics) : {'data': statistics}"/>
+                        <t t-component="item.Component" t-props="itemProp" />
+                    </DashboardItem>
+                </t>
             </div>
-        </Layout>    
+        </Layout>
     </t>
 
+    <t t-name="awesome_dashboard.ConfigurationDialog">
+        <Dialog title="'Dashboard items configuration'">
+            Which cards do you whish to see ?
+            <t t-foreach="items" t-as="item" t-key="item.id">
+                <CheckBox value="item.enabled" onChange="(ev) => this.onChange(ev, item)">
+                    <t t-esc="item.description"/>
+                </CheckBox>
+            </t>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="done">
+                    Done
+                </button>
+            </t>
+        </Dialog>
+    </t>
 </templates>

@@ -25,9 +25,11 @@
         'web.assets_backend': [
             'awesome_dashboard/static/src/**/*',
             ('remove', 'awesome_dashboard/static/src/dashboard/**/*'),
+            # ('remove', 'awesome_dashboard/static/src/dashboard/PieChardCard/*'),
         ],
         'awesome_dashboard.dashboard': [
-            'awesome_dashboard/static/src/dashboard/**/*'
+            'awesome_dashboard/static/src/dashboard/**/*',
+            # 'awesome_dashboard/static/src/dashboard/pie_chart_card/pie'
         ]
 
     },
