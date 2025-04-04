@@ -125,16 +125,16 @@ export class ComboConfiguratorPopup extends Component {
         }
     }
 
-    resetComboQuantities(comboId) {
-        for (const itemId in this.state.qty[comboId]) {
-            this.state.qty[comboId][itemId] = 0;
+    resetSingleQtyMaxCombo(combo) {
+        if (combo.qty_max === 1) {
+            for (const itemId in this.state.qty[combo.id]) {
+                this.state.qty[combo.id][itemId] = 0;
+            }
         }
     }
 
     async onClickSimpleProduct(combo_item, combo) {
-        if (combo.qty_max === 1) {
-            this.resetComboQuantities(combo.id);
-        }
+        this.resetSingleQtyMaxCombo(combo);
         if (this.totalQuantityForCombo(combo.id) < combo.qty_max) {
             this.state.qty[combo.id][combo_item.id] += 1;
         }
@@ -148,7 +148,7 @@ export class ComboConfiguratorPopup extends Component {
             } else {
                 const payload = await this.pos.openConfigurator(product.product_tmpl_id);
                 if (payload) {
-                    this.resetComboQuantities(combo.id);
+                    this.resetSingleQtyMaxCombo(combo);
                     this.state.configuration[combo_item.id] = payload;
                     this.state.qty[combo.id][combo_item.id] = 1;
                 }
