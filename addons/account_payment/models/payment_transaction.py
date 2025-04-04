@@ -163,6 +163,10 @@ class PaymentTransaction(models.Model):
             **extra_create_values,
         }
 
+        payment_term_lines = self.invoice_ids.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        if payment_term_lines:
+            payment_values['destination_account_id'] = payment_term_lines[0].account_id.id
+
         for invoice in self.invoice_ids:
             next_payment_values = invoice._get_invoice_next_payment_values()
             if next_payment_values['installment_state'] == 'epd' and self.amount == next_payment_values['amount_due']:
