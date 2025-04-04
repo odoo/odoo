@@ -8,6 +8,7 @@ from unittest.mock import patch
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.fields import Command, Domain
 from odoo.tests.common import BaseCase, TransactionCase
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 _FALSE_LEAF, _TRUE_LEAF = (0, '=', 1), (1, '=', 1)
@@ -1405,6 +1406,7 @@ class TestExpression2(TransactionExpressionCase):
         self.env['res.users'].search([('name', '=', 'test')])
 
 
+@tagged('res_partner')
 class TestAutoJoin(TransactionExpressionCase):
 
     def test_auto_join(self):
