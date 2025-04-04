@@ -2027,3 +2027,28 @@ test("display the notification message's posting date and time", async () => {
         text: "Tom Riddle joined the channel1:00 PM",
     });
 });
+
+test("should delete link preview along with message", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        og_title: "Delete Test Link",
+        og_description: "Should be removed with the message.",
+        og_type: "article",
+        source_url: "https://www.odoo.com",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "DeletePreviewTest" });
+    pyEnv["mail.message"].create({
+        body: "<a href='https://www.odoo.com'>https://www.odoo.com</a>",
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-LinkPreviewCard");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:contains('Delete')");
+    await click("button:contains('Confirm')");
+    await contains(".o-mail-LinkPreviewCard", { count: 0 });
+});
