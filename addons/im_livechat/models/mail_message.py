@@ -21,8 +21,8 @@ class MailMessage(models.Model):
         for message in self:
             message.parent_body = message.parent_id.body if message.parent_id else False
 
-    def _to_store_defaults(self):
-        return super()._to_store_defaults() + ["chatbot_current_step"]
+    def _to_store_defaults(self, for_current_user=False):
+        return super()._to_store_defaults(for_current_user) + ["chatbot_current_step"]
 
     def _to_store(self, store: Store, fields, **kwargs):
         """If we are currently running a chatbot.script, we include the information about

@@ -3,6 +3,8 @@ import { url } from "@web/core/utils/urls";
 export const FileModelMixin = (T) =>
     class extends T {
         access_token;
+        /** @type {string} */
+        as_author_access_token;
         checksum;
         extension;
         id;

@@ -86,11 +86,6 @@ class MailControllerCommon(HttpCase, MailCommon):
 
 class MailControllerAttachmentCommon(MailControllerCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.WITH_TOKEN, cls.NO_TOKEN = True, False
-
     def _execute_subtests_upload(self, document, subtests):
         for data_user, allowed, *args in subtests:
             route_kw = args[0] if args else {}
@@ -106,35 +101,26 @@ class MailControllerAttachmentCommon(MailControllerCommon):
                     ):
                         self._upload_attachment(document, route_kw)
 
-    def _execute_subtests_delete(self, subtests, allowed, message=None, thread=None):
-        for data_user, token, *args in subtests:
-            extra_params = args[0] if args else {}
-            route_kw = extra_params.get("route_kw", {})
-            author = extra_params.get("author")
+    def _execute_subtests_delete(self, subtests, thread=None, message=None):
+        for data_user, token, allowed in subtests:
             user, guest = self._authenticate_pseudo_user(data_user)
-            with self.subTest(user=user.name, guest=guest.name, token=token, route_kw=route_kw):
+            with self.subTest(user=user.name, guest=guest.name, token=token):
                 attachment = self.env["ir.attachment"].create({"name": "sample attachment"})
-                if token:
-                    attachment.generate_access_token()
                 if thread:
-                    message and message.write({"res_id": thread.id, "model": thread._name})
-                    attachment.write({"res_model": thread._name, "res_id": thread.id})
+                    attachment.write(
+                        {
+                            "res_model": thread._name,
+                            "res_id": thread.id,
+                        }
+                    )
                 if message:
                     message.write({"attachment_ids": [Command.LINK, attachment.id]})
-                    if author:
-                        if isinstance(author, str) and author == "self_author":
-                            author = guest.id if guest else user.partner_id
-                        message.author_guest_id = author if guest else False
-                        message.author_id = author if not guest else False
                 if allowed:
-                    self._delete_attachment(attachment, token, route_kw)
+                    self._delete_attachment(attachment, token)
                     self.assertFalse(attachment.exists())
                 else:
                     with self.assertRaises(JsonRpcException, msg="Wrong access token"):
-                        self._delete_attachment(attachment, token, route_kw)
-                if message:
-                    message.author_guest_id = False
-                    message.author_id = False
+                        self._delete_attachment(attachment, token)
 
     def _upload_attachment(self, document, route_kw):
         with mute_logger("odoo.http"), file_open("addons/web/__init__.py") as file:
@@ -152,14 +138,15 @@ class MailControllerAttachmentCommon(MailControllerCommon):
             res.raise_for_status()
             return json.loads(res.content.decode("utf-8"))["data"]["ir.attachment"][0]["id"]
 
-    def _delete_attachment(self, attachment, token, route_kw):
+    def _delete_attachment(self, attachment, token):
         with mute_logger("odoo.http"):
             self.make_jsonrpc_request(
                 route="/mail/attachment/delete",
                 params={
                     "attachment_id": attachment.id,
-                    "access_token": attachment.access_token if token else None,
-                    **route_kw,
+                    "access_token": (
+                        attachment._attachment_ownership_access_token() if token else None
+                    ),
                 },
             )
 

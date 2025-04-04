@@ -36,9 +36,12 @@ class MailMessage(models.Model):
         ])
         return [('id', 'in', ratings.subselect('message_id'))]
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, for_current_user=False):
         # sudo: mail.message - guest and portal user can receive rating of accessible message
-        return super()._to_store_defaults() + [Store.One("rating_id", sudo=True), "record_rating"]
+        return super()._to_store_defaults(for_current_user) + [
+            Store.One("rating_id", sudo=True),
+            "record_rating",
+        ]
 
     def _to_store(self, store: Store, fields, **kwargs):
         super()._to_store(store, [f for f in fields if f != "record_rating"], **kwargs)

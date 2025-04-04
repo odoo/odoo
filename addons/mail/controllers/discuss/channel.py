@@ -100,7 +100,9 @@ class ChannelController(http.Controller):
             messages.set_message_done()
         return {
             **res,
-            "data": Store(messages, for_current_user=True).get_result(),
+            "data": Store(
+                messages, messages._to_store_defaults(for_current_user=True), for_current_user=True
+            ).get_result(),
             "messages": messages.ids,
         }
 
