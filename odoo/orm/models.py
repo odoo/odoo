@@ -6163,9 +6163,9 @@ class BaseModel(metaclass=MetaModel):
         if not dirty_field_ids:
             return
 
-        # if any field is context-dependent, the values to flush should
-        # be found with a context where the context keys are all None
-        model = self.with_context({})
+        # for context-dependent fields, `convert_to_column_update` contains the
+        # logic to find which value to flush
+        model = self
 
         # sort dirty record ids so that records with the same set of modified
         # fields are grouped together; for that purpose, map each dirty id to

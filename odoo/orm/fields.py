@@ -1012,7 +1012,10 @@ class Field(typing.Generic[T]):
             return PsycopgJson(values) if values else None
         if self in record.env._field_depends_context:
             # field that will be written to the database depends on context;
-            # find the first value
+            # find the first value that is set
+            # If we have more than one value, it is a logical error in the
+            # design of the model. In that case, we pick one at random because
+            # a stored field can have only one value.
             for ctx_key, cache in field_cache.items():
                 if (value := cache.get(record_id, SENTINEL)) is not SENTINEL:
                     break
@@ -1530,11 +1533,6 @@ class Field(typing.Generic[T]):
         if dirty:
             assert self.column_type and self.store and all(assign)
             env._field_dirty[self].update(assign)
-            # XXX remove self.translate from here
-            if not self.translate and not self.company_dependent and self in env._field_depends_context:
-                # put the values under conventional context key values {'context_key': None},
-                # in order to ease the retrieval of those values to flush them
-                self._get_cache(env(context={})).update(assign)
         else:
             dirty_ids = env._field_dirty.get(self)
             if dirty_ids and not dirty_ids.isdisjoint(assign):
