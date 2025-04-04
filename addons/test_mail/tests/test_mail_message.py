@@ -81,7 +81,7 @@ class TestMessageValues(MailCommon):
         # Completely emptied now
         note_subtype.sudo().write({'description': ''})
         self.assertEqual(message.sudo()._filter_empty(), message)
-        record._message_update_content(message, body="", attachment_ids=[])
+        record._message_update_content(message.sudo(), body="", attachment_ids=[])
         self.assertEqual(message.notified_partner_ids, self.partner_admin)  # message still notified (albeit content is removed)
         self.assertEqual(message.starred_partner_ids, self.partner_admin)  # starred messages stay (albeit content is removed)
 
