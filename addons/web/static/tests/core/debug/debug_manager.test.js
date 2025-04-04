@@ -713,12 +713,16 @@ describe("DebugMenu", () => {
             _name = "partner";
 
             foo = fields.Char();
+            description = fields.Html();
+            bar = fields.Many2one({ relation: "ir.ui.view" });
 
             _records = [
                 {
                     id: 1,
                     display_name: "p1",
                     foo: fooValue,
+                    description: fooValue,
+                    bar: 18,
                 },
             ];
 
@@ -726,6 +730,8 @@ describe("DebugMenu", () => {
                 form: `
                     <form>
                         <field name="foo"/>
+                        <field name="description"/>
+                        <field name="bar" invisible="1"/>
                     </form>`,
                 search: "<search/>",
             };
@@ -758,11 +764,13 @@ describe("DebugMenu", () => {
         expect(queryAllTexts`.modal #formview_default_fields option`).toEqual([
             "",
             "Foo = 121212121212121212121212121212121212121212121212121212121...",
+            "Description = 121212121212121212121212121212121212121212121212121212121...",
         ]);
 
         expect(queryAllProperties(".modal #formview_default_fields option", "value")).toEqual([
             "",
             "foo",
+            "description",
         ]);
 
         await contains(".modal #formview_default_fields").select("foo");
