@@ -61,8 +61,3 @@ class BinaryController(Binary):
             ._get_image_stream_from(attachment_sudo, width=int(width), height=int(height))
             .get_response(as_attachment=kwargs.get("download"))
         )
-
-    @http.route()
-    @add_guest_to_context
-    def content_image(self, *args, **kwargs):
-        return super().content_image(*args, **kwargs)
