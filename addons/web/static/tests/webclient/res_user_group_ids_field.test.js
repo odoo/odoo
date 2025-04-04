@@ -1,6 +1,12 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, hover, queryAllTexts, runAllTimers, select } from "@odoo/hoot-dom";
-import { contains, defineModels, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    mountView,
+    onRpc,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 import { ResGroups } from "../_framework/mock_server/mock_models/res_groups";
 import { ResUsers } from "../_framework/mock_server/mock_models/res_users";
 import { ResCompany } from "../_framework/mock_server/mock_models/res_company";
@@ -37,7 +43,23 @@ beforeEach(() => {
         },
         {
             id: 15,
-            name: "Helpdesk Administator",
+            name: "Helpdesk Administrator",
+        },
+        {
+            id: 91,
+            name: "Internal user",
+        },
+        {
+            id: 92,
+            name: "Portal user",
+        },
+        {
+            id: 93,
+            name: "Something related to project",
+        },
+        {
+            id: 94,
+            name: "Something related to helpdesk",
         },
     ];
     ResUsers._records = [
@@ -48,49 +70,164 @@ beforeEach(() => {
             login: "my_user",
             partner_id: 1,
             password: "password",
-            group_ids: [1, 11],
-            view_group_hierarchy: [
-                {
-                    id: 121,
-                    name: "Administration (section)",
-                    categories: [
-                        {
-                            id: 122,
-                            name: "Administration",
-                            description: false,
-                            groups: [
-                                [1, "Access Rights"],
-                                [2, "Settings"],
-                            ],
-                        },
-                    ],
+            group_ids: [1, 11, 91],
+            view_group_hierarchy: {
+                groups: {
+                    1: {
+                        id: 1,
+                        name: "Access Rights",
+                        all_implied_by_ids: [1, 2],
+                        all_implied_ids: [],
+                        comment: false,
+                        disjoint_ids: [],
+                        implied_ids: [],
+                        level: 1,
+                        privilege_id: 122,
+                    },
+                    2: {
+                        id: 2,
+                        name: "Settings",
+                        all_implied_by_ids: [2],
+                        all_implied_ids: [1, 2, 15],
+                        comment: false,
+                        disjoint_ids: [],
+                        implied_ids: [1, 15],
+                        level: 2,
+                        privilege_id: 122,
+                    },
+                    11: {
+                        id: 11,
+                        name: "Project User",
+                        all_implied_by_ids: [11, 12, 13],
+                        all_implied_ids: [11],
+                        comment: "Can access Project as a user",
+                        disjoint_ids: [],
+                        implied_ids: [],
+                        level: 1.01,
+                        privilege_id: 222,
+                    },
+                    12: {
+                        id: 12,
+                        name: "Project Manager",
+                        all_implied_by_ids: [2, 12, 13, 15],
+                        all_implied_ids: [11, 12],
+                        comment: "Can access Project as a manager",
+                        disjoint_ids: [],
+                        implied_ids: [11],
+                        level: 2.02,
+                        privilege_id: 222,
+                    },
+                    13: {
+                        id: 13,
+                        name: "Project Administrator",
+                        all_implied_by_ids: [13],
+                        all_implied_ids: [11, 12, 13, 93],
+                        comment: "Can access Project as an admistrator",
+                        disjoint_ids: [],
+                        implied_ids: [11, 12, 93],
+                        level: 3.03,
+                        privilege_id: 222,
+                    },
+                    14: {
+                        id: 14,
+                        name: "Helpdesk User",
+                        all_implied_by_ids: [14, 15],
+                        all_implied_ids: [11, 14],
+                        comment: false,
+                        disjoint_ids: [],
+                        implied_ids: [11],
+                        level: 1.01,
+                        privilege_id: 223,
+                    },
+                    15: {
+                        id: 15,
+                        name: "Helpdesk Administrator",
+                        all_implied_by_ids: [15],
+                        all_implied_ids: [11, 12, 14, 15, 93, 94],
+                        comment: false,
+                        disjoint_ids: [],
+                        implied_ids: [14, 94],
+                        level: 2.02,
+                        privilege_id: 223,
+                    },
+                    91: {
+                        id: 91,
+                        name: "Internal user",
+                        all_implied_by_ids: [1, 2, 91],
+                        all_implied_ids: [91],
+                        comment: false,
+                        disjoint_ids: [92],
+                        implied_ids: [11],
+                        level: 1,
+                        privilege_id: false,
+                    },
+                    92: {
+                        id: 92,
+                        name: "Portal user",
+                        all_implied_by_ids: [92],
+                        all_implied_ids: [92],
+                        comment: "Portal members have specific access rights",
+                        disjoint_ids: [91],
+                        implied_ids: [],
+                        level: 1,
+                        privilege_id: false,
+                    },
+                    93: {
+                        id: 93,
+                        name: "Something related to project",
+                        all_implied_by_ids: [13, 15, 93],
+                        all_implied_ids: [93],
+                        comment: false,
+                        disjoint_ids: [],
+                        implied_ids: [],
+                        level: 1,
+                        privilege_id: false,
+                    },
+                    94: {
+                        id: 94,
+                        name: "Something related to helpdesk",
+                        all_implied_by_ids: [15, 94],
+                        all_implied_ids: [94],
+                        comment: false,
+                        disjoint_ids: [],
+                        implied_ids: [],
+                        level: 1,
+                        privilege_id: false,
+                    },
                 },
-                {
-                    id: 221,
-                    name: "Project (section)",
-                    categories: [
-                        {
-                            id: 222,
-                            name: "Project",
-                            description: "Project access rights description",
-                            groups: [
-                                [11, "Project User"],
-                                [12, "Project Manager"],
-                                [13, "Project Administrator"],
-                            ],
-                        },
-                        {
-                            id: 223,
-                            name: "Helpdesk",
-                            description: "",
-                            groups: [
-                                [14, "Helpdesk User"],
-                                [15, "Helpdesk Administrator"],
-                            ],
-                        },
-                    ],
-                },
-            ],
+                sections: [
+                    {
+                        id: 121,
+                        name: "Administration (section)",
+                        privileges: [
+                            {
+                                id: 122,
+                                name: "Administration",
+                                description: false,
+                                group_ids: [1, 2],
+                            },
+                        ],
+                    },
+                    {
+                        id: 221,
+                        name: "Project (section)",
+                        privileges: [
+                            {
+                                id: 222,
+                                name: "Project",
+                                description: "Project access rights description",
+                                group_ids: [11, 12, 13],
+                            },
+                            {
+                                id: 223,
+                                name: "Helpdesk",
+                                description: "",
+                                group_ids: [14, 15],
+                            },
+                        ],
+                    },
+                ],
+            },
         },
     ];
 });
@@ -101,9 +238,7 @@ test("simple rendering", async () => {
         arch: `
             <form>
                 <sheet>
-                    <group>
-                        <field name="group_ids" nolabel="1" widget="res_user_group_ids"/>
-                    </group>
+                    <field name="group_ids" widget="res_user_group_ids"/>
                 </sheet>
             </form>`,
         resModel: "res.users",
@@ -113,9 +248,8 @@ test("simple rendering", async () => {
     // 1 group with 2 inner groups
     expect(".o_field_widget[name=group_ids] .o_group").toHaveCount(1);
     expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(2);
-    expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(2);
 
-    // first group has one category
+    // first group has one privilege
     expect(
         ".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_horizontal_separator"
     ).toHaveText("ADMINISTRATION (SECTION)");
@@ -123,14 +257,10 @@ test("simple rendering", async () => {
     expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_form_label").toHaveText(
         "Administration"
     );
-    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_field_selection").toHaveCount(
-        1
-    );
-    expect(
-        ".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_field_selection select"
-    ).toHaveValue("1");
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) select").toHaveCount(1);
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) select").toHaveValue("1");
 
-    // second group has 2 categories
+    // second group has 2 privileges
     expect(
         ".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_horizontal_separator"
     ).toHaveText("PROJECT (SECTION)");
@@ -138,20 +268,45 @@ test("simple rendering", async () => {
     expect(
         queryAllTexts(".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_form_label")
     ).toEqual(["Project?", "Helpdesk"]);
-    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_field_selection").toHaveCount(
-        2
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select").toHaveCount(2);
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(0)").toHaveValue("11");
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(1)").toHaveValue(
+        "false"
     );
-    expect(
-        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_field_selection:eq(0) select"
-    ).toHaveValue("11");
-    expect(
-        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_field_selection:eq(1) select"
-    ).toHaveValue("false");
+
+    expect(".o_group_info_button").toHaveCount(0); // not displayed in non debug mode
+});
+
+test("simple rendering (debug)", async () => {
+    serverState.debug = "1";
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    // 2 group and 4 inner groups
+    expect(".o_field_widget[name=group_ids] .o_group").toHaveCount(2);
+    expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(4);
+    expect(".o_group:eq(1) .o_horizontal_separator").toHaveText("EXTRA RIGHTS");
+    expect(".o_group:eq(1) .o_inner_group").toHaveCount(2);
+    expect(".o_group:eq(1) .o_inner_group:eq(0) input[type=checkbox]").toHaveCount(2);
+    expect(".o_group:eq(1) .o_inner_group:eq(0) input[type=checkbox]:checked").toHaveCount(1);
+    expect(".o_group:eq(1) .o_inner_group:eq(1) input[type=checkbox]").toHaveCount(2);
+    expect(".o_group:eq(1) .o_inner_group:eq(1) input[type=checkbox]:checked").toHaveCount(0);
+
+    expect(".o_group_info_button:not(.invisible)").toHaveCount(3);
 });
 
 test("add and remove groups", async () => {
     onRpc("web_save", ({ args }) => {
-        expect(args[1].group_ids).toEqual([[6, false, [1, 15]]]);
+        expect(args[1].group_ids).toEqual([[6, false, [1, 15, 91]]]);
     });
 
     await mountView({
@@ -159,33 +314,24 @@ test("add and remove groups", async () => {
         arch: `
             <form>
                 <sheet>
-                    <group>
-                        <field name="group_ids" nolabel="1" widget="res_user_group_ids"/>
-                    </group>
+                    <field name="group_ids" widget="res_user_group_ids"/>
                 </sheet>
             </form>`,
         resModel: "res.users",
         resId: 1,
     });
 
-    await click(".o_field_selection select:eq(1)");
+    await click(".o_field_widget[name=group_ids] select:eq(1)");
     await select("false");
-    await click(".o_field_selection select:eq(2)");
+    await click(".o_field_widget[name=group_ids] select:eq(2)");
     await select("15");
     await contains(`.o_form_button_save`).click();
 });
 
-test("editing groups doesn't remove groups that are not in categories", async () => {
-    // this group doesn't belong to a category, so it can't be added/removed from the relation
-    // with the `res_user_group_ids` widget.
-    ResGroups._records.push({
-        id: 101,
-        name: "Extra Rights",
-    });
-    ResUsers._records[0].group_ids.push(101);
-
+test("editing groups doesn't remove groups (debug)", async () => {
+    serverState.debug = "1";
     onRpc("web_save", ({ args }) => {
-        expect(args[1].group_ids).toEqual([[6, false, [101, 1]]]);
+        expect(args[1].group_ids).toEqual([[6, false, [1, 15, 91]]]);
     });
 
     await mountView({
@@ -193,30 +339,28 @@ test("editing groups doesn't remove groups that are not in categories", async ()
         arch: `
             <form>
                 <sheet>
-                    <group>
-                        <field name="group_ids" nolabel="1" widget="res_user_group_ids"/>
-                    </group>
+                    <field name="group_ids" widget="res_user_group_ids"/>
                 </sheet>
             </form>`,
         resModel: "res.users",
         resId: 1,
     });
 
-    await click(".o_field_selection select:eq(1)");
+    await click(".o_field_widget[name=group_ids] select:eq(1)");
     await select("false");
+    await click(".o_field_widget[name=group_ids] select:eq(2)");
+    await select("15");
     await contains(`.o_form_button_save`).click();
 });
 
 test.tags("desktop");
-test(`category tooltips`, async () => {
+test(`privilege tooltips`, async () => {
     await mountView({
         type: "form",
         arch: `
             <form>
                 <sheet>
-                    <group>
-                        <field name="group_ids" nolabel="1" widget="res_user_group_ids"/>
-                    </group>
+                    <field name="group_ids" widget="res_user_group_ids"/>
                 </sheet>
             </form>`,
         resModel: "res.users",
@@ -225,5 +369,277 @@ test(`category tooltips`, async () => {
 
     await hover(`.o_form_label sup`);
     await runAllTimers();
-    expect(`.o-tooltip .o-tooltip--help`).toHaveText("Project access rights description");
+    expect(`.o-tooltip .o-tooltip--help`).toHaveText(
+        "Project access rights description\n- Project User: Can access Project as a user\n- Project Manager: Can access Project as a manager\n- Project Administrator: Can access Project as an admistrator"
+    );
+});
+
+test("implied groups rendering", async () => {
+    ResUsers._records[0].group_ids = [2, 15];
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(2);
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select").toHaveCount(2);
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(0)").toHaveValue(
+        "false"
+    );
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(0) option.o_select_placeholder"
+    ).toHaveText("Project Manager");
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(1)").toHaveValue("15");
+});
+
+test("implied groups rendering (debug)", async () => {
+    serverState.debug = "1";
+    ResUsers._records[0].group_ids = [2, 15];
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(4);
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select").toHaveCount(2);
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(0)").toHaveValue(
+        "false"
+    );
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(0) option.o_select_placeholder"
+    ).toHaveText("Project Manager");
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(1)").toHaveValue("15");
+
+    await contains(".o_inner_group:eq(1) .o_group_info_button:eq(0)").click();
+    expect(".o_popover").toHaveCount(1);
+    expect(queryAllTexts(".o_popover table td")).toEqual([
+        "Project",
+        "Project Manager",
+        "Implied by",
+        "- Administration/Settings\n- Helpdesk/Helpdesk Administrator",
+    ]);
+    await contains(".o_inner_group:eq(1) .o_group_info_button:eq(1)").click();
+    expect(".o_popover").toHaveCount(1);
+    expect(queryAllTexts(".o_popover table td")).toEqual([
+        "Helpdesk",
+        "Helpdesk Administrator",
+        "Exclusively implies",
+        "- Something related to project\n- Something related to helpdesk",
+        "Jointly implies",
+        "- Project/Project Manager",
+    ]);
+
+    expect(".o_inner_group:eq(2) .o_is_implied input").not.toBeChecked();
+    await contains(".o_inner_group:eq(2) .o_group_info_button").click();
+    expect(".o_popover").toHaveCount(1);
+    expect(queryAllTexts(".o_popover table td")).toEqual([
+        "Group",
+        "Internal user",
+        "Implied by",
+        "- Administration/Settings",
+    ]);
+});
+
+test("implied groups rendering: exclusive (debug)", async () => {
+    serverState.debug = "1";
+    ResUsers._records[0].group_ids = [15];
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=group_ids] .o_group .o_inner_group").toHaveCount(4);
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select").toHaveCount(2);
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(0)").toHaveValue(
+        "false"
+    );
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(0) option.o_select_placeholder"
+    ).toHaveText("Project Manager");
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(1) select:eq(1)").toHaveValue("15");
+
+    await contains(".o_inner_group:eq(1) .o_group_info_button:eq(0)").click();
+    expect(".o_popover").toHaveCount(1);
+    expect(queryAllTexts(".o_popover table td")).toEqual([
+        "Project",
+        "Project Manager",
+        "Implied by",
+        "- Helpdesk/Helpdesk Administrator",
+    ]);
+    await contains(".o_inner_group:eq(1) .o_group_info_button:eq(1)").click();
+    expect(".o_popover").toHaveCount(1);
+    expect(queryAllTexts(".o_popover table td")).toEqual([
+        "Helpdesk",
+        "Helpdesk Administrator",
+        "Exclusively implies",
+        "- Something related to project\n- Something related to helpdesk\n- Project/Project Manager",
+    ]);
+});
+
+test("implied groups: lower level groups no longer available", async () => {
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_inner_group:eq(1) select").toHaveCount(2);
+    expect(".o_inner_group:eq(1) select:eq(0)").toHaveValue("11");
+    expect(".o_inner_group:eq(1) select:eq(0) option:not(.d-none)").toHaveCount(4);
+    expect(".o_inner_group:eq(1) select:eq(1)").toHaveValue("false");
+
+    await contains(".o_inner_group:eq(1) select:eq(1)").select("15");
+    expect(".o_inner_group:eq(1) select:eq(0)").toHaveValue("false");
+    expect(".o_inner_group:eq(1) select:eq(0) option.o_select_placeholder").toHaveText(
+        "Project Manager"
+    );
+    expect(".o_inner_group:eq(1) select:eq(0) option:not(.d-none)").toHaveCount(2);
+
+    await contains(".o_inner_group:eq(1) select:eq(1)").select("14");
+    expect(".o_inner_group:eq(1) select:eq(0)").toHaveValue("11");
+    expect(".o_inner_group:eq(1) select:eq(0) option:not(.d-none)").toHaveCount(4);
+});
+
+test("implied groups: lower level groups of same privilege still available", async () => {
+    ResUsers._records[0].group_ids = [13];
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+    expect(".o_inner_group:eq(1) select:eq(0) option:not(.d-none)").toHaveCount(4);
+});
+
+test("do not lose shadowed groups when editing", async () => {
+    ResUsers._records[0].group_ids = [11, 15];
+    onRpc("web_save", ({ args }) => {
+        expect(args[1]).toEqual({
+            group_ids: [[6, false, [2, 15, 11]]],
+        });
+        expect.step("web_save");
+    });
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_inner_group:eq(1) select:eq(0)").toHaveValue("false");
+    expect(".o_inner_group:eq(1) select:eq(0) option.o_select_placeholder").toHaveText(
+        "Project Manager"
+    );
+    expect(".o_inner_group:eq(1) select:eq(0) option:not(.d-none)").toHaveCount(2);
+
+    await contains(".o_inner_group:eq(0) select").select("2");
+    expect(".o_inner_group:eq(1) select:eq(0)").toHaveValue("false");
+    expect(".o_inner_group:eq(1) select:eq(0) option.o_select_placeholder").toHaveText(
+        "Project Manager"
+    );
+    expect(".o_inner_group:eq(1) select:eq(0) option:not(.d-none)").toHaveCount(2);
+
+    await contains(".o_form_button_save").click();
+    expect.verifySteps(["web_save"]);
+});
+
+test("do not keep shadowed group if higher level group is set", async () => {
+    ResUsers._records[0].group_ids = [11, 15];
+    onRpc("web_save", ({ args }) => {
+        expect(args[1]).toEqual({
+            group_ids: [[6, false, [13, 15]]],
+        });
+        expect.step("web_save");
+    });
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_inner_group:eq(1) select:eq(0)").toHaveValue("false");
+    expect(".o_inner_group:eq(1) select:eq(0) option.o_select_placeholder").toHaveText(
+        "Project Manager"
+    );
+    expect(".o_inner_group:eq(1) select:eq(0) option:not(.d-none)").toHaveCount(2);
+
+    await contains(".o_inner_group:eq(1) select:eq(0)").select("13");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps(["web_save"]);
+});
+
+test("disjoint groups", async () => {
+    serverState.debug = "1";
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_group_info_button.fa-info-circle:not(.invisible)").toHaveCount(3);
+    expect(".o_group_info_button.fa-exclamation-triangle:not(.invisible)").toHaveCount(0);
+    expect(".o_is_disjoint").toHaveCount(0);
+
+    await contains(".o_inner_group:eq(3) input[type=checkbox]").click();
+    expect(".o_group_info_button.fa-info-circle:not(.invisible)").toHaveCount(2);
+    expect(".o_group_info_button.fa-exclamation-triangle:not(.invisible)").toHaveCount(2);
+    expect(".o_is_disjoint").toHaveCount(2);
+
+    await contains(".o_inner_group:eq(3) .o_group_info_button").click();
+    expect(".o_popover").toHaveCount(1);
+    expect(queryAllTexts(".o_popover table td")).toEqual([
+        "Group",
+        "Portal user",
+        "Incompatibility",
+        "- Internal user",
+    ]);
 });

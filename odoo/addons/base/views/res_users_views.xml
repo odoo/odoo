@@ -265,7 +265,7 @@
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
                                     <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                                 </group>
-                                <field name="group_ids" widget="res_user_group_ids" nolabel="1" colspan="2"/>
+                                <field name="group_ids" widget="res_user_group_ids"/>
                             </page>
                             <page string="Preferences" name="preferences">
                                 <group>

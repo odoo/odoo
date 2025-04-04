@@ -1,4 +1,4 @@
-import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { parseXML } from "@web/core/utils/xml";
@@ -6,344 +6,251 @@ import { Record } from "@web/model/record";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { SelectionField } from "@web/views/fields/selection/selection_field";
-import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
 
-import { Component, useState } from "@odoo/owl";
-
-class ResGroupsInformationPopover extends Component {
-    static template = "web.ResGroupsInformationPopover";
-    static props = {
-        close: Function,
-        group: Object,
-        groups: Object,
-        disjoints: Array,
-        selectedIds: Array,
-        onClose: Function,
-    };
-
-    setup() {
-        this.group = this.props.group;
-        const privilege = this.group.privilege;
-        const groups = this.props.groups;
-
-        let implies = this.group.all_implied_ids
-            .map((g) => groups[g])
-            .filter(
-                (g) => this.group.id !== g.id && (!privilege || g.privilege?.id !== privilege.id)
-            )
-            .sort((a, b) => !a.privilege - !b.privilege);
-        implies = implies.filter(
-            (g) =>
-                !g.privilege ||
-                !implies.find(
-                    (group) => group.privilege?.id === g.privilege?.id && group.level > g.level
-                )
-        );
-
-        const others = this.props.selectedIds
-            .filter((gId) => this.group.id !== gId && !this.group.all_implied_by_ids.includes(gId))
-            .map((gId) => groups[gId].all_implied_ids)
-            .flat()
-            .map((gId) => groups[gId]);
-
-        this.impliesFromCurrent = implies.filter((g) => !others.includes(g));
-        this.implies = implies.filter((g) => others.includes(g));
-        this.impliedBy = this.group.all_implied_by_ids
-            .map((g) => groups[g])
-            .filter(
-                (g) =>
-                    g.id !== this.group.id &&
-                    this.props.selectedIds.includes(g.id) &&
-                    (!privilege || g.privilege.id !== privilege.id)
-            );
-
-        this.state = useState({
-            showGroupWithoutPrivilege: false,
-        });
-    }
-
-    showExtraGroups() {
-        this.state.showGroupWithoutPrivilege = true;
-    }
-}
-
-class ResUserGroupIdsSelectionField extends SelectionField {
-    static template = "web.ResUserGroupIdsSelectionField";
-
-    setup() {
-        super.setup();
-        this.popover = useService("popover");
-        this.groupHierarchy = this.props.record.data.groupHierarchy;
-        this.isDebug = odoo.debug;
-    }
-
-    get string() {
-        const value = this.value;
-        return this.options.find((o) => o[0] === value)?.[1] || "";
-    }
-
-    get stringImpliedBy() {
-        const groups = this.impliedBy.map(
-            (g) => (g.privilege ? g.privilege?.name + "/" : "") + g.name
-        );
-        return this.implied.name + " (" + _t("implied by: %s", groups.join(", ")) + ")";
-    }
-
-    get selectedIds() {
-        return Object.values(this.props.record.data).filter(
-            (value) => value && typeof value === "number"
-        );
-    }
-
-    get group() {
-        return this.groupHierarchy.getGroups()[this.value] || false;
-    }
-
-    get implied() {
-        const selectedIds = this.selectedIds;
-        const groups = this.groupHierarchy.getGroups();
-        const implied =
-            this.options.findLast(
-                (o) =>
-                    o[0] &&
-                    groups[o[0]].all_implied_by_ids.find(
-                        (gId) => gId !== o[0] && selectedIds.includes(gId)
-                    )
-            )?.[0] || false;
-        return groups[implied];
-    }
-
-    get infoGroup() {
-        return this.exclusivelyImplied || this.group;
-    }
-
-    get exclusivelyImplied() {
-        const implied = this.implied;
-        const group = this.group;
-        if (implied && (!group || implied.level > group.level)) {
-            return implied;
-        }
-        return false;
-    }
-
-    get impliedBy() {
-        const implied = this.implied;
-        if (!implied) {
-            return false;
-        }
-        const selectedIds = this.selectedIds;
-        const groups = this.groupHierarchy.getGroups();
-        const impliedBy = implied.all_implied_by_ids
-            .map((g) => groups[g])
-            .filter(
-                (g) =>
-                    g.id !== implied.id &&
-                    selectedIds.includes(g.id) &&
-                    (!implied.privilege_id || g.privilege_id !== implied.privilege_id)
-            );
-        return impliedBy;
-    }
-
-    get disjoints() {
-        const group = this.implied || this.group;
-        if (!group) {
-            return false;
-        }
-        const groups = this.groupHierarchy.getGroups();
-        const selectedIds = this.selectedIds;
-        const disjoint_ids = group.disjoint_ids
-            .map((gId) => (group.id === gId ? [] : groups[gId].all_implied_by_ids))
-            .flat()
-            .filter((gId) => selectedIds.includes(gId));
-        if (disjoint_ids.length) {
-            return disjoint_ids.map((gId) => groups[gId]);
-        }
-        return false;
-    }
-
-    onClickPlaceholder() {
-        if (this.props.options.length === 1) {
-            this.onClickSwitch();
-        }
-    }
-
-    onClickSwitch() {
-        const value = this.props.record.data[this.props.name] ? false : this.options[0][0];
-        this.props.record.update({ [this.props.name]: value }, { save: this.props.autosave });
-    }
-
-    onClickInfoButton(ev) {
-        const close = () => {
-            this.popoverCloseFn();
-            this.popoverCloseFn = null;
-        };
-
-        if (this.popoverCloseFn) {
-            close();
-        }
-
-        this.popoverCloseFn = this.popover.add(
-            ev.currentTarget,
-            ResGroupsInformationPopover,
-            {
-                group: this.infoGroup,
-                groups: this.groupHierarchy.getGroups(),
-                disjoints: this.disjoints || [],
-                selectedIds: this.selectedIds,
-                onClose: close,
-            },
-            {
-                closeOnClickAway: true,
-                position: localization.direction === "rtl" ? "left" : "right",
-            }
-        );
-    }
-}
-
-class ResUserGroupIdsSwitchField extends ResUserGroupIdsSelectionField {
-    static template = "web.ResUserGroupIdsSwitchField";
-
-    get stringImpliedBy() {
-        const groups = this.impliedBy.map(
-            (g) => (g.privilege ? g.privilege?.name + "/" : "") + g.name
-        );
-        return _t("Yes") + " (" + _t("implied by: %s", groups.join(", ")) + ")";
-    }
-}
+import { Component, onWillRender, toRaw, useChildSubEnv } from "@odoo/owl";
+import { deepCopy } from "@web/core/utils/objects";
 
 /**
  * This widget is only used for the 'group_ids' field of the 'res.users'
  * form view or the 'implied_ids' field of the 'res.groups' form view,
  * in order to vizualize and configure access rights.
  */
-export class ResUserGroupIdsField extends Component {
+class ResUserGroupIdsField extends Component {
     static template = "web.ResUserGroupIdsField";
     static components = { Record, FormRenderer };
     static props = { ...standardFieldProps };
 
     setup() {
-        const { groups, sections } = JSON.parse(
-            JSON.stringify(this.props.record.data.view_group_hierarchy)
-        );
-        this.groupHierarchy = {
-            getGroups: () => groups,
-            getSections: () => sections,
-        };
+        const { groups, sections } = toRaw(this.props.record.data.view_group_hierarchy);
 
-        for (const section of sections) {
-            for (const privilege of section.privileges) {
-                for (const gId of privilege.group_ids) {
-                    groups[gId].privilege = privilege;
-                }
-            }
-        }
-
-        sections.push({
+        // Generate the extra rights sections (for groups without privilege)
+        this.extraSection = {
             id: "extra",
             name: _t("Extra Rights"),
             privileges: Object.values(groups)
                 .filter((group) => !group.privilege_id)
-                .map((group) =>
-                    Object.assign({
+                .map((group) => {
+                    const privilege = {
+                        description: group.comment,
+                        groupId: group.id,
                         id: "group_" + group.id,
                         name: group.name,
-                        description: "",
-                        group_ids: [group.id],
-                    })
-                ),
-        });
+                    };
+                    privilege.groupFieldName = this.getFieldName(privilege);
+                    return privilege;
+                })
+                .sort((p1, p2) => p1.name.localeCompare(p2.name)),
+        };
 
-        this.fields = { groupHierarchy: { type: "json" } };
+        // Generate selection (for privileges) and boolean (for extra right groups) fields
+        this._fields = {};
+        const booleanFieldToGroupId = {};
         for (const section of sections) {
             for (const privilege of section.privileges) {
-                this.fields[this.getFieldName(privilege)] = {
-                    type: "selection",
+                const helpLines = privilege.description ? [privilege.description] : [];
+                for (const gid of privilege.group_ids) {
+                    if (groups[gid].comment) {
+                        helpLines.push(`- ${groups[gid].name}: ${groups[gid].comment}`);
+                    }
+                }
+                this._fields[this.getFieldName(privilege)] = {
+                    help: helpLines.join("\n"),
+                    selection: privilege.group_ids.map((gId) => [gId, groups[gId].name]),
                     string: privilege.name,
-                    selection: [[0, ""]].concat(
-                        section.id === "extra"
-                            ? [[privilege.group_ids[0], _t("Yes")]]
-                            : privilege.group_ids.map((gId) => [gId, groups[gId].name])
-                    ),
-                    help: privilege.description,
+                    type: "selection",
                 };
             }
         }
+        for (const privilege of this.extraSection.privileges) {
+            this._fields[privilege.groupFieldName] = {
+                help: privilege.description,
+                string: privilege.name,
+                type: "boolean",
+            };
+            booleanFieldToGroupId[privilege.groupFieldName] = privilege.groupId;
+        }
+        this.fields = deepCopy(this._fields); // dynamically modifed before each rendering w.r.t. to current groups
 
-        const models = { main: { fields: this.fields } };
+        // Generate archInfo to provide to the FormRenderer
+        const models = { main: { fields: this._fields } };
         const arch = `
             <t>
                 <group>
-                    ${sections
-                        .map(
-                            (section) => `
-                        <group string="${section.name}" ${
-                                section.id === "extra"
-                                    ? ' colspan="4" col="4" ' +
-                                      (!odoo.debug ? ' invisible="1" ' : "")
-                                    : ""
-                            }>
-                            ${section.privileges
-                                .map(
-                                    (cat) => `
-                                <field name="${this.getFieldName(
-                                    cat
-                                )}" widget="res_user_group_ids_field_${
-                                        section.id === "extra" ? "switch" : "selection"
-                                    }"/>`
-                                )
-                                .join("")}
-                        </group>`
-                        )
-                        .join("")}
+                    ${sections.map((section) => this.getSectionArch(section)).join("")}
                 </group>
+                ${odoo.debug ? this.getExtraGroupsArch() : ""}
             </t>`;
         this.archInfo = new FormArchParser().parse(parseXML(arch), models, "main");
+
+        // Generate information to share through the env with "res_user_group_ids_privilege" widgets
+        //  - `booleanFieldToGroupId` maps generated boolean field names to their group id
+        //  - `privileges` is an object mapping all privilege ids to their description
+        //  - `groups` is an object mapping all group ids to their description, which is based on
+        //     the current selected groups
+        this.info = {
+            booleanFieldToGroupId,
+            groups: {},
+            privileges: Object.fromEntries(
+                sections
+                    .map((section) => section.privileges)
+                    .flat()
+                    .map((privilege) => [privilege.id, privilege])
+            ),
+        };
+        window.info = this.info;
+        useChildSubEnv({
+            resUserGroupsInfo: this.info,
+        });
+        onWillRender(() => {
+            console.time("groups");
+
+            // Generate groups information based on current ids, i.e.
+            //  - `id`, `name`, `privilege_id`, `level`, `comment` are kept as in the static definition
+            //  - `selected` is true iff the group is explicitely selected (!= implied)
+            //  - `impliedByIds` only contain *selected* group ids that imply the given group
+            //  - `disjointIds` is only set for *selected* or *implied* groups
+            //  - `implyIds` doesn't contain itself, because it's useless and easier later
+            const selectedIds = new Set(this.props.record.data[this.props.name].currentIds);
+            for (const group of Object.values(groups)) {
+                const selected = selectedIds.has(group.id);
+                this.info.groups[group.id] = {
+                    name: group.name,
+                    id: group.id,
+                    privilege_id: group.privilege_id,
+                    level: group.level,
+                    comment: group.comment,
+                    impliedByIds: group.all_implied_by_ids.filter(
+                        (gid) => gid !== group.id && selectedIds.has(gid)
+                    ),
+                    implyIds: selected
+                        ? group.all_implied_ids.filter((gid) => gid !== group.id)
+                        : [],
+                    selected,
+                };
+            }
+            for (const group of Object.values(groups)) {
+                let disjointIds = [];
+                const { selected, impliedByIds } = this.info.groups[group.id];
+                if (selected || impliedByIds.length) {
+                    disjointIds = group.disjoint_ids.filter(
+                        (gid) =>
+                            this.info.groups[gid].selected ||
+                            this.info.groups[gid].impliedByIds.length
+                    );
+                }
+                this.info.groups[group.id].disjointIds = disjointIds;
+            }
+
+            // Remove lower level groups from selection fields where a higher level group is implied
+            for (const fieldName in this.fields) {
+                if (this.fields[fieldName].type === "selection") {
+                    const options = this._fields[fieldName].selection;
+                    this.fields[fieldName].selection = options;
+                    for (let i = options.length - 1; i > 0; i--) {
+                        // i > 0 to omit "false" option
+                        const group = this.info.groups[options[i][0]];
+                        const isImplied = group.impliedByIds.some(
+                            (gid) => this.info.groups[gid].privilege_id !== group.privilege_id
+                        );
+                        if (isImplied) {
+                            this.fields[fieldName].selection = options.slice(i);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Generate values for the dynamically generated selection and boolean fields
+            this.values = {};
+            this.shadowedGroupIds = [];
+            for (const section of sections) {
+                for (const privilege of section.privileges) {
+                    let groupId =
+                        privilege.group_ids.findLast((gId) => selectedIds.has(gId)) || false;
+                    const fieldName = this.getFieldName(privilege);
+                    const options = this.fields[fieldName].selection;
+                    if (groupId && !options.some((option) => option[0] === groupId)) {
+                        // The option has been removed because a higher level group is implied
+                        // => force the value to false to show the implied group instead
+                        this.shadowedGroupIds.push(groupId);
+                        groupId = false;
+                    }
+                    this.values[this.getFieldName(privilege)] = groupId;
+                }
+            }
+            if (this.extraSection) {
+                for (const privilege of this.extraSection.privileges) {
+                    this.values[this.getFieldName(privilege)] = selectedIds.has(privilege.groupId);
+                }
+            }
+            console.timeEnd("groups");
+        });
+
         this.hooks = {
             onRecordChanged: this.onRecordChanged.bind(this),
         };
     }
 
-    get values() {
-        const values = { groupHierarchy: this.groupHierarchy };
-        const ids = this.props.record.data[this.props.name].currentIds;
-        for (const section of this.groupHierarchy.getSections()) {
-            for (const privilege of section.privileges) {
-                values[this.getFieldName(privilege)] =
-                    privilege.group_ids.find((gId) => ids.includes(gId)) || false;
-            }
-        }
-        return values;
+    getExtraGroupsArch() {
+        return `
+            <group string="${this.extraSection.name}" class="o_extra_rights_group">
+                <group>
+                    ${this.extraSection.privileges
+                        .filter((cat, index) => index % 2 === 0)
+                        .map((privilege) => this.getPrivilegeArch(privilege))
+                        .join("")}
+                </group>
+                <group>
+                    ${this.extraSection.privileges
+                        .filter((cat, index) => index % 2 === 1)
+                        .map((privilege) => this.getPrivilegeArch(privilege))
+                        .join("")}
+                </group>
+            </group>`;
     }
 
     getFieldName(privilege) {
         return `field_${privilege.id}`;
     }
 
+    getPrivilegeArch(privilege) {
+        const fieldName = this.getFieldName(privilege);
+        return `<field name="${fieldName}" widget="res_user_group_ids_privilege"/>`;
+    }
+
+    getSectionArch(section) {
+        return `
+            <group string="${section.name}">
+                ${section.privileges.map((privilege) => this.getPrivilegeArch(privilege)).join("")}
+            </group>`;
+    }
+
     onRecordChanged(_, values) {
-        const selectedIds = Object.values(values).filter(
-            (value) => value && typeof value === "number"
+        let selectedGroupIds = Object.entries(values)
+            .filter(([fieldName, gid]) => this.fields[fieldName].type === "selection" && gid)
+            .map(([_, gid]) => gid);
+        // Keep shadowed groups, except if an higher level group has been set, in which case they
+        // are not shadowed anymore
+        const { groups, privileges } = this.info;
+        const shadowedGroupIds = this.shadowedGroupIds.filter(
+            (gid) => !values[this.getFieldName(privileges[groups[gid].privilege_id])]
         );
-        return this.props.record.update({ [this.props.name]: [x2ManyCommands.set(selectedIds)] });
+        selectedGroupIds = selectedGroupIds.concat(shadowedGroupIds);
+        for (const privilege of this.extraSection.privileges) {
+            if (values[privilege.groupFieldName]) {
+                selectedGroupIds.push(privilege.groupId);
+            }
+        }
+        return this.props.record.update({
+            [this.props.name]: [x2ManyCommands.set(selectedGroupIds)],
+        });
     }
 }
 
-const resUserGroupIdsSelectionField = {
-    component: ResUserGroupIdsSelectionField,
-};
-
-const resUserGroupIdsSwithField = {
-    component: ResUserGroupIdsSwitchField,
-};
-
-export const resUserGroupIdsField = {
+const resUserGroupIdsField = {
     component: ResUserGroupIdsField,
     fieldDependencies: [{ name: "view_group_hierarchy", type: "json", readonly: true }],
+    additionalClasses: ["w-100"],
 };
 
-registry
-    .category("fields")
-    .add("res_user_group_ids_field_selection", resUserGroupIdsSelectionField);
-registry.category("fields").add("res_user_group_ids_field_switch", resUserGroupIdsSwithField);
 registry.category("fields").add("res_user_group_ids", resUserGroupIdsField);
