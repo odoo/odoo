@@ -464,21 +464,22 @@ env['res.partner'].create({'name': partner_name})
                             <!-- Icon section -->
                             <i
                                 data-name="server_action_icon"
-                                t-att-title="record.state.value"
+                                t-att-title="record.state.value" 
                                 class="fa fa-fw"
                                 t-att-class="{
-                                    'code': 'fa-file-code-o',
-                                    'object_create': 'fa-edit',
-                                    'object_write': 'fa-refresh',
+                                    'code': 'fa-code',
+                                    'object_create': 'fa-plus-square',
+                                    'object_copy': 'fa-clone',
+                                    'object_write': 'fa-pencil',
                                     'multi': 'fa-list-ul',
                                     'mail_post': 'fa-envelope',
-                                    'followers': 'fa-user-o',
+                                    'followers': 'fa-user',
                                     'remove_followers': 'fa-user-times',
                                     'next_activity': 'fa-clock-o',
-                                    'sms': 'fa-comments-o',
+                                    'sms': 'fa-mobile',
                                     'webhook': 'fa-paper-plane',
                                     'whatsapp': 'fa-whatsapp',
-                                }[record.state.raw_value]"
+                                }[record.state.raw_value] || 'fa-circle-thin'"
                             />
                             <i class="fa fa-warning text-warning px-2 m-0" invisible="not warning" t-att-title="record.warning.raw_value"/>
                             <field name="name" class="text-truncate" />
