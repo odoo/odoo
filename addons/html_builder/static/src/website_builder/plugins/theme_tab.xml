@@ -233,10 +233,11 @@
             </t>
         </BuilderRow>
         <BuilderRow label.translate="On Click Effect">
-            <BuilderSelect>
-                <BuilderSelectItem action="'customizeWebsiteVariable'" actionParam="'btn-ripple'" actionValue="'false'">None</BuilderSelectItem>
-                <BuilderSelectItem action="'customizeWebsiteVariableAndAssets'"
-                    actionParam="{variable: 'btn-ripple', assets: 'website.ripple_effect_scss, website.ripple_effect_js'}" actionValue="'true'"
+            <BuilderSelect action="'websiteConfig'">
+                <!-- TODO implicit removal of assets -->
+                <BuilderSelectItem actionParam="{vars: {'btn-ripple': 'false'}, assets: []}">None</BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{vars: {'btn-ripple': 'true'}, assets: ['website.ripple_effect_scss', 'website.ripple_effect_js']}"
                 >Ripple</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
