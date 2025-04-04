@@ -376,6 +376,28 @@ describe("using selectors", () => {
         );
         expect("span").toHaveAttribute("animal", "colibri");
     });
+
+    test("dynamic selector can return multiple nodes", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicSelectors = {
+                _myselector: () => this.el.querySelectorAll(".my-selector"),
+            };
+            dynamicContent = {
+                _myselector: { "t-att-animal": () => "colibri" },
+            };
+        }
+        await startInteraction(
+            Test,
+            `
+            <div class="test">
+                <span class="my-selector">coucou</span>
+                <span class="my-selector">coucou</span>
+                <span class="my-selector">coucou</span>
+            </div>`
+        );
+        expect(queryAll("span")).toHaveAttribute("animal", "colibri");
+    });
 });
 
 describe("removing listeners", () => {
