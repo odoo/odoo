@@ -4,6 +4,7 @@ import { cleanTextNode, splitTextNode, unwrapContents, fillEmpty } from "../util
 import {
     areSimilarElements,
     isContentEditable,
+    isElement,
     isEmptyTextNode,
     isSelfClosingElement,
     isTextNode,
@@ -20,6 +21,7 @@ import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { isFakeLineBreak } from "../utils/dom_state";
+import { getColor } from "@html_editor/utils/color";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -96,6 +98,13 @@ export class FormatPlugin extends Plugin {
                 icon: "fa-eraser",
                 run: this.removeFormat.bind(this),
             },
+            {
+                id: "paintFormat",
+                description: () =>
+                    this._copiedFormats.length ? _t("Apply format") : _t("Copy format"),
+                run: this.paintFormat.bind(this),
+                icon: "oe-paint-format-icon",
+            },
         ],
         shortcuts: [
             { hotkey: "control+b", commandId: "formatBold" },
@@ -134,11 +143,17 @@ export class FormatPlugin extends Plugin {
                 commandId: "formatStrikethrough",
                 isActive: isFormatted(this, "strikeThrough"),
             },
-            withSequence(20, {
+            withSequence(30, {
                 id: "remove_format",
                 groupId: "decoration",
                 commandId: "removeFormat",
                 isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
+            }),
+            withSequence(20, {
+                id: "paint_format",
+                groupId: "decoration",
+                commandId: "paintFormat",
+                isActive: () => !!this._copiedFormats.length,
             }),
         ],
         /** Handlers */
@@ -149,7 +164,11 @@ export class FormatPlugin extends Plugin {
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
 
-    removeFormat() {
+    setup() {
+        this._copiedFormats = [];
+    }
+
+    _removeFormat() {
         const traversedNodes = this.dependencies.selection.getTraversedNodes();
         for (const format of Object.keys(formatsSpecs)) {
             if (
@@ -161,7 +180,88 @@ export class FormatPlugin extends Plugin {
             this._formatSelection(format, { applyStyle: false });
         }
         this.dispatchTo("remove_format_handlers");
+    }
+
+    removeFormat() {
+        this._removeFormat();
         this.dependencies.history.addStep();
+    }
+
+    paintFormat() {
+        if (this._copiedFormats.length) {
+            this._paintFormat();
+        } else {
+            this._copyFormat();
+        }
+    }
+
+    _paintFormat() {
+        const traversedNodes = this.dependencies.selection.getTraversedNodes();
+        // Preserve text-align styles.
+        const alignedBlocks = new Map();
+        for (const node of traversedNodes) {
+            const block = closestBlock(node);
+            if (!alignedBlocks.has(block)) {
+                const textAlign = block.style.textAlign;
+                if (textAlign) {
+                    alignedBlocks.set(block, textAlign);
+                }
+            }
+        }
+        this._removeFormat();
+        for (const [block, textAlign] of alignedBlocks) {
+            block.style.textAlign = textAlign;
+        }
+        while (this._copiedFormats.length) {
+            const { format, formatValue } = this._copiedFormats.shift();
+            if (formatsSpecs[format]) {
+                this._formatSelection(format, { applyStyle: true, formatProps: formatValue });
+            } else {
+                this.dispatchTo("apply_format_handlers", format, formatValue);
+            }
+        }
+        this.dependencies.history.addStep();
+    }
+
+    _copyFormat() {
+        const traversedNodes = this.dependencies.selection.getTraversedNodes();
+        const commonAncestorContainer = closestElement(
+            this.dependencies.selection.getEditableSelection().commonAncestorContainer
+        );
+        if (
+            !traversedNodes.length ||
+            traversedNodes.some((node) => isElement(node) && node !== commonAncestorContainer)
+        ) {
+            return;
+        }
+        for (const format of Object.keys(formatsSpecs)) {
+            if (!this.hasSelectionFormat(format, traversedNodes)) {
+                continue;
+            }
+            const value = formatsSpecs[format].isFormatted(traversedNodes[0]);
+            const propName = formatsSpecs[format]["propName"];
+            this._copiedFormats.push({
+                format,
+                ...(propName && {
+                    formatValue: { [propName]: value },
+                }),
+            });
+        }
+        const textColor = getColor(commonAncestorContainer, "color");
+        if (textColor) {
+            this._copiedFormats.push({
+                format: "color",
+                formatValue: textColor,
+            });
+        }
+        const bgColor = getColor(commonAncestorContainer, "backgroundColor");
+        if (bgColor) {
+            this._copiedFormats.push({
+                format: "backgroundColor",
+                formatValue: bgColor,
+            });
+        }
+        this.dispatchTo("update_ui_handlers");
     }
 
     /**
