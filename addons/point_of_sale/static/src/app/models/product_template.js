@@ -32,7 +32,7 @@ export class ProductTemplate extends Base {
         const config = this.models["pos.config"].getFirst();
         const productTemplate = this instanceof ProductTemplate ? this : this.product_tmpl_id;
         const basePrice = this?.lst_price || productTemplate.getPrice(pricelist, 1);
-        const priceUnit = price === undefined ? basePrice : price;
+        const priceUnit = price || price === 0 ? price : basePrice;
         const currency = config.currency_id;
         const extraValues = { currency_id: currency };
 
