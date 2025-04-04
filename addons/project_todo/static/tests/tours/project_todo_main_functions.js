@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_project_task_kanban_view",
 },
 {
-    trigger: '.o_kanban_quick_create div.o_field_char[name=name] input',
+    trigger: '.o_kanban_quick_create div.o_field_char[name=display_name] input',
     content: "Create a personal task from the To-do kanban view",
     run: "edit Personal Task 1",
 },
