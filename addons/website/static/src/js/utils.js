@@ -4,6 +4,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { App, Component } from "@odoo/owl";
 import { getTemplate } from "@web/core/templates";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
+import weUtils from "@web_editor/js/common/utils";
 
 /**
  * Allows to load anchors from a page.
@@ -494,6 +495,36 @@ export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
         }
     }
 }
+
+const oldIsAbsoluteURLInCurrentDomain = weUtils.isAbsoluteURLInCurrentDomain;
+
+/**
+ * @override
+ */
+weUtils.isAbsoluteURLInCurrentDomain = (url, env = null) => {
+    const res = oldIsAbsoluteURLInCurrentDomain(url, env);
+    if (res) {
+        return true;
+    }
+
+    const w = env?.services.website.currentWebsite;
+    if (!w) {
+        return false;
+    }
+
+    // Make sure that while being on abc.odoo.com, if you edit a link and
+    // enter an absolute URL using your real domain, it is still considered
+    // to be added as relative, preferably.
+    // In the past, you could not edit your website from abc.odoo.com if you
+    // properly configured your real domain already.
+    let origin;
+    try { // Needed: "http:" would crash
+        origin = new URL(url, window.location.origin).origin;
+    } catch {
+        return false;
+    }
+    return `${origin}/`.startsWith(w.domain);
+};
 
 export default {
     loadAnchors: loadAnchors,

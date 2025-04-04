@@ -1,4 +1,3 @@
-import { session } from "@web/session";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { _t } from "@web/core/l10n/translation";
 import { isVisible } from "@web/core/utils/ui";
@@ -271,37 +270,6 @@ export class Link extends Component {
      */
     _doStripDomain() {}
     /**
-     * Checks if the given URL is using the domain where the content being
-     * edited is reachable, i.e. if this URL should be stripped of its domain
-     * part and converted to a relative URL if put as a link in the content.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _isAbsoluteURLInCurrentDomain(url) {
-        // First check if it is a relative URL: if it is, we don't want to check
-        // further as we will always leave those untouched.
-        let hasProtocol;
-        try {
-            hasProtocol = !!(new URL(url).protocol);
-        } catch {
-            hasProtocol = false;
-        }
-        if (!hasProtocol) {
-            return false;
-        }
-
-        const urlObj = new URL(url, window.location.origin);
-        return urlObj.origin === window.location.origin
-            // Chosen heuristic to detect someone trying to enter a link using
-            // its Odoo instance domain. We just suppose it should be a relative
-            // URL (if unexpected behavior, the user can just not enter its Odoo
-            // instance domain but its real domain, or opt-out from the domain
-            // stripping). Mentioning an .odoo.com domain, especially its own
-            // one, is always a bad practice anyway.
-            || new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`).test(urlObj.origin);
-    }
-    /**
      * Get the link's data (url, content and styles).
      *
      * @private
@@ -336,15 +304,15 @@ export class Link extends Component {
         var isNewWindow = this._isNewWindow(url);
         var doStripDomain = this._doStripDomain();
         let urlWithoutDomain = this.state.url;
-        if (this._isAbsoluteURLInCurrentDomain(this.state.url)) {
+        if (weUtils.isAbsoluteURLInCurrentDomain(this.state.url, this.env)) {
             const urlObj = new URL(this.state.url, window.location.origin);
             // Not necessarily equal to window.location.origin
-            // (see _isAbsoluteURLInCurrentDomain)
+            // (see weUtils.isAbsoluteURLInCurrentDomain)
             urlWithoutDomain = this.state.url.replace(urlObj.origin, '');
             if (doStripDomain) {
                 this.state.url = urlWithoutDomain;
             }
-        } else if (this._isAbsoluteURLInCurrentDomain(url) && !doStripDomain) {
+        } else if (weUtils.isAbsoluteURLInCurrentDomain(url, this.env) && !doStripDomain) {
             this.state.url = url;
         }
         var allWhitespace = /\s+/gi;
@@ -720,7 +688,7 @@ export class Link extends Component {
         let isLink = !EMAIL_REGEX.test(value) && !PHONE_REGEX.test(value);
         this._getIsNewWindowFormRow().toggleClass('d-none', !isLink);
         this.$el.find('.o_strip_domain')
-            .toggleClass('d-none', !this._isAbsoluteURLInCurrentDomain(value));
+            .toggleClass('d-none', !weUtils.isAbsoluteURLInCurrentDomain(value, this.env));
     }
     /**
      * @private
