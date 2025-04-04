@@ -21,6 +21,8 @@ class AccountAccount(models.Model):
         for account in self:
             if account.account_type in ('asset_receivable', 'liability_payable') and not account.reconcile:
                 raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)', account.code))
+            if account.account_type == 'asset_cash' and account.reconcile:
+                raise ValidationError(_('You cannot have a Bank and Cash account that is reconcilable. (account code: %s)', account.code))
 
     @api.constrains('account_type')
     def _check_account_type_unique_current_year_earning(self):
