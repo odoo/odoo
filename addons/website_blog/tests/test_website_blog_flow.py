@@ -74,7 +74,6 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'res_model': 'mail.compose.message',
             'datas': 'test',
             'type': 'binary',
-            'access_token': 'azerty',
         })
 
         with MockRequest(self.env):
@@ -82,7 +81,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
                 'blog.post',
                 self.test_blog_post.id,
                 {'body': 'Test message blog post', 'attachment_ids': [attachment.id]},
-                attachment_tokens=[attachment.access_token]
+                attachment_tokens=[attachment._get_ownership_token()],
             )
 
         self.assertTrue(self.env['mail.message'].sudo().search(
@@ -93,7 +92,6 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'res_model': 'mail.compose.message',
             'datas': 'test',
             'type': 'binary',
-            'access_token': 'azerty',
         })
 
         with self.assertRaises(UserError), MockRequest(self.env):

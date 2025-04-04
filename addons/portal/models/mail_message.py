@@ -8,6 +8,26 @@ from odoo.tools import format_datetime, groupby
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
+    def _compute_is_current_user_or_guest_author(self):
+        super()._compute_is_current_user_or_guest_author()
+        portal_data = self.env.context.get("portal_data", {})
+        portal_partner = portal_data.get("portal_partner")
+        portal_thread = portal_data.get("portal_thread")
+        if (
+            not portal_partner
+            or not portal_thread
+            or not isinstance(portal_partner, self.pool["res.partner"])
+            or not isinstance(portal_thread, self.pool["mail.thread"])
+        ):
+            return
+        for message in self:
+            if (
+                message.author_id == portal_partner
+                and message.model == portal_thread._name
+                and message.res_id == portal_thread.id
+            ):
+                message.is_current_user_or_guest_author = True
+
     def portal_message_format(self, options=None):
         """ Simpler and portal-oriented version of 'message_format'. Purpose
         is to prepare, organize and format values required by frontend widget
@@ -75,22 +95,15 @@ class MailMessage(models.Model):
         if 'attachment_ids' in properties_names:
             properties_names.remove('attachment_ids')
             attachments_sudo = self.sudo().attachment_ids
-            attachments_sudo.generate_access_token()
             related_attachments = {
-                att_read_values["id"]: {
-                    **att_read_values,
-                    "raw_access_token": att._get_raw_access_token(),
-                }
-                for att, att_read_values in zip(
-                    attachments_sudo,
-                    attachments_sudo.read(
-                        ["access_token", "checksum", "id", "mimetype", "name", "res_id", "res_model"]
-                    ),
+                att_read_values['id']: att_read_values
+                for att_read_values in attachments_sudo.read(
+                    ["checksum", "id", "mimetype", "name", "res_id", "res_model"]
                 )
             }
             message_to_attachments = {
                 message.id: [
-                    self._portal_message_format_attachments(related_attachments[att_id])
+                    message._portal_message_format_attachments(related_attachments[att_id])
                     for att_id in message.attachment_ids.ids
                 ]
                 for message in self.sudo()
@@ -166,4 +179,8 @@ class MailMessage(models.Model):
             'application/octet-stream' if safari and
             'video' in (attachment_values["mimetype"] or "")
             else attachment_values["mimetype"])
+        attachment = self.env['ir.attachment'].browse(attachment_values['id'])
+        attachment_values["raw_access_token"] = attachment._get_raw_access_token()
+        if self.is_current_user_or_guest_author:
+            attachment_values["ownership_token"] = attachment._get_ownership_token()
         return attachment_values

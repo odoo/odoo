@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from itertools import product
 
 import odoo
 from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCommon
@@ -26,40 +25,34 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
         )
 
     def test_attachment_delete_linked_to_public_channel(self):
-        """Test access to delete an attachment associated with a public channel"""
+        """Test access to delete an attachment associated with a public channel
+        whether or not limited `ownership_token` is sent"""
         channel = self.env["discuss.channel"].create({"name": "public channel"})
+        self._execute_subtests_delete(self.all_users, token=True, allowed=True, thread=channel)
         self._execute_subtests_delete(
-            product(
-                (self.guest, self.user_portal, self.user_public),
-                (self.WITH_TOKEN, self.NO_TOKEN),
-            ),
-            allowed=False,
+            (self.user_admin, self.user_employee),
+            token=False,
+            allowed=True,
             thread=channel,
         )
         self._execute_subtests_delete(
-            product(
-                (self.user_admin, self.user_employee),
-                (self.WITH_TOKEN, self.NO_TOKEN),
-            ),
-            allowed=True,
+            (self.guest, self.user_portal, self.user_public),
+            token=False,
+            allowed=False,
             thread=channel,
         )
 
     def test_attachment_delete_linked_to_private_channel(self):
-        """Test access to delete an attachment associated with a private channel"""
+        """Test access to delete an attachment associated with a private channel
+        whether or not limited `ownership_token` is sent"""
         channel = self.env["discuss.channel"].create(
             {"name": "Private Channel", "channel_type": "group"}
         )
+        self._execute_subtests_delete(self.all_users, token=True, allowed=True, thread=channel)
+        self._execute_subtests_delete(self.user_admin, token=False, allowed=True, thread=channel)
         self._execute_subtests_delete(
-            product(
-                (self.guest, self.user_employee, self.user_portal, self.user_public),
-                (self.WITH_TOKEN, self.NO_TOKEN),
-            ),
+            (self.guest, self.user_employee, self.user_portal, self.user_public),
+            token=False,
             allowed=False,
-            thread=channel,
-        )
-        self._execute_subtests_delete(
-            product(self.user_admin, (self.WITH_TOKEN, self.NO_TOKEN)),
-            allowed=True,
             thread=channel,
         )
