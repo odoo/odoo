@@ -5,6 +5,7 @@ import json
 import odoo
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.base.tests.common import HttpCase, HttpCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.http import STATIC_CACHE_LONG
@@ -104,6 +105,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "id": self.attachments[0].id,
                     "name": "File 1",
+                    "raw_access_token": limited_field_access_token(self.attachments[0], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
@@ -160,6 +162,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "id": self.attachments[0].id,
                     "name": "File 1",
+                    "raw_access_token": limited_field_access_token(self.attachments[0], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
@@ -172,6 +175,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
                     "id": self.attachments[1].id,
                     "name": "File 2",
+                    "raw_access_token": limited_field_access_token(self.attachments[1], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
@@ -206,6 +210,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "id": self.attachments[0].id,
                     "name": "File 1",
+                    "raw_access_token": limited_field_access_token(self.attachments[0], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
@@ -218,6 +223,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
                     "id": self.attachments[1].id,
                     "name": "File 2",
+                    "raw_access_token": limited_field_access_token(self.attachments[1], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},

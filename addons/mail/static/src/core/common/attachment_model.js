@@ -20,6 +20,8 @@ export class Attachment extends FileModelMixin(Record) {
     }
 
     thread = fields.One("Thread", { inverse: "attachments" });
+    /** @type {string} */
+    raw_access_token;
     res_name;
     message = fields.One("mail.message", { inverse: "attachment_ids" });
     create_date = fields.Datetime();
