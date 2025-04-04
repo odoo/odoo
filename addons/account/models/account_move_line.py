@@ -3312,8 +3312,8 @@ class AccountMoveLine(models.Model):
             'name': self.name,
             'account_id': self.account_id.id,
             # TODO flg
-            # 'currency_id': self.currency_id.id,
-            # 'amount_currency': self.amount_currency,
+            'currency_id': self.currency_id.id,
+            'amount_currency': self.amount_currency,
             'balance': self.balance,
             'reconcile_model_id': self.reconcile_model_id.id,
             'analytic_distribution': self.analytic_distribution,
