@@ -110,9 +110,15 @@ messageActionsRegistry
                 {
                     message,
                     prompt: _t("Are you sure you want to delete this message?"),
-                    onConfirm: () => {
+                    onConfirm: async () => {
                         def.resolve(true);
-                        message.remove();
+                        if (message.link_preview_ids && message.link_preview_ids.length) {
+                            await component.orm.call("mail.link.preview", "unlink", [
+                                message.link_preview_ids.map(preview => preview.id)
+                            ]);
+                            message.link_preview_ids = [];
+                        }
+                        await message.remove();
                     },
                 },
                 { context: component, onClose: () => def.resolve(false) }
@@ -122,6 +128,7 @@ messageActionsRegistry
         setup: () => {
             const component = useComponent();
             component.dialog = useService("dialog");
+            component.orm = useService("orm");
         },
         sequence: 90,
     })
