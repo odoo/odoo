@@ -278,3 +278,34 @@ class TestLotSerial(TestStockCommon):
         sn_form.product_id = self.productB
         sn = sn_form.save()
         self.assertEqual(sn.company_id, branch_a)
+
+    def test_lot_search_partner_ids(self):
+        """Test that the correct lots show when doing searches based on partner_ids"""
+        customer = self.PartnerObj.create({'name': 'bob'})
+        picking1 = self.env['stock.picking'].create({
+            'name': 'Picking 1',
+            'partner_id': customer.id,
+            'location_id': self.locationA.id,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+            'move_ids': [Command.create({
+                'name': self.productA.name,
+                'location_id': self.locationA.id,
+                'location_dest_id': self.customer_location,
+                'product_id': self.productA.id,
+                'product_uom_qty': 1.0,
+                'quantity': 1.0,
+            })]
+        })
+        picking1.move_ids.move_line_ids.lot_id = self.lot_p_a
+        picking1.action_confirm()
+        picking1.button_validate()
+        lot_id = self.env['stock.lot'].search([('partner_ids', '!=', False)])
+        self.assertEqual(len(lot_id), 1)
+        self.assertEqual(lot_id, self.lot_p_a)
+        lot_id = self.env['stock.lot'].search([('partner_ids', '=', False)])
+        self.assertEqual(len(lot_id), 1)
+        self.assertEqual(lot_id, self.lot_p_b)
+        lot_id = self.env['stock.lot'].search([('partner_ids.name', 'ilike', 'bo')])
+        self.assertEqual(len(lot_id), 1)
+        self.assertEqual(lot_id, self.lot_p_a)
