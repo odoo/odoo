@@ -713,6 +713,15 @@ class SlideSlide(models.Model):
         channel_partner_ids._recompute_completion()
         return res
 
+    def _can_return_content(self, field_name=None, access_token=None):
+        # Override because the module `website` overrides `_can_return_content` to allow returning the content of any
+        # `website_published=True` record while the content of a course (`slide.slide`) can still be restricted
+        # despite it's website published, according if the course is on invitation and so on.
+        if self.website_published:
+            return self.has_access("read")
+        # if not `website_published`, the base `_can_return_content` returns `False``
+        return super()._can_return_content(field_name, access_token)
+
     # ---------------------------------------------------------
     # Mail/Rating
     # ---------------------------------------------------------
