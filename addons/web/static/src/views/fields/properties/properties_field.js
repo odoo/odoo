@@ -597,7 +597,7 @@ export class PropertiesField extends Component {
     async onPropertyCreate() {
         if (!this.state.canChangeDefinition || !(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
-                _t("You need edit access on the parent document to update these property fields"),
+                this._getPropertyCreateWarningText(),
                 { type: "warning" }
             );
             return;
@@ -633,6 +633,15 @@ export class PropertiesField extends Component {
         this.openPropertyDefinition = newName;
         this.state.showAddButton = true;
         this.props.record.update({ [this.props.name]: propertiesDefinitions });
+    }
+
+    /**
+     * Returns the warning text to be displayed when property creation fails due to access rights.
+     * This method is designed to be overridden by other modules.
+     * @returns {string}
+     */
+    _getPropertyCreateWarningText() {
+        return _t("You need edit access on the parent document to update these property fields");
     }
 
     /**
