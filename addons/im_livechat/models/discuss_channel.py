@@ -145,6 +145,11 @@ class DiscussChannel(models.Model):
                 subtype_xmlid='mail.mt_comment'
             )
 
+    def _get_user_name(self):
+        if self.env.user.user_livechat_username:
+            return self.env.user.user_livechat_username
+        return super()._get_user_name()
+
     # Rating Mixin
 
     def _rating_get_parent_field_name(self):
