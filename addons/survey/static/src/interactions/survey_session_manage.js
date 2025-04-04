@@ -1,6 +1,5 @@
 import { preloadBackground } from "@survey/js/survey_preload_image_mixin";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import SurveySessionChart from "@survey/interactions/survey_session_chart";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
@@ -43,15 +42,6 @@ export class SurveySessionManage extends Interaction {
         },
     };
 
-    /**
-     * TODO: refactor when the three widgets will be converted
-     */
-    async willStart() {
-        const setupPromises = [];
-        setupPromises.push(this._setupChart());
-        await Promise.all(setupPromises);
-    }
-
     setup() {
         this.fadeInOutTime = 500;
         if (this.el.dataset["isSessionClosed"]) {
@@ -59,6 +49,7 @@ export class SurveySessionManage extends Interaction {
             this.el.classList.remove("invisible");
             return;
         }
+        this.chartEl = this.el.querySelector(".o_survey_session_chart");
         this.leaderboardEl = this.el.querySelector(".o_survey_session_leaderboard");
         this.textAnswersEl = this.el.querySelector(".o_survey_session_text_answers_container");
         // general survey props
@@ -113,11 +104,25 @@ export class SurveySessionManage extends Interaction {
         this.setupIntervals();
     }
 
+    async willStart() {
+        // If a chart is present, we wait for the chart interaction to be ready
+        if (this.chartEl) {
+            let resolveChartPromise;
+            const chartPromise = new Promise(function (resolve, reject) {
+                resolveChartPromise = resolve;
+            });
+            this.env.bus.addEventListener("SURVEY:CHART_INTERACTION_STARTED", resolveChartPromise);
+            await this.waitFor(chartPromise);
+        }
+    }
+
     start() {
-        // Check if the page is being loaded as a result of going back
+        this.setupCurrentScreen();
+
+        // Check if we are loading this page because the user clicked on 'previous'
         if (this.el.dataset["goingBack"]) {
-            this.setShowInputs(true);
-            this.setShowAnswers(true);
+            this.chartUpdateState({ showInputs: true, showAnswers: true });
+
             if (this.sessionShowLeaderboard && this.isScoredQuestion) {
                 this.currentScreen = "leaderboard";
                 this.leaderboardEl.dispatchEvent(
@@ -130,10 +135,9 @@ export class SurveySessionManage extends Interaction {
                 );
             } else {
                 this.currentScreen = "results";
-                this.refreshResults();
             }
+            this.refreshResults();
         }
-        this.setupCurrentScreen();
         this.addListener(document, "keydown", this.onKeyDown.bind(this));
     }
     /**
@@ -190,10 +194,10 @@ export class SurveySessionManage extends Interaction {
         const screenToDisplay = this.getNextScreen();
         switch (screenToDisplay) {
             case "userInputs":
-                this.setShowInputs(true);
+                this.chartUpdateState({ showInputs: true });
                 break;
             case "results":
-                this.setShowAnswers(true);
+                this.chartUpdateState({ showAnswers: true });
                 // when showing results, stop refreshing answers
                 clearInterval(this.resultsRefreshInterval);
                 delete this.resultsRefreshInterval;
@@ -239,10 +243,10 @@ export class SurveySessionManage extends Interaction {
         const screenToDisplay = this.getPreviousScreen();
         switch (screenToDisplay) {
             case "question":
-                this.setShowInputs(false);
+                this.chartUpdateState({ showInputs: false });
                 break;
             case "userInputs":
-                this.setShowAnswers(false);
+                this.chartUpdateState({ showAnswers: false });
                 // resume refreshing answers if necessary
                 if (!this.resultsRefreshInterval) {
                     this.resultsRefreshInterval = setInterval(this.refreshResults.bind(this), 2000);
@@ -477,37 +481,23 @@ export class SurveySessionManage extends Interaction {
         } else {
             this.currentScreen = "question";
         }
-        this.setShowInputs(this.currentScreen === "userInputs");
+        this.chartUpdateState({ showInputs: this.currentScreen === "userInputs" });
         this.updateNextScreenTooltip();
     }
 
     /**
-     * When we go from the 'question' screen to the 'userInputs' screen, we toggle this boolean
-     * and send the information to the chart.
-     * The chart will show attendees survey.user_input.lines.
-     * TODO: refactor when converting SurveySessionChart widget
-     * @param {Boolean} showInputs
+     * Send a CustomEvent to the chart interaction to update its state.
+     * Possible options are:
+     *  - showInputs: boolean, show attendees survey.user_input.lines
+     *  - showAnswers: boolean, show the question survey.question.answers
+     *  - questionStatistics: object, chart data (counts / labels / ...)
      */
-    setShowInputs(showInputs) {
-        if (this.resultsChart) {
-            this.resultsChart.setShowInputs(showInputs);
-            this.resultsChart.updateChart();
-        }
-    }
-
-    /**
-     * When we go from the 'userInputs' screen to the 'results' screen, we toggle this boolean
-     * and send the information to the chart.
-     * The chart will show the question survey.question.answers.
-     * (Only used for simple / multiple choice questions).
-     * TODO: refactor when converting SurveySessionChart widget
-     * @param {Boolean} showAnswers
-     */
-    setShowAnswers(showAnswers) {
-        if (this.resultsChart) {
-            this.resultsChart.setShowAnswers(showAnswers);
-            this.resultsChart.updateChart();
-        }
+    chartUpdateState(options) {
+        this.chartEl?.dispatchEvent(
+            new CustomEvent("updateState", {
+                detail: options,
+            })
+        );
     }
 
     /**
@@ -539,37 +529,6 @@ export class SurveySessionManage extends Interaction {
         if (sessionNavigationNextEl && tooltip) {
             this.sessionNavigationNextLabel = tooltip;
             this.updateContent();
-        }
-    }
-
-    /**
-     * For simple/multiple choice questions, we display a bar chart with:
-     *
-     * - answers of attendees
-     * - correct / incorrect answers when relevant
-     *
-     * see SurveySessionChart widget doc for more information.
-     * TODO: refactor when converting SurveySessionChart widget
-     */
-    _setupChart() {
-        if (this.resultsChart) {
-            this.resultsChart.setElement(null);
-            this.resultsChart.destroy();
-            delete this.resultsChart;
-        }
-
-        if (!this.isStartScreen && this.showBarChart) {
-            this.resultsChart = new SurveySessionChart(this, {
-                questionType: this.el.dataset["questionType"],
-                answersValidity: this.el.dataset["answersValidity"],
-                hasCorrectAnswers: this.hasCorrectAnswers,
-                questionStatistics: JSON.parse(this.el.dataset["questionStatistics"]),
-                showInputs: this.showInputs,
-            });
-
-            return this.resultsChart.attachTo(this.el.querySelector(".o_survey_session_chart"));
-        } else {
-            return Promise.resolve();
         }
     }
 
@@ -653,12 +612,16 @@ export class SurveySessionManage extends Interaction {
                 if (questionResults) {
                     this.attendeesCount = questionResults.attendees_count;
 
-                    if (this.resultsChart && questionResults.question_statistics_graph) {
+                    if (
+                        !this.isStartScreen &&
+                        this.showBarChart &&
+                        questionResults.question_statistics_graph
+                    ) {
                         const parsedStatistics = JSON.parse(
                             questionResults.question_statistics_graph
                         );
                         if (parsedStatistics.length > 0) {
-                            this.resultsChart.updateChart(parsedStatistics);
+                            this.chartUpdateState({ questionStatistics: parsedStatistics });
                         }
                     } else if (!this.isStartScreen && this.showTextAnswers) {
                         this.textAnswersEl.dispatchEvent(
