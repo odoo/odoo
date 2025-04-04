@@ -26,12 +26,12 @@
                         <i class="fa fa-fw fa-times" role="img"/>
                     </div>
                 </div>
-                <div t-on-click.stop="close" t-on-mousemove="onMousemoveView" class="o-FileViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': state.file.isImage }">
+                <div t-on-click.stop="close" t-on-mousemove="onMouseMoveImage" t-on-touchmove.prevent="onTouchMoveImage" class="o-FileViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': state.file.isImage }">
                     <div t-if="state.file.isImage" class="o-FileViewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="zoomer">
                         <div t-if="!state.imageLoaded" class="position-absolute">
                             <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin text-white" role="img" title="Loading"/>
                         </div>
-                        <img t-on-click.stop="" t-on-load="onImageLoaded" t-on-wheel="onWheelImage" t-on-mousedown.stop="onMousedownImage" t-on-mouseup.stop="onMouseupImage" class="o-FileViewer-view o-FileViewer-viewImage mw-100 mh-100 transition-base" t-att-src="state.file.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
+                        <img t-on-click.stop="" t-on-load="onImageLoaded" t-on-wheel="onWheelImage" t-on-mousedown.stop="onMouseDownImage" t-on-mouseup.stop="onMouseUpImage" t-on-touchstart="onTouchStartImage" t-on-touchend="onTouchEndImage" class="o-FileViewer-view o-FileViewer-viewImage mw-100 mh-100" t-att-class="{'transition-base': !hasTouch}" t-att-src="state.file.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
                     </div>
                     <iframe t-if="state.file.isPdf" class="o-FileViewer-view w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': ui.isSmall }" t-att-src="state.file.defaultSource"/>
                     <iframe t-if="state.file.isText" class="o-FileViewer-view o-isText o_text w-75 h-100 border-0" t-att-src="state.file.defaultSource"/>
@@ -40,7 +40,7 @@
                         <source t-att-data-type="state.file.mimetype" t-att-src="state.file.defaultSource"/>
                     </video>
                 </div>
-                <div t-if="state.file.isImage" class="position-absolute bottom-0 d-flex" role="toolbar">
+                <div t-if="state.file.isImage" class="position-absolute bottom-0 d-flex" t-ref="imageToolbar" role="toolbar">
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="zoomIn" title="Zoom In (+)" role="button">
                         <i class="fa fa-fw fa-plus" role="img"/>
                     </div>
