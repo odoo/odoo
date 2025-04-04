@@ -10,6 +10,7 @@ from __future__ import annotations
 import codecs
 import fnmatch
 import functools
+import itertools
 import inspect
 import io
 import json
@@ -99,17 +100,27 @@ space_pattern = re.compile(r"[\s\uFEFF]*")  # web_editor uses \uFEFF as ZWNBSP
 
 # regexpr for string formatting and extract ( ruby-style )|( jinja-style  ) used in `_compile_format`
 FORMAT_REGEX = re.compile(r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
+VARNAME_REGEXP = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
+
 
 def translate_format_string_expression(term, callback):
     expressions = {}
-    def add(exp_py):
-        index = len(expressions)
-        expressions[str(index)] = exp_py
-        return '{{%s}}' % index
-    term_without_py = FORMAT_REGEX.sub(lambda g: add(g.group(0)), term)
+    index = itertools.count()
+
+    def add_expression(g):
+        key = next(index)
+        expressions[str(key)] = g.group(0)
+        expression = (g.group(1) or g.group(2)).strip()
+        if VARNAME_REGEXP.fullmatch(expression):
+            expressions[expression] = g.group(0)
+            return '{{%s}}' % expression
+        else:
+            return '{{%s}}' % key
+
+    term_without_py = FORMAT_REGEX.sub(add_expression, term)
     translated_value = callback(term_without_py)
     if translated_value:
-        return FORMAT_REGEX.sub(lambda g: expressions.get(g.group(0)[2:-2], 'None'), translated_value)
+        return FORMAT_REGEX.sub(lambda g: expressions.get((g.group(1) or g.group(2)).strip(), "{{'WRONG TRANSLATION'}}"), translated_value)
 
 def translate_xml_node(node, callback, parse, serialize):
     """ Return the translation of the given XML/HTML node.

@@ -316,28 +316,73 @@ class TranslationToolsTestCase(BaseCase):
                         <t t-set="first" t-value="33"/>
                         <t t-set="second" t-valuef="no-translate-{{first}}"/>
                         <t t-set="toto" t-valuef.translate="My ro-{{first}}"/>
-                        <span t-attf-title="Big #{toto} first {{first}} second:{{second}}"/>
+                        <span t-attf-title="first+1 {{first + 1}} first+second {{first+second}} add #{10+10}"/>
+                        <span t-attf-string="Toto #{toto.strip()} first {{first}} second #{second} {{10+10}}"/>
 
                         <div data-stuff.translate="cat"/>
                     </t>"""
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
-        self.assertItemsEqual(terms,
-            ['My ro-{{0}}', 'Big {{0}} first {{1}} second:{{2}}', 'cat'])
+        self.assertItemsEqual(terms, [
+            'My ro-{{first}}',
+            'first+1 {{0}} first+second {{1}} add {{2}}',
+            'Toto {{0}} first {{first}} second {{second}} {{3}}',
+            'cat'
+        ])
 
-        # try to insert malicious expression
-        malicous = {
-            'My ro-{{0}}': 'Translated ro-{{0}} and {{1+1}}',
-            'Big {{0}} first {{1}} second:{{2}}': 'Big Translated {{0}} second ({{2}}) first {{1+1}}',
+        # translations with index only should work
+        translations = {
+            # source: translation
+            'My ro-{{first}}': 'Mon toto-{{0}}',
+            'first+1 {{0}} first+second {{1}} add {{2}}': 'premier+deuxieme {{1}} premier+1 {{0}} addition {{2}}',
+            'Toto {{0}} first {{first}} second {{second}} {{3}}': '{{3}} Robert {{0}} first {{1}} deuxieme {{2}}',
             'cat': 'dog',
         }
-        result = xml_translate(malicous.get, source)
-
+        result = xml_translate(translations.get, source)
         self.assertEqual(result, """<t t-name="stuff">
                         <t t-set="first" t-value="33"/>
                         <t t-set="second" t-valuef="no-translate-{{first}}"/>
-                        <t t-set="toto" t-valuef.translate="Translated ro-{{first}} and None"/>
-                        <span t-attf-title="Big Translated #{toto} second ({{second}}) first None"/>
+                        <t t-set="toto" t-valuef.translate="Mon toto-{{first}}"/>
+                        <span t-attf-title="premier+deuxieme {{first+second}} premier+1 {{first + 1}} addition #{10+10}"/>
+                        <span t-attf-string="{{10+10}} Robert #{toto.strip()} first {{first}} deuxieme #{second}"/>
+
+                        <div data-stuff.translate="dog"/>
+                    </t>""")
+
+        # translations with index and term name
+        translations = {
+            # source: translation
+            'My ro-{{first}}': 'Mon toto-{{first}}',
+            'first+1 {{0}} first+second {{1}} add {{2}}': 'premier+deuxieme {{1}} premier+1 {{0}} addition {{2}}',
+            'Toto {{0}} first {{first}} second {{second}} {{3}}': '{{3}} Robert {{0}} premier {{first}} deuxieme {{second}}',
+            'cat': 'dog',
+        }
+        result = xml_translate(translations.get, source)
+        self.assertEqual(result, """<t t-name="stuff">
+                        <t t-set="first" t-value="33"/>
+                        <t t-set="second" t-valuef="no-translate-{{first}}"/>
+                        <t t-set="toto" t-valuef.translate="Mon toto-{{first}}"/>
+                        <span t-attf-title="premier+deuxieme {{first+second}} premier+1 {{first + 1}} addition #{10+10}"/>
+                        <span t-attf-string="{{10+10}} Robert #{toto.strip()} premier {{first}} deuxieme #{second}"/>
+
+                        <div data-stuff.translate="dog"/>
+                    </t>""")
+
+        # translations with wrong expressions
+        translations = {
+            # source: translation
+            'My ro-{{first}}': 'Mon toto-{{first}}',
+            'first+1 {{0}} first+second {{1}} add {{2}}': 'premier+deuxieme {{1}} premier+1 {{6}} addition {{wrong}}',
+            'Toto {{0}} first {{first}} second {{second}} {{3}}': '{{3}} Robert {{0}} premier {{first.strip()}} deuxieme {{second}}',
+            'cat': 'dog',
+        }
+        result = xml_translate(translations.get, source)
+        self.assertEqual(result, """<t t-name="stuff">
+                        <t t-set="first" t-value="33"/>
+                        <t t-set="second" t-valuef="no-translate-{{first}}"/>
+                        <t t-set="toto" t-valuef.translate="Mon toto-{{first}}"/>
+                        <span t-attf-title="premier+deuxieme {{first+second}} premier+1 {{'WRONG TRANSLATION'}} addition {{'WRONG TRANSLATION'}}"/>
+                        <span t-attf-string="{{10+10}} Robert #{toto.strip()} premier {{'WRONG TRANSLATION'}} deuxieme #{second}"/>
 
                         <div data-stuff.translate="dog"/>
                     </t>""")
