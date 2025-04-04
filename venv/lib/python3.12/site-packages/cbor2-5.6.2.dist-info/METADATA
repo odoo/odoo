@@ -1,0 +1,160 @@
+Metadata-Version: 2.1
+Name: cbor2
+Version: 5.6.2
+Summary: CBOR (de)serializer with extensive tag support
+Author-email: Alex Grönholm <alex.gronholm@nextday.fi>
+Maintainer-email: "Kio Smallwood (Sekenre)" <kio@mothers-arms.co.uk>
+License: MIT
+Project-URL: Changelog, https://cbor2.readthedocs.io/en/latest/versionhistory.html
+Project-URL: Documentation, https://cbor2.readthedocs.org/en/latest/
+Project-URL: Source Code, https://github.com/agronholm/cbor2
+Project-URL: Issue Tracker, https://github.com/agronholm/cbor2/issues
+Keywords: serialization,cbor
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Typing :: Typed
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.8
+Description-Content-Type: text/x-rst
+License-File: LICENSE.txt
+Provides-Extra: benchmarks
+Requires-Dist: pytest-benchmark ==4.0.0 ; extra == 'benchmarks'
+Provides-Extra: doc
+Requires-Dist: packaging ; extra == 'doc'
+Requires-Dist: Sphinx >=7 ; extra == 'doc'
+Requires-Dist: sphinx-rtd-theme >=1.3.0 ; extra == 'doc'
+Requires-Dist: sphinx-autodoc-typehints >=1.2.0 ; extra == 'doc'
+Requires-Dist: typing-extensions ; (python_version < "3.12") and extra == 'doc'
+Provides-Extra: test
+Requires-Dist: coverage >=7 ; extra == 'test'
+Requires-Dist: pytest ; extra == 'test'
+Requires-Dist: hypothesis ; extra == 'test'
+
+.. image:: https://github.com/agronholm/cbor2/actions/workflows/test.yml/badge.svg
+  :target: https://github.com/agronholm/cbor2/actions/workflows/test.yml
+  :alt: Testing Status
+.. image:: https://github.com/agronholm/cbor2/actions/workflows/publish.yml/badge.svg
+  :target: https://github.com/agronholm/cbor2/actions/workflows/publish.yml
+  :alt: Publish Status
+.. image:: https://coveralls.io/repos/github/agronholm/cbor2/badge.svg?branch=master
+  :target: https://coveralls.io/github/agronholm/cbor2?branch=master
+  :alt: Code Coverage
+.. image:: https://readthedocs.org/projects/cbor2/badge/?version=latest
+  :target: https://cbor2.readthedocs.io/en/latest/?badge=latest
+  :alt: Documentation Status
+
+About
+=====
+
+This library provides encoding and decoding for the Concise Binary Object Representation (CBOR)
+(`RFC 8949`_) serialization format. The specification is fully compatible with the original RFC 7049.
+`Read the docs <https://cbor2.readthedocs.io/>`_ to learn more.
+
+It is implemented in pure python with an optional C backend.
+
+On PyPy, cbor2 runs with almost identical performance to the C backend.
+
+.. _RFC 8949: https://www.rfc-editor.org/rfc/rfc8949.html
+
+Features
+--------
+
+* Simple api like ``json`` or ``pickle`` modules.
+* Support many `CBOR tags`_ with `stdlib objects`_.
+* Generic tag decoding.
+* `Shared value`_ references including cyclic references.
+* `String references`_ compact encoding with repeated strings replaced with indices.
+* Optional C module backend tested on big- and little-endian architectures.
+* Extensible `tagged value handling`_ using ``tag_hook`` and ``object_hook`` on decode and ``default`` on encode.
+* Command-line diagnostic tool, converting CBOR file or stream to JSON ``python -m cbor2.tool``
+  (This is a lossy conversion, for diagnostics only)
+* Thorough test suite.
+
+.. _CBOR tags: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
+.. _stdlib objects: https://cbor2.readthedocs.io/en/latest/usage.html#tag-support
+.. _Shared value: http://cbor.schmorp.de/value-sharing
+.. _String references: http://cbor.schmorp.de/stringref
+.. _tagged value handling: https://cbor2.readthedocs.io/en/latest/customizing.html#using-the-cbor-tags-for-custom-types
+
+Installation
+============
+
+::
+
+    pip install cbor2
+
+Requirements
+------------
+
+* Python >= 3.8 (or `PyPy3`_ 3.8+)
+* C-extension: Any C compiler that can build Python extensions.
+  Any modern libc with the exception of Glibc<2.9
+
+.. _PyPy3: https://www.pypy.org/
+
+Building the C-Extension
+------------------------
+
+To force building of the optional C-extension, set OS env ``CBOR2_BUILD_C_EXTENSION=1``.
+To disable building of the optional C-extension, set OS env ``CBOR2_BUILD_C_EXTENSION=0``.
+If this environment variable is unset, setup.py will default to auto detecting a compatible C library and
+attempt to compile the extension.
+
+
+Usage
+=====
+
+`Basic Usage <https://cbor2.readthedocs.io/en/latest/usage.html#basic-usage>`_
+
+Command-line Usage
+==================
+
+The provided command line tool (``cbor2``) converts CBOR data in raw binary or base64
+encoding into a representation that allows printing as JSON. This is a lossy
+transformation as each datatype is converted into something that can be represented as a
+JSON value.
+
+The tool can alternatively be invoked with ``python -m cbor2.tool``.
+
+Usage::
+
+    # Pass hexadecimal through xxd.
+    $ echo a16568656c6c6f65776f726c64 | xxd -r -ps | cbor2 --pretty
+    {
+        "hello": "world"
+    }
+    # Decode Base64 directly
+    $ echo ggEC | python -m cbor2.tool --decode
+    [1, 2]
+    # Read from a file encoded in Base64
+    $ python -m cbor2.tool -d tests/examples.cbor.b64
+    {...}
+
+It can be used in a pipeline with json processing tools like `jq`_ to allow syntax
+coloring, field extraction and more.
+
+CBOR data items concatenated into a sequence can be decoded also::
+
+    $ echo ggECggMEggUG | cbor2 -d --sequence
+    [1, 2]
+    [3, 4]
+    [5, 6]
+
+Multiple files can also be sent to a single output file::
+
+    $ cbor2 -o all_files.json file1.cbor file2.cbor ... fileN.cbor
+
+.. _jq: https://stedolan.github.io/jq/
+
+Security
+========
+
+This library has not been tested against malicious input. In theory it should be
+as safe as JSON, since unlike ``pickle`` the decoder does not execute any code.

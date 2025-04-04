@@ -1,0 +1,68 @@
+// Định nghĩa bảng màu cho website
+$o-website-values-palettes: (
+   (
+      // By default, the $o-base-website-values-palette for fonts are "null"
+      // but will actually automatically be filled with the first font themes
+      // define in $o-theme-font-configs (for the base one). For the default
+      // website, we use a combination of Inter Tight for headings and Inter.
+   'font': 'Poppins',
+   'headings-font': 'Roboto', 
+
+   'color-palettes-name': 'airproof',
+
+   'menu-gradient': linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%),
+   'header-boxed-gradient': linear-gradient(45deg, rgba(255, 87, 34, 0.8) 0%, rgba(255, 152, 0, 0.8) 100%),
+   'footer-gradient': linear-gradient(90deg, rgba(33, 150, 243, 0.7) 0%, rgba(255, 87, 34, 0.7) 100%),
+   'copyright-gradient': linear-gradient(180deg, rgba(0, 188, 212, 0.5) 0%, rgba(255, 87, 34, 0.5) 100%),
+
+   // 'header-template': 'Search', // odoo nội suy hậu tố thành id 
+   'header-template': 'airproof', // odoo nội suy hậu tố thành id 
+   'footer-template': 'Links',
+   ),
+);
+
+// Định nghĩa cấu hình font
+$o-theme-font-configs: (
+   'Poppins': (
+      'family': ('Poppins', sans-serif),
+      'properties' : (
+         'base': (
+            'font-size-base': 1rem,
+         ),
+      ),
+   ),
+   'Roboto': (
+      'family': ('Roboto', sans-serif),
+      'url': 'Roboto:300,300i,400,400i,700,700i',
+  ),
+);
+
+// Định nghĩa bảng màu airproof
+$o-color-palettes: map-merge($o-color-palettes,
+   (
+      'airproof': (
+         'o-color-1': #984c46,
+         'o-color-2': #23323b,
+         'o-color-3': #eceae4,
+         'o-color-4': #FFFFFF,
+         'o-color-5': #16121f,
+
+         'o-cc1-bg':                     'o-color-1',
+         'o-cc1-text':                   'o-color-2',
+         'o-cc1-headings':               'o-color-3',
+         'o-cc1-h2':                     'o-color-4',
+         'o-cc1-h3':                     'o-color-5',
+         'o-cc1-h4':                     'o-color-1',
+         'o-cc1-h5':                     'o-color-2',
+         'o-cc1-h6':                     'o-color-3',
+         'o-cc1-link':                   'o-color-4',
+         'o-cc1-btn-primary':            'o-color-1',
+         'o-cc1-btn-primary-border':     'o-color-2',
+         'o-cc1-btn-secondary':          'o-color-3',
+         'o-cc1-btn-secondary-border':   'o-color-4',
+      ),
+   )
+);
+
+// Sử dụng bảng màu airproof
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'airproof');

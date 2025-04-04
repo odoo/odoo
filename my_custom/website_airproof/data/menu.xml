@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <delete model="website.menu" search="[('url','in', ['/', '/contactus']),('website_id', '=', 1)]" />
+
+  <!-- Menu item -->
+  <record id="menu_about_us" model="website.menu">
+    <field name="name">About us</field>
+    <field name="url">/about-us</field>
+    <field name="parent_id"
+      search="[
+        ('url', '=', '/default-main-menu'),
+        ('website_id', '=', 1)]" />
+    <field name="website_id">1</field>
+    <field name="sequence" type="int">10</field>
+    <!-- Open link in new window -->
+    <field name="new_window" eval="True" />
+    <!-- Add a link to external website -->
+    <!-- <field name="url">https://www.facebook.com/thang.936090</field> -->
+    <!-- Link to a specific section of a page -->
+    <!-- <field name="url">/about-us#our-team</field> -->
+  </record>
+
+  <!-- profile page -->
+  <record id="menu_profile" model="website.menu">
+    <field name="name">Profile</field>
+    <field name="url">/profile</field>
+    <field name="parent_id"
+      search="[
+        ('url', '=', '/default-main-menu'),
+        ('website_id', '=', 1)]" />
+    <field name="sequence" type="int">10</field>
+  </record>
+
+  <!-- Dropdown menu -->
+  <record id="menu_services" model="website.menu">
+    <field name="name">Services</field>
+    <field name="website_id">1</field>
+    <field name="parent_id"
+      search="[
+        ('url', '=', '/default-main-menu'),
+        ('website_id', '=', 1)]" />
+    <field name="sequence" type="int">5</field>
+  </record>
+
+  <record id="menu_services_item_1" model="website.menu">
+    <field name="name">Item 1</field>
+    <field name="url">/dropdown/item-1</field>
+    <field name="website_id">1</field>
+    <field name="parent_id" ref="website_airproof.menu_services" />
+    <field name="sequence" type="int">0</field>
+  </record>
+  <record id="menu_services_item_2" model="website.menu">
+    <field name="name">Item 2</field>
+    <field name="url">/dropdown/item-1</field>
+    <field name="website_id">1</field>
+    <field name="parent_id" ref="website_airproof.menu_services" />
+    <field name="sequence" type="int">0</field>
+  </record>
+  <record id="menu_services_item_3" model="website.menu">
+    <field name="name">Item 3</field>
+    <field name="url">/dropdown/item-1</field>
+    <field name="website_id">1</field>
+    <field name="parent_id" ref="website_airproof.menu_services" />
+    <field name="sequence" type="int">0</field>
+  </record>
+
+  <!-- Mega menu -->
+  <record id="menu_mega_demo" model="website.menu">
+    <field name="name">Sản phẩm</field>
+    <field name="parent_id" search="[('url', '=', '/default-main-menu'), ('website_id', '=', 1)]" />
+    <field name="website_id">1</field>
+    <field name="sequence" type="int">10</field>
+    <field name="is_mega_menu" eval="True" />
+    <field name="mega_menu_classes">s_mega_menu_custom</field>
+    <field name="mega_menu_content" type="html">
+      <section class="s_mega_menu_multi_menus py-4 o_colored_level o_cc">
+        <div class="container">
+          <div class="row">
+            <!-- Cột 1: Có Icon -->
+            <div class="col-12 col-md-4 text-center">
+              <i class="fa fa-laptop fa-2x mb-2 text-primary"></i>
+              <h5 class="mb-2">Laptop</h5>
+              <a href="/shop/laptop" class="btn btn-sm btn-outline-primary">Xem ngay</a>
+            </div>
+
+            <!-- Cột 2: Hình ảnh -->
+            <div class="col-12 col-md-4 text-center">
+              <img src="/web/image/website/1/logo" alt="Banner" style="max-height: 100px;"
+                class="mb-2" />
+              <h5 class="mb-2">Khuyến mãi hot</h5>
+              <a href="/promo" class="btn btn-sm btn-danger">Xem ưu đãi</a>
+            </div>
+
+            <!-- Cột 3: Text + danh sách link -->
+            <div class="col-12 col-md-4 text-center">
+              <h5 class="mb-2">Danh mục</h5>
+              <nav class="nav flex-column">
+                <a href="/shop/phones" class="nav-link">Điện thoại</a>
+                <a href="/shop/tablets" class="nav-link">Máy tính bảng</a>
+                <a href="/shop/accessories" class="nav-link">Phụ kiện</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </section>
+    </field>
+  </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="404" inherit_id="http_routing.404">
+    <xpath expr="//*[@id='wrap']" position="replace">
+      <t t-set="additional_title" t-value="'404 - Not found'" />
+      <div id="wrap" class="oe_structure">
+        <h3>thang dep chai</h3>
+      </div>
+    </xpath>
+  </template>
+
+</odoo>

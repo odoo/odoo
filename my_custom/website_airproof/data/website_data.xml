@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="website.homepage" name="Home">
+    <t t-call="website.layout">
+      <t t-set="pageName" t-value="'homepage'" />
+      <div id="wrap" class="oe_structure">
+        <t t-set="meta_description">This is the description of the page that will appear on Search
+          Engines.</t>
+        <t t-set="no_header" t-value="false" />
+        <t t-set="no_footer" t-value="false"/>
+      </div>
+    </t>
+  </template>
+
+</odoo>
