@@ -2057,3 +2057,28 @@ test("Pause GIF when thread is not focused", async () => {
     await focus(".o-mail-Thread");
     await contains(".o-mail-AttachmentImage:not([data-paused])");
 });
+
+test("should delete link preview along with message", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        og_title: "Test Link",
+        og_description: "Should be removed with the message.",
+        og_type: "article",
+        source_url: "https://www.odoo.com",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "PreviewTest" });
+    pyEnv["mail.message"].create({
+        body: "<a href='https://www.odoo.com'>https://www.odoo.com</a>",
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-LinkPreviewCard");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:contains('Delete')");
+    await click("button:contains('Delete')");
+    await contains(".o-mail-LinkPreviewCard", { count: 0 });
+});
