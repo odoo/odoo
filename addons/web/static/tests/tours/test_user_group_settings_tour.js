@@ -25,6 +25,9 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "click",
         },
         {
+            trigger: 'a.nav-link[name="technical_access_rights"].active',
+        },
+        {
             trigger: '.o_notebook_content:not(.o_data_cell(:contains("Settings"))',
             content: "check if demo user does not have 'Settings' access",
         },
@@ -34,7 +37,11 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "click",
         },
         {
-            trigger: '.o_field_widget[name="group_ids"] .o_inner_group:has(label:contains("Administration")) select.o_input',
+            trigger: 'a.nav-link[name="access_rights"].active',
+        },
+        {
+            trigger:
+                '.o_field_widget[name="group_ids"] .o_inner_group:has(label:contains("Administration")) select.o_input',
             content: "Add 'Access Rights' access to demo user",
             run: `select 2`,
         },
@@ -42,6 +49,9 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             trigger: 'a.nav-link[name="technical_access_rights"]',
             content: "show changes in Technical Access Rights",
             run: "click",
+        },
+        {
+            trigger: 'a.nav-link[name="technical_access_rights"].active',
         },
         {
             trigger: '.o_notebook_content .o_data_cell:contains("Access Rights")',
@@ -68,13 +78,17 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "click",
         },
         {
-            trigger: '.o_notebook_content select.o_input:has(option:contains("Access Rights"):selected)',
+            trigger:
+                '.o_notebook_content select.o_input:has(option:contains("Access Rights"):selected)',
             content: "check if demo user have 'Settings' with 'Access Rights' level",
         },
         {
             trigger: 'a.nav-link[name="technical_access_rights"]',
             content: "show Technical Access Rights",
             run: "click",
+        },
+        {
+            trigger: 'a.nav-link[name="technical_access_rights"].active',
         },
         {
             trigger: '.o_notebook_content .o_data_cell:contains("Access Rights")',
