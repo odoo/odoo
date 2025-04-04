@@ -3,6 +3,7 @@
 from odoo import models
 from odoo.http import request
 from odoo.tools import format_datetime, groupby
+from odoo.tools.misc import limited_field_access_token
 
 
 class MailMessage(models.Model):
@@ -74,9 +75,15 @@ class MailMessage(models.Model):
             attachments_sudo = self.sudo().attachment_ids
             attachments_sudo.generate_access_token()
             related_attachments = {
-                att_read_values['id']: att_read_values
-                for att_read_values in attachments_sudo.read(
-                    ["access_token", "checksum", "id", "mimetype", "name", "res_id", "res_model"]
+                att_read_values["id"]: {
+                    **att_read_values,
+                    "raw_access_token": limited_field_access_token(att, "raw"),
+                }
+                for att, att_read_values in zip(
+                    attachments_sudo,
+                    attachments_sudo.read(
+                        ["access_token", "checksum", "id", "mimetype", "name", "res_id", "res_model"]
+                    ),
                 )
             }
             message_to_attachments = {

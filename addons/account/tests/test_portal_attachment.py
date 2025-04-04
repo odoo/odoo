@@ -72,7 +72,10 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertEqual(res_binary.status_code, 404)
 
         # Test created access_token is working
-        res_binary = self.url_open('/web/content/%d?access_token=%s' % (create_res['id'], create_res['access_token']))
+        res_binary = self.url_open(
+            "/web/content/%d?access_token=%s"
+            % (create_res["id"], create_res["raw_access_token"])
+        )
         self.assertEqual(res_binary.status_code, 200)
 
         # Test mimetype is neutered as non-admin
@@ -91,11 +94,17 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         create_res = json.loads(res.content.decode('utf-8'))['data']['ir.attachment'][0]
         self.assertEqual(create_res['mimetype'], 'text/plain')
 
-        res_binary = self.url_open('/web/content/%d?access_token=%s' % (create_res['id'], create_res['access_token']))
+        res_binary = self.url_open(
+            "/web/content/%d?access_token=%s"
+            % (create_res["id"], create_res["raw_access_token"])
+        )
         self.assertEqual(res_binary.headers['Content-Type'], 'text/plain; charset=utf-8')
         self.assertEqual(res_binary.content, b'<svg></svg>')
 
-        res_image = self.url_open('/web/image/%d?access_token=%s' % (create_res['id'], create_res['access_token']))
+        res_image = self.url_open(
+            "/web/image/%d?access_token=%s"
+            % (create_res["id"], create_res["raw_access_token"])
+        )
         self.assertEqual(res_image.headers['Content-Type'], 'application/octet-stream')
         self.assertEqual(res_image.content, b'<svg></svg>')
 

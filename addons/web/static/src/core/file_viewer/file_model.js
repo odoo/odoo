@@ -8,6 +8,8 @@ export const FileModelMixin = (T) =>
         id;
         mimetype;
         name;
+        /** @type {string} */
+        raw_access_token;
         /** @type {"binary"|"url"} */
         type;
         /** @type {string} */
@@ -104,7 +106,7 @@ export const FileModelMixin = (T) =>
                 return {};
             }
             const params = {
-                access_token: this.access_token,
+                access_token: this.raw_access_token || this.access_token,
                 filename: this.name,
                 unique: this.checksum,
             };

@@ -9,6 +9,7 @@ from odoo.addons.test_mail.tests.test_performance import BaseMailPerformance
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from odoo.tools.misc import limited_field_access_token
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
@@ -259,6 +260,9 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'id': message.attachment_ids[0].id,
                         'mimetype': 'application/octet-stream',
                         'name': 'Test file 1',
+                        'raw_access_token': limited_field_access_token(
+                            message.attachment_ids[0], 'raw'
+                        ),
                         'res_id': record.id,
                         'res_model': record._name,
                     }, {
@@ -268,6 +272,9 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'id': message.attachment_ids[1].id,
                         'mimetype': 'application/octet-stream',
                         'name': 'Test file 0',
+                        'raw_access_token': limited_field_access_token(
+                            message.attachment_ids[1], 'raw'
+                        ),
                         'res_id': record.id,
                         'res_model': record._name,
                     }
