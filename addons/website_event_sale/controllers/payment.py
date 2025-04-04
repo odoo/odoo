@@ -30,3 +30,4 @@ class PaymentPortalOnsite(PaymentPortal):
         )
         for event, count in count_per_event:
             event._check_seats_availability(minimal_availability=count)
+            event._check_slot_seats_availability(minimal_availability=count)

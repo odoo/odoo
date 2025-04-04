@@ -16,10 +16,17 @@ class WebsiteEventSale(WebsiteSale):
             groupby=['event_id'],
             aggregates=['id:recordset'],
         )
-        values['attendee_ids_per_event'] = dict(attendee_per_event_read_group)
+        # Get attendees and urls per event, also per slot if the event is multi slots
+        values['attendee_ids_per_event'] = {
+            event: regs.grouped('event_slot_id') if event.is_multi_slots else regs
+            for event, regs in attendee_per_event_read_group
+        }
         values['urls_per_event'] = {
-            event.id: event._get_event_resource_urls()
-            for event in values['events']
+            event.id: {
+                slot.id: event._get_event_resource_urls(slot=slot)
+                for slot in value.grouped('event_slot_id')
+            } if event.is_multi_slots else event._get_event_resource_urls()
+            for event, value in attendee_per_event_read_group
         }
 
         return values

@@ -6,6 +6,7 @@ import werkzeug
 
 from ast import literal_eval
 from collections import Counter
+from datetime import datetime
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -203,8 +204,14 @@ class WebsiteEventController(http.Controller):
     def _prepare_event_register_values(self, event, **post):
         """Return the require values to render the template."""
         urls = lazy(event._get_event_resource_urls)
+        future_slots_by_date = event.sudo().slot_ids.filtered(lambda s: s.start_datetime > datetime.now()).grouped('date')
         return {
             'event': event,
+            'slots': future_slots_by_date,
+            'slots_to_preview': {  # Next 3 closest dates
+                date: future_slots_by_date.get(date)
+                for date in sorted(date for date in future_slots_by_date)[:3]
+            },
             'main_object': event,
             'range': range,
             'google_url': lazy(lambda: urls.get('google_url')),
@@ -245,16 +252,70 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
+        """ Display the slot registration modal if the event is multi slots,
+        else display the attendee registration modal.
+
+        For the slot registration modal, retrieving all the slots with available seats
+        for the ticket selection and pass them to the slot registration modal.
+        If there is none, showing an availability check error in the modal.
+        Only one slot can be selected for the current registration.
+        The attendee registration form is displayed after the slot selection modal.
+        """
         tickets = self._process_tickets_form(event, post)
         availability_check = True
-        if event.seats_limited:
-            ordered_seats = 0
-            for ticket in tickets:
-                ordered_seats += ticket['quantity']
-            if event.seats_available < ordered_seats:
-                availability_check = False
+        available_slots = self.env['event.slot']
+        event_slots = event.sudo().slot_ids
+        if not event.seats_limited:
+            available_slots = event_slots
+        else:
+            if event.is_multi_slots and any(not ticket.is_expired for ticket in event.no_slot_ticket_ids):
+                # multi slots with tickets check
+                ordered_seats_per_ticket = {ticket_data['ticket'].id: ticket_data['quantity'] for ticket_data in tickets}
+                for parent_ticket, slot_tickets in event.event_ticket_ids.grouped('parent_ticket_id').items():
+                    ordered_quantity = ordered_seats_per_ticket.get(parent_ticket.id)
+                    if not ordered_quantity:
+                        continue
+                    available_slots += slot_tickets.filtered(lambda slot_ticket: slot_ticket.seats_available >= ordered_quantity).mapped('slot_id')
+                if not available_slots:
+                    availability_check = False
+            else:
+                # not multi slots / multi slots without tickets check
+                ordered_seats = 0
+                for ticket in tickets:
+                    ordered_seats += ticket['quantity']
+                seats_available = max(slot.seats_available for slot in event_slots) if event.is_multi_slots else event.seats_available
+                if seats_available < ordered_seats:
+                    availability_check = False
+                if event.is_multi_slots:
+                    available_slots = event_slots.filtered(lambda slot: slot.seats_available >= ordered_seats)
         if not tickets:
             return False
+        if event.is_multi_slots:
+            return request.env['ir.ui.view']._render_template("website_event.modal_slot_registration", {
+                'tickets': tickets,
+                'event': event,
+                'availability_check': availability_check,
+                'available_slots_per_date': available_slots.sorted('date').grouped('date'),
+                'selected_tickets': post,
+            })
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+            'tickets': tickets,
+            'event': event,
+            'availability_check': availability_check,
+            'default_first_attendee': self._prepare_default_first_attendee(),
+        })
+
+    @http.route(['/event/<model("event.event"):event>/registration/slot'], type='jsonrpc', auth="public", methods=['POST'], website=True)
+    def registration_slot(self, event, **post):
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+            'tickets': self._process_tickets_form(event, literal_eval(post.get('selected_tickets'))),
+            'event': event,
+            'availability_check': True,  # Always True as already checked after tickets selection
+            'default_first_attendee': self._prepare_default_first_attendee(),
+            'selected_slot': post.get('selected_slot', False),
+        })
+
+    def _prepare_default_first_attendee(self):
         default_first_attendee = {}
         if not request.env.user._is_public():
             default_first_attendee = {
@@ -270,12 +331,7 @@ class WebsiteEventController(http.Controller):
                     "email": visitor.email,
                     "phone": visitor.mobile,
                 }
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
-            'tickets': tickets,
-            'event': event,
-            'availability_check': availability_check,
-            'default_first_attendee': default_first_attendee,
-        })
+        return default_first_attendee
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
@@ -285,8 +341,24 @@ class WebsiteEventController(http.Controller):
         - For questions of type 'text_box', extracting the text answer of the attendee.
 
         :param form_details: posted data from frontend registration form, like
-            {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
+            {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1', 'selected_slot': '1'}
         """
+        if form_details.get('selected_slot') and event.event_ticket_ids:
+            # Depending on the selected slot converts the selected tickets to their related slot tickets.
+            slot_tickets_for_slot = {
+                ticket.parent_ticket_id.id: ticket.id
+                for ticket in event.event_ticket_ids.filtered(lambda ticket:
+                    ticket.parent_ticket_id and
+                    ticket.slot_id.id == int(form_details['selected_slot'])
+                )
+            }
+            for form_key, form_value in form_details.items():
+                if 'event_ticket_id' in form_key and form_value != '0':
+                    slot_ticket_id = slot_tickets_for_slot.get(int(form_value))
+                    if not slot_ticket_id:
+                        raise UserError(_("This slot and ticket combination does not exist on event."))
+                    form_details[form_key] = str(slot_ticket_id)
+                    continue
         allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
@@ -309,7 +381,10 @@ class WebsiteEventController(http.Controller):
                 registration_index, field_name = key_values
                 if field_name not in registration_fields:
                     continue
-                registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
+                reg = registrations.setdefault(registration_index, dict())
+                reg[field_name] = int(value) or False
+                if form_details.get('selected_slot'):
+                    reg['event_slot_id'] = int(form_details['selected_slot'])
                 continue
 
             if len(key_values) != 3:
@@ -413,12 +488,14 @@ class WebsiteEventController(http.Controller):
             self._get_registration_confirm_values(event, attendees_sudo))
 
     def _get_registration_confirm_values(self, event, attendees_sudo):
-        urls = event._get_event_resource_urls()
+        slot = attendees_sudo.event_slot_id
+        urls = event._get_event_resource_urls(slot)
         return {
             'attendees': attendees_sudo,
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
+            'slot': slot,
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
