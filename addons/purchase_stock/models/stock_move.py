@@ -62,8 +62,8 @@ class StockMove(models.Model):
             for invoice_line in line.sudo().invoice_lines:
                 if invoice_line.move_id.state != 'posted':
                     continue
-                # Discount applied on bill prior to reception
-                if invoice_line.discount and not move_layer:
+                # Discount applied on bill prior to reception of original pick or backorders
+                if invoice_line.discount and (not move_layer or move_layer.stock_move_id.picking_id[-1] == self.picking_id.backorder_id):
                     price_unit = invoice_line.price_subtotal / invoice_line.quantity
                 else:
                     price_unit = invoice_line.price_unit
