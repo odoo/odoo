@@ -597,7 +597,10 @@ export class PropertiesField extends Component {
     async onPropertyCreate() {
         if (!this.state.canChangeDefinition || !(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
-                _t("You need edit access on the parent document to update these property fields"),
+                _t('You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
+                    parentName: this.props.record.data[this.definitionRecordField][1],
+                    parentFieldLabel: this.props.record.fields[this.definitionRecordField].string,
+                }),
                 { type: "warning" }
             );
             return;
