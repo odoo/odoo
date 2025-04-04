@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                     const src = this.anchor.querySelector("img").src;
                     const token = store["ir.attachment"].get(
                         (src.match("/web/image/([0-9]+)") || []).at(-1)
-                    )?.access_token;
+                    )?.raw_access_token;
                     if (!(token && src.includes(`access_token=${token}`))) {
                         throw new Error("Access token of the attachment isn't correct.");
                     }
