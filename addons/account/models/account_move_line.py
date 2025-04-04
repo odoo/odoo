@@ -3321,6 +3321,7 @@ class AccountMoveLine(models.Model):
             'tax_ids': [Command.set(self.tax_ids.ids)],
             'tax_tag_ids': [Command.set(self.tax_tag_ids.ids)],
             'group_tax_id': self.group_tax_id.id,
+            'partner_id': self.partner_id.id,
             **kwargs,
         }
 
