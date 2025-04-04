@@ -3327,7 +3327,7 @@ class BaseModel(metaclass=MetaModel):
                 _old_translations = {src: values[lang] for src, values in old_translation_dictionary.items() if lang in values}
                 _new_translations = {**_old_translations, **_translations}
                 new_values[lang] = field.translate(_new_translations.get, old_source_lang_value)
-            self.env.cache.update_raw(self, field, [new_values], dirty=True)
+            field._cache_update(self.with_context(prefetch_langs=True), new_values, dirty=True)
 
         # the following write is incharge of
         # 1. mark field as modified
@@ -4572,15 +4572,15 @@ class BaseModel(metaclass=MetaModel):
                 if not field.store:
                     continue
                 if field.type in ('one2many', 'many2many'):
-                    self.env.cache.set(record, field, ())
+                    field._cache_update(record, ())
                 elif field.name not in set_vals:
-                    self.env.cache.set(record, field, None)
+                    field._cache_update(record, None)
 
             for fname, value in vals.items():
                 field = self._fields[fname]
                 if field.type not in ('one2many', 'many2many'):
                     cache_value = field.convert_to_cache(value, record)
-                    self.env.cache.set(record, field, cache_value)
+                    field._cache_update(record, cache_value)
                     if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
                         inverses_update[(field, cache_value)].append(record.id)
 
@@ -4627,7 +4627,7 @@ class BaseModel(metaclass=MetaModel):
         if not self._parent_store:
             return
 
-        self._cr.execute(SQL(
+        updated = dict(self.env.execute_query(SQL(
             """ UPDATE %(table)s node
                 SET parent_path=concat((
                         SELECT parent.parent_path
@@ -4639,12 +4639,12 @@ class BaseModel(metaclass=MetaModel):
             table=SQL.identifier(self._table),
             parent=SQL.identifier(self._parent_name),
             ids=tuple(self.ids),
-        ))
+        )))
 
         # update the cache of updated nodes, and determine what to recompute
-        updated = dict(self._cr.fetchall())
-        records = self.browse(updated)
-        self.env.cache.update(records, self._fields['parent_path'], updated.values())
+        update = self._fields['parent_path']._cache_update
+        for record_id, path in updated.items():
+            update(self.browse(record_id), path)
 
     def _parent_store_update_prepare(self, vals_list: list[ValuesType]) -> Self:
         """ Return the records in ``self`` that must update their parent_path
@@ -4694,7 +4694,7 @@ class BaseModel(metaclass=MetaModel):
                     raise UserError(_("Recursion Detected."))
 
             # update parent_path of all records and their descendants
-            rows = self.env.execute_query(SQL(
+            updated = dict(self.env.execute_query(SQL(
                 """ UPDATE %(table)s child
                     SET parent_path = concat(%(prefix)s, substr(child.parent_path,
                             length(node.parent_path) - length(node.id || '/') + 1))
@@ -4706,12 +4706,13 @@ class BaseModel(metaclass=MetaModel):
                 prefix=prefix,
                 ids=tuple(records.ids),
                 wildcard='%',
-            ))
+            )))
 
             # update the cache of updated nodes, and determine what to recompute
-            updated = dict(rows)
+            update = self._fields['parent_path']._cache_update
+            for record_id, path in updated.items():
+                update(self.browse(record_id), path)
             records = self.browse(updated)
-            self.env.cache.update(records, self._fields['parent_path'], updated.values())
             records.modified(['parent_path'])
 
     def _clean_properties(self) -> None:
