@@ -1269,7 +1269,8 @@ export class PosStore extends WithLazyGetterTrap {
                     .forEach((order) => (order.session_id = this.session));
             }
 
-            this.clearPendingOrder();
+            // Remove only synced orders from the pending orders
+            orders.forEach((o) => this.removePendingOrder(o));
             return newData["pos.order"];
         } catch (error) {
             if (options.throw) {
