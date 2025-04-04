@@ -695,6 +695,8 @@ async function mail_message_update_content(request) {
     const BusBus = this.env["bus.bus"];
     /** @type {import("mock_models").IrAttachment} */
     const IrAttachment = this.env["ir.attachment"];
+    /** @type {import("mock_models").MailLinkPreview} */
+    const MailLinkPreview = this.env["mail.link.preview"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
@@ -722,6 +724,9 @@ async function mail_message_update_content(request) {
         );
         msg_values.attachment_ids = attachment_ids;
     }
+    if (body === "" && message.link_preview_ids) {
+        MailLinkPreview.unlink(message.link_preview_ids);
+    }
     MailMessage.write([message_id], msg_values);
     BusBus._sendone(
         MailMessage._bus_notification_target(message.id),
@@ -734,6 +739,7 @@ async function mail_message_update_content(request) {
                 this.env["res.partner"].browse(message.partner_ids),
                 makeKwArgs({ fields: ["avatar_128", "name"] })
             ),
+            link_preview_ids: message.link_preview_ids,
         }).get_result()
     );
     return new mailDataHelpers.Store(

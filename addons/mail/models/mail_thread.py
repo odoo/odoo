@@ -4720,6 +4720,9 @@ class MailThread(models.AbstractModel):
         if msg_values:
             message.write(msg_values)
 
+        if message._filter_empty() and message.link_preview_ids:
+            message.link_preview_ids._unlink_and_notify()
+
         if 'scheduled_date' in kwargs:
             # update scheduled datetime
             if kwargs['scheduled_date']:
