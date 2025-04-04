@@ -7,6 +7,7 @@ from re import findall as regex_findall, split as regex_split
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
 
 PY_OPERATORS = {
@@ -239,17 +240,29 @@ class StockLot(models.Model):
         return [('id', 'in', ids)]
 
     def _search_partner_ids(self, operator, value):
-        domain = []
-        if isinstance(value, (int, list)):
-            domain.append(('id', operator, value))
-        elif isinstance(value, str):
-            domain.append(('name', operator, value))
+        """ returns partner_ids that are directly delivered the product of the lot/SN, i.e. not
+        lots/SNs that are consumed within a MO. This means this search is NOT symmetric with the
+        partner_ids field within the form view since it uses different logic that isn't efficient
+        enough for this search due to it being usable within the list view.
+        """
+        if operator in expression.NEGATIVE_TERM_OPERATORS or not isinstance(value, (Iterable)):
+            return NotImplemented
+        is_no_partner = operator == 'in' and list(value) == [False]
+        domain = Domain([
+            ('lot_id', '!=', False),
+            ('state', '=', 'done'),
+        ])
+        if is_no_partner:
+            # reverse the search, get all lots sent to partner so we can return all lots NOT sent
+            domain &= Domain('picking_partner_id', 'not in', value)
+        else:
+            domain &= Domain('picking_partner_id', operator, value)
+        domain &= Domain(self._get_outgoing_domain())
+        move_lines = self.env['stock.move.line'].search(domain)
 
-        if not domain:
-            return [('id', 'in', [])]
-        partners = self.env['res.partner'].search(domain)
-        filtered_lot_ids = self.env['stock.lot'].search([]).filtered(lambda lot: any(partner.id in partners.ids for partner in lot.partner_ids))
-        return [('id', 'in', filtered_lot_ids.ids)]
+        if is_no_partner:
+            return [('id', 'not in', move_lines.lot_id.ids)]
+        return [('id', 'in', move_lines.lot_id.ids)]
 
     def action_lot_open_quants(self):
         self = self.with_context(search_default_lot_id=self.id, create=False)
