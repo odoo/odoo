@@ -678,28 +678,6 @@ class ProductProduct(models.Model):
         action['context'] = {'default_product_ids': self.ids}
         return action
 
-    def open_pricelist_rules(self):
-        self.ensure_one()
-        domain = ['|',
-            '&', ('product_tmpl_id', '=', self.product_tmpl_id.id), ('applied_on', '=', '1_product'),
-            '&', ('product_id', '=', self.id), ('applied_on', '=', '0_product_variant'),
-            ('compute_price', '=', 'fixed'),
-        ]
-        return {
-            'name': _('Price Rules'),
-            'view_mode': 'list,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'list')],
-            'res_model': 'product.pricelist.item',
-            'type': 'ir.actions.act_window',
-            'target': 'current',
-            'domain': domain,
-            'context': {
-                'default_product_id': self.id,
-                'default_applied_on': '0_product_variant',
-                'search_default_visible': True,
-            }
-        }
-
     def open_product_template(self):
         """ Utility method used to add an "Open Template" button in product views """
         self.ensure_one()

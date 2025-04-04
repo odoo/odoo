@@ -14,29 +14,6 @@
                     <field name='attribute_line_ids' invisible='1'/>
                     <field name="company_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button"
-                               name="open_pricelist_rules"
-                               icon="fa-list-ul"
-                               groups="product.group_product_pricelist"
-                               type="object">
-                               <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value o_row">
-                                        <field name="pricelist_item_count"/>
-                                        <span class="o_stat_text" invisible="pricelist_item_count == 1">
-                                            Rules
-                                        </span>
-                                        <span class="o_stat_text" invisible="pricelist_item_count != 1">
-                                            Rule
-                                        </span>
-                                    </span>
-                                    <span class="o_stat_text" invisible="pricelist_item_count == 1">
-                                        Pricelists
-                                    </span>
-                                    <span class="o_stat_text" invisible="pricelist_item_count != 1">
-                                        Pricelist
-                                    </span>
-                               </div>
-                        </button>
                         <!-- Dummy tag for organizing buttons, using position='replace' when inheriting -->
                         <span id="button_website" invisible="1"/>
                         <button class="oe_stat_button"
