@@ -1138,8 +1138,10 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
                     terms.update(
                         axes.get('title', {}).get('text', '') for axes in figure['data']['axesDesign'].values()
                     )
-                if 'baselineDescr' in figure['data']:
-                    terms.add(figure['data']['baselineDescr'])
+                if 'text' in (baselineDescr := figure['data'].get('baselineDescr', {})):
+                    terms.add(baselineDescr['text'])
+                if 'text' in (keyDescr := figure['data'].get('keyDescr', {})):
+                    terms.add(keyDescr['text'])
     terms.update(global_filter['label'] for global_filter in data.get('globalFilters', []))
     return (
         (0, None, term, [])
