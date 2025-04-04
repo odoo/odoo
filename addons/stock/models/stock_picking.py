@@ -1413,6 +1413,7 @@ class StockPicking(models.Model):
         self.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
     def button_validate(self):
+        self = self.filtered(lambda p: p.state != 'done')
         draft_picking = self.filtered(lambda p: p.state == 'draft')
         draft_picking.action_confirm()
         for move in draft_picking.move_ids:
