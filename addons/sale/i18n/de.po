@@ -3,8 +3,8 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2024
 # Felix Schubert <felix.schubert@go-erp.com>, 2025
+# Wil Odoo, 2025
 # Larissa Manderfeld, 2025
 # 
 msgid ""
@@ -1065,8 +1065,8 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
-"Der Kombinationsartikel einer Auftragszeile muss unter den verfügbaren "
-"Kombinationsartikeln der mit ihr verbundenen Zeile sein."
+"Der Kombi-Artikel einer Auftragszeile muss unter den verfügbaren Kombi-"
+"Artikeln der mit ihr verbundenen Zeile sein."
 
 #. module: sale
 #. odoo-python
@@ -1074,7 +1074,7 @@ msgstr ""
 msgid "A sale order line's product must match its combo item's product."
 msgstr ""
 "Das Produkt einer Auftragszeile muss mit dem Produkt der zugehörigen "
-"Kombinationszeile übereinstimmen."
+"Kombizeile übereinstimmen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1676,12 +1676,12 @@ msgstr "Abschließen"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
 msgid "Combo Choices"
-msgstr "Kombinationsmöglichkeiten"
+msgstr "Kombi-Möglichkeiten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
 msgid "Combo Item"
-msgstr "Kombinationsartikel"
+msgstr "Kombi-Artikel"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -4621,7 +4621,7 @@ msgstr "Wählen Sie ein Produkt aus oder erstellen Sie spontan ein neues."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
 msgid "Selected Combo Items"
-msgstr "Ausgewählte Kombinationsartikel"
+msgstr "Ausgewählte Kombi-Artikel"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -4941,9 +4941,19 @@ msgid "Tax Country"
 msgstr "Steuerland"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax Excl."
+msgstr "exkl. Steuern"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax ID"
 msgstr "USt-IdNr."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax Incl."
+msgstr "inkl. Steuern"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -5146,8 +5156,8 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
-"Die Anzahl der ausgewählten Kombinationsartikel muss mit der Anzahl der "
-"verfügbaren Kombinationsmöglichkeiten übereinstimmen."
+"Die Anzahl der ausgewählten Kombi-Artikel muss mit der Anzahl der "
+"verfügbaren Kombi-Möglichkeiten übereinstimmen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

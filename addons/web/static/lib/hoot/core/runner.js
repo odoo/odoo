@@ -32,7 +32,7 @@ import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
-import { cleanupNetwork } from "../mock/network";
+import { cleanupNetwork, throttleNetwork } from "../mock/network";
 import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
@@ -106,6 +106,7 @@ const {
     EventTarget,
     Map,
     Math: { abs: $abs, floor: $floor },
+    Number: { parseFloat: $parseFloat },
     Object: {
         assign: $assign,
         defineProperties: $defineProperties,
@@ -455,6 +456,11 @@ export class Runner {
         // Tests
         if (this.config.test?.length) {
             this._include("test", this.config.test);
+        }
+
+        if (this.config.networkDelay) {
+            const values = this.config.networkDelay.split("-").map((val) => $parseFloat(val) || 0);
+            throttleNetwork(...values);
         }
 
         // Random seed

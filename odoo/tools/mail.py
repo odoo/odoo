@@ -61,7 +61,8 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-o-mail-quote', 'data-o-mail-quote-node',  # quote detection
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-source-sha', 'data-oe-nodeid',
      'data-last-history-steps', 'data-oe-protected', 'data-embedded', 'data-embedded-editable', 'data-embedded-props', 'data-oe-version',
-     'data-oe-transient-content', 'data-behavior-props', 'data-prop-name',  # legacy editor
+     'data-oe-transient-content', 'data-behavior-props', 'data-prop-name', 'data-width', 'data-height', 'data-scale-x', 'data-scale-y', 'data-x', 'data-y',  # legacy editor
+     'data-oe-role', 'data-oe-aria-label',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
      'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
@@ -477,7 +478,10 @@ def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True
         for img in tree.findall('.//img'):
             if src := img.get('src'):
                 img.tag = 'span'
-                img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
+                if src.startswith('data:'):
+                    img_name = None  # base64 image
+                else:
+                    img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
                 img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
                 url_index.append(src)
 

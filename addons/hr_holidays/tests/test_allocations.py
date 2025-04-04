@@ -2,11 +2,10 @@ from datetime import date
 
 from freezegun import freeze_time
 
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged, users
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
-from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('allocation')
@@ -387,33 +386,15 @@ class TestAllocations(TestHrHolidaysCommon):
 
         self.assertEqual(allocation.allocation_type, 'regular')
 
-    def test_allocation_default_employee(self):
+    def test_create_allocation_from_company_with_no_employee_for_current_user(self):
         """
-        Make sure that the default employee is set on the allocation
+            This test makes sure that the allocation can be created if the current company doesn't have an employee
+            linked to the loggedIn user.
         """
-        with Form(self.env['hr.leave.allocation']
-                  .with_user(self.user_hrmanager)
-                  .with_context({"default_holiday_status_id": self.leave_type.id})) as allocation_form:
-            self.assertEqual(allocation_form.employee_id, self.user_hrmanager.employee_id)
-
-        new_company = self.env['res.company'].create({'name': 'Test company 2'})
-        new_leave_type = self.env['hr.leave.type'].create({
-            'name': 'Time Off with no validation for approval',
-            'time_type': 'leave',
-            'requires_allocation': 'yes',
-            'allocation_validation_type': 'no_validation',
-            'company_id': new_company.id,
-        })
-        with self.assertRaises(UserError, msg="This company does not have any employees."):
-            Form(self.env['hr.leave.allocation']
-                    .with_company(new_company)
-                    .with_context({"default_holiday_status_id": new_leave_type.id}))
-
-        new_employee = self.env['hr.employee'].create({
-            'name': 'My Employee',
-            'company_id': new_company.id,
-        })
-        with Form(self.env['hr.leave.allocation']
-                .with_company(new_company)
-                .with_context({"default_holiday_status_id": new_leave_type.id})) as allocation_form:
-            self.assertEqual(allocation_form.employee_id, new_employee)
+        self.user_hrmanager.employee_id = False
+        allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager))
+        self.assertFalse(allocation_form.employee_id)
+        allocation_form.employee_id = self.employee
+        allocation_form.holiday_status_id = self.leave_type
+        allocation = allocation_form.save()
+        self.assertTrue(allocation)

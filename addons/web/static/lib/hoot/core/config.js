@@ -139,6 +139,16 @@ export const CONFIG_SCHEMA = {
         parse: parseBoolean(true),
     },
     /**
+     * Artifical delay introduced for each network call. It can be a fixed integer,
+     * or an integer range (in the form "min-max") to generate a random delay between
+     * "min" and "max".
+     * @default 0
+     */
+    networkDelay: {
+        default: "0",
+        parse: parseString("0"),
+    },
+    /**
      * Removes the safety of 'try .. catch' statements around each test's run function
      * to let errors bubble to the browser.
      * @default false

@@ -1387,31 +1387,25 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(modified_leave.request_date_from, two_days_after)
         self.assertEqual(modified_leave.request_date_to, two_days_after)
 
-    def test_leave_default_employee(self):
-        """
-        Make sure that the default employee is set on the leave
-        """
-        with Form(self.env['hr.leave']
-                  .with_user(self.user_hrmanager)
-                  .with_context({"default_holiday_status_id": self.holidays_type_1.id})) as leave_form:
-            self.assertEqual(leave_form.employee_id, self.user_hrmanager.employee_id)
-
-        new_company = self.env['res.company'].create({'name': 'Test company 2'})
-        new_leave_type = self.env['hr.leave.type'].create({
-            'name': 'Time Off with no validation for approval',
-            'requires_allocation': 'no',
-            'company_id': new_company.id,
+    def test_public_holiday_in_the_middle_of_flexible_request(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'hours_per_day': 8,
+            'flexible_hours': True
         })
-        with self.assertRaises(UserError, msg="This company does not have any employees."):
-            Form(self.env['hr.leave']
-                    .with_company(new_company)
-                    .with_context({"default_holiday_status_id": new_leave_type.id}))
-
-        new_employee = self.env['hr.employee'].create({
-            'name': 'My Employee',
-            'company_id': new_company.id,
+        self.employee_emp.resource_calendar_id = calendar
+        # Create a public holiday for the flexible calendar
+        self.env['resource.calendar.leaves'].create({
+            'date_from': datetime(2022, 3, 11),
+            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+            'calendar_id': calendar.id,
         })
-        with Form(self.env['hr.leave']
-                .with_company(new_company)
-                .with_context({"default_holiday_status_id": new_leave_type.id})) as leave_form:
-            self.assertEqual(leave_form.employee_id, new_employee)
+
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': date(2022, 3, 10),
+            'request_date_to': date(2022, 3, 12),
+        })
+        self.assertEqual(leave.number_of_days, 2)

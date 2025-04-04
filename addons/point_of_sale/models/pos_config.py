@@ -216,6 +216,14 @@ class PosConfig(models.Model):
             'records': records
         })
 
+        for config in self.trusted_config_ids:
+            config._notify('SYNCHRONISATION', {
+                'static_records': static_records,
+                'session_id': config.current_session_id.id,
+                'login_number': 0,
+                'records': records
+            })
+
     def read_config_open_orders(self, domain, record_ids):
         all_domain = expression.OR([domain, [('id', 'in', record_ids.get('pos.order')), ('config_id', '=', self.id)]])
         all_orders = self.env['pos.order'].search(all_domain)
@@ -788,12 +796,11 @@ class PosConfig(models.Model):
             self.get_limited_product_count(),
         )
         product_ids = [r[0] for r in self.env.execute_query(sql)]
-        special_products = self._get_special_products().filtered(
-            lambda product: not product.sudo().company_id
-                            or product.sudo().company_id == self.company_id
-        )
-        product_ids.extend(special_products.ids)
-        products = self.env['product.product'].browse(product_ids)
+        product_ids.extend(self._get_special_products().ids)
+        products = self.env['product.product'].search([('id', 'in', product_ids)])
+        # sort products by product_ids order
+        id_to_index = {pid: index for index, pid in enumerate(product_ids)}
+        products = products.sorted(key=lambda p: id_to_index[p.id])
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
         products_available = products | product_in_combo
@@ -964,6 +971,8 @@ class PosConfig(models.Model):
 
     @api.model
     def _load_furniture_data(self):
+        if not self.env.user.has_group('base.group_system'):
+            raise AccessError(_("You must have 'Administration Settings' access to load furniture data."))
         product_module = self.env['ir.module.module'].search([('name', '=', 'product')])
         if not product_module.demo:
             convert.convert_file(self.env, 'product', 'data/product_category_demo.xml', None, noupdate=True, mode='init', kind='data')
@@ -978,6 +987,8 @@ class PosConfig(models.Model):
 
     @api.model
     def load_onboarding_clothes_scenario(self):
+        if not self.env.user.has_group('base.group_system'):
+            raise AccessError(_("You must have 'Administration Settings' access to load clothes data."))
         ref_name = 'point_of_sale.pos_config_clothes'
         if not self.env.ref(ref_name, raise_if_not_found=False):
             convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/clothes_data.xml', None, noupdate=True, mode='init', kind='data')

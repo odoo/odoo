@@ -99,7 +99,7 @@ patch(PaymentScreen.prototype, {
                 agg[pe.coupon_id].partner_id = partner.id;
             }
             if (program.program_type != "loyalty") {
-                agg[pe.coupon_id].expiration_date = program.date_to;
+                agg[pe.coupon_id].expiration_date = program.date_to || pe.expiration_date;
             }
             return agg;
         }, {});
