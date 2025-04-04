@@ -963,6 +963,11 @@ export class PropertiesField extends Component {
      */
     _getPropertyEditWarningText() {
         const displayData = this._getDisplayData();
+        if (!this.definitionRecordId) {
+            return _t("Oops! A %(parentFieldLabel)s is needed to add property fields.", {
+                parentFieldLabel: displayData.parentFieldLabel,
+            });
+        }
         return _t(
             'Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".',
             { parentFieldLabel: displayData.parentFieldLabel, parentName: displayData.parentName }
