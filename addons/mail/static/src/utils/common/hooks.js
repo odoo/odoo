@@ -1,48 +1,10 @@
-import {
-    onMounted,
-    onPatched,
-    onWillUnmount,
-    useComponent,
-    useEffect,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { onMounted, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
-import { useService } from "@web/core/utils/hooks";
+import { useLazyExternalListener, useService } from "@web/core/utils/hooks";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
-
-export function useLazyExternalListener(target, eventName, handler, eventParams) {
-    const boundHandler = handler.bind(useComponent());
-    let t;
-    onMounted(() => {
-        t = target();
-        if (!t) {
-            return;
-        }
-        t.addEventListener(eventName, boundHandler, eventParams);
-    });
-    onPatched(() => {
-        const t2 = target();
-        if (t !== t2) {
-            if (t) {
-                t.removeEventListener(eventName, boundHandler, eventParams);
-            }
-            if (t2) {
-                t2.addEventListener(eventName, boundHandler, eventParams);
-            }
-            t = t2;
-        }
-    });
-    onWillUnmount(() => {
-        if (!t) {
-            return;
-        }
-        t.removeEventListener(eventName, boundHandler, eventParams);
-    });
-}
 
 export function onExternalClick(refName, cb) {
     let downTarget, upTarget;
