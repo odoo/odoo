@@ -108,7 +108,7 @@ class PurchaseOrder(models.Model):
     acknowledged = fields.Boolean(
         'Acknowledged', copy=False, tracking=True,
         help="It indicates that the vendor has acknowledged the receipt of the purchase order.")
-    notes = fields.Html('Terms and Conditions')
+    note = fields.Html('Terms and Conditions')
 
     partner_bill_count = fields.Integer(related='partner_id.supplier_invoice_count')
     invoice_count = fields.Integer(compute="_compute_invoice", string='Bill Count', copy=False, default=0, store=True)
@@ -816,7 +816,7 @@ class PurchaseOrder(models.Model):
 
         invoice_vals = {
             'move_type': move_type,
-            'narration': self.notes,
+            'narration': self.note,
             'currency_id': self.currency_id.id,
             'partner_id': partner_invoice.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,

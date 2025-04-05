@@ -60,7 +60,7 @@ class PurchaseOrder(models.Model):
                     self.origin = self.origin + ', ' + requisition.name
             else:
                 self.origin = requisition.name
-        self.notes = requisition.description
+        self.note = requisition.description
         if requisition.date_start:
             self.date_order = max(fields.Datetime.now(), fields.Datetime.to_datetime(requisition.date_start))
         else:
