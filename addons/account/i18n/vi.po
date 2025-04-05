@@ -1054,8 +1054,8 @@ msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
 msgstr ""
-"<span title=\"Thanh toán trước / Biên nhận\">Thanh toán trước / Biên "
-"nhận</span>"
+"<span title=\"Thanh toán trước / Biên nhận\">Khoản chi/thu chưa thanh "
+"toán</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -8475,8 +8475,7 @@ msgid ""
 "include one and only one outstanding payments/receipts account."
 msgstr ""
 "Bút toán nhật ký %s không hợp lệ. Để tiến hành, các chi tiết bút toán nhật "
-"ký phải bao gồm một và chỉ một tài khoản thanh toán/biên lai chưa thanh "
-"toán."
+"ký phải bao gồm một và chỉ một tài khoản chi/thu chưa thanh toán."
 
 #. module: account
 #. odoo-python
@@ -8590,7 +8589,7 @@ msgstr "Tên sổ nhật ký"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_credit_account_id
 msgid "Journal Outstanding Payments Account"
-msgstr "Nhật ký tài khoản thanh toán trước"
+msgstr "Nhật ký tài khoản chi chưa thanh toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_payment_debit_account_id
@@ -9821,7 +9820,7 @@ msgstr "Không"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "No Bank Matching"
-msgstr "Không có khớp ngân hàng"
+msgstr "Chưa khớp ngân hàng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -10556,8 +10555,8 @@ msgid ""
 "Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
 msgstr ""
-"Các Khoản Thanh toán được vào sổ trên một Tài khoản Thanh toán Chưa thanh toán. Trong tiện ích điều chỉnh ngân hàng, chúng xuất hiện dưới dạng các đường màu xanh lam.\n"
-"Các giao dịch ngân hàng sau đó được đối chiếu trên Tài khoản thanh toán chưa thanh toán thay vì Tài khoản phải trả."
+"Các Khoản thanh toán ra được vào sổ trên một Tài khoản thu chưa thanh toán. Trong tiện ích điều chỉnh ngân hàng, chúng xuất hiện dưới dạng các đường màu xanh lam.\n"
+"Các giao dịch ngân hàng sau đó được đối chiếu trên Tài khoản thu chưa thanh toán thay vì Tài khoản phải trả."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
@@ -10580,17 +10579,17 @@ msgstr "Tài khoản chưa thanh toán"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr "Thanh toán trả trước"
+msgstr "Khoản chi chưa thanh toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments Account"
-msgstr "Tài khoản Thanh toán trả trước"
+msgstr "Tài khoản chi chưa thanh toán"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
-msgstr "Tài khoản thanh toán trả trước"
+msgstr "Tài khoản chi chưa thanh toán"
 
 #. module: account
 #. odoo-python
@@ -13304,7 +13303,7 @@ msgstr "Chuỗi thành Hash"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__subformula
 msgid "Subformula"
-msgstr "Công thức con"
+msgstr "Công thức phụ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subject
@@ -16683,9 +16682,9 @@ msgid ""
 "account set either on the company or the %s payment method in the %s "
 "journal."
 msgstr ""
-"Bạn không thể tạo khoản thanh toán mới mà không có tài khoản thanh toán/biên"
-" nhận chưa thanh toán được thiết lập trên công ty hoặc %s phương thức thanh "
-"toán %s trong nhật ký."
+"Bạn không thể tạo khoản thanh toán mới mà không có tài khoản chi/thu chưa "
+"thanh toán được thiết lập trên công ty hoặc %s phương thức thanh toán %s "
+"trong nhật ký."
 
 #. module: account
 #. odoo-python

@@ -23,9 +23,9 @@
 # Katerina Horylova, 2024
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # Tomáš Píšek, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Stanislav Kurinec, 2025
 # Wil Odoo, 2025
+# Aleš Fiala <f.ales1@seznam.cz>, 2025
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8254,7 +8254,7 @@ msgstr "Je mezi"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Je úč. osnova instalována"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -12791,6 +12791,8 @@ msgstr "Stanovte cenu"
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Nastavte hodnotu převyšující 0.0, abyste aktivovali kontrolu kreditního "
+"limitu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -15702,6 +15704,8 @@ msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.\n"
 "                                        <br/><small>Set a value greater than 0.0 to activate a credit limit check</small>"
 msgstr ""
+"Vyvolat upozornění, když je vytvářena FV či prodejní objednávka pro zákazníka v hodnotě překračující kreditní limit.\n"
+"                                        <br/><small>Nastavte hodnotu převyšující 0.0, abyste aktivovali kontrolu kreditního limitu</small>"
 
 #. module: account
 #. odoo-python
@@ -16281,6 +16285,10 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
+"Přijaté faktury lze předem vygenerovat na základě nákupní\n"
+"              objednávky nebo účtenek. To vám umožní kontrolovat\n"
+"                účty, které obdržíte od svého dodavatele podle návrhu \n"
+"dokumentu v Odoo."
 
 #. module: account
 #. odoo-javascript
@@ -16928,7 +16936,7 @@ msgstr "Tuto zprávu (%s) nelze smazat, používá ji účetní generátor PDF."
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot deprecate an account that is used in a tax distribution."
-msgstr ""
+msgstr "Nelze odespat účet, který se používá při rozdělování daní."
 
 #. module: account
 #. odoo-python
@@ -17181,7 +17189,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a document which has been posted once."
-msgstr ""
+msgstr "Nelze přepnout typ dokladu, který byl jednou zaúčtován."
 
 #. module: account
 #. odoo-python
