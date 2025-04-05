@@ -462,8 +462,13 @@ class configmanager:
                          help="Maximum allowed Real time per request (default 120).",
                          type="int")
         group.add_option("--limit-time-real-cron", dest="limit_time_real_cron", my_default=-1,
-                         help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
+                         help="Maximum allowed Real time per cron batch for a database. (default: --limit-time-real). "
                               "Set to 0 for no limit. ",
+                         type="int")
+        group.add_option("--limit-time-soft-cron", dest="limit_time_soft_cron", my_default=-1,
+                         help="Best-effort maximum allowed time before per cron batch for a database. "
+                         "Time split fairly for the cron jobs in the batch. "
+                         "(default: half of hard limit).",
                          type="int")
         group.add_option(PosixOnlyOption(
                          "--limit-request", dest="limit_request", my_default=2**16,

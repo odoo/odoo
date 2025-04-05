@@ -14,7 +14,7 @@ import odoo
 from odoo import api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.modules.registry import Registry
-from odoo.tools import SQL
+from odoo.tools import SQL, config
 from odoo.tools.constants import GC_UNLINK_LIMIT
 
 if typing.TYPE_CHECKING:
@@ -25,12 +25,11 @@ _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.get_manifest('base')['version']
 MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
-MIN_RUNS_PER_JOB = 10
-MIN_TIME_PER_JOB = 10  # seconds
 CONSECUTIVE_TIMEOUT_FOR_FAILURE = 3
 MIN_FAILURE_COUNT_BEFORE_DEACTIVATION = 5
 MIN_DELTA_BEFORE_DEACTIVATION = timedelta(days=7)
 # crons must satisfy both minimum thresholds before deactivation
+DEFAULT_JOB_TIME_LIMIT = 60
 
 # custom function to call instead of default PostgreSQL's `pg_notify`
 ODOO_NOTIFY_FUNCTION = os.getenv('ODOO_NOTIFY_FUNCTION', 'pg_notify')
@@ -135,12 +134,28 @@ class IrCron(models.Model):
         job = self._acquire_one_job(cron_cr, self.id, include_not_ready=True)
         if not job:
             raise UserError(self.env._("Job '%s' already executing", self.name))
-        self._process_job(cron_cr, job)
+        if (limit := config['limit_time_real']) > 0:
+            # halve the available hard limit
+            end_time = time.monotonic() + limit // 2
+        else:
+            end_time = None
+        self._process_job(cron_cr, job, end_time=end_time)
         return True
 
     @staticmethod
-    def _process_jobs(db_name: str) -> None:
+    def _process_jobs(db_name: str, soft_limit: float | None = None) -> None:
         """ Execute every job ready to be run on this database. """
+        if soft_limit is None:
+            soft_limit = config['limit_time_soft_cron']
+            if soft_limit < 0:
+                # default to half of the hard-limit
+                real_limit_cron = config['limit_time_real_cron']
+                if real_limit_cron < 0:
+                    real_limit_cron = config['limit_time_real']
+                soft_limit = (real_limit_cron + 1) // 2
+        if not soft_limit:
+            soft_limit = float('inf')
+        end_time = time.monotonic() + soft_limit
         try:
             db = odoo.sql_db.db_connect(db_name)
             threading.current_thread().dbname = db_name
@@ -151,7 +166,7 @@ class IrCron(models.Model):
                 if not jobs:
                     return
                 cls._check_modules_state(cron_cr, jobs)
-                cls._process_jobs_loop(cron_cr, job_ids=[job['id'] for job in jobs])
+                cls._process_jobs_loop(cron_cr, job_ids=[job['id'] for job in jobs], end_time=end_time)
         except BadVersion:
             _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
         except BadModuleState:
@@ -168,14 +183,17 @@ class IrCron(models.Model):
                 del threading.current_thread().dbname
 
     @staticmethod
-    def _process_jobs_loop(cron_cr: BaseCursor, *, job_ids: Iterable[int] = ()):
+    def _process_jobs_loop(cron_cr: BaseCursor, *, job_ids: Iterable[int] = (), end_time: float = float('inf')):
         """ Process ready jobs to run on this database.
 
         The `cron_cr` is used to lock the currently processed job and relased
         by committing after each job.
         """
         db_name = cron_cr.dbname
-        for job_id in job_ids:
+        for index, job_id in enumerate(job_ids):
+            if end_time <= time.monotonic():
+                _logger.info("Database %s soft-time limit reached", db_name)
+                break
             try:
                 job = IrCron._acquire_one_job(cron_cr, job_id)
             except psycopg2.extensions.TransactionRollbackError:
@@ -186,9 +204,13 @@ class IrCron(models.Model):
                 _logger.debug("job %s is being processed by another worker, skip", job_id)
                 continue
             _logger.debug("job %s acquired", job_id)
+            # split remaining time between remaining jobs
+            jobs_remaining = len(job_ids) - index
+            start_job_time = time.monotonic()
+            job_end_time = start_job_time + (end_time - start_job_time) / jobs_remaining
             # take into account overridings of _process_job() on that database
             registry = Registry(db_name)
-            registry[IrCron._name]._process_job(cron_cr, job)
+            registry[IrCron._name]._process_job(cron_cr, job, end_time=job_end_time)
             cron_cr.commit()
             _logger.debug("job %s updated and released", job_id)
 
@@ -348,7 +370,7 @@ class IrCron(models.Model):
         _logger.warning(message)
 
     @classmethod
-    def _process_job(cls, cron_cr: BaseCursor, job) -> None:
+    def _process_job(cls, cron_cr: BaseCursor, job, *, end_time: float | None = None) -> None:
         """
         Execute the cron's server action in a dedicated transaction.
 
@@ -385,7 +407,7 @@ class IrCron(models.Model):
         )
 
         if not failed_by_timeout:
-            status = cls._run_job(job)
+            status = cls._run_job(job, end_time=end_time)
         else:
             status = CompletionStatus.FAILED
             cron_cr.execute("""
@@ -407,7 +429,7 @@ class IrCron(models.Model):
             raise RuntimeError(f"unreachable {status=}")
 
     @classmethod
-    def _run_job(cls, job) -> CompletionStatus:
+    def _run_job(cls, job, *, end_time: float | None = None) -> CompletionStatus:
         """
         Execute the job's server action multiple times until it
         completes. The completion status is returned.
@@ -418,8 +440,8 @@ class IrCron(models.Model):
           and notified that all records has been processed: ``'fully done'``;
 
         - the server action returned and notified that there are
-          remaining records to process, but this cron worker ran this
-          server action 10 times already: ``'partially done'``;
+          remaining records to process, but this cron worker reached an
+          execution limit: ``'partially done'``;
 
         - the server action was able to commit and notify some work done,
           but later crashed due to an exception: ``'partially done'``;
@@ -428,13 +450,15 @@ class IrCron(models.Model):
           was notified: ``'failed'``.
         """
         timed_out_counter = job['timed_out_counter']
+        if not end_time:
+            end_time = time.monotonic() + DEFAULT_JOB_TIME_LIMIT
 
         with cls.pool.cursor() as job_cr:
             start_time = time.monotonic()
             env = api.Environment(job_cr, job['user_id'], {
                 'lastcall': job['lastcall'],
                 'cron_id': job['id'],
-                'cron_end_time': start_time + MIN_TIME_PER_JOB,
+                'cron_end_time': end_time,
             })
             cron = env[cls._name].browse(job['id'])
 
@@ -442,12 +466,7 @@ class IrCron(models.Model):
             loop_count = 0
             _logger.info('Job %r (%s) starting', job['cron_name'], job['id'])
 
-            # stop after MIN_RUNS_PER_JOB runs and MIN_TIME_PER_JOB seconds, or
-            # upon full completion or failure
-            while (
-                loop_count < MIN_RUNS_PER_JOB
-                or time.monotonic() < env.context['cron_end_time']
-            ):
+            while True:
                 cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
                 job_cr.commit()
 
@@ -486,6 +505,8 @@ class IrCron(models.Model):
                         job['cron_name'], job['id'], done, remaining)
 
                 if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
+                    break
+                if time.monotonic() >= end_time:
                     break
 
             _logger.info(
