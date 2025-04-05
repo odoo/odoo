@@ -205,7 +205,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             'vals': {
                 'id': order.name,
                 'issue_date': order.create_date.date(),
-                'note': html2plaintext(order.notes) if order.notes else False,
+                'note': html2plaintext(order.note) if order.note else False,
                 'originator_document_reference': order.origin,
                 'document_currency_code': order.currency_id.name.upper(),
                 'delivery_party_vals': self._get_delivery_party_vals(delivery),
