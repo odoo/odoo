@@ -490,7 +490,7 @@ class AccountEdiFormat(models.Model):
         if self.code != 'sa_zatca' or edi_document.move_id.country_code != 'SA':
             return
 
-        attachment = edi_document.attachment_id
+        attachment = edi_document.sudo().attachment_id
         if not attachment or not attachment.datas:
             _logger.warning(f"No attachment found for invoice {edi_document.move_id.name}")
             return
