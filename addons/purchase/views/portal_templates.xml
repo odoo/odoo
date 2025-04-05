@@ -384,10 +384,10 @@
               </div>
           </section>
 
-          <section id="terms" class="mt-5" t-if="order.notes">
+          <section id="terms" class="mt-5" t-if="order.note">
               <h3 class="">Terms &amp; Conditions</h3>
               <hr class="mt-0 mb-1"/>
-              <em t-field="order.notes"/>
+              <em t-field="order.note"/>
           </section>
 
           <section class="mt-5" t-if="order.payment_term_id">
