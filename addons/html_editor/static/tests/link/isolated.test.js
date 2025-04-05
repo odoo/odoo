@@ -295,7 +295,7 @@ test("should not zwnbsp-pad link with block fontawesome", async () => {
         contentBefore:
             '<p>a<a href="#/">[]<i style="display: flex;" class="fa fa-star"></i></a>b</p>',
         contentBeforeEdit:
-            '<p>a<a href="#/">[]<i style="display: flex;" class="fa fa-star" contenteditable="false">\u200b</i></a>b</p>',
+            '<p>a<a href="#/">\ufeff[]<i style="display: flex;" class="fa fa-star" contenteditable="false">\u200b</i>\ufeff</a>b</p>',
     });
 });
 

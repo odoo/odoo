@@ -620,7 +620,11 @@
                     &.o_long_title {
                         width: fit-content !important;
                         padding-right: 10px !important;
+                        flex: 1 1 auto;
                     }
+                }
+                we-button .o_switch {
+                    min-width: fit-content;
                 }
                 .highlighted-text {
                     color: white;
@@ -1769,6 +1773,10 @@
                 &.o_we_user_value_widget {
                     min-width: auto; // ... except for these ones
                 }
+            }
+
+            &:has(.o_long_title) we-button {
+                flex-shrink: 0;
             }
 
             &.o_we_header_font_row > div {

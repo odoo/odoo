@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FileViewer">
-        <div class="d-flex justify-content-center" t-att-class="{ 'modal fixed-top bottom-0': props.modal }">
+        <div class="d-flex justify-content-center" t-att-class="{ 'modal modal-fullscreen': props.modal }">
             <div class="o-FileViewer flex-column align-items-center d-flex w-100 h-100" tabindex="0" t-ref="autofocus" t-on-keydown.stop="(ev) => this.onKeydown(ev)">
                 <div class="o-FileViewer-header position-absolute top-0 d-flex w-100" t-on-click.stop="">
                     <div t-if="isViewable" class="d-flex align-items-center ms-4 me-2">

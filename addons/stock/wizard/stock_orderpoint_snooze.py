@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools.date_utils import add
 
 
@@ -32,15 +32,3 @@ class StockOrderpointSnooze(models.TransientModel):
         self.orderpoint_ids.write({
             'snoozed_until': self.snoozed_until
         })
-        if self.orderpoint_ids.create_uid._is_superuser():
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'type': 'warning',
-                    'sticky': False,
-                    'message': _("This order point has been created automatically.\n"
-                                "snoozing it will not affect future ones created for the same product."),
-                    'next': {'type': 'ir.actions.act_window_close'},
-                }
-            }

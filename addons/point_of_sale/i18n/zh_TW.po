@@ -1370,13 +1370,13 @@ msgstr "如果沒有使用現金支付方式則無法退換零錢"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
 msgid "Cannot weigh product - IoT Box is disconnected"
-msgstr ""
+msgstr "未能秤量產品：IoT Box 連線已中斷"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
 msgid "Cannot weigh product - Scale is not connected to IoT Box"
-msgstr ""
+msgstr "未能秤量產品：磅秤未連接至 IoT Box"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2078,7 +2078,7 @@ msgstr "連線失敗"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/utils.js:0
 msgid "Connection successful"
-msgstr ""
+msgstr "連線成功"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3173,7 +3173,7 @@ msgstr "訂單編碼的產生"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Get Weight"
-msgstr "稱重"
+msgstr "秤重"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -4143,7 +4143,7 @@ msgstr "名稱"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.js:0
 msgid "Navigate to your PoS Customer Display on the other computer"
-msgstr ""
+msgstr "前往另一部電腦的 PoS 客戶顯示屏"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5266,7 +5266,7 @@ msgstr "請選擇客戶"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.js:0
 msgid "PoS Customer Display opened in a new window"
-msgstr ""
+msgstr "PoS 客戶顯示屏已在新視窗中開啟"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6116,7 +6116,7 @@ msgstr "Razorpay 付款終端機"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 msgid "Read Weighing Scale"
-msgstr "讀取稱重電子秤"
+msgstr "讀取秤重電子秤"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6543,7 +6543,7 @@ msgstr "比例"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.js:0
 msgid "Scale error"
-msgstr ""
+msgstr "磅秤誤差"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8026,7 +8026,7 @@ msgstr "待退款："
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__to_weight
 msgid "To Weigh With Scale"
-msgstr "用秤稱重"
+msgstr "用秤秤重"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8308,7 +8308,7 @@ msgstr "未知錯誤"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
 msgid "Unnamed Product"
-msgstr ""
+msgstr "未命名產品"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_view_form_normalized_pos
@@ -8519,12 +8519,12 @@ msgstr "網站溝通記錄"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Weighing Product:"
-msgstr ""
+msgstr "秤重產品："
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__weight
 msgid "Weighted Product"
-msgstr "稱重的產品"
+msgstr "秤重的產品"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8768,6 +8768,18 @@ msgstr "在POS界面需要定義一個能代表您所賣的每一樣東西的產
 #: code:addons/point_of_sale/models/product.py:0
 msgid "You must first remove this product from the %s combo"
 msgstr "您必須首先將該產品從 %s 組合中移除"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You must have 'Administration Settings' access to load clothes data."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You must have 'Administration Settings' access to load furniture data."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

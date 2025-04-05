@@ -75,7 +75,7 @@ class Meeting(models.Model):
         """If microsoft calendar is not syncing, don't send a mail."""
         user_id = self._get_event_user_m()
         if self.with_user(user_id)._check_microsoft_sync_status() and user_id._get_microsoft_sync_status() == "sync_active":
-            return True
+            return self.microsoft_id or self.need_sync_m
         return super()._skip_send_mail_status_update()
 
     @api.model_create_multi
@@ -87,7 +87,8 @@ class Meeting(models.Model):
         if self._check_microsoft_sync_status() and not notify_context and recurrency_in_batch:
             self._forbid_recurrence_creation()
 
-        for vals in vals_list:
+        vals_check_organizer = self._check_organizer_validation_conditions(vals_list)
+        for vals in [vals for vals, check_organizer in zip(vals_list, vals_check_organizer) if check_organizer]:
             # If event has a different organizer, check its sync status and verify if the user is listed as attendee.
             sender_user, partner_ids = self._get_organizer_user_change_info(vals)
             partner_included = partner_ids and len(partner_ids) > 0 and sender_user.partner_id.id in partner_ids

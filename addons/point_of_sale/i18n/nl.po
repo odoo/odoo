@@ -6,9 +6,9 @@
 # Martin Trigaux, 2024
 # Lukas Van Cauter <cvl@odoo.com>, 2024
 # Tiffany Chang, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Wil Odoo, 2025
 # Manon Rondou, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -356,7 +356,7 @@ msgid ""
 "                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                <i class=\"fa fa-info-circle me-1\" title=\"Deze instelling geldt voor alle verkooppunten.\" pos-data-toggle=\"tooltip\"/>"
+"                                <i class=\"fa fa-info-circle me-1\" title=\"Deze instellingen gelden voor alle kassa's.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -463,7 +463,7 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"Een globale unieke identifier voor deze kassa-configuratie, gebruikt om "
+"Een globale unieke identifier voor deze kassaconfiguratie, gebruikt om "
 "conflicten te voorkomen in cliënt gegenereerde data."
 
 #. module: point_of_sale
@@ -477,7 +477,7 @@ msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
 msgstr ""
-"Een reeks welke iedere keer, als en gebruiker de kassa sessie hervat, wordt "
+"Een reeks welke iedere keer, als en gebruiker de kassasessie hervat, wordt "
 "opgehoogt"
 
 #. module: point_of_sale
@@ -1116,7 +1116,7 @@ msgstr "Valideert automatisch orders die via een betaalterminal zijn betaald."
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_avatax
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_avatax
 msgid "AvaTax PoS Integration"
-msgstr "AvaTax PoS integratie"
+msgstr "Kassa-integratie AvaTax"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1226,7 +1226,7 @@ msgstr "Rekeningafschriftregel"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Bar"
-msgstr "Balk"
+msgstr "Bar"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1941,7 +1941,7 @@ msgstr "Fout bij sluiten van sessie"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Clothes"
-msgstr "Kleren"
+msgstr "Kleding"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2274,7 +2274,7 @@ msgstr "Product aanmaken"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
 msgid "Create a new POS order"
-msgstr "Maak een nieuwe Kassa-order"
+msgstr "Maak een nieuwe Kassaorder"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -2700,7 +2700,7 @@ msgstr "Verschil"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Difference at closing PoS session"
-msgstr "Verschil bij het sluiten van Kassa-sessie"
+msgstr "Verschil bij het sluiten van Kassasessie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -2862,7 +2862,7 @@ msgstr "Wil je printen met de webprinter? "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
-msgstr "Download een rapport met alle verkopen van de huidige kassa-sessie"
+msgstr "Download een rapport met alle verkopen van de huidige kassasessie"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
@@ -2962,7 +2962,7 @@ msgid ""
 "form."
 msgstr ""
 "Werknemers kunnen hun badge scannen of een pincode ingeven om in te loggen "
-"in de kassa sessie. Deze gegevens zijn configureerbaar in het *HR "
+"in de kassasessie. Deze gegevens zijn configureerbaar in het *HR "
 "instellingen* tabblad van de werknemer."
 
 #. module: point_of_sale
@@ -3133,7 +3133,7 @@ msgstr "Flexibele btw"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Floor plan, tips, self order, etc."
-msgstr "Plattegrond, tips, zelfbestelling, enz."
+msgstr "Plattegrond, fooien, zelfbestelling, enz."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_follower_ids
@@ -4377,7 +4377,7 @@ msgstr "Nee"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No PoS configuration found"
-msgstr "Geen PoS-configuratie gevonden"
+msgstr "Geen Kassaconfiguratie gevonden"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4958,12 +4958,12 @@ msgstr "Openstaande rekening"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_view_form_normalized_pos
 msgid "POS Category"
-msgstr "POS Categorie"
+msgstr "Kassacategorie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
 msgid "POS Order"
-msgstr "Kassa-order"
+msgstr "Kassaorder"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5016,13 +5016,13 @@ msgstr "Kassaverkopen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_session_id
 msgid "POS Session"
-msgstr "Kassa sessie"
+msgstr "Kassasessie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_ids
 msgid "POS Sessions"
-msgstr "POS-sessies"
+msgstr "Kassasessies"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5440,7 +5440,7 @@ msgstr "Notitie kassa"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
-msgstr "PoS-orderregel"
+msgstr "Kassaorderregel"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5521,7 +5521,7 @@ msgstr "Kassainstellingen"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Point of Sale Configuration"
-msgstr "Kassa-instellingen"
+msgstr "Kassainstellingen"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_daily_sales_reports_wizard
@@ -5552,7 +5552,7 @@ msgstr "Kassa dagboek"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_tree
 msgid "Point of Sale List"
-msgstr "Lijst verkooppunten"
+msgstr "Lijst kassa's"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
@@ -5595,7 +5595,7 @@ msgstr "Kassa betaalmethodes"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Kassa betalingen"
+msgstr "Kassabetalingen"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_printer
@@ -5608,7 +5608,7 @@ msgstr "Kassaprinter"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_tree
 msgid "Point of Sale Session"
-msgstr "Kassa sessie"
+msgstr "Kassasessie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
@@ -5685,7 +5685,7 @@ msgstr "Kassaorderregel"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_payment_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_payment_ids
 msgid "Pos Payment"
-msgstr "Kassa betaling"
+msgstr "Kassabetaling"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -5707,27 +5707,27 @@ msgstr "Kassa selecteerbare categorie"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr "Kassa sessie"
+msgstr "Kassasessie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
 msgid "Pos Session Duration"
-msgstr "Kassa sessie duur"
+msgstr "Kassasessie duur"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
-msgstr "Kassa sessie status"
+msgstr "Kassasessie status"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
-msgstr "Kassa sessie gebruikersnaam"
+msgstr "Kassasessie gebruikersnaam"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr "Kassa sessies"
+msgstr "Kassasessies"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
@@ -5910,7 +5910,7 @@ msgstr "Rapport afdrukken"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/sale_details_button/sale_details_button.xml:0
 msgid "Print a report with all the sales of the current PoS Session"
-msgstr "Print een rapport met alle verkopen binnen de huidige kassa sessie"
+msgstr "Print een rapport met alle verkopen binnen de huidige kassasessie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__basic_receipt
@@ -6142,7 +6142,7 @@ msgstr "Productprijzen op kassabon"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_tipproduct
 msgid "Product tips"
-msgstr "Product tips"
+msgstr "Product fooien"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6427,7 +6427,7 @@ msgstr "Gerelateerde sessie: %(link)s"
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
-msgstr "Kassa-menu opnieuw laden"
+msgstr "Kassamenu opnieuw laden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7187,7 +7187,7 @@ msgid ""
 "the issue has been resolved."
 msgstr ""
 "Sommige orders konden niet bij de server worden ingediend vanwege problemen "
-"met de internetverbinding. Je kunt het kassa verlaten, maar de sessie niet "
+"met de internetverbinding. Je kunt de kassa verlaten, maar de sessie niet "
 "afsluiten voordat het probleem is opgelost."
 
 #. module: point_of_sale
@@ -7585,7 +7585,7 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"Het Kassa ondersteunt alleen de afrondingsstrategie \"voeg een "
+"De Kassa ondersteunt alleen de afrondingsstrategie \"voeg een "
 "afrondingsregel toe\"."
 
 #. module: point_of_sale
@@ -7644,7 +7644,7 @@ msgid ""
 " (See Tips field.)"
 msgstr ""
 "Het standaard fooiproduct ontbreekt. Geef het fooiproduct handmatig op. (Zie"
-" het veld Tips.)"
+" het veld fooien.)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7665,7 +7665,7 @@ msgid ""
 msgstr ""
 "De fiscale positie die gebruikt wordt in de oorspronkelijke order is niet "
 "geladen. Zorg ervoor dat deze wordt geladen door deze toe te voegen in de "
-"kassa-configuratie."
+"kassaconfiguratie."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -7716,7 +7716,7 @@ msgstr "De naam van de Munten/Biljetten moet een nummer zijn."
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique!"
-msgstr "De naam van deze kassa-sessie moet uniek zijn!"
+msgstr "De naam van deze kassasessie moet uniek zijn!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
@@ -7754,14 +7754,14 @@ msgid ""
 "The payment method selected is not allowed in the config of the POS session."
 msgstr ""
 "De geselecteerde betaalmethode is niet toegestaan in de configuratie van de "
-"Kassa-sessie."
+"Kassasessie."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
-msgstr "De betaalmethoden voor het Kassa %s moeten van zijn bedrijf zijn."
+msgstr "De betaalmethoden voor de Kassa %s moeten van zijn bedrijf zijn."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -7781,7 +7781,7 @@ msgid ""
 "The pos order that was reverted after closing the session to create an "
 "invoice for it."
 msgstr ""
-"De Kassa-order die na het sluiten van de sessie werd teruggeboekt om een "
+"De Kassaorder die na het sluiten van de sessie werd teruggeboekt om een "
 "factuur aan te maken."
 
 #. module: point_of_sale
@@ -7815,8 +7815,8 @@ msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
 msgstr ""
-"Het kassabon scherm wordt overgeslagen als de kassabon automatisch afgedrukt"
-" kan worden."
+"Het kassabonscherm wordt overgeslagen als de kassabon automatisch afgedrukt "
+"kan worden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
@@ -8039,7 +8039,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "There is no cash payment method for this PoS Session"
-msgstr "Er is geen contante betaalmethode voor deze kassa-sessie"
+msgstr "Er is geen contante betaalmethode voor deze kassasessie"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8120,7 +8120,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "This invoice has been created from the point of sale session: %s"
-msgstr "Deze factuur is aangemaakt vanuit de kassa-sessie: %s"
+msgstr "Deze factuur is aangemaakt vanuit de kassasessie: %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -8148,7 +8148,7 @@ msgid ""
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
 "Dit dagboek is gekoppeld aan betaalmethode %(payment_method)s die wordt "
-"gebruikt door bestelling %(pos_order)s in de actieve Kassa-sessie "
+"gebruikt door bestelling %(pos_order)s in de actieve Kassasessie "
 "%(pos_session)s."
 
 #. module: point_of_sale
@@ -8230,7 +8230,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Those settings are common to all PoS."
-msgstr "Deze instellingen gelden voor alle verkooppunten."
+msgstr "Deze instellingen gelden voor alle kassa's."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__ticket_code
@@ -8260,7 +8260,7 @@ msgstr "Tijgerbrood"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Tip"
-msgstr "Tip"
+msgstr "Fooi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
@@ -8283,7 +8283,7 @@ msgstr "Fooien"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Tips:"
-msgstr "Tips:"
+msgstr "Fooien:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -8525,8 +8525,8 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
-"Kan deze Kassa-configuratie niet wijzigen omdat je deze niet kunt wijzigen "
-"%s terwijl een sessie open is."
+"Kan deze Kassaconfiguratie niet wijzigen omdat je deze niet kunt wijzigen %s"
+" terwijl een sessie open is."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8661,7 +8661,7 @@ msgstr "Gebruik automatische belastingen in kaart brengen met Avatax"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_avatax
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_avatax
 msgid "Use automatic taxes mapping with Avatax in PoS"
-msgstr "Gebruik automatische belastingtabellen met Avatax in PoS"
+msgstr "Gebruik automatische belastingtabellen met Avatax in Kassa"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8761,7 +8761,7 @@ msgstr "Wandplank"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "Want to try with sample products?"
-msgstr "Wil je proberen met voorbeeldproducten?"
+msgstr "Wil je het proberen met voorbeeldproducten?"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
@@ -8919,7 +8919,7 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
-"Je mag de afrondingsmethode niet wijzigen terwijl een kassa sessie die "
+"Je mag de afrondingsmethode niet wijzigen terwijl een kassasessie die "
 "geopend is deze gebruikt."
 
 #. module: point_of_sale
@@ -8985,7 +8985,7 @@ msgid ""
 "'%(config)s'."
 msgstr ""
 "Je kunt '%(picking_type)s' niet archiveren omdat het wordt gebruikt door een"
-" kassa-configuratie '%(config)s'."
+" kassaconfiguratie '%(config)s'."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9061,8 +9061,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
-"Je kunt geen POS-sessie openen. Probeer een sessie te openen met een andere "
-"gebruiker"
+"Je kunt geen Kassasessie openen. Probeer een sessie te openen met een andere"
+" gebruiker"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9098,6 +9098,18 @@ msgstr ""
 #: code:addons/point_of_sale/models/product.py:0
 msgid "You must first remove this product from the %s combo"
 msgstr "Je moet dit product eerst uit de %s-combinatie verwijderen"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You must have 'Administration Settings' access to load clothes data."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You must have 'Administration Settings' access to load furniture data."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9156,8 +9168,8 @@ msgid ""
 "Your PoS Session is open since %(date)s, we advise you to close it and to "
 "create a new one."
 msgstr ""
-"Je Kassa-sessie is geopend sinds %(date)s, we raden je aan deze te sluiten "
-"en een nieuwe aan te maken."
+"Je Kassasessie is geopend sinds %(date)s, we raden je aan deze te sluiten en"
+" een nieuwe aan te maken."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen

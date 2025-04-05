@@ -71,20 +71,32 @@ export class PosKanbanRenderer extends KanbanRenderer {
         this.posState.show_predefined_scenarios = this.props.list.count === 0;
     }
 
+    showAccessDeniedDialog(body) {
+        this.dialog.add(AlertDialog, {
+            title: _t("Access Denied"),
+            body: body,
+        });
+    }
+
     async callWithViewUpdate(func) {
         try {
             const isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
             if (!isPosManager) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Access Denied"),
-                    body: _t(
+                this.showAccessDeniedDialog(
+                    _t(
                         "It seems like you don't have enough rights to create point of sale configurations."
-                    ),
-                });
+                    )
+                );
                 return;
             }
             await func();
             await updatePosKanbanViewState(this.orm, this.posState);
+        } catch (e) {
+            if (e.exceptionName === "odoo.exceptions.AccessError") {
+                this.showAccessDeniedDialog(e.data.message);
+            } else {
+                throw e;
+            }
         } finally {
             this.env.searchModel.clearQuery();
         }

@@ -56,7 +56,7 @@ class StockMove(models.Model):
             layers |= layers.stock_valuation_layer_ids
             if self.product_id.lot_valuated:
                 layers_by_lot = layers.grouped('lot_id')
-                prices = {}
+                prices = defaultdict(lambda: 0)
                 for lot, stock_layers in layers_by_lot.items():
                     qty = sum(stock_layers.mapped("quantity"))
                     val = sum(stock_layers.mapped("value"))

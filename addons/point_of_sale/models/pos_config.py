@@ -971,6 +971,8 @@ class PosConfig(models.Model):
 
     @api.model
     def _load_furniture_data(self):
+        if not self.env.user.has_group('base.group_system'):
+            raise AccessError(_("You must have 'Administration Settings' access to load furniture data."))
         product_module = self.env['ir.module.module'].search([('name', '=', 'product')])
         if not product_module.demo:
             convert.convert_file(self.env, 'product', 'data/product_category_demo.xml', None, noupdate=True, mode='init', kind='data')
@@ -985,6 +987,8 @@ class PosConfig(models.Model):
 
     @api.model
     def load_onboarding_clothes_scenario(self):
+        if not self.env.user.has_group('base.group_system'):
+            raise AccessError(_("You must have 'Administration Settings' access to load clothes data."))
         ref_name = 'point_of_sale.pos_config_clothes'
         if not self.env.ref(ref_name, raise_if_not_found=False):
             convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/clothes_data.xml', None, noupdate=True, mode='init', kind='data')
