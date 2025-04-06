@@ -2023,6 +2023,6 @@ test("display the notification message's posting date and time", async () => {
         });
     });
     await contains(".o-mail-NotificationMessage", {
-        text: "Tom Riddle joined the channelToday at 1:00 PM",
+        text: "Tom Riddle joined the channel1:00 PM",
     });
 });
