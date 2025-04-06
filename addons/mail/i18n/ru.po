@@ -3,8 +3,8 @@
 # 	* mail
 # 
 # Translators:
-# Wil Odoo, 2025
 # Ilya Rozhkov, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Ilya Rozhkov, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1125,7 +1125,7 @@ msgstr "Добавьте учетные данные twilio для сервер�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Добавить/Удалить подписчиков"
 
 #. module: mail
 #. odoo-python
@@ -2610,6 +2610,12 @@ msgid "Congratulations, your inbox is empty!"
 msgstr "Поздравляем, ваш почтовый ящик пуст!"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/notification_model.js:0
+msgid "Connection failed"
+msgstr "Соединение не удалось"
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_smtp
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_smtp
 msgid "Connection failed (outgoing mail server problem)"
@@ -4087,6 +4093,8 @@ msgid "Everyone"
 msgstr "Все"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__exception
 #: model:mail.activity.type,name:mail.mail_activity_data_warning
 msgid "Exception"
@@ -5372,6 +5380,8 @@ msgid "Invalid domain “%(domain)s” (type “%(domain_type)s”)"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_invalid
 msgid "Invalid email address"
@@ -5400,6 +5410,8 @@ msgid "Invalid field “%(field_name)s” when creating a channel with members."
 msgstr "Недопустимое поле \"%(field_name)s\" при создании канала с участниками."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_from_invalid
 msgid "Invalid from address"
@@ -5607,6 +5619,11 @@ msgstr "Это журнал"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__is_note
 msgid "Is a note"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_share_is_follower
+msgid "Is an external partner follower of the document?"
 msgstr ""
 
 #. module: mail
@@ -6683,11 +6700,15 @@ msgid "Missing email"
 msgstr "Пропавшее письмо"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_missing
 msgid "Missing email address"
 msgstr "Не указан адрес электронной почты"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_missing
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_from_missing
 msgid "Missing from address"
@@ -9309,6 +9330,8 @@ msgid "Send & close"
 msgstr "Отправить и закрыть"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_popover.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__mail_post
 msgid "Send Email"
 msgstr "Отправить Email"
@@ -9494,6 +9517,12 @@ msgstr "Тип сервера IMAP."
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "Server type POP."
 msgstr "Тип сервера POP."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
+msgid "Set Email"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11443,7 +11472,7 @@ msgstr "Просмотр или присоединение к каналам"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Видно всем"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__voice_ids
@@ -11571,6 +11600,12 @@ msgid ""
 "Well, nothing lasts forever, but are you sure you want to unpin this "
 "message?"
 msgstr "Что ж, ничто не вечно, но вы уверены, что хотите снять это сообщение?"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
+msgid "What's the email address of"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12216,6 +12251,12 @@ msgstr "например, введение в должность"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "e.g. Schedule a meeting"
 msgstr "например, запланировать встречу"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
+msgid "e.g. mail@example.com"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form

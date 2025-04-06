@@ -5,9 +5,9 @@
 # Translators:
 # Pekka Ikonen, 2025
 # Jessica Jakara, 2025
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2025
 # Wil Odoo, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,7 +109,7 @@ msgstr "%(payment_method)s Kassa-maksu %(partner)s istunnossa %(session)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Deleted line (quantity: %(qty)s)"
-msgstr ""
+msgstr "%(product_name)s: Poistettu rivi (määrä: %(qty)s)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1447,13 +1447,15 @@ msgstr "Et voi palauttaa vaihtorahoja muuta kuin käteismaksutavassa"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
 msgid "Cannot weigh product - IoT Box is disconnected"
-msgstr ""
+msgstr "Tuotteen punnitseminen ei onnistu - IoT-box on kytketty pois päältä"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
 msgid "Cannot weigh product - Scale is not connected to IoT Box"
 msgstr ""
+"Tuotteen punnitseminen ei onnistu - vaakaa ei ole yhdistetty IoT Box "
+"-laitteeseen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__slots_per_interval
@@ -2137,7 +2139,7 @@ msgstr "Yhteyden muodostaminen välityspalvelimeen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/utils.js:0
 msgid "Connecting to the IoT Box"
-msgstr ""
+msgstr "Yhdistäminen IoT-boxiin"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2161,7 +2163,7 @@ msgstr "Yhteys epäonnistui"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/utils.js:0
 msgid "Connection successful"
-msgstr ""
+msgstr "Yhteys onnistui"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4608,7 +4610,7 @@ msgstr "Nimi"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 msgid "Navigate to your PoS Customer Display on the other computer"
-msgstr ""
+msgstr "Siirry kassan asiakasnäyttöön toisella tietokoneella"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4825,7 +4827,7 @@ msgstr "Tilauksia ei löytynyt"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "No other products found for \"%s\"."
-msgstr ""
+msgstr "Muita tuotteita ei löytynyt tuotteelle \"%s\"."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5821,7 +5823,7 @@ msgstr "Kassapäätteen asetukset"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 msgid "PoS Customer Display opened in a new window"
-msgstr ""
+msgstr "Kassan asiakasnäyttö on avattu uuteen ikkunaan"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7172,7 +7174,7 @@ msgstr "Skaala"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.js:0
 msgid "Scale error"
-msgstr ""
+msgstr "Vaa'an virhe"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9135,7 +9137,7 @@ msgstr "Tuntematon virhe"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
 msgid "Unnamed Product"
-msgstr ""
+msgstr "Nimetön tuote"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9354,7 +9356,7 @@ msgstr "Verkkosivun viestihistoria"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Weighing Product:"
-msgstr ""
+msgstr "Punnitustuote:"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__weight
