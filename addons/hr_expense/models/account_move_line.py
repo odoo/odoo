@@ -17,7 +17,7 @@ class AccountMoveLine(models.Model):
     def reconcile(self):
         # OVERRIDE
         not_paid_expenses = self.move_id.expense_sheet_id.expense_line_ids.filtered(lambda expense: expense.state != 'done')
-        res = super().reconcile()
+        res = super().with_context(no_cash_basis=True).reconcile()
         # Do not update expense or expense sheet states when reversing journal entries
         not_paid_expense_sheets = not_paid_expenses.sheet_id.filtered(lambda sheet: sheet.account_move_id.payment_state != 'reversed')
         paid_expenses = not_paid_expenses.filtered(lambda expense: expense.currency_id.is_zero(expense.amount_residual))
