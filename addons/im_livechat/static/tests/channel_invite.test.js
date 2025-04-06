@@ -56,7 +56,7 @@ test("Can invite a partner to a livechat channel", async () => {
     );
     await click("button:enabled", { text: "Invite" });
     await contains(".o-mail-NotificationMessage", {
-        text: "Mitch (FR) invited James to the channelToday at 1:00 PM",
+        text: "Mitch (FR) invited James to the channel1:00 PM",
     });
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("button[title='Members']");
