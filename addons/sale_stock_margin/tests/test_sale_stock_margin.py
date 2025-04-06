@@ -314,3 +314,99 @@ class TestSaleStockMargin(TestStockValuationCommon):
 
         self.assertEqual(so.state, 'sent')
         self.assertEqual(so.order_line[0].purchase_price, 15)
+
+    def test_compute_average_price_with_different_company(self):
+        """Ensure _compute_average_price correctly fetches price from the intended company context"""
+
+        # Create Companies
+        company_a = self.env['res.company'].create({'name': 'Company A'})
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+
+        # Create Product Category with cost method other than 'standard'
+        product_category = self.env['product.category'].with_company(company_b).create({
+            'name': 'Test Category',
+            'property_cost_method': 'average',
+        })
+
+        # Product for Company B
+        main_product = self.env['product.product'].create({
+            'name': 'Main Product',
+            'type': 'product',
+            'standard_price': 101.11,
+            'company_id': company_b.id,
+            'categ_id': product_category.id,
+        })
+
+        # Create additional product for the BOM
+        product_b = self.env['product.product'].with_company(company_b).create({
+            'name': 'Product B',
+            'type': 'product',
+            'standard_price': 100,
+            'company_id': company_b.id,
+            'categ_id': product_category.id,
+        })
+
+        # Create Bill of Materials (BoM) for the main product
+        bom = self.env['mrp.bom'].with_company(company_b).create({
+            'product_id': main_product.id,
+            'product_tmpl_id': main_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': product_b.id, 'product_qty': 1})],
+        })
+
+        incoming_picking_type = self.env['stock.picking.type'].search([('company_id', '=', company_b.id), ('code', '=', 'incoming')], limit=1)
+        production_location = self.env['stock.location'].search([('company_id', '=', company_b.id), ('usage', '=', 'production')])
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': incoming_picking_type.id,
+            'location_id': production_location.id,
+            'location_dest_id': incoming_picking_type.default_location_dest_id.id,
+        })
+
+        # Create stock moves for Product B
+        stock_moves = self.env['stock.move'].create([
+            {
+                'name': 'Move 1 - Product B',
+                'product_id': product_b.id,
+                'company_id': company_b.id,
+                'product_uom_qty': 5,
+                'product_uom': product_b.uom_id.id,
+                'bom_line_id': bom.bom_line_ids[0].id,
+                'location_id': production_location.id,
+                'location_dest_id': incoming_picking_type.default_location_dest_id.id,
+                'picking_type_id': incoming_picking_type.id,
+                'picking_id': picking.id,
+                'state': 'done',
+            },
+        ])
+
+        # Create Sale Order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'company_id': company_b.id,
+        })
+
+        # Create Sale Order Line with main_product and link stock_moves
+        sol = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': main_product.id,
+            'product_uom_qty': 1,
+            'product_uom': main_product.uom_id.id,
+            'company_id': company_b.id,
+            'move_ids': stock_moves.ids,
+        })
+
+        # Switch to Company A's context for the test
+        self.env.company = company_a
+
+        sol._compute_purchase_price()
+
+        # Assert the computed price from Company A
+        purchase_price_a = sol.product_id.with_company(company_a).standard_price
+        self.assertEqual(purchase_price_a, 0, "Price be 0 as the product exists in Company B")
+
+        # Assert that the computed price comes from Company B
+        purchase_price = sol.purchase_price
+        self.assertEqual(purchase_price, 100, "Price should be fetched from Company B, not Company A")
+        self.assertNotEqual(purchase_price, 0, "Price should not be 0 as the product exists in Company B")
