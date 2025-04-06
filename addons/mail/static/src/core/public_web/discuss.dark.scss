@@ -1,10 +1,9 @@
 .o-mail-Discuss {
-    --mail-Discuss-coreBgColor: #{mix($body-bg, $gray-200, 75%)};
     --mail-Discuss-headerActionsGroupBorderOpacity: .1;
 }
 
 .o-mail-Discuss-header {
-    background-color: $o-webclient-background-color;
+    background-color: mix($white, $o-webclient-background-color, 15%);
 }
 
 .o-mail-Discuss-headerActions button {
@@ -23,10 +22,10 @@
 .o_web_client:has(.o-mail-Discuss) {
 
     .o_main_navbar {
-        background-color: unset;
+        background-color: mix($white, $o-webclient-background-color, 15%);
     }
 
     .o_control_panel {
-        background-color: unset;
+        background-color: mix($white, $o-webclient-background-color, 15%);
     }
 }
