@@ -208,9 +208,7 @@ export class Message extends Record {
     get dateSimpleWithDay() {
         const userLocale = { locale: user.lang };
         if (this.datetime.hasSame(DateTime.now(), "day")) {
-            return _t("Today at %(time)s", {
-                time: this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
-            });
+            return this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale);
         }
         if (this.datetime.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
             return _t("Yesterday at %(time)s", {

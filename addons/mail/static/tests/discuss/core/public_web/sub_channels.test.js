@@ -37,7 +37,7 @@ test("navigate to sub channel", async () => {
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
     await contains(".o-mail-NotificationMessage", {
-        text: `${serverState.partnerName} started a thread: New Thread. See all threads.Today at 1:00 PM`,
+        text: `${serverState.partnerName} started a thread: New Thread. See all threads.1:00 PM`,
     });
     await click(".o-mail-NotificationMessage a", { text: "New Thread" });
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
@@ -71,7 +71,7 @@ test("open sub channel menu from notification", async () => {
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-NotificationMessage", {
-        text: `${serverState.partnerName} started a thread: New Thread. See all threads.Today at 1:00 PM`,
+        text: `${serverState.partnerName} started a thread: New Thread. See all threads.1:00 PM`,
     });
     await click(".o-mail-NotificationMessage a", { text: "See all threads" });
     await contains(".o-mail-SubChannelList");
