@@ -1999,7 +1999,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         with self.assertQueryCount(5):
             # <categories>.__get__(existing)
             #  -> records.check_access('read')
-            #      -> records._check_access('read')
+            #      -> records.has_access('read')
             #          -> records.sudo().filtered_domain(...)
             #              -> <name>.__get__(existing)
             #                  -> records._fetch_field(<name>)

@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase, users
 from odoo.tools import mute_logger
 
@@ -1536,11 +1536,8 @@ class PropertiesCase(TestPropertiesMixin):
     @users('test')
     def test_properties_field_security(self):
         """Check the access right related to the Properties fields."""
-        def _mocked_check_access(records, operation):
-            if records.env.su:
-                return
-            msg = ''
-            raise AccessError(msg)
+        def _mocked_access_domain(records, operation):
+            return Domain(records.env.su)
 
         message = self.message_1.with_user(self.test_user)
 
@@ -1557,14 +1554,14 @@ class PropertiesCase(TestPropertiesMixin):
         values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
         self.env.invalidate_all()
-        with patch('odoo.addons.test_orm.models.test_orm.TestOrmMultiTag.check_access', _mocked_check_access):
+        with patch('odoo.addons.test_orm.models.test_orm.TestOrmMultiTag._access_domain', _mocked_access_domain):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, None))
 
         # a user read a properties with a many2one to a record
         # but doesn't have access to its parent
         self.env.invalidate_all()
-        with patch('odoo.addons.test_orm.models.test_orm.TestOrmDiscussion.check_access', _mocked_check_access):
+        with patch('odoo.addons.test_orm.models.test_orm.TestOrmDiscussion._access_domain', _mocked_access_domain):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
 

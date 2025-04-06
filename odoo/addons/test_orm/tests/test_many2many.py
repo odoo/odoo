@@ -74,21 +74,21 @@ class Many2manyCase(TransactionCase):
         # check that attachments are searched with bypass_access, and filtered with _check_access()
         Attachment = type(attachment)
         with (
-            patch.object(Attachment, '_search', autospec=True, side_effect=Attachment._search) as _search,
-            patch.object(Attachment, '_check_access', autospec=True, return_value=None) as _check_access,
+            patch.object(Attachment, '_search', autospec=True, side_effect=Attachment._search) as p_search,
+            patch.object(Attachment, '_access_domain', autospec=True, side_effect=Attachment._access_domain) as p_access,
         ):
             record.invalidate_model()
             record.m2m_attachment_ids
-            _search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=True)
-            _check_access.assert_called_once_with(attachment, 'read')
+            p_search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=True)
+            p_access.assert_called_once_with(attachment, 'read')
 
         # check that otherwise, attachments are searched without bypass_access
         self.patch(field, 'bypass_search_access', False)
         with (
-            patch.object(Attachment, '_search', autospec=True, side_effect=Attachment._search) as _search,
-            patch.object(Attachment, '_check_access', autospec=True, return_value=None) as _check_access,
+            patch.object(Attachment, '_search', autospec=True, side_effect=Attachment._search) as p_search,
+            patch.object(Attachment, '_access_domain', autospec=True, side_effect=Attachment._access_domain) as p_access,
         ):
             record.invalidate_model()
             record.m2m_attachment_ids
-            _search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=False)
-            _check_access.assert_called_once_with(attachment.browse(), 'read')
+            p_search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=False)
+            p_access.assert_called_once_with(attachment.browse(), 'read')
