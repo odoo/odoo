@@ -54,9 +54,20 @@ const odooNumberDateAdapter = {
         return Number(readGroupResult[groupBy]);
     },
     increment(normalizedValue, step) {
-        return normalizedValue + step;
+        return (normalizedValue + step + 30) % 31 + 1
     },
 };
+
+function boundedOdooNumberDateAdapter(lower, upper) {
+    return {
+        normalizeServerValue(groupBy, field, readGroupResult) {
+            return Number(readGroupResult[groupBy]);
+        },
+        increment(normalizedValue, step) {
+            return (normalizedValue + step + upper-lower) % upper + lower
+        },
+    };    
+}
 
 const odooDayAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
@@ -230,11 +241,11 @@ pivotTimeAdapterRegistry.add("quarter", falseHandlerDecorator(odooQuarterAdapter
 
 extendSpreadsheetAdapter("day", odooDayAdapter);
 extendSpreadsheetAdapter("year", odooNumberDateAdapter);
-extendSpreadsheetAdapter("day_of_month", odooNumberDateAdapter);
+extendSpreadsheetAdapter("day_of_month", boundedOdooNumberDateAdapter(1, 31));
 extendSpreadsheetAdapter("day", odooDayAdapter);
-extendSpreadsheetAdapter("iso_week_number", odooNumberDateAdapter);
-extendSpreadsheetAdapter("month_number", odooNumberDateAdapter);
-extendSpreadsheetAdapter("quarter_number", odooNumberDateAdapter);
+extendSpreadsheetAdapter("iso_week_number", boundedOdooNumberDateAdapter(0, 54));
+extendSpreadsheetAdapter("month_number", boundedOdooNumberDateAdapter(1, 12));
+extendSpreadsheetAdapter("quarter_number", boundedOdooNumberDateAdapter(1, 4));
 
 /**
  * When grouping by a time field, return
