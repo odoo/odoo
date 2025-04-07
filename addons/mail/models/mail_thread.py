@@ -4676,7 +4676,7 @@ class MailThread(models.AbstractModel):
             ):
                 res["activities"] = Store.Many(thread.with_context(active_test=True).activity_ids)
             if request_list and "attachments" in request_list:
-                res["attachments"] = Store.Many(thread._get_mail_thread_data_attachments())
+                res["attachments"] = Store.Many(thread._get_mail_thread_data_attachments(), extra_fields="message_ids")
                 res["areAttachmentsLoaded"] = True
                 res["isLoadingAttachments"] = False
             if request_list and "followers" in request_list:

@@ -175,7 +175,7 @@ class ChannelController(http.Controller):
             domain.append(["id", "<", before])
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
-        return Store(attachments).get_result()
+        return Store(attachments, extra_fields="message_ids").get_result()
 
     @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
