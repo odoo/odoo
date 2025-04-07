@@ -9,7 +9,7 @@ export class Tracking extends Interaction {
         'a[href^="/web/login?redirect"][href*="/shop/checkout"]': {
             't-on-click': this.onCustomerSignin,
         },
-        'a[href="/shop/confirm_order"]': { 't-on-click': this.onOrder },
+        'a[href="/shop/payment"]': { 't-on-click': this.onOrder },
         'button[name="o_payment_submit_button"]': { 't-on-click': this.onOrderPayment },
         _root: {
             't-on-view_item_event': (ev) => this.onViewItem(ev),

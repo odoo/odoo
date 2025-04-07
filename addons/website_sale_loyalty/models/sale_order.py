@@ -254,3 +254,9 @@ class SaleOrder(models.Model):
         return super()._cart_find_product_line(*args, **kwargs).filtered(
             lambda sol: not sol.is_reward_line
         )
+
+    def _recompute_cart(self):
+        """Recompute cart with loyalty programs and rewards applied."""
+        self._update_programs_and_rewards()
+        self._auto_apply_rewards()
+        super()._recompute_cart()

@@ -35,13 +35,6 @@ class WebsiteSale(main.WebsiteSale):
                 request.session['successful_code'] = promo
         return request.redirect(post.get('r', '/shop/cart'))
 
-    @route()
-    def shop_payment(self, **post):
-        if order_sudo := request.cart:
-            order_sudo._update_programs_and_rewards()
-            order_sudo._auto_apply_rewards()
-        return super().shop_payment(**post)
-
     @route(['/coupon/<string:code>'], type='http', auth='public', website=True, sitemap=False)
     def activate_coupon(self, code, r='/shop', **kw):
         url_parts = url_parse(r)
