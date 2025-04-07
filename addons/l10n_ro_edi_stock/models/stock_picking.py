@@ -421,7 +421,7 @@ class Picking(models.Model):
     @api.model
     def _l10n_ro_edi_stock_validate_carrier_filter(self, picking):
         # To be overridden by stock.picking.batch
-        return picking.l10n_ro_edi_stock_enable
+        return picking.l10n_ro_edi_stock_enable and picking.picking_type_code != 'internal'
 
     @api.model
     def _l10n_ro_edi_stock_validate_data(self, data: dict):
@@ -431,26 +431,38 @@ class Picking(models.Model):
         if not data['company_id'].l10n_ro_edi_access_token:
             errors.append(_('Romanian access token not found. Please generate or fill it in the settings.'))
 
+        # carrier for internal pickings
+        carrier_valid = True  # for non-internal pickings the carrier has already been checked during validation of the picking
+        if data['picking_type_id'].code == 'internal':
+            # Carrier is required when sending an eTransport document
+            if not data['carrier_id']:
+                errors.append(_("The delivery carrier is missing."))
+                carrier_valid = False
+            elif not data['carrier_id'].l10n_ro_edi_stock_partner_id:
+                errors.append(_("The delivery carrier is missing the partner field value."))
+                carrier_valid = False
+
         # carrier partner fields
-        partner = data['transport_partner_id']
-        missing_carrier_partner_fields = []
+        if carrier_valid:
+            partner = data['carrier_id'].l10n_ro_edi_stock_partner_id
+            missing_carrier_partner_fields = []
 
-        if partner.country_id.code != 'RO':
-            errors.append(_("The delivery carrier partner has to be located in Romania."))
+            if partner.country_id.code != 'RO':
+                errors.append(_("The delivery carrier partner has to be located in Romania."))
 
-        if not partner.vat:
-            missing_carrier_partner_fields.append(_("VAT"))
+            if not partner.vat:
+                missing_carrier_partner_fields.append(_("VAT"))
 
-        if not partner.city:
-            missing_carrier_partner_fields.append(_("City"))
+            if not partner.city:
+                missing_carrier_partner_fields.append(_("City"))
 
-        if not partner.street:
-            missing_carrier_partner_fields.append(_("Street"))
+            if not partner.street:
+                missing_carrier_partner_fields.append(_("Street"))
 
-        if len(missing_carrier_partner_fields) == 1:
-            errors.append(_("The delivery carrier partner is missing the %(field_name)s field.", field_name=missing_carrier_partner_fields[0]))
-        elif len(missing_carrier_partner_fields) > 1:
-            errors.append(_("The delivery carrier partner is missing following fields: %(field_names)s", field_names=', '.join(missing_carrier_partner_fields)))
+            if len(missing_carrier_partner_fields) == 1:
+                errors.append(_("The delivery carrier partner is missing the %(field_name)s field.", field_name=missing_carrier_partner_fields[0]))
+            elif len(missing_carrier_partner_fields) > 1:
+                errors.append(_("The delivery carrier partner is missing following fields: %(field_names)s", field_names=', '.join(missing_carrier_partner_fields)))
 
         # operation type
         if not data['l10n_ro_edi_stock_operation_type']:
@@ -677,7 +689,7 @@ class Picking(models.Model):
 
         data = {
             'partner_id': self.partner_id,
-            'transport_partner_id': self.carrier_id.l10n_ro_edi_stock_partner_id,
+            'carrier_id': self.carrier_id,
             'company_id': self.company_id,
             'scheduled_date': self.scheduled_date,
             'name': self.name,
@@ -809,7 +821,7 @@ class Picking(models.Model):
         Returns the data necessary to render the eTransport template
         """
         commercial_partner = data['partner_id'].commercial_partner_id
-        transport_partner = data['transport_partner_id']
+        transport_partner = data['carrier_id'].l10n_ro_edi_stock_partner_id
         company_id = data['company_id']
         scheduled_date = data['scheduled_date'].date()
         name = data['name']
