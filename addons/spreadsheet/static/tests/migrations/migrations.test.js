@@ -221,6 +221,7 @@ test("fieldMatchings are moved from filters to their respective datasources", ()
                         tag: "chart",
                         data: {
                             type: "odoo_bar",
+                            metaData: {}
                         },
                     },
                 ],
@@ -291,6 +292,7 @@ test("fieldMatchings offsets are correctly preserved after migration", () => {
                         tag: "chart",
                         data: {
                             type: "odoo_bar",
+                            metaData: {}
                         },
                     },
                 ],
@@ -533,4 +535,61 @@ test("Pivot sorted columns are migrated (12 to 13)", () => {
         order: "desc",
     });
     expect(migratedData.pivots["2"].sortedColumn).toBe(undefined);
+});
+
+test("Chart cumulatedStart is set to true if cumulative at migration", () => {
+    const data = {
+        version: 18.0,
+        odooVersion: 9,
+        sheets: [
+            {
+                figures: [
+                    {
+                        id: "fig1",
+                        tag: "chart",
+                        data: {
+                            type: "odoo_bar",
+                            metaData: {
+                                cumulatedStart: undefined,
+                                cumulative: true,
+                            },
+                            cumulative: true,
+                        },
+                    },
+                    {
+                        id: "fig2",
+                        tag: "chart",
+                        data: {
+                            type: "odoo_bar",
+                            metaData: {
+                                cumulative: false,
+                            },
+                            cumulative: false,
+                        },
+                    },
+                    {
+                        id: "fig3",
+                        tag: "chart",
+                        data: {
+                            type: "odoo_bar",
+                            metaData: {
+                                cumulative: true,
+                                cumulatedStart: false
+                            },
+                            cumulative: true,
+                            cumulatedStart: false
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+    const migratedData = load(data);
+    const sheet = migratedData.sheets[0];
+    expect(sheet.figures[0].data.metaData.cumulatedStart).toBe(true);
+    expect(sheet.figures[0].data.cumulatedStart).toBe(true);
+    expect(sheet.figures[1].data.metaData.cumulatedStart).toBe(false);
+    expect(sheet.figures[1].data.cumulatedStart).toBe(false);
+    expect(sheet.figures[2].data.metaData.cumulatedStart).toBe(false);
+    expect(sheet.figures[2].data.cumulatedStart).toBe(false);
 });
