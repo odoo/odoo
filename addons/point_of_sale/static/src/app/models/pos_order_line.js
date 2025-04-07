@@ -5,7 +5,10 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat, roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numbers";
 import { roundCurrency, formatCurrency } from "./utils/currency";
 import { _t } from "@web/core/l10n/translation";
-import { getTaxesAfterFiscalPosition } from "@point_of_sale/app/models/utils/tax_utils";
+import {
+    getTaxesAfterFiscalPosition,
+    getTaxesValues,
+} from "@point_of_sale/app/models/utils/tax_utils";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 export class PosOrderline extends Base {
@@ -505,7 +508,10 @@ export class PosOrderline extends Base {
     get_all_prices(qty = this.get_quantity()) {
         const company = this.company;
         const product = this.get_product();
-        const taxes = this.tax_ids || product.taxes_id;
+        let taxes = this.tax_ids || product.taxes_id;
+        const priceUnit = this.get_unit_price();
+        const discount = this.get_discount();
+        const priceUnitAfterDiscount = priceUnit * (1.0 - discount / 100.0);
         const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
             this,
             this.prepareBaseLineForTaxesComputationExtraValues({
@@ -513,6 +519,13 @@ export class PosOrderline extends Base {
                 tax_ids: taxes,
             })
         );
+        if (this.order_id.fiscal_position_id) {
+            taxes = getTaxesAfterFiscalPosition(
+                taxes,
+                this.order_id.fiscal_position_id,
+                this.models
+            );
+        }
         accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
         accountTaxHelpers.round_base_lines_tax_details([baseLine], company);
 
@@ -535,6 +548,15 @@ export class PosOrderline extends Base {
                 base: taxData.base_amount_currency,
             };
         }
+        const taxesData = getTaxesValues(
+            taxes,
+            priceUnitAfterDiscount,
+            qty,
+            product,
+            this.config._product_default_values,
+            company,
+            this.currency
+        );
 
         return {
             priceWithTax: baseLine.tax_details.total_included_currency,
@@ -545,7 +567,7 @@ export class PosOrderline extends Base {
                 baseLine.tax_details.total_included_currency -
                 baseLine.tax_details.total_excluded_currency,
             taxDetails: taxDetails,
-            taxesData: baseLine.tax_details.taxes_data,
+            taxesData: taxesData.taxes_data,
         };
     }
 
