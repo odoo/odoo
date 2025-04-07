@@ -214,7 +214,7 @@ class SaleOrderLine(models.Model):
                 ('product_id.service_tracking', 'in', ['project_only', 'task_in_project']),
             ])
             if project_only_sol_count == 1:
-                values['name'] = "%s - [%s] %s" % (values['name'], self.product_id.default_code, self.product_id.name) if self.product_id.default_code else "%s - %s" % (values['name'], self.product_id.name)
+                values['name'] = f"{values['name']} - {f'[{self.product_id.default_code}] ' if self.product_id.default_code else ''}{self.product_id.name}" + (f" - {self.order_id.partner_id.commercial_company_name or self.order_id.partner_id.name}" if not self.order_id.client_order_ref else "")
             values.update(self._timesheet_create_project_account_vals(self.order_id.project_id))
             project = self.env['project.project'].create(values)
 
@@ -258,8 +258,13 @@ class SaleOrderLine(models.Model):
             title = self.product_id.display_name
             description = '<br/>'.join(sale_line_name_parts)
 
+        if project.sale_line_id.id == self.id:
+            task_name = title
+        else:
+            task_name = f"{self.order_id.name or ''} - {title}" + (f" - {self.order_id.partner_id.commercial_company_name or self.order_id.partner_id.name}" if not self.order_id.client_order_ref else "")
+
         return {
-            'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
+            'name': task_name,
             'allocated_hours': allocated_hours,
             'partner_id': self.order_id.partner_id.id,
             'description': description,
