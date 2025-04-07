@@ -1471,7 +1471,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "anon 2 Ernest Employee",
-                "email_from": False,
                 "id": last_message.id,
                 "incoming_email_cc": False,
                 "incoming_email_to": False,
@@ -1637,6 +1636,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
             if also_livechat:
                 res["user_livechat_username"] = False
+                res["offline_since"] = False
             return res
         if user == self.users[2]:
             if only_inviting:
@@ -1733,6 +1733,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "avatar_128_access_token": limited_field_access_token(self.guest, "avatar_128"),
                 "id": self.guest.id,
                 "im_status": "offline",
+                "offline_since": False,
                 "name": "Visitor",
                 "write_date": fields.Datetime.to_string(self.guest.write_date),
             }
