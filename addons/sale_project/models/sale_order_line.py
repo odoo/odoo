@@ -157,6 +157,11 @@ class SaleOrderLine(models.Model):
     def _convert_qty_company_hours(self, dest_company):
         return self.product_uom_qty
 
+    def _prepare_name(self, name):
+        if not self.order_id.client_order_ref:
+            name += " - %s" % (self.order_id.partner_id.commercial_company_name or self.order_id.partner_id.name)
+        return name
+
     def _timesheet_create_project_prepare_values(self):
         """Generate project values"""
         # create the project or duplicate one
@@ -197,6 +202,7 @@ class SaleOrderLine(models.Model):
             ])
             if project_only_sol_count == 1:
                 values['name'] = "%s - [%s] %s" % (values['name'], self.product_id.default_code, self.product_id.name) if self.product_id.default_code else "%s - %s" % (values['name'], self.product_id.name)
+                values["name"] = self._prepare_name(values['name'])
             values.update(self._timesheet_create_project_account_vals(self.order_id.project_id))
             project = self.env['project.project'].create(values)
 
@@ -241,8 +247,14 @@ class SaleOrderLine(models.Model):
             title = sale_line_name_parts[0]
             description = '<br/>'.join(sale_line_name_parts[1:])
 
+        if project.sale_line_id.id == self.id:
+            task_name = title
+        else:
+            task_name = '%s - %s' % (self.order_id.name or '', title)
+            task_name = self._prepare_name(task_name)
+
         return {
-            'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
+            'name': task_name,
             'allocated_hours': allocated_hours,
             'partner_id': self.order_id.partner_id.id,
             'description': description,
