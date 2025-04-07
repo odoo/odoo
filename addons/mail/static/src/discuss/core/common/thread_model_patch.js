@@ -130,6 +130,8 @@ const threadPatch = {
                         return lastMessageSeenByAllId
                             ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
                             : member.seen_message_id.id;
+                    } else {
+                        return lastMessageSeenByAllId;
                     }
                 }, undefined);
             },
