@@ -389,7 +389,7 @@ export class PaymentScreen extends Component {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
         let nextScreen = this.nextScreen;
-        let switchScreen = false;
+        let switchScreen = true;
 
         if (
             nextScreen === "ReceiptScreen" &&
@@ -414,8 +414,6 @@ export class PaymentScreen extends Component {
                     }
                 }
             }
-        } else {
-            switchScreen = true;
         }
 
         if (switchScreen) {
