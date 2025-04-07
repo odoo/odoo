@@ -124,9 +124,11 @@ patch(TicketScreen.prototype, {
     async onDoRefund() {
         const order = this.getSelectedOrder();
         if (this.pos.config.module_pos_restaurant && order && !this.pos.selectedTable) {
-            await this.pos.setTable(
-                order.table ? order.table : this.pos.models["restaurant.table"].getAll()[0]
-            );
+            const tableModel = this.pos.models["restaurant.table"];
+            const table = order.table_id || tableModel.getFirst();
+            if (table) {
+                await this.pos.setTable(table);
+            }
         }
         await super.onDoRefund(...arguments);
     },

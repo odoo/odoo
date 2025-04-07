@@ -328,3 +328,8 @@ class TestFrontend(TestFrontendCommon):
     def test_15_pos_refund_qty(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('RefundQtyTour')
+
+    def test_refund_no_tables(self):
+        self.pos_config.floor_ids.unlink()
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('RefundNoTable')
