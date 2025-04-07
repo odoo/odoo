@@ -11,19 +11,18 @@ class IrActionsReport(models.Model):
         if collected_streams \
                 and res_ids \
                 and len(res_ids) == 1 \
-                and self._is_purchase_order_report(report_ref):
-            purchase_order = self.env['purchase.order'].browse(res_ids)
-            builders = purchase_order._get_edi_builders()
-
+                and self._is_sale_order_report(report_ref):
+            sale_order = self.env['sale.order'].browse(res_ids)
+            builders = sale_order._get_edi_builders()
             if len(builders) == 0:
                 return collected_streams
-
-            return self._embed_edi_attachments(purchase_order, collected_streams, builders)
+            return self._embed_edi_attachments(sale_order, collected_streams, builders)
 
         return collected_streams
 
-    def _is_purchase_order_report(self, report_ref):
+    def _is_sale_order_report(self, report_ref):
         return self._get_report(report_ref).report_name in (
-            'purchase.report_purchasequotation',
-            'purchase.report_purchaseorder'
+            'sale.report_saleorder_document',
+            'sale.report_saleorder',
+            'sale.report_saleorder_raw',
         )

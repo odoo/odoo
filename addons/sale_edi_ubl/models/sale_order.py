@@ -57,3 +57,6 @@ class SaleOrder(models.Model):
             'price_unit': price_unit,
             'tax_ids': [Command.set(tax_ids)],
         } for name, quantity, price_unit, tax_ids in lines_vals]
+
+    def _get_edi_builders(self):
+        return super()._get_edi_builders() + [self.env['sale.edi.xml.ubl_bis3']]
