@@ -419,6 +419,7 @@ class SaleOrderLine(models.Model):
             })
             if self.product_id.service_tracking == 'task_in_project':
                 self.task_id.milestone_id = milestone.id
+        return milestones
 
     def _prepare_invoice_line(self, **optional_values):
         """
