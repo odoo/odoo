@@ -205,6 +205,7 @@ def translate_xml_node(node, callback, parse, serialize):
             # hierarchy breaks their functionalities. We need to force them to
             # be translated as a whole using the `o_translate_inline` class.
             "o_translate_inline" in node.attrib.get("class", "").split()
+            or bool(node.xpath("ancestor::*[contains(@class, 'o_translate_inline')]"))
             or node.tag in TRANSLATED_ELEMENTS
             and not any(key.startswith("t-") for key in node.attrib)
             and all(translatable(child) for child in node)
