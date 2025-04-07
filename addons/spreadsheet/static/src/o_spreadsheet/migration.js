@@ -34,6 +34,25 @@ migrationStepRegistry.add("18.1.2", {
     },
 });
 
+migrationStepRegistry.add("18.3.2", {
+    migrate(data) {
+        for (let sheet of data.sheets || []) {
+            for (let figure of sheet.figures || []) {
+                if (
+                    figure.tag === "chart" &&
+                    ["odoo_bar", "odoo_line", "odoo_pie"].includes(figure.data.type) &&
+                    !("cumulatedStart" in figure.data)
+                ) {
+                    const isCumulative = figure.data.cumulative || false;
+                    figure.data.cumulatedStart = isCumulative;
+                    figure.data.metaData.cumulatedStart = isCumulative;
+                }
+            }
+        }
+        return data;
+    },
+});
+
 function migrateOdooData(data) {
     const version = data.odooVersion || 0;
     if (version < 1) {
