@@ -82,7 +82,8 @@ class PaymentTransaction(models.Model):
         """ Validate and format the phone number.
 
         :param str phone: The phone number to validate.
-        :return str: The formatted phone number.
+        :returns: The formatted phone number.
+        :rtype: str
         :raise ValidationError: If the phone number is missing or incorrect.
         """
         if not phone and self.tokenize:

@@ -148,7 +148,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
     def _generate_outlook_oauth2_string(self, login):
         """Generate a OAuth2 string which can be used for authentication.
 
-        :param user: Email address of the Outlook account to authenticate
+        :param login: Email address of the Outlook account to authenticate
         :return: The SASL argument for the OAuth2 mechanism.
         """
         self.ensure_one()

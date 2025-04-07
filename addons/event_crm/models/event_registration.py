@@ -175,7 +175,8 @@ class EventRegistration(models.Model):
         in which case first found non void value is taken. Note that all
         registrations should belong to the same event.
 
-        :return dict lead_values: values used for create / write on a lead
+        :returns: values used for create / write on a lead
+        :rtype: dict
         """
         sorted_self = self.sorted("id")
         lead_values = {
@@ -207,7 +208,8 @@ class EventRegistration(models.Model):
           * in batch mode: if a customer is found use it as main contact. Registrations
             details are included in lead description;
 
-        :return dict: values used for create / write on a lead
+        :returns: values used for create / write on a lead
+        :rtype: dict
         """
         sorted_self = self.sorted("id")
         valid_partner = next(
@@ -264,8 +266,9 @@ class EventRegistration(models.Model):
         lines. For example to enumerate participants or inform of an update in
         the information of a participant.
 
-        :return string description: complete description for a lead taking into
+        :returns: complete description for a lead taking into
           account all registrations contained in self
+        :rtype: str
         """
         reg_lines = [
             registration._get_lead_description_registration(
@@ -325,13 +328,14 @@ class EventRegistration(models.Model):
         :param rule_to_new_regs: dict: for each rule, subset of self matching
           rule conditions. Used to speedup batch computation;
 
-        :return dict: for each rule, rule (key of dict) gives a list of groups.
+        :returns: for each rule, rule (key of dict) gives a list of groups.
           Each group is a tuple (
             existing_lead: existing lead to update;
             group_record: record used to group;
             registrations: sub record set of self, containing registrations
                            belonging to the same group;
           )
+        :rtype: dict
         """
         grouped_registrations = {
             (create_date, event): sub_registrations

@@ -67,9 +67,6 @@ class MailThread(models.AbstractModel):
 
         This is used to determine who is opening the link
         to be able for the recipient to post messages on the document's portal view.
-
-        :param str email:
-            Email of the recipient that opened the link.
         """
         self.ensure_one()
         # check token field exists

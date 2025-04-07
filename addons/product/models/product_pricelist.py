@@ -293,8 +293,6 @@ class ProductPricelist(models.Model):
         Else, it will return the generic property (res_id not set)
         Else, it will return the first available pricelist if any
 
-        :param int company_id: if passed, used for looking up properties,
-            instead of current user's company
         :return: a dict {partner_id: pricelist}
         """
         ProductPricelist = self.env['product.pricelist']

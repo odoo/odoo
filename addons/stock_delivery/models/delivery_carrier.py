@@ -36,16 +36,20 @@ class DeliveryCarrier(models.Model):
         ''' Send the package to the service provider
 
         :param pickings: A recordset of pickings
-        :return list: A list of dictionaries (one per picking) containing of the form::
+        :returns: A list of dictionaries (one per picking) containing of
+            the form::
+
                          { 'exact_price': price,
                            'tracking_number': number }
-                           # TODO missing labels per package
-                           # TODO missing currency
-                           # TODO missing success, error, warnings
+        :rtype: list[dict] | None
         '''
+        # TODO missing labels per package
+        # TODO missing currency
+        # TODO missing success, error, warnings
         self.ensure_one()
         if hasattr(self, '%s_send_shipping' % self.delivery_type):
             return getattr(self, '%s_send_shipping' % self.delivery_type)(pickings)
+        return None
 
     def get_return_label(self, pickings, tracking_number=None, origin_date=None):
         self.ensure_one()
@@ -70,11 +74,13 @@ class DeliveryCarrier(models.Model):
         ''' Ask the tracking link to the service provider
 
         :param picking: record of stock.picking
-        :return str: an URL containing the tracking link or False
+        :returns: an URL containing the tracking link or None
+        :rtype: str | None
         '''
         self.ensure_one()
         if hasattr(self, '%s_get_tracking_link' % self.delivery_type):
             return getattr(self, '%s_get_tracking_link' % self.delivery_type)(picking)
+        return None
 
     def cancel_shipment(self, pickings):
         ''' Cancel a shipment

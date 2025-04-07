@@ -161,8 +161,8 @@ class AccountMove(models.Model):
     def _get_line_vals_list(self, lines_vals):
         """ Get invoice line values list.
 
-        param list line_vals: List of values [name, qty, price, tax].
-        :return: List of invoice line values.
+        :param list[tuple] lines_vals: List of values ``[(name, qty, price, tax), ...]``.
+        :returns: List of invoice line values.
         """
         return [{
             'sequence': 0,  # be sure to put these lines above the 'real' invoice lines

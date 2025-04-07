@@ -283,7 +283,7 @@ class SaleOrder(models.Model):
 
         :param rewards_to_ignore: the rewards to ignore from the total amount (if they were already
             applied on the order)
-        :type reward: `loyalty.reward` recordset
+        :type rewards_to_ignore: `loyalty.reward` recordset
 
         :return: The discountable amount
         :rtype: float

@@ -1288,7 +1288,6 @@ class StockQuant(models.Model):
         Depending of the context (user have right to be inventory mode or not),
         the list view will be editable or readonly.
 
-        :param domain: List for the domain, empty by default.
         :param extend: If True, enables form, graph and pivot views. False by default.
         """
         if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):

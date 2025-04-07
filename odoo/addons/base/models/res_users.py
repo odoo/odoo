@@ -751,7 +751,6 @@ class ResUsers(models.Model):
         """Verifies and returns the user ID corresponding to the given
         ``credential``, or False if there was no matching user.
 
-        :param str db: the database on which user is trying to authenticate
         :param dict credential: a dictionary where the `type` key defines the authentication method and
             additional keys are passed as required per authentication method.
             For example:

@@ -635,7 +635,8 @@ class IrMail_Server(models.Model):
         """ Computes the default bounce address. It is used to set the envelop
         address if no envelop address is provided in the message.
 
-        :return str/None: defaults to the ``--email-from`` CLI/config parameter.
+        :return: defaults to the ``--email-from`` CLI/config parameter.
+        :rtype: str | None
         """
         return tools.config.get("email_from")
 
@@ -644,7 +645,8 @@ class IrMail_Server(models.Model):
         """ Computes the default from address. It is used for the "header from"
         address when no other has been received.
 
-        :return str/None: defaults to the ``--email-from`` CLI/config parameter.
+        :return: defaults to the ``--email-from`` CLI/config parameter.
+        :rtype: str | None
         """
         return tools.config.get("email_from")
 
@@ -654,8 +656,9 @@ class IrMail_Server(models.Model):
         ir.mail_server is used when sending emails, hence having no value for
         from_filter.
 
-        :return str/None: defaults to 'mail.default.from_filter', then
+        :return: defaults to 'mail.default.from_filter', then
           ``--from-filter`` CLI/config parameter.
+        :rtype: str | None
         """
         return self.env['ir.config_parameter'].sudo().get_param(
             'mail.default.from_filter', tools.config.get('from_filter')

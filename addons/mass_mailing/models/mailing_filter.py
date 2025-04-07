@@ -28,7 +28,8 @@ class MailingFilter(models.Model):
         """Evaluate domain string as python code using safe_eval
 
         :param str domain: the domain to evaluate
-        :returns dict: evaluation context given to safe_eval
+        :returns: evaluation context given to safe_eval
+        :rtype: dict
         """
         # to_utc is a purely JS concept where datetime is localized by default
         # as that is the default in python, and to_utc is undefined, we can disregard it

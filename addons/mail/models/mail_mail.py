@@ -185,7 +185,7 @@ class MailMail(models.Model):
         return self.write({'state': 'cancel'})
 
     @api.model
-    def process_email_queue(self, ids=None, batch_size=1000):
+    def process_email_queue(self, ids=(), batch_size=1000):
         """Send immediately queued messages, committing after each
            message is sent - this is not transactional and should
            not be called during another transaction!
@@ -196,11 +196,6 @@ class MailMail(models.Model):
         :param list ids: optional list of emails ids to send. If given only
                          scheduled and outgoing emails within this ids list
                          are sent;
-        :param dict context: if a 'filters' key is present in context,
-                             this value will be used as an additional
-                             filter to further restrict the outgoing
-                             messages to send (by default all 'outgoing'
-                             'scheduled' messages are sent).
         """
         domain = [
             '&',
@@ -291,7 +286,8 @@ class MailMail(models.Model):
         dealing with the hard-to-parse trio (01/04/09 -> ?). In most use cases
         year will be given first as this is the expected default formatting.
 
-        :return datetime: parsed datetime (or False if parser failed)
+        :returns: parsed datetime (or False if parser failed)
+        :rtype: datetime.datetime | bool
         """
         if isinstance(scheduled_datetime, datetime.datetime):
             parsed_datetime = scheduled_datetime
@@ -369,7 +365,8 @@ class MailMail(models.Model):
         :param mail_server: <ir.mail_server> mail server that will be used to send the mails,
           False if it is the default one
         :param dict doc_to_followers: see ``Followers._get_mail_doc_to_followers()``
-        :return list: list of dicts used in IrMailServer.build_email()
+        :returns: list of dicts used in IrMailServer.build_email()
+        :rtype: list[dict]
         """
         self.ensure_one()
         body = self._prepare_outgoing_body()

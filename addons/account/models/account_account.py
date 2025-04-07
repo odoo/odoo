@@ -499,7 +499,7 @@ class AccountAccount(models.Model):
                 |    hello     |  hello.copy, hello.copy2, hello.copy3, hello.copy4, ...    |
                 |     9998     |  9999, 9998.copy, 9998.copy2, 9998.copy3, ...              |
 
-            :param start_code str: the code to increment until an available one is found
+            :param str start_code: the code to increment until an available one is found
             :param set[str] cache: a set of codes which you know are already used
                                     (optional, to speed up the method).
                                     If none is given, the method will use cache = {start_code}.
@@ -508,11 +508,12 @@ class AccountAccount(models.Model):
                                     If you want the method to start at start_code, you should
                                     explicitly pass cache={}.
 
-            :return str: an available new account code for the active company.
-                         It will normally have length `len(start_code)`.
-                         If incrementing the last digits starting from `start_code` does
-                         not work, the method will try as a fallback
-                         '{start_code}.copy', '{start_code}.copy2', ... '{start_code}.copy99'.
+            :return: an available new account code for the active company.
+                     It will normally have length `len(start_code)`.
+                     If incrementing the last digits starting from `start_code` does
+                     not work, the method will try as a fallback
+                     '{start_code}.copy', '{start_code}.copy2', ... '{start_code}.copy99'.
+            :rtype: str
         """
         if cache is None:
             cache = {start_code}

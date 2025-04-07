@@ -34,7 +34,7 @@ class MailThread(models.AbstractModel):
     def _rating_get_operator(self):
         """ Return the operator (partner) that is the person who is rated.
 
-        :return record: res.partner singleton
+        :return: res.partner singleton
         """
         if 'user_id' in self and self.user_id.partner_id:
             return self.user_id.partner_id
@@ -43,7 +43,7 @@ class MailThread(models.AbstractModel):
     def _rating_get_partner(self):
         """ Return the customer (partner) that performs the rating.
 
-        :return record: res.partner singleton
+        :return: res.partner singleton
         """
         if 'partner_id' in self and self.partner_id:
             return self.partner_id
@@ -117,7 +117,7 @@ class MailThread(models.AbstractModel):
         :param notify_delay_send: Delay the sending by 2 hours of the email so the user
             can still change his feedback. If False, the email will be sent immediately.
 
-        :returns rating: rating.rating record
+        :returns: rating.rating record
         """
         if rate < 0 or rate > 5:
             raise ValueError(_('Wrong rating value. A rate should be between 0 and 5 (received %d).', rate))

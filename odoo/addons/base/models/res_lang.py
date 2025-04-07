@@ -264,7 +264,7 @@ class ResLang(models.Model):
         return OrderedSet(['id', 'name', 'code', 'iso_code', 'url_code', 'active', 'direction', 'date_format', 'short_date_format',
                            'time_format', 'short_time_format', 'week_start', 'grouping', 'decimal_point', 'thousands_sep', 'flag_image_url'])
 
-    def _get_data(self, **kwargs: Any) -> LangData:
+    def _get_data(self, **kwargs) -> LangData:
         """ Get the language data for the given field value in kwargs
         For example, get_data(code='en_US') will return the LangData
         for the res.lang record whose 'code' field value is 'en_US'
@@ -275,7 +275,6 @@ class ResLang(models.Model):
         :return: Valid LangData if (field_name, field_value) pair is for an
                 **active** language. Otherwise, Dummy LangData which will return
                 ``False`` for all ``self.CACHED_FIELDS``
-        :rtype: LangData
         :raise: UserError if field_name is not in ``self.CACHED_FIELDS``
         """
         [[field_name, field_value]] = kwargs.items()

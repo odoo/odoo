@@ -506,7 +506,7 @@ class ProductPricelistItem(models.Model):
         Note: self and self.ensure_one()
 
         :param product: recordset of product (product.product/product.template)
-        :param float qty: quantity of products requested (in given uom)
+        :param float quantity: quantity of products requested (in given uom)
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
         :param currency: currency (for the case where self is empty)
@@ -561,7 +561,7 @@ class ProductPricelistItem(models.Model):
         """ Compute the base price for a given rule
 
         :param product: recordset of product (product.product/product.template)
-        :param float qty: quantity of products requested (in given uom)
+        :param float quantity: quantity of products requested (in given uom)
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
         :param currency: currency in which the returned price must be expressed

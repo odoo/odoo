@@ -267,7 +267,8 @@ class SmsComposer(models.TransientModel):
         """Meant to be overridden to filter out and handle sms that must not be sent.
 
         :param dict sms_values_all: sms values by res_id
-        :return dict: filtered sms_vals_all
+        :returns: filtered sms_vals_all
+        :rtype: dict
         """
         return sms_values_all
 

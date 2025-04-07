@@ -397,8 +397,10 @@ class DiscussChannelMember(models.Model):
             - Current sessions are returned.
             - Sessions given in check_rtc_session_ids that no longer exists
               are returned as non-existing.
+
             :param list check_rtc_session_ids: list of the ids of the sessions to check
-            :returns tuple: (current_rtc_sessions, outdated_rtc_sessions)
+            :returns: (current_rtc_sessions, outdated_rtc_sessions)
+            :rtype: tuple
         """
         self.ensure_one()
         self.channel_id.rtc_session_ids._delete_inactive_rtc_sessions()

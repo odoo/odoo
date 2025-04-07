@@ -427,9 +427,10 @@ class ResConfigSettings(models.TransientModel):
 
         :param string menu_xml_id: the xml id of the menuitem where the view is located,
             structured as follows: module_name.menuitem_xml_id (e.g.: "sales_team.menu_sale_config")
-        :return tuple:
-            - t[0]: string: full path to the menuitem (e.g.: "Settings/Configuration/Sales")
-            - t[1]: int or long: id of the menuitem's action
+        :return: a 2-value tuple where
+
+          - t[0]: string: full path to the menuitem (e.g.: "Settings/Configuration/Sales")
+          - t[1]: int or long: id of the menuitem's action
         """
         ir_ui_menu = self.env.ref(menu_xml_id)
         return (ir_ui_menu.complete_name, ir_ui_menu.action.id)
@@ -441,7 +442,8 @@ class ResConfigSettings(models.TransientModel):
 
         :param string full_field_name: the full name of the field, structured as follows:
             model_name.field_name (e.g.: "sale.config.settings.fetchmail_lead")
-        :return string: human readable name of the field (e.g.: "Create leads from incoming mails")
+        :return: human readable name of the field (e.g.: "Create leads from incoming mails")
+        :rtype: str
         """
         model_name, field_name = full_field_name.rsplit('.', 1)
         return self.env[model_name].fields_get([field_name])[field_name]['string']

@@ -595,10 +595,10 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_demo_account(self, xml_id, account_type, company):
         """Find the most appropriate account possible for demo data creation.
 
-        :param xml_id (str): the xml_id of the account template in the generic coa
-        :param account_type (str): the full xml_id of the account type wanted
-        :param company (Model<res.company>): the company for which we search the account
-        :return (Model<account.account>): the most appropriate record found
+        :param str xml_id: the xml_id of the account template in the generic coa
+        :param str account_type: the full xml_id of the account type wanted
+        :param company: the company for which we search the account
+        :return: the most appropriate account.account record found
         """
         return (
             self.env['account.account'].browse(self.env['ir.model.data'].sudo().search([
