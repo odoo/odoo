@@ -172,8 +172,14 @@
                         <page string="Advanced Options" name="advanced_options">
                             <group>
                                 <group>
+<<<<<<< saas-17.4
                                     <field name="invoice_label" invisible="amount_type == 'group'"/>
                                     <field name="description"/>
+||||||| a8a613f57dbb166c8be3e99df166013f4ae9ebce
+                                    <field name="invoice_label" invisible="amount_type == 'group'"/>
+=======
+                                    <field name="invoice_label"/>
+>>>>>>> 7b0bd5ae8ed4a7c63a2805e6a2d4e24680be0e08
                                     <field name="tax_group_id" invisible="amount_type == 'group'" required="amount_type != 'group'"/>
                                     <field name="analytic" invisible="amount_type == 'group'" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
