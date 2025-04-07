@@ -24,9 +24,13 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         landed_costs_lines = self.line_ids.filtered(lambda line: line.is_landed_costs_line)
+        landed_cost_picking_ids = self.invoice_line_ids.purchase_order_id.picking_ids.filtered(
+            lambda picking: any(move._get_stock_valuation_layer_ids() for move in picking.move_ids)
+        )
 
         landed_costs = self.env['stock.landed.cost'].with_company(self.company_id).create({
             'vendor_bill_id': self.id,
+            'picking_ids': landed_cost_picking_ids.ids,
             'cost_lines': [(0, 0, {
                 'product_id': l.product_id.id,
                 'name': l.product_id.name,
