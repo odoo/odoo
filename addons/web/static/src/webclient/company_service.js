@@ -133,7 +133,7 @@ export const companyService = {
              * @param {boolean} [includeChildCompanies=true] - If true, will also
              * log into each child of each companyIds (default is true)
              */
-            setCompanies(companyIds, includeChildCompanies = true) {
+            async setCompanies(companyIds, includeChildCompanies = true) {
                 const newCompanyIds = companyIds.length ? companyIds : [activeCompanyIds[0]];
 
                 function addCompanies(companyIds) {
@@ -151,11 +151,24 @@ export const companyService = {
                     );
                 }
 
-                const cidsHash = formatCompanyIds(newCompanyIds, CIDS_HASH_SEPARATOR);
-                router.pushState({ cids: cidsHash }, { lock: true });
-                router.pushState({ _company_switching: true });
                 cookie.set("cids", formatCompanyIds(newCompanyIds));
-                browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
+                user.updateContext({ allowed_company_ids: newCompanyIds });
+
+                const controller = action.currentController;
+                const state = {};
+                const options = { reload: true };
+                if (controller?.props.resId && controller?.props.resModel) {
+                    const hasReadRights = await user.checkAccessRight(
+                        controller.props.resModel,
+                        "read",
+                        controller.props.resId
+                    );
+
+                    if (!hasReadRights) {
+                        options.replace = true;
+                        state.actionStack = router.current.actionStack.slice(0, -1);
+                    }
+                }
             },
         };
     },
