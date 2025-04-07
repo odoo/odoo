@@ -399,6 +399,7 @@ class TestItEdiExport(TestItEdi):
             'partner_id': self.italian_partner_a.id,
             'invoice_date': '2024-03-24',
             'move_type': 'out_invoice',
+            'invoice_date': '2024-01-01',
             'invoice_line_ids': [
                 Command.create({
                     'name': 'Example Product',
