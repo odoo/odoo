@@ -127,46 +127,44 @@
                             <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
                             <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact'"/>
                         </h1>
-                        <div class="o_row">
+                    </div>
+                    <group>
+                        <group>
                             <field name="parent_id"
                                 widget="res_partner_many2one"
                                 placeholder="Company Name..."
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
+                                string="Company"
+                                domain="[('is_company', '=', True)]"
+                                context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
                                 invisible="((is_company and not parent_id) or company_name) and company_name != ''"/>
-                                <field name="company_name" invisible="not company_name or company_name == '' or is_company"/>
-                                <button name="create_company" icon="fa-plus-square" string="Create company"
-                                    type="object" class="oe_edit_only btn-link"
-                                    invisible="is_company or company_name == '' or not company_name"/>
-                        </div>
-                    </div>
+                            <div colspan="2" class="d-flex gap-2" invisible="not company_name or company_name == '' or is_company">
+                                <label for="company_name" class="fw-bold text-nowrap"/>
+                                <field name="company_name"/>
+                                <button name="create_company" icon="fa-plus-square" string="Create" type="object" class="oe_edit_only btn-link text-nowrap"/>
+                            </div>
 
-                    <group>
-                        <group>
                             <span class="o_form_label o_td_label o_address_type" name="address_name">
-                                <field name="type" invisible="is_company" readonly="user_ids" required="not is_company" class="fw-bold"/>
+                                <field name="type_address_label" invisible="is_company" readonly="1" class="fw-bold"/>
                                 <span invisible="not is_company">Address</span>
                             </span>
                             <div class="o_address_format">
-                                <field name="street" placeholder="Street..." class="o_address_street"
-                                    readonly="type == 'contact' and parent_id"/>
-                                <field name="street2" placeholder="Street 2..." class="o_address_street"
-                                    readonly="type == 'contact' and parent_id"/>
-                                <field name="city" placeholder="City" class="o_address_city"
-                                    readonly="type == 'contact' and parent_id"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
-                                    readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip"
-                                    readonly="type == 'contact' and parent_id"/>
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" placeholder="State" class="o_address_state"
+                                    options="{'no_open': True, 'no_quick_create': True}"
+                                    context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <div name="partner_address_country" class="d-flex justify-content-between">
-                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
-                                        readonly="type == 'contact' and parent_id"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country"
+                                        options='{"no_open": True, "no_create": True}'/>
                                 </div>
                             </div>
-                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id"/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
                                 invisible="is_company"/>
+                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id"/>
                             <field name="phone" widget="phone"/>
                             <field name="email" widget="email" required="user_ids"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
@@ -216,7 +214,9 @@
                                                      placeholder="e.g. New Address"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
                                                     invisible="type != 'contact'"/>
-                                                <label for="street" string="Address" invisible="type == 'contact'"/>
+                                                <span class="o_form_label o_td_label o_address_type" invisible="type == 'contact'">
+                                                    <field name="type_address_label" readonly="1" class="fw-bold"/>
+                                                </span>
                                                 <div invisible="type == 'contact'">
                                                     <div class="o_address_format" name="div_address">
                                                         <field name="street" placeholder="Street..." class="o_address_street"/>
