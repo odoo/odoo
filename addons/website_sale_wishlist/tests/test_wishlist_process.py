@@ -80,3 +80,42 @@ class TestWishlistProcess(HttpCase):
             ],
         })
         self.start_tour("/", 'shop_wishlist_admin', login="admin")
+
+    def test_03_wishlist_tour_for_unpublished_product(self):
+
+        self.env['product.template'].search([]).write({'website_published': False})
+        # Setup attributes and attributes values
+        product_attribute_2 = self.env['product.attribute'].create({
+            'name': 'Color',
+            'sequence': 20,
+        })
+        product_attribute_value_3 = self.env['product.attribute.value'].create({
+            'name': 'White',
+            'attribute_id': product_attribute_2.id,
+            'sequence': 1,
+        })
+        product_attribute_value_4 = self.env['product.attribute.value'].create({
+            'name': 'Black',
+            'attribute_id': product_attribute_2.id,
+            'sequence': 2,
+        })
+
+        # Create product template
+        self.product_product_4_product_template = self.env['product.template'].create({
+            'name': 'Flipover (TEST)',
+            'standard_price': 1959.0,
+            'list_price': 750.0,
+            'website_published': False,
+        })
+
+        # Generate variants
+        self.env['product.template.attribute.line'].create([{
+            'product_tmpl_id': self.product_product_4_product_template.id,
+            'attribute_id': product_attribute_2.id,
+            'value_ids': [(4, product_attribute_value_3.id), (4, product_attribute_value_4.id)],
+
+        }])
+
+        self.env.ref('base.user_admin').name = 'Mitchell Admin'
+
+        self.start_tour("/", 'check_shop_wishlist_icon', login="admin")
