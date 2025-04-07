@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -13,7 +12,7 @@ from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.models.test_mail_corner_case_models import MailTestMultiCompanyWithActivity
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged, users, HttpCase
 from odoo.tools import mute_logger
 
@@ -533,3 +532,26 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                     self.assertEqual(response.request._cookies.get('cids'), str(test_record.company_id.id))
                 else:
                     self.assertNotIn('cids', response.request._cookies)
+
+
+@tagged("-at_install", "post_install", "multi_company")
+class TestMultiCompanyThreadData(MailCommon, HttpCase):
+    def test_mail_thread_data_follower(self):
+        partner_portal = self.env["res.partner"].create(
+            {"company_id": self.company_3.id, "name": "portal partner"}
+        )
+        record = self.env["mail.test.multi.company"].create({"name": "Multi Company Record"})
+        record.message_subscribe(partner_ids=partner_portal.ids)
+        with self.assertRaises(UserError):
+            partner_portal.with_user(self.user_employee_c2).check_access_rule("read")
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        data = self.make_jsonrpc_request(
+            "/mail/thread/data",
+            {
+                "thread_id": record.id,
+                "thread_model": "mail.test.multi.company",
+                "request_list": ["followers"],
+            },
+        )
+        self.assertEqual(len(data["Follower"]), 1)
+        self.assertEqual(data["Follower"][0]["partner"]["id"], partner_portal.id)

@@ -513,7 +513,9 @@ GROUP BY fol.id%s%s""" % (
         return new, update
 
     def _to_store(self, store: Store):
-        store.add(self.partner_id)
+        # sudo: res.partner - can read partners of found followers, in particular allows
+        # by-passing multi-company ACL for portal partners
+        store.add(self.partner_id.sudo())
         for follower in self:
             store.add(
                 "Follower",
