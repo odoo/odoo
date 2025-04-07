@@ -252,6 +252,10 @@ class TestClocFields(test_cloc.TestClocCustomization):
             archive.writestr('test_imported_module/static/src/js/test.scss', test_cloc.SCSS_TEST)
             archive.writestr('test_imported_module/static/src/js/test.xml', VALID_XML)
             archive.writestr('test_imported_module/data/test.xml', VALID_XML_2)
+
+            # include a file at zero-depth under static/ to test matching of '**/*'
+            archive.writestr('test_imported_module/static/dummy.js', test_cloc.JS_TEST)
+
         # Import test module
         self.env['ir.module.module']._import_zipfile(stream)
 
