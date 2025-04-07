@@ -17,6 +17,7 @@ import time
 import threading
 
 from collections import namedtuple
+from collections.abc import Iterable
 from email import message_from_string
 from email.message import EmailMessage
 from xmlrpc import client as xmlrpclib
@@ -165,6 +166,13 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_is_follower(self, operator, operand):
+        if not (self.env.su or self.env.user._is_internal()):
+            user_partner = self.env.user.partner_id
+            allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
+            operand_values = operand if isinstance(operand, Iterable) else [operand]
+            if not allow_partner_ids.issuperset(operand_values):
+                raise AccessError(self.env._("Portal users can only filter threads by themselves as followers."))
+
         followers = self.env['mail.followers'].sudo().search_fetch(
             [('res_model', '=', self._name), ('partner_id', '=', self.env.user.partner_id.id)],
             ['res_id'],
@@ -405,18 +413,6 @@ class MailThread(models.AbstractModel):
             return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
 
         return super().get_empty_list_help(help_message)
-
-    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
-        if self.env.su or self.env.user._is_internal():
-            return super()._condition_to_sql(alias, fname, operator, value, query)
-        if fname != 'message_partner_ids':
-            return super()._condition_to_sql(alias, fname, operator, value, query)
-        user_partner = self.env.user.partner_id
-        allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
-        operand = value if isinstance(value, (list, tuple)) else [value]
-        if not allow_partner_ids.issuperset(operand):
-            raise AccessError("Portal users can only filter threads by themselves as followers.")
-        return super(MailThread, self.sudo())._condition_to_sql(alias, fname, operator, value, query)
 
     # ------------------------------------------------------
     # MODELS / CRUD HELPERS
