@@ -824,3 +824,8 @@ class SaleOrder(models.Model):
 
         if not self.only_services and not self.carrier_id:
             raise ValidationError(_("No shipping method is selected."))
+
+    def _recompute_cart(self):
+        """Recompute taxes and prices for the current cart."""
+        self._recompute_taxes()
+        self._recompute_prices()

@@ -793,8 +793,8 @@ class Website(models.Model):
         )
         return steps
 
-    def _get_checkout_step_values(self, href=None):
-        href = href or request.httprequest.path
+    def _get_checkout_step_values(self):
+        href = request.httprequest.path
         # /shop/address is associated with the delivery step
         if href == '/shop/address':
             href = '/shop/checkout'

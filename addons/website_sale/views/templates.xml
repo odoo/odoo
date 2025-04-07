@@ -2668,7 +2668,7 @@
                                 <a role="button"
                                    name="website_sale_main_button"
                                    class="s_website_form_send btn btn-primary order-lg-3 w-100 w-lg-auto ms-lg-auto"
-                                   href="/shop/confirm_order">
+                                   href="/shop/payment">
                                     Continue checkout
                                     <i class="fa fa-angle-right ms-2 fw-light"/>
                                 </a>
@@ -3145,7 +3145,7 @@
                             not website.is_public_user()) and show_shorter_cart_summary"
                     t-call="payment.express_checkout"
                 />
-                <t t-if="current_website_checkout_step_href == '/shop/confirm_order'">
+                <t t-if="current_website_checkout_step_href == '/shop/payment'">
                     <div t-if="not errors and not website_sale_order.amount_total"
                          name="o_website_sale_free_cart">
                         <form name="o_wsale_confirm_order"
