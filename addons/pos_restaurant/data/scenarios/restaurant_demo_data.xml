@@ -548,6 +548,34 @@
             />
         </record>
 
+        <record id="sushi_choice" model="product.combo">
+            <field name="name">Sushi Choice</field>
+            <field name="qty_free">2</field>
+            <field name="qty_max">4</field>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.clear(),
+                    Command.create({
+                        'product_id': ref('pos_food_maki'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('pos_food_salmon'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('pos_food_chirashi'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('pos_food_temaki'),
+                        'extra_price': 1,
+                    }),
+                ]"
+            />
+        </record>
+
         <record id="drink_combo" model="product.combo">
             <field name="name">Drinks choice</field>
             <field
@@ -586,6 +614,21 @@
             <field name="categ_id" ref="point_of_sale.product_category_food"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
+            <field name="supplier_taxes_id" eval="[(5,)]"/>
+        </record>
+
+        <record id="sushi_drink_combo" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">20</field>
+            <field name="name">Sushi Lunch Combo</field>
+            <field name="type">combo</field>
+            <field name="purchase_ok">False</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="pos_restaurant/static/img/sushi-combo.png"/>
+            <field name="combo_ids" eval="[(6, 0, [ref('drink_combo'), ref('sushi_choice')])]"/>
+            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
+            <field name="taxes_id" eval="[(5,)]"/>
             <field name="supplier_taxes_id" eval="[(5,)]"/>
         </record>
     </data>
