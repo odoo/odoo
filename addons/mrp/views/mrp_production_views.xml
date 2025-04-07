@@ -62,13 +62,7 @@
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
-                    <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
-                    <field name="components_availability" options='{"lazy": true}'
-                        invisible="state not in ['confirmed', 'progress']"
-                        optional="show"
-                        decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
-                        decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
-                        decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
+                    <widget name="mrp_lazy_column_widget"/>
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="product_uom_id" string="UoM" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
