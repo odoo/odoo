@@ -1,4 +1,4 @@
-import { MediaDialog } from "../main/media/media_dialog/media_dialog";
+import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 
 export class CustomMediaDialog extends MediaDialog {
     async save() {

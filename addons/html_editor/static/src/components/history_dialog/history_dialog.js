@@ -6,7 +6,7 @@ import { memoize } from "@web/core/utils/functions";
 import { Component, onMounted, useState, markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { HtmlViewer } from "@html_editor/fields/html_viewer";
+import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 
 const { DateTime } = luxon;
