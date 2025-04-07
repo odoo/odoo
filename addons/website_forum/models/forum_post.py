@@ -316,8 +316,10 @@ class Post(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if 'content' in vals and vals.get('forum_id'):
-                vals['content'] = self._update_content(vals['content'], vals['forum_id'])
+            forum_id = vals.get('forum_id') or self._context.get('default_forum_id')
+            if ('content' in vals or 'default_content' in self._context) and forum_id:
+                content = vals.get('content') or self._context.get('default_content')
+                vals['content'] = self._update_content(content, forum_id)
 
         posts = super(Post, self.with_context(mail_create_nolog=True)).create(vals_list)
 
