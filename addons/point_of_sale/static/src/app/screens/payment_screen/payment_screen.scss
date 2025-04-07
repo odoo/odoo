@@ -46,3 +46,13 @@
   border: $border-width solid $o-component-active-border;
   color: $o-component-active-color;
 }
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(30px); }
+  50% { opacity: 0.5; transform: translateY(0px); }
+  100% { opacity: 1; }
+}
+
+.fade-effect {
+  animation: fadeInOut 1000ms ease-in-out;
+}
