@@ -17,6 +17,12 @@
                     readonly="state == 'done'"
                     domain="[('company_id', '=', company_id), ('move_finished_ids.is_in', '!=', False)]"/>
             </field>
+            <button name="action_view_pickings" position="after">
+                <button class="oe_stat_button" name="action_view_mrp_productions" icon="fa-wrench"
+                    type="object" invisible="mrp_productions_count == 0">
+                    <field name="mrp_productions_count" string="Manufacturing" widget="statinfo"/>
+                </button>
+            </button>
         </field>
     </record>
 </odoo>

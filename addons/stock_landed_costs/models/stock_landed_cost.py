@@ -41,6 +41,7 @@ class StockLandedCost(models.Model):
     picking_ids = fields.Many2many(
         'stock.picking', string='Transfers',
         copy=False)
+    pickings_count = fields.Integer(compute='_compute_pickings_count')
     cost_lines = fields.One2many(
         'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
         copy=True)
@@ -72,6 +73,11 @@ class StockLandedCost(models.Model):
     def _compute_total_amount(self):
         for cost in self:
             cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
+
+    @api.depends('picking_ids')
+    def _compute_pickings_count(self):
+        for cost in self:
+            cost.pickings_count = len(cost.picking_ids)
 
     @api.onchange('target_model')
     def _onchange_target_model(self):
@@ -241,6 +247,21 @@ class StockLandedCost(models.Model):
         for key, value in towrite_dict.items():
             AdjustementLines.browse(key).write({'additional_landed_cost': value})
         return True
+
+    def action_view_pickings(self):
+        self.ensure_one()
+        action = {
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'view_mode': 'list,form',
+        }
+        if len(self.picking_ids) == 1:
+            action['res_id'] = self.picking_ids.id
+            action['view_mode'] = 'form'
+        elif self.picking_ids:
+            action['name'] = self.env._("Transfers")
+            action['domain'] = [('id', 'in', self.picking_ids.ids)]
+        return action
 
     def _get_targeted_move_ids(self):
         return self.picking_ids.move_ids
