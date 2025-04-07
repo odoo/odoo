@@ -480,7 +480,6 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         bill.action_post()
         action = bill.button_create_landed_costs()
         lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
-        lc_form.picking_ids.add(receipt)
         lc = lc_form.save()
         lc.button_validate()
         self.assertEqual(self.product1.standard_price, 2)
@@ -606,7 +605,6 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         bill.action_post()
         action = bill.button_create_landed_costs()
         lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
-        lc_form.picking_ids.add(receipt)
         lc = lc_form.save()
         lc.button_validate()
         self.assertEqual(product.standard_price, 2.35)
@@ -668,7 +666,6 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
         action = bill.button_create_landed_costs()
         lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
-        lc_form.picking_ids.add(receipt)
         lc = lc_form.save()
         lc.button_validate()
 
