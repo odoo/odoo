@@ -345,8 +345,17 @@ class ChatbotScriptStep(models.Model):
                 # first post the message of the step (if we have one)
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
-            # next, add the human_operator to the channel and post a "Operator joined the channel" notification
-            discuss_channel.with_user(human_operator).sudo().add_members(human_operator.partner_id.ids, open_chat_window=True)
+            # next, add the human_operator to the channel
+            discuss_channel.with_user(human_operator).sudo().add_members(human_operator.partner_id.ids, open_chat_window=True, post_joined_message=False)
+            # post a "Operator joined the channel" notification
+            discuss_channel.message_post(
+                author_id=human_operator.partner_id.id,
+                body=Markup('<div class="o_mail_notification">%s</div>') % _(
+                    '%s has joined',
+                    human_operator.livechat_username or human_operator.partner_id.name
+                ),
+                subtype_xmlid='mail.mt_comment'
+            )
 
             # finally, rename the channel to include the operator's name
             discuss_channel.sudo().name = ' '.join([
