@@ -526,7 +526,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_17_website_edit_menus(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus', login='admin')
 
-    @unittest.skip
     def test_18_website_snippets_menu_tabs(self):
         self.start_tour('/', 'website_snippets_menu_tabs', login='admin')
 
