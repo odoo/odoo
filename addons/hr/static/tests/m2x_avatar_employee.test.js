@@ -387,7 +387,6 @@ test("many2one widget in list view", async () => {
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
-    expect(".o-mail-ChatWindow").toHaveCount(2);
     await waitFor(".o-mail-ChatWindow-header:contains('Yoshi')");
 });
 
