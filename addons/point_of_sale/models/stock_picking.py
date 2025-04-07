@@ -128,7 +128,7 @@ class StockPicking(models.Model):
             if rec.pos_order_id.shipping_date and not rec.pos_order_id.to_invoice:
                 cost_per_account = defaultdict(lambda: 0.0)
                 for line in rec.pos_order_id.lines:
-                    if not line.product_id.is_storable or line.product_id.valuation != 'real_time':
+                    if not line._eligible_for_valuation():
                         continue
                     accounts = line.product_id._get_product_accounts()
                     out = accounts['stock_output']
