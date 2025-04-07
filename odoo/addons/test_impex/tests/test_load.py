@@ -141,14 +141,13 @@ class test_boolean_field(ImporterCase):
         ], values(records))
 
     def test_falses(self):
-        for lang in ['fr_FR', 'de_DE', 'ru_RU', 'nl_BE', 'lt_LT']:
-            self.env['res.lang']._activate_lang(lang)
+        self.env['res.lang']._activate_lang('fr_BE')
+        fr_python_translations = code_translations.get_python_translations('base', 'fr_BE')
+        self.addCleanup(code_translations.python_translations.pop, ('base', 'fr_BE'))
+        fr_python_translations['false'] = 'faux'
+        fr_python_translations['no'] = 'non'
         falses = [[u'0'], [u'no'], [u'false'], [u'FALSE'], [u''],
-                  [u'faux'], # false, fr
-                  [u'falsch'], # false, de
-                  [u'ложь'], # no, ru
-                  [u'onwaar'], # false, nl
-                  [u'ne'], # false, lt,
+                  ['faux'], ['non']
         ]
 
         result = self.import_(['value'], falses)
