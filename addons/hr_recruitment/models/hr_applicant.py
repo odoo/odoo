@@ -8,6 +8,7 @@ from datetime import datetime
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools import clean_context
 from odoo.tools.translate import _
 
 
@@ -651,7 +652,7 @@ class HrApplicant(models.Model):
 
     def create_employee_from_applicant(self):
         self.ensure_one()
-        action = self.candidate_id.create_employee_from_candidate()
+        action = self.candidate_id.with_context(clean_context(self.env.context)).create_employee_from_candidate()
         employee = self.env['hr.employee'].browse(action['res_id'])
         employee.write({
             'job_id': self.job_id.id,
