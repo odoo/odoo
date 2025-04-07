@@ -21,6 +21,8 @@ export function usePartnerAutocomplete() {
     const notification = useService("notification");
     const orm = useService("orm");
 
+    let lastNoResultsQuery = null;
+
     function sanitizeVAT(value) {
         return value ? value.replace(/[^A-Za-z0-9]/g, '') : '';
     }
@@ -225,6 +227,13 @@ export function usePartnerAutocomplete() {
     async function getSuggestions(value, isVAT, queryCountryId) {
         const method = isVAT ? 'autocomplete_by_vat' : 'autocomplete_by_name';
 
+        // Optimization: if the search query starts with the same content as a previous query for
+        // which there was no results, there won't be any results for the current query.
+        // E.g., if there is no results for query "abc123", there won't be any results for query "abc1234".
+        if (!isVAT && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
+            return [];
+        }
+
         const prom = orm.silent.call(
             'res.partner',
             method,
@@ -232,6 +241,11 @@ export function usePartnerAutocomplete() {
         );
 
         const suggestions = await keepLastOdoo.add(prom);
+
+        if (!isVAT && suggestions.length === 0) {
+            lastNoResultsQuery = value;
+        }
+
         await Promise.all(suggestions.map(async (suggestion) => {
             suggestion.query = value;  // Save queried value (name, VAT) for later
             suggestion.logoUrl = await getClearbitLogoUrl(suggestion);
