@@ -791,6 +791,13 @@ class PosSession(models.Model):
             or self.env['account.account']
         )
 
+    def _prepare_account_move_vals(self):
+        return {
+            'journal_id': self.config_id.journal_id.id,
+            'date': fields.Date.context_today(self),
+            'ref': self.name,
+        }
+
     def _create_account_move(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         """ Create account.move and account.move.line records for this session.
 
@@ -798,11 +805,7 @@ class PosSession(models.Model):
             - setting self.move_id to the created account.move record
             - reconciling cash receivable lines, invoice receivable lines and stock output lines
         """
-        account_move = self.env['account.move'].create({
-            'journal_id': self.config_id.journal_id.id,
-            'date': fields.Date.context_today(self),
-            'ref': self.name,
-        })
+        account_move = self.env['account.move'].create(self._prepare_account_move_vals())
         self.write({'move_id': account_move.id})
 
         data = {'bank_payment_method_diffs': bank_payment_method_diffs or {}}
