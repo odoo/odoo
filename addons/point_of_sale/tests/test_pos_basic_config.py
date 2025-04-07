@@ -613,7 +613,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         ))
 
         # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order'].create(orders)
 
         self.assertEqual(orders[0]['amount_return'], 0, msg='The amount return should be 0')
         self.assertEqual(orders[1]['amount_return'], 0, msg='The amount return should be 0')
@@ -826,7 +826,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             self.assertLogs('odoo.addons.point_of_sale.models.pos_order', level='DEBUG') as cm,
             unittest.mock.patch('odoo.addons.point_of_sale.models.pos_order.randrange', return_value=1996)
         ):
-            res = self.env['pos.order'].sync_from_ui([order_data])
+            res = self.env['pos.order'].create([order_data])
             # Basic check for logs on order synchronization
             order_log_str = self.env['pos.order']._get_order_log_representation(order_data)
             odoo_order_id = res['pos.order'][0]['id']
@@ -835,7 +835,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             self.assertTrue(cm.output[1].startswith(f'DEBUG:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 processing order {order_log_str} order full data: '))
             self.assertEqual(cm.output[2], f'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 order {order_log_str} created pos.order #{odoo_order_id}')
             self.assertEqual(cm.output[3], 'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 finished')
-            
+
         session.post_closing_cash_details(amount_paid)
         session.close_session_from_ui()
 
@@ -881,7 +881,7 @@ class TestPoSBasicConfig(TestPoSCommon):
 
             order_data = self.create_ui_order_data([(self.product3, pos_data['p_qty'])])
             pos_data['amount_paid'] += order_data['amount_paid']
-            self.env['pos.order'].sync_from_ui([order_data])
+            self.env['pos.order'].create([order_data])
 
             session.post_closing_cash_details(pos_data['amount_paid'])
             session.close_session_from_ui()
@@ -1116,15 +1116,15 @@ class TestPoSBasicConfig(TestPoSCommon):
             return [p['product_variant_ids'][0] for p in available_top_product[:count]]
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=1))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product1, 1)])])
+        self.env['pos.order'].create([self.create_ui_order_data([(self.product1, 1)])])
         self.assertEqual(get_top_product_ids(1), [self.product1.id])
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=2))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product2, 1)])])
+        self.env['pos.order'].create([self.create_ui_order_data([(self.product2, 1)])])
         self.assertEqual(get_top_product_ids(2), [self.product1.id, self.product2.id])
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=3))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
+        self.env['pos.order'].create([self.create_ui_order_data([(self.product3, 1)])])
         self.assertEqual(get_top_product_ids(3), [self.product1.id, self.product2.id, self.product3.id])
 
     def test_closing_entry_by_product(self):
@@ -1188,7 +1188,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         ))
 
         # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order'].create(orders)
         # close the session
         self.pos_session.action_pos_session_validate()
 
@@ -1238,7 +1238,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         ))
 
         # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order'].create(orders)
         # close the session
         self.pos_session.action_pos_session_validate()
 
@@ -1267,7 +1267,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             [(self.product1, 5), (self.product0, 10)],
             payments=[(self.bank_pm1, 50)]
         ))
-        self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order'].create(orders)
         self.pos_session.action_pos_session_validate()
 
         # open new session & create orders
@@ -1281,7 +1281,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             [(self.product4, 1), (self.product2, 5)],
             payments=[(self.bank_pm1, 109.96)]
         ))
-        self.env['pos.order'].sync_from_ui(orders2)
+        self.env['pos.order'].create(orders2)
         self.pos_session.action_pos_session_validate()
 
         pos_orders = self.env['pos.order'].search([])

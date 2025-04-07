@@ -120,29 +120,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.clickReview(),
             ProductScreen.clickControlButton("Cancel Order"),
             Chrome.noFloatingOrder("006"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("OrderModificationAfterValidationError", {
-    checkDelay: 50,
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Test Product", true, "1"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
-            PaymentScreen.clickValidate(),
-
-            // Dialog showing the error
-            Dialog.confirm(),
-
-            PaymentScreen.clickBack(),
-            { ...ProductScreen.back(), isActive: ["mobile"] },
-            ProductScreen.isShown(),
-
-            // Allow order changes after the error
-            ProductScreen.clickDisplayedProduct("Test Product", true, "2"),
+            Chrome.endTour(),
         ].flat(),
 });
 

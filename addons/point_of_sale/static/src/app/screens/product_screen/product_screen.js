@@ -5,7 +5,7 @@ import { useLongPress } from "@point_of_sale/app/hooks/long_press_hook";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, useEffect, useState, onWillRender, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, useEffect, useState, onWillRender } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {
@@ -26,8 +26,6 @@ import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optional_products_popup/optional_products_popup";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { debounce } from "@web/core/utils/timing";
-
-const { DateTime } = luxon;
 
 export class ProductScreen extends Component {
     static template = "point_of_sale.ProductScreen";
@@ -63,7 +61,6 @@ export class ProductScreen extends Component {
         onMounted(() => {
             this.currentOrder.deselectOrderline();
             this.pos.openOpeningControl();
-            this.pos.addPendingOrder([this.currentOrder.id]);
             // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
             // We don't do this in the `mounted` lifecycle method because it is called before
             // the callbacks in `onMounted` hook.
@@ -74,20 +71,6 @@ export class ProductScreen extends Component {
             // If its a shared order it can be paid from another POS
             if (this.currentOrder?.state !== "draft") {
                 this.pos.addNewOrder();
-            }
-        });
-
-        onWillUnmount(async () => {
-            if (
-                this.pos.config.use_presets &&
-                this.currentOrder &&
-                this.currentOrder.preset_id &&
-                this.currentOrder.preset_time
-            ) {
-                if (this.currentOrder.preset_time > DateTime.now()) {
-                    this.pos.addPendingOrder([this.currentOrder.id]);
-                    await this.pos.syncAllOrders();
-                }
             }
         });
 
@@ -296,9 +279,6 @@ export class ProductScreen extends Component {
     }
     displayAllControlPopup() {
         this.dialog.add(ControlButtonsPopup);
-    }
-    get selectedOrderlineQuantity() {
-        return this.currentOrder.getSelectedOrderline()?.getQuantityStr();
     }
     get selectedOrderlineDisplayName() {
         return this.currentOrder.getSelectedOrderline()?.getFullProductName();

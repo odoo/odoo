@@ -14,10 +14,10 @@ class PosConfig(models.Model):
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     default_screen = fields.Selection([('tables', 'Tables'), ('register', 'Register')], string='Default Screen', default='tables')
 
-    def _get_forbidden_change_fields(self):
-        forbidden_keys = super(PosConfig, self)._get_forbidden_change_fields()
-        forbidden_keys.append('floor_ids')
-        return forbidden_keys
+    def _configs_that_share_data(self):
+        self.ensure_one()
+        configs_that_share_floors = self.floor_ids.mapped('pos_config_ids') - self
+        return super()._configs_that_share_data() + configs_that_share_floors
 
     @api.model_create_multi
     def create(self, vals_list):

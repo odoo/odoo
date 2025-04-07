@@ -24,7 +24,11 @@ export class CustomerDisplayPosAdapter {
             });
         } else {
             this.channel.postMessage(JSON.parse(JSON.stringify(this.data)));
-            pos.data
+            // we use use orm.call instead of data.call because data.call
+            // interferes with the `flush`
+            // TODO: use the data from `flush` instead of calling this
+            // method just for the customer display
+            pos.env.services.orm
                 .call("pos.config", "update_customer_display", [
                     [pos.config.id],
                     this.data,

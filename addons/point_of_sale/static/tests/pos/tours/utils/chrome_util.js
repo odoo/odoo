@@ -42,10 +42,16 @@ export function doCashMove(amount, reason) {
     ];
 }
 export function endTour() {
-    return {
-        content: "Last tour step that avoids error mentioned in commit 443c209",
-        trigger: "body",
-    };
+    return [
+        {
+            content: "wait for the queue to be flushed",
+            trigger: ".queue-length:contains(0)",
+        },
+        {
+            content: "Last tour step that avoids error mentioned in commit 443c209",
+            trigger: "body",
+        },
+    ];
 }
 export function isSyncStatusConnected() {
     return {

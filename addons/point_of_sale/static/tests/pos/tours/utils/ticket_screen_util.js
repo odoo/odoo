@@ -9,6 +9,7 @@ export function clickDiscard() {
         run: "click",
     };
 }
+// FIXME: this function sometimes selects the order with a certain login number instead !
 export function selectOrder(orderName) {
     return [
         {

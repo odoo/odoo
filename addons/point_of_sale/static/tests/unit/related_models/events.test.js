@@ -33,7 +33,7 @@ describe(`Related models Events`, () => {
     test("Loading data", () => {
         const { models } = createRelatedModels(modelDefs, {}, modelOpts);
 
-        let orderCreates = [];
+        const orderCreates = [];
         let orderUpdates = [];
 
         models["pos.order"].addEventListener("create", (data) => {
@@ -49,8 +49,12 @@ describe(`Related models Events`, () => {
         expect(orderCreates.length).toBe(1);
         expect(orderCreates[0].ids).toEqual([order1.id]);
 
-        orderCreates = [];
+        const orderLoads = [];
         orderUpdates = [];
+
+        models["pos.order"].addEventListener("load", (data) => {
+            orderLoads.push(data);
+        });
 
         models.connectNewData({
             "pos.order": [
@@ -68,8 +72,8 @@ describe(`Related models Events`, () => {
         });
 
         expect(orderUpdates.length).toBe(1);
-        expect(orderCreates.length).toBe(1);
-        expect(orderCreates[0].ids).toEqual([2, 3]);
+        expect(orderLoads.length).toBe(1);
+        expect(orderLoads[0].ids).toEqual([2, 3]);
     });
 
     test("Connecting new data", () => {
@@ -83,7 +87,7 @@ describe(`Related models Events`, () => {
             orderUpdates.push(data);
         });
 
-        models["pos.order.line"].addEventListener("create", (data) => {
+        models["pos.order.line"].addEventListener("load", (data) => {
             lineCreates.push(data);
         });
 

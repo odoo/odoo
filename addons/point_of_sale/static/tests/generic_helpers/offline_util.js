@@ -1,5 +1,7 @@
 import { run } from "@point_of_sale/../tests/generic_helpers/utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import { browser } from "@web/core/browser/browser";
 
 const originalFetch = window.fetch;
 const originalSend = XMLHttpRequest.prototype.send;
@@ -7,27 +9,30 @@ const originalConsoleError = console.error;
 const originalNavigatorOnLine = navigator.onLine;
 
 export function setOfflineMode() {
-    return run(() => {
-        window.fetch = () => {
-            throw new ConnectionLostError();
-        };
-        XMLHttpRequest.prototype.send = () => {
-            throw new ConnectionLostError();
-        };
-        console.error = (...args) => {
-            const message = args[0] instanceof Error ? args[0].message : args[0];
-            if (typeof message === "string" && message.includes("ConnectionLostError")) {
-                console.info("Connection lost error handled in offline mode:", ...args);
-            } else {
-                originalConsoleError.apply(console, args);
-            }
-
+    return [
+        run(() => {
+            window.fetch = () => {
+                throw new ConnectionLostError();
+            };
+            XMLHttpRequest.prototype.send = () => {
+                throw new ConnectionLostError();
+            };
+            console.error = (...args) => {
+                const message = args[0] instanceof Error ? args[0].message : args[0];
+                if (typeof message === "string" && message.includes("ConnectionLostError")) {
+                    console.info("Connection lost error handled in offline mode:", ...args);
+                } else {
+                    originalConsoleError.apply(console, args);
+                }
+            };
             Object.defineProperty(navigator, "onLine", {
                 get: () => false,
                 configurable: true,
             });
-        };
-    }, "Offline mode is now enabled");
+            browser.dispatchEvent(new Event("offline"));
+        }, "Offline mode is now enabled"),
+        Dialog.confirm("Continue with limited functionality"),
+    ];
 }
 
 export function setOnlineMode() {

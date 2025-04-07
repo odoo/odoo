@@ -35,13 +35,13 @@ class PosOrder(models.Model):
     # an error is raised, asking the user to open a session.
     def _get_valid_session(self, order):
         PosSession = self.env['pos.session']
-        closed_session = PosSession.browse(order['session_id'])
+        closed_session = self.env['pos.session'].browse(order['session_id'])
 
-        _logger.warning('Session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
-                        closed_session.name,
-                        closed_session.id,
-                        order['uuid'],
-                        order['amount_total'])
+        # _logger.warning('Session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
+        #                 closed_session.name,
+        #                 closed_session.id,
+        #                 order['uuid'],
+        #                 order['amount_total'])
 
         open_session = PosSession.search([
             ('state', 'not in', ('closed', 'closing_control')),
@@ -56,72 +56,7 @@ class PosOrder(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('state', '=', 'draft'), ('config_id', '=', data['pos.config'][0]['id'])]
-
-    @api.model
-    def _process_order(self, order, existing_order):
-        """Create or update an pos.order from a given dictionary.
-
-        :param dict order: dictionary representing the order.
-        :param existing_order: order to be updated or False.
-        :type existing_order: pos.order.
-        :returns: id of created/updated pos.order
-        :rtype: int
-        """
-        draft = True if order.get('state') == 'draft' else False
-        pos_session = self.env['pos.session'].browse(order['session_id'])
-        if pos_session.state == 'closing_control' or pos_session.state == 'closed':
-            order['session_id'] = self._get_valid_session(order).id
-
-        if order.get('partner_id'):
-            partner_id = self.env['res.partner'].browse(order['partner_id'])
-            if not partner_id.exists():
-                order.update({
-                    "partner_id": False,
-                    "to_invoice": False,
-                })
-
-        pos_order = False
-        record_uuid_mapping = order.pop('relations_uuid_mapping', {})
-
-        if not existing_order:
-            pos_order = self.create({
-                **{key: value for key, value in order.items() if key != 'name'},
-            })
-            pos_order = pos_order.with_company(pos_order.company_id)
-        else:
-            pos_order = existing_order
-
-            # If the order is belonging to another session, it must be moved to the current session first
-            if order.get('session_id') and order['session_id'] != pos_order.session_id.id:
-                pos_order.write({'session_id': order['session_id']})
-
-            # Save lines and payments before to avoid exception if a line is deleted
-            # when vals change the state to 'paid'
-            for field in ['lines', 'payment_ids']:
-                if order.get(field):
-                    pos_order.write({field: order.get(field)})
-                    order[field] = []
-
-            del order['uuid']
-            del order['access_token']
-            pos_order.write(order)
-
-        for model_name, mapping in record_uuid_mapping.items():
-            owner_records = self.env[model_name].search([('uuid', 'in', mapping.keys())])
-            for uuid, fields in mapping.items():
-                for name, uuids in fields.items():
-                    params = self.env[model_name]._fields[name]
-                    if params.type in ['one2many', 'many2many']:
-                        records = self.env[params.comodel_name].search([('uuid', 'in', uuids)])
-                        owner_records.filtered(lambda r: r.uuid == uuid).write({name: [Command.link(r.id) for r in records]})
-                    else:
-                        record = self.env[params.comodel_name].search([('uuid', '=', uuids)])
-                        owner_records.filtered(lambda r: r.uuid == uuid).write({name: record.id})
-
-        self = self.with_company(pos_order.company_id)
-        self._process_payment_lines(order, pos_order, pos_session, draft)
-        return pos_order._process_saved_order(draft)
+        return ['&', ('config_id', 'in', [c['id'] for c in data['pos.config']]), ('state', '=', 'draft')]
 
     def _process_saved_order(self, draft):
         self.ensure_one()
@@ -138,9 +73,6 @@ class PosOrder(models.Model):
             self._create_order_picking()
             self._compute_total_cost_in_real_time()
 
-        if self.to_invoice and self.state == 'paid':
-            self._generate_pos_order_invoice()
-
         return self.id
 
     def _clean_payment_lines(self):
@@ -149,40 +81,6 @@ class PosOrder(models.Model):
 
     def _compute_amount_paid(self):
         return sum(self.payment_ids.mapped('amount'))
-
-    def _process_payment_lines(self, pos_order, order, pos_session, draft):
-        """Create account.bank.statement.lines from the dictionary given to the parent function.
-
-        If the payment_line is an updated version of an existing one, the existing payment_line will first be
-        removed before making a new one.
-        :param pos_order: dictionary representing the order.
-        :type pos_order: dict.
-        :param order: Order object the payment lines should belong to.
-        :type order: pos.order
-        :param pos_session: PoS session the order was created in.
-        :type pos_session: pos.session
-        :param draft: Indicate that the pos_order is not validated yet.
-        :type draft: bool.
-        """
-        prec_acc = order.currency_id.decimal_places
-
-        # Recompute amount paid because we don't trust the client
-        order.write({'amount_paid': order._compute_amount_paid()})
-
-        if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
-            cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
-            if not cash_payment_method:
-                raise UserError(_("No cash statement found for this session. Unable to record returned cash."))
-            return_payment_vals = {
-                'name': _('return'),
-                'pos_order_id': order.id,
-                'amount': -pos_order['amount_return'],
-                'payment_date': fields.Datetime.now(),
-                'payment_method_id': cash_payment_method.id,
-                'is_change': True,
-            }
-            order.add_payment(return_payment_vals)
-            order._compute_prices()
 
     def _prepare_tax_base_line_values(self):
         """ Convert pos order lines into dictionaries that would be used to compute taxes later.
@@ -279,16 +177,16 @@ class PosOrder(models.Model):
         default=lambda self: self.env.uid,
     )
     amount_difference = fields.Monetary(string='Difference', readonly=True)
-    amount_tax = fields.Monetary(string='Taxes', readonly=True, required=True)
-    amount_total = fields.Monetary(string='Total', readonly=True, required=True)
-    amount_paid = fields.Monetary(string='Paid', required=True)
-    amount_return = fields.Monetary(string='Returned', required=True, readonly=True)
+    amount_tax = fields.Monetary(string='Taxes', readonly=True, required=True, default=0)
+    amount_total = fields.Monetary(string='Total', readonly=True, required=True, default=0)
+    amount_paid = fields.Monetary(string='Paid', required=True, default=0)
+    amount_return = fields.Monetary(string='Returned', required=True, readonly=True, default=0)
     margin = fields.Monetary(string="Margin", compute='_compute_margin')
     margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
     is_total_cost_computed = fields.Boolean(compute='_compute_is_total_cost_computed',
         help="Allows to know if all the total cost of the order lines have already been computed")
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', copy=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, index=True)
+    company_id = fields.Many2one('res.company', string='Company', related="config_id.company_id", store=True, readonly=True, index=True)
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
@@ -365,6 +263,11 @@ class PosOrder(models.Model):
         for order in self:
             if order.session_id:
                 order.config_id = order.session_id.config_id
+
+    @api.constrains('lines')
+    def _ensure_all_refunded_products_are_from_the_same_order(self):
+        if len(self.lines.refunded_orderline_id.order_id) > 1:
+            raise ValidationError(_('Refunded products must be from the same order'))
 
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):
@@ -492,8 +395,10 @@ class PosOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
+        for vals in [vals for vals in vals_list if vals.get('session_id')]:
             session = self.env['pos.session'].browse(vals['session_id'])
+            if session.state in ['closing_control', 'closed']:
+                vals['session_id'] = self._get_valid_session(vals).id
             vals = self._complete_values_from_session(session, vals)
         return super().create(vals_list)
 
@@ -513,6 +418,9 @@ class PosOrder(models.Model):
 
     def write(self, vals):
         for order in self:
+            pos_session = order.session_id
+            if vals.get('state') != 'done' and (pos_session.state == 'closing_control' or pos_session.state == 'closed'):
+                order['session_id'] = self._get_valid_session(order).id
             if vals.get('state') and vals['state'] == 'paid' and order.name == '/':
                 session = self.env['pos.session'].browse(vals['session_id']) if not self.session_id and vals.get('session_id') else False
                 vals['name'] = self._compute_order_name(session)
@@ -521,6 +429,7 @@ class PosOrder(models.Model):
                         country=order.partner_id.country_id or self.env.company.country_id)
             if vals.get('has_deleted_line') is not None and self.has_deleted_line:
                 del vals['has_deleted_line']
+            # self._process_payment_lines(vals.get('amount_return'), order, order.session_id , order.state == 'draft')
 
         list_line = self._create_pm_change_log(vals)
         res = super().write(vals)
@@ -535,6 +444,14 @@ class PosOrder(models.Model):
                 if order.nb_print > 0 and vals.get('payment_ids'):
                     raise UserError(_('You cannot change the payment of a printed order.'))
 
+            if order.state != 'draft':
+                order._create_order_picking()
+                order._compute_total_cost_in_real_time()
+
+            # order.write({'amount_paid': order._compute_amount_paid()})
+            # self = self.with_company(order.company_id)
+            # order._process_saved_order(order.state == 'draft')
+
         if len(list_line) > 0:
             body = _("Payment changes:")
             body += self._markup_list_message(list_line)
@@ -543,6 +460,40 @@ class PosOrder(models.Model):
                     order.message_post(body=body)
 
         return res
+
+    def _process_payment_lines(self, amount_return, order, pos_session, draft):
+        """Create account.bank.statement.lines from the dictionary given to the parent function.
+        If the payment_line is an updated version of an existing one, the existing payment_line will first be
+        removed before making a new one.
+        :param pos_order: dictionary representing the order.
+        :type pos_order: dict.
+        :param order: Order object the payment lines should belong to.
+        :type order: pos.order
+        :param pos_session: PoS session the order was created in.
+        :type pos_session: pos.session
+        :param draft: Indicate that the pos_order is not validated yet.
+        :type draft: bool.
+        """
+        prec_acc = order.currency_id.decimal_places
+
+        # # Recompute amount paid because we don't trust the client
+        # order.write({'amount_paid': order._compute_amount_paid()})
+
+        if not draft and not float_is_zero(amount_return, prec_acc):
+            cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+            if not cash_payment_method:
+                raise UserError(_("No cash statement found for this session. Unable to record returned cash."))
+            return_payment_vals = {
+                'name': _('return'),
+                'pos_order_id': order.id,
+                'amount': -amount_return,
+                'payment_date': fields.Datetime.now(),
+                'payment_method_id': cash_payment_method.id,
+                'is_change': True,
+            }
+            order.add_payment(return_payment_vals)
+            order._compute_prices()
+
 
     def _create_pm_change_log(self, vals):
         if not vals.get('payment_ids'):
@@ -778,7 +729,7 @@ class PosOrder(models.Model):
             if not abs(diff) <= maxDiff:
                 raise UserError(_("Order %s is not fully paid.", self.name))
 
-        self.write({'state': 'paid'})
+        # self.write({'state': 'paid'})
 
         return True
 
@@ -1075,90 +1026,6 @@ class PosOrder(models.Model):
             'pos.order': today_orders.read(self._load_pos_data_fields(self.config_id.ids[0]), load=False)
         }
 
-    def _get_open_order(self, order):
-        return self.env["pos.order"].search([('uuid', '=', order.get('uuid'))], limit=1)
-
-    @staticmethod
-    def _get_order_log_representation(order):
-        return dict((k, order.get(k)) for k in ("name", "uuid"))
-
-    @api.model
-    def sync_from_ui(self, orders):
-        """ Create and update Orders from the frontend PoS application.
-
-        Create new orders and update orders that are in draft status. If an order already exists with a status
-        different from 'draft' it will be discarded, otherwise it will be saved to the database. If saved with
-        'draft' status the order can be overwritten later by this function.
-
-        :param orders: dictionary with the orders to be created.
-        :type orders: dict.
-        :param draft: Indicate if the orders are meant to be finalized or temporarily saved.
-        :type draft: bool.
-        :Returns: list -- list of db-ids for the created and updated orders.
-        """
-        sync_token = randrange(100_000_000)  # Use to differentiate 2 parallels calls to this function in the logs
-        _logger.info("PoS synchronisation #%d started for PoS orders references: %s", sync_token, [self._get_order_log_representation(order) for order in orders])
-        order_ids = []
-        session_ids = set({order.get('session_id') for order in orders})
-        for order in orders:
-            order_log_name = self._get_order_log_representation(order)
-            _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
-
-            refunded_orders = self._get_refunded_orders(order)
-            if len(refunded_orders) > 1:
-                raise ValidationError(_('You can only refund products from the same order.'))
-            elif len(refunded_orders) == 1:
-                order_ids.append(refunded_orders[0].id)
-
-            existing_order = self._get_open_order(order)
-            if existing_order and existing_order.state == 'draft':
-                order_ids.append(self._process_order(order, existing_order))
-                _logger.info("PoS synchronisation #%d order %s updated pos.order #%d", sync_token, order_log_name, order_ids[-1])
-            elif not existing_order:
-                order_ids.append(self._process_order(order, False))
-                _logger.info("PoS synchronisation #%d order %s created pos.order #%d", sync_token, order_log_name, order_ids[-1])
-            else:
-                # In theory, this situation is unintended
-                # In practice it can happen when "Tip later" option is used
-                order_ids.append(existing_order.id)
-                _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
-
-        # Sometime pos_orders_ids can be empty.
-        pos_order_ids = self.env['pos.order'].browse(order_ids)
-        config_id = pos_order_ids.config_id.ids[0] if pos_order_ids else False
-
-        for order in pos_order_ids:
-            order._ensure_access_token()
-            if not self.env.context.get('preparation'):
-                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('login_number', 0))
-
-        _logger.info("PoS synchronisation #%d finished", sync_token)
-        return pos_order_ids.read_pos_data(orders, config_id)
-
-    @api.model
-    def read_pos_data_uuid(self, uuid):
-        order = self.search([('uuid', '=', uuid)], limit=1)
-        if not order:
-            return {}
-        return order.read_pos_data([], order.config_id.id)
-
-    def read_pos_data(self, data, config_id):
-        # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
-
-        return {
-            'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.session': [],
-            'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-        }
-
-    @api.model
-    def _get_refunded_orders(self, order):
-        refunded_orderline_ids = [line[2]['refunded_orderline_id'] for line in order['lines'] if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
-        return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
-
     def _should_create_picking_real_time(self):
         return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
 
@@ -1390,9 +1257,9 @@ class PosOrderLine(models.Model):
     price_unit = fields.Float(string='Unit Price', digits=0)
     qty = fields.Float('Quantity', digits='Product Unit', default=1)
     price_subtotal = fields.Monetary(string='Tax Excl.',
-        readonly=True, required=True)
+        readonly=True, required=True, default=0)
     price_subtotal_incl = fields.Monetary(string='Tax Incl.',
-        readonly=True, required=True)
+        readonly=True, required=True, default=0)
     price_extra = fields.Float(string="Price extra")
     price_type = fields.Selection([
         ('original', 'Original'),
@@ -1767,6 +1634,7 @@ class PosPackOperationLot(models.Model):
     order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
     lot_name = fields.Char('Lot Name')
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
+    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -1774,7 +1642,7 @@ class PosPackOperationLot(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['lot_name', 'pos_order_line_id']
+        return ['lot_name', 'pos_order_line_id', 'uuid']
 
 
 class AccountCashRounding(models.Model):

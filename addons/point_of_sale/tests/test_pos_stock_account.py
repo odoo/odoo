@@ -225,7 +225,7 @@ class TestPoSStock(TestPoSCommon):
         orders.append(self.create_ui_order_data([(self.product4, 1)]))
 
         # sync orders
-        order = self.env['pos.order'].sync_from_ui(orders)
+        order = self.env['pos.order'].create(orders)
 
         # check values before closing the session
         self.assertEqual(1, self.pos_session.order_count)
@@ -253,9 +253,9 @@ class TestPoSStock(TestPoSCommon):
         self.open_new_session()
         orders = []
         orders.append(self.create_ui_order_data([(self.product4, 1)]))
-        order = self.env['pos.order'].sync_from_ui(orders)
+        order = self.env['pos.order'].create(orders)
 
-        refund_action = self.env['pos.order'].browse(order['pos.order'][0]['id']).refund()
+        refund_action = order.refund()
         refund = self.env['pos.order'].browse(refund_action['res_id'])
 
         payment_context = {"active_ids": refund.ids, "active_id": refund.id}

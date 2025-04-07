@@ -40,7 +40,7 @@ class TestReportSession(TestPoSCommon):
             'amount_total': 110.0,
             'amount_tax': 10.0,
             'amount_return': 0.0,
-            'last_order_preparation_change': '{}',
+
             'to_invoice': False,
         })
 

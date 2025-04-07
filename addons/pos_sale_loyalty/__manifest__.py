@@ -12,6 +12,7 @@
 This module correct some behaviors when both module are installed.
 """,
     'depends': ['pos_sale', 'pos_loyalty'],
+    # 'installable': True,
     'installable': True,
     'auto_install': True,
     'assets': {

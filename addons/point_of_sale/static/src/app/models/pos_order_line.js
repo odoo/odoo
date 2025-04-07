@@ -109,6 +109,7 @@ export class PosOrderline extends Base {
     }
 
     get session() {
+        // FIXME: this will not be correct when sharing floors between multiple sessions
         return this.models["pos.session"].getFirst();
     }
 

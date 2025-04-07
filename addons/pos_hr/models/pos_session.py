@@ -21,6 +21,10 @@ class PosSession(models.Model):
             data += ['hr.employee']
         return data
 
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return (['employee_id'] if self.env['pos.config'].browse(config_id).module_pos_hr else []) + super()._load_pos_data_fields(config_id)
+
     def set_opening_control(self, cashbox_value: int, notes: str):
         super().set_opening_control(cashbox_value, notes)
         if author_id := self._get_message_author():

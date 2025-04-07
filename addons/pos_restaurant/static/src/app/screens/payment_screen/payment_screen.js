@@ -20,11 +20,8 @@ patch(PaymentScreen.prototype, {
         return super.nextPage;
     },
     async afterOrderValidation(suggestToSync = true) {
-        const changedTables = this.currentOrder?.table_id?.children?.map((table) => table.id);
         // After the order has been validated the tables have no reason to be merged anymore.
-        if (changedTables?.length) {
-            this.pos.data.write("restaurant.table", changedTables, { parent_id: null });
-        }
-        return await super.afterOrderValidation(...arguments);
+        this.currentOrder?.table_id?.children?.forEach?.((t) => (t.parent_id = null));
+        return await super.afterOrderValidation();
     },
 });

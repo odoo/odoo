@@ -38,20 +38,19 @@ class PosSelfOrderController(http.Controller):
         order['fiscal_position_id'] = preset_id.fiscal_position_id.id if preset_id else pos_config.default_fiscal_position_id.id
         order['pricelist_id'] = preset_id.pricelist_id.id if preset_id else pos_config.pricelist_id.id
 
-        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
-        line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
-        order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
+        order = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).create([order])
+        line_ids = order.lines
 
         self._verify_line_price(line_ids, pos_config, preset_id)
 
-        amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
-        order_ids.write({
+        amount_total, amount_untaxed = self._get_order_prices(order.lines)
+        order.write({
             'state': 'paid' if amount_total == 0 else 'draft',
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })
 
-        return self._generate_return_values(order_ids, pos_config)
+        return self._generate_return_values(order, pos_config)
 
     def _get_prefixes(self, device_type):
         tracking_prefix = ''
