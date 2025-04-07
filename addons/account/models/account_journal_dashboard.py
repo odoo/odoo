@@ -51,6 +51,7 @@ class account_journal(models.Model):
                       SELECT id, company_id
                         FROM account_bank_statement
                        WHERE journal_id = journal.id
+                         AND first_line_index IS NOT NULL
                     ORDER BY first_line_index DESC
                        LIMIT 1
                    ) statement ON TRUE
@@ -517,6 +518,11 @@ class account_journal(models.Model):
                 'image': '/account/static/src/img/bank.svg' if journal.type in ('bank', 'credit') else '/web/static/img/rfq.svg',
                 'text': _('Drop to import transactions'),
             }
+            last_statement_visible = (
+                not journal.company_id.fiscalyear_lock_date
+                or journal.last_statement_id.date
+                and journal.company_id.fiscalyear_lock_date < journal.last_statement_id.date
+            )
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
@@ -529,6 +535,8 @@ class account_journal(models.Model):
                 'nb_lines_outstanding_pay_account_balance': has_outstanding,
                 'last_balance': currency.format(journal.last_statement_id.balance_end_real),
                 'last_statement_id': journal.last_statement_id.id,
+                'last_statement_visible': last_statement_visible,
+                'has_invalid_statements': journal.has_invalid_statements,
                 'bank_statements_source': journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
                 'nb_misc_operations': number_misc,
@@ -780,6 +788,7 @@ class account_journal(models.Model):
                              FROM account_bank_statement
                             WHERE journal_id = journal.id
                               AND company_id = ANY(%s)
+                              AND first_line_index IS NOT NULL
                          ORDER BY date DESC, id DESC
                             LIMIT 1
                    ) statement ON TRUE
@@ -1092,6 +1101,10 @@ class account_journal(models.Model):
                 'search_default_date_between': True
             }
         return action
+
+    def open_invalid_statements_action(self):
+        self.ensure_one()
+        return self.env["ir.actions.act_window"]._for_xml_id('account.action_bank_statement_tree')
 
     def _show_sequence_holes(self, domain):
         return {
