@@ -135,19 +135,23 @@ class AccountMove(models.Model):
     def _submit_to_jofotara(self):
         self.ensure_one()
         headers = self._l10n_jo_build_jofotara_headers()
+        demo_mode = all(header.startswith('demo') for header in headers.values())
         xml_invoice = self.env['account.edi.xml.ubl_21.jo']._export_invoice(self)[0]
         params = {'invoice': base64.b64encode(xml_invoice).decode()}
 
-        try:
-            response = requests.post(JOFOTARA_URL, json=params, headers=headers, timeout=50)
-        except requests.exceptions.Timeout:
-            return _("Request time out! Please try again.")
-        except requests.exceptions.RequestException as e:
-            return _("Invalid request: %s", e)
+        if demo_mode:
+            dict_response = {'EINV_QR': 'demo'}
+        else:
+            try:
+                response = requests.post(JOFOTARA_URL, json=params, headers=headers, timeout=50)
+            except requests.exceptions.Timeout:
+                return _("Request time out! Please try again.")
+            except requests.exceptions.RequestException as e:
+                return _("Invalid request: %s", e)
 
-        if not response.ok:
-            return _("Request failed: %s", response.content.decode())
-        dict_response = response.json()
+            if not response.ok:
+                return _("Request failed: %s", response.content.decode())
+            dict_response = response.json()
         self.l10n_jo_edi_qr = str(dict_response.get('EINV_QR', ''))
         self.invoice_pdf_report_id.res_field = False
         self.env["ir.attachment"].create(
