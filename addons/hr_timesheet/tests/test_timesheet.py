@@ -988,3 +988,41 @@ class TestTimesheet(TestCommonTimesheet):
             f"{another_account.id}": 50,
         }
         self.assertEqual(line.amount, -5)  # the line is split in 2
+
+    def test_sub_task_remaining_hours(self):
+        """
+        Check whether remaining hours are correctly computed for subtasks.
+            Steps:
+            - Create subtask
+            - Set 10 allocated hours on parent task
+            - Create a timesheet for 10 hours on the parent
+            - Create a timesheet for 10 hours on the subtask
+            - subtask: Check remaining hours (-10)
+            - parent: Set 5 allocated hours on parent
+            - Check remaining hours (-10)
+        """
+        subtask = self.env['project.task'].create({
+            'name': 'Sub Task for Remaining Hours Test',
+            'project_id': self.project_customer.id,
+            'parent_id': self.task1.id,
+            'allocated_hours': 5,
+        })
+
+        self.task1.allocated_hours = 10
+
+        self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'task_id': self.task1.id,
+            'unit_amount': 10,
+            'employee_id': self.empl_employee.id,
+        })
+
+        self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'task_id': subtask.id,
+            'unit_amount': 10,
+            'employee_id': self.empl_employee.id,
+        })
+
+        self.assertEqual(self.task1.remaining_hours, -10, "Parent should have -10 remaining hours.")
+        self.assertEqual(subtask.remaining_hours, -5, "Subtask should have -5 remaining hours.")
