@@ -20,7 +20,7 @@ patch(PosStore.prototype, {
                 action: () =>
                     this.dialog.closeAll() &&
                     this.config.module_pos_restaurant &&
-                    this.mainScreen.component.name !== "PaymentScreen" &&
+                    !["LoginScreen", "PaymentScreen"].includes(this.mainScreen.component.name) &&
                     this.showScreen("FloorScreen"),
             },
         ];
