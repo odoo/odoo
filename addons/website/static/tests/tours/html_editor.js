@@ -278,7 +278,7 @@ registerWebsitePreviewTour('test_html_editor_scss_2', {
         },
         {
             content: "confirm reset warning",
-            trigger: '.modal-footer .btn-primary',
+            trigger: ".modal:contains(careful) .modal-footer .btn-primary",
             run: "click",
         },
         {

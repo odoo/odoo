@@ -256,5 +256,8 @@ registerWebsitePreviewTour(
         },
         ...duplicateSinglePage,
         ...duplicateMultiplePage,
+        {
+            trigger: "td:contains('/test-duplicate-2-1')",
+        },
     ]
 );
