@@ -66,10 +66,16 @@ const actionRegistry = registry.category("actions");
 
 /**
  * @typedef {Object} ActionOptions
- * @property {Context} [additionalContext]
+ * @property {Context} [additionalContext] context keys to add to the action's context. Especially
+ *   useful when executing an action with its id or xmlid:
+ * `doAction("my.action", { additionalContext: extraContext })`
  * @property {boolean} [clearBreadcrumbs]
- * @property {CallableFunction} [onClose]
- * @property {Object} [props]
+ * @property {CallableFunction} [onClose] Only useful for actions in target="new" and for actions of
+ *   type "ir.actions.act_window_close". This callback is called when the dialog is closed. Typically
+ * used to reload the view in the background.
+ * @property {Object} [props] props given to the action's main component (typically the view
+ * controller for "ir.actions.act_window" actions). Be aware that some of them might be overridden, or
+ * lost on subsequent model loads.
  * @property {ViewType} [viewType]
  * @property {"replaceCurrentAction" | "replacePreviousAction"} [stackPosition]
  * @property {number} [index]
