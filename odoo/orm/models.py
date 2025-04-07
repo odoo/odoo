@@ -2721,15 +2721,26 @@ class BaseModel(metaclass=MetaModel):
         given by the triple ``(field_expr, operator, value)`` with the given
         table alias, and in the context of the given query.
 
-        The method is also responsible for checking that the field is accessible
-        for reading, and should include metadata in the result object to make
-        sure that the necessary fields are flushed before executing the final
-        SQL query.
+        The method should include metadata in the result object to make sure
+        that the necessary fields are flushed before executing the final SQL
+        query.
+
+        The caller of this method is responsible for checking that the field is
+        accessible for reading.
         """
         assert operator in domains.STANDARD_CONDITION_OPERATORS, \
             f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
 
-        field = self._fields[parse_field_expr(field_expr)[0]]
+        field_name, property_name = parse_field_expr(field_expr)
+        field = self._fields[field_name]
+
+        if field.related and not field.store:
+            # delegate the condition on the target model and field
+            model, field, alias = self._traverse_related_sql(alias, field, query)
+            model = model.with_env(self.env)
+            related_expr = field.name if not property_name else f"{field.name}.{property_name}"
+            return model._condition_to_sql(alias, related_expr, operator, value, query)
+
         return field.condition_to_sql(field_expr, operator, value, self, alias, query)
 
     @api.model

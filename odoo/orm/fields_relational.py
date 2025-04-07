@@ -423,7 +423,7 @@ class Many2one(_Relational[M]):
         fname = field_expr
         comodel = model.env[self.comodel_name]
         sql_field = model._field_to_sql(alias, fname, query)
-        can_be_null = self not in model.env.registry.not_null_fields
+        can_be_null = self.can_be_null(model, alias, query)
 
         if not isinstance(value, Domain):
             # value is SQL or Query
@@ -679,7 +679,6 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
 
     def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
         assert field_expr == self.name, "Supporting condition only to field"
-        model._check_field_access(self, 'read')
         comodel = model.env[self.comodel_name]
 
         # update the operator to 'any'
