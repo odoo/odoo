@@ -1676,7 +1676,7 @@ class Request:
                         profile_session=self.session.profile_session,
                         collectors=self.session.profile_collectors,
                         params=self.session.profile_params,
-                    )
+                    )._get_cm_proxy()
                 except Exception:
                     _logger.exception("Failure during Profiler creation")
                     self.session.profile_session = None
