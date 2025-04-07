@@ -1,7 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
-import { Domain } from '@web/core/domain';
 import { SearchModel } from '@web/search/search_model';
-import { onWillStart, useState } from "@odoo/owl";
+import { onWillStart } from "@odoo/owl";
 
 export class PageSearchModel extends SearchModel {
     /**
@@ -11,78 +10,78 @@ export class PageSearchModel extends SearchModel {
         super.setup(...arguments);
         this.website = useService('website');
 
-        this.pagesState = useState({
-            websiteDomain: false,
-        });
         onWillStart(async () => {
-            // Before the searchModel performs its DB search call, append the
-            // website domain to the search domain.
+            // Call `fetchWebsites` to populate `this.website.websites`.
             await this.website.fetchWebsites();
-            const website = await this.getCurrentWebsite();
-            await this.notifyWebsiteChange(website.id);
+
+            await this.addFilterForAllWebsites();
+            await this.selectFilterForCurrentWebsite();
         });
     }
 
     /**
-     * @override
+     * Adds filters for all available websites if they haven't been added
+     * already.
      */
-    exportState() {
-        const state = super.exportState();
-        state.websiteDomain = this.pagesState.websiteDomain;
-        return state;
-    }
+    async addFilterForAllWebsites() {
+        const existingWebsiteFilters = this.getSearchItems(
+            (searchItem) => searchItem.type === "filter" && searchItem.name.startsWith("website_")
+        );
 
-    /**
-     * @override
-     */
-    _importState(state) {
-        super._importState(...arguments);
-
-        if (state.websiteDomain) {
-            this.pagesState.websiteDomain = state.websiteDomain;
-        }
-    }
-
-    /**
-     * @override
-     */
-    _getDomain(params = {}) {
-        let domain = super._getDomain(params);
-        if (!this.pagesState.websiteDomain) {
-            return domain;
+        // Skip adding filters if filter for all the websites is already added
+        if (existingWebsiteFilters.length === this.website.websites.length) {
+            return;
         }
 
-        domain = Domain.and([
-            domain,
-            this.pagesState.websiteDomain,
-        ]);
-        return params.raw ? domain : domain.toList();
-    }
+        const websiteFilters = this.website.websites.map(async (website) => {
+            let websiteDomain = [];
 
-    /**
-     * Updates the website domain state and notifies the change. That domain
-     * state will be appended to the base SearchModel domain.
-     *
-     * @param {number} websiteId - The ID of the website.
-     */
-    async notifyWebsiteChange(websiteId) {
-        let websiteDomain = [];
-        if (websiteId && 'website_id' in this.searchViewFields) {
-            if (this.resModel === 'website.page') {
-                // In case of `website.page`, we can't find the website pages
-                // with a regular domain (because we need to filter duplicates).
-                const pageIds = await this.orm.call(
-                    "website",
-                    "get_website_page_ids",
-                    [websiteId],
-                );
-                websiteDomain = [['id', 'in', pageIds]];
+            if (this.resModel === "website.page") {
+                // `website.page` requires fetching specific page IDs, as a
+                // standard domain filter cannot be used due to duplicate
+                // entries.
+                const pageIds = await this.orm.call("website", "get_website_page_ids", [
+                    website.id,
+                ]);
+                websiteDomain = [["id", "in", pageIds]];
             } else {
-                websiteDomain = [['website_id', 'in', [false, websiteId]]];
+                websiteDomain = [["website_id", "in", [false, website.id]]];
             }
+
+            return {
+                description: website.name,
+                domain: websiteDomain,
+                name: `website_${website.id}`,
+                type: "filter",
+            };
+        });
+
+        this._createGroupOfSearchItems(await Promise.all(websiteFilters));
+    }
+
+    /**
+     * Selects the filter for the current website if no other website filter is
+     * selected.
+     */
+    async selectFilterForCurrentWebsite() {
+        const currentlySelectedWebsiteFilters = this.getSearchItems(
+            (searchItem) =>
+                searchItem.type === "filter" &&
+                searchItem.name.startsWith("website_") &&
+                searchItem.isActive
+        );
+        if (currentlySelectedWebsiteFilters.length) {
+            return;
         }
-        this.pagesState.websiteDomain = websiteDomain;
-        this._notify();
+
+        const currentWebsite = await this.getCurrentWebsite();
+        const currentWebsiteFilter = this.getSearchItems(
+            (searchItem) =>
+                searchItem.type === "filter" && searchItem.name === `website_${currentWebsite.id}`
+        )[0];
+        if (currentWebsiteFilter) {
+            this.toggleSearchItem(currentWebsiteFilter.id);
+        }
     }
 
     /**
