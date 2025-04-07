@@ -999,8 +999,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const fields = getFields(model);
 
             for (const rawRec of rawRecords) {
+                let keepCurrentConnection = false;
                 if (ignoreConnection[model].includes(rawRec.id)) {
-                    continue;
+                    keepCurrentConnection = true;
                 }
 
                 const recorded = records[model][rawRec.id];
@@ -1017,6 +1018,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
                 for (const name in fields) {
                     const field = fields[name];
+                    if (keepCurrentConnection && typeof recorded[field.name] === "object") {
+                        continue;
+                    }
                     alreadyLinkedSet.add(field);
 
                     if (X2MANY_TYPES.has(field.type)) {
