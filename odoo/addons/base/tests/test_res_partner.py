@@ -524,16 +524,14 @@ class TestPartnerAddressCompany(TransactionCase):
         for child in inv, deli, other:
             self.assertEqual(child.street, f'{child.name} Street', 'Should not be updated')
 
-        # UPSTREAM: child -> parent update: not done currently, consider contact is readonly
+        # UPSTREAM: child -> parent update: contact update company
         # ------------------------------------------------------------
         ct1.write(self.test_address_values_3)
-        for fname, fvalue in self.test_address_values_2_cmp.items():
-            self.assertEqual(self.test_parent[fname], fvalue)
-            self.assertEqual(ct2[fname], fvalue)
-            self.assertEqual(self.existing[fname], fvalue)
         for fname, fvalue in self.test_address_values_3_cmp.items():
+            self.assertEqual(self.test_parent[fname], fvalue)
             self.assertEqual(ct1[fname], fvalue)
             self.assertEqual(ct1_1[fname], fvalue)
+            self.assertEqual(ct2[fname], fvalue)
 
     @users('employee')
     def test_address_first_contact_sync(self):
@@ -718,12 +716,11 @@ class TestPartnerAddressCompany(TransactionCase):
             lambda self: commercial_fields + ['ref'],
         ):
             individual.write({'parent_id': company})
-        for fname in self.base_address_fields:
-            self.assertFalse(company[fname], 'FIXME: did not take from contact child')
         self.assertFalse(company.industry_id, 'Industry is not considered for upstream')
         self.assertEqual(company.ref, 'COMPANYREF', 'not updated from contact child')
         self.assertFalse(company.vat, 'FIXME: did not take from contact child')
         for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(company[fname], fvalue, 'Void parent should have been updated when adding a contact with address')
             self.assertEqual(individual[fname], fvalue, 'Setting parent with void address should not reset child')
         self.assertFalse(individual.industry_id, 'FIXME: erased using parent void value')
         self.assertEqual(individual.ref, 'COMPANYREF', 'downstream update')
