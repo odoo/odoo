@@ -125,10 +125,31 @@ test("CopyClipboardButtonField in form view", async () => {
 
     expect(".o_field_widget[name=char_field] input").toHaveCount(0);
     expect(".o_clipboard_button.o_btn_char_copy").toHaveCount(1);
+    expect(".o_clipboard_button.o_btn_char_copy").toHaveClass("btn-primary");
+    expect(".o_clipboard_button.o_btn_char_copy").not.toHaveClass("btn-secondary");
 
     await contains(".o_clipboard_button.o_btn_char_copy").click();
 
     expect.verifySteps(["char value"]);
+});
+
+test("CopyClipboardButtonField with a secondary style", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+            <form>
+                <group>
+                    <field name="char_field" widget="CopyClipboardButton" options="{'btn_class': 'secondary'}"/>
+                </group>
+            </form>`,
+    });
+
+    expect(".o_field_widget[name=char_field] input").toHaveCount(0);
+    expect(".o_clipboard_button.o_btn_char_copy").toHaveCount(1);
+    expect(".o_clipboard_button.o_btn_char_copy").not.toHaveClass("btn-primary");
+    expect(".o_clipboard_button.o_btn_char_copy").toHaveClass("btn-secondary");
 });
 
 test("CopyClipboardButtonField can be disabled", async () => {
