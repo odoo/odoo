@@ -119,7 +119,7 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('partner_id.vat', 'partner_id.country_id', 'partner_id.l10n_in_gst_treatment', 'state')
+    @api.depends('partner_id.vat', 'partner_id.country_id', 'partner_id.l10n_in_gst_treatment')
     def _compute_l10n_in_gst_treatment(self):
         for invoice in self.filtered(lambda m: m.country_code == 'IN' and m.state == 'draft'):
             partner = invoice.partner_id
@@ -152,7 +152,7 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_state_id = False
 
-    @api.depends('l10n_in_state_id')
+    @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
 
         def _get_fiscal_state(move):
