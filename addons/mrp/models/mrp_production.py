@@ -552,11 +552,11 @@ class MrpProduction(models.Model):
                 production.state = 'to_close'
             elif not production.workorder_ids and production.product_uom_id.compare(production.qty_producing, production.product_qty) >= 0:
                 production.state = 'to_close'
-            elif any(wo_state in ('progress', 'done') for wo_state in production.workorder_ids.mapped('state')):
-                production.state = 'progress'
-            elif production.product_uom_id and not production.product_uom_id.is_zero(production.qty_producing):
-                production.state = 'progress'
-            elif any(production.move_raw_ids.mapped('picked')):
+            elif (
+                any(wo_state in ('progress', 'done') for wo_state in production.workorder_ids.mapped('state'))
+                or production.product_uom_id and not production.product_uom_id.is_zero(production.qty_producing)
+                or any(production.move_raw_ids.mapped('picked'))
+            ):
                 production.state = 'progress'
 
     @api.depends('bom_id', 'product_id', 'product_qty', 'product_uom_id', 'never_product_template_attribute_value_ids')
