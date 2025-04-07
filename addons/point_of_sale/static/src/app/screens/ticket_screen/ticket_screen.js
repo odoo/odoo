@@ -297,7 +297,7 @@ export class TicketScreen extends Component {
         const partner = order.getPartner();
         // The order that will contain the refund orderlines.
         // We select the order if it is empty, else we create a new one.
-        const destinationOrder = this._getEmptyOrder(partner);
+        const destinationOrder = await this._getEmptyOrder(partner);
 
         destinationOrder.is_refund = true;
         // Add orderline for each toRefundDetail to the destinationOrder.
@@ -561,7 +561,7 @@ export class TicketScreen extends Component {
      * @param {Object | null} partner
      * @returns {boolean}
      */
-    _getEmptyOrder(partner) {
+    async _getEmptyOrder(partner) {
         let emptyOrderForPartner = null;
         let emptyOrder = null;
         for (const order of this.pos.models["pos.order"].filter((order) => !order.finalized)) {
@@ -575,7 +575,11 @@ export class TicketScreen extends Component {
                 }
             }
         }
-        return emptyOrderForPartner || emptyOrder || this.pos.addNewOrder({ partner_id: partner });
+        return (
+            emptyOrderForPartner ||
+            emptyOrder ||
+            (await this.pos.addNewOrder({ partner_id: partner }))
+        );
     }
     _doesOrderHaveSoleItem(order) {
         const orderlines = order.getOrderlines();

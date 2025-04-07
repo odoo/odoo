@@ -72,10 +72,11 @@ export class ReceiptScreen extends Component {
     showPhoneInput() {
         return false;
     }
-    orderDone() {
+    async orderDone() {
         this.pos.orderDone(this.currentOrder);
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.selectedOrderUuid = this.pos.getEmptyOrder().uuid;
+            const newOrder = await this.pos.getEmptyOrder();
+            this.pos.selectedOrderUuid = newOrder.uuid;
         }
         this.pos.searchProductWord = "";
         const nextPage = this.pos.defaultPage;

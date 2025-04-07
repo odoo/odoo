@@ -1112,8 +1112,8 @@ export class FloorScreen extends Component {
             return this.deleteFloor();
         }
     }
-    clickNewOrder() {
-        this.pos.addNewOrder();
+    async clickNewOrder() {
+        await this.pos.addNewOrder();
         this.pos.navigate("ProductScreen", {
             orderUuid: this.pos.selectedOrderUuid,
         });

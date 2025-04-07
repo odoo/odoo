@@ -319,6 +319,10 @@ export class PosStore extends WithLazyGetterTrap {
                       page: this.router.state.current,
                       params: this.router.state.params,
                   };
+        if (page.page == "ProductScreen" && !page.params.orderUuid) {
+            const newOrder = await this.addNewOrder();
+            page.params.orderUuid = newOrder.uuid;
+        }
         this.navigate(page.page, page.params);
         return process;
     }
@@ -501,15 +505,19 @@ export class PosStore extends WithLazyGetterTrap {
                 return false;
             }
         }
+        await this.afterOrderDeletion(order);
         const orderIsDeleted = await this.deleteOrders([order]);
         if (orderIsDeleted) {
             order.uiState.displayed = false;
-            await this.afterOrderDeletion();
         }
         return orderIsDeleted;
     }
-    async afterOrderDeletion() {
-        this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
+    async afterOrderDeletion(order) {
+        this.setOrder(
+            this.getOpenOrders()
+                .filter((o) => o.id != order.id)
+                .at(-1) || (await this.addNewOrder())
+        );
     }
 
     async deleteOrders(orders, serverIds = [], ignoreChange = false) {
@@ -628,7 +636,7 @@ export class PosStore extends WithLazyGetterTrap {
             } else {
                 this.selectedOrderUuid = openOrders.length
                     ? openOrders[openOrders.length - 1].uuid
-                    : this.addNewOrder().uuid;
+                    : await this.addNewOrder().uuid;
             }
         }
 
@@ -753,7 +761,7 @@ export class PosStore extends WithLazyGetterTrap {
         order.assertEditable();
 
         if (!order) {
-            order = this.addNewOrder();
+            order = await this.addNewOrder();
         }
         return await this.addLineToOrder(vals, order, opts, configure);
     }
@@ -1130,12 +1138,12 @@ export class PosStore extends WithLazyGetterTrap {
     get showCashMoveButton() {
         return Boolean(this.config.cash_control && this.config._has_cash_move_perm);
     }
-    createNewOrder(data = {}) {
+    async createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(
             (fp) => fp.id === this.config.default_fiscal_position_id?.id
         );
 
-        const order = this.models["pos.order"].create({
+        const orderData = {
             session_id: this.session,
             company_id: this.company,
             config_id: this.config,
@@ -1148,9 +1156,10 @@ export class PosStore extends WithLazyGetterTrap {
             sequence_number: 0,
             pos_reference: "",
             ...data,
-        });
+        };
 
-        this.getNextOrderRefs(order);
+        await this.getNextOrderRefs(orderData);
+        const order = this.models["pos.order"].create(orderData);
         order.setPricelist(this.config.pricelist_id);
 
         if (this.config.use_presets) {
@@ -1161,18 +1170,18 @@ export class PosStore extends WithLazyGetterTrap {
 
         return order;
     }
-    addNewOrder(data = {}) {
+    async addNewOrder(data = {}) {
         if (this.getOrder()) {
             this.getOrder().updateSavedQuantity();
         }
-        const order = this.createOrderIfNeeded(data);
+        const order = await this.createOrderIfNeeded(data);
         this.selectedOrderUuid = order.uuid;
         this.searchProductWord = "";
         this.mobile_pane = "right";
         return order;
     }
-    createOrderIfNeeded(data) {
-        return this.createNewOrder(data);
+    async createOrderIfNeeded(data) {
+        return await this.createNewOrder(data);
     }
     async getNextOrderRefs(order) {
         try {
@@ -1217,25 +1226,25 @@ export class PosStore extends WithLazyGetterTrap {
         order.tracking_number = trackingNumber;
         return true;
     }
-    selectNextOrder() {
+    async selectNextOrder() {
         const orders = this.models["pos.order"].filter((order) => !order.finalized);
         if (orders.length > 0) {
             this.selectedOrderUuid = orders[0].uuid;
         } else {
-            return this.addNewOrder();
+            return await this.addNewOrder();
         }
     }
     get openOrder() {
         return this.models["pos.order"].find((o) => o.state === "draft") || this.addNewOrder();
     }
-    getEmptyOrder() {
+    async getEmptyOrder() {
         const orders = this.models["pos.order"].filter(
             (order) => !order.finalized && order.isEmpty()
         );
         if (orders.length > 0) {
             return orders[0];
         }
-        return this.addNewOrder();
+        return await this.addNewOrder();
     }
 
     addPendingOrder(orderIds, remove = false) {
@@ -1871,9 +1880,9 @@ export class PosStore extends WithLazyGetterTrap {
         };
     }
 
-    addOrderIfEmpty(forceEmpty) {
+    async addOrderIfEmpty(forceEmpty) {
         if (!this.getOrder()) {
-            return this.addNewOrder();
+            return await this.addNewOrder();
         }
     }
 

@@ -43,7 +43,7 @@ patch(PosStore.prototype, {
                 linkedSO.partner_invoice_id?.id !== sale_order.partner_invoice_id?.id ||
                 linkedSO.partner_shipping_id?.id !== sale_order.partner_shipping_id?.id
             ) {
-                this.addNewOrder({
+                await this.addNewOrder({
                     partner_id: sale_order.partner_id,
                 });
                 this.notification.add(_t("A new order has been created."));
