@@ -55,13 +55,13 @@ class PosOrderReport(models.Model):
                 l.id AS id,
                 1 AS nbr_lines, -- number of lines in order line is always 1
                 s.date_order AS date,
-                l.qty AS product_qty,
-                l.qty * l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS price_sub_total,
-                ROUND((l.price_subtotal_incl) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
-                (l.qty * l.price_unit) * (l.discount / 100) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS total_discount,
+                SUM(l.qty) AS product_qty,
+                SUM(l.qty * l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0)) AS price_sub_total,
+                SUM(ROUND((l.price_subtotal_incl) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places)) AS price_total,
+                SUM((l.qty * l.price_unit) * (l.discount / 100) / COALESCE(NULLIF(s.currency_rate, 0), 1.0)) AS total_discount,
                 CASE
-                    WHEN l.qty * u.factor = 0 THEN NULL
-                    ELSE (l.qty*l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0))/(l.qty * u.factor)::decimal
+                    WHEN SUM(l.qty * u.factor) = 0 THEN NULL
+                    ELSE SUM(l.qty*l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0))/SUM(l.qty * u.factor)::decimal
                 END AS average_price,
                 cast(to_char(date_trunc('day',s.date_order) - date_trunc('day',s.create_date),'DD') AS INT) AS delay_validation,
                 s.id as order_id,
@@ -77,7 +77,7 @@ class PosOrderReport(models.Model):
                 s.pricelist_id,
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
-                l.price_subtotal - COALESCE(l.total_cost,0) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS margin,
+                SUM(l.price_subtotal - COALESCE(l.total_cost,0) / COALESCE(NULLIF(s.currency_rate, 0), 1.0)) AS margin,
                 pm.payment_method_id AS payment_method_id
         """
 
@@ -95,7 +95,16 @@ class PosOrderReport(models.Model):
         """
 
     def _group_by(self):
-        return ""
+        return """
+            GROUP BY
+                l.id, s.id, s.date_order, s.partner_id,s.state, pt.categ_id,
+                s.user_id, s.company_id, s.sale_journal,
+                s.pricelist_id, s.account_move, s.create_date, s.session_id,
+                l.product_id,
+                pt.categ_id,
+                p.product_tmpl_id,
+                ps.config_id, pm.payment_method_id;
+        """
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
@@ -104,5 +113,5 @@ class PosOrderReport(models.Model):
                 %s
                 %s
             )
-        """ % (self._table, self._select(), self._from())
+        """ % (self._table, self._select(), self._from(), self._group_by())
         )
