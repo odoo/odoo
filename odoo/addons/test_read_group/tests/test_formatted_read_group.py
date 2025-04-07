@@ -1272,7 +1272,7 @@ class TestWebReadGroup(common.TransactionCase):
                     'user_ids': (luigi.id, 'Luigi'),
                 },
                 {
-                    '__extra_domain': [('user_ids', 'not in', [mario.id, luigi.id])],
+                    '__extra_domain': [('user_ids', 'not any', [])],
                     'name:array_agg': ['Donkey Kong'],
                     'user_ids': False,
                 },
@@ -1290,7 +1290,7 @@ class TestWebReadGroup(common.TransactionCase):
             [
                 {
                     'user_ids': False,
-                    '__extra_domain': [('user_ids', 'not in', [luigi.id, mario.id])],
+                    '__extra_domain': [('user_ids', 'not any', [])],
                     'name:array_agg': ['Donkey Kong'],
                 },
                 {
@@ -1330,7 +1330,7 @@ class TestWebReadGroup(common.TransactionCase):
                 },
                 {
                     'user_ids': False,
-                    '__extra_domain': [('user_ids', 'not in', [mario.id])],
+                    '__extra_domain': [('user_ids', 'not any', [])],
                     '__count': 2,
                     'name:array_agg': ["Luigi's Mansion", 'Donkey Kong'],
                 },
@@ -1546,7 +1546,7 @@ class TestWebReadGroup(common.TransactionCase):
                 },
                 {
                     '__count': 1,
-                    '__extra_domain': [('bar_base_ids', 'not in', [bases[0].id, bases[1].id, bases[2].id])],
+                    '__extra_domain': [('bar_base_ids', 'not any', [])],
                     'bar_base_ids': False,
                 },
             ]
@@ -1580,7 +1580,7 @@ class TestWebReadGroup(common.TransactionCase):
                 },
                 {
                     '__count': 3,
-                    '__extra_domain': [('bar_base_ids', 'not in', [bases[1].id, bases[2].id])],
+                    '__extra_domain': [('bar_base_ids', 'not any', [])],
                     'bar_base_ids': False,
                 },
             ]
