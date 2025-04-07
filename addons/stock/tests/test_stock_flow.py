@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from dateutil.relativedelta import relativedelta
+
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
@@ -2719,3 +2721,43 @@ class TestStockFlowPostInstall(TestStockCommon):
 
         new_location_complete_name = self.env['stock.location'].name_create('NoPrefixLocation')[1]
         self.assertEqual(new_location_complete_name, 'NoPrefixLocation')
+
+    def test_picking_and_move_scheduled_date_flow(self):
+        """Test that move dates are updated correctly when scheduled_date is changed and vice versa.
+        1. Changing a move date to after the scheduled date should not affect the scheduled date
+        or other move dates.
+        2. Changing a move date to before the scheduled date should update the scheduled date to
+        match the earliest move date, but should not affect other move dates.
+        3. Changing the scheduled date should update all move dates to match the new scheduled date.
+        """
+        # Create a picking with two move lines: productA and productB
+        with Form(self.PickingObj) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.productA
+                move.product_uom_qty = 1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.productB
+                move.product_uom_qty = 1
+            picking = picking_form.save()
+        today = picking.scheduled_date
+        move_productA = picking.move_ids.filtered(lambda m: m.product_id == self.productA)
+        move_productB = picking.move_ids.filtered(lambda m: m.product_id == self.productB)
+        # Case 1: Change move B's date to 10 days after scheduled_date
+        picking_form = Form(picking)
+        with picking_form.move_ids_without_package.edit(1) as move:
+            move.date = today + relativedelta(days=10)
+        picking = picking_form.save()
+        self.assertEqual(picking.scheduled_date, today)
+        self.assertEqual(move_productA.date, today)
+        # Case 2: Change move A's date to 5 days before scheduled_date
+        picking_form = Form(picking)
+        with picking_form.move_ids_without_package.edit(0) as move:
+            move.date = today - relativedelta(days=5)
+        picking = picking_form.save()
+        self.assertEqual(picking.scheduled_date, move_productA.date)
+        self.assertEqual(move_productB.date, today + relativedelta(days=10))
+        # Case 3: Set scheduled_date back to the original value
+        picking.scheduled_date = today
+        self.assertEqual(move_productA.date, today)
+        self.assertEqual(move_productB.date, today)

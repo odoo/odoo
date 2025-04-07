@@ -695,6 +695,17 @@ class Picking(models.Model):
                 raise UserError(_("You cannot change the Scheduled Date on a done or cancelled transfer."))
             picking.move_ids.write({'date': picking.scheduled_date})
 
+    def onchange(self, values, field_names, fields_spec):
+        """Prevent the picking's scheduled_date from being updated when a move's date is modified,
+        as it is computed when the form view is saved.
+        """
+        result = super().onchange(values, field_names, fields_spec)
+        if 'move_ids_without_package' in field_names and result.get('value') and result['value'].get('scheduled_date'):
+            for move in values.get('move_ids_without_package', []):
+                if move[0] == Command.UPDATE and 'date' in move[2]:
+                    result['value'].pop('scheduled_date', None)
+        return result
+
     def _has_scrap_move(self):
         for picking in self:
             # TDE FIXME: better implementation
