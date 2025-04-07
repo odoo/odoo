@@ -6,7 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
-from odoo.tools import Query
+from odoo.tools import clean_context
 from odoo.tools.translate import _
 
 from dateutil.relativedelta import relativedelta
@@ -648,14 +648,14 @@ class Applicant(models.Model):
         if not self.partner_id:
             if not self.partner_name:
                 raise UserError(_('Please provide an applicant name.'))
-            self.partner_id = self.env['res.partner'].create({
+            self.partner_id = self.env['res.partner'].with_context(clean_context(self.env.context)).create({
                 'is_company': False,
                 'name': self.partner_name,
                 'email': self.email_from,
             })
 
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
-        employee = self.env['hr.employee'].create(self._get_employee_create_vals())
+        employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(self._get_employee_create_vals())
         action['res_id'] = employee.id
         return action
 
