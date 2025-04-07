@@ -49,6 +49,11 @@ class AccountMove(models.Model):
         depends=["l10n_jo_edi_xml_attachment_file"],
         help="Jordan: e-invoice XML.",
     )
+    l10n_jo_invoice_counter = fields.Integer(compute='_compute_l10n_jo_invoice_counter')
+
+    def _compute_l10n_jo_invoice_counter(self):
+        for move in self:
+            move.l10n_jo_invoice_counter = self.env['account.move'].search_count([('company_id', '=', self.company_id.id), ('l10n_jo_edi_state', '=', 'sent')]) + 1
 
     @api.depends("country_code", "move_type")
     def _compute_l10n_jo_edi_is_needed(self):
