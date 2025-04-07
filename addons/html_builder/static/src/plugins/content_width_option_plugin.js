@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 
 class ContentWidthOptionPlugin extends Plugin {
     static id = "contentWidthOption";
+    static dependencies = ["builderActions", "history"];
     resources = {
         builder_options: [
             {
@@ -14,6 +15,27 @@ class ContentWidthOptionPlugin extends Plugin {
                     ":scope > .container, :scope > .container-fluid, :scope > .o_container_small",
             },
         ],
+        builder_actions: this.getActions(),
     };
+
+    getActions() {
+        const builderActions = this.dependencies.builderActions;
+        const historyPlugin = this.dependencies.history;
+        return {
+            get setContainerWidth() {
+                const classAction = builderActions.getAction("classAction");
+                return {
+                    ...classAction,
+                    apply: (...args) => {
+                        classAction.apply(...args);
+                        // Add/remove the container preview.
+                        const containerEl = args[0].editingElement;
+                        const isPreviewMode = historyPlugin.getIsPreviewing();
+                        containerEl.classList.toggle("o_container_preview", isPreviewMode);
+                    },
+                };
+            },
+        };
+    }
 }
 registry.category("website-plugins").add(ContentWidthOptionPlugin.id, ContentWidthOptionPlugin);
