@@ -647,7 +647,7 @@ class MailActivity(models.Model):
         :param int offset: offset of the first record to fetch
         :param bool fetch_done: determines if "done" activities are integrated in the
             aggregated data or not.
-        :return dict: {'activity_types': dict of activity type info
+        :returns: {'activity_types': dict of activity type info
                             {id: int, name: str, mail_template: list of {id:int, name:str}}
                        'activity_res_ids': list<int> of record id ordered by closest date
                             (deadline for ongoing activities, and done date for done activities)
@@ -664,6 +664,7 @@ class MailActivity(models.Model):
                                 attachments_info: dict with information about the attachments
                                     {'count': int, 'most_recent_id': int, 'most_recent_name': str}
                        }
+        :rtype: dict
         """
         user_tz = self.user_id.sudo().tz
         DocModel = self.env[res_model]
@@ -775,11 +776,12 @@ class MailActivity(models.Model):
         are classified by model. Activities not linked to a valid record through
         res_model / res_id are ignored.
 
-        :return dict: for each model having at least one activity in self, have
+        :returns: for each model having at least one activity in self, have
           a sub-dict containing
             * activities: activities related to that model;
             * record IDs: record linked to the activities of that model, in same
               order;
+        :rtype: dict
         """
         data_by_model = {}
         for activity in self.filtered(lambda act: act.res_model and act.res_id):

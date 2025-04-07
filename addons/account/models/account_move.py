@@ -1855,16 +1855,17 @@ class AccountMove(models.Model):
         """ Build the warning message that will be displayed in a yellow banner on top of the current record
             if the partner exceeds a credit limit (set on the company or the partner itself).
             :param record:                  The record where the warning will appear (Invoice, Sales Order...).
-            :param current_amount (float):  The partner's outstanding credit amount from the current document.
-            :param exclude_current (bool):  DEPRECATED in favor of parameter `exclude_amount`:
+            :param float current_amount:    The partner's outstanding credit amount from the current document.
+            :param bool exclude_current:    DEPRECATED in favor of parameter `exclude_amount`:
                                             Whether to exclude `current_amount` from the credit to invoice.
-            :param exclude_amount (float):  The amount to subtract from the partner's `credit_to_invoice`.
+            :param float exclude_amount:    The amount to subtract from the partner's `credit_to_invoice`.
                                             Consider the warning on a draft invoice created from a sales order.
                                             After confirming the invoice the (partial) amount (on the invoice)
                                             stemming from sales orders will be substracted from the `credit_to_invoice`.
                                             This will reduce the total credit of the partner.
                                             This parameter is used to reflect this amount.
-            :return (str):                  The warning message to be showed.
+            :return:                        The warning message to be showed.
+            :rtype: str
         """
         partner_id = record.partner_id.commercial_partner_id
         credit_to_invoice = partner_id.credit_to_invoice - exclude_amount
@@ -5088,10 +5089,10 @@ class AccountMove(models.Model):
         If the journal is locked with a hash table, it will be impossible to change
         some fields afterwards.
 
-        :param soft (bool): if True, future documents are not immediately posted,
+        :param bool soft: if True, future documents are not immediately posted,
             but are set to be auto posted automatically at the set accounting date.
             Nothing will be performed on those documents before the accounting date.
-        :return Model<account.move>: the documents that have been posted
+        :returns: the Model<account.move> documents that have been posted
         """
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
             raise AccessError(_("You don't have the access rights to post an invoice."))
@@ -5993,7 +5994,7 @@ class AccountMove(models.Model):
         :param has_tax (bool): Iff any taxes are involved in the lines of the invoice
         :param lock_dates: Like result from `_get_violated_lock_dates`;
                            Can be used to avoid recomputing them in case they are already known.
-        :return (datetime.date):
+        :rtype: datetime.date
         """
         self.ensure_one()
         lock_dates = lock_dates or self._get_violated_lock_dates(invoice_date, has_tax)

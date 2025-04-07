@@ -1233,10 +1233,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_untranslatable_fields_to_translate(self):
         """Return information about the untranslatable fields we want to translate anyway.
 
-        :param langs: The codes of the languages into which we want to translate the records.
-        :type langs: list[str]
-        :param companies: Records belonging to these companies will be considered.
-        :type companies: Model<res.company>
         :return: Dictionary (model -> list of fields) where the list of fields contains
                  all the untranslatable fields of the model we want to translate anyway
         :rtype: dict[str, list[str]]

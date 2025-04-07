@@ -134,8 +134,9 @@ class MailTrackingValue(models.Model):
         to display tracking values. Order it according to asked display, aka
         ascending sequence (and field name).
 
-        :return list: for each tracking value in self, their formatted display
+        :return: for each tracking value in self, their formatted display
           values given as a dict;
+        :rtype: list[dict]
         """
         model_map = {}
         for tracking in self:
@@ -152,8 +153,9 @@ class MailTrackingValue(models.Model):
         to display tracking values. Order it according to asked display, aka
         ascending sequence (and field name).
 
-        :return list: for each tracking value in self, their formatted display
+        :returns: for each tracking value in self, their formatted display
           values given as a dict;
+        :rtype: list[dict]
         """
         if not self:
             return []

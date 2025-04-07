@@ -294,7 +294,8 @@ class MailRenderMixin(models.AbstractModel):
         :param dict options: options for rendering propagated to IrQweb render
           (see docstring for available options);
 
-        :return dict: {res_id: string of rendered template based on record}
+        :returns: {res_id: string of rendered template based on record}
+        :rtype: dict
         """
         results = dict.fromkeys(res_ids, u"")
         if not template_src or not res_ids:
@@ -400,7 +401,8 @@ class MailRenderMixin(models.AbstractModel):
         :param dict options: options for rendering propagated to IrQweb render
           (see docstring for available options);
 
-        :return dict: {res_id: string of rendered template based on record}
+        :returns: {res_id: string of rendered template based on record}
+        :rtype: dict
         """
         results = {}
         if not res_ids:
@@ -451,7 +453,8 @@ class MailRenderMixin(models.AbstractModel):
         :param dict options: options for rendering (no options available
           currently);
 
-        :return dict: {res_id: string of rendered template based on record}
+        :returns: {res_id: string of rendered template based on record}
+        :rtype: dict
         """
         results = dict.fromkeys(res_ids, "")
         if not template_txt or not res_ids:
@@ -521,7 +524,8 @@ class MailRenderMixin(models.AbstractModel):
 
         :param rendered: result of ``_render_template``;
 
-        :return dict: updated version of rendered per record ID;
+        :returns: updated version of rendered per record ID;
+        :rtype: dict
         """
         res_ids = list(rendered.keys())
         for res_id, rendered_html in rendered.items():
@@ -566,7 +570,8 @@ class MailRenderMixin(models.AbstractModel):
             behavior is to remove them. It is used notably for browser-specific
             code implemented like comments;
 
-        :return dict: {res_id: string of rendered template based on record}
+        :returns: ``{res_id: string of rendered template based on record}``
+        :rtype: dict
         """
         if options is None:
             options = {}
@@ -613,7 +618,8 @@ class MailRenderMixin(models.AbstractModel):
           Odoo model given by model;
         :param string engine: inline_template or qweb_view;
 
-        :return dict: {res_id: lang code (i.e. en_US)}
+        :return: {res_id: lang code (i.e. en_US)}
+        :rtype: dict
         """
         self.ensure_one()
 
@@ -631,8 +637,9 @@ class MailRenderMixin(models.AbstractModel):
           defined by self.render_model)
         :param string engine: inline_template, qweb, or qweb_view;
 
-        :return dict: {lang: (template with lang=lang_code if specific lang computed
+        :return: {lang: (template with lang=lang_code if specific lang computed
           or template, res_ids targeted by that language}
+        :rtype: dict
         """
         self.ensure_one()
 
@@ -680,7 +687,8 @@ class MailRenderMixin(models.AbstractModel):
             behavior is to remove them. It is used notably for browser-specific
             code implemented like comments;
 
-        :return dict: {res_id: string of rendered template based on record}
+        :return: {res_id: string of rendered template based on record}
+        :rtype: dict
         """
         if field not in self:
             raise ValueError(

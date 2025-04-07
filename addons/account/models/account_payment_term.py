@@ -173,8 +173,6 @@ class AccountPaymentTerm(models.Model):
             We assume that the input total in move currency (tax_amount_currency + untaxed_amount_currency) is already cash rounded.
             The cash rounding does not change the totals: Consider the sum of all the computed payment term amounts in move / company currency.
             It is the same as the input total in move / company currency.
-        :return (list<tuple<datetime.date,tuple<float,float>>>): the amount in the company's currency and
-            the document's currency, respectively for each required payment date
         """
         self.ensure_one()
         company_currency = company.currency_id

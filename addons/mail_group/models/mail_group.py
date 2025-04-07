@@ -288,7 +288,7 @@ class MailGroup(models.Model):
             format used in mail groups;
           * apply moderation rules;
 
-        :return message: newly-created mail.message
+        :returns: newly-created mail.message
         """
         self.ensure_one()
         # First create the <mail.message>

@@ -65,8 +65,9 @@ class Base(models.AbstractModel):
           wrong formatting, invalid country information, ...). Otherwise False
           is returned;
 
-        :return str: formatted number. If formatting is not possible False is
+        :return: formatted number. If formatting is not possible ``False`` is
           returned.
+        :rtype: str | Literal[False]
         """
         if not number:
             # if no number is given, having a singletong recordset is mandatory to

@@ -122,7 +122,7 @@ class SaleOrder(models.Model):
 
         :param product.template product_template:
         :return: matrix to display
-        :rtype dict:
+        :rtype: dict
         """
         def has_ptavs(line, sorted_attr_ids):
             # TODO instead of sorting on ids, use odoo-defined order for matrix ?

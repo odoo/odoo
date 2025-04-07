@@ -614,7 +614,7 @@ class MrpWorkorder(models.Model):
     def _cal_cost(self, date=False):
         """Returns total cost of time spent on workorder.
 
-        :param date datetime: Only calculate for time_ids that ended before this date
+        :param datetime date: Only calculate for time_ids that ended before this date
         """
         total = 0
         for wo in self:

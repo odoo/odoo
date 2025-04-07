@@ -187,7 +187,6 @@ class PosOrder(models.Model):
     def _prepare_tax_base_line_values(self):
         """ Convert pos order lines into dictionaries that would be used to compute taxes later.
 
-        :param sign: An optional parameter to force the sign of amounts.
         :return: A list of python dictionaries (see '_prepare_base_line_for_taxes_computation' in account.tax).
         """
         result = []
@@ -1092,9 +1091,8 @@ class PosOrder(models.Model):
 
         :param orders: dictionary with the orders to be created.
         :type orders: dict.
-        :param draft: Indicate if the orders are meant to be finalized or temporarily saved.
-        :type draft: bool.
-        :Returns: list -- list of db-ids for the created and updated orders.
+        :returns: list of db-ids for the created and updated orders.
+        :rtype: list
         """
         sync_token = randrange(100_000_000)  # Use to differentiate 2 parallels calls to this function in the logs
         _logger.info("PoS synchronisation #%d started for PoS orders references: %s", sync_token, [self._get_order_log_representation(order) for order in orders])
@@ -1738,7 +1736,6 @@ class PosOrderLine(models.Model):
     def _prepare_tax_base_line_values(self):
         """ Convert pos order lines into dictionaries that would be used to compute taxes later.
 
-        :param sign: An optional parameter to force the sign of amounts.
         :return: A list of python dictionaries (see '_prepare_base_line_for_taxes_computation' in account.tax).
         """
         return [line._prepare_base_line_for_taxes_computation() for line in self]

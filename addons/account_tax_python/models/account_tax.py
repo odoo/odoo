@@ -128,7 +128,7 @@ class AccountTax(models.Model):
         [!] Mirror of the same method in account_tax.js.
         PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 
-        :param tax_data:          The values of a tax returned by '_prepare_taxes_computation'.
+        :param raw_base:
         :param evaluation_context:  The context created by '_eval_taxes_computation_prepare_context'.
         :return:                    The tax base amount.
         """

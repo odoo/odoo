@@ -123,8 +123,8 @@ class MailGuest(models.Model):
     def _format_auth_cookie(self):
         """Format the cookie value for the given guest.
 
-        :param guest: guest to format the cookie value for
-        :return str: formatted cookie value
+        :return: formatted cookie value
+        :rtype: str
         """
         self.ensure_one()
         return f"{self.id}{self._cookie_separator}{self.access_token}"

@@ -198,8 +198,6 @@ class GamificationBadge(models.Model):
     def _can_grant_badge(self):
         """Check if a user can grant a badge to another user
 
-        :param uid: the id of the res.users trying to send the badge
-        :param badge_id: the granted badge id
         :return: integer representing the permission.
         """
         if self.env.is_admin():

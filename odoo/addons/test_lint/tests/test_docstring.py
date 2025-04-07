@@ -91,6 +91,11 @@ def extract_docstring_params(method):
                         e = f"conflicting type: {type_param} (:param:) vs {type_type} (:type:)"
                         raise ValueError(e)
 
+            elif kind == 'returns':
+                if name:
+                    e = f'invalid ":{kind} {name}:", did you mean ":rtype: {name}"?'
+                    raise ValueError(e)
+
             elif kind == 'type':
                 if not name:
                     e = "empty :type:"

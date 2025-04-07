@@ -277,14 +277,12 @@ class Base(models.AbstractModel):
         The returning value is a read of the resequenced records with the specification given
         in the parameter.
 
-        :param ids: identifiers of the records to resequence, in the new sequence order
-        :type ids: list(id)
-        :param str field: field used for sequence specification, defaults to
-                          "sequence"
+        :param specification: specification for the read of the resequenced records
+        :type specification: dict[str, dict]
+        :param str field_name: field used for sequence specification, defaults to "sequence"
         :param int offset: sequence number for first record in ``ids``, allows
                            starting the resequencing from an arbitrary number,
                            defaults to ``0``
-        :param dict[str, dict] specification: specification for the read of the resequenced records
         """
         if field_name not in self._fields:
             return []
@@ -354,14 +352,11 @@ class Base(models.AbstractModel):
         :param str order: optional ``order by`` specification, for
                 overriding the natural sort ordering of the groups,
                 see also :meth:`~.search`.
-        :return: list of dictionaries (one dictionary for each group) containing:
-
+        :return: list of dict such as ``[{'groupy_spec': value, ...}, ...]`` containing:
                     * the groupby values: {groupby[i]: <value>}
                     * the aggregate values: {aggregates[i]: <value>}
                     * __extra_domain: list of tuples specifying the group search criteria
                     * __fold: boolean if a fold_name is set on the comodel and read_group_expand is activated
-
-        :rtype: [{'groupy_spec': value, ...}, ...]
         :raise AccessError: if user is not allowed to access requested information
         """
         groupby = tuple(groupby)

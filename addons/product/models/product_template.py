@@ -870,7 +870,7 @@ class ProductTemplate(models.Model):
         :type parent_combination: recordset `product.template.attribute.value`
         :param parent_name: the name of the parent product combination.
         :type parent_name: str
-        :param list combination: The combination of the product, as a
+        :param list combination_ids: The combination of the product, as a
             list of `product.template.attribute.value` ids.
 
         :return: dict of exclusions
@@ -926,8 +926,8 @@ class ProductTemplate(models.Model):
     def _get_own_attribute_exclusions(self, combination_ids=None):
         """Get exclusions coming from the current template.
 
-        :param list combination: The combination of the product, as a
-            list of `product.template.attribute.value` ids.
+        :param list combination_ids: The combination of the product, as
+            a list of `product.template.attribute.value` ids.
         Dictionnary, each product template attribute value is a key, and for each of them
         the value is an array with the other ptav that they exclude (empty if no exclusion).
         """

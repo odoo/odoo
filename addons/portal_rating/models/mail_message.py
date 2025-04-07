@@ -56,7 +56,8 @@ class MailMessage(models.Model):
         :param dict rating_values: values coming from reading ratings
           in database;
 
-        :return dict: updated rating_values
+        :returns: updated rating_values
+        :rtype: dict
         """
         publisher_id, publisher_name = rating_values['publisher_id'] or [False, '']
         rating_values['publisher_avatar'] = f'/web/image/res.partner/{publisher_id}/avatar_128/50x50' if publisher_id else ''

@@ -1622,18 +1622,19 @@ class StockPicking(models.Model):
         we don't want to notify a picking on move that it doesn't
         contain.
 
-        :param orig_obj_changes dict: contain a record as key and the
-        change on this record as value.
-        eg: {'move_id': (new product_uom_qty, old product_uom_qty)}
-        :param stream_field string: It has to be a field of the
-        records that are register in the key of 'orig_obj_changes'
-        eg: 'move_dest_ids' if we use move as record (previous example)
-            - 'UP' if we want to log on the upper most ongoing
-            documents.
-            - 'DOWN' if we want to log on following documents.
+        :param dict orig_obj_changes: contain a record as key and the
+            change on this record as value.
+            eg: {'move_id': (new product_uom_qty, old product_uom_qty)}
+        :param str stream_field: It has to be a field of the
+            records that are register in the key of 'orig_obj_changes'
+            eg: 'move_dest_ids' if we use move as record (previous example)
+                - 'UP' if we want to log on the upper most ongoing
+                documents.
+                - 'DOWN' if we want to log on following documents.
+        :param str stream: ``'UP'`` or ``'DOWN'``
         :param groupby_method: Only need when
-        stream is 'DOWN', it should group by tuple(object on
-        which the activity is log, the responsible for this object)
+            stream is 'DOWN', it should group by tuple(object on
+            which the activity is log, the responsible for this object)
         """
         if self.env.context.get('skip_activity'):
             return {}
@@ -1686,19 +1687,18 @@ class StockPicking(models.Model):
         call in order to use a template and render it with a
         rendering_context.
 
-        :param documents dict: A tuple (document, responsible) as key.
-        An activity will be log by key. A rendering_context as value.
-        If used with _log_activity_get_documents. In 'DOWN' stream
-        cases the rendering_context will be a dict with format:
-        {'stream_object': ('orig_object', new_qty, old_qty)}
-        'UP' stream will add all the documents browsed in order to
-        get the final/upstream document present in the key.
-        :param render_method method: a static function that will generate
-        the html note to log on the activity. The render_method should
-        use the args:
-            - rendering_context dict: value of the documents argument
-        the render_method should return a string with an html format
-        :param stream string:
+        :param dict documents: A tuple (document, responsible) as key.
+            An activity will be log by key. A rendering_context as value.
+            If used with _log_activity_get_documents. In 'DOWN' stream
+            cases the rendering_context will be a dict with format:
+            {'stream_object': ('orig_object', new_qty, old_qty)}
+            'UP' stream will add all the documents browsed in order to
+            get the final/upstream document present in the key.
+        :param callable render_method: a static function that will generate
+            the html note to log on the activity. The render_method should
+            use the args:
+                - rendering_context dict: value of the documents argument
+            the render_method should return a string with an html format
         """
         for (parent, responsible), rendering_context in documents.items():
             note = render_method(rendering_context)

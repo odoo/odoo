@@ -35,7 +35,8 @@ class IapAutocompleteApi(models.AbstractModel):
     def _request_partner_autocomplete(self, action, params, timeout=15):
         """ Contact endpoint to get autocomplete data.
 
-        :return tuple: results, error code
+        :returns: a 2-element tuple (results, error code)
+        :rtype: tuple[dict, Literal[False]] | tuple[Literal[False], str]
         """
         try:
             results = self._contact_iap('/api/dnb/1', action, params, timeout=timeout)

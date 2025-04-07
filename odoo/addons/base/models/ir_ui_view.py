@@ -1499,8 +1499,9 @@ actual arch.
         :param self: the view being validated
         :param node: the combined architecture as an etree
         :param model_name: the reference model name for the given architecture
+        :param view_type:
         :param editable: whether the view is considered editable
-        :param full: whether the whole view must be validated
+        :param node_info:
         :return: the combined architecture's NameManager
         """
         self.ensure_one()
@@ -2479,15 +2480,14 @@ class Base(models.AbstractModel):
         return self.get_formview_action(access_uid=access_uid)
 
     @api.model
-    def get_empty_list_help(self, help_message):
+    def get_empty_list_help(self, help_message: str) -> str:
         """ Hook method to customize the help message in empty list/kanban views.
 
         By default, it returns the help received as parameter.
 
-        :param str help: ir.actions.act_window help content
+        :param help_message: ir.actions.act_window help content
         :return: help message displayed when there is no result to display
           in a list/kanban view (by default, it returns the action help)
-        :rtype: str
         """
         return help_message
 

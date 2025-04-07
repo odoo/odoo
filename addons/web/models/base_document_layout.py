@@ -210,7 +210,7 @@ class BaseDocumentLayout(models.TransientModel):
         :param white_threshold: arbitrary value defining the maximum value a color can reach
         :param mitigate: arbitrary value defining the maximum value a band can reach
 
-        :return colors: hex values of primary and secondary colors
+        :return: a 2-value tuple with hex values of primary and secondary colors
         """
         if not logo:
             return False, False

@@ -262,8 +262,8 @@ class IrAsset(models.Model):
         a specific asset and target the right bundle, i.e. the first one
         defining the target path.
 
-        :param target_path_def: string: path to match.
-        :root_bundle: string: bundle from which to initiate the search.
+        :param str target_path_def: path to match.
+        :param str root_bundle: bundle from which to initiate the search.
         :returns: the first matching bundle or None
         """
         installed = self._get_installed_addons_list()
@@ -332,7 +332,6 @@ class IrAsset(models.Model):
 
         :param path_def: the definition (glob) of file paths to match
         :param installed: the list of installed addons
-        :param extensions: a list of extensions that found files must match
         :returns: a list of tuple: (path, full_path, modified)
         """
         paths = None

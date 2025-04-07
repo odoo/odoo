@@ -129,7 +129,7 @@ class MailFollowers(models.Model):
         :param pids: additional set of partner IDs from which to fetch recipient
           data independently from following status;
 
-        :return dict: recipients data based on record.ids if given, else a generic
+        :returns: recipients data based on record.ids if given, else a generic
           '0' key to keep a dict-like return format. Each item is a dict based on
           recipients partner ids formatted like {
             'active': partner.active;
@@ -150,6 +150,7 @@ class MailFollowers(models.Model):
             'uid': linked 'res.users' ID. If several users exist preference is
                 given to internal user, then share users;
           }
+        :rtype: dict
         """
         self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])
         self.env['mail.message.subtype'].flush_model(['internal'])
@@ -520,14 +521,11 @@ GROUP BY fol.id%s%s""" % (
         :param subtypes: optional subtypes for new partner followers. This
           is a dict whose keys are partner IDs and value subtype IDs for that
           partner.
-        :param channel_subtypes: optional subtypes for new channel followers. This
-          is a dict whose keys are channel IDs and value subtype IDs for that
-          channel.
         :param check_existing: if True, check for existing followers for given
           documents and handle them according to existing_policy parameter.
           Setting to False allows to save some computation if caller is sure
           there are no conflict for followers;
-        :param existing policy: if check_existing, tells what to do with already
+        :param existing_policy: if check_existing, tells what to do with already
           existing followers:
 
           * skip: simply skip existing followers, do not touch them;

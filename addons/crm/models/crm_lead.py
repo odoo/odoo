@@ -1219,9 +1219,10 @@ class CrmLead(models.Model):
     def action_schedule_meeting(self, smart_calendar=True):
         """ Open meeting's calendar view to schedule meeting on current opportunity.
 
-            :param smart_calendar: boolean, to set to False if the view should not try to choose relevant
+            :param bool smart_calendar: to set to False if the view should not try to choose relevant
               mode and initial date for calendar view, see ``_get_opportunity_meeting_view_parameters``
-            :return dict: dictionary value for created Meeting view
+            :returns: dictionary value for created Meeting view
+            :rtype: dict
         """
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
@@ -1431,8 +1432,9 @@ class CrmLead(models.Model):
                 - m2o: the first not null value prevails (the other are dropped)
                 - any other type of field: same as m2o
 
-            :param fields: list of fields to process
-            :return dict data: contains the merged values of the new opportunity
+            :param fnames: list of fields to process
+            :returns: contains the merged values of the new opportunity
+            :rtype: dict
         """
         if fnames is None:
             fnames = self._merge_get_fields()
@@ -2150,7 +2152,7 @@ class CrmLead(models.Model):
         To avoid this, we add 0.1 in each frequency. With few data, the computation is than not really realistic.
         The more we have records to analyse, the more the estimation will be precise.
 
-        :param: is_tooltip (boolean). If true, method recomputes the probability of self, that should be a singleton, and
+        :param bool is_tooltip: If true, method recomputes the probability of self, that should be a singleton, and
             also returns a dict containing probability, and a list of all (score, field, value) triplets for all value of
             PLS fields that impact the computation of the probability. Score is a simple value that indicates whether the
             impact is positive (>.5) or negative (<.5). See method prepare_pls_tooltip_data, or test_pls_tooltip_data for
@@ -2595,7 +2597,7 @@ class CrmLead(models.Model):
                first stage can be used to know how many lost and won there is
                as won count are equals for all stage
                and first stage is always incremented in lost_count
-        :param frequencies: lead_scoring_frequencies
+        :param team_results:
         :return: won count, lost count and total count for all records in frequencies
         """
         # TODO : check if we need to handle specific team_id stages [for lost count] (if first stage in sequence is team_specific)
@@ -2752,12 +2754,13 @@ class CrmLead(models.Model):
             in the crm.lead form view. This method first replaces ids with display names of relational
             fields before returning data, then also recomputes probabilities and writes them on self.
 
-            :returns dict: {
+            :returns: {
                 low_3_data: list of field-value couples for lowest 3 criterions, lowest first
                 probability: numerical value, used for display on tooltip
                 team_name: string, name of lead team if any
                 top_3_data: list of field-value couples for top 3 criterions, highest first
-            }
+              }
+            :rtype: dict
         '''
         self.ensure_one()
         _unused, tooltip_data = self._pls_get_naive_bayes_probabilities(is_tooltip=True)

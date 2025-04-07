@@ -48,9 +48,7 @@ class ResCompany(models.Model):
 
     def _enrich(self):
         """ This method calls the partner autocomplete service from IAP to enrich
-        partner related fields of the company.
-
-        :return bool: either done, either failed """
+        partner related fields of the company. """
         self.ensure_one()
         _logger.info("Starting enrich of company %s (%s)", self.name, self.id)
 
@@ -60,7 +58,7 @@ class ResCompany(models.Model):
 
         company_data = self.env['res.partner'].enrich_by_domain(company_domain, timeout=COMPANY_AC_TIMEOUT)
         if not company_data or company_data.get("error"):
-            return
+            return False
 
         company_data = {field: value for field, value in company_data.items()
                         if field in self.partner_id._fields and value and (field == 'image_1920' or not self.partner_id[field])}

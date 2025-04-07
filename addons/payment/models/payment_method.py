@@ -338,7 +338,7 @@ class PaymentMethod(models.Model):
         :param dict mapping: A non-exhaustive mapping of generic payment method codes to
                              provider-specific codes.
         :return: The corresponding payment method, if any.
-        :type: payment.method
+        :rtype: payment.method
         """
         generic_to_specific_mapping = mapping or {}
         specific_to_generic_mapping = {v: k for k, v in generic_to_specific_mapping.items()}

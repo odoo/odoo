@@ -1545,21 +1545,22 @@ class PosSession(models.Model):
         [1] Except when `force_company_currency` = True. It means that values in `amounts_to_add`
             is in company currency.
 
-        :params old_amounts dict:
+        :param dict old_amounts:
             Amounts to update
-        :params amounts_to_add dict:
+        :param dict amounts_to_add:
             Amounts used to update the old_amounts
-        :params date date:
+        :param date date:
             Date used for conversion
-        :params round bool:
+        :param bool round:
             Same as round parameter of `res.currency._convert`.
             Defaults to True because that is the default of `res.currency._convert`.
             We put it to False if we want to round globally.
-        :params force_company_currency bool:
+        :param bool force_company_currency:
             If True, the values in amounts_to_add are in company's currency.
             Defaults to False because it is only used to anglo-saxon lines.
 
-        :return dict: new amounts combining the values of `old_amounts` and `amounts_to_add`.
+        :returns: new amounts combining the values of `old_amounts` and `amounts_to_add`.
+        :rtype: dict
         """
         # make a copy of the old amounts
         new_amounts = { **old_amounts }
@@ -1603,14 +1604,15 @@ class PosSession(models.Model):
         in account module. Understanding this basic is important in correctly assigning values for
         'amount' and 'amount_currency' in the account.move.line record.
 
-        :param partial_move_line_vals dict:
+        :param dict partial_move_line_vals:
             initial values in creating account.move.line
-        :param amount float:
+        :param float amount:
             amount derived from pos.payment, pos.order, or pos.order.line records
-        :param amount_converted float:
+        :param float amount_converted:
             converted value of `amount` from the given `session_currency` to company currency
 
-        :return dict: complete values for creating 'amount.move.line' record
+        :return: complete values for creating 'amount.move.line' record
+        :rtype: dict
         """
         if self.is_in_company_currency or force_company_currency:
             additional_field = {}

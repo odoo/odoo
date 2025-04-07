@@ -23,12 +23,14 @@ class SaleOrder(models.Model):
         """ Return sale order ubl builder with decording capibily to given tree
 
         :param xml tree: xml tree to find builder.
-        :return class: class object of builder for given tree if found else none.
+        :returns: model of builder for given tree if found else none.
+        :rtype: models.Model | None
         """
         customization_id = tree.find('{*}CustomizationID')
         if customization_id is not None:
             if customization_id.text == 'urn:fdc:peppol.eu:poacc:trns:order:3':
                 return self.env['sale.edi.xml.ubl_bis3']
+        return None
 
     def _create_activity_set_details(self):
         """ Create activity on sale order to set details.
@@ -46,7 +48,7 @@ class SaleOrder(models.Model):
     def _get_line_vals_list(self, lines_vals):
         """ Get sale order line values list.
 
-        :param list line_vals: List of values [name, qty, price, tax].
+        :param list lines_vals: List of values [name, qty, price, tax].
         :return: List of dict values.
         """
 

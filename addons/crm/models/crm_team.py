@@ -193,7 +193,7 @@ class CrmTeam(models.Model):
 
         See sub methods for more details about assign process.
 
-        :return action: a client notification giving some insights on assign
+        :returns: action, a client notification giving some insights on assign
           process;
         """
         teams_data, members_data = self._action_assign_leads(force_quota=True, creation_delta_days=0)
@@ -235,9 +235,10 @@ class CrmTeam(models.Model):
         :param int creation_delta_days: Take into account all leads created in the last nb days (by default 7).
                                         If set to zero we take all the past leads.
 
-        :return teams_data, members_data: structure-based result of assignment
-          process. For more details about data see ``CrmTeam._allocate_leads()``
-          and ``CrmTeam._assign_and_convert_leads``;
+        :returns: 2-elements tuple (teams_data, members_data) as a
+          structure-based result of assignment process. For more details
+          about data see :meth:`CrmTeam._allocate_leads` and
+          :meth:`CrmTeam._assign_and_convert_leads`;
         """
         if not (self.env.user.has_group('sales_team.group_sale_manager') or self.env.is_system()):
             raise exceptions.UserError(_('Lead/Opportunities automatic assignment is limited to managers or administrators'))
@@ -259,8 +260,9 @@ class CrmTeam(models.Model):
         :param teams_data: see ``CrmTeam._allocate_leads()``;
         :param members_data: see ``CrmTeam._assign_and_convert_leads()``;
 
-        :return list: list of formatted logs, ready to be formatted into a nice
+        :returns: list of formatted logs, ready to be formatted into a nice
         plaintext or html message at caller's will
+        :rtype: list[str]
         """
         # extract some statistics
         assigned = sum(len(teams_data[team]['assigned']) + len(teams_data[team]['merged']) for team in teams_data)
@@ -361,20 +363,27 @@ class CrmTeam(models.Model):
         allocation will be proportional to their size (assignment of their
         members).
 
-        :config int crm.assignment.bundle: deprecated
-        :config int crm.assignment.commit.bundle: optional config parameter allowing
-          to set size of lead batch to be committed together. By default 100
-          which is a good trade-off between transaction time and speed
-        :config float crm.assignment.delay: optional config parameter giving a
-          delay before taking a lead into assignment process (BUNDLE_HOURS_DELAY)
-          given in hours. Purpose if to allow other crons or automation rules
-          to make their job. This option is mainly historic as its purpose was
-          to let automation rules prepare leads and score before PLS was added
-          into CRM. This is now not required anymore but still supported;
+        Supported ``ir.config_parameter`` settings.
+
+        ``crm.assignment.bundle``
+            deprecated
+
+        ``crm.assignment.commit.bundle`` (``int``)
+            Allow to set size of lead batch to be committed together. By
+            default 100 which is a good trade-off between transaction time and
+            speed.
+
+        ``crm.assignment.delay`` (``float``)
+            Give a delay before taking a lead into assignment process
+            (BUNDLE_HOURS_DELAY) given in hours. Purpose if to allow other
+            crons or automation rules to make their job. This option is mainly
+            historic as its purpose was to let automation rules prepare leads
+            and score before PLS was added into CRM. This is now not required
+            anymore but still supported;
 
         :param int creation_delta_days: see ``CrmTeam._action_assign_leads()``;
 
-        :return teams_data: dict() with each team assignment result:
+        :return: teams_data dict() with each team assignment result:
           team: {
             'assigned': set of lead IDs directly assigned to the team (no
               duplicate or merged found);
@@ -560,7 +569,7 @@ class CrmTeam(models.Model):
 
         :param bool force_quota: see ``CrmTeam._action_assign_leads()``;
 
-        :return members_data: dict() with each member assignment result:
+        :returns: dict() with each member assignment result:
           membership: {
             'assigned': set of lead IDs directly assigned to the member;
           }, ...

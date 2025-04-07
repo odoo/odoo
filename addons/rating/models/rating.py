@@ -190,11 +190,12 @@ class RatingRating(models.Model):
         are classified by model. Ratings not linked to a valid record through
         res_model / res_id are ignored.
 
-        :return dict: for each model having at least one rating in self, have
+        :returns: for each model having at least one rating in self, have
           a sub-dict containing
             * ratings: ratings related to that model;
             * record IDs: records linked to the ratings of that model, in same
               order;
+        :rtype: dict
         """
         data_by_model = {}
         for rating in self.filtered(lambda act: act.res_model and act.res_id):

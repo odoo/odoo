@@ -223,7 +223,8 @@ class PaymentProvider(models.Model):
         valid, it is registered to use with Apple Pay.
         See https://stripe.com/docs/stripe-js/elements/payment-request-button#verifying-your-domain-with-apple-pay.
 
-        :return dict: A client action with a success message.
+        :returns: A client action with a success message.
+        :rtype: dict
         :raise UserError: If test keys are used to make the request.
         """
         self.ensure_one()

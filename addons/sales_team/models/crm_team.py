@@ -34,7 +34,7 @@ class CrmTeam(models.Model):
           5- any team matching my company (based on company rule)
 
         :param user_id: salesperson to target, fallback on env.uid;
-        :domain: optional domain to filter teams (like use_lead = True);
+        :param domain: optional domain to filter teams (like use_lead = True);
         """
         if not user_id:
             user = self.env.user

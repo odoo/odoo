@@ -105,7 +105,7 @@ class ResPartner(models.Model):
     def _get_busy_calendar_events(self, start_datetime, end_datetime):
         """Get a mapping from partner id to attended events intersecting with the time interval.
 
-        :return dict[int, <calendar.event>]:
+        :rtype: dict[int, <calendar.event>]
         """
         events = self.env['calendar.event'].search([
             ('stop', '>=', start_datetime.replace(tzinfo=None)),

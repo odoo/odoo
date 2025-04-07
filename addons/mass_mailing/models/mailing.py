@@ -934,8 +934,11 @@ class MailingMailing(models.Model):
         """ Give list of opt-outed emails, depending on specific model-based
         computation if available.
 
-        :return list: opt-outed emails, preferably normalized (aka not records)
+        :returns: opt-outed emails, preferably normalized (aka not records)
         """
+        # FIXME: The function and docstring say it returns a list but opt_out
+        #        is initialized as a dict, and `_mailing_get_opt_out_list`
+        #        actually returns a set. So is it a list, a set, or a dict?
         self.ensure_one()
         opt_out = {}
         target = self.env[self.mailing_model_real]

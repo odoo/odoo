@@ -137,7 +137,7 @@ class EventLeadRule(models.Model):
           self have to run. Triggers should already be checked, only filters are
           applied here.
 
-        :return leads: newly-created leads. Updated leads are not returned.
+        :returns: newly-created leads. Updated leads are not returned.
         """
         # order by ID, ensure first created wins
         registrations = registrations.sorted('id')
