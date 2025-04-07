@@ -45,7 +45,9 @@ export class MailCoreCommon {
                         continue;
                     }
                     this.env.bus.trigger("mail.message/delete", { message });
-                    message.delete();
+                    if (payload.delete_from_store) {
+                        message.delete();
+                    }
                 }
             });
             this.busService.subscribe("mail.message/notification_update", (payload) => {

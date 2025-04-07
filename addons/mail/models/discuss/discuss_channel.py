@@ -571,14 +571,8 @@ class Channel(models.Model):
         message_format = message.message_format()[0]
         if "temporary_id" in self.env.context:
             message_format["temporary_id"] = self.env.context["temporary_id"]
-        # Last interest and is_pinned are updated for a channel when posting a message.
-        # So a notification is needed to update UI, and it should come before the
-        # notification of the message itself to ensure the channel automatically opens.
         payload = {"id": self.id, "last_interest_dt": fields.Datetime.now()}
         bus_notifications = [
-            ((self, "members"), "mail.record/insert", {
-                "Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}
-            }),
             (self, "discuss.channel/last_interest_dt_changed", payload),
             (self, "discuss.channel/new_message", {"id": self.id, "message": message_format}),
         ]
@@ -614,7 +608,6 @@ class Channel(models.Model):
             self = self.sudo()
         # sudo: discuss.channel.member - updating hard-coded fields/values for non-self members
         self.sudo().channel_member_ids.write({
-            'is_pinned': True,
             'last_interest_dt': fields.Datetime.now(),
         })
         # mail_post_autofollow=False is necessary to prevent adding followers
