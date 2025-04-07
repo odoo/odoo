@@ -55,7 +55,9 @@ export class ResPartner extends webModels.ResPartner {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        search = search.toLowerCase();
+        if (!Array.isArray(search)) {
+            search = search.toLowerCase();
+        }
         /**
          * Returns the given list of partners after filtering it according to
          * the logic of the Python method `get_mention_suggestions` for the
@@ -92,7 +94,7 @@ export class ResPartner extends webModels.ResPartner {
         const partnersFromUsers = ResUsers._filter([])
             .map((user) => this.browse(user.partner_id)[0])
             .filter((partner) => partner);
-        const mainMatchingPartnerIds = mentionSuggestionsFilter(partnersFromUsers, search, limit);
+        const mainMatchingPartnerIds = (!Array.isArray(search)) ? mentionSuggestionsFilter(partnersFromUsers, search, limit) : search;
 
         let extraMatchingPartnerIds = [];
         // if not enough results add extra suggestions based on partners
@@ -123,7 +125,6 @@ export class ResPartner extends webModels.ResPartner {
         const ResUsers = this.env["res.users"];
         /** @type {import("mock_models").DiscussChannel} */
         const channel = this.env["discuss.channel"].browse(channel_id)[0];
-        const searchLower = search.toLowerCase();
 
         const extraDomain = [
             ["user_ids", "!=", false],
@@ -135,9 +136,9 @@ export class ResPartner extends webModels.ResPartner {
         if (allowed_group) {
             extraDomain.push(["group_ids", "in", allowed_group]);
         }
-        const baseDomain = search
-            ? ["|", ["name", "ilike", searchLower], ["email", "ilike", searchLower]]
-            : [];
+        const baseDomain = !Array.isArray(search)
+            ? ["|", ["name", "ilike", search], ["email", "ilike", search]]
+              : [["id", "in", search]];
         const partners = this._search_mention_suggestions(
             baseDomain,
             limit,

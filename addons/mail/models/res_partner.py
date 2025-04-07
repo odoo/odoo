@@ -4,7 +4,7 @@ import re
 
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
-from odoo.tools.misc import limited_field_access_token
+from odoo.tools.misc import is_list_of, limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -283,6 +283,11 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_mention_suggestions_domain(self, search):
+        if is_list_of(search, int):
+            return expression.AND([
+                [("id", "in", search)],
+                [('active', '=', True)],
+            ])
         return expression.AND([
             expression.OR([
                 [('name', 'ilike', search)],
