@@ -806,3 +806,47 @@ class TestTimesheet(TestCommonTimesheet):
         create_timesheet(self.task2, 10)
         project_update_vals_list = create_project_update()
         self.assertListEqual(project_update_vals_list, [12, 15, 125])
+
+    def test_remaining_hours(self):
+        # Sub task with no allocated_hours
+        subtask = self.env['project.task'].create({
+            'name': 'Sub Task for Remaining Hours Test',
+            'project_id': self.project_customer.id,
+            'parent_id': self.task1.id,
+        })
+
+        # Case 1: Both allocated → expect normal computed values
+        self.project_customer.allocated_hours = 20.0
+        self.task1.allocated_hours = 10.0
+        self.task1.effective_hours = 5.0
+        subtask.effective_hours = 6.0
+
+        self.assertEqual(self.task1.remaining_hours, -1.0, msg=f"When both allocated, expected -1.0 but got {self.task1.remaining_hours}")
+        self.assertEqual(subtask.remaining_hours, -6.0, msg=f"When both allocated, expected -6.0 but got {subtask.remaining_hours}")
+
+        # Case 2: Neither allocated → expect 0.0
+        self.project_customer.allocated_hours = 0.0
+        self.task1.allocated_hours = 0.0
+        self.task1.effective_hours = 5.0
+        subtask.effective_hours = 6.0
+
+        self.assertEqual(self.task1.remaining_hours, 0.0, msg=f"When both not allocated, expected 0.0 but got {self.task1.remaining_hours}")
+        self.assertEqual(subtask.remaining_hours, 0.0, msg=f"When both not allocated, expected 0.0 but got {subtask.remaining_hours}")
+
+        # Case 3: Only project allocated → expect 0.0
+        self.project_customer.allocated_hours = 5.0
+        self.task1.allocated_hours = 0.0
+        self.task1.effective_hours = 3.0
+        subtask.effective_hours = 2.0
+
+        self.assertEqual(self.task1.remaining_hours, 0.0, msg=f"When only project allocated, expected 0.0 but got {self.task1.remaining_hours}")
+        self.assertEqual(subtask.remaining_hours, 0.0, msg=f"When only project allocated, expected 0.0 but got {subtask.remaining_hours}")
+
+        # Case 4: Only task allocated → expect computed value
+        self.project_customer.allocated_hours = 0.0
+        self.task1.allocated_hours = 10.0
+        self.task1.effective_hours = 3.0
+        subtask.effective_hours = 2.0
+
+        self.assertEqual(self.task1.remaining_hours, 5.0, msg=f"When only task allocated, expected 5.0 but got {self.task1.remaining_hours}")
+        self.assertEqual(subtask.remaining_hours, 0.0, msg=f"When only task allocated, expected 0.0 but got {subtask.remaining_hours}")
