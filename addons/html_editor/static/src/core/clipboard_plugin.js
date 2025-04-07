@@ -157,6 +157,7 @@ export class ClipboardPlugin extends Plugin {
         this.removeSystemProperties(clonedContents);
         const dataHtmlElement = this.document.createElement("data");
         dataHtmlElement.append(clonedContents);
+        prependOriginToImages(dataHtmlElement, window.location.origin);
         const htmlContent = dataHtmlElement.innerHTML;
         ev.clipboardData.setData("text/html", htmlContent);
         ev.clipboardData.setData("application/vnd.odoo.odoo-editor", htmlContent);
@@ -695,4 +696,17 @@ export function isHtmlContentSupported(node) {
         node,
         '[data-oe-model]:not([data-oe-field="arch"]):not([data-oe-type="html"]),[data-oe-translation-id]'
     );
+}
+
+/**
+ * Add origin to relative img src.
+ * @param {string} origin
+ */
+function prependOriginToImages(doc, origin) {
+    doc.querySelectorAll("img").forEach((img) => {
+        const src = img.getAttribute("src");
+        if (src && !src.startsWith("http") && !src.startsWith("//")) {
+            img.src = origin + (src.startsWith("/") ? src : "/" + src);
+        }
+    });
 }
