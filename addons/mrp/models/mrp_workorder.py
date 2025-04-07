@@ -149,6 +149,7 @@ class MrpWorkorder(models.Model):
                                      column1="blocked_by_id", column2="workorder_id", string="Blocks",
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
+    procurement_name = fields.Char("Manufacturing order name", related='production_id.procurement_group_id.name')
 
     @api.depends('production_availability', 'blocked_by_workorder_ids.state', 'qty_ready', 'product_uom_id')
     def _compute_state(self):
