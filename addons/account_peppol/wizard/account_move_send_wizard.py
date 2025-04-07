@@ -50,13 +50,9 @@ class AccountMoveSendWizard(models.TransientModel):
 
     @api.depends('sending_methods')
     def _compute_invoice_edi_format(self):
-        # EXTENDS 'account' - add default on bis3 if not set on partner's preferences and "by Peppol" is selected
-        super()._compute_invoice_edi_format()
+        # OVERRIDE 'account' - sets ubl_bis3 as invoice_edi_format if Peppol is checked in sending methods but no format on partner.
         for wizard in self:
-            if not wizard.invoice_edi_format and wizard.sending_methods and 'peppol' in wizard.sending_methods:
-                wizard.invoice_edi_format = wizard.move_id.partner_id._get_peppol_edi_format()
-            elif wizard.invoice_edi_format != self._get_default_invoice_edi_format(wizard.move_id) and wizard.sending_methods and 'peppol' not in wizard.sending_methods:
-                wizard.invoice_edi_format = None  # back to initial state if user unchecked 'by Peppol'
+            wizard.invoice_edi_format = self._get_default_invoice_edi_format(wizard.move_id, sending_methods=wizard.sending_methods)
 
     def action_send_and_print(self, allow_fallback_pdf=False):
         # EXTENDS 'account'

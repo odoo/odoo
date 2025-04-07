@@ -76,6 +76,13 @@ class AccountMoveSend(models.AbstractModel):
     # SENDING METHODS
     # -------------------------------------------------------------------------
 
+    def _get_default_invoice_edi_format(self, move, **context) -> str:
+        # EXTENDS 'account' - default on bis3 if Peppol is set but no format on the partner
+        invoice_edi_format = super()._get_default_invoice_edi_format(move, **context)
+        if 'peppol' in (context.get('sending_methods') or []) and not invoice_edi_format:
+            return 'ubl_bis3'
+        return invoice_edi_format
+
     def _get_mail_layout(self):
         # EXTENDS 'account'
         # TODO remove the fallback in master
@@ -141,7 +148,7 @@ class AccountMoveSend(models.AbstractModel):
             partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
             if 'peppol' in invoice_data['sending_methods']:
                 invoice_edi_format = invoice_data['invoice_edi_format'] or partner._get_peppol_edi_format()
-                # Triggers online check of the partner's validity
+                # Triggers online check of the partner's validity, needs to be done before access to peppol_verification_state
                 is_applicable_to_move = self._is_applicable_to_move('peppol', invoice, invoice_edi_format=invoice_edi_format)
                 if not partner.peppol_eas or not partner.peppol_endpoint:
                     invoice.peppol_move_state = 'error'
