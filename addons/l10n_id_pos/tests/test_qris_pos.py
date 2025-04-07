@@ -214,6 +214,11 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
             self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PayementScreenQRISFetchQR', login="pos_user")
             self.assertEqual(patched.call_count, 1)
 
+            # when generating QR, ensure that cliTrxNumber is non-empty, else it will generate
+            # error in practice
+            qr_params = patched.call_args[0][1]
+            self.assertTrue(qr_params.get('cliTrxNumber'))
+
     @freeze_time("2024-02-27 04:15:00")
     def test_qris_change_amount(self):
         """ Test that when user changes the amount of order after generating QRIS QR for the first time,
