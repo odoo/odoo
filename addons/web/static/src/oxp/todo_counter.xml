@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="TodoCounter" >
+    <div class="o-dropdown dropdown o-dropdown--no-caret">
+      <button class="dropdown-toggle" t-on-click="onClick">
+          <i class="fa fa-tasks"></i>
+          <span class="o-mail-ActivityMenu-counter badge rounded-pill">
+            <t t-esc="nbDone"/>/<t t-esc="total"/>
+          </span>
+      </button>
+    </div>
+  </t>
+
+</templates>
