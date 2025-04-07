@@ -1,20 +1,106 @@
 import { Plugin } from "@html_editor/plugin";
-import { splitTextNode } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
-import { DIRECTIONS } from "@html_editor/utils/position";
+import { isBlock, closestBlock } from "@html_editor/utils/blocks";
+import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
+import { isTextNode } from "@html_editor/utils/dom_info";
+import { closestElement, findFurthest, selectElements } from "@html_editor/utils/dom_traversal";
+import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
-    static dependencies = ["selection", "history", "input"];
+    static dependencies = ["selection", "history", "input", "split"];
     resources = {
         input_handlers: this.onInput.bind(this),
+        beforeinput_handlers: withSequence(1, this.onBeforeInput.bind(this)),
     };
+
+    onBeforeInput() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (
+            selection.isCollapsed ||
+            closestElement(selection.anchorNode, "a") ||
+            closestElement(selection.focusNode, "a")
+        ) {
+            return;
+        }
+        const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
+        const hasTextNode = this.dependencies.selection.getTraversedNodes().some(isTextNode);
+        if (traversedBlocks.size === 1 && hasTextNode) {
+            this.historySavePointRestore = this.dependencies.history.makeSavePoint();
+        }
+    }
 
     onInput(ev) {
         const selection = this.dependencies.selection.getEditableSelection();
         if (ev.data !== "`" || closestElement(selection.anchorNode, "code")) {
             return;
         }
+        if (this.historySavePointRestore) {
+            this.historySavePointRestore();
+            let { anchorNode, anchorOffset, focusNode, focusOffset, direction } =
+                this.dependencies.split.splitSelection();
+            if (direction === false) {
+                // Swap anchorNode and focusNode
+                [anchorNode, anchorOffset, focusNode, focusOffset] = [
+                    focusNode,
+                    focusOffset,
+                    anchorNode,
+                    anchorOffset,
+                ];
+            }
+
+            const furthestAnchorElement = findFurthest(
+                anchorNode,
+                closestBlock(anchorNode),
+                (n) => !isBlock(n)
+            );
+            let start = this.dependencies.split.splitAroundUntil(anchorNode, furthestAnchorElement);
+            const furthestFocusElement = findFurthest(
+                focusNode,
+                closestBlock(focusNode),
+                (n) => !isBlock(n)
+            );
+            const end = this.dependencies.split.splitAroundUntil(focusNode, furthestFocusElement);
+
+            // After splitting the anchorNode, if the start element contains
+            // the focusNode, splitting the focusNode could cause the start
+            // element to be detached from the DOM. In this case, find the
+            // valid start element again to ensure it remains connected.
+            if (!start.isConnected) {
+                start = findFurthest(anchorNode, closestBlock(anchorNode), (n) => !isBlock(n));
+            }
+            const codeElement = this.document.createElement("code");
+            codeElement.classList.add("o_inline_code");
+            start.before(codeElement);
+            while (start) {
+                const next = start.nextSibling;
+                codeElement.appendChild(start);
+                if (start.nodeType === Node.ELEMENT_NODE) {
+                    for (const code of selectElements(start, "code")) {
+                        unwrapContents(code);
+                    }
+                }
+                if (start === end) {
+                    break;
+                }
+                start = next;
+            }
+            if (
+                !codeElement.previousSibling ||
+                codeElement.previousSibling.nodeType !== Node.TEXT_NODE
+            ) {
+                codeElement.before(document.createTextNode("\u200B"));
+            }
+            codeElement.after(document.createTextNode("\u200B"));
+            this.dependencies.selection.setSelection({
+                anchorNode: codeElement,
+                anchorOffset: nodeSize(codeElement),
+            });
+            this.dependencies.history.addStep();
+            delete this.historySavePointRestore;
+            return;
+        }
+
         // We just inserted a backtick, check if there was another
         // one in the text.
         let textNode = selection.startContainer;
