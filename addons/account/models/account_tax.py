@@ -917,6 +917,9 @@ class AccountTax(models.Model):
         :return:                    The tax amount.
         """
         self.ensure_one()
+        if self.amount_type == 'percent' and self.has_negative_factor:
+            return raw_base * self.amount / 100.0
+
         if self.amount_type == 'percent':
             total_percentage = sum(tax.amount for tax in batch) / 100.0
             to_price_excluded_factor = 1 / (1 + total_percentage) if total_percentage != -1 else 0.0

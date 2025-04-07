@@ -177,6 +177,10 @@ export const accountTaxHelpers = {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     eval_tax_amount_price_included(tax, batch, raw_base, evaluation_context) {
+        if (tax.amount_type === "percent" && tax.has_negative_factor) {
+            return (raw_base * tax.amount) / 100.0;
+        }
+        
         if (tax.amount_type === "percent") {
             const total_percentage =
                 batch.reduce(
