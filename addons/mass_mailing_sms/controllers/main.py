@@ -98,12 +98,29 @@ class MailingSMSController(http.Controller):
         else:
             trace_id = False
 
+<<<<<<< 17.0
         request.env['link.tracker.click'].sudo().add_click(
             code,
             ip=request.httprequest.remote_addr,
             country_code=request.geoip.country_code,
             mailing_trace_id=trace_id
         )
+||||||| ee64d4c4b728d39b7e0a5753b04b215151fab43b
+        request.env['link.tracker.click'].sudo().add_click(
+            code,
+            ip=request.httprequest.remote_addr,
+            country_code=country_code,
+            mailing_trace_id=trace_id
+        )
+=======
+        if not request.env['ir.http'].is_a_bot():
+            request.env['link.tracker.click'].sudo().add_click(
+                code,
+                ip=request.httprequest.remote_addr,
+                country_code=country_code,
+                mailing_trace_id=trace_id
+            )
+>>>>>>> 1bd84cbe7153937a4ce13b7eea49530703401a3d
         redirect_url = request.env['link.tracker'].get_url_from_code(code)
         if not redirect_url:
             raise NotFound()
