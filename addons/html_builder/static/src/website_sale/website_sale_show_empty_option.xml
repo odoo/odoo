@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.ShowEmptyOption">
+        <BuilderContext action="'websiteConfig'">
+            <div class="d-flex gap-1 mb-1 w-100">
+                <BuilderRow label.translate="Show Empty">
+                    <BuilderButton title.translate="Show/hide shopping cart" className="'o_btn_show_empty_cart fa fa-shopping-cart d-flex justify-content-center flex-grow-1'" actionParam="{views: ['website_sale.header_hide_empty_cart_link']}" />
+                </BuilderRow>
+            </div>
+        </BuilderContext>
+    </t>
+
+</templates>
