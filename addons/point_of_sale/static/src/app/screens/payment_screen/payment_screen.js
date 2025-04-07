@@ -270,8 +270,19 @@ export class PaymentScreen extends Component {
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.
+<<<<<<< saas-18.1
         if (["waiting", "waitingCard", "timeout"].includes(line.getPaymentStatus())) {
             line.setPaymentStatus("waitingCancel");
+||||||| 3354866530e9525c2c794dee24e857bce5c75945
+        if (["waiting", "waitingCard", "timeout"].includes(line.get_payment_status())) {
+            line.set_payment_status("waitingCancel");
+=======
+        if (
+            ["waiting", "waitingCard", "timeout"].includes(line.get_payment_status()) &&
+            line.payment_method_id.payment_terminal
+        ) {
+            line.set_payment_status("waitingCancel");
+>>>>>>> e6b30dbd7f6bd243cc11e85796ffe692b3c28380
             line.payment_method_id.payment_terminal
                 .sendPaymentCancel(this.currentOrder, uuid)
                 .then(() => {
