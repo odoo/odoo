@@ -900,7 +900,7 @@ class DiscussChannel(models.Model):
             return self.add_members(guest_ids=guest.ids)
         return self.env["discuss.channel.member"]
 
-    def _find_or_create_persona_for_channel(self, guest_name, timezone, country_code, post_joined_message=True):
+    def _find_or_create_persona_for_channel(self, guest_name, timezone, country_code, post_joined_message=True, join_channel=True):
         """
         :param channel: channel to add the persona to
         :param guest_name: name of the persona
@@ -929,7 +929,8 @@ class DiscussChannel(models.Model):
                 guest._set_auth_cookie()
                 guest = guest.sudo(False)
                 self = self.with_context(guest=guest)
-            self.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
+            if join_channel:
+                self.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
     @api.model
