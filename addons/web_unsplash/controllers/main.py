@@ -105,10 +105,12 @@ class Web_Unsplash(http.Controller):
 
             # /unsplash/5gR788gfd/lion
             url_frags = ['unsplash', key, query]
+            # Do not take spaces into account for url construction
+            url_frags_for_url = ['unsplash', key, query.replace(' ', '')]
 
             attachment_data = {
                 'name': '_'.join(url_frags),
-                'url': '/' + '/'.join(url_frags),
+                'url': '/' + '/'.join(url_frags_for_url),
                 'data': image,
                 'res_id': res_id,
                 'res_model': res_model,
