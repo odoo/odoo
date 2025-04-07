@@ -906,19 +906,20 @@ class PropertiesDefinition(Field):
     def convert_to_write(self, value, record):
         return value
 
-    @classmethod
-    def _validate_properties_definition(cls, properties_definition, env):
+    def _validate_properties_definition(self, properties_definition, env):
         """Raise an error if the property definition is not valid."""
+        allowed_keys = self.ALLOWED_KEYS + env["base"]._additional_allowed_keys_properties_definition()
+
         properties_names = set()
 
         for property_definition in properties_definition:
-            for property_parameter, allowed_types in cls.PROPERTY_PARAMETERS_MAP.items():
+            for property_parameter, allowed_types in self.PROPERTY_PARAMETERS_MAP.items():
                 if property_definition.get('type') not in allowed_types and property_parameter in property_definition:
                     raise ValueError(f'Invalid property parameter {property_parameter!r}')
 
             property_definition_keys = set(property_definition.keys())
 
-            invalid_keys = property_definition_keys - set(cls.ALLOWED_KEYS)
+            invalid_keys = property_definition_keys - set(allowed_keys)
             if invalid_keys:
                 raise ValueError(
                     'Some key are not allowed for a properties definition [%s].' %
@@ -927,7 +928,7 @@ class PropertiesDefinition(Field):
 
             check_property_field_value_name(property_definition['name'])
 
-            required_keys = set(cls.REQUIRED_KEYS) - property_definition_keys
+            required_keys = set(self.REQUIRED_KEYS) - property_definition_keys
             if required_keys:
                 raise ValueError(
                     'Some key are missing for a properties definition [%s].' %
