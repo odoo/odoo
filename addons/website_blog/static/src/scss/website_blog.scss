@@ -183,14 +183,14 @@ $o-wblog-loader-size: 50px;
     // Blog Post Specific
     // ==============================================
     .o_wblog_post_title {
-        #o_wblog_post_name {
+        .o_wblog_post_name {
             font-weight: $display-font-weight;
             line-height: $display-line-height;
             // Default font-size.
             @include font-size(map-get($display-font-sizes, 4));
         }
 
-        #o_wblog_post_subtitle {
+        .o_wblog_post_subtitle {
             font-weight: $lead-font-weight;
             // Default font-size.
             @include font-size($lead-font-size);
@@ -198,7 +198,7 @@ $o-wblog-loader-size: 50px;
     }
 
     // Refine multi-lines titles when using 'regular' cover
-    .o_wblog_regular_cover_container #o_wblog_post_name {
+    .o_wblog_regular_cover_container .o_wblog_post_name {
         line-height: 1;
         padding-bottom: 0.5rem;
     }
