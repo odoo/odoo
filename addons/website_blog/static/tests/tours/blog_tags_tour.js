@@ -21,7 +21,7 @@ registerWebsitePreviewTour('blog_tags', {
     },
     {
         content: "Ensure that the blog is opened",
-        trigger: ":iframe h1#o_wblog_post_name",
+        trigger: ":iframe h1.o_wblog_post_name",
     },
     ...clickOnEditAndWaitEditMode(),
     ...clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
