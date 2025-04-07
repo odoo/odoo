@@ -25,58 +25,157 @@ export function callWithUnloadCheck(func, ...args) {
     }
 }
 
-function formatValue(key, value, maxLength = 200) {
-    if (!value) {
-        return "(empty)";
+/**
+ * @returns The css selector of the node or its text when node is a text node.
+ */
+function serializeNode(node, accept_text_node = false) {
+    if (accept_text_node && node.nodeType === Node.TEXT_NODE) {
+        return `${node.nodeValue.trim()}`;
     }
-    return value.length > maxLength ? value.slice(0, maxLength) + "..." : value;
+    if (!(node instanceof Element)) {
+        return "";
+    }
+    let selector = node.tagName.toLowerCase();
+    if (node.id) {
+        selector += `#${node.id}`;
+    }
+    if (node.classList.length > 0) {
+        selector += `.${[...node.classList].join(".")}`;
+    }
+    for (const attr of node.attributes) {
+        if (!["id", "class"].includes(attr.name)) {
+            selector += `[${attr.name}="${attr.value}"]`;
+        }
+    }
+    return selector;
 }
 
-function serializeNode(node) {
-    if (node.nodeType === Node.TEXT_NODE) {
-        return `"${node.nodeValue.trim()}"`;
-    }
-    return node.outerHTML ? formatValue("node", node.outerHTML, 500) : "[Unknown Node]";
+/**
+ * @returns List of modifications
+ */
+function extractChanges(nodes, parentPath = []) {
+    let sentences = [];
+
+    nodes.forEach((node) => {
+        const currentPath = [...parentPath, node.node].filter(Boolean);
+        const path =
+            currentPath.length > 2
+                ? `${currentPath.at(0)} ${currentPath.at(-1)}`
+                : currentPath.at(0);
+
+        if (node.text) {
+            sentences.push(
+                `${path} : Text has changed : ${node.text.before} => ${node.text.after}`
+            );
+        }
+
+        if (node.attributes) {
+            node.attributes.forEach((attr) => {
+                sentences.push(
+                    `${path} : Attribute ${attr.name} has changed : ${attr.before} => ${attr.after}`
+                );
+            });
+        }
+
+        if (node.addedNodes) {
+            node.addedNodes.forEach((added) => {
+                sentences.push(`${path} : The node {${added}} has been added.`);
+            });
+        }
+
+        if (node.removedNodes) {
+            node.removedNodes.forEach((removed) => {
+                sentences.push(`${path} : The node {${removed}} has been removed.`);
+            });
+        }
+
+        if (node.children) {
+            sentences = sentences.concat(extractChanges(node.children, currentPath));
+        }
+    });
+
+    return sentences;
 }
 
-export function serializeChanges(snapshot, current) {
-    const changes = {
-        node: serializeNode(current),
-    };
-    function pushChanges(key, obj) {
-        changes[key] = changes[key] || [];
-        changes[key].push(obj);
+/**
+ * Popularizes the modifications that have been made for a node between two states.
+ */
+export function serializeChanges(beforeElement, afterElement, changes = [], deep = 0) {
+    if (!beforeElement || !afterElement) {
+        return;
+    }
+    const node = serializeNode(afterElement, true);
+    const beforeNodes = [...beforeElement.childNodes];
+    const afterNodes = [...afterElement.childNodes];
+    const maxLength = Math.max(beforeNodes.length, afterNodes.length);
+    const hasChanged = {};
+    if (maxLength) {
+        hasChanged.children = [];
     }
 
-    if (snapshot.textContent !== current.textContent) {
-        pushChanges("modifiedText", { before: snapshot.textContent, after: current.textContent });
+    if (
+        afterElement.nodeType === Node.TEXT_NODE &&
+        beforeElement.textContent !== afterElement.textContent &&
+        !beforeElement.children?.length &&
+        !afterElement.children?.length
+    ) {
+        hasChanged.text = {
+            before: beforeElement.textContent,
+            after: afterElement.textContent,
+        };
+    } else {
+        hasChanged.node = node;
     }
 
-    const oldChildren = [...snapshot.childNodes].filter((node) => node.nodeType !== Node.TEXT_NODE);
-    const newChildren = [...current.childNodes].filter((node) => node.nodeType !== Node.TEXT_NODE);
-    oldChildren.forEach((oldNode, index) => {
-        if (!newChildren[index] || !oldNode.isEqualNode(newChildren[index])) {
-            pushChanges("removedNodes", { oldNode: serializeNode(oldNode) });
-        }
-    });
-    newChildren.forEach((newNode, index) => {
-        if (!oldChildren[index] || !newNode.isEqualNode(oldChildren[index])) {
-            pushChanges("addedNodes", { newNode: serializeNode(newNode) });
-        }
-    });
-
-    const oldAttrNames = new Set([...snapshot.attributes].map((attr) => attr.name));
-    const newAttrNames = new Set([...current.attributes].map((attr) => attr.name));
-    new Set([...oldAttrNames, ...newAttrNames]).forEach((attributeName) => {
-        const oldValue = snapshot.getAttribute(attributeName);
-        const newValue = current.getAttribute(attributeName);
-        const before = oldValue !== newValue || !newAttrNames.has(attributeName) ? oldValue : null;
-        const after = oldValue !== newValue || !oldAttrNames.has(attributeName) ? newValue : null;
+    const beforeAttrNames = new Set([...(beforeElement.attributes || [])].map((attr) => attr.name));
+    const afterAttrNames = new Set([...(afterElement.attributes || [])].map((attr) => attr.name));
+    new Set([...beforeAttrNames, ...afterAttrNames]).forEach((name) => {
+        const oldValue =
+            beforeElement?.nodeType === Node.ELEMENT_NODE ? beforeElement.getAttribute(name) : null;
+        const newValue =
+            afterElement?.nodeType === Node.ELEMENT_NODE ? afterElement.getAttribute(name) : null;
+        const before = oldValue !== newValue || !afterAttrNames.has(name) ? oldValue : null;
+        const after = oldValue !== newValue || !beforeAttrNames.has(name) ? newValue : null;
         if (before || after) {
-            pushChanges("modifiedAttributes", { attributeName, before, after });
+            hasChanged.attributes = hasChanged.attributes || [];
+            hasChanged.attributes.push({ name, before, after });
         }
     });
-    return changes;
+
+    function compareNodes(afterNodes, beforeNodes) {
+        return afterNodes.filter((node, index) => {
+            const correspondingNode = beforeNodes[index];
+            if (!correspondingNode) {
+                return true;
+            }
+            if (
+                correspondingNode.nodeName === node.nodeName &&
+                correspondingNode.id === node.id &&
+                correspondingNode.className === node.className
+            ) {
+                return false;
+            }
+            return (
+                correspondingNode.nodeName !== node.nodeName ||
+                (correspondingNode.nodeType !== Node.TEXT_NODE &&
+                    correspondingNode.textContent !== node.textContent)
+            );
+        });
+    }
+    const addedNodes = compareNodes(afterNodes, beforeNodes);
+    if (addedNodes.length) {
+        hasChanged.addedNodes = addedNodes.map(serializeNode);
+    }
+    const removedNodes = compareNodes(beforeNodes, afterNodes);
+    if (removedNodes.length) {
+        hasChanged.removedNodes = removedNodes.map(serializeNode);
+    }
+    changes.push(hasChanged);
+    for (let i = 0; i < maxLength; i++) {
+        serializeChanges(beforeNodes[i], afterNodes[i], hasChanged.children, deep++);
+    }
+
+    return extractChanges(changes);
 }
 
 export function serializeMutation(mutation) {
