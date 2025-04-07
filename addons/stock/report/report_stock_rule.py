@@ -60,9 +60,10 @@ class ReportStockRule(models.AbstractModel):
                     idx = locations_names.index(rule_loc['destination'].display_name)
                     tpl = (rule, 'destination', route_color, )
                     res[idx] = tpl
-                    idx = locations_names.index(rule_loc['source'].display_name)
-                    tpl = (rule, 'origin', route_color, )
-                    res[idx] = tpl
+                    if rule_loc['source']:
+                        idx = locations_names.index(rule_loc['source'].display_name)
+                        tpl = (rule, 'origin', route_color)
+                        res[idx] = tpl
                     route_lines.append(res)
         return {
             'docs': product,
