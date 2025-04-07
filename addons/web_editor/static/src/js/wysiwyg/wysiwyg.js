@@ -1448,6 +1448,9 @@ const Wysiwyg = Widget.extend({
             this.snippetsMenu.activateSnippet($(element)).then(() => {
                 if (element.tagName === 'IMG') {
                     $(element).trigger('image_changed');
+                } else if (element.classList.contains("media_iframe_video")) {
+                    // Trigger for video having a media iframe
+                    element.dispatchEvent(new Event("replace_media_element", { bubbles: true }));
                 }
             });
         }
