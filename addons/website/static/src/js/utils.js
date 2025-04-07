@@ -1,5 +1,5 @@
 import { intersection } from "@web/core/utils/arrays";
-import { _t } from "@web/core/l10n/translation";
+import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { App, Component } from "@odoo/owl";
 import { getTemplate } from "@web/core/templates";
@@ -58,7 +58,7 @@ function autocompleteWithPages(input, options= {}) {
             targetDropdown: input,
         },
         translatableAttributes: ["data-tooltip"],
-        translateFn: _t,
+        translateFn: appTranslateFn,
     });
 
     const container = document.createElement("div");
