@@ -19,4 +19,7 @@ This module allows the computation of the 'Vendor Bills', 'Other Costs' and 'Oth
         'views/project_task_views.xml',
         'views/project_sharing_project_task_views.xml',
     ],
+    'demo': [
+        'data/project_account_demo.xml',
+    ],
 }

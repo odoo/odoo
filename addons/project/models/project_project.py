@@ -782,6 +782,7 @@ class ProjectProject(models.Model):
         action['domain'] = [('milestone_id', 'in', self.milestone_ids.ids)]
         return action
 
+
     # ---------------------------------------------
     #  PROJECT UPDATES
     # ---------------------------------------------
