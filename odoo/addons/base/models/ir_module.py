@@ -177,7 +177,7 @@ class Module(models.Model):
     @api.model
     def get_views(self, views, options=None):
         res = super().get_views(views, options)
-        if res['views'].get('form', {}).get('toolbar'):
+        if res['views'].get('form', {}).get('toolbar') and res['views']['form']['toolbar'].get('action'):
             install_id = self.env.ref('base.action_server_module_immediate_install').id
             action = [rec for rec in res['views']['form']['toolbar']['action'] if rec.get('id', False) != install_id]
             res['views']['form']['toolbar'] = {'action': action}
