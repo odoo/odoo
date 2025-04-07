@@ -783,3 +783,10 @@ class StockMove(models.Model):
                         for move in self):
             res = 'assigned'
         return res
+
+    def _should_clear_move_orig_ids(self):
+        """ Override hook to preserve move_orig_ids for MRP-related moves."""
+        # Check if this move is linked to a manufacturing order
+        if self.raw_material_production_id or self.production_id:
+            return False
+        return super()._should_clear_move_orig_ids()

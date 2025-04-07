@@ -2494,3 +2494,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         return self.location_dest_id.usage in ('customer', 'supplier') or (
             self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id
         )
+
+    def _should_clear_move_orig_ids(self):
+        """ Hook to determine if move_orig_ids should be cleared during free reservation.
+        Returns True by default (clear move_orig_ids), can be overridden by other modules."""
+        return True
