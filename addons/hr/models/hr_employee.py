@@ -238,6 +238,8 @@ class HrEmployeePrivate(models.Model):
         self.flush_recordset(field_names)
         public = self.env['hr.employee.public'].browse(self._ids)
         public.fetch(field_names)
+        if non_stored := [f for f in field_names if not self.env['hr.employee.public']._fields[f].store]:
+            public.read(non_stored)
         self._copy_cache_from(public, field_names)
 
     def _check_private_fields(self, field_names):
