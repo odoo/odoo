@@ -27,6 +27,7 @@ class PosConfig(models.Model):
             *self.env['account.journal']._check_company_domain(self.env.company),
             ('type', 'in', ('sale', 'general')),
             ('code', '=', 'POSS'),
+            ('company_id.currency_id', '=', self.env.company.currency_id.id),
         ], limit=1)
 
     def _default_invoice_journal(self):
