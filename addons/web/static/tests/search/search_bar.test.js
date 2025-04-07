@@ -555,6 +555,59 @@ test("autocompletion with a boolean field", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([["bool", "=", false]]);
 });
 
+test("autocompletion with a selection field", async () => {
+    Partner._fields.selection_field = fields.Selection({
+        string: "Selection Field",
+        selection: [
+            ["abc", "ABC"],
+            ["aef", "AEF"],
+            ["ghi", "GHI"],
+        ],
+    });
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="selection_field"/>
+            </search>
+        `,
+    });
+    expect(searchBar.env.searchModel.domain).toEqual([]);
+
+    await editSearch("a");
+    expect(`.o_searchview_autocomplete .o-dropdown-item`).toHaveCount(2);
+    expect(`.o_searchview_autocomplete .o-dropdown-item:first`).toHaveText(
+        "Search Selection Field for: a"
+    );
+    // expand results
+    await contains(".o_searchview_autocomplete .o-dropdown-item:first").click();
+    expect(`.o_searchview_autocomplete .o-dropdown-item`).toHaveCount(4);
+    expect(`.o_searchview_autocomplete .o-dropdown-item:eq(1)`).toHaveText("ABC");
+    expect(`.o_searchview_autocomplete .o-dropdown-item:eq(2)`).toHaveText("AEF");
+    // select "AEF"
+    await contains(`.o_searchview_autocomplete .o-dropdown-item:eq(2)`).click();
+    expect(searchBar.env.searchModel.domain).toEqual([["selection_field", "=", "aef"]]);
+
+    await removeFacet("Selection Field AEF");
+    expect(searchBar.env.searchModel.domain).toEqual([]);
+
+    await editSearch("h");
+    expect(`.o_searchview_autocomplete .o-dropdown-item`).toHaveCount(2);
+    expect(`.o_searchview_autocomplete .o-dropdown-item:first`).toHaveText(
+        "Search Selection Field for: h"
+    );
+    // expand results
+    await contains(".o_searchview_autocomplete .o-dropdown-item:first").click();
+    expect(`.o_searchview_autocomplete .o-dropdown-item`).toHaveCount(3);
+    expect(`.o_searchview_autocomplete .o-dropdown-item:eq(1)`).toHaveText("GHI");
+
+    // select "GHI"
+    await contains(`.o_searchview_autocomplete .o-dropdown-item:eq(1)`).click();
+    expect(searchBar.env.searchModel.domain).toEqual([["selection_field", "=", "ghi"]]);
+});
+
 test("the search value is trimmed to remove unnecessary spaces", async () => {
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "partner",
