@@ -9,6 +9,7 @@ from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.fields import Command, Domain
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import mute_logger
+from odoo.tests import tagged
 
 _FALSE_LEAF, _TRUE_LEAF = (0, '=', 1), (1, '=', 1)
 
@@ -48,6 +49,7 @@ class TransactionExpressionCase(TransactionCase):
         return sql
 
 
+@tagged('res_partner')
 class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
 
     @classmethod
@@ -1396,6 +1398,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(other_partners, all_partner - partner)
 
 
+@tagged('res_partner')
 class TestExpression2(TransactionExpressionCase):
 
     def test_long_table_alias(self):
@@ -1405,6 +1408,7 @@ class TestExpression2(TransactionExpressionCase):
         self.env['res.users'].search([('name', '=', 'test')])
 
 
+@tagged('res_partner')
 class TestAutoJoin(TransactionExpressionCase):
 
     def test_auto_join(self):
@@ -1603,6 +1607,7 @@ class TestAutoJoin(TransactionExpressionCase):
         )
 
 
+@tagged('res_partner')
 class TestQueries(TransactionCase):
 
     def test_logic(self):
@@ -1770,6 +1775,7 @@ class TestQueries(TransactionCase):
             Model.name_search('foo', operator='not ilike')
 
 
+@tagged('res_partner')
 class TestMany2one(TransactionCase):
     def setUp(self):
         super().setUp()
@@ -2098,6 +2104,7 @@ class TestMany2one(TransactionCase):
             self.assertGreater(len(self.Partner.name_search('test')), 0)
 
 
+@tagged('res_partner')
 class TestOne2many(TransactionCase):
     def setUp(self):
         super().setUp()
@@ -2328,6 +2335,7 @@ class TestOne2many(TransactionCase):
             self.Partner.search([('bank_ids', '=', False)], order='id')
 
 
+@tagged('res_partner')
 class TestMany2many(TransactionCase):
     def setUp(self):
         super().setUp()

@@ -52,7 +52,7 @@
                     </div>
                     <group>
                         <field name="function" placeholder="e.g. Sales Director" invisible="is_company"/>
-                        <field name="email" widget="email" context="{'gravatar_image': True}" required="True"/>
+                        <field name="email" widget="email" required="True"/>
                         <field name="phone" widget="phone" options="{'enable_sms': false}"/>
                     </group>
                 </form>
@@ -168,7 +168,7 @@
                             <field name="function" placeholder="e.g. Sales Director"
                                 invisible="is_company"/>
                             <field name="phone" widget="phone"/>
-                            <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids"/>
+                            <field name="email" widget="email" required="user_ids"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"

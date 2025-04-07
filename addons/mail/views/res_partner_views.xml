@@ -15,7 +15,7 @@
                             title="This email is blacklisted for mass mailings. Click to unblacklist."
                             type="object" context="{'default_email': email}" groups="base.group_user"
                             invisible="not is_blacklisted"/>
-                        <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids"/>
+                        <field name="email" widget="email" required="user_ids"/>
                     </div>
                 </xpath>
                 <xpath expr="//sheet" position="after">

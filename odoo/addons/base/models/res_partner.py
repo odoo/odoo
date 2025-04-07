@@ -529,11 +529,6 @@ class ResPartner(models.Model):
         if self.state_id.country_id and self.country_id != self.state_id.country_id:
             self.country_id = self.state_id.country_id
 
-    @api.onchange('email')
-    def onchange_email(self):
-        if not self.image_1920 and self._context.get('gravatar_image') and self.email:
-            self.image_1920 = self._get_gravatar_image(self.email)
-
     @api.onchange('parent_id', 'company_id')
     def _onchange_company_id(self):
         if self.parent_id:
@@ -951,19 +946,6 @@ class ResPartner(models.Model):
         if parsed_email_normalized:  # keep default_email in context
             create_values['email'] = parsed_email_normalized
         return self.create(create_values)
-
-    def _get_gravatar_image(self, email):
-        email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
-        url = "https://www.gravatar.com/avatar/" + email_hash
-        try:
-            res = requests.get(url, params={'d': '404', 's': '128'}, timeout=5)
-            if res.status_code != requests.codes.ok:
-                return False
-        except requests.exceptions.ConnectionError as e:
-            return False
-        except requests.exceptions.Timeout as e:
-            return False
-        return base64.b64encode(res.content)
 
     def address_get(self, adr_pref=None):
         """ Find contacts/addresses of the right type(s) by doing a depth-first-search
