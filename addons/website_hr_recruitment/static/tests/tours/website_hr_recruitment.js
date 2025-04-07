@@ -123,7 +123,9 @@
         content: 'Verify that the job_id field has kept its default value',
         trigger: "body",
         run: () => {
-            if (!document.querySelector('.o_iframe:not(.o_ignore_in_tour)').contentDocument.querySelector('input[name="job_id"][value="FAKE_JOB_ID_DEFAULT_VAL"]')) {
+            const doc = document.querySelector(".o_iframe:not(.o_ignore_in_tour)").contentDocument;
+            const id = doc.querySelector('[data-oe-model="hr.job"]').dataset.oeId;
+            if (!doc.querySelector(`input[name="job_id"][value="${id}"]`)) {
                 console.error('The job_id field has lost its default value');
             }
         }
