@@ -1,21 +1,17 @@
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillStart } from "@odoo/owl";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
+import { onWillStart } from "@odoo/owl";
 
-export class AvatarPartnerCardPopover extends Component {
+export class AvatarPartnerCardPopover extends AvatarCardPopover {
     static template = "calendar.AvatarPartnerCardPopover";
-
-    static props = {
-        id: { type: Number, required: true },
-        close: { type: Function, required: true },
-    };
 
     setup() {
         this.actionService = useService("action");
         this.orm = useService("orm");
         this.openChat = useOpenChat("res.partner");
         onWillStart(async () => {
-            [this.partner] = await this.orm.read("res.partner", [this.props.id], this.fieldNames);
+            [this.user] = await this.orm.read("res.partner", [this.props.id], this.fieldNames);
         });
     }
 
@@ -23,42 +19,12 @@ export class AvatarPartnerCardPopover extends Component {
         return ["name", "email", "phone", "im_status"];
     }
 
-    get email() {
-        return this.partner.email;
-    }
-
-    get phone() {
-        return this.partner.phone;
-    }
-
-    get showViewProfileBtn() {
-        return true;
-    }
-
-    get hasFooter() {
-        return false;
-    }
-
     async getProfileAction() {
         return {
-            res_id: this.partner.id,
+            res_id: this.user.id,
             res_model: "res.partner",
             type: "ir.actions.act_window",
             views: [[false, "form"]],
         };
-    }
-
-    get partnerId() {
-        return this.partner.id;
-    }
-
-    onSendClick() {
-        this.openChat(this.partner.id);
-        this.props.close();
-    }
-
-    async onClickViewProfile(newWindow) {
-        const action = await this.getProfileAction();
-        this.actionService.doAction(action, { newWindow });
     }
 }
