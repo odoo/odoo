@@ -330,6 +330,7 @@ class PropertiesCase(TestPropertiesMixin):
         ]
 
         self.env.invalidate_all()
+        self.env.cr.cache.pop('cache_exists', None)
         with self.assertQueryCount(5), self.assertQueries(expected_queries):
             self.message_1.read(['attributes'])
 

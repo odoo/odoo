@@ -203,6 +203,7 @@ class AccountMergeWizard(models.TransientModel):
 
         # Clear ir.model.data ormcache
         self.env.registry.clear_cache()
+        self.env.cr.cache.pop('cache_exists', None)
 
         # Step 5: Write company_ids and codes on the account
         for company, code in code_by_company.items():

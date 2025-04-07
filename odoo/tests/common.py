@@ -1128,6 +1128,7 @@ class TransactionCase(BaseCase):
         finally:
             self.registry_leave_test_mode()
             env.invalidate_all()
+            env.cr.cache.clear()  # Cannot trust the cache anymore
 
     @contextmanager
     def allow_pdf_render(self):
