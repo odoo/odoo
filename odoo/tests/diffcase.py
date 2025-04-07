@@ -50,6 +50,18 @@ class FileInfo:
         return ''
 
 
+class Element:
+    __slots__ = ('start_lineno', 'end_lineno', '_element')
+
+    def __init__(self, element: etree._Element):
+        self._element = element
+    
+    def __getattr__(self, name: str):
+        if name in self.__slots__:
+            return getattr(self, name)
+        return getattr(self._element, name)
+
+
 def get_repos() -> list[str]:
     """ get all git repos in the given path """
     repo_paths = OrderedSet()
@@ -137,7 +149,7 @@ class DiffCase:
         DiffCase.__test_classes.append(cls)
 
     @classmethod
-    def get_xml_diff_elements(cls, abs_path: str, diff_linenos: set[int] | None = None) -> Generator[etree._Element, None, None]:
+    def get_xml_diff_elements(cls, abs_path: str, diff_linenos: set[int] | None = None) -> Generator[Element, None, None]:
         assert abs_path.endswith('.xml')
         if diff_linenos is None:
             file_info = cls.diff_linenos['xml'].get(abs_path)
@@ -152,7 +164,10 @@ class DiffCase:
                 if event == "start":
                     # element.sourceline is the line number of the last line of the start tag
                     if any(line in diff_linenos for line in range(previous_line, element.sourceline + 1)):
-                        yield element
+                        e = Element(element)
+                        e.start_lineno = previous_line
+                        e.end_lineno = element.sourceline
+                        yield e
                     previous_line = element.sourceline
                     if element.text:
                         previous_line += element.text.count('\n')

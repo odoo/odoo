@@ -4,12 +4,8 @@ import logging
 from collections import defaultdict
 from typing import Collection
 
-from odoo.tests.diffcase import DiffCase
+from odoo.tests.diffcase import DiffCase, Element, FileInfo
 from odoo.modules.module import get_manifest
-
-if typing.TYPE_CHECKING:
-    from lxml.etree import _Element
-    from odoo.tests.diffcase import FileInfo
 
 
 _logger = logging.getLogger(__name__)
@@ -111,7 +107,7 @@ def check_ref_for_python_file(abs_path: str, diff_linenos: set[int], protected_x
         return []
 
 
-def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', init: bool = True, protected_xml_ids: Collection[str] = ()) -> tuple[str, int, int] | None:
+def check_ref_for_data_xml_element(element: Element, file_info: FileInfo, init: bool = True, protected_xml_ids: Collection[str] = ()) -> tuple[str, int, int] | None:
     """Check for references in xml files
     
     :param element: the xml element to check
@@ -134,18 +130,18 @@ def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', i
         if not id_attr:
             return None
         if is_ref_risky(id_attr) and 'forcecreate' not in record.attrib:
-            return 'inherit_id', record.sourceline, record.sourceline
+            return 'inherit_id', record.start_lineno, record.end_lineno
     elif element.tag == 'field':
         field = element
         ref_attr = field.attrib.get('ref')
         if ref_attr:
             if is_ref_risky(ref_attr) and 'forcecreate' not in field.attrib:
-                return 'ref', field.sourceline, field.sourceline
+                return 'ref', field.start_lineno, field.end_lineno
         elif eval_attr := field.attrib.get('eval'):
             # parse as python ast, check function ref
             # add to issues if ref for another module without raise_if_not_found=False
             tree = ast.parse(eval_attr)
-            visitor = EvalRefVisitor(line=(field.sourceline, field.sourceline), protected_xml_ids=protected_xml_ids)
+            visitor = EvalRefVisitor(line=(field.start_lineno, field.end_lineno), protected_xml_ids=protected_xml_ids)
             visitor.visit(tree)
             if visitor.issues:
                 return 'eval', visitor.issues[0][0], visitor.issues[0][1]
@@ -155,7 +151,7 @@ def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', i
         if not id_attr:
             return None
         if is_ref_risky(id_attr) and 'forcecreate' not in template.attrib:
-            return 'inherit_id', template.sourceline, template.sourceline
+            return 'inherit_id', template.start_lineno, template.end_lineno
 
 
 def _get_protected_xml_ids():
