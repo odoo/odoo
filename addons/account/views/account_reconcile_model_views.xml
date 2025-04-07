@@ -38,7 +38,6 @@
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_reconcile_stat"
                               class="oe_stat_button" icon="fa-book">
-                                <field name="number_entries" string="Journal Entries" widget="statinfo"/>
                             </button>
                         </div>
                         <div class="oe_title">
@@ -46,21 +45,18 @@
                             <h1><field name="name" placeholder="e.g. Bank Fees"/></h1>
                         </div>
                         <group>
-                            <group id="filters_left_column" string="Filters">
-                                <label for="match_journal_ids" string="Availabiliby"/>
-                                <div class="d-flex gap-2">
-                                    <field name="match_journal_ids"
-                                           placeholder="All bank &amp; cash journals"
-                                           widget="many2many_tags"
-                                           options="{'no_create': True}"/>
-                                    <field name="match_partner_ids" nolabel="1"
-                                           widget="many2many_tags"
-                                           options="{'no_quick_create': True}"
-                                           placeholder="All partners"/>
-                                </div>
+                            <group id="filters_left_column">
+                                <field name="match_journal_ids"
+                                       placeholder="All bank &amp; cash journals"
+                                       widget="many2many_tags"
+                                       options="{'no_create': True}"/>
+                                <field name="match_partner_ids"
+                                       widget="many2many_tags"
+                                       options="{'no_quick_create': True}"
+                                       placeholder="All partners"/>
                                 <label for="match_amount"/>
                                 <div class="d-flex gap-2">
-                                    <field name="match_amount"/>
+                                    <field name="match_amount" placeholder="Any amount"/>
                                     <field name="match_amount_min"
                                            invisible="match_amount in (False, 'lower')"
                                            required="match_amount"/>
@@ -72,27 +68,14 @@
                                 </div>
                                 <label for="match_label"/>
                                 <div class="d-flex gap-3">
-                                    <field name="match_label"/>
+                                    <field name="match_label" placeholder="Any label"/>
                                     <field name="match_label_param"
                                            invisible="not match_label"
                                            required="match_label"/>
                                 </div>
-                                <label for="allow_payment_tolerance"/>
-                                <div class="d-flex gap-2">
-                                    <field name="allow_payment_tolerance"/>
-                                    <span invisible="not allow_payment_tolerance" class="d-flex gap-2 w-100">
-                                        <field name="payment_tolerance_param"/>
-                                        <field name="payment_tolerance_type" class="o_field_highlight o_show_selection_caret"/>
-                                    </span>
-                                </div>
                             </group>
-                            <group id="counterpart_entry_right_column" class="col-6" string="Counterpart Entry">
-                                <field name="to_check"/>
-                                <field name="counterpart_type"/>
-                                <field name="journal_id"
-                                       invisible="counterpart_type not in ('sale', 'purchase')"
-                                       options="{'no_create': True}"
-                                       domain="[('type', '=', counterpart_type)]"/>
+                            <group id="counterpart_entry_right_column" class="col-6">
+                                <field name="next_activity_type_id"/>
                             </group>
                         </group>
                         <notebook>
@@ -115,7 +98,7 @@
                                             <field name="tax_ids"
                                                    widget="many2many_tax_tags"
                                                    optional="hide"
-                                                   domain="[('type_tax_use', '=?', parent.counterpart_type if parent.counterpart_type in ('sale', 'purchase') else None)]"/>
+                                            />
                                             <field name="analytic_distribution" widget="analytic_distribution" string="Analytic"
                                                    groups="analytic.group_analytic_accounting"
                                                    options="{'account_field': 'account_id', 'business_domain': 'general'}"/>

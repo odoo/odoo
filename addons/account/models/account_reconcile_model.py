@@ -14,9 +14,6 @@ class AccountReconcileModelLine(models.Model):
 
     model_id = fields.Many2one('account.reconcile.model', readonly=True, index='btree_not_null', ondelete='cascade')
     #related fields
-    journal_id = fields.Many2one(related='model_id.journal_id')  # This field is ignored in a bank statement reconciliation.
-    allow_payment_tolerance = fields.Boolean(related='model_id.allow_payment_tolerance')
-    payment_tolerance_param = fields.Float(related='model_id.payment_tolerance_param')
     company_id = fields.Many2one(related='model_id.company_id', store=True)
     #model fields
     sequence = fields.Integer(required=True, default=10)
@@ -49,9 +46,6 @@ class AccountReconcileModelLine(models.Model):
         string="Taxes",
         ondelete='restrict',
         check_company=True,
-        compute='_compute_tax_ids',
-        readonly=False,
-        store=True,
     )
 
     @api.onchange('amount_type')
@@ -69,21 +63,6 @@ class AccountReconcileModelLine(models.Model):
                 record.amount = float(record.amount_string)
             except ValueError:
                 record.amount = 0
-
-    @api.depends('model_id.counterpart_type', 'account_id', 'company_id', 'company_id.account_purchase_tax_id')
-    def _compute_tax_ids(self):
-        for line in self:
-            if line.model_id.counterpart_type in ('sale', 'purchase'):
-                line.tax_ids = line.tax_ids.filtered(lambda x: x.type_tax_use == line.model_id.counterpart_type)
-                if not line.tax_ids:
-                    line.tax_ids = line.account_id.tax_ids.filtered(lambda x: x.type_tax_use == line.model_id.counterpart_type)
-                if not line.tax_ids:
-                    if line.model_id.counterpart_type == 'purchase' and line.company_id.account_purchase_tax_id:
-                        line.tax_ids = line.company_id.account_purchase_tax_id
-                    elif line.model_id.counterpart_type == 'sale' and line.company_id.account_sale_tax_id:
-                        line.tax_ids = line.company_id.account_sale_tax_id
-            else:
-                line.tax_ids = line.tax_ids
 
     @api.constrains('amount_string')
     def _validate_amount(self):
@@ -123,29 +102,14 @@ class AccountReconcileModel(models.Model):
         default=lambda self: self.env.company)
 
     #RN# 
-    #deleted rule_type, matching_order, match_note, match_note_param, match_transaction_details, match_transaction_details_param, match_text_location_label, match_text_location_note, match_text_location_reference, match_same_currency, match_partner_category_ids, match_partner, past_months_limit, decimal_separator, show_decimal_separator, partner_mapping_line_ids (+class)
+    #deleted rule_type, matching_order, match_note, match_note_param, match_transaction_details, match_transaction_details_param, match_text_location_label, match_text_location_note, match_text_location_reference, match_same_currency, match_partner_category_ids, match_partner, past_months_limit, decimal_separator, show_decimal_separator, partner_mapping_line_ids (+class), allow_payment_tolerance, payment_tolerance_type, payment_tolerance_param, counterpart_type, journal_id, number_entries 
     #auto_reconcile boolean --> trigger selection
+    #to_check --> next_activity_type
     trigger = fields.Selection([('manual', 'Manual'), ('auto_reconcile', 'Automated')], default='manual', required=True, tracking=True,
         help='Validate the statement line automatically (reconciliation based on your rule).')
-    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the information of the counterpart.')
-    counterpart_type = fields.Selection(
-        selection=[
-            ('general', 'Journal Entry'),
-            ('sale', 'Customer Invoices'),
-            ('purchase', 'Vendor Bills'),
-        ],
-        string="Counterpart Type",
-        default='general',
-    )
-    journal_id = fields.Many2one(
-        comodel_name='account.journal',
-        string="Journal",
-        help="The journal in which the counterpart entry will be created.",
-        check_company=True,
-        store=True,
-        readonly=False,
-        compute='_compute_journal_id',
-    )
+    next_activity_type_id = fields.Many2one(
+        comodel_name='mail.activity.type',
+        string='Next Activity')
 
     # ===== Conditions =====
     match_journal_ids = fields.Many2many('account.journal', string='Journals Availability',
@@ -169,32 +133,10 @@ class AccountReconcileModel(models.Model):
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_label_param = fields.Char(string='Label Parameter', tracking=True)
-    allow_payment_tolerance = fields.Boolean(
-        string="Payment Tolerance",
-        default=True,
-        tracking=True,
-        help="Difference accepted in case of underpayment.",
-    )
-    payment_tolerance_param = fields.Float(
-        string="Gap",
-        compute='_compute_payment_tolerance_param',
-        readonly=False,
-        store=True,
-        tracking=True,
-        help="The sum of total residual amount propositions matches the statement line amount under this amount/percentage.",
-    )
-    payment_tolerance_type = fields.Selection(
-        selection=[('percentage', "in percentage"), ('fixed_amount', "in amount")],
-        default='percentage',
-        required=True,
-        tracking=True,
-        help="The sum of total residual amount propositions and the statement line amount allowed gap type.",
-    )
     match_partner_ids = fields.Many2many('res.partner', string='Partners',
         help='The reconciliation model will only be applied to the selected customers/vendors.')
 
     line_ids = fields.One2many('account.reconcile.model.line', 'model_id', copy=True)
-    number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
 
     def action_set_manual(self):
         for model in self:
@@ -218,37 +160,6 @@ class AccountReconcileModel(models.Model):
             'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(_('This reconciliation model has created no entry so far')),
         })
         return action
-
-    def _compute_number_entries(self):
-        data = self.env['account.move.line']._read_group([('reconcile_model_id', 'in', self.ids)], ['reconcile_model_id'], ['__count'])
-        mapped_data = {reconcile_model.id: count for reconcile_model, count in data}
-        for model in self:
-            model.number_entries = mapped_data.get(model.id, 0)
-
-    @api.depends('payment_tolerance_param', 'payment_tolerance_type')
-    def _compute_payment_tolerance_param(self):
-        for record in self:
-            if record.payment_tolerance_type == 'percentage':
-                record.payment_tolerance_param = min(100.0, max(0.0, record.payment_tolerance_param))
-            else:
-                record.payment_tolerance_param = max(0.0, record.payment_tolerance_param)
-
-    @api.depends('counterpart_type')
-    def _compute_journal_id(self):
-        for record in self:
-            if record.journal_id.type != record.counterpart_type:
-                record.journal_id = None
-            else:
-                record.journal_id = record.journal_id
-
-    @api.constrains('allow_payment_tolerance', 'payment_tolerance_param', 'payment_tolerance_type')
-    def _check_payment_tolerance_param(self):
-        for record in self:
-            if record.allow_payment_tolerance:
-                if record.payment_tolerance_type == 'percentage' and not 0 <= record.payment_tolerance_param <= 100:
-                    raise ValidationError(_("A payment tolerance defined as a percentage should always be between 0 and 100"))
-                elif record.payment_tolerance_type == 'fixed_amount' and record.payment_tolerance_param < 0:
-                    raise ValidationError(_("A payment tolerance defined as an amount should always be higher than 0"))
 
     def copy_data(self, default=None):
         default = dict(default or {})
