@@ -528,6 +528,76 @@ class TestProcurement(TestMrpCommon):
 
         self.assertEqual(mo_assign_at_confirm.move_raw_ids.quantity, 5, "Components should have been auto-reserved")
 
+    def test_no_dup_mo_after_changing_sched_date(self):
+        ''' The test checks that the following scenario does not happen (or regress)
+        1. A product with a BoM is created
+        2. An automatic reordering rule is created with 0 visibility days, 0 min, and 0 max
+        3. An out picking is created with this product (similar to a purchase order)
+        4. The picking will automatically create a purchase order
+        5. The scheduled date of the MO is updated such that it is not within visibility date range
+        6. We force-run the scheduler (simulating automatic procurements)
+        7. We need to make sure that the current MO has NOT been duplicated
+        '''
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+        })
+
+        component = self.env['product.product'].create({
+            'name': 'component',
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+        ]})
+        warehouse = self.env.ref('stock.warehouse0')
+        self.env['stock.warehouse.orderpoint'].create({
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'trigger': 'auto',
+        })
+
+        pick_output = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [(0, 0, {
+                'name': '/',
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 3,
+                'procure_method': 'make_to_order',
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })],
+        })
+
+        pick_output.action_confirm()
+
+        mo = self.env['mrp.production'].search([
+            ('product_id', '=', product.id),
+            ('state', '=', 'confirmed')
+        ])
+
+        mo.date_start += timedelta(days=20)
+
+        self.env['procurement.group'].run_scheduler()
+
+        mos = self.env['mrp.production'].search([
+            ('product_id', '=', product.id),
+            ('state', '=', 'confirmed')
+        ])
+
+        self.assertEqual(len(mos), 1)
+
     def test_check_update_qty_mto_chain(self):
         """ Simulate a mto chain with a manufacturing order. Updating the
         initial demand should also impact the initial move but not the
