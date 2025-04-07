@@ -62,7 +62,7 @@ registerWebsitePreviewTour('blog_tags', {
         run: "click",
     },
     {
-        trigger: ":iframe .h1:contains(our latest posts)",
+        trigger: ":iframe h1:contains(our latest posts)",
     },
     {
         content: "Click on the adventure tag",
