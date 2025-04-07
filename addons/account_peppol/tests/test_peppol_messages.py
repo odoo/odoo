@@ -410,3 +410,24 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         self.assertFalse('facturx' in self.valid_partner.available_peppol_edi_formats)
         self.valid_partner.invoice_sending_method = 'email'
         self.assertTrue('facturx' in self.valid_partner.available_peppol_edi_formats)
+
+    def test_silent_error_while_creating_xml(self):
+        """When in multi/async mode, the generation of XML can fail silently (without raising).
+        This needs to be reflected as an error and put the move in Peppol Error state.
+        """
+        def mocked_export_invoice_constraints(self, invoice, vals):
+            return {'test_error_key': 'test_error_description'}
+
+        self.valid_partner.invoice_edi_format = 'ubl_bis3'
+        move_1 = self.create_move(self.valid_partner)
+        move_2 = self.create_move(self.valid_partner)
+        (move_1 + move_2).action_post()
+
+        wizard = self.create_send_and_print(move_1 + move_2)
+        with patch(
+            'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20.AccountEdiXmlUBL20._export_invoice_constraints',
+            mocked_export_invoice_constraints
+        ):
+            wizard.action_send_and_print()
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        self.assertEqual(move_1.peppol_move_state, 'error')

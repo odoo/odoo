@@ -120,14 +120,14 @@ class AccountMoveSend(models.AbstractModel):
 
     def _hook_if_errors(self, moves_data, allow_raising=True):
         # EXTENDS 'account'
-        # to update `peppol_move_state` as `skipped` to show users that something went wrong
+        # to update `peppol_move_state` as `error` to show users that something went wrong
         # because those moves that failed XML/PDF files generation are not sent via Peppol
         moves_failed_file_generation = self.env['account.move']
         for move, move_data in moves_data.items():
             if 'peppol' in move_data['sending_methods'] and move_data.get('blocking_error'):
                 moves_failed_file_generation |= move
 
-        moves_failed_file_generation.peppol_move_state = 'skipped'
+        moves_failed_file_generation.peppol_move_state = 'error'
 
         return super()._hook_if_errors(moves_data, allow_raising=allow_raising)
 
@@ -140,6 +140,9 @@ class AccountMoveSend(models.AbstractModel):
         for invoice, invoice_data in invoices_data.items():
             partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
             if 'peppol' in invoice_data['sending_methods']:
+                invoice_edi_format = invoice_data['invoice_edi_format'] or partner._get_peppol_edi_format()
+                # Triggers online check of the partner's validity
+                is_applicable_to_move = self._is_applicable_to_move('peppol', invoice, invoice_edi_format=invoice_edi_format)
                 if not partner.peppol_eas or not partner.peppol_endpoint:
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
@@ -150,7 +153,7 @@ class AccountMoveSend(models.AbstractModel):
                     invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                     continue
 
-                if self._is_applicable_to_move('peppol', invoice, invoice_edi_format=invoice_data['invoice_edi_format']):
+                if is_applicable_to_move:
                     if invoice_data.get('ubl_cii_xml_attachment_values'):
                         xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
                         filename = invoice_data['ubl_cii_xml_attachment_values']['name']
@@ -158,7 +161,12 @@ class AccountMoveSend(models.AbstractModel):
                         xml_file = invoice.ubl_cii_xml_id.raw
                         filename = invoice.ubl_cii_xml_id.name
                     else:
-                        invoice.peppol_move_state = 'skipped'
+                        invoice.peppol_move_state = 'error'
+                        builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_edi_format)
+                        invoice_data['error'] = _(
+                            "Errors occurred while creating the EDI document (format: %s):",
+                            builder._description
+                        )
                         continue
 
                     receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
