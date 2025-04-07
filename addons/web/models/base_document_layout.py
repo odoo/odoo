@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from markupsafe import Markup
+from math import ceil
 
 from odoo import api, fields, models
 from odoo.addons.base.models.ir_qweb_fields import nl2br
@@ -222,7 +223,7 @@ class BaseDocumentLayout(models.TransientModel):
             return False, False
 
         base_w, base_h = image.size
-        w = int(50 * base_w / base_h)
+        w = ceil(50 * base_w / base_h)
         h = 50
 
         # Converts to RGBA (if already RGBA, this is a noop)
