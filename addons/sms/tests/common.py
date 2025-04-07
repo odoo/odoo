@@ -306,11 +306,7 @@ class SMSCommon(MailCommon, SMSCase):
 
     @classmethod
     def setUpClass(cls):
-        super(SMSCommon, cls).setUpClass()
-        cls.user_employee.write({'login': 'employee'})
-
-        # update country to belgium in order to test sanitization of numbers
-        cls.user_employee.company_id.write({'country_id': cls.env.ref('base.be').id})
+        super().setUpClass()
 
         # some numbers for testing
         cls.random_numbers_str = '+32456998877, 0456665544'
