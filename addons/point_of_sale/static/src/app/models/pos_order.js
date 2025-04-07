@@ -412,9 +412,10 @@ export class PosOrder extends Base {
                             configuration: {
                                 attribute_value_ids: cLine.attribute_value_ids,
                             },
+                            qty: pLine.qty,
                         };
                     } else {
-                        return { combo_item_id: cLine.combo_item_id };
+                        return { combo_item_id: cLine.combo_item_id, qty: pLine.qty };
                     }
                 }),
                 pricelist,
@@ -423,7 +424,7 @@ export class PosOrder extends Base {
             );
         }
         const combo_children_lines = this.lines.filter(
-            (line) => line.price_type === "original" && line.combo_parent_id
+            (line) => line.price_type === "automatic" && line.combo_parent_id
         );
         combo_children_lines.forEach((line) => {
             line.setUnitPrice(

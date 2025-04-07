@@ -509,6 +509,12 @@ export function selectedOrderlineHasDirect(productName, quantity, price) {
         price,
     });
 }
+export function orderComboLineHas(productName, quantity) {
+    return Order.hasLine({
+        productName,
+        quantity,
+    });
+}
 export function orderLineHas(productName, quantity, price) {
     return Order.hasLine({
         productName,
