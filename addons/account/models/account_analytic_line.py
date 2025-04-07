@@ -87,3 +87,42 @@ class AccountAnalyticLine(models.Model):
                 account=self.env['account.analytic.account'].browse(self.env.context['account_id']).name
             )
         return super().view_header_get(view_id, view_type)
+    
+    def _get_distribution_key(self, analytic_line):
+        return ",".join(str(account_id) for account_id in analytic_line._get_analytic_accounts().ids)
+    
+    def _update_analytic_distribution(self, move_lines):
+        #updating the analytic distribution field in the account.move.line
+        for move_line in move_lines:
+            new_distribution = {}
+            analytic_lines = move_line.analytic_line_ids
+            total_amount = move_line.credit - move_line.debit
+            for line in analytic_lines:
+                key = self._get_distribution_key(line)
+                new_distribution[key] = (line.amount / total_amount) * 100
+            
+            move_line.with_context(edited_from_analytic_line=True).write({'analytic_distribution': new_distribution})
+
+    def write(self, vals):
+        #overriding the write function to update the analytic distribution field in the account.move.line
+        res = super().write(vals)
+        fields_to_check = ['amount'] + self._get_plan_fnames()
+        if any(field in vals for field in fields_to_check):
+            affected_move_lines = self.move_line_id
+            self._update_analytic_distribution(affected_move_lines)
+        return res
+    
+    def unlink(self):
+        #Overriding unlink to remove analytic accounts from move lines
+        affected_move_lines = self.move_line_id
+        res = super().unlink()
+        if not self.env.context.get('deleted_from_move_line'):
+            self._update_analytic_distribution(affected_move_lines)
+        return res
+    
+    def create(self, vals):
+        #overriding create to add the newly created analytic lines to its linked move line's analytic distribution
+        res = super().create(vals)
+        if(res.move_line_id):
+            self._update_analytic_distribution(res.move_line_id)
+        return res

@@ -1158,10 +1158,12 @@ class AccountMoveLine(models.Model):
 
     def _inverse_analytic_distribution(self):
         """ Unlink and recreate analytic_lines when modifying the distribution."""
+        if self.env.context.get('edited_from_analytic_line'):
+            return
         lines_to_modify = self.env['account.move.line'].browse([
             line.id for line in self if line.parent_state == "posted"
         ])
-        lines_to_modify.analytic_line_ids.unlink()
+        lines_to_modify.analytic_line_ids.with_context(deleted_from_move_line=True).unlink()
         lines_to_modify._create_analytic_lines()
 
     @api.onchange('account_id')
