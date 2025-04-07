@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[@id='pos-receipt-contact-company-info']" position="replace">
+            <t t-if="props.data.isCountryPortugal &amp; props.data.l10nPtTrainingMode">
+                <div>Odoo</div>
+                <div>Chaussée de Namur 40</div>
+                <div>1367 Ramillies</div>
+                <div>Belgium</div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>
