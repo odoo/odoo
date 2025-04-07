@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="product_expiry.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
+        <xpath expr="//t[@t-out='freeStockLabel']" position="before">
+            <t t-elif="line.removal_date">
+                <t t-if="line.removal_date === -1">
+                    To remove now
+                </t>
+                <t t-else="">
+                    To remove on <t t-out="line.removal_date"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
