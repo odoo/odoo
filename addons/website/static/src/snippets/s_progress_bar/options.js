@@ -42,7 +42,7 @@ options.registry.progress = options.Class.extend({
 
         // Temporary hide the label. It's effectively removed in cleanForSave
         // if the option is confirmed
-        progressLabel.classList.toggle('d-none', widgetValue === 'none');
+        progressLabel?.classList.toggle("d-none", widgetValue === "none");
     },
     /**
      * Sets the progress bar value.

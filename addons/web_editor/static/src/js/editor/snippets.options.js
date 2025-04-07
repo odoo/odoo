@@ -1582,7 +1582,7 @@ const MultiUserValueWidget = UserValueWidget.extend({
     async setValue(value, methodName) {
         let values = value.split(/\s*\|\s*/g);
         if (values.length === 1) {
-            values = value.split(/\s+/g);
+            values = value.match(/rgba?\([^)]+\)|[^ ,]+/g);
         }
         for (let i = 0; i < this._userValueWidgets.length - 1; i++) {
             await this._userValueWidgets[i].setValue(values.shift() || '', methodName);
@@ -8956,7 +8956,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      */
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'backgroundType') {
-            return this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover';
+            return this.$target.css("background-repeat").includes("no-repeat") ? "cover" : "repeat-pattern";
         }
         return this._super(...arguments);
     },
