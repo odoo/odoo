@@ -38,15 +38,15 @@
         </xpath>
 
         <!-- support for custom footer -->
-        <div class="o_footer_content row border-top pt-2" position="attributes">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="attributes">
             <attribute name="t-if">not custom_footer</attribute>
-        </div>
-        <div class="o_footer_content row border-top pt-2" position="after">
-            <div class="o_footer_content row border-top pt-2"
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div class="o_footer_content border-top pt-2" t-attf-class="{{'d-flex' if is_html_empty(company.report_header) else 'row' }}"
                  t-if="custom_footer and company._localization_use_documents()">
                 <t t-out="custom_footer"/>
             </div>
-        </div>
+        </xpath>
     </template>
 
     <template id="external_layout_boxed" inherit_id="web.external_layout_boxed" >
@@ -61,15 +61,15 @@
         </xpath>
 
         <!-- support for custom footer -->
-        <div class="o_footer_content row border-top pt-2" position="attributes">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="attributes">
             <attribute name="t-if">not custom_footer</attribute>
-        </div>
-        <div class="o_footer_content row border-top pt-2" position="after">
-            <div class="o_footer_content row border-top pt-2"
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div class="o_footer_content border-top pt-2" t-attf-class="{{'d-flex' if is_html_empty(company.report_header) else 'row' }}"
                  t-if="custom_footer and company._localization_use_documents()">
                 <t t-out="custom_footer"/>
             </div>
-        </div>
+        </xpath>
     </template>
 
     <template id="external_layout_striped" inherit_id="web.external_layout_striped" >
