@@ -75,8 +75,8 @@ class PortalAccount(CustomerPortal):
         return {
             'all': {'label': _('All'), 'domain': []},
             'overdue_invoices': {'label': _('Overdue invoices'), 'domain': self._get_overdue_invoices_domain()},
-            'invoices': {'label': _('Invoices'), 'domain': [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]},
-            'bills': {'label': _('Bills'), 'domain': [('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]},
+            'invoices': {'label': _('Invoices'), 'domain': []},
+            'bills': {'label': _('Bills'), 'domain': []},
         }
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
@@ -100,9 +100,12 @@ class PortalAccount(CustomerPortal):
         values = self._prepare_portal_layout_values()
         AccountInvoice = request.env['account.move']
 
+        # Map the filterby keyword to what is expected from _get_invoice_domain
+        filter_map = {'invoices': 'out', 'bills': 'in'}
+        m_type = filter_map.get(filterby, filterby)
         domain = expression.AND([
             domain or [],
-            self._get_invoices_domain(),
+            self._get_invoices_domain(m_type),
         ])
 
         searchbar_sortings = self._get_account_searchbar_sortings()
