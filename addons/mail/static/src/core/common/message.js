@@ -42,6 +42,7 @@ import { rpc } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
+import { useMessageShrinkWrap } from "@mail/utils/common/hooks";
 
 /**
  * @typedef {Object} Props
@@ -130,6 +131,7 @@ export class Message extends Component {
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
+        useMessageShrinkWrap();
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
