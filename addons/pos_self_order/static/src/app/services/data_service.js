@@ -20,28 +20,10 @@ patch(PosData.prototype, {
             ? super.initIndexedDB(...arguments)
             : true;
     },
-    initListeners() {
-        return session.data.self_ordering_mode === "mobile"
-            ? super.initListeners(...arguments)
-            : true;
-    },
-    synchronizeLocalDataInIndexedDB() {
-        return session.data.self_ordering_mode === "mobile"
-            ? super.synchronizeLocalDataInIndexedDB(...arguments)
-            : true;
-    },
-    async getCachedServerDataFromIndexedDB() {
-        return session.data.self_ordering_mode === "mobile"
-            ? await super.getCachedServerDataFromIndexedDB(...arguments)
-            : {};
-    },
-    async getLocalDataFromIndexedDB() {
-        return session.data.self_ordering_mode === "mobile"
-            ? await super.getLocalDataFromIndexedDB(...arguments)
-            : {};
+    async flush() {
+        this.queue = [];
     },
     async missingRecursive(recordMap) {
         return recordMap;
     },
-    async checkAndDeleteMissingOrders(results) {},
 });

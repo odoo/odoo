@@ -208,11 +208,8 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             'payment_ids': [],
         }
 
-        create_result = self.env['pos.order'].with_user(self.pos_user).sync_from_ui([order_data])
+        order = self.env['pos.order'].with_user(self.pos_user).create([order_data])
         self.assertEqual(len(current_session.order_ids), 1)
-        order_id = next(result_order_data for result_order_data in create_result['pos.order'] if result_order_data['uuid'] == order_uid)['id']
-
-        order = self.env['pos.order'].search([('id', '=', order_id)])
         self.assertEqual(order.state, 'draft')
         return order
 

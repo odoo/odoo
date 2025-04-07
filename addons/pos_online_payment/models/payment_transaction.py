@@ -60,8 +60,6 @@ class PaymentTransaction(models.Model):
                     'pos_order_id': pos_order.id,
                     'pos_session_id': pos_order.session_id.id,
                 })
-                if pos_order.state == 'draft' and pos_order._is_pos_order_paid():
-                    pos_order._process_saved_order(False)
                 # The bus communication is only protected by the name of the channel.
                 # Therefore, no sensitive information is sent through it, only a
                 # notification to invite the local browser to do a safe RPC to

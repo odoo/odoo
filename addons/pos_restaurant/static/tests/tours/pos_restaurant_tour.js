@@ -227,6 +227,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ProductScreen.totalAmountIs("2.20"),
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("4", "1"),
+            Chrome.endTour(),
         ].flat(),
 });
 
@@ -528,6 +529,7 @@ registry.category("web_tour.tours").add("LeaveResidualOrder", {
             FloorScreen.hasTable("2"),
             FloorScreen.hasTable("4"),
             FloorScreen.hasTable("5"),
+            Chrome.endTour(),
         ].flat(),
 });
 
@@ -547,6 +549,7 @@ registry.category("web_tour.tours").add("FinishResidualOrder", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
+            Chrome.endTour(),
         ].flat(),
 });
 

@@ -29,6 +29,9 @@ export class PosOrderline extends Base {
             savedQuantity: 0,
         };
     }
+    get refunded_qty() {
+        return -this.refund_orderline_ids?.reduce((acc, line) => acc + line.qty, 0);
+    }
 
     setFullProductName() {
         this.full_product_name = constructFullProductName(this);
@@ -109,6 +112,7 @@ export class PosOrderline extends Base {
     }
 
     get session() {
+        // FIXME: this will not be correct when sharing floors between multiple sessions
         return this.models["pos.session"].getFirst();
     }
 

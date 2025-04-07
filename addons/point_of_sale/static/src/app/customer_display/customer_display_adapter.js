@@ -25,7 +25,7 @@ export class CustomerDisplayPosAdapter {
             });
         } else {
             this.channel.postMessage(JSON.parse(JSON.stringify(this.data)));
-            pos.data
+            pos.env.services.orm //  we use the orm service directly instead of data.call in order to not have `flush` called automatically
                 .call("pos.config", "update_customer_display", [
                     [pos.config.id],
                     this.data,

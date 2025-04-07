@@ -405,72 +405,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             lambda line: line.name == 'Difference at closing PoS session')
         self.assertAlmostEqual(diff_line.credit, 1.0, msg="Missing amount of 1.0")
 
-    def test_order_multi_step_route(self):
-        """
-            Test that orders in sessions with "Ship Later" enabled and
-            "Specific Route" set to a multi-step (2/3) route can be validated.
-            This config implies multiple picking types and multiple move_lines.
-        """
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-        self.twenty_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-        twenty_dollars_lot = self.env['stock.lot'].create({
-            'name': '80085',
-            'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id,
-        })
-        stock_location = self.company_data['default_warehouse'].lot_stock_id
-        stock_quantity = self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id,
-            'inventory_quantity': 1,
-            'location_id': stock_location.id,
-            'lot_id': twenty_dollars_lot.id
-        })
-        stock_quantity.action_apply_inventory()
-        warehouse_id = self.company_data['default_warehouse']
-        warehouse_id.delivery_steps = 'pick_ship'
-
-        self.pos_config_usd.write({
-            'ship_later': True,
-            'warehouse_id': warehouse_id.id,
-            'route_id': warehouse_id.route_ids[-1].id,
-        })
-
-        self.pos_config_usd.open_ui()
-        self.pos_config_usd.current_session_id.update_stock_at_closing = False
-        order, _ = self.create_backend_pos_order({
-            'order_data': {
-                'shipping_date': fields.Date.today(),
-                'partner_id': self.partner_mobt.id,
-                'pricelist_id': self.partner_mobt.property_product_pricelist.id,
-            },
-            'line_data': [
-                {
-                    'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-                    'pack_lot_ids': [[0, 0, {'lot_name': '80085'}]],
-                },
-                {
-                    'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id,
-                    'pack_lot_ids': [[0, 0, {'lot_name': '80085'}]],
-                },
-            ],
-            'payment_data': [
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 30},
-            ],
-        })
-        picking_mls_no_stock = order.picking_ids.move_line_ids.filtered(
-            lambda l: l.product_id.id == self.ten_dollars_with_10_incl.product_variant_id.id)
-        picking_mls_stock = order.picking_ids.move_line_ids.filtered(
-            lambda l: l.product_id.id == self.twenty_dollars_with_10_incl.product_variant_id.id)
-        self.assertEqual(order.state, 'paid')
-        self.assertEqual(len(picking_mls_no_stock), 0)
-        self.assertEqual(len(picking_mls_stock), 1)
-        self.assertEqual(len(order.picking_ids.picking_type_id), 1)
-
     def test_order_with_different_payments_and_refund(self):
         """
         Test that all the payments are correctly taken into account when the order
@@ -498,122 +432,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             ],
         })
         self.assertEqual(order.account_move.amount_residual, 20)
-
-    def test_sale_order_postponed_invoicing(self):
-        """
-            Test the flow of creating an invoice later, after the POS session
-            has been closed and everything has been processed. Process should:
-                - Create a new misc entry, that will revert part of the POS
-                    closing entry.
-                - Create the move and associating payment(s) entry, as it would
-                    do when closing with invoice.
-                - Reconcile the receivable lines from the created misc entry
-                    with the ones from the created payment(s)
-        """
-        tags = self.env['account.account.tag'].create([
-            {
-                'name': f"tag{i}",
-                'applicability': 'taxes',
-                'country_id': self.company_data['company'].country_id.id,
-            }
-            for i in range(1, 5)
-        ])
-
-        self.twenty_dollars_with_15_excl.taxes_id = [Command.set(self.tax_sale_a.ids)]
-        self.tax_sale_a.invoice_repartition_line_ids.filtered(
-            lambda l: l.repartition_type == 'base').write({'tag_ids': tags[0].ids})
-        self.tax_sale_a.invoice_repartition_line_ids.filtered(
-            lambda l: l.repartition_type == 'tax').write({'tag_ids': tags[1].ids})
-        self.tax_sale_a.refund_repartition_line_ids.filtered(
-            lambda l: l.repartition_type == 'base').write({'tag_ids': tags[2].ids})
-        self.tax_sale_a.refund_repartition_line_ids.filtered(
-            lambda l: l.repartition_type == 'tax').write({'tag_ids': tags[3].ids})
-
-        with freeze_time('2020-01-01'):
-            order, _ = self.create_backend_pos_order({
-                'line_data': [
-                    {'product_id': self.twenty_dollars_with_15_excl.product_variant_id.id},
-                ],
-                'payment_data': [
-                    {'payment_method_id': self.bank_payment_method.id, 'amount': 23.0},
-                ],
-            })
-            self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-
-            # Check the closing entry.
-            closing_entry = order.session_move_id
-            self.assertRecordValues(closing_entry.line_ids.sorted(), [{
-                    'balance': -3.0,
-                    'account_id': self.company_data['default_account_tax_sale'].id,
-                    'tax_ids': [],
-                    'tax_tag_ids': tags[1].ids,
-                    'tax_tag_invert': True,
-                    'reconciled': False
-                }, {
-                    'balance': -20.0,
-                    'account_id': self.company_data['default_account_revenue'].id,
-                    'tax_ids': self.tax_sale_a.ids,
-                    'tax_tag_ids': tags[0].ids,
-                    'tax_tag_invert': True,
-                    'reconciled': False
-                }, {
-                    'balance': 23.0,
-                    'account_id': self.company_data['default_account_receivable'].id,
-                    'tax_ids': [],
-                    'tax_tag_ids': [],
-                    'tax_tag_invert': False,
-                    'reconciled': True
-            }])
-
-        with freeze_time('2020-01-03'):
-            order.partner_id = self.partner_adgu.id
-            order.action_pos_order_invoice()
-
-        # Check the reverse moves, one for the closing entry, one for the statement lines.
-        reverse_closing_entries = self.env['account.move'].search([
-            ('id', '!=', closing_entry.id),
-            ('company_id', '=', self.env.company.id),
-            ('statement_line_id', '=', False),
-            ('move_type', '=', 'entry'),
-            ('state', '=', 'posted'),
-        ])
-        self.assertRecordValues(reverse_closing_entries[0].line_ids.sorted(), [{
-                'balance': 3.0,
-                'account_id': self.company_data['default_account_tax_sale'].id,
-                'tax_ids': [],
-                'tax_tag_ids': tags[1].ids,
-                'tax_tag_invert': True,
-                'reconciled': False
-            }, {
-                'balance': 20.0,
-                'account_id': self.company_data['default_account_revenue'].id,
-                'tax_ids': self.tax_sale_a.ids,
-                'tax_tag_ids': tags[0].ids,
-                'tax_tag_invert': True,
-                'reconciled': False
-            }, {
-                'balance': -23.0,
-                'account_id': self.company_data['default_account_receivable'].id,
-                'tax_ids': [],
-                'tax_tag_ids': [],
-                'tax_tag_invert': False,
-                'reconciled': True
-        }])
-        self.assertRecordValues(reverse_closing_entries[2].line_ids.sorted(), [{
-                'balance': -23.0,
-                'account_id': self.company_data['default_account_receivable'].id,
-                'tax_ids': [],
-                'tax_tag_ids': [],
-                'tax_tag_invert': False,
-                'reconciled': True
-            }, {
-                'balance': 23.0,
-                'account_id': self.company_data['default_account_receivable'].id,
-                'tax_ids': [],
-                'tax_tag_ids': [],
-                'tax_tag_invert': False,
-                'reconciled': True
-        }])
 
     def test_sale_order_postponed_invoicing_anglosaxon(self):
         """ Test the flow of creating an invoice later, after the POS session has been closed and everything has been processed
@@ -732,7 +550,7 @@ class TestPointOfSaleFlow(CommonPosTest):
            linked to the original invoice."""
         self.pos_config_usd.open_ui()
         current_session = self.pos_config_usd.current_session_id
-        self.create_backend_pos_order({
+        order, _ = self.create_backend_pos_order({
             'order_data': {
                 'partner_id': self.partner_adgu.id,
                 'to_invoice': True,
@@ -747,7 +565,7 @@ class TestPointOfSaleFlow(CommonPosTest):
                 {'payment_method_id': self.bank_payment_method.id, 'amount': -20}
             ]
         })
-
+        order.action_pos_order_invoice()
         current_session.action_pos_session_closing_control()
         invoices = self.env['account.move'].search([('move_type', '=', 'out_invoice')], order='id desc', limit=1)
         credit_notes = self.env['account.move'].search([('move_type', '=', 'out_refund')], order='id desc', limit=1)

@@ -1,11 +1,9 @@
-import { _t } from "@web/core/l10n/translation";
 import { useErrorHandlers, useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { registry } from "@web/core/registry";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { useState, Component, onMounted } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { isValidEmail } from "@point_of_sale/utils";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
@@ -101,15 +99,6 @@ export class ReceiptScreen extends Component {
         );
     async _sendReceiptToCustomer({ action, destination }) {
         const order = this.currentOrder;
-        if (typeof order.id !== "number") {
-            this.dialog.add(ConfirmationDialog, {
-                title: _t("Unsynced order"),
-                body: _t(
-                    "This order is not yet synced to server. Make sure it is synced then try again."
-                ),
-            });
-            return Promise.reject();
-        }
         const fullTicketImage = await this.generateTicketImage();
         const basicTicketImage = await this.generateTicketImage(true);
         await this.pos.data.call("pos.order", action, [

@@ -44,9 +44,10 @@ class PosOrder(models.Model):
                 invoice_vals['partner_id'] = sale_orders[0].partner_invoice_id.id
         return invoice_vals
 
+    # TODO adapt this
     @api.model
-    def sync_from_ui(self, orders):
-        data = super().sync_from_ui(orders)
+    def create123(self, orders):
+        data = super().create(orders)
         if len(orders) == 0:
             return data
 

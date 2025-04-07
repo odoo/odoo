@@ -47,12 +47,12 @@ class PosOrder(models.Model):
         self._send_notification(order_ids)
         return super().remove_from_ui(server_ids)
 
-    @api.model
-    def sync_from_ui(self, orders):
-        result = super().sync_from_ui(orders)
-        order_ids = self.browse([order['id'] for order in result['pos.order'] if order.get('id')])
-        self._send_notification(order_ids)
-        return result
+    # @api.model
+    # def create(self, orders):
+    #     result = super().create(orders)
+    #     order_ids = self.browse([order['id'] for order in result['pos.order'] if order.get('id')])
+    #     self._send_notification(order_ids)
+    #     return result
 
     def _send_notification(self, order_ids):
         config_ids = order_ids.config_id

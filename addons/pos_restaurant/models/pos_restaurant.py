@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, Command
+from uuid import uuid4
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -20,6 +21,7 @@ class RestaurantFloor(models.Model):
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
     floor_background_image = fields.Image(string='Floor Background Image')
+    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -27,7 +29,7 @@ class RestaurantFloor(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image']
+        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image', 'uuid', 'active']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
@@ -40,51 +42,6 @@ class RestaurantFloor(models.Model):
                     if floor in session.config_id.floor_ids:
                         error_msg += _("Floor: %(floor)s - PoS Config: %(config)s \n", floor=floor.name, config=session.config_id.name)
             raise UserError(error_msg)
-
-    def write(self, vals):
-        for floor in self:
-            for config in floor.pos_config_ids:
-                if config.has_active_session and (vals.get('pos_config_ids') or vals.get('active')):
-                    raise UserError(
-                        self.env._(
-                            "Please close and validate the following open PoS Session before modifying this floor.\n"
-                            "Open session: %(session_names)s",
-                            session_names=" ".join(config.mapped("name")),
-                        )
-                    )
-
-        return super().write(vals)
-
-    def rename_floor(self, new_name):
-        for floor in self:
-            floor.name = new_name
-
-    @api.model
-    def sync_from_ui(self, name, background_color, config_id):
-        floor_fields = {
-            "name": name,
-            "background_color": background_color,
-        }
-        pos_floor = self.create(floor_fields)
-        pos_floor.pos_config_ids = [Command.link(config_id)]
-        return {
-            'id': pos_floor.id,
-            'name': pos_floor.name,
-            'background_color': pos_floor.background_color,
-            'table_ids': [],
-            'sequence': pos_floor.sequence,
-            'tables': [],
-        }
-
-    def deactivate_floor(self, session_id):
-        draft_orders = self.env['pos.order'].search([('session_id', '=', session_id), ('state', '=', 'draft'), ('table_id.floor_id', '=', self.id)])
-        if draft_orders:
-            raise UserError(_("You cannot delete a floor when orders are still in draft for this floor."))
-        for table in self.table_ids:
-            table.active = False
-        self.active = False
-
-        return True
 
 
 class RestaurantTable(models.Model):
@@ -106,6 +63,7 @@ class RestaurantTable(models.Model):
     color = fields.Char('Color', help="The table's color, expressed as a valid 'background' CSS property value")
     parent_id = fields.Many2one('restaurant.table', string='Parent Table', help="The parent table if this table is part of a group of tables")
     active = fields.Boolean('Active', default=True, help='If false, the table is deactivated and will not be available in the point of sale')
+    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
 
     @api.depends('table_number', 'floor_id')
     def _compute_display_name(self):
@@ -119,7 +77,7 @@ class RestaurantTable(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['table_number', 'width', 'height', 'position_h', 'position_v', 'parent_id', 'shape', 'floor_id', 'color', 'seats', 'active']
+        return ['table_number', 'width', 'height', 'position_h', 'position_v', 'parent_id', 'shape', 'floor_id', 'color', 'seats', 'active', 'uuid', 'active']
 
     def are_orders_still_in_draft(self):
         draft_orders_count = self.env['pos.order'].search_count([('table_id', 'in', self.ids), ('state', '=', 'draft')])

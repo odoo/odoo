@@ -20,7 +20,7 @@ import { processModelDefs } from "./model_defs";
 import { computeBackLinks, createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
 
-const AVAILABLE_EVENT = ["create", "update", "delete"];
+const AVAILABLE_EVENT = ["create", "update", "delete", "load"];
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     const database = opts.databaseTable || {};
@@ -234,7 +234,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         _sanitizeRawData(vals, options = {}) {
             const { connectRecords = true, serverData = false } = options;
             let dataToConnect;
-            if (!vals.uuid && database[this.name]?.key === "uuid") {
+            if (!vals.uuid && this.fields.uuid) {
                 vals.uuid = uuidv4();
             }
             vals.id = vals["id"] ?? (vals.uuid || uuidv4());
@@ -327,10 +327,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             if (dataToConnect) {
                 this._connectRecords(record, dataToConnect);
             }
-
             if (!delaySetup) {
+                update.fire = false;
                 setupRecord(record, vals, uiState);
-                record.model.triggerEvents("create", { ids: [record.id] });
+                update.fire = true;
+                record.model.triggerEvents("create", { ids: [record.id], vals, rawData });
                 return record;
             }
             return { record, uiState };
@@ -443,10 +444,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 this[STORE_SYMBOL].remove(record);
                 this[STORE_SYMBOL].add(record);
             }
-
-            aggregatedUpdates.fireEventAndDirty({
-                silentModels: opts.silent ? [record.model.name] : [],
-            });
+            if (!opts.silent && update.fire) {
+                aggregatedUpdates.fireEventAndDirty();
+            }
         }
 
         _delete(record, opts = {}) {
@@ -521,7 +521,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return serialized;
         }
     }
-
+    const update = { fire: true };
     class Models {
         constructor(processedModelDefs) {
             Object.assign(
@@ -634,7 +634,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
                         resultsArray.push(record);
                     }
-                    modelEvents.triggerEvents("create", { ids: createdIds });
+                    modelEvents.triggerEvents("load", { ids: createdIds });
                 }
                 return finalResults;
             } finally {

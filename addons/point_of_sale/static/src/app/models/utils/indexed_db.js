@@ -91,6 +91,16 @@ export default class IndexedDB {
         }
         return this.promises(storeName, arrData, "put");
     }
+    update(storeName, id, data) {
+        const transaction = this.getNewTransaction(storeName, "readonly");
+        transaction.objectStore(storeName).get(id).onsuccess = (event) => {
+            const record = event.target.result;
+            if (record) {
+                const updatedRecord = { ...record, ...data };
+                transaction.objectStore(storeName).put(JSON.parse(JSON.stringify(updatedRecord)));
+            }
+        };
+    }
 
     readAll(storeName = [], retry = 0) {
         const storeNames =

@@ -10,6 +10,12 @@ patch(DataServiceOptions.prototype, {
                 condition: (record) =>
                     record.order_id?.finalized && typeof record.order_id.id === "number",
             },
+            "restaurant.table": {
+                key: "uuid",
+            },
+            "restaurant.floor": {
+                key: "uuid",
+            },
         };
     },
     get cascadeDeleteModels() {

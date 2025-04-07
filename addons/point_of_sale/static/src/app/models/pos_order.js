@@ -42,7 +42,7 @@ export class PosOrder extends Base {
             this.last_order_preparation_change =
                 typeof vals.last_order_preparation_change === "object"
                     ? vals.last_order_preparation_change
-                    : JSON.parse(vals.last_order_preparation_change);
+                    : JSON.parse(vals.last_order_preparation_change.replace(/'/g, '"'));
         }
 
         this.general_customer_note = vals.general_customer_note || "";
@@ -270,7 +270,7 @@ export class PosOrder extends Base {
         return this.lines.length;
     }
     recomputeOrderData() {
-        this.amount_paid = this.getTotalPaid();
+        this.amount_paid = this.getTotalPaid() - this.getChange();
         this.amount_tax = this.getTotalTax();
         this.amount_total = this.getTotalWithTax();
         this.amount_return = this.getChange();
@@ -331,6 +331,9 @@ export class PosOrder extends Base {
         this.last_order_preparation_change.general_customer_note = this.general_customer_note;
         this.last_order_preparation_change.internal_note = this.internal_note;
         this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
+        // The point of this is to trigger the notification that the record did update
+        // eslint-disable-next-line no-self-assign
+        this.last_order_preparation_change = this.last_order_preparation_change;
     }
 
     isEmpty() {
@@ -926,7 +929,7 @@ export class PosOrder extends Base {
         };
     }
     get floatingOrderName() {
-        return this.floating_order_name || this.tracking_number.toString() || "";
+        return this.floating_order_name || this.tracking_number?.toString?.() || "";
     }
 
     sortBySequenceAndCategory(a, b) {

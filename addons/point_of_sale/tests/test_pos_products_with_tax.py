@@ -346,7 +346,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             tax_ids=tax_21_incl.ids,
         )
         self.open_new_session()
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].create([self.create_ui_order_data([
             (product1, 1),
             (product2, -1),
         ])])
@@ -392,7 +392,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             tax_ids=tax_21_incl.ids,
         )
         self.open_new_session()
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].create([self.create_ui_order_data([
             (product1, 1),
             (product2, -1),
         ])])
@@ -438,7 +438,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             tax_ids=tax_21_incl.ids,
         )
         self.open_new_session()
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].create([self.create_ui_order_data([
             (product1, 1, 10),
             (product2, -1, 10),
         ])])
@@ -485,7 +485,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             tax_ids=tax_21_incl.ids,
         )
         self.open_new_session()
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].create([self.create_ui_order_data([
             (product1, 6, 5),
             (product2, -6, 5),
         ])])
@@ -531,7 +531,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         })
 
         self.open_new_session()
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].create([self.create_ui_order_data([
             (zero_amount_product, 1),
         ])])
         self.pos_session.action_pos_session_validate()

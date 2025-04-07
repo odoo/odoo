@@ -1,6 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useRef, onMounted } from "@odoo/owl";
@@ -49,20 +47,9 @@ export class TipScreen extends Component {
     async validateTip() {
         const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
         const order = this.pos.getOrder();
-        const serverId = typeof order.id === "number" && order.id;
-
-        if (!serverId) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Unsynced order"),
-                body: _t(
-                    "This order is not yet synced to server. Make sure it is synced then try again."
-                ),
-            });
-            return;
-        }
 
         if (!amount) {
-            await this.pos.data.write("pos.order", [serverId], { is_tipped: true, tip_amount: 0 });
+            order.update({ is_tipped: true, tip_amount: 0 });
             this.goNextScreen();
             return;
         }
@@ -90,14 +77,10 @@ export class TipScreen extends Component {
                 paymentline.uuid
             );
         }
-
         const serializedTipLine = order.getSelectedOrderline().serializeForORM();
         order.getSelectedOrderline().delete();
-        const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
-        await this.pos.data.write("pos.order", [serverId], {
-            is_tipped: true,
-            tip_amount: serverTipLine[0].price_subtotal_incl,
-        });
+        const serverTipLine = this.pos.models["pos.order.line"].create(serializedTipLine);
+        order.update({ is_tipped: true, tip_amount: serverTipLine.price_subtotal_incl });
         this.goNextScreen();
     }
     goNextScreen() {

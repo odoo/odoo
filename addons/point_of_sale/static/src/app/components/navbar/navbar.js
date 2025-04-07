@@ -23,7 +23,7 @@ import { _t } from "@web/core/l10n/translation";
 import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { uuidv4 } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
-const { DateTime } = luxon;
+import { session } from "@web/session";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -35,7 +35,6 @@ export class Navbar extends Component {
         Input,
         Dropdown,
         DropdownItem,
-        SyncPopup,
         OrderTabs,
     };
     static props = {};
@@ -56,6 +55,10 @@ export class Navbar extends Component {
             this.isSystemUser = await user.hasGroup("base.group_system");
         });
         useExternalListener(document, "keydown", this.handleKeydown.bind(this));
+    }
+
+    isDebug() {
+        return odoo.debug || session.test_mode;
     }
 
     handleKeydown(event) {
@@ -190,10 +193,6 @@ export class Navbar extends Component {
             }
 
             order.preset_time = data.slot.datetime;
-            if (data.slot.datetime > DateTime.now()) {
-                this.pos.addPendingOrder([order.id]);
-                await this.pos.syncAllOrders();
-            }
         }
     }
 

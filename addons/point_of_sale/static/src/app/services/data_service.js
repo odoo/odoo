@@ -1,66 +1,64 @@
 import { Reactive } from "@web/core/utils/reactive";
-import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
-import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw } from "@odoo/owl";
-import { batched } from "@web/core/utils/timing";
-import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
-import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
+import { getOnNotified } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
-
+import IndexedDB from "../models/utils/indexed_db";
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { debounce } from "@web/core/utils/timing";
+import { serializeDateTime } from "@web/core/l10n/dates";
+import { omit } from "@web/core/utils/objects";
+import { Mutex } from "@web/core/utils/concurrency";
+
+const MIN_FLUSH_INTERVAL_MILLIS = 10;
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
-    static serviceDependencies = ["orm", "bus_service"];
+    static serviceDependencies = ["orm", "bus_service", "dialog"];
 
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
 
-    async setup(env, { orm, bus_service }) {
-        this.orm = orm;
-        this.bus = bus_service;
+    async setup(env, services) {
         this.relations = [];
-        this.custom = {};
-        this.syncInProgress = false;
-        this.mutex = markRaw(new Mutex());
         this.records = {};
+        Object.assign(this, services);
         this.opts = new DataServiceOptions();
         this.channels = [];
+        this.idUpdates = {};
 
         this.network = {
-            warningTriggered: false,
-            offline: !navigator.onLine,
             loading: true,
-            unsyncData: [],
+            get offline() {
+                return !navigator.onLine;
+            },
         };
-
+        this.flushMutex = new Mutex();
         this.initializeWebsocket();
         await this.intializeDataRelation();
-        browser.addEventListener("online", () => {
-            if (this.network.offline) {
-                this.network.offline = false;
-                this.network.warningTriggered = false;
-            }
-
-            this.syncData();
-        });
 
         browser.addEventListener("offline", () => {
-            this.network.offline = true;
+            this.dialog.add(AlertDialog, {
+                title: _t("Connection Lost"),
+                body: _t(
+                    "Until the connection is reestablished, Odoo Point of Sale will operate with limited functionality."
+                ),
+                confirmLabel: _t("Continue with limited functionality"),
+            });
         });
 
-        this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
+        this.bus_service.addEventListener("connect", this.reconnectWebSocket.bind(this));
     }
 
     initializeWebsocket() {
-        this.onNotified = getOnNotified(this.bus, odoo.access_token);
+        this.onNotified = getOnNotified(this.bus_service, odoo.access_token);
     }
 
     reconnectWebSocket() {
@@ -83,7 +81,6 @@ export class PosData extends Reactive {
 
         this.onNotified(channel, method);
     }
-
     get databaseName() {
         return `point-of-sale-${odoo.pos_config_id}-${odoo.info?.db}`;
     }
@@ -101,44 +98,11 @@ export class PosData extends Reactive {
         // This method initializes indexedDB with all models loaded into the PoS. The default key is ID.
         // But some models have another key configured in data_service_options.js. These models are
         // generally those that can be created in the frontend.
-        const allModelNames = Array.from(
-            new Set([...Object.keys(relations), ...Object.keys(this.opts.databaseTable)])
-        );
-        const models = allModelNames.map((model) => {
-            const key = this.opts.databaseTable[model]?.key || "id";
-            return [key, model];
-        });
+        const models = Object.keys(relations).map((model) => ["id", model]);
 
         return new Promise((resolve) => {
             this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models, resolve);
         });
-    }
-
-    async synchronizeLocalDataInIndexedDB() {
-        // This methods will synchronize local data and state in indexedDB. This methods is mostly
-        // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
-        // in the frontend and are not loaded from the backend.
-        const modelsParams = Object.entries(this.opts.databaseTable);
-        for (const [model, params] of modelsParams) {
-            const put = [];
-            const remove = [];
-            const data = this.models[model].getAll();
-
-            for (const record of data) {
-                const isToRemove = params.condition(record);
-
-                if (isToRemove === undefined || isToRemove === true) {
-                    if (record[params.key]) {
-                        remove.push(record[params.key]);
-                    }
-                } else {
-                    put.push(record.serializeForIndexedDB());
-                }
-            }
-
-            await this.indexedDB.delete(model, remove);
-            await this.indexedDB.create(model, put);
-        }
     }
 
     async synchronizeServerDataInIndexedDB(serverData = {}) {
@@ -150,54 +114,8 @@ export class PosData extends Reactive {
             }
         }
     }
-
-    async getLocalDataFromIndexedDB() {
-        // Used to retrieve models containing states from the indexedDB.
-        // This method will load the records directly via loadData.
-        const models = Object.keys(this.opts.databaseTable);
-        const data = await this.indexedDB.readAll(models);
-
-        if (!data) {
-            return;
-        }
-
-        const newData = {};
-        for (const model of models) {
-            const rawRec = data[model];
-
-            if (rawRec) {
-                newData[model] = rawRec.filter((r) => !this.models[model].get(r.id));
-            }
-        }
-
-        const preLoadData = await this.preLoadData(data);
-        const missing = await this.missingRecursive(preLoadData);
-        const results = this.models.loadConnectedData(missing, []);
-
-        await this.checkAndDeleteMissingOrders(results);
-
-        return results;
-    }
-
-    async getCachedServerDataFromIndexedDB() {
-        // Used to load models that have not yet been loaded into related_models.
-        // These models have been sent to the indexedDB directly after the RPC load_data.
-        const data = await this.indexedDB.readAll();
-        const modelToIgnore = Object.keys(this.opts.databaseTable);
-        const results = {};
-
-        for (const name in data) {
-            if (name in modelToIgnore) {
-                continue;
-            }
-            results[name] = data[name];
-        }
-
-        return results;
-    }
-
     async loadInitialData() {
-        let localData = await this.getCachedServerDataFromIndexedDB();
+        let localData = await this.indexedDB.readAll();
         const session = localData?.["pos.session"]?.[0];
 
         if (
@@ -231,16 +149,7 @@ export class PosData extends Reactive {
 
                 for (const [model, values] of Object.entries(data)) {
                     const local = localData[model] || [];
-
-                    if (this.opts.uniqueModels.includes(model) && values.length > 0) {
-                        this.indexedDB.delete(
-                            model,
-                            local.map((r) => r.id)
-                        );
-                        localData[model] = values;
-                    } else {
-                        localData[model] = local.concat(values);
-                    }
+                    localData[model] = local.concat(values);
                 }
 
                 this.synchronizeServerDataInIndexedDB(localData);
@@ -259,26 +168,9 @@ export class PosData extends Reactive {
         return localData;
     }
 
-    async initData(hard = false, limit = true) {
-        const data = await this.loadInitialData(hard, limit);
-        const order = data["pos.order"] || [];
-        const orderlines = data["pos.order.line"] || [];
-
-        delete data["pos.order"];
-        delete data["pos.order.line"];
-
-        this.models.loadConnectedData(data, this.modelToLoad);
-        this.models.loadConnectedData({ "pos.order": order, "pos.order.line": orderlines }, []);
-        this.sanitizeData();
-    }
-
-    async sanitizeData() {
-        const order_to_delete = this.models["pos.order"].filter((order) =>
-            order.lines.some((line) => line.is_reward_line && !line.coupon_id)
-        );
-        for (const order of order_to_delete) {
-            order.lines.forEach((line) => line.delete());
-        }
+    async initData() {
+        const data = await this.loadInitialData();
+        this.models.connectNewData(data);
     }
 
     async loadFieldsAndRelations() {
@@ -323,53 +215,156 @@ export class PosData extends Reactive {
                 ...extraFields,
             };
         }
+        // this.queue = JSON.parse(
+        //     localStorage.getItem(`pos_config_${odoo.pos_config_id}_changes_queue`) || "[]"
+        // );
+        this.queue = [];
+        // if (this.queue.length) {
+        //     // This means that we have unsynced data from the last session.
+        //     // We sync this data with the server and then we restart the initData method
+        //     // to get the latest data from the server.
+        //     // This means that we don't have to manually deal with the "merging" of this unsynced data
+        //     await this.flush();
+        //     return this.initData();
+        // }
+        this.debouncedFlush = debounce(this.flush.bind(this), MIN_FLUSH_INTERVAL_MILLIS);
+        // this.debouncedFlush = this.flush.bind(this);
 
+        const prepareVals = (vals) =>
+            Object.fromEntries(
+                Object.entries(vals).map(([k, v]) => {
+                    const getId = (record) => record?.id ?? record ?? false; // the orm service ignores undefined values, so we need to set it to false
+                    if (v?.isValid) {
+                        return [k, serializeDateTime(v)];
+                    }
+                    if (v instanceof Array) {
+                        return [k, v.map((r) => getId(r))];
+                    }
+                    return [k, getId(v)];
+                })
+            );
         const { models } = createRelatedModels(relations, modelClasses, this.opts);
+        Object.entries(models).forEach(([modelName, _]) => {
+            models[modelName].addEventListener("create", ({ ids }) => {
+                if (!this.shouldSync) {
+                    return;
+                }
+                if (!ids.length) {
+                    return;
+                }
+                const vals = models[modelName].getBy("uuid", ids[0]).raw;
+                this.indexedDB.create(modelName, [vals]);
+                this.queue.push(["CREATE", modelName, omit(vals, "id")]);
+                this.debouncedFlush();
+            });
+            models[modelName].addEventListener("update", ({ id, vals }) => {
+                if (!this.shouldSync || !vals) {
+                    return;
+                }
+                this.indexedDB.update(modelName, id, prepareVals(vals));
+                this.queue.push(["UPDATE", modelName, id, prepareVals(vals)]);
+                this.debouncedFlush();
+            });
+            models[modelName].addEventListener("delete", ({ id }) => {
+                if (!this.shouldSync) {
+                    return;
+                }
+                this.indexedDB.delete(modelName, [id]);
+                this.queue.push(["DELETE", modelName, id]);
+                this.debouncedFlush();
+            });
+        });
 
         this.fields = fields;
         this.relations = relations;
         this.models = models;
-
-        await this.initData();
-        await this.getLocalDataFromIndexedDB();
-        this.initListeners();
+        await this.withoutSyncing(this.initData.bind(this));
         this.network.loading = false;
-    }
-
-    initListeners() {
-        this.models["pos.order"].addEventListener(
-            "update",
-            batched(this.synchronizeLocalDataInIndexedDB.bind(this))
-        );
-
-        const ignore = Object.keys(this.opts.databaseTable);
-        for (const model of Object.keys(this.relations)) {
-            if (ignore.includes(model)) {
-                continue;
+        this.connectWebSocket("DATA_CHANGED", ({ queue: newData, login_number, config_id }) => {
+            if (config_id == odoo.pos_config_id && login_number == odoo.login_number) {
+                return;
             }
+            const findRecord = async (modelName, id) =>
+                this.models[modelName].find((x) => x.uuid === id || x.id === id) ||
+                (
+                    await this.searchRead(modelName, [
+                        [typeof id === "string" ? "uuid" : "id", "=", id],
+                    ])
+                )[0];
+            const linkVals = async (modelName, vals) => {
+                for (const key in vals) {
+                    const field = this.models[modelName]?.fields[key];
 
-            this.models[model].addEventListener("delete", (params) => {
-                this.indexedDB.delete(model, [params.key]);
-            });
-
-            this.models[model].addEventListener("update", (params) => {
-                const record = this.models[model].get(params.id)?.raw;
-                if (!record) {
-                    return; // the record may be deleted
-                }
-                for (const [key, value] of Object.entries(record)) {
-                    if (value instanceof Base) {
-                        record[key] = value.id;
-                    } else if (Array.isArray(value) && value[0] instanceof Base) {
-                        record[key] = value.map((v) => v.id);
+                    if (field?.type === "many2one" && vals[key]) {
+                        vals[key] = await findRecord(field.relation, vals[key]);
+                    }
+                    if (field.type === "many2many" || field.type === "one2many") {
+                        const records = await Promise.all(
+                            [...vals[key]].map(async (id) => await findRecord(field.relation, id))
+                        );
+                        vals[key] = [["set", ...records.filter((x) => x)]];
                     }
                 }
-
-                this.synchronizeServerDataInIndexedDB({ [model]: [record] });
+                return vals;
+            };
+            this.withoutSyncing(async () => {
+                for (const [command, ...data] of newData) {
+                    if (command === "CREATE") {
+                        const [model, vals] = data;
+                        this.models[model].create(await linkVals(model, vals));
+                    } else if (command === "UPDATE") {
+                        const [model, id, vals] = data;
+                        (await findRecord(model, id))?.update(await linkVals(model, vals));
+                    } else if (command === "DELETE") {
+                        const [model, id] = data;
+                        this.models[model].find((x) => x.uuid === id || x.id === id)?.delete();
+                    }
+                }
             });
+        });
+    }
+    async withoutSyncing(callback) {
+        try {
+            this.shouldSync = false;
+            return await callback();
+        } finally {
+            this.shouldSync = true;
         }
     }
 
+    async flush() {
+        await this.flushMutex.exec(async () => {
+            if (this.queue.length === 0 || !navigator.onLine) {
+                return;
+            }
+            try {
+                console.debug("Flushing: ");
+                console.debug(
+                    "%c" + JSON.stringify(this.queue, null, 2),
+                    "color: white; font-family: monospace; white-space: pre;"
+                );
+                const queueLength = this.queue.length;
+                const idUpdates = await this.orm.call(
+                    "pos.config",
+                    "flush",
+                    [odoo.pos_config_id, this.queue, odoo.login_number],
+                    {},
+                    false
+                );
+                Object.assign(this.idUpdates, idUpdates);
+                localStorage.setItem(`pos_config_${odoo.pos_config_id}_changes_queue`, "[]");
+                // Items can be added to the queue while flushing, so we have to
+                // remove only the flushed items
+                this.queue = this.queue.slice(queueLength);
+            } catch (error) {
+                localStorage.setItem(
+                    `pos_config_${odoo.pos_config_id}_changes_queue`,
+                    JSON.stringify(this.queue)
+                );
+                console.error("Flush failed", error);
+            }
+        });
+    }
     async execute({
         type,
         model,
@@ -381,7 +376,6 @@ export class PosData extends Reactive {
         kwargs = {},
         fields = [],
         options = [],
-        uuid = "",
     }) {
         this.network.loading = true;
 
@@ -404,15 +398,6 @@ export class PosData extends Reactive {
             }
 
             switch (type) {
-                case "write":
-                    result = await this.orm.write(model, ids, values);
-                    break;
-                case "delete":
-                    result = await this.orm.unlink(model, ids);
-                    break;
-                case "call":
-                    result = await this.orm.call(model, method, args, kwargs);
-                    break;
                 case "read":
                     queue = false;
                     result = await this.orm.read(model, ids, fields, {
@@ -426,12 +411,10 @@ export class PosData extends Reactive {
                         ...options,
                         load: false,
                     });
-            }
-
-            if (type === "create") {
-                const response = await this.orm.create(model, values);
-                values[0].id = response[0];
-                result = values;
+                    break;
+                case "call":
+                    result = await this.orm.call(model, method, args, kwargs);
+                    break;
             }
 
             const nonExistentRecords = [];
@@ -508,23 +491,7 @@ export class PosData extends Reactive {
             }
             return result;
         } catch (error) {
-            let throwErr = true;
-            const uuids = this.network.unsyncData.map((d) => d.uuid);
-            if (
-                queue &&
-                !uuids.includes(uuid) &&
-                method !== "sync_from_ui" &&
-                error instanceof ConnectionLostError
-            ) {
-                this.network.unsyncData.push({
-                    args: [...arguments],
-                    date: DateTime.now(),
-                    try: 1,
-                    uuid: uuidv4(),
-                });
-
-                throwErr = false;
-            }
+            const throwErr = true;
 
             if (throwErr) {
                 throw error;
@@ -533,7 +500,6 @@ export class PosData extends Reactive {
             this.network.loading = false;
         }
     }
-
     async missingRecursive(recordMap, idsMap = {}, acc = {}) {
         if (!navigator.onLine) {
             return acc;
@@ -619,81 +585,6 @@ export class PosData extends Reactive {
         }
     }
 
-    async syncData() {
-        this.syncInProgress = true;
-
-        await this.mutex.exec(async () => {
-            while (this.network.unsyncData.length > 0) {
-                const data = this.network.unsyncData[0];
-                const result = await this.execute({ ...data.args[0], uuid: data.uuid });
-
-                if (result) {
-                    this.network.unsyncData.shift();
-                } else {
-                    this.network.unsyncData[0].try += 1;
-                    break;
-                }
-            }
-        });
-
-        this.syncInProgress = false;
-    }
-
-    async checkAndDeleteMissingOrders(results) {
-        if (results && results["pos.order"]) {
-            const ids = results["pos.order"]
-                .map((o) => o.id)
-                .filter((id) => typeof id === "number");
-
-            if (ids.length) {
-                const result = await this.read("pos.order", ids);
-                const serverIds = result.map((r) => r.id);
-
-                for (const id of ids) {
-                    if (!serverIds.includes(id)) {
-                        this.localDeleteCascade(this.models["pos.order"].get(id));
-                    }
-                }
-            }
-        }
-    }
-
-    write(model, ids, vals) {
-        const records = [];
-
-        for (const id of ids) {
-            const record = this.models[model].get(id);
-            delete vals.id;
-            record.update(vals, { omitUnknownField: true });
-
-            const dataToUpdate = {};
-            const keysToUpdate = Object.keys(vals);
-
-            for (const key of keysToUpdate) {
-                dataToUpdate[key] = vals[key];
-            }
-
-            records.push(record);
-            if (typeof id === "number") {
-                this.ormWrite(model, [record.id], dataToUpdate);
-            }
-        }
-
-        return records;
-    }
-
-    delete(model, ids) {
-        const deleted = [];
-        for (const id of ids) {
-            const record = this.models[model].get(id);
-            deleted.push(id);
-            record.delete();
-        }
-
-        this.ormDelete(model, ids);
-        return deleted;
-    }
-
     async searchRead(model, domain = [], fields = [], options = {}, queue = false) {
         return await this.execute({
             type: "search_read",
@@ -706,17 +597,55 @@ export class PosData extends Reactive {
     }
 
     async read(model, ids, fields = [], options = [], queue = false) {
-        return await this.execute({ type: "read", model, ids, fields, options, queue });
+        // Needs to flush so that `mapUuidToId` works correctly.
+        await this.flush();
+        return await this.execute({
+            type: "read",
+            model,
+            ids: this.mapUuidToId(ids),
+            fields,
+            options,
+            queue,
+        });
     }
 
-    async call(model, method, args = [], kwargs = {}, queue = false) {
-        return await this.execute({ type: "call", model, method, args, kwargs, queue });
+    /**
+     * @param {number | string | (string | number)[]} idOrIds
+     * @returns {number | number[]}
+     */
+    mapUuidToId(idOrIds) {
+        if (typeof idOrIds === "number") {
+            return idOrIds;
+        }
+        if (typeof idOrIds === "string") {
+            return this.idUpdates[idOrIds];
+        }
+        if (Array.isArray(idOrIds)) {
+            return idOrIds.map((id) => this.mapUuidToId(id));
+        }
+    }
+
+    async call(model, method, args = [], kwargs = {}) {
+        if (!navigator.onLine) {
+            throw new ConnectionLostError();
+        }
+        await this.flush();
+        if (this.queue.length > 0) {
+            throw new Error("There are unsynced changes in the queue.");
+        }
+        if (Array.isArray(args) && args.length == 0) {
+            // This is for static (api.model) methods.
+            return await this.orm.call(model, method, args, kwargs);
+        }
+
+        const ids = this.mapUuidToId(args[0]);
+        return await this.orm.call(model, method, [ids, ...args.slice(1)], kwargs);
     }
 
     // In a silent call we ignore the error and return false instead
-    async silentCall(model, method, args = [], kwargs = {}, queue = false) {
+    async silentCall(model, method, args = [], kwargs = {}) {
         try {
-            return await this.execute({ type: "call", model, method, args, kwargs, queue });
+            return this.call(model, method, args, kwargs);
         } catch (e) {
             console.warn("Silent call failed:", e);
             return false;
@@ -726,58 +655,16 @@ export class PosData extends Reactive {
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
         if (data) {
-            this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
             return this.models.connectNewData(data);
         }
         return false;
-    }
-
-    async create(model, values, queue = true) {
-        return await this.execute({ type: "create", model, values, queue });
-    }
-
-    async ormWrite(model, ids, values, queue = true) {
-        const result = await this.execute({ type: "write", model, ids, values, queue });
-        this.deviceSync?.dispatch &&
-            this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
-        return result;
-    }
-
-    async ormDelete(model, ids, queue = true) {
-        return await this.execute({ type: "delete", model, ids, queue });
-    }
-
-    localDeleteCascade(record, removeFromServer = false) {
-        const recordModel = record.constructor.pythonModel;
-
-        const relationsToDelete = Object.values(this.relations[recordModel])
-            .filter((rel) => this.opts.cascadeDeleteModels.includes(rel.relation))
-            .map((rel) => rel.name);
-        const recordsToDelete = Object.entries(record)
-            .filter(([idx, values]) => relationsToDelete.includes(idx) && values)
-            .map(([idx, values]) => values)
-            .flat();
-
-        // Delete all children records before main record
-        this.indexedDB.delete(recordModel, [record.uuid]);
-        for (const item of recordsToDelete) {
-            this.indexedDB.delete(item.model.name, [item.uuid]);
-            item.delete({ silent: !removeFromServer });
-        }
-
-        // Delete the main record
-        const result = record.delete({ silent: !removeFromServer });
-        return result;
-    }
-
-    deleteUnsyncData(uuid) {
-        this.network.unsyncData = this.network.unsyncData.filter((d) => d.uuid !== uuid);
     }
 
     async preLoadData(data) {
         return data;
     }
 
+    // FIXME a method of type isXYZ should not have side effects
     isLimitedLoading() {
         const url = new URL(window.location.href);
         const limitedLoading = url.searchParams.get("limited_loading") === "0" ? false : true;

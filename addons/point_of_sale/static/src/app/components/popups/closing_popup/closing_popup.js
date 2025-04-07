@@ -195,11 +195,6 @@ export class ClosePosPopup extends Component {
         if (proxyIP) {
             this.pos.hardwareProxy.deviceControllers.customerDisplay.action({ action: "close" });
         }
-        // If there are orders in the db left unsynced, we try to sync.
-        const syncSuccess = await this.pos.pushOrdersWithClosingPopup();
-        if (!syncSuccess) {
-            return;
-        }
         if (this.pos.config.cash_control) {
             const response = await this.pos.data.call(
                 "pos.session",

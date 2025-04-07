@@ -27,15 +27,6 @@ class PosOrder(models.Model):
         for order in self:
             order.use_self_order_online_payment = bool(order.config_id.self_order_online_payment_method_id)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if 'use_self_order_online_payment' not in vals or vals['use_self_order_online_payment']:
-                session = self.env['pos.session'].browse(vals['session_id'])
-                config = session.config_id
-                vals['use_self_order_online_payment'] = bool(config.self_order_online_payment_method_id)
-        return super().create(vals_list)
-
     def write(self, vals):
         # Because use_self_order_online_payment is not intended to be changed manually,
         # avoid to raise an error.

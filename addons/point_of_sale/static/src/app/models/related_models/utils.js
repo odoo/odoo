@@ -111,12 +111,14 @@ export class AggregatedUpdates {
      * @param {string[]} [opts.silentModels=[]] - List of model names to exclude from triggering update events.
      */
     fireEventAndDirty(opts = {}) {
-        const { silentModels = [] } = opts;
         for (const [record, fields] of this.updates) {
-            if (!silentModels.includes(record.model.name)) {
-                record.model.triggerEvents("update", { id: record.id, fields: [...fields] });
-            }
-            record._markDirty();
+            record.model.triggerEvents("update", {
+                id: record.id,
+                fields: [...fields],
+                vals: Object.fromEntries(
+                    [...fields].map((fieldName) => [fieldName, record[fieldName]])
+                ),
+            });
         }
     }
 
