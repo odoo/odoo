@@ -36,7 +36,7 @@
             <field name="amount">7</field>
             <field name="amount_type">percent</field>
             <field name="sequence">2</field>
-            <field name="tax_group_id" ref="tax_group_gst_7"/>
+            <field name="tax_group_id" ref="tax_group_pst_7"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
@@ -90,13 +90,13 @@
         </record>
         <record id="pst_mb_sale_en" model="account.tax.template">
             <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-            <field name="name">PST for sales - 8% (MB)</field>
-            <field name="description">PST 8%</field>
+            <field name="name">PST for sales - 7% (MB)</field>
+            <field name="description">PST 7%</field>
             <field name="type_tax_use">none</field>
-            <field name="amount">8</field>
+            <field name="amount">7</field>
             <field name="amount_type">percent</field>
             <field name="sequence">2</field>
-            <field name="tax_group_id" ref="tax_group_gst_8"/>
+            <field name="tax_group_id" ref="tax_group_pst_7"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
@@ -209,13 +209,13 @@
         </record>
         <record id="pst_sk_sale_en" model="account.tax.template">
             <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-            <field name="name">PST for sales - 5% (SK)</field>
-            <field name="description">PST 5%</field>
+            <field name="name">PST for sales - 6% (SK)</field>
+            <field name="description">PST 6%</field>
             <field name="type_tax_use">none</field>
-            <field name="amount">5</field>
+            <field name="amount">6</field>
             <field name="amount_type">percent</field>
             <field name="sequence">2</field>
-            <field name="tax_group_id" ref="tax_group_pst_5"/>
+            <field name="tax_group_id" ref="tax_group_pst_6"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
@@ -401,13 +401,13 @@
         </record>
         <record id="pst_mb_purc_en" model="account.tax.template">
             <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-            <field name="name">PST for purchases - 8% (MB)</field>
-            <field name="description">PST 8%</field>
+            <field name="name">PST for purchases - 7% (MB)</field>
+            <field name="description">PST 7%</field>
             <field name="type_tax_use">none</field>
-            <field name="amount">8</field>
+            <field name="amount">7</field>
             <field name="amount_type">percent</field>
             <field name="sequence">2</field>
-            <field name="tax_group_id" ref="tax_group_pst_8"/>
+            <field name="tax_group_id" ref="tax_group_pst_7"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
@@ -520,10 +520,10 @@
         </record>
         <record id="pst_sk_purc_en" model="account.tax.template">
             <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-            <field name="name">PST for purchases - 5% (SK)</field>
-            <field name="description">PST 5%</field>
+            <field name="name">PST for purchases - 6% (SK)</field>
+            <field name="description">PST 6%</field>
             <field name="type_tax_use">none</field>
-            <field name="amount">5</field>
+            <field name="amount">6</field>
             <field name="amount_type">percent</field>
             <field name="sequence">2</field>
             <field name="tax_group_id" ref="tax_group_pst_5"/>
