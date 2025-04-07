@@ -1,10 +1,10 @@
 # Product External ID Display
 
-This module adds a visible External ID field to product forms and views in Odoo.
+This module adds a visible External IDs field to product forms and views in Odoo.
 
 ## Purpose
 
-When importing/exporting data between Odoo and external systems, it's often necessary to reference the External ID (also known as XML ID) of products. However, by default, Odoo doesn't show the External ID in the interface, making it difficult to know which identifier to use when creating data that references products.
+When importing/exporting data between Odoo and external systems, it's often necessary to reference the External ID of products. However, by default, Odoo doesn't show the External ID in the interface, making it difficult to know which identifier to use when creating data that references products.
 
 This module solves that problem by displaying the External ID as a read-only field on product forms and list views.
 
@@ -31,12 +31,12 @@ Once installed, the External ID will be visible:
 
 ## Benefits
 
-- Simplifies working with Bills of Materials (BoMs) when integrating with external systems
-- Makes it easier to identify which products are being referenced in imported/exported data
-- Eliminates the need to export products just to obtain their External IDs
+- Upload BoM using external ID to reference line items
+- Eliminate the need to export products just to obtain their External IDs
+- Make it easier to identify which products are being referenced in imported/exported data
 
 ## Technical Notes
 
 - The module uses a computed field to retrieve the External ID from the `ir.model.data` table
-- For products with multiple External IDs, only the first one found is displayed
-- The field is read-only as External IDs should be managed via data import/export or developer tools 
+- For products with multiple External IDs, they are concatenated into a comma separated string
+- The field is read-only as External IDs should be managed via data import/export or developer tools
