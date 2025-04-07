@@ -286,7 +286,7 @@ class SaleOrder(models.Model):
         """Add quantity of the given product to the current sales order.
 
         :param int product_id: product id, as a `product.product` id.
-        :params float quantity: the quantity to add to the cart.
+        :param float quantity: the quantity to add to the cart.
         :param dict kwargs: Additional parameters given to deeper method calls.
         :return: values used by the cart service to give feedback to the customer.
         :rtype: dict
@@ -372,7 +372,7 @@ class SaleOrder(models.Model):
         """Update the quantity of a given line of the cart.
 
         :param int line_id: line id, as a `sale.order.line` id.
-        :params float quantity: the updated quantity of the line.
+        :param float quantity: the updated quantity of the line.
         :param dict kwargs: Additional parameters given to deeper method calls.
         :return: values used by the cart service to give feedback to the customer.
         :rtype: dict

@@ -644,10 +644,6 @@ class Base(models.AbstractModel):
         possible we return only the email and skip the formataddr which causes
         the issue in python. We do not use hacks like crop the name part as
         encoding and quoting would be error prone.
-
-        :param <res.company> company: if given, setup the company used to
-          complete name in formataddr. Otherwise fallback on 'company_id'
-          of self or environment company;
         """
         length_limit = 68  # 78 - len('Reply-To: '), 78 per RFC
         # address itself is too long : return only email and log warning

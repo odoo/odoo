@@ -185,7 +185,7 @@ class MailMail(models.Model):
         return self.write({'state': 'cancel'})
 
     @api.model
-    def process_email_queue(self, ids=None, batch_size=1000):
+    def process_email_queue(self, ids=(), batch_size=1000):
         """Send immediately queued messages, committing after each
            message is sent - this is not transactional and should
            not be called during another transaction!
@@ -196,11 +196,6 @@ class MailMail(models.Model):
         :param list ids: optional list of emails ids to send. If given only
                          scheduled and outgoing emails within this ids list
                          are sent;
-        :param dict context: if a 'filters' key is present in context,
-                             this value will be used as an additional
-                             filter to further restrict the outgoing
-                             messages to send (by default all 'outgoing'
-                             'scheduled' messages are sent).
         """
         domain = [
             '&',
