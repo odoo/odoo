@@ -595,3 +595,45 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         merger_alternative_orders = po_orders[0] | po_orders[1]
         merger_alternative_orders.action_merge()
         self.assertEqual(len(po_orders[0].alternative_po_ids), 4)
+
+    def test_payment_terms_for_alternative_rqf(self):
+        """
+            Ensure that the payment terms of the vendor are correctly set
+            when creating an alternative RFQ.
+        """
+        # Create two different payment terms
+        pay_terms_immediate = self.env.ref('account.account_payment_term_immediate')
+        pay_terms_end_month = self.env.ref("account.account_payment_term_end_following_month")
+
+        # Create two vendors with different payment terms
+        vendor_a = self.env["res.partner"].create({
+            "name": "Supplier A",
+            'property_supplier_payment_term_id': pay_terms_immediate.id
+        })
+        vendor_b = self.env["res.partner"].create({
+            "name": "Supplier B",
+            'property_supplier_payment_term_id': pay_terms_end_month.id
+        })
+
+        # Create an initial RFQ for Vendor A
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = vendor_a
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_13
+            line.product_qty = 1
+        orig_po = po_form.save()
+
+        # Check that payment terms is correctly set on the original RFQ
+        self.assertEqual(orig_po.payment_term_id, orig_po.partner_id.property_supplier_payment_term_id)
+
+        # Create an alternative RFQ with Vendor B
+        action = orig_po.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = vendor_b
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
+        alt_po = self.env['purchase.order'].browse(alt_po_id)
+
+        # Check that payment terms is correctly set on the alternative RFQ
+        self.assertEqual(alt_po.payment_term_id, alt_po.partner_id.property_supplier_payment_term_id)

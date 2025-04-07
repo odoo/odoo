@@ -58,8 +58,20 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
                 _('The vendor you have selected or at least one of the products you are copying from the original '
                   'order has a blocking warning on it and cannot be selected to create an alternative.')
             )
-        vals = self._get_alternative_values()
-        alt_po = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id, default_requisition_id=False).create(vals)
+        po_vals = self.origin_po_id.copy_data()[0]
+        po_vals.update(self._get_alternative_values())
+        if self.copy_products:
+            po_lines_vals = []
+            for line in self.origin_po_id.order_line:
+                line_vals = line.copy_data()[0]
+                line_vals.update(self._get_alternative_line_value(line))
+                po_lines_vals.append(line_vals)
+            po_vals['order_line'] = [Command.create(vals) for vals in po_lines_vals]
+        else:
+            po_vals.pop('order_line', None)
+
+        alt_po = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id, default_requisition_id=False).create(po_vals)
+        alt_po.partner_id = self.partner_id.id
         alt_po.order_line._compute_tax_id()
         return {
             'type': 'ir.actions.act_window',
@@ -74,21 +86,12 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
     def _get_alternative_values(self):
         vals = {
             'date_order': self.origin_po_id.date_order,
-            'partner_id': self.partner_id.id,
-            'user_id': self.origin_po_id.user_id.id,
-            'dest_address_id': self.origin_po_id.dest_address_id.id,
             'origin': self.origin_po_id.origin,
+            'payment_term_id': self.partner_id.property_supplier_payment_term_id.id,
+            'currency_id': self.partner_id.currency_id.id,
         }
-        if self.copy_products and self.origin_po_id:
-            vals['order_line'] = [Command.create(self._get_alternative_line_value(line)) for line in self.origin_po_id.order_line]
         return vals
 
     @api.model
     def _get_alternative_line_value(self, order_line):
-        return {
-            'product_id': order_line.product_id.id,
-            'product_qty': order_line.product_qty,
-            'product_uom_id': order_line.product_uom_id.id,
-            'display_type': order_line.display_type,
-            **({'name': order_line.name} if order_line.display_type in ('line_section', 'line_note') else {}),
-        }
+        return {}
