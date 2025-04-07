@@ -36,6 +36,11 @@ export class CalendarCommonPopover extends Component {
         } else {
             format = formattersRegistry.get(field.type);
         }
+        if (field.type === "html") {
+            const snippetsDocument = new DOMParser().parseFromString(record.data[fieldName], 'text/html');
+            const rawText = snippetsDocument.body.textContent;
+            return format(rawText);
+        }
         return format(record.data[fieldName]);
     }
 
