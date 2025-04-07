@@ -149,6 +149,17 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             ]
         })
         cls.invoice_with_export.action_post()
+        cls.invoice_with_rcm_tax = cls.init_invoice(
+            "out_invoice", partner=cls.partner_a, post=False, products=cls.product_a
+        )
+        cls.sgst_sale_18_rc = cls.env["account.chart.template"].ref('sgst_sale_18_rc')
+        cls.invoice_with_rcm_tax.write({
+            'invoice_line_ids': [
+                Command.update(line_id, {'tax_ids': [Command.clear(), Command.set(cls.sgst_sale_18_rc.ids)]})
+                for line_id in cls.invoice_with_rcm_tax.invoice_line_ids.ids
+            ]
+        })
+        cls.invoice_with_rcm_tax.action_post()
 
     def test_edi_json(self):
         # line1: 1000, 10% discount and a tax of 5%
@@ -400,4 +411,54 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             json_value,
             expected_with_overseas,
             "Indian EDI with Overseas sent json value is not matched"
+        )
+
+        #=================================== RCM test =============================================
+        json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_with_rcm_tax)
+        expected_with_rcm = expected.copy()
+        expected_with_rcm.update({
+            'TranDtls': {'TaxSch': 'GST', 'SupTyp': 'B2B', 'RegRev': 'Y', 'IgstOnIntra': 'N'},
+            'DocDtls': {'Typ': 'INV', 'No': 'INV/18-19/0012', 'Dt': '01/01/2019'},
+            'ItemList': [
+                {
+                    'SlNo': '1',
+                    'PrdDesc': 'product_a',
+                    'IsServc': 'N',
+                    'HsnCd': '111111',
+                    'Qty': 1.0,
+                    'Unit': 'UNT',
+                    'UnitPrice': 1000.0,
+                    'TotAmt': 1000.0,
+                    'Discount': 0.0,
+                    'AssAmt': 1000.0,
+                    'GstRt': 18.0,
+                    'IgstAmt': 0.0,
+                    'CgstAmt': 90.0,
+                    'SgstAmt': 90.0,
+                    'CesRt': 0.0,
+                    'CesAmt': 0.0,
+                    'CesNonAdvlAmt': 0.0,
+                    'StateCesRt': 0.0,
+                    'StateCesAmt': 0.0,
+                    'StateCesNonAdvlAmt': 0.0,
+                    'OthChrg': 0.0,
+                    'TotItemVal': 1000.0
+                }
+            ],
+            'ValDtls': {
+                'AssVal': 1000.0,
+                'CgstVal': 90.0,
+                'SgstVal': 90.0,
+                'IgstVal': 0.0,
+                'CesVal': 0.0,
+                'StCesVal': 0.0,
+                'Discount': 0.0,
+                'RndOffAmt': 0.0,
+                'TotInvVal': 1000.0
+            }
+        })
+        self.assertDictEqual(
+            json_value,
+            expected_with_rcm,
+            "Indian EDI with RCM sent json value is not matched"
         )
