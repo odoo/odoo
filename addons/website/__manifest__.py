@@ -539,10 +539,10 @@
             '5': ['s_banner'],
         },
         'gallery': {
-            '0': ['s_text_block_h2', 's_images_wall'],
-            '1': ['s_text_block_h2', 's_image_text', 's_text_image', 's_image_text_2nd'],
+            '0': ['s_text_block_h1', 's_images_wall'],
+            '1': ['s_text_block_h1', 's_image_text', 's_text_image', 's_image_text_2nd'],
             '2': ['s_banner', 's_text_block_2nd', 's_image_gallery', 's_picture_only'],
-            '3': ['s_text_block_h2', 's_text_block', 's_three_columns', 's_three_columns_2nd'],
+            '3': ['s_text_block_h1', 's_text_block', 's_three_columns', 's_three_columns_2nd'],
             '4': ['s_cover', 's_media_list'],
         },
         'services': {

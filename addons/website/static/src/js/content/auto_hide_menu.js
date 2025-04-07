@@ -215,8 +215,8 @@ async function autoHideMenu(el, options) {
     }
 
     function _addExtraItemsButton(target) {
-        let dropdownMenu = document.createElement('div');
-        extraItemsToggle = dropdownMenu.cloneNode();
+        let dropdownMenu = document.createElement("ul");
+        extraItemsToggle = document.createElement("li");
         const extraItemsToggleIcon = document.createElement('i');
         const extraItemsToggleLink = document.createElement('a');
 

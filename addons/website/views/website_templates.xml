@@ -2759,7 +2759,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     <t t-set="action" t-valuef="/pages"/>
                     <t t-set="search" t-value="original_search or search"/>
                 </t>
-                <h3 class="mt16">Pages</h3>
+                <h1 class="mt16 h3-fs">Pages</h1>
                 <t t-if="not pages">
                     <div t-if="search" class="alert alert-warning mt8" role="alert">
                         Your search '<t t-esc="search" />' did not match any pages.
@@ -2797,7 +2797,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     <t t-set="search_type" t-valuef="all"/>
                     <t t-set="action" t-valuef="/website/search"/>
                 </t>
-                <div class="mt24 h3">Search Results</div>
+                <h1 class="mt24 h3-fs">Search Results</h1>
                 <t t-if="not results">
                     <div class="alert alert-warning mt8" role="alert">
                         <t t-if="search">
@@ -2828,7 +2828,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 <template id="one_hybrid" name="Single any Search Results">
     <a t-att-href="result.get('website_url')" class="dropdown-item p-2 text-wrap">
         <div class="d-flex align-items-center flex-wrap o_search_result_item">
-            <img t-if="result.get('image_url')" t-att-src="result.get('image_url')" class="flex-shrink-0 o_image_64_contain"/>
+            <img t-if="result.get('image_url')" t-att-src="result.get('image_url')" role="presentation" alt="" class="flex-shrink-0 o_image_64_contain"/>
             <i t-else="" t-att-class="'o_image_64_contain text-center pt16 fa %s' % result.get('_fa')" style="font-size: 34px;"/>
             <div class="o_search_result_item_detail px-3">
                 <t t-set="description" t-value="result.get('description')"/>
