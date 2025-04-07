@@ -247,6 +247,7 @@ class ResPartner(models.Model):
          ('other', 'Other'),
         ], string='Address Type',
         default='contact')
+    type_address_label = fields.Char('Address Type Description', compute='_compute_type_address_label')
     # address fields
     street = fields.Char()
     street2 = fields.Char()
@@ -425,6 +426,18 @@ class ResPartner(models.Model):
     def _compute_vat_label(self):
         self.vat_label = self.env.company.country_id.vat_label or _("Tax ID")
 
+    @api.depends('parent_id', 'type')
+    def _compute_type_address_label(self):
+        for partner in self:
+            if partner.type == 'invoice':
+                partner.type_address_label = _('Invoice Address')
+            elif partner.type == 'delivery':
+                partner.type_address_label = _('Delivery Address')
+            elif partner.type == 'contact' and partner.parent_id:
+                partner.type_address_label = _('Company Address')
+            else:
+                partner.type_address_label = _('Address')
+
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
         for partner in self:
@@ -597,7 +610,7 @@ class ResPartner(models.Model):
         return self._address_fields()
 
     def _get_address_values(self):
-        """ Get address values from parent if at least one value is set. Otherwise
+        """ Get address values from if at least one value is set. Otherwise
         it is considered empty and nothing is returned. """
         address_fields = self._address_fields()
         if any(self[key] for key in address_fields):
@@ -664,8 +677,13 @@ class ResPartner(models.Model):
         sync_children.write(sync_vals)
 
     def _fields_sync(self, values):
-        """ Sync commercial fields and address fields from company and to children after create/update,
-        just as if those were all modeled as fields.related to the parent """
+        """ Sync commercial fields and address fields from company and to children.
+        Also synchronize address to parent. This somehow mimics related fields
+        to the parent, with more control. This method should be called after
+        updating values in cache e.g. self should contain new values.
+
+        :param dict values: updated values, triggering sync
+        """
         # 1. From UPSTREAM: sync from parent
         if values.get('parent_id') or values.get('type') == 'contact':
             # 1a. Commercial fields: sync if parent changed
@@ -676,7 +694,17 @@ class ResPartner(models.Model):
                 if address_values := self.parent_id._get_address_values():
                     self._update_address(address_values)
 
-        # 2. To DOWNSTREAM: sync children
+        # 2. To UPSTREAM: sync parent address
+        address_to_upstream = (
+            bool(self.parent_id) and bool(self.type == 'contact') and
+            any(field in values for field in self._address_fields()) and
+            any(self[fname] != self.parent_id[fname] for fname in self._address_fields())
+        )
+        if address_to_upstream:
+            new_address = self._get_address_values()
+            self.parent_id.write(new_address)  # is going to trigger _fields_sync again
+
+        # 3. To DOWNSTREAM: sync children
         self._children_sync(values)
 
     def _children_sync(self, values):
