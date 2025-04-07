@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
+from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tests import Form
@@ -147,8 +150,12 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
 
         # change duration to 60
         mo_form = Form(mo)
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 60.0
+        with mo_form.workorder_ids.edit(0) as wo:
+            with wo.time_ids.new() as time:
+                time.workcenter_id = wo.workcenter_id
+                now = fields.Datetime.now()
+                time.date_start = now - timedelta(minutes=60)
+                time.date_end = now
         mo_form.save()
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -10.0)
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
@@ -156,8 +163,12 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
 
         # change duration to 120
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 120.0
+        with mo_form.workorder_ids.edit(0) as wo:
+            with wo.time_ids.new() as time:
+                time.workcenter_id = wo.workcenter_id
+                now = fields.Datetime.now()
+                time.date_start = now - timedelta(minutes=120)
+                time.date_end = now
         mo_form.save()
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
@@ -194,8 +205,12 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
 
         # Change duration to 60
         mo_form = Form(mo)
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 60.0
+        with mo_form.workorder_ids.edit(0) as wo:
+            with wo.time_ids.new() as time:
+                time.workcenter_id = wo.workcenter_id
+                now = fields.Datetime.now()
+                time.date_start = now - timedelta(minutes=60)
+                time.date_end = now
         mo_form.save()
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
 

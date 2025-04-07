@@ -85,7 +85,7 @@
                 <field name="duration_expected" widget="float_time" sum="expected duration" readonly="state in ['cancel', 'done']"/>
                 <field name="duration" widget="mrp_timer"
                   invisible="production_state == 'draft'"
-                  readonly="is_user_working" sum="real duration"/>
+                  readonly="True" sum="real duration"/>
                 <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
                   column_invisible="parent and parent.state == 'draft'"
                   invisible="production_state == 'draft'"/>
