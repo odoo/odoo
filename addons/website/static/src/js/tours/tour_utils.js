@@ -127,6 +127,37 @@ export function changeOption(optionName, weName = '', optionTooltipLabel = '', p
     };
 }
 
+/*
+ * This function is used when the desired UI control is embedded inside popover
+ * (e.g., a dropdown that appears only after clicking a toggle).
+ *
+ * It constructs two steps:
+ *   1. Clicks the dropdown toggle or control to open the popover.
+ *   2. Clicks the target element (option) inside the popover.
+ *
+ * Note: This function assumes that the popover content is available and render
+ *       immediately after the first click.
+ *
+ * @param {string} blockName - The name of the block (e.g., "Text - Image").
+ * @param {string} optionName - The name of the option (e.g., "Visibility").
+ * @param {string} elementName - The name of the element to be clicked inside
+ *                               the popover (e.g., "Conditionally").
+ *
+ * Example:
+ *      ...changeOptionInPopover("Text - Image", "Visibility", "Conditionally")
+ */
+export function changeOptionInPopover(blockName, optionName, elementName) {
+    const steps = [changeOption(blockName, `[data-label='${optionName}'] .dropdown-toggle`)];
+
+    steps.push(
+        clickOnElement(
+            `${elementName} in the ${optionName} option`,
+            `.o_popover div:contains("${elementName}"), .o_popover ${elementName}`
+        )
+    );
+    return steps;
+}
+
 export function selectNested(trigger, optionName, altTrigger = null, optionTooltipLabel = '', position = "top", allowPalette = false) {
     const noPalette = allowPalette ? '' : '.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))';
     const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
