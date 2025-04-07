@@ -543,3 +543,13 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
             self.flush_tracking()
         # check that no mail was received for the assignee of the task
         self.assertNotSentEmail(self.user_projectuser.email_formatted)
+
+    def test_copy_task_logs_chatter(self):
+        """Test that copying a task logs a message in the chatter."""
+        copied_task = self.task_1.copy()
+
+        # Ensure only one message is logged in chatter
+        self.assertEqual(
+            'Task Created', copied_task.message_ids[0].preview,
+            "Expected 'Task Created' message not found in copied task's chatter."
+        )
