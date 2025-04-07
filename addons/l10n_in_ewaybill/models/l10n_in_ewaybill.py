@@ -413,8 +413,8 @@ class L10nInEwaybill(models.Model):
 
     def _l10n_in_ewaybill_handle_zero_distance_alert_if_present(self, response_data):
         if self.distance == 0 and (alert := response_data.get('alert')):
-            pattern = r", Distance between these two pincodes is \d+, "
-            if re.fullmatch(pattern, alert) and (dist := int(re.search(r'\d+', alert).group())) > 0:
+            pattern = r"Distance between these two pincodes is (\d+)"
+            if (match := re.search(pattern, alert)) and (dist := int(match.group(1))) > 0:
                 return {
                     'distance': dist
                 }
