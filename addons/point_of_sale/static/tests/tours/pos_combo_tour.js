@@ -146,3 +146,30 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("ProductComboChangePricelist", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            inLeftSide([
+                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "6.67"),
+                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "14.66"),
+                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "26.00"),
+            ]),
+            ProductScreen.totalAmountIs("47.33"),
+            ProductScreen.clickPriceList("sale 10%"),
+            inLeftSide([
+                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "6.00"),
+                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "13.20"),
+                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "23.40"),
+            ]),
+            ProductScreen.totalAmountIs("42.60"),
+            ProductScreen.isShown(),
+        ].flat(),
+});
