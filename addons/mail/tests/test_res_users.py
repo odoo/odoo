@@ -11,7 +11,6 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tests import RecordCapturer, tagged, users
 from odoo.tools import mute_logger
 
-
 @tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
 class TestNotifySecurityUpdate(MailCommon):
 
@@ -178,7 +177,7 @@ class TestUserSettings(MailCommon):
     @users('employee')
     def test_find_or_create_for_user_should_return_correct_res_users_settings(self):
         self.user_employee.res_users_settings_ids.unlink()
-        settings = self.env['res.users.settings'].create({
+        settings = self.env['res.users.settings'].sudo().create({
             'user_id': self.user_employee.id,
         })
         result = self.env['res.users.settings']._find_or_create_for_user(self.user_employee)
