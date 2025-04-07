@@ -32,22 +32,21 @@ class ExternalIdMixin(models.AbstractModel):
         for record in self:
             ext_ids = record_to_external_ids.get(record.id, [])
             if ext_ids:
-                ext_id_list = [f"{ext_id.module}.{ext_id.name}" for ext_id in ext_ids]
+                ext_id_list = [ext_id.name for ext_id in ext_ids]
                 record.external_id = ", ".join(ext_id_list)
             else:
+                # Unexpected, but handle just in case
                 record.external_id = False
 
     @api.model
     def _search_external_id(self, operator, value):
         """Search for records by their external ID."""
         if not value:
-            return []
+            return [('id', '=', False)]
         
         domain = [
             ('model', '=', self._name),
-            '|',
-            ('name', 'ilike', value),
-            ('module', 'ilike', value)
+            ('name', 'ilike', value)
         ]
         external_ids = self.env['ir.model.data'].search(domain)
         
