@@ -1,8 +1,8 @@
 {
-    'name': 'Product External ID Display',
+    'name': 'Visible Product External ID',
     'version': '1.0',
     'category': 'Inventory',
-    'summary': 'Display External ID on products',
+    'summary': 'Display Visible External ID on products',
     'description': """
         This module adds the ability to see the External ID directly on product forms.
         External IDs are useful for integration with third-party systems.

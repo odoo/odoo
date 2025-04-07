@@ -1,4 +1,4 @@
-# Product External ID Display
+# Visible Product External ID
 
 This module adds a visible External IDs field to product forms and views in Odoo.
 
@@ -17,9 +17,9 @@ This module solves that problem by displaying the External ID as a read-only fie
 
 ## Installation
 
-1. Place the `product_external_id` module in your Odoo addons directory
+1. Place the `visible_product_external_id` module in your Odoo addons directory
 2. Update the addons list: Settings -> Technical -> Modules -> Update Apps List
-3. Install the module: Apps -> search for "Product External ID Display" -> Install
+3. Install the module: Apps -> search for "Visible Product External ID" -> Install
 
 ## Usage
 
@@ -39,4 +39,4 @@ Once installed, the External ID will be visible:
 
 - The module uses a computed field to retrieve the External ID from the `ir.model.data` table
 - For products with multiple External IDs, they are concatenated into a comma separated string
-- The field is read-only as External IDs should be managed via data import/export or developer tools
+- The field is read-only as External IDs should be managed via data import/export or developer tools 

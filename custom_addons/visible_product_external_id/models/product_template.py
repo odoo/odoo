@@ -50,4 +50,4 @@ class ProductProduct(models.Model):
 
     @api.depends()
     def _compute_external_id(self):
-        _set_external_id(self)
+        _set_external_id(self) 
