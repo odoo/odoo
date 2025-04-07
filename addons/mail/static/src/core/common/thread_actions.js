@@ -9,7 +9,10 @@ export const threadActionsRegistry = registry.category("mail.thread/actions");
 threadActionsRegistry
     .add("fold-chat-window", {
         condition(component) {
-            return !component.ui.isSmall && component.props.chatWindow;
+            return (
+                (!component.ui.isSmall || component.isMobileForLivechatVisitor) &&
+                component.props.chatWindow
+            );
         },
         icon: "fa fa-fw fa-minus",
         name(component) {
@@ -40,7 +43,7 @@ threadActionsRegistry
     })
     .add("close", {
         condition(component) {
-            return component.props.chatWindow;
+            return component.props.chatWindow && !component.isMobileFoldedForLivechatVisitor;
         },
         icon: "oi fa-fw oi-close",
         name: _t("Close Chat Window (ESC)"),
