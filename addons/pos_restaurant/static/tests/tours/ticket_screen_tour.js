@@ -27,7 +27,6 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             Chrome.clickMenuOption("Orders"),
             TicketScreen.deleteOrder("-0001"),
             Dialog.confirm(),
-            TicketScreen.clickDiscard(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             FloorScreen.clickTable("5"),
