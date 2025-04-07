@@ -616,6 +616,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
     def test_resupply_order_buy_mto(self):
         """ Test a subcontract component can has resupply on order + buy + mto route"""
+        self.comp2.bom_ids.unlink()
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
@@ -774,6 +775,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
     @freeze_time('2024-01-01')
     def test_bom_overview_availability_po_lead(self):
         # Create routes for components and the main product
+        self.comp2.bom_ids.unlink()
         self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.finished.product_tmpl_id.id,
             'partner_id': self.subcontractor_partner1.id,

@@ -189,13 +189,12 @@
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
                     <field name="has_available_route_ids" invisible="1"/>
-                    <group string="Operations" name="operations">
-                        <label for="route_ids" invisible="type == 'service'"/>
-                        <div>
-                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes" invisible="not has_available_route_ids or type == 'service'"/>
+                    <group string="Operations" name="operations" invisible="not (has_available_route_ids or route_from_categ_ids)">
+                        <label for="route_ids" invisible="not has_available_route_ids"/>
+                        <div invisible="not has_available_route_ids">
+                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes"/>
                             <button id="stock.view_diagram_button" string="View Diagram" type="action" name="%(action_open_routes)d" icon="oi-arrow-right"
-                                 invisible="type != 'consu'"
-                                 class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
+                                class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
                         </div>
                         <field name="route_from_categ_ids" widget="many2many_tags" invisible="not route_from_categ_ids"/>
                     </group>

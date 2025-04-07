@@ -71,6 +71,7 @@ class StockWarehouse(models.Model):
         rules = super()._generate_global_route_rules_values()
         subcontract_location_id = self._get_subcontracting_location()
         production_location_id = self._get_production_location()
+        dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         rules.update({
             'subcontracting_dropshipping_pull_id': {
                 'depends': ['subcontracting_dropshipping_to_resupply'],
@@ -79,7 +80,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_or_create_global_route('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping', _('Dropship Subcontractor on Order')).id,
+                    'route_id': dropship_route.id,
                     'name': self._format_rulename(subcontract_location_id, production_location_id, False),
                     'location_dest_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,
