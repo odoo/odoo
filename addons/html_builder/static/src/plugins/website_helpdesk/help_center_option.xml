@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_helpdesk.helpCenterPageOption">
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Date Filter">
+            <BuilderCheckbox actionParam="{views: ['website_helpdesk.navbar_search_date']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Tags Filter">
+            <BuilderCheckbox actionParam="{views: ['website_helpdesk.navbar_search_tag']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Type Filter">
+            <BuilderCheckbox actionParam="{views: ['website_helpdesk.navbar_search_type']}"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>
