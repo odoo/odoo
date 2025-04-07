@@ -103,3 +103,28 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
                 self.assertEqual(response.json()['result'][0], expected_correct_answers)
 
                 user_input.invalidate_recordset() # TDE note: necessary as lots of sudo in controllers messing with cache
+
+    def test_general_print_of_a_survey_with_token_access(self):
+        survey = self.env['survey.survey'].with_user(self.survey_manager).create({
+            'title': 'Test Survey without answers',
+            'access_mode': 'token',
+            'users_login_required': False,
+            'users_can_go_back': False,
+        })
+        self.authenticate(self.survey_manager.login, self.survey_manager.login)
+        response = self.url_open(f'/survey/print/{survey.access_token}')
+        self.assertEqual(response.status_code, 200, "Response should = OK")
+        self.assertIn(survey.title, str(response.content),
+            "Survey without answers, nor questions should be printable")
+
+        question = self.env['survey.question'].with_user(self.survey_manager).create({
+            'title': 'A or B',
+            'survey_id': survey.id,
+            'sequence': 1,
+            'is_page': False,
+            'question_type': 'simple_choice',
+        })
+        response = self.url_open(f'/survey/print/{survey.access_token}')
+        self.assertEqual(response.status_code, 200, "Response should = OK")
+        self.assertIn(question.title, str(response.content),
+            "Survey with a question, but no answers should be printable")
