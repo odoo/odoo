@@ -669,6 +669,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     }
 
     function delete_(model, record, opts = {}) {
+        if (!record){
+            return;
+        }
         const id = record.id;
         const fields = getFields(model);
         const handleCommand = (inverse, field, record, backend = false) => {
