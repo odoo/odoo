@@ -88,11 +88,13 @@
                         </form>
                     </field>
                     <group invisible="not analytic_account_active">
-                        <group class="oe_subtotal_footer" name="project_hours">
-                            <span class="o_td_label float-start">
-                                <label class="fw-bold" for="effective_hours" string="Time Spent"/>
-                            </span>
-                            <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
+                        <group class="oe_subtotal_footer d-block" name="project_hours">
+                            <div class="d-flex">
+                                <span class="o_td_label float-start">
+                                    <label class="fw-bold" for="effective_hours" string="Time Spent"/>
+                                </span>
+                                <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
+                            </div>
                             <button name="action_view_subtask_timesheet" type="object" class="ps-0 border-0 oe_inline oe_link mb-2 o_td_label float-start" invisible="subtask_effective_hours == 0.0">
                                 <span class="text-nowrap">Time Spent on Sub-tasks:</span>
                             </button>
@@ -106,14 +108,16 @@
                             </span>
                             <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
                                    invisible="subtask_effective_hours == 0.0" />
-                            <span class="o_td_label float-start my-1" invisible="allocated_hours == 0.0">
-                                <label class="fw-bold" for="remaining_hours"
-                                       invisible="remaining_hours &lt; 0"/>
-                                <label class="fw-bold text-danger" for="remaining_hours"
-                                       invisible="remaining_hours &gt;= 0"/>
-                            </span>
-                            <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
-                                   invisible="allocated_hours == 0.0" nolabel="1" decoration-danger="remaining_hours &lt; 0"/>
+                            <div class="d-flex">
+                                <span class="o_td_label float-start my-1" invisible="allocated_hours == 0.0">
+                                    <label class="fw-bold" for="remaining_hours"
+                                        invisible="remaining_hours &lt; 0"/>
+                                    <label class="fw-bold text-danger" for="remaining_hours"
+                                        invisible="remaining_hours &gt;= 0"/>
+                                </span>
+                                <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
+                                    invisible="allocated_hours == 0.0" nolabel="1" decoration-danger="remaining_hours &lt; 0"/>
+                            </div>
                         </group>
                     </group>
                 </page>
