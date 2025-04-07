@@ -28,7 +28,7 @@ class EventController(Controller):
         ])
 
     @route(['/event/<int:event_id>/my_tickets'], type='http', auth='public')
-    def event_my_tickets(self, event_id, registration_ids, tickets_hash, badge_mode=False, responsive_html=False):
+    def event_my_tickets(self, event_id=False, registration_ids=False, tickets_hash=False, badge_mode=False, responsive_html=False):
         """ Returns a pdf response, containing all tickets for attendees in registration_ids for event_id.
 
         Throw Forbidden if no registration is valid / hash is invalid / parameters are missing.
