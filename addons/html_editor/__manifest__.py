@@ -19,6 +19,7 @@ This addon provides an extensible, maintainable editor.
         'web.assets_frontend': [
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),
+            'html_editor/static/src/public/**/*',
         ],
         'web.assets_backend': [
             ('include', 'html_editor.assets_editor'),
@@ -60,6 +61,9 @@ This addon provides an extensible, maintainable editor.
         ],
         'web.assets_unit_tests': [
             'html_editor/static/tests/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'html_editor/static/src/public/**/*',
         ],
         'html_editor.assets_image_cropper': [
             'html_editor/static/lib/cropperjs/cropper.css',
