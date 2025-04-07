@@ -115,7 +115,7 @@ export function goToCheckout() {
 export function confirmOrder() {
     return {
         content: 'Confirm',
-        trigger: 'a[href^="/shop/confirm_order"]',
+        trigger: 'a[href^="/shop/payment"]',
         run: 'click',
     };
 }

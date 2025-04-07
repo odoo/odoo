@@ -2211,7 +2211,7 @@
                                 <a role="button"
                                    name="website_sale_main_button"
                                    class="s_website_form_send btn btn-primary order-lg-3 w-100 w-lg-auto ms-lg-auto"
-                                   href="/shop/confirm_order">
+                                   href="/shop/payment">
                                     Continue checkout
                                     <i class="fa fa-angle-right ms-2 fw-light"/>
                                 </a>
@@ -2655,7 +2655,7 @@
         -->
         <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} mb-5 mb-lg-0 pt-4">
             <t t-if="website_sale_order and website_sale_order.website_order_line">
-                <t t-if="current_website_checkout_step_href == '/shop/confirm_order'">
+                <t t-if="current_website_checkout_step_href == '/shop/payment'">
                     <div t-if="not errors and not website_sale_order.amount_total"
                          name="o_website_sale_free_cart">
                         <form name="o_wsale_confirm_order"
