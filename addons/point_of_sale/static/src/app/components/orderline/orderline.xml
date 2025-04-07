@@ -27,7 +27,7 @@
                     <div t-if="!props.basic_receipt" t-esc="line.getPriceString()" class="product-price price fw-bolder"/>
                     <div t-if="props.showTaxGroup" t-esc="this.taxGroup" class="text-end" style="width: 2rem"/>
                 </div>
-                <ul class="info-list d-flex flex-column mb-0" t-att-class="{'gap-2 mt-1' : line.customer_note || line.note || line.discount || line.packLotLines?.length}">
+                <ul class="info-list d-flex flex-column mb-0 gap-1" t-att-class="{'mt-1' : (line.customer_note || line.note || line.discount || line.packLotLines?.length) and !(this.props.mode == 'receipt') }">
                     <li t-if="line.discount" class="price-per-unit">
                         <t t-set="discount" t-value="line.getDiscountStr()" />
                         <t t-if="!props.basic_receipt and line.price_unit !== 0 and discount and discount !== '0'">
