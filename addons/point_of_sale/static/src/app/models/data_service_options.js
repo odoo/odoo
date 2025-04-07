@@ -55,9 +55,8 @@ export class DataServiceOptions {
 
         return indexes;
     }
-
     get autoLoadedOrmMethods() {
-        return ["read", "search_read", "create"];
+        return ["read", "search_read"];
     }
 
     get pohibitedAutoLoadedModels() {

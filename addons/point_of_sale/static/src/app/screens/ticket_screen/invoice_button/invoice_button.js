@@ -23,7 +23,7 @@ export class InvoiceButton extends Component {
         if (!this.props.order) {
             return false;
         }
-        return Boolean(this.props.order.raw.account_move);
+        return Boolean(this.props.order.account_move);
     }
     get commandName() {
         if (!this.props.order) {
@@ -32,16 +32,9 @@ export class InvoiceButton extends Component {
             return this.isAlreadyInvoiced ? _t("Reprint Invoice") : _t("Invoice");
         }
     }
-    async _downloadInvoice(orderId) {
+    async _downloadInvoice(order) {
         try {
-            const orderWithInvoice = await this.pos.data.read("pos.order", [orderId], [], {
-                load: false,
-            });
-            const order = orderWithInvoice[0];
-            const accountMoveId = order.raw.account_move;
-            if (accountMoveId) {
-                await this.invoiceService.downloadPdf(accountMoveId);
-            }
+            await this.invoiceService.downloadPdf(order.account_move);
         } catch (error) {
             if (error instanceof Error) {
                 throw error;
@@ -66,7 +59,7 @@ export class InvoiceButton extends Component {
         const orderId = order.id;
         // Part 0. If already invoiced, print the invoice.
         if (this.isAlreadyInvoiced) {
-            await this._downloadInvoice(orderId);
+            await this._downloadInvoice(order);
             this.props.onInvoiceOrder(orderId);
             return;
         }
@@ -86,8 +79,7 @@ export class InvoiceButton extends Component {
             if (!partner) {
                 return;
             }
-
-            await this.pos.data.ormWrite("pos.order", [orderId], { partner_id: partner.id });
+            order.partner_id = partner;
         }
 
         const confirmed = await this.onWillInvoiceOrder(order, partner);
@@ -97,10 +89,13 @@ export class InvoiceButton extends Component {
 
         // Part 2: Invoice the order.
         // FIXME POSREF timeout
-        await this.pos.data.silentCall("pos.order", "action_pos_order_invoice", [orderId]);
+        const { res_id } = await this.pos.data.silentCall("pos.order", "action_pos_order_invoice", [
+            orderId,
+        ]);
 
+        order.account_move = res_id;
         // Part 3: Download invoice.
-        await this._downloadInvoice(orderId);
+        await this._downloadInvoice(order);
         this.props.onInvoiceOrder(orderId);
     }
     async click() {

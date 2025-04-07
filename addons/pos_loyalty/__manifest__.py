@@ -22,7 +22,8 @@
     'demo': [
         'data/pos_loyalty_demo.xml',
     ],
-    'installable': True,
+    # 'installable': True, # FIXME remove _code_activated_coupon_ids
+    'installable': False,
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [

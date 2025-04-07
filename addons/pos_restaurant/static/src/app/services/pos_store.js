@@ -1,6 +1,5 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
-import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -14,7 +13,6 @@ patch(PosStore.prototype, {
      */
     async setup() {
         this.isEditMode = false;
-        this.tableSyncing = false;
         this.tableSelectorState = false;
         await super.setup(...arguments);
     },
@@ -78,7 +76,6 @@ patch(PosStore.prototype, {
             return false;
         }
         currentOrder.setCustomerCount(guestCount);
-        this.addPendingOrder([currentOrder.id]);
         return true;
     },
     async sendOrderInPreparationUpdateLastChange(order, cancelled = false) {
@@ -196,9 +193,6 @@ patch(PosStore.prototype, {
                 });
             }
         }
-
-        this.deleteOrders([sourceOrder], [], true);
-        this.syncAllOrders({ orders: [destOrder] });
         return destOrder;
     },
     mergeCourses(sourceOrder, destOrder) {
@@ -328,13 +322,15 @@ patch(PosStore.prototype, {
                 delete order.uiState.unmerge[line.uuid];
             }
 
-            await this.syncAllOrders({ orders: [order, newOrder] });
             return newOrder;
         }
 
         return false;
     },
     async onDeleteOrder(order) {
+        if (this.config.module_pos_restaurant) {
+            order.table_id = null;
+        }
         const orderIsDeleted = await super.onDeleteOrder(...arguments);
         if (
             orderIsDeleted &&
@@ -427,7 +423,7 @@ patch(PosStore.prototype, {
             order &&
             !order.isBooked
         ) {
-            this.removeOrder(order);
+            order.delete();
         }
         super.showScreen(...arguments);
     },
@@ -456,12 +452,6 @@ patch(PosStore.prototype, {
         const data = await super.afterProcessServerData(...arguments);
         this.restoreSampleDataState();
         return data;
-    },
-    //@override
-    addNewOrder(data = {}) {
-        const order = super.addNewOrder(...arguments);
-        this.addPendingOrder([order.id]);
-        return order;
     },
     createOrderIfNeeded(data) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
@@ -500,18 +490,6 @@ patch(PosStore.prototype, {
 
         return result;
     },
-    async getServerOrders() {
-        if (this.config.module_pos_restaurant) {
-            const tableIds = [].concat(
-                ...this.models["restaurant.floor"].map((floor) =>
-                    floor.table_ids.map((table) => table.id)
-                )
-            );
-            await this.syncAllOrders({ table_ids: tableIds });
-        }
-        //Need product details from backand to UI for urbanpiper
-        return await super.getServerOrders();
-    },
     getDefaultSearchDetails() {
         if (this.config.module_pos_restaurant) {
             return {
@@ -522,7 +500,6 @@ patch(PosStore.prototype, {
         return super.getDefaultSearchDetails();
     },
     async setTable(table, orderUuid = null) {
-        this.deviceSync.readDataFromServer();
         let currentOrder = table
             .getOrders()
             .find((order) => (orderUuid ? order.uuid === orderUuid : !order.finalized));
@@ -548,14 +525,8 @@ patch(PosStore.prototype, {
             title: _t("Edit Order Name"),
             placeholder: _t("18:45 John 4P"),
             startingValue: order.floating_order_name || "",
-            getPayload: async (newName) => {
-                if (typeof order.id == "number") {
-                    this.data.write("pos.order", [order.id], {
-                        floating_order_name: newName,
-                    });
-                } else {
-                    order.floating_order_name = newName;
-                }
+            getPayload: (newName) => {
+                order.floating_order_name = newName;
             },
         });
     },
@@ -590,36 +561,25 @@ patch(PosStore.prototype, {
         return false;
     },
     async setTableFromUi(table, orderUuid = null) {
-        try {
-            if (!orderUuid && this.getOrder()?.isFilledDirectSale) {
-                this.transferOrder(this.getOrder().uuid, table);
-                return;
+        if (!orderUuid && this.getOrder()?.isFilledDirectSale) {
+            this.transferOrder(this.getOrder().uuid, table);
+            return;
+        }
+        if (table.parent_id) {
+            table = table.getParent();
+        }
+        await this.setTable(table, orderUuid);
+        const orders = this.getTableOrders(table.id);
+        if (orders.length > 0) {
+            this.setOrder(orders[0]);
+            const props = {};
+            if (orders[0].getScreenData().name === "PaymentScreen") {
+                props.orderUuid = orders[0].uuid;
             }
-            this.tableSyncing = true;
-            if (table.parent_id) {
-                table = table.getParent();
-            }
-            await this.setTable(table, orderUuid);
-        } catch (e) {
-            if (!(e instanceof ConnectionLostError)) {
-                throw e;
-            }
-            // Reject error in a separate stack to display the offline popup, but continue the flow
-            Promise.reject(e);
-        } finally {
-            this.tableSyncing = false;
-            const orders = this.getTableOrders(table.id);
-            if (orders.length > 0) {
-                this.setOrder(orders[0]);
-                const props = {};
-                if (orders[0].getScreenData().name === "PaymentScreen") {
-                    props.orderUuid = orders[0].uuid;
-                }
-                this.showScreen(orders[0].getScreenData().name, props);
-            } else {
-                this.addNewOrder({ table_id: table });
-                this.showScreen("ProductScreen");
-            }
+            this.showScreen(orders[0].getScreenData().name, props);
+        } else {
+            this.addNewOrder({ table_id: table });
+            this.showScreen("ProductScreen");
         }
     },
     getTableOrders(tableId) {
@@ -629,12 +589,6 @@ patch(PosStore.prototype, {
         const order = this.getOrder();
         if (order && !order.isBooked) {
             this.removeOrder(order);
-        } else if (order) {
-            if (!this.isOrderTransferMode) {
-                this.syncAllOrders({ orders: [order] });
-            } else if (order && this.previousScreen !== "ReceiptScreen") {
-                await this.syncAllOrders({ orders: [order] });
-            }
         }
     },
     getActiveOrdersOnTable(table) {
@@ -644,8 +598,14 @@ patch(PosStore.prototype, {
         return Boolean(table.getOrder());
     },
     getTableFromElement(el) {
-        return this.models["restaurant.table"].get(
-            [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
+        return this.models["restaurant.table"].find((t) =>
+            [t.id.toString(), t.uuid].includes(
+                [...el.classList]
+                    .find((c) => c.includes("tableId"))
+                    .split("-")
+                    .slice(1)
+                    .join("-")
+            )
         );
     },
     startTransferOrder() {
@@ -682,7 +642,6 @@ patch(PosStore.prototype, {
         if (!this.tableHasOrders(destinationTable)) {
             order.table_id = destinationTable;
             this.setOrder(order);
-            this.syncAllOrders({ orders: [order] });
             return false;
         }
         return true;
