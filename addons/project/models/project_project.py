@@ -782,6 +782,12 @@ class ProjectProject(models.Model):
         action['domain'] = [('milestone_id', 'in', self.milestone_ids.ids)]
         return action
 
+    def action_view_my_tasks(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('project.act_project_project_2_project_task_all')
+        action['domain'] = [('project_id', 'in', self.ids), ('user_ids', 'in', self.env.user.ids)]
+        return action
+
     # ---------------------------------------------
     #  PROJECT UPDATES
     # ---------------------------------------------
