@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
 
 import werkzeug.urls
 
 from odoo import models, fields, api
+from odoo.tools import microdata as md
 
 
 class ResPartner(models.Model):
@@ -10,6 +12,40 @@ class ResPartner(models.Model):
     _inherit = ['res.partner', 'website.published.multi.mixin']
 
     visitor_ids = fields.One2many('website.visitor', 'partner_id', string='Visitors')
+
+    def _to_markup_data(self) -> md.Organization | md.Person:
+        self.ensure_one()
+        if self.is_company:
+            retval = md.Organization(
+                name=self.name,
+                url=self.website
+            )
+        else:
+            retval = md.Person(
+                name=self.name,
+                url=self.website
+            )
+        return retval
+
+    def _address_to_markup_data(self) -> md.Place:
+        self.ensure_one()
+        street_address = " ".join(
+            filter(
+                None,
+                [self.street, self.street2]
+            )
+        )
+        location = md.Place(
+            name=self.name,
+            address=md.PostalAddress(
+                address_country=self.country_id.code,
+                address_locality=self.city,
+                address_region=self.state_id.code,
+                postal_code=self.zip or "",
+                street_address=street_address
+            )
+        )
+        return location
 
     def google_map_img(self, zoom=8, width=298, height=298):
         google_maps_api_key = self.env['website'].get_current_website().google_maps_api_key
