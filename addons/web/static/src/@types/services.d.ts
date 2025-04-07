@@ -49,7 +49,6 @@ declare module "services" {
         file_upload: typeof fileUploadService;
         hotkey: typeof hotkeyService;
         http: typeof httpService;
-        lazy_session: typeof lazySession;
         localization: typeof localizationService;
         menu: typeof menuService;
         name: typeof nameService;

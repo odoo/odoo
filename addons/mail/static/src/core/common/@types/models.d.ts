@@ -6,7 +6,7 @@ declare module "models" {
     import { ChatWindow as ChatWindowClass } from "@mail/core/common/chat_window_model";
     import { Composer as ComposerClass } from "@mail/core/common/composer_model";
     import { Country as CountryClass } from "@mail/core/common/country_model";
-    import { DataResponse as DataResponseClass } from "@mail/core/common/data_request_model";
+    import { DataResponse as DataResponseClass } from "@mail/core/common/data_response_model";
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";

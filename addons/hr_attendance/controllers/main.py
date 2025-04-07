@@ -9,7 +9,31 @@ from odoo.tools.image import image_data_uri
 
 import datetime
 
-class HrAttendance(http.Controller):
+from odoo.addons.mail.controllers.webclient import WebclientController
+from odoo.addons.mail.tools.discuss import Store
+
+
+class HrAttendance(WebclientController):
+    @classmethod
+    def _process_request_for_internal_user(self, store: Store, name, params):
+        super()._process_request_for_internal_user(store, name, params)
+        if name == "/hr_attendance/user_data":
+            employee = request.env.user.employee_id
+            store.add_global_values(
+                self_employee=Store.One(employee, self._get_user_attendance_data(employee))
+            )
+        if name == "/hr_attendance/systray_check_in_out":
+            employee = request.env.user.employee_id
+            geo_ip_response = self._get_geoip_response(
+                mode="systray",
+                latitude=params.get("latitude", False),
+                longitude=params.get("longitude", False),
+            )
+            employee._attendance_action_change(geo_ip_response)
+            store.add_global_values(
+                self_employee=Store.One(employee, self._get_employee_info_response(employee))
+            )
+
     @staticmethod
     def _get_company(token):
         company = request.env['res.company'].sudo().search([('attendance_kiosk_key', '=', token)])
@@ -163,20 +187,6 @@ class HrAttendance(http.Controller):
             } for employee in employees]
             return {'records': employees_data, 'length': request.env['hr.employee'].sudo().search_count(domain)}
         return []
-
-    @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
-    def systray_attendance(self, latitude=False, longitude=False):
-        employee = request.env.user.employee_id
-        geo_ip_response = self._get_geoip_response(mode='systray',
-                                                  latitude=latitude,
-                                                  longitude=longitude)
-        employee._attendance_action_change(geo_ip_response)
-        return self._get_employee_info_response(employee)
-
-    @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", readonly=True)
-    def user_attendance_data(self):
-        employee = request.env.user.employee_id
-        return self._get_user_attendance_data(employee)
 
     def has_password(self):
         # With this method we try to know whether it's the user is on trial mode or not.
