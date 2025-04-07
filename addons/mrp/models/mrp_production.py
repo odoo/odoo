@@ -272,11 +272,16 @@ class MrpProduction(models.Model):
         string='Date Category', store=False,
         search='_search_date_category', readonly=True
     )
+    quantity_produced_issues = fields.Boolean("Quantity Produced Issues", compute='_compute_quantity_produced_issues', readonly=True)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
         ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
     ]
+
+    def _compute_quantity_produced_issues(self):
+        for production in self:
+            production.quantity_produced_issues = bool(production._get_quantity_produced_issues())
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids',
                  'procurement_group_id.stock_move_ids.move_orig_ids.created_production_id.procurement_group_id.mrp_production_ids')
