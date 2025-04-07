@@ -347,7 +347,6 @@ export const ormService = {
     async: [
         "call",
         "create",
-        "nameGet",
         "read",
         "formattedReadGroup",
         "webReadGroup",
