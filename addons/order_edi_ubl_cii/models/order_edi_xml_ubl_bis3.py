@@ -1,6 +1,6 @@
 from lxml import etree
 
-from odoo import _, models
+from odoo import _, models, Command
 from odoo.tools import html2plaintext, cleanup_xml_node
 
 
@@ -199,3 +199,118 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
         vals = self._export_order_vals(order)
         xml_content = self.env['ir.qweb']._render('order_edi_ubl_cii.bis3_OrderType', vals)
         return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8')
+
+    #####################################################################################
+    ##### Order EDI Import
+    #####################################################################################
+
+    def _import_order_lines(self, order, tree, xpath):
+        """ Import order lines from xml tree.
+        :param order: Order to set order line on.
+        :param tree: Xml tree to extract OrderLine from.
+        :param xpath: Xpath for order line items.
+        :return: Logging information related orderlines details.
+        :rtype: List
+        """
+        logs = []
+        lines_values = []
+        for line_tree in tree.iterfind(xpath):
+            line_values = self._retrieve_line_vals(line_tree)
+            line_values = {
+                **line_values,
+                self._get_order_qty_field(): line_values['quantity'],
+            }
+            del line_values['quantity']
+
+            if not line_values['product_id']:
+                logs += [_("Could not retrieve product for line '%s'", line_values['name'])]
+            line_values['tax_ids'], tax_logs = self._retrieve_taxes(
+                order, line_values, self._get_order_type(),
+            )
+            logs += tax_logs
+            lines_values += self._retrieve_line_charges(order, line_values, line_values['tax_ids'])
+            if not line_values['product_uom_id']:
+                line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
+            lines_values.append(line_values)
+
+        return lines_values, logs
+
+    def _import_fill_order(self, order, tree):
+        """ Fill order details by extracting details from xml tree.
+        param order: Order to fill details from xml tree.
+        param tree: Xml tree to extract details.
+        :return: list of logs to add warnig and information about data from xml.
+        """
+        logs = []
+        order_values = {}
+        partner, partner_logs = self._import_partner(
+            order.company_id,
+            **self._import_retrieve_partner_vals(tree, self._get_order_partner_role()),
+        )
+        if partner:
+            order_values['partner_id'] = partner.id
+        delivery_partner, delivery_partner_logs = self._import_delivery_partner(
+            order,
+            **self._import_retrieve_delivery_vals(tree),
+        )
+        if delivery_partner:
+            order_values[self._get_dest_address_field()] = delivery_partner.id
+        order_values['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
+
+        order_values['date_order'] = tree.findtext('./{*}IssueDate')
+        order_values[self._get_order_ref()] = tree.findtext('./{*}ID')
+        order_values['note'] = self._import_description(tree, xpaths=['./{*}Note'])
+        order_values['origin'] = tree.findtext('./{*}OriginatorDocumentReference/{*}ID')
+        order_values['payment_term_id'] = self._import_payment_term_id(order, tree, './/cac:PaymentTerms/cbc:Note')
+
+        allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, order, self._get_order_type())
+        lines_vals, line_logs = self._import_order_lines(order, tree, './{*}OrderLine/{*}LineItem')
+        lines_vals += allowance_charges_line_vals
+
+        # Update order with lines excluding discounts
+        order_values = {
+            **order_values,
+            'order_line': [Command.create(line_vals) for line_vals in lines_vals],
+        }
+        order.write(order_values)
+        logs += partner_logs + delivery_partner_logs + currency_logs + line_logs + allowance_charges_logs
+
+        return logs
+
+    def _import_payment_term_id(self, order, tree, xapth):
+        """ Return payment term from given tree. """
+        payment_term_note = self._find_value(xapth, tree)
+        if not payment_term_note:
+            return False
+
+        return self.env['account.payment.term'].search([
+            *self.env['account.payment.term']._check_company_domain(order.company_id),
+            ('name', '=', payment_term_note)
+        ], limit=1)
+
+    def _import_delivery_partner(self, order, name, phone, email):
+        """ Import delivery address from details if not found then log details."""
+        logs = []
+        dest_partner = self.env['res.partner'].with_company(
+            order.company_id
+        )._retrieve_partner(name=name, phone=phone, email=email)
+        if not dest_partner:
+            partner_detaits_str = self._get_partner_detail_str(name, phone, email)
+            logs.append(_("Could not retrieve Delivery Address with Details: { %s }", partner_detaits_str))
+
+        return dest_partner, logs
+
+    def _import_retrieve_delivery_vals(self, tree):
+        """ Returns a dict of values that will be used to retrieve the delivery address. """
+        return {
+            'phone': self._find_value('.//cac:Delivery/cac:DeliveryParty//cbc:Telephone', tree),
+            'email': self._find_value('.//cac:Delivery/cac:DeliveryParty//cbc:ElectronicMail', tree),
+            'name': self._find_value('.//cac:Delivery/cac:DeliveryParty//cbc:Name', tree),
+        }
+
+    def _get_line_xpaths(self, document_type=False, qty_factor=1):
+        # Override account.edi.xml.ubl_bis3
+        return {
+            **super()._get_line_xpaths(),
+            'delivered_qty': ('./{*}Quantity'),
+        }

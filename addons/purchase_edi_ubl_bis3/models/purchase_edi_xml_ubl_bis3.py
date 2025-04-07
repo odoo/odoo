@@ -14,3 +14,12 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _get_order_type_code(self):
         return 105
+
+    def _get_order_type(self):
+        return 'purchase'
+
+    def _get_order_ref(self):
+        return 'partner_ref'
+
+    def _get_order_partner_role(self):
+        return "SellerSupplier"
