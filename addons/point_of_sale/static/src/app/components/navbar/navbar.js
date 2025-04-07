@@ -95,11 +95,11 @@ export class Navbar extends Component {
         this.bufferedInput = "";
     }
 
-    onClickRegister() {
+    async onClickRegister() {
         let order = this.pos.getOrder();
 
         if (!order) {
-            order = this.pos.addNewOrder();
+            order = await this.pos.addNewOrder();
         }
 
         this.pos.navigateToOrderScreen(order);
