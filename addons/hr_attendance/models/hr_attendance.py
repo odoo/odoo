@@ -685,7 +685,12 @@ class HrAttendance(models.Model):
         user_domain = self.env.context.get('user_domain')
         employee_domain = [('company_id', 'in', self.env.context.get('allowed_company_ids', []))]
         if not self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
+<<<<<<< 13a766e15f91a55b007130fa30cdd2bb9d4783bf
             employee_domain.append(('attendance_manager_id', '=', self.env.user.id))
+||||||| 74998898be58e803d9c44da8cf78d2cd7ca33b1b
+=======
+            employee_domain = AND([employee_domain, [('attendance_manager_id', '=', self.env.user.id)]])
+>>>>>>> ef423640c4e2402509eafc6aa8696e33dacf51ea
         if not user_domain:
             return self.env['hr.employee'].search(employee_domain)
         else:
