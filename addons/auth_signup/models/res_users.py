@@ -121,6 +121,10 @@ class ResUsers(models.Model):
         values['active'] = True
         try:
             with self.env.cr.savepoint():
+                # Trim leading and trailing whitespace from login
+                values['login'] = values['login'].strip()
+                if self.search(self._get_login_domain(values['login'])):
+                    raise SignupError(_('Signup: user %s already exists', values['login']))
                 return template_user.with_context(no_reset_password=True).copy(values)
         except Exception as e:
             # copy may failed if asked login is not available.

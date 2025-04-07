@@ -684,11 +684,16 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_login_domain(self, login):
-        return [('login', '=', login)]
+        # TODO KMDI: check if we should keep an option like case=True
+        # Escape user entered wild cards i.e. % and _
+        login = login.replace('%', '\\%').replace('_','\\_')
+        return [('login', '=ilike', login)]
 
     @api.model
     def _get_email_domain(self, email):
-        return [('email', '=', email)]
+        # Escape user entered wild cards i.e. % and _
+        email = email.replace('%', '\\%').replace('_','\\_')
+        return [('email', '=ilike', email)]
 
     @api.model
     def _get_login_order(self):
@@ -699,6 +704,7 @@ class ResUsers(models.Model):
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         try:
             with self._assert_can_auth(user=login):
+                login = login.strip()
                 user = self.sudo().search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
                 if not user:
                     # ruff: noqa: TRY301
