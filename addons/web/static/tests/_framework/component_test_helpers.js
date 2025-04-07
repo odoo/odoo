@@ -98,6 +98,8 @@ export function getDropdownMenu(togglerSelector) {
  * @template [E=OdooEnv]
  * @param {C | string} ComponentClass
  * @param {MountOptions & {
+ *  componentEnv?: Partial<OdooEnv>;
+ *  containerEnv?: Partial<OdooEnv>;
  *  fixtureClassName?: string | string[] | null;
  *  env?: E;
  *  noMainContainer?: boolean;
@@ -106,19 +108,30 @@ export function getDropdownMenu(togglerSelector) {
  * }} [options]
  */
 export async function mountWithCleanup(ComponentClass, options) {
-    const { fixtureClassName = "o_web_client", env, noMainContainer, target } = options || {};
-    const config = {
+    const {
+        componentEnv,
+        containerEnv,
+        fixtureClassName = "o_web_client",
+        env,
+        noMainContainer,
+        target,
+    } = options || {};
+
+    // Common component configuration
+    const commonConfig = {
         getTemplate,
         test: true,
         translateFn: _t,
         warnIfNoStaticProps: true,
         ...options,
-        env: env || getMockEnv() || (await makeMockEnv()),
     };
-    delete config.fixtureClassName;
-    delete config.noMainContainer;
-    delete config.target;
+    delete commonConfig.componentEnv;
+    delete commonConfig.containerEnv;
+    delete commonConfig.fixtureClassName;
+    delete commonConfig.noMainContainer;
+    delete commonConfig.target;
 
+    // Fixture
     const fixture = getFixture();
     const targetEl = target ? queryOne(target) : fixture;
     if (fixtureClassName) {
@@ -127,6 +140,7 @@ export async function mountWithCleanup(ComponentClass, options) {
     }
 
     if (typeof ComponentClass === "string") {
+        // Convert templates to components (if needed)
         ComponentClass = class extends Component {
             static name = "anonymous component";
             static props = {};
@@ -134,18 +148,24 @@ export async function mountWithCleanup(ComponentClass, options) {
         };
     }
 
-    /** @type {InstanceType<C>} */
-    const component = await mountComponentWithCleanup(ComponentClass, targetEl, {
-        ...config,
+    const commonEnv = env || getMockEnv() || (await makeMockEnv());
+    const componentConfig = {
+        ...commonConfig,
+        env: { ...commonEnv, ...componentEnv },
         name: `TEST: ${ComponentClass.name}`,
-    });
+    };
+
+    /** @type {InstanceType<C>} */
+    const component = await mountComponentWithCleanup(ComponentClass, targetEl, componentConfig);
 
     if (!noMainContainer && !hasMainComponent) {
-        await mountComponentWithCleanup(MainComponentsContainer, targetEl, {
-            ...config,
+        const containerConfig = {
+            ...commonConfig,
+            env: { ...commonEnv, ...containerEnv },
             name: `TEST: ${ComponentClass.name} (main container)`,
             props: {},
-        });
+        };
+        await mountComponentWithCleanup(MainComponentsContainer, targetEl, containerConfig);
     }
 
     return component;
