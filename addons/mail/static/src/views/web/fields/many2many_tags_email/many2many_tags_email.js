@@ -1,17 +1,18 @@
-import { onMounted } from "@odoo/owl";
-
+import { RecipientsInputTagsList } from "@mail/core/web/recipients_input_tags_list";
+import { RecipientsPopover } from "@mail/core/web/recipients_popover";
 import { parseEmail } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { TagsList } from "@web/core/tags_list/tags_list";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { useService } from "@web/core/utils/hooks";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { useOpenMany2XRecord, Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
-export class FieldMany2ManyTagsEmailTagsList extends TagsList {
+export class FieldMany2ManyTagsEmailTagsList extends RecipientsInputTagsList {
     static template = "FieldMany2ManyTagsEmailTagsList";
 }
 
@@ -46,76 +47,19 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
 
     setup() {
         super.setup();
-
+        if (this.quickCreate) {
+            this.quickCreate = this.quickCreateRecipient.bind(this);
+        }
         this.openedDialogs = 0;
         this.recordsIdsToAdd = [];
-        this.openMany2xRecord = useOpenMany2XRecord({
-            resModel: this.relation,
-            activeActions: {
-                create: false,
-                createEdit: false,
-                write: true,
-            },
-            isToMany: true,
-            onRecordSaved: async (record) => {
-                if (record.data.email) {
-                    this.recordsIdsToAdd.push(record.resId);
-                }
-                if (this.props.canEditTags) {
-                    // Reload the tag list to update the display:
-                    const list = this.props.record.data[this.props.name];
-                    await list.addAndRemove({
-                        add: [],
-                        remove: [],
-                        reload: true,
-                    });
-                }
-            },
-            fieldString: this.props.string,
-        });
+
+        this.recipientsPopover = usePopover(RecipientsPopover);
+        this.actionService = useService("action");
 
         const update = this.update;
         this.update = async (object) => {
             await update(object);
-            await this.checkEmails();
         };
-
-        onMounted(() => {
-            this.checkEmails();
-        });
-    }
-
-    async checkEmails() {
-        const list = this.props.record.data[this.props.name];
-        const invalidRecords = list.records.filter((record) => !record.data.email);
-        if (!invalidRecords.length) {
-            return;
-        }
-        // Remove records with invalid data, open form view to edit those and readd them if they are updated correctly.
-        const dialogDefs = [];
-        for (const record of invalidRecords) {
-            dialogDefs.push(
-                this.openMany2xRecord({
-                    resId: record.resId,
-                    context: this.props.context,
-                    title: _t("Edit: %s", record.data.name),
-                })
-            );
-        }
-        this.openedDialogs += invalidRecords.length;
-        await Promise.all(dialogDefs);
-
-        this.openedDialogs -= invalidRecords.length;
-        if (this.openedDialogs) {
-            return;
-        }
-
-        const invalidRecordIds = invalidRecords.map((rec) => rec.resId);
-        await list.addAndRemove({
-            remove: invalidRecordIds.filter((id) => !this.recordsIdsToAdd.includes(id)),
-            reload: true,
-        });
-        this.recordsIdsToAdd = [];
     }
 
     get tags() {
@@ -128,7 +72,12 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             },
             {}
         );
-        tags.forEach((tag) => (tag.email = emailByResId[tag.resId]));
+        tags.forEach((tag) => {
+            tag.email = emailByResId[tag.resId];
+            tag.id = tag.resId;
+            tag.name = tag.text;
+            tag.title = tag.text;
+        });
         return tags;
     }
 
@@ -149,13 +98,31 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
      * @param {Record} record
      */
     onTagClick(event, record) {
-        if (this.props.canEditTags) {
-            return this.openMany2xRecord({
-                resId: record.resId,
-                context: this.props.context,
-                title: _t("Edit: %s", record.data.name),
-            });
-        }
+        const viewProfileBtnOverride = () => {
+            const action = {
+                type: "ir.actions.act_window",
+                res_model: "res.partner",
+                res_id: record.resId,
+                views: [[false, "form"]],
+                target: "current",
+            };
+            this.actionService.doAction(action);
+        };
+        this.recipientsPopover.open(event.target, {
+            id: record.resId,
+            viewProfileBtnOverride,
+        });
+    }
+
+    async quickCreateRecipient(request, params) {
+        const [name, email] = parseEmail(request);
+        const [partnerId] = await this.orm.create("res.partner", [{ name, email }]);
+        return this.props.record.data[this.props.name].addAndRemove({ add: [partnerId] });
+    }
+
+    async updateRecipient(newEmail, partnerId) {
+        await this.orm.write("res.partner", [partnerId], { email: newEmail });
+        return this.props.record.data[this.props.name].addAndRemove({ reload: true });
     }
 }
 
@@ -168,7 +135,6 @@ export const fieldMany2ManyTagsEmail = {
             label: _t("Edit Tags"),
             name: "edit_tags",
             type: "boolean",
-            help: _t("If checked, clicking on the tag will open the form that allows to directly edit it."),
         },
     ],
     extractProps({ options, attrs }, dynamicInfo) {

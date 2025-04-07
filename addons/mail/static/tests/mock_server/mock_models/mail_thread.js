@@ -309,6 +309,7 @@ export class MailThread extends models.ServerModel {
             result.push({
                 partner_id: partner.id,
                 name: partner.display_name,
+                email: partner.email,
                 lang,
                 reason,
                 create_values: {},

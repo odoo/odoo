@@ -9,8 +9,9 @@
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.persona">
                     <t t-esc="notification.persona.name"/>
-                    <t t-if="notification.persona.email"> (<t t-out="notification.persona.email"/>)</t>
+                    <t t-if="notification.persona.email and !notification.isFailure"> (<t t-out="notification.persona.email"/>)</t>
                 </span>
+                <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
             </div>
             <div t-if="props.message.incoming_email_cc or props.message.incoming_email_to" t-foreach="(props.message.incoming_email_cc || []).concat(props.message.incoming_email_to || [])" t-as="incomingEmail" t-key="incomingEmail_index">
                 <i class="me-2 fa fa-fw fa-send-o"/>
@@ -21,8 +22,9 @@
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.persona">
                     <t t-esc="notification.persona.name"/>
-                    <t t-if="notification.persona.email"> (<t t-out="notification.persona.email"/>)</t>
+                    <t t-if="notification.persona.email and !notification.isFailure"> (<t t-out="notification.persona.email"/>)</t>
                 </span>
+                <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
             </div>
         </div>
     </t>

@@ -15,9 +15,9 @@
                                     placeholder="Add contacts to notify..."
                                     options="{'edit_tags': True}"
                                     context="{'force_email': True, 'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
-                                <field name="show_notified_bcc" widget="mail_composer_show_bcc_button" invisible="show_notified_bcc" class="w-auto"/>
+                                <field name="show_notified_bcc" widget="mail_composer_show_bcc_button" invisible="1" class="w-auto"/> <!-- Will be removed in master -->
                             </div>
-                            <field name="notified_bcc" widget="mail_composer_bcc_list" invisible="is_note or not show_notified_bcc"/>
+                            <field name="notified_bcc" widget="mail_composer_bcc_list" invisible="1"/> <!-- Will be removed in master -->
                             <field name="subject" required="True"/>
                         </group>
                         <group col="1">

@@ -133,14 +133,13 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
-        trigger: ".o_field_widget[name=email] input, input[name=email]",
+        trigger: ".o-mail-RecipientsInputTagsListPopover input",
         content: markup(_t("Write here <b>your own email address</b> to test the flow.")),
         run: "edit customer@example.com",
     },
     {
         isActive: ["auto"],
-        trigger: ".modal button.o_form_button_save",
+        trigger: ".o-mail-RecipientsInputTagsListPopover .btn-primary",
         content: _t("Validate."),
         run: "click",
     },
