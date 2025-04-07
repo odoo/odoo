@@ -8,7 +8,8 @@ def _define_external_id_field():
         compute='_compute_external_id',
         help="All external IDs as comma-separated string",
         readonly=True,
-        store=False
+        store=False,
+        search='_search_external_id'
     )
 
 
@@ -35,6 +36,24 @@ def _set_external_id(mdl):
             record.external_id = False
 
 
+def _fetch_by_external_id(mdl, operator, value):
+    if not value:
+        return []
+    
+    domain = [
+        ('model', '=', mdl._name),
+        '|',
+        ('name', 'ilike', value),
+        ('module', 'ilike', value)
+    ]
+    external_ids = mdl.env['ir.model.data'].search(domain)
+    
+    if not external_ids:
+        return [('id', '=', False)]
+        
+    return [('id', 'in', external_ids.mapped('res_id'))] 
+
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
     external_id = _define_external_id_field()
@@ -43,6 +62,11 @@ class ProductTemplate(models.Model):
     def _compute_external_id(self):
         _set_external_id(self)
 
+    @api.model
+    def _search_external_id(self, operator, value):
+        """Search for products by their external ID"""
+        return _fetch_by_external_id(self, operator, value)
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -50,4 +74,9 @@ class ProductProduct(models.Model):
 
     @api.depends()
     def _compute_external_id(self):
-        _set_external_id(self) 
+        _set_external_id(self)
+
+    @api.model
+    def _search_external_id(self, operator, value):
+        """Search for products by their external ID"""
+        return _fetch_by_external_id(self, operator, value)
