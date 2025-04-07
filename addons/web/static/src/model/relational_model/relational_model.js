@@ -141,7 +141,6 @@ export class RelationalModel extends Model {
         this.useSendBeaconToSaveUrgently = params.useSendBeaconToSaveUrgently || false;
 
         this._urgentSave = false;
-        this.isReady = false;
     }
 
     // -------------------------------------------------------------------------
@@ -158,7 +157,7 @@ export class RelationalModel extends Model {
     }
 
     hasData() {
-        return !this.isReady || this.root.hasData;
+        return this.root.hasData;
     }
 
     /**
@@ -171,23 +170,11 @@ export class RelationalModel extends Model {
      */
     async load(params = {}) {
         const config = this._getNextConfig(this.config, params);
-        if (!this.isReady && !config.isMonoRecord) {
-            this.root = this._createRoot(config, { groups: [], records: [], length: 0 });
-            this.config = config;
-            this.hooks.onWillLoadRoot(config);
-            this.keepLast.add(this._loadData(config)).then((data) => {
-                this.root = this._createRoot(config, data);
-                this.isReady = true;
-                this.hooks.onRootLoaded(this.root);
-                this.bus.trigger("render");
-            });
-        } else {
-            this.hooks.onWillLoadRoot(config);
-            const data = await this.keepLast.add(this._loadData(config));
-            this.root = this._createRoot(config, data);
-            this.config = config;
-            return this.hooks.onRootLoaded(this.root);
-        }
+        this.hooks.onWillLoadRoot(config);
+        const data = await this.keepLast.add(this._loadData(config));
+        this.root = this._createRoot(config, data);
+        this.config = config;
+        return this.hooks.onRootLoaded(this.root);
     }
 
     // -------------------------------------------------------------------------
