@@ -898,7 +898,7 @@ export class PosStore extends WithLazyGetterTrap {
                     ]),
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
-                    price_type: "manual",
+                    price_type: "automatic",
                     order_id: order,
                     qty: comboItem.qty,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [

@@ -23,6 +23,7 @@ export function hasLine({
     productName,
     quantity,
     price,
+    priceUnit,
     customerNote,
     internalNote,
     comboParent,
@@ -44,6 +45,9 @@ export function hasLine({
     }
     if (price) {
         trigger += `:has(.price:contains("${price}"))`;
+    }
+    if (priceUnit) {
+        trigger += `:has(.price-per-unit:contains("${priceUnit}"))`;
     }
     if (customerNote) {
         trigger += `:has(.info-list .customer-note:contains("${customerNote}"))`;
