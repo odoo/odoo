@@ -139,7 +139,7 @@ registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
         id: "s_image_gallery",
         name: "Image Gallery",
     }),
-    changeOption("GalleryImageList", "we-button[data-add-images]"),
+    changeOption("Image Gallery", "addImage"),
 {
     content: "Click on the default image",
     trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",
