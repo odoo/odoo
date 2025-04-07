@@ -68,7 +68,7 @@ export class WebsiteBlog extends Interaction {
      */
     onShareArticleClick(ev, currentTargetEl) {
         let url = "";
-        const blogPostTitle = document.querySelector("#o_wblog_post_name").textContent || "";
+        const blogPostTitle = document.querySelector(".o_wblog_post_name").textContent || "";
         const articleURL = browser.location.href;
         if (currentTargetEl.classList.contains("o_twitter")) {
             const tweetText = _t("Amazing blog article: %(title)s! Check it live: %(url)s", {
