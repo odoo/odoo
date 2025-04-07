@@ -2034,7 +2034,7 @@ export class ListRenderer extends Component {
         const resizeHeader = (ev) => {
             ev.preventDefault();
             ev.stopPropagation();
-            const delta = ev.clientX - initialX;
+            const delta = (ev.clientX - initialX) * (this.isRTL ? -1: 1);
             const newWidth = Math.max(10, initialWidth + delta);
             const tableDelta = newWidth - initialWidth;
             th.style.width = `${Math.floor(newWidth)}px`;
