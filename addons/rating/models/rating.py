@@ -47,7 +47,7 @@ class Rating(models.Model):
     feedback = fields.Text('Comment')
     message_id = fields.Many2one(
         'mail.message', string="Message",
-        index=True, ondelete='cascade')
+        index='btree_not_null', ondelete='cascade')
     is_internal = fields.Boolean('Visible Internally Only', readonly=False, related='message_id.is_internal', store=True)
     access_token = fields.Char('Security Token', default=_default_access_token)
     consumed = fields.Boolean(string="Filled Rating")

@@ -24,7 +24,7 @@ class WebsiteTrack(models.Model):
     _log_access = False
 
     visitor_id = fields.Many2one('website.visitor', ondelete="cascade", index=True, required=True, readonly=True)
-    page_id = fields.Many2one('website.page', index=True, ondelete='cascade', readonly=True)
+    page_id = fields.Many2one('website.page', index='btree_not_null', ondelete='cascade', readonly=True)
     url = fields.Text('Url', index=True)
     visit_datetime = fields.Datetime('Visit Date', default=fields.Datetime.now, required=True, readonly=True)
 
