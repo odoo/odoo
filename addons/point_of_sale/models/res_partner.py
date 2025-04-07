@@ -51,8 +51,17 @@ class ResPartner(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
+<<<<<<< 3a070921470adf196e2ce015d42c0b27d86a742e
             'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
             'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'pos_contact_address', 'invoice_emails'
+||||||| c7d0bbc91560f0561bacfbf4f5a64ca4836ccb7a
+            'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
+            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'contact_address'
+=======
+            'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
+            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'contact_address',
+            'company_type',
+>>>>>>> 58d19db3f8ef031c707903476df45ca99e23a4a4
         ]
 
     def _compute_pos_order(self):
