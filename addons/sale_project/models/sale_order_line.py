@@ -258,8 +258,29 @@ class SaleOrderLine(models.Model):
             fname: project[fname].id for fname in project._get_plan_fnames() if fname != 'account_id' and project[fname]
         }
 
+    def _create_task_template(self, project, template):
+        template_count = sum(
+                1 for sol in self.order_id.order_line
+                if sol.product_id.task_template_id.id == template.id
+            )
+        task = template.copy_data()[0]
+        task.update({
+            'name': '%s - %s' % (self.order_id.name, template.name),
+            'allocated_hours': template.allocated_hours * template_count,
+            'active': True,
+            'partner_id': self.order_id.partner_id.id,
+            'project_id': project.id,
+            'sale_line_id': self.id,
+            'sale_order_id': self.order_id.id,
+            'parent_id': False,
+        })
+        return task
+
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
+        template = self.product_id.task_template_id
+        if template:
+            return self._create_task_template(project, template)
         allocated_hours = 0.0
         if self.product_id.service_type not in ['milestones', 'manual']:
             allocated_hours = self._convert_qty_company_hours(self.company_id)
@@ -316,6 +337,7 @@ class SaleOrderLine(models.Model):
         """
         so_line_task_global_project = self._get_so_lines_task_global_project()
         so_line_new_project = self._get_so_lines_new_project()
+        TaskTemplate = self.env['project.task']
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can
         # create its own project, or reuse the one of its order.
@@ -378,7 +400,8 @@ class SaleOrderLine(models.Model):
                         project = map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)]
                     else:
                         project = map_so_project[so_line.order_id.id]
-                if not so_line.task_id:
+                if not so_line.task_id and so_line.product_id.task_template_id not in TaskTemplate:
+                    TaskTemplate |= so_line.product_id.task_template_id
                     so_line._timesheet_create_task(project=project)
             so_line._handle_milestones(project)
 
@@ -392,7 +415,9 @@ class SaleOrderLine(models.Model):
             if not so_line.task_id:
                 project = map_sol_project.get(so_line.id) or so_line.order_id.project_id
                 if project and so_line.product_uom_qty > 0:
-                    so_line._timesheet_create_task(project)
+                    if so_line.product_id.task_template_id not in TaskTemplate:
+                        TaskTemplate |= so_line.product_id.task_template_id
+                        so_line._timesheet_create_task(project)
                 else:
                     raise UserError(_(
                         "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
