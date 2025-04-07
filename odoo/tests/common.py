@@ -2267,8 +2267,8 @@ class HttpCase(TransactionCase):
         with self.allow_requests(browser=browser):
             try:
                 if "bus.bus" in self.env.registry:
-                    from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler
-                    from odoo.addons.bus.models.bus import BusBus
+                    from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler  # noqa: PLC0415
+                    from odoo.addons.bus.models.bus import BusBus  # noqa: PLC0415
 
                     kick_all_websockets = partial(_kick_all, CloseCode.KILL_NOW)
                     original_send_one = BusBus._sendone
