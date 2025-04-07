@@ -34,17 +34,22 @@ class ReportStockRule(models.AbstractModel):
         locations_names = locations.mapped('display_name')
         # Here we handle reordering rules and putaway strategies by creating the header_lines dict. This dict is indexed
         # by location_id and contains itself another dict with the relevant reordering rules and putaway strategies.
+        reorder_rules_by_location = reordering_rules.read_group(
+            [('product_id', '=', product.id)], 
+            ['location_id'], 
+            ['location_id'])
+
         header_lines = {}
         for location in locations:
-            # TODO: group the RR by location_id to avoid a filtered at each loop
-            rr = reordering_rules.filtered(lambda r: r.location_id.id == location.id)
+            rr = [rule for rule in reorder_rules_by_location if rule['location_id'][0] == location.id]
             putaways = product.putaway_rule_ids.filtered(lambda p: p.location_in_id.id == location.id)
             if putaways or rr:
                 header_lines[location.id] = {'putaway': [], 'orderpoint': []}
                 for putaway in putaways:
                     header_lines[location.id]['putaway'].append(putaway)
                 for r in rr:
-                    header_lines[location.id]['orderpoint'].append(r)
+                    orderpoint_record = reordering_rules.filtered(lambda op: op.id == r['location_id_count'])
+                    header_lines[location.id]['orderpoint'].extend(orderpoint_record)
         route_lines = []
         colors = self._get_route_colors()
         for color_index, route in enumerate(routes):
