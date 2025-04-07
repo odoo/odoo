@@ -4,19 +4,17 @@ import { App, Component, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
-import { getTemplate } from "@web/core/templates";
+import { getTemplate as getTemplateFn } from "@web/core/templates";
 import { isIterable } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
 
 /**
+ * @typedef {import("@odoo/hoot-dom").Target} Target
  * @typedef {import("@odoo/owl").Component} Component
- *
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  *
- * @typedef {Parameters<typeof import("@odoo/owl").mount>[2]} MountOptions
- *
- * @typedef {import("@odoo/hoot-dom").Target} Target
+ * @typedef {ConstructorParameters<typeof App>[1]} AppConfig
  */
 
 /**
@@ -28,7 +26,7 @@ import { getMockEnv, makeMockEnv } from "./env_test_helpers";
 /**
  * @param {ComponentConstructor} ComponentClass
  * @param {HTMLElement | ShadowRoot} targetEl
- * @param {MountOptions} [options]
+ * @param {AppConfig} config
  */
 const mountComponentWithCleanup = (ComponentClass, targetEl, config) => {
     const app = new App(ComponentClass, config);
@@ -97,7 +95,9 @@ export function getDropdownMenu(togglerSelector) {
  * @template [P={}]
  * @template [E=OdooEnv]
  * @param {C | string} ComponentClass
- * @param {MountOptions & {
+ * @param {AppConfig & {
+ *  componentEnv?: Partial<OdooEnv>;
+ *  containerEnv?: Partial<OdooEnv>;
  *  fixtureClassName?: string | string[] | null;
  *  env?: E;
  *  noMainContainer?: boolean;
@@ -106,19 +106,37 @@ export function getDropdownMenu(togglerSelector) {
  * }} [options]
  */
 export async function mountWithCleanup(ComponentClass, options) {
-    const { fixtureClassName = "o_web_client", env, noMainContainer, target } = options || {};
-    const config = {
-        getTemplate,
-        test: true,
-        translateFn: _t,
-        warnIfNoStaticProps: true,
-        ...options,
-        env: env || getMockEnv() || (await makeMockEnv()),
-    };
-    delete config.fixtureClassName;
-    delete config.noMainContainer;
-    delete config.target;
+    const {
+        componentEnv,
+        containerEnv,
+        customDirectives,
+        env,
+        fixtureClassName = "o_web_client",
+        getTemplate = getTemplateFn,
+        globalValues,
+        noMainContainer,
+        props,
+        target,
+        templates,
+        translatableAttributes,
+        translateFn = _t,
+    } = options || {};
 
+    // Common component configuration
+    const commonConfig = {
+        customDirectives,
+        getTemplate,
+        globalValues,
+        templates,
+        translatableAttributes,
+        translateFn,
+        // The following keys are forced to ensure validation of all tested components
+        dev: false,
+        test: true,
+        warnIfNoStaticProps: true,
+    };
+
+    // Fixture
     const fixture = getFixture();
     const targetEl = target ? queryOne(target) : fixture;
     if (fixtureClassName) {
@@ -127,6 +145,7 @@ export async function mountWithCleanup(ComponentClass, options) {
     }
 
     if (typeof ComponentClass === "string") {
+        // Convert templates to components (if needed)
         ComponentClass = class extends Component {
             static name = "anonymous component";
             static props = {};
@@ -134,18 +153,25 @@ export async function mountWithCleanup(ComponentClass, options) {
         };
     }
 
-    /** @type {InstanceType<C>} */
-    const component = await mountComponentWithCleanup(ComponentClass, targetEl, {
-        ...config,
+    const commonEnv = env || getMockEnv() || (await makeMockEnv());
+    const componentConfig = {
+        ...commonConfig,
+        env: Object.assign(Object.create(commonEnv), componentEnv),
         name: `TEST: ${ComponentClass.name}`,
-    });
+        props,
+    };
+
+    /** @type {InstanceType<C>} */
+    const component = await mountComponentWithCleanup(ComponentClass, targetEl, componentConfig);
 
     if (!noMainContainer && !hasMainComponent) {
-        await mountComponentWithCleanup(MainComponentsContainer, targetEl, {
-            ...config,
+        const containerConfig = {
+            ...commonConfig,
+            env: Object.assign(Object.create(commonEnv), containerEnv),
             name: `TEST: ${ComponentClass.name} (main container)`,
             props: {},
-        });
+        };
+        await mountComponentWithCleanup(MainComponentsContainer, targetEl, containerConfig);
     }
 
     return component;
