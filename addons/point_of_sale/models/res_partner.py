@@ -12,7 +12,7 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
-    pos_contact_address = fields.Char('PoS Address', compute='_compute_contact_address')
+    pos_contact_address = fields.Char('PoS Address', compute='_compute_pos_contact_address')
     invoice_emails = fields.Char(compute='_compute_invoice_emails', readonly=True)
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position',
@@ -22,8 +22,8 @@ class ResPartner(models.Model):
              "customers or sales orders/invoices. The default value comes from the customer.",
     )
 
-    def _compute_contact_address(self):
-        super()._compute_contact_address()
+    @api.depends(lambda self: self._display_address_depends())
+    def _compute_pos_contact_address(self):
         for partner in self:
             partner.pos_contact_address = partner._display_address(without_company=True)
 
