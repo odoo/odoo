@@ -6,6 +6,7 @@ import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { _t } from "@web/core/l10n/translation";
 import { WebsiteDialog } from '@website/components/dialog/dialog';
 import { Switch } from '@website/components/switch/switch';
+import { applyTextHighlight, initTextHighlightObserver } from "@website/js/text_processing";
 import { useRef, useState, useSubEnv, Component, onWillStart, onMounted } from "@odoo/owl";
 import wUtils from '@website/js/utils';
 
@@ -218,6 +219,15 @@ export class AddPageTemplatePreview extends Component {
                 holderEl.classList.add("o_ready");
             };
             adjustHeight();
+
+            this.highlightObserverDisconnect = initTextHighlightObserver(
+                iframeEl.contentDocument.getElementById("wrap")
+            );
+            // We only need to apply the highlights once, the `ResizeObserver`
+            // will always track and correctly adapt them to the content size.
+            for (const textEl of iframeEl.contentDocument?.querySelectorAll(".o_text_highlight") || []) {
+                applyTextHighlight(textEl);
+            }
         });
     }
 
@@ -225,6 +235,7 @@ export class AddPageTemplatePreview extends Component {
         if (this.holderRef.el.classList.contains("o_loading")) {
             return;
         }
+        this.highlightObserverDisconnect();
         const wrapEl = this.iframeRef.el.contentDocument.getElementById("wrap").cloneNode(true);
         for (const previewEl of wrapEl.querySelectorAll(".o_new_page_snippet_preview")) {
             previewEl.remove();
