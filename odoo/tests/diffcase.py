@@ -7,7 +7,11 @@ import subprocess
 from collections import defaultdict
 from lxml import etree
 from typing import Generator, Literal
-from unidiff import PatchSet
+
+try:
+    from unidiff import PatchSet
+except ImportError:
+    PatchSet = None
 
 import odoo.addons
 
@@ -237,6 +241,8 @@ class DiffCase:
                     diff_content = f.read()
 
                     # Parse diff using unidiff
+                    if PatchSet is None:
+                        raise ImportError("unidiff is not installed")
                     patch_set = PatchSet.from_string(diff_content)
 
                     # Process each patched file
