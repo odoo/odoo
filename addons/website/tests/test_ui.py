@@ -588,7 +588,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_27_website_clicks(self):
         self.start_tour('/odoo', 'website_click_tour', login='admin')
 
-    @unittest.skip
     def test_29_website_text_edition(self):
         self.start_tour('/@/', 'website_text_edition', login='admin')
 
@@ -766,7 +765,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
         self.start_tour('/', 'website_no_dirty_lazy_image', login='admin')
 
-    @unittest.skip
     def test_website_edit_menus_delete_parent(self):
         website = self.env['website'].browse(1)
         menu_tree = self.env['website.menu'].get_tree(website.id)
