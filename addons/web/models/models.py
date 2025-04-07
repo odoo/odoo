@@ -624,8 +624,7 @@ class Base(models.AbstractModel):
             # Special case for many2many because (<many2many>, '=', False) domain bypass ir.rule.
             def formatter_many2many(value):
                 if not value:
-                    other_values = [other_value.id for other_value in values if other_value]
-                    return False, [(field_name, 'not in', other_values)]
+                    return False, [(field_name, 'not any', [])]
                 id_ = value.id
                 return (id_, value.sudo().display_name), [(field_name, '=', id_)]
 
