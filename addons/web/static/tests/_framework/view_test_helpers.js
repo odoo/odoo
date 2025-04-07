@@ -4,10 +4,10 @@ import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { getDefaultConfig, View } from "@web/views/view";
+import { View } from "@web/views/view";
 import { mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
-import { getMockEnv, getService, makeMockEnv } from "./env_test_helpers";
+import { getService } from "./env_test_helpers";
 import { registerInlineViewArchs } from "./mock_server/mock_model";
 
 /**
@@ -192,20 +192,17 @@ export function fieldInput(name, options) {
  * @param {MountViewParams} params
  */
 export async function mountViewInDialog(params) {
-    const config = { ...getDefaultConfig(), ...params.config };
     const container = await mountWithCleanup(MainComponentsContainer, {
-        env: params.env || getMockEnv() || (await makeMockEnv()),
+        env: params.env,
     });
-
     const deferred = new Deferred();
     getService("dialog").add(ViewDialog, {
-        viewEnv: { config },
+        viewEnv: { config: params.config },
         viewProps: parseViewProps(params),
         onMounted() {
             deferred.resolve();
         },
     });
-
     await deferred;
     return container;
 }
@@ -219,9 +216,9 @@ export async function mountView(params, target = null) {
     actionManagerEl.classList.add("o_action_manager");
     (target ?? getFixture()).append(actionManagerEl);
     after(() => actionManagerEl.remove());
-    const config = { ...getDefaultConfig(), ...params.config };
     return mountWithCleanup(View, {
-        env: params.env || getMockEnv() || (await makeMockEnv({ config })),
+        env: params.env,
+        componentEnv: { config: params.config },
         props: parseViewProps(params),
         target: actionManagerEl,
     });
