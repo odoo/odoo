@@ -96,6 +96,8 @@ const LinkPopoverWidget = Widget.extend({
             // 3. Remain open when the popover content is clicked..
             // 4. ..except if it the click was on a button of the popover content
             // 5. Close when the user click somewhere on the page (not being the link or the popover content)
+            // 6. Closes when context menu is opened.
+            // 7. Closes when the user selects text in link popver and selection is not collapsed.
             trigger: 'manual',
             boundary: 'viewport',
             container: this.container,
@@ -133,7 +135,18 @@ const LinkPopoverWidget = Widget.extend({
         this.popover = Popover.getInstance(this.target);
         this.$target.on('mousedown.link_popover', (e) => {
             if (!popoverShown) {
-                this.$target.popover('show');
+               this.$target.popover('show');
+            }
+        });
+        this.$target.on('contextmenu.link_popover', (e) => {
+            if (popoverShown) {
+                this.$target.popover('hide');
+            }
+        });
+        this.$target.on('mouseup.link_popover', (e) => {
+            const selection = this.options.wysiwyg.odooEditor.document.getSelection();
+            if (popoverShown && !selection.isCollapsed) {
+                this.$target.popover('hide');
             }
         });
         this.$target.on('href_changed.link_popover', (e) => {
