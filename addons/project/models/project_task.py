@@ -880,6 +880,8 @@ class ProjectTask(models.Model):
         )).copy(default=default)
 
         self._resolve_copied_dependencies(copied_tasks)
+        log_message = _("Task Created")
+        copied_tasks._message_log_batch(bodies={task.id: log_message for task in copied_tasks})
 
         return copied_tasks
 
