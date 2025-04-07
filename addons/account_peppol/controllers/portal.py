@@ -15,8 +15,7 @@ class PortalAccount(CustomerPortal):
 
     def _prepare_my_account_rendering_values(self, *args, **kwargs):
         rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
-        can_send = request.env['account_edi_proxy_client.user']._get_can_send_domain()
-        if request.env.company.account_peppol_proxy_state in can_send:
+        if request.env.company.peppol_can_send:
             rendering_values['invoice_sending_methods'].update({'peppol': _("by Peppol")})
             rendering_values.update({
                 'peppol_eas_list': dict(request.env['res.partner']._fields['peppol_eas'].selection),

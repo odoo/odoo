@@ -63,10 +63,9 @@ class AccountMoveSend(models.AbstractModel):
             },
         }
         info_always_on_countries = {'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE'}
-        can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
         any_moves_not_sent_peppol = any(move.peppol_move_state not in ('processing', 'done') for move in moves)
         always_on_companies = moves.company_id.filtered(
-            lambda c: c.country_code in info_always_on_countries and c.account_peppol_proxy_state not in can_send
+            lambda c: c.country_code in info_always_on_countries and not c.peppol_can_send
         )
         if always_on_companies and any_moves_not_sent_peppol and not filter_peppol_state(moves, ['not_valid', 'not_verified']):
             alerts.pop('account_edi_ubl_cii_configure_company', False)
@@ -96,8 +95,7 @@ class AccountMoveSend(models.AbstractModel):
 
     def _do_peppol_pre_send(self, moves):
         if len(moves.company_id) == 1:
-            can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
-            if moves.company_id.account_peppol_proxy_state not in can_send:
+            if not moves.company_id.peppol_can_send:
                 return self.env['peppol.registration'].with_context(default_company_id=moves.company_id.id)._action_open_peppol_form(reopen=False)
 
         for move in moves:
@@ -214,8 +212,7 @@ class AccountMoveSend(models.AbstractModel):
 
     def action_what_is_peppol_activate(self, moves):
         companies = moves.company_id
-        can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
-        if len(companies) == 1 and companies.account_peppol_proxy_state not in can_send:
+        if len(companies) == 1 and not companies.peppol_can_send:
             action = self.env['peppol.registration']._action_open_peppol_form()
             action['context'] = {
                 'active_model': "account.move",

@@ -33,10 +33,9 @@ class AccountMove(models.Model):
 
     @api.depends('state')
     def _compute_peppol_move_state(self):
-        can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
         for move in self:
             if all([
-                move.company_id.account_peppol_proxy_state in can_send,
+                move.company_id.peppol_can_send,
                 move.commercial_partner_id.peppol_verification_state == 'valid',
                 move.state == 'posted',
                 move.is_sale_document(include_receipts=True),
