@@ -110,6 +110,58 @@
     </BuilderRow>
 </t>
 
+<t t-name="website.headerScrollEffectOption">
+    <BuilderRow label.translate="Scroll Effect" t-if="!this.isActiveItem('header_sidebar_opt')">
+        <BuilderSelect action="'websiteConfig'" className="'o_scroll_effects_selector'">
+            <BuilderSelectItem
+                id="'header_visibility_standard_opt'"
+                label.translate="Standard"
+                actionParam="{ views: ['website.header_visibility_standard'], vars: {'header-scroll-effect': 'standard'} }"
+                classAction="'o_header_standard'"
+                className="'o_we_img_animate'"
+            >
+                <img src="/website/static/src/img/snippets_options/header_effect_standard.png" style="--animate-src: '/website/static/src/img/snippets_options/header_effect_standard.gif';"/><span>Standard</span>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                id="'header_effect_scroll_opt'"
+                label.translate="Scroll"
+                actionParam="{ views: [], vars: {'header-scroll-effect': 'scroll'} }"
+                classAction="''"
+                className="'o_we_img_animate'"
+            >
+                <img src="/website/static/src/img/snippets_options/header_effect_scroll.png" style="--animate-src: '/website/static/src/img/snippets_options/header_effect_scroll.gif';"/><span>Scroll</span>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                id="'header_effect_fixed_opt'"
+                label.translate="Fixed"
+                actionParam="{ views: ['website.header_visibility_fixed'], vars: {'header-scroll-effect': 'fixed'} }"
+                classAction="'o_header_fixed'"
+                className="'o_we_img_animate'"
+            >
+                <img src="/website/static/src/img/snippets_options/header_effect_fixed.png" style="--animate-src: '/website/static/src/img/snippets_options/header_effect_fixed.gif';"/><span>Fixed</span>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                id="'header_effect_disappears_opt'"
+                label.translate="Disappears"
+                actionParam="{ views: ['website.header_visibility_disappears'], vars: {'header-scroll-effect': 'disappears'} }"
+                classAction="'o_header_disappears'"
+                className="'o_we_img_animate'"
+            >
+                <img src="/website/static/src/img/snippets_options/header_effect_disappears.png" style="--animate-src: '/website/static/src/img/snippets_options/header_effect_disappears.gif';"/><span>Disappears</span>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                id="'header_effect_fade_out_opt'"
+                label.translate="Fade Out"
+                actionParam="{ views: ['website.header_visibility_fade_out'], vars: {'header-scroll-effect': 'fade-out'} }"
+                classAction="'o_header_fade_out'"
+                className="'o_we_img_animate'"
+            >
+                <img src="/website/static/src/img/snippets_options/header_effect_fade_out.png" style="--animate-src: '/website/static/src/img/snippets_options/header_effect_fade_out.gif';"/><span>Fade Out</span>
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
 <t t-name="website.headerElementOption">
     <BuilderRow label.translate="Elements" action="'websiteConfig'">
         <div class="flex-grow-1">
