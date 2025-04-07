@@ -837,7 +837,7 @@
 </template>
 
 <template id="vertical_alignment_option">
-    <we-button-group t-att-class="indent and 'o_we_sublevel_1'" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
+    <we-button-group t-att-class="indent and 'o_we_sublevel_1'" string="Vertical Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
         <we-button title="Align Top"
                     data-select-class="align-items-start"
                     data-img="/website/static/src/img/snippets_options/align_top.svg"/>
@@ -1060,7 +1060,7 @@
 
     <!--  Vertical Alignment -->
     <div data-js="vAlignment" id="row_valign_snippet_option"
-         data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image"
+         data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_key_images"
          data-target=".row">
         <t t-call="website.vertical_alignment_option">
             <t t-set="indent" t-value="True"/>
