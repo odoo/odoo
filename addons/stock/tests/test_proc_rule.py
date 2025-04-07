@@ -529,10 +529,11 @@ class TestProcRule(TransactionCase):
         Create a selectable on product route and a product without routes. Verify that the orderpoint created
         to replenish that product did not set the new route by default.
         """
+        stock_location = self.env.ref('stock.stock_location_stock')
         interdimensional_protal = self.env['stock.location'].create({
             'name': 'Interdimensional portal',
             'usage': 'internal',
-            'location_id': self.env.ref('stock.stock_location_stock').location_id.id,
+            'location_id': stock_location.location_id.id,
         })
         lovely_route = self.env['stock.route'].create({
             'name': 'Lovely Route',
@@ -544,7 +545,7 @@ class TestProcRule(TransactionCase):
                 'action': 'pull',
                 'picking_type_id': self.ref('stock.picking_type_internal'),
                 'location_src_id': interdimensional_protal.id,
-                'location_dest_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': stock_location.id,
             })],
         })
         lovely_category = self.env['product.category'].create({
@@ -572,7 +573,7 @@ class TestProcRule(TransactionCase):
         moves = self.env['stock.move'].create([
             {
                 'name': 'Create a demand move',
-                'location_id': self.ref('stock.stock_location_stock'),
+                'location_id': stock_location.id,
                 'location_dest_id': self.partner.property_stock_customer.id,
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
@@ -586,11 +587,10 @@ class TestProcRule(TransactionCase):
         replenishments = self.env['stock.warehouse.orderpoint'].search([
             ('product_id', 'in', products.ids),
         ])
-        # Verify that the route is unset
-        self.assertRecordValues(replenishments.sorted('product_id'), [
-            {'product_id': products[0].id, 'location_id': self.ref('stock.stock_location_stock'), 'route_id': False},
-            {'product_id': products[1].id, 'location_id': self.ref('stock.stock_location_stock'), 'route_id': lovely_route.id},
-            {'product_id': products[2].id, 'location_id': self.ref('stock.stock_location_stock'), 'route_id': lovely_route.id},
+        self.assertRecordValues(replenishments.sorted(lambda r: r.product_id.id), [
+            {'product_id': products[0].id, 'location_id': stock_location.id, 'route_id': False},
+            {'product_id': products[1].id, 'location_id': stock_location.id, 'route_id': lovely_route.id},
+            {'product_id': products[2].id, 'location_id': stock_location.id, 'route_id': lovely_route.id},
         ])
 
     def test_orderpoint_compute_warehouse_location(self):
