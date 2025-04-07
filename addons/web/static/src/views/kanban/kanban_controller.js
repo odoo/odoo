@@ -129,7 +129,7 @@ export class KanbanController extends Component {
         this.model = useState(
             useModelWithSampleData(KanbanSampleModel, this.modelParams, this.modelOptions)
         );
-        useBus(this.model.bus, "render", () => this.render());
+        // useBus(this.model.bus, "render", () => this.render());
         if (archInfo.progressAttributes) {
             const { activeBars } = this.props.state || {};
             this.progressBarState = useProgressBar(
@@ -173,6 +173,9 @@ export class KanbanController extends Component {
             }),
         });
         usePager(() => {
+            if (!this.model.isReady) {
+                return;
+            }
             const root = this.model.root;
             const { count, hasLimitedCount, isGrouped, limit, offset } = root;
             if (!isGrouped && !this.model.useSampleModel) {
@@ -196,7 +199,7 @@ export class KanbanController extends Component {
             () => {
                 this.onSelectionChanged();
             },
-            () => [this.model.root.selection?.length, this.model.root.isDomainSelected]
+            () => [this.model.root?.selection?.length, this.model.root?.isDomainSelected]
         );
         onWillStart(async () => {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
@@ -259,7 +262,7 @@ export class KanbanController extends Component {
     }
 
     get hasSelectedRecords() {
-        return this.model.root.selection?.length || this.isDomainSelected;
+        return this.model.isReady && (this.model.root.selection?.length || this.isDomainSelected);
     }
 
     get isDomainSelected() {

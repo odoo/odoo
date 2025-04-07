@@ -16,7 +16,7 @@
                 <t t-set-slot="layout-buttons">
                     <t t-if="!env.isSmall" t-call="{{ props.buttonTemplate }}"/>
                 </t>
-                <t t-set-slot="control-panel-always-buttons">
+                <t t-if="model.isReady" t-set-slot="control-panel-always-buttons">
                     <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
                         <MultiRecordViewButton
                             t-if="button.display === 'always'"
@@ -40,7 +40,7 @@
                     <t t-if="!hasSelectedRecords" t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
 
-                <t t-set-slot="control-panel-additional-actions">
+                <t t-if="model.isReady" t-set-slot="control-panel-additional-actions">
                     <CogMenu t-if="!hasSelectedRecords"/>
                     <CogMenu t-elif="env.isSmall and (props.info.actionMenus or archInfo.headerButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="hasSelectedRecords">
                         <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
@@ -61,7 +61,7 @@
                         </t>
                     </CogMenu>
                 </t>
-                <t t-set-slot="control-panel-selection-actions">
+                <t t-if="model.isReady" t-set-slot="control-panel-selection-actions">
                     <div t-if="hasSelectedRecords" class="o_selection_container m-1 m-md-0 d-flex gap-1">
                         <SelectionBox />
                         <t t-if="!env.isSmall">

@@ -79,7 +79,7 @@ export class ListController extends Component {
         this.editable = (!this.props.readonly && this.archInfo.editable) || false;
         this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
         this.model = useState(useModelWithSampleData(this.props.Model, this.modelParams));
-        useBus(this.model.bus, "render", () => this.render());
+        // useBus(this.model.bus, "render", () => this.render());
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
         // occurs on the change event for input fields. But we don't want to do it when clicking on
@@ -95,7 +95,7 @@ export class ListController extends Component {
 
         this.editedRecord = null;
         onWillRender(() => {
-            this.editedRecord = this.model.root.editedRecord;
+            this.editedRecord = this.model.isReady && this.model.root.editedRecord;
         });
 
         onWillStart(async () => {
@@ -151,7 +151,7 @@ export class ListController extends Component {
         });
 
         usePager(() => {
-            if (this.model.useSampleModel) {
+            if (!this.model.isReady || this.model.useSampleModel) {
                 return;
             }
             const { count, hasLimitedCount, isGrouped, limit, offset } = this.model.root;
@@ -179,7 +179,7 @@ export class ListController extends Component {
             () => {
                 this.onSelectionChanged();
             },
-            () => [this.model.root.selection.length, this.model.root.isDomainSelected]
+            () => [this.model.root?.selection.length, this.model.root?.isDomainSelected]
         );
         this.searchBarToggler = useSearchBarToggler();
         this.firstLoad = true;
@@ -439,7 +439,7 @@ export class ListController extends Component {
     }
 
     get hasSelectedRecords() {
-        return this.model.root.selection.length || this.isDomainSelected;
+        return this.model.isReady && (this.model.root.selection.length || this.isDomainSelected);
     }
 
     get isDomainSelected() {

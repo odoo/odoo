@@ -124,6 +124,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     }
 
     const model = new ModelClass(component.env, params, services);
+    model.isReady = false;
 
     useBus(
         model.bus,
@@ -163,14 +164,19 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
         }
     }
     onWillStart(async () => {
-        if (options.onWillStart) {
-            await options.onWillStart();
-        }
-        await load(component.props);
-        if (options.onWillStartAfterLoad) {
-            await options.onWillStartAfterLoad();
-        }
-        started = true;
+        const initialLoad = async () => {
+            if (options.onWillStart) {
+                await options.onWillStart();
+            }
+            await load(component.props);
+            if (options.onWillStartAfterLoad) {
+                await options.onWillStartAfterLoad();
+            }
+            model.isReady = true;
+            started = true;
+            model.notify();
+        };
+        initialLoad();
     });
     onWillUpdateProps((nextProps) => {
         useSampleModel = false;
