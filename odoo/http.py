@@ -76,7 +76,7 @@ Request._serve_nodb
 Request._serve_db
   Handle all requests that are not static when it is possible to connect
   to a database. It opens a registry on the database and then delegates
-  most of the effort the the ``ir.http`` abstract model. This model acts
+  most of the effort to the ``ir.http`` abstract model. This model acts
   as a module-aware middleware, its implementation in ``base`` is merely
   more than just delegating to Dispatcher.
 
