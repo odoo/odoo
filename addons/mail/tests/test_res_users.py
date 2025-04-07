@@ -42,6 +42,23 @@ class TestNotifySecurityUpdate(MailCommon):
             'subject': 'Security Update: Password Changed',
         })
 
+    @users('employee')
+    def test_security_update_password_after_module_upgrade(self):
+        """ When Contacts is upgraded, load_modules will re-initialize res.users
+        which will check for plaintext passwords in psql and hash them. We do not
+        want these password "changes" to send a security email
+        """
+        self.env.user.write({'notification_type': 'email'})
+        # Set a plaintext password so that the res_users init function hashes it
+        self.env.cr.execute("UPDATE res_users SET password = 'password' WHERE id = %s" % self.env.user.id)
+
+        with self.mock_mail_gateway():
+            # Simulate Contacts module upgrade by calling init manually
+            self.env['res.users'].init()
+            self.env['mail.mail'].sudo().process_email_queue()
+
+        self.assertNotSentEmail()
+
 
 @tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
 class TestUser(MailCommon):

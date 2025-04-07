@@ -429,9 +429,9 @@ class Users(models.Model):
           AND password !~ '^\$[^$]+\$[^$]+\$.'
         """)
         if self.env.cr.rowcount:
-            Users = self.sudo()
+            ctx = self._crypt_context()
             for uid, pw in cr.fetchall():
-                Users.browse(uid).password = pw
+                self._set_encrypted_password(uid, ctx.hash(pw))
 
     def _set_password(self):
         ctx = self._crypt_context()
