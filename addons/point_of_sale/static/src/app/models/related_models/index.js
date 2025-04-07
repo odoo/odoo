@@ -20,7 +20,7 @@ import { processModelDefs } from "./model_defs";
 import { computeBackLinks, createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
 
-const AVAILABLE_EVENT = ["create", "update", "delete"];
+const AVAILABLE_EVENT = ["create", "update", "delete", "load"];
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     const database = opts.databaseTable || {};
@@ -138,7 +138,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         getBy() {
-            return this.readBy(...arguments);
+            // return this.readBy(...arguments);
+            return this.find((r) => r[arguments[0]] === arguments[1]);
         }
 
         get() {
@@ -234,7 +235,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         _sanitizeRawData(vals, options = {}) {
             const { connectRecords = true, serverData = false } = options;
             let dataToConnect;
-            if (!vals.uuid && database[this.name]?.key === "uuid") {
+            if (!vals.uuid && this.fields.uuid) {
                 vals.uuid = uuidv4();
             }
             vals.id = vals["id"] ?? (vals.uuid || uuidv4());
@@ -327,12 +328,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             if (dataToConnect) {
                 this._connectRecords(record, dataToConnect);
             }
-
+            update.fire = false;
             if (!delaySetup) {
                 setupRecord(record, vals, uiState);
-                record.model.triggerEvents("create", { ids: [record.id] });
+                record.model.triggerEvents("create", { ids: [record.id], vals, rawData });
+                update.fire = true;
                 return record;
             }
+            // record.model.triggerEvents("create", { ids: [record.id], vals, rawData });
+            update.fire = true;
             return { record, uiState };
         }
 
@@ -443,10 +447,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 this[STORE_SYMBOL].remove(record);
                 this[STORE_SYMBOL].add(record);
             }
-
-            aggregatedUpdates.fireEventAndDirty({
-                silentModels: opts.silent ? [record.model.name] : [],
-            });
+            if (!opts.silent && update.fire) {
+                aggregatedUpdates.fireEventAndDirty({
+                    // silentModels: opts.silent ? [record.model.name] : [],
+                });
+            }
         }
 
         _delete(record, opts = {}) {
@@ -521,7 +526,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return serialized;
         }
     }
-
+    // FIXME: this is just a hack
+    const update = { fire: true };
     class Models {
         constructor(processedModelDefs) {
             Object.assign(
@@ -634,7 +640,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
                         resultsArray.push(record);
                     }
-                    modelEvents.triggerEvents("create", { ids: createdIds });
+                    modelEvents.triggerEvents("load", { ids: createdIds });
                 }
                 return finalResults;
             } finally {

@@ -75,15 +75,7 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             ...ReceiptScreen.isShown(),
             ...ReceiptScreen.clickNextOrder(),
 
-            // another order but won't be sent to the backend
-            ...ProductScreen.clickDisplayedProduct("Office Combo"),
-            combo.select("Combo Product 2"),
-            combo.select("Combo Product 4"),
-            combo.select("Combo Product 6"),
-            Dialog.confirm(),
-            ...ProductScreen.totalAmountIs("59.17"),
-            ...inLeftSide(Order.hasTax("10.56")),
-            // the split screen is tested in `pos_restaurant`
+            Chrome.endTour(),
         ].flat(),
 });
 

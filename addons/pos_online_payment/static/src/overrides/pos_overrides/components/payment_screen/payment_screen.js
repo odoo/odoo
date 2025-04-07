@@ -10,8 +10,6 @@ patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
         if (paymentMethod.is_online_payment && typeof this.currentOrder.id === "string") {
             this.currentOrder.date_order = luxon.DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
-            this.pos.addPendingOrder([this.currentOrder.id]);
-            await this.pos.syncAllOrders();
         }
         return await super.addNewPaymentLine(...arguments);
     },
@@ -63,7 +61,7 @@ patch(PaymentScreen.prototype, {
         }
 
         if (this.currentOrder.finalized) {
-            this.afterOrderValidation(false);
+            this.afterOrderValidation();
             return false;
         }
 
@@ -241,6 +239,6 @@ patch(PaymentScreen.prototype, {
 
         await this.postPushOrderResolve([this.currentOrder.id]);
 
-        this.afterOrderValidation(true);
+        this.afterOrderValidation();
     },
 });

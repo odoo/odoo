@@ -88,8 +88,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
              {'amount': 10,
               'name': fields.Datetime.now(),
               'payment_method_id': self.pos_config.payment_method_ids[0].id}]],
-           'last_order_preparation_change': '{}',
            'user_id': self.env.uid}
 
-        order = self.env['pos.order'].sync_from_ui([pos_order])
+        order = self.env['pos.order'].create([pos_order])
         self.assertEqual(self.env['pos.order'].browse(order['pos.order'][0]['id']).picking_ids.move_line_ids.lot_id, lot1)

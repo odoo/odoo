@@ -56,10 +56,6 @@ export class DataServiceOptions {
         return indexes;
     }
 
-    get autoLoadedOrmMethods() {
-        return ["read", "search_read", "create"];
-    }
-
     get pohibitedAutoLoadedModels() {
         return [
             "pos.session",
