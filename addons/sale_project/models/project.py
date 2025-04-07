@@ -910,12 +910,9 @@ class ProjectTask(models.Model):
             return search_on_comodel
         return sales_orders
 
-    @api.depends('sale_line_id', 'project_id', 'partner_id.commercial_partner_id', 'allow_billable')
+    @api.depends('sale_line_id', 'project_id', 'partner_id.commercial_partner_id')
     def _compute_sale_order_id(self):
         for task in self:
-            if not task.allow_billable:
-                task.sale_order_id = False
-                continue
             sale_order = (
                 task.sale_line_id.order_id
                 or task.project_id.sale_order_id

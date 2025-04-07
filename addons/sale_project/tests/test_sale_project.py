@@ -891,3 +891,22 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order_form = Form(self.env['sale.order'].with_user(milestone_user), view='sale_project.view_order_form_inherit_sale_project')
         project_ids = sale_order_form._view['fields'].get('project_ids')
         self.assertTrue(project_ids, "'project_ids' field should be present for milestone users in the sale order form")
+
+    def test_non_billable_task_sale_order_id(self):
+        project = self.env['project.project'].create({
+            "name": "Test Task's Smart Button",
+            "allow_billable": False,
+        })
+        prod = self.env['product.product'].create({
+            'name': 'elct',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id': project.id
+        })
+        partner = self.env['res.partner'].create({'name': 'Val Kilmer'})
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [(0, 0, {'product_id': prod.id, 'product_uom_qty': 1})]
+        })
+        so.action_confirm()
+        self.assertEqual(len(so.tasks_ids[0].sale_order_id), 1)
