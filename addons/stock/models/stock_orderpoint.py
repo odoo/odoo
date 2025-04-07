@@ -339,7 +339,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _search_qty_to_order(self, operator, value):
         records = self.search_fetch([('qty_to_order_manual', 'in', [0, False])], ['qty_to_order_computed'])
         matched_ids = records.filtered_domain([('qty_to_order_computed', operator, value)]).ids
-        return ['|',
+        return ['&',
                     ('qty_to_order_manual', operator, value),
                     ('id', 'in', matched_ids)
                 ]
