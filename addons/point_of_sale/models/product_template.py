@@ -139,7 +139,7 @@ class ProductTemplate(models.Model):
         domain = self._server_date_to_domain(domain)
         return self.with_context(context).search(
             domain,
-            order='sequence,default_code,name')
+            order='sequence,name')
 
     def _process_pos_ui_product_product(self, products, config_id):
 
