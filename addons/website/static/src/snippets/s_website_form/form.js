@@ -24,6 +24,10 @@ const { DateTime } = luxon;
 
 export class Form extends Interaction {
     static selector = ".s_website_form form, form.s_website_form"; // !compatibility
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _endMessage: () => this.el.parentNode.querySelector(".s_website_form_end_message"),
+    };
     dynamicContent = {
         ".s_website_form_send, .o_website_form_send": { "t-on-click.prevent": this.send }, // !compatibility
         _root: {
@@ -32,7 +36,7 @@ export class Form extends Interaction {
                 "d-none": this.isHidden,
             })
         },
-        ".s_website_form_end_message": {
+        _endMessage: {
             "t-att-class": () => ({
                 "d-none": !this.isHidden,
             })
@@ -438,6 +442,7 @@ export class Form extends Interaction {
                             await delay(400);
 
                             this.isHidden = true;
+                            this.updateContent();
                             break;
                         }
                         default: {
