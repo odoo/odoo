@@ -1,6 +1,6 @@
 import { ImStatus } from "@mail/core/common/im_status";
 
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
 
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
@@ -67,6 +67,7 @@ export class ChatBubble extends Component {
             },
             () => [this.thread.importantCounter]
         );
+        useSubEnv({ inChatBubble: true });
     }
 
     /** @returns {import("models").Thread} */

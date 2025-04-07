@@ -2,9 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ImStatus">
-        <div class="o-mail-ImStatus d-flex justify-content-center flex-shrink-0 align-items-center rounded-circle bg-inherit" t-attf-class="{{ props.className }}" t-att-style="props.style" t-att-class="{
+        <div class="o-mail-ImStatus d-flex justify-content-center flex-shrink-0 align-items-center bg-inherit" t-attf-class="{{ props.className }}" t-att-style="props.style" t-att-class="{
             'o-md': props.size === 'md' or props.size === 'medium',
             'o-sm': props.size === 'sm' or props.size === 'small',
+            'rounded-circle': !props.member?.isTyping,
+            'rounded-pill': props.member?.isTyping,
         }">
             <span class="d-flex flex-column" t-att-class="{
                 'smaller': props.size === 'md' or props.size === 'medium',
@@ -19,7 +21,11 @@
                         <i t-elif="persona.im_status === 'bot'" class="fa fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
                         <i t-else="" class="fa fa-fw fa-question-circle opacity-75" title="No IM status available"/>
                     </t>
-                    <Typing t-if="props.member?.isTyping" member="props.member" channel="props.member.threadAsTyping" size="'medium'" displayText="false" />
+                    <div t-if="props.member?.isTyping" class="rounded-pill" style="padding: 1px;" t-att-class="{ 'bg-300': env.inChatBubble, 'bg-inherit': !env.inChatBubble }">
+                        <div class="bg-success rounded-pill" style="padding: 3px;">
+                            <Typing member="props.member" channel="props.member.threadAsTyping" size="'md'" displayText="false" />
+                        </div>
+                    </div>
                 </t>
             </span>
         </div>

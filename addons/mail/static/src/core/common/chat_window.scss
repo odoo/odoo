@@ -14,6 +14,9 @@
     &.o-quick {
         opacity: 15%;
     }
+    &.o-actionsMenu {
+        background-color: inherit !important;
+    }
     &:not(.o-actionsMenu) {
         padding: map-get($spacers, 1) / 2;
     }
@@ -54,6 +57,11 @@
         height: $o-mail-Avatar-sizeSmall;
         width: $o-mail-Avatar-sizeSmall;
     }
+}
+
+.o-mail-ChatWindow-imStatus {
+    bottom: -2px;
+    right: -2px;
 }
 
 .o-mail-ChatWindow-typing {
