@@ -114,7 +114,7 @@ WebsiteSale.include({
             if (selectedCustomPtav) {
                 serializedProduct.product_custom_attribute_values.push({
                     custom_product_template_attribute_value_id: selectedCustomPtav.id,
-                    custom_value: ptal.customValue,
+                    custom_value: ptal.customValue || '',
                 });
             }
         }
