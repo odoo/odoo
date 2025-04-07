@@ -17,10 +17,13 @@ export class ResPartner extends Base {
         ];
         return fields
             .map((field) => {
-                if ((field === "phone" || field === "mobile") && this[field]) {
-                    return this[field].split(" ").join("");
+                const value = this[field] || "";
+                if ((field === "phone" || field === "mobile") && value) {
+                    // Include both versions: with and without spaces
+                    const withoutSpaces = value.split(" ").join("");
+                    return `${value} ${withoutSpaces}`;
                 }
-                return this[field] || "";
+                return value;
             })
             .filter(Boolean)
             .join(" ");
