@@ -1195,6 +1195,7 @@ class AccountMoveLine(models.Model):
             'context': {
                 'active_model': 'account.move.line',
                 'active_ids': self.ids,
+                'active_move_ids': self.move_id.ids,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
