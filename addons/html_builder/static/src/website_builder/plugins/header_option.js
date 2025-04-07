@@ -13,6 +13,12 @@ class HeaderOptionPlugin extends Plugin {
                 selector: "header",
                 groups: ["website.group_website_designer"],
             }),
+            withSequence(80, {
+                editableOnly: false,
+                template: "website.headerScrollEffectOption",
+                selector: "#wrapwrap > header",
+                groups: ["website.group_website_designer"],
+            }),
             withSequence(100, {
                 editableOnly: false,
                 template: "website.headerElementOption",

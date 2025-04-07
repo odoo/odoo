@@ -13,6 +13,7 @@ export class BuilderSelectItem extends Component {
         ...clickableBuilderComponentProps,
         id: { type: String, optional: true },
         title: { type: String, optional: true },
+        label: { type: String, optional: true },
         className: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
@@ -29,7 +30,7 @@ export class BuilderSelectItem extends Component {
             // todo: it's not clear why the item.el?.innerHTML is not set at in
             // some cases. We fallback on a previously set value to circumvent
             // the problem, but it should be investigated.
-            label = item.el?.innerHTML || label || "";
+            label = this.props.label || item.el?.innerHTML || label || "";
             return label;
         };
 
