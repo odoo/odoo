@@ -517,14 +517,13 @@ class TestPartnerAddressCompany(TransactionCase):
         for child in inv, deli, other:
             self.assertEqual(child.street, f'{child.name} Street', 'Should not be updated')
 
-        # UPSTREAM: child -> parent update: not done currently, consider contact is readonly
+        # UPSTREAM: child -> parent update: contact update company
         ct1.write(self.test_address_values_3)
-        for fname, fvalue in self.test_address_values_2_compare.items():
-            self.assertEqual(self.test_parent[fname], fvalue)
-            self.assertEqual(ct2[fname], fvalue)
         for fname, fvalue in self.test_address_values_3_compare.items():
+            self.assertEqual(self.test_parent[fname], fvalue)
             self.assertEqual(ct1[fname], fvalue)
             self.assertEqual(ct1_1[fname], fvalue)
+            self.assertEqual(ct2[fname], fvalue)
 
     @users('employee')
     def test_address_first_contact_sync(self):
@@ -572,8 +571,8 @@ class TestPartnerAddressCompany(TransactionCase):
                         self.assertEqual(parent[fname], fvalue, 'Should sync void parent to first contact')
                 elif parent in (full_parent_ct, full_parent_comp):
                     for fname, fvalue in self.test_address_values_2_compare.items():
-                        self.assertEqual(p1[fname], fvalue, 'Parent wins over creation values')
                         self.assertEqual(parent[fname], fvalue, 'Should not sync parent with address to first contact')
+                        self.assertEqual(p1[fname], fvalue, 'Parent wins over creation values')
                 elif parent == full_parent_withparent:
                     for fname, fvalue in self.test_address_values_compare.items():
                         self.assertEqual(p1[fname], fvalue)
