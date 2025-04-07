@@ -93,8 +93,12 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'project_id': False,
         })
 
+        # Create company
+        cls.new_company = cls.env['res.partner'].create({'name': 'new_company', 'is_company': True, 'company_type': 'company'})
+
         # Create partner
         cls.partner = cls.env['res.partner'].create({'name': "Mur en béton"})
+        cls.individual_partner = cls.env['res.partner'].create({'name': "test partner", 'company_type': 'person', 'parent_id': cls.new_company.id, 'commercial_partner_id': cls.new_company.id})
 
         project = cls.env['project.project'].create({
             'name': 'Test History Project',
@@ -167,6 +171,8 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
 
         self.assertEqual(self.project_global._get_sale_order_items(), self.project_global.sale_line_id | self.project_global.tasks.sale_line_id, 'The _get_sale_order_items should returns all the SOLs linked to the project and its active tasks.')
 
+        self.assertEqual(so_line_order_task_in_global.task_id.name, f"{sale_order.name} - {('[' + so_line_order_task_in_global.product_id.default_code + ']') if so_line_order_task_in_global.product_id.default_code else ''} {so_line_order_task_in_global.product_id.name} - {so_line_order_task_in_global.order_id.partner_id.name}")
+
         sale_order_2 = SaleOrder.create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -214,6 +220,36 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             self.assertDictEqual(line, expected_sale_line_dict[sol_id])
         self.assertNotIn(section_sale_line_order_2.id, actual_sol_ids, 'The section Sales Order Item should not be takken into account in the Sales section of project.')
         self.assertNotIn(note_sale_line_order_2.id, actual_sol_ids, 'The note Sales Order Item should not be takken into account in the Sales section of project.')
+
+        sale_order_3 = SaleOrder.create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+
+        so_line_order_only_project_3 = SaleOrderLine.create({
+            'product_id': self.product_order_service4.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order_3.id,
+        })
+        sale_order_3.action_confirm()
+
+        self.assertEqual(so_line_order_only_project_3.project_id.name, f"{sale_order_3.name} - {('[' + so_line_order_only_project_3.product_id.default_code + ']') if so_line_order_only_project_3.product_id.default_code else ''} {so_line_order_only_project_3.product_id.name} - {so_line_order_only_project_3.order_id.partner_id.name}")
+
+        sale_order_4 = SaleOrder.create({
+            'partner_id': self.individual_partner.id,
+            'partner_invoice_id': self.individual_partner.id,
+            'partner_shipping_id': self.individual_partner.id,
+        })
+
+        so_line_order_only_project_4 = SaleOrderLine.create({
+            'product_id': self.product_order_service4.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order_4.id,
+        })
+        sale_order_4.action_confirm()
+
+        self.assertEqual(so_line_order_only_project_4.project_id.name, f"{sale_order_4.name} - {('[' + so_line_order_only_project_3.product_id.default_code + ']') if so_line_order_only_project_4.product_id.default_code else ''} {so_line_order_only_project_4.product_id.name} - {so_line_order_only_project_4.order_id.partner_id.commercial_company_name}")
 
     def test_sol_product_type_update(self):
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
