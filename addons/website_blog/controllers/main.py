@@ -209,8 +209,11 @@ class WebsiteBlog(http.Controller):
 
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
 
-        if tag and request.httprequest.method == 'GET':
-            # redirect get tag-1,tag-2 -> get tag-1
+        # Checking request.env.user._is_internal() to see if the GET request is NOT from
+        # a bot, in which case the extra tags should not be removed
+        if tag and request.httprequest.method == 'GET' and not request.env.user._is_internal():
+            # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
+            # in GET request for proper bot indexation;
             tags = tag.split(',')
             if len(tags) > 1:
                 url = QueryURL('' if blog else '/blog', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end, search=search)()
