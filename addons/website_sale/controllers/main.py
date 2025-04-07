@@ -886,6 +886,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         try_skip_step = str2bool(try_skip_step or 'false')
         order_sudo = request.cart
+        extra_step = request.website.viewref('website_sale.extra_info')
         request.session['sale_last_order_id'] = order_sudo.id
 
         if redirection := self._check_cart_and_addresses(order_sudo):
@@ -908,7 +909,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     order_sudo._set_delivery_method(delivery_method, rate=rate)
 
         if try_skip_step and can_skip_delivery:
-            return request.redirect('/shop/confirm_order')
+            if extra_step.active:
+                return request.redirect('/shop/extra_info')
+            return request.redirect('/shop/payment')
 
         return request.render('website_sale.checkout', checkout_page_values)
 
@@ -1361,21 +1364,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         order_sudo._update_address(partner_id, partner_fnames)
 
-    @route(['/shop/confirm_order'], type='http', auth="public", website=True, sitemap=False)
-    def shop_confirm_order(self, **post):
-        order_sudo = request.cart
-
-        if redirection := self._check_cart_and_addresses(order_sudo):
-            return redirection
-
-        order_sudo._recompute_taxes()
-        order_sudo._recompute_prices()
-        extra_step = request.website.viewref('website_sale.extra_info')
-        if extra_step.active:
-            return request.redirect("/shop/extra_info")
-
-        return request.redirect("/shop/payment")
-
     # === CHECKOUT FLOW - EXTRA STEP METHODS === #
 
     @route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False)
@@ -1456,6 +1444,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
+
+        order_sudo._recompute_taxes()
+        order_sudo._recompute_prices()
 
         render_values = self._get_shop_payment_values(order_sudo, **post)
         render_values['only_services'] = order_sudo and order_sudo.only_services

@@ -595,7 +595,7 @@ class Website(models.Model):
             'name': _lt("Delivery"),
             'current_href': '/shop/checkout',
             'main_button': _lt("Confirm"),
-            'main_button_href': f'{"/shop/extra_info" if is_extra_step_active else "/shop/confirm_order"}',
+            'main_button_href': f'{"/shop/extra_info" if is_extra_step_active else "/shop/payment"}',
             'back_button':  _lt("Back to cart"),
             'back_button_href': '/shop/cart',
         })]
@@ -604,7 +604,7 @@ class Website(models.Model):
                 'name': _lt("Extra Info"),
                 'current_href': '/shop/extra_info',
                 'main_button': _lt("Continue checkout"),
-                'main_button_href': '/shop/confirm_order',
+                'main_button_href': '/shop/payment',
                 'back_button':  _lt("Back to delivery"),
                 'back_button_href': '/shop/checkout',
             }))

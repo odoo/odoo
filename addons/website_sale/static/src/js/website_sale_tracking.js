@@ -6,7 +6,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
         'click form a.a-submit': '_onAddProductIntoCart',
         'click a[href^="/shop/checkout"]': '_onCheckoutStart',
         'click a[href^="/web/login?redirect"][href*="/shop/checkout"]': '_onCustomerSignin',
-        'click form[action="/shop/confirm_order"] a.a-submit': '_onOrder',
+        'click form[action="/shop/payment"] a.a-submit': '_onOrder',
         'click form[target="_self"] button[type=submit]': '_onOrderPayment',
         'view_item_event': '_onViewItem',
         'add_to_cart_event': '_onAddToCart',
