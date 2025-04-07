@@ -1914,6 +1914,35 @@ class TestAssetsManifest(AddonManifestPatched):
             """
         )
 
+    def test_dynamic_t_call_asset(self):
+        view = self.env["ir.ui.view"].create({
+            "type": "qweb",
+            "arch": """<div>
+                    <t t-foreach="assets" t-as="asset" >
+                        <t t-call-assets="{{ asset }}" />
+                    </t>
+                    <t t-call-assets="test_assetsbundle.bundle3" />
+                </div>
+                """
+        })
+        assets = ['test_assetsbundle.bundle2', 'test_assetsbundle.bundle4']
+        rendered = self.env["ir.qweb"]._render(view.id, {"assets": assets})
+        attachs = self.env['ir.attachment'].search(["|", "|", ('name', 'ilike', 'test_assetsbundle.bundle2'), ('name', 'ilike', 'test_assetsbundle.bundle4'), ('name', 'ilike', 'test_assetsbundle.bundle3')], order='create_date DESC')
+        self.assertEqual(len(attachs), 4)
+
+        name_to_id = {attach.name: attach.id for attach in attachs}
+        self.assertXMLEqual(rendered, f"""
+            <div>
+              <link type="text/css" rel="stylesheet" href="/web/assets/{name_to_id['test_assetsbundle.bundle2.min.css']}-a9d354a/test_assetsbundle.bundle2.min.css"/>
+              <script type="text/javascript" src="http://test.external.link/javascript1.js"/>
+              <link type="text/css" rel="stylesheet" href="http://test.external.link/style1.css"/>
+              <script type="text/javascript" src="http://test.external.link/javascript2.js"/>
+              <link type="text/css" rel="stylesheet" href="http://test.external.link/style2.css"/>
+              <link type="text/css" rel="stylesheet" href="/web/assets/{name_to_id['test_assetsbundle.bundle4.min.css']}-6d50dfd/test_assetsbundle.bundle4.min.css"/>
+              <script type="text/javascript" src="/web/assets/{name_to_id['test_assetsbundle.bundle4.min.js']}-a25a439/test_assetsbundle.bundle4.min.js" onerror="__odooAssetError=1"/>
+              <link type="text/css" rel="stylesheet" href="/web/assets/{name_to_id['test_assetsbundle.bundle3.min.css']}-d28e585/test_assetsbundle.bundle3.min.css"/>
+            </div>""")
+
 @tagged('-at_install', 'post_install')
 class AssetsNodeOrmCacheUsage(TransactionCase):
 

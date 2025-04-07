@@ -2223,7 +2223,8 @@ class IrQweb(models.AbstractModel):
             raise SyntaxError("t-call-assets cannot contain children nodes")
 
         code = self._flush_text(compile_context, level)
-        xmlid = el.attrib.pop('t-call-assets')
+        xmlid = self._compile_format(el.attrib.pop("t-call-assets"))
+
         css = self._compile_bool(el.attrib.pop('t-css', True))
         js = self._compile_bool(el.attrib.pop('t-js', True))
         # async_load support was removed
@@ -2233,7 +2234,7 @@ class IrQweb(models.AbstractModel):
         autoprefix = self._compile_bool(el.attrib.pop('t-autoprefix', False))
         code.append(indent_code(f"""
             t_call_assets_nodes = self._get_asset_nodes(
-                {xmlid!r},
+                {xmlid},
                 css={css},
                 js={js},
                 debug=values.get("debug"),
