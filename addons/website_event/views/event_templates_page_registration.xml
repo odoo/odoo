@@ -77,7 +77,7 @@
                                     <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge">
                                         <i class="fa fa-check me-2" role="img"/>Registered
                                     </span>
-                                    <h2 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3"/>
+                                    <h1 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3 h2-fs"/>
                                     <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
                                 </div>
                             </t>
@@ -396,7 +396,7 @@
         <div class="container my-5 o_wereg_confirmed">
             <div class="row mb-3">
                 <div class="col-12">
-                    <h3>Registration confirmed!</h3>
+                    <h1 class="h3-fs">Registration confirmed!</h1>
                     <u><a class="h4 text-primary" t-out="event.name" t-att-href="event.website_url" /></u>
                 </div>
             </div>
