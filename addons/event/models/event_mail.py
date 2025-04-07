@@ -305,14 +305,14 @@ class EventMail(models.Model):
             elif mail_slot and mail_slot.last_registration_id:
                 total_sent = self.env["event.registration"].search_count([
                     ("id", "<=", mail_slot.last_registration_id.id),
-                    ("event_id", "=", self.event_id.id),
+                    ("event_id", "=", scheduler.event_id.id),
                     ("event_slot_id", "=", mail_slot.event_slot_id.id),
                     ("state", "not in", ["draft", "cancel"]),
                 ])
                 mail_slot.mail_count_done = total_sent
                 mail_slot.mail_done = total_sent >= mail_slot.event_slot_id.seats_taken
-                self.mail_count_done = sum(self.mail_slot_ids.mapped('mail_count_done'))
-                self.mail_done = total_sent >= self.event_id.seats_taken
+                scheduler.mail_count_done = sum(scheduler.mail_slot_ids.mapped('mail_count_done'))
+                scheduler.mail_done = total_sent >= scheduler.event_id.seats_taken
             elif scheduler.last_registration_id:
                 total_sent = self.env["event.registration"].search_count([
                     ("id", "<=", self.last_registration_id.id),
