@@ -4,7 +4,8 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { useChildRef } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
+import { TimePickerBottomSheet } from "./time_picker_bottom_sheet";
 
 const HOURS = [...Array(24)].map((_, i) => i);
 const MINUTES = [...Array(60)].map((_, i) => i);
@@ -45,6 +46,7 @@ export class TimePicker extends Component {
         this.inputRef = useRef("inputRef");
         this.menuRef = useChildRef();
         this.dropdownState = useDropdownState();
+        this.bottomSheetService = useService("bottomSheet");
 
         this.state = useState({
             value: new Time(),
@@ -162,12 +164,12 @@ export class TimePicker extends Component {
      */
     setValue(newValue, cleanValue = true) {
         if (cleanValue) {
-            if (this.props.minutesRounding > 1) {
+            if (this.props.minutesRounding > 1 && !this.env.isSmall) {
                 newValue.roundMinutes(this.props.minutesRounding);
             }
             // If showSeconds is false, keep the seconds from
             // the original props.value
-            if (!this.props.showSeconds && this.state.value) {
+            if (!this.props.showSeconds && this.state.value && !this.env.isSmall) {
                 newValue.second = this.state.value.second;
             }
         }
@@ -194,6 +196,9 @@ export class TimePicker extends Component {
      * @param {InputEvent} event
      */
     onInput(event) {
+        // If on mobile, don't handle input here
+        if (this.env.isSmall) return;
+
         this.ensureOpen();
 
         const value = parseTime(this.inputRef.el.value, this.props.showSeconds);
@@ -216,6 +221,9 @@ export class TimePicker extends Component {
     }
 
     onChange() {
+        // If on mobile, don't handle change here
+        if (this.env.isSmall) return;
+
         const value = parseTime(this.inputRef.el.value, this.props.showSeconds);
         this.state.isValid = value !== null;
         if (this.state.isValid) {
@@ -233,12 +241,39 @@ export class TimePicker extends Component {
         this.isNavigating = ["arrowup", "arrowdown"].includes(getActiveHotkey(event));
     }
 
+    /**
+     * Opens dropdown or bottom sheet depending on device
+     */
     ensureOpen() {
-        if (!this.dropdownState.isOpen) {
+        if (this.env.isSmall) {
+            // On mobile, open the bottom sheet
+            this.openBottomSheet();
+        } else if (!this.dropdownState.isOpen) {
+            // On desktop, open the dropdown (existing behavior)
             this.isNavigating = false;
             this.dropdownState.open();
             this.inputRef.el.select();
         }
+    }
+
+    /**
+     * Opens a bottom sheet with time picker on mobile devices
+     */
+    openBottomSheet() {
+        const currentValue = this.state.value;
+
+        this.bottomSheetService.add(
+            TimePickerBottomSheet,
+            {
+                value: currentValue,
+                showSeconds: this.props.showSeconds,
+                minutesRounding: this.props.minutesRounding,
+                onConfirm: (value) => {
+                    this.setValue(value);
+                },
+                onDiscard: () => {},
+            },
+        );
     }
 
     close() {

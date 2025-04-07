@@ -1,0 +1,92 @@
+// Styles for the bottom sheet time picker
+
+.o_time_picker_bottom_sheet {
+    $-cell_height: 48px; // Must match the JS value
+    $-scroll_size: 7;
+
+    // Columns container
+    .o_time_picker_columns {
+        height: $-cell_height * $-scroll_size;
+        background-color: $o-view-background-color;
+        font-size: 1.6rem;
+
+        // Selection indicator - highlights the currently selected rows
+        &::before, &::after {
+            @include o-position-absolute(0, 0, 0, 0);
+            border-bottom: $border-width solid $o-action;
+            z-index: 1;
+            background-image: linear-gradient($o-view-background-color, rgba($o-view-background-color, 0));
+            pointer-events: none;
+            touch-action: none;
+            content: '';
+        }
+
+        &::before {
+            bottom: calc(50% + #{$-cell_height * .5});
+        }
+
+        &::after {
+            top: calc(50% + #{$-cell_height * .5});
+            transform: scaleY(-1);
+        }
+    }
+
+    // Visual selection indicator (center highlight)
+    .o_time_picker_selection_indicator {
+        @include o-position-absolute(50%, 0, auto, 0);
+        height: $-cell_height;
+        background-color: rgba($component-active-bg, 0.4);
+    }
+
+    // Individual scrollable column
+    .o_time_picker_column {
+        flex: 1;
+        scroll-snap-type: y mandatory;
+
+        // Add space before and after to allow centering
+        padding: ($-cell_height * (($-scroll_size - 1 ) * .5)) 0;
+
+        // Hide scrollbar
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    // Individual time cell
+    .o_time_picker_cell {
+        height: $-cell_height;
+        scroll-snap-align: center;
+        transition: transform 0.2s ease, color 0.2s ease;
+        transform: scale(.6);
+
+        &.o_time_picker_cell_selected {
+            font-weight: bold;
+            color: $component-active-color;
+            transform: scale(1);
+        }
+
+        &.o_time_picker_cell_preceding, &.o_time_picker_cell_selected + .o_time_picker_cell {
+            transform: scale(0.8);
+        }
+    }
+}
+
+// Mobile-specific input styling
+@include media-breakpoint-down(md) {
+    .o_time_picker {
+        input.o_time_picker_input {
+            text-align: center;
+            background-color: transparent;
+            border: 1px solid $border-color;
+            border-radius: $border-radius;
+            padding: 0.375rem 0.75rem;
+
+            &:focus {
+                border-color: $primary;
+                box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
+            }
+        }
+    }
+}
