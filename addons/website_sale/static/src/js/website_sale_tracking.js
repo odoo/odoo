@@ -6,8 +6,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
         'click form a.a-submit': '_onAddProductIntoCart',
         'click a[href^="/shop/checkout"]': '_onCheckoutStart',
         'click a[href^="/web/login?redirect"][href*="/shop/checkout"]': '_onCustomerSignin',
-        'click form[action="/shop/confirm_order"] a.a-submit': '_onOrder',
-        'click form[target="_self"] button[type=submit]': '_onOrderPayment',
+        'click a[name="website_sale_main_button"][href="/shop/payment"]': '_onOrderPayment',
         'view_item_event': '_onViewItem',
         'add_to_cart_event': '_onAddToCart',
     },
@@ -101,16 +100,11 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onOrder: function () {
+    _onOrderPayment: function () {
         if ($('header#top [href="/web/login"]').length) {
             this._vpv('/stats/ecom/customer_signup');
         }
         this._vpv('/stats/ecom/order_checkout');
-    },
-    /**
-     * @private
-     */
-    _onOrderPayment: function () {
         var method = $('#payment_method input[name=provider]:checked').nextAll('span:first').text();
         this._vpv('/stats/ecom/order_payment/' + method);
     },
