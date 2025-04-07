@@ -76,7 +76,7 @@ patch(PaymentScreen.prototype, {
      * @override
      */
     async _postPushOrderResolve(order, server_ids) {
-        if (order.isPaid()) {
+        if (!["draft", "cancel"].includes(order.state)) {
             await this._postProcessLoyalty(order);
         }
         return super._postPushOrderResolve(order, server_ids);
