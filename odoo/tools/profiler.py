@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import nullcontext
 from datetime import datetime
 import gc
 import json
@@ -653,6 +654,9 @@ class Profiler:
             if self.log:
                 _logger.info(self.summary())
 
+    def _get_cm_proxy(self):
+        return Nested(self)
+
     def _add_file_lines(self, stack):
         for index, frame in enumerate(stack):
             (filename, lineno, name, line) = frame
@@ -730,16 +734,16 @@ class Nested:
     be ignored, too. This is also why Nested() does not use
     contextlib.contextmanager.
     """
-    def __init__(self, profiler, context_manager):
-        self.profiler = profiler
-        self.context_manager = context_manager
+    def __init__(self, profiler, context_manager=None):
+        self._profiler__ = profiler
+        self.context_manager = context_manager or nullcontext()
 
     def __enter__(self):
-        self.profiler.__enter__()
+        self._profiler__.__enter__()
         return self.context_manager.__enter__()
 
     def __exit__(self, exc_type, exc_value, traceback):
         try:
             return self.context_manager.__exit__(exc_type, exc_value, traceback)
         finally:
-            self.profiler.__exit__(exc_type, exc_value, traceback)
+            self._profiler__.__exit__(exc_type, exc_value, traceback)

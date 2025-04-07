@@ -66,7 +66,7 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             self.registry.get_sequences(self.cr)
             self.url_open(url)
 
-        profiler = nested_profiler.profiler
+        profiler = nested_profiler._profiler__
         self.assertEqual(len(profiler.sub_profilers), 1, "we expect to have only one accessed url") # if not adapt the code below
         route_profiler = profiler.sub_profilers[0]
         route_entries = route_profiler.collectors[0].entries
