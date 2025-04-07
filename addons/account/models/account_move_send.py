@@ -191,7 +191,7 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_placeholder_mail_template_dynamic_attachments_data(self, move, mail_template, pdf_report=None):
-        invoice_template = pdf_report or self._get_default_pdf_report_id(move)
+        invoice_template = (pdf_report or self._get_default_pdf_report_id(move)) + self.env.ref('account.account_invoices')
         extra_mail_templates = mail_template.report_template_ids - invoice_template
         filename = move._get_invoice_report_filename()
         return [
