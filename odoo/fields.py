@@ -1658,6 +1658,11 @@ class Monetary(Field):
     def convert_to_write(self, value, record):
         return value
 
+    def convert_to_export(self, value, record):
+        if value or value == 0.0:
+            return value
+        return ''
+
 
 class _String(Field):
     """ Abstract class for string fields. """
