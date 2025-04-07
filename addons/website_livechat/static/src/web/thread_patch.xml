@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="website_livechat.Thread" t-inherit="mail.Thread" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-Thread')]" position="before">
-            <t t-set="visitor" t-value="props.thread.visitor"/>
+            <t t-set="visitor" t-value="props.thread.livechatVisitorMember?.persona"/>
             <div t-if="visitor and !env.inChatWindow" class="o-website_livechat-VisitorBanner py-4 px-2 d-flex border-bottom">
                 <div t-if="props.thread.correspondent" class="o-website_livechat-VisitorBanner-sidebar me-2 d-flex justify-content-center">
                     <img class="rounded o-website_livechat-VisitorBanner-avatar o_object_fit_cover" t-att-src="props.thread.correspondent.persona.avatarUrl" alt="Avatar"/>
