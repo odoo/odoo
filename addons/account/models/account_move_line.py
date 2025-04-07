@@ -1216,15 +1216,16 @@ class AccountMoveLine(models.Model):
     def _check_payable_receivable(self):
         for line in self:
             account_type = line.account_id.account_type
+            usable_as_partner_account = line.account_id.usable_as_partner_account
             if line.move_id.is_sale_document(include_receipts=True):
-                if account_type == 'liability_payable':
+                if account_type == 'liability_payable' and not usable_as_partner_account :
                     raise UserError(_("Account %s is of payable type, but is used in a sale operation.", line.account_id.code))
-                if (line.display_type == 'payment_term') ^ (account_type == 'asset_receivable'):
+                if (line.display_type == 'payment_term') ^ (account_type == 'asset_receivable' or usable_as_partner_account):
                     raise UserError(_("Any journal item on a receivable account must have a due date and vice versa."))
             if line.move_id.is_purchase_document(include_receipts=True):
-                if account_type == 'asset_receivable':
+                if account_type == 'asset_receivable' and not usable_as_partner_account:
                     raise UserError(_("Account %s is of receivable type, but is used in a purchase operation.", line.account_id.code))
-                if (line.display_type == 'payment_term') ^ (account_type == 'liability_payable'):
+                if (line.display_type == 'payment_term') ^ (account_type == 'liability_payable' or usable_as_partner_account):
                     raise UserError(_("Any journal item on a payable account must have a due date and vice versa."))
 
     def _affect_tax_report(self):

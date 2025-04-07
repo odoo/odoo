@@ -543,11 +543,11 @@ class ResPartner(models.Model):
         string="Currency") # currency of amount currency
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
-        domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False)]",
+        domain="[('deprecated', '=', False), '|', ('account_type', '=', 'liability_payable'), ('usable_as_partner_account', '=', True)]",
         ondelete='restrict')
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
-        domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False)]",
+        domain="[('deprecated', '=', False), '|', ('account_type', '=', 'asset_receivable'), ('usable_as_partner_account', '=', True)]",
         ondelete='restrict')
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",

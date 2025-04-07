@@ -1,3 +1,4 @@
+import logging
 from bisect import bisect_left
 from collections import defaultdict
 from collections.abc import Iterable
@@ -142,6 +143,31 @@ class AccountAccount(models.Model):
 
     # Form view: show code mapping tab or not
     display_mapping_tab = fields.Boolean(default=lambda self: len(self.env.user.company_ids) > 1, store=False)
+
+    # # Field to indicate if the account can be used on products
+    # usable_on_product = fields.Boolean(
+    #     string="Usable on Products",
+    #     help="Enable this option to allow using this account on product templates and categories."
+    # )
+
+    # Field to indicate if the account can be used as a partner account
+    usable_as_partner_account = fields.Boolean(
+        string="Usable as Partner Account",
+        help="Enable this option to allow using this account as payable or receivable for partners."
+    )
+
+    @api.onchange('account_type')
+    def _onchange_account_type_usable_bool(self):
+        """
+        Automatically manage `usable_on_product` and `usable_as_partner_account`
+        based on the account type.
+        """
+        for record in self:
+            # if record.account_type in ['asset_receivable', 'liability_payable']:
+            #     record.usable_on_product = False
+            if record.account_type not in ['asset_receivable',
+                                             'liability_payable']:
+                record.usable_as_partner_account = False
 
     def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         if field_expr == 'internal_group':
