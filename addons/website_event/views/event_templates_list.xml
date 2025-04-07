@@ -50,7 +50,7 @@
 <template id="index_topbar" name="Topbar">
     <div class="container">
         <section class="o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
-            <h2 class="me-auto mb-0 h4">Events</h2>
+            <h1 class="me-auto mb-0 h4-fs">Events</h1>
             <t t-foreach="categories" t-as="category">
                 <div t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" class="dropdown d-none d-lg-block">
                     <t t-set="searched_category_tags" t-value="search_tags.filtered(lambda tag: tag.category_id == category)"/>
