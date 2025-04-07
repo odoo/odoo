@@ -78,11 +78,20 @@ class TestLinkPreview(MailCommon):
         content = b""""""
         return self._patched_get_html(None, content)
 
+    def _patch_with_xml_declaration(self, *args, **kwargs):
+        content = b"""<?xml version="1.0" encoding="UTF-8"?>
+        <html>
+        <head>
+        </head>
+        </html>"""
+        return self._patched_get_html("text/html", content)
+
     def test_get_link_preview_from_url(self):
         test_cases = [
             (self._patch_with_og_properties, self.source_url),
             (self._patch_without_og_properties, self.source_url),
             (self._patch_with_image_mimetype, self.og_image),
+            (self._patch_with_xml_declaration, self.source_url)
         ]
         expected_values = [
             {
@@ -108,6 +117,7 @@ class TestLinkPreview(MailCommon):
                 'og_image': self.og_image,
                 'source_url': self.og_image,
             },
+            False
         ]
         session = requests.Session()
         for (get_patch, url), expected in zip(test_cases, expected_values):
