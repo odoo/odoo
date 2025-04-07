@@ -112,6 +112,6 @@ class HrLeave(models.Model):
         If the employee were to take a time off ending on wednesday, the legal duration would count until friday.
         """
         if self._l10n_fr_leave_applies():
-            return super()._get_duration(resource_calendar=(resource_calendar or self.company_id.resource_calendar_id))
+            return super()._get_duration(resource_calendar=(resource_calendar or self.resource_calendar_id or self.company_id.resource_calendar_id))
         else:
             return super()._get_duration(resource_calendar)
