@@ -20,9 +20,9 @@
 <template id="index" name="Find Resellers">
     <t t-call="website_crm_partner_assign.layout">
         <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
-            <h2 class="me-auto mb-0 h4">
+            <h1 class="me-auto mb-0 h4 h2-fs">
                 Find a reseller <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
-            </h2>
+            </h1>
             <t t-set='all_categories_label'>All Categories</t>
             <div class="dropdown d-none d-lg-block">
                 <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
@@ -156,13 +156,13 @@
             <t t-set="last_grade" t-value="None"/>
             <t t-foreach="partners" t-as="partner">
                 <t t-if="last_grade != partner.grade_id.id">
-                    <h5 class="mt-3 mb-2 col-12">
+                    <h2 class="mt-3 mb-2 col-12 h5-fs">
                         <span t-field="partner.grade_id"/> Resellers
                         <t t-call="website.publish_management">
                             <t t-set="object" t-value="partner.grade_id"/>
                             <t t-set="publish_edit" t-value="True"/>
                         </t>
-                    </h5>
+                    </h2>
                     <t t-set="last_grade" t-value="partner.grade_id.id"/>
                 </t>
                 <div class="col-md-4 col-xl-3 col-12 mb-4">
@@ -173,7 +173,7 @@
                                 t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
                                 />
                             <div class="card-body">
-                                <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
+                                <h2 class="card-title m-0 h5-fs" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
                                 <small id="o_wcrm_partners_address"/>
                                 <small class="o_wcrm_short_description text-muted overflow-hidden">
                                     <b t-if="partner.implemented_partner_count">
