@@ -452,20 +452,65 @@ export class MailMessage extends models.ServerModel {
      * @param {number} [limit=30]
      * @returns {Object[]}
      */
-    _message_fetch(domain, search_term, before, after, around, limit) {
+    _message_fetch(domain, search_term, search_type, before, after, around, limit) {
+        /** @type {import("mock_models").IrAttachment} */
+        const IrAttachment = this.env["ir.attachment"];
+        /** @type {import("mock_models").MailMessageSubtype} */
+        const MailMessageSubtype = this.env["mail.message.subtype"];
+        /** @type {import("mock_models").MailTrackingValue} */
+        const MailTrackingValue = this.env["mail.tracking.value"];
         ({
             domain,
             search_term,
+            search_type,
             before,
             after,
             around,
             limit = 30,
-        } = getKwArgs(arguments, "domain", "search_term", "before", "after", "around", "limit"));
-
+        } = getKwArgs(
+            arguments,
+            "domain",
+            "search_term",
+            "search_type",
+            "before",
+            "after",
+            "around",
+            "limit"
+        ));
         const res = {};
         if (search_term) {
+            const searchDomain = [];
             search_term = search_term.replace(" ", "%");
-            domain.push(["body", "ilike", search_term]);
+            const subtypeIds = MailMessageSubtype.search([["description", "ilike", search_term]]);
+            const trackingValueIds = MailTrackingValue.search(
+                this._get_tracking_values_domain(search_term)
+            );
+            if (!search_type || search_type === "all_activity") {
+                searchDomain.push(
+                    "|",
+                    "|",
+                    "|",
+                    "|",
+                    ["body", "ilike", search_term],
+                    ["attachment_ids", "in", IrAttachment.search([["name", "ilike", search_term]])],
+                    ["subject", "ilike", search_term],
+                    ["subtype_id", "in", subtypeIds],
+                    ["tracking_value_ids", "in", trackingValueIds]
+                );
+            } else if (search_type === "conversation") {
+                searchDomain.push(
+                    "|",
+                    "|",
+                    "|",
+                    ["body", "ilike", search_term],
+                    ["attachment_ids", "in", IrAttachment.search([["name", "ilike", search_term]])],
+                    ["subject", "ilike", search_term],
+                    ["subtype_id", "in", subtypeIds]
+                );
+            } else if (search_type === "tracked_changes") {
+                searchDomain.push(["tracking_value_ids", "in", trackingValueIds]);
+            }
+            domain = domain.concat(searchDomain);
             res.count = this.search_count(domain);
         }
         if (around !== undefined) {
@@ -493,6 +538,34 @@ export class MailMessage extends models.ServerModel {
         messages.length = Math.min(messages.length, limit);
         res.messages = messages;
         return res;
+    }
+
+    _get_tracking_values_domain(search_term) {
+        let numeric_term = false;
+        try {
+            numeric_term = parseFloat(search_term);
+        } catch {}
+        const domain = [
+            "|",
+            "|",
+            "|",
+            ["old_value_char", "ilike", search_term],
+            ["new_value_char", "ilike", search_term],
+            ["old_value_text", "ilike", search_term],
+            ["new_value_text", "ilike", search_term],
+        ];
+        if (numeric_term) {
+            domain.push(
+                "|",
+                "|",
+                "|",
+                ["old_value_integer", "=", numeric_term],
+                ["new_value_integer", "=", numeric_term],
+                ["old_value_float", "=", numeric_term],
+                ["new_value_float", "=", numeric_term]
+            );
+        }
+        return domain;
     }
 
     /**
