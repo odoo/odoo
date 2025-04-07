@@ -68,11 +68,11 @@ export class ResUserGroupIdsField extends Component {
 
     onRecordChanged(_, values) {
         const groupIds = Object.values(values).filter((groupId) => groupId);
-        const groupIdsNotInCategories = this.props.record.data.group_ids.currentIds.filter(
+        const groupIdsNotInCategories = this.props.record.data[this.props.name].currentIds.filter(
             (id) => !this.groupIdsInCategories.includes(id)
         );
         const allGroupIds = groupIdsNotInCategories.concat(groupIds);
-        return this.props.record.update({ group_ids: [x2ManyCommands.set(allGroupIds)] });
+        return this.props.record.update({ [this.props.name]: [x2ManyCommands.set(allGroupIds)] });
     }
 }
 
