@@ -822,7 +822,763 @@ class HrExpense(models.Model):
         expenses.update_activities_and_mails()
         return expenses
 
+<<<<<<< saas-18.2
     # --------------------------------------------
+||||||| 1ca879612fe546108fd1067839924ae8c25b2bb9
+    def unlink(self):
+        attachments_to_unlink = self.env['ir.attachment']
+        for sheet in self.sheet_id:
+            checksums = set((sheet.expense_line_ids.attachment_ids & self.attachment_ids).mapped('checksum'))
+            attachments_to_unlink += sheet.attachment_ids.filtered(lambda att: att.checksum in checksums)
+        attachments_to_unlink.with_context(sync_attachment=False).unlink()
+        return super().unlink()
+
+    @api.model
+    def get_empty_list_help(self, help_message):
+        return super().get_empty_list_help((help_message or '') + self._get_empty_list_mail_alias())
+
+    @api.model
+    def _get_empty_list_mail_alias(self):
+        use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
+        expense_alias = self.env.ref('hr_expense.mail_alias_expense') if use_mailgateway else False
+        if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
+            # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
+            params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
+            return Markup(
+                """<div class="text-muted mt-4">%(send_string)s <a class="text-body" href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></div>"""
+            ) % {
+                'alias_email': expense_alias.display_name,
+                'params': params,
+                'send_string': _("Tip: try sending receipts by email"),
+            }
+        return ""
+
+    def get_expense_attachments(self):
+        return self.attachment_ids.mapped('image_src')
+
+    def check_amount_not_zero(self, vals):
+        error_msgs = []
+        if 'total_amount' in vals:
+            if any(expense.company_currency_id.is_zero(vals['total_amount']) for expense in self):
+                error_msgs.append(_("You cannot set the expense total to 0 if it's linked to a report."))
+        if 'total_amount_currency' in vals:
+            if any(expense.currency_id.is_zero(vals['total_amount_currency']) for expense in self):
+                error_msgs.append(_("You cannot set the expense total in currency to 0 if it's linked to a report."))
+        if error_msgs:
+            raise UserError("\n".join(error_msgs))
+
+    # ----------------------------------------
+    # Actions
+    # ----------------------------------------
+
+    def action_show_same_receipt_expense_ids(self):
+        self.ensure_one()
+        return self.same_receipt_expense_ids._get_records_action(
+            name=_("Expenses with a similar receipt to %(other_expense_name)s", other_expense_name=self.name),
+        )
+
+    def action_view_sheet(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'views': [[False, "form"]],
+            'res_model': 'hr.expense.sheet',
+            'target': 'current',
+            'res_id': self.sheet_id.id
+        }
+
+    def _get_default_expense_sheet_values(self):
+        # If there is an expense with total_amount == 0, it means that expense has not been processed by OCR yet
+        expenses_with_amount = self.filtered(lambda expense: not (
+            expense.currency_id.is_zero(expense.total_amount_currency)
+            or expense.company_currency_id.is_zero(expense.total_amount)
+            or (expense.product_id and not float_round(expense.quantity, precision_rounding=expense.product_uom_id.rounding))
+        ))
+
+        if any(expense.state != 'draft' or expense.sheet_id for expense in expenses_with_amount):
+            raise UserError(_("You cannot report twice the same line!"))
+        if not expenses_with_amount:
+            raise UserError(_("You cannot report the expenses without amount!"))
+        if len(expenses_with_amount.mapped('employee_id')) != 1:
+            raise UserError(_("You cannot report expenses for different employees in the same report."))
+        if any(not expense.product_id for expense in expenses_with_amount):
+            raise UserError(_("You can not create report without category."))
+        if len(self.company_id) != 1:
+            raise UserError(_("You cannot report expenses for different companies in the same report."))
+
+        # Check if two reports should be created
+        own_expenses = expenses_with_amount.filtered(lambda x: x.payment_mode == 'own_account')
+        company_expenses = expenses_with_amount - own_expenses
+        create_two_reports = own_expenses and company_expenses
+
+        sheets = (own_expenses, company_expenses) if create_two_reports else (expenses_with_amount,)
+        values = []
+
+        # We use a fallback name only when several expense sheets are created,
+        # else we use the form view required name to force the user to set a name
+        for todo in sheets:
+            paid_by = 'company' if todo[0].payment_mode == 'company_account' else 'employee'
+            sheet_name = self.env['hr.expense.sheet']._get_default_sheet_name(todo)
+            if not sheet_name and len(sheets) > 1:
+                sheet_name = _("New Expense Report, paid by %(paid_by)s", paid_by=paid_by)
+            values.append({
+                'company_id': self.company_id.id,
+                'employee_id': self[0].employee_id.id,
+                'name': sheet_name,
+                'expense_line_ids': [Command.set(todo.ids)],
+                'state': 'draft',
+            })
+        return values
+
+    def get_expenses_to_submit(self):
+        # if there ere no records selected, then select all draft expenses for the user
+        if self:
+            expenses = self.filtered(lambda expense: expense.state == 'draft' and not expense.sheet_id and expense.is_editable)
+        else:
+            expenses = self.env['hr.expense'].search([
+                ('state', '=', 'draft'),
+                ('sheet_id', '=', False),
+                ('employee_id', '=', self.env.user.employee_id.id),
+            ]).filtered(lambda expense: expense.is_editable)
+
+        if not expenses:
+            raise UserError(_('You have no expense to report'))
+        return expenses.action_submit_expenses()
+
+    def _create_sheets_from_expense(self):
+        if self.filtered(lambda expense: not expense.is_editable):
+            raise UserError(_('You are not authorized to edit this expense.'))
+        sheets = self.env['hr.expense.sheet'].create(self._get_default_expense_sheet_values())
+        return sheets
+
+    def action_submit_expenses(self):
+        sheets = self._create_sheets_from_expense()
+        return {
+            'name': _('New Expense Reports'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.expense.sheet',
+            'context': self.env.context,
+            'views': [[False, "list"], [False, "form"]] if len(sheets) > 1 else [[False, "form"]],
+            'domain': [('id', 'in', sheets.ids)],
+            'res_id': sheets.id if len(sheets) == 1 else False,
+        }
+
+    def action_get_attachment_view(self):
+        self.ensure_one()
+        res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
+        res.update({
+            'domain': [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)],
+            'context': {'default_res_model': 'hr.expense', 'default_res_id': self.id},
+        })
+        return res
+
+    def action_approve_duplicates(self):
+        root = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
+        for expense in self.duplicate_expense_ids:
+            expense.message_post(
+                body=_('%(user)s confirms this expense is not a duplicate with similar expense.', user=self.env.user.name),
+                author_id=root,
+            )
+
+    def _get_split_values(self):
+        self.ensure_one()
+        half_price = self.total_amount_currency / 2
+        price_round_up = float_round(half_price, precision_digits=self.currency_id.decimal_places, rounding_method='UP')
+        price_round_down = float_round(half_price, precision_digits=self.currency_id.decimal_places, rounding_method='DOWN')
+
+        return [{
+            'name': self.name,
+            'product_id': self.product_id.id,
+            'total_amount_currency': price,
+            'tax_ids': self.tax_ids.ids,
+            'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
+            'analytic_distribution': self.analytic_distribution,
+            'employee_id': self.employee_id.id,
+            'expense_id': self.id,
+        } for price in (price_round_up, price_round_down)]
+
+    def action_split_wizard(self):
+        self.ensure_one()
+        splits = self.env['hr.expense.split'].create(self._get_split_values())
+
+        wizard = self.env['hr.expense.split.wizard'].create({
+            'expense_split_line_ids': splits.ids,
+            'expense_id': self.id,
+        })
+        return {
+            'name': _('Expense split'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'views': [[False, "form"]],
+            'res_model': 'hr.expense.split.wizard',
+            'res_id': wizard.id,
+            'target': 'new',
+            'context': self.env.context,
+        }
+
+    # ----------------------------------------
+    # Business
+    # ----------------------------------------
+
+    def _get_move_line_name(self):
+        """ Helper to get the name of the account move lines related to an expense """
+        self.ensure_one()
+        expense_name = self.name.split("\n")[0][:64]
+        return _('%(employee_name)s: %(expense_name)s', employee_name=self.employee_id.name, expense_name=expense_name)
+
+    def _prepare_payments_vals(self):
+        self.ensure_one()
+
+        journal = self.sheet_id.journal_id
+        payment_method_line = self.sheet_id.payment_method_line_id
+        if not payment_method_line:
+            raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
+
+        AccountTax = self.env['account.tax']
+        rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 0.0
+        base_line = self._prepare_base_line_for_taxes_computation(
+            price_unit=self.total_amount_currency,
+            quantity=1.0,
+            account_id=self._get_base_account(),
+            rate=rate,
+        )
+        base_lines = [base_line]
+        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, self.company_id, include_caba_tags=self.payment_mode == 'company_account')
+        tax_results = AccountTax._prepare_tax_lines(base_lines, self.company_id)
+
+        # Base line.
+        move_lines = []
+        for base_line, to_update in tax_results['base_lines_to_update']:
+            base_move_line = {
+                'name': self._get_move_line_name(),
+                'account_id': base_line['account_id'].id,
+                'product_id': base_line['product_id'].id,
+                'analytic_distribution': base_line['analytic_distribution'],
+                'expense_id': self.id,
+                'tax_ids': [Command.set(base_line['tax_ids'].ids)],
+                'tax_tag_ids': to_update['tax_tag_ids'],
+                'amount_currency': to_update['amount_currency'],
+                'balance': to_update['balance'],
+                'currency_id': base_line['currency_id'].id,
+                'partner_id': self.vendor_id.id,
+                'quantity': self.quantity,
+            }
+            move_lines.append(base_move_line)
+
+        # Tax lines.
+        total_tax_line_balance = 0.0
+        for tax_line in tax_results['tax_lines_to_add']:
+            total_tax_line_balance += tax_line['balance']
+            move_lines.append(tax_line)
+        base_move_line['balance'] = self.total_amount - total_tax_line_balance
+
+        # Outstanding payment line.
+        move_lines.append({
+            'name': self._get_move_line_name(),
+            'account_id': self.sheet_id._get_expense_account_destination(),
+            'balance': -self.total_amount,
+            'amount_currency': self.currency_id.round(-self.total_amount_currency),
+            'currency_id': self.currency_id.id,
+            'partner_id': self.vendor_id.id,
+        })
+        payment_vals = {
+            'date': self.date,
+            'memo': self.name,
+            'journal_id': journal.id,
+            'amount': self.total_amount_currency,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'partner_id': self.vendor_id.id,
+            'currency_id': self.currency_id.id,
+            'payment_method_line_id': payment_method_line.id,
+            'company_id': self.company_id.id,
+        }
+        move_vals = {
+            **self.sheet_id._prepare_move_vals(),
+            'ref': self.name,
+            'date': self.date,  # Overidden from self.sheet_id._prepare_move_vals() so we can use the expense date for the account move date
+            'journal_id': journal.id,
+            'partner_id': self.vendor_id.id,
+            'currency_id': self.currency_id.id,
+            'line_ids': [Command.create(line) for line in move_lines],
+            'attachment_ids': [
+                Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
+                for attachment in self.message_main_attachment_id]
+        }
+        return move_vals, payment_vals
+
+    def _get_base_account(self):
+        """
+        Returns the expense account or forces default values if none was found
+        We need to do this as the installation process may delete the original account, and it doesn't recompute properly after
+        Returned expense accounts are the first expense account encountered in the following list:
+        1. expense account of the expense itself
+        2. expense account of the product
+        3. expense account of the product category
+        4. expense account on the purchase journal for employee expense
+        """
+
+        # expense account of the expense itself
+        account = self.account_id
+
+        if account:
+            return account
+
+        # expense account of the product then the product category
+        if self.product_id:
+            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+        else:
+            field = self.env['product.category']._fields['property_account_expense_categ_id']
+            account = field.get_company_dependent_fallback(self.env['product.category'])
+
+        if account:
+            return account
+
+        # expense account on the purchase journal for employee expense
+        journal = self.sheet_id.journal_id
+        if journal.type == 'purchase':
+            account = journal.default_account_id
+
+        return account
+
+    def _prepare_move_lines_vals(self):
+        self.ensure_one()
+        account = self._get_base_account()
+
+        return {
+            'name': self._get_move_line_name(),
+            'account_id': account.id,
+            'quantity': self.quantity or 1,
+            'price_unit': self.price_unit,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom_id.id,
+            'analytic_distribution': self.analytic_distribution,
+            'expense_id': self.id,
+            'partner_id': False if self.payment_mode == 'company_account' else self.employee_id.sudo().work_contact_id.id,
+            'tax_ids': [Command.set(self.tax_ids.ids)],
+        }
+
+    @api.model
+    def get_expense_dashboard(self):
+        expense_state = {
+            'to_submit': {
+                'description': _('to submit'),
+                'amount': 0.0,
+                'currency': self.env.company.currency_id.id,
+            },
+            'submitted': {
+                'description': _('under validation'),
+                'amount': 0.0,
+                'currency': self.env.company.currency_id.id,
+            },
+            'approved': {
+                'description': _('to be reimbursed'),
+                'amount': 0.0,
+                'currency': self.env.company.currency_id.id,
+            }
+        }
+        if not self.env.user.employee_ids:
+            return expense_state
+        target_currency = self.env.company.currency_id
+        # Counting the expenses to display in the dashboard:
+        # - To submit: contains the expenses paid either by the employee or by the company, and that are draft or reported
+        # - Under validation: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
+        # - To be reimbursed: contains ONLY expenses paid by the employee that are approved, the payment has not yet been made
+        expenses = self._read_group(
+            [
+                ('employee_id', 'in', self.env.user.employee_ids.ids),
+                '|', '&', ('payment_mode', 'in', ('own_account', 'company_account')), ('state', 'in', ('draft', 'reported', 'submitted')),
+                     '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
+            ], ['state'], ['total_amount:sum'])
+        for state, total_amount_sum in expenses:
+            if state in {'draft', 'reported'}:  # Fuse the two states into only one "To Submit" state
+                state = 'to_submit'
+            expense_state[state]['amount'] += total_amount_sum
+        return expense_state
+
+    # ----------------------------------------
+=======
+    def unlink(self):
+        attachments_to_unlink = self.env['ir.attachment']
+        for sheet in self.sheet_id:
+            checksums = set((sheet.expense_line_ids.attachment_ids & self.attachment_ids).mapped('checksum'))
+            attachments_to_unlink += sheet.attachment_ids.filtered(lambda att: att.checksum in checksums)
+        attachments_to_unlink.with_context(sync_attachment=False).unlink()
+        return super().unlink()
+
+    @api.model
+    def get_empty_list_help(self, help_message):
+        return super().get_empty_list_help((help_message or '') + self._get_empty_list_mail_alias())
+
+    @api.model
+    def _get_empty_list_mail_alias(self):
+        use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
+        expense_alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False) if use_mailgateway else False
+        if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
+            # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
+            params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
+            return Markup(
+                """<div class="text-muted mt-4">%(send_string)s <a class="text-body" href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></div>"""
+            ) % {
+                'alias_email': expense_alias.display_name,
+                'params': params,
+                'send_string': _("Tip: try sending receipts by email"),
+            }
+        return ""
+
+    def get_expense_attachments(self):
+        return self.attachment_ids.mapped('image_src')
+
+    def check_amount_not_zero(self, vals):
+        error_msgs = []
+        if 'total_amount' in vals:
+            if any(expense.company_currency_id.is_zero(vals['total_amount']) for expense in self):
+                error_msgs.append(_("You cannot set the expense total to 0 if it's linked to a report."))
+        if 'total_amount_currency' in vals:
+            if any(expense.currency_id.is_zero(vals['total_amount_currency']) for expense in self):
+                error_msgs.append(_("You cannot set the expense total in currency to 0 if it's linked to a report."))
+        if error_msgs:
+            raise UserError("\n".join(error_msgs))
+
+    # ----------------------------------------
+    # Actions
+    # ----------------------------------------
+
+    def action_show_same_receipt_expense_ids(self):
+        self.ensure_one()
+        return self.same_receipt_expense_ids._get_records_action(
+            name=_("Expenses with a similar receipt to %(other_expense_name)s", other_expense_name=self.name),
+        )
+
+    def action_view_sheet(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'views': [[False, "form"]],
+            'res_model': 'hr.expense.sheet',
+            'target': 'current',
+            'res_id': self.sheet_id.id
+        }
+
+    def _get_default_expense_sheet_values(self):
+        # If there is an expense with total_amount == 0, it means that expense has not been processed by OCR yet
+        expenses_with_amount = self.filtered(lambda expense: not (
+            expense.currency_id.is_zero(expense.total_amount_currency)
+            or expense.company_currency_id.is_zero(expense.total_amount)
+            or (expense.product_id and not float_round(expense.quantity, precision_rounding=expense.product_uom_id.rounding))
+        ))
+
+        if any(expense.state != 'draft' or expense.sheet_id for expense in expenses_with_amount):
+            raise UserError(_("You cannot report twice the same line!"))
+        if not expenses_with_amount:
+            raise UserError(_("You cannot report the expenses without amount!"))
+        if len(expenses_with_amount.mapped('employee_id')) != 1:
+            raise UserError(_("You cannot report expenses for different employees in the same report."))
+        if any(not expense.product_id for expense in expenses_with_amount):
+            raise UserError(_("You can not create report without category."))
+        if len(self.company_id) != 1:
+            raise UserError(_("You cannot report expenses for different companies in the same report."))
+
+        # Check if two reports should be created
+        own_expenses = expenses_with_amount.filtered(lambda x: x.payment_mode == 'own_account')
+        company_expenses = expenses_with_amount - own_expenses
+        create_two_reports = own_expenses and company_expenses
+
+        sheets = (own_expenses, company_expenses) if create_two_reports else (expenses_with_amount,)
+        values = []
+
+        # We use a fallback name only when several expense sheets are created,
+        # else we use the form view required name to force the user to set a name
+        for todo in sheets:
+            paid_by = 'company' if todo[0].payment_mode == 'company_account' else 'employee'
+            sheet_name = self.env['hr.expense.sheet']._get_default_sheet_name(todo)
+            if not sheet_name and len(sheets) > 1:
+                sheet_name = _("New Expense Report, paid by %(paid_by)s", paid_by=paid_by)
+            values.append({
+                'company_id': self.company_id.id,
+                'employee_id': self[0].employee_id.id,
+                'name': sheet_name,
+                'expense_line_ids': [Command.set(todo.ids)],
+                'state': 'draft',
+            })
+        return values
+
+    def get_expenses_to_submit(self):
+        # if there ere no records selected, then select all draft expenses for the user
+        if self:
+            expenses = self.filtered(lambda expense: expense.state == 'draft' and not expense.sheet_id and expense.is_editable)
+        else:
+            expenses = self.env['hr.expense'].search([
+                ('state', '=', 'draft'),
+                ('sheet_id', '=', False),
+                ('employee_id', '=', self.env.user.employee_id.id),
+            ]).filtered(lambda expense: expense.is_editable)
+
+        if not expenses:
+            raise UserError(_('You have no expense to report'))
+        return expenses.action_submit_expenses()
+
+    def _create_sheets_from_expense(self):
+        if self.filtered(lambda expense: not expense.is_editable):
+            raise UserError(_('You are not authorized to edit this expense.'))
+        sheets = self.env['hr.expense.sheet'].create(self._get_default_expense_sheet_values())
+        return sheets
+
+    def action_submit_expenses(self):
+        sheets = self._create_sheets_from_expense()
+        return {
+            'name': _('New Expense Reports'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.expense.sheet',
+            'context': self.env.context,
+            'views': [[False, "list"], [False, "form"]] if len(sheets) > 1 else [[False, "form"]],
+            'domain': [('id', 'in', sheets.ids)],
+            'res_id': sheets.id if len(sheets) == 1 else False,
+        }
+
+    def action_get_attachment_view(self):
+        self.ensure_one()
+        res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
+        res.update({
+            'domain': [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)],
+            'context': {'default_res_model': 'hr.expense', 'default_res_id': self.id},
+        })
+        return res
+
+    def action_approve_duplicates(self):
+        root = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
+        for expense in self.duplicate_expense_ids:
+            expense.message_post(
+                body=_('%(user)s confirms this expense is not a duplicate with similar expense.', user=self.env.user.name),
+                author_id=root,
+            )
+
+    def _get_split_values(self):
+        self.ensure_one()
+        half_price = self.total_amount_currency / 2
+        price_round_up = float_round(half_price, precision_digits=self.currency_id.decimal_places, rounding_method='UP')
+        price_round_down = float_round(half_price, precision_digits=self.currency_id.decimal_places, rounding_method='DOWN')
+
+        return [{
+            'name': self.name,
+            'product_id': self.product_id.id,
+            'total_amount_currency': price,
+            'tax_ids': self.tax_ids.ids,
+            'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
+            'analytic_distribution': self.analytic_distribution,
+            'employee_id': self.employee_id.id,
+            'expense_id': self.id,
+        } for price in (price_round_up, price_round_down)]
+
+    def action_split_wizard(self):
+        self.ensure_one()
+        splits = self.env['hr.expense.split'].create(self._get_split_values())
+
+        wizard = self.env['hr.expense.split.wizard'].create({
+            'expense_split_line_ids': splits.ids,
+            'expense_id': self.id,
+        })
+        return {
+            'name': _('Expense split'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'views': [[False, "form"]],
+            'res_model': 'hr.expense.split.wizard',
+            'res_id': wizard.id,
+            'target': 'new',
+            'context': self.env.context,
+        }
+
+    # ----------------------------------------
+    # Business
+    # ----------------------------------------
+
+    def _get_move_line_name(self):
+        """ Helper to get the name of the account move lines related to an expense """
+        self.ensure_one()
+        expense_name = self.name.split("\n")[0][:64]
+        return _('%(employee_name)s: %(expense_name)s', employee_name=self.employee_id.name, expense_name=expense_name)
+
+    def _prepare_payments_vals(self):
+        self.ensure_one()
+
+        journal = self.sheet_id.journal_id
+        payment_method_line = self.sheet_id.payment_method_line_id
+        if not payment_method_line:
+            raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
+
+        AccountTax = self.env['account.tax']
+        rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 0.0
+        base_line = self._prepare_base_line_for_taxes_computation(
+            price_unit=self.total_amount_currency,
+            quantity=1.0,
+            account_id=self._get_base_account(),
+            rate=rate,
+        )
+        base_lines = [base_line]
+        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, self.company_id, include_caba_tags=self.payment_mode == 'company_account')
+        tax_results = AccountTax._prepare_tax_lines(base_lines, self.company_id)
+
+        # Base line.
+        move_lines = []
+        for base_line, to_update in tax_results['base_lines_to_update']:
+            base_move_line = {
+                'name': self._get_move_line_name(),
+                'account_id': base_line['account_id'].id,
+                'product_id': base_line['product_id'].id,
+                'analytic_distribution': base_line['analytic_distribution'],
+                'expense_id': self.id,
+                'tax_ids': [Command.set(base_line['tax_ids'].ids)],
+                'tax_tag_ids': to_update['tax_tag_ids'],
+                'amount_currency': to_update['amount_currency'],
+                'balance': to_update['balance'],
+                'currency_id': base_line['currency_id'].id,
+                'partner_id': self.vendor_id.id,
+                'quantity': self.quantity,
+            }
+            move_lines.append(base_move_line)
+
+        # Tax lines.
+        total_tax_line_balance = 0.0
+        for tax_line in tax_results['tax_lines_to_add']:
+            total_tax_line_balance += tax_line['balance']
+            move_lines.append(tax_line)
+        base_move_line['balance'] = self.total_amount - total_tax_line_balance
+
+        # Outstanding payment line.
+        move_lines.append({
+            'name': self._get_move_line_name(),
+            'account_id': self.sheet_id._get_expense_account_destination(),
+            'balance': -self.total_amount,
+            'amount_currency': self.currency_id.round(-self.total_amount_currency),
+            'currency_id': self.currency_id.id,
+            'partner_id': self.vendor_id.id,
+        })
+        payment_vals = {
+            'date': self.date,
+            'memo': self.name,
+            'journal_id': journal.id,
+            'amount': self.total_amount_currency,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'partner_id': self.vendor_id.id,
+            'currency_id': self.currency_id.id,
+            'payment_method_line_id': payment_method_line.id,
+            'company_id': self.company_id.id,
+        }
+        move_vals = {
+            **self.sheet_id._prepare_move_vals(),
+            'ref': self.name,
+            'date': self.date,  # Overidden from self.sheet_id._prepare_move_vals() so we can use the expense date for the account move date
+            'journal_id': journal.id,
+            'partner_id': self.vendor_id.id,
+            'currency_id': self.currency_id.id,
+            'line_ids': [Command.create(line) for line in move_lines],
+            'attachment_ids': [
+                Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
+                for attachment in self.message_main_attachment_id]
+        }
+        return move_vals, payment_vals
+
+    def _get_base_account(self):
+        """
+        Returns the expense account or forces default values if none was found
+        We need to do this as the installation process may delete the original account, and it doesn't recompute properly after
+        Returned expense accounts are the first expense account encountered in the following list:
+        1. expense account of the expense itself
+        2. expense account of the product
+        3. expense account of the product category
+        4. expense account on the purchase journal for employee expense
+        """
+
+        # expense account of the expense itself
+        account = self.account_id
+
+        if account:
+            return account
+
+        # expense account of the product then the product category
+        if self.product_id:
+            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+        else:
+            field = self.env['product.category']._fields['property_account_expense_categ_id']
+            account = field.get_company_dependent_fallback(self.env['product.category'])
+
+        if account:
+            return account
+
+        # expense account on the purchase journal for employee expense
+        journal = self.sheet_id.journal_id
+        if journal.type == 'purchase':
+            account = journal.default_account_id
+
+        return account
+
+    def _prepare_move_lines_vals(self):
+        self.ensure_one()
+        account = self._get_base_account()
+
+        return {
+            'name': self._get_move_line_name(),
+            'account_id': account.id,
+            'quantity': self.quantity or 1,
+            'price_unit': self.price_unit,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom_id.id,
+            'analytic_distribution': self.analytic_distribution,
+            'expense_id': self.id,
+            'partner_id': False if self.payment_mode == 'company_account' else self.employee_id.sudo().work_contact_id.id,
+            'tax_ids': [Command.set(self.tax_ids.ids)],
+        }
+
+    @api.model
+    def get_expense_dashboard(self):
+        expense_state = {
+            'to_submit': {
+                'description': _('to submit'),
+                'amount': 0.0,
+                'currency': self.env.company.currency_id.id,
+            },
+            'submitted': {
+                'description': _('under validation'),
+                'amount': 0.0,
+                'currency': self.env.company.currency_id.id,
+            },
+            'approved': {
+                'description': _('to be reimbursed'),
+                'amount': 0.0,
+                'currency': self.env.company.currency_id.id,
+            }
+        }
+        if not self.env.user.employee_ids:
+            return expense_state
+        target_currency = self.env.company.currency_id
+        # Counting the expenses to display in the dashboard:
+        # - To submit: contains the expenses paid either by the employee or by the company, and that are draft or reported
+        # - Under validation: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
+        # - To be reimbursed: contains ONLY expenses paid by the employee that are approved, the payment has not yet been made
+        expenses = self._read_group(
+            [
+                ('employee_id', 'in', self.env.user.employee_ids.ids),
+                '|', '&', ('payment_mode', 'in', ('own_account', 'company_account')), ('state', 'in', ('draft', 'reported', 'submitted')),
+                     '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
+            ], ['state'], ['total_amount:sum'])
+        for state, total_amount_sum in expenses:
+            if state in {'draft', 'reported'}:  # Fuse the two states into only one "To Submit" state
+                state = 'to_submit'
+            expense_state[state]['amount'] += total_amount_sum
+        return expense_state
+
+    # ----------------------------------------
+>>>>>>> ab69a67175abfbbd70fcd799e9182e5686ecebef
     # Mail Thread
     # --------------------------------------------
 
