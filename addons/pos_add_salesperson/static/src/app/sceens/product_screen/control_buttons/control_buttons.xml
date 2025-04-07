@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="pos_salesperson_assignment.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath
+            expr="//button[@t-if='!props.showRemainingButtons and !ui.isSmall and props.onClickMore']"
+            position="before">
+                <SelectSalespersonButton/>
+        </xpath>
+    </t>
+</templates>

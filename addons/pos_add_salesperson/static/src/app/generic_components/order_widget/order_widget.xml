@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="pos_salesperson_assignment.OrderWidget" t-inherit="point_of_sale.OrderWidget" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='props.lines?.length']/div[1]" position="before">
+            <div class="order-sales-person text-break mb-1 ms-1">
+                <h5>
+                    <t t-if="props.sales_person">
+                        Sales Person: <t t-esc="props.sales_person"/>
+                    </t>
+                </h5>
+            </div>
+        </xpath>
+    </t>
+</templates>
