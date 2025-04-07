@@ -3,8 +3,11 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo import fields
 from odoo.tests import Form, tagged
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
+from freezegun import freeze_time
+import time
 
 
 class TestStockValuationLCCommon(TestStockLandedCostsCommon):
@@ -655,3 +658,108 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         lc.button_validate()
 
         self.assertEqual(lc.cost_lines.price_unit, 10)
+
+@tagged('-at_install', 'post_install')
+class TestAccountInvoicingWithCOA(TestStockValuationLCCommon):
+    def setUp(self):
+        self.usd = self.env.ref('base.USD')
+        self.eur = self.env.ref('base.EUR')
+        self.env.company.currency_id = self.usd
+        self.env['res.currency.rate'].search([]).unlink()
+
+    def create_rate(self, inv_rate):
+        return self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y-%m-%d'),
+            'inverse_company_rate': inv_rate,
+            'currency_id': self.eur.id,
+            'company_id': self.env.company.id,
+        })
+
+    def _bill(self, po, qty=None, price=None):
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = fields.Date.today()
+        if qty is not None:
+            bill.invoice_line_ids.quantity = qty
+        if price is not None:
+            bill.invoice_line_ids.price_unit = price
+        bill.action_post()
+        return bill
+
+    def _return(self, picking, qty=None):
+        wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=picking.ids, active_id=picking.id, active_model='stock.picking'))
+        wizard = wizard_form.save()
+        qty = qty or wizard.product_return_moves.quantity
+        wizard.product_return_moves.quantity = qty
+        action = wizard.create_returns()
+        return_picking = self.env["stock.picking"].browse(action["res_id"])
+        return_picking.move_ids.move_line_ids.qty_done = qty
+        return_picking.button_validate()
+        return return_picking
+
+    def _purchase_receipt(self, product, qty, price, curr):
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.env['res.partner'].browse(self.supplier_id)
+        po_form.currency_id = curr
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = qty
+            po_line.price_unit = price
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.qty_done = qty
+        receipt.button_validate()
+
+        return po, receipt
+
+    def test_fifo_return_twice_and_bill_with_landed_cost_and_multi_currency(self):
+
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        with freeze_time('2025-01-01'):
+            self.create_rate(1.0)
+            po, _ = self._purchase_receipt(self.product1, 5, 10, self.eur)
+            self._bill(po)
+
+        with freeze_time('2025-01-02'):
+            self.create_rate(1.5)
+            po, receipt01 = self._purchase_receipt(self.product1, 10, 10, self.eur)
+            self._make_lc(receipt01.move_ids, 10)
+            receipt_return = self._return(receipt01)
+            _ = self._return(receipt_return)
+
+        with freeze_time('2025-01-03'):
+            self.create_rate(2.0)
+            bill = self._bill(po)
+
+        in_stock_amls = self._get_stock_input_move_lines()
+        self.assertRecordValues(in_stock_amls, [
+            # Receive and bill 5 @ 10 * 1
+            {'debit': 0.0, 'credit': 50.0, 'reconciled': True},
+            {'debit': 50.0, 'credit': 0.0, 'reconciled': True},
+            # Receive 10 @ 10 * 1.5
+            {'debit': 0.0, 'credit': 150.0, 'reconciled': True},
+            # Landed Cost
+            {'debit': 0.0, 'credit': 10.0, 'reconciled': False},
+            # Return it, Valo: 5 @ 10 * 1 + 5 @ 10 * 1.5 = 130  |  Expense: 20
+            {'debit': 130.0, 'credit': 0.0, 'reconciled': True},
+            {'debit': 20.0, 'credit': 0.0, 'reconciled': True},
+            # Receive it again
+            # The "return of a return" ignores the POL price and uses the value of the returned product
+            # So, same: 130 with valo, 20 with expense
+            {'debit': 0.0, 'credit': 130.0, 'reconciled': True},
+            {'debit': 30.0, 'credit': 0.0, 'reconciled': True},
+            # Bill it: 10 @ 10 * 2
+            {'debit': 200.0, 'credit': 0.0, 'reconciled': False},  # Why not reconciled false ??
+            # Why is this here ?
+            {'debit': 0.0, 'credit': 33.34, 'reconciled': True},
+        ])
+
+        expense_amls = self._get_expense_move_lines()
+        self.assertRecordValues(expense_amls, [
+            {'debit': 0.0, 'credit': 20.0, 'reconciled': False},
+            {'debit': 0.0, 'credit': 30.0, 'reconciled': False},
+        ])
