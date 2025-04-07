@@ -84,6 +84,7 @@ patch(ActionpadWidget.prototype, {
             return;
         }
         await this.pos.fireCourse(course);
+        this.currentOrder.cleanCourses(); //remove empty course on fire course.
         this.pos.showDefault();
     },
 });
