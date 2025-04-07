@@ -18,7 +18,7 @@ class Im_LivechatExpertise(models.Model):
         string="Operators",
         compute="_compute_user_ids",
         inverse="_inverse_user_ids",
-        store=False,
+        store=True,
     )
 
     _name_unique = models.UniqueIndex("(name)")
