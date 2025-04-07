@@ -1029,7 +1029,7 @@ test("domain field can be foldable", async function () {
     // Fold domain selector
     await contains(".o_field_domain a i").click();
 
-    expect(".o_field_domain .o_facet_values:contains('Color index is equal 2')").toHaveCount(1);
+    expect(".o_field_domain .o_searchview_facet").toHaveText("Color index\n2");
 });
 
 test("add condition in empty foldable domain", async function () {
@@ -1108,7 +1108,7 @@ test("folded domain field with any operator", async function () {
                 </sheet>
             </form>`,
     });
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Company matches ( Id is equal 1 )");
+    expect(".o_field_domain .o_searchview_facet").toHaveText("Company");
 });
 
 test("foldable domain, search_count delayed", async function () {
@@ -1133,7 +1133,7 @@ test("foldable domain, search_count delayed", async function () {
     });
     expect(".o_domain_show_selection_button").toHaveCount(0);
     expect(".o_tree_editor").toHaveCount(0);
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Id is equal 1");
+    expect(".o_field_domain .o_searchview_facet").toHaveText("Id\n1");
     def.resolve();
     await animationFrame();
     expect(".o_domain_show_selection_button").toHaveCount(1);
@@ -1159,5 +1159,5 @@ test("folded domain field with withinh operator", async function () {
                 </sheet>
             </form>`,
     });
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Datetime next 2 months");
+    expect(".o_field_domain .o_searchview_facet").toHaveText("Datetime\n2 months");
 });
