@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tds_entry_wizard_form_action" model="ir.actions.act_window">
+        <field name="name">Create TDS Entry</field>
+        <field name="res_model">tds.entry.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="tds_entry_wizard_view_form" model="ir.ui.view">
+        <field name="name">tds.entry.wizard.view.form</field>
+        <field name="model">tds.entry.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="currency_id" invisible="1"/>
+                <group>
+                    <group id="header_left_group">
+                        <field name="date"/>
+                        <field name="amount_untaxed"/>
+                        <field name="tax_id"/>
+                        <field name="tds_amount"/>
+                    </group>
+                    <group id="header_right_group">
+                        <field name="journal_id"/>
+                        <field name="reference"/>
+                        <field name="l10n_in_pan"/>
+                        <field name="pan_type"/>
+                    </group>
+                </group>
+                    <footer>
+                        <button string="Confirm" type="object" name="create_tds_entry" class="btn-primary"/>
+                        <button string="Discard" special="cancel" class="btn-secondary"/>
+                    </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
