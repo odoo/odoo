@@ -43,6 +43,9 @@ class FileInfo:
 
         self.diff_linenos: set[int] = set()
         """ line numbers of new lines in the git diff of the file """
+        # TBD:
+        # use list[tuple[int, int]] instead of set[int] which only stores sorted [(start_lineno, end_lineno), ...]
+        # and use bisect to check if the given line numbers are in the diff O(log(n))
 
     @classmethod
     def parse_odoo_path(cls, abs_path: str) -> str:
@@ -144,7 +147,6 @@ class DiffCase:
     """ {file_category: {abs_path: file_info}} """
 
     report: list[dict] = []
-    """ {repo_name: {file_path: file_content}} """
 
     __test_classes: list[type] = []
 
