@@ -1,18 +1,17 @@
-import { _t } from "@web/core/l10n/translation";
 import { Component, useState } from "@odoo/owl";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
+import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
-import { EvaluationError } from "@web/core/py_js/py_builtin";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { EvaluationError } from "@web/core/py_js/py_builtin";
 import { registry } from "@web/core/registry";
+import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { useRecordObserver } from "@web/model/relational_model/utils";
+import { useGetDomainFacets } from "@web/search/utils/misc";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
-import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
-import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
-import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
-import { treeFromDomain } from "@web/core/tree_editor/condition_tree";
-import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class DomainField extends Component {
     static template = "web.DomainField";
@@ -35,8 +34,7 @@ export class DomainField extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.getDomainTreeDescription = useGetTreeDescription();
-        this.makeGetFieldDef = useMakeGetFieldDef();
+        this.getDomainFacets = useGetDomainFacets();
         this.getDefaultLeafDomain = useGetDefaultLeafDomain();
         this.addDialog = useOwnedDialogs();
 
@@ -143,10 +141,7 @@ export class DomainField extends Component {
         let promises = [];
         const domain = this.getDomain(props);
         try {
-            const getFieldDef = await this.makeGetFieldDef(resModel, treeFromDomain(domain));
-            const tree = treeFromDomain(domain, { distributeNot: !this.env.debug, getFieldDef });
-            const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
-            promises = trees.map((tree) => this.getDomainTreeDescription(resModel, tree));
+            promises = await this.getDomainFacets(resModel, domain, { splitAndConnector: true });
         } catch (error) {
             if (error.data?.name === "builtins.KeyError" && error.data.message === resModel) {
                 // we don't want to support invalid models

@@ -2499,7 +2499,7 @@ test("shorten descriptions of long lists", async () => {
         readonly: true,
     });
     expect(".o_tree_editor_condition").toHaveText(
-        `Id\nis in\n(\n${values.slice(0, 20).join("\n,\n")}\n,\n...\n)`
+        `Id\nis in\n(\n${values.slice(0, 4).join("\n,\n")}\n,\n...\n)`
     );
 });
 

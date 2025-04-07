@@ -80,8 +80,9 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { FileInput } from "@web/core/file_input/file_input";
+import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 
+import { FileInput } from "@web/core/file_input/file_input";
 import { browser } from "@web/core/browser/browser";
 import { currencies } from "@web/core/currency";
 import { registry } from "@web/core/registry";
@@ -5178,6 +5179,92 @@ test("kanban view with default_group_by", async () => {
     await contains(".o_searchview_facet .o_facet_remove").click();
     expect(".o_kanban_group").toHaveCount(2);
     expect(`.o_searchview_facet`).toHaveCount(0);
+});
+
+test.tags("desktop");
+test("edit a favorite: group by = default_group_by", async () => {
+    expect.assertions(4);
+
+    const irFilters = [
+        {
+            context: "{ 'group_by': ['bar'] }",
+            domain: "[]",
+            id: 1,
+            is_default: true,
+            name: "My favorite",
+            sort: "[]",
+            user_ids: [2],
+        },
+    ];
+
+    onRpc("web_read_group", ({ kwargs }) => {
+        expect(kwargs.groupby).toEqual(["bar"]);
+    });
+    onRpc("/web/domain/validate", () => true);
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban default_group_by="bar">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        irFilters,
+    });
+
+    expect(getFacetTexts()).toEqual(["My favorite"]);
+
+    await contains(".o_searchview_facet_label").click();
+    await addNewRule();
+    await contains("button:contains('Confirm')").click();
+    expect(getFacetTexts()).toEqual(["Id\n1"]);
+});
+
+test.tags("desktop");
+test("edit a favorite: group by != default_group_by", async () => {
+    expect.assertions(4);
+
+    const irFilters = [
+        {
+            context: "{ 'group_by': ['product_id'] }",
+            domain: "[]",
+            id: 1,
+            is_default: true,
+            name: "My favorite",
+            sort: "[]",
+            user_ids: [2],
+        },
+    ];
+
+    onRpc("web_read_group", ({ kwargs }) => {
+        expect(kwargs.groupby).toEqual(["product_id"]);
+    });
+    onRpc("/web/domain/validate", () => true);
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban default_group_by="bar">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        irFilters,
+    });
+
+    expect(getFacetTexts()).toEqual(["My favorite"]);
+
+    await contains(".o_searchview_facet_label").click();
+    await addNewRule();
+    await contains("button:contains('Confirm')").click();
+    expect(getFacetTexts()).toEqual(["Id\n1", "Product"]);
 });
 
 test.tags("desktop");

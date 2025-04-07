@@ -214,7 +214,7 @@ test("edit a favorite with a groupby", async () => {
     ];
 
     onRpc("/web/domain/validate", () => true);
-    await mountWithSearch(SearchBar, {
+    const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",
         searchMenuTypes: ["groupBy"], // we need it to have facet (see facets getter in search_model)
         searchViewId: false,
@@ -232,7 +232,8 @@ test("edit a favorite with a groupby", async () => {
     await editValue("abcde");
     await contains(`.modal footer button`).click();
     expect(`.modal`).toHaveCount(0);
-    expect(getFacetTexts()).toEqual(["Bar", "Foo contains abcde"]);
+    expect(getFacetTexts()).toEqual(["Foo\nabcde", "Bar"]);
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "abcde"]]);
 
     await toggleSearchBarMenu();
     expect(`.o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)`).toHaveCount(0);
