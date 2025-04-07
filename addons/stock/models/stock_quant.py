@@ -54,6 +54,7 @@ class StockQuant(models.Model):
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit',
         readonly=True, related='product_id.uom_id')
+    rounding = fields.Float(related='product_uom_id.rounding')
     is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite')
     company_id = fields.Many2one(related='location_id.company_id', string='Company', store=True, readonly=True)
     location_id = fields.Many2one(
@@ -80,16 +81,16 @@ class StockQuant(models.Model):
     quantity = fields.Float(
         'Quantity',
         help='Quantity of products in this quant, in the default unit of measure of the product',
-        readonly=True, digits='Product Unit')
+        readonly=True)
     reserved_quantity = fields.Float(
         'Reserved Quantity',
         default=0.0,
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
-        readonly=True, required=True, digits='Product Unit')
+        readonly=True, required=True)
     available_quantity = fields.Float(
         'Available Quantity',
         help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
-        compute='_compute_available_quantity', digits='Product Unit')
+        compute='_compute_available_quantity')
     in_date = fields.Datetime('Incoming Date', readonly=True, required=True, default=fields.Datetime.now)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     on_hand = fields.Boolean('On Hand', store=False, search='_search_on_hand')
@@ -1099,13 +1100,14 @@ class StockQuant(models.Model):
         this method is often called in batch and each unlink invalidate
         the cache. We defer the calls to unlink in this method.
         """
-        precision_digits = max(6, self.sudo().env.ref('uom.decimal_product_uom').digits * 2)
+        precision_digits = self.sudo().env.ref('uom.decimal_product_uom').digits
+        threshold = 10 ** -precision_digits
         # Use a select instead of ORM search for UoM robustness.
-        query = """SELECT id FROM stock_quant WHERE (round(quantity::numeric, %s) = 0 OR quantity IS NULL)
-                                                     AND round(reserved_quantity::numeric, %s) = 0
-                                                     AND (round(inventory_quantity::numeric, %s) = 0 OR inventory_quantity IS NULL)
+        query = """SELECT id FROM stock_quant WHERE ((quantity > %s AND quantity < %s) OR quantity IS NULL)
+                                                     AND (reserved_quantity > %s AND reserved_quantity < %s)
+                                                     AND ((inventory_quantity > %s AND inventory_quantity < %s) OR inventory_quantity IS NULL)
                                                      AND user_id IS NULL;"""
-        params = (precision_digits, precision_digits, precision_digits)
+        params = (-threshold, threshold, -threshold, threshold, -threshold, threshold)
         self.env.cr.execute(query, params)
         quants = self.env['stock.quant'].browse([quant['id'] for quant in self.env.cr.dictfetchall()])
         quants.sudo().unlink()
