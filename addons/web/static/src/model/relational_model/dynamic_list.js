@@ -1,4 +1,4 @@
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
@@ -308,11 +308,8 @@ export class DynamicList extends DataPoint {
             return false;
         }
         if (validSelection.length === 0) {
-            this.model.dialog.add(AlertDialog, {
-                body: _t("No valid record to save"),
-                confirm: () => this.leaveEditMode({ discard: true }),
-                dismiss: () => this.leaveEditMode({ discard: true }),
-            });
+            // Will be consumed by the record when showing the "No records to save" dialog
+            record.onInvalidFieldAlertClose = () => this.leaveEditMode({ discard: true });
             return false;
         } else {
             const resIds = unique(validSelection.map((r) => r.resId));

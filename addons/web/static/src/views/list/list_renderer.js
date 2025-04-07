@@ -1126,7 +1126,7 @@ export class ListRenderer extends Component {
      * @param { import('@web/model/relational_model/group').Group | null } group
      * @param { import('@web/model/relational_model/record').Record | null } record
      */
-    onCellKeydown(ev, group = null, record = null) {
+    async onCellKeydown(ev, group = null, record = null) {
         if (this.props.list.model.useSampleModel) {
             return;
         }
