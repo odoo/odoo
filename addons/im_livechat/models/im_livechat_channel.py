@@ -189,8 +189,13 @@ class Im_LivechatChannel(models.Model):
             :returns : the ir.action 'action_view_rating' with the correct context
         """
         self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.rating_rating_action_livechat')
-        action['context'] = {'search_default_parent_res_name': self.name}
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "im_livechat.discuss_channel_action_from_livechat_channel"
+        )
+        action["context"] = {
+            "search_default_parent_res_name": self.name,
+            "search_default_fiter_session_rated": "1"
+        }
         return action
 
     def action_view_chatbot_scripts(self):
