@@ -159,16 +159,36 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             'transportation_doc_no': 123456789,
             'transportation_doc_date': '2024-04-26'
         })
-        expected_distance = 118
-        response = {
-            'status_cd': '1',
-            'status_desc': 'EWAYBILL request succeeds',
-            'data': {
-                'ewayBillNo': 123456789012,
-                'ewayBillDate': '26/02/2024 12:09:43 PM',
-                'validUpto': '27/02/2024 12:09:43 PM',
-                "alert": ", Distance between these two pincodes is 118, "
+
+        # Sub-test: Extract `Distance` when multiple alerts in response
+        with self.subTest(scenario="Extract distance when multiple alerts in response"):
+            expected_distance = 118
+            response = {
+                'status_cd': '1',
+                'status_desc': 'EWAYBILL request succeeds',
+                'data': {
+                    'ewayBillNo': 123456789012,
+                    'ewayBillDate': '26/02/2024 12:09:43 PM',
+                    'validUpto': '27/02/2024 12:09:43 PM',
+                    "alert": ", Distance between these two pincodes is 118, "
+                }
             }
-        }
-        distance_val = ewaybill._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response.get('data'))
-        self.assertEqual(distance_val['distance'], expected_distance)
+            distance_val = ewaybill._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response.get('data'))
+            self.assertEqual(distance_val['distance'], expected_distance)
+
+        # Sub-test: Extract `Distance` when single alert in response
+        with self.subTest(scenario="Extract distance when single alert in response"):
+            ewaybill.distance = 0
+            expected_distance = 222
+            response = {
+                'status_cd': '1',
+                'status_desc': 'EWAYBILL request succeeds',
+                'data': {
+                    'ewayBillNo': 987654321012,
+                    'ewayBillDate': '08/04/2025 11:04:04 AM',
+                    'validUpto': '09/04/2025 11:04:04 AM',
+                    'alert': 'Distance between these two pincodes is 222'
+                }
+            }
+            distance_val = ewaybill._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response.get('data'))
+            self.assertEqual(distance_val['distance'], expected_distance)
