@@ -60,3 +60,6 @@ class SaleOrder(models.Model):
 
     def _get_edi_builders(self):
         return super()._get_edi_builders() + [self.env['sale.edi.xml.ubl_bis3']]
+
+    def _get_supplier_id(self):
+        return self.company_id.partner_id

@@ -3,8 +3,20 @@ from odoo import models, Command
 
 class SaleEdiXmlUbl_Bis3(models.AbstractModel):
     _name = 'sale.edi.xml.ubl_bis3'
-    _inherit = ['sale.edi.common', 'account.edi.xml.ubl_bis3']
-    _description = "UBL BIS Ordering 3.0"
+    _inherit = ['sale.edi.common', 'order.edi.xml.ubl_bis3']
+    _description = "Sale BIS Ordering 3.0"
+
+    def _get_order_qty_field(self):
+        return 'product_uom_qty'
+
+    def _get_order_note_field(self):
+        return 'note'
+
+    def _get_dest_address_field(self):
+        return 'partner_shipping_id'
+
+    def _get_order_type_code(self):
+        return 220
 
     # -------------------------------------------------------------------------
     # Import order

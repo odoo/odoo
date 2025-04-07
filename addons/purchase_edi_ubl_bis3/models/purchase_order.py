@@ -6,3 +6,6 @@ class PurchaseOrder(models.Model):
 
     def _get_edi_builders(self):
         return super()._get_edi_builders() + [self.env['purchase.edi.xml.ubl_bis3']]
+
+    def _get_supplier_id(self):
+        return self.partner_id
