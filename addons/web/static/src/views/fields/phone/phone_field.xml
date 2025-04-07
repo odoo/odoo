@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.PhoneField">
-        <div class="o_phone_content d-inline-flex w-100">
-            <t t-if="props.readonly">
-                <a t-if="props.record.data[props.name]" class="o_form_uri" t-att-href="phoneHref" t-esc="props.record.data[props.name]"/>
-            </t>
-            <t t-else="">
-                <input
-                    class="o_input"
-                    t-att-id="props.id"
-                    type="tel"
-                    autocomplete="off"
-                    t-att-placeholder="props.placeholder"
-                    t-ref="input"
-                />
-            </t>
+    <t t-name="web.Phone">
+        <div class="o_phone_content">
+            <a t-if="props.record.data[props.name]" class="btn btn-secondary" t-att-href="phoneHref"><i class="fa fa-phone"></i>
+            </a>
         </div>
+    </t>
+
+    <t t-name="web.PhoneField" t-inherit="web.Phone" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_phone_content')]" position="replace">
+            <div class="o_phone_content d-inline-flex w-100">
+                <t t-if="props.readonly">
+                    <a t-if="props.record.data[props.name]" class="o_form_uri" t-att-href="phoneHref" t-out="props.record.data[props.name]"/>
+                </t>
+                <t t-else="">
+                    <input
+                        class="o_input"
+                        t-att-id="props.id"
+                        type="tel"
+                        autocomplete="off"
+                        t-att-placeholder="props.placeholder"
+                        t-ref="input"
+                    />
+                </t>
+            </div>
+        </xpath>
     </t>
 
     <t t-name="web.FormPhoneField" t-inherit="web.PhoneField" t-inherit-mode="primary">
