@@ -15,6 +15,7 @@ class MailNotification(models.Model):
     _rec_name = 'res_partner_id'
     _log_access = False
     _description = 'Message Notifications'
+    _order = 'id DESC'
 
     # origin
     author_id = fields.Many2one('res.partner', 'Author', ondelete='set null')
