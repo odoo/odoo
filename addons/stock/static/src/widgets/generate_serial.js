@@ -47,10 +47,10 @@ export class GenerateDialog extends Component {
         let count;
         let qtyToProcess;
         if (this.props.move.data.has_tracking === 'lot'){
-            count = parseFloat(this.nextSerialCount.el?.value || '0');
+            count = parseFloat(this.nextSerialCount.el?.value) || 0;
             qtyToProcess = parseFloat(this.totalReceived.el?.value || this.props.move.data.product_qty);
         } else {
-            count = parseInteger(this.nextSerialCount.el?.value || '0');
+            count = parseInteger(this.nextSerialCount.el?.value) || 0;
             qtyToProcess = this.props.move.data.product_qty;
         }
         const move_line_vals = await this.orm.call("stock.move", "action_generate_lot_line_vals", [{
