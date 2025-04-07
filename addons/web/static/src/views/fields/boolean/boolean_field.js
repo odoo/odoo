@@ -21,6 +21,10 @@ export class BooleanField extends Component {
         });
     }
 
+    get isReadonly() {
+        return this.props.readonly;
+    }
+
     /**
      * @param {boolean} newValue
      */
