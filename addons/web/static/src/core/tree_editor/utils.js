@@ -1,22 +1,22 @@
-import { unique, zip } from "@web/core/utils/arrays";
-import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
-import {
-    Expression,
-    condition,
-    createVirtualOperators,
-    normalizeValue,
-    isTree,
-    Couple,
-} from "@web/core/tree_editor/condition_tree";
-import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
 import {
     deserializeDate,
     deserializeDateTime,
     formatDate,
     formatDateTime,
 } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
+import {
+    Couple,
+    Expression,
+    condition,
+    createVirtualOperators,
+    isTree,
+    normalizeValue,
+} from "@web/core/tree_editor/condition_tree";
+import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
+import { unique, zip } from "@web/core/utils/arrays";
+import { useService } from "@web/core/utils/hooks";
 import { Within } from "./tree_editor_components";
 
 /**
@@ -221,56 +221,6 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
     return description;
 }
 
-export function useGetTreeDescription(fieldService, nameService) {
-    fieldService ||= useService("field");
-    nameService ||= useService("name");
-    const makeGetFieldDef = useMakeGetFieldDef(fieldService);
-    const makeGetConditionDescription = useMakeGetConditionDescription(fieldService, nameService);
-    return async (resModel, tree) => {
-        async function getTreeDescription(resModel, tree, isSubExpression = false) {
-            tree = simplifyTree(tree);
-            if (tree.type === "connector") {
-                // we assume that the domain tree is normalized (--> there is at least two children)
-                const childDescriptions = tree.children.map((node) =>
-                    getTreeDescription(resModel, node, true)
-                );
-                const separator = tree.value === "&" ? _t("and") : _t("or");
-                let description = await Promise.all(childDescriptions);
-                description = description.join(` ${separator} `);
-                if (isSubExpression || tree.negate) {
-                    description = `( ${description} )`;
-                }
-                if (tree.negate) {
-                    description = `! ${description}`;
-                }
-                return description;
-            }
-            const getFieldDef = await makeGetFieldDef(resModel, tree);
-            const getConditionDescription = await makeGetConditionDescription(
-                resModel,
-                tree,
-                getFieldDef
-            );
-            const { pathDescription, operatorDescription, valueDescription } =
-                getConditionDescription(tree);
-            const stringDescription = [pathDescription, operatorDescription];
-            if (valueDescription) {
-                const { values, join, addParenthesis } = valueDescription;
-                const jointedValues = values.join(` ${join} `);
-                stringDescription.push(addParenthesis ? `( ${jointedValues} )` : jointedValues);
-            } else if (isTree(tree.value)) {
-                const _fieldDef = getFieldDef(tree.path);
-                const _resModel = getResModel(_fieldDef);
-                const _tree = tree.value;
-                const description = await getTreeDescription(_resModel, _tree);
-                stringDescription.push(`( ${description} )`);
-            }
-            return stringDescription.join(" ");
-        }
-        return getTreeDescription(resModel, tree);
-    };
-}
-
 export function getResModel(fieldDef) {
     if (fieldDef) {
         return fieldDef.is_property ? fieldDef.comodel : fieldDef.relation;
@@ -351,7 +301,7 @@ export function getDefaultPath(fieldDefs) {
  * @param {Tree} tree
  * @returns {tree}
  */
-function simplifyTree(tree) {
+export function simplifyTree(tree) {
     if (tree.type === "condition") {
         return tree;
     }
@@ -388,7 +338,7 @@ function simplifyTree(tree) {
                 value.push(...child.value);
             }
         }
-        children.push(condition(path, "in", normalizeValue(value)));
+        children.push(condition(path, "in", normalizeValue(unique(value))));
     }
     if (children.length === 1) {
         return { ...children[0] };

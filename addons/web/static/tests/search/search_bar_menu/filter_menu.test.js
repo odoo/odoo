@@ -5,8 +5,6 @@ import {
     clickOnButtonAddBranch,
     clickOnButtonAddNewRule,
     getCurrentPath,
-    openModelFieldSelectorPopover,
-    selectOperator,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
@@ -25,7 +23,7 @@ import {
     toggleMenuItemOption,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { Foo, Partner, defineSearchBarModels } from "./models";
+import { Foo, defineSearchBarModels } from "./models";
 
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
@@ -699,18 +697,13 @@ test("Add a custom filter", async () => {
     await clickOnButtonAddBranch(-1);
     await clickOnButtonAddBranch(-1);
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([
-        "Filter",
-        "Id is equal 1",
-        "Id is equal 1",
-        "( Id is equal 1 and Id is equal 1 ) or Id is in ( 1 , 1 )",
-    ]);
+    expect(getFacetTexts()).toEqual(["Filter", "Custom filter"]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
         ["foo", "=", "abc"],
         "&",
-        ["id", "=", 1],
         "&",
+        ["id", "=", 1],
         ["id", "=", 1],
         "|",
         "|",
@@ -745,94 +738,10 @@ test("Add a custom filter containing an expression", async () => {
         `[("foo", "in", [uid, 1, "a"])]`
     );
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Foo is in ( uid , 1 , "a" )`]);
+    expect(getFacetTexts()).toEqual([`Custom filter`]);
     expect(searchBar.env.searchModel.domain).toEqual([
         ["foo", "in", [7, 1, "a"]], // uid = 7
     ]);
-});
-
-test("Add a custom filter containing a between operator", async () => {
-    patchWithCleanup(odoo, { debug: "1" });
-
-    onRpc("/web/domain/validate", () => true);
-    const searchBar = await mountWithSearch(SearchBar, {
-        resModel: "foo",
-        searchMenuTypes: ["filter"],
-        searchViewId: false,
-        searchViewArch: `<search />`,
-    });
-    expect(getFacetTexts()).toEqual([]);
-    expect(searchBar.env.searchModel.domain).toEqual([]);
-
-    await toggleSearchBarMenu();
-    await openAddCustomFilterDialog();
-    await contains(`.o_domain_selector_debug_container textarea`).edit(
-        `[("id", "between", [0, 10])]`
-    );
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Id is between 0 and 10`]);
-    expect(searchBar.env.searchModel.domain).toEqual(["&", ["id", ">=", 0], ["id", "<=", 10]]);
-});
-
-test("consistent display of ! in debug mode", async () => {
-    patchWithCleanup(odoo, { debug: "1" });
-
-    onRpc("/web/domain/validate", () => true);
-    const searchBar = await mountWithSearch(SearchBar, {
-        resModel: "foo",
-        searchMenuTypes: ["filter"],
-        searchViewId: false,
-        searchViewArch: `<search />`,
-    });
-    await toggleSearchBarMenu();
-    await openAddCustomFilterDialog();
-    await contains(`.o_domain_selector_debug_container textarea`).edit(
-        `["!", "|", ("foo", "=", 1 ), ("id", "=", 2)]`
-    );
-    expect(".o_tree_editor_row .dropdown-toggle").toHaveText("none");
-
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`! ( Foo is equal 1 or Id is equal 2 )`]);
-    expect(searchBar.env.searchModel.domain).toEqual(["!", "|", ["foo", "=", 1], ["id", "=", 2]]);
-});
-
-test("display of (not) set in facets", async () => {
-    Foo._fields.boolean = fields.Boolean();
-    onRpc("/web/domain/validate", () => true);
-    const searchBar = await mountWithSearch(SearchBar, {
-        resModel: "foo",
-        searchMenuTypes: ["filter"],
-        searchViewId: false,
-        searchViewArch: `<search/>`,
-    });
-    expect(getFacetTexts()).toEqual([]);
-    expect(searchBar.env.searchModel.domain).toEqual([]);
-
-    await toggleSearchBarMenu();
-    await openAddCustomFilterDialog();
-    await selectOperator("not_set");
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Id not set"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["id", "=", false]]);
-
-    await contains(".o_searchview_facet_label").click();
-    await selectOperator("set");
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Id set"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["id", "!=", false]]);
-
-    await contains(".o_searchview_facet_label").click();
-    await openModelFieldSelectorPopover();
-    await contains(".o_model_field_selector_popover_item_name:contains(Boolean)").click();
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean set"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["boolean", "!=", false]]);
-
-    await contains(".o_searchview_facet_label").click();
-    await selectOperator("not_set");
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean not set"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["boolean", "=", false]]);
 });
 
 test("Add a custom filter: notification on invalid domain", async () => {
@@ -859,83 +768,6 @@ test("Add a custom filter: notification on invalid domain", async () => {
     await contains(".modal footer button").click();
     expect(".modal .o_domain_selector").toHaveCount(1);
     expect.verifySteps(["notification"]);
-});
-
-test("display names in facets", async () => {
-    patchWithCleanup(odoo, { debug: "1" });
-    Partner._records = [
-        { id: 1, name: "John" },
-        { id: 2, name: "David" },
-    ];
-
-    onRpc("/web/domain/validate", () => true);
-    const searchBar = await mountWithSearch(SearchBar, {
-        resModel: "foo",
-        searchMenuTypes: ["filter"],
-        searchViewId: false,
-        searchViewArch: `<search />`,
-    });
-    await toggleSearchBarMenu();
-    await openAddCustomFilterDialog();
-    await contains(`.o_domain_selector_debug_container textarea`).edit(
-        `[("bar", "=", 1 ), ("bar", "in", [2, 5555]), ("bar", "!=", false), ("id", "=", 2)]`
-    );
-    await contains(".modal footer button").click();
-
-    expect(getFacetTexts()).toEqual([
-        "Bar is equal John",
-        "Bar is in ( David , Inaccessible/missing record ID: 5555 )",
-        "Bar is not equal false",
-        "Id is equal 2",
-    ]);
-    expect(searchBar.env.searchModel.domain).toEqual([
-        "&",
-        ["bar", "=", 1],
-        "&",
-        ["bar", "in", [2, 5555]],
-        "&",
-        ["bar", "!=", false],
-        ["id", "=", 2],
-    ]);
-});
-
-test("display names in facets (with a property)", async () => {
-    patchWithCleanup(odoo, { debug: "1" });
-    Partner._records = [{ id: 1, name: "John" }];
-
-    onRpc("/web/domain/validate", () => true);
-    onRpc("/web/dataset/call_kw/parent.model/web_search_read", () => ({
-        records: [
-            {
-                id: 1337,
-                display_name: "First Parent",
-                properties_definition: [
-                    {
-                        name: "m2o",
-                        type: "many2one",
-                        string: "M2O",
-                        comodel: "partner",
-                    },
-                ],
-            },
-        ],
-    }));
-
-    const searchBar = await mountWithSearch(SearchBar, {
-        resModel: "foo",
-        searchMenuTypes: ["filter"],
-        searchViewId: false,
-        searchViewArch: `<search />`,
-    });
-    await toggleSearchBarMenu();
-    await openAddCustomFilterDialog();
-    await contains(`.o_domain_selector_debug_container textarea`).edit(
-        `[("properties.m2o", "=", 1)]`
-    );
-    await contains(".modal footer button").click();
-
-    expect(getFacetTexts()).toEqual(["Properties \u2794 M2O is equal John"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["properties.m2o", "=", 1]]);
 });
 
 test("group by properties", async () => {
@@ -1026,27 +858,4 @@ test("group by properties", async () => {
     await animationFrame();
     expect(searchBar.env.searchModel.groupBy).toEqual(["properties.my_datetime:quarter"]);
     expect(getFacetTexts()).toEqual(["My Datetime: Quarter"]);
-});
-
-test("shorten descriptions of long lists", async function () {
-    patchWithCleanup(odoo, { debug: "1" });
-    onRpc("/web/domain/validate", () => true);
-    const searchBar = await mountWithSearch(SearchBar, {
-        resModel: "foo",
-        searchMenuTypes: ["filter"],
-        searchViewId: false,
-        searchViewArch: `<search />`,
-    });
-    expect(getFacetTexts()).toEqual([]);
-    expect(searchBar.env.searchModel.domain).toEqual([]);
-
-    await toggleSearchBarMenu();
-    await openAddCustomFilterDialog();
-    const values = new Array(500).fill(42525245);
-    await contains(`.o_domain_selector_debug_container textarea`).edit(
-        `[("id", "in", [${values}])]`
-    );
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Id is in ( ${values.slice(0, 20).join(" , ")} , ... )`]);
-    expect(searchBar.env.searchModel.domain).toEqual([["id", "in", values]]);
 });
