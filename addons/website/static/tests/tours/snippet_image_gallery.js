@@ -60,10 +60,10 @@ registerWebsitePreviewTour("snippet_image_gallery_remove", {
     run: "click",
 }, {
     content: "Check that the Snippet Editor of the clicked image has been loaded",
-    trigger: "we-customizeblock-options span:contains('Image'):not(:contains('Image Gallery'))",
+    trigger: ".o-tab-content [data-container-title='Image Gallery']",
 }, {
     content: "Click on Remove Block",
-    trigger: ".o_we_customize_panel we-title:has(span:contains('Image Gallery')) we-button[title='Remove Block']",
+    trigger: ".o_customize_tab .options-container[data-container-title='Image Gallery'] .oe_snippet_remove",
     run: "click",
 }, {
     content: "Check that the Image Gallery snippet has been removed",
