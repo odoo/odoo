@@ -6459,8 +6459,9 @@ class StockMove(TransactionCase):
         move_product.date = today + relativedelta(day=5)
         move_consu = picking.move_ids.filtered(lambda m: m.product_id == self.product_consu)
         move_consu.date = today + relativedelta(day=10)
-        self.assertEqual(picking.scheduled_date, today + relativedelta(day=5))
+        self.assertEqual(picking.scheduled_date.date(), today.date())
         picking.action_confirm()
+        self.assertEqual(picking.scheduled_date, today + relativedelta(day=5))
 
         # Complete one move and create a backorder with the remaining move
         move_product.quantity = 1
