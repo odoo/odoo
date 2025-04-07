@@ -124,10 +124,10 @@ class ProjectTask(models.Model):
         )""", SQL.identifier(self._table), SQL(operator), value)
         return [('id', 'in', sql)]
 
-    @api.depends('effective_hours', 'subtask_effective_hours', 'allocated_hours')
+    @api.depends('effective_hours', 'subtask_effective_hours', 'allocated_hours', 'parent_id.allocated_hours', 'project_id.allocated_hours')
     def _compute_remaining_hours(self):
         for task in self:
-            if not task.allocated_hours:
+            if not task.allocated_hours and (task.parent_id or task.project_id).allocated_hours <= 0.0:
                 task.remaining_hours = 0.0
             else:
                 task.remaining_hours = task.allocated_hours - task.effective_hours - task.subtask_effective_hours
