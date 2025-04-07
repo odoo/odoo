@@ -12,7 +12,7 @@
             <field name="list_price">14.0</field>
             <field name="standard_price">8.0</field>
             <field name="type">service</field>
-            <field name="categ_id" ref="product.product_category_expenses"/>
+            <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
         </record>
 
         <record id="expense_hotel" model="product.product">
@@ -21,13 +21,13 @@
             <field name="standard_price">400.0</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_day"/>
-            <field name="categ_id" ref="product_category_expenses"/>
+            <field name="categ_id" eval="ref('product_category_expenses', raise_if_not_found=False)"/>
         </record>
 
         <!-- Service products -->
         <record id="product_product_1" model="product.product">
             <field name="name">Virtual Interior Design</field>
-            <field name="categ_id" ref="product_category_services"/>
+            <field name="categ_id" eval="ref('product_category_services', raise_if_not_found=False)"/>
             <field name="standard_price">20.5</field>
             <field name="list_price">30.75</field>
             <field name="type">service</field>
@@ -36,7 +36,7 @@
 
         <record id="product_product_2" model="product.product">
             <field name="name">Virtual Home Staging</field>
-            <field name="categ_id" ref="product_category_services"/>
+            <field name="categ_id" eval="ref('product_category_services', raise_if_not_found=False)"/>
             <field name="standard_price">25.5</field>
             <field name="list_price">38.25</field>
             <field name="type">service</field>
@@ -492,7 +492,7 @@
             <field name="name">Local Delivery</field>
             <field name="default_code">Delivery_010</field>
             <field name="type">service</field>
-            <field name="categ_id" ref="product_category_services"/>
+            <field name="categ_id" eval="ref('product_category_services', raise_if_not_found=False)"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
             <field name="list_price">10.0</field>
