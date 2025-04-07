@@ -699,18 +699,13 @@ test("Add a custom filter", async () => {
     await clickOnButtonAddBranch(-1);
     await clickOnButtonAddBranch(-1);
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([
-        "Filter",
-        "Id is equal 1",
-        "Id is equal 1",
-        "( Id is equal 1 and Id is equal 1 ) or Id is in ( 1 , 1 )",
-    ]);
+    expect(getFacetTexts()).toEqual(["Filter", "Custom filter"]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
         ["foo", "=", "abc"],
         "&",
-        ["id", "=", 1],
         "&",
+        ["id", "=", 1],
         ["id", "=", 1],
         "|",
         "|",
@@ -745,7 +740,7 @@ test("Add a custom filter containing an expression", async () => {
         `[("foo", "in", [uid, 1, "a"])]`
     );
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Foo is in ( uid , 1 , "a" )`]);
+    expect(getFacetTexts()).toEqual([`Foo\nuid\nor\n1\nor\n"a"`]);
     expect(searchBar.env.searchModel.domain).toEqual([
         ["foo", "in", [7, 1, "a"]], // uid = 7
     ]);
@@ -767,10 +762,11 @@ test("Add a custom filter containing a between operator", async () => {
     await toggleSearchBarMenu();
     await openAddCustomFilterDialog();
     await contains(`.o_domain_selector_debug_container textarea`).edit(
-        `[("id", "between", [0, 10])]`
+        `[("id", ">=", 0), ("id", "<=", 10)]`
     );
+
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Id is between 0 and 10`]);
+    expect(getFacetTexts()).toEqual([`Id\n( 0 and 10 )`]);
     expect(searchBar.env.searchModel.domain).toEqual(["&", ["id", ">=", 0], ["id", "<=", 10]]);
 });
 
@@ -792,7 +788,7 @@ test("consistent display of ! in debug mode", async () => {
     expect(".o_tree_editor_row .dropdown-toggle").toHaveText("none");
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`! ( Foo is equal 1 or Id is equal 2 )`]);
+    expect(getFacetTexts()).toEqual([`Custom filter`]);
     expect(searchBar.env.searchModel.domain).toEqual(["!", "|", ["foo", "=", 1], ["id", "=", 2]]);
 });
 
@@ -812,26 +808,26 @@ test("display of (not) set in facets", async () => {
     await openAddCustomFilterDialog();
     await selectOperator("not_set");
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Id not set"]);
+    expect(getFacetTexts()).toEqual(["Id\nnot set"]);
     expect(searchBar.env.searchModel.domain).toEqual([["id", "=", false]]);
 
     await contains(".o_searchview_facet_label").click();
     await selectOperator("set");
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Id set"]);
+    expect(getFacetTexts()).toEqual(["Id\nset"]);
     expect(searchBar.env.searchModel.domain).toEqual([["id", "!=", false]]);
 
     await contains(".o_searchview_facet_label").click();
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name:contains(Boolean)").click();
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean set"]);
+    expect(getFacetTexts()).toEqual(["Boolean\nset"]);
     expect(searchBar.env.searchModel.domain).toEqual([["boolean", "!=", false]]);
 
     await contains(".o_searchview_facet_label").click();
     await selectOperator("not_set");
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean not set"]);
+    expect(getFacetTexts()).toEqual(["Boolean\nnot set"]);
     expect(searchBar.env.searchModel.domain).toEqual([["boolean", "=", false]]);
 });
 
@@ -878,24 +874,17 @@ test("display names in facets", async () => {
     await toggleSearchBarMenu();
     await openAddCustomFilterDialog();
     await contains(`.o_domain_selector_debug_container textarea`).edit(
-        `[("bar", "=", 1 ), ("bar", "in", [2, 5555]), ("bar", "!=", false), ("id", "=", 2)]`
+        `["|", ("bar", "=", 1 ), ("bar", "in", [2, 5555])]`
     );
     await contains(".modal footer button").click();
 
     expect(getFacetTexts()).toEqual([
-        "Bar is equal John",
-        "Bar is in ( David , Inaccessible/missing record ID: 5555 )",
-        "Bar is not equal false",
-        "Id is equal 2",
+        "Bar\nJohn\nor\nDavid\nor\nInaccessible/missing record ID: 5555",
     ]);
     expect(searchBar.env.searchModel.domain).toEqual([
-        "&",
+        "|",
         ["bar", "=", 1],
-        "&",
         ["bar", "in", [2, 5555]],
-        "&",
-        ["bar", "!=", false],
-        ["id", "=", 2],
     ]);
 });
 
@@ -934,7 +923,7 @@ test("display names in facets (with a property)", async () => {
     );
     await contains(".modal footer button").click();
 
-    expect(getFacetTexts()).toEqual(["Properties \u2794 M2O is equal John"]);
+    expect(getFacetTexts()).toEqual(["M2O\nJohn"]);
     expect(searchBar.env.searchModel.domain).toEqual([["properties.m2o", "=", 1]]);
 });
 
@@ -1047,6 +1036,6 @@ test("shorten descriptions of long lists", async function () {
         `[("id", "in", [${values}])]`
     );
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Id is in ( ${values.slice(0, 20).join(" , ")} , ... )`]);
+    expect(getFacetTexts()).toEqual([`Id\n${[...values.slice(0, 4), "..."].join("\nor\n")}`]);
     expect(searchBar.env.searchModel.domain).toEqual([["id", "in", values]]);
 });
