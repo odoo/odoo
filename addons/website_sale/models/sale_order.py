@@ -296,14 +296,13 @@ class SaleOrder(models.Model):
             delivery_method = self._get_preferred_delivery_method(delivery_methods)
             self._set_delivery_method(delivery_method)
 
-    def _cart_add(self, product_id:int, quantity:int|float=1.0, **kwargs):
+    def _cart_add(self, product_id: int, quantity: float = 1.0, **kwargs) -> dict:
         """Add quantity of the given product to the current sales order.
 
-        :param int product_id: product id, as a `product.product` id.
-        :params float quantity: the quantity to add to the cart.
-        :param dict kwargs: Additional parameters given to deeper method calls.
+        :param product_id: product id, as a `product.product` id.
+        :param quantity: the quantity to add to the cart.
+        :param kwargs: Additional parameters given to deeper method calls.
         :return: values used by the cart service to give feedback to the customer.
-        :rtype: dict
         """
         self.ensure_one()
         self = self.with_company(self.company_id)
@@ -382,14 +381,13 @@ class SaleOrder(models.Model):
 
         return filtered_sol
 
-    def _cart_update_line_quantity(self, line_id:int, quantity:int|float, **kwargs):
+    def _cart_update_line_quantity(self, line_id: int, quantity: float, **kwargs) -> dict:
         """Update the quantity of a given line of the cart.
 
-        :param int line_id: line id, as a `sale.order.line` id.
-        :params float quantity: the updated quantity of the line.
-        :param dict kwargs: Additional parameters given to deeper method calls.
+        :param line_id: line id, as a `sale.order.line` id.
+        :param quantity: the updated quantity of the line.
+        :param kwargs: Additional parameters given to deeper method calls.
         :return: values used by the cart service to give feedback to the customer.
-        :rtype: dict
         """
         self.ensure_one()
         self = self.with_company(self.company_id)

@@ -221,8 +221,8 @@ class IrActionsActions(models.Model):
     def _for_xml_id(self, full_xml_id):
         """ Returns the action content for the provided xml_id
 
-        :param xml_id: the namespace-less id of the action (the @id
-                       attribute from the XML file)
+        :param full_xml_id: the namespace-less id of the action (the @id
+            attribute from the XML file)
         :return: A read() view of the ir.actions.action safe for web use
         """
         record = self.env.ref(full_xml_id)

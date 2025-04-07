@@ -154,7 +154,8 @@ class MailingMailing(models.Model):
         """ Give list of opt-outed records, depending on specific model-based
         computation if available.
 
-        :return list: opt-outed record IDs
+        :returns: opt-outed record IDs
+        :rtype: list
         """
         self.ensure_one()
         opt_out = []

@@ -277,7 +277,6 @@ class SequenceMixin(models.AbstractModel):
         would only work when the numbering makes a new start (domain returns by
         _get_last_sequence_domain is [], i.e: a new year).
 
-        :param field_name: the field that contains the sequence.
         :param relaxed: this should be set to True when a previous request didn't find
             something without. This allows to find a pattern from a previous period, and
             try to adapt it for the new period.
@@ -312,10 +311,12 @@ class SequenceMixin(models.AbstractModel):
         """Get the python format and format values for the sequence.
 
         :param previous: the sequence we want to extract the format from
-        :return tuple(format, format_values):
-            format is the format string on which we should call .format()
-            format_values is the dict of values to format the `format` string
-            ``format.format(**format_values)`` should be equal to ``previous``
+         tuple(format, format_values)
+        :returns: a 2-elements tuple with:
+
+            - format is the format string on which we should call .format()
+            - format_values is the dict of values to format the `format` string
+              ``format.format(**format_values)`` should be equal to ``previous``
         """
         sequence_number_reset = self._deduce_sequence_number_reset(previous)
         regex = self._sequence_fixed_regex
@@ -425,8 +426,6 @@ class SequenceMixin(models.AbstractModel):
         This method ensures that the field is set both in the ORM and in the database.
         This is necessary because we use a database query to get the previous sequence,
         and we need that query to always be executed on the latest data.
-
-        :param field_name: the field that contains the sequence.
         """
         self.ensure_one()
         format_string, format_values = self._get_next_sequence_format()
@@ -451,9 +450,10 @@ class SequenceMixin(models.AbstractModel):
         This method retrieves the last used sequence and determines the next sequence format based on it.
         If there is no previous sequence, it initializes a new sequence using the starting sequence format.
 
-        :return tuple(format_string, format_values):
+        :returns: a 2-element tuple with:
+
             - format_string (str): the string on which we should call .format()
-            - format_values (dict): the dict of values to format `format_string`
+            - format_values (dict): the dict of values to format ``format_string``
         """
         last_sequence = self._get_last_sequence()
         new = not last_sequence

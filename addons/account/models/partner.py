@@ -869,10 +869,11 @@ class ResPartner(models.Model):
         :param validation: if False, it will only return the formatted vat without checking if it valid.
             if 'error', an incorrect number will raise and if 'setnull' it will just return an empty vat
 
-        :return: The vat number
-                The country code of the country the VAT number
-                 was validated for, if it was validated. False if it could not be validated
-                 against the provided or guessed country.
+        :return: A two-elements tuple with:
+
+            1. The vat number
+            2. The country code of the country the VAT number was validated for, if it was validated.
+               False if it could not be validated against the provided or guessed country.
         """
         assert validation in (False, 'error', 'setnull')
         return vat, country and country.code or ''

@@ -247,7 +247,7 @@ class DigestDigest(models.Model):
         """ Compute KPIs to display in the digest template. It is expected to be
         a list of KPIs, each containing values for 3 columns display.
 
-        :return list: result [{
+        :return: result [{
             'kpi_name': 'kpi_mail_message',
             'kpi_fullname': 'Messages',  # translated
             'kpi_action': 'crm.crm_lead_action_pipeline',  # xml id of an action to execute
@@ -330,15 +330,17 @@ class DigestDigest(models.Model):
     def _compute_kpis_actions(self, company, user):
         """ Give an optional action to display in digest email linked to some KPIs.
 
-        :return dict: key: kpi name (field name), value: an action that will be
+        :returns: key: kpi name (field name), value: an action that will be
           concatenated with /odoo/action-{action}
+        :rtype: dict
         """
         return {}
 
     def _compute_preferences(self, company, user):
         """ Give an optional text for preferences, like a shortcut for configuration.
 
-        :return string: html to put in template
+        :returns: html to put in template
+        :rtype: str
         """
         preferences = []
         if self._context.get('digest_slowdown'):

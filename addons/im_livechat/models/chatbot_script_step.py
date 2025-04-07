@@ -162,7 +162,7 @@ class ChatbotScriptStep(models.Model):
         :param bool update_partner: whether or not to set update the email and phone on the res.partner
           from the environment (if not a public user) if those are not set yet. Defaults to True.
 
-        :return dict: a dict containing the customer values."""
+        :returns: a dict containing the customer values."""
 
         partner = False
         user_inputs = discuss_channel._chatbot_find_customer_values_in_messages({

@@ -1216,7 +1216,7 @@ class IrQweb(models.AbstractModel):
         method.
 
         :param expr: string: python expression
-        :param [raise_on_missing]: boolean:
+        :param bool raise_on_missing:
             Compile has `values['product'].price` instead of
             `values.get('product').price` to raise an error when get the
             'product' value and not an 'NoneType' object has no attribute

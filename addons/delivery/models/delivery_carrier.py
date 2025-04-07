@@ -258,12 +258,16 @@ class DeliveryCarrier(models.Model):
         ''' Compute the price of the order shipment
 
         :param order: record of sale.order
-        :return dict: {'success': boolean,
-                       'price': a float,
-                       'error_message': a string containing an error message,
-                       'warning_message': a string containing a warning message}
-                       # TODO maybe the currency code?
+        :returns: a dict with structure
+          ::
+
+            {'success': boolean,
+             'price': a float,
+             'error_message': a string containing an error message,
+             'warning_message': a string containing a warning message}
+        :rtype: dict
         '''
+        # TODO maybe the currency code?
         self.ensure_one()
         if hasattr(self, '%s_rate_shipment' % self.delivery_type):
             res = getattr(self, '%s_rate_shipment' % self.delivery_type)(order)

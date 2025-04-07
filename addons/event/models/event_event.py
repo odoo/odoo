@@ -727,14 +727,12 @@ class EventEvent(models.Model):
     def _verify_seats_availability(self, slot_tickets):
         """ Check event seats availability, for combinations of slot / ticket.
 
-        :slot_tickets: a list of tuples(slot, ticket, count). SLot and ticket
-          are optional, depending on event configuration. If count is 0
+        :param slot_tickets: a list of tuples(slot, ticket, count). Slot and
+          ticket are optional, depending on event configuration. If count is 0
           it is a simple check current values do not overflow limit. If count
           is given, it serves as a check there are enough remaining seats.
-
-        Raises:
-            ValidationError: if the event / slot / ticket do not have enough
-            available seats
+        :raises ValidationError: if the event / slot / ticket do not have
+          enough available seats
         """
         self.ensure_one()
         if not (all(len(item) == 3 for item in slot_tickets)):

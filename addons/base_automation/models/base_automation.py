@@ -1118,11 +1118,7 @@ class BaseAutomation(models.Model):
 
     @api.model
     def _cron_process_time_based_actions(self):
-        """ Execute the time-based automations.
-
-        :param auto_commit: Set to True when called from a CRON to commit after
-            each automation.
-        """
+        """ Execute the time-based automations. """
         if '__action_done' not in self._context:
             self = self.with_context(__action_done={})
 

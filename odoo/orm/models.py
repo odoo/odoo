@@ -2216,13 +2216,9 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _read_group_format_result(self, rows_dict, lazy_groupby):
         """
-            Helper method to format the data contained in the dictionary data by
-            adding the domain corresponding to its values, the groupbys in the
-            context and by properly formatting the date/datetime values.
-
-        :param data: a single group
-        :param annotated_groupbys: expanded grouping metainformation
-        :param groupby: original grouping metainformation
+        Helper method to format the data contained in the dictionary data by
+        adding the domain corresponding to its values, the groupbys in the
+        context and by properly formatting the date/datetime values.
         """
         for group in lazy_groupby:
             field_name = group.split(':')[0].split('.')[0]
@@ -3128,7 +3124,6 @@ class BaseModel(metaclass=MetaModel):
 
         :param operation: one of ``create``, ``read``, ``write``, ``unlink``
         :param field_names: names of the fields
-        :type field_names: list or None
         :return: provided fields if fields is truthy (or the fields
           readable by the current user).
         :raise AccessError: if the user is not allowed to access
@@ -3203,8 +3198,8 @@ class BaseModel(metaclass=MetaModel):
         """ Update the translations for a given field, with support for handling
         old terms using an optional digest function.
 
-        :param str field_name: The name of the field to update.
-        :param dict translations: The translations to apply.
+        :param field_name: The name of the field to update.
+        :param translations: The translations to apply.
             If `field.translate` is `True`, the dictionary should be in the format:
                 {lang: new_value}
                 where
@@ -3218,8 +3213,8 @@ class BaseModel(metaclass=MetaModel):
                     new_value (str): The new translation of old_term for the specified language.
                     new_value (False/''): Removes the translation for the specified
                         language and falls back to the old source_lang_term.
-        :param callable digest: An optional function to generate identifiers for old terms.
-        :param str source_lang: The language of old_source_lang_term in translations.
+        :param digest: An optional function to generate identifiers for old terms.
+        :param source_lang: The language of old_source_lang_term in translations.
             Defaults to 'en_US' if not specified.
         """
         self.ensure_one()
@@ -3603,8 +3598,7 @@ class BaseModel(metaclass=MetaModel):
     def get_metadata(self) -> list[ValuesType]:
         """Return some metadata about the given records.
 
-        :return: list of ownership dictionaries for each requested record
-        :rtype: list of dictionaries with the following keys:
+        :returns: list of ownership dictionaries for each requested record with the following keys:
 
             * id: object id
             * create_uid: user who created the record
@@ -4438,7 +4432,7 @@ class BaseModel(metaclass=MetaModel):
         * discarded forbidden values (magic fields),
         * precomputed fields.
 
-        :param list vals_list: List of create values
+        :param vals_list: List of create values
         :returns: new list of completed create values
         """
         bad_names = ['id', 'parent_path']
@@ -4478,8 +4472,6 @@ class BaseModel(metaclass=MetaModel):
     def _add_precomputed_values(self, vals_list: list[ValuesType]) -> None:
         """ Add missing precomputed fields to ``vals_list`` values.
         Only applies for precompute=True fields.
-
-        :param dict vals_list: list(dict) of create values
         """
         precomputable = {
             fname: field
@@ -5453,9 +5445,9 @@ class BaseModel(metaclass=MetaModel):
             Defaults to an empty domain that will match all records.
         :param fields: List of fields to read, see ``fields`` parameter in :meth:`read`.
             Defaults to all fields.
-        :param int offset: Number of records to skip, see ``offset`` parameter in :meth:`search`.
+        :param offset: Number of records to skip, see ``offset`` parameter in :meth:`search`.
             Defaults to 0.
-        :param int limit: Maximum number of records to return, see ``limit`` parameter in :meth:`search`.
+        :param limit: Maximum number of records to return, see ``limit`` parameter in :meth:`search`.
             Defaults to no limit.
         :param order: Columns to sort result, see ``order`` parameter in :meth:`search`.
             Defaults to no sort.

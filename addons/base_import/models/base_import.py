@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import chardet
 import codecs
 import collections
 import contextlib
@@ -17,7 +15,9 @@ import os
 import re
 import unicodedata
 from collections import defaultdict
+from collections.abc import Sequence
 
+import chardet
 import psycopg2
 import requests
 from PIL import Image
@@ -59,10 +59,14 @@ except ImportError:
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
+from odoo.tools import (
+    DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    config,
+    parse_version,
+)
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, parse_version
-
+from odoo.tools.translate import _
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -389,10 +393,10 @@ class Base_ImportImport(models.TransientModel):
         """ Remove from model_fields_tree param all the fields and subfields
         that do not match the types in header_types
 
-        :param: list[dict] model_fields_tree: Contains recursively all the importable fields of the target model.
-                                              Generated in "get_fields_tree" method.
-        :param: list header_types: Contains the extracted fields types of the current header.
-                                   Generated in :meth:`_extract_header_types`.
+        :param list[dict] model_fields_tree: Contains recursively all the importable fields of
+            the target model. Generated in :meth:`get_fields_tree`.
+        :param list header_types: Contains the extracted fields types of the current header.
+            Generated in :meth:`_extract_header_types`.
         """
         most_likely_fields_tree = []
         for field in model_fields_tree:
@@ -1141,15 +1145,20 @@ class Base_ImportImport(models.TransientModel):
             }
 
     @api.model
-    def _convert_import_data(self, fields, options):
+    def _convert_import_data(
+        self,
+        fields: Sequence[str | bool],
+        options,
+    ) -> tuple[
+        list[list[str]],  # data
+        list[str],        # fields, without the bool items
+    ]:
         """ Extracts the input BaseModel and fields list (with
             ``False``-y placeholders for fields to *not* import) into a
             format Model.import_data can use: a fields list without holes
             and the precisely matching data matrix
 
-            :param list(str|bool): fields
             :returns: (data, fields)
-            :rtype: (list(list(str)), list(str))
             :raises ValueError: in case the import data could not be converted
         """
         # Get indices for non-empty fields
@@ -1622,9 +1631,9 @@ class Base_ImportImport(models.TransientModel):
             there was already a conflict during first import run and user had to
             select a fallback value for the field.
 
-        :param: list import_field: ordered list of field that have been matched to import data
-        :param: list input_file_data: ordered list of values (list) that need to be imported in the given import_fields
-        :param: dict fallback_values:
+        :param list import_field: ordered list of field that have been matched to import data
+        :param list input_file_data: ordered list of values (list) that need to be imported in the given import_fields
+        :param dict fallback_values:
 
             contains all the fields that have been tagged by the user to use a
             specific fallback value in case the value to import does not match

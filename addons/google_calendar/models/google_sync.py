@@ -165,8 +165,9 @@ class GoogleCalendarSync(models.AbstractModel):
         """Synchronize Google recurrences in Odoo. Creates new recurrences, updates
         existing ones.
 
-        :param google_recurrences: Google recurrences to synchronize in Odoo
+        :param google_events: Google recurrences to synchronize in Odoo
         :param write_dates: A dictionary mapping Odoo record IDs to their write dates.
+        :param default_reminders:
         :return: synchronized odoo recurrences
         """
         write_dates = dict(write_dates or {})

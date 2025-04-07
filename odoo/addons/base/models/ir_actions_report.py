@@ -380,13 +380,6 @@ class IrActionsReport(models.Model):
         The idea is to put all headers/footers together. Then, we will use a javascript trick
         (see minimal_layout template) to set the right header/footer during the processing of wkhtmltopdf.
         This allows the computation of multiple reports in a single call to wkhtmltopdf.
-
-        :param html: The html rendered by render_qweb_html.
-        :type: bodies: list of string representing each one a html body.
-        :type header: string representing the html header.
-        :type footer: string representing the html footer.
-        :type specific_paperformat_args: dictionary of prioritized paperformat values.
-        :return: bodies, header, footer, specific_paperformat_args
         '''
 
         # Return empty dictionary if 'web.minimal_layout' not found.

@@ -373,7 +373,8 @@ class MailAlias(models.Model):
         :param bool is_email: whether to keep a right part, otherwise only
           left part is kept;
 
-        :return str: sanitized alias name
+        :returns: sanitized alias name
+        :rtype: str
         """
         sanitized_name = name.strip() if name else ''
         if is_email:

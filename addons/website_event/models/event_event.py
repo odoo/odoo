@@ -278,8 +278,9 @@ class EventEvent(models.Model):
         menu to de-activate. Due to saas-13.3 improvement of menu management
         this is done using side-methods to ease inheritance.
 
-        :return list: list of fields, each of which triggering a menu update
-          like website_menu, website_track, ... """
+        :returns: list of fields, each of which triggering a menu update
+          like website_menu, website_track, ...
+        :rtype: list"""
         return ['community_menu', 'introduction_menu', 'register_menu']
 
     def _get_menu_type_field_matching(self):
@@ -294,7 +295,7 @@ class EventEvent(models.Model):
         menu activated and de-activated. Purpose is to find those whose value
         changed and update the underlying menus.
 
-        :return dict: key = name of field triggering a website menu update, get {
+        :returns: key = name of field triggering a website menu update, get {
           'activated': subset of self having its menu currently set to True
           'deactivated': subset of self having its menu currently set to False
         } """
@@ -317,7 +318,7 @@ class EventEvent(models.Model):
           is used notably when a direct write to a stored editable field messes with
           its pre-computed value, notably in a transient mode (aka demo for example);
 
-        :return dict: key = name of field triggering a website menu update, get {
+        :returns: key = name of field triggering a website menu update, get {
           'activated': subset of self having its menu toggled to True
           'deactivated': subset of self having its menu toggled to False
         } """
@@ -382,7 +383,7 @@ class EventEvent(models.Model):
         :param fname_o2m: o2m linking towards website.event.menu matching the
           boolean fields (normally an entry of website.event.menu with type matching
           the boolean field name)
-        :param method_name: method returning menu entries information: url, sequence, ...
+        :param fmenu_type:
         """
         self.ensure_one()
         new_menu = None

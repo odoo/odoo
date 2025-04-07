@@ -31,7 +31,8 @@ class IrUiMenu(models.Model):
 
         :param str res_model: the model name for which we want to find the best
             menu root id
-        :return (int): the best menu root id or None if not found
+        :return: the best menu root id or None if not found
+        :rtype: int
         """
         with contextlib.suppress(AccessError):  # if no access to the menu, return None
             visible_menu_ids = self._visible_menu_ids()

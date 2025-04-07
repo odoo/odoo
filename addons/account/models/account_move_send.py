@@ -425,12 +425,7 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _hook_if_errors(self, moves_data, allow_raising=True):
-        """ Process errors found so far when generating the documents.
-        :param from_cron:   Flag indicating if the method is called from a cron. In that case, we avoid raising any
-                            error.
-        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
-                                    proforma PDF report instead.
-        """
+        """ Process errors found so far when generating the documents. """
         for move, move_data in moves_data.items():
             error = move_data['error']
             if allow_raising:
