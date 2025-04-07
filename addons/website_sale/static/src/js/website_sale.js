@@ -658,54 +658,8 @@ publicWidget.registry.WebsiteSaleAccordionProduct = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend({
-    selector: '#o_product_page_reviews',
-    disabledInEditableMode: false,
-
-    /**
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        this.website_menus = this.bindService("website_menus");
-    },
-
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        this._updateChatterComposerPosition();
-        this.website_menus.registerCallback(this._updateChatterComposerPosition.bind(this));
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this.$el.find('.o_portal_chatter_composer').css('top', '');
-        this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _updateChatterComposerPosition() {
-        let size = 20;
-        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
-            size += $(el).outerHeight();
-        }
-        this.$el.find('.o_portal_chatter_composer').css('top', size);
-    },
-});
-
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,
     WebsiteSaleSearchModal: publicWidget.registry.WebsiteSaleSearchModal,
     WebsiteSaleProductPage: publicWidget.registry.WebsiteSaleAccordionProduct,
-    WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
-    WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
 };
