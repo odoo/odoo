@@ -53,7 +53,7 @@
                                 </span>
                             </div>
                             <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
-                            <t t-if="message.is_note and !message.isPending" t-call="mail.Message.actions"/>
+                            <t t-if="message.is_note" t-call="mail.Message.actions"/>
                         </div>
                         <div
                             class="o-mail-Message-contentContainer position-relative d-flex"
@@ -110,7 +110,7 @@
                                             </div>
                                         </t>
                                     </t>
-                                    <t t-if="!message.is_note and !message.isPending and message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
+                                    <t t-if="!message.is_note and message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
                                 </div>
                                 <AttachmentList
                                     t-if="message.attachment_ids.length > 0"
@@ -120,7 +120,7 @@
                                     messageSearch="props.messageSearch"/>
                                 <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="props.message.editable"/>
                             </div>
-                            <t t-if="!message.is_note and !message.isPending and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
+                            <t t-if="!message.is_note and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
                         </div>
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
                     </div>
@@ -179,6 +179,11 @@
                         </t>
                     </Dropdown>
                 </div>
+                <t t-foreach="Array.from({ length: quickActionCount - quickActions.length - 1 })" t-as="emptyQuickAction" t-key="emptyQuickAction_index">
+                    <button class="btn border-0 px-1 py-0 rounded-0 opacity-0 pe-none">
+                        <i class="fa-lg fa fa-question"/>
+                    </button>
+                </t>
             </div>
         </t>
     </div>
