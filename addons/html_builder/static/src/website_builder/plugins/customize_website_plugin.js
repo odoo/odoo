@@ -467,15 +467,15 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
     withHistoryFromLoad(action) {
         const loadFn = action.load;
-        const load = async ({ param, value }) => {
-            const oldValue = action.getValue({ param });
-            await loadFn({ param, value });
+        const load = async ({ editingElement, param, value }) => {
+            const oldValue = action.getValue({ editingElement, param });
+            await loadFn({ editingElement, param, value });
             return oldValue;
         };
-        const apply = ({ param, value, loadResult: oldValue }) => {
+        const apply = ({ editingElement, param, value, loadResult: oldValue }) => {
             const blockedLoad = (v) => {
                 this.services.ui.block({ delay: 2500 });
-                loadFn({ param, value: v })
+                loadFn({ editingElement, param, value: v })
                     .then(() => {
                         this.dispatchTo("trigger_dom_updated");
                     })
