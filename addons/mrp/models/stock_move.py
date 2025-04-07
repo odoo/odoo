@@ -611,9 +611,7 @@ class StockMove(models.Model):
         if self.state in ('done', 'cancel'):
             return True
         # Do not update extra product quantities
-        if self.product_uom.is_zero(self.product_uom_qty):
-            return True
-        return False
+        return self.product_uom.is_zero(self.product_uom_qty)
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         vals = super()._prepare_move_line_vals(quantity, reserved_quant)
