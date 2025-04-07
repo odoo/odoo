@@ -14,6 +14,12 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_view_pickings" icon="fa-truck"
+                                type="object" invisible="pickings_count == 0">
+                                <field name="pickings_count" string="Transfers" widget="statinfo"/>
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <label for="name" string="Landed Cost"/>
                             <h1>
