@@ -145,8 +145,10 @@ class ResPartner(models.Model):
                 country_code = partner.country_id.code
                 number = partner.vat
             partner.vies_vat_to_check = (
-                country_code.upper() in eu_country_codes or
-                country_code.lower() in _region_specific_vat_codes
+                country_code.upper() not in list(_eu_country_vat.keys()) and (
+                    country_code.upper() in eu_country_codes + list(_eu_country_vat.values()) or
+                    country_code.lower() in _region_specific_vat_codes
+                )
             ) and self._fix_vat_number(country_code + number, partner.country_id.id) or ''
 
     @api.depends_context('company')
@@ -158,7 +160,7 @@ class ResPartner(models.Model):
             company_code = self.env.company.account_fiscal_country_id.code
             partner.perform_vies_validation = (
                 to_check
-                and not to_check[:2].upper() == company_code
+                and not to_check[:2].upper() == _eu_country_vat_inverse.get(company_code, company_code)
                 and self.env.company.vat_check_vies
             )
 
