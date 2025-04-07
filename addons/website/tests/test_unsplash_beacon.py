@@ -7,7 +7,6 @@ import unittest
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUnsplashBeacon(odoo.tests.HttpCase):
 
-    @unittest.skip
     def test_01_beacon(self):
         self.env['ir.config_parameter'].sudo().set_param('unsplash.app_id', '123456')
         # Create page with unsplash image.

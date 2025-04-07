@@ -27,7 +27,6 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
         self.start_tour('/', 'website_form_editor_tour_submit')
         self.start_tour('/', 'website_form_editor_tour_results', login="admin")
 
-    @unittest.skip
     def test_website_form_contact_us_edition_with_email(self):
         self.start_tour('/odoo', 'website_form_contactus_edition_with_email', login="admin")
         self.start_tour('/contactus', 'website_form_contactus_submit', login="portal")
@@ -52,7 +51,6 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     def test_website_form_conditional_required_checkboxes(self):
         self.start_tour('/', 'website_form_conditional_required_checkboxes', login="admin")
 
-    @unittest.skip
     def test_contactus_form_email_stay_dynamic(self):
         # The contactus form should always be sent to the company email except
         # if the user explicitly changed it in the options.
