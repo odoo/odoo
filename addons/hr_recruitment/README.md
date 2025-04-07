@@ -8,6 +8,8 @@ Organize your job board, promote your job announces and keep track of
 application submissions easily. Follow every applicant and build up a database
 of skills and profiles with indexed documents.
 
+Awesome app for managing your hiring process. Keep track of everything in one place.
+
 Post Your Jobs on Best Job Boards
 ---------------------------------
 
