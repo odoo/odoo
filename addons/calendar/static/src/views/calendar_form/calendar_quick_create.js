@@ -45,6 +45,16 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
 
     goToFullEvent() {
         const context = getDefaultValuesFromRecord(this.model.root.data)
+        if (!context.default_start_date) {
+            context.default_start_date = this.model.root.data.start
+                ? serializeDate(this.model.root.data.start)
+                : false;
+        }
+        if (!context.default_stop_date) {
+            context.default_stop_date = this.model.root.data.stop
+                ? serializeDate(this.model.root.data.stop)
+                : false;
+        }
         this.props.goToFullEvent(context);
     }
 }
