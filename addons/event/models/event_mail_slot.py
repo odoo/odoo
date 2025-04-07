@@ -12,6 +12,7 @@ class EventMailRegistration(models.Model):
     _rec_name = 'scheduler_id'
     _order = 'scheduled_date DESC, id ASC'
 
+    active = fields.Boolean("Active", default=True)
     event_slot_id = fields.Many2one('event.slot', 'Slot', ondelete='cascade', required=True)
     error_datetime = fields.Datetime('Last Error')
     scheduled_date = fields.Datetime('Schedule Date', compute='_compute_scheduled_date', store=True)
