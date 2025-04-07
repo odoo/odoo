@@ -37,6 +37,7 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                         if (
                             cmd.definition.type !== chart.type ||
                             chart.cumulative !== cmd.definition.cumulative ||
+                            chart.cumulatedStart !== cmd.definition.cumulatedStart ||
                             dataSource.getInitialDomainString() !==
                                 new Domain(cmd.definition.searchParams.domain).toString()
                         ) {
