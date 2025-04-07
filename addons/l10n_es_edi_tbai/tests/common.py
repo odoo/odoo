@@ -73,7 +73,6 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
         })
         cls.company_data['company'].write({
             'l10n_es_tbai_tax_agency': agency,
-            'l10n_es_tbai_certificate_id': cls.certificate.id,
         })
 
     @classmethod
