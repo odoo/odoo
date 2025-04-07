@@ -44,16 +44,17 @@ function compareProfilePictures(currentSrc) {
 registerWebsitePreviewTour(
     "portal_profile_update",
     {
-        url: "/my/account",
+        url: "/my",
     },
     () => [
         {
-            content: "Ensure that profile picture for portal user is present",
-            trigger: ":iframe .o_wportal_avatar_img",
+            content: "Check portal is loaded",
+            trigger: "a[href*='/my/account']",
+            run: "click",
         },
         {
             content: "Update the profile picture using edit button",
-            trigger: ":iframe .o_portal_picture_card",
+            trigger: ".o_portal_picture_card",
             run: async function () {
                 previousProfilePictureSrc = this.anchor.querySelector(".o_wportal_avatar_img").src;
                 const fileInputEl = this.anchor.querySelector(".o_file_upload");
@@ -72,24 +73,24 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check if profile picture is updated successfully.",
-            trigger: ":iframe .o_wportal_avatar_img",
+            trigger: ".o_wportal_avatar_img",
             run: function () {
                 compareProfilePictures(this.anchor.src);
             },
         },
         {
             content: "Click on save button",
-            trigger: ":iframe button#save_address",
+            trigger: "button#save_address",
             run: "click",
         },
         {
             content: "Click on edit information",
-            trigger: ":iframe a[href*='/my/account']:contains('Edit information')",
+            trigger: "a[href*='/my/account']:contains('Edit information')",
             run: "click",
         },
         {
             content: "Click on delete button",
-            trigger: ":iframe .o_portal_profile_pic_clear",
+            trigger: ".o_portal_profile_pic_clear",
             run: function () {
                 previousProfilePictureSrc =
                     this.anchor.parentNode.parentNode.querySelector(".o_wportal_avatar_img").src;
@@ -98,12 +99,12 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on save button",
-            trigger: ":iframe button#save_address",
+            trigger: "button#save_address",
             run: "click",
         },
         {
             content: "Check if profile picture is updated successfully.",
-            trigger: ":iframe img[alt=Contact]",
+            trigger: "img[alt=Contact]",
             run: function () {
                 compareProfilePictures(this.anchor.src);
             },
