@@ -24,7 +24,11 @@ class ProductPricelistItem(models.Model):
         default=_default_pricelist_id)
 
     company_id = fields.Many2one(related='pricelist_id.company_id', store=True)
-    currency_id = fields.Many2one(related='pricelist_id.currency_id', store=True)
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        compute='_compute_currency_id',
+        store=True
+    )
 
     date_start = fields.Datetime(
         string="Start Date",
@@ -158,6 +162,14 @@ class ProductPricelistItem(models.Model):
     rule_tip = fields.Char(compute='_compute_rule_tip')
 
     #=== COMPUTE METHODS ===#
+
+    @api.depends('pricelist_id', 'pricelist_id.currency_id')
+    def _compute_currency_id(self):
+        for pricing in self:
+            if pricing.pricelist_id and pricing.pricelist_id.currency_id:
+                pricing.currency_id = pricing.pricelist_id.currency_id
+            else:
+                pricing.currency_id = pricing.env.company.currency_id
 
     @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id')
     def _compute_name(self):
