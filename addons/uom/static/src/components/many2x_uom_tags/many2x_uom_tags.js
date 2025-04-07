@@ -45,7 +45,8 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
 
     async updateReferenceUnit(props = this.props) {
         if (props.productModel && props.productId) {
-            const product = await this.orm.searchRead(props.productModel, [["id", "=", props.productId]], ["uom_id"]);
+            const context = { "active_test" : false };
+            const product = await this.orm.searchRead(props.productModel, [["id", "=", props.productId]], ["uom_id"], { context });
             this.referenceUnit = (await this.orm.searchRead("uom.uom", [["id", "=", product[0].uom_id[0]]], ["name", "factor", "parent_path", "rounding"]))[0];
         }
     }
