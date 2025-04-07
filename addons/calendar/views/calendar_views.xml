@@ -105,7 +105,7 @@
             <form string="Meetings" js_class="calendar_form">
                 <div invisible="not recurrence_id" class="alert alert-info oe_edit_only" role="status">
                     <p>Edit recurring event</p>
-                    <field name="recurrence_update" widget="radio"/>
+                    <field name="recurrence_update" widget="recurrence_update_select"/>
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -148,7 +148,7 @@
                             </div>
                             <field name="event_tz" invisible="not recurrency" readonly="not user_can_edit"/>
 
-
+                            <field name="show_all_events" invisible="1"/>
                             <field name="recurrence_id" invisible="1" />
                             <field name="rrule_type" invisible="1" />
                             <field name="recurrency" readonly="not user_can_edit"/>
