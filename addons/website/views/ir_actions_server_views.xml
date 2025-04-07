@@ -24,17 +24,6 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_server_action_tree_website">
-            <field name="name">ir.actions.server.list.website</field>
-            <field name="model">ir.actions.server</field>
-            <field name="inherit_id" ref="base.view_server_action_tree"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='model_id']" position="after">
-                    <field name="website_url"/>
-                </xpath>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="view_server_action_search_website">
             <field name="name">ir.actions.server.search.website</field>
             <field name="model">ir.actions.server</field>

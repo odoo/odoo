@@ -517,9 +517,9 @@ env['res.partner'].create({'name': partner_name})
             <field name="model">ir.actions.server</field>
             <field name="arch" type="xml">
                 <list string="Server Actions">
-                    <field name="name"/>
-                    <field name="state"/>
+                    <field name="name" string="Name"/>
                     <field name="model_id"/>
+                    <field name="state"/>
                     <field name="usage"/>
                 </list>
             </field>
