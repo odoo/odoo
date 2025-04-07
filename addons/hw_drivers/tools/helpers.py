@@ -12,7 +12,6 @@ import io
 import logging
 import netifaces
 from OpenSSL import crypto
-import os
 from pathlib import Path
 import platform
 import re
@@ -129,10 +128,8 @@ def start_nginx_server():
     if platform.system() == 'Windows':
         path_nginx = get_path_nginx()
         if path_nginx:
-            os.chdir(path_nginx)
             _logger.info('Start Nginx server: %s\\nginx.exe', path_nginx)
-            os.popen('nginx.exe')
-            os.chdir('..\\server')
+            subprocess.Popen('nginx.exe', cwd=path_nginx)
     elif platform.system() == 'Linux':
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
@@ -176,58 +173,6 @@ def check_certificate():
         message = 'Your certificate %(certificate)s is valid until %(end_date)s' % {"certificate": cn, "end_date": cert_end_date}
         _logger.info(message)
         return {"status": CertificateStatus.OK, "message": message}
-
-
-@toggleable
-@require_db
-def check_git_branch(server_url=None):
-    """Check if the local branch is the same as the connected Odoo DB and
-    checkout to match it if needed.
-
-    :param server_url: The URL of the connected Odoo database (provided by decorator).
-    """
-    try:
-        response = requests.post(server_url + "/web/webclient/version_info", json={}, timeout=5)
-        response.raise_for_status()
-        data = response.json()
-    except requests.exceptions.HTTPError:
-        _logger.exception('Could not reach configured server to get the Odoo version')
-        return
-    except ValueError:
-        _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
-        return
-
-    try:
-        git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
-
-        db_branch = data['result']['server_serie'].replace('~', '-')
-        if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
-            db_branch = 'master'
-
-        local_branch = (
-            subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
-        )
-        _logger.info(
-            "Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s",
-            local_branch,
-            db_branch,
-        )
-
-        if db_branch != local_branch:
-            try:
-                with writable():
-                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
-                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
-                    _logger.info("Updating odoo folder to the branch %s", db_branch)
-                    subprocess.run(
-                        ['/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh'], check=True
-                    )
-            except subprocess.CalledProcessError:
-                _logger.exception("Failed to update the code with git.")
-            finally:
-                odoo_restart()
-    except Exception:
-        _logger.exception('An error occurred while trying to update the code with git')
 
 
 def check_image():
@@ -336,7 +281,7 @@ def get_mac_address():
                 return addr
 
 def get_path_nginx():
-    return str(list(Path().absolute().parent.glob('*nginx*'))[0])
+    return path_file('nginx')
 
 
 @cache
@@ -411,8 +356,8 @@ def load_certificate():
             Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
             Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
     elif platform.system() == 'Windows':
-        Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
-        Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
+        get_path_nginx().joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
+        get_path_nginx().joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
     time.sleep(3)
     if platform.system() == 'Windows':
         odoo_restart(0)
@@ -528,7 +473,7 @@ def path_file(*args):
     if platform_os == 'Linux':
         return Path("~pi", *args).expanduser()  # Path.home() returns odoo user's home instead of pi's
     elif platform_os == 'Windows':
-        return Path().absolute().parent.joinpath('server', *args)
+        return Path().absolute().parent.joinpath(*args)
 
 
 def read_file_first_line(filename):
