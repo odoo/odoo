@@ -1411,7 +1411,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.ensure_one()
         return bool(not self.picking_id and self.picking_type_id)
 
-    def _action_confirm(self, merge=True, merge_into=False):
+    def _action_confirm(self, merge=True, merge_into=False, force_full_reservation=False):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         :param: merge: According to this boolean, a newly confirmed move will be merged
         in another move of the same picking sharing its characteristics.
@@ -1500,7 +1500,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                        and (move._should_bypass_reservation()
                             or move.picking_type_id.reservation_method == 'at_confirm'
                             or (move.reservation_date and move.reservation_date <= fields.Date.today())))\
-             ._action_assign()
+             ._action_assign(force_full_reservation=force_full_reservation)
 
         if new_push_moves:
             neg_push_moves = new_push_moves.filtered(lambda sm: float_compare(sm.product_uom_qty, 0, precision_rounding=sm.product_uom.rounding) < 0)
@@ -1750,7 +1750,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         rounding = self.product_id.uom_id.rounding
         return dict((k, v) for k, v in available_move_lines.items() if float_compare(v, 0, precision_rounding=rounding) > 0)
 
-    def _action_assign(self, force_qty=False):
+    def _action_assign(self, force_full_reservation=False):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `reserved_qty` for all its move lines is
         equal to its `product_qty`. If it is less, the stock move is considered
@@ -1759,6 +1759,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         StockMove = self.env['stock.move']
         assigned_moves_ids = OrderedSet()
         partially_available_moves_ids = OrderedSet()
+        unavailable_moves_ids = self.env['stock.move']
         # Read the `reserved_availability` field of the moves out of the loop to prevent unwanted
         # cache invalidation when actually reserving the move.
         reserved_availability = {move: move.quantity for move in self}
@@ -1769,18 +1770,14 @@ Please change the quantity done or the rounding precision in your settings.""",
         # to the putaway rules. This redirection will be applied on moves of `moves_to_redirect`.
         moves_to_redirect = OrderedSet()
         moves_to_assign = self
-        if not force_qty:
-            moves_to_assign = moves_to_assign.filtered(
-                lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
-            )
+        moves_to_assign = moves_to_assign.filtered(
+            lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
+        )
         moves_mto = moves_to_assign.filtered(lambda m: m.move_orig_ids and not m._should_bypass_reservation())
         quants_cache = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
         for move in moves_to_assign:
             rounding = roundings[move]
-            if not force_qty:
-                missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
-            else:
-                missing_reserved_uom_quantity = force_qty
+            missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
             if float_compare(missing_reserved_uom_quantity, 0, precision_rounding=rounding) <= 0:
                 assigned_moves_ids.add(move.id)
                 continue
@@ -1825,7 +1822,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 assigned_moves_ids.add(move.id)
                 moves_to_redirect.add(move.id)
             else:
-                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) and not force_qty:
+                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                     assigned_moves_ids.add(move.id)
                 elif not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
@@ -1838,6 +1835,11 @@ Please change the quantity done or the rounding precision in your settings.""",
                     # Reserve new quants and create move lines accordingly.
                     forced_package_id = move.package_level_id.package_id or None
                     taken_quantity = move._update_reserved_quantity(need, move.location_id, package_id=forced_package_id, strict=False)
+                    if force_full_reservation:
+                        # need to create an additional move line here with the remaining quantity
+                        # if cannot be assigned as the quant does not exist => will this break the reservation ?
+                        unavailable_moves_ids |= self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=need - taken_quantity)).move_id
+                        taken_quantity = need
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
                     moves_to_redirect.add(move.id)
@@ -1868,6 +1870,11 @@ Please change the quantity done or the rounding precision in your settings.""",
 
                         taken_quantity = move.with_context(quants_cache=quants_cache)._update_reserved_quantity(
                             min(quantity, need), location_id, lot_id, package_id, owner_id)
+                        if force_full_reservation and taken_quantity:
+                            # need to create an additional move line here with the remaining quantity
+                            # if cannot be assigned as the quant does not exist => will this break the reservation ?
+                            unavailable_moves_ids |= self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=need - taken_quantity)).move_id
+                            taken_quantity = need
                         if float_is_zero(taken_quantity, precision_rounding=rounding):
                             continue
                         moves_to_redirect.add(move.id)
@@ -1881,6 +1888,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.env['stock.move.line'].create(move_line_vals_list)
         StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
         StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
+        unavailable_moves_ids.write({'state': 'draft'})
         if not self.env.context.get('bypass_entire_pack'):
             self.picking_id._check_entire_pack()
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
