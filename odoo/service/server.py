@@ -1261,7 +1261,16 @@ server = None
 server_phoenix = False
 
 def load_server_wide_modules():
+<<<<<<< 772f9607be55f5b4b301cc7e4aad8649f5034275
     for m in config['server_wide_modules']:
+||||||| abcce1f5d1981785a419224fcd2351c830bb1b54
+    server_wide_modules = {'base', 'web'} | set(odoo.conf.server_wide_modules)
+    for m in server_wide_modules:
+=======
+    server_wide_modules = list(odoo.conf.server_wide_modules)
+    server_wide_modules.extend(m for m in ('base', 'web') if m not in server_wide_modules)
+    for m in server_wide_modules:
+>>>>>>> bde905e498e69fb4cf6ac1c78280e23b84783085
         try:
             odoo.modules.module.load_openerp_module(m)
         except Exception:
