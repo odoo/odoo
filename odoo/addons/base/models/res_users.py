@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
-import binascii
 import contextlib
 import collections
 import datetime
@@ -10,7 +9,7 @@ import hmac
 import ipaddress
 import json
 import logging
-import os
+import secrets
 import time
 from functools import wraps
 from hashlib import sha256
@@ -1502,7 +1501,7 @@ class ResUsersApikeys(models.Model):
         """
         self._check_expiration_date(expiration_date)
         # no need to clear the LRU when *adding* a key, only when removing
-        k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
+        k = secrets.token_hex(API_KEY_SIZE)
         self.env.cr.execute("""
         INSERT INTO {table} (name, user_id, scope, expiration_date, key, index)
         VALUES (%s, %s, %s, %s, %s, %s)
