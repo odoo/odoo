@@ -131,8 +131,7 @@
                             <field name="parent_id"
                                 widget="res_partner_many2one"
                                 placeholder="Company Name..."
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
-                                invisible="((is_company and not parent_id) or company_name) and company_name != ''"/>
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"/>
                                 <field name="company_name" invisible="not company_name or company_name == '' or is_company"/>
                                 <button name="create_company" icon="fa-plus-square" string="Create company"
                                     type="object" class="oe_edit_only btn-link"
@@ -162,7 +161,7 @@
                                         readonly="type == 'contact' and parent_id"/>
                                 </div>
                             </div>
-                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id"/>
+                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id and not is_company"/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
