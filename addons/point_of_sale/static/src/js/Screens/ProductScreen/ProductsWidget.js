@@ -42,7 +42,7 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             } else {
                 list = this.env.pos.db.get_product_by_category(this.selectedCategoryId);
             }
-            return list.sort(function (a, b) { return a.display_name.localeCompare(b.display_name) });
+            return list.sort(function (a, b) { return a.display_name.localeCompare(b.display_name, undefined, {numeric: true,sensitivity: 'base'}) });
         }
         get subcategories() {
             return this.env.pos.db
