@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="s_store_locator" name="Store Locator">
+    <section class="s_store_locator o_not_editable"
+        data-map-type="Road"
+        data-map-zoom="12"
+        data-map-searchbar="true"
+        data-map-sidebar="true"
+        data-map-sidebar-location="Left"
+        data-map-details="Area"
+        data-offscreen-locations-hidden="false"
+        locations_data="">
+    </section>
+</template>
+
+<!-- Snippet's Options -->
+<template id="s_store_locator_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="StoreLocator" data-selector=".s_store_locator">
+            <we-select string="Type" data-no-preview="true" data-attribute-name="mapType">
+                <we-button data-select-data-attribute="Road">Road</we-button>
+                <we-button data-select-data-attribute="Satellite">Satellite</we-button>
+            </we-select>
+            <we-select string="Zoom" data-no-preview="true" data-attribute-name="mapZoom">
+                <we-button data-select-data-attribute="19">10 m</we-button>
+                <we-button data-select-data-attribute="18">20 m</we-button>
+                <we-button data-select-data-attribute="17">50 m</we-button>
+                <we-button data-select-data-attribute="16">100 m</we-button>
+                <we-button data-select-data-attribute="15">200 m</we-button>
+                <we-button data-select-data-attribute="14">400 m</we-button>
+                <we-button data-select-data-attribute="13">1 km</we-button>
+                <we-button data-select-data-attribute="12">2 km</we-button>
+                <we-button data-select-data-attribute="11">4 km</we-button>
+                <we-button data-select-data-attribute="10">8 km</we-button>
+                <we-button data-select-data-attribute="9">15 km</we-button>
+                <we-button data-select-data-attribute="8">30 km</we-button>
+                <we-button data-select-data-attribute="7">50 km</we-button>
+                <we-button data-select-data-attribute="6">100 km</we-button>
+                <we-button data-select-data-attribute="5">200 km</we-button>
+                <we-button data-select-data-attribute="4">400 km</we-button>
+                <we-button data-select-data-attribute="3">1000 km</we-button>
+                <we-button data-select-data-attribute="2">2000 km</we-button>
+            </we-select>
+            <we-checkbox string="Display searchbar" data-select-data-attribute="false|true" data-no-preview="true" data-show-searchbar="true" data-attribute-name="mapSearchbar"/>
+            <we-checkbox string="Display sidebar" data-select-data-attribute="false|true" data-no-preview="true" data-show-sidebar="true" data-attribute-name="mapSidebar"/>
+            <we-select string="Sidebar location" data-no-preview="true" data-attribute-name="mapSidebarLocation">
+                <we-button data-select-data-attribute="Left">Left</we-button>
+                <we-button data-select-data-attribute="Right">Right</we-button>
+            </we-select>
+            <we-select string="Details" data-no-preview="true" data-attribute-name="mapDetails">
+                <we-button data-select-data-attribute="Area">Area</we-button>
+                <we-button data-select-data-attribute="Tooltip">Tooltip</we-button>
+            </we-select>
+            <we-checkbox string="Hide Offscreen" data-select-data-attribute="false|true" data-no-preview="true" data-hide-offscreen-locations="true" data-attribute-name="offscreenLocationsHidden"/>
+            <we-many2many string="Store Locations"
+                data-no-preview="true"
+                data-model="res.partner"
+                data-domain='[["is_company", "=", true], ["contact_address_complete", "not in", ["", null]]]'
+                data-fakem2m="true"
+                data-render-list-items=""
+                data-limit="5"
+                data-displayed-field="display_name"
+                data-extra-info-fields="[&quot;contact_address_complete&quot;]"
+                data-display-vertically="true"/>
+            <we-button data-refresh-geoloc="" data-no-preview="true">Refresh Geolocalization</we-button>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_store_locator_000_scss" model="ir.asset">
+    <field name="name">Store locator 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_store_locator/000.scss</field>
+</record>
+
+</odoo>
