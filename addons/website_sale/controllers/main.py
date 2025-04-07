@@ -665,8 +665,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _prepare_product_values(self, product, category, search, **kwargs):
         ProductCategory = request.env['product.public.category']
         product_markup_data = [product._to_markup_data(request.website)]
-        if category:
-            category = ProductCategory.browse(int(category)).exists()
+        if category := ProductCategory.browse(category and int(category)).exists():
             # Add breadcrumb's SEO data.
             product_markup_data.append(self._prepare_breadcrumb_markup_data(
                 request.website.get_base_url(), category, product.name
