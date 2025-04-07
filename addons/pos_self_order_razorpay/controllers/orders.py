@@ -35,7 +35,7 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
                 'razorpay_reverse_ref_no': razorpay_status_response.get('reverseReferenceNumber'),
             })
 
-            order.action_pos_order_paid()
+            order.state = "paid"
 
             if order.config_id.self_ordering_mode == 'kiosk':
                 self.call_bus_service(order, payment_result='Success')

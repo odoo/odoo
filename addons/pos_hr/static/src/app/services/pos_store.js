@@ -14,9 +14,7 @@ patch(PosStore.prototype, {
         this.employeeBuffer = [];
         browser.addEventListener("online", () => {
             this.employeeBuffer.forEach((employee) =>
-                this.data.write("pos.session", [this.config.current_session_id.id], {
-                    employee_id: employee.id,
-                })
+                this.config.current_session_id.update({ employee_id: employee.id })
             );
             this.employeeBuffer = [];
         });
@@ -58,9 +56,7 @@ patch(PosStore.prototype, {
 
         if (this.config.module_pos_hr) {
             if (navigator.onLine) {
-                this.data.write("pos.session", [this.config.current_session_id.id], {
-                    employee_id: employee.id,
-                });
+                this.config.current_session_id.update({ employee_id: employee.id });
             } else {
                 this.employeeBuffer.push(employee);
             }

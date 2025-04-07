@@ -115,5 +115,6 @@ class PosConfig(models.Model):
                 'coupon_partner_id': coupon.partner_id.id,
                 'points': coupon.points,
                 'has_source_order': coupon._has_source_order(),
+                'uuid': coupon.uuid,
             },
         }

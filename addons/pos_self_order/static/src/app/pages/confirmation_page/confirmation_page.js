@@ -61,7 +61,7 @@ export class ConfirmationPage extends Component {
             return this.initOrder(false);
         }
 
-        this.selfOrder.selectedOrderUuid = order.uuid;
+        this.selfOrder.selectedOrderUuid = order?.uuid;
 
         const paymentMethods = this.selfOrder.filterPaymentMethods(
             this.selfOrder.models["pos.payment.method"].getAll()

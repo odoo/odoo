@@ -453,11 +453,11 @@ class TestFrontend(TestFrontendCommon):
     def test_user_on_residual_order(self):
         self.pos_config.write({'printer_ids': False})
         self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('LeaveResidualOrder', login="pos_admin")
-        self.start_pos_tour('FinishResidualOrder')
+        self.start_pos_tour('LeaveResidualOrder', login="pos_admin", step_delay=100)
+        self.start_pos_tour('FinishResidualOrder', step_delay=100)
         orders = self.env['pos.order'].search([])
-        self.assertEqual(orders[0].user_id.id, self.pos_user.id, "Pos user not registered on order")
-        self.assertEqual(orders[1].user_id.id, self.pos_admin.id, "Pos admin not registered on order")
+        self.assertEqual(orders[1].user_id.id, self.pos_user.id, "Pos user not registered on order")
+        self.assertEqual(orders[2].user_id.id, self.pos_admin.id, "Pos admin not registered on order")
 
     def test_tax_in_merge_table_order_line(self):
         """

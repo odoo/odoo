@@ -14,7 +14,7 @@ patch(OrderSummary.prototype, {
     async updateSelectedOrderline({ buffer, key }) {
         const selectedLine = this.currentOrder.getSelectedOrderline();
         if (key === "-") {
-            if (selectedLine && selectedLine._e_wallet_program_id) {
+            if (selectedLine?.uiState.eWalletId) {
                 // Do not allow negative quantity or price in a gift card or ewallet orderline.
                 // Refunding gift card or ewallet is not supported.
                 this.notification.add(
@@ -73,7 +73,9 @@ patch(OrderSummary.prototype, {
                 coupon.id > 0 &&
                 this.currentOrder._code_activated_coupon_ids.find((c) => c.code === coupon.code)
             ) {
-                coupon.delete();
+                this.pos.data.withoutSyncing(() => {
+                    coupon.delete();
+                });
             }
         }
         if (
@@ -100,7 +102,7 @@ patch(OrderSummary.prototype, {
      * 1. Reduce the quantity if greater than one, otherwise remove the order line.
      * 2. Add a new order line with updated gift card code and points, removing any existing related couponPointChanges.
      */
-    async _updateGiftCardOrderline(code, points) {
+    async _updateGiftCardOrderline(code, points, expirationDate) {
         let selectedLine = this.currentOrder.getSelectedOrderline();
         const product = selectedLine.product_id;
 
@@ -134,7 +136,8 @@ patch(OrderSummary.prototype, {
             { price_unit: points }
         );
         selectedLine = this.currentOrder.getSelectedOrderline();
-        selectedLine.gift_code = code;
+        selectedLine.uiState.giftCode = code;
+        selectedLine.uiState.giftCardExpirationDate = expirationDate;
     },
 
     manageGiftCard() {
@@ -169,11 +172,8 @@ patch(OrderSummary.prototype, {
                     return;
                 }
 
-                await this._updateGiftCardOrderline(code, points);
                 this.currentOrder.processGiftCard(code, points, expirationDate);
-
-                // update indexedDB
-                this.pos.data.synchronizeLocalDataInIndexedDB();
+                await this._updateGiftCardOrderline(code, points, expirationDate);
             },
         });
     },

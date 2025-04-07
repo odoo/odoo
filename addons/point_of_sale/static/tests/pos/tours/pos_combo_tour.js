@@ -90,6 +90,7 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             ...ProductScreen.totalAmountIs("59.17"),
             ...inLeftSide(Order.hasTax("10.56")),
             // the split screen is tested in `pos_restaurant`
+            Chrome.endTour(),
         ].flat(),
 });
 

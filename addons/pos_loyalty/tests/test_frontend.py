@@ -530,7 +530,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("GiftCardProgramTour2")
         # Check that gift cards are used (Whiteboard Pen price is 1.20)
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
-        loyalty_history = self.env['loyalty.history'].search([('card_id','=',gift_card_program.coupon_ids.id)])
+        loyalty_history = self.env['loyalty.history'].search([('card_id', '=', gift_card_program.coupon_ids.id)], limit=1)
         self.assertEqual(loyalty_history.used, 3.2)
 
     def test_ewallet_program(self):
@@ -1115,7 +1115,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'applies_on': 'current',
             'rule_ids': [(0, 0, {
                 'reward_point_mode': 'order',
-                'minimum_qty': 0
+                'minimum_qty': 1,
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'discount',
@@ -1134,7 +1134,8 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_point_per_money_spent(self):
         """Test the point per $ spent feature"""
         LoyaltyProgram = self.env['loyalty.program']
-        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.main_pos_config.use_pricelist = True
         self.loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program Test',
             'program_type': 'loyalty',
@@ -1280,7 +1281,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pos_ok': True,
             'rule_ids': [(0, 0, {
                 'minimum_amount': 0,
-                'minimum_qty': 0
+                'minimum_qty': 1
                 })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'discount',
@@ -1339,7 +1340,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
 
-        self.start_pos_tour("PosLoyaltyPromotion")
+        self.start_pos_tour("PosLoyaltyPromotion", login="pos_admin")
 
     def test_promo_with_free_product(self):
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -2195,7 +2196,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyArchivedRewardProductsInactive",
             login="pos_user",
         )
-
+        current_session_id = self.main_pos_config.current_session_id
+        current_session_id.post_closing_cash_details(100.0)
+        current_session_id.close_session_from_ui()
         product_c.active = True
         self.start_tour(
             "/pos/ui/%d" % self.main_pos_config.id,
@@ -2425,15 +2428,37 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/ui/%d" % self.main_pos_config.id,
             "PosRewardProductScan",
-            login="pos_admin",
+            login="pos_admin"
         )
+
+        # Check that there should be one paid order with reward line and not draft order
+        current_session_id = self.main_pos_config.current_session_id
+        pos_orders = self.env['pos.order'].search([('session_id', '=', current_session_id.id)])
+        self.assertEqual(len(pos_orders.filtered(lambda l: l.state == 'paid')), 1, "There should be one paid order")
+        self.assertEqual(len(pos_orders.filtered(lambda l: l.state == 'draft')), 0, "There should be no draft order")
+        reward_line = pos_orders.filtered(lambda l: l.state == 'paid').lines.filtered(lambda l: l.is_reward_line)
+        self.assertEqual(len(reward_line), 1, "There should be one reward line")
+        current_session_id.post_closing_cash_details(575.0)
+        current_session_id.close_session_from_ui()
+
         # check the same flow with gs1 nomenclature
         self.env.company.nomenclature_id = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(
             "/pos/ui/%d" % self.main_pos_config.id,
             "PosRewardProductScanGS1",
-            login="pos_admin",
+            login="pos_admin"
         )
+
+        # Check that there should be one paid order with reward line and not draft order
+        current_session_id = self.main_pos_config.current_session_id
+        pos_orders = self.env['pos.order'].search([('session_id', '=', current_session_id.id)])
+        self.assertEqual(len(pos_orders.filtered(lambda l: l.state == 'paid')), 1, "There should be one paid order")
+        self.assertEqual(len(pos_orders.filtered(lambda l: l.state == 'draft')), 1, "There should be one draft order")
+        reward_line = pos_orders.filtered(lambda l: l.state == 'paid').lines.filtered(lambda l: l.is_reward_line)
+        self.assertEqual(len(reward_line), 1, "There should be one reward line")
+        current_session_id.post_closing_cash_details(575.0)
+        current_session_id.close_session_from_ui()
 
     def test_coupon_pricelist(self):
         self.env["product.product"].create(

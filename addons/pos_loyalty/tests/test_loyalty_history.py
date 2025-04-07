@@ -34,7 +34,7 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
                 'discount_applicability': 'order',
             })],
         })
-        self.start_pos_tour("LoyaltyHistoryTour")
+        self.start_pos_tour("LoyaltyHistoryTour", login="pos_admin")
         loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_aaa.id)
         self.assertEqual(len(loyalty_card.history_ids), 1,
                         "Loyalty History line should be created on pos oder confirmation")

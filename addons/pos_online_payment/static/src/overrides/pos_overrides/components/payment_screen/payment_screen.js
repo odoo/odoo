@@ -10,8 +10,6 @@ patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
         if (paymentMethod.is_online_payment && typeof this.currentOrder.id === "string") {
             this.currentOrder.date_order = luxon.DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
-            this.pos.addPendingOrder([this.currentOrder.id]);
-            await this.pos.syncAllOrders();
         }
         return await super.addNewPaymentLine(...arguments);
     },
@@ -63,7 +61,7 @@ patch(PaymentScreen.prototype, {
         }
 
         if (this.currentOrder.finalized) {
-            this.afterOrderValidation(false);
+            this.afterOrderValidation();
             return false;
         }
 
@@ -115,10 +113,14 @@ patch(PaymentScreen.prototype, {
 
                     onlinePaymentLine.setPaymentStatus("waiting");
                     this.currentOrder.selectPaymentline(onlinePaymentLine);
+                    let order_id = this.currentOrder.id;
+                    if (order_id === this.currentOrder.uuid) {
+                        order_id = this.pos.data.mapUuidToId(order_id);
+                    }
                     const onlinePaymentData = {
                         formattedAmount: this.env.utils.formatCurrency(onlinePaymentLineAmount),
                         qrCode: qrCodeSrc(
-                            `${this.pos.session._base_url}/pos/pay/${this.currentOrder.id}?access_token=${this.currentOrder.access_token}`
+                            `${this.pos.session._base_url}/pos/pay/${order_id}?access_token=${this.currentOrder.access_token}`
                         ),
                         orderName: this.currentOrder.name,
                     };
@@ -218,7 +220,6 @@ patch(PaymentScreen.prototype, {
             return;
         }
         this.currentOrder.state = "paid";
-        this.pos.validated_orders_name_server_id_map[this.currentOrder.name] = this.currentOrder.id;
 
         // Now, do practically the normal flow
         if (
@@ -241,6 +242,6 @@ patch(PaymentScreen.prototype, {
 
         await this.postPushOrderResolve([this.currentOrder.id]);
 
-        this.afterOrderValidation(true);
+        this.afterOrderValidation();
     },
 });

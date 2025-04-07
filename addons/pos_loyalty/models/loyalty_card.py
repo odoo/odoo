@@ -3,6 +3,8 @@
 
 from odoo import fields, models, api
 
+from uuid import uuid4
+
 
 class LoyaltyCard(models.Model):
     _name = 'loyalty.card'
@@ -13,6 +15,7 @@ class LoyaltyCard(models.Model):
     source_pos_order_partner_id = fields.Many2one(
         'res.partner', "PoS Order Customer",
         related="source_pos_order_id.partner_id")
+    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -20,7 +23,7 @@ class LoyaltyCard(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['partner_id', 'code', 'points', 'program_id', 'expiration_date', 'write_date']
+        return ['partner_id', 'code', 'points', 'program_id', 'expiration_date', 'write_date', 'uuid']
 
     def _has_source_order(self):
         return super()._has_source_order() or bool(self.source_pos_order_id)

@@ -42,7 +42,7 @@ patch(TicketScreen.prototype, {
         );
     },
     _isEWalletGiftCard(orderline) {
-        if (orderline.is_reward_line) {
+        if (orderline?.is_reward_line) {
             const reward = orderline.reward_id;
             const program = reward && reward.program_id;
             if (program && ["gift_card", "ewallet"].includes(program.program_type)) {

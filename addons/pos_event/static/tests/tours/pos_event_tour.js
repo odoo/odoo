@@ -33,6 +33,5 @@ registry.category("web_tour.tours").add("SellingEventInPos", {
             ReceiptScreen.isShown(),
             EventTourUtils.printTicket("full"),
             EventTourUtils.printTicket("badge"),
-            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });

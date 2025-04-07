@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
 import { computePriceForcePriceInclude } from "@point_of_sale/app/models/utils/tax_utils";
 const { DateTime } = luxon;
+import { serializeDate } from "@web/core/l10n/dates";
 
 function _newRandomRewardCode() {
     return (Math.random() + 1).toString(36).substring(3);
@@ -321,7 +322,10 @@ patch(PosOrder.prototype, {
                 continue;
             }
             const loyaltyCard =
-                this.models["loyalty.card"].get(coupon_id) ||
+                this.models["loyalty.card"].getBy(
+                    isNaN(Number(coupon_id)) ? "uuid" : "id",
+                    coupon_id
+                ) ||
                 this.models["loyalty.card"].create({
                     id: coupon_id,
                     points: 0,
@@ -420,7 +424,10 @@ patch(PosOrder.prototype, {
     //FIXME use of pos
     _getRealCouponPoints(coupon_id) {
         let points = 0;
-        const dbCoupon = this.models["loyalty.card"].get(coupon_id);
+        const dbCoupon = this.models["loyalty.card"].getBy(
+            isNaN(Number(coupon_id)) ? "uuid" : "id",
+            coupon_id
+        );
         if (dbCoupon) {
             points += dbCoupon.points;
         }
@@ -616,14 +623,22 @@ patch(PosOrder.prototype, {
                                 (rule.reward_point_amount * line.getPriceWithTax()) /
                                     line.getQuantity()
                             );
-                            if (pointsPerUnit > 0) {
+                            if (pointsPerUnit >= 0) {
                                 splitPoints.push(
                                     ...Array.apply(null, Array(line.getQuantity())).map(() => {
-                                        if (line._gift_barcode && line.getQuantity() == 1) {
+                                        if (
+                                            program.program_type === "gift_card" &&
+                                            line.getQuantity() == 1
+                                        ) {
                                             return {
                                                 points: pointsPerUnit,
-                                                barcode: line._gift_barcode,
-                                                giftCardId: line._gift_card_id.id,
+                                                barcode: line.uiState.giftCode,
+                                                expiration_date:
+                                                    line.uiState.giftCardExpirationDate ||
+                                                    serializeDate(
+                                                        luxon.DateTime.now().plus({ year: 1 })
+                                                    ),
+                                                partner_id: this.partner_id?.id || false,
                                             };
                                         }
                                         return { points: pointsPerUnit };
@@ -698,9 +713,12 @@ patch(PosOrder.prototype, {
      * @returns {Array} List of {Object} containing the coupon_id and reward keys
      */
     getClaimableRewards(coupon_id = false, program_id = false, auto = false) {
+        const giftCardPrograms = this.models["loyalty.program"]
+            .filter((lp) => lp.program_type == "gift_card")
+            ?.map((lp) => lp.id);
         const couponPointChanges = this.uiState.couponPointChanges;
         const excludedCouponIds = Object.keys(couponPointChanges)
-            .filter((id) => couponPointChanges[id].manual && couponPointChanges[id].existing_code)
+            .filter((id) => giftCardPrograms.includes(couponPointChanges[id].program_id))
             .map((id) => couponPointChanges[id].coupon_id);
 
         const allCouponPrograms = Object.values(this.uiState.couponPointChanges)
@@ -876,34 +894,22 @@ patch(PosOrder.prototype, {
         const product_id = this.getSelectedOrderline().product_id.id;
         const program = this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
 
-        let couponId;
+        const selectedLine = this.getSelectedOrderline();
+        const availableCouponChange = Object.entries(this.uiState.couponPointChanges).find(
+            ([k, p]) =>
+                p.points == selectedLine.price_unit &&
+                p.program_id == program.id &&
+                product_id == product_id &&
+                !p.manual
+        )[1];
         const couponData = {
-            program_id: program?.id,
+            barcode: newGiftCardCode,
             points: points,
             manual: true,
-            product_id: product_id,
+            expiration_date: expirationDate,
+            partner_id: partner_id,
         };
-
-        // Fetch all coupon_ids for the specified points and not manually created, that are associated with the gift card program
-        const applicableCouponIds = Object.keys(this.uiState.couponPointChanges).filter((key) => {
-            const change = this.uiState.couponPointChanges[key];
-            return (
-                change.points === points &&
-                change.program_id === program.id &&
-                change.product_id === product_id &&
-                !change.manual
-            );
-        });
-
-        if (newGiftCardCode) {
-            couponId = applicableCouponIds.shift() || loyaltyIdsGenerator();
-            couponData.coupon_id = couponId;
-            couponData.code = newGiftCardCode;
-            couponData.partner_id = partner_id;
-            couponData.expiration_date = expirationDate;
-        }
-
-        this.uiState.couponPointChanges[couponId] = couponData;
+        Object.assign(availableCouponChange, couponData);
     },
     /**
      * @param {loyalty.reward} reward

@@ -14,6 +14,14 @@ patch(PaymentScreen.prototype, {
     async validateOrder(isForceValidate) {
         const pointChanges = {};
         const newCodes = [];
+        this.currentOrder.uiState.couponPointChanges = Object.entries(
+            this.currentOrder.uiState.couponPointChanges
+        ).reduce((acc, [k, p]) => {
+            const newId = this.pos.data.mapUuidToId(p.coupon_id);
+            p.coupon_id = newId;
+            acc[newId] = p;
+            return acc;
+        }, {});
         for (const pe of Object.values(this.currentOrder.uiState.couponPointChanges)) {
             if (pe.coupon_id > 0) {
                 pointChanges[pe.coupon_id] = pe.points;
@@ -23,13 +31,17 @@ patch(PaymentScreen.prototype, {
             }
         }
         for (const line of this.currentOrder._get_reward_lines()) {
+            let couponId = line.coupon_id.id;
+            if (isNaN(Number(line.coupon_id.id))) {
+                couponId = this.pos.data.mapUuidToId(line.coupon_id.id);
+            }
             if (line.coupon_id.id < 1) {
                 continue;
             }
-            if (!pointChanges[line.coupon_id.id]) {
-                pointChanges[line.coupon_id.id] = -line.points_cost;
+            if (!pointChanges[couponId]) {
+                pointChanges[couponId] = -line.points_cost;
             } else {
-                pointChanges[line.coupon_id.id] -= line.points_cost;
+                pointChanges[couponId] -= line.points_cost;
             }
         }
         if (!(await this._isOrderValid(isForceValidate))) {
@@ -86,6 +98,7 @@ patch(PaymentScreen.prototype, {
         const ProgramModel = this.pos.models["loyalty.program"];
         const rewardLines = order._get_reward_lines();
         const partner = order.getPartner();
+
         let couponData = Object.values(order.uiState.couponPointChanges).reduce((agg, pe) => {
             agg[pe.coupon_id] = Object.assign({}, pe, {
                 points: pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id)),
@@ -104,7 +117,10 @@ patch(PaymentScreen.prototype, {
         }, {});
         for (const line of rewardLines) {
             const reward = line.reward_id;
-            const couponId = line.coupon_id.id;
+            let couponId = line.coupon_id.id;
+            if (isNaN(Number(line.coupon_id.id))) {
+                couponId = this.pos.data.mapUuidToId(line.coupon_id.id);
+            }
             if (!couponData[couponId]) {
                 couponData[couponId] = {
                     points: 0,
@@ -141,46 +157,9 @@ patch(PaymentScreen.prototype, {
                 order.id,
                 couponData,
             ]);
-            if (payload.coupon_updates) {
-                for (const couponUpdate of payload.coupon_updates) {
-                    // The following code is a workaround to update the id of an existing record.
-                    // It's so ugly.
-                    // FIXME: Find a better way of updating the id of an existing record.
-                    // It would be better if we can do this:
-                    // const coupon = this.pos.models["loyalty.card"].get(couponUpdate.old_id);
-                    // coupon.update({ id: couponUpdate.id, points: couponUpdate.points })
-
-                    if (couponUpdate.old_id == couponUpdate.id) {
-                        // just update the points
-                        const coupon = this.pos.models["loyalty.card"].get(couponUpdate.id);
-
-                        if (!coupon) {
-                            await this.pos.data.read("loyalty.card", [couponUpdate.id]);
-                        } else {
-                            coupon.points = couponUpdate.points;
-                        }
-                    } else {
-                        // create a new coupon and delete the old one
-                        const coupon = this.pos.models["loyalty.card"].create({
-                            id: couponUpdate.id,
-                            code: couponUpdate.code,
-                            program_id: this.pos.models["loyalty.program"].get(
-                                couponUpdate.program_id
-                            ),
-                            partner_id: this.pos.models["res.partner"].get(couponUpdate.partner_id),
-                            points: couponUpdate.points,
-                        });
-
-                        // Before deleting the old coupon, update the order lines that use it.
-                        for (const line of order.lines) {
-                            if (line.coupon_id?.id == couponUpdate.old_id) {
-                                line.coupon_id = coupon;
-                            }
-                        }
-
-                        this.pos.models["loyalty.card"].get(couponUpdate.old_id)?.delete();
-                    }
-                }
+            // Update the coupons in the pos
+            for (const couponId of Object.keys(couponData)) {
+                await this.pos.fetchCoupons([["id", "=", Number(couponId)]]);
             }
 
             const loyaltyPoints = Object.keys(couponData).map((coupon_id) => ({

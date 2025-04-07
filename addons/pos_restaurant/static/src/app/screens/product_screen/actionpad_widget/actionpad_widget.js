@@ -32,7 +32,7 @@ patch(ActionpadWidget.prototype, {
         return hasChange;
     },
     async submitOrder() {
-        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+        await this.pos.sendOrderInPreparation(this.currentOrder);
         this.pos.showDefault();
     },
     hasQuantity(order) {

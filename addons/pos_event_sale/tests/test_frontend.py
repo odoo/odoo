@@ -51,13 +51,6 @@ class TestPoSEventSale(TestUi):
             "partner_id": self.partner_a.id,
             "session_id": self.main_pos_config.current_session_id.id,
             "sequence_number": 2,
-            "payment_ids": [
-                    Command.create({
-                        "amount": 100,
-                        "name": fields.Datetime.now(),
-                        "payment_method_id": self.bank_payment_method.id,
-                    }),
-            ],
             "uuid": "12345-123-1234",
             "last_order_preparation_change": "{}",
             "user_id": self.env.uid,
@@ -105,7 +98,13 @@ class TestPoSEventSale(TestUi):
             "to_invoice": False,
             "state": "draft",
         }
-        self.env['pos.order'].sync_from_ui([order_data, order_data_2])
+        order = self.env['pos.order'].create(order_data)
+        order_payment = self.env['pos.make.payment'].with_context({"active_id": order.id}).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.main_pos_config.current_session_id.payment_method_ids[0].id,
+        })
+        order_payment.with_context({"active_id": order.id}).check()
+        self.env['pos.order'].create(order_data_2)
         sale_status = self.env['event.registration'].search([]).mapped("sale_status")
         self.assertEqual(len(sale_status), 2)
         self.assertIn('sold', sale_status)

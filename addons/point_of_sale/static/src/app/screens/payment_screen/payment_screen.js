@@ -334,29 +334,15 @@ export class PaymentScreen extends Component {
             }
         }
 
-        this.pos.addPendingOrder([this.currentOrder.id]);
+        this.currentOrder.recomputeOrderData();
         this.currentOrder.state = "paid";
 
         this.env.services.ui.block();
-        let syncOrderResult;
         try {
-            // 1. Save order to server.
-            syncOrderResult = await this.pos.syncAllOrders({ throw: true });
-            if (!syncOrderResult) {
-                return;
-            }
-
-            // 2. Invoice.
+            // Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.isToInvoice()) {
-                if (this.currentOrder.raw.account_move) {
-                    await this.invoiceService.downloadPdf(this.currentOrder.raw.account_move);
-                } else {
-                    throw {
-                        code: 401,
-                        message: "Backend Invoice",
-                        data: { order: this.currentOrder },
-                    };
-                }
+                await this.pos.data.read("pos.order", [this.currentOrder.id]);
+                await this.invoiceService.downloadPdf(this.currentOrder.raw.account_move);
             }
         } catch (error) {
             return this.handleValidationError(error);
@@ -365,12 +351,10 @@ export class PaymentScreen extends Component {
         }
 
         // 3. Post process.
-        const postPushOrders = syncOrderResult.filter((order) => order.waitForPushOrder());
-        if (postPushOrders.length > 0) {
-            await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
+        if (this.currentOrder.waitForPushOrder()) {
+            await this.postPushOrderResolve([this.currentOrder.id]);
         }
-
-        await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
+        await this.afterOrderValidation();
     }
     handleValidationError(error) {
         if (error instanceof ConnectionLostError) {
@@ -394,6 +378,11 @@ export class PaymentScreen extends Component {
         }
     }
     async afterOrderValidation() {
+        for (const line of this.currentOrder.lines) {
+            if (line.refunded_orderline_id?.order_id.uiState.lineToRefund) {
+                line.refunded_orderline_id.order_id.uiState.lineToRefund = [];
+            }
+        }
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
         let nextPage = this.nextPage;

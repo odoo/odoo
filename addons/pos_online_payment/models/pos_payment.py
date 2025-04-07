@@ -15,6 +15,9 @@ class PosPayment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if not any(vals.get('online_account_payment_id') for vals in vals_list):
+            return super().create(vals_list)
+
         online_account_payments_by_pm = {}
         for vals in vals_list:
             pm_id = vals['payment_method_id']
@@ -42,11 +45,6 @@ class PosPayment(models.Model):
                 raise UserError(_("Cannot create a POS online payment without an accounting payment."))
 
         return super().create(vals_list)
-
-    def write(self, vals):
-        if vals.keys() & ('amount', 'payment_date', 'payment_method_id', 'online_account_payment_id', 'pos_order_id') and any(payment.online_account_payment_id or payment.payment_method_id.is_online_payment for payment in self):
-            raise UserError(_("Cannot edit a POS online payment essential data."))
-        return super().write(vals)
 
     @api.constrains('payment_method_id')
     def _check_payment_method_id(self):

@@ -109,7 +109,9 @@ export class RecordStore {
      * @param {Array<Base>} - Map of records by ids.
      */
     getOrderedRecords(model) {
-        return Array.from(this.getRecordsMap(model, "id").values());
+        return Array.from(this.getRecordsMap(model, "id").values()).filter(
+            (r) => r.active !== false
+        );
     }
 
     /**

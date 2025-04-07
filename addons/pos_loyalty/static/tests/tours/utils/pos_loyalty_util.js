@@ -119,14 +119,17 @@ export function pointsAwardedAre(points_str) {
         },
     ];
 }
-export function finalizeOrder(paymentMethod, amount) {
-    return [
+export function finalizeOrder(paymentMethod, amount, nextOrder = true) {
+    const steps = [
         ...ProductScreen.clickPayButton(),
         ...PaymentScreen.clickPaymentMethod(paymentMethod),
         ...PaymentScreen.clickNumpad([...amount].join(" ")),
         ...PaymentScreen.clickValidate(),
-        ...ReceiptScreen.clickNextOrder(),
     ];
+    if (nextOrder) {
+        steps.push(...ReceiptScreen.clickNextOrder());
+    }
+    return steps;
 }
 export function removeRewardLine(name) {
     return [selectRewardLine(name), ProductScreen.clickNumpad("⌫"), Dialog.confirm()].flat();

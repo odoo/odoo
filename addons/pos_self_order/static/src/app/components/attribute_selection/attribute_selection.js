@@ -1,6 +1,5 @@
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
-import { attributeFlatter, attributeFormatter } from "@pos_self_order/app/utils";
 
 export class AttributeSelection extends Component {
     static template = "pos_self_order.AttributeSelection";
@@ -59,26 +58,6 @@ export class AttributeSelection extends Component {
                 }
             }
         }
-    }
-
-    get showNextBtn() {
-        for (const attrSelection of Object.values(this.selectedValues)) {
-            if (!attrSelection) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    get attributeSelected() {
-        const flatAttribute = attributeFlatter(this.selectedValues);
-        const customAttribute = this.env.customValues;
-        return attributeFormatter(
-            this.selfOrder.models["product.attribute"].getAllBy("id"),
-            flatAttribute,
-            customAttribute
-        );
     }
 
     availableAttributeValue(attribute) {

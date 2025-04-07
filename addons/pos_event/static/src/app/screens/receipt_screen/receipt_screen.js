@@ -9,12 +9,13 @@ patch(ReceiptScreen.prototype, {
         super.setup(...arguments);
 
         this.report = useService("report");
-        this.orm = useService("orm");
         this.doPrintEventFull = useTrackedAsync(() => this.printEventFull());
         this.doPrintEventBadge = useTrackedAsync(() => this.printEventBadge());
     },
     async printEventFull() {
-        const registrations = this.pos.getOrder().eventRegistrations.map((reg) => reg.id);
+        const registrations = this.pos
+            .getOrder()
+            .eventRegistrations.map((reg) => this.pos.data.mapUuidToId(reg.id));
         await this.report.doAction("event.action_report_event_registration_full_page_ticket", [
             registrations,
         ]);
@@ -35,26 +36,25 @@ patch(ReceiptScreen.prototype, {
         if (nonBadgePrinterRegistrations.length > 0) {
             await this.report.doAction(
                 "event.action_report_event_registration_badge",
-                nonBadgePrinterRegistrations.map((reg) => reg.id)
+                nonBadgePrinterRegistrations.map((reg) => this.pos.data.mapUuidToId(reg.id))
             );
         }
         if (largeBadgeRegistrations.length > 0) {
             await this.report.doAction(
                 "event.action_report_event_registration_badge_96x134",
-                largeBadgeRegistrations.map((reg) => reg.id)
+                largeBadgeRegistrations.map((reg) => this.pos.data.mapUuidToId(reg.id))
             );
         }
         if (smallBadgeRegistrations.length > 0) {
             await this.report.doAction(
                 "event.action_report_event_registration_badge_96x82",
-                smallBadgeRegistrations.map((reg) => reg.id)
+                smallBadgeRegistrations.map((reg) => this.pos.data.mapUuidToId(reg.id))
             );
         }
 
         // Update the status to "attended" if we print the attendee badge
         if (registrations.length > 0) {
-            const registrationIds = registrations.map((registration) => registration.id);
-            await this.orm.write("event.registration", registrationIds, { state: "done" });
+            registrations.update({ state: "done" });
         }
     },
 });

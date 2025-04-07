@@ -195,11 +195,6 @@ export class ClosePosPopup extends Component {
         if (proxyIP) {
             this.pos.hardwareProxy.deviceControllers.customerDisplay.action({ action: "close" });
         }
-        // If there are orders in the db left unsynced, we try to sync.
-        const syncSuccess = await this.pos.pushOrdersWithClosingPopup();
-        if (!syncSuccess) {
-            return;
-        }
         if (this.pos.config.cash_control) {
             const response = await this.pos.data.call(
                 "pos.session",
@@ -222,6 +217,11 @@ export class ClosePosPopup extends Component {
                 this.pos.session.id,
                 this.state.notes,
             ]);
+            this.pos.data.withoutSyncing(() => {
+                this.pos.session.update({
+                    state: "closing_control",
+                });
+            });
         } catch (error) {
             // We have to handle the error manually otherwise the validation check stops the script.
             // In case of "rescue session", we want to display the next popup with "handleClosingError".
@@ -249,6 +249,7 @@ export class ClosePosPopup extends Component {
                 return this.handleClosingError(response);
             }
             this.pos.session.state = "closed";
+            await this.pos.data.flush();
             this.pos.router.close();
         } catch (error) {
             if (error instanceof ConnectionLostError) {
@@ -310,7 +311,7 @@ export class ClosePosPopup extends Component {
             cancel: async () => {
                 if (!response.redirect) {
                     const ordersDraft = this.pos.models["pos.order"].filter((o) => !o.finalized);
-                    await this.pos.deleteOrders(ordersDraft, response.open_order_ids);
+                    await this.pos.deleteOrders(ordersDraft);
                     this.closeSession();
                 }
             },
