@@ -31,9 +31,6 @@ class StockMoveLine(models.Model):
             for move_line in self:
                 move_id = vals.get('move_id', move_line.move_id.id)
                 analytic_move_to_recompute.add(move_id)
-        if 'quantity' in vals:
-            for move_line in self:
-                move_line._update_svl_quantity(vals['quantity'] - move_line.quantity)
         new_lot = False
         if 'lot_id' in vals:
             new_lot = vals.get('lot_id')
@@ -44,6 +41,10 @@ class StockMoveLine(models.Model):
             # remove quantity of old lot
             for move_line in self:
                 move_line._update_svl_quantity(-move_line.quantity)
+        elif 'quantity' in vals:
+            # directly updates the right quantity if no lot change
+            for move_line in self:
+                move_line._update_svl_quantity(vals['quantity'] - move_line.quantity)
         if 'location_id' in vals or 'location_dest_id' in vals:
             for move_line in self:
                 if move_line.state != 'done':
