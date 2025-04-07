@@ -17,11 +17,22 @@ This addon provides an extensible, maintainable editor.
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            ('include', 'html_editor.assets_media_dialog')
+            ('include', 'html_editor.assets_media_dialog'),
+            ('include', 'html_editor.assets_readonly'),
         ],
         'web.assets_backend': [
-            'html_editor/static/src/**/*',
+            ('include', 'html_editor.assets_editor'),
+            'html_editor/static/src/fields/**/*',
+        ],
+        'html_editor.assets_editor': [
             ('include', 'html_editor.assets_media_dialog'),
+            ('include', 'html_editor.assets_readonly'),
+            'html_editor/static/src/*',
+            'html_editor/static/src/components/history_dialog/**/*',
+            'html_editor/static/src/core/**/*',
+            'html_editor/static/src/main/**/*',
+            'html_editor/static/src/others/**/*',
+            'html_editor/static/src/services/**/*',
             ('remove', 'html_editor/static/src/components/history_dialog/history_dialog.dark.scss'),
             ('remove', 'html_editor/static/src/main/movenode.dark.scss'),
             ('remove', 'html_editor/static/src/main/toolbar/toolbar.dark.scss'),
@@ -29,8 +40,18 @@ This addon provides an extensible, maintainable editor.
         'html_editor.assets_media_dialog': [
             # Bundle to use the media dialog in the backend and the frontend
             'html_editor/static/src/main/media/media_dialog/**/*',
+        ],
+        'html_editor.assets_readonly': [
+            'html_editor/static/src/components/html_viewer/**/*',
+            'html_editor/static/src/local_overlay_container.*',
+            'html_editor/static/src/main/local_overlay.scss',
+            'html_editor/static/src/position_hook.*',
+            'html_editor/static/src/html_migrations/**/*',
+            'html_editor/static/src/main/list/list.scss',
+            'html_editor/static/src/main/media/file.scss',
+            'html_editor/static/src/others/embedded_component_utils.js',
+            'html_editor/static/src/others/embedded_components/core/**/*',
             'html_editor/static/src/utils/**/*',
-
         ],
         "web.assets_web_dark": [
             'html_editor/static/src/components/history_dialog/history_dialog.dark.scss',

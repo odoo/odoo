@@ -22,7 +22,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TranslationButton } from "@web/views/fields/translation_button";
-import { HtmlViewer } from "./html_viewer";
+import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
