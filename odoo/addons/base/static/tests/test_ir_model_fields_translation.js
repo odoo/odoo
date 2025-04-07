@@ -20,7 +20,7 @@ function checkLoginColumn(translation) {
             run: "click",
         }, {
             content: `Login column should be ${translation}`,
-            trigger: `[data-name="login"] span:contains("${translation}")`,
+            trigger: `[data-name="login-TMP-LSE-TOUR-FAIL"] span:contains("${translation}")`, // TODO: tmp change to test tour failure
         }
     ]
 }
