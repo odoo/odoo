@@ -454,11 +454,11 @@ class StockMove(models.Model):
                                                'workorder_id': move.workorder_id.id,})
         return res
 
-    def _action_confirm(self, merge=True, merge_into=False):
+    def _action_confirm(self, merge=True, merge_into=False, create_proc=True):
         moves = self.action_explode()
         merge_into = merge_into and merge_into.action_explode()
         # we go further with the list of ids potentially changed by action_explode
-        return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
+        return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into, create_proc=create_proc)
 
     def _action_done(self, cancel_backorder=False):
         # explode kit moves that avoided the action_explode of any confirmation process
