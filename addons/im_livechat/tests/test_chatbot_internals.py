@@ -128,7 +128,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             self.env["discuss.channel"].sudo().browse(data["channel_id"])
         )
         self.assertEqual(discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id)
-        discuss_channel.add_members(partner_ids=self.env.user.partner_id.ids)
+        discuss_channel._add_members(users=self.env.user)
         self_member = discuss_channel.channel_member_ids.filtered(lambda m: m.is_self)
         bot_member = discuss_channel.channel_member_ids.filtered(
             lambda m: m.partner_id == self.chatbot_script.operator_partner_id

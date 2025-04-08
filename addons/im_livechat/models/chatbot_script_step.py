@@ -378,9 +378,7 @@ class ChatbotScriptStep(models.Model):
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
             # next, add the human_operator to the channel and post a "Operator joined the channel" notification
-            discuss_channel.with_user(human_operator).sudo().add_members(
-                human_operator.partner_id.ids
-            )
+            discuss_channel.with_user(human_operator).sudo()._add_members(users=human_operator)
             # sudo - discuss.channel: let the chat bot proceed to the forward step (change channel operator, add human operator
             # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
             channel_sudo = discuss_channel.sudo()

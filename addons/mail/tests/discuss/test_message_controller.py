@@ -45,7 +45,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             )
         )
         cls.guest = cls.env["mail.guest"].create({"name": "Guest"})
-        cls.channel.add_members(guest_ids=cls.guest.ids)
+        cls.channel._add_members(guests=cls.guest)
 
     @mute_logger("odoo.addons.http_routing.models.ir_http", "odoo.http")
     def test_channel_message_attachments(self):
@@ -307,7 +307,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         })
         test_user = self.authenticate("testuser", "testuser")
         partner = self.env["res.users"].browse(test_user.uid).partner_id
-        self.channel.add_members(testuser.partner_id.ids)
+        self.channel._add_members(users=testuser)
         res = self.url_open(
             url=f"/web/image/?field=avatar_128&id={self.channel.id}&model=discuss.channel&unique={self.channel.avatar_cache_key}"
         )

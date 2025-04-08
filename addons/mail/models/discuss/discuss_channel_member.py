@@ -197,7 +197,7 @@ class DiscussChannelMember(models.Model):
         # kept in sync.
         for member in res:
             if parent := member.channel_id.parent_channel_id:
-                parent.add_members(partner_ids=member.partner_id.ids, guest_ids=member.guest_id.ids)
+                parent._add_members(partners=member.partner_id, guests=member.guest_id)
         return res
 
     def write(self, vals):

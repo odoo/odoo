@@ -194,20 +194,20 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.channel_channel_public_1 = Channel._create_channel(
             name="public channel 1", group_id=None
         )
-        self.channel_channel_public_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[4] + self.users[8]).partner_id.ids)
+        self.channel_channel_public_1._add_members(users=self.users[0] | self.users[2] | self.users[3] | self.users[4] | self.users[8])
         self.channel_channel_public_2 = Channel._create_channel(
             name="public channel 2", group_id=None
         )
-        self.channel_channel_public_2.add_members((self.users[0] + self.users[2] + self.users[4] + self.users[7] + self.users[9]).partner_id.ids)
+        self.channel_channel_public_2._add_members(users=self.users[0] | self.users[2] | self.users[4] | self.users[7] | self.users[9])
         # create group-restricted channels
         self.channel_channel_group_1 = Channel._create_channel(
             name="group restricted channel 1", group_id=self.env.ref("base.group_user").id
         )
-        self.channel_channel_group_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[6] + self.users[12]).partner_id.ids)
+        self.channel_channel_group_1._add_members(users=self.users[0] | self.users[2] | self.users[3] | self.users[6] | self.users[12])
         self.channel_channel_group_2 = Channel._create_channel(
             name="group restricted channel 2", group_id=self.env.ref("base.group_user").id
         )
-        self.channel_channel_group_2.add_members((self.users[0] + self.users[2] + self.users[6] + self.users[7] + self.users[13]).partner_id.ids)
+        self.channel_channel_group_2._add_members(users=self.users[0] | self.users[2] | self.users[6] | self.users[7] | self.users[13])
         # create chats
         self.channel_chat_1 = Channel._get_or_create_chat((self.users[0] + self.users[14]).partner_id.ids)
         self.channel_chat_2 = Channel._get_or_create_chat((self.users[0] + self.users[15]).partner_id.ids)

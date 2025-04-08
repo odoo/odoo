@@ -41,14 +41,13 @@ class TestAvatarAcl(HttpCase):
         )
         self.authenticate("testuser", "testuser")
         guest = self.env["mail.guest"].create({"name": "Guest"})
-        partner = self.env["res.users"].browse(testuser.id).partner_id
         channel = self.env["discuss.channel"].create(
             {
                 "group_public_id": None,
                 "name": "Test channel",
             }
         )
-        channel.add_members(guest_ids=[guest.id], partner_ids=[partner.id])
+        channel._add_members(guests=guest, users=testuser)
         res = self.url_open(url=self.get_avatar_url(guest))
         self.assertEqual(res.headers["Content-Disposition"], "inline; filename=Guest.svg")
 
@@ -82,18 +81,17 @@ class TestAvatarAcl(HttpCase):
                 "password": "testuser",
             }
         )
-        partner = self.env["res.users"].browse(testuser.id).partner_id
         channel = self.env["discuss.channel"].create(
             {
                 "group_public_id": None,
                 "name": "Test channel",
             }
         )
-        channel.add_members(guest_ids=[guest.id], partner_ids=[partner.id])
-        res = self.url_open(url=self.get_avatar_url(partner))
+        channel._add_members(guests=guest, users=testuser)
+        res = self.url_open(url=self.get_avatar_url(testuser.partner_id))
         self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
-        res = self.url_open(url=self.get_avatar_url(partner, add_token=True))
-        self.assertEqual(res.headers["Content-Disposition"], f'inline; filename="{partner.name}.svg"')
+        res = self.url_open(url=self.get_avatar_url(testuser.partner_id, add_token=True))
+        self.assertEqual(res.headers["Content-Disposition"], f'inline; filename="{testuser.partner_id.name}.svg"')
 
     def test_partner_open_partner_avatar(self):
         testuser = self.env["res.users"].create(
@@ -115,17 +113,15 @@ class TestAvatarAcl(HttpCase):
                 "password": "testuser 2",
             }
         )
-        partner = self.env["res.users"].browse(testuser.id).partner_id
-        partner2 = self.env["res.users"].browse(testuser2.id).partner_id
         channel = self.env["discuss.channel"].create(
             {
                 "group_public_id": None,
                 "name": "Test channel",
             }
         )
-        channel.add_members(partner_ids=[partner.id, partner2.id])
-        res = self.url_open(url=self.get_avatar_url(partner2))
-        self.assertEqual(res.headers["Content-Disposition"], f'inline; filename="{partner2.name}.svg"')
+        channel._add_members(users=testuser | testuser2)
+        res = self.url_open(url=self.get_avatar_url(testuser2.partner_id))
+        self.assertEqual(res.headers["Content-Disposition"], f'inline; filename="{testuser2.partner_id.name}.svg"')
 
     def test_guest_open_guest_avatar(self):
         self.authenticate(None, None)
@@ -146,7 +142,7 @@ class TestAvatarAcl(HttpCase):
                 "name": "Test channel",
             }
         )
-        channel.add_members(guest_ids=[guest.id, guest2.id])
+        channel._add_members(guests=guest | guest2)
         res = self.url_open(url=self.get_avatar_url(guest2))
         self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
         res = self.url_open(url=self.get_avatar_url(guest2, add_token=True))
@@ -196,16 +192,14 @@ class TestAvatarAcl(HttpCase):
                 "password": "testuser 2",
             }
         )
-        partner = self.env["res.users"].browse(testuser.id).partner_id
-        partner2 = self.env["res.users"].browse(testuser2.id).partner_id
         channel = self.env["discuss.channel"].create(
             {
                 "group_public_id": None,
                 "name": "Test channel",
             }
         )
-        channel.add_members(partner_ids=[partner.id, partner2.id])
-        res = self.url_open(url=self.get_avatar_url(partner2))
+        channel._add_members(users=testuser | testuser2)
+        res = self.url_open(url=self.get_avatar_url(testuser2.partner_id))
         self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
-        res = self.url_open(url=self.get_avatar_url(partner2, add_token=True))
-        self.assertEqual(res.headers["Content-Disposition"], f'inline; filename="{partner2.name}.svg"')
+        res = self.url_open(url=self.get_avatar_url(testuser2.partner_id, add_token=True))
+        self.assertEqual(res.headers["Content-Disposition"], f'inline; filename="{testuser2.partner_id.name}.svg"')

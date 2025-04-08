@@ -49,7 +49,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
         channel = self.env["discuss.channel"].create(
             {"name": "Public Channel", "group_public_id": None}
         )
-        channel.add_members(partner_ids=self.user_employee_nopartner.partner_id.ids)
+        channel._add_members(users=self.user_employee_nopartner)
         partners = (
             self.user_portal + self.user_employee + self.user_employee_nopartner + self.user_admin
         ).partner_id

@@ -44,7 +44,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         user_public = mail_new_test_user(self.env, login='user_public', groups='base.group_public', name='Bert Tartignole')
         public_channel = self.env['discuss.channel']._create_channel(name='Public Channel', group_id=None)
         with self.assertRaises(ValidationError):
-            public_channel.add_members(user_public.partner_id.id)
+            public_channel._add_members(users=user_public)
 
     @users('employee')
     @freeze_time("2020-03-22 10:42:06")
@@ -189,7 +189,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             )
         self._reset_bus()
         with self.assertBus(get_params=get_add_member_bus):
-            channel.add_members(self.test_partner.ids)
+            channel._add_members(partners=self.test_partner)
 
         def get_add_member_again_bus():
             member = self.env["discuss.channel.member"].search([], order="id desc", limit=1)
@@ -236,7 +236,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             )
         self._reset_bus()
         with self.assertBus(get_params=get_add_member_again_bus):
-            channel.add_members(self.test_partner.ids)
+            channel._add_members(partners=self.test_partner)
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.test_partner)
 
@@ -268,7 +268,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         """ Posting a message on a channel should not send emails """
         channel = self.env['discuss.channel'].browse(self.test_channel.ids)
         # sudo: discuss.channel.member - adding members in non-accessible channel in a test file
-        channel.sudo().add_members((self.partner_employee | self.partner_admin | self.test_partner).ids)
+        channel.sudo()._add_members(users=self.user_employee | self.user_admin, partners=self.test_partner)
         with self.mock_mail_gateway():
             new_msg = channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertNotSentEmail()
@@ -305,8 +305,8 @@ class TestChannelInternals(MailCommon, HttpCase):
         """Archiving / deleting a user should automatically unsubscribe related partner from group restricted channels"""
         group_restricted_channel = self.env['discuss.channel']._create_channel(name='Sic Mundus', group_id=self.env.ref('base.group_user').id)
 
-        self.test_channel.add_members((self.partner_employee | self.partner_employee_nomail).ids)
-        group_restricted_channel.add_members((self.partner_employee | self.partner_employee_nomail).ids)
+        self.test_channel._add_members(users=self.user_employee | self.user_employee_nomail)
+        group_restricted_channel._add_members(users=self.user_employee | self.user_employee_nomail)
 
         # Unsubscribe archived user from the private channels, but not from public channels
         self.user_employee.active = False
@@ -557,7 +557,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         even if `_action_unfollow()` is called again.
         '''
         channel = self.env['discuss.channel'].browse(self.test_channel.id)
-        channel.add_members(self.test_partner.ids)
+        channel._add_members(partners=self.test_partner)
 
         # no message should be posted under test_partner's name
         messages_0 = self.env['mail.message'].search([
@@ -665,7 +665,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         nothing_test_user.res_users_settings_id.write({"channel_notifications": "no_notif"})
 
         channel = self.env["discuss.channel"]._create_channel(name="Channel", group_id=None)
-        channel.add_members((self.partner_employee | all_test_user.partner_id | mentions_test_user.partner_id | nothing_test_user.partner_id).ids)
+        channel._add_members(users=self.user_employee | all_test_user | mentions_test_user | nothing_test_user)
 
         # sending normal message
         with self.with_user("employee"):
@@ -853,7 +853,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             'channel_type': 'group',
             'channel_partner_ids': [(6, 0, test_user.partner_id.id)]
         })
-        test_group.add_members(self.partner_employee_nomail.ids)
+        test_group._add_members(users=self.user_employee_nomail)
         self._reset_bus()
         with self.assertBus(
             [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
