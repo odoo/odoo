@@ -7,7 +7,6 @@ import {
     getCurrentPath,
     openModelFieldSelectorPopover,
     selectOperator,
-    selectValue,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
@@ -797,7 +796,7 @@ test("consistent display of ! in debug mode", async () => {
     expect(searchBar.env.searchModel.domain).toEqual(["!", "|", ["foo", "=", 1], ["id", "=", 2]]);
 });
 
-test("display of is (not) (not) set in facets", async () => {
+test("display of (not) set in facets", async () => {
     Foo._fields.boolean = fields.Boolean();
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -813,39 +812,27 @@ test("display of is (not) (not) set in facets", async () => {
     await openAddCustomFilterDialog();
     await selectOperator("not_set");
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Id is not set"]);
+    expect(getFacetTexts()).toEqual(["Id not set"]);
     expect(searchBar.env.searchModel.domain).toEqual([["id", "=", false]]);
 
     await contains(".o_searchview_facet_label").click();
     await selectOperator("set");
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Id is set"]);
+    expect(getFacetTexts()).toEqual(["Id set"]);
     expect(searchBar.env.searchModel.domain).toEqual([["id", "!=", false]]);
 
     await contains(".o_searchview_facet_label").click();
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name:contains(Boolean)").click();
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean is set"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["boolean", "=", true]]);
-
-    await contains(".o_searchview_facet_label").click();
-    await selectValue(false);
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean is not set"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["boolean", "=", false]]);
-
-    await contains(".o_searchview_facet_label").click();
-    await selectOperator("is_not");
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean is not not set"]);
+    expect(getFacetTexts()).toEqual(["Boolean set"]);
     expect(searchBar.env.searchModel.domain).toEqual([["boolean", "!=", false]]);
 
     await contains(".o_searchview_facet_label").click();
-    await selectValue(true);
+    await selectOperator("not_set");
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean is not set"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["boolean", "!=", true]]);
+    expect(getFacetTexts()).toEqual(["Boolean not set"]);
+    expect(searchBar.env.searchModel.domain).toEqual([["boolean", "=", false]]);
 });
 
 test("Add a custom filter: notification on invalid domain", async () => {

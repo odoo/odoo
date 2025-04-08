@@ -29,10 +29,8 @@ const OPERATOR_DESCRIPTIONS = {
     parent_of: _t("parent of"),
 
     // virtual operators (replace = and != in some cases)
-    is: _t("is"),
-    is_not: _t("is not"),
-    set: _t("is set"),
-    not_set: _t("is not set"),
+    set: _t("set"),
+    not_set: _t("not set"),
 
     starts_with: _t("starts with"),
     ends_with: _t("ends with"),

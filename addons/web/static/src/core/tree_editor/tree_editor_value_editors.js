@@ -117,7 +117,8 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             return {
                 component: null,
                 extractProps: null,
-                isSupported: (value) => value === false,
+                isSupported: (value) =>
+                    value === false || (fieldDef.type === "boolean" && value === true),
                 defaultValue: () => false,
             };
         case "=like":
@@ -279,20 +280,6 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "html":
         case "text":
             return STRING_EDITOR;
-        case "boolean": {
-            if (["is", "is_not"].includes(operator)) {
-                const options = [
-                    [true, _t("set")],
-                    [false, _t("not set")],
-                ];
-                return makeSelectEditor(options, params);
-            }
-            const options = [
-                [true, _t("True")],
-                [false, _t("False")],
-            ];
-            return makeSelectEditor(options, params);
-        }
         case "many2one": {
             if (["=", "!="].includes(operator)) {
                 return {
