@@ -844,19 +844,21 @@ export class Composer extends Component {
 
     restoreContent() {
         const composer = toRaw(this.props.composer);
+        let config;
         try {
-            const config = JSON.parse(browser.localStorage.getItem(composer.localId));
-            if (config.text) {
-                composer.emailAddSignature = config.emailAddSignature;
-                composer.text = config.text;
-            }
-            if (Number.isInteger(config.replyToMessageId)) {
-                composer.replyToMessage = this.store["mail.message"].insert(
-                    config.replyToMessageId
-                );
-            }
+            config = JSON.parse(browser.localStorage.getItem(composer.localId));
         } catch {
             browser.localStorage.removeItem(composer.localId);
+        }
+        if (!config) {
+            return;
+        }
+        if (config.text) {
+            composer.emailAddSignature = config.emailAddSignature;
+            composer.text = config.text;
+        }
+        if (Number.isInteger(config.replyToMessageId)) {
+            composer.replyToMessage = this.store["mail.message"].insert(config.replyToMessageId);
         }
     }
 }
