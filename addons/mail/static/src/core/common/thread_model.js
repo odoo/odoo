@@ -457,17 +457,20 @@ export class Thread extends Record {
             this.isLoaded = true;
             return [];
         }
+        let res;
         try {
-            const { data, messages } = await this.fetchMessagesData({ after, around, before });
-            this.store.insert(data, { html: true });
-            return this.store["mail.message"].insert(messages.reverse());
+            res = await this.fetchMessagesData({ after, around, before });
         } catch (e) {
             this.hasLoadingFailed = true;
-            throw e;
-        } finally {
             this.isLoaded = true;
             this.status = "ready";
+            throw e;
         }
+        this.store.insert(res.data, { html: true });
+        const msgs = this.store["mail.message"].insert(res.messages.reverse());
+        this.isLoaded = true;
+        this.status = "ready";
+        return msgs;
     }
 
     /** @param {{after: Number, before: Number}} */
@@ -496,43 +499,42 @@ export class Thread extends Record {
         }
         const before = epoch === "older" ? this.oldestPersistentMessage?.id : undefined;
         const after = epoch === "newer" ? this.newestPersistentMessage?.id : undefined;
+        let fetched = [];
         try {
-            const fetched = await this.fetchMessages({ after, before });
-            if (
-                (after !== undefined && !this.messages.some((message) => message.id === after)) ||
-                (before !== undefined && !this.messages.some((message) => message.id === before))
-            ) {
-                // there might have been a jump to message during RPC fetch.
-                // Abort feeding messages as to not put holes in message list.
-                return;
-            }
-            const alreadyKnownMessages = new Set(this.messages.map(({ id }) => id));
-            const messagesToAdd = fetched.filter(
-                (message) => !alreadyKnownMessages.has(message.id)
-            );
+            fetched = await this.fetchMessages({ after, before });
+        } catch {
+            return;
+        }
+        if (
+            (after !== undefined && !this.messages.some((message) => message.id === after)) ||
+            (before !== undefined && !this.messages.some((message) => message.id === before))
+        ) {
+            // there might have been a jump to message during RPC fetch.
+            // Abort feeding messages as to not put holes in message list.
+            return;
+        }
+        const alreadyKnownMessages = new Set(this.messages.map(({ id }) => id));
+        const messagesToAdd = fetched.filter((message) => !alreadyKnownMessages.has(message.id));
+        if (epoch === "older") {
+            this.messages.unshift(...messagesToAdd);
+        } else {
+            this.messages.push(...messagesToAdd);
+        }
+        if (fetched.length < this.store.FETCH_LIMIT) {
             if (epoch === "older") {
-                this.messages.unshift(...messagesToAdd);
-            } else {
-                this.messages.push(...messagesToAdd);
-            }
-            if (fetched.length < this.store.FETCH_LIMIT) {
-                if (epoch === "older") {
-                    this.loadOlder = false;
-                } else if (epoch === "newer") {
-                    this.loadNewer = false;
-                    const missingMessages = this.pendingNewMessages.filter(
-                        ({ id }) => !alreadyKnownMessages.has(id)
-                    );
-                    if (missingMessages.length > 0) {
-                        this.messages.push(...missingMessages);
-                        this.messages.sort((m1, m2) => m1.id - m2.id);
-                    }
+                this.loadOlder = false;
+            } else if (epoch === "newer") {
+                this.loadNewer = false;
+                const missingMessages = this.pendingNewMessages.filter(
+                    ({ id }) => !alreadyKnownMessages.has(id)
+                );
+                if (missingMessages.length > 0) {
+                    this.messages.push(...missingMessages);
+                    this.messages.sort((m1, m2) => m1.id - m2.id);
                 }
             }
-            this._enrichMessagesWithTransient();
-        } catch {
-            // handled in fetchMessages
         }
+        this._enrichMessagesWithTransient();
         this.pendingNewMessages = [];
     }
 
@@ -544,44 +546,45 @@ export class Thread extends Record {
             return;
         }
         const after = this.isLoaded ? this.newestPersistentMessage?.id : undefined;
+        let fetched = [];
         try {
-            const fetched = await this.fetchMessages({ after });
-            // feed messages
-            // could have received a new message as notification during fetch
-            // filter out already fetched (e.g. received as notification in the meantime)
-            let startIndex;
-            if (after === undefined) {
-                startIndex = 0;
-            } else {
-                const afterIndex = this.messages.findIndex((message) => message.id === after);
-                if (afterIndex === -1) {
-                    // there might have been a jump to message during RPC fetch.
-                    // Abort feeding messages as to not put holes in message list.
-                    return;
-                } else {
-                    startIndex = afterIndex + 1;
-                }
-            }
-            const alreadyKnownMessages = new Set(this.messages.map((m) => m.id));
-            const filtered = fetched.filter(
-                (message) =>
-                    !alreadyKnownMessages.has(message.id) &&
-                    (this.persistentMessages.length === 0 ||
-                        message.id < this.oldestPersistentMessage.id ||
-                        message.id > this.newestPersistentMessage.id)
-            );
-            this.messages.splice(startIndex, 0, ...filtered);
-            Object.assign(this, {
-                loadOlder:
-                    after === undefined && fetched.length === this.store.FETCH_LIMIT
-                        ? true
-                        : after === undefined && fetched.length !== this.store.FETCH_LIMIT
-                        ? false
-                        : this.loadOlder,
-            });
+            fetched = await this.fetchMessages({ after });
         } catch {
-            // handled in fetchMessages
+            return;
         }
+        // feed messages
+        // could have received a new message as notification during fetch
+        // filter out already fetched (e.g. received as notification in the meantime)
+        let startIndex;
+        if (after === undefined) {
+            startIndex = 0;
+        } else {
+            const afterIndex = this.messages.findIndex((message) => message.id === after);
+            if (afterIndex === -1) {
+                // there might have been a jump to message during RPC fetch.
+                // Abort feeding messages as to not put holes in message list.
+                return;
+            } else {
+                startIndex = afterIndex + 1;
+            }
+        }
+        const alreadyKnownMessages = new Set(this.messages.map((m) => m.id));
+        const filtered = fetched.filter(
+            (message) =>
+                !alreadyKnownMessages.has(message.id) &&
+                (this.persistentMessages.length === 0 ||
+                    message.id < this.oldestPersistentMessage.id ||
+                    message.id > this.newestPersistentMessage.id)
+        );
+        this.messages.splice(startIndex, 0, ...filtered);
+        Object.assign(this, {
+            loadOlder:
+                after === undefined && fetched.length === this.store.FETCH_LIMIT
+                    ? true
+                    : after === undefined && fetched.length !== this.store.FETCH_LIMIT
+                    ? false
+                    : this.loadOlder,
+        });
     }
 
     getFetchParams() {
@@ -638,29 +641,30 @@ export class Thread extends Record {
         ) {
             return;
         }
+        this.isLoaded = false;
+        this.scrollTop = undefined;
         try {
-            this.isLoaded = false;
-            this.scrollTop = undefined;
             this.messages = await this.fetchMessages({ around: messageId });
-            this.isLoaded = true;
-            this.loadNewer = messageId !== undefined ? true : false;
-            this.loadOlder = true;
-            const limit =
-                !messageId && messageId !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2;
-            if (this.messages.length < limit) {
-                const olderMessagesCount = this.messages.filter(({ id }) => id < messageId).length;
-                const newerMessagesCount = this.messages.filter(({ id }) => id > messageId).length;
-                if (olderMessagesCount < limit / 2 - 1) {
-                    this.loadOlder = false;
-                }
-                if (newerMessagesCount < limit / 2) {
-                    this.loadNewer = false;
-                }
-            }
-            this._enrichMessagesWithTransient();
         } catch {
-            // handled in fetchMessages
+            this.isLoaded = true;
+            return;
         }
+        this.isLoaded = true;
+        this.loadNewer = messageId !== undefined ? true : false;
+        this.loadOlder = true;
+        const limit =
+            !messageId && messageId !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2;
+        if (this.messages.length < limit) {
+            const olderMessagesCount = this.messages.filter(({ id }) => id < messageId).length;
+            const newerMessagesCount = this.messages.filter(({ id }) => id > messageId).length;
+            if (olderMessagesCount < limit / 2 - 1) {
+                this.loadOlder = false;
+            }
+            if (newerMessagesCount < limit / 2) {
+                this.loadNewer = false;
+            }
+        }
+        this._enrichMessagesWithTransient();
     }
 
     async markAllMessagesAsRead() {
