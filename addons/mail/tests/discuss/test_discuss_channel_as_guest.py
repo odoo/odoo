@@ -29,14 +29,14 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         guest = self.env['mail.guest'].create({'name': 'Guest Mario'})
 
         self.channel = self.env['discuss.channel']._create_channel(group_id=None, name='Test channel')
-        self.channel.add_members(portal_user.partner_id.ids)
-        self.channel.add_members(internal_user.partner_id.ids)
-        self.channel.add_members(guest_ids=[guest.id])
+        self.channel._add_members(users=portal_user)
+        self.channel._add_members(users=internal_user)
+        self.channel._add_members(guests=guest)
         internal_member = self.channel.channel_member_ids.filtered(lambda m: internal_user.partner_id == m.partner_id)
         internal_member._rtc_join_call()
 
         self.group = self.env['discuss.channel']._create_group(partners_to=(internal_user + portal_user).partner_id.ids, name="Test group")
-        self.group.add_members(guest_ids=[guest.id])
+        self.group._add_members(guests=guest)
         self.tour = "discuss_channel_public_tour.js"
 
     def _open_channel_page_as_user(self, login):
@@ -105,6 +105,6 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         guest = self.env['mail.guest'].create({'name': 'Guest'})
         channel_1 = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
         channel_2 = self.env["discuss.channel"]._create_channel(name="Channel 2", group_id=None)
-        channel_1.add_members(guest_ids=[guest.id])
-        channel_2.add_members(guest_ids=[guest.id])
+        channel_1._add_members(guests=guest)
+        channel_2._add_members(guests=guest)
         self.start_tour(f"/discuss/channel/{channel_1.id}", "sidebar_in_public_page_tour", cookies={guest._cookie_name: guest._format_auth_cookie()})

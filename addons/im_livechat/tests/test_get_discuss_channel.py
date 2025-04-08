@@ -340,13 +340,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 "name": "test",
             }
         )
-        other_member = channel.with_user(self.operators[0]).add_members(
-            partner_ids=self.operators[1].partner_id.ids
-        )
+        other_member = channel.with_user(self.operators[0])._add_members(users=self.operators[1])
         self.assertEqual(other_member.partner_id, self.operators[1].partner_id)
-        self_member = channel.with_user(self.operators[0]).add_members(
-            partner_ids=self.operators[0].partner_id.ids
-        )
+        self_member = channel.with_user(self.operators[0])._add_members(users=self.operators[0])
         self.assertEqual(self_member.partner_id, self.operators[0].partner_id)
 
     def test_livechat_operator_can_see_all_livechat_conversations_and_members(self):
@@ -360,9 +356,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 "name": "test",
             }
         )
-        livechat_session.with_user(self.operators[0]).add_members(
-            partner_ids=self.operators[1].partner_id.ids
-        )
+        livechat_session.with_user(self.operators[0])._add_members(users=self.operators[1])
         self.assertEqual(
             self.env["discuss.channel"].with_user(bob_user).search([("id", "=", livechat_session.id)]),
             livechat_session
