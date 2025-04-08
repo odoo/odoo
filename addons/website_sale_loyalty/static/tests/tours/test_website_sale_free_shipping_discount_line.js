@@ -8,9 +8,9 @@ import {
     pay,
 } from "@website_sale/js/tours/tour_utils";
 
-function assertRewardAmounts(rewards, visibleOnly) {
+function assertRewardAmounts(rewards) {
     const steps = [];
-    const currencyValue = `.oe_currency_value${visibleOnly ? ":visible" : ":not(:visible)"}`;
+    const currencyValue = `.oe_currency_value:visible`;
     for (const [reward, amount] of Object.entries(rewards)) {
         steps.push({
             content: `check if ${reward} reward is correct`,
@@ -30,7 +30,7 @@ function selectDelivery(provider) {
 
 const waitForPaymentPage = {
     content: "wait for Payment page to load",
-    trigger: ".o_total_card:contains(Order summary)",
+    trigger: ".o_total_card button[name='o_payment_submit_button']:contains(Pay now)",
 };
 
 const webTours = registry.category("web_tour.tours");

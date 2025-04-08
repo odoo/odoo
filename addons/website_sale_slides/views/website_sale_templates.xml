@@ -43,9 +43,9 @@
 </template>
 
 <template id="cart_summary_inherit_website_sale_slides"
-          inherit_id="website_sale.checkout_layout"
+          inherit_id="website_sale.cart_summary_content"
           name="Course Cart right column">
-    <xpath expr="//td[@name='website_sale_cart_summary_product_name']/h6" position="after">
+    <xpath expr="//td[@name='website_sale_cart_summary_product_name']/span" position="after">
         <div t-if="line.product_id.channel_ids"
              t-foreach="line.product_id.channel_ids.filtered(lambda course: course.enroll == 'payment')"
              t-as="course"
