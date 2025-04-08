@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields
 from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessage(models.Model):
     _inherit = "mail.message"
+
+    call_channel_id = fields.Many2one("discuss.channel", string="Call Channel", index="btree_not_null")
 
     def _extras_to_store(self, store: Store, format_reply):
         super()._extras_to_store(store, format_reply=format_reply)

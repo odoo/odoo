@@ -3022,6 +3022,7 @@ class MailThread(models.AbstractModel):
             'subject',
             'subtype_id',
             'tracking_value_ids',
+            "call_channel_id"
         }
 
     def _get_message_create_ignore_field_names(self):
