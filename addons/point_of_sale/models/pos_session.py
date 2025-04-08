@@ -372,6 +372,30 @@ class PosSession(models.Model):
             # the .xml files as the CoA is not yet installed.
             pos_config = self.env['pos.config'].browse(config_id)
 
+<<<<<<< 551916af090bb390845268bb9d803fddbe52ba5b
+||||||| 6d8bf4401c9a3e808a2512be96d7491d0480b117
+            pos_name = self.env['ir.sequence'].with_context(
+                company_id=pos_config.company_id.id
+            ).next_by_code('pos.session')
+            if vals.get('name'):
+                pos_name += ' ' + vals['name']
+
+=======
+            base_name = f"{pos_config.name}/"
+            last_session = self.sudo().search_read(
+                [('name', 'ilike', base_name)],
+                ['name'],
+                order='name desc',
+                limit=1
+            )
+            if last_session:
+                last_number = int(last_session[0]['name'].split('/')[-1])
+            else:
+                last_number = 0
+
+            vals['name'] = f"{base_name}{str(last_number + 1).zfill(5)}"
+
+>>>>>>> f0a9f474b7cf9def269b1782318a1db9533d5c96
             update_stock_at_closing = pos_config.company_id.point_of_sale_update_stock_quantities == "closing"
 
             vals.update({
@@ -1708,9 +1732,14 @@ class PosSession(models.Model):
             return
         self.state = 'opened'
         self.start_at = fields.Datetime.now()
+<<<<<<< 551916af090bb390845268bb9d803fddbe52ba5b
         self.name = self.config_id.name + self.env['ir.sequence'].with_context(
             company_id=self.config_id.company_id.id
         ).next_by_code('pos.session') + (self.name if self.name != '/' else '')
+||||||| 6d8bf4401c9a3e808a2512be96d7491d0480b117
+=======
+        self.name = self.env['ir.sequence'].with_context(company_id=self.config_id.company_id.id).next_by_code('pos.session')
+>>>>>>> f0a9f474b7cf9def269b1782318a1db9533d5c96
 
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         if cash_payment_method_ids:
