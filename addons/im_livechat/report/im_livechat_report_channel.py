@@ -23,7 +23,7 @@ class Im_LivechatReportChannel(models.Model):
     day_number = fields.Char('Day Number', readonly=True, help="1 is Monday, 7 is Sunday")
     time_to_answer = fields.Float('Time to answer (sec)', digits=(16, 2), readonly=True, aggregator="avg", help="Average time in seconds to give the first answer to the visitor")
     start_date_hour = fields.Char('Hour of start Date of session', readonly=True)
-    duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in seconds)")
+    duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
     nbr_speaker = fields.Integer('# of speakers', readonly=True, aggregator="avg", help="Number of different speakers")
     nbr_message = fields.Integer('Average message', readonly=True, aggregator="avg", help="Number of message in the conversation")
     is_without_answer = fields.Integer('Session(s) without answer', readonly=True, aggregator="sum",
@@ -64,7 +64,7 @@ class Im_LivechatReportChannel(models.Model):
                 to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                 to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
                 extract(dow from  C.create_date) as day_number, 
-                EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date)) AS duration,
+                EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date))/60 AS duration,
                 EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer,
                 count(distinct C.livechat_operator_id) as nbr_speaker,
                 count(distinct M.id) as nbr_message,

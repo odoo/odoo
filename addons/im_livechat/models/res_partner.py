@@ -71,3 +71,11 @@ class ResPartner(models.Model):
                 )
             )
         self._bus_send_transient_message(channel, message_body)
+
+    @api.depends_context("im_livechat.hide_partner_company")
+    def _compute_display_name(self):
+        if not self._context.get("im_livechat.hide_partner_company"):
+            super()._compute_display_name()
+            return
+        for partner in self:
+            partner.display_name = partner.name

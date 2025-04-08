@@ -4,7 +4,7 @@
     {
       "id": "sheet1",
       "name": "Dashboard",
-      "colNumber": 5,
+      "colNumber": 6,
       "rowNumber": 35,
       "rows": {
         "6": { "size": 40 },
@@ -26,13 +26,14 @@
         "1": { "size": 100 },
         "2": { "size": 50 },
         "3": { "size": 209 },
-        "4": { "size": 260 }
+        "4": { "size": 260 },
+        "5": { "size": 100 }
       },
       "merges": [],
       "cells": {
-        "A7": "[Daily Sessions](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"start_date:day\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_date:day\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Session per Day\"})",
-        "A23": "[Top Operators](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
-        "A24": "=_t(\"Operator\")",
+        "A7": "[Sessions by Day](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"start_date:day\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_date:day\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Session per Day\"})",
+        "A23": "[Top Agents](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Agent Analysis\"})",
+        "A24": "=_t(\"Agent\")",
         "A25": "=PIVOT.HEADER(3,\"#partner_id\",1)",
         "A26": "=PIVOT.HEADER(3,\"#partner_id\",2)",
         "A27": "=PIVOT.HEADER(3,\"#partner_id\",3)",
@@ -54,29 +55,40 @@
         "B32": "=PIVOT.VALUE(3,\"nbr_channel\",\"#partner_id\",8)",
         "B33": "=PIVOT.VALUE(3,\"nbr_channel\",\"#partner_id\",9)",
         "B34": "=PIVOT.VALUE(3,\"nbr_channel\",\"#partner_id\",10)",
-        "D7": "[Sessions by Operator](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
-        "D24": "=_t(\"Time to answer (seconds)\")",
-        "D25": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",1)",
-        "D26": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",2)",
-        "D27": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",3)",
-        "D28": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",4)",
-        "D29": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",5)",
-        "D30": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",6)",
-        "D31": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",7)",
-        "D32": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",8)",
-        "D33": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",9)",
-        "D34": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",10)",
-        "E24": "=_t(\"Average session (seconds)\")",
-        "E25": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",1)",
-        "E26": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",2)",
-        "E27": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",3)",
-        "E28": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",4)",
-        "E29": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",5)",
-        "E30": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",6)",
-        "E31": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",7)",
-        "E32": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",8)",
-        "E33": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",9)",
-        "E34": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",10)"
+        "D7": "[Sessions by Agent](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Agent Analysis\"})",
+        "D24": "=_t(\"Session Duration (min)\")",
+        "D25": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",1)",
+        "D26": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",2)",
+        "D27": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",3)",
+        "D28": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",4)",
+        "D29": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",5)",
+        "D30": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",6)",
+        "D31": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",7)",
+        "D32": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",8)",
+        "D33": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",9)",
+        "D34": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",10)",
+        "E24": "=_t(\"Time to Respond (sec)\")",
+        "E25": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",1)",
+        "E26": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",2)",
+        "E27": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",3)",
+        "E28": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",4)",
+        "E29": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",5)",
+        "E30": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",6)",
+        "E31": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",7)",
+        "E32": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",8)",
+        "E33": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",9)",
+        "E34": "=PIVOT.VALUE(3,\"time_to_answer\",\"#partner_id\",10)",
+        "F24": "=_t(\"Rating (%)\")",
+        "F25": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",1)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",1) - 1, 0) * 100 / 4, \"\")",
+        "F26": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",2)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",2) - 1, 0) * 100 / 4, \"\")",
+        "F27": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",3)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",3) - 1, 0) * 100 / 4, \"\")",
+        "F28": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",4)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",4) - 1, 0) * 100 / 4, \"\")",
+        "F29": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",5)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",5) - 1, 0) * 100 / 4, \"\")",
+        "F30": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",6)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",6) - 1, 0) * 100 / 4, \"\")",
+        "F31": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",7)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",7) - 1, 0) * 100 / 4, \"\")",
+        "F32": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",8)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",8) - 1, 0) * 100 / 4, \"\")",
+        "F33": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",9)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",9) - 1, 0) * 100 / 4, \"\")",
+        "F34": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating\",\"#partner_id\",10)), MAX(PIVOT.VALUE(3,\"rating\",\"#partner_id\",10) - 1, 0) * 100 / 4, \"\")"
       },
       "styles": {
         "A7": 1,
@@ -86,19 +98,21 @@
         "A25:B34": 3,
         "D25:E34": 3,
         "B24": 4,
-        "D24:E24": 4
+        "D24:F24": 4
       },
-      "formats": {},
+      "formats": {
+        "D25:F35": 1
+      },
       "borders": {
         "A7:B7": 1,
         "D7:E7": 1,
-        "A23:E23": 1,
+        "A23:F23": 1,
         "A8:B8": 2,
         "D8:E8": 2,
-        "A24:E24": 2,
-        "A25:E25": 3,
-        "A26:E34": 4,
-        "A35:E35": 5
+        "A24:F24": 2,
+        "A25:F25": 3,
+        "A26:F34": 4,
+        "A35:F35": 5
       },
       "conditionalFormats": [
         {
@@ -113,7 +127,7 @@
           "id": "082454d7-d797-48a6-8db5-9182050a8c55",
           "x": 0,
           "y": 12,
-          "width": 200,
+          "width": 250,
           "height": 102,
           "tag": "chart",
           "data": {
@@ -126,7 +140,7 @@
             "baseline": "Data!E2",
             "baselineDescr": "since last period",
             "keyValue": "Data!D2",
-            "humanize": false
+            "humanize": true
           }
         },
         {
@@ -184,7 +198,9 @@
             },
             "searchParams": {
               "comparison": null,
-              "context": {},
+              "context": {
+                "im_livechat.hide_partner_company": true
+              },
               "domain": [],
               "groupBy": ["partner_id"],
               "orderBy": []
@@ -192,7 +208,7 @@
             "type": "odoo_bar",
             "dataSets": [],
             "verticalAxisPosition": "left",
-            "stacked": true,
+            "stacked": false,
             "fieldMatching": {
               "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
               "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" }
@@ -200,28 +216,8 @@
           }
         },
         {
-          "id": "ced6ca85-c9d2-4804-9100-e1ca5fd290d1",
-          "x": 213,
-          "y": 12,
-          "width": 200,
-          "height": 102,
-          "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Avg. Time to Answer", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FEF2F2",
-            "baseline": "Data!E3",
-            "baselineDescr": "last period",
-            "keyValue": "Data!D3",
-            "humanize": false
-          }
-        },
-        {
           "id": "e0b92164-4451-4c0b-bd28-3bab46fd88de",
-          "x": 426,
+          "x": 260,
           "y": 12,
           "width": 200,
           "height": 102,
@@ -230,18 +226,38 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Avg. Session Duration", "color": "#434343", "bold": true },
+            "title": { "text": "Session Duration", "color": "#434343", "bold": true },
             "type": "scorecard",
             "background": "#FEF2F2",
             "baseline": "Data!E4",
-            "baselineDescr": "last period",
+            "baselineDescr": "min",
             "keyValue": "Data!D4",
-            "humanize": false
+            "humanize": true
+          }
+        },
+        {
+          "id": "ced6ca85-c9d2-4804-9100-e1ca5fd290d1",
+          "x": 470,
+          "y": 12,
+          "width": 200,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Time to Respond", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!E3",
+            "baselineDescr": "sec",
+            "keyValue": "Data!D3",
+            "humanize": true
           }
         },
         {
           "id": "5b8972f1-db5f-48dd-aeca-c0bc87c7155d",
-          "x": 636,
+          "x": 680,
           "y": 12,
           "width": 200,
           "height": 102,
@@ -255,11 +271,11 @@
                 "upperColor": "#6aa84f"
               },
               "rangeMin": "0",
-              "rangeMax": "5",
-              "lowerInflectionPoint": { "type": "number", "value": "1", "operator": "<=" },
-              "upperInflectionPoint": { "type": "number", "value": "3", "operator": "<=" }
+              "rangeMax": "100",
+              "lowerInflectionPoint": { "type": "number", "value": "20", "operator": "<=" },
+              "upperInflectionPoint": { "type": "number", "value": "50", "operator": "<=" }
             },
-            "title": { "text": "Average Rating", "bold": true, "color": "#434343" },
+            "title": { "text": "Rating (%)", "bold": true, "color": "#434343", "fontSize": 14 },
             "type": "gauge",
             "dataRange": "Data!D5"
           }
@@ -322,30 +338,28 @@
       "cells": {
         "A1": "=_t(\"KPI\")",
         "A2": "=_t(\"Sessions\")",
-        "A3": "=_t(\"Avg. time to answer\")",
+        "A3": "=_t(\"Avg. time to respond\")",
         "A4": "=_t(\"Avg. session duration\")",
         "A5": "=_t(\"Rating\")",
         "B1": "=_t(\"Current\")",
         "B2": "=PIVOT.VALUE(4,\"__count\")",
         "B3": "=PIVOT.VALUE(1,\"time_to_answer\")",
         "B4": "=PIVOT.VALUE(1,\"duration\")",
-        "B5": "=PIVOT.VALUE(1,\"rating\")",
+        "B5": "=IF(ISNUMBER(PIVOT.VALUE(1,\"rating\")), MAX(PIVOT.VALUE(1,\"rating\") - 1, 0) * 100 / 4, \"\")",
         "C1": "=_t(\"Previous\")",
         "C2": "=PIVOT.VALUE(5,\"__count\")",
         "C3": "=PIVOT.VALUE(2,\"time_to_answer\")",
         "C4": "=PIVOT.VALUE(2,\"duration\")",
         "D1": "=_t(\"Current\")",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
-        "D3": "=CONCATENATE(-ROUND(B3/60),\"min\")",
-        "D4": "=CONCATENATE(ROUND(B4/60),\"min\")",
+        "D3": "=CONCATENATE(ROUND(B3),\" sec\")",
+        "D4": "=CONCATENATE(ROUND(B4),\" min\")",
         "D5": "=B5",
         "E1": "=_t(\"Previous\")",
         "E2": "=FORMAT.LARGE.NUMBER(C2)",
-        "E3": "=-ROUND(C3/60)",
-        "E4": "=ROUND(C4/60)"
+        "E3": "=ROUND(C3)",
+        "E4": "=ROUND(C4)"
       },
-      "styles": { "A1:E1": 5, "D2:D5": 6, "E2:E4": 6 },
-      "formats": {},
       "borders": {},
       "conditionalFormats": [],
       "dataValidationRules": [],
@@ -373,7 +387,9 @@
     "5": { "bold": true },
     "6": { "fillColor": "#f2f2f2" }
   },
-  "formats": {},
+  "formats": {
+    "1": "0[$]"
+  },
   "borders": {
     "1": {
       "bottom": { "style": "thin", "color": "#CCCCCC" }
@@ -455,16 +471,19 @@
         "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" }
       },
-      "context": {},
+      "context": {
+        "im_livechat.hide_partner_company": true
+      },
       "domain": [],
       "id": "3",
       "measures": [
         { "id": "nbr_channel", "fieldName": "nbr_channel" },
         { "id": "time_to_answer", "fieldName": "time_to_answer" },
-        { "id": "duration", "fieldName": "duration" }
+        { "id": "duration", "fieldName": "duration" },
+        { "id": "rating", "fieldName": "rating" }
       ],
       "model": "im_livechat.report.operator",
-      "name": "Livechat Support Statistics by Operator",
+      "name": "Livechat Support Statistics by Agent",
       "sortedColumn": {
         "measure": "nbr_channel",
         "order": "desc",
@@ -529,8 +548,9 @@
     {
       "id": "5124b7b1-aa17-46cc-b574-2309708de75b",
       "type": "relation",
-      "label": "Operator",
+      "label": "Agent",
       "modelName": "res.partner",
+      "domainOfAllowedValues": "[['partner_share', '=', False]]",
       "defaultValue": [],
       "defaultValueDisplayNames": [],
       "rangeType": "year"
