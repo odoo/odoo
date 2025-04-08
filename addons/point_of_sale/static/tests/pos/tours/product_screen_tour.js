@@ -624,12 +624,26 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
                 "Test Frontend Product",
                 "710535977349",
                 "20.0",
+<<<<<<< 1e13520ca9bb18deba85110ce9362ac2adb55904
                 "Chair test"
+||||||| 6d8bf4401c9a3e808a2512be96d7491d0480b117
+                "Chairs"
+=======
+                "Chair Test"
+>>>>>>> 2d5225aa8d0f24c1d9192cece3422c25bc172e88
             ),
             Dialog.confirm(),
 
+<<<<<<< 1e13520ca9bb18deba85110ce9362ac2adb55904
             // Click on the category button for "Chair test" to verify the product's addition.
             ProductScreen.clickSubcategory("Chair test"),
+||||||| 6d8bf4401c9a3e808a2512be96d7491d0480b117
+            // Click on the category button for "Chairs" to verify the product's addition.
+            ProductScreen.clickSubcategory("Chairs"),
+=======
+            // Click on the category button for "Chairs" to verify the product's addition.
+            ProductScreen.clickSubcategory("Chair Test"),
+>>>>>>> 2d5225aa8d0f24c1d9192cece3422c25bc172e88
             ProductScreen.clickDisplayedProduct("Test Frontend Product"),
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect("Test Frontend Product", "1", "20.0"),
@@ -649,7 +663,13 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
                 "50.0"
             ),
             Dialog.confirm(),
+<<<<<<< 1e13520ca9bb18deba85110ce9362ac2adb55904
             ProductScreen.clickSubcategory("Chair test"),
+||||||| 6d8bf4401c9a3e808a2512be96d7491d0480b117
+            ProductScreen.clickSubcategory("Chairs"),
+=======
+            ProductScreen.clickSubcategory("Chair Test"),
+>>>>>>> 2d5225aa8d0f24c1d9192cece3422c25bc172e88
             ProductScreen.clickDisplayedProduct("Test Frontend Product Edited"),
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect(
