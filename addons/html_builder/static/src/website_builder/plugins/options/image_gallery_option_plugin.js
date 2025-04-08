@@ -177,7 +177,7 @@ class ImageGalleryOption extends Plugin {
                 return this.processImages(editingElement, selectedImages);
             },
             apply: ({ editingElement, loadResult: { images } }) => {
-                if (images.length) {
+                if (images && images.length) {
                     const mode = this.getMode(editingElement);
                     this.setImages(editingElement, mode, images);
                 }
