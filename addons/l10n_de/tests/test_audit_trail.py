@@ -31,6 +31,13 @@ class TestAuditTrailDE(AccountTestInvoicingHttpCommon):
             force_report_rendering=True,
         )._generate_and_send_invoices(invoice)
 
+    def test_audit_trail_setting(self):
+        self.assertEqual(self.env.company.country_id.code, 'DE')
+        self.assertEqual(self.env.company.account_fiscal_country_id.code, 'DE')
+        self.assertTrue(self.env.company.restrictive_audit_trail)
+        with self.assertRaisesRegex(UserError, "Can't disable restricted audit trail: forced by localization."):
+            self.env.company.restrictive_audit_trail = False
+
     def test_audit_trail_de(self):
         invoice = self.env['account.move'].create([{
             'move_type': 'out_invoice',
@@ -52,7 +59,7 @@ class TestAuditTrailDE(AccountTestInvoicingHttpCommon):
         first_attachment.unlink()
         self.assertTrue(first_attachment.exists())
         # But we cannot entirely remove it
-        with self.assertRaisesRegex(UserError, "remove parts of the audit trail"):
+        with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail."):
             first_attachment.unlink()
 
         # Print a second time the invoice, it generates a new attachment
@@ -96,11 +103,11 @@ class TestAuditTrailDE(AccountTestInvoicingHttpCommon):
         self._send_and_print(invoice)
         attachment = invoice.message_main_attachment_id
 
-        with self.assertRaisesRegex(UserError, "remove parts of the audit trail"):
+        with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail."):
             attachment.write({
                 'res_id': self.env.user.id,
                 'res_model': self.env.user._name,
             })
 
-        with self.assertRaisesRegex(UserError, "remove parts of the audit trail"):
+        with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail."):
             attachment.datas = b'new data'

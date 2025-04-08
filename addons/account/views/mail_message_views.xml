@@ -46,6 +46,7 @@
                 <separator/>
                 <filter string="Update Only" name="update_only" domain="[('tracking_value_ids', '!=', False)]" groups="base.group_system"/>
                 <filter string="Create Only" name="create_only" domain="[('tracking_value_ids', '=', False)]" groups="base.group_system"/>
+                <filter string="Restricted Only" name="restricted_by_audit_trail" domain="[('account_audit_log_restricted', '=', True)]"/>
                 <separator/>
                 <filter name="date" string="Date" date="date"/>
                 <group expand="0" string="Group By">
@@ -63,12 +64,10 @@
         <field name="view_mode">list</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">This is the Audit Trail Report</p>
-            <div>Make sure you first activate the audit trail in the accounting settings</div>
-            <a class="btn-link" type="action" name="%(action_account_config)d">Go to the accounting settings</a>
         </field>
         <field name="domain">[
             ('message_type', '=', 'notification'),
-            ('account_audit_log_activated', '=', True),
+            ('model', 'in', ('account.move', 'account.account', 'account.tax', 'res.partner', 'res.company')),
         ]</field>
         <field name="search_view_id" ref="view_message_tree_audit_log_search"/>
     </record>

@@ -342,6 +342,11 @@
                                 <field name="module_product_margin"/>
                             </setting>
                         </block>
+                        <block title="Reporting" id="account_reports_settings" groups="account.group_account_user" invisible="not module_account_reports">
+                            <setting string="Restrictive Audit Trail" company_dependent="1" invisible="force_restrictive_audit_trail" help="As soon as a journal item is involved, changes to the account, partner, journal entry or journal item are logged. You can then not delete those records anymore">
+                                <field name="restrictive_audit_trail"/>
+                            </setting>
+                        </block>
                         <field name="is_account_peppol_eligible" invisible="1"/>
                         <block title="PEPPOL Electronic Invoicing" id="peppol" invisible="not is_account_peppol_eligible">
                             <div id="account_peppol_install" class="col-12 col-lg-12 o_setting_box">
@@ -369,16 +374,6 @@
                             </div>
                             <setting company_dependent="1">
                                 <field name="quick_edit_mode" placeholder="Disabled"/>
-                            </setting>
-                        </block>
-                        <block title="Audit Trail" name="audit_trail_setting_container">
-                            <setting string="Audit Trail" company_dependent="1" help="Activate Audit Trail">
-                                <field name="check_account_audit_trail"/>
-                                <div class="alert alert-warning o_setting_box" role="alert" invisible= "check_account_audit_trail">
-                                    <p>
-                                        <strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be disabled again if there are any existing journal items.
-                                    </p>
-                                </div>
                             </setting>
                         </block>
                     </app>
