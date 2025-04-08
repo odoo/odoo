@@ -30,13 +30,13 @@
       },
       "merges": [],
       "cells": {
-        "A7": "[Daily Sessions](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"start_date:day\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_date:day\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Session per Day\"})",
-        "A23": "[Top Operators](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
-        "A24": "=_t(\"Operator\")",
+        "A7": "[Sessions by Day](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"start_date:day\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_date:day\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Session per Day\"})",
+        "A23": "[Top Agents](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
+        "A24": "=_t(\"Agent\")",
         "B24": "=_t(\"Sessions\")",
-        "D7": "[Sessions by Operator](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
-        "D24": "=_t(\"Time to answer (seconds)\")",
-        "E24": "=_t(\"Average session (seconds)\")"
+        "D7": "[Sessions by Agent](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
+        "D24": "=_t(\"Session Duration (min)\")",
+        "E24": "=_t(\"Time to respond (sec)\")"
       },
       "styles": { "A7": 1, "A23": 1, "D7": 1, "A24": 2, "B24": 3, "D24:E24": 3 },
       "formats": {},
@@ -46,10 +46,10 @@
         "A23:E23": 1,
         "A8:B8": 2,
         "D8:E8": 2,
-        "A24:E24": 2,
-        "A25:E25": 3,
-        "A26:E34": 4,
-        "A35:E35": 5
+        "A24:F24": 2,
+        "A25:F25": 3,
+        "A26:F34": 4,
+        "A35:F35": 5
       },
       "conditionalFormats": [],
       "dataValidationRules": [],
@@ -58,7 +58,7 @@
           "id": "082454d7-d797-48a6-8db5-9182050a8c55",
           "x": 0,
           "y": 12,
-          "width": 200,
+          "width": 250,
           "height": 102,
           "tag": "chart",
           "data": {
@@ -76,7 +76,7 @@
         },
         {
           "id": "ced6ca85-c9d2-4804-9100-e1ca5fd290d1",
-          "x": 213,
+          "x": 470,
           "y": 12,
           "width": 200,
           "height": 102,
@@ -85,18 +85,18 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Avg. Time to Answer", "bold": true, "color": "#434343" },
+            "title": { "text": "Time to Respond", "bold": true, "color": "#434343" },
             "type": "scorecard",
             "background": "#FEF2F2",
             "baseline": "Data!E3",
-            "baselineDescr": "last period",
+            "baselineDescr": "sec",
             "keyValue": "Data!D3",
             "humanize": false
           }
         },
         {
           "id": "e0b92164-4451-4c0b-bd28-3bab46fd88de",
-          "x": 426,
+          "x": 260,
           "y": 12,
           "width": 200,
           "height": 102,
@@ -105,18 +105,18 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Avg. Session Duration", "color": "#434343", "bold": true },
+            "title": { "text": "Session Duration", "color": "#434343", "bold": true },
             "type": "scorecard",
             "background": "#FEF2F2",
             "baseline": "Data!E4",
-            "baselineDescr": "last period",
+            "baselineDescr": "min",
             "keyValue": "Data!D4",
             "humanize": false
           }
         },
         {
           "id": "5b8972f1-db5f-48dd-aeca-c0bc87c7155d",
-          "x": 636,
+          "x": 680,
           "y": 12,
           "width": 200,
           "height": 102,
@@ -130,11 +130,11 @@
                 "upperColor": "#6aa84f"
               },
               "rangeMin": "0",
-              "rangeMax": "5",
-              "lowerInflectionPoint": { "type": "number", "value": "1", "operator": "<=" },
-              "upperInflectionPoint": { "type": "number", "value": "3", "operator": "<=" }
+              "rangeMax": "100",
+              "lowerInflectionPoint": { "type": "number", "value": "20", "operator": "<=" },
+              "upperInflectionPoint": { "type": "number", "value": "50", "operator": "<=" }
             },
-            "title": { "text": "Average Rating", "bold": true, "color": "#434343" },
+            "title": { "text": "Rating (%)", "bold": true, "color": "#434343", "fontSize": 14 },
             "type": "gauge",
             "dataRange": "Data!D5"
           }
@@ -237,8 +237,8 @@
         "C13": "=RANDBETWEEN(10,100)",
         "D1": "=_t(\"Current\")",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
-        "D3": "=CONCATENATE(ROUND(B3),\"min\")",
-        "D4": "=CONCATENATE(ROUND(B4),\"min\")",
+        "D3": "=CONCATENATE(ROUND(B3),\" sec\")",
+        "D4": "=CONCATENATE(ROUND(B4),\" min\")",
         "D5": "=B5",
         "E1": "=_t(\"Previous\")",
         "E2": "=FORMAT.LARGE.NUMBER(C2)",
