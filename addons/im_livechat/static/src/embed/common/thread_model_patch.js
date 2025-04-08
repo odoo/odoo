@@ -145,6 +145,15 @@ patch(Thread.prototype, {
         return super.showUnreadBanner;
     },
 
+    get composerHide() {
+        const step = this.chatbot?.currentStep;
+        return (
+            this.livechat_active === false ||
+            this.chatbot?.completed ||
+            step?.type === "question_selection"
+        );
+    },
+
     get composerDisabled() {
         const step = this.chatbot?.currentStep;
         if (this.chatbot?.forwarded && this.livechat_active) {
