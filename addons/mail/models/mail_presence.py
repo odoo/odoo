@@ -99,7 +99,8 @@ class MailPresence(models.Model):
             target._bus_send(
                 "bus.bus/im_status_updated",
                 {
-                    "im_status": im_status or presence.status,
+                    "presence_status": im_status or presence.status,
+                    "im_status": target.im_status,
                     "guest_id": presence.guest_id.id,
                     "partner_id": presence.user_id.partner_id.id,
                 },
