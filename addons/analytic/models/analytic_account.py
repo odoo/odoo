@@ -177,39 +177,42 @@ class AccountAnalyticAccount(models.Model):
                 account.credit = data_credit.get(account.id, 0.0)
                 account.balance = account.credit - account.debit
 
+    def _update_accounts_in_analytic_lines(self, new_fname, current_fname, accounts):
+        if current_fname != new_fname:
+            domain = [
+                (new_fname, 'not in', accounts.ids + [False]),
+                (current_fname, 'in', accounts.ids),
+            ]
+            if self.env['account.analytic.line'].sudo().search_count(domain, limit=1):
+                list_view = self.env.ref('analytic.view_account_analytic_line_tree', raise_if_not_found=False)
+                raise RedirectWarning(
+                    message=_("Whoa there! Making this change would wipe out your current data. Let's avoid that, shall we?"),
+                    action={
+                        'res_model': 'account.analytic.line',
+                        'type': 'ir.actions.act_window',
+                        'domain': domain,
+                        'target': 'new',
+                        'views': [(list_view and list_view.id, 'list')]
+                    },
+                    button_text=_("See them"),
+                )
+            self.env.cr.execute(SQL(
+                """
+                UPDATE account_analytic_line
+                   SET %(new_fname)s = %(current_fname)s,
+                       %(current_fname)s = NULL
+                 WHERE %(current_fname)s = ANY(%(account_ids)s)
+                """,
+                new_fname=SQL.identifier(new_fname),
+                current_fname=SQL.identifier(current_fname),
+                account_ids=accounts.ids,
+            ))
+            self.env['account.analytic.line'].invalidate_model()
+
     def write(self, vals):
         if vals.get('plan_id'):
             new_fname = self.env['account.analytic.plan'].browse(vals['plan_id'])._column_name()
-            for account in self:
-                current_fname = account.plan_id._column_name()
-                if current_fname != new_fname:
-                    domain = [
-                        (new_fname, 'not in', (account.id, False)),
-                        (current_fname, '=', account.id),
-                    ]
-                    if self.env['account.analytic.line'].sudo().search_count(domain, limit=1):
-                        list_view = self.env.ref('analytic.view_account_analytic_line_tree', raise_if_not_found=False)
-                        raise RedirectWarning(
-                            message=_("Whoa there! Moving this account would wipe out your current data. Let's avoid that, shall we?"),
-                            action={
-                                'res_model': 'account.analytic.line',
-                                'type': 'ir.actions.act_window',
-                                'domain': domain,
-                                'target': 'new',
-                                'views': [(list_view and list_view.id, 'list')]
-                            },
-                            button_text=_("See them"),
-                        )
-                    self.env.cr.execute(SQL(
-                        """
-                        UPDATE account_analytic_line
-                           SET %(new_fname)s = %(account_id)s,
-                               %(current_fname)s = NULL
-                         WHERE %(current_fname)s = %(account_id)s
-                        """,
-                        new_fname=SQL.identifier(new_fname),
-                        current_fname=SQL.identifier(current_fname),
-                        account_id=account.id,
-                    ))
-                    self.env['account.analytic.line'].invalidate_model()
+            for plan, accounts in self.grouped('plan_id').items():
+                current_fname = plan._column_name()
+                self._update_accounts_in_analytic_lines(new_fname, current_fname, accounts)
         return super().write(vals)

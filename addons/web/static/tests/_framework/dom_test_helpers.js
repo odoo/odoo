@@ -25,6 +25,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {import("@odoo/hoot-dom").DragHelpers} DragHelpers
+ * @typedef {import("@odoo/hoot-dom").DragOptions} DragOptions
  * @typedef {import("@odoo/hoot-dom").FillOptions} FillOptions
  * @typedef {import("@odoo/hoot-dom").InputValue} InputValue
  * @typedef {import("@odoo/hoot-dom").KeyStrokes} KeyStrokes
@@ -33,7 +34,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
  * @typedef {import("@odoo/hoot-dom").QueryOptions} QueryOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
  *
- * @typedef {PointerOptions & {
+ * @typedef {DragOptions & {
  *  initialPointerMoveDistance?: number;
  *  pointerDownDuration: number;
  * }} DragAndDropOptions
@@ -238,7 +239,7 @@ export function contains(target, options) {
         /**
          * @param {Target} target
          * @param {DragAndDropOptions} [dropOptions]
-         * @param {PointerOptions} [dragOptions]
+         * @param {DragOptions} [dragOptions]
          */
         dragAndDrop: async (target, dropOptions, dragOptions) => {
             consumeContains();

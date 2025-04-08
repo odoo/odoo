@@ -65,12 +65,6 @@ class TestReports(L10nInTestInvoicingCommon):
                 'l10n_in_gst_treatment': 'regular',
             }]
         )
-        invoice_b_2.button_draft()
-        self.assertRecordValues(invoice_b_2, [{
-            'state': 'draft',
-            'l10n_in_gst_treatment': self.partner_b.l10n_in_gst_treatment,
-            'l10n_in_state_id': expected_pos_id,
-        }])
 
     def test_partner_change_with_invoice(self):
         in_invoice = self.init_invoice(

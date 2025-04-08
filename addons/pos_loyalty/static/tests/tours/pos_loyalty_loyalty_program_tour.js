@@ -1,6 +1,7 @@
 import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
@@ -280,6 +281,8 @@ registry.category("web_tour.tours").add("PosLoyaltyMultipleOrders", {
             ProductScreen.addOrderline("Whiteboard Pen", "2"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
 
             // Order2: Finalize a different order.
             Chrome.createFloatingOrder(),

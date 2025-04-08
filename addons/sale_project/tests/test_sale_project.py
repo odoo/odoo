@@ -1188,3 +1188,14 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             so2.order_line.project_id,
             "The project of `so1` should be set to the project that was generated at SO confirmation."
         )
+
+    def test_so_with_service_product_negative_qty(self):
+        so = self.env['sale.order'].create({'partner_id': self.partner.id})
+        sol = self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'product_id': self.product_order_service2.id,
+            'product_uom_qty': -5,
+        })
+        so.action_confirm()
+        self.assertFalse(self.product_order_service2.project_id.task_ids)
+        self.assertFalse(sol.task_id)

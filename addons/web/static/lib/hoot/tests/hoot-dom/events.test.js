@@ -685,6 +685,80 @@ describe(parseUrl(import.meta.url), () => {
         ]);
     });
 
+    test("drag & drop: draggable items with files", async () => {
+        await mountForTest(/* xml */ `
+            <ul>
+                <li id="first-item" draggable="true">Item 1</li>
+                <li id="second-item" draggable="true">Item 2</li>
+                <li id="third-item" draggable="true">Item 3</li>
+            </ul>
+        `);
+
+        const { drop, moveTo } = await drag("#first-item", {
+            dropEffect: "move",
+            files: [new File([""], "dragged-file.txt")],
+        });
+        await moveTo("#second-item");
+        const events = await drop("#third-item");
+
+        const dragEvents = events.getAll((ev) => ev.type.startsWith("drag"));
+        const { dataTransfer } = dragEvents[0];
+
+        expect(dataTransfer.dropEffect).toBe("move");
+        expect(dataTransfer.effectAllowed).toBe("all");
+        expect(dataTransfer.files).toHaveLength(1);
+        expect(dataTransfer.items).toHaveLength(1);
+        expect(dataTransfer.types).toEqual(["Files"]);
+
+        for (const event of dragEvents) {
+            expect(event.dataTransfer).toBe(dataTransfer, {
+                message: (_, r) => [
+                    r`drag event`,
+                    event.type,
+                    r`should share the same dataTransfer object`,
+                ],
+            });
+        }
+    });
+
+    test("drag & drop: draggable items with dataTransfer items", async () => {
+        await mountForTest(/* xml */ `
+            <ul>
+                <li id="first-item" draggable="true">Item 1</li>
+                <li id="second-item" draggable="true">Item 2</li>
+                <li id="third-item" draggable="true">Item 3</li>
+            </ul>
+        `);
+
+        const { drop, moveTo } = await drag("#first-item", {
+            items: [
+                ["abc", "text/plain"],
+                ["<html/>", "text/html"],
+            ],
+        });
+        await moveTo("#second-item");
+        const events = await drop("#third-item");
+
+        const dragEvents = events.getAll((ev) => ev.type.startsWith("drag"));
+        const { dataTransfer } = dragEvents[0];
+
+        expect(dataTransfer.dropEffect).toBe("none");
+        expect(dataTransfer.effectAllowed).toBe("all");
+        expect(dataTransfer.files).toHaveLength(0);
+        expect(dataTransfer.items).toHaveLength(2);
+        expect(dataTransfer.types).toEqual(["text/plain", "text/html"]);
+
+        for (const event of dragEvents) {
+            expect(event.dataTransfer).toBe(dataTransfer, {
+                message: (_, r) => [
+                    r`drag event`,
+                    event.type,
+                    r`should share the same dataTransfer object`,
+                ],
+            });
+        }
+    });
+
     test("drag & drop: non-draggable items", async () => {
         await mountForTest(/* xml */ `
             <ul>

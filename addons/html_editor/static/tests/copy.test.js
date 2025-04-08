@@ -156,4 +156,16 @@ describe("range not collapsed", () => {
             '<p><a href="http://test.com/">label</a></p>'
         );
     });
+
+    test("should add origin to images urls", async () => {
+        await setupEditor('<p>[<img src="/nice.png">]</p>');
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe(
+            `<p><img src="${window.location.origin}/nice.png"></p>`
+        );
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            `<p><img src="${window.location.origin}/nice.png"></p>`
+        );
+    });
 });

@@ -193,6 +193,7 @@ export class Message extends Component {
                 this.message.translationValue,
                 this.props.messageSearch?.searchTerm,
                 this.message.body,
+                this.message.composer,
             ]
         );
     }
@@ -409,6 +410,8 @@ export class Message extends Component {
         if (!bodyEl) {
             return;
         }
+        const editedEl = bodyEl.querySelector(".o-mail-Message-edited");
+        editedEl?.replaceChildren(renderToElement("mail.Message.edited"));
         const linkEls = bodyEl.querySelectorAll(".o_channel_redirect");
         for (const linkEl of linkEls) {
             const text = linkEl.textContent.substring(1); // remove '#' prefix
