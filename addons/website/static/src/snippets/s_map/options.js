@@ -43,7 +43,7 @@ options.registry.Map = options.Class.extend({
             divEl.className = "description";
             divEl.contentEditable = false;
             divEl.textContent = _t("Visit us: Our office is open Monday – Friday 8:30 a.m. – 4:00 p.m.");
-            this.$target[0].appendChild(divEl);
+            this.$target[0].querySelector('.map_container')?.appendChild(divEl);
         } else if (!widgetValue && descriptionEl) {
             // Clean Up: Remove entered value from input field
             if (descriptionTextEl && inputField) {
