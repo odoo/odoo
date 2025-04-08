@@ -103,9 +103,11 @@ composerActionsRegistry
     .add("upload-files", {
         condition: (component) => {
             const thread = component.thread ?? component.message?.thread;
-            return !(
-                thread?.channel_type === "whatsapp" &&
-                component.props.composer.attachments.length > 0
+            return (
+                !(
+                    thread?.channel_type === "whatsapp" &&
+                    component.props.composer.attachments.length > 0
+                ) && !component.props.composer.portalComment
             );
         },
         icon: "fa fa-paperclip",
