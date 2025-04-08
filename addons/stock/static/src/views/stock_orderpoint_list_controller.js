@@ -20,8 +20,19 @@ export class StockOrderpointListController extends ListController {
         if (action) {
             await this.actionService.doAction(action);
         }
-        return this.actionService.doAction('stock.action_replenishment', {
-            stackPosition: 'replaceCurrentAction',
+        return this.actionService.doAction({
+            name: "Replenishment",
+            type: "ir.actions.act_window",
+            res_model: "stock.warehouse.orderpoint",
+            view_id: "stock.action_orderpoint_replenish",
+            target: "main",
+            views:[[false,'list']],
+            context : {
+                search_default_filter_to_reorder: true,
+                search_default_filter_not_snoozed: true,
+                default_trigger: 'manual',
+                searchpanel_default_trigger: 'manual',
+            },
         });
     }
 
