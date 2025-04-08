@@ -72,3 +72,11 @@ class StockMove(models.Model):
             if move.unbuild_id:
                 product_unbuild_map[move.product_id] |= move.unbuild_id
         return super(StockMove, self.with_context(product_unbuild_map=product_unbuild_map))._create_out_svl(forced_quantity)
+
+    def _get_all_related_sm(self, product):
+        moves = super()._get_all_related_sm(product)
+        return moves | self.filtered(
+            lambda m:
+            m.bom_line_id.bom_id.type == 'phantom' and
+            m.bom_line_id.bom_id == moves.bom_line_id.bom_id
+        )
