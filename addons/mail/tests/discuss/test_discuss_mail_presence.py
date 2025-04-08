@@ -43,6 +43,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
         )
         self.assertEqual(notifications[0]["message"]["type"], "bus.bus/im_status_updated")
         self.assertEqual(notifications[0]["message"]["payload"]["im_status"], "online")
+        self.assertEqual(notifications[0]["message"]["payload"]["presence_status"], "online")
         self.assertEqual(
             notifications[0]["message"]["payload"]["partner_id" if sent_from_user else "guest_id"],
             sender_bus_target.id,
