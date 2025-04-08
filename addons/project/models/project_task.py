@@ -205,7 +205,7 @@ class ProjectTask(models.Model):
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
         string='Assignees', context={'active_test': False}, tracking=True, default=_default_user_ids,
-        domain="['|', ('share', '=', False), '&', ('share', '=', True), ('followed_project_ids', '=', project_id), ('active', '=', True)]", falsy_value_label=_lt("👤 Unassigned"))
+        domain="['|', ('share', '=', False), '&', ('share', '=', True), ('followed_project_ids', '=', project_id), ('active', '=', True), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]", falsy_value_label=_lt("👤 Unassigned"))
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names', export_string_translation=False)
     # Second Many2many containing the actual personal stage for the current user
