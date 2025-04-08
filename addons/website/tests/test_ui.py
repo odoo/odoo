@@ -636,7 +636,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_text_highlights(self):
         self.start_tour("/", 'text_highlights', login='admin')
 
-    @unittest.skip
     def test_website_extra_items_no_dirty_page(self):
         """
         Having enough menus to trigger the "+" folded menus has been known to
