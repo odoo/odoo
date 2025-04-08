@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import Command
 from odoo.tests import tagged
 from datetime import datetime
 from odoo.addons.test_hr_contract_calendar.tests.common import TestHrContractCalendarCommon
@@ -188,3 +190,26 @@ class TestWorkingHours(TestHrContractCalendarCommon):
             {'daysOfWeek': [5], 'startTime': '08:00', 'endTime': '12:00'},
             {'daysOfWeek': [5], 'startTime': '13:00', 'endTime': '22:00'},
         ])
+
+    def test_event_with_flexible_and_default_calendar_employees(self):
+        """
+        If an employee is marked as Fully Flexible, their default calendar should be `env.company.resource_calendar_id`.
+        If one employee has no calendar assigned (indicating full flexibility) and another uses the default calendar,
+        they should still be grouped together in the same work intervals.
+        """
+        expected_partners = self.partnerF | self.partnerG
+        event = self.env['calendar.event'].with_context(company_id=self.company_A.id).create([
+            {
+                'start': datetime(2024, 7, 12, 8, 30, 0),
+                'stop': datetime(2024, 7, 12, 9, 30, 0),
+                'name': "Event X",
+                'partner_ids': [
+                    Command.link(self.partnerF.id),
+                    Command.link(self.partnerG.id),
+                ]
+            },
+        ])
+
+        # Need to read unavailable_partner_ids to force being computed and trigger _get_schedule
+        self.assertEqual(event.unavailable_partner_ids.ids, [], "All partners must be available!")
+        self.assertEqual(expected_partners.ids, event.partner_ids.ids, "All partners must be invited!")
