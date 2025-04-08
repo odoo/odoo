@@ -376,6 +376,7 @@ export class Composer extends Component {
                             return {
                                 label: suggestion.name,
                                 role: suggestion,
+                                thread: this.thread,
                                 optionTemplate: "mail.Composer.suggestionRole",
                                 classList: "o-mail-Composer-suggestion",
                             };

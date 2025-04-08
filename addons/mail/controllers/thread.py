@@ -144,15 +144,15 @@ class ThreadController(http.Controller):
                 partner_emails,
                 no_create=not request.env.user.has_group("base.group_partner_manager"),
             )
-        if not request.env.user._is_internal():
-            partners = partners & self._filter_message_post_partners(thread, partners)
-        post_data["partner_ids"] = partners.ids
         if role_ids := post_data.pop("role_ids", []):
-            user_ids = request.env["res.users"].search([("role_ids", "in", role_ids)])
-            post_data["partner_ids"] += user_ids.partner_id.ids
+            # sudo - res.users: getting partners linked to the role is allowed.
+            partners |= request.env["res.users"].sudo().search([("role_ids", "in", role_ids)]).partner_id
+        post_data["partner_ids"] = self._filter_message_post_partners(thread, partners).ids
         return post_data
 
     def _filter_message_post_partners(self, thread, partners):
+        if self.env.user._is_internal():
+            return partners
         domain = [
             ("res_model", "=", thread._name),
             ("res_id", "=", thread.id),
