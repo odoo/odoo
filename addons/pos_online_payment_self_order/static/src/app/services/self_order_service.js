@@ -6,8 +6,22 @@ patch(SelfOrder.prototype, {
     async setup(...args) {
         await super.setup(...args);
         this.onlinePaymentStatus = null;
+<<<<<<< e1c6ced292cdcb91682039e28864ad77b13ad3cf
         this.onNotified("ONLINE_PAYMENT_STATUS", ({ status, data }) => {
             this.models.connectNewData(data);
+||||||| 22420502ed0c3f7d4c1acf35e6d76f4611742865
+        this.data.connectWebSocket("ONLINE_PAYMENT_STATUS", ({ status, data }) => {
+            this.models.loadData(data, [], false);
+=======
+        this.data.connectWebSocket("ONLINE_PAYMENT_STATUS", ({ status, data }) => {
+            if (
+                data["pos.order"].length === 0 ||
+                data["pos.order"][0].uuid !== this.currentOrder.uuid
+            ) {
+                return;
+            }
+            this.models.loadData(data, [], false);
+>>>>>>> 19e6a07e1313ccc3389c07ca3251542d1e7a0a0a
             this.onlinePaymentStatus = status;
             this.paymentError = status === "fail";
 

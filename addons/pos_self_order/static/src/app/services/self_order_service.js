@@ -712,7 +712,12 @@ export class SelfOrder extends Reactive {
                 access_token: this.access_token,
                 order_access_tokens: accessTokens,
             });
+<<<<<<< e1c6ced292cdcb91682039e28864ad77b13ad3cf
             this.models.connectNewData(data);
+||||||| 22420502ed0c3f7d4c1acf35e6d76f4611742865
+            this.models.loadData(data);
+=======
+>>>>>>> 19e6a07e1313ccc3389c07ca3251542d1e7a0a0a
             this.selectedOrderUuid = null;
         } catch (error) {
             this.handleErrorNotification(
