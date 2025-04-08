@@ -117,4 +117,4 @@ class TestPoSSaleL10NBeNormalCompany(TestPointOfSaleHttpCommon):
             })],
         })
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PosSettleOrderTryInvoice', login="accountman")
+        self.start_pos_tour('PosSettleOrderTryInvoice', login="accountman")

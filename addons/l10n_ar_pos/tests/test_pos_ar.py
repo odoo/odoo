@@ -52,4 +52,4 @@ class TestPosAR(AccountTestInvoicingHttpCommon, TestAr):
         self.product_a.available_in_pos = True
         self.product_a.name = "A test product"
         self.main_pos_config.open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosARBaseFlow', login="pos_user")
+        self.start_pos_tour('PosARBaseFlow')

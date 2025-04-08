@@ -2092,11 +2092,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.open_ui()
-        self.start_tour(
-            "/pos/ui/%d" % self.main_pos_config.id,
-            "PosLoyaltyPointsEwallet",
-            login="pos_user",
-        )
+        self.start_pos_tour("PosLoyaltyPointsEwallet")
         self.assertEqual(loyalty_card.points, 100)
 
     def test_points_awarded_giftcard(self):
@@ -2335,7 +2331,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, "CustomerLoyaltyPointsDisplayed", login="pos_user")
+        self.start_pos_tour("CustomerLoyaltyPointsDisplayed")
 
     def test_cheapest_product_reward_pos_combo(self):
         self.env['product.product'].create({
@@ -2367,7 +2363,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosComboCheapestRewardProgram', login="pos_user")
+        self.start_pos_tour('PosComboCheapestRewardProgram')
 
     def test_specific_product_reward_pos_combo(self):
         setup_product_combo_items(self)
@@ -2391,7 +2387,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosComboSpecificProductProgram', login="pos_user")
+        self.start_pos_tour('PosComboSpecificProductProgram')
 
     def test_apply_reward_on_product_scan(self):
         """
@@ -2573,7 +2569,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosCheapestProductTaxInclude', login="pos_user")
+        self.start_pos_tour('PosCheapestProductTaxInclude')
 
     def test_next_order_coupon_program_expiration_date(self):
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -2652,7 +2648,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_loyalty_on_order_with_fixed_tax', login="pos_user")
+        self.start_pos_tour('test_loyalty_on_order_with_fixed_tax')
 
     def test_gift_card_no_date(self):
         """

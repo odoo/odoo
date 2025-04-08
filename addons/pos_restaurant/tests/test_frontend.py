@@ -390,7 +390,7 @@ class TestFrontend(TestFrontendCommon):
                 'value_ids': [(6, 0, [attribute_2_value.id, attribute_2_value_2.id])],
             })
             self.main_pos_config.with_user(self.pos_user).open_ui()
-            self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
+            self.start_pos_tour('PreparationPrinterContent')
 
     def test_create_floor_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -448,13 +448,13 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'MultiPreparationPrinter', login="pos_user")
+        self.start_pos_tour('MultiPreparationPrinter')
 
     def test_user_on_residual_order(self):
         self.pos_config.write({'printer_ids': False})
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('LeaveResidualOrder', login="pos_admin")
-        self.start_pos_tour('FinishResidualOrder', login="pos_user")
+        self.start_pos_tour('FinishResidualOrder')
         orders = self.env['pos.order'].search([])
         self.assertEqual(orders[0].user_id.id, self.pos_user.id, "Pos user not registered on order")
         self.assertEqual(orders[1].user_id.id, self.pos_admin.id, "Pos admin not registered on order")
