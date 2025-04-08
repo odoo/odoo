@@ -42,7 +42,7 @@ class TestAutomation(TransactionCaseWithUserDemo):
                 "trigger_field_ids": [],
                 "trg_date_range": -60,
                 "trg_date_range_type": "minutes",
-                "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
+                "trg_date_id": self.env.ref("base.field_res_partner__create_date").id,
             },
             {
                 "name": "Bilbo time senstive reminder late",
@@ -51,7 +51,7 @@ class TestAutomation(TransactionCaseWithUserDemo):
                 "trigger_field_ids": [],
                 "trg_date_range": 60,
                 "trg_date_range_type": "minutes",
-                "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
+                "trg_date_id": self.env.ref("base.field_res_partner__create_date").id,
             }
             ])
 
