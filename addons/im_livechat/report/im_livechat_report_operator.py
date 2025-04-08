@@ -18,7 +18,7 @@ class Im_LivechatReportOperator(models.Model):
     channel_id = fields.Many2one('discuss.channel', 'Conversation', readonly=True)
     start_date = fields.Datetime('Start Date of session', readonly=True)
     time_to_answer = fields.Float('Time to answer', digits=(16, 2), readonly=True, aggregator="avg", help="Average time to give the first answer to the visitor")
-    duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in seconds)")
+    duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
     rating = fields.Float('Average rating', readonly=True, aggregator="avg", help="Average rating given by the visitor")
 
     def init(self):
@@ -34,12 +34,17 @@ class Im_LivechatReportOperator(models.Model):
                     C.id AS channel_id,
                     C.create_date AS start_date,
                     C.rating_last_value as rating,
-                    EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date)) AS duration,
+                    EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date))/60 AS duration,
                     EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer
                 FROM discuss_channel C
                     JOIN mail_message M ON M.res_id = C.id AND M.model = 'discuss.channel'
                     LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'discuss.channel' AND MO.author_id = C.livechat_operator_id)
                 WHERE C.livechat_channel_id IS NOT NULL
+                  AND NOT EXISTS (
+                      SELECT 1
+                        FROM chatbot_script
+                       WHERE operator_partner_id = C.livechat_operator_id
+                  )
                 GROUP BY C.id, C.livechat_operator_id
             )
         """)
