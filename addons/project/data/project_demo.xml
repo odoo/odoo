@@ -776,6 +776,22 @@
             <field name="parent_id" ref="project.project_1_task_16"/>
             <field name="stage_id" ref="project_stage_2"/>
         </record>
+        <record id="project_1_task_18" model="project.task">
+            <field name="name">Template Task</field>
+            <field name="description">This is a template task - WIP</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
+            <field name="is_template">True</field>
+            <field name="active">False</field>
+        </record>
+        <record id="project_1_task_19" model="project.task">
+            <field name="name">Template Task 2</field>
+            <field name="description">Another Template?! - WIP</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="is_template">True</field>
+            <field name="active">False</field>
+        </record>
 
         <!-- Project 2 Tasks-->
         <record id="project_2_task_1" model="project.task">

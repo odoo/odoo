@@ -36,6 +36,10 @@ class ProductTemplate(models.Model):
     project_template_id = fields.Many2one(
         'project.project', 'Project Template', company_dependent=True, copy=True,
     )
+    task_template_id = fields.Many2one(
+        'project.task', 'Task Template', domain="[('is_template', '=', True), ('active', '=', False), ('project_id', 'in', [project_id, project_template_id])]",
+        company_dependent=True, copy=True,
+    )
     service_policy = fields.Selection('_selection_service_policy', string="Service Invoicing Policy", compute_sudo=True, compute='_compute_service_policy', inverse='_inverse_service_policy', tracking=True)
     service_type = fields.Selection(selection_add=[
         ('milestones', 'Project Milestones'),
@@ -124,6 +128,10 @@ class ProductTemplate(models.Model):
             self.project_template_id = False
         elif self.service_tracking in ['task_in_project', 'project_only']:
             self.project_id = False
+
+    @api.onchange('project_id', 'project_template_id')
+    def _onchange_project_fields(self):
+        self.task_template_id = False
 
     def write(self, vals):
         if 'type' in vals and vals['type'] != 'service':

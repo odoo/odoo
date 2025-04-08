@@ -638,6 +638,13 @@ class ProjectProject(models.Model):
                     'to align with the stage\'s company or remove the company designation from the stage', project.stage_id.company_id.name)
                 )
 
+    def get_template_tasks(self):
+        self.ensure_one()
+        return self.env['project.task'].with_context(active_test=False).search_read(
+            [('project_id', '=', self.id), ('is_template', '=', True)],
+            ['id', 'name'],
+        )
+
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------

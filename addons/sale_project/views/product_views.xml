@@ -21,6 +21,24 @@
                     <label for='project_template_id'/>
                 </div>
                 <field name="project_template_id" context="{'active_test': False, 'default_allow_billable': True}" invisible="service_tracking not in ['task_in_project', 'project_only']" nolabel="1" placeholder="Empty project"/>
+                <div class="o_td_label d-inline-flex"
+                    invisible="not project_id and (service_tracking != 'task_in_project' or not project_template_id)">
+                    <label for="task_template_id" />
+                </div>
+                <!-- Editable field for project users -->
+                <field name="task_template_id"
+                    groups="project.group_project_user"
+                    context="{'default_active': False, 'default_is_template': True, 'default_project_id': project_id or project_template_id}"
+                    invisible="not project_id and (service_tracking != 'task_in_project' or not project_template_id)"
+                    nolabel="1"
+                    placeholder="Empty Task template" />
+                <!-- Read-only field for non-project users -->
+                <field name="task_template_id"
+                    groups="!project.group_project_user"
+                    options="{'no_open': True, 'no_create_edit': True, 'no_create': True}"
+                    invisible="not project_id and (service_tracking != 'task_in_project' or not project_template_id)"
+                    nolabel="1"
+                    placeholder="Empty Task template" />
                 <field name="service_policy"
                     string="Invoicing Policy"
                     invisible="type != 'service' or sale_ok == False"
