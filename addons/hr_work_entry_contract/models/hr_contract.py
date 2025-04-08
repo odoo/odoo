@@ -9,9 +9,10 @@ from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime, Intervals
+from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime
 from odoo.osv import expression
 from odoo.exceptions import UserError
+from .hr_work_intervals import WorkIntervals
 
 
 class HrContract(models.Model):
@@ -144,7 +145,7 @@ class HrContract(models.Model):
                     dt0 = string_to_datetime(leave.date_from).astimezone(tz)
                     dt1 = string_to_datetime(leave.date_to).astimezone(tz)
                     result[resource.id].append((max(start, dt0), min(end, dt1), leave))
-            mapped_leaves = {r.id: Intervals(result[r.id]) for r in resources_list}
+            mapped_leaves = {r.id: WorkIntervals(result[r.id]) for r in resources_list}
             leaves = mapped_leaves[resource.id]
 
             real_attendances = attendances - leaves
@@ -170,15 +171,6 @@ class HrContract(models.Model):
                         split_attendances += [attendance]
                 real_attendances = split_attendances
 
-            # A leave period can be linked to several resource.calendar.leave
-            split_leaves = []
-            for leave_interval in leaves:
-                if leave_interval[2] and len(leave_interval[2]) > 1:
-                    split_leaves += [(leave_interval[0], leave_interval[1], l) for l in leave_interval[2]]
-                else:
-                    split_leaves += [(leave_interval[0], leave_interval[1], leave_interval[2])]
-            leaves = split_leaves
-
             # Attendances
             default_work_entry_type = contract._get_default_work_entry_type()
             for interval in real_attendances:
@@ -196,6 +188,15 @@ class HrContract(models.Model):
                     ('state', 'draft'),
                 ] + contract._get_more_vals_attendance_interval(interval))]
 
+            leaves = result[resource.id]
+            # real_leaves here is wrong; since for each interval we will only use 1 work entry type, it excludes
+            # situations for which multiple leaves in the same covered period are imposing different work entry types
+            # eg:
+            # wednesday is a public time off: the work entry type should be "Public Time Off", which is paid
+            # from tuesday to thursday, an employee takes an unpaid leave, work entry type "Unpaid Leave" which is unpaid
+            # with the current system, the period from tuesday to thursday is taken as a whole with only one work entry type
+            # while in reality it should be : TU = Unpaid, WE = Public Time Off, TH = Unpaid
+            # (note that the priority of each leave type can be different given l10ns)
             for interval in real_leaves:
                 # Could happen when a leave is configured on the interface on a day for which the
                 # employee is not supposed to work, i.e. no attendance_ids on the calendar.
