@@ -34,7 +34,7 @@ export class PropertiesField extends Component {
             optional: true,
             validate: (columns) => [1, 2].includes(columns),
         },
-        showAddButton: { type: Boolean, optional: true },
+        editMode: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -63,22 +63,48 @@ export class PropertiesField extends Component {
         this.definitionRecordField = field.definition_record;
 
         this.state = useState({
-            canChangeDefinition: true,
+            canChangeDefinition: false,
+            isEditMode: false,
             movedPropertyName: null,
-            showAddButton: this.props.showAddButton,
             unfoldedSeparators: this._getUnfoldedSeparators(),
         });
 
-        // Properties can be added from the cogmenu of the form controller
+        // Properties can be added from the cog menu of the form controller
         if (this.env.config?.viewType === "form") {
-            useBus(this.env.model.bus, "PROPERTY_FIELD:ADD_PROPERTY_VALUE", () => {
-                this.onPropertyCreate();
+            useBus(this.env.model.bus, "PROPERTY_FIELD:EDIT", () => {
+                if (!this.props.readonly && this.state.canChangeDefinition) {
+                    this.state.isEditMode = true;
+                    if (this.propertiesList.length === 0) {
+                        this.onPropertyCreate();
+                    }
+                }
             });
         }
 
-        onWillStart(async () => {
-            await this._checkDefinitionAccess();
+        // Fetch the definition "write" access when loading the component:
+        onWillStart(() => {
+            this.checkDefinitionWriteAccess().then((canChangeDefinition) => {
+                this.state.canChangeDefinition = canChangeDefinition;
+            });
         });
+
+        // Re-fetch the definition "write" access when the definition record changes:
+        useEffect(
+            () => {
+                this.checkDefinitionWriteAccess().then((canChangeDefinition) => {
+                    this.state.canChangeDefinition = canChangeDefinition;
+                });
+            },
+            () => [this.props.record.data[this.definitionRecordField]]
+        );
+
+        useEffect(
+            (canChangeDefinition, readonly, editMode) => {
+                this.state.isEditMode =
+                    canChangeDefinition && !readonly && (this.state.isEditMode || editMode);
+            },
+            () => [this.state.canChangeDefinition, this.props.readonly, this.props.editMode]
+        );
 
         useEffect(
             () => {
@@ -505,13 +531,6 @@ export class PropertiesField extends Component {
     async onPropertyEdit(event, propertyName) {
         event.stopPropagation();
         event.preventDefault();
-        if (!(await this.checkDefinitionWriteAccess())) {
-            this.notification.add(
-                _t("You need edit access on the parent document to update these property fields"),
-                { type: "warning" }
-            );
-            return;
-        }
         if (event.target.classList.contains("disabled")) {
             // remove the glitch if we click on the edit button
             // while the popover is already opened
@@ -580,7 +599,10 @@ export class PropertiesField extends Component {
             title: _t("Delete Property Field"),
             body: _t(
                 'Are you sure you want to delete this property field? It will be removed for everyone using the "%(parentName)s" %(parentFieldLabel)s.',
-                { parentName: this.parentName, parentFieldLabel: this.parentString }
+                {
+                    parentName: this.props.record.data[this.definitionRecordField][1],
+                    parentFieldLabel: this.props.record.fields[this.definitionRecordField].string
+                }
             ),
             confirmLabel: _t("Delete"),
             confirm: () => {
@@ -596,13 +618,6 @@ export class PropertiesField extends Component {
     }
 
     async onPropertyCreate() {
-        if (!this.state.canChangeDefinition || !(await this.checkDefinitionWriteAccess())) {
-            this.notification.add(
-                _t("You need edit access on the parent document to update these property fields"),
-                { type: "warning" }
-            );
-            return;
-        }
         const propertiesDefinitions = this.propertiesList || [];
 
         if (
@@ -632,7 +647,6 @@ export class PropertiesField extends Component {
             definition_changed: true,
         });
         this.openPropertyDefinition = newName;
-        this.state.showAddButton = true;
         this.props.record.update({ [this.props.name]: propertiesDefinitions });
     }
 
@@ -753,26 +767,6 @@ export class PropertiesField extends Component {
     }
 
     /**
-     * Verify that we can write on the parent record,
-     * and therefor update the properties definition.
-     */
-    async _checkDefinitionAccess() {
-        this.parentName = this.props.record.data[this.definitionRecordField][1];
-        this.parentString = this.props.record.fields[this.definitionRecordField].string;
-
-        if (!this.definitionRecordModel) {
-            this.state.canChangeDefinition = false;
-            return;
-        }
-
-        // check if we can write on the definition record
-        this.state.canChangeDefinition = await user.checkAccessRight(
-            this.definitionRecordModel,
-            "write"
-        );
-    }
-
-    /**
      * Regenerate a new name if needed or restore the original one.
      * (see @_saveInitialPropertiesValues).
      *
@@ -882,7 +876,6 @@ export class PropertiesField extends Component {
         this.popover.open(target, {
             readonly: this.props.readonly || !this.state.canChangeDefinition,
             canChangeDefinition: this.state.canChangeDefinition,
-            checkDefinitionWriteAccess: () => this.checkDefinitionWriteAccess(),
             propertyDefinition: this.propertiesList.find(
                 (property) => property.name === currentName(propertyName)
             ),
@@ -937,7 +930,7 @@ export const propertiesField = {
         return {
             context: dynamicInfo.context,
             columns: parseInt(attrs.columns || "1"),
-            showAddButton: exprToBoolean(attrs.showAddButton),
+            editMode: exprToBoolean(attrs.editMode),
         };
     },
 };
