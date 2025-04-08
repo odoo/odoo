@@ -31,6 +31,12 @@ class ResUsers(models.Model):
             'hr_icon_display',
         ]
 
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + [
+            'leave_manager_id',
+        ]
+
     def _compute_im_status(self):
         super()._compute_im_status()
         on_leave_user_ids = self._get_on_leave_ids()
