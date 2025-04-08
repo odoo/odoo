@@ -10,7 +10,9 @@
             <t t-set-slot="control-panel-create-button">
                 <div class="d-flex gap-1">
                     <button class="btn btn-primary" t-on-click="onPrint">Print</button>
-                    <button class="btn btn-primary" t-on-click="onUnfold">Unfold</button>
+                    <button t-on-click="toggleFold" class="btn btn-primary">
+                        <t t-esc="state.isFolded ? 'Unfold' : 'Fold'"/>
+                    </button>
                 </div>
             </t>
 
