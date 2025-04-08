@@ -183,7 +183,7 @@ export class RecipientsInput extends Component {
             tags.push({
                 id: recipient.partner_id,
                 canEdit: true,
-                text: recipient.name || recipient.email,
+                text: recipient.name || recipient.email || "Unknown",
                 name: recipient.name,
                 email: recipient.email,
                 title,
