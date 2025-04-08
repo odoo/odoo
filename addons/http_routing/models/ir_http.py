@@ -557,7 +557,7 @@ class IrHttp(models.AbstractModel):
     def _get_error_html(cls, env, code, values):
         try:
             return code, env['ir.ui.view']._render_template('http_routing.%s' % code, values)
-        except ValueError:
+        except MissingError:
             if str(code)[0] == '4':
                 return code, env['ir.ui.view']._render_template('http_routing.4xx', values)
             raise
