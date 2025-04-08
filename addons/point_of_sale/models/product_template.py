@@ -104,6 +104,8 @@ class ProductTemplate(models.Model):
             domain = self._load_pos_data_domain(data)
             products = self._load_product_with_domain(domain)
 
+        products += self._load_product_with_domain([('active', '=', False)])
+
         data['pos.config'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
 

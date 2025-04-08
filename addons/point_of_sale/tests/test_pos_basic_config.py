@@ -1112,7 +1112,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         def get_top_product_ids(count):
             data = session.load_data([])
             special_product = session.config_id._get_special_products().ids
-            available_top_product = [product for product in data['product.template'] if product['product_variant_ids'][0] not in special_product]
+            available_top_product = [product for product in data['product.template'] if not product['product_variant_ids'] or product['product_variant_ids'][0] not in special_product]
             return [p['product_variant_ids'][0] for p in available_top_product[:count]]
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=1))
