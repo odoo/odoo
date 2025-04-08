@@ -14,6 +14,7 @@ export class SelectionPopup extends Component {
     static defaultProps = {
         title: _t("Select"),
         list: [],
+        size: "lg",
     };
 
     /**

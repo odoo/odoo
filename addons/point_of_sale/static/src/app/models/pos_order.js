@@ -141,6 +141,9 @@ export class PosOrder extends Base {
         this.setPricelist(preset.pricelist_id);
         this.fiscal_position_id = preset.fiscal_position_id;
         this.preset_id = preset;
+        if (preset.is_return) {
+            this.lines.forEach((l) => l.setQuantity(-Math.abs(l.getQuantity())));
+        }
     }
 
     /**

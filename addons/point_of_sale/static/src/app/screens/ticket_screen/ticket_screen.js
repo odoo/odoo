@@ -29,6 +29,7 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { ConnectionLostError } from "@web/core/network/rpc";
 
 const NBR_BY_PAGE = 30;
+const { DateTime } = luxon;
 
 export class TicketScreen extends Component {
     static storeOnOrder = false;
@@ -804,6 +805,28 @@ export class TicketScreen extends Component {
 
         if (idsNotInCacheOrOutdated.length > 0) {
             await this.pos.data.read("pos.order", Array.from(new Set(idsNotInCacheOrOutdated)));
+        }
+    }
+    //#endregion
+    getPresetTimeColor(order) {
+        const slot = order.preset_id.currentSlot;
+        const presetTime = order.preset_time;
+        if (!slot) {
+            if (presetTime < DateTime.now()) {
+                return "bg-danger text-white";
+            } else {
+                return "bg-light text-dark";
+            }
+        }
+        if (
+            slot.datetime <= presetTime &&
+            presetTime < slot.datetime.plus({ minutes: order.preset_id.interval_time })
+        ) {
+            return "bg-warning text-dark";
+        } else if (presetTime < slot.datetime) {
+            return "bg-danger text-white";
+        } else {
+            return "bg-light text-dark";
         }
     }
 }
