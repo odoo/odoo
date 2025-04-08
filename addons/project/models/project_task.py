@@ -204,7 +204,7 @@ class ProjectTask(models.Model):
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
         string='Assignees', context={'active_test': False}, tracking=True, default=_default_user_ids,
-        domain="['|', ('share', '=', False), '&', ('share', '=', True), ('followed_project_ids', '=', project_id), ('active', '=', True)]", falsy_value_label=_lt("👤 Unassigned"))
+        domain="['|', ('share', '=', False), '&', ('share', '=', True), ('followed_project_ids', '=', project_id), ('active', '=', True), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]", falsy_value_label=_lt("👤 Unassigned"))
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names', export_string_translation=False)
     # Second Many2many containing the actual personal stage for the current user
@@ -680,6 +680,10 @@ class ProjectTask(models.Model):
     def _onchange_task_company(self):
         if self.project_id.company_id and self.project_id.company_id != self.company_id:
             self.project_id = False
+        if self.company_id:
+            self.user_ids = self.user_ids.filtered(
+                lambda u: self.company_id in u._origin.company_ids
+            )
 
     @api.depends('project_id.company_id', 'parent_id.company_id')
     def _compute_company_id(self):
@@ -1357,6 +1361,10 @@ class ProjectTask(models.Model):
         elif additional_vals:
             super(ProjectTask, self.sudo()).write(additional_vals)
         result = super().write(vals)
+
+        if vals.get('company_id'):
+            for task in self:
+                task.user_ids = task.user_ids.filtered(lambda user: task.company_id in user.company_ids)
 
         if 'user_ids' in vals:
             self._populate_missing_personal_stages()
