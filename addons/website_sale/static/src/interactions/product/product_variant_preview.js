@@ -4,21 +4,19 @@ import { registry } from "@web/core/registry";
 export class ProductVariantPreview extends Interaction {
     static selector = ".oe_product_cart";
     dynamicContent = {
-        '#o_product_variant_preview': {
+        '.o_product_variant_preview': {
             "t-on-mouseenter": this.mouseEnter,
             "t-on-mouseleave": this.mouseLeave,
         },
     };
 
     setup() {
-        debugger;
         this.productImg = this.el.querySelector(".oe_product_image_img_wrapper img")
         this.originalImgSrc = this.productImg.getAttribute("src");
         this.variantImageSrc = null;
     }
 
     mouseEnter(ev) {
-        debugger;
         this.variantImageSrc = ev.target.dataset.variantImage
         if (!this.variantImageSrc) {
             return;
@@ -27,11 +25,11 @@ export class ProductVariantPreview extends Interaction {
     }
 
     mouseLeave() {
-        debugger;
         this.setImgSrc(this.originalImgSrc);
     }
 
     setImgSrc(imageSrc) {
+        debugger;
         this.productImg.src = imageSrc;
     }
 }

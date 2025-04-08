@@ -267,42 +267,66 @@
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <t t-set="previewed_attribute_values"
                         t-value="product._get_previewed_attribute()"/>
-                    <div t-if="previewed_attribute_values" class="o_wsale_attribute_previewer row p-1">
-                        <t t-foreach="previewed_attribute_values" t-as="ptav">
+                    <div t-if="previewed_attribute_values" class="o_wsale_attribute_previewer row py-2">
+                        <t t-foreach="previewed_attribute_values" t-as="previewed_attribute">
+                            <t t-set="ptav" t-value="previewed_attribute['ptav']"/>
                             <t t-set="selected_attribute_value"
                                 t-value="ptav.product_attribute_value_id.id"/>
                             <t
                                 t-set="variant_href"
                                 t-value="product_href.split('#')[0] + '#attribute_values=%s' % (selected_attribute_value)"
                             />
-                            <div
-                                t-if="ptav.display_type == 'color'"
-                                class="col-md-3 d-flex justify-content-center"
+                            <span
+                                t-attf-id="o_product_variant_preview_{{ptav.id}}"
+                                class="o_product_variant_preview"
+                                t-att-data-variant-image="previewed_attribute['variant_image_url']"
                             >
-                                <t
-                                    t-set="img_style"
-                                    t-value="'background:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''"
-                                />
-                                <t
-                                    t-set="color_style"
-                                    t-value="'background: ' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"
-                                />
-                                <label
-                                    t-attf-style="#{img_style or color_style}"
-                                    t-attf-class="css_attribute_color cursor-pointer"
-                                    id="o_product_variant_preview"
-                                    data-variant-image="ptav"
+                                <div
+                                    t-if="ptav.attribute_id.is_thumbnail_visible"
+                                    class="col-md-3 d-flex justify-content-center"
                                 >
-                                    <a
-                                        t-att-href="variant_href"
-                                        class="d-block"
-                                        t-att-title="ptav.name"
+                                    <t
+                                        t-set="img_style"
+                                        t-value="'background:url(%s); background-size:cover;' % previewed_attribute['variant_image_url']"
                                     />
-                                </label>
-                            </div>
-                            <a t-else="" id="o_product_variant_preview" class="col"
-                                t-out="ptav.name"
-                                t-att-href="variant_href"/>
+                                    <label
+                                        t-attf-style="#{img_style}"
+                                        t-attf-class="css_attribute_thumbnail cursor-pointer"
+                                    >
+                                        <a
+                                            t-att-href="variant_href"
+                                            class="d-block"
+                                            t-att-title="ptav.name"
+                                        />
+                                    </label>
+                                </div>
+                                <div
+                                    t-elif="ptav.display_type == 'color'"
+                                    class="col-md-3 d-flex justify-content-center"
+                                >
+                                    <t
+                                        t-set="img_style"
+                                        t-value="'background:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''"
+                                    />
+                                    <t
+                                        t-set="color_style"
+                                        t-value="'background: ' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"
+                                    />
+                                    <label
+                                        t-attf-style="#{img_style or color_style}"
+                                        t-attf-class="css_attribute_color cursor-pointer"
+                                    >
+                                        <a
+                                            t-att-href="variant_href"
+                                            class="d-block"
+                                            t-att-title="ptav.name"
+                                        />
+                                    </label>
+                                </div>
+                                <a t-else="" class="col"
+                                    t-out="ptav.name"
+                                    t-att-href="variant_href"/>
+                            </span>
                         </t>
                     </div>
                     <div class="o_wsale_product_btn d-flex gap-2"/>

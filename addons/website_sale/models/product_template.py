@@ -276,11 +276,21 @@ class ProductTemplate(models.Model):
     def _get_previewed_attribute(self):
         for product in self:
             all_variants = product._get_possible_variants_sorted()
-            available_variants = all_variants.attribute_line_ids.filtered(
-                lambda variant: variant.attribute_id.preview_variants !='hidden'
+            available_attribute_lines = all_variants.attribute_line_ids.filtered(
+                lambda variant: variant.attribute_id.preview_variants != 'hidden'
             )
-            if available_variants:
-                return available_variants[0].product_template_value_ids
+            if available_attribute_lines:
+                selected_attribute_values = available_attribute_lines[0].product_template_value_ids
+                result = []
+                for ptav in selected_attribute_values:
+                    matching_variant = ptav.ptav_product_variant_ids[0]
+                    result.append({
+                        'ptav': ptav,
+                        'variant_image_url': f'/web/image/product.product/{matching_variant.id}/image_512',
+                    })
+                return result
+
+
         return False
 
 

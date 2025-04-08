@@ -43,7 +43,6 @@
 }
 
 .o_wsale_attribute_previewer{
-    height: 30px;
     z-index: 2;
     flex-wrap: nowrap;
     background: white;
@@ -55,5 +54,20 @@
 
     + .o_wsale_product_btn{
         bottom: calc(100% + 2.5rem) !important;
+    }
+    span{
+        width: 25%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.css_attribute_thumbnail{
+    a{
+        margin: 5px;
+        height: 15px;
+        width: 15px;
+        opacity: 0;
     }
 }
