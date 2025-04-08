@@ -354,8 +354,6 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         * Update all the references to the old taxes to the new ones.
           - Fiscal positions: The previous mappings won't be deleted but the new ones will be created.
                               This ensures that reports still work.
-          - Company: The default sales/purchase taxes should be updated. It should only impact the creation
-                     of new products so it is probably not going to be an issue.
         * If such a tax was part of a group, a new group must be created and the old one removed from the template.
 
         The procedure for the users, when they are ready, is:
@@ -391,7 +389,6 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
         self.assertEqual(fiscal_position.map_tax(tax_1), tax_2)
         self.assertEqual(fiscal_position.map_tax(tax_3), tax_2)
-        self.assertEqual(self.company.account_sale_tax_id, tax_3)
 
         # On a new company you would never see the old tax.
         # In case users need it, they can duplicate the new one and change the rate.
@@ -680,6 +677,8 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             return data
 
         company = self.company
+        # force first load since company data is removed on reload
+        company.chart_template = False
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             # hard fail the loading if the context key is set to ensure `test_all_l10n` works as expected
