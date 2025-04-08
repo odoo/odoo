@@ -110,6 +110,11 @@ msgid "Companies"
 msgstr "Sociétés"
 
 #. module: l10n_fr_account
+#: model:ir.model,name:l10n_fr_account.model_base_document_layout
+msgid "Company Document Layout"
+msgstr "Mise en page des documents de votre société"
+
+#. module: l10n_fr_account
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.fec_export_wizard_view
 msgid "CompteLib"
 msgstr "CompteLib"
@@ -145,7 +150,12 @@ msgid "Debit"
 msgstr "Debit"
 
 #. module: l10n_fr_account
+#: model:ir.model.fields,field_description:l10n_fr_account.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_fr_account.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_fr_account.field_base_document_layout__display_name
 #: model:ir.model.fields,field_description:l10n_fr_account.field_l10n_fr_fec_export_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_fr_account.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_fr_account.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
 
@@ -205,6 +215,11 @@ msgid "Filename"
 msgstr "Nom de fichier"
 
 #. module: l10n_fr_account
+#: model:ir.model.fields,help:l10n_fr_account.field_base_document_layout__report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "Pied de page de tous les rapports."
+
+#. module: l10n_fr_account
 #: model:ir.ui.menu,name:l10n_fr_account.account_reports_fr_statements_menu
 msgid "France"
 msgstr "France"
@@ -220,7 +235,12 @@ msgid "Goods Delivery"
 msgstr "Livraison de biens"
 
 #. module: l10n_fr_account
+#: model:ir.model.fields,field_description:l10n_fr_account.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_fr_account.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_fr_account.field_base_document_layout__id
 #: model:ir.model.fields,field_description:l10n_fr_account.field_l10n_fr_fec_export_wizard__id
+#: model:ir.model.fields,field_description:l10n_fr_account.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_fr_account.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -312,9 +332,20 @@ msgid "PieceRef"
 msgstr "PieceRef"
 
 #. module: l10n_fr_account
+#: model:ir.model.fields,field_description:l10n_fr_account.field_base_document_layout__report_footer
+msgid "Report Footer"
+msgstr "Pied de page du rapport"
+
+#. module: l10n_fr_account
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.report_invoice_document
 msgid "SIRET:"
 msgstr "SIRET :"
+
+#. module: l10n_fr_account
+#. odoo-python
+#: code:addons/l10n_fr_account/models/base_document_layout.py:0
+msgid "SIRET: %s"
+msgstr ""
 
 #. module: l10n_fr_account
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.report_invoice_document
