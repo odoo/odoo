@@ -361,7 +361,7 @@ class StockQuant(models.Model):
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
-            if self._trigger_inventory_moves(vals):
+            if StockQuant._trigger_inventory_moves(vals):
                 self._apply_inventory(vals)
                 vals.pop('inventory_quantity_auto_apply', None)  # Avoid falsy 'Serial duplicated' error
             self = self.sudo()
@@ -994,58 +994,42 @@ class StockQuant(models.Model):
     def _apply_inventory(self, new_values = None):
         # Consider the inventory_quantity as set => recompute the inventory_diff_quantity if needed
         # TODO: handles partial packages etc.
-        if new_values and ('lot_id' in new_values or 'owner_id' in new_values):
-            # In such case, we must scrap the old quant and create a new one instead
-            move_vals = list(chain.from_iterable([
-               # 'scrap' old quant
-                quant._get_inventory_move_values(
-                    quant.quantity,
-                    quant.location_id,
-                    quant.product_id.with_company(quant.company_id).property_stock_inventory,
-                    package_id=quant.package_id,
-                    lot_id=quant.lot_id,
-                    owner_id=quant.owner_id,
-                ),
-                # 'create' new quant
-                quant._get_inventory_move_values(
-                    new_values.get('quantity', quant.quantity),
-                    quant.product_id.with_company(quant.company_id).property_stock_inventory,
-                    self.env['stock.location'].browse(new_values['location_id']) if 'location_id' in new_values else quant.location_id,
-                    package_dest_id=self.env['stock.quant.package'].browse(new_values['package_id']) if 'package_id' in new_values else quant.package_id,
-                    lot_id=self.env['stock.lot'].browse(new_values['lot_id']) if 'lot_id' in new_values else quant.lot_id,
-                    owner_id=self.env['res.partner'].browse(new_values['owner_id']) if 'owner_id' in new_values else quant.owner_id,
+        rewrite = new_values and ('lot_id' in new_values or 'owner_id' in new_values)
+        self.inventory_quantity_set = True
+        move_vals = []
+        new_location = self.env['stock.location'].browse(new_values['location_id']) if new_values and 'location_id' in new_values else False
+        new_package = self.env['stock.quant.package'].browse(new_values['package_id']) if new_values and 'package_id' in new_values else False
+        new_lot = self.env['stock.lot'].browse(new_values['lot_id']) if new_values and 'lot_id' in new_values else False
+        new_owner = self.env['res.partner'].browse(new_values['owner_id']) if new_values and 'owner_id' in new_values else False
+        for quant in self:
+            diff_qty_comparison = float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding)
+            if not rewrite and new_values and 'location_id' in new_values:
+                # Transfer move for available qty
+                move_vals.append(
+                    quant._get_inventory_move_values(
+                       min(new_values.get('quantity', quant.quantity), quant.quantity), #In case diff != 0, only move the 'definitive' available qty
+                       quant.product_id.with_company(quant.company_id).property_stock_inventory,
+                       new_location or quant.location_id,
+                       package_dest_id=new_package or quant.package_id, ## FIXME: handle package ...
+                    )
                 )
-            ] for quant in self))
-        else:
-            self.inventory_quantity_set = True
-            move_vals = []
-            new_location = self.env['stock.location'].browse(new_values['location_id']) if new_values and 'location_id' in new_values else False
-            new_package = self.env['stock.quant.package'].browse(new_values['package_id']) if new_values and 'package_id' in new_values else False
-            for quant in self:
-                diff_qty_comparison = float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding)
-                if new_values and 'location_id' in new_values:
-                    # Transfer move for available qty
-                    move_vals.append(
-                        quant._get_inventory_move_values(
-                           min(new_values.get('quantity', quant.quantity), quant.quantity), #In case diff != 0, only move the 'definitive' available qty
-                           quant.product_id.with_company(quant.company_id).property_stock_inventory,
-                           new_location or quant.location_id,
-                           package_dest_id=new_package or quant.package_id,
-                        )
-                    )
-                if diff_qty_comparison > 0:
-                    move_vals.append(
-                    quant._get_inventory_move_values(quant.inventory_diff_quantity,
-                            quant.product_id.with_company(quant.company_id).property_stock_inventory,
-                            new_location or quant.location_id,
-                            package_dest_id=new_package or quant.package_id,)
-                    )
-                elif diff_qty_comparison < 0:
-                    move_vals.append(
-                        quant._get_inventory_move_values(-quant.inventory_diff_quantity,
-                            quant.location_id,
-                            quant.product_id.with_company(quant.company_id).property_stock_inventory,
-                            package_id=quant.package_id))
+            if diff_qty_comparison > 0 or rewrite:
+                move_vals.append(
+                quant._get_inventory_move_values(
+                        new_values.get('quantity', quant.quantity) if rewrite else quant.inventory_diff_quantity,
+                        quant.product_id.with_company(quant.company_id).property_stock_inventory,
+                        new_location or quant.location_id,
+                        package_dest_id=new_package or quant.package_id,
+                        lot_id=new_lot or quant.lot_id,
+                        owner_id=new_owner or quant.owner_id,)
+                )
+            if diff_qty_comparison < 0 or rewrite:
+                move_vals.append(
+                    quant._get_inventory_move_values(
+                        quant.quantity if rewrite else -quant.inventory_diff_quantity,
+                        quant.location_id,
+                        quant.product_id.with_company(quant.company_id).property_stock_inventory,
+                        package_id=quant.package_id))
 
         moves = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
         moves._action_done()
