@@ -16,6 +16,9 @@ import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
 import { callActionsRegistry } from "./call_actions";
 
+let sequence = 1;
+const getSequence = () => sequence++;
+
 /**
  * @typedef {'audio' | 'camera' | 'screen' } streamType
  */
@@ -961,6 +964,24 @@ export class Rtc extends Record {
             return;
         }
         switch (name) {
+            case "broadcast":
+                {
+                    const {
+                        senderId,
+                        message: { sequence },
+                    } = payload;
+                    if (!sequence) {
+                        return;
+                    }
+                    const session = await this.store.RtcSession.getWhenReady(senderId);
+                    if (!session) {
+                        return;
+                    }
+                    if (!session.sequence || session.sequence < sequence) {
+                        session.sequence = sequence;
+                    }
+                }
+                return;
             case "connection_change":
                 {
                     const { id, state } = payload;
@@ -986,7 +1007,7 @@ export class Rtc extends Record {
                 return;
             case "track":
                 {
-                    const { sessionId, type, track, active } = payload;
+                    const { sessionId, type, track, active, sequence } = payload;
                     const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
                         sessionId
                     );
@@ -994,6 +1015,13 @@ export class Rtc extends Record {
                         this.log(
                             this.selfSession,
                             `track received for unknown session ${sessionId} (${this.state.connectionType})`
+                        );
+                        return;
+                    }
+                    if (sequence && sequence < session.sequence) {
+                        this.log(
+                            session,
+                            `track received for old sequence ${sequence} (${this.state.connectionType})`
                         );
                         return;
                     }
@@ -1036,6 +1064,7 @@ export class Rtc extends Record {
             case this.SFU_CLIENT_STATE.AUTHENTICATED:
                 // if we are hot-swapping connection type, we clear the p2p as late as possible
                 this.p2pService.removeALlPeers();
+                this.sfuClient.broadcast({ sequence: getSequence() });
                 break;
             case this.SFU_CLIENT_STATE.CONNECTED:
                 browser.clearTimeout(this.sfuTimeout);
@@ -1156,12 +1185,13 @@ export class Rtc extends Record {
         if (this.state.channel.rtc_session_ids.length === 0) {
             return;
         }
+        const sequence = getSequence();
         for (const session of this.state.channel.rtc_session_ids) {
             if (session.eq(this.localSession)) {
                 continue;
             }
             this.log(session, "init call", { step: "init call" });
-            this.p2pService.addPeer(session.id);
+            this.p2pService.addPeer(session.id, { sequence });
         }
     }
 
@@ -2013,6 +2043,14 @@ export const rtcService = {
     start(env, services) {
         const rtc = env.services["mail.store"].rtc;
         rtc.p2pService = services["discuss.p2p"];
+        rtc.p2pService.acceptOffer = async (id, sequence) => {
+            const session = await this.store.RtcSession.getWhenReady(Number(id));
+            /**
+             * We only accept offers for new connections (higher sequence),
+             * or offers that renegotiate an existing connection (same sequence).
+             */
+            return sequence >= session?.sequence;
+        };
         services["bus_service"].subscribe(
             "discuss.channel.rtc.session/sfu_hot_swap",
             async ({ serverInfo }) => {
