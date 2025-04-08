@@ -70,10 +70,12 @@ class WebsiteMenu(models.Model):
     @api.depends("page_id", "is_mega_menu", "child_id")
     def _compute_url(self):
         for menu in self:
-            if menu.is_mega_menu or menu.child_id:
-                menu.url = "#"
-            else:
-                menu.url = (menu.page_id.url if menu.page_id else menu.url) or "#"
+            if menu.is_mega_menu:
+                menu.url = menu.Url
+            elif menu.child_id:
+                menu.child_id.url = menu.child_id.url
+            # else:
+            #     menu.url = (menu.page_id.url if menu.page_id else menu.url) or "#"
 
     @api.model_create_multi
     def create(self, vals_list):
