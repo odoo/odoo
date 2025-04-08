@@ -6,11 +6,14 @@ import { onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 export class ProjectTaskKanbanRenderer extends KanbanRenderer {
+    static template = "project.ProjectTaskKanbanRenderer";
     static components = {
         ...KanbanRenderer.components,
         KanbanRecord: ProjectTaskKanbanRecord,
         KanbanHeader: ProjectTaskKanbanHeader,
     };
+
+    static props = [...KanbanRenderer.props, "hideGhostColumns?"];
 
     setup() {
         super.setup();

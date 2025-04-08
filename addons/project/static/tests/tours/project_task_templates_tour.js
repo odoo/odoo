@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("project_task_templates_tour", {
             content: "Wit for the kanban view to load",
         },
         {
-            trigger: "button.o-kanban-button-new",
+            trigger: "a.o-kanban-button-new",
             run: "click",
         },
         {

@@ -55,6 +55,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'recurring_count',
     'duration_tracking',
     'display_follow_button',
+    'is_template',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -820,7 +821,7 @@ class ProjectTask(models.Model):
                 vals['stage_id'] = task.stage_id.id
             if 'active' not in default and not task['active'] and not self.env.context.get('copy_project') and not self.env.context.get('has_template_ancestor'):
                 vals['active'] = True
-            vals['name'] = task.name if self.env.context.get('copy_project') else _("%s (copy)", task.name)
+            vals['name'] = task.name if self.env.context.get('copy_project') or self.env.context.get('copy_from_template') else _("%s (copy)", task.name)
             if task.recurrence_id and not default.get('recurrence_id'):
                 vals['recurrence_id'] = task.recurrence_id.copy().id
             if task.allow_milestones:
@@ -1937,9 +1938,26 @@ class ProjectTask(models.Model):
 
     def action_convert_to_template(self):
         self.ensure_one()
+        if not self.project_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': _('Private tasks cannot be converted into templates.'),
+                },
+            }
+        if self.is_template:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'project_show_template_undo_confirmation_dialog',
+                'params': {
+                    'task_id': self.id,
+                },
+            }
         self.action_archive()
         self.is_template = True
-        self.message_post(body=_("Task converted to template"))
+        self.message_post(body=_("Task converted to template."))
         return {
             'type': 'ir.actions.client',
             'tag': 'project_show_template_notification',
@@ -1956,15 +1974,48 @@ class ProjectTask(models.Model):
         self.ensure_one()
         self.action_unarchive()
         self.is_template = False
-        self.message_post(body=_("Template reverted to task."))
+        self.message_post(body=_("Template converted back to regular task."))
         return {
             'type': 'ir.actions.client',
-            'tag': 'soft_reload',
+            'tag': 'display_notification',
+            'params': {
+                'message': _('Template converted back to regular task.'),
+                'next': {
+                    'type': 'ir.actions.client',
+                    'tag': 'soft_reload',
+                },
+            },
         }
+
+    @api.model
+    def _get_template_default_context_whitelist(self):
+        """
+        Whitelist of fields that can be set through the `default_` context keys when creating a task from a template.
+        """
+        return [
+            "parent_id",
+        ]
+
+    @api.model
+    def _get_template_field_blacklist(self):
+        """
+        Blacklist of fields to not copy when creating a task from a template.
+        """
+        return [
+            "partner_id",
+        ]
 
     def action_create_from_template(self):
         self.ensure_one()
-        return self.with_context(copy_from_template=True).copy().id
+        default = {
+            key[8:]: value
+            for key, value in self.env.context.items()
+            if key.startswith('default_') and key[8:] in self._get_template_default_context_whitelist()
+        } | {
+            field: False
+            for field in self._get_template_field_blacklist()
+        }
+        return self.with_context(copy_from_template=True).copy(default=default).id
 
     def action_archive(self):
         child_tasks = self.child_ids.filtered(lambda child_task: not child_task.display_in_project)

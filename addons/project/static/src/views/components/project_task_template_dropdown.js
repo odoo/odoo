@@ -16,6 +16,11 @@ export class ProjectTaskTemplateDropdown extends Component {
             type: [Number, Boolean],
             optional: true,
         },
+        context: Object,
+        getAdditionalContext: {
+            type: Function,
+            optional: true,
+        },
     };
     static defaultProps = {
         hotkey: "r",
@@ -38,8 +43,20 @@ export class ProjectTaskTemplateDropdown extends Component {
     }
 
     async createTaskFromTemplate(templateId) {
+        const context = this.props.context;
+        if (this.props.getAdditionalContext) {
+            Object.assign(context, this.props.getAdditionalContext());
+        }
         this.action.switchView("form", {
-            resId: await this.orm.call("project.task", "action_create_from_template", [templateId]),
+            resId: await this.orm.call(
+                "project.task",
+                "action_create_from_template",
+                [templateId],
+                {
+                    context: context,
+                }
+            ),
+            focusTitle: true,
         });
     }
 }

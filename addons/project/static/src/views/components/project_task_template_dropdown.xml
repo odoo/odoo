@@ -3,9 +3,9 @@
     <t t-name="project.TemplateDropdown">
         <button t-if="!taskTemplates.length" type="button" t-att-class="props.newButtonClasses" t-att-data-hotkey="props.hotkey" t-on-click.stop="props.onCreate" data-bounce-button="">New</button>
         <t t-else="">
-            <button type="button" t-attf-class="{{ props.newButtonClasses }} dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" t-att-data-hotkey="props.hotkey" data-bounce-button="">
+            <a t-attf-class="{{ props.newButtonClasses }} dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" t-att-data-hotkey="props.hotkey" data-bounce-button="">
                 New
-            </button>
+            </a>
             <ul class="dropdown-menu o-project-form-dropdown-menu">
                 <button type="button" class="btn btn-link dropdown-item o-dropdown-item" t-on-click="props.onCreate">
                     New Task

@@ -11,7 +11,7 @@
                     <field name="tag_ids"/>
                     <field name="stage_id"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>
-                    <field name="partner_id" operator="child_of"/>
+                    <field name="partner_id" operator="child_of" invisible="is_template"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator invisible="context.get('default_project_id')"/>
                     <filter string="Favorite Projects" name="favorite_projects" domain="[('project_id.is_favorite', '=', True)]" invisible="context.get('default_project_id')"/>
@@ -198,7 +198,7 @@
             <field name="path">tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,list,form,calendar,pivot,graph,activity</field>
-            <field name="domain">[('project_id', '=', active_id)]</field>
+            <field name="domain">[('project_id', '=', active_id), ('is_template', '=', False)]</field>
             <field name="context">{
                 'default_project_id': active_id,
                 'show_project_update': True,
@@ -282,7 +282,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
-            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id), ('is_template', '=', False)]</field>
             <field name="context">{'show_project_update': False, 'default_parent_id': active_id}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -342,7 +342,7 @@
                         <span id="start_rating_buttons" invisible="1"/>
                         <field name="rating_avg" invisible="1"/>
                         <field name="rating_active" invisible="1"/>
-                        <button name="action_open_ratings" type="object" invisible="rating_count == 0 or not rating_active" class="oe_stat_button" groups="project.group_project_rating">
+                        <button name="action_open_ratings" type="object" invisible="rating_count == 0 or not rating_active or is_template" class="oe_stat_button" groups="project.group_project_rating">
                             <i class="fa fa-fw o_button_icon fa-smile-o text-success" invisible="rating_avg &lt; 3.66" title="Happy"/>
                             <i class="fa fa-fw o_button_icon fa-meh-o text-warning" invisible="rating_avg &lt; 2.33 or rating_avg &gt;= 3.66" title="Neutral"/>
                             <i class="fa fa-fw o_button_icon fa-frown-o text-danger" invisible="rating_avg &gt;= 2.33" title="Unhappy"/>
@@ -416,7 +416,7 @@
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="partner_id" nolabel="0" widget="res_partner_many2one" class="o_task_customer_field" invisible="not project_id"/>
+                            <field name="partner_id" nolabel="0" widget="res_partner_many2one" class="o_task_customer_field" invisible="not project_id or is_template"/>
                             <label for="date_deadline"/>
                             <div id="date_deadline_and_recurring_task" class="d-inline-flex w-100">
                                 <field name="date_deadline" nolabel="1" decoration-danger="date_deadline and date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
@@ -456,6 +456,7 @@
                                         'default_milestone_id': allow_milestones and milestone_id,
                                         'default_active': not is_template and not context.get('propagate_not_active'),
                                         'default_is_template': False,
+                                        'active_test': not is_template and not context.get('propagate_not_active'),
                                         'kanban_view_ref': 'project.project_sub_task_view_kanban_mobile',
                                         'closed_X2M_count': closed_subtask_count,
                                         'propagate_not_active': is_template or context.get('propagate_not_active'),
@@ -480,7 +481,7 @@
                                         context="{'default_project_id': project_id}"
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
-                                    <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id"/>
+                                    <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id or is_template"/>
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                     <field name="company_id" column_invisible="True"/>
@@ -524,7 +525,7 @@
                                         context="{'default_project_id': project_id}"
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
-                                    <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id"/>
+                                    <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id or is_template"/>
                                     <field name="parent_id" optional="hide" groups="base.group_no_one"/>
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
@@ -664,7 +665,7 @@
                                 <div class="text-muted d-flex flex-column">
                                     <field t-if="record.parent_id.raw_value" invisible="context.get('default_parent_id', False)" name="parent_id"/>
                                     <field invisible="context.get('default_project_id', False)" name="project_id" options="{'no_open': True}"/>
-                                    <field name="partner_id"/>
+                                    <field name="partner_id" invisible="is_template"/>
                                     <field t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" name="milestone_id" options="{'no_open': True}"/>
                                 </div>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -861,7 +862,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,list,form,calendar,pivot,graph,activity</field>
             <field name="context">{'search_default_my_tasks': 1}</field>
-            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="domain">[('project_id', '!=', False), ('is_template', '=', False)]</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -1012,7 +1013,7 @@
                 'default_user_ids': [(4, uid)],
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="domain">[('user_ids', 'in', uid)]</field>
+            <field name="domain">[('user_ids', 'in', uid), ('is_template', '=', False)]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tasks found. Let's create one!
@@ -1062,7 +1063,7 @@
             <field name="res_model">project.task</field>
             <field name="path">all-tasks</field>
             <field name="view_mode">list,kanban,form,calendar,activity,pivot,graph</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('is_template', '=', False)]</field>
             <field name="context">{'search_default_open_tasks': 1, 'default_user_ids': [(4, uid)]}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -1173,6 +1174,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="domain">[('is_template', '=', False)]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tasks found. Let's create one!
@@ -1212,7 +1214,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">list,form,calendar,graph,kanban</field>
-            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False)]</field>
+            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False), ('is_template', '=', False)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
@@ -1222,7 +1224,7 @@
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
             <field name="view_mode">list,form,calendar,graph,kanban</field>
-            <field name="domain">[('project_id', '=', active_id)]</field>
+            <field name="domain">[('project_id', '=', active_id), ('is_template', '=', False)]</field>
             <field name="context">{'project_id':active_id}</field>
         </record>
 
@@ -1258,6 +1260,7 @@
             <field name="name">Tasks.test</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,list,form,calendar,pivot,graph,activity</field>
+            <field name="domain">[('is_template', '=', False)]</field>
             <field name="context">{'default_project_id': active_id}</field>
         </record>
 
@@ -1305,6 +1308,7 @@
                 <field name="project_id" position="attributes">
                     <attribute name="readonly">False</attribute>
                 </field>
+                <field name="partner_id" position="replace"/>
             </field>
         </record>
 
@@ -1325,7 +1329,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">list,kanban,form</field>
             <field name="domain">[('is_template', '=', True)]</field>
-            <field name="context">{'active_test': False, 'default_is_template': True}</field>
+            <field name="context">{'active_test': False, 'default_is_template': True, 'hide_kanban_ghost_columns': True}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No task templates found. Let's create one!

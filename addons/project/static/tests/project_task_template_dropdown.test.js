@@ -53,9 +53,9 @@ beforeEach(() => {
 });
 
 for (const [viewType, newButtonClass] of [
-    ["form", "o_form_button_create"],
-    ["kanban", "o-kanban-button-new"],
-    ["list", "o_list_button_add"],
+    ["form", ".o_form_button_create"],
+    ["kanban", ".o-kanban-button-new"],
+    ["list", ".o_list_button_add"],
 ]) {
     test(`template dropdown in ${viewType} view of a project with no template`, async () => {
         await mountView({
@@ -66,15 +66,15 @@ for (const [viewType, newButtonClass] of [
                 default_project_id: 1,
             },
         });
-        expect(`button.${newButtonClass}`).toHaveCount(1, {
+        expect(newButtonClass).toHaveCount(1, {
             message: "The “New” button should be displayed",
         });
-        expect(`button.${newButtonClass}`).not.toHaveClass("dropdown-toggle", {
+        expect(newButtonClass).not.toHaveClass("dropdown-toggle", {
             message: "The “New” button should not be a dropdown since there is no template",
         });
 
         // Test that we can create a new record without errors
-        await contains(`button.${newButtonClass}`).click();
+        await contains(`${newButtonClass}`).click();
     });
 
     test(`template dropdown in ${viewType} view of a project with one template`, async () => {
@@ -87,14 +87,14 @@ for (const [viewType, newButtonClass] of [
                 default_project_id: 1,
             },
         });
-        expect(`button.${newButtonClass}`).toHaveCount(1, {
+        expect(newButtonClass).toHaveCount(1, {
             message: "The “New” button should be displayed",
         });
-        expect(`button.${newButtonClass}`).toHaveClass("dropdown-toggle", {
+        expect(newButtonClass).toHaveClass("dropdown-toggle", {
             message: "The “New” button should be a dropdown since there is a template",
         });
 
-        await contains(`button.${newButtonClass}`).click();
+        await contains(newButtonClass).click();
         expect("button.dropdown-item:contains('New Task')").toHaveCount(1, {
             message: "The “New Task” button should be in the dropdown",
         });
@@ -111,7 +111,7 @@ test("template dropdown should not appear when not in the context of a specific 
         type: "kanban",
     });
 
-    expect("button.o-kanban-button-new").not.toHaveClass("dropdown-toggle", {
+    expect(".o-kanban-button-new").not.toHaveClass("dropdown-toggle", {
         message:
             "The “New” button should not be a dropdown since there is no project in the context",
     });
