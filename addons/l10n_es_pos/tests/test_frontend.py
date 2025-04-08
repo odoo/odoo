@@ -91,7 +91,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         current_session.action_pos_session_closing_control()
 
         self.main_pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'l10n_es_pos_settle_account_due', login="accountman")
+        self.start_pos_tour('l10n_es_pos_settle_account_due', login="accountman")
 
     def test_spanish_pos_invoice_no_certificate(self):
         """This test make sure that the invoice generated in spanish PoS are not proforma invoices when no certificate exists"""
