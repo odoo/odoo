@@ -45,6 +45,7 @@ class TestConfigManager(TransactionCase):
             'pidfile': '',
             'addons_path': f'{ROOT_PATH}/odoo/addons,{ROOT_PATH}/addons',
             'upgrade_path': '',
+            'pre_upgrade_scripts': '',
             'server_wide_modules': 'base,web',
             'data_dir': _get_default_datadir(),
 
@@ -165,6 +166,7 @@ class TestConfigManager(TransactionCase):
             'pidfile': '/tmp/pidfile',
             'addons_path': '/tmp/odoo',
             'upgrade_path': '/tmp/upgrade',
+            'pre_upgrade_scripts': '/tmp/pre-custom.py',
             'server_wide_modules': 'base,mail',
             'data_dir': '/tmp/data-dir',
 
@@ -340,6 +342,7 @@ class TestConfigManager(TransactionCase):
             'unaccent': False,
             'update': {},
             'upgrade_path': '',
+            'pre_upgrade_scripts': '',
             'without_demo': False,
 
             # options that are not taken from the file (also in 14.0)
@@ -428,6 +431,7 @@ class TestConfigManager(TransactionCase):
             'pidfile': '/tmp/pidfile',
             'addons_path': f'{ROOT_PATH}/odoo/addons,{ROOT_PATH}/addons',
             'upgrade_path': '',
+            'pre_upgrade_scripts': '',
             'server_wide_modules': 'base,mail',
             'data_dir': '/tmp/data-dir',
 

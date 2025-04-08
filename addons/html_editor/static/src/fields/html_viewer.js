@@ -61,9 +61,12 @@ export class HtmlViewer extends Component {
             });
         } else {
             this.readonlyElementRef = useRef("readonlyContent");
-            useEffect(() => {
-                this.retargetLinks(this.readonlyElementRef.el);
-            });
+            useEffect(
+                () => {
+                    this.processReadonlyContent(this.readonlyElementRef.el);
+                },
+                () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
+            );
         }
 
         if (this.props.config.cssAssetId) {
@@ -119,6 +122,24 @@ export class HtmlViewer extends Component {
         return newVal;
     }
 
+    processReadonlyContent(container) {
+        this.retargetLinks(container);
+        this.applyAccessibilityAttributes(container);
+    }
+
+    /**
+     * Ensure that elements with accessibility editor attributes correctly get
+     * the standard accessibility attribute (aria-label, role).
+     */
+    applyAccessibilityAttributes(container) {
+        for (const el of container.querySelectorAll("[data-oe-role]")) {
+            el.setAttribute("role", el.dataset.oeRole);
+        }
+        for (const el of container.querySelectorAll("[data-oe-aria-label]")) {
+            el.setAttribute("aria-label", el.dataset.oeAriaLabel);
+        }
+    }
+
     /**
      * Ensure all links are opened in a new tab.
      */
@@ -139,7 +160,7 @@ export class HtmlViewer extends Component {
             ? contentWindow.document.documentElement
             : contentWindow.document.querySelector("#iframe_target");
         iframeTarget.innerHTML = content;
-        this.retargetLinks(iframeTarget);
+        this.processReadonlyContent(iframeTarget);
     }
 
     onLoadIframe(value) {

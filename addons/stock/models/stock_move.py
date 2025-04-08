@@ -1056,7 +1056,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
 
             ProcurementGroup = self.env['procurement.group']
-            if move.location_dest_id.company_id != self.env.company:
+            if move.location_dest_id.company_id not in self.env.companies:
                 ProcurementGroup = self.env['procurement.group'].sudo()
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
                 warehouse_id = False
@@ -2143,6 +2143,12 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
         return new_move_vals
 
+    def _post_process_created_moves(self):
+        # This method is meant to be overriden in order to execute post 
+        # creation actions that would be bypassed since the move was 
+        # and will probably never be confirmed
+        pass
+
     def _recompute_state(self):
         if self._context.get('preserve_state'):
             return
@@ -2476,3 +2482,15 @@ Please change the quantity done or the rounding precision of your unit of measur
             ),
             'readOnly': False,
         }
+
+    def _is_incoming(self):
+        self.ensure_one()
+        return self.location_id.usage in ('customer', 'supplier') or (
+            self.location_id.usage == 'transit' and not self.location_id.company_id
+        )
+
+    def _is_outgoing(self):
+        self.ensure_one()
+        return self.location_dest_id.usage in ('customer', 'supplier') or (
+            self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id
+        )

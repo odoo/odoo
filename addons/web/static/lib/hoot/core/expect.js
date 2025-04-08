@@ -16,6 +16,7 @@ import {
     isNodeVisible,
     queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
+import { Deferred } from "@web/../lib/hoot-dom/helpers/time";
 import { addInteractionListener, isFirefox, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     CASE_EVENT_TYPES,
@@ -49,6 +50,10 @@ import { Test } from "./test";
  *
  * @typedef {string | string[] | ((pass: boolean, raw: typeof String["raw"]) => string | string[])} AssertionMessage
  *
+ * @typedef {VerifierOptions & {
+ *  timeout?: number;
+ * }} AsyncVerifierOptions
+ *
  * @typedef {InteractionType | "assertion" | "error" | "step"} CaseEventType
  *
  * @typedef {{ exact?: boolean }} ClassListOptions
@@ -67,6 +72,11 @@ import { Test } from "./test";
  *  silent?: boolean;
  * }} ExpectOptions
  *
+ * @typedef {DeepEqualOptions & {
+ *  message?: AssertionMessage;
+ * }} VerifierOptions
+ *
+ * @typedef {import("../hoot_utils").DeepEqualOptions} DeepEqualOptions
  * @typedef {import("../hoot_utils").Label} Label
  *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
@@ -79,11 +89,20 @@ import { Test } from "./test";
  */
 
 /**
+ * @template T
+ * @typedef {T & {
+ *  deferred: Deferred<boolean>;
+ *  options: VerifierOptions
+ *  timeout: number;
+ * }} AsyncResolver
+ */
+
+/**
  * @template [R=unknown]
  * @template [A=R]
  * @typedef {{
  *  acceptedType: ArgumentType | ArgumentType[];
- *  getFailedDetails: () => any[];
+ *  getFailedDetails: () => unknown[];
  *  mapElements: (received: Target) => ElementMap;
  *  message: AssertionMessage;
  *  name: string;
@@ -103,12 +122,14 @@ import { Test } from "./test";
 const {
     Array: { isArray: $isArray },
     Boolean,
+    clearTimeout,
     Error,
     Math: { abs: $abs, floor: $floor },
     Object: { assign: $assign, create: $create, entries: $entries, keys: $keys },
     parseFloat,
     performance,
     Promise,
+    setTimeout,
     TypeError,
 } = globalThis;
 /** @type {Performance["now"]} */
@@ -167,7 +188,7 @@ const formatMessage = (message, plural, not) =>
     message.replaceAll(R_PLURAL, plural ? "$2" : "$1").replaceAll(R_NOT, not ? "$2" : "$1");
 
 /**
- * @param {Iterable<any> | Record<any, any>} object
+ * @param {Iterable<unknown> | Record<unknown, unknown>} object
  */
 const getLength = (object) => {
     if (typeof object === "string" || $isArray(object)) {
@@ -213,8 +234,8 @@ const getStyleValues = (node, keys) => {
 };
 
 /**
- * @param {Iterable<any> | Record<any, any>} object
- * @param {any} item
+ * @param {Iterable<unknown> | Record<unknown, unknown>} object
+ * @param {unknown} item
  * @returns {boolean}
  */
 const includes = (object, item) => {
@@ -280,8 +301,8 @@ const matcherModifierError = (modifier, message) =>
     new HootError(`cannot use modifier "${modifier}": ${message}`);
 
 /**
- * @param {string | Record<string, any>} style
- * @param {any} [defaultValue]
+ * @param {string | Record<string, unknown>} style
+ * @param {unknown} [defaultValue]
  */
 const parseInlineStyle = (style, defaultValue) => {
     /** @type {Record<string, string>} */
@@ -326,6 +347,7 @@ const valueMatches = (value, matcher) => {
     return strictEqual(value, matcher);
 };
 
+const AMPERSAND = makeLabel("&", null);
 const ARROW_RIGHT = makeLabelIcon("fa fa-arrow-right text-sm");
 
 const R_LINE_RETURN = /\n+/g;
@@ -547,6 +569,88 @@ export function makeExpect(params) {
     }
 
     /**
+     * @param {{ errors: unknown[]; options: VerifierOptions }} resolver
+     * @param {boolean} forceCheck
+     */
+    function checkErrors(resolver, forceCheck) {
+        if (!resolver) {
+            return false;
+        }
+        const { errors, options } = resolver;
+        const actualErrors = currentResult.currentErrors;
+        const pass =
+            actualErrors.length === errors.length &&
+            actualErrors.every(
+                (error, i) =>
+                    match(error, errors[i]) || (error.cause && match(error.cause, errors[i]))
+            );
+
+        if (pass || forceCheck) {
+            currentResult.consumeErrors();
+
+            const message =
+                options?.message ||
+                (pass
+                    ? errors.length
+                        ? listJoin(errors, ARROW_RIGHT)
+                        : "no errors"
+                    : "expected the following errors");
+            const assertion = {
+                label: "verifyErrors",
+                message,
+                pass,
+            };
+            if (!pass) {
+                const fActual = actualErrors.map(formatError);
+                const fExpected = errors.map(formatError);
+                assertion.failedDetails = detailsFromValuesWithDiff(fExpected, fActual);
+                assertion.stack = getStack(0);
+            }
+            currentResult.registerEvent("assertion", assertion);
+        }
+
+        return pass;
+    }
+
+    /**
+     * @param {{ steps: unknown[]; options: VerifierOptions } | null} resolver
+     * @param {boolean} forceCheck
+     */
+    function checkSteps(resolver, forceCheck) {
+        if (!resolver) {
+            return false;
+        }
+        const { steps, options } = resolver;
+        const receivedSteps = currentResult.currentSteps;
+        const pass = deepEqual(steps, receivedSteps, options);
+
+        if (pass || forceCheck) {
+            currentResult.consumeSteps();
+
+            const separator = options?.ignoreOrder ? AMPERSAND : ARROW_RIGHT;
+            const message =
+                options?.message ||
+                (pass
+                    ? receivedSteps.length
+                        ? listJoin(receivedSteps, separator)
+                        : "no steps"
+                    : "expected the following steps");
+            const assertion = {
+                label: "verifySteps",
+                message,
+                pass,
+            };
+            if (!pass) {
+                assertion.failedDetails = detailsFromValuesWithDiff(steps, receivedSteps);
+                assertion.stack = getStack(0);
+            }
+            currentResult.registerEvent("assertion", assertion);
+        }
+
+        return pass;
+    }
+
+    /**
      * @param {number} expected
      */
     function errors(expected) {
@@ -571,6 +675,8 @@ export function makeExpect(params) {
         currentResultInErrorState =
             currentResult.expectedErrors < (currentResult.counts.error || 0);
 
+        checkErrors(currentResult.errorResolver, false);
+
         return !currentResultInErrorState;
     }
 
@@ -586,7 +692,7 @@ export function makeExpect(params) {
     }
 
     /**
-     * @param {any} value
+     * @param {unknown} value
      */
     function step(value) {
         if (!currentResult) {
@@ -594,6 +700,8 @@ export function makeExpect(params) {
         }
 
         currentResult.registerEvent("step", value);
+
+        checkSteps(currentResult.stepResolver, false);
     }
 
     /**
@@ -602,40 +710,18 @@ export function makeExpect(params) {
      * will reset the list of current errors.
      *
      * @param {unknown[]} errors
+     * @param {VerifierOptions} [options]
+     * @returns {boolean}
      * @example
      *  expect.verifyErrors([/RPCError/, /Invalid domain AST/]);
      */
-    function verifyErrors(errors) {
+    function verifyErrors(errors, options) {
         if (!currentResult) {
             throw scopeError("expect.verifyErrors");
         }
-        ensureArguments(arguments, "any[]");
+        ensureArguments(arguments, "any[]", ["object", null]);
 
-        const actualErrors = currentResult.consumeErrors();
-        const pass =
-            actualErrors.length === errors.length &&
-            actualErrors.every(
-                (error, i) =>
-                    match(error, errors[i]) || (error.cause && match(error.cause, errors[i]))
-            );
-
-        const message = pass
-            ? errors.length
-                ? listJoin(errors, ARROW_RIGHT)
-                : "no errors"
-            : "expected the following errors";
-        const assertion = {
-            label: "verifyErrors",
-            message,
-            pass,
-        };
-        if (!pass) {
-            const fActual = actualErrors.map(formatError);
-            const fExpected = errors.map(formatError);
-            assertion.failedDetails = detailsFromValuesWithDiff(fExpected, fActual);
-            assertion.stack = getStack(0);
-        }
-        currentResult.registerEvent("assertion", assertion);
+        return checkErrors({ errors, options }, true);
     }
 
     /**
@@ -643,33 +729,101 @@ export function makeExpect(params) {
      * of the test or the last call to {@link verifySteps}. Calling this matcher
      * will reset the list of current steps.
      *
-     * @param {any[]} steps
+     * @param {unknown[]} steps
+     * @param {VerifierOptions} [options]
+     * @returns {boolean}
      * @example
      *  expect.verifySteps(["web_read_group", "web_search_read"]);
      */
-    function verifySteps(steps) {
+    function verifySteps(steps, options) {
         if (!currentResult) {
             throw scopeError("expect.verifySteps");
         }
-        ensureArguments(arguments, "any[]");
+        ensureArguments(arguments, "any[]", ["object", null]);
 
-        const actualSteps = currentResult.consumeSteps();
-        const pass = deepEqual(actualSteps, steps);
-        const message = pass
-            ? steps.length
-                ? listJoin(steps, ARROW_RIGHT)
-                : "no steps"
-            : "expected the following steps";
-        const assertion = {
-            label: "verifySteps",
-            message,
-            pass,
-        };
-        if (!pass) {
-            assertion.failedDetails = detailsFromValuesWithDiff(steps, actualSteps);
-            assertion.stack = getStack(0);
+        return checkSteps({ steps, options }, true);
+    }
+
+    /**
+     * Same as {@link verifyErrors}, but will not immediatly fail if errors are
+     * not caught yet, and will instead wait for a certain timeout (default: 2000ms)
+     * to allow errors to be caught later.
+     *
+     * Checks are performed initially, at the end of the timeout, and each time
+     * an error is detected.
+     *
+     * @param {unknown[]} errors
+     * @param {AsyncVerifierOptions} [options]
+     * @returns {Promise<boolean>}
+     * @example
+     *  fetch("invalid/url");
+     *  await expect.waitForErrors([/RPCError/]);
+     */
+    function waitForErrors(errors, options) {
+        if (!currentResult) {
+            throw scopeError("expect.waitForErrors");
         }
-        currentResult.registerEvent("assertion", assertion);
+        ensureArguments(arguments, "any[]", ["object", null]);
+
+        // Run check for any current resolver (if any)
+        checkErrors(currentResult.errorResolver, true);
+
+        // Run early check if conditions are already met
+        if (checkErrors({ errors, options }, false)) {
+            return true;
+        }
+
+        currentResult.errorResolver = {
+            errors,
+            options,
+            deferred: new Deferred(),
+            timeout: setTimeout(
+                () => checkErrors(currentResult.errorResolver, true),
+                options?.timeout ?? 2000
+            ),
+        };
+        return currentResult.errorResolver.deferred;
+    }
+
+    /**
+     * Same as {@link verifySteps}, but will not immediatly fail if steps have not
+     * been registered yet, and will instead wait for a certain timeout (default:
+     * 2000ms) to allow steps to be registered later.
+     *
+     * Checks are performed initially, at the end of the timeout, and each time
+     * a step is registered.
+     *
+     * @param {unknown[]} steps
+     * @param {AsyncVerifierOptions} [options]
+     * @returns {Promise<boolean>}
+     * @example
+     *  fetch(".../call_kw/web_read_group");
+     *  await expect.waitForSteps(["web_read_group"]);
+     */
+    async function waitForSteps(steps, options) {
+        if (!currentResult) {
+            throw scopeError("expect.waitForSteps");
+        }
+        ensureArguments(arguments, "any[]", ["object", null]);
+
+        // Run check for any current resolver (if any)
+        checkSteps(currentResult.stepResolver, true);
+
+        // Run early check if conditions are already met
+        if (checkSteps({ steps, options }, false)) {
+            return true;
+        }
+
+        currentResult.stepResolver = {
+            steps,
+            options,
+            deferred: new Deferred(),
+            timeout: setTimeout(
+                () => checkSteps(currentResult.stepResolver, true),
+                options?.timeout ?? 2000
+            ),
+        };
+        return currentResult.stepResolver.deferred;
     }
 
     /**
@@ -711,6 +865,8 @@ export function makeExpect(params) {
         step,
         verifyErrors,
         verifySteps,
+        waitForErrors,
+        waitForSteps,
     });
     const expectHooks = {
         after: afterTest,
@@ -744,6 +900,10 @@ export class CaseResult {
 
     currentErrors = [];
     currentSteps = [];
+    /** @type {AsyncResolver<{ errors: unknown[] }> | null} */
+    errorResolver = null;
+    /** @type {AsyncResolver<{ steps: unknown[] }> | null} */
+    stepResolver = null;
 
     /**
      * @param {Test | null} [test]
@@ -760,15 +920,21 @@ export class CaseResult {
     }
 
     consumeErrors() {
-        const errors = this.currentErrors;
+        if (this.errorResolver) {
+            clearTimeout(this.errorResolver.timeout);
+            this.errorResolver.deferred.resolve(true);
+            this.errorResolver = null;
+        }
         this.currentErrors = [];
-        return errors;
     }
 
     consumeSteps() {
-        const steps = this.currentSteps;
+        if (this.stepResolver) {
+            clearTimeout(this.stepResolver.timeout);
+            this.stepResolver.deferred.resolve(true);
+            this.stepResolver = null;
+        }
         this.currentSteps = [];
-        return steps;
     }
 
     /**
@@ -786,7 +952,7 @@ export class CaseResult {
     /**
      *
      * @param {CaseEventType} type
-     * @param {any} value
+     * @param {unknown} value
      */
     registerEvent(type, value) {
         let caseEvent;
@@ -1176,7 +1342,7 @@ export class Matcher {
      * Expects the received value to be *deeply* equal to the `expected` value.
      *
      * @param {R} expected
-     * @param {ExpectOptions} [options]
+     * @param {ExpectOptions & DeepEqualOptions} [options]
      * @example
      *  expect(["foo"]).toEqual(["foo"]);
      * @example
@@ -1188,7 +1354,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toEqual",
             acceptedType: "any",
-            predicate: () => deepEqual(this._received, expected),
+            predicate: () => deepEqual(this._received, expected, options),
             message:
                 options?.message ||
                 ((pass) =>
@@ -1598,7 +1764,7 @@ export class Matcher {
         this._ensureArguments(arguments, ["string", "string[]"]);
 
         const rawClassNames = ensureArray(className);
-        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(R_WHITE_SPACE)).sort();
+        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(R_WHITE_SPACE));
 
         return this._resolve(() => ({
             name: "toHaveClass",
@@ -1606,7 +1772,7 @@ export class Matcher {
             mapElements: (el) => [...el.classList].sort(),
             predicate: (classes) =>
                 options?.exact
-                    ? deepEqual(classNames, classes)
+                    ? deepEqual(classNames, classes, { ignoreOrder: true })
                     : classNames.every((cls) => classes.includes(cls)),
             message:
                 options?.message ||
@@ -1812,7 +1978,7 @@ export class Matcher {
         this._ensureArguments(arguments, ["string", "object"]);
 
         const styleDef = parseInlineStyle(style, S_ANY);
-        const styleKeys = $keys(styleDef).sort();
+        const styleKeys = $keys(styleDef);
 
         return this._resolve(() => ({
             name: "toHaveStyle",
@@ -1823,7 +1989,7 @@ export class Matcher {
                     : getStyleValues(el, $keys(styleDef)),
             predicate: (elStyle) =>
                 styleKeys.every((key) => valueMatches(elStyle[key], styleDef[key])) &&
-                (!options?.exact || deepEqual(styleKeys, $keys(elStyle))),
+                (!options?.exact || deepEqual(styleKeys, $keys(elStyle), { ignoreOrder: true })),
             message:
                 options?.message ||
                 ((pass) =>

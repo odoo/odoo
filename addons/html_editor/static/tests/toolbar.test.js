@@ -35,6 +35,7 @@ import {
     setSelection,
 } from "./_helpers/selection";
 import { strong } from "./_helpers/tags";
+import { delay } from "@web/core/utils/concurrency";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -767,7 +768,8 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
-test("should not close cropper while loading media", async () => {
+test.tags("desktop");
+test("should not close image cropper while loading media", async () => {
     onRpc("/html_editor/get_image_info", () => {
         return {
             original: {
@@ -775,12 +777,13 @@ test("should not close cropper while loading media", async () => {
             },
         };
     });
-    onRpc("/web/image/__odoo__unknown__src__/", () => {
+    onRpc("/web/image/__odoo__unknown__src__/", async () => {
+        await delay(50);
         return {};
     });
 
     await setupEditor(`<p>[<img src="#">]</p>`);
-    await waitFor('div[name="image_transform"]');
+    await waitFor(".o-we-toolbar");
 
     await click('div[name="image_transform"] > .btn');
     await animationFrame();
@@ -794,21 +797,21 @@ test("should not close cropper while loading media", async () => {
 
     // cropper should not close as the cropper still loading the image.
     expect('.btn[title="Discard"]').toHaveCount(1);
-    // debugger;
+
     // once the image loaded we should be able to close
-    await waitFor("img.o_we_cropper_img", { timeout: 1000 });
+    await waitFor('img[src^="blob:"]', { timeout: 2000 });
     await click('.btn[title="Discard"]');
-    await animationFrame();
+    await waitForNone('.btn[title="Discard"]', { timeout: 1000 });
 
     await click("img");
-    await tick();
-    await animationFrame();
+    await waitFor(".o-we-toolbar", { timeout: 1000 });
 
     await click('div[name="image_transform"] > .btn');
     await animationFrame();
 
+    await waitFor('.btn[name="image_crop"]', { timeout: 1000 });
     await click('.btn[name="image_crop"]');
-    await animationFrame();
+    await waitFor('.btn[title="Discard"]', { timeout: 1000 });
     expect('.btn[title="Discard"]').toHaveCount(1);
 });
 

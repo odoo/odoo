@@ -3,8 +3,8 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -680,6 +680,54 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Xin chào,\n"
+"        <br/><br/>\n"
+"        Đã có\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            hóa đơn chiếu lệ cho <t t-out=\"doc_name or ''\">báo giá</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (với mã tham chiếu: <t t-out=\"object.origin or ''\"/> )\n"
+"            </t>\n"
+"            có giá trị là <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span>.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">báo giá</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (với mã tham chiếu: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            </t>\n"
+"            có giá trị là <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span> đã sẵn sàng để bạn kiểm tra.\n"
+"        </t>\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
+"        <t t-if=\"documents\">\n"
+"            <br/> \n"
+"            <t t-if=\"len(documents)&gt;1\">\n"
+"                Đây là một số tài liệu bổ sung mà bạn có thể quan tâm:\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Đây là tài liệu bổ sung mà bạn có thể quan tâm:\n"
+"            </t>\n"
+"            <ul style=\"margin-bottom: 0;\">\n"
+"                <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\">\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                    </li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </t>\n"
+"        <br/>\n"
+"        Đừng ngần ngại liên hệ với chúng tôi nếu bạn có câu hỏi cần được giải đáp.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -1094,7 +1142,7 @@ msgstr ""
 "  - Thủ công: số lượng được nhập thủ công trên dòng\n"
 "  - Phân tích từ chi phí: số lượng dựa trên tổng các khoản chi phí đã ghi nhận\n"
 "  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với dòng bán hàng\n"
-"  - Dịch chuyển tồn kho: số lượng đến từ các phiếu lấy hàng đã xác nhận\n"
+"  - Dịch chuyển tồn kho: số lượng đến từ các phiếu xuất kho đã xác nhận\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
@@ -4854,9 +4902,19 @@ msgid "Tax Country"
 msgstr "Quốc gia tính thuế"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax Excl."
+msgstr "Chưa bao gồm thuế"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax ID"
 msgstr "Mã số thuế"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax Incl."
+msgstr "Bao gồm thuế"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -5534,7 +5592,7 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
-"Các khoản chi phí đã xác thực, hóa đơn mua hàng hoặc phiếu lấy hàng tồn kho "
+"Các khoản chi phí đã xác thực, hóa đơn mua hàng hoặc phiếu xuất kho tồn kho "
 "(được thiết lập để theo dõi chi phí) có thể được lập hóa đơn cho khách hàng "
 "theo giá thành hoặc giá bán."
 
@@ -5651,7 +5709,7 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
-"Bạn có thể chọn tất cả đơn đặt hàng và gửi hóa đơn hàng loạt, <br>\n"
+"Bạn có thể chọn tất cả đơn đặt hàng và gửi hóa đơn theo lô, <br>\n"
 "                 hoặc kiểm tra từng đơn hàng và gửi hóa đơn cho từng đơn một."
 
 #. module: sale

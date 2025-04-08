@@ -1759,6 +1759,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_limited_categories', login="pos_user")
 
+        self.main_pos_config.current_session_id.close_session_from_ui()
+
+        # when no category is selected, all products should be displayed
+        self.main_pos_config.write({
+            'iface_available_categ_ids': [(6, 0, [])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_limited_categories', login="pos_user")
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
