@@ -2,7 +2,10 @@
 <templates xml:space="preserve">
     <t t-name="ProductCatalogKanbanRecord">
         <article
-             t-att-class="getRecordClasses() + (productCatalogData.quantity ? ' o_product_added' : '')"
+             t-att-class="getRecordClasses() + (props.record.context.selected_section
+                ? (productCatalogData.isHighlighted and productCatalogData.quantity  ? ' o_product_added' : '')
+                : (productCatalogData.quantity ? ' o_product_added' : '')
+            )"
              t-att-data-id="props.record.id"
              t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
              t-on-click="onGlobalClick"

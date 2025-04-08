@@ -2173,7 +2173,7 @@ class SaleOrder(models.Model):
                 or (self.state == 'sale' and document.attached_on_sale == 'sale_order')
         )
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
+    def _update_order_line_info(self, product_id, quantity, selected_section = None, **kwargs):
         """ Update sale order line information for a given product or create a
         new one if none exists yet.
         :param int product_id: The product, as a `product.product` id.
@@ -2199,11 +2199,25 @@ class SaleOrder(models.Model):
             else:
                 sol.product_uom_qty = 0
         elif quantity > 0:
+            section_lines = self.order_line.filtered(lambda line: line.display_type == 'line_section')
+            if not section_lines:
+                # No section exists, add SOL at the end
+                sequence = ((self.order_line and self.order_line[-1].sequence + 1) or 10)
+            elif selected_section:
+                sequence = selected_section['sequence'] + 1
+            else:
+                # Sections exist, but no section is selected → Add SOL above the first section
+                sequence = min(section_lines.mapped("sequence"))
+            conflicting_lines = self.order_line.filtered(lambda line: line.sequence >= sequence)
+            if conflicting_lines:
+                for line in conflicting_lines:
+                    line.sequence += 1
+
             sol = self.env['sale.order.line'].create({
                 'order_id': self.id,
                 'product_id': product_id,
                 'product_uom_qty': quantity,
-                'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
+                'sequence': sequence,  # put it at the end of the order
             })
         return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
 

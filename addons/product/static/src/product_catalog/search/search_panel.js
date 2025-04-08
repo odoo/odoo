@@ -74,6 +74,11 @@ export class ProductCatalogSearchPanel extends SearchPanel {
         }
     }
 
+    clearSectionSelection() {
+        this.env.model.config.context.selected_section = null;
+        this.env.model.load();
+    }
+
     buildSection() {
         const values = this.env.searchModel.filters[0].values;
         let sections = new Map();
@@ -103,11 +108,13 @@ export class ProductCatalogSearchPanel extends SearchPanel {
         })
     }
 
-    toggleSectionSelection(sectionId) {
+    setSelectedSection(sectionId, highlightOnly) {
         const section = this.state.sectionOfSections.get(sectionId);
         if (section) {
             this.env.model.config.context.selected_section = {
-                name: section.name, sequence: section.sequence
+                name: section.name,
+                sequence: section.sequence,
+                highlightOnly,
             };
         }
         this.env.model.load();
