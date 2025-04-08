@@ -1284,3 +1284,33 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(len(credit_note.invoice_line_ids), 2)
         # so the credit note cannot be considered a reversal of the invoice
         self.assertFalse(credit_note.reversed_entry_id)
+
+    def test_refund_salesteam(self):
+        """Check that salesperson & sales team doesn't change when creating a refund."""
+        salesperson = self.user
+        team1, team2 = self.env['crm.team'].create([
+            {'name': "Team 1", 'member_ids': [Command.link(salesperson.id)]},
+            {'name': "Team 2"},
+        ])
+        self.assertEqual(salesperson.sale_team_id, team1)
+        self.sale_order.write({
+            'user_id': salesperson,
+            'team_id': team2.id,
+            'order_line': [
+                Command.update(sol_id, {'price_unit': -10})  # negative prices to force a refund
+                for sol_id in self.sale_order.order_line.ids
+            ],
+        })
+
+        self.sale_order.action_confirm()
+        invoice = self.sale_order._create_invoices(final=True)
+
+        self.assertEqual(invoice.move_type, 'out_refund')
+        self.assertEqual(
+            invoice.invoice_user_id, salesperson,
+            "Invoice salesperson should be the same as the order's salesperson",
+        )
+        self.assertEqual(
+            invoice.team_id, team2,
+            "Invoice team should be the same as the order's team",
+        )
