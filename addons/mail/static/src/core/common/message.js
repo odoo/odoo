@@ -310,14 +310,11 @@ export class Message extends Component {
     }
 
     get isPersistentMessageFromAnotherThread() {
-        return !this.isOriginThread && !this.message.is_transient && this.message.thread;
-    }
-
-    get isOriginThread() {
-        if (!this.props.thread) {
-            return false;
-        }
-        return this.props.thread.eq(this.message.thread);
+        return (
+            !this.message.is_transient &&
+            this.message.thread &&
+            this.message.thread.notEq(this.props.thread)
+        );
     }
 
     get translatedFromText() {
