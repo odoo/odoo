@@ -599,6 +599,9 @@ class SaleOrder(models.Model):
         self.ensure_one()
         command_list = []
         for vals, line in zip(reward_vals, old_lines):
+            # We don't want to change the name(description) of the line if it's the same line we're updating
+            if vals['product_id'] == line.product_id.id:
+                vals['name'] = line.name
             command_list.append((Command.UPDATE, line.id, vals))
         if len(reward_vals) > len(old_lines):
             command_list.extend((Command.CREATE, 0, vals) for vals in reward_vals[len(old_lines):])
