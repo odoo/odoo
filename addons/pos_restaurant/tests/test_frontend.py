@@ -117,7 +117,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             company_id=main_company.id,
         )
 
-        cls.env['product.product'].create({
+        cls.coca_cola_test = cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Coca-Cola',
@@ -126,7 +126,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'taxes_id': [(6, 0, [])],
         })
 
-        cls.env['product.product'].create({
+        cls.water_test = cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Water',
@@ -135,7 +135,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'taxes_id': [(6, 0, [])],
         })
 
-        cls.env['product.product'].create({
+        cls.minute_maid_test = cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Minute Maid',

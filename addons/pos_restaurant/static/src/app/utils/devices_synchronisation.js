@@ -36,15 +36,11 @@ patch(DevicesSynchronisation.prototype, {
 
                 const uniqOrder = syncedOrder.pop();
                 for (const order of [...localOrders, ...syncedOrder]) {
-                    let watcher = 0;
-                    while (order.lines.length > 0) {
-                        if (watcher > 1000) {
-                            break;
-                        }
-
-                        const line = order.lines.pop();
-                        line.update({ order_id: uniqOrder });
-                        watcher++;
+                    const linesIds = order.lines.map((line) => line.id);
+                    for (const id of linesIds) {
+                        order.models["pos.order.line"].get(id).update({
+                            order_id: uniqOrder,
+                        });
                     }
                 }
 
@@ -57,8 +53,7 @@ patch(DevicesSynchronisation.prototype, {
                     this.pos.addPendingOrder([uniqOrder.id]);
                 }
 
-                this.pos.deleteOrders(syncedOrder);
-                this.pos.models["pos.order"].deleteMany(localOrders);
+                this.pos.deleteOrders([...syncedOrder, ...localOrders]);
             }
         }
     },
