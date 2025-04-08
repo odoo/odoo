@@ -5488,6 +5488,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         report_action = self.action_send_and_print()
+        report_action['context'].update({'allow_partners_without_mail': True})
         if self.env.is_admin() and not self.env.company.external_report_layout_id and not self.env.context.get('discard_logo_check'):
             report_action = self.env['ir.actions.report']._action_configure_external_report_layout(report_action, "account.action_base_document_layout_configurator")
             report_action['context']['default_from_invoice'] = self.move_type == 'out_invoice'

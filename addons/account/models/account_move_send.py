@@ -183,7 +183,7 @@ class AccountMoveSend(models.AbstractModel):
             partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
             partner_ids = mail_template._parse_partner_to(partner_to)
             partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
-        return partners.filtered('email')
+        return partners if self.env.context.get('allow_partners_without_mail') else partners.filtered('email')
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS

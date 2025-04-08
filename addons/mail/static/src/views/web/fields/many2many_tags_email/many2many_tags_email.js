@@ -87,7 +87,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
      */
     getTagProps(record) {
         return {...super.getTagProps(record),
-            text: record.data.name,
+            text: record.data.name || record.data.email || _t("Unnamed"),
             onClick: (ev) => this.onTagClick(ev, record),
         };
     }
