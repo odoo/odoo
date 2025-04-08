@@ -21,6 +21,9 @@ class HrEmployee(models.Model):
     def _load_pos_data_fields(self, config_id):
         return ['name', 'user_id', 'work_contact_id']
 
+    def _server_date_to_domain(self, domain):
+        return domain
+
     def _post_read_pos_data(self, data):
         employee_ids = [employee['id'] for employee in data]
         employees = self.browse(employee_ids)
