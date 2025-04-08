@@ -46,6 +46,7 @@ import { PowerboxPlugin } from "./main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "./main/powerbox/search_powerbox_plugin";
 import { SignaturePlugin } from "./main/signature_plugin";
 import { StarPlugin } from "./main/star_plugin";
+import { TableAlignPlugin } from "./main/table/table_align_plugin";
 import { TablePlugin } from "./main/table/table_plugin";
 import { TableResizePlugin } from "./main/table/table_resize_plugin";
 import { TableUIPlugin } from "./main/table/table_ui_plugin";
@@ -145,6 +146,7 @@ export const MAIN_PLUGINS = [
     SignaturePlugin,
     StarPlugin,
     TablePlugin,
+    TableAlignPlugin,
     TableUIPlugin,
     TabulationPlugin,
     ToolbarPlugin,

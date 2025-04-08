@@ -241,6 +241,18 @@ export function alignRight(editor) {
 export function justify(editor) {
     execCommand(editor, "justify");
 }
+/** @param {Editor} editor */
+export function alignTop(editor) {
+    execCommand(editor, "alignTop");
+}
+/** @param {Editor} editor */
+export function alignMiddle(editor) {
+    execCommand(editor, "alignMiddle");
+}
+/** @param {Editor} editor */
+export function alignBottom(editor) {
+    execCommand(editor, "alignBottom");
+}
 
 /**
  * @param {string} color
