@@ -28,7 +28,7 @@
                 <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
             </xpath>
-            <xpath expr="//field[@name='partner_id']" position="after">
+            <xpath expr="//div[@name='repeat_intervals']" position="after">
                 <field name="encode_uom_in_days" invisible="1"/>
                 <field name="subtask_count" invisible="1"/>
                 <label for="allocated_hours" invisible="not allow_timesheets"/>
