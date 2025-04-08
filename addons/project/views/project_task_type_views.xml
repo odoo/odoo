@@ -99,6 +99,9 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="task_type_tree"/>
             <field name="arch" type="xml">
+                <list position="attributes">
+                    <attribute name="default_group_by">project_ids</attribute>
+                </list>
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="rating_template_id" optional="hide"/>
                 </xpath>
