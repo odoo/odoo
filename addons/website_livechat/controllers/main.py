@@ -17,7 +17,7 @@ class WebsiteLivechat(LivechatController):
         }
         return request.render('website_livechat.channel_list_page', values)
 
-    @http.route('/livechat/channel/<model("im_livechat.channel"):channel>', type='http', auth='public', website=True, sitemap=True)
+    @http.route('/livechat/channel/<model("im_livechat.channel"):channel>', type='http', auth='user', website=True, sitemap=False)
     def channel_rating(self, channel, **kw):
         # get the last 100 ratings and the repartition per grade
         domain = [

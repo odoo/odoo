@@ -181,7 +181,7 @@ class Im_LivechatChannel(models.Model):
         self.ensure_one()
         # sudo: im_livechat.channel - users can leave channels
         self.sudo().user_ids = [Command.unlink(self.env.user.id)]
-        self.env.user._bus_send_store(self, ["are_you_inside", "name"])
+        self.env.user._bus_send_store(self.sudo(), ["are_you_inside", "name"])
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
