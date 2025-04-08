@@ -40,6 +40,9 @@ export function refresh() {
             };
 
             checkTransaction();
+            setTimeout(() => {
+                throw new Error("Timeout waiting indexedDB for transactions to finish");
+            }, 2000);
         });
     }, "refresh page");
 }
