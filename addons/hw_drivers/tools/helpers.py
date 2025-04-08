@@ -376,13 +376,12 @@ def load_certificate():
 
     response = json.loads(response.data.decode('utf8'))
     error = response.get('error')
-    if error:
-        _logger.warning("An error received from odoo.com while trying to get the certificate: %s", error)
-    result = json.loads(response.data.decode('utf8'))['result']
-    if not result:
+    if error or not response.get('data') or not json.loads(response.data.decode('utf8')).get('result'):
+        _logger.warning("An error received from odoo.com while trying to get the certificate: %s", error or 'Empty response')
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
     update_conf({'subject': result['subject_cn']})
+    result = json.loads(response.data.decode('utf8'))['result']
     if platform.system() == 'Linux':
         with writable():
             Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
