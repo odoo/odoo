@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 import stdnum.de.stnr
 import stdnum.exceptions
 
@@ -24,7 +24,15 @@ class ResCompany(models.Model):
             and self.env['account.move'].search_count([('company_id', 'in', german_companies.ids)], limit=1)
         ):
             raise ValidationError(_("You cannot change the fiscal country."))
+
         return super().write(vals)
+
+    @api.depends('country_code')
+    @api.constrains('restrictive_audit_trail')
+    def _check_audit_trail_records(self):
+        companies = self.filtered(lambda c: not c.restrictive_audit_trail and c.country_code == 'DE')
+        if companies:
+            raise UserError(_("Can't disable restricted audit trail : this would allow to break GoBD."))
 
     @api.depends('country_code')
     @api.constrains('state_id', 'l10n_de_stnr')
