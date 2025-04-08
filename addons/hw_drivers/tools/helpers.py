@@ -396,14 +396,19 @@ def load_certificate():
             timeout=5,
         )
         response.raise_for_status()
-        result = response.json()['result']
+        data = response.json()  # decode once
     except requests.exceptions.RequestException as e:
         _logger.exception("An error occurred while trying to reach odoo.com servers.")
         return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
-    except ValueError:
+
+    error = data.get('error')
+    result = data.get('result')
+    if error or not result:
+        _logger.warning("An error received from odoo.com while trying to get the certificate: %s", error or 'Empty response')
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
     update_conf({'subject': result['subject_cn']})
+
     if platform.system() == 'Linux':
         with writable():
             Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
