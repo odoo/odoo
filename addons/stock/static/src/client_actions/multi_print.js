@@ -26,8 +26,9 @@ async function doMultiPrint(env, action) {
         await env.services.action.doAction({ type: "ir.actions.report", ...report });
     }
     if (action.params.anotherAction) {
-        return env.services.action.doAction(action.params.anotherAction);
-    } else if (action.params.onClose) {
+        await env.services.action.doAction(action.params.anotherAction);
+    }
+    if (action.params.onClose) {
         // handle special cases such as barcode
         action.params.onClose()
     } else {
