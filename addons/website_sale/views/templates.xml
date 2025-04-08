@@ -2709,6 +2709,9 @@
         <t name="b2b_fields" position="attributes">
             <attribute name="t-if">display_b2b_fields</attribute>
         </t>
+        <t t-set="country_warning" position="attributes">
+            <attribute name="t-if">not is_anonymous_cart</attribute>
+        </t>
     </template>
 
     <!-- /shop/address route -->

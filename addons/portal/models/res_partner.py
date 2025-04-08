@@ -17,8 +17,7 @@ class ResPartner(models.Model):
             'zipcode', 'vat', 'company_name',
         }
 
-    def _can_edit_name(self):
-        """ Name can be changed more often than the VAT """
+    def can_edit_country(self):
         self.ensure_one()
         return True
 
@@ -27,7 +26,7 @@ class ResPartner(models.Model):
         entity) and the children. Only the commercial entity should be able to
         edit it (as in backend)."""
         self.ensure_one()
-        return not self.parent_id
+        return True
 
     def _can_be_edited_by_current_customer(self, **kwargs):
         """Return whether partner can be edited by current user."""

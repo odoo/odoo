@@ -223,7 +223,7 @@ class CustomerPortal(Controller):
             **address_data,
             'page_name': 'my_addresses',
             # One unique address
-            'use_delivery_as_billing': len(address_data['billing_addresses']) == 1,
+            'use_delivery_as_billing': 0,
             'address_url': '/my/address',
         }
         return request.render('portal.my_addresses', values)
@@ -243,16 +243,16 @@ class CustomerPortal(Controller):
         """
         partner_sudo = partner_sudo.with_context(show_address=1)
         commercial_partner_sudo = partner_sudo.commercial_partner_id
-        billing_partners_sudo = partner_sudo | partner_sudo.search([
+        billing_partners_sudo = partner_sudo.search([
             ('id', 'child_of', commercial_partner_sudo.ids),
             '|',
             ('type', 'in', ['invoice', 'other']),
             ('id', '=', commercial_partner_sudo.id),
-        ], order='id desc')
-        delivery_partners_sudo = partner_sudo | partner_sudo.search(
+        ], order='id desc') | partner_sudo
+        delivery_partners_sudo = partner_sudo.search(
             commercial_partner_sudo._get_delivery_address_domain(),
             order='id desc',
-        )
+        ) | partner_sudo
 
         if partner_sudo != commercial_partner_sudo:  # Child of the commercial partner.
             # Don't display the commercial partner's addresses if they are not complete, as its
@@ -531,6 +531,16 @@ class CustomerPortal(Controller):
                 partner_sudo._onchange_phone_validation()
         elif not self._are_same_addresses(address_values, partner_sudo):
             partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
+
+        # If partner is an individual, update existing company name or create a new one
+        company_name = address_values.get('company_name')
+        if company_name and not partner_sudo.is_company:
+            if partner_sudo.parent_id:
+                if partner_sudo.parent_id.name != company_name:
+                    partner_sudo.parent_id.name = company_name
+            else:
+                partner_sudo._create_company(company_name)
+
             if 'phone' in address_values and hasattr(partner_sudo, '_onchange_phone_validation'):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
@@ -615,17 +625,22 @@ class CustomerPortal(Controller):
                 and partner_sudo.name
                 and address_values['name'] != partner_sudo.name
             )
+            country_change = (
+                'country_id' in address_values
+                and partner_sudo.country_id
+                and address_values['country_id'] != partner_sudo.country_id.id
+            )
             email_change = (
                 'email' in address_values
                 and partner_sudo.email
                 and address_values['email'] != partner_sudo.email
             )
 
-            # Prevent changing the partner name if documents have been issued.
-            if name_change and not partner_sudo._can_edit_name():
-                invalid_fields.add('name')
+            # Prevent changing the partner country if documents have been issued.
+            if country_change and not partner_sudo.can_edit_country():
+                invalid_fields.add('country_id')
                 error_messages.append(_(
-                    "Changing your name is not allowed once document(s) have been issued for your"
+                    "Changing your country is not allowed once document(s) have been issued for your"
                     " account. Please contact us directly for this operation."
                 ))
 
@@ -667,10 +682,6 @@ class CustomerPortal(Controller):
                             ))
                     else:
                         address_values.pop(commercial_field_name, None)
-
-                # Company name shouldn't be updated on a child address, even if it's not in the
-                # fields returned by _commercial_fields.
-                address_values.pop('company_name', None)
 
             # Prevent changing the VAT number on a commercial partner if documents have been issued.
             elif (
