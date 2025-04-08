@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -16,7 +17,7 @@ class HrDepartment(models.Model):
     _parent_store = True
 
     name = fields.Char('Department Name', required=True, translate=True)
-    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, search='_search_complete_name')
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True, check_company=True)
@@ -49,6 +50,28 @@ class HrDepartment(models.Model):
             return [(1, "=", 1)]
         departments_ids = self.env['hr.department'].sudo().search([('manager_id', 'in', self.env.user.employee_ids.ids)]).ids
         return [('id', 'child_of', departments_ids)]
+
+    def _search_complete_name(self, operator, value):
+        supported_operators = ["=", "!=", "ilike", "not ilike", "in", "not in", "=ilike"]
+        if operator not in supported_operators or not isinstance(value, (str, list)):
+            raise NotImplementedError(_('Operation not Supported.'))
+        department = self.env['hr.department'].search([])
+        if operator == '=':
+            department = department.filtered(lambda m: m.complete_name == value)
+        elif operator == '!=':
+            department = department.filtered(lambda m: m.complete_name != value)
+        elif operator == 'ilike':
+            department = department.filtered(lambda m: value.lower() in m.complete_name.lower())
+        elif operator == 'not ilike':
+            department = department.filtered(lambda m: value.lower() not in m.complete_name.lower())
+        elif operator == 'in':
+            department = department.filtered(lambda m: m.complete_name in value)
+        elif operator == 'not in':
+            department = department.filtered(lambda m: m.complete_name not in value)
+        elif operator == '=ilike':
+            pattern = re.compile(re.escape(value).replace('%', '.*').replace('_', '.'), flags=re.IGNORECASE)
+            department = department.filtered(lambda m: pattern.fullmatch(m.complete_name))
+        return [('id', 'in', department.ids)]
 
     @api.model
     def name_create(self, name):
