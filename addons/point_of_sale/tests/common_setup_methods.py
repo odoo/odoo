@@ -299,3 +299,98 @@ def setup_pos_combo_items(self):
             ],
         }
     )
+<<<<<<< d3f7c93acb12f67e23b93f49df7f29531598759c
+||||||| f65f9934fec9f6583756d1aa7ab967c8c54e8260
+
+    #Create Combo with custom attribute
+    custom_attribute = self.env['product.attribute'].create({
+        'name': 'Custom Attribute',
+        'display_type': 'radio',
+        'create_variant': 'no_variant',
+        'value_ids': [
+                Command.create({'name': 'Custom Value', 'is_custom': True}),
+        ]
+    })
+
+    self.product_tmpl_with_custom_attr = self.env["product.template"].create(
+        {
+            "name": "Custom Attr Product",
+            "available_in_pos": True,
+            "attribute_line_ids": [
+                Command.create({
+                    'attribute_id': custom_attribute.id,
+                    'value_ids': [Command.set(custom_attribute.value_ids.ids)],
+                })
+            ],
+        }
+    )
+
+    custom_combo_line = self.env["pos.combo.line"].create(
+        {
+            "product_id": self.product_tmpl_with_custom_attr.product_variant_id.id,
+            "combo_price": 100,
+        }
+    )
+
+    custom_combo = self.env["pos.combo"].create({
+        "name": "Attr Combo",
+        "combo_line_ids": custom_combo_line.ids,
+    })
+
+    self.combo_product_with_custom_attr = self.env["product.product"].create(
+        {
+            "available_in_pos": True,
+            "list_price": 40,
+            "name": "Custom Attr Combo",
+            "type": "combo",
+            "categ_id": self.env.ref("product.product_category_2").id,
+            "combo_ids": custom_combo.ids,
+        }
+    )
+=======
+
+    #Create Combo with custom attribute
+    custom_attribute = self.env['product.attribute'].create({
+        'name': 'Custom Attribute',
+        'display_type': 'radio',
+        'create_variant': 'no_variant',
+        'value_ids': [
+                Command.create({'name': 'Custom Value', 'is_custom': True}),
+        ]
+    })
+
+    self.product_tmpl_with_custom_attr = self.env["product.template"].create(
+        {
+            "name": "Custom Attr Product",
+            "available_in_pos": True,
+            "attribute_line_ids": [
+                Command.create({
+                    'attribute_id': custom_attribute.id,
+                    'value_ids': [Command.set(custom_attribute.value_ids.ids)],
+                })
+            ],
+        }
+    )
+
+    custom_combo_line = self.env["pos.combo.line"].create(
+        {
+            "product_id": self.product_tmpl_with_custom_attr.product_variant_id.id,
+            "combo_price": 100,
+        }
+    )
+
+    custom_combo = self.env["pos.combo"].create({
+        "name": "Attr Combo",
+        "combo_line_ids": custom_combo_line.ids,
+    })
+
+    self.combo_product_with_custom_attr = self.env["product.product"].create(
+        {
+            "available_in_pos": True,
+            "list_price": 40,
+            "name": "Custom Attr Combo",
+            "type": "combo",
+            "combo_ids": custom_combo.ids,
+        }
+    )
+>>>>>>> b40dc54c03eb280d189c589ad464814ec3a197fa
