@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { AddProductOption } from "./add_product_option";
+import { VerticalAlignmentOption } from "../vertical_alignment_option";
 
 class PriceListCafePlugin extends Plugin {
     static id = "priceList";
@@ -18,7 +19,7 @@ class PriceListCafePlugin extends Plugin {
             }),
             withSequence(6, {
                 selector: ".s_pricelist_cafe",
-                template: "html_builder.VerticalAlignmentOption",
+                OptionComponent: VerticalAlignmentOption,
                 applyTo: ".row:has(.s_pricelist_cafe_col)",
             }),
             withSequence(5, {

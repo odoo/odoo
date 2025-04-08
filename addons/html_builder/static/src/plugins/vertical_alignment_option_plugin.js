@@ -1,14 +1,20 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { classAction } from "../core/core_builder_action_plugin";
+import { VerticalAlignmentOption } from "./vertical_alignment_option";
 
-class AlignmentOptionPlugin extends Plugin {
-    static id = "alignmentOption";
+class VerticalAlignmentOptionPlugin extends Plugin {
+    static id = "verticalAlignmentOption";
     resources = {
         builder_options: [
             {
-                template: "html_builder.AlignmentOption",
-                selector: ".s_share, .s_text_highlight, .s_social_media",
+                OptionComponent: VerticalAlignmentOption,
+                selector:
+                    ".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image",
+                applyTo: ".row",
+                props: {
+                    level: 1,
+                },
             },
         ],
         builder_actions: this.getActions(),
@@ -33,4 +39,6 @@ class AlignmentOptionPlugin extends Plugin {
         };
     }
 }
-registry.category("website-plugins").add(AlignmentOptionPlugin.id, AlignmentOptionPlugin);
+registry
+    .category("website-plugins")
+    .add(VerticalAlignmentOptionPlugin.id, VerticalAlignmentOptionPlugin);
