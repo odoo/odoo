@@ -176,7 +176,7 @@ def retrying(func, env):
                         if exc.diag.table_name == rclass._table:
                             model = env[rclass._name]
                             break
-                    message = env._("The operation cannot be completed: %s", model._sql_error_to_message(exc))
+                    message = env._("The operation cannot be completed: %s", model.sudo()._sql_error_to_message(exc))
                     raise ValidationError(message) from exc
                 if not isinstance(exc, PG_CONCURRENCY_EXCEPTIONS_TO_RETRY):
                     raise
