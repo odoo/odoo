@@ -7,7 +7,7 @@ from odoo.addons.mail.controllers import thread
 
 class ThreadController(thread.ThreadController):
     def _filter_message_post_partners(self, thread, partners):
-        if thread._name == "project.task":
+        if thread._name == "project.task" and not self.env.user._is_internal():
             domain = [
                 ("res_model", "=", "project.task"),
                 ("res_id", "=", thread.id),
