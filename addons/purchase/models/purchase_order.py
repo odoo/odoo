@@ -334,6 +334,16 @@ class PurchaseOrder(models.Model):
 
         return {order_id: set(duplicate_ids) for order_id, duplicate_ids in result}
 
+    def action_open_business_doc(self):
+        self.ensure_one()
+        return {
+            'name': _("Order"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'res_id': self.id,
+            'views': [(False, 'form')],
+        }
+
     @api.onchange('date_planned')
     def onchange_date_planned(self):
         if self.date_planned:
