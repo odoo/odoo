@@ -8,6 +8,21 @@
         <field name="hidden" eval="True"/>
         <field name="description">Task Created</field>
     </record>
+    <record id="mt_subtask_new" model="mail.message.subtype">
+        <field name="name">Subtask Created</field>
+        <field name="res_model">project.task</field>
+        <field name="internal" eval="True"/>
+        <field name="hidden" eval="True"/>
+        <field name="default" eval="True"/>
+        <field name="description">Sub-task has been created</field>
+    </record>
+    <record id="mt_task_subtasks" model="mail.message.subtype">
+        <field name="name">Sub-tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="internal" eval="True"/>
+        <field name="parent_id" ref="mt_subtask_new"/>
+        <field name="relation_field">parent_id</field>
+    </record>
     <record id="mt_task_stage" model="mail.message.subtype">
         <field name="name">Stage Changed</field>
         <field name="res_model">project.task</field>
