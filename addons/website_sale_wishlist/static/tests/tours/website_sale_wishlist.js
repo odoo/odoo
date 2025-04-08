@@ -25,11 +25,6 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
-            content: "go back to the store",
-            trigger: "a[href='/shop']",
-            run: "click",
-        },
-        {
             content: "hover card && click on add to wishlist",
             trigger: ".o_wsale_product_grid_wrapper:contains(desk)",
             run: "hover && click .o_add_wishlist",
@@ -436,11 +431,6 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Remove the product from the wishlist",
             trigger: '.o_wish_rm',
-            run: "click",
-        },
-        {
-            content: "Go to '/shop",
-            trigger: 'header#top a[href="/shop"]',
             run: "click",
         },
         {
