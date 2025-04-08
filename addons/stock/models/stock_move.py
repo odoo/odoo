@@ -2431,6 +2431,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 ),
             ),
             'readOnly': len(self) > 1,
+            'uomDisplayName': len(self) == 1 and self.product_uom.display_name or self.product_id.uom_id.display_name,
         }
 
     def _visible_quantity(self):

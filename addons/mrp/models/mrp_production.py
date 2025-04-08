@@ -2943,6 +2943,9 @@ class MrpProduction(models.Model):
             'product_uom_qty': quantity,
         }
 
+    def _get_display_stock_in_catalog(self):
+        return True
+
     def _post_run_manufacture(self, post_production_values):
         note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for production in self:

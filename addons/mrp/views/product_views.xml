@@ -58,18 +58,6 @@
             </field>
         </record>
 
-        <record id="product_view_kanban_catalog_mrp_bom_only" model="ir.ui.view">
-            <field name="name">product.view.kanban.catalog.mrp.bom</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="stock.product_view_kanban_catalog"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <div name="o_kanban_qty_available_and_on_hand" position="attributes">
-                    <attribute name="class">d-none</attribute>
-                </div>
-            </field>
-        </record>
-
         <record id="product_view_search_catalog" model="ir.ui.view">
             <field name="name">product.view.search.catalog.inherit.mrp</field>
             <field name="inherit_id" ref="product.product_view_search_catalog"/>

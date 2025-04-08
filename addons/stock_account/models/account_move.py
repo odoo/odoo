@@ -70,12 +70,6 @@ class AccountMove(models.Model):
         self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
         return res
 
-    def action_add_from_catalog(self):
-        res = super().action_add_from_catalog()
-        kanban_view_id = self.env.ref('stock_account.product_view_kanban_catalog_account_only').id
-        res['views'][0] = (kanban_view_id, 'kanban')
-        return res
-
     # -------------------------------------------------------------------------
     # COGS METHODS
     # -------------------------------------------------------------------------

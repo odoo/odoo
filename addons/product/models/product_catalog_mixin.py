@@ -77,7 +77,7 @@ class ProductCatalogMixin(models.AbstractModel):
         return {
             product.id: {
                 'productType': product.type,
-                'uomDisplayName': product.uom_id.name,
+                'uomDisplayName': product.uom_id.display_name,
                 'code': product.code if product.code else '',
             }
             for product in products
@@ -109,9 +109,8 @@ class ProductCatalogMixin(models.AbstractModel):
                 parent_record=self, **kwargs
             )
             order_line_info[product.id] = {
-               **line_data,
+               **record_lines._get_product_catalog_lines_data(parent_record=self, **kwargs),
                'productType': product.type,
-                **({'uomDisplayName': product.uom_id.name} if 'uomDisplayName' not in line_data else {}),
                'code': product.code if product.code else '',
             }
             product_ids.remove(product.id)
