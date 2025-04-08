@@ -36,10 +36,7 @@ class TestMailingContactToList(MassMailCommon):
         wizard = wizard_form.save()
         action = wizard.action_add_contacts()
         self.assertEqual(contacts.list_ids, mailing)
-        self.assertEqual(action["type"], "ir.actions.client")
-        self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
-        subaction = action["params"]["next"]
-        self.assertEqual(subaction["type"], "ir.actions.act_window_close")
+        self.assertEqual(action["type"], "ir.actions.act_window")
 
         # set mailing list, add contacts and redirect to mailing view
         mailing2 = self.env['mailing.list'].create({
@@ -50,11 +47,8 @@ class TestMailingContactToList(MassMailCommon):
         wizard = wizard_form.save()
         action = wizard.action_add_contacts_and_send_mailing()
         self.assertEqual(contacts.list_ids, mailing + mailing2)
-        self.assertEqual(action["type"], "ir.actions.client")
-        self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
-        subaction = action["params"]["next"]
-        self.assertEqual(subaction["type"], "ir.actions.act_window")
-        self.assertEqual(subaction["context"]["default_contact_list_ids"], [mailing2.id])
+        self.assertEqual(action["type"], "ir.actions.act_window")
+        self.assertEqual(action["context"]["default_contact_list_ids"], [mailing2.id])
 
 
 @tagged('mailing_list')
@@ -146,51 +140,104 @@ class TestMailingListMerge(MassMailCommon):
 
     @users('user_marketing')
     def test_mailing_list_merge(self):
-        # TEST CASE: Merge A,B into the existing mailing list C
-        # The mailing list C contains the same email address than 'Norbert' in list B
-        # This test ensure that the mailing lists are correctly merged and no
-        # duplicates are appearing in C
-        merge_form = Form(self.env['mailing.list.merge'].with_context(
-            active_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
-            active_model='mailing.list'
-        ))
-        merge_form.new_list_name = False
-        merge_form.merge_options = 'existing'
-        # Need to set `merge_options` before `dest_lid_id` so `dest_list_id` is visible
-        # `'invisible': [('merge_options', '=', 'new')]`
-        merge_form.dest_list_id = self.mailing_list_3
-        merge_form.archive_src_lists = False
-        result_list = merge_form.save().action_mailing_lists_merge()
+        """Check that merging correctly picks the destination, avoids duplicates and propagates opt-out."""
+        unrelated_mailing_list = self.env['mailing.list'].create({'name': 'Unrelated List'})
+        mailing_src, mailing_dst, mailing_src_done = self.env['mailing.mailing'].create([
+            {
+                'contact_list_ids': (self.mailing_list_1 + unrelated_mailing_list).ids,
+                'state': 'draft',
+                'subject': 'Mailing Draft Source List'
+            }, {
+                'contact_list_ids': self.mailing_list_2.ids,
+                'state': 'draft',
+                'subject': 'Mailing Draft Destination List'
+            }, {
+                'contact_list_ids': self.mailing_list_1.ids,
+                'state': 'done',
+                'subject': 'Mailing Done Source List'
+            }
+        ])
+        contacts = self.env['mailing.contact'].create([
+            {
+                'name': f'Test {n}',
+                'email': f'test{n}@test.lan',
+            }
+        for n in range(21)])
+        contacts[0].email = 'same.contact@test.lan'  # same contact in both lists, should not be unlinked
+        contacts[1:4].email = 'inter.list.duplicate@test.lan'
+        inter_list_duplicates = contacts[1:4]
+        contacts[4:8].email = 'src.list.duplicate@test.lan'
+        src_list_duplicates = contacts[4:8]
+        contacts[8:10].email = 'dst.list.duplicate@test.lan'
+        dst_list_duplicates = contacts[8:10]
+        different_contacts = contacts[10:]
+        self.mailing_list_1.contact_ids = contacts[0] + inter_list_duplicates[:2] + src_list_duplicates + different_contacts[:3]
+        self.mailing_list_2.contact_ids = contacts[0] + inter_list_duplicates[2] + dst_list_duplicates + different_contacts[3:]
+        unrelated_mailing_list.contact_ids = inter_list_duplicates[1]
+        contacts.invalidate_recordset(['subscription_ids'])
+        optouts = contacts.browse([
+            inter_list_duplicates[0].id, # opt-out in source list and already present in destination -> does not update destination
+            src_list_duplicates[0].id, # opt-out duplicated multiple times in the source
+            dst_list_duplicates[0].id, # opt-out duplicated multiple times in the destination 
+            different_contacts[0].id, # opt-out in source not present in destination
+            different_contacts[-1].id, # opt-out in destination not present in source
+        ])
+        optouts.subscription_ids.opt_out = True
+        expected_optouts = optouts[1:] # duplicate in the destination list keeps the opt_out status of the destination
+        # src_list_duplicates: 0 is moved, all remaining duplicates are unlinked
+        # inter_list_duplicates: 2 in the right list, 1 is in another list so is kept, 0 is in no list except the source so is unlinked 
+        expected_unlinked_contacts = inter_list_duplicates[0] + src_list_duplicates[1:]
 
-        # Assert the number of contacts is correct
         self.assertEqual(
-            len(result_list.contact_ids.ids), 5,
-            'The number of contacts on the mailing list C is not equal to 5')
-
-        # Assert there's no duplicated email address
+            len(list(set(self.mailing_list_2.contact_ids.mapped('email')))),
+            len(self.mailing_list_2.contact_ids.mapped('email')) - 1,
+            "There should be exactly 2 duplicate email pairs in the destination",
+        )
         self.assertEqual(
-            len(list(set(result_list.contact_ids.mapped('email')))), 5,
-            'Duplicates have been merged into the destination mailing list. Check %s' % (result_list.contact_ids.mapped('email')))
+            len(self.mailing_list_2.subscription_ids.filtered('opt_out')),
+            2,
+        )
 
-    @users('user_marketing')
-    def test_mailing_list_merge_cornercase(self):
-        """ Check wrong use of merge wizard """
-        with self.assertRaises(exceptions.UserError):
-            merge_form = Form(self.env['mailing.list.merge'].with_context(
-                active_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
-            ))
+        original_mailing_list_2_members = self.mailing_list_2.contact_ids
+        result_list = (self.mailing_list_1 + self.mailing_list_2).action_mailing_lists_merge()
 
-        merge_form = Form(self.env['mailing.list.merge'].with_context(
-            active_ids=[self.mailing_list_1.id],
-            active_model='mailing.list',
-            default_src_list_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
-            default_dest_list_id=self.mailing_list_3.id,
-            default_merge_options='existing',
-        ))
-        merge = merge_form.save()
-        self.assertEqual(merge.src_list_ids, self.mailing_list_1 + self.mailing_list_2)
-        self.assertEqual(merge.dest_list_id, self.mailing_list_3)
+        self.assertEqual(
+            result_list['res_id'], self.mailing_list_2.id,
+            'The destination should be the one with the most recipients or most mailings and finally the oldest'
+        )
 
+        self.assertEqual(
+            len(self.mailing_list_2.contact_ids), len(original_mailing_list_2_members) + 4,
+            'Should be 4 new contacts in the mailing list'
+        )
+        self.assertTrue(self.mailing_list_2.active)
+        self.assertFalse(self.mailing_list_1.contact_ids, 'Source mailing list should be empty')
+        self.assertFalse(self.mailing_list_1.active)
+
+        self.assertEqual(
+            len(list(set(self.mailing_list_2.contact_ids.mapped('email')))),
+            len(self.mailing_list_2.contact_ids.mapped('email')) - 1,
+            'There should be no new duplicate in the contact info of the contacts',
+        )
+        self.assertEqual(
+            set(self.mailing_list_2.subscription_ids.filtered('opt_out').contact_id.mapped('email')),
+            set(expected_optouts.mapped('email')),
+            (
+                'Should be 1 opt-out from the original list, 2 opt-outs from the merged list.'
+                'Contacts that were already in the destination and not opted-out should remain not opted-out.'
+            )
+        )
+
+        self.assertEqual(
+            contacts - contacts.exists(), expected_unlinked_contacts,
+            'Remaining duplicates in source lists should be deleted'
+        )
+        
+        self.assertEqual(mailing_src.contact_list_ids, self.mailing_list_2 + unrelated_mailing_list,
+            'Draft mailings should see merged lists replaced with the target of the merge.')
+        self.assertEqual(mailing_src_done.contact_list_ids, self.mailing_list_1)
+        self.assertEqual(mailing_dst.contact_list_ids, self.mailing_list_2,
+            'Done mailings should see their lists untouched regardless of merge result.')
 
 @tagged('mailing_list')
 class TestMailingContactImport(MassMailCommon):

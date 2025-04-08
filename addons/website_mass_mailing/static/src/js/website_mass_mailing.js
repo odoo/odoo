@@ -48,6 +48,11 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      */
     destroy() {
         this._updateView({is_subscriber: false});
+        if (this.missingListWarning) {
+            this.missingListWarning.remove();
+            this.missingListWarning = null;
+        }
+        this.$target[0].classList.remove('s_newsletter_subscription_checked');
         this._super.apply(this, arguments);
     },
 
@@ -62,6 +67,11 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      * @param {Object} data
      */
     _updateView(data) {
+        if (data.warn_missing_list) {
+            this.missingListWarning = this._displayListDoesNotExist();
+        }
+        this.$target[0].classList.add('s_newsletter_subscription_checked');
+
         this._updateSubscribeControlsStatus(!!data.is_subscriber);
 
         // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
@@ -98,6 +108,29 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         // the ID of the inner form snippet. We should make it more consistent:
         // probably always relying on the inner form list-id? (upgrade...)
         return this.el.closest('section[data-list-id]')?.dataset.listId || this.el.dataset.listId;
+    },
+
+    /**
+     * Build an error message dynamically and add it to the snippet
+     * (snippets are static after creation, t-if is not an option)
+     *
+     * @returns {HTMLElement} the warning div
+     */
+    _displayListDoesNotExist() {
+        const insertedDiv = new DOMParser()
+            .parseFromString(
+                `<div class="alert alert-warning text-center mb-2">
+                    <span class="fa fa-exclamation-triangle mx-1"/><p class="m-0"></p><p class="m-0"></p>
+                </div>`,
+                "text/html"
+            )
+            .querySelector("div.alert");
+        insertedDiv.querySelectorAll("p")[0].innerText = _t(
+            "This block is not linked to an active Newsletter."
+        );
+        insertedDiv.querySelectorAll("p")[1].innerText = _t("Pick one or remove this block.");
+        this.$target[0].insertBefore(insertedDiv, this.$target[0].firstChild);
+        return insertedDiv;
     },
 
     //--------------------------------------------------------------------------

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from ast import literal_eval
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
@@ -171,7 +170,7 @@ class MailingContact(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_contact_to_list_action")
         action['view_mode'] = 'form'
         action['target'] = 'new'
-        action['context'] = ctx
+        action['context'] = literal_eval(action.get('context', '{}')) | ctx
 
         return action
 
