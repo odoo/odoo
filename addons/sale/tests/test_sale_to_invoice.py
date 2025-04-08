@@ -838,7 +838,7 @@ class TestSaleToInvoice(TestSaleCommon):
         orders = so1 | so2 | so3
         orders.action_confirm()
         # Create the invoicing wizard and invoice all of them at once
-        wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=orders.ids, open_invoices=True).create({})
+        wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=orders.ids).create({})
         res = wiz.create_invoices()
         # Check that exactly 2 invoices are generated
         self.assertEqual(

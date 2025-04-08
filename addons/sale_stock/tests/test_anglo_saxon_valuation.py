@@ -1743,7 +1743,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         self.env['sale.advance.payment.inv'].with_context(
             active_ids=so.ids,
-            open_invoices=True
         ).sudo().create({}).create_invoices()
         credit_note = so.invoice_ids.filtered(lambda i: i.state != 'posted')
         self.assertEqual(len(credit_note), 1)
@@ -1758,7 +1757,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         backorder.button_validate()
 
         self.env['sale.advance.payment.inv'].with_context(
-            active_ids=so.ids, open_invoices=True
+            active_ids=so.ids,
         ).sudo().create({}).create_invoices()
 
         invoice = so.invoice_ids.filtered(lambda i: i.state != 'posted')
@@ -1824,7 +1823,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         backorder_delivery.move_ids.quantity = 2
         backorder_delivery.button_validate()
         self.env['sale.advance.payment.inv'].with_context(
-            active_ids=sale_order.ids, open_invoices=True
+            active_ids=sale_order.ids,
         ).sudo().create({}).create_invoices()
 
         invoice = sale_order.invoice_ids
@@ -1834,7 +1833,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         invoice.action_post()
         product.standard_price = 50
         self.env['sale.advance.payment.inv'].with_context(
-            active_ids=sale_order.ids, open_invoices=True
+            active_ids=sale_order.ids,
         ).sudo().create({}).create_invoices()
         invoice2 = sale_order.invoice_ids.filtered(lambda i: i.state != 'posted')
         invoice2.invoice_date = fields.Date.today()
