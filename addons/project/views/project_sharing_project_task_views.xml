@@ -181,7 +181,7 @@
                             <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
                             <field name="recurring_task" groups="project.group_project_recurring_tasks"/>
                             <label for="repeat_interval" invisible="not recurring_task" groups="project.group_project_recurring_tasks"/>
-                            <div invisible="not recurring_task" class="d-flex" groups="project.group_project_recurring_tasks">
+                            <div invisible="not recurring_task" class="d-flex" groups="project.group_project_recurring_tasks" name="repeat_intervals">
                                 <field name="repeat_interval" required="recurring_task"
                                        class="me-2" style="max-width: 2rem !important;" />
                                 <field name="repeat_unit" required="recurring_task"
