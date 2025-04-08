@@ -41,6 +41,34 @@ class MailRenderMixin(models.AbstractModel):
             return html
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         short_schema = base_url + '/r/'
+<<<<<<< saas-17.4
+||||||| a866bf9aa0f6fbcf244ff17e9c2ef9da89006ca6
+        for match in set(re.findall(tools.HTML_TAG_URL_REGEX, html)):
+            long_url = match[1]
+            # Make relative links absolute
+            if long_url.startswith(('/', '?', '#')):
+                long_url = base_url + long_url
+            # Don't shorten already-shortened links
+            if long_url.startswith(short_schema):
+                continue
+            # Don't shorten urls present in blacklist (aka to skip list)
+            if blacklist and any(s in long_url for s in blacklist):
+                continue
+            label = (match[3] or '').strip()
+=======
+        for match in set(re.findall(tools.HTML_TAG_URL_REGEX, html)):
+            long_url = match[1]
+            # Make relative links absolute
+            if long_url.startswith(('/', '?', '#')):
+                long_url = base_url + long_url
+            # Don't shorten already-shortened links
+            if long_url.startswith(short_schema):
+                continue
+            # Don't shorten urls present in blacklist (aka to skip list)
+            if blacklist and any(re.search(s + r'([#?/]|$)', long_url) for s in blacklist):
+                continue
+            label = (match[3] or '').strip()
+>>>>>>> f055c2b93a442be98fc25bfd4f182ebd8760ca7a
 
         root_node = lxml.html.fromstring(html)
         link_nodes, urls_and_labels = find_links_with_urls_and_labels(
@@ -79,7 +107,7 @@ class MailRenderMixin(models.AbstractModel):
                 continue
             # support blacklist items in path, like /u/
             parsed = urls.url_parse(original_url, scheme='http')
-            if blacklist and any(item in parsed.path for item in blacklist):
+            if blacklist and any(re.search(item + r'([#?/]|$)', parsed.path) for item in blacklist):
                 continue
 
             create_vals = dict(link_tracker_vals, url=unescape(original_url))
