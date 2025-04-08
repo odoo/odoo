@@ -1293,3 +1293,29 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(len(credit_note.invoice_line_ids), 2)
         # so the credit note cannot be considered a reversal of the invoice
         self.assertFalse(credit_note.reversed_entry_id)
+
+    def test_refund_salesteam(self):
+        """Check that salesperson & sales team doesn't change when creating a refund."""
+        salesperson = self.user
+        team1 = self.company_data['default_sale_team']
+        team2 = team1.copy({'name': "Team 2"})
+        team1.member_ids = salesperson
+        self.sale_order.write({
+            'user_id': salesperson,
+            'team_id': team2.id,
+        })
+
+        # Set all prices to negative values to force a refund
+        self.sale_order.order_line.price_unit = -10
+        self.sale_order.action_confirm()
+        invoice = self.sale_order._create_invoices(final=True)
+
+        self.assertEqual(invoice.move_type, 'out_refund')
+        self.assertEqual(
+            invoice.invoice_user_id, salesperson,
+            "Invoice salesperson should be the same as the order's salesperson",
+        )
+        self.assertEqual(
+            invoice.team_id, team2,
+            "Invoice team should be the same as the order's team",
+        )
