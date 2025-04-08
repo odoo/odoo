@@ -735,6 +735,14 @@ export function checkRoundingAmount(amount) {
     };
 }
 
+export function customerIs(name) {
+    return [
+        {
+            trigger: `.product-screen .set-partner:contains("${name}")`,
+        },
+    ];
+}
+
 export function checkTotalAmount(amount) {
     return {
         trigger: `.order-summary .total:contains(${amount})`,
