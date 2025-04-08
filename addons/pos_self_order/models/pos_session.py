@@ -17,9 +17,8 @@ class PosSession(models.Model):
     def _load_pos_self_data_domain(self, data):
         return [('config_id', '=', data['pos.config'][0]['id']), ('state', '=', 'opened')]
 
-    def _load_pos_data(self, data):
-        sessions = super()._load_pos_data(data)
-        sessions[0]['_self_ordering'] = (
+    def _post_read_pos_data(self, data):
+        data[0]['_self_ordering'] = (
             self.env["pos.config"]
             .sudo()
             .search_count(
@@ -32,4 +31,4 @@ class PosSession(models.Model):
             )
             > 0
         )
-        return sessions
+        return super()._post_read_pos_data(data)

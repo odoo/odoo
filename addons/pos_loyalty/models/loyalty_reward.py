@@ -28,13 +28,10 @@ class LoyaltyReward(models.Model):
                 'discount_max_amount', 'discount_line_product_id', 'reward_product_id',
                 'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id', 'reward_product_domain']
 
-    def _load_pos_data(self, data):
-        domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
-        rewards = self.search_read(domain, fields, load=False)
-        for reward in rewards:
+    def _post_read_pos_data(self, data):
+        for reward in data:
             reward['reward_product_domain'] = self._replace_ilike_with_in(reward['reward_product_domain'])
-        return rewards
+        return super()._post_read_pos_data(data)
 
     def _get_reward_product_domain_fields(self, config_id):
         fields = set()
