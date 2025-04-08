@@ -303,7 +303,6 @@ def setup_pos_combo_items(self):
             "list_price": 40,
             "name": "Custom Attr Combo",
             "type": "combo",
-            "categ_id": self.env.ref("product.product_category_2").id,
             "combo_ids": custom_combo.ids,
         }
     )
