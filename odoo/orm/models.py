@@ -6620,7 +6620,7 @@ class BaseModel(metaclass=MetaModel):
         traversing backwards field dependencies along the way, and yielding
         tuple ``(field, records, created)`` to recompute.
         """
-        cache = self.env.cache
+        cache_data = self.env.transaction.data
 
         # The fields' trigger trees are merged in order to evaluate all triggers
         # at once. For non-stored computed fields, `_modified_triggers` might
@@ -6630,7 +6630,15 @@ class BaseModel(metaclass=MetaModel):
         # This allows us to discard subtrees from the merged tree when they
         # only contain such fields.
         def select(field):
-            return (field.compute and field.store) or cache.contains_field(field)
+            if field.compute and field.store:
+                return True
+            cache = cache_data.get(field)
+            if not cache:
+                return False
+            # if field depends on context, check if any of these have values
+            if field in self.env._field_depends_context:
+                return any(cache.values())
+            return True
 
         tree = self.pool.get_trigger_tree(fields, select=select)
         if not tree:
