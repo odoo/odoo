@@ -29,6 +29,21 @@ class StockPicking(models.Model):
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
 
+    def button_validate(self):
+        res = super().button_validate()
+        for picking in self:
+            if picking.carrier_id:
+                carrier_id = picking.carrier_id.id
+                carrier_tracking_ref = picking.carrier_tracking_ref
+                next_pickings = picking._get_next_transfers()
+                while next_pickings:
+                    next_pickings.filtered(lambda p: any(rule.propagate_carrier for rule in p.move_ids.rule_id)).write({
+                        'carrier_id': carrier_id,
+                        'carrier_tracking_ref': carrier_tracking_ref
+                    })
+                    next_pickings = next_pickings._get_next_transfers()
+        return res
+
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
         for picking in self:
