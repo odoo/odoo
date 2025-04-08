@@ -1,45 +1,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    payment_onboarding_payment_method = fields.Selection(
-        string="Selected onboarding payment method",
-        selection=[('razorpay', "Razorpay"), ('stripe', "Stripe")],
-        compute="_compute_payment_onboarding_payment_method",
-        store=True,
-    )
-
-    @api.depends('country_id', 'currency_id')
-    def _compute_payment_onboarding_payment_method(self):
-        for company in self:
-            if company.currency_id.name == 'INR':
-                company.payment_onboarding_payment_method = 'razorpay'
-            elif company.country_id.is_stripe_supported_country:
-                company.payment_onboarding_payment_method = 'stripe'
-            else:
-                company.payment_onboarding_payment_method = False
-
-    def _run_payment_onboarding_step(self, menu_id=None):
+    def _run_payment_onboarding_step(self, provider_code, menu_id=None):
         """ Install the suggested payment modules and configure the providers.
 
         It's checked that the current company has a Chart of Account.
 
         :param int menu_id: The menu from which the user started the onboarding step, as an
                             `ir.ui.menu` id
-        :return: The action returned by `action_stripe_connect_account` or
-                 `action_razorpay_redirect_to_oauth_url`
+        :param str provider_code: The code of provider for which the onboarding step is started.
+        :return: The action returned by `_run_onboarding_action`
         :rtype: dict
         """
         self.env.company.get_chart_of_accounts_or_fail()
-
-        if not self.payment_onboarding_payment_method:
-            return {}
-
-        provider_code = self.payment_onboarding_payment_method
 
         self._install_modules([f'payment_{provider_code}'])
 
@@ -49,7 +27,7 @@ class ResCompany(models.Model):
         # Configure Provider
         provider = new_env['payment.provider'].search([
             *self.env['payment.provider']._check_company_domain(self.env.company),
-            ('code', '=', provider_code)
+            ('code', '=', provider_code),
         ], limit=1)
         if not provider:
             base_provider = self.env.ref(f'payment.payment_provider_{provider_code}')
@@ -58,11 +36,7 @@ class ResCompany(models.Model):
                 provider_onboarding=True,
             ).copy(default={'company_id': self.env.company.id})
 
-        return (
-            provider.action_razorpay_redirect_to_oauth_url()
-            if provider_code == 'razorpay'
-            else provider.action_stripe_connect_account(menu_id=menu_id)
-        )
+        return provider._run_onboarding_action(menu_id=menu_id)
 
     def _install_modules(self, module_names):
         modules_sudo = self.env['ir.module.module'].sudo().search([('name', 'in', module_names)])

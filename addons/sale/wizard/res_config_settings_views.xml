@@ -71,27 +71,25 @@
                             </div>
                             <div
                                 class="row mt8"
-                                invisible="not portal_confirmation_pay or
-                                    providers_state != 'none'"
+                                invisible="not portal_confirmation_pay or providers_state"
                             >
                                 <div class="oe_inline">
                                     <button
-                                        string="Activate Stripe"
                                         name="action_enable_payment_provider"
                                         type="object"
                                         class="btn-primary"
-                                        invisible="onboarding_payment_method != 'stripe'"
-                                    />
-                                    <button
-                                        string="Activate Razorpay"
-                                        name="action_enable_payment_provider"
-                                        type="object"
-                                        class="btn-primary"
-                                        invisible="onboarding_payment_method != 'razorpay'"
-                                    />
+                                        invisible="not onboarding_payment_provider"
+                                    >
+                                        Activate
+                                        <field
+                                            name="onboarding_payment_provider"
+                                            nolabel="1"
+                                            class="oe_inline"
+                                        />
+                                    </button>
                                     <div
                                         title="Stripe Connect is not available in your country, please use another payment provider."
-                                        invisible="onboarding_payment_method in ('stripe', 'razorpay')"
+                                        invisible="onboarding_payment_provider"
                                     >
                                         <button
                                             string="Activate Stripe"
@@ -101,10 +99,10 @@
                                     </div>
                                 </div>
                                 <button
-                                    name='%(payment.action_payment_provider)d'
-                                    icon="oi-arrow-right"
-                                    type="action"
                                     string="View Alternatives"
+                                    name='%(payment.action_payment_provider)d'
+                                    type="action"
+                                    icon="oi-arrow-right"
                                     class="btn-link oe_inline"
                                 />
                             </div>
@@ -114,20 +112,21 @@
                                     providers_state != 'primary_provider'"
                             >
                                 <button
-                                    name="action_configure_first_provider"
+                                    name="action_configure_primary_provider"
                                     type="object"
                                     class="btn-primary col-auto"
                                 >
+                                    Configure
                                     <field
-                                        name="primary_provider_label"
+                                        name="onboarding_payment_provider"
                                         nolabel="1"
                                         class="oe_inline"
                                     />
                                 </button>
                                 <button
-                                    type="action"
-                                    name="%(payment.action_payment_provider)d"
                                     string="View other providers"
+                                    name="%(payment.action_payment_provider)d"
+                                    type="action"
                                     class="btn-link col-auto"
                                     icon="oi-arrow-right"
                                 />

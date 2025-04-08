@@ -248,6 +248,18 @@ class PaymentProvider(models.Model):
 
         return 1.0
 
+    def _run_onboarding_action(self, **kwargs):
+        """ Override of `payment` to run the Razorpay onboarding action.
+
+        :param dict kwargs: The onboarding action's parameters.
+        :return: The action returned by `action_razorpay_redirect_to_oauth_url`.
+        :rtype: dict
+        """
+        default_action = super()._run_onboarding_action(**kwargs)
+        if self.code != 'razorpay':
+            return default_action
+        return self.action_razorpay_redirect_to_oauth_url()
+
     # === BUSINESS METHODS - OAUTH FLOW === #
 
     def _razorpay_make_proxy_request(self, endpoint, payload=None):

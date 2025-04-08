@@ -15,33 +15,30 @@
                         documentation="/applications/finance/payment_providers.html"
                     >
                         <div class="content-group">
-                            <div class="row" invisible="providers_state != 'none'">
+                            <div class="row" invisible="providers_state">
                                 <field name="providers_state" invisible="1"/>
                                 <div
                                     class="oe_inline"
-                                    invisible="onboarding_payment_method != 'stripe'"
+                                    invisible="not onboarding_payment_provider"
                                 >
                                     <button
-                                        string="Activate Stripe"
                                         name="action_activate_payment_provider"
                                         type="object"
                                         class="btn-primary"
-                                    />
+                                    >
+                                        Activate
+                                        <field
+                                            name="onboarding_payment_provider"
+                                            nolabel="1"
+                                            class="oe_inline"
+                                        />
+                                    </button>
                                 </div>
                                 <div
                                     class="oe_inline"
-                                    invisible="onboarding_payment_method != 'razorpay'"
+                                    title="Stripe Connect is not available in your country, please use another payment provider."
+                                    invisible="onboarding_payment_provider"
                                 >
-                                    <button
-                                        string="Activate Razorpay"
-                                        name="action_activate_payment_provider"
-                                        type="object"
-                                        class="btn-primary"
-                                    />
-                                </div>
-                                <div class="oe_inline"
-                                     title="Stripe Connect is not available in your country, please use another payment provider."
-                                     invisible="onboarding_payment_method in ('stripe', 'razorpay')">
                                     <button string="Activate Stripe" class="btn-primary" disabled=""/>
                                 </div>
                                 <button type="action"
@@ -52,12 +49,14 @@
                                 />
                             </div>
                             <div invisible="providers_state != 'primary_provider'">
-                                <button name="action_configure_first_provider"
-                                        type="object"
-                                        class="btn-primary col-auto"
+                                <button
+                                    name="action_configure_primary_provider"
+                                    type="object"
+                                    class="btn-primary col-auto"
                                 >
+                                    Configure
                                     <field
-                                        name="primary_provider_label"
+                                        name="onboarding_payment_provider"
                                         nolabel="1"
                                         class="oe_inline"
                                     />
