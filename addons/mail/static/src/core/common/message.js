@@ -259,6 +259,10 @@ export class Message extends Component {
         return _t("Expand");
     }
 
+    get isEditing() {
+        return this.props.message.composer;
+    }
+
     get message() {
         return this.props.message;
     }

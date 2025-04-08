@@ -10,6 +10,10 @@ patch(Message.prototype, {
         this.state.editRating = false;
     },
 
+    get isEditing() {
+        return !this.state.editRating && this.props.message.composer;
+    },
+
     get ratingValue() {
         return this.message.rating_id?.rating || this.message.rating_value;
     },
