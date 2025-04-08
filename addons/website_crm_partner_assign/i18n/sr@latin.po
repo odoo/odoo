@@ -213,8 +213,7 @@ msgid ""
 "                    <span style=\"font-size: 10px;\">Your leads</span><br>\n"
 "                </td><td valign=\"middle\" align=\"right\" t-if=\"not user."
 "company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ user.company_id."
-"id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-"
+"                    <img t-attf-src=\"/logo.png?company={{0}}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-"
 "att-alt=\"user.company_id.name\">\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
@@ -1148,12 +1147,12 @@ msgstr "Ocene"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-msgid "Rating: #{lead.priority} on 3"
+msgid "Rating: {{0}} on 3"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "Rating: #{opportunity.priority} on 4"
+msgid "Rating: {{0}} on 4"
 msgstr ""
 
 #. module: website_crm_partner_assign
