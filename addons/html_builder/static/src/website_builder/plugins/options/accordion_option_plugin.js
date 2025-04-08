@@ -38,13 +38,15 @@ class accordionOptionPlugin extends Plugin {
                     });
                     return selectedIconClass;
                 },
-                apply: ({ editingElement, param, loadResult }) => {
+                apply: ({ editingElement, param, loadResult: customClass }) => {
+                    if (!customClass) {
+                        return;
+                    }
                     const isActiveIcon = param.isActiveIcon;
                     const media = document.createElement("i");
                     media.className = isActiveIcon
                         ? editingElement.dataset.activeCustomIcon
                         : editingElement.dataset.inactiveCustomIcon;
-                    const customClass = loadResult;
                     const activeIconsEls =
                         editingElement.querySelectorAll(".o_custom_icon_active i");
                     const inactiveIconsEls = editingElement.querySelectorAll(
