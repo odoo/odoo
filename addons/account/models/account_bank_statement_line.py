@@ -428,7 +428,7 @@ class AccountBankStatementLine(models.Model):
 
     def unlink(self):
         # OVERRIDE to unlink the inherited account.move (move_id field) as well.
-        tracked_lines = self.filtered(lambda stl: stl.company_id.check_account_audit_trail)
+        tracked_lines = self.filtered(lambda stl: stl.company_id.restrictive_audit_trail)
         tracked_lines.move_id.button_cancel()
         moves_to_delete = (self - tracked_lines).move_id
         res = super().unlink()

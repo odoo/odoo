@@ -3523,13 +3523,13 @@ class AccountMove(models.Model):
         return self.filtered(lambda move: move.name != '/')._is_end_of_seq_chain()
 
     def _get_unlink_logger_message(self):
-        """ Before unlink, get a log message for audit trail if it's enabled.
+        """ Before unlink, get a log message for audit trail if restricted.
         Logger is added here because in api ondelete, account.move.line is deleted, and we can't get total amount """
         if not self._context.get('force_delete'):
             pass
 
         moves_details = []
-        for move in self.filtered(lambda m: m.posted_before and m.company_id.check_account_audit_trail):
+        for move in self.filtered(lambda m: m.posted_before and m.company_id.restrictive_audit_trail):
             entry_details = f"{move.name} ({move.id}) amount {move.amount_total} {move.currency_id.name} and partner {move.partner_id.display_name}"
             account_balances_per_account = defaultdict(float)
             for line in move.line_ids:
@@ -3570,11 +3570,11 @@ class AccountMove(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_account_audit_trail_except_once_post(self):
         if not self._context.get('force_delete') and any(
-                move.posted_before and move.company_id.check_account_audit_trail
+                move.posted_before and move.company_id.restrictive_audit_trail
                 for move in self
         ):
             raise UserError(_(
-                "To keep the audit trail, you can not delete journal entries once they have been posted.\n"
+                "To keep the restrictive audit trail, you can not delete journal entries once they have been posted.\n"
                 "Instead, you can cancel the journal entry."
             ))
 
@@ -5031,13 +5031,13 @@ class AccountMove(models.Model):
     def _can_be_unlinked(self):
         self.ensure_one()
         lock_date = self.company_id._get_user_fiscal_lock_date(self.journal_id)
-        is_part_of_audit_trail = self.posted_before and self.company_id.check_account_audit_trail
+        is_part_of_restricted_audit_trail = self.posted_before and self.company_id.restrictive_audit_trail
         posted_caba_entry = self.state == 'posted' and (self.tax_cash_basis_rec_id or self.tax_cash_basis_origin_move_id)
         posted_exchange_diff_entry = self.state == 'posted' and self.exchange_diff_partial_ids
-        return not self.inalterable_hash and self.date > lock_date and not is_part_of_audit_trail and not posted_caba_entry and not posted_exchange_diff_entry
+        return not self.inalterable_hash and self.date > lock_date and not is_part_of_restricted_audit_trail and not posted_caba_entry and not posted_exchange_diff_entry
 
     def _is_protected_by_audit_trail(self):
-        return any(move.posted_before and move.company_id.check_account_audit_trail for move in self)
+        return any(move.posted_before and move.company_id.restrictive_audit_trail for move in self)
 
     def _unlink_or_reverse(self):
         if not self:
