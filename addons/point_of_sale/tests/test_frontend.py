@@ -582,15 +582,17 @@ class TestUi(TestPointOfSaleHttpCommon):
         # that are returned by the backend in module_boot. Without
         # this you end up with js, css but no qweb.
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
-
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="pos_user")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_01_multi_payment_and_change', login="pos_user")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_02_decimal_order_quantity', login="pos_user")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_03_tax_position', login="pos_user")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FloatingOrderTour', login="pos_user")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="pos_user")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="pos_user")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="pos_user")
+        self.start_pos_tour('pos_pricelist')
+        self.env['pos.order'].search([]).unlink() # the previous tour created a draft order; if we don't delete it it will be present in the next tour
+        self.start_pos_tour('pos_basic_order_01_multi_payment_and_change')
+        self.env['pos.order'].search([('state', '=', 'draft')]).unlink() # the previous test created a draft order
+        self.start_pos_tour('pos_basic_order_02_decimal_order_quantity')
+        self.start_pos_tour('pos_basic_order_03_tax_position')
+        self.env['pos.order'].search([('state', '=', 'draft')]).unlink() # the previous test created a draft order
+        self.start_pos_tour('FloatingOrderTour')
+        self.env['pos.order'].search([('state', '=', 'draft')]).unlink() # the previous test created a draft order
+        self.start_pos_tour('PaymentScreenTour')
+        self.start_pos_tour('ReceiptScreenTour')
 
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
@@ -607,7 +609,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="pos_user")
+        self.start_pos_tour('ChromeTour')
         n_invoiced = self.env['pos.order'].search_count([('account_move', '!=', False)])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
@@ -651,7 +653,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             ]
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="pos_user")
+        self.start_pos_tour('TicketScreenTour')
 
     def test_product_information_screen_admin(self):
         '''Consider this test method to contain a test tour with miscellaneous tests/checks that require admin access.
@@ -662,7 +664,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.assertFalse(self.product_a.is_storable)
         self.main_pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CheckProductInformation', login="pos_admin")
+        self.start_pos_tour('CheckProductInformation', login="pos_admin")
 
     def test_fixed_tax_negative_qty(self):
         """ Assert the negative amount of a negative-quantity orderline
@@ -700,7 +702,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # We need to do this because of the fix in the "compute_all" port.
         self.main_pos_config.write({'iface_tax_included': 'total'})
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FixedTaxNegativeQty', login="pos_user")
+        self.start_pos_tour('FixedTaxNegativeQty',)
         pos_session = self.main_pos_config.current_session_id
 
         # Close the session and check the session journal entry.
@@ -729,7 +731,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)], 'ship_later': True})
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour2', login="pos_user")
+        self.start_pos_tour('PaymentScreenTour2')
 
     def test_rounding_up(self):
         rouding_method = self.env['account.cash.rounding'].create({
@@ -751,7 +753,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingUp', login="pos_user")
+        self.start_pos_tour('PaymentScreenRoundingUp')
 
     def test_rounding_down(self):
         rouding_method = self.env['account.cash.rounding'].create({
@@ -773,9 +775,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingDown', login="pos_user")
+        self.start_pos_tour('PaymentScreenRoundingDown')
         self.env["pos.order"].search([]).write({'state': 'cancel'})
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTotalDueWithOverPayment', login="pos_user")
+        self.start_pos_tour('PaymentScreenTotalDueWithOverPayment')
 
     def test_rounding_half_up(self):
         rouding_method = self.env['account.cash.rounding'].create({
@@ -811,7 +813,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="pos_user")
+        self.start_pos_tour('PaymentScreenRoundingHalfUp')
 
     def test_pos_closing_cash_details(self):
         """Test cash difference *loss* at closing.
@@ -821,7 +823,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         current_session.post_closing_cash_details(0)
         current_session.close_session_from_ui()
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashClosingDetails', login="pos_user")
+        self.start_pos_tour('CashClosingDetails')
         cash_diff_line = self.env['account.bank.statement.line'].search([
             ('payment_ref', 'ilike', 'Cash difference observed during the counting (Loss)')
         ])
@@ -829,7 +831,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_cash_payments_should_reflect_on_next_opening(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderPaidInCash', login="pos_user")
+        self.start_pos_tour('OrderPaidInCash')
 
     def test_fiscal_position_no_tax(self):
         #create a tax of 15% with price included
@@ -869,7 +871,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pricelist_id': pricelist.id,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTax', login="pos_user")
+        self.start_pos_tour('FiscalPositionNoTax')
 
     def test_fiscal_position_inclusive_and_exclusive_tax(self):
         """ Test the mapping of fiscal position for both Tax Inclusive ans Tax Exclusive"""
@@ -957,8 +959,8 @@ class TestUi(TestPointOfSaleHttpCommon):
                 ])],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionIncl', login="pos_user")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionExcl', login="pos_user")
+        self.start_pos_tour('FiscalPositionIncl')
+        self.start_pos_tour('FiscalPositionExcl')
 
     def test_06_pos_discount_display_with_multiple_pricelist(self):
         """ Test the discount display on the POS screen when multiple pricelists are used."""
@@ -999,7 +1001,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="pos_user")
+        self.start_pos_tour('ReceiptScreenDiscountWithPricelistTour')
 
     def test_07_product_combo(self):
         setup_product_combo_items(self)
@@ -1037,7 +1039,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # If not, it will fail as it will mistakenly match with the product barcode "0123456789"
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanningTour', login="pos_user")
+        self.start_pos_tour('BarcodeScanningTour')
 
     def test_08_show_tax_excluded(self):
         # define a tax included tax record
@@ -1062,7 +1064,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ShowTaxExcludedTour', login="pos_user")
+        self.start_pos_tour('ShowTaxExcludedTour')
 
     def test_chrome_without_cash_move_permission(self):
         self.env.user.write({'group_ids': [
@@ -1098,7 +1100,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanningProductPackagingTour', login="pos_user")
+        self.start_pos_tour('BarcodeScanningProductPackagingTour')
 
     def test_GS1_pos_barcodes_scan(self):
         barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
@@ -1135,7 +1137,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="pos_user")
+        self.start_pos_tour('GS1BarcodeScanningTour')
 
     def test_refund_order_with_fp_tax_included(self):
         #create a tax of 15% tax included
@@ -1178,7 +1180,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="pos_user")
+        self.start_pos_tour('FiscalPositionNoTaxRefund')
 
     def test_lot_refund(self):
 
@@ -1190,7 +1192,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotRefundTour', login="pos_user")
+        self.start_pos_tour('LotRefundTour')
 
     def test_receipt_tracking_method(self):
         self.product_a = self.env['product.product'].create({
@@ -1200,7 +1202,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptTrackingMethodTour', login="pos_user")
+        self.start_pos_tour('ReceiptTrackingMethodTour')
 
     def test_printed_receipt_tour(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -1282,7 +1284,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
+        self.start_pos_tour('limitedProductPricelistLoading')
 
     def test_multi_product_options(self):
         self.pos_user.write({
@@ -1317,7 +1319,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'MultiProductOptionsTour', login="pos_user")
+        self.start_pos_tour('MultiProductOptionsTour')
 
     def test_translate_product_name(self):
         self.env['res.lang']._activate_lang('fr_FR')
@@ -1332,7 +1334,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         product.update_field_translations('name', {'fr_FR': 'Testez le produit'})
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TranslateProductNameTour', login="pos_user")
+        self.start_pos_tour('TranslateProductNameTour')
 
     def test_properly_display_price(self):
         """Make sure that when the decimal separator is a comma, the shown orderline price is correct.
@@ -1348,7 +1350,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "DecimalCommaOrderlinePrice", login="pos_user")
+        self.start_pos_tour("DecimalCommaOrderlinePrice")
 
     def test_res_partner_scan_barcode(self):
         # default Customer Barcodes pattern is '042'
@@ -1357,7 +1359,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'barcode': '0421234567890',
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanPartnerTour', login="pos_user")
+        self.start_pos_tour('BarcodeScanPartnerTour')
 
     def test_allow_order_modification_after_validation_error(self):
         """
@@ -1398,7 +1400,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'RefundFewQuantities', login="pos_user")
+        self.start_pos_tour('RefundFewQuantities')
 
     def test_product_combo_price(self):
         """ Check that the combo has the expected price """
@@ -1433,7 +1435,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboPriceCheckTour', login="pos_user")
+        self.start_pos_tour('ProductComboPriceCheckTour')
         order = self.env['pos.order'].search([], limit=1)
         self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin, 0)
         self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin_percent, 0)
@@ -1504,7 +1506,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboChangeFP', login="pos_user")
+        self.start_pos_tour('ProductComboChangeFP')
 
     def test_cash_rounding_payment(self):
         """Verify than an error popup is shown if the payment value is more precise than the rounding method"""
@@ -1525,7 +1527,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.env['ir.config_parameter'].sudo().set_param('barcode.max_time_between_keys_in_ms', 1)
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
+        self.start_pos_tour('CashRoundingPayment', login="accountman")
 
     def test_product_categories_order(self):
         """ Verify that the order of categories doesnt change in the frontend """
@@ -1561,7 +1563,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCategoriesOrder', login="pos_admin")
+        self.start_pos_tour('PosCategoriesOrder', login="pos_admin")
 
     def test_product_with_dynamic_attributes(self):
         dynamic_attribute = self.env['product.attribute'].create({
@@ -1589,7 +1591,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'value_ids': [Command.set([value_1.id, value_2.id])],
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosProductWithDynamicAttributes', login="pos_admin")
+        self.start_pos_tour('PosProductWithDynamicAttributes', login="pos_admin")
 
     def test_autofill_cash_count(self):
         """Make sure that when the decimal separator is a comma, the shown orderline price is correct.
@@ -1605,7 +1607,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             }
         )
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "AutofillCashCount", login="pos_user")
+        self.start_pos_tour("AutofillCashCount")
 
     def test_product_search_2(self):
         self.env['product.product'].create({
@@ -1626,7 +1628,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
         self.main_pos_config.open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchProducts', login="pos_user")
+        self.start_pos_tour('SearchProducts')
 
     def test_lot(self):
         self.product1 = self.env['product.product'].create({
@@ -1649,7 +1651,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         }).sudo().action_apply_inventory()
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotTour', login="pos_user")
+        self.start_pos_tour('LotTour')
 
 
     def test_product_search(self):
@@ -1680,7 +1682,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         ])
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductSearchTour', login="pos_user")
+        self.start_pos_tour('ProductSearchTour')
 
     def test_sort_orderlines_by_product_categoryies(self):
         """ Test to ensure orderlines are added to the cart in the correct order based on their categories"""
@@ -1721,13 +1723,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SortOrderlinesByCategories', login="pos_user")
+        self.start_pos_tour('SortOrderlinesByCategories')
 
     def test_customer_popup(self):
         """Verify that the customer popup search & inifnite scroll work properly"""
         self.env["res.partner"].create([{"name": "Z partner to search"}, {"name": "Z partner to scroll"}])
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CustomerPopupTour', login="pos_user")
+        self.start_pos_tour('CustomerPopupTour')
 
     def test_pricelist_multi_items_different_qty_thresholds(self):
         """ Having multiple pricelist items for the same product tmpl with ascending `min_quantity`
@@ -1763,7 +1765,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_tracking_number_closing_session(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_tracking_number_closing_session', login="pos_user")
+        self.start_pos_tour('test_tracking_number_closing_session')
         for order in self.env['pos.order'].search([]):
             self.assertEqual(int(order.tracking_number) % 100, 1)
 
@@ -1782,7 +1784,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_product_card_qty_precision(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductCardUoMPrecision', login="pos_user")
+        self.start_pos_tour('ProductCardUoMPrecision')
 
     def test_cash_in_out(self):
         self.pos_user.write({
@@ -1791,7 +1793,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             ]
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_cash_in_out', login="pos_user")
+        self.start_pos_tour('test_cash_in_out')
 
         self.assertEqual(len(self.main_pos_config.current_session_id.statement_line_ids), 1, "There should be one cash in/out statement line")
         self.assertEqual(self.main_pos_config.current_session_id.statement_line_ids[0].amount, -5, "The cash in/out amount should be -5")
@@ -1804,7 +1806,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "AddMultipleSerialsAtOnce", login="pos_user")
+        self.start_pos_tour("AddMultipleSerialsAtOnce")
 
     def test_order_and_invoice_amounts(self):
         payment_term = self.env['account.payment.term'].create({
@@ -1835,7 +1837,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenInvoiceOrder', login="pos_user")
+        self.start_pos_tour('PaymentScreenInvoiceOrder')
 
         order = self.env['pos.order'].search([('partner_id', '=', self.partner_test_1.id)], limit=1)
         self.assertTrue(order)
