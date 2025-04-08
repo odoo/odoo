@@ -4,21 +4,14 @@
 <t t-name="html_builder.LayoutOption">
     <BuilderRow label.translate="Layout">
        <BuilderButtonGroup preview="false">
-            <BuilderButton action="'setGridLayout'" id="'grid'">Grid</BuilderButton>
-            <BuilderButton action="'setColumnLayout'" id="'column'">Column</BuilderButton>
+            <BuilderButton action="'setGridLayout'" id="'grid_mode'">Grid</BuilderButton>
+            <BuilderButton action="'setColumnLayout'" id="'column_mode'">Column</BuilderButton>
         </BuilderButtonGroup>
-        <SelectNumberColumn  t-if="isActiveItem('column')"/>
+        <SelectNumberColumn t-if="isActiveItem('column_mode')"/>
     </BuilderRow>
-    <t t-if="isActiveItem('grid')">
+    <t t-if="isActiveItem('grid_mode')">
         <AddElementOption level="1" applyTo="'.o_grid_mode'"/>
         <SpacingOption level="1" applyTo="'.o_grid_mode'"/>
-    </t>
-    <t t-if="isActiveItem('column')">
-        <BuilderContext applyTo="'.row'">
-            <t t-call="html_builder.VerticalAlignmentOption">
-                <t t-set="level" t-value="1"/>
-            </t>
-        </BuilderContext>
     </t>
 </t>
 
