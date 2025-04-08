@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { deepCopy, pick } from "@web/core/utils/objects";
 import { nbsp } from "@web/core/utils/strings";
 import { parseXML } from "@web/core/utils/xml";
-import { extractLayoutComponents, Layout } from "@web/search/layout";
+import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
@@ -20,13 +20,8 @@ import {
     toRaw,
     useSubEnv,
     reactive,
-    onMounted,
-    useState,
-    status,
 } from "@odoo/owl";
 import { session } from "@web/session";
-import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-import { SearchBar } from "@web/search/search_bar/search_bar";
 
 /**
  * @typedef Config
@@ -195,7 +190,7 @@ const ACTIONS = ["create", "delete", "edit", "group_create", "group_delete", "gr
 export class View extends Component {
     static _download = async function () {};
     static template = "web.View";
-    static components = { SearchBar, Layout, WithSearch };
+    static components = { WithSearch };
     static searchMenuTypes = ["filter", "groupBy", "favorite"];
     static canOrderByCount = false;
     static defaultProps = {
@@ -227,11 +222,6 @@ export class View extends Component {
         this.viewService = useService("view");
         this.withSearchProps = null;
 
-        this.searchBarToggler = useSearchBarToggler();
-        onMounted(() => {
-            this.render();
-        });
-
         useSubEnv({
             keepLast: new KeepLast(),
             config: {
@@ -249,10 +239,6 @@ export class View extends Component {
         onWillUpdateProps((nextProps) => this.onWillUpdateProps(nextProps));
 
         useDebugCategory("view", { component: this });
-    }
-
-    get displayBlankCP() {
-        return status(this) !== "mounted" && this.withSearchProps.searchMenuTypes.length > 0;
     }
 
     /**
