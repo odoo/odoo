@@ -1,8 +1,8 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame, Deferred } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
-import { animationFrame, Deferred } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -182,4 +182,46 @@ test("click on BuilderCheckbox with action “websiteConfig”", async () => {
 
     await contains("input[type='checkbox']:checked").click();
     expect.verifySteps(["theme_customize_data"]);
+});
+
+test("use isActiveItem base on BuilderSelectItem with websiteConfig", async () => {
+    onRpc("/website/theme_customize_data_get", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data_get");
+        expect(params.keys).toEqual(["test_template_1"]);
+        return [];
+    });
+
+    onRpc("/website/theme_customize_data", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data");
+        expect(params.enable).toEqual(["test_template_1"]);
+        expect(params.disable).toEqual([]);
+    });
+
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderRow label.translate="Test">
+                <BuilderSelect action="'websiteConfig'">
+                    <BuilderSelectItem actionParam="{views: ['test_template_1']}">a</BuilderSelectItem>
+                    <BuilderSelectItem id="'test'" actionParam="{views: []}">b</BuilderSelectItem>
+                </BuilderSelect>
+                <div class="my-test" t-if="this.isActiveItem('test')">test</div>
+            </BuilderRow>`,
+    });
+
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await animationFrame();
+    expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
+    expect(".my-test").toHaveCount(1);
+    expect("[data-label='Test'] .dropdown-toggle").toHaveText("b");
+    expect(".o-dropdown-item:visible").toHaveCount(0);
+
+    await contains("[data-label='Test'] .dropdown-toggle").click();
+    expect(".o-dropdown-item:visible").toHaveCount(2);
+
+    await contains("[data-action-param*='test_template_1']").click();
+    expect.verifySteps(["theme_customize_data_get", "theme_customize_data"]);
 });

@@ -1,4 +1,4 @@
-import { Component, onMounted, useRef, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, useRef, useSubEnv, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import {
@@ -9,6 +9,18 @@ import {
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+
+export class WithIgnoreItem extends Component {
+    static template = xml`<t t-slot="default"/>`;
+    static props = {
+        slots: { type: Object },
+    };
+    setup() {
+        useSubEnv({
+            ignoreBuilderItem: true,
+        });
+    }
+}
 
 export class BuilderSelect extends Component {
     static template = "html_builder.BuilderSelect";
@@ -27,6 +39,7 @@ export class BuilderSelect extends Component {
     static components = {
         Dropdown,
         BuilderComponent,
+        WithIgnoreItem,
     };
 
     setup() {
