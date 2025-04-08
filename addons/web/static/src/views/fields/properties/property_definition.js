@@ -32,7 +32,6 @@ export class PropertyDefinition extends Component {
         fieldName: { type: String },
         readonly: { type: Boolean, optional: true },
         canChangeDefinition: { type: Boolean, optional: true },
-        checkDefinitionWriteAccess: { type: Function, optional: true },
         propertyDefinition: { optional: true },
         context: { type: Object },
         isNewlyCreated: { type: Boolean, optional: true },
