@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="action_test_translation_import_model1" model="ir.actions.act_window">
+            <field name="name">Test translation import model1</field>
+            <field name="res_model">test.translation.import.model1</field>
+            <field name="view_mode">list,form</field>
+            <field name="target">current</field>
+        </record>
+
+        <menuitem id="menu_test_translation_import" name="Test translation model1" sequence="650"/>
+
+        <menuitem id="menu_test_translation_import_model1"
+            name="Test translation import model1"
+            action="action_test_translation_import_model1"
+            parent="menu_test_translation_import"/>
+    </data>
+</odoo>
