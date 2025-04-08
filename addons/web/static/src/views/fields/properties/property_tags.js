@@ -46,7 +46,6 @@ export class PropertyTags extends Component {
         deleteAction: { type: String },
         readonly: { type: Boolean, optional: true },
         canChangeTags: { type: Boolean, optional: true },
-        checkDefinitionWriteAccess: { type: Function, optional: true },
         // Select a new value
         onValueChange: { type: Function, optional: true },
         // Change the tags definition (can also receive a second
@@ -227,17 +226,9 @@ export class PropertyTags extends Component {
             return;
         }
 
-        if (!(await this.props.checkDefinitionWriteAccess())) {
-            this.notification.add(
-                _t("You need to be able to edit parent first to add property tags"),
-                { type: "warning" }
-            );
-            return;
-        }
-
         const newValue = newLabel ? newLabel.toLowerCase().replace(" ", "_") : "";
-
         const existingTag = this.props.tags.find((tag) => tag[0] === newValue);
+
         if (existingTag) {
             this.notification.add(_t("This tag is already available"), {
                 type: "warning",
