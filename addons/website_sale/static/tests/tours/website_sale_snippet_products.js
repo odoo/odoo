@@ -1,80 +1,94 @@
-
-import { queryFirst } from '@odoo/hoot-dom';
+import { queryFirst } from "@odoo/hoot-dom";
 import {
     changeOption,
     clickOnSave,
     clickOnSnippet,
     insertSnippet,
     registerWebsitePreviewTour,
-} from '@website/js/tours/tour_utils';
-import { goToCart } from '@website_sale/js/tours/tour_utils';
+} from "@website/js/tours/tour_utils";
+import { goToCart } from "@website_sale/js/tours/tour_utils";
 
-const optionBlock = 'dynamic_snippet_products';
-const productsSnippet = {id: "s_dynamic_snippet_products", name: "Products", groupName: "Products"};
-const templates = [
-    "dynamic_filter_template_product_product_add_to_cart",
-    "dynamic_filter_template_product_product_view_detail",
-    "dynamic_filter_template_product_product_mini_image",
-    "dynamic_filter_template_product_product_mini_price",
-    "dynamic_filter_template_product_product_mini_name",
-    "dynamic_filter_template_product_product_centered",
-    "dynamic_filter_template_product_product_borderless_1",
-    "dynamic_filter_template_product_product_borderless_2",
-    "dynamic_filter_template_product_product_banner",
-    "dynamic_filter_template_product_product_horizontal_card",
-    "dynamic_filter_template_product_product_horizontal_card_2",
-    "dynamic_filter_template_product_product_card_group",
+const optionBlock = "dynamic_snippet_products";
+const productsSnippet = (layout) => ({
+    id: `s_dynamic_snippet_products_${layout || "add_to_cart"}`,
+    name: "Products",
+    groupName: "Products",
+});
+const snippetLayouts = [
+    "view_detail",
+    "mini_image",
+    "mini_price",
+    "mini_name",
+    "centered",
+    "borderless_1",
+    "borderless_2",
+    "banner",
+    "horizontal_card",
+    "horizontal_card_2",
+    "card_group",
 ];
 
-function changeTemplate(templateKey) {
-    const templateClass = templateKey.replace(/dynamic_filter_template_/, "s_");
+function changeSnippetLayout(layout) {
     return [
-        changeOption(optionBlock, 'we-select[data-name="template_opt"] we-toggler', 'template'),
-        changeOption(optionBlock, `we-button[data-select-data-attribute="website_sale.${templateKey}"]`),
         {
-            content: 'Check the template is applied',
-            trigger: `:iframe .s_dynamic_snippet_products.${templateClass} .carousel`,
+            content: "Replace the current snippet.",
+            trigger: ":iframe .oe_overlay.oe_active .o_snippet_replace",
+            run: "click",
         },
+        {
+            content: "Select the new snippet",
+            trigger: `:iframe .o_snippet_preview_wrap[data-snippet-id="s_dynamic_snippet_products_${layout}"]:not(.d-none)`,
+            run: "click",
+        },
+        ...clickOnSnippet(productsSnippet(layout)),
     ];
 }
 
-registerWebsitePreviewTour('website_sale.snippet_products', {
-    url: '/',
+registerWebsitePreviewTour("website_sale.snippet_products", {
+    url: "/",
     edition: true,
 },
 () => {
-    let templatesSteps = [];
-    for (const templateKey of templates) {
-        templatesSteps = templatesSteps.concat(changeTemplate(templateKey));
+    let snippetLayoutSteps = [];
+    const continueSelector = `button[name="website_sale_product_configurator_continue_button"]`;
+    const goToCartStep = goToCart({ backend: true });
+    for (const layout of snippetLayouts) {
+        snippetLayoutSteps = snippetLayoutSteps.concat(changeSnippetLayout(layout));
     }
     return [
-        ...insertSnippet(productsSnippet),
-        ...clickOnSnippet(productsSnippet),
-        ...templatesSteps,
-        ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
+        ...insertSnippet(productsSnippet()),
+        ...clickOnSnippet(productsSnippet()),
+        ...snippetLayoutSteps,
+        ...changeSnippetLayout("add_to_cart"),
         ...clickOnSave(),
         {
-            trigger: ":iframe .s_dynamic_snippet_products .o_carousel_product_card_body .js_add_cart",
-            run: 'click',
+            trigger: ":iframe .s_dynamic_snippet_products_add_to_cart .o_carousel_product_card_body .js_add_cart",
+            run: "click",
         },
-        goToCart({backend: true}),
+        {
+            ...goToCartStep,
+            trigger: `${goToCartStep.trigger}, :iframe ${continueSelector}`,
+            run: (helpers) => {
+                document.querySelector(continueSelector)?.click();
+                helpers.click();
+            }
+        },
     ]
 });
 
-registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
-    url: '/',
+registerWebsitePreviewTour("website_sale.products_snippet_recently_viewed", {
+    url: "/",
     edition: true,
 },
 () => [
-    ...insertSnippet(productsSnippet),
-    ...clickOnSnippet(productsSnippet),
-    ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
-    changeOption(optionBlock, 'we-select[data-name="filter_opt"] we-toggler', 'filter'),
-    changeOption(optionBlock, 'we-select[data-name="filter_opt"] we-button:contains("Recently Viewed")', 'filter'),
+    ...insertSnippet(productsSnippet()),
+    ...clickOnSnippet(productsSnippet()),
+    changeOption(optionBlock, `we-select[data-name="filter_opt"] we-toggler`, "filter"),
+    changeOption(optionBlock, `we-select[data-name="filter_opt"] we-button:contains("Recently Viewed")`, "filter"),
     ...clickOnSave(),
     {
-        content: 'make delete icon appear',
-        trigger: ':iframe .s_dynamic_snippet_products .o_carousel_product_card',
+        content: "make delete icon appear",
+        trigger: ":iframe .s_dynamic_snippet_products_add_to_cart .o_carousel_product_card",
         run() {
             queryFirst(
                 `:iframe .o_carousel_product_card:has(a img[alt="Storage Box"]) .js_remove`,
@@ -82,7 +96,7 @@ registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
         }
     },
     {
-        trigger: ':iframe .s_dynamic_snippet_products .o_carousel_product_card .js_remove',
-        run: 'click',
+        trigger: ":iframe .s_dynamic_snippet_products_add_to_cart .o_carousel_product_card .js_remove",
+        run: "click",
     },
 ]);

@@ -24,21 +24,16 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
      * @private
      */
     _computeWidgetVisibility: function (widgetName, params) {
-        const templateKey = this.$target.get(0).dataset.templateKey;
-
-        if (widgetName === 'hover_effect_opt') {
-            return templateKey === 'website_blog.dynamic_filter_template_blog_post_big_picture';
-        } else if (widgetName === 'picture_size_opt') {
-            return templateKey === 'website_blog.dynamic_filter_template_blog_post_big_picture' ||
-            templateKey === 'website_blog.dynamic_filter_template_blog_post_horizontal' ||
-            templateKey === 'website_blog.dynamic_filter_template_blog_post_card';
-        } else if (widgetName === 'teaser_opt') {
-            return templateKey === 'website_blog.dynamic_filter_template_blog_post_card' ||
-            templateKey === 'website_blog.dynamic_filter_template_blog_post_list';
-        } else if (widgetName === 'date_opt') {
-            return templateKey === 'website_blog.dynamic_filter_template_blog_post_card' ||
-            templateKey === 'website_blog.dynamic_filter_template_blog_post_horizontal' ||
-            templateKey === 'website_blog.dynamic_filter_template_blog_post_list';
+        const templateKeyPrefix = "website_blog.dynamic_filter_template_blog_post_";
+        const templateKey = this.$target[0].dataset.templateKey?.replace(templateKeyPrefix, "");
+        const templatesWidgetVisibility = {
+            hover_effect_opt: ["big_picture"],
+            picture_size_opt: ["big_picture", "horizontal", "card"],
+            teaser_opt: ["card", "list"],
+            date_opt: ["card", "horizontal", "list"],
+        };
+        if (widgetName in templatesWidgetVisibility) {
+            return templatesWidgetVisibility[widgetName].includes(templateKey);
         }
         return this._super.apply(this, arguments);
     },
