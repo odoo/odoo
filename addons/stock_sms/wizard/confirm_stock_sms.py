@@ -24,7 +24,7 @@ class ConfirmStockSms(models.TransientModel):
             if not company.has_received_warning_stock_sms:
                 company.sudo().write({
                     'has_received_warning_stock_sms': True,
-                    'stock_move_sms_validation': False,
+                    'stock_text_confirmation': False,
                 })
         pickings_to_validate = self.env['stock.picking'].browse(self.env.context.get('button_validate_picking_ids'))
         return pickings_to_validate.button_validate()

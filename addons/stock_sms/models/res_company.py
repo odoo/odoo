@@ -13,7 +13,6 @@ class ResCompany(models.Model):
         except ValueError:
             return False
 
-    stock_move_sms_validation = fields.Boolean("SMS Confirmation", default=True)
     stock_sms_confirmation_template_id = fields.Many2one(
         'sms.template', string="SMS Template",
         domain="[('model', '=', 'stock.picking')]",
