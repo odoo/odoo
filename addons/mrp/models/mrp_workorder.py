@@ -8,6 +8,8 @@ import json
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_datetime, float_round
+from odoo.tools.date_utils import sum_intervals
+from odoo.tools.intervals import Intervals
 
 
 class MrpWorkorder(models.Model):
@@ -620,14 +622,16 @@ class MrpWorkorder(models.Model):
         :param datetime date: Only calculate for time_ids that ended before this date
         """
         total = 0
-        for wo in self:
-            if wo._should_estimate_cost():
-                duration = wo.duration_expected
-            elif date:
-                duration = sum(wo.time_ids.filtered(lambda t: t.date_end and t.date_end <= date).mapped('duration'))
+        for workorder in self:
+            if workorder._should_estimate_cost():
+                duration = workorder.duration_expected / 60
             else:
-                duration = sum(wo.time_ids.mapped('duration'))
-            total += (duration / 60.0) * (wo.costs_hour or wo.workcenter_id.costs_hour)
+                intervals = Intervals([
+                    [t.date_start, t.date_end, t]
+                    for t in workorder.time_ids if not date or t.date_end < date
+                ])
+                duration = sum_intervals(intervals)
+            total += duration * (workorder.costs_hour or workorder.workcenter_id.costs_hour)
         return total
 
     def button_start(self, raise_on_invalid_state=False):
