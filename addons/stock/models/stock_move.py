@@ -1412,7 +1412,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.ensure_one()
         return bool(not self.picking_id and self.picking_type_id)
 
-    def _action_confirm(self, merge=True, merge_into=False):
+    def _action_confirm(self, merge=True, merge_into=False, create_proc=True):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         :param: merge: According to this boolean, a newly confirmed move will be merged
         in another move of the same picking sharing its characteristics.
@@ -1428,10 +1428,12 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move_waiting.add(move.id)
             elif move.procure_method == 'make_to_order':
                 move_waiting.add(move.id)
-                move_create_proc.add(move.id)
+                if create_proc:
+                    move_create_proc.add(move.id)
             elif move.rule_id and move.rule_id.procure_method == 'mts_else_mto':
-                move_create_proc.add(move.id)
                 move_to_confirm.add(move.id)
+                if create_proc:
+                    move_create_proc.add(move.id)
             else:
                 move_to_confirm.add(move.id)
             if move._should_be_assigned():
@@ -2009,7 +2011,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
         # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
         # ones as it could messed up the result_package_id of the moves being currently validated
-        backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False)
+        backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False, create_proc=False)
         return backorder_moves
 
     @api.ondelete(at_uninstall=False)
