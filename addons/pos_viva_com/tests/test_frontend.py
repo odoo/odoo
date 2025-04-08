@@ -38,4 +38,4 @@ class TestVivaComHttpCommon(TestPointOfSaleHttpCommon):
 
         with patch.object(PosPaymentMethod, '_call_viva_com', mocked_call_viva_com_check_post_data):
             self.main_pos_config.open_ui()
-            self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'VivaComTour', login="accountman")
+            self.start_pos_tour('VivaComTour', login="accountman")

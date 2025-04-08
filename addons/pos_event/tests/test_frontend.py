@@ -77,7 +77,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             "iface_available_categ_ids": [(6, 0, [self.event_category.id])],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SellingEventInPos', login="pos_user")
+        self.start_pos_tour('SellingEventInPos')
 
         order = self.env['pos.order'].search([], order='id desc', limit=1)
         event_registration = order.lines[0].event_registration_ids

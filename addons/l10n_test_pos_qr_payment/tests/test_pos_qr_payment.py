@@ -43,7 +43,7 @@ class TestUiSEPA(TestPosQrCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPaymentFailure', login="pos_user")
+        self.start_pos_tour('PaymentScreenWithQRPaymentFailure')
 
     def test_02_pos_order_with_sepa_qr_payment(self):
         """ Test Point of Sale QR Payment flow with SEPA
@@ -55,7 +55,7 @@ class TestUiSEPA(TestPosQrCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPayment', login="pos_user")
+        self.start_pos_tour('PaymentScreenWithQRPayment')
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -106,7 +106,7 @@ class TestUiCH(TestPosQrCommon):
         """
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPaymentFailure', login="pos_user")
+        self.start_pos_tour('PaymentScreenWithQRPaymentFailure')
 
     def test_02_pos_order_with_swiss_qr_payment(self):
         """ Test Point of Sale QR Payment flow with Swiss QR
@@ -114,7 +114,7 @@ class TestUiCH(TestPosQrCommon):
         """
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPaymentSwiss', login="pos_user")
+        self.start_pos_tour('PaymentScreenWithQRPaymentSwiss')
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -158,7 +158,7 @@ class TestUiHK(TestPosQrCommon):
         """
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPaymentFailure', login="pos_user")
+        self.start_pos_tour('PaymentScreenWithQRPaymentFailure')
 
     def test_02_pos_order_with_emv_qr_payment(self):
         """ Test Point of Sale QR Payment flow with FPS.
@@ -173,7 +173,7 @@ class TestUiHK(TestPosQrCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPayment', login="pos_user")
+        self.start_pos_tour('PaymentScreenWithQRPayment')
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -213,7 +213,7 @@ class TestUIBR(TestPosQrCommon):
         """
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPaymentFailure', login="pos_user")
+        self.start_pos_tour('PaymentScreenWithQRPaymentFailure')
 
     def test_02_pos_order_with_pix_qr_payment(self):
         """ Test Point of Sale QR Payment flow with PIX
@@ -228,4 +228,4 @@ class TestUIBR(TestPosQrCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPayment', login="pos_user")
+        self.start_pos_tour('PaymentScreenWithQRPayment')
