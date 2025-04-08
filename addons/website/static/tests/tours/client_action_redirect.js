@@ -7,7 +7,9 @@ const testUrl = '/test_client_action_redirect';
 const goToFrontendSteps = [{
     content: "Go to the frontend",
     trigger: 'body',
-    run: `goToUrl ${testUrl}`,
+    run() {
+        window.location.href = testUrl;
+    },
 }, {
     content: "Check we are in the frontend",
     trigger: 'body:not(:has(.o_website_preview)) #test_contact_FE',
@@ -15,7 +17,9 @@ const goToFrontendSteps = [{
 const goToBackendSteps = [{
     content: "Go to the backend",
     trigger: 'body',
-    run: `goToUrl /@${testUrl}`,
+    run() {
+        window.location.href = `/@${testUrl}`;
+    },
 }, {
     content: "Check we are in the backend",
     trigger: ".o_website_preview[data-view-xmlid='website.test_client_action_redirect'] :iframe",
