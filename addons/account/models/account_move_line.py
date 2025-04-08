@@ -2039,12 +2039,12 @@ class AccountMoveLine(models.Model):
             # Let's say the target currency could be [999.995 * 12, 1000.005 * 12] = [11999.94, 12000.06]
             # instead of just 120000.
             if not rate:
-                return (0.0, 0.0)
-            sub_rounding = currency_from.rounding / 10
+                return (0.0, 0.0, 0.0)
+            half_rounding = currency_from.rounding / 2
             return (
-                currency_to.round((amount - (5 * sub_rounding)) * rate),
+                currency_to.round((amount - half_rounding) * rate),
                 currency_to.round(amount * rate),
-                currency_to.round((amount + (5 * sub_rounding)) * rate),
+                currency_to.round((amount + half_rounding) * rate),
             )
 
         # ==== Computation of partial amounts ====
