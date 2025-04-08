@@ -60,7 +60,10 @@ export class FormOptionPlugin extends Plugin {
             },
         ],
         clone_disabled_reason_providers: ({ el, reasons }) => {
-            if (el.classList.contains("s_website_form_model_required")) {
+            if (
+                el.classList.contains("s_website_form_field") &&
+                !el.classList.contains("s_website_form_custom")
+            ) {
                 reasons.push(_t("You cannot duplicate this field."));
             }
             if (el.classList.contains("s_website_form_submit")) {
