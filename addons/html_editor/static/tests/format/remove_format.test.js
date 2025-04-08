@@ -5,6 +5,7 @@ import { click, press, queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
 import { expandToolbar } from "../_helpers/toolbar";
+import { unformat } from "../_helpers/format";
 
 test("should do nothing if no format is set", async () => {
     await testEditor({
@@ -866,6 +867,42 @@ describe("Toolbar", () => {
         await removeFormatClick();
         expect(getContent(el)).toBe(
             `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
+        );
+    });
+
+    test("Should remove vertical-align style from table cells", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr style="height: 100px;">
+                            <td>1</td>
+                            <td class="o_selected_td" style="vertical-align: bottom;">[</td>
+                        </tr>
+                        <tr style="height: 100px;">
+                            <td>3</td>
+                            <td class="o_selected_td" style="vertical-align: bottom;">4]</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await removeFormatClick();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr style="height: 100px;">
+                            <td>1</td>
+                            <td style="" class="o_selected_td">[</td>
+                        </tr>
+                        <tr style="height: 100px;">
+                            <td>3</td>
+                            <td style="" class="o_selected_td">4]</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
         );
     });
 
