@@ -36,7 +36,7 @@ export const imStatusService = {
         bus_service.addEventListener("connect", () => updateBusPresence(), { once: true });
         bus_service.subscribe(
             "bus.bus/im_status_updated",
-            async ({ im_status, partner_id, guest_id }) => {
+            async ({ presence_status, im_status, partner_id, guest_id }) => {
                 const store = env.services["mail.store"];
                 const persona = store.Persona.get({
                     type: partner_id ? "partner" : "guest",
@@ -50,7 +50,7 @@ export const imStatusService = {
                     return;
                 }
                 const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
-                if ((im_status === "away" && isOnline) || im_status === "offline") {
+                if ((presence_status === "away" && isOnline) || presence_status === "offline") {
                     updateBusPresence();
                 }
             }
