@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, onWillStart } from "@odoo/owl";
@@ -20,6 +21,10 @@ export class RecipientsPopover extends Component {
         onWillStart(async () => {
             [this.partner] = await this.orm.read("res.partner", [this.props.id], this.fieldNames);
         });
+    }
+
+    get name() {
+        return this.partner.name || _t("Unnamed");
     }
 
     get phone() {
