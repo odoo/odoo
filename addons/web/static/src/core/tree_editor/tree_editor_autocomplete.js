@@ -1,11 +1,10 @@
-import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { _t } from "@web/core/l10n/translation";
 import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
-import { Expression } from "@web/core/tree_editor/condition_tree";
+import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { RecordSelector } from "@web/core/record_selectors/record_selector";
+import { Expression } from "@web/core/tree_editor/condition_tree";
+import { isId } from "@web/core/tree_editor/utils";
 import { imageUrl } from "@web/core/utils/urls";
-
-export const isId = (val) => Number.isInteger(val) && val >= 1;
 
 export const getFormat = (val, displayNames) => {
     let text;
@@ -48,7 +47,10 @@ export class DomainSelectorAutocomplete extends MultiRecordSelector {
                         ...this.props.resIds.slice(index + 1),
                     ]);
                 },
-                img: this.isAvatarModel && imageUrl(this.props.resModel, val, "avatar_128"),
+                img:
+                    this.isAvatarModel &&
+                    isId(val) &&
+                    imageUrl(this.props.resModel, val, "avatar_128"),
             };
         });
     }

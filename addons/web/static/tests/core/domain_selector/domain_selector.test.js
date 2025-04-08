@@ -2528,3 +2528,29 @@ test("preserve virtual operators in sub domains", async () => {
         `[("product_id", "any", [("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)])])]`,
     ]);
 });
+
+test("don't show avatar for expressions", async () => {
+    class Users extends models.Model {
+        _name = "res.users";
+        name = fields.Char();
+
+        _records = [
+            { id: 1, name: "Mitchell Admin" },
+            { id: 2, name: "Marc Demo" },
+        ];
+    }
+    defineModels([Users]);
+    Partner._fields.user_id = fields.Many2one({ relation: "res.users" });
+    await makeDomainSelector({
+        isDebugMode: true,
+        domain: `[("user_id", "in", [1, uid, 2])]`,
+        resModel: "partner",
+    });
+    expect(".o_tag").toHaveCount(3);
+    expect(".o_tag.o_avatar").toHaveCount(2);
+    expect(".o_tag:not(.o_avatar)").toHaveText("uid");
+    expect(".o_tag:not(.o_avatar) img").toHaveCount(0);
+    await contains(SELECTORS.debugArea).edit(`[("user_id", "=", uid)]`);
+    expect(".o_record_selector input").toHaveValue("uid");
+    expect(".o_record_selector img").toHaveCount(0);
+});
