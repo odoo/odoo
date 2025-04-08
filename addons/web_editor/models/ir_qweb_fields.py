@@ -73,6 +73,9 @@ class IrQweb(models.AbstractModel):
             snippet_base_node.attrib['data-name'] = snippet_name
         return super()._compile_node(el, compile_context, level)
 
+    def _get_preload_attribute_xmlids(self):
+        return super()._get_preload_attribute_xmlids() + ['t-snippet', 't-snippet-call']
+
     # compile directives
 
     def _compile_directive_snippet(self, el, compile_context, indent):
@@ -83,7 +86,7 @@ class IrQweb(models.AbstractModel):
             el.set('t-lang', f"'{snippet_lang}'")
 
         el.set('t-options', f"{{'snippet-key': {key!r}}}")
-        view = self.env['ir.ui.view']._get(key).sudo()
+        view = self.env['ir.ui.view']._get_template_view(key)
         name = el.attrib.pop('string', view.name)
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
         image_preview = el.attrib.pop('t-image-preview', None)

@@ -15,7 +15,6 @@ import uuid
 from lxml import etree, html
 from urllib.parse import urlparse
 from werkzeug import urls
-from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -1476,42 +1475,16 @@ class Website(models.Model):
         ''' Given an xml_id or a view_id, return the corresponding view record.
             In case of website context, return the most specific one.
 
-            If no website_id is in the context, it will return the generic view,
-            instead of a random one like `_get_view_id`.
-
             Look also for archived views, no matter the context.
 
             :param view_id: either a string xml_id or an integer view_id
             :param raise_if_not_found: should the method raise an error if no view found
             :return: The view record or empty recordset
         '''
-        View = self.env['ir.ui.view'].sudo()
-        view = View
-        if isinstance(view_id, str):
-            if 'website_id' in self._context:
-                domain = [('key', '=', view_id)] + self.env['website'].website_domain(self._context.get('website_id'))
-                order = 'website_id'
-            else:
-                domain = [('key', '=', view_id)]
-                order = View._order
-            views = View.with_context(active_test=False).search(domain, order=order)
-            if views:
-                view = views.filter_duplicate()
-            else:
-                # we handle the raise below
-                view = self.env.ref(view_id, raise_if_not_found=False)
-                # self.env.ref might return something else than an ir.ui.view (eg: a theme.ir.ui.view)
-                if not view or view._name != 'ir.ui.view':
-                    # make sure we always return a recordset
-                    view = View
-        elif isinstance(view_id, int):
-            view = View.browse(view_id)
-        else:
+        if not isinstance(view_id, (int, str)):
             raise ValueError('Expecting a string or an integer, not a %s.' % (type(view_id)))
 
-        if not view and raise_if_not_found:
-            raise ValueError('No record found for unique ID %s. It may have been deleted.' % (view_id))
-        return view
+        return self.env['ir.ui.view'].sudo().with_context(active_test=False)._get_template_view(view_id, raise_if_not_found=raise_if_not_found)
 
     @api.model
     @tools.ormcache('key', 'self._context.get("website_id")', cache='templates')
@@ -1526,10 +1499,7 @@ class Website(models.Model):
     def get_template(self, template):
         if isinstance(template, str) and '.' not in template:
             template = 'website.%s' % template
-        view = self.env['ir.ui.view']._get(template).sudo()
-        if not view:
-            raise NotFound
-        return view
+        return self.env['ir.ui.view']._get_template_view(template).sudo()
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
