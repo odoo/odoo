@@ -823,7 +823,7 @@ class PropertiesDefinition(Field):
 
             self._validate_properties_definition(value, record.env)
 
-        return json.dumps(value)
+        return json.dumps(record._convert_to_cache_properties_definition(value))
 
     def convert_to_cache(self, value, record, validate=True):
         # any format -> cache format (list of dicts or None)
@@ -846,7 +846,7 @@ class PropertiesDefinition(Field):
 
             self._validate_properties_definition(value, record.env)
 
-        return value
+        return record._convert_to_column_properties_definition(value)
 
     def convert_to_record(self, value, record):
         # cache format -> record format (list of dicts)
@@ -909,6 +909,8 @@ class PropertiesDefinition(Field):
     def _validate_properties_definition(self, properties_definition, env):
         """Raise an error if the property definition is not valid."""
         allowed_keys = self.ALLOWED_KEYS + env["base"]._additional_allowed_keys_properties_definition()
+
+        env["base"]._validate_properties_definition(properties_definition, self)
 
         properties_names = set()
 
