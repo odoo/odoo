@@ -1,7 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { useService } from "@web/core/utils/hooks";
-import { navigateToOdooMenu } from "./odoo_menu_chartjs_plugin";
+import { _t } from "@web/core/l10n/translation";
 
 patch(spreadsheet.components.FigureComponent.prototype, {
     setup() {
@@ -12,19 +12,26 @@ patch(spreadsheet.components.FigureComponent.prototype, {
     },
     async navigateToOdooMenu() {
         const menu = this.env.model.getters.getChartOdooMenu(this.props.figure.id);
-        await navigateToOdooMenu(menu, this.actionService, this.notificationService);
+        if (!menu) {
+            throw new Error(`Cannot find any menu associated with the chart`);
+        }
+        if (!menu.actionID) {
+            this.notificationService.add(
+                _t(
+                    "The menu linked to this chart doesn't have an corresponding action. Please link the chart to another menu."
+                ),
+                { type: "danger" }
+            );
+            return;
+        }
+        await this.actionService.doAction(menu.actionID);
     },
     get hasOdooMenu() {
         return this.env.model.getters.getChartOdooMenu(this.props.figure.id) !== undefined;
     },
     async onClick() {
-        try {
-            const runtime = this.env.model.getters.getChartRuntime(this.props.figure.id);
-            if (this.env.isDashboard() && this.hasOdooMenu && runtime && !runtime.chartJsConfig) {
-                await this.navigateToOdooMenu();
-            }
-        } catch {
-            return;
+        if (this.env.isDashboard() && this.hasOdooMenu) {
+            this.navigateToOdooMenu();
         }
     },
 });
