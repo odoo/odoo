@@ -51,7 +51,6 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfiguratorTranslation(TestConfiguratorCommon):
 
-    @unittest.skip
     def test_01_configurator_translation(self):
         parseltongue = self.env['res.lang'].create({
             'name': 'Parseltongue',
