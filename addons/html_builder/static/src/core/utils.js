@@ -281,6 +281,20 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
         },
     });
 }
+
+function getReloadTarget(el) {
+    if (el.closest("header")) {
+        return "header";
+    }
+    if (el.closest("main")) {
+        return "main";
+    }
+    if (el.closest("footer")) {
+        return "footer";
+    }
+    return null;
+}
+
 export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
     const { operation, isApplied, getActions, priority, clean, onReady } =
         useClickableBuilderComponent();
@@ -330,23 +344,16 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
 
     return { state, operation };
 }
-export function useClickableBuilderComponent() {
-    useBuilderComponent();
-    const comp = useComponent();
-    const { getAllActions, callOperation, isApplied } = getAllActionsAndOperations(comp);
-    const getAction = comp.env.editor.shared.builderActions.getAction;
+
+function usePrepareAction(getAllActions) {
+    const env = useEnv();
+    const getAction = env.editor.shared.builderActions.getAction;
     const asyncActions = [];
-    let hasReloadAction = false;
-    let getReloadUrl;
     for (const descr of getAllActions()) {
         if (descr.actionId) {
             const action = getAction(descr.actionId);
             if (action.prepare) {
                 asyncActions.push({ action, descr });
-            }
-            if (action.isReload) {
-                hasReloadAction = true;
-                getReloadUrl = action.getReloadUrl;
             }
         }
     }
@@ -361,6 +368,34 @@ export function useClickableBuilderComponent() {
             resolve();
         });
     }
+    return onReady;
+}
+
+function useReloadAction(getAllActions) {
+    const env = useEnv();
+    const getAction = env.editor.shared.builderActions.getAction;
+    let hasReloadAction = false;
+    let getReloadUrl;
+    for (const descr of getAllActions()) {
+        if (descr.actionId) {
+            const action = getAction(descr.actionId);
+            if (action.isReload) {
+                hasReloadAction = true;
+                getReloadUrl = action.getReloadUrl;
+            }
+        }
+    }
+    return { hasReloadAction, getReloadUrl };
+}
+
+export function useClickableBuilderComponent() {
+    useBuilderComponent();
+    const comp = useComponent();
+    const { getAllActions, callOperation, isApplied } = getAllActionsAndOperations(comp);
+    const getAction = comp.env.editor.shared.builderActions.getAction;
+
+    const onReady = usePrepareAction(getAllActions);
+    const { hasReloadAction, getReloadUrl } = useReloadAction(getAllActions);
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
     const inheritedActionIds =
@@ -370,33 +405,12 @@ export function useClickableBuilderComponent() {
         !hasReloadAction &&
         (comp.props.preview === true ||
             (comp.props.preview === undefined && comp.env.weContext.preview !== false));
-
-    const getReloadTarget = (el) => {
-        if (el.closest("header")) {
-            return "header";
-        }
-        if (el.closest("main")) {
-            return "main";
-        }
-        if (el.closest("footer")) {
-            return "footer";
-        }
-        return null;
-    };
+    const operationWithReload = useOperationWithReload(callApply, getReloadUrl);
 
     const operation = {
         commit: () => {
             if (hasReloadAction) {
-                callOperation(async (...args) => {
-                    const { editingElement } = args[0][0];
-                    await Promise.all([
-                        callApply(...args),
-                        comp.env.editor.shared.savePlugin.save(),
-                    ]);
-                    const target = getReloadTarget(editingElement);
-                    const url = getReloadUrl?.();
-                    comp.env.editor.config.reloadEditor({ target, url });
-                });
+                callOperation(operationWithReload);
             } else {
                 callOperation(applyOperation.commit);
             }
@@ -503,6 +517,16 @@ export function useClickableBuilderComponent() {
         onReady,
     };
 }
+function useOperationWithReload(callApply, getReloadUrl) {
+    const env = useEnv();
+    return async (...args) => {
+        const { editingElement } = args[0][0];
+        await Promise.all([callApply(...args), env.editor.shared.savePlugin.save()]);
+        const target = getReloadTarget(editingElement);
+        const url = getReloadUrl?.();
+        env.editor.config.reloadEditor({ target, url });
+    };
+}
 export function useInputBuilderComponent({
     id,
     defaultValue,
@@ -513,17 +537,28 @@ export function useInputBuilderComponent({
     const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const state = useDomState(getState);
-    const applyOperation = comp.env.editor.shared.history.makePreviewableOperation((applySpecs) => {
+
+    const onReady = usePrepareAction(getAllActions);
+    const { hasReloadAction, getReloadUrl } = useReloadAction(getAllActions);
+
+    async function callApply(applySpecs) {
+        const proms = [];
         for (const applySpec of applySpecs) {
-            applySpec.apply({
-                editingElement: applySpec.editingElement,
-                param: applySpec.actionParam,
-                value: applySpec.actionValue,
-                loadResult: applySpec.loadResult,
-                dependencyManager: comp.env.dependencyManager,
-            });
+            proms.push(
+                applySpec.apply({
+                    editingElement: applySpec.editingElement,
+                    param: applySpec.actionParam,
+                    value: applySpec.actionValue,
+                    loadResult: applySpec.loadResult,
+                    dependencyManager: comp.env.dependencyManager,
+                })
+            );
         }
-    });
+        await Promise.all(proms);
+    }
+
+    const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
+    const operationWithReload = useOperationWithReload(callApply, getReloadUrl);
     function getState(editingElement) {
         if (!editingElement || !editingElement.isConnected) {
             // TODO try to remove it. We need to move hook in BuilderComponent
@@ -544,7 +579,11 @@ export function useInputBuilderComponent({
             userInputValue ||= formatRawValue(defaultValue);
         }
         const rawValue = parseDisplayValue(userInputValue);
-        callOperation(applyOperation.commit, { userInputValue: rawValue });
+        if (hasReloadAction) {
+            callOperation(operationWithReload, { userInputValue: rawValue });
+        } else {
+            callOperation(applyOperation.commit, { userInputValue: rawValue });
+        }
         // If the parsed value is not equivalent to the user input, we want to
         // normalize the displayed value. It is useful in cases of invalid
         // input and allows to fall back to the output of parseDisplayValue.
@@ -567,16 +606,21 @@ export function useInputBuilderComponent({
     }
 
     if (id) {
-        useDependencyDefinition(id, {
-            type: "input",
-            getValue: () => state.value,
-        });
+        useDependencyDefinition(
+            id,
+            {
+                type: "input",
+                getValue: () => state.value,
+            },
+            { onReady }
+        );
     }
 
     return {
         state,
         commit,
         preview,
+        onReady,
     };
 }
 
