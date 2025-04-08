@@ -7,7 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 export const patchAvatarCardPopover = {
     setup() {
         super.setup();
-        this.userInfoTemplate = "hr.avatarCardUserInfos",
+        this.userInfoTemplate = "hr.avatarCardUserInfos";
         this.actionService = useService("action");
     },
     get fieldNames(){
@@ -30,7 +30,7 @@ export const patchAvatarCardPopover = {
     async onClickViewEmployee(){
         const employeeId = this.user.employee_ids[0];
         const action = await this.orm.call('hr.employee', 'get_formview_action', [employeeId]);
-        this.actionService.doAction(action); 
+        this.actionService.doAction(action);
     }
 };
 

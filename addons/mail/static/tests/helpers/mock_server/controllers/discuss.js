@@ -197,6 +197,16 @@ patch(MockServer.prototype, {
         if (route === "/discuss/gif/favorites") {
             return [[]];
         }
+        if (route === "/mail/avatar_card/get_user_info") {
+            const { user_id } = args;
+            const user = this.pyEnv["res.users"].searchRead([["id", "=", user_id]])[0];
+            return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+            }
+        }
         return super._performRPC(route, args);
     },
     /**

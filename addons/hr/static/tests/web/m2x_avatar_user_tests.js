@@ -63,23 +63,7 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
             job_title: "sub manager",
             department_id: departmentId,
         });
-        const mockRPC = (route, args) => {
-            if(route === "/web/dataset/call_kw/res.users/read"){
-                assert.deepEqual(args.args[1], [
-                "name", 
-                "email", 
-                "phone", 
-                "im_status",
-                "share",
-                "work_phone",
-                "work_email",
-                "job_title",
-                "department_id",
-                "employee_parent_id",
-                "employee_ids"]);
-                assert.step("user read");
-            }
-        };
+
         const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
         const views = {
             "m2x.avatar.user,false,kanban": `
@@ -93,7 +77,7 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
                         </templates>
                     </kanban>`,
         };
-        const { openView } = await start({ serverData: { views }, mockRPC });
+        const { openView } = await start({ serverData: { views }});
         await openView({
             res_model: "m2x.avatar.user",
             res_id: avatarUserId,
@@ -108,7 +92,7 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
         });
         // Open card
         await click(document, ".o_m2o_avatar > img");
-        assert.verifySteps(["setTimeout of 250ms", "user read"]);
+        assert.verifySteps(["setTimeout of 250ms"]);
         assert.containsOnce(target, ".o_avatar_card");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_card_user_infos > *")), ['Mario', 'sub manager', 'Managemment', 'Mario@odoo.pro', '+585555555']);
         // Close card
