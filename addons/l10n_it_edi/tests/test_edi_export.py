@@ -1,5 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< 88bc9576296cb845dd46c9f1b5aac49a1f7f8d28
+||||||| abcce1f5d1981785a419224fcd2351c830bb1b54
+import datetime
+from lxml import etree
+
+=======
+import datetime
+from lxml import etree
+
+>>>>>>> b4212544f9ac578e1b1f92dfe2d45b6c9d0896ec
 from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
@@ -370,6 +380,7 @@ class TestItEdiExport(TestItEdi):
         with self.subTest('credit note'):
             self._assert_export_invoice(credit_note, 'credit_note_negative_price.xml')
 
+<<<<<<< 88bc9576296cb845dd46c9f1b5aac49a1f7f8d28
     def test_invoice_more_decimal_price_unit(self):
         decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
         decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
@@ -390,6 +401,55 @@ class TestItEdiExport(TestItEdi):
             ],
         })
         invoice.action_post()
+||||||| abcce1f5d1981785a419224fcd2351c830bb1b54
+    def test_price_included_taxes(self):
+        """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not
+            equal to taxable base * tax rate (there is a constraint in the edi where taxable base * tax rate = tax amount, but also
+            taxable base = sum(subtotals) + rounding amount)
+        """
+        # In this case, the first two lines use a price_include tax the
+        # subtotals should be 800.40 / (100 + 22.0) * 100 = 656.065564..,
+        # where 22.0 is the tax rate.
+        #
+        # Since the subtotals are rounded we actually have 656.07
+        lines = self.price_included_invoice.line_ids
+        price_included_lines = lines.filtered(lambda line: line.tax_ids == self.price_included_tax)
+        self.assertEqual([line.price_subtotal for line in price_included_lines], [656.07, 656.07])
+        # So the taxable a base the edi expects (for this tax) is actually 1312.14
+        price_included_tax_line = lines.filtered(lambda line: line.tax_line_id == self.price_included_tax)
+        self.assertEqual(price_included_tax_line.tax_base_amount, 1312.14)
+=======
+    def test_export_zero_amount_move(self):
+        """When a move has an amount of 0, a float division by zero error is triggered."""
+        usd_currency = self.env.ref('base.USD')
+        usd_currency.active = True
+        zero_amount_move = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'currency_id': usd_currency.id,
+            'invoice_line_ids': [Command.create({'amount_currency': 0})]
+        })
+        zero_amount_move._prepare_fatturapa_export_values()
+        self.assertEqual(len(zero_amount_move.invoice_line_ids), 1)
+        self.assertEqual(zero_amount_move.invoice_line_ids[0].amount_currency, 0)
+
+    def test_price_included_taxes(self):
+        """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not
+            equal to taxable base * tax rate (there is a constraint in the edi where taxable base * tax rate = tax amount, but also
+            taxable base = sum(subtotals) + rounding amount)
+        """
+        # In this case, the first two lines use a price_include tax the
+        # subtotals should be 800.40 / (100 + 22.0) * 100 = 656.065564..,
+        # where 22.0 is the tax rate.
+        #
+        # Since the subtotals are rounded we actually have 656.07
+        lines = self.price_included_invoice.line_ids
+        price_included_lines = lines.filtered(lambda line: line.tax_ids == self.price_included_tax)
+        self.assertEqual([line.price_subtotal for line in price_included_lines], [656.07, 656.07])
+        # So the taxable a base the edi expects (for this tax) is actually 1312.14
+        price_included_tax_line = lines.filtered(lambda line: line.tax_line_id == self.price_included_tax)
+        self.assertEqual(price_included_tax_line.tax_base_amount, 1312.14)
+>>>>>>> b4212544f9ac578e1b1f92dfe2d45b6c9d0896ec
 
         self._assert_export_invoice(invoice, 'invoice_decimal_precision_product.xml')
 
