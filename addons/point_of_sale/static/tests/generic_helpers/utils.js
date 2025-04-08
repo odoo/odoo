@@ -1,3 +1,4 @@
+/* global posmodel */
 import { simulateBarCode } from "@barcodes/../tests/legacy/helpers";
 
 export function negate(selector, parent = "body") {
@@ -25,7 +26,24 @@ export function negateStep(step) {
     };
 }
 export function refresh() {
-    return run(() => window.location.reload(), "refresh page");
+    return run(async () => {
+        await new Promise((resolve) => {
+            const checkTransaction = () => {
+                const activeTransactions = posmodel.data.indexedDB.activeTransactions;
+                if (activeTransactions <= 0) {
+                    window.location.reload();
+                    resolve();
+                } else {
+                    setTimeout(checkTransaction, 100);
+                }
+            };
+
+            checkTransaction();
+            setTimeout(() => {
+                throw new Error("Timeout waiting indexedDB for transactions to finish");
+            }, 2000);
+        });
+    }, "refresh page");
 }
 export function elementDoesNotExist(selector) {
     return {
