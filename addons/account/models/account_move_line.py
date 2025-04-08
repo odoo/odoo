@@ -976,7 +976,7 @@ class AccountMoveLine(models.Model):
                 handle_price_include=handle_price_include,
                 include_caba_tags=line.move_id.always_tax_exigible,
             )
-            rate = line.amount_currency / line.balance if line.balance else line.currency_rate
+            rate = line.amount_currency / line.balance if (line.amount_currency and line.balance) else line.currency_rate
             line.compute_all_tax_dirty = True
             line.compute_all_tax = {
                 frozendict({
