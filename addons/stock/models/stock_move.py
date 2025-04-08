@@ -1634,7 +1634,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not owner_id:
             owner_id = self.env['res.partner']
 
-        quants = self.env['stock.quant']._get_reserve_quantity(
+        # Specific packaging uom used for the move
+        packaging_uom_id = self.packaging_uom_id
+        quants = self.env['stock.quant'].with_context(packaging_uom_id=packaging_uom_id)._get_reserve_quantity(
             self.product_id, location_id, need, uom_id=self.product_uom,
             lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
