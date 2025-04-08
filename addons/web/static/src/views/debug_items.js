@@ -309,7 +309,7 @@ class SetDefaultDialog extends Component {
                 return option[0] === value;
             })[1];
         }
-        if (displayed.length > 60) {
+        if (displayed?.length > 60) {
             displayed = displayed.slice(0, 57) + "...";
         }
         return [value, displayed];
