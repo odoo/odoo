@@ -617,6 +617,7 @@ class AccountMove(models.Model):
                 'base_sgst',
                 'base_cgst',
                 'base_igst',
+                'igst_lut',
                 'base_cess',
                 'zero_rated'
             )
