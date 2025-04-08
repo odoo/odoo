@@ -601,7 +601,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             The methods to retrieve views should return the specific inactive
             child over the generic active one.
         '''
-        View = self.env['ir.ui.view']
+        View = self.env['ir.ui.view'].with_context(active_test=False)
         self.inherit_view.with_context(website_id=1).write({'active': False})
 
         # Test _view_obj() return the inactive specific over active generic

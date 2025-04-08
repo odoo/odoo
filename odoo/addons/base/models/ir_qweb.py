@@ -379,7 +379,8 @@ import werkzeug
 
 import psycopg2.errors
 from markupsafe import Markup, escape
-from collections.abc import Sized, Mapping
+from collections import defaultdict
+from collections.abc import Sized, Mapping, Sequence
 from itertools import count, chain
 from lxml import etree
 from dateutil.relativedelta import relativedelta
@@ -389,7 +390,7 @@ from pathlib import Path
 from odoo import api, models, tools
 from odoo.modules import get_module_path
 from odoo.modules.registry import _REGISTRY_CACHES
-from odoo.tools import config, safe_eval, pycompat
+from odoo.tools import config, safe_eval, OrderedSet
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
@@ -473,6 +474,13 @@ SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title'}
 # Name of the variable to insert the content in t-call in the template.
 # The slot will be replaced by the `t-call` tag content of the caller.
 T_CALL_SLOT = '0'
+
+
+def _id_or_xmlid(ref):
+    try:
+        return int(ref)
+    except ValueError:
+        return ref
 
 
 def indent_code(code, level):
@@ -619,15 +627,8 @@ class IrQweb(models.AbstractModel):
         """ Return the list of context keys to use for caching ``_compile``. """
         return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile']
 
-    @tools.conditional(
-        'xml' not in tools.config['dev_mode'],
-        tools.ormcache('template', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())', cache='templates'),
-    )
-    def _get_view_id(self, template):
-        try:
-            return self.env['ir.ui.view'].sudo().with_context(load_all_views=True)._get_view_id(template)
-        except Exception:
-            return None
+    def _get_template_info(self, template):
+        return self.env['ir.ui.view']._get_cached_template_info(template)
 
     def _compile(self, template):
         if not self.env.context.get('profile'):
@@ -661,7 +662,7 @@ class IrQweb(models.AbstractModel):
                 with file_open(template, 'rb', filter_ext=('.xml',)) as file:
                     template = etree.fromstring(file.read())
         else:
-            ref = self._get_view_id(template)
+            ref = self._get_template_info(template)['id']
 
         # define the base key cache for code in cache and t-cache feature
         base_key_cache = None
@@ -705,6 +706,18 @@ class IrQweb(models.AbstractModel):
         return self._load_values(base_key_cache, generate_functions)
 
     def _generate_code(self, template):
+        if isinstance(template, etree._Element):
+            return self.__generate_code(template)
+        return self._generate_code_cached(template)
+
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache('template', 'tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())', cache='templates'),
+    )
+    def _generate_code_cached(self, template):
+        return self.__generate_code(template)
+
+    def __generate_code(self, template):
         """ Compile the given template into a rendering function (generator)::
 
             render_template(qweb, values)
@@ -746,10 +759,14 @@ class IrQweb(models.AbstractModel):
 
         compile_context.pop('raise_if_not_found', None)
 
+        ref_name = element.attrib.pop('t-name', template if isinstance(template, str) and '<' not in template else None)
+        if ref_name is None and isinstance(ref, int):
+            ref_name = self._get_template_info(ref)['key']
+
         # reference to get xml and etree (usually the template ID)
         compile_context['ref'] = ref
         # reference name or key to get xml and etree (usually the template XML ID)
-        compile_context['ref_name'] = element.attrib.pop('t-name', template if isinstance(template, str) and '<' not in template else None)
+        compile_context['ref_name'] = element.attrib.pop('t-name', template if isinstance(template, str) and '<' not in template else ref_name)
         # str xml of the reference template used for compilation. Useful for debugging, dev mode and profiling.
         compile_context['ref_xml'] = document
         # Identifier used to call `_compile`
@@ -849,79 +866,100 @@ class IrQweb(models.AbstractModel):
         if isinstance(template, etree._Element):
             element = template
             document = etree.tostring(template, encoding='unicode')
-            ref = None
+
+            # <templates>
+            #   <template t-name=... /> <!-- return ONLY this element -->
+            #   <template t-name=... />
+            # </templates>
+            for node in element.iter():
+                ref = node.get('t-name')
+                if ref:
+                    return (node, document, ref)
+
+            # use the document itself as ref when no t-name was found
+            return (element, document, document)
+
         # template is xml as string
-        elif isinstance(template, str) and '<' in template:
+        if isinstance(template, str) and '<' in template:
             raise ValueError('Inline templates must be passed as `etree` documents')
 
         # template is (id or ref) to a database stored template
-        else:
-            try:
-                ref_alias = int(template)  # e.g. <t t-call="33"/>
-            except ValueError:
-                ref_alias = template  # e.g. web.layout
+        id_or_xmlid = _id_or_xmlid(template)  # e.g. <t t-call="33"/> or <t t-call="web.layout"/>
+        value = self._preload_trees([id_or_xmlid]).get(id_or_xmlid)
+        if value.get('error'):
+            raise value['error']
 
-            doc_or_elem, ref = self._load(ref_alias) or (None, None)
-            if doc_or_elem is None:
-                raise ValueError(f"Can not load template: {ref_alias!r}")
-            if isinstance(doc_or_elem, etree._Element):
-                element = doc_or_elem
-                document = etree.tostring(doc_or_elem, encoding='unicode')
-            elif isinstance(doc_or_elem, str):
-                element = etree.fromstring(doc_or_elem)
-                document = doc_or_elem
-            else:
-                raise TypeError(f"Loaded template {ref!r} should be a string.")
+        # return etree, document and ref
+        return (value['tree'], value['template'], value['ref'])
 
-        # return etree, document and ref, or try to find the ref
-        if ref:
-            return (element, document, ref)
+    @api.model
+    def _get_preload_attribute_xmlids(self):
+        return ['t-call']
 
-        # <templates>
-        #   <template t-name=... /> <!-- return ONLY this element -->
-        #   <template t-name=... />
-        # </templates>
-        for node in element.iter():
-            ref = node.get('t-name')
-            if ref:
-                return (node, document, ref)
+    def _preload_trees(self, refs: Sequence[int | str]):
+        """ Preload all tree and subtree (from t-call and other '_get_preload_attribute_xmlids' values).
 
-        # use the document itself as ref when no t-name was found
-        return (element, document, document)
+            Returns::
 
-    def _load(self, ref):
+                {
+                    id or xmlId/key: {
+                        'xmlid': str | None,
+                        'ref': int | None,
+                        'tree': etree | None,
+                        'template': str | None,
+                        'error': None | MissingError
+                    }
+                }
         """
-        Load the template referenced by ``ref``.
+        compile_batch = self.env['ir.ui.view']._preload_views(refs)
 
-        :returns: The loaded template (as string or etree) and its
-            identifier
-        :rtype: Tuple[Union[etree, str], Optional[str, int]]
-        """
-        IrUIView = self.env['ir.ui.view'].sudo()
-        view = IrUIView._get(ref)
-        template = IrUIView._read_template(view.id)
-        etree_view = etree.fromstring(template)
+        refs = list(map(_id_or_xmlid, refs))
+        missing_refs = {ref: compile_batch[ref] for ref in refs if 'template' not in compile_batch[ref] and not compile_batch[ref]['error']}
+        if not missing_refs:
+            return compile_batch
 
-        xmlid = view.key or ref
-        if isinstance(ref, int):
-            domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', view.id)]
-            model_data = self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name'], limit=1)
-            if model_data:
-                xmlid = f"{model_data[0]['module']}.{model_data[0]['name']}"
+        xmlids = list(missing_refs)
+        missing_refs_values = list(missing_refs.values())
+        views = self.env['ir.ui.view'].sudo().union(*[data['view'] for data in missing_refs_values])
 
-        # QWeb's ``_read_template`` will check if one of the first children of
-        # what we send to it has a "t-name" attribute having ``ref`` as value
-        # to consider it has found it. As it'll never be the case when working
-        # with view ids or children view or children primary views, force it here.
-        if view.inherit_id is not None:
-            for node in etree_view:
-                if node.get('t-name') == str(ref) or node.get('t-name') == str(view.key):
-                    node.attrib.pop('name', None)
-                    node.attrib.pop('id', None)
-                    etree_view = node
-                    break
-        etree_view.set('t-name', str(xmlid))
-        return (etree_view, view.id)
+        try:
+            trees = views._get_view_etrees()
+        except Exception as e:
+            raise QWebException("Error while render the template", self, ref=','.join(refs)) from e
+
+        # add in cache
+        for xmlid, view, tree in zip(xmlids, views, trees):
+            data = {
+                'tree': tree,
+                'template': etree.tostring(tree, encoding='unicode'),
+            }
+            compile_batch[view.id].update(data)
+            compile_batch[xmlid].update(data)
+
+        # preload sub template
+        ref_names = self._get_preload_attribute_xmlids()
+        sub_refs = OrderedSet()
+        for tree in trees:
+            sub_refs.update(
+                el.get(ref_name)
+                for ref_name in ref_names
+                for el in tree.xpath(f'//*[@{ref_name}]')
+                if not any(att.startswith('t-options-') or att == 't-options' or att == 't-lang' for att in el.attrib)
+                if '{' not in el.get(ref_name) and '<' not in el.get(ref_name) and '/' not in el.get(ref_name)
+            )
+        assert not any(not f for f in sub_refs), "template is required"
+        self._preload_trees(list(sub_refs))
+
+        # not found template
+        for ref in missing_refs:
+            if ref not in compile_batch:
+                compile_batch[ref] = {
+                    'xmlid': ref,
+                    'ref': ref,
+                    'error': MissingError(self.env._("External ID can not be loaded: %s", ref)),
+                }
+
+        return compile_batch
 
     # values for running time
 
@@ -2767,6 +2805,21 @@ def render(template_name, values, load, **options):
         _register = False               # not visible in real registry
 
         pool = MockPool()
+
+        def _get_template_info(self, id_or_xmlid, _view=None):
+            return defaultdict(lambda: None, id=id_or_xmlid)
+
+        def _preload_trees(self, refs):
+            values = {}
+            for ref in refs:
+                tree, vid = self.env.context['load'](ref)
+                values[ref] = values[vid] = {
+                    'tree': tree,
+                    'template': etree.tostring(tree, encoding='unicode'),
+                    'xmlid': vid,
+                    'ref': None,
+                }
+            return values
 
         def _load(self, ref):
             """

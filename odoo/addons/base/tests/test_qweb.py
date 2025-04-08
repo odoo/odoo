@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import collections
-import json
-import os.path
-import re
 import markupsafe
 
 from lxml import etree, html
 from lxml.builder import E
-from copy import deepcopy
 from textwrap import dedent
 
 from odoo.tests.common import TransactionCase
@@ -17,7 +12,7 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.models.ir_qweb import QWebException, render
 from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.exceptions import UserError, ValidationError, MissingError
+from odoo.exceptions import UserError, MissingError
 
 unsafe_eval = eval
 
@@ -1079,6 +1074,7 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
+    @mute_logger('odoo.addons.base.models.ir_qweb')
     def test_set_error_1(self):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
@@ -1098,6 +1094,7 @@ class TestQWebBasic(TransactionCase):
             self.assertIn("KeyError: 't-set'", error)
             self.assertIn('<t t-set="" t-value="1"/>', error)
 
+    @mute_logger('odoo.addons.base.models.ir_qweb')
     def test_set_error_2(self):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
@@ -1431,14 +1428,14 @@ class TestQWebBasic(TransactionCase):
         try:
             self.env['ir.qweb']._render(-999)
         except MissingError as e:
-            self.assertIn('Record does not exist or has been deleted.', str(e))
+            self.assertIn('Template does not exist or has been deleted', str(e))
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(MissingError):
             self.env['ir.qweb']._render('not.wrong_template_xmlid')
         try:
             self.env['ir.qweb']._render('not.wrong_template_xmlid')
-        except ValueError as e:
-            self.assertIn('External ID not found in the system', str(e))
+        except MissingError as e:
+            self.assertIn('Template not found', str(e))
 
         with self.assertRaises(AssertionError):
             self.env['ir.qweb']._render(False)
@@ -1550,7 +1547,7 @@ class TestQWebBasic(TransactionCase):
             self.env['ir.qweb']._render(view1.id)
         except QWebException as e:
             error = str(e)
-            self.assertIn('External ID not found in the system: base.dummy', error)
+            self.assertIn('Template not found: base.dummy', error)
             self.assertIn('<t t-call="base.dummy"/>', error)
 
     def test_render_t_call_propagates_t_lang(self):
@@ -2000,14 +1997,14 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         #     SELECT id + fields from xmlid
         #     SELECT RECURSIVE arch combine => TODO: batch me
 
-        FIRST_SEARCH_FETCH = 3  # the first "SELECT id + fields from xmlid"
-        OTHER_SEARCH_FETCH = 21  # "SELECT id + fields from xmlid"
+        FIRST_SEARCH_FETCH = 1  # the first "SELECT id + fields from xmlid"
+        OTHER_SEARCH_FETCH = 3  # "SELECT id + fields from xmlid"
         ARCH_COMBINE = 8  # SELECT RECURSIVE arch combine
 
         self.env.registry.clear_cache('templates')
         view.invalidate_model()
 
-        check('base.testing_content', 'test-cold-0', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 32
+        check('base.testing_content', 'test-cold-0', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
         check('base.testing_content', 'test-hot-0', 0)
         check('base.testing_content', 'test-hot-1', 0)
 
@@ -2017,20 +2014,20 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
 
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
-        check(view.id, 'test-cold-id-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 31
+        check(view.id, 'test-cold-id-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
 
         # like 'test-cold-0' the first search query is replaced by a fetching
         self.env.registry.clear_cache('templates')
         view.invalidate_model()
-        check(view.id, 'test-cold-id-2', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 31
+        check(view.id, 'test-cold-id-2', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
 
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
-        check('base.testing_content', 'test-cold-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 8)  # 24
+        check('base.testing_content', 'test-cold-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
 
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
-        check(view.id, 'test-cold-id-3', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 9)  # 23
+        check(view.id, 'test-cold-id-3', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 11
 
 
 class TestQwebCache(TransactionCase):
