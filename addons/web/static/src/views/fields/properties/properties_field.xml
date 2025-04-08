@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertiesField">
-        <div t-ref="properties" class="row"
-            t-att-class="{'d-none': propertiesList.length === 0 and !state.showAddButton}"
-            t-att-columns="renderedColumnsCount">
+        <div t-ref="properties" class="row" t-att-columns="renderedColumnsCount">
             <t t-set="unfoldedSeparators" t-value="state.unfoldedSeparators"/>
             <t t-set="_groupedPropertiesList" t-value="groupedPropertiesList"/>
             <t t-foreach="groupedPropertiesList" t-as="propertiesListGroup" t-key="propertiesListGroup_index">
@@ -17,10 +15,10 @@
                         t-on-click="() => this.onSeparatorClick(propertiesListGroup.name)">
                         <span t-if="propertiesListGroup.title" t-out="propertiesListGroup.title"/>
                         <i
-                            t-if="state.canChangeDefinition and !props.readonly and !propertiesListGroup.columnSeparator"
+                            t-if="state.isInEditMode and !propertiesListGroup.columnSeparator"
                             class="o_field_property_open_popover fa fa-pencil ms-3"
                             t-on-click.prevent.stop="(event) => this.onPropertyEdit(event, propertiesListGroup.name)"/>
-                        <i t-if="state.canChangeDefinition and !props.readonly"
+                        <i t-if="state.isInEditMode"
                             class="oi oi-draggable ms-1 d-none d-sm-block"/>
                         <div t-if="foldable" class="ms-auto">
                             <i class="fa me-1" t-att-class="isFolded ? 'fa-caret-right' : 'fa-caret-down'"/>
@@ -50,17 +48,16 @@
                                 New Property
                             </i>
                             <i
-                                t-if="state.canChangeDefinition and !props.readonly"
+                                t-if="state.isInEditMode"
                                 class="o_field_property_open_popover fa fa-pencil ms-2"
                                 t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
-                            <i t-if="state.canChangeDefinition and !props.readonly"
+                            <i t-if="state.isInEditMode"
                                 class="oi oi-draggable ms-1 d-none d-sm-block"/>
                         </label>
                         <div class="o_property_field_value w-100">
                             <PropertyValue
                                 id="domId"
                                 canChangeDefinition="state.canChangeDefinition"
-                                checkDefinitionWriteAccess.bind="checkDefinitionWriteAccess ? checkDefinitionWriteAccess : () => {}"
                                 comodel="propertyConfiguration.comodel || ''"
                                 context="props.context"
                                 domain="propertyConfiguration.domain || '[]'"
@@ -76,11 +73,11 @@
                         </div>
                     </div>
                     <div
-                        t-if="propertiesListGroup_index === _groupedPropertiesList.length - 1 and state.showAddButton"
+                        t-if="propertiesListGroup_index === _groupedPropertiesList.length - 1"
                         class="o_field_property_add d-none d-sm-block"
                         t-att-class="{'g-col-2': props.columns !== 1}">
                         <button
-                            t-if="!props.readonly and state.canChangeDefinition and definitionRecordId"
+                            t-if="state.isInEditMode and definitionRecordId"
                             class="btn btn-light text-muted text-break m-0"
                             t-on-click="onPropertyCreate">
                             <i class="fa fa-plus"/>
