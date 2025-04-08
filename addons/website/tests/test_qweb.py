@@ -6,7 +6,6 @@ from odoo.addons.website.tools import MockRequest
 from odoo.tests.common import TransactionCase, tagged
 
 
-@tagged('post_install', '-at_install')
 class TestQweb(TransactionCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
@@ -197,6 +196,7 @@ class TestQweb(TransactionCaseWithUserDemo):
 
             init = env.cr.sql_log_count
             if with_website:
+                queries += 1
                 with MockRequest(env, website=website) as request:
                     value = str(request.env['ir.qweb']._render(template, {'doc': name}))
                 self.assertEqual(value, expected_website % name)
@@ -207,34 +207,34 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         # SELECT visibility (from _render) + fields from in cache
         # 'base.testing_content'
-        #     SELECT id + fields from (xmlid + website_id) => TODO: batch me
         #     SELECT RECURSIVE arch combine
         # 'base.testing_layout', 'base.testing_header_0'
-        #     SELECT id + fields from (xmlid + website_id) => TODO: batch me
+        #     SELECT id + fields from (xmlid + website_id)
         #     SELECT RECURSIVE arch combine => TODO: batch me
         # 'base.testing_header', 'base.testing_footer'
-        #     SELECT id + fields from (xmlid + website_id) => TODO: batch me
+        #     SELECT id + fields from (xmlid + website_id)
         #     SELECT RECURSIVE arch combine => TODO: batch me
         # 'base.testing_header_1', 'base.testing_footer_0', 'base.testing_footer_1'
-        #     SELECT id + fields from (xmlid + website_id) => TODO: batch me
+        #     SELECT id + fields from (xmlid + website_id)
         #     SELECT RECURSIVE arch combine => TODO: batch me
 
-        first_search_fetch_xmlid_queries = 2  # the first "SELECT id + fields from xmlid"
-        other_search_fetch_xmlid_queries = 14  # "SELECT id + fields from xmlid"
+        first_search_fetch_xmlid_queries = 1  # instead of the first SELECT visibility
+        other_search_fetch_xmlid_queries = 3  # "SELECT id + fields from xmlid"
         arch_combine_queries = 8  # SELECT RECURSIVE arch combine
 
         self.env.registry.clear_cache('templates')
         view.invalidate_recordset()
 
         test_render_queries('base.testing_content', 'test-cold-0',
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 24
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
                             invalidate_templates=True, invalidate_view=True)
 
         test_render_queries('base.testing_content', 'test-cold-0', with_website=True,
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 24
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
                             invalidate_templates=True, invalidate_view=True)
 
-        test_render_queries('base.testing_content', 'test-cold-0', queries=18)
+        test_render_queries('base.testing_content', 'test-cold-0',
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 12
 
         test_render_queries('base.testing_content', 'test-hot-0', 0)
         test_render_queries('base.testing_content', 'test-hot-0', 0, with_website=True)
@@ -248,44 +248,49 @@ class TestQweb(TransactionCaseWithUserDemo):
         # like 'test-cold-0'
 
         test_render_queries(view.id, 'test-cold-id-1',
-                            queries=24,
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
                             invalidate_templates=True)
 
         test_render_queries(view.id, 'test-cold-id-1',
-                            queries=16,
+                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 11
                             invalidate_templates=True)
 
         test_render_queries(view.id, 'test-cold-id-1', with_website=True,
-                            queries=18,
+                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 11
                             invalidate_templates=True)
 
         # like 'test-cold-0' the first search query is replaced by a fetching
         test_render_queries(view.id, 'test-cold-id-2', with_website=True,
-                            queries=24,
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
                             invalidate_templates=True, invalidate_view=True)
         test_render_queries(view.id, 'test-cold-id-2',
-                            queries=24,
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
                             invalidate_templates=True, invalidate_view=True)
+
+        env = self.env(user=self.user_demo, context={
+            'lang': 'en_US',
+            'minimal_qcontext': True,
+            'cookies_allowed': True,
+        })
 
         # like 'test-cold-0'
         test_render_queries('base.testing_content', 'test-cold-1',
-                            queries=16,
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
                             invalidate_templates=True)
         test_render_queries('base.testing_content', 'test-cold-1', with_website=True,
-                            queries=18,
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
                             invalidate_templates=True)
 
         # like 'test-cold-0'
         test_render_queries(view.id, 'test-cold-id-3',
-                            16,
+                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 11
                             with_website=True,
                             invalidate_templates=True)
         test_render_queries(view.id, 'test-cold-id-3',
-                            16,
+                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 11
                             invalidate_templates=True)
 
 
-@tagged('post_install', '-at_install')
 class TestQwebProcessAtt(TransactionCase):
     def setUp(self):
         super(TestQwebProcessAtt, self).setUp()
@@ -370,6 +375,7 @@ class TestQwebProcessAtt(TransactionCase):
             match.assert_called_with('/x', method='POST', query_args='y')
 
 
+@tagged('-at_install', 'post_install')
 class TestQwebDataSnippet(TransactionCase):
 
     @classmethod
@@ -503,12 +509,17 @@ class TestQwebDataSnippet(TransactionCase):
     def test_call_query_count_snippets_template(self):
         init = self.env.cr.sql_log_count
         with MockRequest(self.env, website=self.env['website'].browse(1)):
-            self.env['ir.ui.view'].render_public_asset('website.snippets')
+            render = self.env['ir.ui.view'].render_public_asset('website.snippets')
+            self.assertTrue('data-selector=".s_blockquote"' in render)
 
-        nb_snippets = 156
-        t_call_snippets = nb_snippets
-        fetch_snippets = nb_snippets + 30
-        combine_views = nb_snippets
-        queries = t_call_snippets + fetch_snippets + combine_views + 58
+        # nb_snippets = 156
+        first_search = 1
+        t_call_snippets = 2
+        fetch_snippets = 4
+        get_root_view = 3
+        combine_views = 3
 
-        self.assertEqual(self.env.cr.sql_log_count - init, queries, f'Maximum queries: {queries}')
+        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 13
+        other_queries = 43
+
+        self.assertEqual(self.env.cr.sql_log_count - init, all_ir_ui_view_queries + other_queries, f'Maximum queries: {all_ir_ui_view_queries + other_queries}')

@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-import logging
 
 from collections import OrderedDict
 from urllib.parse import urlsplit
@@ -13,7 +12,6 @@ from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 
 
-_logger = logging.getLogger(__name__)
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
 
@@ -34,7 +32,7 @@ class IrQweb(models.AbstractModel):
         element, document, ref = super()._get_template(template)
         if self.env.context.get('website_id'):
             add_form_signature(element, self.sudo().env)
-        return  element, document, ref
+        return element, document, ref
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
