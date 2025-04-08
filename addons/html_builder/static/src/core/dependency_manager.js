@@ -14,17 +14,20 @@ export class DependencyManager extends EventBus {
     }
     update() {
         this.dependenciesMap = {};
-        for (const [id, value] of this.dependencies) {
+        for (const [id, value, ignored] of this.dependencies.reverse()) {
+            if (ignored && id in this.dependenciesMap) {
+                continue;
+            }
             this.dependenciesMap[id] = value;
         }
         this.dirty = false;
     }
 
-    add(id, value) {
+    add(id, value, ignored = false) {
         // In case the dependency is added after a dependent try to get it
         // an event is scheduled to notify the dependent about it.
         this.triggerDependencyUpdated();
-        this.dependencies.push([id, value]);
+        this.dependencies.push([id, value, ignored]);
         this.dirty = true;
     }
 

@@ -113,12 +113,13 @@ export function useBuilderComponent() {
 }
 export function useDependencyDefinition(id, item, { onReady } = {}) {
     const comp = useComponent();
+    const ignore = comp.env.ignoreBuilderItem;
     if (onReady) {
         onReady.then(() => {
-            comp.env.dependencyManager.add(id, item);
+            comp.env.dependencyManager.add(id, item, ignore);
         });
     } else {
-        comp.env.dependencyManager.add(id, item);
+        comp.env.dependencyManager.add(id, item, ignore);
     }
 
     onWillDestroy(() => {
