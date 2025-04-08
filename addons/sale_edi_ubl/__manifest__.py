@@ -11,6 +11,7 @@ File with embedded xml data will allow seller to retrieve Order data from Files.
     """,
     'depends': ['sale', 'order_edi_ubl_cii'],
     'data': [
+        'report/ir_actions_report_templates.xml',
         'views/portal_templates_edi_ubl_connect_software.xml'
     ],
     'installable': True,
