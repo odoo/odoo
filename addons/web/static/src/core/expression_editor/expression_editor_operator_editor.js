@@ -13,8 +13,6 @@ const EXPRESSION_VALID_OPERATORS = [
     "!=",
     "set",
     "not_set",
-    "is",
-    "is_not",
 ];
 
 export function getExpressionDisplayedOperators(fieldDef) {
