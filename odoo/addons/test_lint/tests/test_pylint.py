@@ -3,6 +3,7 @@
 import logging
 import os
 import platform
+import sys
 from os.path import join
 
 try:
@@ -76,7 +77,8 @@ class TestPyLint(TransactionCase):
             ]),
         ]
 
-        pypath = HERE + os.pathsep + os.environ.get('PYTHONPATH', '')
+        stdlib_prefixes = tuple({sys.prefix, sys.base_prefix, sys.exec_prefix, sys.base_exec_prefix})
+        pypath = os.pathsep.join([HERE, *(p for p in sys.path if not p.startswith(stdlib_prefixes))])
         env = {
             **os.environ,
             "PYTHONPATH": pypath,
