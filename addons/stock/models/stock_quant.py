@@ -875,6 +875,8 @@ class StockQuant(models.Model):
         # will take care of changing the UOM to the UOM of the product.
         if not strict and uom_id and product_id.uom_id != uom_id:
             quantity_move_uom = product_id.uom_id._compute_quantity(quantity, uom_id, rounding_method='DOWN')
+            if product_id.categ_id.packaging_reserve_method == 'full':
+                quantity_move_uom //= 1
             quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
 
         if product_id.tracking == 'serial':

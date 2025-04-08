@@ -2171,6 +2171,36 @@ class StockMove(TransactionCase):
         move_partial._action_assign()
         self.assertEqual(move_partial.state, 'assigned')
 
+    def test_availability_full_packaging(self):
+        """ In the scenario where a move is in a bigger uom than the default uom of the product &
+        the product is in a category that only allows to move full packs & the quantity on hand is
+        insufficient, check that we only reserve quantities amounting to full packs of the
+        packaging uom.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 28.0)
+        self.assertAlmostEqual(self.product.qty_available, 28.0)
+        # Enable packagings
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        # Force only full package reservation
+        product_category = self.env['product.category'].create({'name': 'Full Packages Category'})
+        product_category.packaging_reserve_method = 'full'
+        self.product.categ_id = product_category
+        move = self.env['stock.move'].create({
+            'name': 'test_availability_full_packaging',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 3,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertRecordValues(move, [
+            {'state': 'partially_available', 'quantity': 2},
+        ])
+        # With forced full packaging, only 2 dozens should have been reserved, leaving 4 available
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 4.0)
+
     def test_past_quantity(self):
         """Test the quantity is correct when looking in the past."""
         # make some stock

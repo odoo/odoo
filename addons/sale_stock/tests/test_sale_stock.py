@@ -2086,3 +2086,34 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         self.assertEqual(pickings[0].state, 'done')
         self.assertEqual(len(sale_order.order_line), 1)
+
+    def test_availability_full_packaging(self):
+        """ In the scenario where a sale is in a bigger uom than the default uom of the product &
+        the product is in a category that only allows to move full packs & the quantity on hand is
+        insufficient, check that we only move quantities amounting to full packs of the sale uom.
+        """
+        warehouse = self.company_data['default_warehouse']
+        stock_location = warehouse.lot_stock_id
+        prod = self.product_a
+        prod.write({'is_storable': True})
+        self.env['stock.quant']._update_available_quantity(prod, stock_location, 16.0)
+        self.assertAlmostEqual(prod.qty_available, 16.0)
+        # Enable packagings
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        # Force only full package reservation
+        product_category = self.env['product.category'].create({'name': 'Full Packages Category'})
+        product_category.packaging_reserve_method = 'full'
+        prod.categ_id = product_category
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': prod.name,
+                'product_id': prod.id,
+                'product_uom_qty': 2,
+                'product_uom_id': self.uom_dozen.id,
+            })],
+        })
+        sale_order.action_confirm()
+        # With forced full packaging, only a dozen should have been reserved, leaving 4 available
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(prod, stock_location), 4.0)
