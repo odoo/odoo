@@ -1563,6 +1563,23 @@ export class PosStore extends WithLazyGetterTrap {
                     return;
                 }
 
+                // Printers need to directly have the note text.
+                // Colors are not taken into account like in preparation display.
+                for (const changeItem of [
+                    ...orderChange.new,
+                    ...orderChange.cancelled,
+                    ...orderChange.noteUpdate,
+                ]) {
+                    if (changeItem.note) {
+                        try {
+                            const note = JSON.parse(changeItem.note);
+                            changeItem.note = note.map((n) => n.text).join(", ");
+                        } catch {
+                            changeItem.note = "";
+                        }
+                    }
+                }
+
                 this.printChanges(order, orderChange, reprint);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
