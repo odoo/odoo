@@ -77,6 +77,10 @@ class AccountMove(models.Model):
 
         return res
 
+    def action_switch_move_type(self):
+        with self.env.protecting([self._fields['team_id']], self):
+            super().action_switch_move_type()
+
     def button_draft(self):
         res = super().button_draft()
 

@@ -1190,3 +1190,35 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(len(credit_note.invoice_line_ids), 2)
         # so the credit note cannot be considered a reversal of the invoice
         self.assertFalse(credit_note.reversed_entry_id)
+
+    def test_invoice_switch_move_type(self):
+        """Check that salesperson & sales team doesn't change when switching move type."""
+        team1 = self.company_data['default_sale_team']
+        team2 = team1.copy({'name': "Team 2"})
+        team1.member_ids = self.user
+        self.user.team_id = team1
+        self.sale_order.write({
+            'user_id': self.user.id,
+            'team_id': team2.id,
+        })
+        self.sale_order.action_confirm()
+        invoice = self.sale_order._create_invoices()
+        self.assertEqual(invoice.move_type, 'out_invoice')
+        self.assertEqual(
+            invoice.invoice_user_id, self.user,
+            "Invoice salesperson should be the same as the order's salesperson"
+        )
+        self.assertEqual(
+            invoice.team_id, team2,
+            "Invoice team should be the same as the order's team"
+        )
+        invoice.action_switch_move_type()
+        self.assertEqual(invoice.move_type, 'out_refund')
+        self.assertEqual(
+            invoice.invoice_user_id, self.user,
+            "Invoice salesperson shouldn't change after switching move type"
+        )
+        self.assertEqual(
+            invoice.team_id, team2,
+            "Invoice team shouldn't change after switching move type"
+        )
