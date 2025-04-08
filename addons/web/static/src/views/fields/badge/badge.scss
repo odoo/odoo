@@ -1,0 +1,6 @@
+@for $size from 1 through length($o-colors) {
+    .o_badge_color_#{$size - 1} {
+        background-color: nth($o-colors, $size);
+        color: color-contrast(nth($o-colors, $size));
+    }
+}
