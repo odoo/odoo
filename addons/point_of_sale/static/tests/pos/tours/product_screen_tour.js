@@ -611,12 +611,12 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
                 "Test Frontend Product",
                 "710535977349",
                 "20.0",
-                "Chairs"
+                "Chair Test"
             ),
             Dialog.confirm(),
 
             // Click on the category button for "Chairs" to verify the product's addition.
-            ProductScreen.clickSubcategory("Chairs"),
+            ProductScreen.clickSubcategory("Chair Test"),
             ProductScreen.clickDisplayedProduct("Test Frontend Product"),
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect("Test Frontend Product", "1", "20.0"),
@@ -636,7 +636,7 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
                 "50.0"
             ),
             Dialog.confirm(),
-            ProductScreen.clickSubcategory("Chairs"),
+            ProductScreen.clickSubcategory("Chair Test"),
             ProductScreen.clickDisplayedProduct("Test Frontend Product Edited"),
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect(
