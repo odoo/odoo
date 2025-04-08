@@ -37,11 +37,14 @@ class IrProfile(models.Model):
     sql_count = fields.Integer('Queries Count')
     traces_async = fields.Text('Traces Async', prefetch=False)
     traces_sync = fields.Text('Traces Sync', prefetch=False)
+    others = fields.Text('others', prefetch=False)
     qweb = fields.Text('Qweb', prefetch=False)
     entry_count = fields.Integer('Entry count')
 
     speedscope = fields.Binary('Speedscope', compute='_compute_speedscope')
     speedscope_url = fields.Text('Open', compute='_compute_speedscope_url')
+
+    others_url = fields.Text('Open Memory', compute='_compute_others_url')
 
     @api.autovacuum
     def _gc_profile(self):
@@ -50,6 +53,25 @@ class IrProfile(models.Model):
         records = self.sudo().search(domain, limit=GC_UNLINK_LIMIT)
         records.unlink()
         return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
+
+    def _parse_other_profile_params(self, **params):
+        return {
+            'memory_limit': int(params.get('memory_limit', 0))
+        }
+    
+    def _generate_memory_profile(self, **params):
+        memory_graph = []
+        memory_limit = params.get('memory_limit',0)
+        for execution in self:
+            if execution.others:
+                memory = json.loads(execution.others).get("memory",[])
+                for entry in json.loads(memory)[:-1]: # Eleminating the last element is due to the PeriodicCollector class taking an empty last frame at the end of the thread collection. 
+                    memory_graph.append([sample for sample in entry if sample['size']>memory_limit])
+        return memory_graph
+
+    def _compute_others_url(self):
+        for profile in self:
+            profile.others_url = f'/web/other_profiles/{profile.id}'    
 
     @api.depends('init_stack_trace')
     def _compute_speedscope(self):
