@@ -58,9 +58,9 @@
                            readonly="not is_editable or not product_has_cost"/>
                     <field name="tax_amount" sum="Total Taxes" readonly="True"
                            optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
-                    <field name="nb_attachment" widget="nb_attachment" nolabel="1" readonly="True"/>
+                    <field name="nb_attachment" nolabel="1" readonly="True" invisible="nb_attachment == 0"/>
                     <button name="action_get_attachment_view" type="object" icon="fa-paperclip"
-                            aria-label="View Attachments" title="View Attachments" class="float-end pe-0"
+                            aria-label="View Attachments" title="View Attachments" class="px-0"
                             readonly="True" invisible="nb_attachment == 0"/>
                     <field name="total_amount" sum="Total Amount" widget='monetary'
                            readonly="not is_editable or product_has_cost"
