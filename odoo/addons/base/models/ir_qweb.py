@@ -367,7 +367,6 @@ import fnmatch
 import io
 import logging
 import math
-import os
 import re
 import textwrap
 import time
@@ -389,7 +388,7 @@ from pathlib import Path
 from odoo import api, models, tools
 from odoo.modules import get_module_path
 from odoo.modules.registry import _REGISTRY_CACHES
-from odoo.tools import config, safe_eval, pycompat
+from odoo.tools import config, safe_eval, OrderedSet
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
@@ -472,6 +471,13 @@ SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title'}
 # Name of the variable to insert the content in t-call in the template.
 # The slot will be replaced by the `t-call` tag content of the caller.
 T_CALL_SLOT = '0'
+
+
+def _id_or_xmlid(ref):
+    try:
+        return int(ref)
+    except Exception:
+        return ref
 
 
 def indent_code(code, level):
@@ -596,7 +602,6 @@ class IrQweb(models.AbstractModel):
         irQweb = self.with_context(**options)._prepare_environment(values)
 
         safe_eval.check_values(values)
-
         template_functions, def_name = irQweb._compile(template)
         render_template = template_functions[def_name]
         rendering = render_template(irQweb, values)
@@ -608,16 +613,6 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
         return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile']
-
-    @tools.conditional(
-        'xml' not in tools.config['dev_mode'],
-        tools.ormcache('template', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())', cache='templates'),
-    )
-    def _get_view_id(self, template):
-        try:
-            return self.env['ir.ui.view'].sudo().with_context(load_all_views=True)._get_view_id(template)
-        except Exception:
-            return None
 
     @QwebTracker.wrap_compile
     def _compile(self, template):
@@ -631,7 +626,7 @@ class IrQweb(models.AbstractModel):
                 with file_open(template, 'rb', filter_ext=('.xml',)) as file:
                     template = etree.fromstring(file.read())
         else:
-            ref = self._get_view_id(template)
+            ref = self._get_template_id(template)
 
         # define the base key cache for code in cache and t-cache feature
         base_key_cache = None
@@ -675,6 +670,18 @@ class IrQweb(models.AbstractModel):
         return self._load_values(base_key_cache, generate_functions)
 
     def _generate_code(self, template):
+        if isinstance(template, etree._Element):
+            return self.__generate_code(template)
+        return self._generate_code_cached(template)
+
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache('template', 'tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())', cache='templates'),
+    )
+    def _generate_code_cached(self, template):
+        return self.__generate_code(template)
+
+    def __generate_code(self, template):
         """ Compile the given template into a rendering function (generator)::
 
             render_template(qweb, values)
@@ -818,79 +825,224 @@ class IrQweb(models.AbstractModel):
         if isinstance(template, etree._Element):
             element = template
             document = etree.tostring(template, encoding='unicode')
-            ref = None
+
+            # <templates>
+            #   <template t-name=... /> <!-- return ONLY this element -->
+            #   <template t-name=... />
+            # </templates>
+            for node in element.iter():
+                ref = node.get('t-name')
+                if ref:
+                    return (node, document, ref)
+
+            # use the document itself as ref when no t-name was found
+            return (element, document, document)
+
         # template is xml as string
-        elif isinstance(template, str) and '<' in template:
+        if isinstance(template, str) and '<' in template:
             raise ValueError('Inline templates must be passed as `etree` documents')
 
         # template is (id or ref) to a database stored template
-        else:
-            try:
-                ref_alias = int(template)  # e.g. <t t-call="33"/>
-            except ValueError:
-                ref_alias = template  # e.g. web.layout
+        id_or_xmlid = _id_or_xmlid(template)  # e.g. <t t-call="33"/> or <t t-call="web.layout"/>
+        value = self._preload_tree([id_or_xmlid]).get(id_or_xmlid)
+        if value.get('error'):
+            raise value['error']
 
-            doc_or_elem, ref = self._load(ref_alias) or (None, None)
-            if doc_or_elem is None:
-                raise ValueError(f"Can not load template: {ref_alias!r}")
-            if isinstance(doc_or_elem, etree._Element):
-                element = doc_or_elem
-                document = etree.tostring(doc_or_elem, encoding='unicode')
-            elif isinstance(doc_or_elem, str):
-                element = etree.fromstring(doc_or_elem)
-                document = doc_or_elem
+        # return etree, document and ref
+        return (value['tree'], value['template'], value['ref'])
+
+    @tools.ormcache('template', cache='templates')
+    def _get_template_id(self, template, _ref=None):
+        if _ref is not None:
+            return _ref
+        if isinstance(template, int):
+            return template
+        return self.sudo()._preload_views([template])[template]['ref']
+
+    @api.model
+    def _get_template_views_domain(self, ids, xmlids):
+        return ['|', ('id', 'in', ids), ('key', 'in', xmlids)]
+
+    @api.model
+    def _get_template_views(self, ids_or_xmlids):
+        """ Return the view corresponding to ``template``, which may be a
+            view ID or an XML ID. Note that this method may be overridden for other
+            kinds of template values.
+
+            :param ids: Array(int)
+            :param xmlids: Array(str)
+            :rtype: dict(str: Union(Record(ir.ui.view), Exception))
+        """
+        IrUiView = self.env['ir.ui.view'].sudo().with_context(load_all_views=True, raise_if_not_found=True)
+
+        ids = [id_or_xmlid for id_or_xmlid in ids_or_xmlids if isinstance(id_or_xmlid, int)]
+        xmlids = [id_or_xmlid for id_or_xmlid in ids_or_xmlids if id_or_xmlid not in ids]
+
+        # search view in ir.ui.view
+        data = {}
+        field_names = [f.name for f in IrUiView._fields.values() if f.prefetch is True]
+        for view in IrUiView.search_fetch(self._get_template_views_domain(ids, xmlids), field_names):
+            if view.key in data:
+                # keeps views according to their priority order
+                continue
+            data[view.id] = view
+            if view.key:
+                data[view.key] = view
+
+        # search missing view from xmlid in ir.model.data
+        # TODO: Check if it's useful. The only use cases are tests that don't add the key.
+        missing_xmlid_views = [xmlid for xmlid in xmlids if '.' in xmlid and xmlid not in data]
+        if missing_xmlid_views:
+            domain = []
+            for xmlid in missing_xmlid_views:
+                module, name = xmlid.split('.', 1)
+                if domain:
+                    domain = ['|'] + domain
+                domain.extend(['&', ('module', '=', module), ('name', '=', name)])
+
+            for model_data in self.env['ir.model.data'].sudo().search(domain):
+                view = IrUiView.browse(model_data.res_id)
+                if view.exists():
+                    data[view.id] = view
+                    xmlid = f"{model_data.module}.{model_data.name}"
+                    data[xmlid] = view
+                    if view.key:
+                        data[view.key] = view
+
+        for key, view in data.items():
+            self._get_template_id(key, _ref=view.id)
+
+        # create data and errors
+        for view_id in ids:
+            if view_id not in data:
+                self._get_template_id(view_id, _ref=False)
+                data[view_id] = MissingError(self.env._("Template does not exist or has been deleted: %s", view_id))
+        for xmlid in xmlids:
+            if xmlid not in data:
+                self._get_template_id(xmlid, _ref=False)
+                data[xmlid] = MissingError(self.env._("Template not found: %s", xmlid))
+        return data
+
+    @api.model
+    def _get_preload_attribute_xmlids(self):
+        return ['t-call']
+
+    @tools.ormcache(cache='templates')
+    def _preload_clear_cache_if_needed(self):
+        self.env.cr.cache.pop('_compile_batch_', None)
+
+    def _preload_views(self, refs):
+        self._preload_clear_cache_if_needed()
+
+        context = {k: self.env.context.get(k) for k in self._get_template_cache_keys()}
+        cache_key = tuple(context.values())
+        compile_batch = self.env.cr.cache.setdefault('_compile_batch_', {}).setdefault(cache_key, {})
+
+        refs = [_id_or_xmlid(ref) for ref in refs]
+        missing_refs = [ref for ref in refs if ref not in compile_batch]
+        if not missing_refs:
+            return compile_batch
+
+        irQweb = self.with_context(**context)
+
+        known_views = {}
+        for ref in missing_refs:
+            if not ref:
+                compile_batch[ref] = {'xmlid': ref, 'ref': None, 'error': AssertionError("template is required")}
+
+            for batch in self.env.cr.cache['_compile_batch_'].values():
+                if ref in batch and 'view' in batch[ref]:
+                    known_views[ref] = batch[ref]['view'].with_context(**context)
+
+        unknown_views = irQweb._get_template_views([ref for ref in missing_refs if ref not in known_views])
+
+        views = irQweb.env['ir.ui.view'].sudo().union(*known_views.values())
+        xmlids = list(known_views)
+        for xmlid, view in unknown_views.items():
+            if view.__class__ == views.__class__:
+                views += view
+                xmlids.append(xmlid)
             else:
-                raise TypeError(f"Loaded template {ref!r} should be a string.")
+                compile_batch[xmlid] = {'xmlid': xmlid, 'ref': None, 'error': view}
 
-        # return etree, document and ref, or try to find the ref
-        if ref:
-            return (element, document, ref)
+        pack = zip(xmlids, views)
 
-        # <templates>
-        #   <template t-name=... /> <!-- return ONLY this element -->
-        #   <template t-name=... />
-        # </templates>
-        for node in element.iter():
-            ref = node.get('t-name')
-            if ref:
-                return (node, document, ref)
+        # add in cache
+        for xmlid, view in pack:
+            compile_batch[view.id] = compile_batch[xmlid] = {
+                'xmlid': view.key or xmlid,
+                'ref': view.id,
+                'view': view,
+            }
 
-        # use the document itself as ref when no t-name was found
-        return (element, document, document)
+        return compile_batch
 
-    def _load(self, ref):
-        """
-        Load the template referenced by ``ref``.
+    def _preload_tree(self, refs):
+        compile_batch = self._preload_views(refs)
 
-        :returns: The loaded template (as string or etree) and its
-            identifier
-        :rtype: Tuple[Union[etree, str], Optional[str, int]]
-        """
-        IrUIView = self.env['ir.ui.view'].sudo()
-        view = IrUIView._get(ref)
-        template = IrUIView._read_template(view.id)
-        etree_view = etree.fromstring(template)
+        refs = [_id_or_xmlid(ref) for ref in refs]
+        missing_refs = {ref: compile_batch[ref] for ref in refs if 'template' not in compile_batch[ref] and 'error' not in compile_batch[ref]}
+        if not missing_refs:
+            return compile_batch
 
-        xmlid = view.key or ref
-        if isinstance(ref, int):
-            domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', view.id)]
-            model_data = self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name'], limit=1)
-            if model_data:
-                xmlid = f"{model_data[0]['module']}.{model_data[0]['name']}"
+        xmlids = list(missing_refs)
+        missing_refs_values = list(missing_refs.values())
+        views = missing_refs_values[0]['view'].union(*[data['view'] for data in missing_refs_values[1:]])
 
-        # QWeb's ``_read_template`` will check if one of the first children of
-        # what we send to it has a "t-name" attribute having ``ref`` as value
-        # to consider it has found it. As it'll never be the case when working
-        # with view ids or children view or children primary views, force it here.
-        if view.inherit_id is not None:
-            for node in etree_view:
-                if node.get('t-name') == str(ref) or node.get('t-name') == str(view.key):
-                    node.attrib.pop('name', None)
-                    node.attrib.pop('id', None)
-                    etree_view = node
-                    break
-        etree_view.set('t-name', str(xmlid))
-        return (etree_view, view.id)
+        try:
+            trees = views._get_view_etrees()
+        except Exception as e:
+            raise QWebException("Error while render the template", self, ref=','.join(refs)) from e
+
+        pack = zip(xmlids, views, trees)
+
+        # add in cache
+        for xmlid, view, tree in pack:
+            data = {
+                'tree': tree,
+                'template': etree.tostring(tree, encoding='unicode'),
+            }
+            compile_batch[view.id].update(data)
+            compile_batch[xmlid].update(data)
+
+        # preload sub template
+        ref_names = self._get_preload_attribute_xmlids()
+        sub_refs = OrderedSet()
+        for tree in trees:
+            sub_refs.update(
+                el.get(ref_name)
+                for ref_name in ref_names
+                for el in tree.xpath(f'//*[@{ref_name}]')
+                if not any(att.startswith('t-options-') or att == 't-options' or att == 't-lang' for att in el.attrib)
+                if '{' not in el.get(ref_name) and '<' not in el.get(ref_name) and '/' not in el.get(ref_name)
+            )
+        self._preload_tree(list(sub_refs))
+
+        # post process loaded tree
+        for index, (xmlid, view, tree) in enumerate(pack):
+            # QWeb's ``_read_template`` will check if one of the first children of
+            # what we send to it has a "t-name" attribute having ``ref`` as value
+            # to consider it has found it. As it'll never be the case when working
+            # with view ids or children view or children primary views, force it here.
+            if view.inherit_id is not None:
+                for node in tree:
+                    if node.get('t-name') == str(xmlid) or node.get('t-name') == str(xmlid) or node.get('t-name') == str(view.key):
+                        node.attrib.pop('name', None)
+                        node.attrib.pop('id', None)
+                        node.set('t-name', str(xmlid))
+                        pack[index] = (xmlid, view, node)
+                        break
+
+        # not found template
+        for ref in missing_refs:
+            if ref not in compile_batch:
+                compile_batch[ref] = {
+                    'xmlid': ref,
+                    'ref': ref,
+                    'error': f"External ID can not be loaded: {ref}",
+                }
+
+        return compile_batch
 
     # values for running time
 
@@ -2718,6 +2870,21 @@ def render(template_name, values, load, **options):
         _register = False               # not visible in real registry
 
         pool = MockPool()
+
+        def _get_template_id(self, _ref, *args, **kwargs):
+            return _ref
+
+        def _preload_tree(self, refs):
+            values = {}
+            for ref in refs:
+                tree, vid = self.env.context['load'](ref)
+                values[ref] = values[vid] = {
+                    'tree': tree,
+                    'template': etree.tostring(tree, encoding='unicode'),
+                    'xmlid': vid,
+                    'ref': None,
+                }
+            return values
 
         def _load(self, ref):
             """

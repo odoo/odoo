@@ -1,18 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-import logging
 
 from collections import OrderedDict
 from urllib.parse import urlsplit
 
-from odoo import models
+from odoo import models, api
 from odoo.http import request
-from odoo.tools import lazy
+from odoo.tools import lazy, ormcache
 from odoo.addons.website.models import ir_http
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 
 
-_logger = logging.getLogger(__name__)
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
 
@@ -33,6 +31,37 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
+
+    @ormcache('template', 'self.env.context.get("website")', cache='templates')
+    def _get_template_id(self, template, _ref=None):
+        return super()._get_template_id(template, _ref=_ref)
+
+    @api.model
+    def _get_template_views_domain(self, ids, xmlids):
+        """ If a website_id is in the context and the given xml_id is not an int
+            then try to get the id of the specific view for that website, but
+            fallback to the id of the generic view if there is no specific.
+
+            If no website_id is in the context, it might randomly return the generic
+            or the specific view, so it's probably not recommanded to use this
+            method. `viewref` is probably more suitable.
+
+            Archived views are ignored (unless the active_test context is set, but
+            then the ormcache will not work as expected).
+        """
+        domain = super()._get_template_views_domain(ids, xmlids)
+        website_id = self.env.context.get('website_id')
+        if website_id:
+            return domain + self.env['website'].website_domain(website_id=int(website_id))
+        return domain
+
+    @api.model
+    def _get_template_views(self, ids_or_xmlids):
+        data = super()._get_template_views(ids_or_xmlids)
+        for key in list(data):
+            if isinstance(data[key], MissingError):
+                data[key] = MissingError(self.env._("%(error)s (website: %(website_id)s)", error=data[key], website_id=self.env.context['website_id']))
+        return data
 
     def _prepare_frontend_environment(self, values):
         """ Update the values and context with website specific value

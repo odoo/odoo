@@ -375,32 +375,6 @@ class IrUiView(models.Model):
                         AND oview.website_id IS NULL;
                     """
 
-    @api.model
-    @tools.ormcache('self.env.uid', 'self.env.su', 'xml_id', 'self._context.get("website_id")', cache='templates')
-    def _get_view_id(self, xml_id):
-        """If a website_id is in the context and the given xml_id is not an int
-        then try to get the id of the specific view for that website, but
-        fallback to the id of the generic view if there is no specific.
-
-        If no website_id is in the context, it might randomly return the generic
-        or the specific view, so it's probably not recommanded to use this
-        method. `viewref` is probably more suitable.
-
-        Archived views are ignored (unless the active_test context is set, but
-        then the ormcache will not work as expected).
-        """
-        website_id = self._context.get('website_id')
-        if website_id and not isinstance(xml_id, int):
-            current_website = self.env['website'].browse(int(website_id))
-            domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()
-
-            view = self.sudo().search(domain, order='website_id', limit=1)
-            if not view:
-                _logger.warning("Could not find view object with xml_id '%s'", xml_id)
-                raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
-            return view.id
-        return super(IrUiView, self.sudo())._get_view_id(xml_id)
-
     @tools.ormcache('self.id', cache='templates')
     def _get_cached_visibility(self):
         return self.visibility
@@ -444,13 +418,13 @@ class IrUiView(models.Model):
 
     def _render_template(self, template, values=None):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
-        view = self._get(template).sudo()
+        view = self.sudo().browse(self.env['ir.qweb']._get_template_id(template))
         view._handle_visibility(do_raise=True)
         if values is None:
             values = {}
         if 'main_object' not in values:
             values['main_object'] = view
-        return super()._render_template(template, values=values)
+        return self.env['ir.qweb']._render(template, values=values)
 
     @api.model
     def get_default_lang_code(self):

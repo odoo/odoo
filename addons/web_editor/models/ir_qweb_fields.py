@@ -73,6 +73,9 @@ class IrQweb(models.AbstractModel):
             snippet_base_node.attrib['data-name'] = snippet_name
         return super()._compile_node(el, compile_context, level)
 
+    def _get_preload_attribute_xmlids(self):
+        return super()._get_preload_attribute_xmlids() + ['t-snippet', 't-snippet-call']
+
     # compile directives
 
     def _compile_directive_snippet(self, el, compile_context, indent):
@@ -83,8 +86,17 @@ class IrQweb(models.AbstractModel):
             el.set('t-lang', f"'{snippet_lang}'")
 
         el.set('t-options', f"{{'snippet-key': {key!r}}}")
-        view = self.env['ir.ui.view']._get(key).sudo()
-        name = el.attrib.pop('string', view.name)
+        name = el.attrib.pop('string', None)
+
+        value = self._preload_views([key]).get(key)
+        if value.get('error'):
+            raise value['error']
+
+        view = value['view']
+        view_id = value['ref']
+        if name is None:
+            name = view.name
+
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
         image_preview = el.attrib.pop('t-image-preview', None)
         # Forbid sanitize contains the specific reason:
@@ -98,7 +110,7 @@ class IrQweb(models.AbstractModel):
             name,
             escape_silent(image_preview),
             thumbnail,
-            view.id,
+            view_id,
             key.split('.')[-1],
             escape_silent(el.findtext('keywords')),
             Markup('data-oe-forbid-sanitize="%s"') % forbid_sanitize if forbid_sanitize else '',

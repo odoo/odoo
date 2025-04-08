@@ -1,26 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import collections
-import json
-import os.path
-import re
 import markupsafe
 
 from lxml import etree, html
-from lxml.builder import E
-from copy import deepcopy
 from textwrap import dedent
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.models.ir_qweb import QWebException, render
 from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.exceptions import UserError, ValidationError, MissingError
+from odoo.exceptions import UserError, MissingError
 
 unsafe_eval = eval
 
 
+@tagged('post_install', '-at_install')
 class TestQWebTField(TransactionCase):
     def setUp(self):
         super(TestQWebTField, self).setUp()
@@ -161,6 +157,7 @@ class TestQWebTField(TransactionCase):
         self.assertEqual(str(rendered.strip()), result.strip())
 
 
+@tagged('post_install', '-at_install')
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
         """ Test the rendering on a namespaced view with no static content. The resulting string should be untouched.
@@ -700,6 +697,8 @@ class TestQWebNS(TransactionCase):
 
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result))
 
+
+@tagged('post_install', '-at_install')
 class TestQWebBasic(TransactionCase):
     def test_compile_expr(self):
         tests = [
@@ -1078,6 +1077,7 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
+    @mute_logger('odoo.addons.base.models.ir_qweb')  # warning for template not found 't-value'
     def test_set_error_1(self):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
@@ -1097,6 +1097,7 @@ class TestQWebBasic(TransactionCase):
             self.assertIn("KeyError: 't-set'", error)
             self.assertIn('<t t-set="" t-value="1"/>', error)
 
+    @mute_logger('odoo.addons.base.models.ir_qweb')  # warning for template not found 't-value'
     def test_set_error_2(self):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
@@ -1430,14 +1431,14 @@ class TestQWebBasic(TransactionCase):
         try:
             self.env['ir.qweb']._render(-999)
         except MissingError as e:
-            self.assertIn('Record does not exist or has been deleted.', str(e))
+            self.assertIn('Template does not exist or has been deleted', str(e))
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(MissingError):
             self.env['ir.qweb']._render('not.wrong_template_xmlid')
         try:
             self.env['ir.qweb']._render('not.wrong_template_xmlid')
-        except ValueError as e:
-            self.assertIn('External ID not found in the system', str(e))
+        except MissingError as e:
+            self.assertIn('Template not found', str(e))
 
         with self.assertRaises(AssertionError):
             self.env['ir.qweb']._render(False)
@@ -1472,16 +1473,17 @@ class TestQWebBasic(TransactionCase):
 
     @mute_logger('odoo.addons.base.models.ir_qweb') # warning for template not found
     def test_error_message_8(self):
-        # UserError not found a second rendering (first rendering with option hide this error).
-        html = self.env['ir.qweb']._render(-9999, raise_if_not_found=False)
-        self.assertEqual('', html)
+        # UserError not found a first rendering.
+        with self.assertRaises(MissingError, msg="Not Found"):
+            html = self.env['ir.qweb']._render(-9999)
+            self.assertEqual('', html)
 
         # re try this rendering without any error (use cached method)
         html = self.env['ir.qweb']._render(-9999, raise_if_not_found=False)
         self.assertEqual('', html)
 
         # re try this rendering but raise (use cached method)
-        with self.assertRaises(UserError, msg="Not Found"):
+        with self.assertRaises(MissingError, msg="Not Found"):
             self.env['ir.qweb']._render(-9999)
 
     def test_call_set(self):
@@ -1549,7 +1551,7 @@ class TestQWebBasic(TransactionCase):
             self.env['ir.qweb']._render(view1.id)
         except QWebException as e:
             error = str(e)
-            self.assertIn('External ID not found in the system: base.dummy', error)
+            self.assertIn('Template not found: base.dummy', error)
             self.assertIn('<t t-call="base.dummy"/>', error)
 
     def test_render_t_call_propagates_t_lang(self):
@@ -1890,6 +1892,156 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(view.id)
         self.assertEqual(str(rendered), result)
 
+
+@tagged('post_install', '-at_install')
+class TestQweb(TransactionCaseWithUserDemo):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_demo.group_ids = cls.env.ref('base.group_user')
+
+    def test_call_query_count(self):
+        IrUiView = self.env['ir.ui.view']
+        header_0 = IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_header_0',
+            'arch_db': '''<span>0</span>'''
+        })
+        IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_header_1',
+            'arch_db': '''<span>1</span>'''
+        })
+        IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_header',
+            'arch_db': f'''<t t-name="base.testing_header">
+                <t t-call="{header_0.id}"/>
+                <header>header</header>
+                <t t-call="base.testing_header_1"/>
+            </t>'''
+        })
+        IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_footer_0',
+            'arch_db': '''<span>0</span>'''
+        })
+        IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_footer_1',
+            'arch_db': '''<span>1</span>'''
+        })
+        IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_footer',
+            'arch_db': '''<t t-name="base.testing_footer">
+                <t t-call="base.testing_footer_0"/>
+                <header>header</header>
+                <t t-call="base.testing_footer_1"/>
+            </t>'''
+        })
+        IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_layout',
+            'arch_db': '''<t t-name="base.testing_layout">
+                <section>
+                    <header><t t-call="base.testing_header"/></header>
+                    <article><t t-out="0"/></article>
+                    <header><t t-call="base.testing_footer"/></header>
+                </section>
+            </t>'''
+        })
+        view = IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_content',
+            'arch_db': '''<t t-call="base.testing_layout"><div><t t-call="base.testing_header_0"/><t t-out="doc.name"/></div></t>'''
+        })
+        doc = self.env['ir.attachment'].create({
+            'name': 'test',
+            'type': 'url',
+        })
+
+        expected = """
+                <section>
+                    <header><span>0</span>
+                <header>header</header><span>1</span></header>
+                    <article><div><span>0</span>%s</div></article>
+                    <header><span>0</span>
+                <header>header</header><span>1</span></header>
+                </section>"""
+
+        def test_render_queries(template, name, queries):
+            doc.name = name
+            env = self.env(user=self.user_demo)
+
+            doc.with_user(env.user).name  # fetch doc to not count this query
+            env.user.name  # fetch user to not count this query
+
+            init = env.cr.sql_log_count
+            value = env['ir.qweb']._render(template, {'doc': doc})
+            self.assertEqual(str(value), expected % name)
+            self.assertEqual(env.cr.sql_log_count - init, queries)
+
+        # 'base.testing_content'
+        #     SELECT id + fields from xmlid
+        #     SELECT RECURSIVE arch combine
+        # 'base.testing_layout', 'base.testing_header_0'
+        #     SELECT id + fields from xmlid
+        #     SELECT RECURSIVE arch combine
+        #     SELECT RECURSIVE arch combine => TODO: batch me
+        # 'base.testing_header', 'base.testing_footer'
+        #     SELECT id + fields from xmlid
+        #     SELECT RECURSIVE arch combine
+        #     SELECT RECURSIVE arch combine => TODO: batch me
+        # 'base.testing_header_1', 'base.testing_footer_0', 'base.testing_footer_1'
+        #     SELECT id + fields from xmlid
+        #     SELECT RECURSIVE arch combine
+        #     SELECT RECURSIVE arch combine => TODO: batch me
+        #     SELECT RECURSIVE arch combine => TODO: batch me
+
+        first_search_fetch_xmlid_queries = 1  # the first "SELECT id + fields from xmlid"
+        first_fetch_queries = 1               # instead of the first "SELECT id + fields from xmlid" if use the view id instead of xmlid
+        other_search_fetch_xmlid_queries = 3  # "SELECT id + fields from xmlid"
+        arch_combine_queries = 8              # SELECT RECURSIVE arch combine
+
+        self.env.registry.clear_cache('templates')
+        view.invalidate_recordset()
+
+        test_render_queries('base.testing_content', 'test-cold-0', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)
+
+        test_render_queries('base.testing_content', 'test-hot-0', 0)
+        test_render_queries('base.testing_content', 'test-hot-1', 0)
+        view.invalidate_recordset()
+        test_render_queries('base.testing_content', 'test-hot-2', 0)
+        test_render_queries(view.id, 'test-hot-id', 0)
+
+        # like 'test-cold-0'
+        self.env.registry.clear_cache('templates')
+        test_render_queries(view.id, 'test-cold-id-1', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)
+
+        # like 'test-cold-0' the first search query is replaced by a fetching
+        self.env.registry.clear_cache('templates')
+        view.invalidate_recordset()
+        test_render_queries(view.id, 'test-cold-id-2', arch_combine_queries + first_fetch_queries + other_search_fetch_xmlid_queries)
+
+        # like 'test-cold-0'
+        self.env.registry.clear_cache('templates')
+        test_render_queries('base.testing_content', 'test-cold-1', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)
+
+        # like 'test-cold-0'
+        self.env.registry.clear_cache('templates')
+        test_render_queries(view.id, 'test-cold-id-3', arch_combine_queries + first_fetch_queries + other_search_fetch_xmlid_queries)
+
+
+@tagged('post_install', '-at_install')
 class TestQwebCache(TransactionCase):
     def test_render_xml_cache_base(self):
         view1 = self.env['ir.ui.view'].create({

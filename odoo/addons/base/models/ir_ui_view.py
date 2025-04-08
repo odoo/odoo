@@ -2131,11 +2131,13 @@ actual arch.
         """ Return the list of context keys to use for caching ``_read_template``. """
         return ['lang', 'inherit_branding', 'edit_translations']
 
-    @api.model
-    def _read_template(self, view_id):
-        arch_tree = self.browse(view_id)._get_combined_arch()
-        self.distribute_branding(arch_tree)
-        return etree.tostring(arch_tree, encoding='unicode')
+    def _get_view_etrees(self):  # TODO: batch me
+        if not self:
+            return []
+        arch_trees = self.mapped(lambda view: view._get_combined_arch())
+        for arch_tree in arch_trees:
+            self.distribute_branding(arch_tree)
+        return arch_trees
 
     @api.model
     def _get_view_id(self, template):
