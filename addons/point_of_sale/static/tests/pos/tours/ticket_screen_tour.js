@@ -254,13 +254,14 @@ registry.category("web_tour.tours").add("LotTour", {
             inLeftSide(
                 [
                     ProductScreen.clickLotIcon(),
-                    ProductScreen.enterLotNumber("2"),
+                    ProductScreen.deleteNthLotNumber(1),
+                    ProductScreen.enterLotNumber("2", "serial", true),
                     Order.hasLine({
                         productName: "Product A",
                         quantity: 1,
                     }),
                     ProductScreen.clickLotIcon(),
-                    ProductScreen.enterLastLotNumber("1"),
+                    ProductScreen.enterLotNumber("1"),
                     Order.hasLine({
                         productName: "Product A",
                         quantity: 2.0,
@@ -268,7 +269,7 @@ registry.category("web_tour.tours").add("LotTour", {
                 ].flat()
             ),
             ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLastLotNumber("3"),
+            ProductScreen.enterLotNumber("3"),
             ProductScreen.selectedOrderlineHas("Product A", "3"),
             inLeftSide({
                 trigger: ".info-list:contains('SN 3')",
@@ -277,9 +278,9 @@ registry.category("web_tour.tours").add("LotTour", {
             // Verify if the serial number can be reused for the current order
             Chrome.createFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLastLotNumber("5"),
+            ProductScreen.enterLotNumber("5"),
             ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLastLotNumber("3"),
+            ProductScreen.enterLotNumber("3"),
             inLeftSide({
                 trigger: ".info-list:not(:contains('SN 3'))",
             }),

@@ -174,7 +174,7 @@ registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLotNumber("123456789"),
+            ProductScreen.enterLotNumber("123456789", "lot"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
