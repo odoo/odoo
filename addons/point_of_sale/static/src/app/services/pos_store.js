@@ -14,7 +14,7 @@ import { OpeningControlPopup } from "@point_of_sale/app/components/popups/openin
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
-import { EditListPopup } from "@point_of_sale/app/components/popups/select_lot_popup/select_lot_popup";
+import { SelectLotPopup } from "@point_of_sale/app/components/popups/select_lot_popup/select_lot_popup";
 import { ProductConfiguratorPopup } from "@point_of_sale/app/components/popups/product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
 import {
@@ -2068,12 +2068,12 @@ export class PosStore extends WithLazyGetterTrap {
             // If there's only one existing lot/serial number, automatically assign it to the order line
             return { newPackLotLines: [{ lot_name: existingLotsName[0] }] };
         }
-        const payload = await makeAwaitable(this.dialog, EditListPopup, {
+        const payload = await makeAwaitable(this.dialog, SelectLotPopup, {
             title: _t("Lot/Serial number(s) required for"),
             name: product.display_name,
             isSingleItem: isAllowOnlyOneLot,
             array: packLotLinesToEdit,
-            options: existingLotsName,
+            options: existingLots,
             customInput: canCreateLots,
             uniqueValues: product.tracking === "serial",
             isLotNameUsed: isLotNameUsed,
