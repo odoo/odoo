@@ -1,7 +1,6 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { chartOdooMenuPlugin } from "./odoo_menu/odoo_menu_chartjs_plugin";
 
-const { chartComponentRegistry, chartJsExtensionRegistry } = spreadsheet.registries;
+const { chartComponentRegistry } = spreadsheet.registries;
 const { ChartJsComponent } = spreadsheet.components;
 
 chartComponentRegistry.add("odoo_bar", ChartJsComponent);
@@ -12,8 +11,6 @@ chartComponentRegistry.add("odoo_waterfall", ChartJsComponent);
 chartComponentRegistry.add("odoo_pyramid", ChartJsComponent);
 chartComponentRegistry.add("odoo_scatter", ChartJsComponent);
 chartComponentRegistry.add("odoo_combo", ChartJsComponent);
-
-chartJsExtensionRegistry.add("chartOdooMenuPlugin", chartOdooMenuPlugin);
 
 import { OdooChartCorePlugin } from "./plugins/odoo_chart_core_plugin";
 import { ChartOdooMenuPlugin } from "./plugins/chart_odoo_menu_plugin";

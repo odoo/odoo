@@ -810,8 +810,7 @@ test("See records when clicking on a bar chart bar", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
     expect.verifySteps([]);
 
-    const event = { type: "click", native: new Event("click") };
-    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
     await animationFrame();
     expect.verifySteps(["load-action", "do-action"]);
 });
@@ -884,8 +883,7 @@ test("See records when clicking on a pie chart slice", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
     expect.verifySteps([]);
 
-    const event = { type: "click", native: new Event("click") };
-    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
     await animationFrame();
     expect.verifySteps(["do-action"]);
 });
@@ -932,8 +930,7 @@ test("See records when clicking on a waterfall chart bar", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
 
     // First dataset
-    let event = { type: "click", native: new Event("click") };
-    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
     await animationFrame();
     expect(lastActionCalled?.domain).toEqual([
         "&",
@@ -944,8 +941,7 @@ test("See records when clicking on a waterfall chart bar", async () => {
     ]);
 
     // First dataset subtotal
-    event = { type: "click", native: new Event("click") };
-    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 2 }]);
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 2 }]);
     await animationFrame();
     expect(lastActionCalled?.domain).toEqual([
         "&",
@@ -956,8 +952,7 @@ test("See records when clicking on a waterfall chart bar", async () => {
     ]);
 
     // Second dataset
-    event = { type: "click", native: new Event("click") };
-    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 3 }]);
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 3 }]);
     await animationFrame();
     expect(lastActionCalled?.domain).toEqual([
         "&",
