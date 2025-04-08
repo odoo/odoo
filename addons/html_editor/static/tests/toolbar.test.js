@@ -650,6 +650,133 @@ test("toolbar should close on keypress tab inside table", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
+test("toolbar works: show the correct vertical alignment", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr style="height: 100px;">
+                        <td>[1</td>
+                        <td></td>
+                        <td>3</td>
+                    </tr>
+                    <tr style="height: 100px;">
+                        <td>4</td>
+                        <td>5]</td>
+                        <td>6</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    await expandToolbar();
+    expect("button[name='vertical_align'] svg[name='vertical_align_top']").toHaveCount(1);
+    await click("button[name='vertical_align']");
+    await animationFrame();
+    await contains(".dropdown-menu button svg[name='vertical_align_middle']").click();
+    expect("button[name='vertical_align'] svg[name='vertical_align_middle']").toHaveCount(1);
+    expect(".dropdown-menu button.active svg[name='vertical_align_middle']").toHaveCount(1);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr style="height: 100px;">
+                        <td class="o_selected_td" style="vertical-align: middle;">[1</td>
+                        <td class="o_selected_td" style="vertical-align: middle;"></td>
+                        <td>3</td>
+                    </tr>
+                    <tr style="height: 100px;">
+                        <td class="o_selected_td" style="vertical-align: middle;">4</td>
+                        <td class="o_selected_td" style="vertical-align: middle;">5]</td>
+                        <td>6</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+});
+
+test("toolbar works: show the correct vertical alignment after undo/redo", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr style="height: 100px;">
+                        <td>1</td>
+                        <td>[</td>
+                    </tr>
+                    <tr style="height: 100px;">
+                        <td>3</td>
+                        <td>4]</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    await expandToolbar();
+    expect("button[name='vertical_align'] svg[name='vertical_align_top']").toHaveCount(1);
+    await click("button[name='vertical_align']");
+    await animationFrame();
+    await contains(".dropdown-menu button svg[name='vertical_align_bottom']").click();
+    expect("button[name='vertical_align'] svg[name='vertical_align_bottom']").toHaveCount(1);
+    expect(".dropdown-menu button.active svg[name='vertical_align_bottom']").toHaveCount(1);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr style="height: 100px;">
+                        <td>1</td>
+                        <td class="o_selected_td" style="vertical-align: bottom;">[</td>
+                    </tr>
+                    <tr style="height: 100px;">
+                        <td>3</td>
+                        <td class="o_selected_td" style="vertical-align: bottom;">4]</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    await press(["ctrl", "z"]);
+    await animationFrame();
+    expect("button[name='vertical_align'] svg[name='vertical_align_top']").toHaveCount(1);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr style="height: 100px;">
+                        <td>1</td>
+                        <td>[</td>
+                    </tr>
+                    <tr style="height: 100px;">
+                        <td>3</td>
+                        <td>4]</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    await press(["ctrl", "y"]);
+    await animationFrame();
+    expect("button[name='vertical_align'] svg[name='vertical_align_bottom']").toHaveCount(1);
+    expect(".dropdown-menu button.active svg[name='vertical_align_bottom']").toHaveCount(1);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr style="height: 100px;">
+                        <td>1</td>
+                        <td class="o_selected_td" style="vertical-align: bottom;">[</td>
+                    </tr>
+                    <tr style="height: 100px;">
+                        <td>3</td>
+                        <td class="o_selected_td" style="vertical-align: bottom;">4]</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+});
+
 test("toolbar buttons shouldn't be active without text node in the selection", async () => {
     await setupEditor("<div>[<p><br></p>]</div>");
     await waitFor(".o-we-toolbar");
