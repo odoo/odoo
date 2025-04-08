@@ -23,4 +23,4 @@ def migrate(cr, version):
             ('model', '=', 'account.tax'),
         ]).mapped('res_id')
         env['account.tax'].browse(tax_ids).active = False
-        env['account.chart.template'].try_loading(company.chart_template, company)
+        env['account.chart.template'].try_loading(company.chart_template, company, force_create=False)
