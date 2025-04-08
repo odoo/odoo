@@ -11,7 +11,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
         channel = self.env["discuss.channel"].create(
             {"group_public_id": None, "name": "public channel"}
         )
-        channel.add_members(guest_ids=[self.guest.id])
+        channel._add_members(guests=self.guest)
         channel = channel.with_context(guest=self.guest)
         self._execute_subtests(
             channel,

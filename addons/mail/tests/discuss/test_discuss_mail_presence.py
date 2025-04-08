@@ -55,7 +55,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             self._receive_presence(sender=bob, recipient=guest)
         channel = self.env["discuss.channel"]._create_channel(group_id=None, name="General")
-        channel.add_members(guest_ids=[guest.id], partner_ids=[bob.partner_id.id])
+        channel._add_members(guests=guest, users=bob)
         # Now that they share a channel, guest should receive users's presence.
         self._receive_presence(sender=bob, recipient=guest)
 
@@ -63,7 +63,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
         # Guest should not receive guest's presence: no common channel.
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             self._receive_presence(sender=other_guest, recipient=guest)
-        channel.add_members(guest_ids=[other_guest.id])
+        channel._add_members(guests=other_guest)
         # Now that they share a channel, guest should receive guest's presence.
         self._receive_presence(sender=other_guest, recipient=guest)
         self.assertEqual(other_guest.im_status, "online")
@@ -75,7 +75,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             self._receive_presence(sender=bob, recipient=portal)
         channel = self.env["discuss.channel"]._create_channel(group_id=None, name="General")
-        channel.add_members(partner_ids=[portal.partner_id.id, bob.partner_id.id])
+        channel._add_members(users=portal | bob)
         # Now that they share a channel, portal should receive users's presence.
         self._receive_presence(sender=bob, recipient=portal)
 
@@ -83,7 +83,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
         # Portal should not receive guest's presence: no common channel.
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             self._receive_presence(sender=guest, recipient=portal)
-        channel.add_members(guest_ids=[guest.id])
+        channel._add_members(guests=guest)
         # Now that they share a channel, portal should receive guest's presence.
         self._receive_presence(sender=guest, recipient=portal)
         self.assertEqual(guest.im_status, "online")

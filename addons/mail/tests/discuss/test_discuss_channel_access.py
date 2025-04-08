@@ -478,7 +478,8 @@ class TestDiscussChannelAccess(MailCommon):
         self._test_discuss_channel_member_access(cases, for_sub_channel=True)
 
     def _get_channel_id(self, user_key, channel_key, membership, sub_channel):
-        partner = self.env["res.partner"] if user_key == "public" else self.users[user_key].partner_id
+        user = self.env["res.users"] if user_key == "public" else self.users[user_key]
+        partner = user.partner_id
         guest = self.guest if user_key == "public" else self.env["mail.guest"]
         partners = self.other_user.partner_id
         if membership == "member":
@@ -487,13 +488,13 @@ class TestDiscussChannelAccess(MailCommon):
         if channel_key == "group":
             channel = DiscussChannel._create_group(partners.ids)
             if membership == "member":
-                channel.add_members(partner_ids=partner.ids, guest_ids=guest.ids)
+                channel._add_members(users=user, guests=guest)
         elif channel_key == "chat":
             channel = DiscussChannel._get_or_create_chat(partners.ids)
         else:
             channel = DiscussChannel._create_channel("Channel", group_id=None)
             if membership == "member":
-                channel.add_members(partner_ids=partner.ids, guest_ids=guest.ids)
+                channel._add_members(users=user, guests=guest)
         if channel_key == "no_group":
             channel.group_public_id = None
         elif channel_key == "group_matching":
@@ -504,7 +505,7 @@ class TestDiscussChannelAccess(MailCommon):
             channel.sudo()._create_sub_channel()
             channel = channel.sub_channel_ids[0]
             if membership == "member":
-                channel.sudo().add_members(partner_ids=partner.ids, guest_ids=guest.ids)
+                channel.sudo()._add_members(users=user, guests=guest)
         return channel.id
 
     def _execute_action_channel(self, user_key, channel_key, membership, operation, result, for_sub_channel):

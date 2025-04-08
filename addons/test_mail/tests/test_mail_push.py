@@ -97,7 +97,7 @@ class TestWebPushNotification(SMSCommon):
                 'name': f'{channel_type} Message' if channel_type != 'group' else '',
             } for channel_type in ['chat', 'channel', 'group']
         ])
-        group_channel.add_members(guest_ids=[self.guest.id])
+        group_channel._add_members(guests=self.guest)
 
         for channel, sender, notification_count in zip(
             (chat_channel + channel_channel + group_channel + group_channel),
