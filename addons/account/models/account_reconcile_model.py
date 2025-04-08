@@ -112,7 +112,7 @@ class AccountReconcileModel(models.Model):
         string='Next Activity')
 
     # ===== Conditions =====
-    match_journal_ids = fields.Many2many('account.journal', string='Journals Availability',
+    match_journal_ids = fields.Many2many('account.journal', string='Journals',
         domain="[('type', 'in', ('bank', 'cash', 'credit'))]",
         check_company=True,
         help='The reconciliation model will only be available from the selected journals.')
@@ -128,8 +128,8 @@ class AccountReconcileModel(models.Model):
         ('contains', 'Contains'),
         ('not_contains', 'Not Contains'),
         ('match_regex', 'Match Regex'),
-    ], string='Label', tracking=True, help='''The reconciliation model will only be applied when the label:
-        * Contains: The proposition label must contains this string (case insensitive).
+    ], string='Label', tracking=True, help='''The reconciliation model will only be applied when either the statement line label or transaction details matches the following:
+        * Contains: The statement line must contains this string (case insensitive).
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_label_param = fields.Char(string='Label Parameter', tracking=True)
