@@ -223,11 +223,13 @@ class AccountChartTemplate(models.AbstractModel):
         if reload_template:
             self._pre_reload_data(company, template_data, data, force_create)
             install_demo = False
-        data = self._pre_load_data(template_code, company, template_data, data)
-        self._load_data(data)
-        self._post_load_data(template_code, company, template_data)
-        self._load_translations(companies=company)
+        # allow reloading the data only if we force create it
+        if force_create:
+            data = self._pre_load_data(template_code, company, template_data, data)
+            self._load_data(data)
+            self._post_load_data(template_code, company, template_data)
 
+        self._load_translations(companies=company)
         # Manual sync because disable above (delay_account_group_sync)
         AccountGroup = self.env['account.group'].with_context(delay_account_group_sync=False)
         AccountGroup._adapt_parent_account_group(company=company)
