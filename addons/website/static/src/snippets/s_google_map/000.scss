@@ -6,33 +6,23 @@ $s-google-map-desc-hover-alpha: 0.55 !default;
 
 .s_google_map {
     position: relative;
-    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 
     .map_container {
-        @include o-position-absolute(0, 0, 0, 0);
+        min-height: 100px;
+        flex: 1 1 auto;
     }
     .description {
-        @include o-position-absolute(auto, 0, 0, 0);
         z-index: 99;
         padding: 0 1em;
         background: rgba($s-google-map-desc-bg, $s-google-map-desc-alpha);
         color: color-contrast(rgba($s-google-map-desc-bg, $s-google-map-desc-alpha));
         transition: background-color 250ms ease;
-
-        font {
-            float: left;
-            margin-top: 20px;
-            margin-bottom: 15px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        span {
-            float: left;
-            text-transform: none;
-            font-weight: normal;
-            margin-top: 20px;
-            margin-left: 10px;
-        }
+        float: left;
+        text-transform: none;
+        font-weight: normal;
     }
     &:hover .description {
         background: $s-google-map-desc-hover-bg;
