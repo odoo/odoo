@@ -127,12 +127,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "edit Test Customer",
     },
     {
-        isActive: ["auto"],
-        trigger: ".ui-menu-item a:contains('Test Customer')",
-        content: _t("Select first partner"),
-        run: "click",
-    },
-    {
         trigger: ".o-mail-RecipientsInputTagsListPopover input",
         content: markup(_t("Write here <b>your own email address</b> to test the flow.")),
         run: "edit customer@example.com",

@@ -98,10 +98,10 @@ export class RecipientsInput extends Component {
                             id: match.id,
                             label: match.email
                                 ? _t("%(partner_name)s <%(partner_email)s>", {
-                                      partner_name: match.name,
+                                      partner_name: match.name || _t("Unnamed"),
                                       partner_email: match.email,
                                   })
-                                : match.name,
+                                : match.name || _t("Unnamed"),
                             onSelectOption: () => {
                                 this.insertAdditionalRecipient({
                                     email: match.email,
@@ -176,14 +176,16 @@ export class RecipientsInput extends Component {
     getTagsFromMailThread() {
         const tags = [];
         const createTagForRecipient = (recipient, recipientField) => {
-            const title = `${recipient.name} ${recipient.email ? "<" + recipient.email + ">" : ""}`;
+            const title = `${recipient.name || _t("Unnamed")} ${
+                recipient.email ? "<" + recipient.email + ">" : ""
+            }`;
             title.trim();
             tags.push({
                 id: uniqueId("tag_"),
                 resId: recipient.partner_id,
                 canEdit: true,
-                text: recipient.name || recipient.email,
-                name: recipient.name,
+                text: recipient.name || recipient.email || _t("Unnamed"),
+                name: recipient.name || _t("Unnamed"),
                 email: recipient.email,
                 title,
                 onClick: (ev) => {
