@@ -808,8 +808,7 @@ test("See records when clicking on a bar chart bar", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
     expect.verifySteps([]);
 
-    const event = { type: "click", native: new Event("click") };
-    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
     await animationFrame();
     expect.verifySteps(["load-action", "do-action"]);
 });
@@ -880,8 +879,7 @@ test("See records when clicking on a pie chart slice", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
     expect.verifySteps([]);
 
-    const event = { type: "click", native: new Event("click") };
-    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
     await animationFrame();
     expect.verifySteps(["do-action"]);
 });

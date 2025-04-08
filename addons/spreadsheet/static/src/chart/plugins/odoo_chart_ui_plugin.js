@@ -157,7 +157,6 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                 if (!env) {
                     return;
                 }
-                event.native.preventDefault();
                 const { datasetIndex, index } = items[0];
                 const dataset = datasets[datasetIndex];
                 let name = labels[index];
