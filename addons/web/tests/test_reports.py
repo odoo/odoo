@@ -128,7 +128,7 @@ class TestReports(odoo.tests.HttpCase):
                 report.with_context(force_report_rendering=True)._render_qweb_pdf(report.id)
 
             # Check if the temporary session has been deleted
-            self.assertEqual(mock_delete.call_count, 1)
+            self.assertEqual(mock_delete.call_count, 2)
             self.assertNotEqual(mock_delete.call_args.args[0].sid, mock_request.session.sid)
 
             # Check if temporary files have been deleted

@@ -67,7 +67,7 @@ export async function downloadReport(rpc, action, type, userContext) {
     if (type === "pdf") {
         // Cache the wkhtml status on the function. In prod this means is only
         // checked once, but we can reset it between tests to test multiple statuses.
-        downloadReport.wkhtmltopdfStatusProm ||= rpc("/report/check_wkhtmltopdf");
+        downloadReport.wkhtmltopdfStatusProm ||= rpc("/report/get_pdf_engine_state");
         const status = await downloadReport.wkhtmltopdfStatusProm;
         message = getWKHTMLTOPDF_MESSAGES(status);
         if (!["upgrade", "ok"].includes(status)) {

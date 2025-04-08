@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.base.setup</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='no_rendering_engine_warning']" position="after">
+                <div class="content-group"
+                    invisible="company_report_rendering_engine != 'paper-muncher'"
+                    id="paper_muncher_warning">
+                    <div class="mt16 text-danger">
+                        <strong>Warning!</strong> Paper Muncher is in early development stage! Use at your own risk.
+                        Bugs and issues are expected.
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
