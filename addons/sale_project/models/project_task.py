@@ -40,6 +40,9 @@ class ProjectTask(models.Model):
     # Project sharing  fields
     display_sale_order_button = fields.Boolean(string='Display Sales Order', compute='_compute_display_sale_order_button')
 
+    task_template_project_id = fields.Many2one('project.project', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=',  company_id)]")
+    is_task_template = fields.Boolean(string='Task Template')
+
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
@@ -134,6 +137,15 @@ class ProjectTask(models.Model):
                         order_id=task.sale_line_id.order_id.name,
                         product_id=task.sale_line_id.product_id.display_name,
                     ))
+
+    @api.constrains('child_ids', 'project_id', 'parent_id', 'is_task_template')
+    def _ensure_super_task_is_not_private(self):
+        for task in self:
+            if task.is_task_template or task.parent_id.is_task_template:
+                if task.project_id:
+                    raise ValidationError(_('You cant assign project to task template'))
+            else:
+                super(ProjectTask, task)._ensure_super_task_is_not_private()
 
     def _ensure_sale_order_linked(self, sol_ids):
         """ Orders created from project/task are supposed to be confirmed to match the typical flow from sales, but since

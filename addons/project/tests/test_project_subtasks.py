@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
-from psycopg2.errors import CheckViolation
 
 from odoo import Command, _
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
@@ -115,7 +114,7 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertTrue(child_task.display_in_project, "As the subtask isn't in the same project as its parent, it should be displayed")
 
         # 3)
-        with self.assertRaises(CheckViolation):
+        with self.assertRaises(ValidationError):
             child_task.project_id = False
 
         # 3bis)

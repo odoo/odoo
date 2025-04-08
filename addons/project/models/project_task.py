@@ -312,10 +312,6 @@ class ProjectTask(models.Model):
         'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))',
         'You cannot convert this task into a sub-task because it is recurrent.',
     )
-    _private_task_has_no_parent = models.Constraint(
-        'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL))',
-        'A private task cannot have a parent.',
-    )
 
     @api.constrains('company_id', 'partner_id')
     def _ensure_company_consistency_with_partner(self):
@@ -324,12 +320,12 @@ class ProjectTask(models.Model):
             if task.partner_id and task.partner_id.company_id and task.company_id and task.company_id != task.partner_id.company_id:
                 raise ValidationError(_('The task and the associated partner must be linked to the same company.'))
 
-    @api.constrains('child_ids', 'project_id')
+    @api.constrains('child_ids', 'project_id', 'parent_id')
     def _ensure_super_task_is_not_private(self):
         """ Ensures that the company of the task is valid for the partner. """
         for task in self:
-            if not task.project_id and task.subtask_count:
-                raise ValidationError(_('This task has sub-tasks, so it can\'t be private.'))
+            if not task.project_id and (task.subtask_count or task.parent_id):
+                raise ValidationError(_('This task has sub-tasks or parent id set, so it can\'t be private.'))
 
     @property
     def SELF_READABLE_FIELDS(self):

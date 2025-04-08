@@ -12,4 +12,18 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <record id="project.ir_rule_private_task" model="ir.rule">
+        <field name="domain_force">[
+            '|','|',
+                ('is_task_template', '=', True),
+                ('parent_id.is_task_template', '=', True),
+            '&amp;',
+                ('project_id.privacy_visibility', '!=', 'followers'),
+            '|', '|', 
+                ('project_id', '!=', False),
+                ('parent_id', '!=', False),
+                ('user_ids', 'in', user.id),
+        ]</field>
+    </record>
+    
 </odoo>

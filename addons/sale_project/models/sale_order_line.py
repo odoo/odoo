@@ -290,15 +290,37 @@ class SaleOrderLine(models.Model):
             :param project: record of project.project in which the task should be created
             :return task: record of the created task
         """
-        values = self._timesheet_create_task_prepare_values(project)
-        task = self.env['project.task'].sudo().create(values)
-        self.task_id = task
+        def _chatter_message(task):
+            task_msg = _("This task has been created from: %(order_link)s (%(product_name)s)",
+                order_link=self.order_id._get_html_link(),
+                product_name=self.product_id.name,
+            )
+            task.message_post(body=task_msg)
+        if self.product_id.task_template_id:
+            template_count = sum(1 for sol in self.order_id.order_line if sol.product_id.task_template_id == self.product_id.task_template_id)
+            tasks = self.env['project.task']
+            for task in tasks.with_context(active_test=False).search([('parent_id', '=', self.product_id.task_template_id.id)]):
+                task_data = task.copy_data()[0]
+                task_data.update({
+                    'name': '%s - %s' % (self.order_id.name or '', task.name),
+                    'allocated_hours': task.allocated_hours * template_count,
+                    'active': task.active,
+                    'partner_id': self.order_id.partner_id.id,
+                    'project_id': task.task_template_project_id.id or project.id,
+                    'sale_line_id': self.id,
+                    'sale_order_id': self.order_id.id,
+                    'parent_id': False,
+                })
+                task_data = self.env['project.task'].create(task_data)
+                _chatter_message(task_data)
+                tasks |= task_data
+            return tasks
+        else:
+            values = self._timesheet_create_task_prepare_values(project)
+            task = self.env['project.task'].sudo().create(values)
+            self.task_id = task
         # post message on task
-        task_msg = _("This task has been created from: %(order_link)s (%(product_name)s)",
-            order_link=self.order_id._get_html_link(),
-            product_name=self.product_id.name,
-        )
-        task.message_post(body=task_msg)
+            _chatter_message(task)
         return task
 
     def _get_so_lines_task_global_project(self):
@@ -314,6 +336,7 @@ class SaleOrderLine(models.Model):
             new project/task. This explains the searches on 'sale_line_id' on project/task. This also
             implied if so line of generated task has been modified, we may regenerate it.
         """
+        TaskTemplate = self.env['project.task']
         so_line_task_global_project = self._get_so_lines_task_global_project()
         so_line_new_project = self._get_so_lines_new_project()
 
@@ -378,7 +401,8 @@ class SaleOrderLine(models.Model):
                         project = map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)]
                     else:
                         project = map_so_project[so_line.order_id.id]
-                if not so_line.task_id:
+                if not so_line.task_id and TaskTemplate not in so_line.product_id.task_template_id:
+                    TaskTemplate |= so_line.product_id.task_template_id
                     so_line._timesheet_create_task(project=project)
             so_line._handle_milestones(project)
 
@@ -392,7 +416,9 @@ class SaleOrderLine(models.Model):
             if not so_line.task_id:
                 project = map_sol_project.get(so_line.id) or so_line.order_id.project_id
                 if project and so_line.product_uom_qty > 0:
-                    so_line._timesheet_create_task(project)
+                    if TaskTemplate not in so_line.product_id.task_template_id:
+                        TaskTemplate |= so_line.product_id.task_template_id
+                        so_line._timesheet_create_task(project)
                 else:
                     raise UserError(_(
                         "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
