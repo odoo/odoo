@@ -263,8 +263,8 @@ class AccountChartTemplate(models.AbstractModel):
                 template_data.pop(prop)
         data.pop('account.reconcile.model', None)
         if 'res.company' in data:
+            data['res.company'][company.id].clear()
             data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
-
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
                 del data['account.journal'][xmlid]
@@ -448,7 +448,7 @@ class AccountChartTemplate(models.AbstractModel):
         e.g. the account codes' width must be standardized to the code_digits applied.
         The fiscal country code must be put in place before taxes are generated.
         """
-        if 'account_fiscal_country_id' in data['res.company'][company.id]:
+        if 'account_fiscal_country_id' in data.get('res.company', {}).get(company.id, {}):
             fiscal_country = self.ref(data['res.company'][company.id]['account_fiscal_country_id'])
         else:
             fiscal_country = company.account_fiscal_country_id
