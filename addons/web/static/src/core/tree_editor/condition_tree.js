@@ -963,7 +963,7 @@ function _removeWithinOperator(c) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// is - is_not - set - not_set - starts_with - ends_with
+// set - not_set - starts_with - ends_with
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -971,23 +971,23 @@ function _removeWithinOperator(c) {
  * @param {Options} [options={}]
  */
 function _createVirtualOperator(c, options = {}) {
-    const { path, operator, value } = c;
+    const { negate, path, operator, value } = c;
     if (typeof operator === "string" && ["=", "!="].includes(operator)) {
         const fieldType = getFieldType(path, options);
         if (fieldType) {
-            if (fieldType === "boolean") {
-                return { ...c, operator: operator === "=" ? "is" : "is_not" };
+            if (fieldType === "boolean" && value === true) {
+                return condition(path, operator === "=" ? "set" : "not_set", value, negate);
             } else if (!["many2one", "date", "datetime"].includes(fieldType) && value === false) {
-                return { ...c, operator: operator === "=" ? "not_set" : "set" };
+                return condition(path, operator === "=" ? "not_set" : "set", value, negate);
             }
         }
     }
     if (typeof value === "string" && operator === "=ilike") {
         if (value.endsWith("%")) {
-            return { ...c, operator: "starts_with", value: value.slice(0, -1) };
+            return condition(path, "starts_with", value.slice(0, -1), negate);
         }
         if (value.startsWith("%")) {
-            return { ...c, operator: "ends_with", value: value.slice(1) };
+            return condition(path, "ends_with", value.slice(1), negate);
         }
     }
 }
@@ -1000,10 +1000,10 @@ function _removeVirtualOperator(c) {
     if (typeof operator !== "string") {
         return;
     }
-    if (["is", "is_not"].includes(operator)) {
-        return condition(path, operator === "is" ? "=" : "!=", value, negate);
-    }
     if (["set", "not_set"].includes(operator)) {
+        if (value === true) {
+            return condition(path, operator === "set" ? "=" : "!=", value, negate);
+        }
         return condition(path, operator === "set" ? "!=" : "=", value, negate);
     }
     if (["starts_with", "ends_with"].includes(operator)) {

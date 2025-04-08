@@ -182,7 +182,7 @@ test("change path, operator and value", async () => {
     await makeExpressionEditor({ expression: `bar != "blabla"` });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "is not", "blabla"] },
+        { level: 1, value: ["Bar", "is not equal", "blabla"] },
     ]);
     const tree = getTreeEditorContent({ node: true });
     await openModelFieldSelectorPopover();
@@ -215,12 +215,12 @@ test("rendering of a valid fieldName in fields", async () => {
     const parent = await makeExpressionEditor({ fieldFilters: ["foo"] });
 
     const toTests = [
-        { expr: `foo`, condition: ["Foo", "is set"] },
+        { expr: `foo`, condition: ["Foo", "set"] },
         { expr: `foo == "a"`, condition: ["Foo", "is equal", "a"] },
         { expr: `foo != "a"`, condition: ["Foo", "is not equal", "a"] },
         // { expr: `foo is "a"`, complexCondition: `foo is "a"` },
         // { expr: `foo is not "a"`, complexCondition: `foo is not "a"` },
-        { expr: `not foo`, condition: ["Foo", "is not set"] },
+        { expr: `not foo`, condition: ["Foo", "not set"] },
         { expr: `foo + "a"`, complexCondition: `foo + "a"` },
     ];
 
@@ -298,7 +298,7 @@ test("rendering of connectors", async () => {
         { level: 1, value: "all" },
         { level: 2, value: "expr" },
         { level: 2, value: ["Foo", "is equal", "abc"] },
-        { level: 1, value: ["Bar", "is", "not set"] },
+        { level: 1, value: ["Bar", "not set"] },
     ]);
 });
 
@@ -358,13 +358,13 @@ test("allow selection of boolean field", async () => {
     await makeExpressionEditor({ expression: "id" });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Id", "is set"] },
+        { level: 1, value: ["Id", "set"] },
     ]);
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name").click();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "is", "set"] },
+        { level: 1, value: ["Bar", "set"] },
     ]);
 });
 
@@ -393,7 +393,7 @@ test("no field of type properties in model field selector", async () => {
     });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Properties", "is set"] },
+        { level: 1, value: ["Properties", "set"] },
     ]);
     expect(isNotSupportedPath()).toBe(true);
     await clearNotSupported();
@@ -414,12 +414,12 @@ test("no special fields in fields", async () => {
     });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "is not", "not set"] },
+        { level: 1, value: ["Bar", "set"] },
     ]);
     await addNewRule();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "is not", "not set"] },
+        { level: 1, value: ["Bar", "set"] },
         { level: 1, value: ["Foo", "is equal", ""] },
     ]);
     expect.verifySteps([`bar and foo == ""`]);
@@ -440,8 +440,8 @@ test("between operator", async () => {
         "is lower",
         "is lower or equal",
         "is between",
-        "is set",
-        "is not set",
+        "set",
+        "not set",
     ]);
     expect.verifySteps([]);
     await selectOperator("between");

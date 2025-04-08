@@ -1543,7 +1543,7 @@ test("facets display with any / not any operator (check brackets)", async functi
         searchViewId: false,
         searchViewArch: `
             <search>
-                <filter isDebugMode="true" name="filter" string="Filter" domain="['|', ('company', 'any', [('bar', 'any', [('bool', 'is', False)]), ('bar', 'any', [('bool', 'is', True)])]), ('bar', '=', false)]"/>
+                <filter isDebugMode="true" name="filter" string="Filter" domain="['|', ('company', 'any', [('bar', 'any', [('bool', '=', False)]), ('bar', 'any', [('bool', '=', True)])]), ('bar', '=', false)]"/>
             </search>
         `,
         context: {
@@ -1558,7 +1558,7 @@ test("facets display with any / not any operator (check brackets)", async functi
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
-        "Company matches ( Bar matches ( Bool is not set ) and Bar matches ( Bool is set ) ) or Bar is equal false",
+        "Company matches ( Bar matches ( Bool not set ) and Bar matches ( Bool set ) ) or Bar is equal false",
     ]);
     expect.verifySteps([`/web/domain/validate`]);
 });
