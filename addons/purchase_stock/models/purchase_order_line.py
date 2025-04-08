@@ -312,6 +312,8 @@ class PurchaseOrderLine(models.Model):
                 self.company_id.currency_id,
                 round=False,
             )
+        if 'amount_currency' not in res:
+            res['amount_currency'] = self.price_unit_discounted * (self.qty_received or 1)
         return res
 
     @api.model
