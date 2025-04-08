@@ -77,7 +77,7 @@ class ResUsers(models.Model):
 
     @api.depends_context("uid")
     def _compute_can_edit_role(self):
-        self.can_edit_role = self.env["res.role"].has_access("write")
+        self.can_edit_role = self.env["res.role"].sudo(False).has_access("write")
 
     # ------------------------------------------------------------
     # CRUD
