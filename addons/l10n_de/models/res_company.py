@@ -25,9 +25,15 @@ class ResCompany(models.Model):
             and self.env['account.move'].search_count([('company_id', 'in', german_companies.ids)], limit=1)
         ):
             raise ValidationError(_("You cannot change the fiscal country."))
+
         return super().write(vals)
 
     @api.depends('country_code')
+    def _compute_force_restrictive_audit_trail(self):
+        super()._compute_force_restrictive_audit_trail()
+        for company in self:
+            company.force_restrictive_audit_trail |= company.country_code == 'DE'
+
     @api.constrains('state_id', 'l10n_de_stnr')
     def _validate_l10n_de_stnr(self):
         for record in self:

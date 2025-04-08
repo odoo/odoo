@@ -204,7 +204,8 @@ class ResConfigSettings(models.TransientModel):
     ) # technical field used for showing the Peppol settings conditionally
 
     # Audit trail
-    check_account_audit_trail = fields.Boolean(string='Audit Trail', related='company_id.check_account_audit_trail', readonly=False)
+    restrictive_audit_trail = fields.Boolean(string='Restricted Audit Trail', related='company_id.restrictive_audit_trail', readonly=False)
+    force_restrictive_audit_trail = fields.Boolean(string='Forced Audit Trail', related='company_id.force_restrictive_audit_trail', readonly=False)
 
     # Autopost of bills
     autopost_bills = fields.Boolean(related='company_id.autopost_bills', readonly=False)

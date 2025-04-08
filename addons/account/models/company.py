@@ -249,7 +249,15 @@ class ResCompany(models.Model):
     account_discount_expense_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for expense discount')
 
     # Audit trail
-    check_account_audit_trail = fields.Boolean(string='Audit Trail')
+    restrictive_audit_trail = fields.Boolean(
+        string='Restrictive Audit Trail',
+        tracking=True,
+        help="Enable this option to prevent deletion of journal item related logs",
+    )
+    force_restrictive_audit_trail = fields.Boolean(
+        string='Force Audit Trail',
+        compute='_compute_force_restrictive_audit_trail',
+    )  # Force the restrictive audit trail mode, and hide the corresponding setting.",
 
     # Autopost Wizard
     autopost_bills = fields.Boolean(string='Auto-validate bills', default=True)
@@ -296,11 +304,11 @@ class ResCompany(models.Model):
             'tax_exigibility',
         ]
 
-    def cache_invalidation_fields(self):
-        # EXTENDS base
-        invalidation_fields = super().cache_invalidation_fields()
-        invalidation_fields.add('check_account_audit_trail')
-        return invalidation_fields
+    @api.constrains('restrictive_audit_trail')
+    def _check_audit_trail_restriction(self):
+        companies = self.filtered(lambda c: not c.restrictive_audit_trail and c.force_restrictive_audit_trail)
+        if companies:
+            raise ValidationError(_("Can't disable restricted audit trail: forced by localization."))
 
     @api.constrains("account_price_include")
     def _check_set_account_price_include(self):
@@ -324,11 +332,9 @@ class ResCompany(models.Model):
             if rec.fiscalyear_last_day > max_day:
                 raise ValidationError(_("Invalid fiscal year last day"))
 
-    @api.constrains('check_account_audit_trail')
-    def _check_audit_trail_records(self):
-        companies = self.filtered(lambda c: not c.check_account_audit_trail)
-        if self.env['account.move'].search_count([('company_id', 'in', companies.ids)], limit=1):
-            raise UserError(_("Can't disable audit trail when there are existing records."))
+    def _compute_force_restrictive_audit_trail(self):
+        for company in self:
+            company.force_restrictive_audit_trail = False
 
     @api.depends('fiscal_position_ids.foreign_vat')
     def _compute_multi_vat_foreign_country(self):
