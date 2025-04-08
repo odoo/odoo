@@ -250,6 +250,27 @@ class Monetary(Field[float]):
             return float_repr(currency.round(value), currency.decimal_places)
         return value
 
+    def _cache_filter_different_from(self, records: BaseModel, cache_value: typing.Any) -> BaseModel:
+        records = super()._cache_filter_different_from(records, cache_value)
+        if not records:
+            return records
+        # check that the values were rounded properly when put in cache
+        # see fix odoo/odoo#177200 (commit 7164d5295904b08ec3a0dc1fb54b217671ff531c)
+        env = records.env
+        field_cache = self._get_cache(env)
+        currency_field = records._fields[self.get_currency_field(records)]
+        return records.browse(
+            record_id
+            for record_id, record_sudo in zip(
+                records._ids, records.sudo().with_context(prefetch_fields=False)
+            )
+            if not (
+                (value := field_cache.get(record_id))
+                and (currency := currency_field.__get__(record_sudo))
+                and currency.with_env(env).round(value) == cache_value
+            )
+        )
+
     def convert_to_cache(self, value, record, validate=True):
         # cache format: float
         value = float(value or 0.0)
