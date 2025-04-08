@@ -10,7 +10,6 @@ from . import crm_team_member
 from . import ir_config_parameter
 from . import res_config_settings
 from . import res_partner
-from . import digest
 from . import crm_lead_scoring_frequency
 from . import utm
 from . import crm_recurring_plan
