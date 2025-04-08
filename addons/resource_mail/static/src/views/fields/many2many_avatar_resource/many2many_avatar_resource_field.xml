@@ -3,7 +3,7 @@
     <t t-name="resource_mail.Many2ManyAvatarResourceField.option" t-inherit="web.Many2ManyTagsAvatarField.option">
         <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="before">
             <i t-if="autoCompleteItemScope.record.resource_type === 'material'" class="o_material_resource fa fa-wrench rounded text-center me-2
-            d-flex align-items-center justify-content-center" t-attf-class="o_colorlist_item_color_{{ autoCompleteItemScope.record.color }}"/>
+            d-flex align-items-center justify-content-center" t-attf-class="o_colorlist_item_color_{{ autoCompleteItemScope.record.role_color }}"/>
         </xpath>
         <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="attributes">
             <attribute name="t-if" add="&amp;&amp; autoCompleteItemScope.record.resource_type !== 'material'" separator=" "/>
