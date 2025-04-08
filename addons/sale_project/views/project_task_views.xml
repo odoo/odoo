@@ -129,12 +129,17 @@
                         options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                     <field name="sale_line_id"
                         groups="sales_team.group_sale_salesman"
-                        options="{'no_edit': True, 'delete': False}"
-                        context="{
-                            'form_view_ref': 'sale_project.sale_order_line_view_form_editable',
-                            'default_partner_id': partner_id,
-                            'default_company_id': company_id,
-                        }"/>
+                        options="{'no_create': True}"
+                    />
+                    <button
+                        title="Create Sales Order"
+                        icon="fa-plus"
+                        class="btn"
+                        type="object"
+                        name="action_create_sales_order_from_project"
+                        invisible="sale_line_id"
+                        groups="sales_team.group_sale_salesman"
+                    />
                     <span
                         class="fa fa-exclamation-triangle text-warning"
                         title="The sales order associated with this project has been cancelled. We recommend either updating the sales order item or cancelling this project in alignment with the cancellation of the sales order."
@@ -193,17 +198,19 @@
                     <field name="sale_line_id"
                         groups="sales_team.group_sale_salesman"
                         string="Sales Order Item"
+                        options="{'no_create': True}"
                         readonly="0"
-                        context="{
-                            'create': False, 'edit': False, 'delete': False,
-                            'with_price_unit': True,
-                            'form_view_ref': 'sale_project.sale_order_line_view_form_editable',
-                            'default_partner_id': partner_id,
-                            'default_company_id': company_id,
-                            'default_order_id': project_sale_order_id,
-                        }"
                         placeholder="Non-billable"/>
-                    <span 
+                    <button
+                        title="Create Sales Order"
+                        icon="fa-plus"
+                        class="btn"
+                        type="object"
+                        name="action_create_sales_order_from_task"
+                        invisible="sale_line_id"
+                        groups="sales_team.group_sale_salesman"
+                    />
+                    <span
                         class="fa fa-exclamation-triangle text-warning"
                         title="The sales order associated with this task has been cancelled. We recommend either updating the sales order item or cancelling this task in alignment with the cancellation of the sales order." 
                         invisible="sale_order_state != 'cancel'"/>

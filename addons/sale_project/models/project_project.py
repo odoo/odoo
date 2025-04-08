@@ -5,6 +5,7 @@ import json
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import Query, SQL
 from odoo.tools.misc import unquote
@@ -872,3 +873,25 @@ class ProjectProject(models.Model):
             action_window['views'] = [[False, 'form']]
             action_window['res_id'] = vendor_bill_ids[0]
         return action_window
+
+    def action_create_sales_order_from_project(self):
+        self.ensure_one()
+        if self.sale_line_id:
+            raise ValidationError(_('This project already has a sale order item.'))
+        return {
+            'name': _('Create Sales Order'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'view_mode': 'form',
+            'view_id': self.env.ref('sale_project.view_order_simple_form').id,
+            'target': 'new',
+            'context': {
+                'create_for_project_id': self.id,
+                'should_confirm_so': True,
+                'default_partner_id': self.partner_id.id,
+                'default_company_id': self.company_id.id or self.env.company.id,
+                'default_project_id': self.id,
+                'default_user_id': self.env.user.id,
+                'dialog_size': 'large',
+            },
+        }
