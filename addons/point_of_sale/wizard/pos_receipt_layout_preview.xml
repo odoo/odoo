@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pos_receipt_layout_preview">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <t t-call-assets="point_of_sale.receipt_assets" />
+            </t>
+            <t t-set="body_classname" t-value="'overflow-hidden'"/>
+            <div id="wrapwrap" class="h-100">
+                <receipt-component t-att-props="props"/>
+            </div>
+        </t>
+    </template>
+</odoo>
