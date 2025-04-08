@@ -16,8 +16,14 @@ export class AvatarCardPopover extends Component {
         this.orm = useService("orm");
         this.openChat = useOpenChat("res.users");
         onWillStart(async () => {
-            [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
+            await this.initialize();
         });
+    }
+
+    async initialize() {
+        if (!this.user) {
+            [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
+        }
     }
 
     get fieldNames() {
