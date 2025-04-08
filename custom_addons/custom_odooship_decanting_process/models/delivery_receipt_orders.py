@@ -69,31 +69,6 @@ class DeliveryReceiptOrders(models.Model):
         Raises a UserError if any license plate is still open.
         """
         for order in self:
-            # Initialize a list to hold the line states
-            line_states = []
-            stock_quant_obj = self.env['stock.quant']
-
-            # Check if all related delivery receipt order lines have the license plate closed
-            all_closed = all(line.license_plate_closed for line in order.delivery_receipt_orders_line_ids)
-
-            # Log the status of each line for debugging
-            for line in order.delivery_receipt_orders_line_ids:
-                line_states.append((line.id, line.license_plate_closed))
-                # Check the automation_manual field to decide if quantity should be updated
-                if line.automation_manual in ('automation_bulk', 'manual'):
-                    # Update the quantity in stock.quant
-                    stock_quant_obj._update_available_quantity(
-                        product_id=line.product_id,
-                        location_id=line.location_dest_id,
-                        quantity=line.quantity,
-                        # Add additional fields if needed, such as lot_id, package_id, owner_id
-                    )
-
-                    # Log the update for debugging
-
-            if not all_closed:
-                raise UserError(_("All license plates must be closed before marking as done."))
-
             # Change the state to 'done' if validation passes
             order.state = 'done'
 

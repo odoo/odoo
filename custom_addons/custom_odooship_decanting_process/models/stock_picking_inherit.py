@@ -25,6 +25,18 @@ class StockPicking(models.Model):
     tenant_id = fields.Char(related='tenant_code_id.name',string='Tenant ID', store=True)
     site_code = fields.Char(related='site_code_id.name',string='Site Code', store=True)
     is_automation = fields.Boolean(string='Is Automation', default=False)
+    is_error_found = fields.Boolean(string='Is Error Found', default=False)
+    is_error_found_message = fields.Char(string='Error Found Message')
+
+    @api.onchange('is_error_found')
+    def _onchange_is_error_found(self):
+        """
+        Onchange is error found display error message when boolean is True
+        """
+        if self.is_error_found:
+            self.is_error_found_message = "<span style='color:red; font-weight:bold;'>Error message in Log</span>"
+        else:
+            self.is_error_found_message = ""
 
     # def button_manual_pack(self):
     #     """

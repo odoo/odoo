@@ -19,3 +19,4 @@ class PackageConfiguration(models.Model):
         store=True
     )
     site_code_id = fields.Many2one('site.code.configuration', string='Site Code', store=True)
+    is_default_package = fields.Boolean(string='Set Default Package', default=False)

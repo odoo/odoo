@@ -29,6 +29,7 @@
         'views/sales_order_inherit_view.xml',
         'views/pack_bench_configuration_view.xml',
         'views/package_configuration_view.xml',
+        'views/stock_quant_inherit_views.xml',
         'views/menuitem_view.xml',
         # 'views/sales_order_inherit_view.xml',
         'wizard/receipt_wizard_view.xml',
