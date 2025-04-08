@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Pager } from "@web/core/pager/pager";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useCommand } from "@web/core/commands/command_hook";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -17,7 +17,7 @@ import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 import { SearchBar } from "../search_bar/search_bar";
 
-import { Component, useState, onMounted, useExternalListener, useRef, useEffect } from "@odoo/owl";
+import { Component, useState, onMounted, useRef, useEffect } from "@odoo/owl";
 
 const STICKY_CLASS = "o_mobile_sticky";
 
@@ -111,9 +111,6 @@ export class ControlPanel extends Component {
         }+${user.userId}`;
 
         this.state = useState({
-            showSearchBar: false,
-            showMobileSearch: false,
-            showViewSwitcher: false,
             embeddedInfos: {
                 showEmbedded:
                     this.env.config.embeddedActions?.length > 0 &&
@@ -156,7 +153,6 @@ export class ControlPanel extends Component {
             );
         }
 
-        useExternalListener(window, "click", this.onWindowClick);
         useEffect(() => {
             if (
                 !this.env.isSmall ||
@@ -238,6 +234,16 @@ export class ControlPanel extends Component {
             onWillStartDrag: (params) => this._sortEmbeddedActionStart(params),
             onDrop: (params) => this._sortEmbeddedActionDrop(params),
         });
+
+        useBus(this.env.bus, "cp_toggle_search_bar", () => {
+            this.isScrolling = true;
+            // Wait 2 animation frame
+            // - The owl render to draw the search input
+            // - The implicit scroll trigger by the owl render
+            browser.requestAnimationFrame(() =>
+                browser.requestAnimationFrame(() => (this.isScrolling = false))
+            );
+        });
     }
 
     getDropdownClass(action) {
@@ -271,17 +277,6 @@ export class ControlPanel extends Component {
         } else {
             return _t("Custom Embedded Action");
         }
-    }
-
-    /**
-     * Reset mobile search state
-     */
-    resetSearchState() {
-        Object.assign(this.state, {
-            showSearchBar: false,
-            showMobileSearch: false,
-            showViewSwitcher: false,
-        });
     }
 
     /**
@@ -350,7 +345,6 @@ export class ControlPanel extends Component {
      * @param {import("@web/views/view").ViewType} viewType
      */
     switchView(viewType, newWindow) {
-        this.resetSearchState();
         this.actionService.switchView(viewType, {}, { newWindow });
     }
 
@@ -362,16 +356,6 @@ export class ControlPanel extends Component {
         );
         const nextIndex = (currentIndex + 1) % viewSwitcherEntries.length;
         this.switchView(viewSwitcherEntries[nextIndex].type);
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    onWindowClick(ev) {
-        if (this.state.showViewSwitcher && !ev.target.closest(".o_cp_switch_buttons")) {
-            this.state.showViewSwitcher = false;
-        }
     }
 
     /**

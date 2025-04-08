@@ -59,7 +59,6 @@ export class SearchPanel extends Component {
         this.state = useState({
             active: {},
             expanded: {},
-            showMobileSearch: false,
             sidebarExpanded: !this.env.searchModel.searchPanelInfo.fold,
         });
         this.hasImportedState = false;
