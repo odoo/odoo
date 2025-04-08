@@ -17,8 +17,6 @@ class TestMenusAdmin(odoo.tests.HttpCase):
     def test_01_click_everywhere_as_admin(self):
         if 'tour_enabled' in self.env['res.users']._fields:
             self.env.ref('base.user_admin').tour_enabled = False
-        if self.env['ir.module.module'].search([('name', '=', 'product_matrix'), ('state', '=', 'installed')]):
-            self.env.ref('base.group_user').implied_ids += self.env.ref('product.group_product_variant')  # avoid uninstall of sale / pruchase matrix
         menus = self.env['ir.ui.menu'].load_menus(False)
         for app_id in menus['root']['children']:
             with self.subTest(app=menus[app_id]['name']):
