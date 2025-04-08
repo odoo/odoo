@@ -3,7 +3,7 @@
 
     <t t-name="web.RecordSelector" >
         <div class="o_input d-flex flex-wrap gap-1 o_record_selector">
-            <span t-if="isAvatarModel and props.resId" class="o_avatar o_m2o_avatar">
+            <span t-if="hasAvatarImg" class="o_avatar o_m2o_avatar">
                 <img class="rounded" t-attf-src="/web/image/{{props.resModel}}/{{props.resId}}/avatar_128"/>
             </span>
             <RecordAutocomplete
