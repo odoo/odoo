@@ -4735,6 +4735,21 @@ class BaseModel(metaclass=MetaModel):
                 if len(new_values) != len(old_value):
                     record[fname] = new_values
 
+    def _validate_properties_definition(self, properties_definition, field):
+        """Allow to validate additional properties attributes."""
+
+    def _additional_allowed_keys_properties_definition(self):
+        """Allow to add more allowed key for properties."""
+        return ()
+
+    def _convert_to_cache_properties_definition(self, value):
+        """Allow to patch `convert_to_cache` of the properties definition."""
+        return value
+
+    def _convert_to_column_properties_definition(self, value):
+        """Allow to patch `convert_to_column` of the properties definition."""
+        return value
+
     def _load_records_write(self, values):
         self.ensure_one()
         to_write = {}  # Deferred the write to avoid using the old definition if it changed
