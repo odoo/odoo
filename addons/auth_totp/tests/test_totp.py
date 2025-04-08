@@ -124,3 +124,17 @@ class TestTOTP(TestTOTPCommon, HttpCaseWithUserDemo):
         response = self.url_open("/web/session/authenticate", data=json.dumps(payload), headers=headers)
         data = response.json()
         self.assertEqual(data['result']['uid'], None)
+
+
+    def test_totp_field_access(self):
+        """
+        Ensure that the field of the totp secret cannot be accessed even by the admin
+        """
+        users = self.env.user.create([
+            {'name': 'test_totp_user', 'login': 'test', 'password': 'passwordtest', 'totp_secret': '111111'},
+            {'name': 'test_totp_user2', 'login': 'test2', 'password': 'passwordtest'}])
+        self.env.cache.invalidate()
+        self.assertFalse(users[0].sudo().totp_secret)
+        users._compute_totp_enabled()  # make sure the compute works for batch operation
+        self.assertFalse(users[1].totp_enabled)
+        self.assertTrue(users[0].totp_enabled)
