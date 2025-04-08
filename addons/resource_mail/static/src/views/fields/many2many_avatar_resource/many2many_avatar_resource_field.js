@@ -24,7 +24,7 @@ export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {
         return this.orm.call(
             this.props.resModel,
             "search_read",
-            [this.getDomain(request), ["id", "display_name", "resource_type", "color"]],
+            [this.getDomain(request), ["id", "display_name", "resource_type", "role_color"]],
             {
                 context: this.props.context,
                 limit: this.props.searchLimit + 1,
@@ -69,7 +69,7 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
         return {
             ...super.getTagProps(...arguments),
             icon: record.data.resource_type === "user" ? null : "fa-wrench",
-            colorIndex: record.data.color,
+            colorIndex: record.data.role_color,
             img: record.data.resource_type === "user"
                 ? `/web/image/${this.relation}/${record.resId}/avatar_128`
                 : null,
@@ -90,7 +90,7 @@ const resourceFieldMixin = {
                 ],
             },
             {
-                name: "color",
+                name: "role_color",
                 type: "integer",
             },
         ];

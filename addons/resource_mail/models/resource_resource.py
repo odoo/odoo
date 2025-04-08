@@ -8,8 +8,12 @@ from odoo import fields, models
 class ResourceResource(models.Model):
     _inherit = 'resource.resource'
 
-    def _default_color(self):
-        return randint(1, 11)
+    role_color = fields.Integer(string='Role Color', compute='_compute_role_color', store=False)
 
-    color = fields.Integer(default=_default_color)
+    def _compute_role_color(self):
+        for slot in self:
+            slot.role_color = (
+                slot.role_ids[0].color
+                if slot.role_ids else 0)
+
     im_status = fields.Char(related='user_id.im_status')
