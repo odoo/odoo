@@ -498,6 +498,27 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         self.assertEqual(sale_order.project_id[analytic_plan_name], sale_order.project_ids[analytic_plan_name], "The project created for the SO and the project of the SO should have the same account.")
         self.assertEqual(self.env.company, sale_order.project_ids.company_id, "The project created for the SO should have the same company as its account.")
 
+    def test_project_creation_on_so_with_manual_analytic(self):
+        """ Test that the manually added analytic account (of a plan other than projects) and the project account
+            created when SO is confirmed are both still in the line after confirmation.
+        """
+        analytic_distribution_manual = {str(self.analytic_account_sale.id): 100}
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order_service3.id,
+                    'analytic_distribution': analytic_distribution_manual,
+                }),
+            ],
+        })
+        self.assertEqual(sale_order.order_line.analytic_distribution, analytic_distribution_manual)
+        sale_order.action_confirm()
+        expected_analytic_distribution = analytic_distribution_manual | {str(sale_order.order_line.project_id.account_id.id): 100}
+        self.assertEqual(sale_order.order_line.analytic_distribution, expected_analytic_distribution)
+
     def test_include_archived_projects_in_stat_btn_related_view(self):
         """Checks if the project stat-button action includes both archived and active projects."""
         # Setup

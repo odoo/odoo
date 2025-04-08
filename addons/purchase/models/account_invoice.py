@@ -533,3 +533,9 @@ class AccountMoveLine(models.Model):
             }
             for line in self
         ]
+
+    def _prepare_analytic_distribution_vals(self):
+        vals = super()._prepare_analytic_distribution_vals()
+        if self.purchase_line_id and not self.analytic_distribution:
+            vals['analytic_distribution'] = self.purchase_line_id.analytic_distribution
+        return vals

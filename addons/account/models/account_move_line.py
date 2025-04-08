@@ -1053,14 +1053,7 @@ class AccountMoveLine(models.Model):
         cache = {}
         for line in self:
             if line.display_type == 'product' or not line.move_id.is_invoice(include_receipts=True):
-                arguments = frozendict({
-                    "product_id": line.product_id.id,
-                    "product_categ_id": line.product_id.categ_id.id,
-                    "partner_id": line.partner_id.id,
-                    "partner_category_id": line.partner_id.category_id.ids,
-                    "account_prefix": line.account_id.code,
-                    "company_id": line.company_id.id,
-                })
+                arguments = frozendict(line._prepare_analytic_distribution_vals())
                 if arguments not in cache:
                     cache[arguments] = self.env['account.analytic.distribution.model']._get_distribution(arguments)
                 line.analytic_distribution = cache[arguments] or line.analytic_distribution
@@ -3096,6 +3089,17 @@ class AccountMoveLine(models.Model):
             'company_id': self.company_id.id or self.env.company.id,
             'category': 'invoice' if self.move_id.is_sale_document() else 'vendor_bill' if self.move_id.is_purchase_document() else 'other',
         }
+
+    def _prepare_analytic_distribution_vals(self):
+        vals = {
+            'product_id': self.product_id.id,
+            'product_categ_id': self.product_id.categ_id.id,
+            'partner_id': self.partner_id.id,
+            'partner_category_id': self.partner_id.category_id.ids,
+            'account_prefix': self.account_id.code,
+            'company_id': self.company_id.id,
+        }
+        return vals
 
     # -------------------------------------------------------------------------
     # INSTALLMENTS

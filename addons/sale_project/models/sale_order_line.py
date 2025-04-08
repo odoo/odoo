@@ -137,12 +137,25 @@ class SaleOrderLine(models.Model):
     def _compute_analytic_distribution(self):
         super()._compute_analytic_distribution()
         for line in self:
-            if line.display_type or line.analytic_distribution or not line.product_id:
+            if line.display_type or not line.product_id:
                 continue
             project = line.product_id.project_id or line.order_id.project_id
             distribution = project._get_analytic_distribution()
-            if distribution:
+            if not distribution:
+                continue
+            if not line.analytic_distribution:
                 line.analytic_distribution = distribution
+            else:
+                AnalyticAccount = self.env['account.analytic.account']
+                applied_plans = AnalyticAccount.browse(
+                    list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
+                ).mapped('root_plan_id')
+                new_plans = AnalyticAccount.browse(
+                    list({int(account_id) for ids in distribution for account_id in ids.split(",")})
+                ).mapped('root_plan_id')
+                # ignore distribution if it contains an account having a root plan that was already applied
+                if not applied_plans & new_plans:
+                    line.analytic_distribution |= distribution
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -428,7 +441,7 @@ class SaleOrderLine(models.Model):
             to this sale order line, or the analytic account of the project which uses this sale order line, if it exists.
         """
         values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
-        if not values.get('analytic_distribution'):
+        if not values.get('analytic_distribution') and not self.analytic_distribution:
             if self.task_id.project_id.account_id:
                 values['analytic_distribution'] = {self.task_id.project_id.account_id.id: 100}
             elif self.project_id.account_id:
