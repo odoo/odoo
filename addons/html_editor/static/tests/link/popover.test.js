@@ -938,6 +938,41 @@ describe("link preview", () => {
         await waitFor(".o-we-linkpopover");
         expect.verifySteps([]);
     });
+    test("should change replace URL button to magic wand icon after selection change", async () => {
+        onRpc("/html_editor/link_preview_external", () => ({
+            og_description:
+                "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+            og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+            og_title: "Open Source ERP and CRM | Odoo",
+            og_type: "website",
+            og_site_name: "Odoo",
+            source_url: "http://odoo.com/",
+        }));
+        const { editor } = await setupEditor(`<p>abc</p><p>[]</p>`);
+        await insertText(editor, "/link");
+        await animationFrame();
+        await click(".o-we-command-name:first");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").fill("http://odoo.com/");
+        await animationFrame();
+        expect("button.o_we_replace_title_btn").toHaveCount(1);
+        expect("a.o_we_replace_title_btn").toHaveCount(0);
+        const pNode = document.querySelector("p");
+        setSelection({
+            anchorNode: pNode,
+            anchorOffset: 0,
+        });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+        expect(".o-we-linkpopover").toHaveCount(0);
+        const link = document.querySelector("a");
+        setSelection({
+            anchorNode: link,
+            anchorOffset: 0,
+        });
+        await waitFor(".o_we_replace_title_btn");
+        expect(".o-we-linkpopover").toHaveCount(1);
+        expect("a.o_we_replace_title_btn").toHaveCount(1);
+        expect("button.o_we_replace_title_btn").toHaveCount(0);
+    });
 });
 
 describe("link in templates", () => {

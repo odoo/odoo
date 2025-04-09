@@ -361,6 +361,7 @@ export class DomPlugin extends Plugin {
             currentNode = nodeToInsert;
         }
         allInsertedNodes.push(...lastInsertedNodes);
+        this.getResource("after_insert_handlers").forEach((handler) => handler(allInsertedNodes));
         let insertedNodesParents = getConnectedParents(allInsertedNodes);
         for (const parent of insertedNodesParents) {
             if (

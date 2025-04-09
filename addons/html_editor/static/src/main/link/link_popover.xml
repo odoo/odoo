@@ -62,6 +62,13 @@
                                     <t t-esc="state.urlTitle"/>
                                 </a>
                                 <div class="flex-grow-1 d-flex justify-content-end">
+                                    <a href="#" class="mx-1 o_we_replace_title_btn text-dark"
+                                        t-if="!state.isImage and state.urlTitle and state.label === '' and !state.showReplaceTitleBanner"
+                                        t-on-click="onClickReplaceTitle"
+                                        title="Replace URL with its title"
+                                    >
+                                        <i class="fa fa-magic"></i>
+                                    </a>
                                     <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
                                         <i class="fa fa-clipboard"></i>
                                     </a>
@@ -95,7 +102,7 @@
                         </span>
                     </div>
                 </div>
-                <div t-if="!state.isImage and state.urlTitle and state.label === ''" class="d-flex align-items-baseline" style="background-color: var(--primary);">
+                <div t-if="!state.isImage and state.urlTitle and state.label === '' and state.showReplaceTitleBanner" class="d-flex align-items-baseline" style="background-color: var(--primary);">
                     <i class="fa fa-magic fa-fw m-1" style="color: var(--o-cc1-btn-primary-text);"></i>
                     <span class="me-2 flex-grow-1" style="color: var(--o-cc1-btn-primary-text);font-size: smaller;">Replace URL with its title?</span>
                     <button class=" btn btn-sm btn-primary o_we_replace_title_btn" style="margin: 1px;font-size: smaller;" t-on-click="onClickReplaceTitle">Yes</button>
