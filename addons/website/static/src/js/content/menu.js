@@ -848,8 +848,8 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
                 const mobileMegaMenuToggleEl = this.el.querySelectorAll(
                     "#top_menu_collapse_mobile .top_menu .o_mega_menu_toggle"
                 )[position];
-                megaMenuToggleEl.classList.add("active");
-                mobileMegaMenuToggleEl.classList.add("active");
+                megaMenuToggleEl?.classList.add("active");
+                mobileMegaMenuToggleEl?.classList.add("active");
             }
         });
     },
