@@ -346,7 +346,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
 
         # Make payment
         payment_context = {"active_ids": order.ids, "active_id": order.id}
-        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+        order_payment = self.env['pos.make.payment'].sudo().with_context(**payment_context).create({
             'amount': order.amount_total,
             'payment_method_id': self.bank_pm2.id
         })

@@ -21,7 +21,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
+        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_user')
         cls.company_data_2 = cls.setup_other_company()
 
         cls.company_data['company'].write({
@@ -44,7 +44,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         })
         cls.partner1 = cls.env['res.partner'].create({'name': 'Partner 1'})
         cls.partner4 = cls.env['res.partner'].create({'name': 'Partner 4'})
-        cls.pos_config = cls.env['pos.config'].create({
+        cls.pos_config = cls.env['pos.config'].sudo().create({
             'name': 'Main',
             'journal_id': cls.company_data['default_journal_sale'].id,
             'invoice_journal_id': cls.company_data['default_journal_sale'].id,
@@ -65,19 +65,19 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
             'list_price': 1.28,
         })
         cls.company_data['default_journal_cash'].pos_payment_method_ids.unlink()
-        cls.cash_payment_method = cls.env['pos.payment.method'].create({
+        cls.cash_payment_method = cls.env['pos.payment.method'].sudo().create({
             'name': 'Cash',
             'receivable_account_id': cls.company_data['default_account_receivable'].id,
             'journal_id': cls.company_data['default_journal_cash'].id,
             'company_id': cls.env.company.id,
         })
-        cls.bank_payment_method = cls.env['pos.payment.method'].create({
+        cls.bank_payment_method = cls.env['pos.payment.method'].sudo().create({
             'name': 'Bank',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'receivable_account_id': cls.company_data['default_account_receivable'].id,
             'company_id': cls.env.company.id,
         })
-        cls.credit_payment_method = cls.env['pos.payment.method'].create({
+        cls.credit_payment_method = cls.env['pos.payment.method'].sudo().create({
             'name': 'Credit',
             'receivable_account_id': cls.company_data['default_account_receivable'].id,
             'split_transactions': True,
@@ -150,7 +150,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
+        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_user')
 
         cls.company_data['company'].write({
             'point_of_sale_update_stock_quantities': 'real',
@@ -241,7 +241,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
     @classmethod
     def _create_basic_config(cls):
-        config = cls.env['pos.config'].create({
+        config = cls.env['pos.config'].sudo().create({
             'name': 'PoS Shop Test',
             'invoice_journal_id': cls.invoice_journal.id,
             'available_pricelist_ids': cls.currency_pricelist.ids,
@@ -252,13 +252,13 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         if cls.cash_pm1:
             cls.cash_pm1.write({'receivable_account_id': cls.pos_receivable_cash.id})
         else:
-            cls.cash_pm1 = cls.env['pos.payment.method'].create({
+            cls.cash_pm1 = cls.env['pos.payment.method'].sudo().create({
                 'name': 'Cash',
                 'journal_id': cls.company_data['default_journal_cash'].id,
                 'receivable_account_id': cls.pos_receivable_cash.id,
                 'company_id': cls.env.company.id,
             })
-        cls.bank_pm1 = cls.env['pos.payment.method'].create({
+        cls.bank_pm1 = cls.env['pos.payment.method'].sudo().create({
             'name': 'Bank',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'receivable_account_id': cls.pos_receivable_bank.id,
@@ -278,7 +278,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'name': 'Split (Bank) PM',
             'split_transactions': True,
         })
-        cls.pay_later_pm = cls.env['pos.payment.method'].create({'name': 'Pay Later', 'split_transactions': True})
+        cls.pay_later_pm = cls.env['pos.payment.method'].sudo().create({'name': 'Pay Later', 'split_transactions': True})
         config.write({'payment_method_ids': [(4, cls.cash_split_pm1.id), (4, cls.bank_split_pm1.id), (4, cls.cash_pm1.id), (4, cls.bank_pm1.id), (4, cls.pay_later_pm.id)]})
         return config
 
@@ -326,19 +326,19 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'name': 'Public Pricelist Other',
             'currency_id': cls.other_currency.id,
         })
-        cls.cash_pm2 = cls.env['pos.payment.method'].create({
+        cls.cash_pm2 = cls.env['pos.payment.method'].sudo().create({
             'name': 'Cash Other',
             'journal_id': other_cash_journal.id,
             'receivable_account_id': cls.pos_receivable_cash.id,
         })
-        cls.bank_pm2 = cls.env['pos.payment.method'].create({
+        cls.bank_pm2 = cls.env['pos.payment.method'].sudo().create({
             'name': 'Bank Other',
             'journal_id': other_bank_journal.id,
             'receivable_account_id': cls.pos_receivable_bank.id,
             'outstanding_account_id': cls.outstanding_bank.id,
         })
 
-        config = cls.env['pos.config'].create({
+        config = cls.env['pos.config'].sudo().create({
             'name': 'Shop Other',
             'invoice_journal_id': other_invoice_journal.id,
             'journal_id': other_sales_journal.id,

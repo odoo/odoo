@@ -243,6 +243,8 @@ class TestPoSStock(TestPoSCommon):
         self.pos_session.action_pos_session_validate()
 
     def test_04_order_refund(self):
+        # TODO-manv: needed since we use 'make_payment'
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
         self.categ4 = self.env['product.category'].create({
             'name': 'Category 4',
             'property_cost_method': 'fifo',

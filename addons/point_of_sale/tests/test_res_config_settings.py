@@ -24,6 +24,8 @@ class TestConfigureShops(TestPoSCommon):
         group_order_template = cls.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)
         if group_order_template:
             cls.env.ref('base.group_user').write({"implied_ids": [(4, group_order_template.id)]})
+        # TODO-manv: needed since we create config & update their settings in each test
+        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
 
     def _remove_on_payment_taxes(self):
         """ Call this when testing the res.config.settings with Form.
@@ -38,8 +40,8 @@ class TestConfigureShops(TestPoSCommon):
         """
         self._remove_on_payment_taxes()
 
-        pos_config1 = self.env['pos.config'].create({'name': 'Shop 1', 'module_pos_restaurant': False})
         pos_config2 = self.env['pos.config'].create({'name': 'Shop 2', 'module_pos_restaurant': False})
+        pos_config1 = self.env['pos.config'].create({'name': 'Shop 1', 'module_pos_restaurant': False})
         self.assertEqual(pos_config1.receipt_header, False)
         self.assertEqual(pos_config2.receipt_header, False)
 

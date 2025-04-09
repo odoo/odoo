@@ -15,6 +15,8 @@ class TestPoSProductsWithTax(TestPoSCommon):
 
     def setUp(self):
         super(TestPoSProductsWithTax, self).setUp()
+        # TODO-manv: needed since we use 'make_payment', create config & pm
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
 
         self.config = self.basic_config
         self.product1 = self.create_product(
