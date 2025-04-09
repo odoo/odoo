@@ -9338,7 +9338,7 @@ test(`display tooltips for buttons (debug = false)`, async () => {
 
 test.tags("desktop");
 test(`display tooltips for buttons (debug = true)`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
@@ -9702,7 +9702,7 @@ test(`basic support for widgets: onchange update`, async () => {
 
 test.tags("desktop");
 test(`proper stringification in debug mode tooltip`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
@@ -9732,7 +9732,7 @@ test(`proper stringification in debug mode tooltip`, async () => {
 
 test.tags("desktop");
 test(`field tooltip in debug mode, on field with domain attr`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
@@ -9754,7 +9754,7 @@ test(`field tooltip in debug mode, on field with domain attr`, async () => {
 
 test.tags("desktop");
 test(`do not display unset attributes in debug field tooltip`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
@@ -10967,7 +10967,7 @@ test(`save a form view with an invisible required field in a x2many`, async () =
 
 test(`help on field as precedence over field's declaration -- form`, async () => {
     Partner._fields.foo = fields.Char({ help: "pythonhelp" });
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
