@@ -4,11 +4,16 @@ import {
 } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
 import { registry } from "@web/core/registry";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { user } from "@web/core/user";
+import { onWillStart } from "@odoo/owl";
 
 export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
     setup() {
         super.setup();
         this.productColumns = ["product_id", "product_template_id"];
+        onWillStart(async () => {
+            this.optionalDeductibleAmount = await user.hasGroup("account.group_purchase_all_invoicing_rights");
+        });
     }
 
     getCellTitle(column, record) {
@@ -32,6 +37,9 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
                 )
                     ? "hide"
                     : "show";
+            }
+            if (column.optional === "conditional" && column.name === "deductible_amount") {
+                column.optional = this.optionalDeductibleAmount ? "show" : "hide";
             }
             return column;
         });

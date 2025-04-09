@@ -5212,6 +5212,8 @@ class AccountMove(models.Model):
             'posted_before': True,
         })
 
+        to_post._add_all_invoicing_rights_group()
+
         # Add the move number to the non_deductible lines for easier auditing
         if non_deductible_lines := self.line_ids.filtered(lambda line: (line.display_type in ('non_deductible_product_total', 'non_deductible_tax'))):
             for line in non_deductible_lines:
@@ -6192,6 +6194,13 @@ class AccountMove(models.Model):
         if self.is_purchase_document(include_receipts=True) and self.company_id.account_discount_income_allocation_id:
             return self.company_id.account_discount_income_allocation_id
         return None
+
+    def _add_all_invoicing_rights_group(self):
+        if not self.env.user.has_group('account.group_purchase_all_invoicing_rights'):
+            for move in self:
+                if move.move_type == 'in_invoice' and any(deductible_amount != 100 for deductible_amount in move.line_ids.mapped('deductible_amount')):
+                    self.env.user.group_ids += self.env.ref('account.group_purchase_all_invoicing_rights')
+                    return
 
     # -------------------------------------------------------------------------
     # TOOLING
