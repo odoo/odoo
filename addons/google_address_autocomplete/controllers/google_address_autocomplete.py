@@ -101,14 +101,14 @@ class AutoCompleteController(http.Controller):
         try:
             results = self._call_google_route("/autocomplete/json", params)
         except (TimeoutError, ValueError) as e:
-            _logger.error(e)
+            _logger.warning(e)
             return {
                 'results': [],
                 'session_id': session_id
             }
 
         if results.get('error_message'):
-            _logger.error(results['error_message'])
+            _logger.warning(results['error_message'])
 
         results = results.get('predictions', [])
 
@@ -136,11 +136,11 @@ class AutoCompleteController(http.Controller):
         try:
             results = self._call_google_route("/details/json", params)
         except (TimeoutError, ValueError) as e:
-            _logger.error(e)
+            _logger.warning(e)
             return {'address': None}
 
         if results.get('error_message'):
-            _logger.error(results['error_message'])
+            _logger.warning(results['error_message'])
 
         try:
             html_address = results['result']['adr_address']
