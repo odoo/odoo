@@ -11,4 +11,15 @@
         <field name="code">model._autopost_draft_entries()</field>
         <field name="state">code</field>
     </record>
+    <record id="ir_cron_assign_numbers" model="ir.cron">
+        <field name="name">Account: In case we try assigning a number at the same time to a same invoice, do it asynchronously in this cron</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="DateTime.now().strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="code">model._assign_locked_numbers()</field>
+        <field name="state">code</field>
+    </record>
 </odoo>
