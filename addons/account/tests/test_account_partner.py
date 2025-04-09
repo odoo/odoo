@@ -46,5 +46,23 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             },
         ]).action_post()
 
+        # rank updates are updated in the post-commit phase
+        with self.enter_registry_test_mode():
+            self.env.cr.postcommit.run()
         self.assertEqual(self.partner_a.supplier_rank, 1)
         self.assertEqual(self.partner_a.customer_rank, 1)
+
+        # a second move is updated in postcommit
+        self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'date': '2017-01-02',
+                'invoice_date': '2017-01-02',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [(0, 0, {'name': 'aaaa', 'price_unit': 100.0})],
+            },
+        ]).action_post()
+        # rank updates are updated in the post-commit phase
+        with self.enter_registry_test_mode():
+            self.env.cr.postcommit.run()
+        self.assertEqual(self.partner_a.customer_rank, 2)

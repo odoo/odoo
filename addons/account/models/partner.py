@@ -5,6 +5,7 @@ import re
 import time
 
 from collections import defaultdict
+from psycopg2 import errors as pgerrors
 
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError, ValidationError
@@ -805,16 +806,40 @@ class ResPartner(models.Model):
         if moves:
             raise UserError(_("The partner cannot be deleted because it is used in Accounting"))
 
-    def _increase_rank(self, field, n=1):
-        assert isinstance(n, int) and field in ('customer_rank', 'supplier_rank')
-        try:
-            self.lock_for_update(allow_referencing=True)
-        except LockError:
-            _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
+    def _increase_rank(self, field: str, n: int = 1):
+        assert field in ('customer_rank', 'supplier_rank')
+        if not self:
             return
-        records = self.sudo().with_context(tracking_disable=True)
-        for record in records:
-            record[field] += n
+        postcommit = self.env.cr.postcommit
+        data = postcommit.data.setdefault(f'account.res.partner.increase_rank.{field}', defaultdict(int))
+        already_registered = bool(data)
+        for record in self.sudo():
+            # In case we alrady have a value, we will increase the rank in
+            # postcommit to avoid serialization errors.  However, if the record
+            # has a rank of 0, we increase it directly so that filtering on
+            # partner_type is correctly set to customer or supplier.
+            if record[field] and record.id:
+                data[record.id] += n
+            else:
+                record[field] += n
+
+        if already_registered or not data:
+            return
+
+        @postcommit.add
+        def increase_partner_rank():
+            try:
+                with self.env.registry.cursor() as cr:
+                    partners = (
+                        self.env(cr=cr)[self._name]
+                        .sudo().browse(data)
+                        .with_context(prefetch_fields=False)
+                    )
+                    for partner in partners:
+                        partner[field] += data[partner.id]
+                    data.clear()
+            except pgerrors.OperationalError:
+                _logger.debug('Cannot update partner ranks.')
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
