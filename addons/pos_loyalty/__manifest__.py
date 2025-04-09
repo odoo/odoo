@@ -18,6 +18,7 @@
         'views/res_config_settings_view.xml',
         'views/loyalty_program_views.xml',
         'views/res_partner_views.xml',
+        'views/pos_order_views.xml',
     ],
     'demo': [
         'data/pos_loyalty_demo.xml',

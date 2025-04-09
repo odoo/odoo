@@ -82,4 +82,15 @@ patch(PosOrderline.prototype, {
             "fst-italic": this.is_reward_line,
         };
     },
+    getPriceChange(price) {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
+        const parsed_price = !isNaN(price)
+            ? price
+            : isNaN(parseFloat(price))
+            ? 0
+            : parseFloat("" + price);
+        return ProductPrice.round(parsed_price || 0);
+    },
 });

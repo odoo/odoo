@@ -331,4 +331,5 @@ class LoyaltyReward(models.Model):
             'sale_ok': False,
             'purchase_ok': False,
             'lst_price': 0,
+            'taxes_id': False,
         } for reward in self]

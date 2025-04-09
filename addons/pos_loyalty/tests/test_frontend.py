@@ -2949,6 +2949,82 @@ class TestUi(TestPointOfSaleHttpCommon):
         }).check()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_dont_give_points_again', login="accountman")
 
+    def test_editable_gift_card_reward_line(self):
+        """
+        Test that reward lines for gift cards are editable and correctly reflect usage in PoS.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+
+        # Activate gift card product
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+
+        # Create gift card program and card
+        gift_card_program = self.create_programs([('gift_card_program', 'gift_card')])['gift_card_program']
+        gift_card = self.env['loyalty.card'].create({
+            'code': 'test-card-0005',
+            'program_id': gift_card_program.id,
+            'points': 100,
+        })
+        # Create test product
+        self.product_a = self.env["product.product"].create({
+            "name": "Test Product A",
+            "list_price": 100,
+            "available_in_pos": True,
+            "taxes_id": False,
+        })
+
+        # Validate initial gift card points
+        self.assertEqual(gift_card.points, 100, "Initial gift card points should be 100.")
+
+        self.main_pos_config.open_ui()
+
+        # Run PoS tour for gift card redemption
+        self.start_pos_tour("test_editable_gift_card_reward_line")
+        gift_card_order = self.main_pos_config.current_session_id.order_ids[0]
+        gift_card_history = gift_card.history_ids[0]
+
+        self.assertEqual(gift_card_history.order_id, gift_card_order.id, "Gift card usage should be linked to the latest PoS order.")
+        self.assertEqual(gift_card_history.used, 50, "Gift card should have 50 points used.")
+        self.assertEqual(gift_card.points, 50, "Gift card should have 50 points remaining.")
+
+    def test_editable_ewallet_reward_line(self):
+        """
+        Test that reward lines for e-wallets are editable and correctly reflect usage in PoS.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+
+        # Activate e-wallet product
+        self.env.ref('loyalty.ewallet_product_50').product_tmpl_id.write({'active': True})
+
+        # Create test product
+        self.product_a = self.env["product.product"].create({
+            "name": "Test Product A",
+            "list_price": 100,
+            "available_in_pos": True,
+            "taxes_id": False,
+        })
+
+        # Create e-wallet program and partner
+        ewallet_program = self.create_programs([('ewallet_program', 'ewallet')])['ewallet_program']
+        ewallet_partner = self.env['res.partner'].create({'name': 'E wallet Partner'})
+
+        self.main_pos_config.open_ui()
+
+        # Run PoS tour for e-wallet redemption
+        self.start_pos_tour("test_editable_ewallet_reward_line")
+        ewallet_order = self.main_pos_config.current_session_id.order_ids[0]
+        ewallet_card = self.env['loyalty.card'].search([
+            ('partner_id', '=', ewallet_partner.id),
+            ('program_id', '=', ewallet_program.id)
+        ], order='id desc', limit=1)
+        ewallet_history = ewallet_card.history_ids[0]
+
+        self.assertEqual(ewallet_history.order_id, ewallet_order.id, "E-wallet usage should be linked to the latest PoS order.")
+        self.assertEqual(ewallet_history.used, 50, "E-wallet should have 50 points used.")
+        self.assertEqual(ewallet_card.points, 50, "E-wallet should have 50 points remaining.")
+
     def test_refund_does_not_decrease_points(self):
         """
         Tests that when refunding a product bought while spending points, it does not decrease the points a second time
