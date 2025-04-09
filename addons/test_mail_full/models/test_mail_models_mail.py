@@ -121,3 +121,11 @@ class MailTestRatingThreadRead(models.Model):
     _inherit = ["mail.test.rating.thread"]
     _order = "name asc, id asc"
     _mail_post_access = "read"
+
+
+class MailTestAttachmentCompany(models.Model):
+    _name = 'mail.test.attachment.company'
+    _description = "Model for testing attachment company"
+    _inherit = 'mail.thread'
+
+    company_id = fields.Many2one("res.company")

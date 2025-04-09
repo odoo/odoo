@@ -65,6 +65,16 @@ class AttachmentController(http.Controller):
                     "res_model": "mail.compose.message",
                 }
             )
+        thread_record = request.env[thread_model].browse(int(thread_id))
+        attachment_company_id = False
+        if "company_id" in thread_record and thread_record.company_id:
+            attachment_company_id = thread_record.company_id.id
+        else:
+            cids = request.cookies.get('cids')
+            if cids:
+                attachment_company_id = int(cids.split('-')[0])
+        if attachment_company_id:
+            vals["company_id"] = attachment_company_id
         if request.env.user.share:
             # Only generate the access token if absolutely necessary (= not for internal user).
             vals["access_token"] = request.env["ir.attachment"]._generate_access_token()
