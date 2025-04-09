@@ -6,25 +6,25 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2024
 # Tereza Mokrá, 2024
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
-# Marta Wacławek, 2024
 # Michael Svoboda, 2025
 # Jakub Smolka, 2025
 # Tomáš Píšek, 2025
 # Stanislav Kurinec, 2025
 # Petr Vojta <petvoj@gmail.com>, 2025
-# Wil Odoo, 2025
 # Radim Bílý, 2025
 # Denis Gobin, 2025
 # Vojtěch Olšan, 2025
 # Aleš Fiala <f.ales1@seznam.cz>, 2025
+# Marta Wacławek, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9360,6 +9360,12 @@ msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "Dříve bylo '%(previous)s' a teď je '%(current)s'."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
 msgid "January"
 msgstr "Leden"
@@ -11224,6 +11230,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "Jednu nebo více faktur nebylo možné zpracovat."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr ""
+"Jeden nebo více řádků vyžaduje rozdělit 100 % v analytické distribuci."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -13328,7 +13341,7 @@ msgstr "Průběžný zůstatek"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_iso20022
 msgid "SEPA Credit Transfer / ISO20022"
-msgstr ""
+msgstr "SEPA převod peněz / ISO20022"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13659,6 +13672,12 @@ msgstr "Bezpečnostní token"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "Zobrazit všechny aktivity"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
