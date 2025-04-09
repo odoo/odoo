@@ -36,9 +36,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'nz_tax_purchase_15',
                 'fiscalyear_last_month': '3',
                 'fiscalyear_last_day': 31,
-                # Changing the opening date to the first day of the fiscal year.
-                # This way the opening entries will be set to the 31st of March.
-                'account_opening_date': fields.Date.context_today(self).replace(month=4, day=1),
                 'expense_account_id': 'nz_51110',
                 'income_account_id': 'nz_41110',
             },
