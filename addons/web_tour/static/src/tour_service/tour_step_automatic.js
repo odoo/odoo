@@ -1,6 +1,6 @@
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
-import { callWithUnloadCheck, serializeChanges, serializeMutation } from "./tour_utils";
+import { serializeChanges, serializeMutation } from "./tour_utils";
 import { TourHelpers } from "./tour_helpers";
 import { TourStep } from "./tour_step";
 import { getTag } from "@web/core/utils/xml";
@@ -86,19 +86,17 @@ export class TourStepAutomatic extends TourStep {
         if (this.skipped) {
             return;
         }
-        return await callWithUnloadCheck(async () => {
-            const actionHelper = new TourHelpers(this.element);
-            if (typeof this.run === "function") {
-                await this.run.call({ anchor: this.element }, actionHelper);
-            } else if (typeof this.run === "string") {
-                for (const todo of this.run.split("&&")) {
-                    const m = String(todo)
-                        .trim()
-                        .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
-                    await actionHelper[m.groups?.action](m.groups?.arguments);
-                }
+        const actionHelper = new TourHelpers(this.element);
+        if (typeof this.run === "function") {
+            await this.run.call({ anchor: this.element }, actionHelper);
+        } else if (typeof this.run === "string") {
+            for (const todo of this.run.split("&&")) {
+                const m = String(todo)
+                    .trim()
+                    .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
+                await actionHelper[m.groups?.action](m.groups?.arguments);
             }
-        });
+        }
     }
 
     /**

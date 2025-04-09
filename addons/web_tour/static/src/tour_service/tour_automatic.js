@@ -28,7 +28,7 @@ export class TourAutomatic {
 
     start() {
         setupEventActions(document.createElement("div"), { allowSubmit: true });
-        const { delayToCheckUndeterminisms, stepDelay } = this.config;
+        const { delayToCheckUndeterminisms } = this.config;
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => [
@@ -44,12 +44,6 @@ export class TourAutomatic {
                         } else {
                             console.log(step.describeMe);
                         }
-                        // This delay is important for making the current set of tour tests pass.
-                        // IMPROVEMENT: Find a way to remove this delay.
-                        await new Promise((resolve) => requestAnimationFrame(resolve));
-                        if (stepDelay > 0) {
-                            await hoot.delay(stepDelay);
-                        }
                     },
                 },
                 {
@@ -62,13 +56,11 @@ export class TourAutomatic {
                         if (delayToCheckUndeterminisms > 0) {
                             await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
                         }
-                        const result = await step.doAction();
+                        await step.doAction();
                         if (this.debugMode) {
                             console.log(trigger);
                             if (step.skipped) {
                                 console.log("This step has been skipped");
-                            } else {
-                                console.log("This step has run successfully");
                             }
                             console.groupEnd();
                             if (step.pause) {
@@ -76,7 +68,6 @@ export class TourAutomatic {
                             }
                         }
                         tourState.setCurrentIndex(step.index + 1);
-                        return result;
                     },
                 },
             ]);

@@ -125,6 +125,9 @@ export class Macro {
     }
 
     async start() {
+        window.addEventListener("pagehide", () => {
+            this.isComplete = true;
+        });
         await this.advance();
     }
 
@@ -138,7 +141,7 @@ export class Macro {
             const executeStep = async () => {
                 const trigger = await waitForTrigger(currentStep.trigger);
                 await this.onStep(currentStep, trigger, this.currentIndex);
-                return await performAction(trigger, currentStep.action);
+                await performAction(trigger, currentStep.action);
             };
             const launchTimer = async () => {
                 const timeout_delay = currentStep.timeout || this.timeout || 10000;
@@ -148,13 +151,7 @@ export class Macro {
                     `TIMEOUT step failed to complete within ${timeout_delay} ms.`
                 );
             };
-            // If falsy action result, it means the action worked properly.
-            // So we can proceed to the next step.
-            const actionResult = await Promise.race([executeStep(), launchTimer()]);
-            if (actionResult) {
-                this.stop();
-                return;
-            }
+            await Promise.race([executeStep(), launchTimer()]);
         } catch (error) {
             this.stop(error);
             return;

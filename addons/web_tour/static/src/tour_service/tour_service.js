@@ -10,7 +10,6 @@ import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
 import { TourInteractive } from "./tour_interactive";
 import { TourAutomatic } from "./tour_automatic";
-import { callWithUnloadCheck } from "./tour_utils";
 import {
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
     TourRecorder,
@@ -144,12 +143,9 @@ export const tourService = {
             tourState.setCurrentTour(tour.name);
             tourState.setCurrentIndex(0);
 
-            const willUnload = callWithUnloadCheck(() => {
-                if (tour.url && tourConfig.startUrl != tour.url && tourConfig.redirect) {
-                    redirect(tour.url);
-                }
-            });
-            if (!willUnload) {
+            if (tour.url && tourConfig.startUrl != tour.url && tourConfig.redirect) {
+                redirect(tour.url);
+            } else {
                 resumeTour();
             }
         }
