@@ -1353,6 +1353,8 @@ class SaleOrder(models.Model):
                 return {'error': _('This coupon is expired.')}
             elif coupon.points < min(coupon.program_id.reward_ids.mapped('required_points')):
                 return {'error': _('This coupon has already been used.')}
+            elif coupon.partner_id and self.partner_id != coupon.partner_id:
+                return {'error': _('This coupon does not apply to current customer')}
             program = coupon.program_id
 
         if not program or not program.active:
