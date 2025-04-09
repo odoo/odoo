@@ -50,5 +50,5 @@ class MailController(mail.MailController):
 
     # Add website=True to support the portal layout
     @http.route('/mail/unfollow', type='http', website=True)
-    def mail_action_unfollow(self, model, res_id, pid, token, **kwargs):
+    def mail_action_unfollow(self, model=None, res_id=None, pid=None, token=None, **kwargs):
         return super().mail_action_unfollow(model, res_id, pid, token, **kwargs)
