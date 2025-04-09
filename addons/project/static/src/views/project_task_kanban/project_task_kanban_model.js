@@ -40,7 +40,7 @@ export class ProjectTaskRecord extends Record {
 }
 
 export class ProjectTaskKanbanModel extends RelationalModel {
-    async _webReadGroup(config, firstGroupByName, orderBy) {
+    async _webReadGroup(config) {
         config.context = {
             ...config.context,
             project_kanban: true,

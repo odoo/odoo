@@ -1800,8 +1800,6 @@ test("quick create record without quick_create_view", async () => {
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
         "onchange", // reopen the quick create automatically
@@ -1868,8 +1866,6 @@ test("quick create record with quick_create_view", async () => {
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "get_views", // form view in quick create
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
@@ -2109,8 +2105,6 @@ test("quick create record in grouped on m2o (no quick_create_view)", async () =>
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
         "onchange", // reopen the quick create automatically
@@ -2176,8 +2170,6 @@ test("quick create record in grouped on m2o (with quick_create_view)", async () 
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "get_views", // form view in quick create
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
@@ -2222,8 +2214,6 @@ test("quick create record in grouped on m2m (no quick_create_view)", async () =>
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
         "onchange", // reopen the quick create automatically
@@ -2270,8 +2260,6 @@ test("quick create record in grouped on m2m in the None column", async () => {
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "web_search_read", // read records when unfolding 'None'
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
@@ -2324,8 +2312,6 @@ test("quick create record in grouped on m2m (field not in template)", async () =
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "get_views", // get form view
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
@@ -2384,8 +2370,6 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "get_views", // get form view
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
@@ -2418,8 +2402,6 @@ test("quick create record validation: stays open when invalid", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 
     await createKanbanRecord();
@@ -2488,8 +2470,6 @@ test("quick create record with default values and onchanges", async () => {
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "get_views", // form view in quick create
         "onchange", // quick create
         "onchange", // onchange due to 'foo' field change
@@ -2568,8 +2548,6 @@ test("quick create record with onchange of field marked readonly", async () => {
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
     ]);
 
     // click on 'Create' -> should open the quick create in the first column
@@ -4401,11 +4379,7 @@ test("o2m loaded in only one batch", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "web_read_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 });
 
@@ -4436,11 +4410,7 @@ test("kanban with many2many, load and reload", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "web_read_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 });
 
@@ -4475,11 +4445,7 @@ test("kanban with reference field", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "web_read_group",
-        "web_search_read",
-        "web_search_read",
     ]);
     expect(queryAllTexts(".o_kanban_record span")).toEqual(["hello", "", "xmo", ""]);
 });
@@ -5519,62 +5485,6 @@ test("create a column in grouped on m2o without sequence field on view model", a
 });
 
 test.tags("desktop");
-test("auto fold group when reach the limit", async () => {
-    for (let i = 0; i < 12; i++) {
-        Product._records.push({ id: 8 + i, name: `column ${i}` });
-        Partner._records.push({ id: 20 + i, foo: "dumb entry", product_id: 8 + i });
-    }
-    Product._records[2].fold = true;
-    Product._records[8].fold = true;
-
-    onRpc("web_search_read", ({ kwargs }) => {
-        expect.step(`web_search_read domain: ${kwargs.domain}`);
-    });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["product_id"],
-    });
-
-    // we look if column are folded/unfolded according to what is expected
-    expect(getKanbanColumn(1)).not.toHaveClass("o_column_folded");
-    expect(getKanbanColumn(3)).not.toHaveClass("o_column_folded");
-    expect(getKanbanColumn(9)).not.toHaveClass("o_column_folded");
-    expect(getKanbanColumn(2)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(8)).toHaveClass("o_column_folded");
-
-    // we look if columns are actually folded after we reached the limit
-    expect(getKanbanColumn(12)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(13)).toHaveClass("o_column_folded");
-
-    // we look if we have the right count of folded/unfolded column
-    expect(".o_kanban_group:not(.o_column_folded)").toHaveCount(10);
-    expect(".o_kanban_group.o_column_folded").toHaveCount(4);
-
-    expect.verifySteps([
-        "web_search_read domain: product_id,=,3",
-        "web_search_read domain: product_id,=,5",
-        "web_search_read domain: product_id,=,9",
-        "web_search_read domain: product_id,=,10",
-        "web_search_read domain: product_id,=,11",
-        "web_search_read domain: product_id,=,12",
-        "web_search_read domain: product_id,=,13",
-        "web_search_read domain: product_id,=,15",
-        "web_search_read domain: product_id,=,16",
-        "web_search_read domain: product_id,=,17",
-    ]);
-});
-
-test.tags("desktop");
 test("delete a column in grouped on m2o", async () => {
     stepAllNetworkCalls();
     let resequencedIDs = [];
@@ -5678,11 +5588,8 @@ test("delete a column in grouped on m2o", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "unlink",
         "web_read_group",
-        "web_search_read",
         "web_search_read",
     ]);
     expect(".o_kanban_group").toHaveCount(2, {
@@ -5778,6 +5685,8 @@ test("delete an empty column, then a column with records.", async () => {
                 __extra_domain: [["product_id", "=", 7]],
                 product_id: [7, "empty group"],
                 __count: 0,
+                __fold: false,
+                __records: [],
             });
             result.length = 3;
             firstLoad = false;
@@ -5887,13 +5796,13 @@ test("edit a column in grouped on m2o", async () => {
 
     expect(".modal").toHaveCount(0, { message: "the modal should be closed" });
     expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("ged\n(2)");
-    expect(nbRPCs).toBe(4, {
-        message: "should have done 1 write, 1 web_read_group and 2 search_read",
+    expect(nbRPCs).toBe(2, {
+        message: "should have done 1 write, 1 web_read_group",
     });
 });
 
 test("edit a column propagates right context", async () => {
-    expect.assertions(4);
+    expect.assertions(3);
 
     Product._views["form"] = `
         <form string="Product">
@@ -5903,7 +5812,7 @@ test("edit a column propagates right context", async () => {
     serverState.lang = "nb_NO";
 
     onRpc(({ method, model, kwargs }) => {
-        if (model === "partner" && method === "web_search_read") {
+        if (model === "partner" && method === "web_read_group") {
             expect(kwargs.context.lang).toBe("nb_NO", {
                 message: "lang is present in context for partner operations",
             });
@@ -6209,6 +6118,7 @@ test("count of folded groups in empty kanban with sample data", async () => {
                 product_id: [1, "New"],
                 __count: 0,
                 __extra_domain: [],
+                __records: [],
             },
             {
                 product_id: [2, "In Progress"],
@@ -6349,6 +6259,7 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
                 __extra_domain: [["product_id", "=", 3]],
                 __count: 0,
                 product_id: [3, "hello"],
+                __records: [],
             },
         ],
     }));
@@ -6475,6 +6386,7 @@ test("no nocontent helper for grouped kanban with empty groups", async () => {
         const result = parent();
         for (const group of result.groups) {
             group.__count = 0;
+            group.__records = [];
         }
         return result;
     });
@@ -6606,6 +6518,7 @@ test("remove nocontent helper after adding a record", async () => {
                 __extra_domain: [["product_id", "=", 3]],
                 __count: 0,
                 product_id: [3, "hello"],
+                __records: [],
             },
         ],
         length: 1,
@@ -6646,6 +6559,7 @@ test("remove nocontent helper when adding a record", async () => {
                 __extra_domain: [["product_id", "=", 3]],
                 __count: 0,
                 product_id: [3, "hello"],
+                __records: [],
             },
         ],
         length: 1,
@@ -6685,6 +6599,7 @@ test("nocontent helper is displayed again after canceling quick create", async (
                 __extra_domain: [["product_id", "=", 3]],
                 __count: 0,
                 product_id: [3, "hello"],
+                __records: [],
             },
         ],
         length: 1,
@@ -6804,6 +6719,7 @@ test("empty kanban with sample data grouped by date range (fill temporal)", asyn
                         ["date", ">=", "2022-12-01"],
                         ["date", "<", "2023-01-01"],
                     ],
+                    __records: [],
                 },
             ],
             length: 1,
@@ -7176,6 +7092,7 @@ test("empty grouped kanban with sample data: add a column", async () => {
         result.groups = this.env["product"].map((r) => ({
             product_id: [r.id, r.display_name],
             __count: 0,
+            __records: [], // Open group by default
             __extra_domain: [["product_id", "=", r.id]],
         }));
         result.length = result.groups.length;
@@ -7260,6 +7177,7 @@ test("empty grouped kanban with sample data: delete a column", async () => {
             product_id: [1, "New"],
             __count: 0,
             __extra_domain: [],
+            __records: [],
         },
     ];
 
@@ -7307,6 +7225,7 @@ test("empty grouped kanban with sample data: add a column and delete it right aw
         result.groups = this.env["product"].map((r) => ({
             product_id: [r.id, r.display_name],
             __count: 0,
+            __records: [], // Open group by default
             __extra_domain: [["product_id", "=", r.id]],
         }));
         result.length = result.groups.length;
@@ -7405,6 +7324,7 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
         groups: [
             {
                 __count: 0,
+                __records: [],
                 product_id: [3, "hello"],
                 __extra_domain: [["product_id", "=", "3"]],
             },
@@ -8077,9 +7997,8 @@ test("colorpicker doesn't appear when missing access rights", async () => {
 
 test("load more records in column", async () => {
     onRpc("web_search_read", ({ kwargs }) => {
-        expect.step(`${kwargs.limit} - ${kwargs.offset}`);
+        expect.step(`web_search_read ${kwargs.limit} - ${kwargs.offset}`);
     });
-
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -8107,8 +8026,8 @@ test("load more records in column", async () => {
         message: "there should now be 3 records in the column",
     });
     // the records should be correctly fetched
-    expect.verifySteps(["2 - 0", "2 - 0", "4 - 0"]);
     expect(getKanbanRecordTexts(1)).toEqual(["1", "2", "3"]);
+    expect.verifySteps(["web_search_read 4 - 0"]);
 
     // reload
     await validateSearch();
@@ -8117,7 +8036,7 @@ test("load more records in column", async () => {
         message: "there should still be 3 records in the column after reload",
     });
     expect(getKanbanRecordTexts(1)).toEqual(["1", "2", "3"]);
-    expect.verifySteps(["2 - 0", "4 - 0"]);
+    expect.verifySteps([]); // managed by web_read_group
 });
 
 test("load more records in column with x2many", async () => {
@@ -8128,9 +8047,8 @@ test("load more records in column with x2many", async () => {
     // record [2] will be loaded after
 
     onRpc("web_search_read", ({ kwargs }) => {
-        expect.step(`web_search_read ${kwargs.limit}-${kwargs.offset}`);
+        expect.step(`web_search_read ${kwargs.limit} - ${kwargs.offset}`);
     });
-
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -8152,7 +8070,6 @@ test("load more records in column with x2many", async () => {
         "silver",
         "",
     ]);
-    expect.verifySteps(["web_search_read 2-0", "web_search_read 2-0"]);
 
     // load more
     await clickKanbanLoadMore(1);
@@ -8163,7 +8080,7 @@ test("load more records in column with x2many", async () => {
         "",
         "gold",
     ]);
-    expect.verifySteps(["web_search_read 4-0"]);
+    expect.verifySteps(["web_search_read 4 - 0"]);
 });
 
 test("update buttons after column creation", async () => {
@@ -8547,8 +8464,6 @@ test("column progressbars properly work", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 });
 
@@ -8646,8 +8561,6 @@ test('column progressbars: "false" bar is clickable', async () => {
         "web_read_group",
         "has_group",
         "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "read_progress_bar",
     ]);
 });
@@ -8695,8 +8608,6 @@ test('column progressbars: "false" bar with sum_field', async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "formatted_read_group",
         "web_search_read",
         "read_progress_bar",
@@ -8768,8 +8679,6 @@ test("column progressbars: creating a new column should create a new progressbar
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "name_create",
         "web_resequence",
     ]);
@@ -8812,8 +8721,6 @@ test("column progressbars on quick create properly update counter", async () => 
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "onchange",
         "name_create",
         "onchange",
@@ -8854,7 +8761,6 @@ test("column progressbars are working with load more", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
         "web_search_read",
         "web_search_read",
     ]);
@@ -8900,7 +8806,6 @@ test("column progressbars with an active filter are working with load more", asy
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
         "web_search_read",
         "read_progress_bar",
         "web_search_read",
@@ -8957,12 +8862,9 @@ test("column progressbars on archiving records update counter", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "action_archive",
         "read_progress_bar",
         "web_read_group",
-        "web_search_read",
     ]);
 });
 
@@ -9007,12 +8909,9 @@ test("kanban with progressbars: correctly update env when archiving records", as
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "action_archive",
         "read_progress_bar",
         "web_read_group",
-        "web_search_read",
     ]);
 });
 
@@ -9044,13 +8943,9 @@ test("RPCs when (re)loading kanban view progressbars", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         // reload
         "read_progress_bar",
         "web_read_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 });
 
@@ -9094,11 +8989,9 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
         "web_read_group",
         "has_group",
         "web_read_group domain []",
-        "web_search_read",
-        "web_search_read",
         "formatted_read_group", // recomputes aggregates
         "web_search_read",
-        'formatted_read_group domain ["&",["bar","=",true],["foo","=","yop"]]', // perform web_read_group only on second column (bar=true)
+        'formatted_read_group domain ["&",["bar","=",true],["foo","=","yop"]]', // perform formatted_read_group only on second column (bar=true)
         "read_progress_bar",
         "formatted_read_group",
         "formatted_read_group",
@@ -9107,7 +9000,7 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
         // activate filter
         "formatted_read_group", // recomputes aggregates
         "web_search_read",
-        'formatted_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]', // perform web_read_group only on second column (bar=true)
+        'formatted_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]', // perform formatted_read_group only on second column (bar=true)
         "read_progress_bar",
         "formatted_read_group",
         "formatted_read_group",
@@ -9169,8 +9062,6 @@ test("drag & drop records grouped by m2o with progressbar", async () => {
         "web_read_group",
         "has_group",
         "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "web_save",
         "read_progress_bar",
         "web_resequence",
@@ -9231,8 +9122,6 @@ test("d&d records grouped by date with progressbar with aggregates", async () =>
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "web_save",
         "read_progress_bar",
         "formatted_read_group",
@@ -9270,8 +9159,6 @@ test("progress bar subgroup count recompute", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "web_search_read",
         "read_progress_bar",
     ]);
@@ -9313,8 +9200,6 @@ test("progress bar recompute after d&d to and from other column", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "web_save",
         "read_progress_bar",
         "web_resequence",
@@ -9356,8 +9241,6 @@ test("progress bar recompute after filter selection", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 
     await contains(".progress-bar.bg-success", { root: getKanbanColumn(1) }).click();
@@ -9372,7 +9255,7 @@ test("progress bar recompute after filter selection", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["3 yop"]);
     expect(getKanbanCounters()).toEqual(["3"]);
-    expect.verifySteps(["read_progress_bar", "web_read_group", "web_search_read"]);
+    expect.verifySteps(["read_progress_bar", "web_read_group"]);
 });
 
 test("progress bar recompute after filter selection (aggregates)", async () => {
@@ -9410,8 +9293,6 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 
     await contains(".progress-bar.bg-success", { root: getKanbanColumn(1) }).click();
@@ -9432,7 +9313,7 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["3 yop"]);
     expect(getKanbanCounters()).toEqual(["600"]);
-    expect.verifySteps(["read_progress_bar", "web_read_group", "web_search_read"]);
+    expect.verifySteps(["read_progress_bar", "web_read_group"]);
 });
 
 test("progress bar with false aggregate value", async () => {
@@ -9698,8 +9579,6 @@ test("column progressbars on quick create with quick_create_view", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "get_views",
         "onchange",
         "web_save",
@@ -9769,8 +9648,6 @@ test("progressbars and active filter with quick_create_view", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "formatted_read_group",
         "web_search_read",
         "read_progress_bar",
@@ -10728,16 +10605,11 @@ test("progressbar filter state is kept unchanged when domain is updated (records
         "web_read_group",
         "has_group",
         "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "read_progress_bar",
         "read_progress_bar",
         "web_read_group",
-        "web_search_read",
         "read_progress_bar",
         "web_read_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 });
 
@@ -10814,18 +10686,12 @@ test("progressbar filter state is kept unchanged when domain is updated (emptyin
         "web_read_group",
         "has_group",
         "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "read_progress_bar",
         "read_progress_bar",
         "web_read_group",
         "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "read_progress_bar",
         "web_read_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 });
 
@@ -10889,8 +10755,6 @@ test("filtered column counters when dropping in non-matching record", async () =
         "web_read_group",
         "has_group",
         "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "read_progress_bar",
         "web_save",
         "read_progress_bar",
@@ -10934,8 +10798,6 @@ test("filtered column is reloaded when dragging out its last record", async () =
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 
     // Apply an active filter
@@ -11371,8 +11233,6 @@ test("basic rendering with 2 groupbys", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 });
 
@@ -11381,7 +11241,7 @@ test("basic rendering with a date groupby with a granularity", async () => {
 
     stepAllNetworkCalls();
     onRpc("web_read_group", ({ method, kwargs }) => {
-        expect(kwargs.aggregates).toEqual(["__count"]);
+        expect(kwargs.aggregates).toEqual([]);
         expect(kwargs.groupby).toEqual(["date:day"]);
     });
 
@@ -11409,8 +11269,6 @@ test("basic rendering with a date groupby with a granularity", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 });
 
@@ -11675,8 +11533,6 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
         "web_read_group",
         "has_group",
         "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "read_progress_bar",
         "web_search_read",
         "read_progress_bar",
@@ -11768,8 +11624,6 @@ test("update field on which progress bars are computed", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "web_search_read",
         "read_progress_bar",
         "web_save",
@@ -12273,8 +12127,6 @@ test("drag record to folded column, with progressbars", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "web_save",
         "read_progress_bar",
         "formatted_read_group",
@@ -12335,8 +12187,6 @@ test("quick create record in grouped kanban in a form view dialog", async () => 
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
-        "web_search_read", // initial search_read (first column)
-        "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
         "get_views", // load views for form view dialog
@@ -12559,8 +12409,6 @@ test("d&d records grouped by m2o with m2o displayed in records", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
     ]);
     expect(queryAllTexts(".o_kanban_record")).toEqual(["hello", "hello", "xmo", "xmo"]);
 
@@ -12679,8 +12527,6 @@ test("rerenders only once after resequencing records", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "web_save",
         "web_resequence",
         "web_save",
@@ -12704,6 +12550,7 @@ test("sample server: _mockWebReadGroup API", async () => {
         groups: [
             {
                 __count: 0,
+                __records: [],
                 state: false,
                 "date:month": ["2022-12-01", "December 2022"],
                 __extra_domain: [
@@ -12756,13 +12603,7 @@ test("scroll on group unfold and progressbar click", async () => {
         groupBy: ["product_id"],
     });
 
-    expect.verifySteps([
-        "get_views",
-        "read_progress_bar",
-        "web_read_group",
-        "has_group",
-        "web_search_read",
-    ]);
+    expect.verifySteps(["get_views", "read_progress_bar", "web_read_group", "has_group"]);
     queryOne(".o_content").style.maxHeight = "80px";
     on(".o_content", "scroll", () => expect.step("scrolled"));
 
@@ -13060,34 +12901,41 @@ test("group by properties and drag and drop", async () => {
                 "properties.my_char": "aaa",
                 __extra_domain: [["properties.my_char", "=", "aaa"]],
                 __count: 1,
+                __records: [
+                    {
+                        id: 2,
+                        properties: [
+                            {
+                                name: "my_char",
+                                string: "My Char",
+                                type: "char",
+                                value: "aaa",
+                            },
+                        ],
+                    },
+                ],
             },
             {
                 "properties.my_char": "bbb",
                 __extra_domain: [["properties.my_char", "=", "bbb"]],
                 __count: 1,
+                __records: [
+                    {
+                        id: 3,
+                        properties: [
+                            {
+                                name: "my_char",
+                                string: "My Char",
+                                type: "char",
+                                value: "bbb",
+                            },
+                        ],
+                    },
+                ],
             },
         ],
         length: 3,
     }));
-    onRpc("web_search_read", ({ kwargs }) => {
-        const value = kwargs.domain[0][2];
-        return {
-            length: 1,
-            records: [
-                {
-                    id: value === "aaa" ? 2 : 3,
-                    properties: [
-                        {
-                            name: "my_char",
-                            string: "My Char",
-                            type: "char",
-                            value: value,
-                        },
-                    ],
-                },
-            ],
-        };
-    });
     onRpc("web_resequence", () => {
         expect.step("resequence");
         return [];
@@ -13338,9 +13186,7 @@ test("Correct values for progress bar with toggling filter and slow RPC", async 
 test("group by numeric field (with aggregator)", async () => {
     onRpc("web_read_group", ({ kwargs }) => {
         expect(kwargs.groupby).toEqual(["int_field"]);
-        expect(kwargs.aggregates).toEqual(["__count", "float_field:sum"], {
-            message: "Don't aggregate int_field since it is grouped by itself",
-        });
+        expect(kwargs.aggregates).toEqual(["int_field:sum", "float_field:sum"]);
         expect.step("web_read_group");
     });
     await mountView({
@@ -13932,7 +13778,7 @@ test("click on New while kanban is loading", async () => {
 });
 
 test("click on New while kanban is loading (with quick create)", async () => {
-    onRpc("web_search_read", () => new Deferred());
+    onRpc("web_read_group", () => new Deferred());
     await mountView({
         arch: `
             <kanban on_create="quick_create">

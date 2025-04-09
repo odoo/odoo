@@ -5,6 +5,7 @@ import itertools
 import json
 import typing
 from collections import defaultdict
+from typing import Any
 
 import babel
 import babel.dates
@@ -14,7 +15,7 @@ import pytz
 from odoo import api, models
 from odoo.fields import Command, Date, Domain
 from odoo.api import NewId
-from odoo.models import READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY, READ_GROUP_TIME_GRANULARITY, BaseModel
+from odoo.models import regex_order, READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY, READ_GROUP_TIME_GRANULARITY, BaseModel
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.translate import LazyTranslate
@@ -25,6 +26,7 @@ if typing.TYPE_CHECKING:
 
 _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
+MAX_NUMBER_OPENED_GROUPS = 10
 
 
 class lazymapping(defaultdict):
@@ -41,14 +43,6 @@ def AND(domains):
 def OR(domains):
     return list(Domain.OR(domains))
 
-
-DISPLAY_DATE_FORMATS = {
-    'day': 'dd MMM yyyy',
-    'week': "'W'w YYYY",
-    'month': 'MMMM yyyy',
-    'quarter': 'QQQ yyyy',
-    'year': 'yyyy',
-}
 
 
 class Base(models.AbstractModel):
@@ -300,20 +294,166 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
-    def web_read_group(self, domain, groupby=(), aggregates=(), offset=0, limit=None, order=None):
+    def web_read_group(
+        self,
+        domain: DomainType,
+        groupby: list[str] | tuple[str, ...],
+        aggregates: Sequence[str] = (),
+        limit: int | None = None,
+        offset: int = 0,
+        order: str | None = None,
+        *,
+        auto_unfold: bool = False,
+        opening_info: list[dict] | None = None,
+        unfold_read_specification: dict[str, dict] | None = None,
+        unfold_read_default_limit: int | None = 80,  # Limit of record by unfolded group by default
+        groupby_read_specification: dict[str, dict] | None = None,
+    ) -> dict[str, int | list]:
         """
-        Wrap :meth:`formatted_read_group` to return its result and the
-        total number of groups matching the search domain.
+        Serves as the primary method for loading grouped data in list and kanban views.
 
-        :return:
+        This method wraps :meth:`~.formatted_read_group` to return both the grouped
+        data and the total number of groups matching the search domain. It also
+        conditionally opens (unfolds) groups based on the `auto_unfold` parameter
+        and the `__fold` key returned by :meth:`~.formatted_read_group`.
+
+        A group is considered "open" if it contains a `__records` or `__groups` key.
+        - `__records`: The result of a :meth:`~.web_search_read` call for the group.
+        - `__groups`: The results of subgroupings.
+
+        :param domain: :ref:`A search domain <reference/orm/domains>`.
+        :param groupby: A list of groupby specification at each level, see :meth:`~.formatted_read_group`.
+        :param aggregates: A list of aggregate specifications. see :meth:`~.formatted_read_group`
+        :param limit: The maximum number of top-level groups to return. see :meth:`~.formatted_read_group`
+        :param offset: The offset for the top-level groups. see :meth:`~.formatted_read_group`
+        :param order: A sort string, as used in :meth:`~.search`
+        :param auto_unfold: If `True`, unfolds the 10 first groups regardless of its `__fold` status.
+            Typically `True` for kanban views and `False` for list views.
+        :param opening_info: The state of currently opened groups, used for reloading.
+          ::
+
+            opening_info = [{
+                "value": raw_value_groupby,
+                "folded": True or False,
+                ["offset": int,]  # present if unfolded
+                ["limit": int,]  # present if unfolded
+                ["progressbar_domain": progressbar_domain,]  # present if unfolded, e.g., when clicking on a progress bar section
+                ["groups": <opening_info>,]  # present if unfolded
+            }]
+
+        :param unfold_read_specification: The read specification for :meth:`~.web_read` when unfolding a group.
+        :param unfold_read_default_limit: The default record limit to apply when unfolding a group.
+        :param groupby_read_specification: The :meth:`~.web_read` specification for reading the records
+            that are being grouped on. This is mainly for list views with <groupby> leaves.
+            {<groupby_spec>: <read_specification>}
+
+        :return: A dictionary with the following structure:
           ::
 
             {
-                'groups': array of read groups
-                'length': total number of groups
+                'groups': <groups>,
+                'length': <total_group_count>,
             }
+
+            Where <groups> is the result of :meth:`~.formatted_read_group`, but with an
+            added `__groups` key for subgroups or a `__records` key for the result of :meth:`~.web_read`
+            for records within the group.
+
         """
-        groups = self.formatted_read_group(domain, groupby, aggregates, offset=offset, limit=limit, order=order)
+        assert isinstance(groupby, (list, tuple)) and groupby
+
+        aggregates = list(aggregates)
+        if '__count' not in aggregates:  # Used for computing length of sublevel groups
+            aggregates.append('__count')
+        domain = Domain(domain).optimize(self)
+
+        # dict to help creating order compatible with _read_group and for search
+        dict_order: dict[str, str] = {}  # {fname_and_property: "<direction> <nulls>"}
+        for order_part in (order.split(',') if order else ()):
+            order_match = regex_order.match(order_part)
+            if not order_match:
+                raise ValueError(f"Invalid order {order!r} for web_read_group()")
+            fname_and_property = order_match['field']
+            if order_match['property']:
+                fname_and_property = f"{fname_and_property}.{order_match['property']}"
+            direction = (order_match['direction'] or 'ASC').upper()
+            if order_match['nulls']:
+                direction = f"{direction} {order_match['nulls'].upper()}"
+            dict_order[fname_and_property] = direction
+
+        # First level of grouping
+        first_groupby = [groupby[0]]
+        read_group_order = self._get_read_group_order(dict_order, first_groupby, aggregates)
+        groups, length = self._formatted_read_group_with_length(
+            domain, first_groupby, aggregates, offset=offset, limit=limit, order=read_group_order,
+        )
+
+        # Open sublevel of grouping (list) and get all subgroup to open into records.
+        # [{limit: int, offset: int, domain: domain, group: <group>}]
+        records_opening_info: list[dict[str, Any]] = []
+
+        self._open_groups(
+            records_opening_info=records_opening_info,
+            groups=groups,
+            domain=domain,
+            groupby=groupby,
+            aggregates=aggregates,
+            dict_order=dict_order,
+            auto_unfold=auto_unfold,
+            opening_info=opening_info,
+            unfold_read_default_limit=unfold_read_default_limit,
+            parent_opening_info=opening_info,
+            parent_group_domain=Domain.TRUE,
+        )
+
+        # Open last level of grouping, meaning read records of groups
+        if records_opening_info:
+
+            order_specs = [
+                f"{fname} {direction}"
+                for fname, direction in dict_order.items()
+                # Remove order that are already unique for each group,
+                # that may avoid a left join and simplify the order (not apply if granularity)
+                if fname not in groupby
+                if fname != '__count'
+            ]
+            for order_str in self._order.split(','):
+                fname = order_str.strip().split(" ", 1)[0]
+                if fname not in dict_order and fname not in groupby:
+                    order_specs.append(order_str)
+
+            order_searches = ', '.join(order_specs)
+            recordset_groups = [
+                self.search(
+                    domain & sub_search['domain'],
+                    order=order_searches,
+                    limit=sub_search['limit'],
+                    offset=sub_search['offset'],
+                ) if sub_search['group']['__count'] else self.browse()
+                for sub_search in records_opening_info
+            ]
+
+            all_records = self.browse().union(*recordset_groups)
+            record_mapped = dict(zip(
+                all_records._ids,
+                all_records.web_read(unfold_read_specification),
+                strict=True,
+            ))
+
+            for opening, records in zip(records_opening_info, recordset_groups, strict=True):
+                opening['group']['__records'] = [record_mapped[record_id] for record_id in records._ids]
+
+        # Read additional info of grouped field record and add it to specific groups
+        self._add_groupby_values(groupby_read_specification, groupby, groups)
+
+        return {
+            'groups': groups,
+            'length': length,
+        }
+
+    def _formatted_read_group_with_length(self, domain, groupby, aggregates, offset=0, limit=None, order=None):
+        groups = self.formatted_read_group(
+            domain, groupby, aggregates, offset=offset, limit=limit, order=order)
 
         if not groups:
             length = 0
@@ -326,10 +466,174 @@ class Base(models.AbstractModel):
         else:
             length = len(groups) + offset
 
-        return {
-            'groups': groups,
-            'length': length,
+        return groups, length
+
+    def _add_groupby_values(self, groupby_read_specification: dict[str, dict] | None, groupby: list[str], current_groups: list):
+        if not groupby_read_specification or groupby_read_specification.keys().isdisjoint(groupby):
+            return
+
+        for groupby_spec in groupby:
+            if groupby_spec in groupby_read_specification:
+                relational_field = self._fields[groupby_spec]
+                assert relational_field.comodel_name, "We can only read extra info from a relational field"
+                group_ids = [
+                    id_label[0] for group in current_groups if (id_label := group[groupby_spec])
+                ]
+                records = self.env[relational_field.comodel_name].browse(group_ids)
+
+                result_read = records.web_read(groupby_read_specification[groupby_spec])
+                result_read_map = dict(zip(records._ids, result_read, strict=True))
+                for group in current_groups:
+                    id_label = group[groupby_spec]
+                    group['__values'] = result_read_map[id_label[0]] if id_label else {'id': False}
+
+            current_groups = [
+                subgroup
+                for group in current_groups
+                for subgroup in group.get('__groups', ())
+            ]
+
+    def _get_read_group_order(self, dict_order: dict[str, str], groupby: list[str], aggregates: Sequence[str]) -> str:
+        if not dict_order:
+            return ", ".join(groupby)
+
+        groupby = list(groupby)
+        order_spec = []
+        for fname, direction in dict_order.items():
+            if fname == '__count':
+                order_spec.append(f"{fname} {direction}")
+                continue
+            for group in list(groupby):
+                if fname == group or group.startswith(f"{fname}:"):
+                    groupby.remove(group)
+                    order_spec.append(f"{group} {direction}")
+                    break
+            for agg_spec in aggregates:
+                if agg_spec.startswith(f"{fname}:"):
+                    order_spec.append(f"{agg_spec} {direction}")
+                    break
+
+        return ", ".join(order_spec + groupby)
+
+    def _open_groups(
+        self,
+        *,
+        records_opening_info: list[dict[str, Any]],
+        groups: list[dict],
+        domain: Domain,
+        groupby: list[str],
+        aggregates: list[str],
+        dict_order: dict[str, str],
+        auto_unfold: bool,
+        opening_info: list[dict] | None,
+        unfold_read_default_limit: int | None,
+        parent_opening_info: list[dict] | None,
+        parent_group_domain: Domain,
+    ):
+        max_number_opened_group = self.env.context.get('max_number_opened_groups') or MAX_NUMBER_OPENED_GROUPS
+
+        parent_opening_info_dict = {
+            info_opening['value']: info_opening
+            for info_opening in parent_opening_info or ()
         }
+        groupby_spec = groupby[0]
+        field = self._fields[groupby_spec.split(':')[0]]
+        nb_opened_group = 0
+
+        last_level = len(groupby) == 1
+        if not last_level:
+            read_group_order = self._get_read_group_order(dict_order, [groupby[1]], aggregates)
+
+        for group in groups:
+            # Remove __fold information, no need for the webclient,
+            # the groups is unfold if __groups/__records exists
+            fold_info = '__fold' in group
+            fold = group.pop('__fold', False)
+
+            # Apply the limit of unfolded if there is whatever the parent_opening_info
+            # That's weird, but keeps the old behavior
+            if nb_opened_group >= max_number_opened_group:
+                continue
+
+            groupby_value = group[groupby_spec]
+            # For relational field
+            raw_groupby_value = groupby_value[0] if isinstance(groupby_value, tuple) else groupby_value
+
+            limit = unfold_read_default_limit
+            offset = 0
+            progressbar_domain = subgroup_opening_info = None
+            if opening_info and raw_groupby_value in parent_opening_info_dict:
+                group_info = parent_opening_info_dict[raw_groupby_value]
+                if group_info['folded']:
+                    continue
+                limit = group_info['limit']
+                offset = group_info['offset']
+                progressbar_domain = group_info.get('progressbar_domain')
+                subgroup_opening_info = group_info.get('groups')
+
+            elif (
+                # Auto Fold/unfold
+                (not auto_unfold and not fold_info)
+                or fold
+                # Empty recordset is folded by default
+                or (field.relational and not group[groupby_spec])
+            ):
+                continue
+
+            # => Open group
+            nb_opened_group += 1
+            if last_level:  # Open records
+                records_domain = parent_group_domain & Domain(group['__extra_domain'])
+
+                # when we click on a part of the progress bar, we force a domain
+                # for a specific open column/group, we want to keep this for the next reload
+                if progressbar_domain:
+                    records_domain &= Domain(progressbar_domain)
+
+                # TODO also for groups ?
+                # Simulate the same behavior than in relational_model.js
+                # If the offset is bigger than the number of record (a record has been deleted)
+                # reset the offset to 0 and add the information to the group to update the webclient too
+                if offset and offset >= group['__count']:
+                    group['__offset'] = offset = 0
+
+                records_opening_info.append({
+                    'domain': records_domain,
+                    'limit': limit,
+                    'offset': offset,
+                    'group': group,
+                })
+
+            else:  # Open subgroups
+
+                subgroup_domain = parent_group_domain
+                if group['__extra_domain']:
+                    subgroup_domain &= Domain(group['__extra_domain'])
+                # That's not optimal but hard to batch because of limit/offset.
+                # Moreover it isn't critical since it is when user opens group manually, then
+                # the number of it should be small.
+                subgroups, length = self._formatted_read_group_with_length(
+                    domain=(subgroup_domain & domain),
+                    groupby=[groupby[1]], aggregates=aggregates,
+                    offset=offset, limit=limit, order=read_group_order)
+
+                group['__groups'] = {
+                    'groups': subgroups,
+                    'length': length,
+                }
+                self._open_groups(
+                    records_opening_info=records_opening_info,
+                    groups=subgroups,
+                    domain=domain,
+                    groupby=groupby[1:],
+                    aggregates=aggregates,
+                    dict_order=dict_order,
+                    auto_unfold=False,
+                    opening_info=opening_info,
+                    unfold_read_default_limit=unfold_read_default_limit,
+                    parent_opening_info=subgroup_opening_info,
+                    parent_group_domain=subgroup_domain,
+                )
 
     @api.model
     @api.readonly
