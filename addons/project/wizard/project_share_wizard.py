@@ -55,6 +55,18 @@ class ProjectShareWizard(models.TransientModel):
     share_link = fields.Char("Public Link", help="Anyone with this link can access the project in read mode.")
     collaborator_ids = fields.One2many('project.share.collaborator.wizard', 'parent_wizard_id', string='Collaborators')
     existing_partner_ids = fields.Many2many('res.partner', compute='_compute_existing_partner_ids', export_string_translation=False)
+    partners_no_email = fields.Many2many('res.partner', string="Partner without email",
+        compute="_compute_partners_no_email", inverse="_inverse_partners_no_email")
+
+    @api.depends('collaborator_ids')
+    def _compute_partners_no_email(self):
+        for project in self:
+            project.partners_no_email = project.collaborator_ids.filtered(
+                lambda c: not c.partner_id.email and c.send_invitation).mapped('partner_id')
+
+    def _inverse_partners_no_email(self):
+        for project in self:
+            project.existing_partner_ids = project.partners_no_email + project.existing_partner_ids.filtered('email')
 
     @api.depends('res_model', 'res_id')
     def _compute_resource_ref(self):
@@ -138,20 +150,37 @@ class ProjectShareWizard(models.TransientModel):
         self.ensure_one()
         if not self.collaborator_ids:
             return
+        action = self.env["ir.actions.actions"]._for_xml_id("project.project_share_wizard_action")
+        action['res_id'] = self.id
+        if self.partners_no_email:
+            action.update({
+                'name': self.env._('No Email Address for Collaborators'),
+                'views': [(self.env.ref('project.partner_no_email_list_wizard').id, 'form')],
+            })
+            return action
         on_invite = self.env['res.users']._get_signup_invitation_scope() == 'b2b'
         new_portal_user = self.collaborator_ids.filtered(lambda c: c.send_invitation and not c.partner_id.user_ids) and on_invite
         if not new_portal_user:
             return self.action_send_mail()
-        return {
+        action.update({
             'name': _('Confirmation'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
             'views': [(self.env.ref('project.project_share_wizard_confirm_form').id, 'form')],
-            'res_model': 'project.share.wizard',
-            'res_id': self.id,
-            'target': 'new',
             'context': self.env.context,
-        }
+        })
+        return action
+
+    def action_check_emails(self):
+        self.ensure_one()
+        if self.partners_no_email:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': self.env._("The email is missing for the following collaborators."),
+                }
+            }
+        return self.action_share_record()
 
     def action_send_mail(self):
         self.env['project.project'].browse(self.res_id).privacy_visibility = 'portal'

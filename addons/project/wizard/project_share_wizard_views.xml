@@ -53,6 +53,29 @@
         </field>
     </record>
 
+    <record id="partner_no_email_list_wizard" model="ir.ui.view">
+        <field name="name">project.share.wizard.view.form</field>
+        <field name="model">project.share.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Partners with no Email">
+                <p>
+                    Define an email address for the following partners so they will receive the project invitation.
+                </p>
+                 <field name="partners_no_email" nolabel="1" options="{'link': false, 'unlink': false}">
+                    <list editable="bottom">
+                        <field name="name" required="1" readonly="1"/>
+                        <field name="email" required="1"/>
+                    </list>
+                </field>
+                <footer>
+                    <button string="Save &amp; Share Project" class="btn-primary"
+                        name="action_check_emails" type="object" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
     <record id="project_share_wizard_action" model="ir.actions.act_window">
         <field name="name">Share Project</field>
         <field name="res_model">project.share.wizard</field>
