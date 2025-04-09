@@ -42,11 +42,11 @@
     </t>
 
     <t t-name="website_slides.ModuleToInstallIcon" owl="1">
-        <a class="w-100 text-center mb-4 btn rounded border text-600 p-3"
-            href="#" t-on-click="() => props.onClickInstallModuleIcon(props.moduleId)"
+        <button class="w-100 text-center mb-4 btn rounded border text-600 p-3"
+            t-on-click="() => props.onClickInstallModuleIcon(props.moduleId)"
             t-att-title="props.title"
             t-att-data-module-id="props.moduleId">
             <i class="fa fa-trophy"/> <t t-out="props.motivational"/><span class="text-primary"> Install the <t t-out="props.title"/> app.</span>
-        </a>
+        </button>
     </t>
 </templates>

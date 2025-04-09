@@ -133,7 +133,7 @@
                     </div>
                     <div class="modal-footer justify-content-start">
                         <button type="button" class="btn btn-primary o_wforum_mark_spam">Mark as spam</button>
-                        <a class="btn btn-sm btn-default o_wforum_select_all_spam" href="#" type="button">Select All</a>
+                        <button class="btn btn-sm btn-default o_wforum_select_all_spam" type="button">Select All</button>
                     </div>
                 </div>
             </div>
@@ -217,7 +217,7 @@
                             <a t-else="" t-attf-href="#{ post_url }/validate" title="Validate" aria-label="Validate" class="btn btn-outline-success flex-grow-1"><i class="fa fa-check"/><span class="ms-2">Accept</span></a>
                             <a t-if="queue_type == 'validation'" t-attf-href="#{ post_url }/refuse" title="Refuse" aria-label="Refuse" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Reject</span></a>
                             <a t-if="queue_type == 'flagged'" t-attf-href="#{ post_url }/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Offensive</span></a>
-                            <a t-if="queue_type == 'offensive'" href="#" disabled="disabled" aria-label="Offensive" title="Offensive" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Offensive</span></a>
+                            <button t-if="queue_type == 'offensive'" disabled="disabled" aria-label="Offensive" title="Offensive" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Offensive</span></button>
                         </div>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('shop_sale_ewallet', {
         ...wsTourUtils.addToCart({productName: "TEST - Gift Card"}),
         wsTourUtils.goToCart(),
         {
-            trigger: 'a:contains("Pay with eWallet")',
+            trigger: 'button:contains("Pay with eWallet")',
             run() {
                 const rewards = document.querySelectorAll('form[name="claim_reward"]');
                 if (rewards.length === 1) {
