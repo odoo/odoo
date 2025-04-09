@@ -230,6 +230,40 @@ class TestActivitySchedule(ActivityScheduleCase):
         with self.assertRaises(ValidationError):
             scheduler.activity_user_id = False
 
+    @users('employee')
+    def test_activity_schedule_readonly_record(self):
+        """ Test read-only users can schedule activities only for themselves, and only where they can create them. """
+        record_readonly = self.env['mail.test.access.custo'].sudo().create({'is_readonly': True})
+        form = self._instantiate_activity_schedule_wizard(record_readonly)
+        form.activity_user_id = self.user_admin
+        self.assertTrue(form.has_error)
+        self.assertIn("Can't assign activities to others", form.error)
+
+        form.activity_user_id = self.user_employee
+        self.assertFalse(form.has_error)
+
+        self.plan_onboarding.res_model = record_readonly._name
+        form = self._instantiate_activity_schedule_wizard(record_readonly)
+        form.plan_id = self.plan_onboarding
+        self.assertTrue(form.has_error)
+        self.assertIn("Can't assign activities to others", form.error)
+
+        self.plan_onboarding.template_ids.responsible_id = self.user_employee
+        form = self._instantiate_activity_schedule_wizard(record_readonly)
+        form.activity_user_id = self.user_admin
+        form.plan_id = self.plan_onboarding
+        self.assertFalse(form.has_error)
+
+        self.env['ir.access'].sudo().create({
+            'name': 'Read-only test record',
+            'model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'operation': 'u',
+            'domain': [('id', '!=', self.test_records[0].id)],
+        })
+        form = self._instantiate_activity_schedule_wizard(self.test_records[0])
+        self.assertTrue(form.has_error)
+        self.assertIn("Can't schedule activities on the selected records.", form.error)
+
     def test_plan_copy(self):
         """Test plan copy"""
         copied_plan = self.plan_onboarding.copy()

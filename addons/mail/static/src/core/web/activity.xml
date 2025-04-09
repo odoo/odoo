@@ -3,7 +3,7 @@
 
 <t t-name="mail.Activity">
     <t t-set="isMainAction" t-value="!!this.activity().user_id and !this.hasMailButton and !this.activity().phone and this.activity().activity_category !== 'upload_file'"/>
-    <div class="o-mail-Activity d-flex align-items-start gap-2 mx-2" t-on-click="this.onClick">
+    <div class="o-mail-Activity d-flex align-items-start gap-2 mx-2" t-on-click="this.onClick" t-att-class="{ 'opacity-50': !this.activity().can_write }">
         <div class="o-mail-Activity-sidebar d-flex flex-shrink-0 position-relative align-items-start justify-content-center">
             <div class="o-mail-Activity-avatarContainer position-relative d-flex align-items-center justify-content-center" t-att-role="this.activity().user_id ? 'button' : 'img'" t-on-click="this.onClickAvatar">
                 <img t-if="this.activity().user_id?.partner_id" class="o-mail-Activity-avatar o_avatar rounded" t-att-src="this.activity().user_id.partner_id.avatarUrl" />

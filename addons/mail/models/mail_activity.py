@@ -147,6 +147,7 @@ class MailActivity(models.Model):
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
     # access
     can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
+    is_assignee_valid = fields.Boolean(compute='_compute_is_assignee_valid')
     active = fields.Boolean(default=True, allow_sudo_search=True)
 
     # if model: valid res_id
@@ -250,11 +251,28 @@ class MailActivity(models.Model):
         else:
             return 'planned'
 
-    @api.depends('res_model', 'res_id', 'user_id')
+    @api.depends('res_model', 'res_id', 'is_assignee_valid')
+    @api.depends_context('uid')
     def _compute_can_write(self):
         valid_records = self._filtered_access('write')
         for record in self:
-            record.can_write = record in valid_records
+            if not record.is_assignee_valid:
+                record.can_write = False
+            elif record._origin:
+                record.can_write = record in valid_records
+            else:
+                # sudo: mail.activity - can check access on related record
+                record.can_write = record.sudo().res_access_create
+
+    @api.depends('res_model', 'res_id', 'user_id')
+    @api.depends_context('uid')
+    def _compute_is_assignee_valid(self):
+        for record in self:
+            new_user = record.user_id - self.env.user - record._origin.user_id
+            # sudo: mail.activity - can check access on related record
+            record.is_assignee_valid = (
+                not (new_user and record.res_model) or record.sudo().res_access_write
+            )
 
     @api.depends('activity_type_id')
     def _compute_date_deadline(self):
@@ -871,7 +889,8 @@ class MailActivity(models.Model):
     def _store_activity_fields(self, res: Store.FieldList):
         res.attr("activity_category")
         res.one("activity_type_id", ["name"])
-        res.extend(["can_write", "create_date"])
+        res.attr("can_write", version=False)
+        res.attr("create_date")
         res.one("create_uid", lambda res: res.one("partner_id", ["name"]))
         res.extend(["date_deadline", "date_done", "display_name", "icon", "note"])
         res.extend(["phone", "res_id", "res_model", "state", "summary"])
