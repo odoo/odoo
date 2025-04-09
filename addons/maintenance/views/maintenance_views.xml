@@ -254,6 +254,7 @@
     <record id="hr_equipment_request_action" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
+        <field name="path">maintenance-requests</field>
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{
@@ -330,6 +331,7 @@
     <record id="hr_equipment_request_action_cal" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
+        <field name="path">maintenance-calendar</field>
         <field name="view_mode">calendar,kanban,list,form,pivot,graph,activity</field>
         <field name="view_id" ref="hr_equipment_view_calendar"/>
         <field name="context">{
@@ -346,8 +348,9 @@
     </record>
 
     <record id="maintenance_request_action_reports" model="ir.actions.act_window">
-        <field name="name">Maintenance Requests</field>
+        <field name="name">Maintenance Requests Analysis</field>
         <field name="res_model">maintenance.request</field>
+        <field name="path">maintenance-requests-analysis</field>
         <field name="view_mode">graph,pivot,kanban,list,form,calendar,activity</field>
         <field name="context">{
             'search_default_active': True,
@@ -542,6 +545,7 @@
     <record id="hr_equipment_action" model="ir.actions.act_window">
         <field name="name">Equipment</field>
         <field name="res_model">maintenance.equipment</field>
+        <field name="path">equipments</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="view_id" ref="hr_equipment_view_kanban"/>
         <field name="help" type="html">
@@ -677,6 +681,7 @@
     <record id="hr_equipment_category_action" model="ir.actions.act_window">
         <field name="name">Equipment Categories</field>
         <field name="res_model">maintenance.equipment.category</field>
+        <field name="path">equipement-categories</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="view_id" ref="hr_equipment_category_view_tree"/>
         <field name="help" type="html">
@@ -727,6 +732,7 @@
     <record id="hr_equipment_stage_action" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">maintenance.stage</field>
+        <field name="path">maintenance-stages</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -894,6 +900,7 @@
     <record id="maintenance_team_action_settings" model="ir.actions.act_window">
         <field name="name">Teams</field>
         <field name="res_model">maintenance.team</field>
+        <field name="path">maintenance-teams</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="maintenance_team_view_search"/>
         <field name="view_ids" eval="[(5, 0, 0),
