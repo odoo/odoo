@@ -265,9 +265,23 @@
                 </div>
                 <div class="o_wsale_product_sub d-flex justify-content-between gap-2">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
-                    <t t-set="previewed_attribute_values"
-                        t-value="product._get_previewed_attribute()"/>
-                    <div t-if="previewed_attribute_values" class="o_wsale_attribute_previewer row py-2">
+                    <t
+                        t-set="previewed_attribute_values"
+                        t-value="product._get_previewed_attribute()"
+                    />
+                    <div
+                        t-if="previewed_attribute_values"
+                        t-attf-class="o_wsale_attribute_previewer row {{'show_on_hover' if previewed_attribute_values[0]['ptav'].attribute_id.preview_variants == 'hover' else ''}}"
+                    >
+                        <t
+                            t-set="count_previewed_attribute_values"
+                            t-value="len(previewed_attribute_values)"
+                        />
+                        <t
+                            t-if="count_previewed_attribute_values>5"
+                            t-set="previewed_attribute_values"
+                            t-value="previewed_attribute_values[0:4]"
+                        />
                         <t t-foreach="previewed_attribute_values" t-as="previewed_attribute">
                             <t t-set="ptav" t-value="previewed_attribute['ptav']"/>
                             <t t-set="selected_attribute_value"
@@ -283,7 +297,7 @@
                             >
                                 <div
                                     t-if="ptav.attribute_id.is_thumbnail_visible"
-                                    class="col-md-3 d-flex justify-content-center"
+                                    class="col-md-3 d-flex justify-content-center my-1"
                                 >
                                     <t
                                         t-set="img_style"
@@ -291,7 +305,7 @@
                                     />
                                     <label
                                         t-attf-style="#{img_style}"
-                                        t-attf-class="css_attribute_thumbnail cursor-pointer"
+                                        class="css_attribute_thumbnail cursor-pointer"
                                     >
                                         <a
                                             t-att-href="variant_href"
@@ -302,7 +316,7 @@
                                 </div>
                                 <div
                                     t-elif="ptav.display_type == 'color'"
-                                    class="col-md-3 d-flex justify-content-center"
+                                    class="col-md-3 d-flex justify-content-center my-2"
                                 >
                                     <t
                                         t-set="img_style"
@@ -314,7 +328,7 @@
                                     />
                                     <label
                                         t-attf-style="#{img_style or color_style}"
-                                        t-attf-class="css_attribute_color cursor-pointer"
+                                        class="css_attribute_color cursor-pointer"
                                     >
                                         <a
                                             t-att-href="variant_href"
@@ -328,6 +342,17 @@
                                     t-att-href="variant_href"/>
                             </span>
                         </t>
+                        <span
+                            t-if="count_previewed_attribute_values>5"
+                            id="o_product_variant_preview_extra"
+                            class="o_product_variant_preview"
+                        >
+                            <a
+                                t-att-href="product_href"
+                                class="d-block"
+                                t-out="'+' + str(count_previewed_attribute_values - 4)"
+                            />
+                        </span>
                     </div>
                     <div class="o_wsale_product_btn d-flex gap-2"/>
                     <div class="product_price">

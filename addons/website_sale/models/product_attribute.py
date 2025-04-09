@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ProductAttribute(models.Model):
@@ -21,3 +21,9 @@ class ProductAttribute(models.Model):
         help="Variants are available for selection from your /shop page",
     )
     is_thumbnail_visible = fields.Boolean(string="Show Thumbnails")
+
+    @api.onchange('create_variant', 'display_type')
+    def _onchange_disable_preview_variants(self):
+        if self.create_variant != 'always' or self.display_type == 'multi':
+            self.preview_variants = 'hidden'
+            self.is_thumbnail_visible = False

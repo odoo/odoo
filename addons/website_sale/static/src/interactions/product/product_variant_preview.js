@@ -29,7 +29,6 @@ export class ProductVariantPreview extends Interaction {
     }
 
     setImgSrc(imageSrc) {
-        debugger;
         this.productImg.src = imageSrc;
     }
 }
