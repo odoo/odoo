@@ -13,7 +13,7 @@ export function isClonable(el) {
 
 export class ClonePlugin extends Plugin {
     static id = "clone";
-    static dependencies = ["history", "builder-options"];
+    static dependencies = ["history", "builder-options", "backgroundShapeOption"];
     static shared = ["cloneElement"];
 
     resources = {
@@ -28,9 +28,11 @@ export class ClonePlugin extends Plugin {
             // }
         ],
         on_cloned_handlers: [
-            // ({ cloneEl: cloneEl, originalEl: el }) => {
-            //     called after an element was cloned and inserted in the DOM
-            // }
+            ({ cloneEl: cloneEl, originalEl: el }) => {
+                // called after an element was cloned and inserted in the DOM
+                this.dependencies.backgroundShapeOption.handleBgColorChanged(cloneEl);
+                this.dependencies.backgroundShapeOption.handleBgColorChanged(el);
+            },
         ],
     };
 

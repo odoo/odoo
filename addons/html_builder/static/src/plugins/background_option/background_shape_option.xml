@@ -14,8 +14,8 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Flip" level="2" t-if="isActiveItem('toggle_bg_shape_id')">
-        <BuilderButton icon="'oi-arrows-h'" preview="false" action="'flipShape'" actionParam="'x'"/>
-        <BuilderButton icon="'oi-arrows-v'" preview="false" action="'flipShape'" actionParam="'y'"/>
+        <BuilderButton icon="'oi-arrows-h'" action="'flipShape'" actionParam="'x'"/>
+        <BuilderButton icon="'oi-arrows-v'" action="'flipShape'" actionParam="'y'"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Colors" level="2">
@@ -23,7 +23,7 @@
             <BuilderColorPicker action="'backgroundShapeColor'" actionParam="colorName"/>
         </t>
         <!-- TODO handle all the attributes -->
-        <BuilderColorPicker styleAction="'background-color'" applyTo="':scope > .o_we_shape'"/>
+        <!-- <BuilderColorPicker styleAction="'background-color'" applyTo="':scope > .o_we_shape'"/> -->
     </BuilderRow>
     <BuilderRow label.translate="Speed" level="2" t-if="state.isAnimated">
         <BuilderRange

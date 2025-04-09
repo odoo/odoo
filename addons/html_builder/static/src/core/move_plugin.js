@@ -73,6 +73,7 @@ export class MovePlugin extends Plugin {
         on_cloned_handlers: this.onCloned.bind(this),
         on_remove_handlers: this.onRemove.bind(this),
     };
+    static dependencies = ["backgroundShapeOption"];
 
     setup() {
         this.overlayTarget = null;
@@ -188,6 +189,7 @@ export class MovePlugin extends Plugin {
     onMoveClick(direction) {
         // TODO nav-item ? (=> specific plugin)
         // const isNavItem = this.overlayTarget.classList.contains("nav-item");
+        this.dependencies.backgroundShapeOption.handleSnippetMoved(this.overlayTarget);
         let hasMobileOrder = !!this.overlayTarget.style.order;
         const siblingEls = this.overlayTarget.parentNode.children;
 
@@ -217,7 +219,7 @@ export class MovePlugin extends Plugin {
                 this.overlayTarget
             );
         }
-
+        this.dependencies.backgroundShapeOption.handleBgColorChanged(this.overlayTarget);
         // TODO scroll (data-no-scroll)
         // TODO update invisible dom
     }

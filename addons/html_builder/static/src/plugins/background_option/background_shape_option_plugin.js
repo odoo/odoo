@@ -1,5 +1,10 @@
 import { getValueFromVar, isMobileView } from "@html_builder/utils/utils";
-import { getBgImageURLFromURL, normalizeColor } from "@html_builder/utils/utils_css";
+import {
+    getBgImageURLFromURL,
+    normalizeColor,
+    getCSSVariableValue,
+    getBgImageURLFromEl,
+} from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
@@ -7,6 +12,7 @@ import { backgroundShapesDefinition } from "./background_shapes_definition";
 import { ShapeSelector } from "../shape/shape_selector";
 import { getDefaultColors } from "./background_shape_option";
 import { withSequence } from "@html_editor/utils/resource";
+import { rgbToHex } from "@web/core/utils/colors";
 
 export class BackgroundShapeOptionPlugin extends Plugin {
     static id = "backgroundShapeOption";
@@ -16,12 +22,15 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         background_shape_target_providers: withSequence(5, (editingElement) =>
             editingElement.querySelector(":scope > .o_we_bg_filter")
         ),
+        on_bg_color_changed: this.handleBgColorChanged.bind(this),
     };
     static shared = [
         "getShapeStyleUrl",
         "getShapeData",
         "showBackgroundShapes",
         "getBackgroundShapes",
+        "handleBgColorChanged",
+        "handleSnippetMoved",
     ];
     setup() {
         // TODO: update shapeBackgroundImagePerClass if a stylesheet value
@@ -56,7 +65,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                     const applyShapeParams = {
                         shape: value,
                         colors: this.getImplicitColors(editingElement, value, shapeData.colors),
-                        flip: [],
+                        flip: shapeData.flip,
                         animated: param.animated,
                         shapeAnimationSpeed: shapeData.shapeAnimationSpeed,
                     };
@@ -117,18 +126,39 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             },
             flipShape: {
                 apply: ({ editingElement, param: { mainParam: axis } }) => {
+                    if (axis === "y") {
+                        this.flipYPending = true;
+                    }
+                    // Might want to prevent the colors computing when flipping x.
                     this.applyShape(editingElement, () => {
-                        const flip = new Set(this.getShapeData(editingElement).flip);
+                        let { shape, flip } = this.getShapeData(editingElement);
+                        flip = new Set(flip);
                         flip.add(axis);
-                        return { flip: [...flip] };
+                        return {
+                            colors: this.getImplicitColors(editingElement, shape),
+                            flip: [...flip],
+                        };
                     });
+                    if (axis === "y") {
+                        delete this.flipYPending;
+                    }
                 },
                 clean: ({ editingElement, param: { mainParam: axis } }) => {
+                    if (axis === "y") {
+                        this.flipYPending = false;
+                    }
                     this.applyShape(editingElement, () => {
-                        const flip = new Set(this.getShapeData(editingElement).flip);
+                        let { shape, flip } = this.getShapeData(editingElement);
+                        flip = new Set(flip);
                         flip.delete(axis);
-                        return { flip: [...flip] };
+                        return {
+                            colors: this.getImplicitColors(editingElement, shape),
+                            flip: [...flip],
+                        };
                     });
+                    if (axis === "y") {
+                        delete this.flipYPending;
+                    }
                 },
                 isApplied: ({ editingElement, param: { mainParam: axis } }) => {
                     // Compat: flip classes are no longer used but may be
@@ -166,7 +196,29 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                     });
                 },
             },
+            dispatchChange: {
+                apply: ({ editingElement }) => {
+                    this.dispatchTo("on_bg_color_changed", editingElement);
+                },
+            },
         };
+    }
+    handleBgColorChanged(editingElement) {
+        //if color is previous implicit color ?
+        //if connection shape TODO
+        const { shape } = this.getShapeData(editingElement);
+        if (shape) {
+            this.applyShape(editingElement, () => ({
+                colors: this.getImplicitColors(editingElement, shape),
+            }));
+        }
+        const elements = this.getNeighborShape(editingElement);
+        for (const element of elements) {
+            this.updateShapeForNeighbor(element);
+        }
+    }
+    handleSnippetMoved(editingElement) {
+        this.updateShapeForNeighborBeforeMoving(editingElement);
     }
     /**
      * Handles everything related to saving state before preview and restoring
@@ -265,6 +317,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         const selectedBackgroundUrl = this.getShapeStyleUrl(shapeName);
         const defaultColors = this.getShapeDefaultColors(selectedBackgroundUrl);
         let colors = previousColors;
+        colors = Object.assign(this.getConnectionsColors(editingElement, shapeName), colors);
         let sibling = editingElement.previousElementSibling;
         while (sibling) {
             colors = Object.assign(this.getShapeData(sibling).colors || {}, colors);
@@ -282,7 +335,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     getShapeDefaultColors(selectedBackgroundUrl) {
         const shapeSrc = selectedBackgroundUrl && getBgImageURLFromURL(selectedBackgroundUrl);
         const url = new URL(shapeSrc, window.location.origin);
-        return Object.fromEntries(url.searchParams.entries());
+        return Object.fromEntries(url.searchParams.entries().filter(([key]) => key !== "flip"));
     }
     /**
      * Retrieves current shape data from the target's dataset.
@@ -397,6 +450,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             shapeGroups: this.getBackgroundShapeGroups(),
             imgThroughDiv: true,
             getShapeUrl: this.getShapeStyleUrl.bind(this),
+            shapeData: this.getShapeData(editingElements[0]),
         });
     }
     getBackgroundShapeGroups() {
@@ -411,6 +465,244 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             )
             .flat();
         return Object.fromEntries(entries);
+    }
+    /**
+     * Returns the computed colors for the currently selected Connections shape.
+     *
+     * The color is computed based on the bgcolor of the next snippet or on the bgcolor
+     * of the previous if the shape flip on Y.
+     *
+     * @private
+     * @param {String} shape identifier of the selected shape.
+     * @param {Element} target Element for which the color has to be computed.
+     */
+    getConnectionsColors(editingElement, shapeName) {
+        if (!shapeName.includes("web_editor/Connections/")) {
+            return {};
+        }
+        const selectedBackgroundUrl = this.getShapeStyleUrl(shapeName);
+        const defaultColors = this.getShapeDefaultColors(selectedBackgroundUrl);
+        const defaultKey = Object.keys(defaultColors)[0];
+        const targetRect = editingElement.getBoundingClientRect();
+        const shapeData = this.getShapeData(editingElement);
+        const x = targetRect.left + targetRect.width / 2;
+        const effectiveFlipY =
+            this.flipYPending !== null ? this.flipYPending : shapeData.flip.includes("y");
+        this.flipYPending = null;
+        const y = effectiveFlipY ? targetRect.top - 1 : targetRect.bottom + 1;
+        const neighborEl = this.getBackgroundElementFromPoint(editingElement, x, y);
+        const neighborElHexColor = rgbToHex(getComputedStyle(neighborEl).backgroundColor);
+
+        let curBgColorEl = editingElement;
+        while (getComputedStyle(curBgColorEl).backgroundColor.includes("rgba(0, 0, 0, 0)")) {
+            curBgColorEl = curBgColorEl.parentElement;
+        }
+        const curBgHexColor = rgbToHex(getComputedStyle(curBgColorEl).backgroundColor);
+
+        return {
+            ...defaultColors,
+            [defaultKey]:
+                curBgHexColor !== neighborElHexColor
+                    ? neighborElHexColor
+                    : this.getContrastingColor(neighborElHexColor),
+        };
+    }
+    /**
+     * Compute the luminance of a color.
+     *
+     * @private
+     */
+    getLuminance(color) {
+        const hexColor = rgbToHex(color);
+        const r = parseInt(hexColor.slice(1, 3), 16);
+        const g = parseInt(hexColor.slice(3, 5), 16);
+        const b = parseInt(hexColor.slice(5), 16);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+    /**
+     * Return the color of the current theme with the most contrast compared to
+     * the given color.
+     *
+     * @private
+     */
+    getContrastingColor(baseColor) {
+        const baseLuminance = this.getLuminance(baseColor);
+
+        const colors = ["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"];
+        const luminances = colors.map((color) => {
+            const colorValue = getCSSVariableValue(color);
+            return { color, luminance: this.getLuminance(colorValue) };
+        });
+
+        let bestContrast;
+        let maxDifference = 0;
+
+        for (const { color, luminance } of luminances) {
+            const difference = Math.abs(baseLuminance - luminance);
+            if (difference > maxDifference) {
+                maxDifference = difference;
+                bestContrast = color;
+            }
+        }
+
+        return getCSSVariableValue(bestContrast);
+    }
+    getElementsFromPoint(editingElement, viewportX, viewportY) {
+        const iframeDoc = editingElement.ownerDocument;
+        const iframeWin = iframeDoc.defaultView;
+        const pageX = iframeWin.scrollX + viewportX;
+        const pageY = iframeWin.scrollY + viewportY;
+        let elements;
+        if (
+            viewportX < 0 ||
+            viewportY < 0 ||
+            viewportX > iframeWin.innerWidth ||
+            viewportY > iframeWin.innerHeight
+        ) {
+            elements = [...iframeDoc.querySelectorAll("*")].filter((el) => {
+                const rect = el.getBoundingClientRect();
+                return (
+                    pageX >= iframeWin.scrollX + rect.left &&
+                    pageX <= iframeWin.scrollX + rect.right &&
+                    pageY >= iframeWin.scrollY + rect.top &&
+                    pageY <= iframeWin.scrollY + rect.bottom
+                );
+            });
+            elements.reverse();
+        } else {
+            elements = iframeDoc.elementsFromPoint(viewportX, viewportY);
+        }
+        const header = iframeDoc.querySelector("header");
+        const headerHeight = header.offsetHeight;
+        const isHeaderTop = !header.classList.contains("o_header_sidebar");
+        if (pageY < headerHeight && isHeaderTop) {
+            elements.unshift(iframeDoc.querySelector("nav"));
+        }
+        return elements;
+    }
+    // Get the first element with a bg color on the point.
+    getBackgroundElementFromPoint(editingElement, viewportX, viewportY) {
+        const iframeDoc = editingElement.ownerDocument;
+        const elements = this.getElementsFromPoint(editingElement, viewportX, viewportY);
+        const classBlacklist = [".o_handles", ".o_header_is_scrolled"];
+        const idBlacklist = ["wrap"];
+        const element = elements.find(
+            (el) =>
+                el.tagName.toLowerCase() !== "html" &&
+                !classBlacklist.some((cls) => el.closest(cls)) &&
+                !idBlacklist.includes(el.id) &&
+                !getComputedStyle(el).backgroundColor.includes("rgba(0, 0, 0, 0)")
+        );
+        return element || iframeDoc.querySelector("body");
+    }
+    updateShapeForNeighborBeforeMoving(editingElement) {
+        const targetRect = editingElement.getBoundingClientRect();
+        const topNeighbors = this.getNeighborShape(editingElement, "top");
+        const bottomNeighbors = this.getNeighborShape(editingElement, "bottom");
+
+        [...topNeighbors, ...bottomNeighbors].forEach((element, index) => {
+            const elRect = element.getBoundingClientRect();
+            const x = elRect.left + elRect.width / 2;
+            const y = index < topNeighbors.length ? targetRect.bottom + 1 : targetRect.top - 1;
+
+            let newColor = getComputedStyle(
+                this.getBackgroundElementFromPoint(editingElement, x, y)
+            ).backgroundColor;
+            let curBgColorEl = element;
+            while (getComputedStyle(curBgColorEl).backgroundColor.includes("rgba(0, 0, 0, 0)")) {
+                curBgColorEl = curBgColorEl.parentElement;
+            }
+            const curBgColor = getComputedStyle(curBgColorEl).backgroundColor;
+            if (curBgColor === newColor) {
+                newColor = this.getContrastingColor(newColor);
+            }
+            this.updateShapeForNeighbor(element, newColor);
+        });
+    }
+    findElementsWithShape(element) {
+        if (!element || element.tagName === "BODY") {
+            return [];
+        }
+        while (element.parentElement?.closest("[data-snippet]")) {
+            element = element.parentElement.closest("[data-snippet]");
+        }
+        const allEl = [element, ...element.querySelectorAll("*")];
+        const allShapeEl = allEl.filter((el) => el.querySelector(":scope > .o_we_shape"));
+        return allShapeEl;
+    }
+    // Is the shape next to the current element ?
+    isShapeNeighbor(editingElement, shapeTarget) {
+        if (!shapeTarget.querySelector(".o_we_shape")) {
+            return false;
+        }
+        const targetRect = shapeTarget.getBoundingClientRect();
+        const shapeData = this.getShapeData(shapeTarget);
+        const x = targetRect.left + targetRect.width / 2;
+        const y = shapeData.flip.includes("y") ? targetRect.top - 1 : targetRect.bottom + 1;
+        return this.getElementsFromPoint(shapeTarget, x, y).includes(editingElement);
+    }
+    getNeighborShape(editingElement, direction) {
+        const targetRect = editingElement.getBoundingClientRect();
+        const x = targetRect.left + targetRect.width / 2;
+        let y;
+        switch (direction) {
+            case "top":
+                y = targetRect.top - 1;
+                break;
+            case "bottom":
+                y = targetRect.bottom + 1;
+                break;
+            case "inner": {
+                const innerElements = this.findElementsWithShape(editingElement);
+                return innerElements.filter((el) => this.isShapeNeighbor(editingElement, el));
+            }
+            default: {
+                const topNeighbors = this.getNeighborShape(editingElement, "top");
+                const bottomNeighbors = this.getNeighborShape(editingElement, "bottom");
+                const innerNeighbors = this.getNeighborShape(editingElement, "inner");
+                return [...topNeighbors, ...bottomNeighbors, ...innerNeighbors];
+            }
+        }
+        const elements = this.getElementsFromPoint(editingElement, x, y);
+        const element = elements.find((el) => el.querySelector(":scope > .o_we_shape"));
+        const ShapeElements = this.findElementsWithShape(element);
+        return ShapeElements.filter((el) => this.isShapeNeighbor(editingElement, el));
+    }
+    updateShapeForNeighbor(snippetEl, newColor) {
+        if (!snippetEl) {
+            return;
+        }
+        const shapeEl = snippetEl.querySelector(".o_we_shape");
+        if (!shapeEl) {
+            return;
+        }
+        const shapeData = this.getShapeData(snippetEl);
+        if (!shapeData.shape.includes("web_editor/Connections")) {
+            return;
+        }
+        const defaultColor = getDefaultColors(snippetEl);
+        const defaultKeys = Object.keys(defaultColor);
+        newColor = newColor
+            ? { [defaultKeys[0]]: rgbToHex(newColor) }
+            : this.getConnectionsColors(snippetEl, shapeData.shape);
+
+        if (JSON.stringify(shapeData.colors) === JSON.stringify(newColor)) {
+            return;
+        }
+        let shapeBackgroundImageURL = getBgImageURLFromEl(shapeEl);
+        if (shapeBackgroundImageURL) {
+            const url = new URL(shapeBackgroundImageURL, window.location.origin);
+            Object.entries(newColor).forEach(([key, value]) => {
+                url.searchParams.set(key, value);
+            });
+            shapeBackgroundImageURL = `url("${url.toString()}")`;
+            shapeEl.style.backgroundImage = shapeBackgroundImageURL;
+        }
+        if (JSON.stringify(defaultColor) === JSON.stringify(newColor) && !shapeData.flip.length) {
+            shapeEl.style.removeProperty("background-image");
+        }
+        shapeData.colors = { ...shapeData.colors, ...newColor };
+        snippetEl.dataset.oeShapeData = JSON.stringify(shapeData);
     }
 }
 

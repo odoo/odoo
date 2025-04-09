@@ -19,6 +19,7 @@ export class BackgroundShapeOption extends BaseOptionComponent {
                 isAnimated: shapeInfo?.animated,
             };
         });
+        // this.backgroundShapePlugin.handleBgColorChanged(this.env.getEditingElements()[0]);
     }
     showBackgroundShapes() {
         this.backgroundShapePlugin.showBackgroundShapes(this.env.getEditingElements());

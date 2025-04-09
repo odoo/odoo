@@ -35,7 +35,7 @@ const layoutElementsSelector = [".o_we_shape", ".o_we_bg_filter"].join(",");
 
 export class RemovePlugin extends Plugin {
     static id = "remove";
-    static dependencies = ["history", "builder-options"];
+    static dependencies = ["history", "builder-options", "backgroundShapeOption"];
     resources = {
         get_overlay_buttons: withSequence(4, {
             getButtons: this.getActiveOverlayButtons.bind(this),
@@ -96,6 +96,7 @@ export class RemovePlugin extends Plugin {
 
     removeElement(el) {
         this.updateContainers(el);
+        this.dependencies.backgroundShapeOption.handleSnippetMoved(el);
         this.removeCurrentTarget(el);
         this.dispatchTo("after_remove_handlers", el);
     }

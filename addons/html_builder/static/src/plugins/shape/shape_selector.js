@@ -11,6 +11,7 @@ export class ShapeSelector extends BaseOptionComponent {
         buttonWrapperClassName: { type: String, optional: true },
         imgThroughDiv: { type: Boolean, optional: true },
         getShapeUrl: { type: Function, optional: true },
+        shapeData: Object,
     };
 
     setup() {
@@ -18,7 +19,29 @@ export class ShapeSelector extends BaseOptionComponent {
         this.rootRef = useRef("root");
     }
     getShapeUrl(shapePath) {
-        return this.props.getShapeUrl ? this.props.getShapeUrl(shapePath) : getShapeURL(shapePath);
+        if (this.props.getShapeUrl) {
+            const baseUrl = this.props.getShapeUrl(shapePath);
+            if (baseUrl) {
+                const { colors, flip: flipProxy } = this.props.shapeData;
+                const flip = Array.from(flipProxy);
+                const urlMatch = baseUrl.match(/url\(["']?(.*?)["']?\)/);
+                const url = new URL(urlMatch[1], window.location.origin);
+
+                if (!Object.keys(colors).length == 0) {
+                    Object.entries(colors).forEach(([key, value]) => {
+                        url.searchParams.set(key, value);
+                    });
+                    if (flip.includes("y")) {
+                        url.searchParams.set("flip", "y");
+                    }
+                }
+                return `url("${url.toString()}")`;
+            } else {
+                return getShapeURL(shapePath);
+            }
+        } else {
+            return getShapeURL(shapePath);
+        }
     }
     scrollToShapes(id) {
         this.rootRef.el

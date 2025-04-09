@@ -6,7 +6,7 @@ import { closest, touching } from "@web/core/utils/ui";
 
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
-    static dependencies = ["history", "setup_editor_plugin"];
+    static dependencies = ["history", "setup_editor_plugin", "backgroundShapeOption"];
     static shared = [
         "displayDropZone",
         "dragElement",
@@ -307,6 +307,7 @@ export class DropZonePlugin extends Plugin {
             this.services.ui.block();
             await Promise.all(proms);
             this.services.ui.unblock();
+            this.dependencies.backgroundShapeOption.handleBgColorChanged(elementToAdd);
             scrollToWindow(elementToAdd, { behavior: "smooth", offset: 50 });
             this.dependencies.history.addStep();
         };
