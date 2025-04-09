@@ -509,7 +509,7 @@ test(`editable list with open_form_view`, async () => {
 });
 
 test(`editable list with open_form_view in debug`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountView({
         resModel: "foo",
         type: "list",
@@ -537,7 +537,7 @@ test(`editable list without open_form_view in debug`, async () => {
             super.setItem(...arguments);
         },
     });
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountView({
         resModel: "foo",
         type: "list",
@@ -577,7 +577,7 @@ test(`editable list without open_form_view in debug`, async () => {
 });
 
 test(`non-editable list in debug`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountView({
         resModel: "foo",
         type: "list",
@@ -6149,7 +6149,7 @@ test(`display a tooltip on a field`, async () => {
     expect(`.o-tooltip`).toHaveCount(1);
     expect(`.o-tooltip`).toHaveText("Foo");
 
-    serverState.debug = true;
+    serverState.debug = "1";
 
     // it is necessary to rerender the list so tooltips can be properly created
     await validateSearch(); // reload view

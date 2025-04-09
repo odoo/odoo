@@ -116,6 +116,15 @@ export const serverState = new Proxy(SERVER_STATE_VALUES, {
         return Reflect.get(getServerStateValues(), p);
     },
     set(target, p, newValue) {
+        if (p in SERVER_STATE_VALUES) {
+            const expectedType = typeof SERVER_STATE_VALUES[p];
+            const receivedType = typeof newValue;
+            if (receivedType !== expectedType) {
+                throw new Error(
+                    `expected server state property "${p}" to be a ${expectedType}, got: ${newValue} (${receivedType})`
+                );
+            }
+        }
         const result = Reflect.set(getServerStateValues(), p, newValue);
         if (result) {
             notifySubscribers();
