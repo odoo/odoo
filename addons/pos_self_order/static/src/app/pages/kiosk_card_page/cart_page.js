@@ -5,6 +5,7 @@ import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_tab
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
 import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
+import { payOrder } from "../cart_page/cart_page_utils";
 
 export class KioskCartPage extends Component {
     static template = "pos_self_order.KioskCartPage";
@@ -43,38 +44,7 @@ export class KioskCartPage extends Component {
     }
 
     async pay() {
-        const presets = this.selfOrder.models["pos.preset"].getAll();
-        const config = this.selfOrder.config;
-        const type = config.self_ordering_mode;
-        const orderingMode =
-            config.use_presets && presets.length > 1
-                ? this.selfOrder.currentOrder.preset_id?.service_at
-                : config.self_ordering_service_mode;
-
-        if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
-            return;
-        }
-
-        if (!this.selfOrder.currentOrder.presetRequirementsFilled && orderingMode !== "table") {
-            this.state.fillInformations = true;
-            return;
-        }
-
-        if (
-            type === "mobile" &&
-            orderingMode === "table" &&
-            !this.selfOrder.currentTable &&
-            this.selfOrder.config.module_pos_restaurant
-        ) {
-            this.state.selectTable = true;
-            return;
-        } else {
-            this.selfOrder.currentOrder.table_id = this.selfOrder.currentTable;
-        }
-
-        this.selfOrder.rpcLoading = true;
-        await this.selfOrder.confirmOrder();
-        this.selfOrder.rpcLoading = false;
+        await payOrder(this.selfOrder, this.state);
     }
 
     proceedInfos(state) {

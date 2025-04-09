@@ -80,12 +80,18 @@ export class OrderWidget extends Component {
         );
     }
 
-    get leftButton() {
+    shouldGoBack() {
         const order = this.selfOrder.currentOrder;
-        const back =
+        return (
+            this.selfOrder.displayCategoryPage() ||
             Object.keys(order.changes).length === 0 ||
             this.router.activeSlot === "cart" ||
-            order.lines.length === 0;
+            order.lines.length === 0
+        );
+    }
+
+    get leftButton() {
+        const back = this.shouldGoBack();
 
         return {
             name: back ? _t("Back") : _t("Cancel"),
@@ -94,23 +100,17 @@ export class OrderWidget extends Component {
     }
 
     onClickleftButton() {
-        const order = this.selfOrder.currentOrder;
-
-        if (
-            order.lines.length === 0 ||
-            Object.keys(order.changes).length === 0 ||
-            this.router.activeSlot === "cart"
-        ) {
+        if (this.shouldGoBack()) {
             this.router.back();
             return;
-        } else {
-            this.dialog.add(CancelPopup, {
-                title: _t("Cancel order"),
-                confirm: () => {
-                    this.selfOrder.cancelOrder();
-                    this.router.navigate("default");
-                },
-            });
         }
+
+        this.dialog.add(CancelPopup, {
+            title: _t("Cancel order"),
+            confirm: () => {
+                this.selfOrder.cancelOrder();
+                this.router.navigate("default");
+            },
+        });
     }
 }

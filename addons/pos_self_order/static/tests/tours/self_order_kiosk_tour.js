@@ -129,7 +129,7 @@ registry.category("web_tour.tours").add("kiosk_order_price_null", {
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         ProductPage.clickKioskProduct("Coca-Cola"),
-        Utils.clickBtn("Order"),
+        Utils.clickBtn("Checkout"),
         CartPage.checkKioskProduct("Coca-Cola", "0.00"),
         Utils.clickBtn("Pay"),
         ConfirmationPage.orderNumberShown(),

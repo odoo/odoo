@@ -109,7 +109,7 @@ export class LandingPage extends Component {
             this.selfOrder.ordering
         ) {
             this.router.navigate("location");
-        } else if (this.selfOrder.kioskMode && this.selfOrder.models["pos.category"].length > 1) {
+        } else if (this.selfOrder.displayCategoryPage()) {
             this.router.navigate("category_list");
         } else {
             this.router.navigate("product_list");

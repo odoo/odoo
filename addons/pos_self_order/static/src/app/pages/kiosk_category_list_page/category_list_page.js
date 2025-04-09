@@ -1,9 +1,12 @@
 import { Component, onWillStart } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
-import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";
+import { _t } from "@web/core/l10n/translation";
+import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
+import { KioskLanguageSelector } from "@pos_self_order/app/components/kiosk_language_selector/language_selector";
 export class KioskCategoryListPage extends Component {
     static template = "pos_self_order.KioskCategoryListPage";
+    static components = { KioskLanguageSelector };
     static props = {};
 
     setup() {
@@ -16,7 +19,23 @@ export class KioskCategoryListPage extends Component {
         });
     }
 
+    shouldGoBack() {
+        const order = this.selfOrder.currentOrder;
+        return Object.keys(order.changes).length === 0 || order.lines.length === 0;
+    }
+
     back() {
+        if (!this.shouldGoBack()) {
+            this.dialog.add(CancelPopup, {
+                title: _t("Cancel order"),
+                confirm: () => {
+                    this.selfOrder.cancelOrder();
+                    this.router.navigate("default");
+                },
+            });
+            return;
+        }
+
         if (this.selfOrder.hasPresets()) {
             this.router.navigate("location");
         } else {
@@ -31,17 +50,5 @@ export class KioskCategoryListPage extends Component {
 
     get categories() {
         return this.selfOrder.availableCategories;
-    }
-
-    get currentLanguage() {
-        return this.selfOrder.currentLanguage;
-    }
-
-    get languages() {
-        return this.selfOrder.config.self_ordering_available_language_ids;
-    }
-
-    openLanguages() {
-        this.dialog.add(LanguagePopup);
     }
 }

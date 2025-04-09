@@ -24,15 +24,15 @@
 
                 <div class="d-flex justify-content-between align-items-center position-relative mx-4 mt-4 mb-5 ">
                     <button class="btn btn-lg bg-white btn-back" t-on-click="back">
-                         <i class="oi oi-chevron-left d-md-none" />
-                         <span class="d-none d-md-inline">Back</span>
+                         <t t-if="shouldGoBack()">
+                            <i class="oi oi-chevron-left d-md-none" /><span class="d-none d-md-inline">Back</span>
+                        </t>
+                        <t t-else="">
+                            <i class="btn-close d-md-none" /><span class="d-none d-md-inline">Cancel</span>
+                        </t>
                     </button>
                     <div></div>
-                    <button t-if="languages.length > 1" t-on-click="openLanguages"
-                            class="kiosk_language_selector d-flex align-items-center border-0  rounded py-3 px-4 bg-white position-absolute start-50 translate-middle-x">
-                        <img class="rounded" t-attf-src="{{currentLanguage.flag_image_url}}"/>
-                        <span t-esc="currentLanguage.display_name" class="ms-3"></span>
-                    </button>
+                    <KioskLanguageSelector extraClass="'position-absolute start-50 translate-middle-x'"/>
                 </div>
 
           </div>

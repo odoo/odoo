@@ -971,6 +971,10 @@ export class SelfOrder extends Reactive {
         return this.config.use_presets && this.models["pos.preset"].length > 1;
     }
 
+    displayCategoryPage() {
+        return this.kioskMode && this.models["pos.category"].length > 1;
+    }
+
     get kioskBackgroundImage() {
         const bgImage = this.config._self_ordering_image_background_ids[0];
         if (bgImage) {

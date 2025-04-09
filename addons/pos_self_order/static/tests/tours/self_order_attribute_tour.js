@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
             { name: "Size", value: "M" },
             { name: "Fabric", value: "Leather" },
         ]),
-        Utils.clickBtn("Order"),
+        Utils.clickBtn("Checkout"),
         CartPage.checkAttribute("Desk Organizer", [
             { name: "Size", value: "M" },
             { name: "Fabric", value: "Leather" },
@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
             { name: "Size", value: "L" },
             { name: "Fabric", value: "Leather" },
         ]),
-        Utils.clickBtn("Order"),
+        Utils.clickBtn("Checkout"),
         CartPage.checkAttribute("Desk Organizer", [
             { name: "Size", value: "L" },
             { name: "Fabric", value: "Leather" },
