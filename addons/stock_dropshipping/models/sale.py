@@ -69,3 +69,14 @@ class SaleOrderLine(models.Model):
             res['dest_address_id'] = self.order_id.partner_shipping_id.id
             res['picking_type_id'] = dropship_operation.id
         return res
+
+    def _get_outgoing_incoming_moves(self, strict=True):
+        # moves for a return of an intercompany dropship are caught here
+        outgoing_moves, incoming_moves = super()._get_outgoing_incoming_moves(strict)
+        dropship_return_moves = outgoing_moves.filtered(
+            lambda m: m.origin_returned_move_id.picking_id.is_dropship
+        )
+        if dropship_return_moves:
+            outgoing_moves -= dropship_return_moves
+            incoming_moves |= dropship_return_moves
+        return outgoing_moves, incoming_moves
