@@ -234,7 +234,7 @@ export class WebsiteForum extends Interaction {
      */
     onExpandAnswerClick(ev, currentTargetEl) {
         if (ev.target.matches(".o_wforum_expand_toggle")) {
-            currentTargetEl.classList.toggle("o_expand")
+            currentTargetEl.classList.toggle("o_expand");
             currentTargetEl.classList.toggle("min-vh-100");
             currentTargetEl.classList.toggle("w-lg-50");
         } else if (ev.target.matches(".o_wforum_discard_btn")) {
@@ -379,7 +379,6 @@ export class WebsiteForum extends Interaction {
             }
             voteCountEl.textContent = parseInt(data["vote_count"]);
             voteCountEl.classList.add("o_forum_vote_animate");
-            this.refreshListeners();
         }
     }
 
@@ -473,8 +472,8 @@ export class WebsiteForum extends Interaction {
         currentTargetEl.classList.toggle("opacity-100-hover", !data);
         const currentTargetEl_icon = currentTargetEl.querySelector(".fa");
         currentTargetEl_icon.classList.toggle("fa-star-o", !data);
-        currentTargetEl_icon.classList.toggle("o_wforum_gold", data)
-        currentTargetEl_icon.classList.toggle("fa-star", data)
+        currentTargetEl_icon.classList.toggle("o_wforum_gold", data);
+        currentTargetEl_icon.classList.toggle("fa-star", data);
     }
 
     /**
