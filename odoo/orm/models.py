@@ -6581,7 +6581,15 @@ class BaseModel(metaclass=MetaModel):
                     ids = (marked.get(field) or set()) | (tomark.get(field) or set())
                     records = records.browse(id_ for id_ in records._ids if id_ not in ids)
                 else:
-                    records = records & self.env.cache.get_records(records, field, all_contexts=True)
+                    # get only records that have a value in cache (in any context)
+                    # (breaks cache abstraction)
+                    ids_in_cache = {}
+                    if field in self.pool.field_depends_context:
+                        for field_cache in self.env.transaction.data.values():
+                            ids_in_cache.update(field_cache)
+                    else:
+                        ids_in_cache = field._get_cache(self.with_context(prefetch_langs=True).env)
+                    records = records.browse(id_ for id_ in records._ids if id_ in ids_in_cache)
                 if not records:
                     continue
                 # recursively trigger recomputation of field's dependents
@@ -6683,7 +6691,8 @@ class BaseModel(metaclass=MetaModel):
                 if real_records:
                     records = model.search([(field.name, 'in', real_records.ids)], order='id')
                 if new_records:
-                    cache_records = self.env.cache.get_records(model, field)
+                    field_cache = field._get_cache(model.env)
+                    cache_records = model.browse(field_cache)
                     new_ids = set(self._ids)
                     records |= cache_records.filtered(lambda r: not set(r[field.name]._ids).isdisjoint(new_ids))
 
