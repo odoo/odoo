@@ -829,13 +829,13 @@ class AccountAccount(models.Model):
             'recent_accounts': suggested_accounts,
         }
 
-        def _records_to_list(records, highlight=None):
+        def _records_to_list(records):
             if template:
                 return [
                     (
                         record.id,
                         record.display_name,
-                        record._to_qweb(template, highlight, extra_values=extra_vals),
+                        record._to_qweb(template, extra_values=extra_vals),
                     )
                     for record in records
                 ]
@@ -858,7 +858,7 @@ class AccountAccount(models.Model):
 
         domain = Domain.AND([search_domain, internal_group_domain, domain])
         records = self.with_context(preferred_account_ids=suggested_accounts).search(domain, limit=limit)
-        return _records_to_list(records, highlight=name)
+        return _records_to_list(records)
 
     @api.model
     @api.readonly
@@ -875,12 +875,10 @@ class AccountAccount(models.Model):
             ]
         return super().web_name_search(name, specification, domain, operator, limit)
 
-    def _to_qweb(self, template=None, highlight=None, tag='span', extra_values={}):
+    def _to_qweb(self, template=None, tag='span', extra_values={}):
         self.ensure_one()
-        re_search_term = self._get_search_term_regex(highlight)
         if not template:
-            content = self._highlight(self.display_name, re_search_term) if highlight else self.display_name
-            return Markup(f"<{escape(tag)}>{content}</{escape(tag)}>")
+            return Markup(f"<{escape(tag)}>{self.display_name}</{escape(tag)}>")
 
         qweb_content = self.env['ir.qweb']._render(
             template=template,
@@ -889,21 +887,7 @@ class AccountAccount(models.Model):
                 **extra_values,
             },
         )
-        return self._highlight(qweb_content, re_search_term) if highlight else qweb_content
-
-    def _get_search_term_regex(self, name):
-        return re.compile(fr"{name}", re.IGNORECASE) if name else None
-
-    @api.model
-    def _highlight(self, qweb_content, re_text_to_highlight, highlight_class="text-primary bg-secondary fw-bold"):
-        text_content = str(qweb_content)
-        parts = XML_TAG_REGEX.split(text_content)
-
-        for i, part in enumerate(parts):
-            if not (part.startswith("<") and part.endswith(">")):  # Skip HTML tags
-                parts[i] = re_text_to_highlight.sub(lambda m: f'<span class="{highlight_class}">{escape(m.group(0))}</span>', part)
-
-        return Markup("").join(Markup(part) for part in parts)
+        return qweb_content
 
     @api.model
     def _search_display_name(self, operator, value):
