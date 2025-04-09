@@ -186,8 +186,22 @@ registerWebsitePreviewTour("website_media_dialog_insert_media", {
         run: "editor test",
     },
     {
-        content: "Click on the toolbar's 'insert media' button",
-        trigger: ".oe-toolbar #media-insert",
+        content: "Show the powerbox",
+        trigger: ":iframe .s_text_block p:last-child",
+        async run(actions) {
+            await actions.editor(`/`);
+            const wrapwrap = this.anchor.closest("#wrapwrap");
+            wrapwrap.dispatchEvent(
+                new InputEvent("input", {
+                    inputType: "insertText",
+                    data: "/",
+                })
+            );
+        },
+    },
+    {
+        content: "Click on the media item from powerbox",
+        trigger: "div.o-we-command-name:contains('Media')",
         run: "click",
     },
     {

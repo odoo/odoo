@@ -621,7 +621,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_media_dialog_image_shape(self):
         self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
 
-    @unittest.skip
     def test_website_media_dialog_insert_media(self):
         self.start_tour("/", "website_media_dialog_insert_media", login="admin")
 
