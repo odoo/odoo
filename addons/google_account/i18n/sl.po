@@ -1,19 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* google_account
-#
+# 
+# Translators:
+# Aleš Pipan, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
-"Language: sl\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"PO-Revision-Date: 2025-02-20 10:06+0000\n"
+"Last-Translator: Aleš Pipan, 2025\n"
+"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sl\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
@@ -21,11 +30,20 @@ msgid "Google Service"
 msgstr ""
 
 #. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service__id
+msgid "ID"
+msgstr ""
+
+#. module: google_account
+#. odoo-python
 #: code:addons/google_account/models/google_service.py:0
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
 msgstr ""
 
 #. module: google_account
+#. odoo-python
 #: code:addons/google_account/models/google_service.py:0
-msgid "Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired"
 msgstr ""
