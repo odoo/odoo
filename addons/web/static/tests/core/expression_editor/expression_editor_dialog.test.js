@@ -82,6 +82,8 @@ test("expr well sent but wrong, so notification when onConfirm", async () => {
     expect(".o_technical_modal").toHaveCount(1);
     await contains(".modal-footer button").click();
     await contains(".modal-body button").click();
-    expect(getTreeEditorContent()).toEqual([{ level: 0, value: "all" }]);
+    expect(getTreeEditorContent()).toEqual([
+        { level: 0, value: "all records matched (no connector value visible)" },
+    ]);
     expect.verifySteps(["notification"]);
 });

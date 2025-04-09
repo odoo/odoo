@@ -1,0 +1,50 @@
+$container-query-grid-breakpoints: (
+    xs: 0,
+    md: 768px,
+) !default;
+
+.d-cq-block {
+    display: block !important;
+}
+.d-cq-none {
+    display: none !important;
+}
+
+@container (min-width: 768px) {
+    .d-cq-md-block {
+        display: block !important;
+    }
+    .d-cq-md-none {
+        display: none !important;
+    }
+}
+
+// Generate BootStrap Grid system based of container query
+// need to be used with BS grid system e.g.: `row row-cq`
+@if $grid-columns > 0 {
+    .row-cq {
+        container-type: inline-size;
+
+        $breakpoints: $container-query-grid-breakpoints;
+
+        %col-cq-base {
+            flex: 1 0 0;
+        }
+
+        @each $breakpoint in map-keys($breakpoints) {
+            $infix: breakpoint-infix($breakpoint);
+            @include container-breakpoint-up($breakpoint, $breakpoints) {
+                .col-cq#{$infix} {
+                    @extend %col-cq-base;
+                }
+
+                @for $i from 1 through $grid-columns {
+                    .col-cq#{$infix}-#{$i} {
+                        flex: 0 0 auto;
+                        width: calc(100cqw * #{divide($i, $grid-columns)});
+                    }
+                }
+            }
+        }
+    }
+}

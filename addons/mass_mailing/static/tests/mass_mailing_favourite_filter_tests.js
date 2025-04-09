@@ -377,7 +377,7 @@ QUnit.module('favorite filter widget', (hooks) => {
 
         // If domain is not set on mailing and no filter available, both drop-down and icon container are hidden
         
-        await testUtils.click(fixture.querySelector(".o_tree_editor_node_control_panel > button:nth-child(3)"));
+        await testUtils.click(fixture.querySelector("button:has(.fa-trash):nth-child(2)"));
         assert.isNotVisible(fixture.querySelector('.o_field_mailing_filter .o_input_dropdown'),
             "should not display drop-down because there is still no filter available to select from");
         assert.isNotVisible(fixture.querySelector('.o_mass_mailing_filter_container'),
@@ -400,7 +400,7 @@ QUnit.module('favorite filter widget', (hooks) => {
         assert.isNotVisible(fixture.querySelector('.o_mass_mailing_save_filter_container'),
             "should not have option to save filter if filter is selected");
 
-        await testUtils.click(fixture.querySelector(".o_tree_editor_node_control_panel > button:nth-child(1)"));
+        await testUtils.click(fixture.querySelector(".o_tree_editor_connector_buttons a:nth-child(1)"));
         await testUtils.nextTick();
         assert.isVisible(fixture.querySelector('.o_mass_mailing_save_filter_container'),
             "should have option to save filter because mailing domain is changed");

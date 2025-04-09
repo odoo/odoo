@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
-            trigger: ".o_tree_editor_row:contains(New Rule) > a",
+            trigger: ".o_tree_editor_connector_buttons a:nth-child(1)",
             run: "click",
         },
         {
