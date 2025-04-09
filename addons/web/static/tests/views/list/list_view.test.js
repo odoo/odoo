@@ -573,7 +573,7 @@ test(`editable list with open_form_view`, async () => {
 
 test.tags("desktop");
 test(`editable list with open_form_view in debug`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountView({
         resModel: "foo",
         type: "list",
@@ -602,7 +602,7 @@ test(`editable list without open_form_view in debug`, async () => {
             super.setItem(...arguments);
         },
     });
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountView({
         resModel: "foo",
         type: "list",
@@ -642,7 +642,7 @@ test(`editable list without open_form_view in debug`, async () => {
 });
 
 test(`non-editable list in debug`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountView({
         resModel: "foo",
         type: "list",
@@ -6645,8 +6645,6 @@ test(`can display a list with a many2many field`, async () => {
 
 test.tags("desktop");
 test(`display a tooltip on a field`, async () => {
-    serverState.debug = false;
-
     await mountView({
         resModel: "foo",
         type: "list",
@@ -6664,7 +6662,7 @@ test(`display a tooltip on a field`, async () => {
     expect(`.o-tooltip`).toHaveCount(1);
     expect(`.o-tooltip`).toHaveText("Foo");
 
-    serverState.debug = true;
+    serverState.debug = "1";
 
     // it is necessary to rerender the list so tooltips can be properly created
     await validateSearch(); // reload view
@@ -6681,7 +6679,6 @@ test(`display a tooltip on a field`, async () => {
 
 test.tags("desktop");
 test("field (with help) tooltip in non debug mode", async function () {
-    serverState.debug = false;
     Foo._fields.foo.help = "This is a foo field";
     await mountView({
         type: "list",
