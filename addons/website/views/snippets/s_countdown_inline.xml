@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_countdown_inline" name="Countdown Inline">
+    <div class="s_countdown_inline d-flex flex-column align-items-start o_countdown_default" data-display="dhms" data-end-action="nothing" t-att-data-end-time="datetime.datetime.now().timestamp() + 228307">
+        <div class="s_countdown_inline_wrapper">
+            <t t-call="website.s_countdown_inline_default_template"/>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_inline_default_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_default o_count_inline_text o_colored_item alert mb-0">
+        <p>
+            <i class="fa fa-clock-o"/> Sale ends in
+            <span class="o_not_editable oe_unremovable" contenteditable="false">
+                <t t-foreach="metrics" t-as="metric">
+                    <span class="o_count_item">
+                        <span class="o_count_item_nbs d-inline-flex fw-bold"/>
+                        <span class="o_count_item_label fw-bold">
+                            <span class="o_skeletton rounded bg-200 ps-5"/>
+                        </span>
+                    </span>
+                </t>
+            </span>
+        </p>
+    </div>
+</template>
+
+<template id="s_countdown_inline_dominoes_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_dominoes">
+        <div class="o_not_editable oe_unremovable d-flex gap-1" contenteditable="false">
+            <t t-foreach="metrics" t-as="metric">
+                <span class="o_count_item d-flex gap-1">
+                    <span class="d-flex flex-column align-items-center">
+                        <span class="o_count_item_nbs d-inline-flex">
+                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fs-4 fw-bold"/>
+                            <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fs-4 fw-bold"/>
+                        </span>
+                        <span class="o_count_item_label small"/>
+                    </span>
+                </span>
+                <span t-if="metric_last == false" class="o_count_separator mt-1 fs-4">:</span>
+            </t>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_inline_wrapped_numbers_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_wrapped_numbers">
+        <div class="o_not_editable oe_unremovable d-inline-flex gap-1" contenteditable="false">
+            <t t-foreach="metrics" t-as="metric">
+                <span class="o_count_item d-flex gap-1">
+                    <span class="d-flex flex-column align-items-center">
+                        <span class="o_count_item_nbs o_colored_item d-flex justify-content-center align-items-center rounded p-2"/>
+                        <span class="o_count_item_label small"/>
+                    </span>
+                </span>
+                <span t-if="metric_last == false" class="o_count_separator align-items-center">:</span>
+            </t>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_inline_text_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_text o_count_inline_text">
+        <p>
+            <i class="fa fa-clock-o"/> Sale ends in
+            <span class="o_not_editable oe_unremovable" contenteditable="false">
+                <t t-foreach="metrics" t-as="metric">
+                    <span class="o_count_item">
+                        <span class="o_count_item_nbs o_colored_text d-inline-flex fw-bold"/>
+                        <span class="o_count_item_label o_colored_text fw-bold"/>
+                    </span>
+                </t>
+            </span>
+        </p>
+    </div>
+</template>
+
+<template id="s_countdown_inline_big_numbers_template" groups="base.group_user">
+    <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
+    <div class="o_template_big_numbers">
+        <div class="o_not_editable oe_unremovable d-inline-flex gap-1" contenteditable="false">
+            <t t-foreach="metrics" t-as="metric">
+                <span class="o_count_item d-flex gap-1">
+                    <span class="d-flex flex-column align-items-center">
+                        <span class="o_count_item_nbs o_colored_text fs-3 fw-bold"/>
+                        <span class="o_count_item_label small"/>
+                    </span>
+                </span>
+                <span t-if="metric_last == false" class="o_count_separator fs-3 fw-bold">:</span>
+            </t>
+        </div>
+    </div>
+</template>
+
+<template id="s_countdown_inline_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="countdownInlineTemplates" data-selector=".s_countdown_inline">
+            <we-select string="Template"
+                data-name="countdown_inline_template_opt"
+                data-attribute-name="countdownInlineTemplate"
+                data-attribute-default-value="default">
+                <we-button title="Default"
+                    data-name="template_default_opt"
+                    data-select-template="website.s_countdown_inline_default_template"
+                    data-select-data-attribute="default"
+                    >Default </we-button>
+                <we-button title="Dominoes"
+                    data-name="template_dominoes_opt"
+                    data-select-template="website.s_countdown_inline_dominoes_template"
+                    data-select-data-attribute="dominoes"
+                >Dominoes</we-button>
+                <we-button title="Wrapped Numbers"
+                    data-name="template_wrapped_numbers_opt"
+                    data-select-template="website.s_countdown_inline_wrapped_numbers_template"
+                    data-select-data-attribute="wrapped_numbers"
+                >Wrapped Numbers</we-button>
+                <we-button title="Text"
+                    data-name="template_text_opt"
+                    data-select-template="website.s_countdown_inline_text_template"
+                    data-select-data-attribute="text"
+                >Text</we-button>
+                <we-button title="Big Numbers"
+                    data-name="template_big_numbers_opt"
+                    data-select-template="website.s_countdown_inline_big_numbers_template"
+                    data-select-data-attribute="big_numbers"
+                >Big Numbers</we-button>
+            </we-select>
+            <we-input class="o_we_sublevel_1" string="Round Corners" data-apply-to=".o_count_item_nbs"
+                data-dependencies="template_wrapped_numbers_opt"
+                data-select-style="0" data-css-property="border-radius"
+                data-unit="px" data-extra-class="rounded"/>
+            <we-select string="Color">
+                <we-button data-select-class="o_countdown_default" data-name="color_default_opt">Default</we-button>
+                <we-button data-select-class="o_countdown_primary">Primary</we-button>
+                <we-button data-select-class="o_countdown_secondary">Secondary</we-button>
+                <we-button data-select-class="o_countdown_info">Info</we-button>
+                <we-button data-select-class="o_countdown_success">Success</we-button>
+                <we-button data-select-class="o_countdown_warning">Warning</we-button>
+                <we-button data-select-class="o_countdown_danger">Danger</we-button>
+                <we-button data-select-class="o_countdown_light">Light</we-button>
+                <we-button data-select-class="o_countdown_dark">Dark</we-button>
+            </we-select>
+            <we-checkbox
+                string="Subtle colors"
+                class="o_we_sublevel_1"
+                data-name="subtle_colors_opt"
+                data-select-class="o_countdown_subtle"
+                data-dependencies="template_default_opt, template_dominoes_opt, template_wrapped_numbers_opt, template_boxes_opt"
+                />
+            <we-select string="Label">
+                <we-button data-select-class="">Default</we-button>
+                <we-button data-select-class="o_label_compact">Compact</we-button>
+                <we-button data-select-class="o_label_none">None</we-button>
+            </we-select>
+            <we-button-group string="Alignment" data-apply-to=".s_countdown_inline_wrapper">
+                <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class=""/>
+                <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="align-self-center text-center"/>
+                <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="align-self-end text-end"/>
+            </we-button-group>
+            <we-checkbox string="Font Monospace" name="font_monospace_opt" data-select-class="o_count_monospace" data-dependencies="template_dominoes_opt, template_wrapped_numbers_opt, template_big_numbers_opt"/>
+        </div>
+        <div data-js="countdownInline" data-selector=".s_countdown_inline">
+            <we-datetimepicker string="Due Date" data-select-data-attribute="0" data-attribute-name="endTime"/>
+            <we-row>
+                <we-select string="At The End" data-no-preview="true">
+                    <we-button data-end-action="nothing" data-name="no_end_action_opt">Nothing</we-button>
+                    <we-button data-end-action="redirect" data-name="redirect_end_action_opt">Redirect</we-button>
+                    <we-button data-end-action="message_no_countdown" data-name="message_no_countdown_opt">Show Message and hide countdown</we-button>
+                    <we-button data-end-action="message" data-name="message_opt">Show Message and keep countdown</we-button>
+                </we-select>
+                <we-button class="toggle-edit-message" title="The message will be visible once the countdown ends" data-dependencies="message_no_countdown_opt, message_opt">
+                    <i class="fa fa-fw fa-eye"/>
+                </we-button>
+            </we-row>
+            <we-urlpicker string="URL" data-dependencies="redirect_end_action_opt" data-select-data-attribute="" placeholder="e.g. /my-awesome-page" data-attribute-name="redirectUrl"/>
+            <we-select string="Display" data-attribute-name="display">
+                <we-button data-select-data-attribute="d">D</we-button>
+                <we-button data-select-data-attribute="dhm">D - H - M</we-button>
+                <we-button data-select-data-attribute="dhms">D - H - M - S</we-button>
+            </we-select>
+            <hr/>
+        </div>
+        <t t-call="website.snippet_options_background_options">
+            <t t-set="selector" t-valuef=".s_countdown_inline"/>
+            <t t-set="target" t-valuef=".s_countdown_inline_wrapper"/>
+            <t t-set="with_colors" t-value="True"/>
+            <t t-set="with_images" t-value="False"/>
+            <t t-set="with_color_combinations" t-value="True"/>
+            <t t-set="with_gradients" t-value="True"/>
+        </t>
+        <div data-selector=".s_countdown_inline">
+            <we-range string="Edge Spacing" data-apply-to=".s_countdown_inline_wrapper" data-select-style="" data-display-range-value="true" data-display-range-value-unit="px" data-unit="px" data-css-property="padding" data-min="0"
+            data-step="1" data-max="200"/>
+            <t t-call="website.snippet_options_border_widgets">
+                <t t-set="apply_to" t-valuef=".s_countdown_inline_wrapper"/>
+            </t>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_countdown_inline_000_scss" model="ir.asset">
+    <field name="name">Countdown Inline 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_countdown_inline/000.scss</field>
+</record>
+
+<record id="website.s_countdown_inline_000_xml" model="ir.asset">
+    <field name="name">Countdown Inline 000 XML</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_countdown_inline/000.xml</field>
+</record>
+
+</odoo>
