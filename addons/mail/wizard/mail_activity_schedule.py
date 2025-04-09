@@ -4,6 +4,7 @@ import logging
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
+from odoo.addons.mail.models.mail_message import _find_allowed_doc_ids
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -132,6 +133,23 @@ class MailActivitySchedule(models.TransientModel):
             warnings = set()
             if scheduler.res_model:
                 applied_on = scheduler._get_applied_on_records()
+                if applied_on:
+                    doc_ids = {res_id: [res_id] for res_id in applied_on.ids}
+                    allowed_ids = _find_allowed_doc_ids(
+                        self.env, {applied_on._name: doc_ids}, 'create',
+                    )
+                    if allowed_ids != set(doc_ids):
+                        errors.add(self.env._(
+                            "Can't schedule activities on the selected records.",
+                        ))
+                    elif (
+                        scheduler.activity_user_id
+                        and scheduler.activity_user_id != self.env.user
+                        and not applied_on.has_access('write')
+                    ):
+                        errors.add(self.env._(
+                            "Can't assign activities to others without write access.",
+                        ))
                 if applied_on and ('company_id' in scheduler.env[applied_on._name]._fields and
                                 len(applied_on.mapped('company_id')) > 1):
                     errors.add(_('The records must belong to the same company.'))

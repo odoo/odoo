@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, tools
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import Form, RecordCapturer, tagged, users
 
 
@@ -229,6 +229,39 @@ class TestActivitySchedule(ActivityScheduleCase):
         scheduler = scheduler.save()
         with self.assertRaises(ValidationError):
             scheduler.activity_user_id = False
+
+    @users('employee')
+    def test_activity_schedule_readonly_record(self):
+        """ Without write access, users cannot assign other users, and can only
+        schedule on documents where read access is enough to create activities. """
+        record_readonly = self.env['mail.test.access.custo'].sudo().create({'name': 'Readonly', 'is_readonly': True})
+        form = self._instantiate_activity_schedule_wizard(record_readonly)
+        form.activity_user_id = self.user_admin
+        self.assertTrue(form.has_error)
+        self.assertIn("Can't assign activities to others without write access.", form.error)
+
+        form.activity_user_id = self.env.user
+        self.assertFalse(form.has_error)
+        with self._mock_activities():
+            form.save().action_schedule_activities()
+        self.assertActivityValues(self._new_activities, {
+            'res_id': record_readonly.id,
+            'res_model': 'mail.test.access.custo',
+            'user_id': self.user_employee,
+        })
+
+        self.env['ir.access'].sudo().create({
+            'name': 'Read-only test record',
+            'model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'operation': 'u',
+            'domain': f"[('id', '!=', {self.test_records[0].id})]",
+        })
+        form = self._instantiate_activity_schedule_wizard(self.test_records[0])
+        form.activity_user_id = self.env.user
+        self.assertTrue(form.has_error)
+        self.assertIn("Can't schedule activities on the selected records.", form.error)
+        with self.assertRaises(AccessError):
+            form.save().action_schedule_activities()
 
     def test_plan_copy(self):
         """Test plan copy"""
