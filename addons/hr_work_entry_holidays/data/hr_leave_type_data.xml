@@ -198,4 +198,17 @@
     <record id="hr_holidays.l10n_sk_leave_type_maternity" model="hr.leave.type">
         <field name="work_entry_type_id" ref="hr_work_entry.l10n_sk_work_entry_type_maternity"/>
     </record>
+
+<!-- Eg: Egypt -->
+    <record id="hr_holidays.l10n_eg_leave_type_paid_sick_time_off" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_eg_work_entry_type_paid_sick_leave" />
+    </record>
+
+    <record id="hr_holidays.l10n_eg_leave_type_sick_leave_75" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_eg_work_entry_type_sick_leave_75" />
+    </record>
+
+    <record id="hr_holidays.l10n_eg_leave_type_sick_leave_unpaid" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_eg_work_entry_type_sick_leave_unpaid" />
+    </record>
 </odoo>
