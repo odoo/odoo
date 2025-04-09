@@ -1,8 +1,13 @@
 import { getWebSocketWorker } from "@bus/../tests/mock_websocket";
 import { describe, expect, test } from "@odoo/hoot";
 import { runAllTimers } from "@odoo/hoot-dom";
-import { mockWebSocket } from "@odoo/hoot-mock";
-import { asyncStep, patchWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    makeMockServer,
+    MockServer,
+    patchWithCleanup,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 
@@ -13,6 +18,7 @@ describe.current.tags("headless");
  * @param {(type: string, message: any) => any} [onBroadcast]
  */
 const startWebSocketWorker = async (onBroadcast) => {
+    await makeMockServer();
     const worker = getWebSocketWorker();
     if (onBroadcast) {
         patchWithCleanup(worker, {
@@ -62,8 +68,6 @@ test("reconnecting/reconnect event is broadcasted", async () => {
 });
 
 test("notification event is broadcasted", async () => {
-    let serverWS;
-    mockWebSocket((ws) => (serverWS = ws));
     const notifications = [
         {
             id: 70,
@@ -84,7 +88,9 @@ test("notification event is broadcasted", async () => {
         }
     });
     await waitForSteps(["broadcast connect"]);
-    serverWS.send(JSON.stringify(notifications));
+    for (const serverWs of MockServer.current.websockets) {
+        serverWs.send(JSON.stringify(notifications));
+    }
     await waitForSteps(["broadcast notification"]);
 });
 
