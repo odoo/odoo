@@ -121,7 +121,7 @@ def generate_diff(output_dir: str):
             
             try:
                 git = which('git')
-                diff_command = [git, "diff", "--unified=5", base_version]
+                diff_command = [git, "diff", "--unified=0", "--merge-base",base_version]
 
                 with open(diff_file_path, 'w') as f:
                     f.write(f"{repo}\n")  # Write repo path as first line

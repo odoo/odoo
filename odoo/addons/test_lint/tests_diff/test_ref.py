@@ -1,6 +1,6 @@
 import ast
-import typing
 import logging
+import os
 from collections import defaultdict
 from typing import Collection
 
@@ -210,7 +210,9 @@ class TestRef(DiffCase):
         """Check for env.ref calls without raise_if_not_found=False"""
         issues = []
         for file_info in self.diff_linenos['python'].values():
-            if not file_info.module_name or file_info.module_name.startswith('test_'):
+            if not os.path.exists(file_info.abs_path):
+                continue
+            if not file_info.module_name or file_info.module_name.startswith('test_') or file_info.module_path.startswith('tests/'):
                 continue
             file_issues = check_ref_for_python_file(file_info.abs_path, file_info.diff_linenos, self.protected_xml_ids)
             if file_issues:
@@ -241,12 +243,17 @@ class TestRef(DiffCase):
         issues: dict[str, list[tuple[str, int, int]]] = defaultdict(list)
         for module_name, file_infos in module_files.items():
             manifest = get_manifest(module_name)
+            if not manifest:
+                continue
             data_files = set(manifest['data'])
             demo_files = set(manifest['demo'])
             for file_info in file_infos:
                 if file_info.module_path in demo_files:
                     continue
                 init = file_info.module_path in data_files
+                # assert file exist
+                if not os.path.exists(file_info.abs_path):
+                    continue
                 for element in self.get_xml_diff_elements(file_info.abs_path):
                     if issue := check_ref_for_data_xml_element(element, file_info, init, self.protected_xml_ids):
                         issues[issue[0]].append((file_info.abs_path, *issue[1:]))

@@ -36,7 +36,7 @@ if __name__ == '__main__':
         modules = args.test_modules.split(',')
         mdoules = [m.strip() for m in modules]
         for m in mdoules:
-            module = f'odoo.addons.{m}.tests'
+            module = f'odoo.addons.{m}.tests_diff'
             importlib.import_module(module)
 
         from odoo.tests.diffcase import DiffCase
