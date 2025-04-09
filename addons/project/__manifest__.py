@@ -81,6 +81,10 @@
             ('remove', 'project/static/src/views/project_task_analysis_graph/**'),
             ('remove', 'project/static/src/views/project_task_analysis_pivot/**'),
             ('remove', 'project/static/src/views/burndown_chart/**'),
+            ('remove', 'project/static/src/**/*.dark.scss'),
+        ],
+        "web.assets_web_dark": [
+            'project/static/src/**/*.dark.scss',
         ],
         'web.assets_backend_lazy': [
             'project/static/src/views/project_task_analysis_renderer_mixin.js',
