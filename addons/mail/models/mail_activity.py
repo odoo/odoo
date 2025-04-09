@@ -171,11 +171,13 @@ class MailActivity(models.Model):
         else:
             return 'planned'
 
-    @api.depends('res_model', 'res_id', 'user_id')
+    @api.depends('res_model')
     def _compute_can_write(self):
-        valid_records = self._filtered_access('write')
+        """Set can_write if the user has write access to the target record's model."""
         for record in self:
-            record.can_write = record in valid_records
+            record.can_write = False
+            if record.res_model:
+                record.can_write = self.env[record.res_model].has_access('write')
 
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
