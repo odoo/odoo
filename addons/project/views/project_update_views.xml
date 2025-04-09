@@ -61,37 +61,37 @@
         <field name="name">project.update.view.kanban</field>
         <field name="model">project.update</field>
         <field name="arch" type="xml">
-            <kanban highlight_color="color" sample="1" js_class="project_update_kanban">
+            <kanban highlight_color="color" sample="0" js_class="project_update_kanban">
                 <field name="color"/>
                 <templates>
-                    <t t-name="card" class="flex-row align-items-center">
-                        <!-- Project Update Kanban View is always ungrouped - see js_class -->
-                        <div class="pb-0 mb-2 mr8 o_pupdate_kanban_width">
+                    <t t-name="card" class="o_project_update_card column-gap-0 column-gap-md-3 row-gap-2 flex-row flex-wrap align-items-center px-3">
+                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
                             <field name="name_cropped" class="fw-bolder"/>
                             <div class="d-flex gap-1">
                                 <field name="user_id" widget="many2one_avatar_user"/>
                                 <field name="user_id"/>
                             </div>
                         </div>
-                        <div class="mr8 text-sm-start o_pupdate_kanban_width">
+                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
+                            <span>Status</span>
                             <field name="color" invisible="1"/>
                             <field name="status" class="fw-bolder" readonly="1" widget="status_with_color"/>
                         </div>
-                        <div class="mr8 o_pupdate_kanban_width">
+                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
+                            <span>Progress</span>
                             <field name="progress_percentage" class="fw-bolder" widget="percentage"/>
-                            <div>Progress</div>
                         </div>
-                        <div class="mr8 o_pupdate_kanban_width">
-                            <b id="tasks_stats">
+                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
+                            <div id="tasks_stats" class="fw-bolder">
                                 <span invisible="not task_count">
                                     <field name="closed_task_count"/> / <field name="task_count"/> <field name="label_tasks"/> (<field name="closed_task_percentage"/>%)
                                 </span>
                                 <span invisible="task_count">0 <field name="label_tasks"/></span>
-                            </b>
+                            </div>
                         </div>
-                        <div class="mr8 o_pupdate_kanban_width">
-                            <field name="date" class="fw-bolder"/>
+                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
                             <div>Date</div>
+                            <field name="date" class="fw-bolder"/>
                         </div>
                     </t>
                 </templates>
