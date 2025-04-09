@@ -141,6 +141,15 @@ class SurveyQuestion(models.Model):
         ('validation_datetime', 'CHECK (validation_min_datetime <= validation_max_datetime)','Max datetime cannot be smaller than min datetime!')
     ]
 
+    @api.constrains('constr_mandatory', 'question_type', 'labels_ids')
+    def _check_multiple_choice_question_answer(self):
+        if (
+            self.question_type in ['simple_choice', 'multiple_choice'] 
+            and self.constr_mandatory
+            and not self.labels_ids
+        ):
+            raise ValidationError(_("A suggested answer should be provided for mandatory multiple choice question."))
+
     @api.onchange('validation_email')
     def _onchange_validation_email(self):
         if self.validation_email:
