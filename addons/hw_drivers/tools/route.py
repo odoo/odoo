@@ -4,6 +4,7 @@ import logging
 from odoo.addons.iot_base.tools.payload_signature import verify_hmac_signature
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.http import request
+from odoo import http
 from werkzeug.exceptions import Forbidden
 
 _logger = logging.getLogger(__name__)
@@ -30,3 +31,17 @@ def protect(endpoint):
 
         return endpoint(*args, **kwargs)
     return protect_wrapper
+
+
+def iot_route(route=None, **kwargs):
+    """A wrapper for the http.route function that sets useful defaults for IoT:
+      - `auth = 'none'`
+      - `save_session = False`
+
+    Both auth and sessions are useless on IoT since we have no DB and no users.
+    """
+    if 'auth' not in kwargs:
+        kwargs['auth'] = 'none'
+    if 'save_session' not in kwargs:
+        kwargs['save_session'] = False
+    return http.route(route, **kwargs)

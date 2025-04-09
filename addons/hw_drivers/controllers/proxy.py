@@ -2,19 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
+from odoo.addons.hw_drivers.tools import route
 
 proxy_drivers = {}
 
 class ProxyController(http.Controller):
-    @http.route('/hw_proxy/hello', type='http', auth='none', cors='*')
+    @route.iot_route('/hw_proxy/hello', type='http', cors='*')
     def hello(self):
         return "ping"
 
-    @http.route('/hw_proxy/handshake', type='jsonrpc', auth='none', cors='*')
+    @route.iot_route('/hw_proxy/handshake', type='jsonrpc', cors='*')
     def handshake(self):
         return True
 
-    @http.route('/hw_proxy/status_json', type='jsonrpc', auth='none', cors='*')
+    @route.iot_route('/hw_proxy/status_json', type='jsonrpc', cors='*')
     def status_json(self):
         statuses = {}
         for driver in proxy_drivers:
