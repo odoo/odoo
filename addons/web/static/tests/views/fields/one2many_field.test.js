@@ -11501,7 +11501,7 @@ test("open a one2many record with optional open record displayed", async () => {
             expect.step(`${model}.${method}`);
         }
     });
-    serverState.debug = true;
+    serverState.debug = "1";
     const rec = Partner._records.find(({ id }) => id === 2);
     rec.p = [1];
 

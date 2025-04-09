@@ -40,7 +40,7 @@ test("displays the loading indicator in non debug mode", async () => {
 });
 
 test("displays the loading indicator for one rpc in debug mode", async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountWithCleanup(LoadingIndicator, { noMainContainer: true });
     expect(".o_loading_indicator").toHaveCount(0, {
         message: "the loading indicator should not be displayed",
@@ -63,7 +63,7 @@ test("displays the loading indicator for one rpc in debug mode", async () => {
 });
 
 test("displays the loading indicator for multi rpc in debug mode", async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountWithCleanup(LoadingIndicator, { noMainContainer: true });
     expect(".o_loading_indicator").toHaveCount(0, {
         message: "the loading indicator should not be displayed",
