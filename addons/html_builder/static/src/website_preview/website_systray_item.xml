@@ -3,6 +3,7 @@
 
 <t t-name="html_builder.WebsiteSystrayItem">
     <div class="d-flex">
+        <PublishSystrayItem t-if="this.canPublish"/>
         <NewContentSystrayItem onNewPage="props.onNewPage"/>
         <EditWebsiteSystrayItem t-props="this.editWebsiteSystrayItemProps"/>
     </div>
