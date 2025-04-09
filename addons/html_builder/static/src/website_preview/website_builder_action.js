@@ -16,6 +16,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { _t } from "@web/core/l10n/translation";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
+import { Deferred } from "@web/core/utils/concurrency";
 
 export class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
@@ -67,6 +68,7 @@ export class WebsiteBuilder extends Component {
             }
         });
         this.setIframeLoaded();
+        this.publicRootReady = new Deferred();
         this.addSystrayItems();
         onWillDestroy(() => {
             this.websiteService.useMysterious = false;
@@ -120,6 +122,7 @@ export class WebsiteBuilder extends Component {
     async onEditPage() {
         document.querySelector(".o_main_navbar").setAttribute("style", "margin-top: -100%;");
         await this.iframeLoaded;
+        await this.publicRootReady;
         await this.loadAssetsEditBundle();
 
         setTimeout(() => {
@@ -148,6 +151,7 @@ export class WebsiteBuilder extends Component {
         if (this.translation) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
+        this.resolvePublicRootReady();
         this.resolveIframeLoaded();
     }
 
@@ -197,6 +201,7 @@ export class WebsiteBuilder extends Component {
     async reloadIframe(isEditing = true, url) {
         this.ui.block();
         this.setIframeLoaded();
+        this.resolvePublicRootReady();
         if (url) {
             this.websiteContent.el.contentWindow.location = url;
         } else {
@@ -204,19 +209,24 @@ export class WebsiteBuilder extends Component {
         }
         await this.iframeLoaded;
         if (isEditing) {
-            await new Promise((resolve) => {
-                this.websiteContent.el.contentWindow.addEventListener(
-                    "PUBLIC-ROOT-READY",
-                    (event) => {
-                        this.websiteContent.el.setAttribute("is-ready", "true");
-                        resolve();
-                    },
-                    { once: true }
-                );
-            });
+            await this.publicRootReady;
             await this.loadAssetsEditBundle();
         }
         this.ui.unblock();
+    }
+
+    resolvePublicRootReady() {
+        new Promise((resolve) => {
+            this.websiteContent.el.contentWindow.addEventListener(
+                "PUBLIC-ROOT-READY",
+                (event) => {
+                    this.websiteContent.el.setAttribute("is-ready", "true");
+                    resolve();
+                    this.publicRootReady.resolve();
+                },
+                { once: true }
+            );
+        });
     }
 
     setIframeLoaded() {
