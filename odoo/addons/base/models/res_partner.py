@@ -190,15 +190,11 @@ class ResPartner(models.Model):
 
     @api.model
     def default_get(self, default_fields):
-        """Add the company of the parent as default if we are creating a child partner.
-        Also take the parent lang by default if any, otherwise, fallback to default DB lang."""
+        """Add the company of the parent as default if we are creating a child partner. """
         values = super().default_get(default_fields)
-        parent = self.env["res.partner"]
         if 'parent_id' in default_fields and values.get('parent_id'):
             parent = self.browse(values.get('parent_id'))
             values['company_id'] = parent.company_id.id
-        if 'lang' in default_fields:
-            values['lang'] = values.get('lang') or parent.lang or self.env.lang
         # protection for `default_type` values leaking from menu action context (e.g. for crm's email)
         if 'type' in default_fields and values.get('type'):
             if values['type'] not in self._fields['type'].get_values(self.env):
@@ -212,6 +208,7 @@ class ResPartner(models.Model):
     child_ids: ResPartner = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
+                            compute='_compute_lang', readonly=False, store=True,
                             help="All the emails and documents sent to this contact will be translated in this language.")
     active_lang_count = fields.Integer(compute='_compute_active_lang_count')
     tz = fields.Selection(_tzs, string='Timezone', default=lambda self: self._context.get('tz'),
@@ -365,6 +362,13 @@ class ResPartner(models.Model):
         for partner in self:
             partner.complete_name = partner.with_context({})._get_complete_name()
 
+    @api.depends('parent_id')
+    def _compute_lang(self):
+        """ While creating / updating child contact, take the parent lang by
+        default if any. 0therwise, fallback to default context / DB lang """
+        for partner in self.filtered('parent_id'):
+            partner.lang = partner.parent_id.lang or self.default_get(['lang'])['lang'] or self.env.lang
+
     @api.depends('lang')
     def _compute_active_lang_count(self):
         lang_count = len(self.env['res.lang'].get_installed())
@@ -501,23 +505,13 @@ class ResPartner(models.Model):
                              'was never correctly set. If an existing contact starts working for a new '
                              'company then a new contact should be created under that new '
                              'company. You can use the "Discard" button to abandon this change.')}
-        if partner.type == 'contact' or self.type == 'contact':
+        if (partner.type or self.type) == 'contact':
             # for contacts: copy the parent address, if set (aka, at least one
             # value is set in the address: otherwise, keep the one from the
             # contact)
-            address_fields = self._address_fields()
-            if any(self.parent_id[key] for key in address_fields):
-                def convert(value):
-                    return value.id if isinstance(value, models.BaseModel) else value
-                result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
+            if address_values := self.parent_id._get_address_values():
+                result['value'] = address_values
         return result
-
-    @api.onchange('parent_id')
-    def _onchange_parent_id_for_lang(self):
-        # While creating / updating child contact, take the parent lang by default if any
-        # otherwise, fallback to default context / DB lang
-        if self.parent_id:
-            self.lang = self.parent_id.lang or self.env.context.get('default_lang') or self.env.lang
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
@@ -586,20 +580,11 @@ class ResPartner(models.Model):
             if partner.barcode and self.env['res.partner'].search_count([('barcode', '=', partner.barcode)]) > 1:
                 raise ValidationError(_('Another partner already has this barcode'))
 
-    def _update_fields_values(self, fields):
-        """ Returns dict of write() values for synchronizing ``fields`` """
-        values = {}
-        for fname in fields:
-            field = self._fields[fname]
-            if field.type == 'many2one':
-                values[fname] = self[fname].id
-            elif field.type == 'one2many':
-                raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
-            elif field.type == 'many2many':
-                values[fname] = [Command.set(self[fname].ids)]
-            else:
-                values[fname] = self[fname]
-        return values
+    def _convert_fields_to_values(self, field_names):
+        """ Returns dict of write() values for synchronizing ``field_names`` """
+        if any(self._fields[fname].type == 'one2many' for fname in field_names):
+            raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
+        return self._convert_to_write({fname: self[fname] for fname in field_names})
 
     @api.model
     def _address_fields(self):
@@ -611,10 +596,21 @@ class ResPartner(models.Model):
         """Returns the list of address fields usable to format addresses."""
         return self._address_fields()
 
-    def update_address(self, vals):
+    def _get_address_values(self):
+        """ Get address values from parent if at least one value is set. Otherwise
+        it is considered empty and nothing is returned. """
+        address_fields = self._address_fields()
+        if any(self[key] for key in address_fields):
+            return self._convert_fields_to_values(self._address_fields())
+        return {}
+
+    def _update_address(self, vals):
+        """ Filter values from vals that are liked to address definition, and
+        update recordset using super().write to avoid loops and side effects
+        due to synchronization of address fields through partner hierarchy. """
         addr_vals = {key: vals[key] for key in self._address_fields() if key in vals}
         if addr_vals:
-            return super().write(addr_vals)
+            super().write(addr_vals)
 
     @api.model
     def _commercial_fields(self):
@@ -637,12 +633,14 @@ class ResPartner(models.Model):
         as if they were related fields """
         commercial_partner = self.commercial_partner_id
         if commercial_partner != self:
-            sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
+            sync_vals = commercial_partner._convert_fields_to_values(self._commercial_fields())
             self.write(sync_vals)
             self._company_dependent_commercial_sync()
-            self._commercial_sync_to_children()
+            self._commercial_sync_to_descendants()
 
     def _company_dependent_commercial_sync(self):
+        """ Propagate sync of company dependant commercial fields to other
+        commpanies. """
         if not (fields_to_sync := self._company_dependent_commercial_fields()):
             return
 
@@ -651,20 +649,19 @@ class ResPartner(models.Model):
                 continue  # already handled by _commercial_sync_from_company
             self_in_company = self.with_company(company_sudo)
             self_in_company.write(
-                self_in_company.commercial_partner_id._update_fields_values(fields_to_sync)
+                self_in_company.commercial_partner_id._convert_fields_to_values(fields_to_sync)
             )
 
-    def _commercial_sync_to_children(self, fields_to_sync=None):
+    def _commercial_sync_to_descendants(self, fields_to_sync=None):
         """ Handle sync of commercial fields to descendants """
         commercial_partner = self.commercial_partner_id
         if fields_to_sync is None:
             fields_to_sync = self._commercial_fields()
-        sync_vals = commercial_partner._update_fields_values(fields_to_sync)
+        sync_vals = commercial_partner._convert_fields_to_values(fields_to_sync)
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
-            child._commercial_sync_to_children(fields_to_sync)
-        res = sync_children.write(sync_vals)
-        return res
+            child._commercial_sync_to_descendants(fields_to_sync)
+        sync_children.write(sync_vals)
 
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children after create/update,
@@ -676,8 +673,8 @@ class ResPartner(models.Model):
                 self.sudo()._commercial_sync_from_company()
             # 1b. Address fields: sync if parent or use_parent changed *and* both are now set
             if self.parent_id and self.type == 'contact':
-                onchange_vals = self.onchange_parent_id().get('value', {})
-                self.update_address(onchange_vals)
+                if address_values := self.parent_id._get_address_values():
+                    self._update_address(address_values)
 
         # 2. To DOWNSTREAM: sync children
         self._children_sync(values)
@@ -688,12 +685,12 @@ class ResPartner(models.Model):
         # 2a. Commercial Fields: sync if commercial entity
         if self.commercial_partner_id == self:
             fields_to_sync = values.keys() & self._commercial_fields()
-            self.sudo()._commercial_sync_to_children(fields_to_sync)
+            self.sudo()._commercial_sync_to_descendants(fields_to_sync)
         # 2b. Address fields: sync if address changed
         address_fields = self._address_fields()
         if any(field in values for field in address_fields):
             contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
-            contacts.update_address(values)
+            contacts._update_address(values)
 
     def _handle_first_contact_creation(self):
         """ On creation of first contact for a company (or root) that has no address, assume contact address
@@ -706,8 +703,8 @@ class ResPartner(models.Model):
             and not any(parent[f] for f in address_fields)
             and len(parent.child_ids) == 1
         ):
-            addr_vals = self._update_fields_values(address_fields)
-            parent.update_address(addr_vals)
+            addr_vals = self._convert_fields_to_values(address_fields)
+            parent._update_address(addr_vals)
 
     def _clean_website(self, website):
         url = urls.url_parse(website)
@@ -787,15 +784,17 @@ class ResPartner(models.Model):
             if vals.get('parent_id'):
                 vals['company_name'] = False
         partners = super().create(vals_list)
+        # due to ir.default, compute is not called as there is a default value
+        # hence calling the compute manually
+        for partner, values in zip(partners, vals_list):
+            if 'lang' not in values and partner.parent_id:
+                partner._compute_lang()
 
         if self.env.context.get('_partners_skip_fields_sync'):
             return partners
 
         for partner, vals in zip(partners, vals_list):
             partner._fields_sync(vals)
-            # Lang: propagate from parent if no value was given
-            if 'lang' not in vals and partner.parent_id:
-                partner._onchange_parent_id_for_lang()
             partner._handle_first_contact_creation()
         return partners
 
@@ -836,7 +835,7 @@ class ResPartner(models.Model):
             to_write = {}
             # commercial fields from commercial partner
             if cp_id:
-                to_write = self.browse(cp_id)._update_fields_values(self._commercial_fields())
+                to_write = self.browse(cp_id)._convert_fields_to_values(self._commercial_fields())
             # address fields from parent
             if add_id:
                 parent = self.browse(add_id)
@@ -858,7 +857,7 @@ class ResPartner(models.Model):
         if self.company_name:
             # Create parent company
             values = dict(name=self.company_name, is_company=True, vat=self.vat)
-            values.update(self._update_fields_values(self._address_fields()))
+            values.update(self._convert_fields_to_values(self._address_fields()))
             new_company = self.create(values)
             # Set new company as my parent
             self.write({
