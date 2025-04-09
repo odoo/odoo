@@ -1036,12 +1036,14 @@ class AccountMove(models.Model):
 
         return move
 
-    def _l10n_it_edi_search_partner(self, company, vat, codice_fiscale, email):
-        for domain in [vat and [('vat', 'ilike', vat)],
+    def _l10n_it_edi_search_partner(self, company, vat, codice_fiscale, email, destination_code=None):
+        base_domain = self.env['res.partner']._check_company_domain(company)
+        for domain in [vat and destination_code
+                           and [('vat', 'ilike', vat), ('l10n_it_pa_index', 'ilike', destination_code)],
+                       vat and [('vat', 'ilike', vat)],
                        codice_fiscale and [('l10n_it_codice_fiscale', 'in', ('IT' + codice_fiscale, codice_fiscale))],
                        email and ['|', ('email', '=', email), ('l10n_it_pec_email', '=', email)]]:
-            if domain and (partner := self.env['res.partner'].search(
-                    domain + self.env['res.partner']._check_company_domain(company), limit=1)):
+            if domain and (partner := self.env['res.partner'].search(domain + base_domain, limit=1)):
                 return partner
         return self.env['res.partner']
 
@@ -1157,7 +1159,8 @@ class AccountMove(models.Model):
             vat = get_text(tree, partner_info['vat_xpath'])
             codice_fiscale = get_text(tree, partner_info['codice_fiscale_xpath'])
             email = get_text(tree, '//DatiTrasmissione//Email') if partner_info['role'] == 'seller' else ''
-            if partner := self._l10n_it_edi_search_partner(company, vat, codice_fiscale, email):
+            destination_code = get_text(tree, "//CodiceDestinatario") if partner_info['role'] == 'buyer' else ''
+            if partner := self._l10n_it_edi_search_partner(company, vat, codice_fiscale, email, destination_code):
                 self.partner_id = partner
             else:
                 message = Markup("<br/>").join((
