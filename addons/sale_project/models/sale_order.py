@@ -300,6 +300,7 @@ class SaleOrder(models.Model):
             if not service_sol and not self.env.context.get('from_embedded_action'):
                 raise UserError(_('The Sales Order must contain at least one service product.'))
             if project and not project.sale_line_id:
+                created_records.with_context(disable_project_task_generation=True).action_confirm()
                 project.sale_line_id = service_sol
                 if not project.reinvoiced_sale_order_id:
                     project.reinvoiced_sale_order_id = service_sol.order_id
