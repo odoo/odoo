@@ -360,8 +360,6 @@ test("Forecast drag&drop and add column", async () => {
         "read_progress_bar",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         // drag&drop
         "web_save",
         "read_progress_bar",
@@ -369,7 +367,5 @@ test("Forecast drag&drop and add column", async () => {
         // add column
         "read_progress_bar",
         "web_read_group",
-        "web_search_read",
-        "web_search_read",
     ]);
 });
