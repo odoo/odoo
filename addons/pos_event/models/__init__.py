@@ -3,6 +3,7 @@ from . import pos_config
 from . import event_ticket
 from . import pos_session
 from . import event_event
+from . import event_slot
 from . import pos_order
 from . import pos_order_line
 from . import event_registration

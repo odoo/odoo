@@ -18,4 +18,5 @@ class EventEventTicket(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'event_id', 'seats_used', 'seats_available', 'price', 'product_id', 'seats_max', 'start_sale_datetime', 'end_sale_datetime']
+        return ['id', 'name', 'event_id', 'seats_used', 'seats_available', 'price', 'product_id', 'seats_max',
+                'start_sale_datetime', 'end_sale_datetime', 'slot_ticket_ids', 'slot_id', 'parent_ticket_id']

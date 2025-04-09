@@ -4,6 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import { EventConfiguratorPopup } from "@pos_event/app/components/popup/event_configurator_popup/event_configurator_popup";
 import { _t } from "@web/core/l10n/translation";
 import { EventRegistrationPopup } from "../../components/popup/event_registration_popup/event_registration_popup";
+import { EventSlotSelectionPopup } from "../../components/popup/event_slot_selection_popup/event_slot_selection_popup";
 
 patch(ProductScreen.prototype, {
     get products() {
@@ -37,7 +38,10 @@ patch(ProductScreen.prototype, {
         }
 
         const event = product.event_id;
-        const tickets = event.event_ticket_ids.filter(
+        const effective_tickets = event.is_multi_slots
+            ? event.no_slot_ticket_ids
+            : event.event_ticket_ids;
+        const tickets = effective_tickets.filter(
             (ticket) => ticket.product_id && ticket.product_id.service_tracking === "event"
         );
 
@@ -47,6 +51,34 @@ patch(ProductScreen.prototype, {
 
         if (!ticketResult || !ticketResult.length) {
             return;
+        }
+
+        if (event.is_multi_slots) {
+            const slotId = await makeAwaitable(this.dialog, EventSlotSelectionPopup, {
+                event: event,
+            });
+            if (!slotId) {
+                return;
+            }
+            // Replace tickets by their related slot tickets
+            const ticketIds = ticketResult.map((r) => r.ticket_id.id);
+            const parentToSlotTicketMapping = {};
+            this.pos.models["event.event.ticket"]
+                .filter(
+                    (ticket) =>
+                        ticket.slot_id?.id == slotId &&
+                        ticket.parent_ticket_id &&
+                        ticketIds.includes(ticket.parent_ticket_id.id)
+                )
+                .forEach((slotTicket) => {
+                    parentToSlotTicketMapping[slotTicket.parent_ticket_id.id] = slotTicket;
+                });
+            ticketResult.forEach((res) => {
+                const ticketId = res.ticket_id.id;
+                if (ticketId in parentToSlotTicketMapping) {
+                    res.ticket_id = parentToSlotTicketMapping[ticketId];
+                }
+            });
         }
 
         const result = await makeAwaitable(this.dialog, EventRegistrationPopup, {

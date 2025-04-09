@@ -8,7 +8,8 @@ class PosSession(models.Model):
     @api.model
     def _load_pos_data_models(self, config_id):
         models = super()._load_pos_data_models(config_id)
-        models += ['event.event.ticket', 'event.event', 'event.registration', 'event.question', 'event.question.answer', 'event.registration.answer']
+        models += ['event.event.ticket', 'event.event', 'event.slot', 'event.registration',
+                   'event.question', 'event.question.answer', 'event.registration.answer']
         return models
 
     @api.model
