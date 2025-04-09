@@ -1838,65 +1838,6 @@
         </xpath>
     </template>
 
-    <template id="product_share_buttons" inherit_id="website_sale.product" active="True" name="Share Buttons" priority="22">
-        <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
-            <div
-                data-snippet="s_share"
-                data-name="Share"
-                class="s_share text-start o_no_link_popover"
-            >
-                <h4 class="s_share_title d-none">Share</h4>
-                <a
-                    href="https://www.facebook.com/sharer/sharer.php?u={url}"
-                    target="_blank"
-                    aria-label="Facebook"
-                    class="s_share_facebook"
-                >
-                    <i class="fa fa-facebook rounded shadow-sm"/>
-                </a>
-                <a
-                    href="https://twitter.com/intent/tweet?text={title}&amp;url={url}"
-                    target="_blank"
-                    aria-label="X"
-                    class="s_share_twitter"
-                >
-                    <i class="fa fa-twitter rounded shadow-sm"/>
-                </a>
-                <a
-                    href="https://www.linkedin.com/sharing/share-offsite/?url={url}"
-                    target="_blank"
-                    aria-label="LinkedIn"
-                    class="s_share_linkedin"
-                >
-                    <i class="fa fa-linkedin rounded shadow-sm"/>
-                </a>
-                <a
-                    href="https://wa.me/?text={title}"
-                    target="_blank"
-                    aria-label="WhatsApp"
-                    class="s_share_whatsapp"
-                >
-                    <i class="fa fa-whatsapp rounded shadow-sm"/>
-                </a>
-                <a
-                    href="https://pinterest.com/pin/create/button/?url={url}&amp;media={media}&amp;description={title}"
-                    target="_blank"
-                    aria-label="Pinterest"
-                    class="s_share_pinterest"
-                >
-                    <i class="fa fa-pinterest rounded shadow-sm"/>
-                </a>
-                <a
-                    href="mailto:?body={url}&amp;subject={title}"
-                    aria-label="Email"
-                    class="s_share_email"
-                >
-                    <i class="fa fa-envelope rounded shadow-sm"/>
-                </a>
-            </div>
-        </xpath>
-    </template>
-
     <!-- Product options: Zoom -->
     <template inherit_id='website_sale.product' id="product_picture_magnify_hover" name="Automatic Image Zoom">
         <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
