@@ -353,7 +353,7 @@ export function insertSnippet(snippet, position = "bottom") {
         trigger: ".o_website_preview :iframe .odoo-editor-editable",
         noPrepend: true,
     }];
-    const snippetIDSelector = snippet.id ? `[data-snippet="${snippet.id}"]` : `[data-snippet^="${snippet.customID}_"]`;
+    const snippetIDSelector = snippet.id ? `[data-snippet="${snippet.id}"]` : `[data-snippet^="${snippet.customID}"]`;
     if (snippet.groupName) {
         insertSnippetSteps.push({
             content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
