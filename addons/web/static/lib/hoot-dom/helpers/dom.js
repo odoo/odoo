@@ -56,6 +56,7 @@ import { waitUntil } from "./time";
  * @typedef {{
  *  displayed?: boolean;
  *  exact?: number;
+ *  interactive?: boolean;
  *  root?: HTMLElement;
  *  viewPort?: boolean;
  *  visible?: boolean;
@@ -295,6 +296,11 @@ const isDocument = (object) => object?.nodeType === Node.DOCUMENT_NODE;
  * @returns {T extends Element ? true: false}
  */
 const isElement = (object) => object?.nodeType === Node.ELEMENT_NODE;
+
+/**
+ * @param {Node} node
+ */
+const isNodeInteractive = (node) => getStyle(node).pointerEvents !== "none";
 
 /**
  * @param {Node} node
@@ -760,6 +766,11 @@ customPseudoClasses
             return doc && doc.readyState !== "loading" ? doc : false;
         };
     })
+    .set("interactive", () => {
+        return function interactive(node) {
+            return isNodeInteractive(node);
+        };
+    })
     .set("last", () => {
         return function last(node, i, nodes) {
             return i === nodes.length - 1;
@@ -927,6 +938,21 @@ export function getNodeText(node, options) {
         content = content.replace(R_LINEBREAK, " ");
     }
     return content;
+}
+
+/**
+ * @param {Node} node
+ * @returns {Node | null}
+ */
+export function getInteractiveNode(node) {
+    let currentEl = ensureElement(node);
+    if (!currentEl) {
+        return null;
+    }
+    while (currentEl && !isNodeInteractive(currentEl)) {
+        currentEl = currentEl.parentElement;
+    }
+    return currentEl;
 }
 
 /**
@@ -1521,6 +1547,7 @@ export function observe(target, callback) {
  *  DOM siblings);
  * - `:focusable`: matches nodes that can be focused (see {@link isFocusable});
  * - `:hidden`: matches nodes that are **not** "visible" (see {@link isVisible});
+ * - `:interactive`: matches nodes that are not affected by 'pointer-events: none'
  * - `:iframe`: matches nodes that are `<iframe>` elements, and returns their `body`
  *  if it is ready;
  * - `:last`: matches the last node matching the selector (regardless of its actual
@@ -1576,7 +1603,7 @@ export function queryAll(target, options) {
         return queryAll(String.raw(...arguments));
     }
 
-    const { exact, displayed, root, viewPort, visible } = options || {};
+    const { exact, displayed, interactive, root, viewPort, visible } = options || {};
 
     /** @type {Node[]} */
     let nodes = [];
@@ -1600,33 +1627,49 @@ export function queryAll(target, options) {
         }
     }
 
-    /** @type {string} */
-    let prefix, suffix;
+    /** @type {string[]} */
+    const prefix = [];
+    /** @type {string[]} */
+    const suffix = [];
     if (visible + displayed > 1) {
         throw new HootDomError(
             `cannot use more than one visibility modifier ('visible' implies 'displayed')`
         );
     }
+
     if (viewPort) {
         nodes = nodes.filter(isNodeInViewPort);
-        suffix = "in viewport";
-    } else if (visible) {
-        nodes = nodes.filter(isNodeVisible);
-        prefix = "visible";
-    } else if (displayed) {
+        suffix.push("in viewport");
+    }
+    if (displayed) {
         nodes = nodes.filter(isNodeDisplayed);
-        prefix = "displayed";
+        prefix.push("displayed");
+    }
+    if (interactive) {
+        nodes = nodes.filter(isNodeInteractive);
+        prefix.push("interactive");
+    }
+    if (visible) {
+        nodes = nodes.filter(isNodeVisible);
+        prefix.push("visible");
     }
 
     const count = nodes.length;
     if ($isInteger(exact) && count !== exact) {
+        const message = ["found", String(count)];
         const s = count === 1 ? "" : "s";
-        const strPrefix = prefix ? `${prefix} ` : "";
-        const strSuffix = suffix ? ` ${suffix}` : "";
-        const strSelector = typeof target === "string" ? `(selector: "${target}")` : "";
-        throw new HootDomError(
-            `found ${count} ${strPrefix}node${s}${strSuffix} instead of ${exact} ${strSelector}`
-        );
+        if (prefix.length) {
+            message.push(prefix.join(" and "));
+        }
+        message.push(`node${s}`);
+        if (suffix.length) {
+            message.push(suffix.join(" and "));
+        }
+        message.push("instead of", String(exact));
+        if (typeof target === "string") {
+            message.push(`(selector: "${target}")`);
+        }
+        throw new HootDomError(message.join(" "));
     }
 
     return nodes;
