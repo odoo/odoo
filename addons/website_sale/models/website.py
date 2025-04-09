@@ -1,19 +1,27 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import json
+import logging
+
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
 from odoo import SUPERUSER_ID, api, fields, models
+from odoo.exceptions import AccessError
+
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import ormcache
+from odoo.tools import file_open, ormcache
 from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.website_sale import const
 
 
+logger = logging.getLogger(__name__)
 _lt = LazyTranslate(__name__)
+
 
 CART_SESSION_CACHE_KEY = 'sale_order_id'
 FISCAL_POSITION_SESSION_CACHE_KEY = 'fiscal_position_id'
@@ -278,6 +286,89 @@ class Website(models.Model):
         if views_to_enable:
             get_views(views_to_enable).active = True
 
+        return res
+
+    def configurator_addons_apply(self, industry_name=None, **kwargs):
+        """Override of `website` to generate eCommerce categories for a given industry using AI."""
+
+        def generate_categories(industry_name_):
+            lang = self.env.context.get('lang')
+            prompt = (
+                f"You are a seasoned Marketing Expert specializing in crafting high-converting eCommerce experiences.\n"
+                f"Your task is to develop compelling category names and descriptions for a {industry_name_}'s new online store.\n"
+                f"The goal is to create categories that are persuasive, attention-grabbing, and concise, encouraging visitors to explore the offerings.\n"
+                f"All content should be in {lang}.\n"
+                f"Here's the format you will use to generate the categories:\n"
+                f'{{"categories": ['
+                f'{{"name": "$category_name_1", "description": "$category_description_1"}}, '
+                f'{{"name": "$category_name_2", "description": "$category_description_2"}}, '
+                f'{{"name": "$category_name_3", "description": "$category_description_3"}}, '
+                f'{{"name": "$category_name_4", "description": "$category_description_4"}}, '
+                f'{{"name": "$category_name_5", "description": "$category_description_5"}}, '
+                f'{{"name": "$category_name_6", "description": "$category_description_6"}}, '
+                f'{{"name": "$category_name_7", "description": "$category_description_7"}}, '
+                f'{{"name": "$category_name_8", "description": "$category_description_8"}}'
+                f']}}\n'
+                f"Constraints:\n"
+                f"Language: {lang}\n"
+                f"Category Names: Must be nouns only (no adjectives).\n"
+                f"Description Length: Keep descriptions very short and to the point (ideally under 20 words).\n"
+                f"Persuasion: Descriptions should be persuasive and designed to attract attention.\n"
+                f"Number of Categories: Exactly 8 categories are required.\n"
+                f"Now, generate the 8 eCommerce categories for the {industry_name_}, adhering to the specified format and constraints."
+            )
+            IrConfigParameterSudo = self.env['ir.config_parameter'].sudo()
+            database_id = IrConfigParameterSudo.get_param('database.uuid')
+            try:
+                response = self._OLG_api_rpc('/api/olg/1/chat', {
+                    'prompt': prompt,
+                    'conversation_history': [],
+                    'database_id': database_id,
+                })
+            except AccessError:
+                logger.warning("API is unreachable for the category generation")
+            if not response:
+                logger.warning("API response is empty for the categories generation")
+                return None
+
+            if response['status'] == 'success':
+                content = response['content'].replace('```json\n', '').replace('\n```', '')
+                try:
+                    return json.loads(content)
+                except json.JSONDecodeError:
+                    logger.warning("API response is not a valid JSON for the category generation")
+            elif response['status'] == 'error_prompt_too_long':
+                logger.warning("Prompt is too long for the category generation")
+            elif response['status'] == 'limit_call_reached':
+                logger.warning("Limit call reached for the category generation")
+            else:
+                logger.warning("Response could not be generated for the category generation")
+            return None
+
+        res = super().configurator_addons_apply(industry_name=industry_name, **kwargs)
+
+        if self.env['product.public.category'].search_count([], limit=1):
+            logger.info("Categories already exist, skipping AI generation.")
+            return
+
+        category_specs = generate_categories(industry_name)
+        if not isinstance(category_specs, dict):
+            return
+
+        if len(category_specs.get('categories')) == 8:
+            images_names = [f'shape_mixed_{i}.png' for i in range(1, 9)]
+            categories = []
+            for idx, cat in enumerate(category_specs['categories']):
+                image_name = images_names[idx]
+                img_path = 'website_sale/static/src/img/categories/' + image_name
+                with file_open(img_path, 'rb') as file:
+                    image_base64 = base64.b64encode(file.read())
+                categories.append({
+                    'name': cat['name'],
+                    'website_description': cat['description'],
+                    'image_1920': image_base64,
+                })
+            self.env['product.public.category'].sudo().create(categories)
         return res
 
     # This method is cached, must not return records! See also #8795
