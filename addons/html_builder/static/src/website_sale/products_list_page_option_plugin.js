@@ -24,7 +24,7 @@ class ProductsListPageOptionPlugin extends Plugin {
     getActions() {
         return {
             setPpg: {
-                isReload: true,
+                reload: {},
                 getValue: ({ editingElement }) => parseInt(editingElement.dataset.ppg),
                 apply: ({ value }) => {
                     const PPG_LIMIT = 10000;
@@ -37,7 +37,7 @@ class ProductsListPageOptionPlugin extends Plugin {
                 },
             },
             setPpr: {
-                isReload: true,
+                reload: {},
                 isApplied: ({ editingElement, value }) =>
                     parseInt(editingElement.dataset.ppr) === value,
                 apply: ({ value }) => {
@@ -46,14 +46,14 @@ class ProductsListPageOptionPlugin extends Plugin {
                 },
             },
             setGap: {
-                isReload: true,
+                reload: {},
                 apply: ({ value }) => {
                     const gap = parseInt(value);
                     return rpc("/shop/config/website", { shop_gap: gap });
                 },
             },
             setDefaultSort: {
-                isReload: true,
+                reload: {},
                 isApplied: ({ editingElement, value }) =>
                     editingElement.dataset.defaultSort === value,
                 apply: ({ value }) => rpc("/shop/config/website", { shop_default_sort: value }),

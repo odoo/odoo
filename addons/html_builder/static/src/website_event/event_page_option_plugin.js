@@ -35,8 +35,9 @@ class EventPageOption extends Plugin {
     getActions() {
         return {
             displaySubMenu: {
-                isReload: true,
-                getReloadUrl: () => this.eventData["website_url"],
+                reload: {
+                    getReloadUrl: () => this.eventData["website_url"],
+                },
                 prepare: async () => this.loadEventData(),
                 apply: async () => {
                     await this.toggleWebsiteMenu("true");

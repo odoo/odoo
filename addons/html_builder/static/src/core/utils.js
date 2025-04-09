@@ -374,20 +374,16 @@ function usePrepareAction(getAllActions) {
 function useReloadAction(getAllActions) {
     const env = useEnv();
     const getAction = env.editor.shared.builderActions.getAction;
-    let hasReloadAction = false;
-    let getReloadUrl;
-    let getReloadSelector;
+    let reload = false;
     for (const descr of getAllActions()) {
         if (descr.actionId) {
             const action = getAction(descr.actionId);
-            if (action.isReload) {
-                hasReloadAction = true;
-                getReloadUrl = action.getReloadUrl;
-                getReloadSelector = action.getReloadSelector;
+            if (action.reload) {
+                reload = action.reload;
             }
         }
     }
-    return { hasReloadAction, getReloadUrl, getReloadSelector };
+    return { reload };
 }
 
 export function useClickableBuilderComponent() {
@@ -397,21 +393,21 @@ export function useClickableBuilderComponent() {
     const getAction = comp.env.editor.shared.builderActions.getAction;
 
     const onReady = usePrepareAction(getAllActions);
-    const { hasReloadAction, getReloadUrl, getReloadSelector } = useReloadAction(getAllActions);
+    const { reload } = useReloadAction(getAllActions);
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
 
     const hasPreview =
-        !hasReloadAction &&
+        !reload &&
         (comp.props.preview === true ||
             (comp.props.preview === undefined && comp.env.weContext.preview !== false));
-    const operationWithReload = useOperationWithReload(callApply, getReloadUrl, getReloadSelector);
+    const operationWithReload = useOperationWithReload(callApply, reload);
 
     const operation = {
         commit: () => {
-            if (hasReloadAction) {
+            if (reload) {
                 callOperation(operationWithReload);
             } else {
                 callOperation(applyOperation.commit);
@@ -520,14 +516,14 @@ export function useClickableBuilderComponent() {
         onReady,
     };
 }
-function useOperationWithReload(callApply, getReloadUrl, getReloadSelector) {
+function useOperationWithReload(callApply, reload) {
     const env = useEnv();
     return async (...args) => {
         const { editingElement } = args[0][0];
         await Promise.all([callApply(...args), env.editor.shared.savePlugin.save()]);
         let target = getReloadTarget(editingElement);
-        const url = getReloadUrl?.();
-        const selector = getReloadSelector?.();
+        const url = reload.getReloadUrl?.();
+        const selector = reload.getReloadSelector?.();
         if (selector && editingElement.closest(selector)) {
             target = selector;
         }
@@ -546,7 +542,7 @@ export function useInputBuilderComponent({
     const state = useDomState(getState);
 
     const onReady = usePrepareAction(getAllActions);
-    const { hasReloadAction, getReloadUrl, getReloadSelector } = useReloadAction(getAllActions);
+    const { reload } = useReloadAction(getAllActions);
 
     async function callApply(applySpecs) {
         const proms = [];
@@ -565,7 +561,7 @@ export function useInputBuilderComponent({
     }
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
-    const operationWithReload = useOperationWithReload(callApply, getReloadUrl, getReloadSelector);
+    const operationWithReload = useOperationWithReload(callApply, reload);
     function getState(editingElement) {
         if (!editingElement || !editingElement.isConnected) {
             // TODO try to remove it. We need to move hook in BuilderComponent
@@ -586,7 +582,7 @@ export function useInputBuilderComponent({
             userInputValue ||= formatRawValue(defaultValue);
         }
         const rawValue = parseDisplayValue(userInputValue);
-        if (hasReloadAction) {
+        if (reload) {
             callOperation(operationWithReload, { userInputValue: rawValue });
         } else {
             callOperation(applyOperation.commit, { userInputValue: rawValue });

@@ -15,8 +15,9 @@ class ProductAttributeOptionPlugin extends Plugin {
     getActions() {
         return {
             productAttributeDisplay: {
-                isReload: true,
-                getReloadSelector: () => "#product_detail .o_wsale_product_attribute",
+                reload: {
+                    getReloadSelector: () => "#product_detail .o_wsale_product_attribute",
+                },
                 isApplied: ({ editingElement: el, value }) =>
                     value === this.getProductAttributeDisplay(el),
                 getValue: ({ editingElement: el }) => this.getProductAttributeDisplay(el),
