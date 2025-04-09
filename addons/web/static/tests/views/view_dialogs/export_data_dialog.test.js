@@ -322,7 +322,7 @@ test("Export dialog: interacting with export templates", async () => {
 });
 
 test("Export dialog: interacting with export templates in debug", async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
     onRpc("/web/export/get_fields", () => [...fetchedFields.root]);
@@ -976,7 +976,7 @@ test("Export dialog: expand subfields after search", async () => {
 });
 
 test("Export dialog: search in debug", async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
     onRpc("/web/export/get_fields", async (request) => {
