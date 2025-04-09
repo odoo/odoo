@@ -95,8 +95,16 @@ export class EventConfiguratorPopup extends Component {
     ticketIsAvailable(ticket) {
         const dateTimeNow = DateTime.now();
         const bookedTicket = this.getOrderAlreadyBooked(ticket) + this.state[ticket.id].qty;
-        const eventAvailable =
-            !ticket.event_id?.seats_limited || bookedTicket <= ticket.event_id.seats_available;
+        let seatsAvailable = ticket.event_id.seats_available;
+        if (ticket.event_id?.is_multi_slots) {
+            // Filtered using the model pos domain (= no future slots)
+            const futureSlotTickets = ticket.slot_ticket_ids
+                .map((st) => st.slot_id?.id)
+                .filter((id) => id);
+            seatsAvailable = Math.max(...futureSlotTickets.map((st) => st.seats_available));
+        }
+        const eventOrSlotAvailable =
+            !ticket.event_id?.seats_limited || bookedTicket <= seatsAvailable;
 
         const eventSaleEnd =
             !ticket.end_sale_datetime ||
@@ -109,10 +117,10 @@ export class EventConfiguratorPopup extends Component {
             return false;
         }
 
-        if (ticket.seats_max === 0 && eventAvailable) {
+        if (ticket.seats_max === 0 && eventOrSlotAvailable) {
             return true;
         }
 
-        return ticket.seats_available >= bookedTicket && eventAvailable;
+        return ticket.seats_available >= bookedTicket && eventOrSlotAvailable;
     }
 }
