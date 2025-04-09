@@ -5,40 +5,40 @@ import subprocess
 
 from collections import defaultdict
 from lxml import etree
-from typing import Generator, Literal
+from typing import Any, Generator
 
 from unidiff import PatchSet, PatchedFile
 
 import odoo.addons
 
 from .common import BaseCase
-from odoo.tests import tagged
-from odoo.tools import OrderedSet, config, lazy_property
+from odoo.tools import OrderedSet, config, lazy_classproperty, lazy_property
 from odoo.tools.which import which
 
 _logger = logging.getLogger(__name__)
 
 
 class DiffFile:
-    root_path = os.path.abspath(config.root_path)
-    addons_paths = [
-        os.path.normpath(os.path.normcase(addons_path)) + os.sep
-        for addons_path in odoo.addons.__path__
-    ]
+
+    @lazy_classproperty
+    def addons_paths(cls) -> list[str]:
+        return [
+            os.path.normpath(os.path.normcase(addons_path)) + os.sep
+            for addons_path in odoo.addons.__path__
+        ]
 
     def __init__(self, repo_path: str, patched_file: PatchedFile):
-        abs_path = os.path.join(repo_path, patched_file.path)
 
-        self.abs_path = abs_path  # /Users/username/project/odoo/odoo/addons/base/models/res_partner.py
+        self.path = os.path.join(repo_path, patched_file.path)  # /Users/username/project/odoo/odoo/addons/base/models/res_partner.py
         """ absolute path of the file """
 
-        self.odoo_path: str = self.parse_odoo_path(self.abs_path)  # base/models/res_partner.py
+        self.path_to_addons: str = self.extract_path_to_addons(self.path) or ''  # base/models/res_partner.py
         """ relative path of the file to one of the odoo addons path """
 
-        self.module_name: str = self.odoo_path.split(os.sep)[0]  # base
+        self.module_name: str = self.path_to_addons.split(os.sep)[0]  # base
         """ module name of the file """
 
-        self.module_path: str = self.odoo_path[len(self.module_name) + len(os.sep):]  # models/res_partner.py
+        self.path_to_module: str = self.path_to_addons[len(self.module_name) + len(os.sep):]  # models/res_partner.py
         """ relative path of the file to the odoo module's path """
 
         self.patched_file: PatchedFile = patched_file
@@ -58,13 +58,13 @@ class DiffFile:
         return diff_linenos
 
     @classmethod
-    def parse_odoo_path(cls, abs_path: str) -> str:
-        """ parse the odoo path from the given absolute path """
+    def extract_path_to_addons(cls, abs_path: str) -> str | None:
+        """ extract the relative path of the file to its odoo addons path """
         for addons_path in cls.addons_paths:
             if abs_path.startswith(addons_path) and len(abs_path) > len(addons_path):
                 odoo_path = abs_path[len(addons_path):].strip(os.sep)
                 return odoo_path
-        return ''
+        return None
     
     def is_lineno_in_diff(self, start_lineno: int, end_lineno: int = 0) -> bool:
         """ check if the given lines [start_lineno, end_lineno] inclusively are in the diff """
@@ -78,8 +78,8 @@ class Element:
 
     def __init__(self, element: etree._Element):
         self._element = element
-    
-    def __getattr__(self, name: str):
+
+    def __getattr__(self, name: str) -> Any:
         if name in self.__slots__:
             return getattr(self, name)
         return getattr(self._element, name)
@@ -174,8 +174,8 @@ def generate_diff(output_dir: str):
 class DiffCase(BaseCase):
     test_tags = {'no_install', 'standard'}
 
-    diff_files: dict[Literal['python', 'xml'], dict[str, DiffFile]] | None = None
-    """ {file_category: {abs_path: file_info}} """    
+    diff_files: dict[str, dict[str, DiffFile]] = defaultdict(dict)
+    """ {file_extension: {abs_path: file_info}} """
 
     diff_dir: str | None = None
     """ Path to a directory containing .txt diff files """
@@ -186,7 +186,7 @@ class DiffCase(BaseCase):
     def get_xml_diff_elements(cls, abs_path: str, diff_linenos: set[int] | None = None) -> Generator[Element, None, None]:
         assert abs_path.endswith('.xml')
         if diff_linenos is None:
-            file_info = cls.diff_files['xml'].get(abs_path)
+            file_info = cls.diff_files['.xml'].get(abs_path)
             if not file_info:
                 return
             diff_linenos = file_info.diff_linenos
@@ -219,17 +219,10 @@ class DiffCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        """Parse a custom diff file and initialize the diff_files dictionary
-        
-        :param diff_path: Path to a directory containing .txt diff files
-        
-        The expected format of each .txt file:
-        - First line: Repository path
-        - Remaining lines: Output of 'git diff --unified=0 base_version'
-        """
-        if cls.diff_files is not None:
+        """Parse a custom diff file and initialize the diff_files dictionary"""
+        if cls.diff_files:
             return
-        cls.diff_files = defaultdict(dict)
+        cls.diff_files['.py']
 
         if cls.diff_dir is None:
             raise ValueError("DiffCase.diff_dir is not set")
@@ -246,11 +239,6 @@ class DiffCase(BaseCase):
             try:
                 with open(file_path, 'r') as f:
                     repo_path = f.readline().strip()
-
-                    if not repo_path:
-                        _logger.warning(f"Empty diff file: {file_path}")
-                        continue
-
                     if not os.path.isdir(repo_path):
                         _logger.warning(f"Invalid repository path: {repo_path}")
                         continue
@@ -274,11 +262,9 @@ class DiffCase(BaseCase):
                                 if line.is_added and line.target_line_no:
                                     file_info.diff_linenos.add(line.target_line_no)
 
-                        # Store the file info based on file type
-                        if abs_path.endswith('.py'):
-                            cls.diff_files['python'][abs_path] = file_info
-                        elif abs_path.endswith('.xml'):
-                            cls.diff_files['xml'][abs_path] = file_info
+                        # Store the file info based on file extension
+                        ext = os.path.splitext(abs_path)[1].lower()
+                        cls.diff_files[ext][abs_path] = file_info
 
             except Exception as e:
                 _logger.error(f"Error processing diff file {file_path}: {e}")

@@ -93,7 +93,7 @@ class FileEnvRefVisitor(EvalRefVisitor):
 
 
 def check_ref_for_python_file(fileinfo: DiffFile, protected_xml_ids: Collection[str] = ()) -> list[tuple[int, int]]:
-    with open(fileinfo.abs_path, 'r') as f:
+    with open(fileinfo.path, 'r') as f:
         content = f.read()
     try:
         tree = ast.parse(content)
@@ -201,20 +201,20 @@ class TestRef(DiffCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # cls.protected_xml_ids = set()
-        cls.protected_xml_ids = _get_protected_xml_ids()
+        cls.protected_xml_ids = set()
+        # cls.protected_xml_ids = _get_protected_xml_ids()
 
     def test_env_ref_usage(self):
         """Check for env.ref calls without raise_if_not_found=False"""
         issues = []
-        for file_info in self.diff_files['python'].values():
-            if not os.path.exists(file_info.abs_path):
+        for file_info in self.diff_files['.py'].values():
+            if not os.path.exists(file_info.path):
                 continue
-            if not file_info.module_name or file_info.module_name.startswith('test_') or file_info.module_path.startswith('tests/'):
+            if not file_info.module_name or file_info.module_name.startswith('test_') or file_info.path_to_module.startswith('tests/'):
                 continue
             file_issues = check_ref_for_python_file(file_info, self.protected_xml_ids)
             if file_issues:
-                issues.extend((file_info.abs_path, *issue) for issue in file_issues)
+                issues.extend((file_info.path, *issue) for issue in file_issues)
 
         for issue in issues:
             self.report.append({
@@ -234,7 +234,7 @@ class TestRef(DiffCase):
     def test_data_xml_ref_usage(self):
         """Check for ref for other modules"""
         module_files: dict[str, list[DiffFile]] = defaultdict(list)
-        for file_info in self.diff_files['xml'].values():
+        for file_info in self.diff_files['.xml'].values():
             if file_info.module_name and file_info.module_name != 'base' and not file_info.module_name.startswith('test_'):
                 module_files[file_info.module_name].append(file_info)
 
@@ -246,15 +246,15 @@ class TestRef(DiffCase):
             data_files = set(manifest['data'])
             demo_files = set(manifest['demo'])
             for file_info in file_infos:
-                if file_info.module_path in demo_files:
+                if file_info.path_to_module in demo_files:
                     continue
-                init = file_info.module_path in data_files
+                init = file_info.path_to_module in data_files
                 # assert file exist
-                if not os.path.exists(file_info.abs_path):
+                if not os.path.exists(file_info.path):
                     continue
-                for element in self.get_xml_diff_elements(file_info.abs_path):
+                for element in self.get_xml_diff_elements(file_info.path):
                     if issue := check_ref_for_data_xml_element(element, file_info, init, self.protected_xml_ids):
-                        issues[issue[0]].append((file_info.abs_path, *issue[1:]))
+                        issues[issue[0]].append((file_info.path, *issue[1:]))
 
         for error_type, issues_ in issues.items():
             if error_type == 'id':
