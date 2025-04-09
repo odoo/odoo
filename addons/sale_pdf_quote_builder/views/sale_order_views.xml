@@ -8,11 +8,11 @@
         <field name="arch" type="xml">
             <!-- Needed by customContentKanbanLikeWidget to save selected documents on the product. -->
             <!-- Desktop view -->
-            <xpath expr="//field[@name='order_line']//list" position="inside">
+            <xpath expr="//field[@name='order_line']/list" position="inside">
                 <field name="product_document_ids" column_invisible="1"/>
             </xpath>
             <!-- Mobile view -->
-            <xpath expr="//field[@name='order_line']//kanban" position="inside">
+            <xpath expr="//field[@name='order_line']/kanban" position="inside">
                 <field name="product_document_ids" column_invisible="1"/>
             </xpath>
             <page name="optional_products" position="after">
