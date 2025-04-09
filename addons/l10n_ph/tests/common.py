@@ -51,7 +51,7 @@ class TestPhCommon(AccountTestInvoicingCommon):
             'property_account_position_id': cls.fiscal_pos_a.id,
             'property_account_receivable_id': cls.company_data['default_account_receivable'].copy().id,
             'property_account_payable_id': cls.company_data['default_account_payable'].copy().id,
-            'street': '11 Super Street',
+            'street': '10 Super Street',
             'city': 'Super City',
             'zip': '8888',
             'country_id': cls.env.ref('base.ph').id,

@@ -524,16 +524,14 @@ class TestPartnerAddressCompany(TransactionCase):
         for child in inv, deli, other:
             self.assertEqual(child.street, f'{child.name} Street', 'Should not be updated')
 
-        # UPSTREAM: child -> parent update: not done currently, consider contact is readonly
+        # UPSTREAM: child -> parent update: contact update company
         # ------------------------------------------------------------
         ct1.write(self.test_address_values_3)
-        for fname, fvalue in self.test_address_values_2_cmp.items():
-            self.assertEqual(self.test_parent[fname], fvalue)
-            self.assertEqual(ct2[fname], fvalue)
-            self.assertEqual(self.existing[fname], fvalue)
         for fname, fvalue in self.test_address_values_3_cmp.items():
+            self.assertEqual(self.test_parent[fname], fvalue)
             self.assertEqual(ct1[fname], fvalue)
             self.assertEqual(ct1_1[fname], fvalue)
+            self.assertEqual(ct2[fname], fvalue)
 
     @users('employee')
     def test_address_first_contact_sync(self):
@@ -681,6 +679,52 @@ class TestPartnerAddressCompany(TransactionCase):
         branch11.write({'type': 'contact'})
         self.assertEqual(leaf111.address_get([]),
                         {'contact': branch11.id}, 'Invalid address resolution, branch11 should now be contact')
+
+    @users('employee')
+    def test_address_parent_company_creation(self):
+        """ When creating parent company, it should be populated with information
+        coming from children when possible, and not erase child with void values
+        from parent. """
+        commercial_fields = self.env['res.partner']._commercial_fields()
+
+        # create your contact
+        individual = self.env['res.partner'].create({
+            'industry_id': self.test_industries[0].id,
+            'is_company': False,
+            'name': 'Individual',
+            'ref': 'REFINDIVIDUAL',
+            'vat': 'BEINDIVIDUAL',
+            **self.test_address_values,
+        })
+        self.assertFalse(individual.is_company)
+        self.assertEqual(individual.type, 'contact')
+        self.assertEqual(individual.ref, 'REFINDIVIDUAL')
+        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(individual[fname], fvalue)
+
+        # create a company through "quick create", which would have partial default
+        # values for some company values
+        company = self.env['res.partner'].create({
+            'is_company': True,
+            'name': 'Company',
+            'ref': 'COMPANYREF',
+        })
+        # set it as parent of individual
+        with patch.object(
+            self.env['res.partner'].__class__, '_commercial_fields',
+            lambda self: commercial_fields + ['ref'],
+        ):
+            individual.write({'parent_id': company})
+        self.assertFalse(company.industry_id, 'Industry is not considered for upstream')
+        self.assertEqual(company.ref, 'COMPANYREF', 'not updated from contact child')
+        self.assertFalse(company.vat, 'FIXME: did not take from contact child')
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(company[fname], fvalue, 'Void parent should have been updated when adding a contact with address')
+            self.assertEqual(individual[fname], fvalue, 'Setting parent with void address should not reset child')
+        self.assertFalse(individual.industry_id, 'FIXME: erased using parent void value')
+        self.assertEqual(individual.ref, 'COMPANYREF', 'downstream update')
+        self.assertFalse(individual.vat, 'FIXME: erased using parent void value')
 
     def test_commercial_partner_nullcompany(self):
         """ The commercial partner is the first/nearest ancestor-or-self which

@@ -20,7 +20,6 @@ modules.
     'data': [
         'security/ir.model.access.csv',
         'data/crm_lead_merge_template.xml',
-        'views/partner_views.xml',
         'views/sale_order_views.xml',
         'views/crm_lead_views.xml',
         'views/crm_team_views.xml',
