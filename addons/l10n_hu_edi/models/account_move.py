@@ -510,10 +510,18 @@ class AccountMove(models.Model):
         for i, invoice in enumerate(self, start=1):
             invoice.l10n_hu_edi_batch_upload_index = i
 
+        def get_operation_type(invoice):
+            operation_type = 'MODIFY'
+            if invoice._l10n_hu_get_chain_base() == invoice:
+                operation_type = 'CREATE'
+            elif invoice.amount_residual == 0:
+                operation_type = 'STORNO'
+            return operation_type
+
         invoice_operations = [
             {
                 'index': invoice.l10n_hu_edi_batch_upload_index,
-                'operation': 'CREATE' if invoice._l10n_hu_get_chain_base() == invoice else 'MODIFY',
+                'operation': get_operation_type(invoice),
                 'invoice_data': base64.b64decode(invoice.l10n_hu_edi_attachment),
             }
             for invoice in self
