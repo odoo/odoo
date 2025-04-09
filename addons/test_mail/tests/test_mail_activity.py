@@ -64,8 +64,10 @@ class TestActivityRights(TestActivityCommon):
         ]:
             with self.subTest(user=activity.user_id.name, creator=activity.create_uid.name):
                 # no document access -> based on create_uid / user_id
-                with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
+                with patch.object(MailTestActivity, '_filtered_access', autospec=True, side_effect=_employee_crash):
                     activity = activity.with_user(self.user_employee)
+                    record = self.test_record.with_user(self.user_employee)
+                    can_write = record in record._filtered_access('write')
                     self.assertEqual(activity.can_write, can_write)
                     if can_write:
                         activity.write({'summary': 'Caramba'})
@@ -185,6 +187,25 @@ class TestActivityRights(TestActivityCommon):
             )
             self.assertEqual(1, read_group_result[0]['__count'])
             self.assertEqual('Summary', read_group_result[0]['summary'])
+
+    def test_activity_can_write_depends_on_write_access(self):
+        """Test can_write is True only when user has write access on res_model/res_id"""
+        activity = self.test_record.with_user(self.user_admin).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_employee.id
+        )
+        activity = activity.with_user(self.user_employee)
+        record = self.test_record.with_user(self.user_employee)
+
+        # check can_write is False when user has no write access on res_model/res_id
+        with patch.object(MailTestActivity, '_filtered_access', return_value=record.browse([])):
+            activity._compute_can_write()
+            self.assertFalse(activity.can_write)
+
+        # check can_write is True when user has write access on res_model/res_id
+        with patch.object(MailTestActivity, '_filtered_access', return_value=record):
+            activity._compute_can_write()
+            self.assertTrue(activity.can_write)
 
 
 @tests.tagged('mail_activity')
