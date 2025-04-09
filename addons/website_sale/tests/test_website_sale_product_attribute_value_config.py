@@ -124,7 +124,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
             'auto_apply': True,
             'country_id': us_country.id,
         })
-        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0, 'fiscal_position_ids': fp})
+        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0, 'fiscal_position_ids': fp, 'alternative_tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)]})
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country

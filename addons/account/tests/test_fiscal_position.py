@@ -3,6 +3,7 @@
 
 from odoo.tests import common
 from odoo.exceptions import ValidationError
+from odoo import Command
 
 
 class TestFiscalPosition(common.TransactionCase):
@@ -263,6 +264,42 @@ class TestFiscalPosition(common.TransactionCase):
             self.env['account.fiscal.position']._get_fiscal_position(partner_us_no_vat, partner_us_no_vat),
             fp_eu_extra
         )
+
+    def test_map_inactive(self):
+        self.env.company.country_id = self.us
+        self.env['account.tax.group'].create(
+            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
+        )
+        fp = self.env['account.fiscal.position'].create({
+            'name': 'FP With Inactive Taxes',
+        })
+        src_tax = self.env['account.tax'].create({
+            'name': 'Source Tax',
+            'amount': 10,
+        })
+        dest_tax = self.env['account.tax'].create({
+            'name': 'Destination Tax',
+            'amount': 20,
+            'fiscal_position_ids': [Command.link(fp.id)],
+            'alternative_tax_ids': [Command.link(src_tax.id)],
+            'active': False,
+        })
+        self.assertEqual(fp.map_tax(src_tax), dest_tax)
+
+    def test_domestic_fp_map_self(self):
+        self.env.company.country_id = self.us
+        self.env['account.tax.group'].create(
+            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
+        )
+        fp = self.env['account.fiscal.position'].create({
+            'name': 'FP Self',
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'Source Dest Tax',
+            'amount': 10,
+            'fiscal_position_ids': [Command.link(fp.id)],
+        })
+        self.assertEqual(fp.map_tax(tax), tax)
 
     def test_fiscal_position_constraint(self):
         """

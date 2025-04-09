@@ -22,11 +22,11 @@ _logger = logging.getLogger(__name__)
 TEMPLATE_MODELS = (
     'account.group',
     'account.account',
+    'account.fiscal.position',
     'account.tax.group',
     'account.tax',
     'account.journal',
     'account.reconcile.model',
-    'account.fiscal.position',
 )
 
 TAX_TAG_DELIMITER = '||'
@@ -335,7 +335,6 @@ class AccountChartTemplate(models.AbstractModel):
                         skip_update.add((model_name, xmlid))
                         continue
                 elif model_name == 'account.tax':
-                    # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
                         if not force_create:
                             skip_update.add((model_name, xmlid))
@@ -358,8 +357,24 @@ class AccountChartTemplate(models.AbstractModel):
                             if rename_idx:
                                 tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
+                        fiscal_position_ids = values.get('fiscal_position_ids')
+                        alternative_tax_ids = values.get('alternative_tax_ids')
                         repartition_lines = values.get('repartition_line_ids')
                         values.clear()
+                        # taxes will always be (re)linked to fiscal positions (unless the fp doesn't exist and won't be created)
+                        if fiscal_position_ids:
+                            link_commands = [
+                                Command.link(xml_id)
+                                for xml_id in fiscal_position_ids.split(',') if force_create or xml_id in xmlid2fiscal_position
+                            ]
+                            if link_commands:
+                                values['fiscal_position_ids'] = link_commands
+                        # Only add tax mappings containing new taxes
+                        if alternative_tax_ids and (new_taxes := [xml_id for xml_id in alternative_tax_ids.split(',') if xml_id not in xmlid2tax]):
+                            values['alternative_tax_ids'] = [
+                                Command.link(alt_xml_id)
+                                for alt_xml_id in new_taxes
+                            ]
                         if repartition_lines:
                             values['repartition_line_ids'] = repartition_lines
                             for element in values.get('repartition_line_ids', []):

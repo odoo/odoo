@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
+from odoo import Command
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -58,6 +58,10 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         })
         fpos.write({
             'account_ids': [(6, 0, account_fpos.ids)],
+        })
+        cls.new_tax_17.write({
+            'fiscal_position_ids': [Command.link(fpos.id)],
+            'alternative_tax_ids': [Command.link(cls.taxes['tax7'].id)],
         })
         return fpos
 

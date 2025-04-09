@@ -44,7 +44,8 @@ class AccountFiscalPosition(models.Model):
         relation='account_fiscal_position_account_tax_rel',
         column1='account_fiscal_position_id',
         column2='account_tax_id',
-        string='Taxes'
+        string='Taxes',
+        context={'active_test': False},
     )
     tax_map = fields.Binary(compute='_compute_tax_map')
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
@@ -150,6 +151,10 @@ class AccountFiscalPosition(models.Model):
                     raise ValidationError(_("A fiscal position with a foreign VAT already exists in this region."))
 
     def map_tax(self, taxes):
+        if not self:
+            return taxes
+        if not self.tax_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
+            return self.env['account.tax']
         return self.env['account.tax'].browse(unique(
             tax_id
             for tax in taxes

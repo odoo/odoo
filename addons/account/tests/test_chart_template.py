@@ -52,10 +52,10 @@ def test_get_data(self, template_code):
             } for i in range(1, 9)
         },
         'account.tax': {
-            xmlid: _tax_vals(name, amount, 'account.account_tax_tag_1', fiscal_pos=position)
-            for name, xmlid, amount, position in [
-                ('Tax 1', 'test_tax_1_template', 15, False),
-                ('Tax 2', 'test_tax_2_template', 0, 'test_fiscal_position_template'),
+            xmlid: _tax_vals(name, amount, 'account.account_tax_tag_1', fiscal_pos=position, alt_taxes=alt)
+            for name, xmlid, amount, position, alt in [
+                ('Tax 1', 'test_tax_1_template', 15, False, False),
+                ('Tax 2', 'test_tax_2_template', 0, 'test_fiscal_position_template', 'test_tax_1_template'),
             ]
         },
         'account.group': {
@@ -108,7 +108,7 @@ def test_get_data(self, template_code):
     }
 
 
-def _tax_vals(name, amount, tax_tag_id=None, children_tax_xmlids=None, active=True, tax_scope="consu", fiscal_pos=False):
+def _tax_vals(name, amount, tax_tag_id=None, children_tax_xmlids=None, active=True, tax_scope="consu", fiscal_pos=False, alt_taxes=False):
     tag_command = [Command.set([tax_tag_id])] if tax_tag_id else None
     tax_vals = {
         'name': name,
@@ -117,7 +117,8 @@ def _tax_vals(name, amount, tax_tag_id=None, children_tax_xmlids=None, active=Tr
         'tax_group_id': 'tax_group_taxes',
         'active': active,
         'tax_scope': tax_scope,
-        'fiscal_position_ids': [Command.set(fiscal_pos)],
+        'fiscal_position_ids': fiscal_pos,
+        'alternative_tax_ids': alt_taxes,
     }
     if children_tax_xmlids:
         tax_vals.update({'children_tax_ids': [Command.set(children_tax_xmlids)]})
@@ -276,35 +277,32 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         def local_get_data(self, template_code):
             data = test_get_data(self, template_code)
             data['account.tax'].update({
-                xmlid: _tax_vals(name, amount, fiscal_pos=position)
-                for name, xmlid, amount, position in [
-                    ('Tax 1', 'test_tax_1_template', 15, False),
-                    ('Tax 3', 'test_tax_3_template', 16, False),
-                    ('Tax 4', 'test_tax_4_template', 17, 'test_later_fiscal_position_template'),
-                    ('Tax 5', 'test_tax_5_template', 10, 'test_later_fiscal_position_template')
+                xmlid: _tax_vals(name, amount, fiscal_pos=position, alt_taxes=alt)
+                for name, xmlid, amount, position, alt in [
+                    ('Tax 3', 'test_tax_3_template', 16, False, False),
+                    ('Tax 4', 'test_tax_4_template', 17, 'test_fiscal_position_template', 'test_tax_2_template'),
                 ]
             })
-            data['account.fiscal.position']['test_later_fiscal_position_template'] = {
-                'name': "Later Fiscal Position",
-            }
+            data['account.tax']['test_tax_1_template']['fiscal_position_ids'] = 'test_fiscal_position_template'
+            data['account.tax']['test_tax_1_template']['alternative_tax_ids'] = 'test_tax_3_template'
             return data
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
 
-        tax_1, tax_2, tax_3, tax_4, tax_5 = self.env['account.tax'].search([('company_id', '=', self.company.id)])
-        old_fp, later_fp = self.env['account.fiscal.position'].search([])
-        self.assertRecordValues(tax_1 | tax_2 | tax_3 | tax_4 | tax_5, [
-            {'name': 'Tax 1', 'fiscal_position_ids': False},
-            {'name': 'Tax 2', 'fiscal_position_ids': old_fp.id},
-            {'name': 'Tax 3', 'fiscal_position_ids': False},
-            {'name': 'Tax 4', 'fiscal_position_ids': later_fp.id},
-            {'name': 'Tax 5', 'fiscal_position_ids': later_fp.id},
+        tax_1, tax_2, tax_3, tax_4 = self.env['account.tax'].search([('company_id', '=', self.company.id)])
+        self.assertRecordValues(tax_1 | tax_2 | tax_3 | tax_4, [
+            {'name': 'Tax 1'},
+            {'name': 'Tax 2'},
+            {'name': 'Tax 3'},
+            {'name': 'Tax 4'},
         ])
 
-        self.assertEqual(old_fp.map_tax(tax_1 | tax_3), tax_2)
-        self.assertEqual(later_fp.map_tax(tax_1 | tax_3), tax_4)
-        self.assertEqual(later_fp.map_tax(tax_1 | tax_3), tax_5)
+        fiscal_position = self.env['account.fiscal.position'].search([])
+
+        self.assertEqual(fiscal_position.map_tax(tax_1), tax_2)
+        self.assertEqual(fiscal_position.map_tax(tax_2), tax_4)
+        self.assertEqual(fiscal_position.map_tax(tax_3), tax_1)
 
     def test_remove_fiscal_position_try_loading_force_create_false(self):
         """Test that removing a fiscal position and calling try_loading with force_create=False does not recreate it."""
@@ -377,6 +375,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             data = test_get_data(self, template_code)
             del data['account.tax']['test_tax_1_template']
             data['account.tax']['test_tax_3_template'] = _tax_vals('Tax 3', 30)
+            data['account.tax']['test_tax_2_template']['alternative_tax_ids'] = 'test_tax_3_template'
             data['res.company'][self.env.company.id]['account_sale_tax_id'] = 'test_tax_3_template'
             return data
 
@@ -488,15 +487,14 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
         # if taxes have been deleted, they will be recreated, and the fiscal position mapping for it too
         self.assertEqual(len(self.env['account.tax'].search([('company_id', '=', self.company.id)])), 2)
-        tax_1, tax_2 = self.env['account.tax'].search([])
-        self.assertEqual(fiscal_position.map_tax(tax_1), tax_2)
+        self.assertEqual(len(fiscal_position.tax_ids.alternative_tax_ids), 1)
 
-        tax_2.fiscal_position_id = False
+        fiscal_position.tax_ids.alternative_tax_ids = False
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
 
-        # if only the fiscal position of the tax is removed, it won't be recreated - is this the only way to remove a fiscal position mapping?
-        self.assertEqual(fiscal_position.map_tax(tax_1), tax_1)
+        # if only the fiscal position mapping has been removed, it won't be recreated
+        self.assertEqual(len(fiscal_position.tax_ids.alternative_tax_ids), 0)
 
     def test_update_taxes_conflict_name(self):
         def local_get_data(self, template_code):

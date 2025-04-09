@@ -63,7 +63,7 @@ class ResCompany(models.Model):
 
                 for domestic_tax in taxes:
                     tax_amount = EU_TAX_MAP.get((domestic_tax.country_id.code, domestic_tax.amount, destination_country.code), False)
-                    if tax_amount and domestic_tax not in fpos.tax_ids.tax_src_id:
+                    if tax_amount and domestic_tax not in fpos.tax_ids.alternative_tax_ids:
                         if not foreign_taxes.get(tax_amount, False):
                             oss_tax_group_local_xml_id = f"{company.id}_oss_tax_group_{str(tax_amount).replace('.', '_')}_{company.account_fiscal_country_id.code}"
                             if not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
@@ -94,8 +94,8 @@ class ResCompany(models.Model):
                                 'country_id': company.account_fiscal_country_id.id,
                                 'sequence': 1000,
                                 'company_id': company.id,
-                                'fiscal_position_ids': Command.link(fpos.id),
-                                'alternative_tax_ids': Command.link(domestic_tax.id),
+                                'fiscal_position_ids': [Command.link(fpos.id)],
+                                'alternative_tax_ids': [Command.link(domestic_tax.id)],
                             })
 
     def _get_repartition_lines_oss(self):
