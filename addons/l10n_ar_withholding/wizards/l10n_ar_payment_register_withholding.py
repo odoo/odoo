@@ -77,7 +77,7 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
         if self.tax_id.l10n_ar_tax_type in ['earnings', 'earnings_scale']:
             f = self.currency_id.format
             if net_amount <= 0:
-                ref = f"{f(self.base_amount)} + {f(same_period_base)} - {f(self.tax_id.l10n_ar_non_taxable_amount)} = {f(self.base_amount + same_period_base - self.tax_id.l10n_ar_non_taxable_amount)} (no corresponde aplicar)"
+                ref = f"{f(self.base_amount)} + {f(same_period_base)} - {f(self.tax_id.l10n_ar_non_taxable_amount)} = {f(self.base_amount + same_period_base - self.tax_id.l10n_ar_non_taxable_amount)} (it should not be applied)"
             # if it is earnings scale we calculate according to the scale.
             if self.tax_id.l10n_ar_tax_type == 'earnings_scale':
                 escala = self.env['l10n_ar.earnings.scale.line'].search([
@@ -100,7 +100,7 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
         l10n_ar_minimum_threshold = self.tax_id.l10n_ar_minimum_threshold
         if l10n_ar_minimum_threshold > tax_amount:
             tax_amount = 0.0
-        return tax_amount, tax_account_id, tax_repartition_line_id, '<li>%s: %s</li>' % (self.tax_id.name, ref) if ref else ''
+        return tax_amount, tax_account_id, tax_repartition_line_id, '<li title="formula de calculo: TODO">%s: %s</li>' % (self.tax_id.name, ref) if ref else ''
 
     @api.depends('base_amount', 'tax_id')
     def _compute_amount(self):

@@ -142,9 +142,10 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _init_payments(self, to_process, edit_mode=False):
         withholding_refs = None
-        if to_process and to_process[0].get('create_vals', {}).get('withholding_refs'):
+        if to_process and 'withholding_refs' in to_process[0].get('create_vals', {}):
             withholding_refs = to_process[0]['create_vals'].pop('withholding_refs')
         payments = super()._init_payments(to_process, edit_mode=edit_mode)
         if withholding_refs:
             payments.message_post(body=markupsafe.Markup(_('Withholding computation detail: <ul>%s</ul>') % withholding_refs))
         return payments
+
