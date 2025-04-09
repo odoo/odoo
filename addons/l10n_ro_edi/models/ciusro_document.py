@@ -1,9 +1,12 @@
 import io
+from datetime import datetime
 import requests
 import zipfile
 
 from lxml import etree
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
+from odoo.tools.safe_eval import json
 
 NS_UPLOAD = {"ns": "mfp:anaf:dgti:spv:respUploadFisier:v1"}
 NS_STATUS = {"ns": "mfp:anaf:dgti:efactura:stareMesajFactura:v1"}
@@ -17,7 +20,7 @@ def make_efactura_request(session, company, endpoint, method, params, data=None)
 
     :param session: ``requests`` or ``requests.Session()`` object
     :param company: ``res.company`` object containing l10n_ro_edi_test_env, l10n_ro_edi_access_token
-    :param endpoint: ``upload`` (for sending) | ``stareMesaj`` (for fetching status) | ``descarcare`` (for downloading answer)
+    :param endpoint: ``upload`` (for sending) | ``stareMesaj`` (for fetching status) | ``descarcare`` (for downloading answer) |``listaMesajeFactura`` (to obtain the latest messages from efactura)
     :param method: ``post`` (for `upload`) | ``get`` (for `stareMesaj` | `descarcare`)
     :param params: Dictionary of query parameters
     :param data: XML data for ``upload`` request
@@ -69,7 +72,7 @@ class L10n_Ro_EdiDocument(models.Model):
     attachment_id = fields.Many2one(comodel_name='ir.attachment')
     message = fields.Char()
     key_loading = fields.Char(string="E-Factura Index")  # To be used to fetch the status of previously sent XML
-    key_signature = fields.Char()    # Received from a successful response: to be saved for government purposes
+    key_signature = fields.Char()   # Received from a successful response: to be saved for government purposes
     key_certificate = fields.Char()  # Received from a successful response: to be saved for government purposes
 
     @api.model
@@ -141,7 +144,7 @@ class L10n_Ro_EdiDocument(models.Model):
             return {}
 
     @api.model
-    def _request_ciusro_download_answer(self, company, key_download, session, status=None):
+    def _request_ciusro_download_answer(self, company, key_download, session, file_to_dl='signature'):
         """
         This method makes a "Download Answer" (GET/descarcare) request to the Romanian SPV. It then processes the
         response by opening the received zip file and returns either:
@@ -152,8 +155,10 @@ class L10n_Ro_EdiDocument(models.Model):
         :param company: ``res.company`` object
         :param key_download: Content of `key_download` received from `_request_ciusro_send_invoice`
         :param session: ``requests.Session()`` object
-        :return: {'attachment_raw': <str>, 'key_signature': <str>, 'key_certificate': <str>, 'error': <str>}
-        """
+        :return: depending on file_to_dl:
+            error or default : {'attachment_raw': <str>, 'key_signature': <str>, 'key_certificate': <str>, 'error': <str>}
+            invoice : {'name': <str>, 'amount_total': <float>, 'due_date': <datetime>, 'raw': <str>}
+         """
         result = make_efactura_request(
             session=session,
             company=company,
@@ -166,15 +171,24 @@ class L10n_Ro_EdiDocument(models.Model):
 
         # E-Factura gives download response in ZIP format
         zip_ref = zipfile.ZipFile(io.BytesIO(result['content']))
-        # The ZIP will contain two files, one with the original invoice or with the identified errors (as the case may be)
-        # and the other with the electronic signature (containing 'semnatura').
-        # If there is an error (status == 'nok') we want to provide the file with the errors.
-        if status == 'nok':
-            signature_file = next(file for file in zip_ref.namelist() if 'semnatura' not in file)
-        else:
-            signature_file = next(file for file in zip_ref.namelist() if 'semnatura' in file)
-        xml_bytes = zip_ref.open(signature_file)
-        root = etree.parse(xml_bytes)
+
+        # The ZIP will contain two files,
+        # one with the electronic signature (containing 'semnatura'),
+        # and the other with one with the original invoice, the requested invoice or the identified errors.
+        # We select the file we want to download depending on file_to_dl ('error', 'invoice' or 'signature').
+        file_name = next(name for name in zip_ref.namelist() if ("semnatura" in name) == (file_to_dl == 'signature'))
+        target_file_bytes = zip_ref.open(file_name)
+        root = etree.parse(target_file_bytes)
+
+        if file_to_dl == 'invoice':
+            raw_data = zip_ref.read(file_name)
+            dl_namespace = {'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2'}
+            return {
+                'name': root.find('.//cbc:ID', namespaces=dl_namespace).text,
+                'amount_total': root.find('.//cbc:TaxInclusiveAmount', namespaces=dl_namespace).text,
+                'due_date': datetime.strptime(root.find('.//cbc:DueDate', namespaces=dl_namespace).text, '%Y-%m-%d').date(),
+                'raw': raw_data
+            }
         error_elements = root.findall('.//ns:Error', namespaces=NS_HEADER)
         if error_elements:
             error_message = ('\n\n').join(error.get('errorMessage') for error in error_elements)
@@ -187,6 +201,60 @@ class L10n_Ro_EdiDocument(models.Model):
             'key_certificate': root.findtext('.//ns:X509Certificate', namespaces=NS_SIGNATURE),
             'error': error_message if error_elements else False,
         }
+
+    @api.model
+    def _request_ciusro_synchronize_invoices(self, company, session, nb_days):
+        """
+        This method makes a "Fetch Messages" (GET/listaMesajeFactura) request to the Romanian SPV.
+        After processing the response, if messages were indeed fetched, it will download the content
+        of said messages.
+
+        For sent invoices, it will update if possible the status of invoices which had not yet been confirmed.
+        For received invoices, it will create a draft bill containing the downloaded information.
+
+        Possible returns:
+
+        - {'error': <str>} ~ failing response from a bad request
+        - <successful response dictionary> ~ contains the necessary information to be stored from the SPV
+        - {} ~ (empty dict) The response was successful but the SPV haven't finished processing the XML yet.
+
+        :param company: ``res.company`` object
+        :param session: ``requests.Session()`` object
+        :nb_days: number of days for which the request should be made, default=1, max=60
+        :return: {'error': <str>} | {'key_download': <str>} | {}
+        """
+        result = make_efactura_request(
+            session=session,
+            company=company,
+            endpoint='listaMesajeFactura',
+            method='GET',
+            params={'zile': nb_days, 'cif': company.vat.replace('RO', '')},
+        )
+        downloaded_invoices_data = []
+
+        if result == {}:
+            return {}
+        elif 'error' in result:
+            raise UserError(result['error'])
+        else:
+            decoded_message = result['content'].decode()
+            msg_content = json.loads(decoded_message)
+            if eroare := msg_content.get('eroare'):
+                raise UserError(eroare)
+            else:
+                for msg in msg_content.get('mesaje'):
+                    msg_id = msg.get('id')
+                    if 'PRIMITA' in msg.get('tip'):  # Received invoice
+                        downloaded_invoices_data.append(self._request_ciusro_download_answer(
+                            key_download=msg_id,
+                            company=company,
+                            session=session,
+                            file_to_dl='invoice'
+                        ))
+                if any(msg['tip'] == 'FACTURA TRIMISA' for msg in msg_content.get('mesaje')):
+                    unvalidated_invoices = self.env['account.move'].search([('l10n_ro_edi_state', '=', 'invoice_sent')])
+                    self.env['account.move']._l10n_ro_edi_fetch_invoice_sent_documents(unvalidated_invoices)
+            return downloaded_invoices_data
 
     def action_l10n_ro_edi_fetch_status(self):
         """ Fetch the latest response from E-Factura about the XML sent """

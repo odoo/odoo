@@ -12,6 +12,13 @@ class ResConfigSettings(models.TransientModel):
     l10n_ro_edi_refresh_expiry_date = fields.Date(related='company_id.l10n_ro_edi_refresh_expiry_date', readonly=False)
     l10n_ro_edi_callback_url = fields.Char(related='company_id.l10n_ro_edi_callback_url')
     l10n_ro_edi_test_env = fields.Boolean(related='company_id.l10n_ro_edi_test_env', readonly=False)
+    l10n_ro_edi_anaf_imported_inv_journal = fields.Many2one(
+        comodel_name='account.journal',
+        related='company_id.l10n_ro_edi_anaf_imported_inv_journal',
+        string='Import Vendor Bills in : ',
+        readonly=False,
+        domain='[("type", "=", "purchase")]',
+        default=lambda self: self.env['account.journal'].search([('type', '=', 'purchase')], limit=1))
 
     def button_l10n_ro_edi_generate_token(self):
         """ Redirects to controllers/main.py ~ `authorize` method """
