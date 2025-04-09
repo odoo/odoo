@@ -677,12 +677,40 @@ class Website(Home):
             return json.dumps({'view_id': page.get('view_id')})
         return json.dumps({'url': url})
 
+    def get_filtered_page_template(self, view):
+        """
+        Retrieves and extracts the relevant arch from an ir.ui.view record.
+
+        :param view: Record of ir.ui.view to fetch and filter its view's XML.
+        :return: Processed arch or False if not found.
+        """
+        if not (view and view.arch):
+            return False
+        page_view = view.arch
+        try:
+            tree = html.fromstring(page_view)
+            wrap_el = tree.xpath("//div[@id='wrap']")
+            return html.tostring(wrap_el[0], encoding="unicode") if wrap_el else page_view
+        except etree.XMLSyntaxError as e:
+            logger.warning("XML parsing error for view ID %s: %s", view.id, e)
+            return page_view
+
     @http.route('/website/get_new_page_templates', type='jsonrpc', auth='user', website=True, readonly=True)
     def get_new_page_templates(self, **kw):
         View = request.env['ir.ui.view']
         result = []
         groups_html = View._render_template("website.new_page_template_groups")
         groups_el = etree.fromstring(f'<data>{groups_html}</data>')
+
+        website = self.env['website'].get_current_website()
+        param_key = f'website.untouched_configurator_pages.{website.id}'
+        view_ids = json.loads(self.env['ir.config_parameter'].sudo().get_param(param_key, '[]'))
+        current_website_views = self.env['ir.ui.view'].search([
+            ('id', 'in', view_ids),
+            ('website_id', '=', website.id)
+        ])
+        filtered_configurator_templates = [self.get_filtered_page_template(view) for view in current_website_views]
+
         for group_el in groups_el.getchildren():
             group = {
                 'id': group_el.attrib['id'],
@@ -732,6 +760,14 @@ class Website(Home):
                     logger.warning("Theme not compatible with template %r: %s", template.key, qe)
             if group['templates']:
                 result.append(group)
+
+        # Insert configurator pages at the beginning of the landing group
+        for group in result:
+            if group['id'] == 'landing':
+                landing_templates = group['templates']
+                for index, template in enumerate(reversed(filtered_configurator_templates), start=1):
+                    landing_templates.insert(0, {"key": f"configurator_pages_{index}", "template": template})
+                break
         return result
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)

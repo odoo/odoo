@@ -626,6 +626,16 @@ class Website(models.Model):
         pages_views = {}
         modules = self.env['ir.module.module']
         module_data = {}
+        configurator_page_ids = []
+        standard_homepage = self.env.ref('website.homepage', raise_if_not_found=False)
+        if standard_homepage:
+            homepage = self.env['ir.ui.view'].search([
+                ('website_id', '=', website.id),
+                ('key', '=', standard_homepage.key),
+            ], limit=1)
+            if homepage:
+                configurator_page_ids.append(homepage.id)
+
         for feature in features:
             add_menu = bool(feature.menu_sequence)
             if feature.module_id:
@@ -650,6 +660,7 @@ class Website(models.Model):
                     template=feature.page_view_id.key
                 )
                 pages_views[feature.iap_page_code] = result['view_id']
+                configurator_page_ids.append(result['view_id'])
 
         if modules:
             modules.button_immediate_install()
@@ -943,6 +954,16 @@ class Website(models.Model):
                     logger.warning(e)
             page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
                               xpath="(//div[hasclass('oe_structure')])[last()]")
+
+        # we copy the configurator pages to preserve the original untouched
+        # pages in the landing page category when creating a new page.
+        untouched_configurator_pages = []
+        configurator_page_views = self.env['ir.ui.view'].browse(configurator_page_ids)
+        for view in configurator_page_views:
+            copy_view = view.copy({'key': view.key + "_untouched"})
+            untouched_configurator_pages.append(copy_view.id)
+        param_key = f'website.untouched_configurator_pages.{website.id}'
+        self.env['ir.config_parameter'].sudo().set_param(param_key, json.dumps(untouched_configurator_pages))
 
         # Configure the images
         images = custom_resources.get('images', {})
