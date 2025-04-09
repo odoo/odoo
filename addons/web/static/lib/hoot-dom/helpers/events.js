@@ -1640,18 +1640,18 @@ const _pointerUp = async (options) => {
         return;
     }
 
-    let actualTarget;
+    let clickTarget;
     if (hasTouch()) {
-        actualTarget = pointerDownTarget === target && target;
+        clickTarget = pointerDownTarget === target && target;
     } else {
-        actualTarget = getFirstCommonParent(target, pointerDownTarget);
+        clickTarget = getFirstCommonParent(target, pointerDownTarget);
     }
-    if (actualTarget) {
-        await triggerClick(actualTarget, mouseEventInit);
+    if (clickTarget) {
+        await triggerClick(clickTarget, mouseEventInit);
         if (mouseEventInit.button === btn.LEFT) {
             runTime.clickCount++;
             if (!hasTouch() && runTime.clickCount % 2 === 0) {
-                await dispatch(actualTarget, "dblclick", mouseEventInit);
+                await dispatch(clickTarget, "dblclick", mouseEventInit);
             }
         }
     }
@@ -1929,6 +1929,17 @@ export async function check(target, options) {
     }
 
     return finalizeEvents();
+}
+
+export function cleanupEvents() {
+    if (runTime.pointerDownTimeout) {
+        globalThis.clearTimeout(runTime.pointerDownTimeout);
+    }
+
+    removeChangeTargetListeners();
+
+    // Runtime global variables
+    $assign(runTime, getDefaultRunTimeValue());
 }
 
 /**
@@ -2742,45 +2753,16 @@ export function setupEventActions(target, options) {
     if (!options?.allowSubmit) {
         eventHandlers.push(...GLOBAL_SUBMIT_FORWARDERS);
     }
+
+    const view = getWindow(target);
     for (const [eventType, handler, options] of eventHandlers) {
-        window.addEventListener(eventType, handler, options);
+        view.addEventListener(eventType, handler, options);
     }
 
-    const processedIframes = new WeakSet();
-    const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-            if (!mutation.addedNodes) {
-                continue;
-            }
-            for (const iframe of target.getElementsByTagName("iframe")) {
-                if (processedIframes.has(iframe)) {
-                    continue;
-                }
-                processedIframes.add(iframe);
-                for (const [eventType, handler, options] of eventHandlers) {
-                    iframe.contentWindow.addEventListener(eventType, handler, options);
-                }
-            }
-        }
-    });
-
-    observer.observe(target, { childList: true, subtree: true });
-
     return function cleanupEventActions() {
-        observer.disconnect();
-
-        if (runTime.pointerDownTimeout) {
-            globalThis.clearTimeout(runTime.pointerDownTimeout);
-        }
-
-        removeChangeTargetListeners();
-
         for (const [eventType, handler, options] of eventHandlers) {
-            window.removeEventListener(eventType, handler, options);
+            view.removeEventListener(eventType, handler, options);
         }
-
-        // Runtime global variables
-        $assign(runTime, getDefaultRunTimeValue());
     };
 }
 
@@ -2854,7 +2836,9 @@ export class EventList extends Array {
     getAll(predicate) {
         if (typeof predicate !== "function") {
             const type = predicate;
-            predicate = (ev) => ev.type === type;
+            predicate = function isSameType(ev) {
+                return ev.type === type;
+            };
         }
         return this.filter(predicate);
     }
