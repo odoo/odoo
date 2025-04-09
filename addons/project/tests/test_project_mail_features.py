@@ -543,3 +543,22 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
             self.flush_tracking()
         # check that no mail was received for the assignee of the task
         self.assertNotSentEmail(self.user_projectuser.email_formatted)
+
+    def test_mail_alais_assignees_from_recipient_list(self):
+        # including all types of users in recipient list
+        incoming_to = f'{self.project_goats.alias_name}@{self.project_goats.alias_domain_id.name},{self.user_public.email},\
+                        {self.user_projectmanager.email}, {self.user_portal.email}, {self.user_projectuser.email}, new.cc@test.agrolait.com'
+        with self.mock_mail_gateway():
+            task = self.format_and_process(
+                MAIL_TEMPLATE,
+                "test.cc@test.agrolait.com",
+                incoming_to,
+                subject=f'Test task assignees from email to address',
+                target_model='project.task',
+            )
+            self.flush_tracking()
+        self.assertTrue(task, "Task has not been created from a incoming email")
+        # only internal users are set as asssignees
+        self.assertEqual(task.user_ids, self.user_projectmanager + self.user_projectuser, "Assignees have not been set from the to address of the mail")
+        # public and portal users are ignored
+        self.assertNotEqual(task.user_ids, self.user_public + self.user_portal, "Assignees should not be set for user other than internal users")

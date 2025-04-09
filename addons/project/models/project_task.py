@@ -10,7 +10,7 @@ from odoo.addons.rating.models import rating_data
 from odoo.addons.web_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools import format_list, SQL, LazyTranslate
+from odoo.tools import format_list, SQL, LazyTranslate, email_normalize_all
 from odoo.addons.resource.models.utils import filter_domain_leaf
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
@@ -1670,6 +1670,17 @@ class ProjectTask(models.Model):
         }
         defaults.update(custom_values)
 
+        # users having email address matched from emails recepients are filtered out and added as assignees to the task
+        if defaults.get('project_id', False):
+            formatted_recipient_emails = set(email_normalize_all(msg.get('to', '')))
+            internal_users = self.env["res.users"].search(
+                [
+                    ("email", "in", formatted_recipient_emails),
+                    ("all_group_ids", "in", [self.env.ref("base.group_user").id]),
+                ]
+            )
+            # set only internal users as assignees
+            defaults['user_ids'] = internal_users
         task = super(ProjectTask, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         partners = task._partner_find_from_emails_single(tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or '')), no_create=True)
         task.message_subscribe(partners.ids)
