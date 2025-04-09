@@ -728,7 +728,7 @@ export class PosStore extends WithLazyGetterTrap {
                     .map((value) => value.id);
 
                 let candidate = productTemplate.product_variant_ids.find((variant) => {
-                    const attributeIds = variant.product_template_variant_value_ids.map(
+                    const attributeIds = variant.product_template_attribute_value_ids.map(
                         (value) => value.id
                     );
                     return (
