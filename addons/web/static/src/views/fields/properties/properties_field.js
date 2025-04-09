@@ -547,6 +547,11 @@ export class PropertiesField extends Component {
      * @param {object} propertyDefinition
      */
     async onPropertyDefinitionChange(propertyDefinition) {
+        const propertyIndex = this._getPropertyIndex(propertyDefinition.name);
+        if (propertyIndex < 0) {
+            return;
+        }
+
         propertyDefinition["definition_changed"] = true;
         if (propertyDefinition.type === "separator") {
             // remove all other keys
@@ -559,9 +564,8 @@ export class PropertiesField extends Component {
                 "fold_by_default"
             );
         }
-        const propertiesValues = this.propertiesList;
-        const propertyIndex = this._getPropertyIndex(propertyDefinition.name);
 
+        const propertiesValues = this.propertiesList;
         const oldType = propertiesValues[propertyIndex].type;
         const newType = propertyDefinition.type;
 
@@ -577,11 +581,11 @@ export class PropertiesField extends Component {
             this.movePopoverToProperty = propertyDefinition.name;
         } else if (oldType === "separator" && newType !== "separator") {
             // unfold automatically the previous separator
-            const previousSeperator = propertiesValues.findLast(
+            const previousSeparator = propertiesValues.findLast(
                 (property, index) => index < propertyIndex && property.type === "separator"
             );
-            if (previousSeperator) {
-                this._unfoldSeparators([previousSeperator.name], true);
+            if (previousSeparator) {
+                this._unfoldSeparators([previousSeparator.name], true);
             }
             // layout has been changed, move the definition popover
             this.movePopoverToProperty = propertyDefinition.name;
