@@ -25,11 +25,10 @@ class IrWebsocket(models.AbstractModel):
     @add_guest_to_context
     def _update_mail_presence(self, inactivity_period):
         partner, guest = self.env["res.partner"]._get_current_persona()
-        if not partner and not guest:
-            return
-        self.env["mail.presence"]._try_update_presence(
-            self.env.user if partner else guest, inactivity_period
-        )
+        if partner:
+            self.env["mail.presence"]._try_update_presence(self.env.user, inactivity_period)
+        if guest:
+            self.env["mail.presence"]._try_update_presence(guest, inactivity_period)
 
     def _filter_accessible_presences(self, partners, guests):
         """Filter presences that are accessible to current user."""

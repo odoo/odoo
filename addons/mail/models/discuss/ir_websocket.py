@@ -18,7 +18,7 @@ class IrWebsocket(models.AbstractModel):
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         # sudo - mail.guest: guest can access their own channels.
         channels_domain = Domain(
-            "channel_ids", "in", (current_partner or current_guest.sudo()).channel_ids.ids
+            "channel_ids", "in", (current_partner.channel_ids | current_guest.sudo().channel_ids).ids,
         )
         # sudo - res.partner: allow access when sharing a common channel.
         allowed_partners |= (
