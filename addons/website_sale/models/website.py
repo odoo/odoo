@@ -1,19 +1,26 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import json
+import logging
+import random
+
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import lazy, ormcache
+from odoo.tools import file_open, ormcache
 from odoo.tools.translate import LazyTranslate, _
 
-
+logger = logging.getLogger(__name__)
 _lt = LazyTranslate(__name__)
+
 
 CART_SESSION_CACHE_KEY = 'sale_order_id'
 FISCAL_POSITION_SESSION_CACHE_KEY = 'fiscal_position_id'
 PRICELIST_SESSION_CACHE_KEY = 'website_sale_current_pl'
 PRICELIST_SELECTED_SESSION_CACHE_KEY = 'website_sale_selected_pl_id'
+SHOP_FEATURE_ID = 8
 
 
 class Website(models.Model):
@@ -635,3 +642,69 @@ class Website(models.Model):
     def has_ecommerce_access(self):
         """ Return whether the current user is allowed to access eCommerce-related content. """
         return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
+
+    def configurator_addons_apply(self, **kwargs):
+        def _generate_ai_ecommerce_categories(industry_name):
+            """
+            Generate e-commerce categories for a given industry using ChatGPT API.
+            """
+            try:
+                lang = self.env.context.get('lang')
+                prompt = f"""
+                My business is {industry_name} and I am building an eCommerce website.
+
+                Create 8 categories in the following language : {lang} with a name and a description. It has to be persuasive and attract
+                the attention of my visitors but keep it very short and to the point. Use only nouns in the category names (no adjectives).
+
+                Provide the answer as a formatted json.
+                """
+
+                IrConfigParameter = self.env['ir.config_parameter'].sudo()
+                database_id = IrConfigParameter.get_param('database.uuid')
+                response = self._OLG_api_rpc('/api/olg/1/chat', {
+                    'prompt': prompt,
+                    'conversation_history': [],
+                    'database_id': database_id,
+                })
+                if not response:
+                    logger.warning("API response is empty for the categories generation")
+                    return False
+                if response['status'] == 'success':
+                    try:
+                        content = response['content'].replace('```json\n', '').replace('\n```', '')
+                        return json.loads(content)
+                    except json.JSONDecodeError:
+                        logger.warning("API response is not a valid JSON for the category generation")
+                        return False
+                elif response['status'] == 'error_prompt_too_long':
+                    logger.warning("Prompt is too long for the category generation")
+                elif response['status'] == 'limit_call_reached':
+                    logger.warning("Limit call reached for the category generation")
+                else:
+                    logger.warning("Response could not be generated for the category generation")
+            except AccessError:
+                logger.warning("API is unreachable for the category generation")
+            return False
+
+        industry_name = kwargs.get('industry_name')
+        if industry_name and SHOP_FEATURE_ID in kwargs.get('selected_features'):  # If the shop feature is selected
+            if self.env['product.public.category'].search_count([]) > 0:
+                logger.info('Categories already exist, skipping AI generation.')
+                return
+            ai_generated_categories = _generate_ai_ecommerce_categories(industry_name)
+            if ai_generated_categories and len(ai_generated_categories.get('categories')) == 8:
+                possible_images = []
+                for i in range(1, 12):
+                    possible_images += [f"shape_mixed_{i}.png"]
+
+                chosen_images_indexes = random.sample(possible_images, 8)
+                for idx, cat in enumerate(ai_generated_categories.get('categories')):
+                    image_name = chosen_images_indexes[idx]
+                    img_path = 'website_sale/static/src/img/categories/' + image_name
+                    with file_open(img_path, 'rb') as file:
+                        image_base64 = base64.b64encode(file.read())
+                    self.env['product.public.category'].sudo().create({
+                        'name': cat['name'],
+                        'website_description': cat['description'],
+                        'image_1920': image_base64,
+                    })

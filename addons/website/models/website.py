@@ -535,6 +535,12 @@ class Website(models.Model):
             }
         )
 
+    # Extension hook: allows installed modules (e.g. website_sale, website_blog, ...) to perform
+    # additional setup steps on the generated website. This acts as an entry point for modules to
+    # customize the website.
+    def configurator_addons_apply(self, **kwargs):
+        pass
+
     @api.model
     def configurator_apply(self, **kwargs):
         website = self.get_current_website()
@@ -655,6 +661,11 @@ class Website(models.Model):
             modules.button_immediate_install()
 
         self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
+
+        # Extension hook: allows installed modules (e.g. website_sale, website_blog, ...) to perform
+        # additional setup steps on the generated website. This acts as an entry point for modules to
+        # customize the website.
+        self.env['website'].configurator_addons_apply(**kwargs)
 
         # We need to refresh the environment of the website because we installed
         # some new module and we need the overrides of these new menus e.g. for
