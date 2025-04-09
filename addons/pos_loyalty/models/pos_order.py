@@ -2,13 +2,26 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from odoo import _, models
+from odoo import api, fields, models, _
 from odoo.tools import float_compare
 import base64
 
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'
+
+    gift_card_count = fields.Integer(compute='_compute_gift_card_count')
+    ewallet_count = fields.Integer(compute='_compute_ewallet_count')
+
+    @api.depends('lines')
+    def _compute_gift_card_count(self):
+        for order in self:
+            order.gift_card_count = len(order.lines.filtered(lambda l: l.is_reward_line and l.reward_id.program_type == 'gift_card'))
+
+    @api.depends('lines')
+    def _compute_ewallet_count(self):
+        for order in self:
+            order.ewallet_count = len(order.lines.filtered(lambda l: l.is_reward_line and l.reward_id.program_type == 'ewallet'))
 
     def validate_coupon_programs(self, point_changes, new_codes):
         """
@@ -216,3 +229,14 @@ class PosOrder(models.Model):
                         attachment += [(4, gift_card_pdf.id)]
 
         return attachment
+
+    def action_open_loyalty_cards(self):
+        self.ensure_one()
+        used_card_ids = self.lines.filtered(lambda l: l.is_reward_line and l.reward_id.program_type == self.env.context.get('program_type')).mapped('coupon_id').ids
+        return {
+            'name': _('Used Loyalty Cards'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'loyalty.card',
+            'views': [(False, 'list'), (False, 'form')],
+            'domain': [('id', 'in', used_card_ids)],
+        }
