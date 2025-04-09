@@ -4,7 +4,11 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
+} from "./website_helpers";
 
 defineWebsiteModels();
 
@@ -97,4 +101,30 @@ test("activate customize tab without any selection", async () => {
     expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
         "CUSTOMIZE"
     );
+});
+
+test("Clicking on the 'BLOCKS' or 'THEME' tab should deactivate the options", async () => {
+    await setupWebsiteBuilderWithSnippet("s_banner");
+
+    await contains(":iframe .s_banner").click();
+    expect(".oe_overlay").toHaveCount(1);
+    expect(".o-snippets-tabs button:contains('CUSTOMIZE')").toHaveClass("active");
+    expect(".o_customize_tab .options-container").toHaveCount(1);
+
+    await contains(".o-snippets-tabs button:contains('BLOCKS')").click();
+    expect(".oe_overlay").toHaveCount(0);
+    await contains(".o-snippets-tabs button:contains('CUSTOMIZE')").click();
+    expect(".o-snippets-tabs button:contains('CUSTOMIZE')").toHaveClass("active");
+    expect(".o_customize_tab .options-container").toHaveCount(0);
+
+    await contains(":iframe .s_banner").click();
+    expect(".oe_overlay").toHaveCount(1);
+    expect(".o-snippets-tabs button:contains('CUSTOMIZE')").toHaveClass("active");
+    expect(".o_customize_tab .options-container").toHaveCount(1);
+
+    await contains(".o-snippets-tabs button:contains('THEME')").click();
+    expect(".oe_overlay").toHaveCount(0);
+    await contains(".o-snippets-tabs button:contains('CUSTOMIZE')").click();
+    expect(".o-snippets-tabs button:contains('CUSTOMIZE')").toHaveClass("active");
+    expect(".o_customize_tab .options-container").toHaveCount(0);
 });
