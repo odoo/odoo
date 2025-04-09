@@ -577,7 +577,7 @@ class PosSession(models.Model):
         self.ensure_one()
         # Even if this is called in `post_closing_cash_details`, we need to call this here too for case
         # where cash_control = False
-        open_order_ids = self.get_session_orders().filtered(lambda o: o.state == 'draft').ids
+        open_order_ids = self.get_session_orders().filtered(lambda o: o.state == 'draft' and len(o.lines) > 0).ids
         check_closing_session = self._cannot_close_session(bank_payment_method_diffs)
         if check_closing_session:
             check_closing_session['open_order_ids'] = open_order_ids
@@ -681,7 +681,7 @@ class PosSession(models.Model):
         It should return {'successful': False, 'message': str, 'redirect': bool} if we can't close the session
         """
         bank_payment_method_diffs = bank_payment_method_diffs or {}
-        if any(order.state == 'draft' for order in self.get_session_orders()):
+        if any(order.state == 'draft' and len(order.lines) > 0 for order in self.get_session_orders()):
             return {'successful': False, 'message': _("You cannot close the POS while there are still draft orders for the day."), 'redirect': False}
         if self.state == 'closed':
             return {

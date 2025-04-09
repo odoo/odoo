@@ -71,7 +71,6 @@ class TestPosMrp(TestPointOfSaleCommon):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': False,
-            'last_order_preparation_change': '{}'
         })
         payment_context = {"active_ids": order.ids, "active_id": order.id}
         order_payment = self.PosMakePayment.with_context(**payment_context).create({
@@ -232,7 +231,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             ]],
             'user_id': self.env.uid
         }
-        order = self.env['pos.order'].sync_from_ui([order_data])
+        order = self.env['pos.order'].create([order_data])
         order = self.env['pos.order'].browse(order['pos.order'][0]['id'])
         self.assertEqual(order.lines.filtered(lambda l: l.product_id == self.kit).total_cost, 15.0)
         accounts = self.kit.product_tmpl_id.get_product_accounts()
@@ -316,7 +315,7 @@ class TestPosMrp(TestPointOfSaleCommon):
                                     'name': fields.Datetime.now(),
                                     'payment_method_id': self.cash_payment_method.id}]],
                 'user_id': self.env.uid}
-        order = self.env['pos.order'].sync_from_ui([order_data])
+        order = self.env['pos.order'].create([order_data])
         order = self.env['pos.order'].browse(order['pos.order'][0]['id'])
         accounts = self.kit.product_tmpl_id.get_product_accounts()
         expense_line = order.account_move.line_ids.filtered(lambda l: l.account_id.id == accounts['expense'].id)

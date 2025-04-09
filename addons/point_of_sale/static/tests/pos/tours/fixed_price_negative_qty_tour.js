@@ -26,5 +26,6 @@ registry.category("web_tour.tours").add("FixedTaxNegativeQty", {
             PaymentScreen.clickValidate(),
 
             ReceiptScreen.receiptIsThere(),
+            Chrome.endTour(),
         ].flat(),
 });

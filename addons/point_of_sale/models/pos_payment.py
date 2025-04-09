@@ -19,7 +19,7 @@ class PosPayment(models.Model):
 
     name = fields.Char(string='Label', readonly=True)
     pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True, ondelete='cascade')
-    amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', help="Total amount of the payment.")
+    amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', help="Total amount of the payment.", default=0)
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True)
     payment_date = fields.Datetime(string='Date', required=True, readonly=True, default=lambda self: fields.Datetime.now())
     currency_id = fields.Many2one('res.currency', string='Currency', related='pos_order_id.currency_id')

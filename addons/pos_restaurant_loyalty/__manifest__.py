@@ -11,7 +11,8 @@
 This module correct some behaviors when both module are installed.
 """,
     'depends': ['pos_restaurant', 'pos_loyalty'],
-    'installable': True,
+    # 'installable': True,
+    'installable': False,
     'auto_install': True,
     'assets': {
         'point_of_sale._assets_pos': [

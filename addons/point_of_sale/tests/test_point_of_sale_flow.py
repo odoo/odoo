@@ -69,8 +69,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'last_order_preparation_change': '{}',
                 'user_id': self.env.uid
             }
-            pos_order_id = self.PosOrder.sync_from_ui([pos_order_data])['pos.order'][0]['id']
-            pos_order = self.env['pos.order'].browse(pos_order_id)
+            pos_order = self.PosOrder.create(pos_order_data)
             # End the session. The order has been created without any invoice.
             self.pos_config.current_session_id.action_pos_session_closing_control()
         return pos_order
@@ -1071,7 +1070,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'last_order_preparation_change': '{}',
             'user_id': self.env.uid
         }
-        self.PosOrder.sync_from_ui([product5_order])
+        self.PosOrder.create([product5_order])
 
         # delete tax
         dummy_50_perc_tax.unlink()
@@ -1164,6 +1163,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'amount_return': 0,
             'shipping_date': fields.Date.today(),
             'last_order_preparation_change': '{}'
+
         })
 
         context_make_payment = {
@@ -1289,7 +1289,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'to_invoice': True
         }
 
-        pos_order_id = self.PosOrder.sync_from_ui([product5_order])['pos.order'][0]['id']
+        pos_order_id = self.PosOrder.create([product5_order])['pos.order'][0]['id']
         pos_order = self.PosOrder.search([('id', '=', pos_order_id)])
         #assert account_move amount_residual is 300
         self.assertEqual(pos_order.account_move.amount_residual, 300)
@@ -1407,7 +1407,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'to_invoice': True
         }
 
-        pos_order_id = self.PosOrder.sync_from_ui([product5_order])['pos.order'][0]['id']
+        pos_order_id = self.PosOrder.create([product5_order])['pos.order'][0]['id']
         pos_order = self.PosOrder.search([('id', '=', pos_order_id)])
         self.assertEqual(pos_order.account_move.amount_residual, 0)
 
@@ -1622,7 +1622,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'to_invoice': True
         }
 
-        order = self.PosOrder.sync_from_ui([order_data])
+        order = self.PosOrder.create([order_data])
         order = self.PosOrder.browse(order['pos.order'][0]['id'])
 
         refund_id = order.refund()['res_id']

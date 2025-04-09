@@ -227,6 +227,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ProductScreen.totalAmountIs("2.20"),
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("4", "1"),
+            Chrome.endTour(),
         ].flat(),
 });
 
@@ -518,6 +519,7 @@ registry.category("web_tour.tours").add("LeaveResidualOrder", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickPlanButton(),
+            Chrome.endTour(),
         ].flat(),
 });
 
@@ -532,5 +534,6 @@ registry.category("web_tour.tours").add("FinishResidualOrder", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
+            Chrome.endTour(),
         ].flat(),
 });
