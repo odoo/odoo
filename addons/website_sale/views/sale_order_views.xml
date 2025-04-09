@@ -43,6 +43,7 @@
     <record id="action_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="res_model">sale.order</field>
+        <field name="path">ecommerce-orders</field>
         <field name="view_mode">list,form,kanban,activity</field>
         <field name="domain">[]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'search_default_from_website': 1}</field>
@@ -113,6 +114,7 @@
     <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
         <field name="name">Unpaid Orders</field>
         <field name="res_model">sale.order</field>
+        <field name="path">ecommerce-unpaid-orders</field>
         <field name="view_mode">list,kanban,form,activity</field>
         <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'create': False}</field>
@@ -130,6 +132,7 @@
     <record id="action_view_abandoned_tree" model="ir.actions.act_window">
         <field name="name">Abandoned Carts</field>
         <field name="res_model">sale.order</field>
+        <field name="path">ecommerce-abandoned-carts</field>
         <field name="view_mode">list,kanban,form,activity</field>
         <field name="domain">[('is_abandoned_cart', '=', 1)]</field>
         <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner'), 'search_default_recovery_email': True}"/>

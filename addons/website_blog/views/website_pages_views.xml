@@ -121,6 +121,7 @@
 <record id="action_blog_post" model="ir.actions.act_window">
     <field name="name">Blog Post Pages</field>
     <field name="res_model">blog.post</field>
+    <field name="path">blog-post-pages</field>
     <field name="view_mode">list,kanban,form</field>
     <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'list', 'view_id': ref('view_blog_post_list')}),

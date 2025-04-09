@@ -158,6 +158,7 @@
 <record id="forum_post_action" model="ir.actions.act_window">
     <field name="name">Forum Post Pages</field>
     <field name="res_model">forum.post</field>
+    <field name="path">forum-post-pages</field>
     <field name="view_mode">list,kanban,graph</field>
     <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'list', 'view_id': ref('forum_post_view_tree')}),

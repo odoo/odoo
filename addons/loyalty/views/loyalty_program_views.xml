@@ -197,6 +197,7 @@
     <record id="loyalty_program_discount_loyalty_action" model="ir.actions.act_window">
         <field name="name">Discount &amp; Loyalty</field>
         <field name="res_model">loyalty.program</field>
+        <field name="path">discount-loyalty</field>
         <field name="view_mode">list,form</field>
         <field name="domain">[('program_type', 'not in', ('gift_card', 'ewallet'))]</field>
         <field name="help" type="html">
@@ -240,6 +241,7 @@
     <record id="loyalty_program_gift_ewallet_action" model="ir.actions.act_window">
         <field name="name">Gift cards &amp; eWallet</field>
         <field name="res_model">loyalty.program</field>
+        <field name="path">gift-cards-ewallet</field>
         <field name="view_mode">list,form</field>
         <field name="context">{'menu_type': 'gift_ewallet', 'default_program_type': 'gift_card'}</field>
         <field name="domain">[('program_type', 'in', ('gift_card', 'ewallet'))]</field>

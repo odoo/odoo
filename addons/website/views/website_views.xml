@@ -83,6 +83,7 @@
         <record id="action_website_list" model="ir.actions.act_window">
             <field name="name">Websites</field>
             <field name="res_model">website</field>
+            <field name="path">websites</field>
             <field name="view_mode">list,form</field>
             <field name="view_id" ref="view_website_tree"/>
             <field name="target">current</field>
@@ -167,6 +168,7 @@
         <record id="action_website_menu" model="ir.actions.act_window">
             <field name="name">Website Menu</field>
             <field name="res_model">website.menu</field>
+            <field name="path">website-menu</field>
             <field name="view_mode">list,form</field>
             <field name="context">{'search_default_group_by_website_id':1}</field>
             <field name="view_id" ref="menu_tree"/>
@@ -201,6 +203,7 @@
         ==================================================================== -->
         <record id="backend_dashboard" model="ir.actions.client">
             <field name="name">Analytics</field>
+            <field name="path">website-analytics</field>
             <field name="tag">backend_dashboard</field>
         </record>
 
