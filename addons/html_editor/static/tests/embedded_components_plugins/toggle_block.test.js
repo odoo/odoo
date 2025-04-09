@@ -470,7 +470,7 @@ describe("Enter applied to toggle title", () => {
                     </div>
                     <div class="ps-4 ms-1 d-none">
                         <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                            <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                            <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                         </div>
                     </div>
                 </div>
@@ -552,7 +552,7 @@ describe("Enter applied to toggle title", () => {
                 </div>
                 <div class="ps-4 ms-1 d-none">
                     <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                        <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                        <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                     </div>
                 </div>
             </div>
@@ -754,7 +754,7 @@ describe("Tab applied to toggle title", () => {
                             </div>
                             <div class="ps-4 ms-1">
                                 <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                                    <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                                    <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                                 </div>
                             </div>
                         </div>
@@ -810,7 +810,7 @@ describe("Shift+Tab applied to toggle title", () => {
                 </div>
                 <div class="ps-4 ms-1">
                     <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                        <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                        <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                     </div>
                 </div>
             </div>
