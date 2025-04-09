@@ -1062,6 +1062,7 @@ class BaseAutomation(models.Model):
             self = self.with_context(__action_done={})
 
         # retrieve all the automation rules to run based on a timed condition
+        final_exception = None
         automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
         for automation_number, automation in enumerate(automations, 1):
             if auto_commit and not automation.active:
@@ -1071,12 +1072,17 @@ class BaseAutomation(models.Model):
             now = self.env.cr.now()
             records = automation._search_time_based_automation_records(until=now)
             # run the automation on the records
-            for record in records:
-                try:
-                    with self.env.cr.savepoint():
-                        automation._process(record)
-                except Exception:
-                    _logger.error(traceback.format_exc())
+            try:
+                for record in records:
+                    automation._process(record)
+                self.env.flush_all()
+            except Exception as e:
+                if not auto_commit:
+                    raise
+                self.env.cr.rollback()
+                _logger.exception("Error in time-based automation rule `%s`.", automation.name)
+                final_exception = e
+                continue
 
             automation.write({'last_run': now})
             if auto_commit:
@@ -1090,3 +1096,6 @@ class BaseAutomation(models.Model):
             else:
                 self.env.flush_all()
             _logger.info("Time-based automation rule `%s` done.", automation.name)
+        if final_exception is not None:
+            # raise the last found exception to mark the cron job as failing
+            raise final_exception
