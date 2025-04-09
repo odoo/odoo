@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<template>
+    <!--
+    Seller Dashboard Template
+    This template displays a multivendor marketplace dashboard with cards showing the
+    status of products, sellers, orders, payments, and stock. Each card includes icons
+    and status indicators (Pending, Approved, Rejected), with hover effects for emphasis.
+    Styling includes CSS for layout and transitions.
+    -->
+    <t t-name="SellerDashBoard">
+        <section class="dashboard_main_section" id="main_section_manager">
+            <style>
+                .divcard {
+                color: #243c64;
+                size: 20rem;
+                text-align: center;
+                }
+                .divdashhover{
+                transition: 0.5s ease;
+                }
+                .divdashhover:hover{
+                -webkit-transform: scale(1.2);
+                -ms-transform: scale(1.2);
+                transform: scale(1.2);
+                transition: 1s ease;
+                }
+                .dashboard_main_section{
+                width: 100%;
+                height: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
+                }
+            </style>
+                <div class="row">
+                    <div class="card"
+                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">MarketPlace Product</h5>
+                            <div class="row">
+                                <div class="divcard fa fa-tags fa-5x"/>
+                                <div id="product_pending" class="divdashhover"
+                                     style="background-color: #8756d1; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="pending"/>
+                                        Pending
+                                    </h5>
+                                </div>
+                                <div id="product_approved" class="divdashhover"
+                                     style="background-color: #04c765; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="approved"/>
+                                        Approved
+                                    </h5>
+                                </div>
+                                <div id="product_rejected" class="divdashhover"
+                                     style="background-color: #c71b04; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="rejected"/>
+                                        Rejected
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="check_user_type" class="card"
+                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">MarketPlace Sellers</h5>
+                            <div class="row">
+                                <div class="divcard fa fa-users fa-5x"/>
+                                <div id="divseller_pending"
+                                     class="divdashhover"
+                                     style="background-color: #8756d1; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="seller_pending"/>
+                                        Pending
+                                    </h5>
+                                </div>
+                                <div id="divseller_approved"
+                                     class="divdashhover"
+                                     style="background-color: #04c765; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="seller_approved"/>
+                                        Approved
+                                    </h5>
+                                </div>
+                                <div id="divseller_rejected"
+                                     class="divdashhover"
+                                     style="background-color: #c71b04; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="seller_rejected"/>
+                                        Rejected
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card"
+                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">MarketPlace Orders</h5>
+                            <div class="row">
+                                <div class="divcard fa fa-shopping-cart fa-5x"> </div>
+                                <div id="divorder_pending" class="divdashhover"
+                                     style="background-color: #8756d1; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="order_pending"> </span>
+                                        Pending
+                                    </h5>
+                                </div>
+                                <div id="divorder_approved" class="divdashhover"
+                                     style="background-color: #04c765; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="order_approved"> </span>
+                                        Approved
+                                    </h5>
+                                </div>
+                                <div id="divorder_shipped" class="divdashhover"
+                                     style="background-color: #fa770c; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="order_shipped"> </span>
+                                        Shipped
+                                    </h5>
+                                </div>
+                                <div id="divorder_cancel" class="divdashhover"
+                                     style="background-color: #c71b04; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="order_cancel"> </span>
+                                        Cancelled
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card"
+                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">MarketPlace Payments</h5>
+                            <div class="row">
+                                <div class="divcard fa fa-money fa-5x"/>
+                                <div id="div_payment_pending" class="divdashhover"
+                                     style="background-color: #8756d1; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="payment_pending"> </span>
+                                        Pending
+                                    </h5>
+                                </div>
+                                <div id="div_payment_approved" class="divdashhover"
+                                     style="background-color: #04c765; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="payment_approved"> </span>
+                                        Approved
+                                    </h5>
+                                </div>
+                                <div id="div_payment_rejected" class="divdashhover"
+                                     style="background-color: #c71b04; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="payment_rejected"> </span>
+                                        Rejected
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card"
+                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;"
+                    >
+                        <div class="card-body">
+                            <h5 class="card-title">Marketplace stock</h5>
+                            <div class="row">
+                                <div class="divcard fa fa-truck fa-5x"/>
+                                <div id="inv_req_pending" class="divdashhover"
+                                     style="background-color: #8756d1; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="inventory_pending"/>
+                                        Pending
+                                    </h5>
+                                </div>
+                                <div id="inv_req_approved" class="divdashhover"
+                                     style="background-color: #04c765; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="inventory_approved"/>
+                                        Approved
+                                    </h5>
+                                </div>
+                                <div id="inv_req_rejected" class="divdashhover"
+                                     style="background-color: #c71b04; color: white; height: 35px; text-align:center;">
+                                    <h5 style="margin-top: 5px;">
+                                        <span id="inventory_rejected"/>
+                                        Rejected
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </t>
+</template>

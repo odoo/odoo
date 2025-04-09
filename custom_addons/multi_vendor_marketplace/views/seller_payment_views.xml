@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Seller payment Action-->
+    <record id="seller_payment_action" model="ir.actions.act_window">
+        <field name="name">Seller Payment</field>
+        <field name="res_model">seller.payment</field>
+        <field name="context">{'search_default_seller': 1}</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Seller's Payment</p>
+        </field>
+    </record>
+<!--    Tree view-->
+    <record id="seller_payment_view_tree" model="ir.ui.view">
+        <field name="name">seller.payment.view.tree</field>
+        <field name="model">seller.payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="seller_id"/>
+                <field name="payment_mode"/>
+                <field name="memo"/>
+                <field name="payable_amount"/>
+                <field name="date"/>
+                <field name="type_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+<!--    Form view-->
+    <record id="seller_payment_view_form" model="ir.ui.view">
+        <field name="name">Seller Payment</field>
+        <field name="model">seller.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="validate" class="oe_highlight"
+                            string="Validate" states="Requested"
+                            type="object"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
+                    <button name="reject" class="oe_highlight"
+                            string="Rejected" states="Requested"
+                            type="object"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
+                    <button name="request" type="object" string="Request"
+                            class="oe_highlight"
+                            states="Draft"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_seller,multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
+                    <button name="cancel" type="object"
+                            string="Cancel" states="Draft"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="Draft,Requested,Validated,Rejected"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="seller_id"/>
+                            <field name="payment_mode"/>
+                            <field name="memo"/>
+                            <field name="commission"/>
+                            <field name="payable_amount"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="type_id"/>
+                            <field name="invoice_cashable"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="description" string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+<!--    Search view-->
+    <record id="seller_payment_view_search" model="ir.ui.view">
+        <field name="name">Payment Search</field>
+        <field name="model">seller.payment</field>
+        <field name="arch" type="xml">
+            <search string="Search contacts">
+                <group expand="0" string="Group By">
+                    <filter string="Seller" name="seller"
+                            context="{'group_by': 'seller_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+<!--    Sequence number for Seller payment-->
+    <record id="seller_payment_sequence" model="ir.sequence">
+        <field name="name">seller reference</field>
+        <field name="code">seller.payment</field>
+        <field name="prefix">SP</field>
+        <field name="padding">5</field>
+    </record>
+<!--    Seller Payment menu-->
+    <menuitem id="seller_payment" parent="sales"
+              name="Seller Payment" sequence="27"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              action="multi_vendor_marketplace.seller_payment_action"/>
+</odoo>

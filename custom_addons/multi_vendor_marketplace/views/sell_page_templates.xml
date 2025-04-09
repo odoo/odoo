@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Templates for seller page in the website-->
+    <template id="sell_page" name="SellPage">
+        <t t-call="website.layout">
+            <t t-set="banner" t-value="website.seller_banner"/>
+            <div align="center">
+                <t t-if="banner">
+                    <div t-esc="banner"
+                         t-options="{'widget':'image'}"/>
+                </t>
+                <t t-else="">
+                    <img src="/multi_vendor_marketplace/static/src/img/vendor.jpg"/>
+                </t>
+            </div>
+            <div class="container-fluid"
+                 style="padding-bottom:45px;padding-top:16px;background-color: #f9f9f8;">
+                <div class="row justify-content-center">
+                    <h2 class="text-center o_default_snippet_text"
+                        style="padding:5px;">More than 5,000 Sellers are part
+                        of our Marketplace Store,<br></br>Join us today and get
+                        all the excited perks.
+                    </h2>
+                </div>
+                <t t-if="config.bcome_seller">
+                    <div class="sell_page_main_div">
+                        <h2 class="o_default_snippet_text" style="
+    margin-left: 563px;
+    color: violet;
+">Why still Offline,
+                            Start
+                            Selling Online with us!
+                        </h2>
+                        <div id="open_store_button" style="
+    margin-left: 785px;
+    margin-top: 32px;
+">
+                            <a href="/seller_reg"
+                               class="btn o_default_snippet_text"
+                               style="font-weight:600;background:#3BD3F4;border-radius: 2px;color:#fff;text-transform: uppercase;">
+                                Open a New Store
+                            </a>
+                        </div>
+                    </div>
+                </t>
+                <div class="row mt64 justify-content-center">
+                    <div class="col-md-3 col-md-offset-2 text-center o_colored_level">
+                        <img src="/multi_vendor_marketplace/static/src/img/icon.png"
+                             alt="feature-a" loading="lazy"
+                             data-lazy-loading-initial-min-height=""
+                             style="
+    height: 100px;
+"/>
+                        <div class="feature-text o_default_snippet_text">Open a
+                            New Shop
+                        </div>
+                        <div class="text-center o_default_snippet_text">By
+                            opening a shop at our marketplace you can expose
+                            more of your products to more potential customers.
+                            Your best opportunity for growth could be selling
+                            in our online marketplace.
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center o_colored_level">
+                        <img src="/multi_vendor_marketplace/static/src/img/icon.png"
+                             alt="feature-b" loading="lazy"
+                             data-lazy-loading-initial-min-height=""
+                             style="
+    height: 100px;
+"/>
+                        <div class="feature-text o_default_snippet_text">Sell
+                            Products
+                        </div>
+                        <div class="text-center o_default_snippet_text">
+                            Business is all about trading. It's all about
+                            creating a product so good that people pay for it.
+                            Increase your sales figure from our high traffic
+                            channel.
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center o_colored_level">
+                        <img src="/multi_vendor_marketplace/static/src/img/icon.png"
+                             alt="feature-c" loading="lazy"
+                             data-lazy-loading-initial-min-height=""
+                             style="
+    height: 100px;
+"/>
+                        <div class="feature-text o_default_snippet_text">Get
+                            Quick Commission
+                        </div>
+                        <div class="text-center o_default_snippet_text">Be
+                            smart and start earning the commission whenever a
+                            product of yours is sold through our website.
+                            Commission Management provides full transparency
+                            and flexibility for both buy-side and sell-side.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="seller_footer" inherit_id="website.footer_custom"
+              name="seller_footer" active="True">
+        <xpath expr="//ul[hasclass('list-unstyled')]" position="inside">
+            <t t-set="sell"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('multi_vendor_marketplace.show_sell_menu_footer')"/>
+            <t t-set="seller_list"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('multi_vendor_marketplace.show_sellers_list')"/>
+            <t t-set="seller_label"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('multi_vendor_marketplace.sell_link_label')"/>
+            <t t-set="seller_list_label"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('multi_vendor_marketplace.seller_list_link_label')"/>
+            <t t-if="sell">
+                <t t-if="seller_label">
+                    <li>
+                        <a href="/sell">
+                            <t t-esc="seller_label"/>
+                        </a>
+                    </li>
+                </t>
+                <t t-else="">
+                    <a href="/sell">
+                        Sell
+                    </a>
+                </t>
+            </t>
+            <t t-if="seller_list">
+                <t t-if="seller_list_label">
+                    <li>
+                        <a href="/seller/list">
+                            <t t-esc="seller_list_label"/>
+                        </a>
+                    </li>
+                </t>
+                <t t-else="">
+                    <li>
+                        <a href="/seller/list">Seller List</a>
+                    </li>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

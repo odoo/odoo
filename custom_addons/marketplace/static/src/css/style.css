@@ -1,0 +1,36 @@
+.o_kanban_record {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.o_kanban_image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.o_kanban_view {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Расстояние между карточками */
+    justify-content: space-between; /* Равномерное распределение карточек */
+    width: 100%; /* Убедитесь, что контейнер занимает всю ширину */
+    margin: 0 auto; /* Центрирование */
+    box-sizing: border-box;
+}
+
+.o_kanban_record {
+    flex: 0 0 calc(33.3333% - 10px); /* Учитываем расстояние между карточками */
+    max-width: calc(33.3333% - 10px);
+    margin: 0; /* Убираем лишние отступы */
+    box-sizing: border-box;
+}
+
+
+.o_kanban_view .o_kanban_group {
+    margin-bottom: 0; /* Убирает лишние отступы */
+}

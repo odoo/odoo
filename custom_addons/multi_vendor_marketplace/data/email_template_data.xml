@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--    Mail templates for Admins when a new request comes -->
+    <record id="seller_request_admin_mail_template"
+            model="mail.template">
+        <field name="name">New Seller Request- Admin mail</field>
+        <field name="model_id"
+               ref="multi_vendor_marketplace.model_res_partner"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="email_from">"{{ object.company_id.name }}" &lt;{{
+            (object.company_id.email or user.email) }}&gt;
+        </field>
+        <field name="email_to">{{object.company_id.email}}</field>
+        <field name="subject">New Seller request from {{
+            ctx['seller']}}
+        </field>
+        <field name="body_html" type="html">
+            <p>
+                Dear Admin,
+                <br/>
+                A new seller
+                <t t-out="ctx['seller']"/>
+                has been requested.
+                Please Approve or Reject.
+            </p>
+        </field>
+    </record>
+    <!--        Mail templates for Seller when a new request comes-->
+    <record id="seller_request_seller_mail_template"
+            model="mail.template">
+        <field name="name">New Seller Request- Seller mail</field>
+        <field name="model_id"
+               ref="multi_vendor_marketplace.model_res_partner"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="email_from">{{object.company_id.email}}</field>
+        <field name="email_to">{{ctx['seller_mail']}}</field>
+        <field name="subject">Seller Request under progress</field>
+        <field name="body_html" type="html">
+            <p>
+                Dear Mr/Ms
+                <t t-out="ctx['seller']"/>
+                ,
+                <br/>
+                You have requested for perform as a seller. Please
+                wait for
+                your approval.
+            </p>
+        </field>
+    </record>
+    <!--        Mail templates for Admins to inform the state of the seller-->
+    <record id="seller_state_admin_mail_template"
+            model="mail.template">
+        <field name="name">Seller Approve/Reject-Admin mail</field>
+        <field name="model_id"
+               ref="multi_vendor_marketplace.model_res_partner"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="email_from">{{object.company_id.email}}</field>
+        <field name="email_to">{{object.company_id.email}}</field>
+        <field name="subject">Seller {{ object.name }} Status</field>
+        <field name="body_html" type="html">
+            <p>
+                Dear Admin,
+                <t t-if="object.state== 'Approved'">
+                    <p>
+                        New Seller
+                        <t t-out="object.display_name"/>
+                        has been approved by you
+                    </p>
+                </t>
+                <t t-if="object.state== 'Denied'">
+                    <p>
+                        New Seller
+                        <t t-out="object.display_name"/>
+                        has been rejected by you
+                    </p>
+                </t>
+            </p>
+        </field>
+    </record>
+    <!--        Mail templates for Seller to inform the state of the seller-->
+    <record id="seller_state_seller_mail_template"
+            model="mail.template">
+        <field name="name">Seller Approve/Reject- Seller mail</field>
+        <field name="model_id"
+               ref="multi_vendor_marketplace.model_res_partner"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="email_from">{{object.company_id.email}}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="subject">Seller {{ object.name }} Status</field>
+        <field name="body_html" type="html">
+            <t t-if="object.state== 'Approved'">
+                <p>
+                    Dear Mr/Ms<t t-out="object.display_name"/>,
+                    <br/>
+                    Congrats..! You have been approved to work as a
+                    new
+                    seller.
+                </p>
+            </t>
+            <t t-if="object.state== 'Denied'">
+                <p>
+                    Dear Mr/Ms<t t-out="object.display_name"/>,
+                    <br/>
+                    Sorry, you have been rejected to work as a
+                    seller.
+                </p>
+            </t>
+        </field>
+    </record>
+    <!--        Mail templates for Admins to inform the state of the product-->
+    <record id="product_state_admin_mail_template"
+            model="mail.template">
+        <field name="name">Product Approve/Reject - Admin mail
+        </field>
+        <field name="model_id"
+               ref="multi_vendor_marketplace.model_product_template"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="email_from">{{object.company_id.email}}</field>
+        <field name="email_to">{{object.company_id.email}}</field>
+        <field name="subject">New product {{ object.name }} from {{
+            object.seller_id.name }}
+        </field>
+        <field name="body_html" type="html">
+            <t t-if="object.state== 'approved'">
+                <p>
+                    Dear Admin,
+                    <br/>
+                    New Product
+                    <t t-out="object.name"/>
+                    request from
+                    <t t-out="object.seller_id.name"/>
+                    has been approved by you.
+                </p>
+            </t>
+            <t t-if="object.state== 'rejected'">
+                <p>
+                    Dear Admin,
+                    <br/>
+                    New Product
+                    <t t-out="object.name"/>
+                    request from
+                    <t t-out="object.seller_id.name"/>
+                    has been rejected by you.
+                </p>
+            </t>
+
+        </field>
+    </record>
+    <!--        Mail templates for Seller to inform the state of the product-->
+    <record id="product_state_seller_mail_template"
+            model="mail.template">
+        <field name="name">Product Approve/Reject - Seller mail
+        </field>
+        <field name="model_id"
+               ref="multi_vendor_marketplace.model_product_template"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="email_from">{{object.company_id.email}}</field>
+        <field name="email_to">{{ object.seller_id.email }}</field>
+        <field name="subject">Your new product {{ object.name }}
+        </field>
+        <field name="body_html" type="html">
+            <t t-if="object.state== 'approved'">
+                <p>
+                    Dear Mr/Ms<t t-out="object.seller_id.name"/>,
+                    <br/>
+                    Congrats..!!
+                    Your new Product
+                    <t t-out="object.name"/>
+                    is approved for sale.
+                </p>
+            </t>
+            <t t-if="object.state== 'rejected'">
+                <p>
+                    Dear Mr/Ms<t t-out="object.seller_id.name"/>,
+                    <br/>
+                    Sorry.. Your new Product
+                    <t t-out="object.name"/>
+                    is not approved for sale
+                </p>
+            </t>
+        </field>
+    </record>
+    <!--        Mail templates for Seller to inform when a sale order comes-->
+    <record id="new_order_seller_mail_template"
+            model="mail.template">
+        <field name="name">New Sale Order - Seller mail</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="email_from">{{object.company_id.email}}</field>
+        <field name="email_to">{{ object.seller_id.email }}</field>
+        <field name="subject">SO {{ object.name }} created</field>
+        <field name="body_html" type="html">
+            <p>
+                Dear Mr/Ms<t t-out="object.display_name"/>,
+                <br/>
+                New Sale Order {{ object.name }} from your shop
+            </p>
+        </field>
+    </record>
+</odoo>
