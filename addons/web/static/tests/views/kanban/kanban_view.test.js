@@ -95,6 +95,7 @@ import { kanbanView } from "@web/views/kanban/kanban_view";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
 import { WebClient } from "@web/webclient/webclient";
+import { RPCError } from "@web/core/network/rpc";
 
 const { IrAttachment } = webModels;
 
@@ -13806,4 +13807,90 @@ test("hide pager in the kanban view with sample data", async () => {
 
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_cp_pager").not.toBeVisible();
+});
+
+test("Dispaly Archive records instead of Delete if it is required by other objects", async () => {
+    Partner._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect(args).toEqual([[1]]);
+            const error = new RPCError();
+            error.data = { message };
+            throw error;
+        } else if (method === "action_archive") {
+            expect.step("action_archive");
+            expect(args).toEqual([[1]]);
+            return true;
+        }
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban limit="3">
+                <templates>
+                    <t t-name="card">
+                        <a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a>
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    await click(queryFirst(".o_kanban_record .o_delete", { root: getKanbanColumn(0) }));
+    await animationFrame();
+
+    await contains(".modal-footer .btn-primary").click();
+
+    expect("h4.modal-title").toHaveText("Delete records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    expect(".modal-footer .btn-primary").toHaveText("Archive records");
+    await contains(".modal-footer .btn-primary").click()
+    expect.verifySteps(["action_archive"]);
+});
+
+test("Don't display Archive records instead of delete if it is required by other objects but model not archivable or no active records exist", async () => {
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect(args).toEqual([[1]]);
+            const error = new RPCError();
+            error.data = { message };
+            throw error;
+        } else if (method === "action_archive") {
+            expect.step("action_archive");
+            expect(args).toEqual([[1]]);
+            return true;
+        }
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban limit="3">
+                <templates>
+                    <t t-name="card">
+                        <a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a>
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    await click(queryFirst(".o_kanban_record .o_delete", { root: getKanbanColumn(0) }));
+    await animationFrame();
+
+    await contains(".modal-footer .btn-primary").click();
+
+    expect("h4.modal-title").toHaveText("Delete records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+    expect(".modal-footer .btn-primary").toHaveCount(0);
 });

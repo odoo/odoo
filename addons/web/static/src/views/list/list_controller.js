@@ -186,7 +186,7 @@ export class ListController extends Component {
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()
         );
-        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model, this.archiveEnabled);
     }
 
     get modelParams() {
