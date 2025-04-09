@@ -13,7 +13,7 @@ from odoo import http
 from odoo.addons.hw_drivers.browser import Browser, BrowserState
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.main import iot_devices
-from odoo.addons.hw_drivers.tools import helpers, wifi
+from odoo.addons.hw_drivers.tools import helpers, route
 from odoo.addons.hw_drivers.tools.helpers import Orientation
 from odoo.tools.misc import file_path
 
@@ -122,7 +122,7 @@ class DisplayDriver(Driver):
 
 
 class DisplayController(http.Controller):
-    @http.route('/hw_proxy/customer_facing_display', type='jsonrpc', auth='none', cors='*')
+    @route.iot_route('/hw_proxy/customer_facing_display', type='jsonrpc', cors='*')
     def customer_facing_display(self, action, pos_id=None, access_token=None, data=None):
         display = self.ensure_display()
         if action in ['open', 'open_kiosk']:
