@@ -10,8 +10,7 @@
             min="8"
             max="100"
             displayRangeValue="true"
-            unit="'%'"
-            computedOutput="(value) => value + '%'" />
+            unit="'%'"/>
     </BuilderRow>
     <BuilderRow t-if="getItemValue('card_width') !== '100%'" label.translate="Alignment" level="1">
         <BuilderButtonGroup action="'setCardAlignment'">
