@@ -364,7 +364,7 @@ test("field context is propagated when opening selection", async function () {
 });
 
 test("domain field: manually edit domain with textarea", async function () {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     Partner._fields.bar = fields.Char();
     Partner._records = [
@@ -409,7 +409,7 @@ test("domain field: manually edit domain with textarea", async function () {
 });
 
 test("domain field: manually set an invalid domain with textarea", async function () {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     Partner._fields.bar = fields.Char();
     Partner._records = [
@@ -476,7 +476,7 @@ test("domain field: manually set an invalid domain with textarea", async functio
 });
 
 test("domain field: reload count by clicking on the refresh button", async function () {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     Partner._fields.bar = fields.Char();
     Partner._records = [
@@ -555,7 +555,7 @@ test("domain field: does not wait for the count to render", async function () {
 });
 
 test("domain field: have a default count limit of 10000", async function () {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     Partner._fields.bar = fields.Char();
     Partner._records = [
@@ -591,7 +591,7 @@ test("domain field: have a default count limit of 10000", async function () {
 });
 
 test("domain field: foldable and count limit reached", async function () {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     Partner._fields.bar = fields.Char();
     Partner._records = [
@@ -627,7 +627,7 @@ test("domain field: foldable and count limit reached", async function () {
 });
 
 test("domain field: configurable count limit", async function () {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     Partner._fields.bar = fields.Char();
     Partner._records = [
@@ -665,7 +665,7 @@ test("domain field: configurable count limit", async function () {
 test("domain field: edit domain with dynamic content", async function () {
     expect.assertions(3);
 
-    serverState.debug = true;
+    serverState.debug = "1";
 
     Partner._fields.bar = fields.Char();
     let rawDomain = `[("date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -365), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`;
@@ -708,7 +708,7 @@ test("domain field: edit domain with dynamic content", async function () {
 });
 
 test("domain field: edit through selector (dynamic content)", async function () {
-    serverState.debug = true;
+    serverState.debug = "1";
     mockDate("2020-09-05 00:00:00");
 
     Partner._fields.bar = fields.Char();
@@ -854,7 +854,7 @@ test("domain field with 'inDialog' options", async function () {
 
 test("invalid value in domain field with 'inDialog' options", async function () {
     Partner._fields.name.default = "[]";
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountView({
         type: "form",
         resModel: "partner",
@@ -878,7 +878,7 @@ test("invalid value in domain field with 'inDialog' options", async function () 
 
 test("edit domain button is available even while loading records count", async function () {
     Partner._fields.name.default = "[]";
-    serverState.debug = true;
+    serverState.debug = "1";
     const searchCountDeffered = new Deferred();
     onRpc("/web/domain/validate", () => true);
     onRpc("search_count", () => searchCountDeffered);
@@ -902,7 +902,7 @@ test("edit domain button is available even while loading records count", async f
 
 test("debug input editing sets the field as dirty even without a focus out", async function () {
     Partner._fields.name.default = "[]";
-    serverState.debug = true;
+    serverState.debug = "1";
     onRpc("/web/domain/validate", () => {
         expect.step("validate domain");
         return true;
@@ -924,7 +924,7 @@ test("debug input editing sets the field as dirty even without a focus out", asy
 
 test("debug input corrections don't need a focus out to be saved", async function () {
     Partner._fields.name.default = "[]";
-    serverState.debug = true;
+    serverState.debug = "1";
     await mountView({
         type: "form",
         resModel: "partner",
@@ -944,7 +944,7 @@ test("debug input corrections don't need a focus out to be saved", async functio
 });
 
 test("quick check on save if domain has been edited via the debug input", async function () {
-    serverState.debug = true;
+    serverState.debug = "1";
     Partner._fields.name = fields.Char({ default: "[['id', '=', False]]" });
     onRpc("/web/domain/validate", async (request) => {
         const { params } = await request.json();
@@ -1033,7 +1033,7 @@ test("domain field can be foldable", async function () {
 });
 
 test("add condition in empty foldable domain", async function () {
-    serverState.debug = true;
+    serverState.debug = "1";
     Partner._records[0].foo = '[("id", "=", 1)]';
 
     await mountView({
