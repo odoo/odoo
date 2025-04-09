@@ -891,11 +891,15 @@ class DiscussChannel(models.Model):
             notification = Markup(notification_text) % {
                 'user_pinned_a_message_to_this_channel': Markup('<a href="#" data-oe-type="highlight" data-oe-id="%s">%s</a>') % (
                     message_id,
-                    _('%(user_name)s pinned a message to this channel.', user_name=self.env.user.display_name),
+                    _('%(user_name)s pinned a message to this channel.', user_name=self._get_user_name()),
                 ),
                 'see_all_pins': _('See all pinned messages.'),
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
+
+    def _get_user_name(self):
+        """ Returns the name of the current user. """
+        return self.env.user.display_name
 
     def _find_or_create_member_for_self(self):
         self.ensure_one()
