@@ -227,6 +227,8 @@ var VariantMixin = {
         $parent
             .find('option, input, label, .o_variant_pills')
             .removeClass('css_not_available')
+            // To Do VCR: check implementation and clean up of old functionality
+            .removeAttr('disabled')
             .attr('title', function () { return $(this).data('value_name') || ''; })
             .data('excluded-by', '');
 
@@ -326,15 +328,16 @@ var VariantMixin = {
     _disableInput: function ($parent, attributeValueId, excludedBy, attributeNames, productName) {
         var $input = $parent
             .find('option[value=' + attributeValueId + '], input[value=' + attributeValueId + ']');
-        $input.addClass('css_not_available');
+        $input.addClass('css_not_available').prop('disabled', true);
         $input.closest('label').addClass('css_not_available');
         $input.closest('.o_variant_pills').addClass('css_not_available');
 
+        const liEl = $input.closest('li');
+
         if (excludedBy && attributeNames) {
-            var $target = $input.is('option') ? $input : $input.closest('label').add($input);
             var excludedByData = [];
-            if ($target.data('excluded-by')) {
-                excludedByData = JSON.parse($target.data('excluded-by'));
+            if (liEl.data('excluded-by')) {
+                excludedByData = JSON.parse(liEl.data('excluded-by'));
             }
 
             var excludedByName = attributeNames[excludedBy];
@@ -343,8 +346,8 @@ var VariantMixin = {
             }
             excludedByData.push(excludedByName);
 
-            $target.attr('title', _t('Not available with %s', excludedByData.join(', ')));
-            $target.data('excluded-by', JSON.stringify(excludedByData));
+            liEl.attr('title', _t('Not available with %s', excludedByData.join(', ')));
+            liEl.data('excluded-by', JSON.stringify(excludedByData));
         }
     },
     /**
@@ -557,9 +560,9 @@ var VariantMixin = {
         radio.click();  // Trigger onChangeVariant.
         var $parent = $(ev.target).closest('.js_product');
         $parent.find('.o_variant_pills')
-            .removeClass("active")
+            .removeClass("active border-primary text-primary-emphasis bg-primary-subtle")
             .filter(':has(input:checked)')
-            .addClass("active");
+            .addClass("active border-primary text-primary-emphasis bg-primary-subtle");
     },
 
     /**
