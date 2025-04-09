@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import re
 
-from collections import defaultdict
 from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
@@ -625,9 +623,6 @@ class HrEmployee(models.Model):
                         if vals['work_contact_id']:
                             bank_account.partner_id = vals['work_contact_id']
             self.message_unsubscribe(self.work_contact_id.ids)
-            if vals['work_contact_id']:
-                # TDE FIXME: should be suggested, to check in master
-                self._message_subscribe([vals['work_contact_id']])
         if vals.get('user_id'):
             # Update the profile pictures with user, except if provided
             user = self.env['res.users'].browse(vals['user_id'])
