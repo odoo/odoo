@@ -125,6 +125,19 @@ class TestItEdiImport(TestItEdi):
                 'amount_tax': 3.95,
             }])
 
+    def test_import_invoice_with_multiple_same_vat(self):
+        (self.italian_partner_a | self.italian_partner_b).update({
+            'vat': "IT06655971007",
+            'l10n_it_codice_fiscale': '06655971007',
+        })
+        self._assert_import_invoice('IT01234567892_FPR01.xml', [{
+            'partner_id': self.italian_partner_b.id,
+        }], move_type="out_invoice")
+        self.italian_partner_b.active = False
+        self._assert_import_invoice('IT01234567892_FPR01.xml', [{
+            'partner_id': self.italian_partner_a.id,
+        }], move_type="out_invoice")
+
     def test_receive_bill_sequence(self):
         """ Ensure that the received bill gets assigned the right sequence. """
         def mock_commit(self):
