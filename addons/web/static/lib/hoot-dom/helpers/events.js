@@ -4,6 +4,7 @@ import { HootDomError, getTag, isFirefox, isIterable } from "../hoot_dom_utils";
 import {
     getActiveElement,
     getDocument,
+    getInteractiveNode,
     getNextFocusableElement,
     getNodeRect,
     getNodeValue,
@@ -20,6 +21,7 @@ import {
     parsePosition,
     queryAll,
     queryFirst,
+    queryOne,
     setDimensions,
     toSelector,
 } from "./dom";
@@ -359,13 +361,15 @@ const getDefaultRunTimeValue = () => ({
     // Pointer
     clickCount: 0,
     key: null,
+    /** @type {HTMLElement | null} */
     pointerDownTarget: null,
     pointerDownTimeout: 0,
+    /** @type {HTMLElement | null} */
     pointerTarget: null,
     /** @type {EventPosition | {}} */
     position: {},
+    /** @type {HTMLElement | null} */
     previousPointerDownTarget: null,
-    previousPointerTarget: null,
     /** @type {EventPosition | {}} */
     touchStartPosition: {},
 
@@ -564,6 +568,23 @@ const getFirstCommonParent = (a, b) => {
 
 /**
  * @param {HTMLElement} element
+ * @param {QueryOptions} options
+ */
+const getPointerTarget = (element, options) => {
+    if (options?.interactive === false) {
+        // Explicit 'interactive: false' option
+        // -> element can be a non-interactive element
+        return element;
+    }
+    const interactiveElement = getInteractiveNode(element);
+    if (!interactiveElement) {
+        queryOne(element, { ...options, interactive: true }); // Will throw if no elements are found
+    }
+    return interactiveElement;
+};
+
+/**
+ * @param {HTMLElement} element
  * @param {PointerOptions} [options]
  */
 const getPosition = (element, options) => {
@@ -628,7 +649,7 @@ const getPosition = (element, options) => {
 };
 
 /**
- * @param {Node} target
+ * @param {HTMLInputElement | HTMLTextAreaElement} target
  */
 const getStringSelection = (target) =>
     $isInteger(target.selectionStart) &&
@@ -645,14 +666,14 @@ const hasTouch = () =>
     globalThis.ontouchstart !== undefined || globalThis.matchMedia("(pointer:coarse)").matches;
 
 /**
- * @param {EventTarget | EventPosition} target
- * @param {PointerOptions} [options]
+ * @param {Position | null} position
  */
-const isDifferentPosition = (target, options) => {
-    const previous = runTime.position;
-    const next = isNode(target) ? getPosition(target, options) : target;
-    for (const key in next) {
-        if (previous[key] !== next[key]) {
+const isDifferentPosition = (position) => {
+    if (!runTime.position || !position) {
+        return runTime.position !== position;
+    }
+    for (const key in position) {
+        if (runTime.position[key] !== position[key]) {
             return true;
         }
     }
@@ -795,9 +816,10 @@ const registerForChange = async (target, initialValue, confirmAction) => {
 
     switch (confirmAction) {
         case "blur": {
-            await _click(getDocument(target).body, {
+            await _hover(getDocument(target).body, {
                 position: { x: 0, y: 0 },
             });
+            await _click();
             break;
         }
         case "enter": {
@@ -851,31 +873,6 @@ const setPointerDownTarget = (target) => {
     }
     runTime.pointerDownTarget = target;
     runTime.canStartDrag = false;
-};
-
-/**
- * @param {HTMLElement | null} target
- * @param {PointerOptions} [options]
- */
-const setPointerTarget = async (target, options) => {
-    runTime.previousPointerTarget = runTime.pointerTarget;
-    runTime.pointerTarget = target;
-
-    if (runTime.canStartDrag) {
-        /**
-         * Special action: drag start
-         *  On: unprevented 'pointerdown' on a draggable element (DESKTOP ONLY)
-         *  Do: triggers a 'dragstart' event
-         */
-        const dragStartEvent = await dispatch(runTime.previousPointerTarget, "dragstart", {
-            dataTransfer: runTime.dataTransfer,
-        });
-
-        runTime.isDragging = !isPrevented(dragStartEvent);
-        runTime.canStartDrag = false;
-    }
-
-    runTime.position = target && getPosition(target, options);
 };
 
 /**
@@ -1072,12 +1069,11 @@ const _clear = async (target, options) => {
 };
 
 /**
- * @param {EventTarget} target
  * @param {PointerOptions} [options]
  */
-const _click = async (target, options) => {
-    await _pointerDown(target, options);
-    await _pointerUp(target, options);
+const _click = async (options) => {
+    await _pointerDown(options);
+    await _pointerUp(options);
 };
 
 /**
@@ -1145,40 +1141,69 @@ const _fill = async (target, value, options) => {
 };
 
 /**
- * @param {EventTarget} target
- * @param {PointerOptions} [options]
+ * @param {EventTarget | null} target
+ * @param {PointerOptions | null} options
+ * @param {{ implicit?: boolean }} [hoverOptions]
  */
-const _hover = async (target, options) => {
-    const isDifferentTarget = target !== runTime.pointerTarget;
+const _hover = async (target, options, hoverOptions) => {
+    const pointerTarget = target && getPointerTarget(target, options);
+    const position = target && getPosition(target, options);
+
+    const previousPT = runTime.pointerTarget;
     const previousPosition = runTime.position;
 
-    await setPointerTarget(target, options);
+    const isDifferentTarget = previousPT !== pointerTarget;
 
-    const { previousPointerTarget: previous, pointerTarget: current } = runTime;
-    if (isDifferentTarget && previous && (!current || !previous.contains(current))) {
+    if (hoverOptions?.implicit && !isDifferentTarget && !isDifferentPosition(position)) {
+        // Implicit hover: do not perform hover if the pointer target is the same
+        // and the position didn't change.
+        return;
+    }
+    if (runTime.canStartDrag) {
+        /**
+         * Special action: drag start
+         *  On: unprevented 'pointerdown' on a draggable element (DESKTOP ONLY)
+         *  Do: triggers a 'dragstart' event
+         */
+        const dragStartEvent = await dispatch(previousPT, "dragstart", {
+            dataTransfer: runTime.dataTransfer,
+        });
+
+        runTime.isDragging = !isPrevented(dragStartEvent);
+        runTime.canStartDrag = false;
+    }
+
+    runTime.pointerTarget = pointerTarget;
+    runTime.position = position;
+
+    if (
+        isDifferentTarget &&
+        previousPT &&
+        (!pointerTarget || !previousPT.contains(pointerTarget))
+    ) {
         // Leaves previous target
         const leaveEventInit = {
             ...previousPosition,
-            relatedTarget: current,
+            relatedTarget: pointerTarget,
             button: options?.button || 0,
         };
 
         if (runTime.isDragging) {
             // If dragging, only drag events are triggered
             const leaveEventInitWithDT = { ...leaveEventInit, dataTransfer: runTime.dataTransfer };
-            runTime.lastDragOverCancelled = await triggerDrag(previous, leaveEventInitWithDT);
-            await dispatch(previous, "dragleave", leaveEventInitWithDT);
+            runTime.lastDragOverCancelled = await triggerDrag(previousPT, leaveEventInitWithDT);
+            await dispatch(previousPT, "dragleave", leaveEventInitWithDT);
         } else {
             // Regular case: pointer events are triggered
-            await dispatchPointerEvent(previous, "pointermove", leaveEventInit, {
+            await dispatchPointerEvent(previousPT, "pointermove", leaveEventInit, {
                 mouse: ["mousemove"],
                 touch: ["touchmove"],
             });
-            await dispatchPointerEvent(previous, "pointerout", leaveEventInit, {
+            await dispatchPointerEvent(previousPT, "pointerout", leaveEventInit, {
                 mouse: ["mouseout"],
             });
             const leaveEvents = await Promise.all(
-                getDifferentParents(current, previous).map((element) =>
+                getDifferentParents(pointerTarget, previousPT).map((element) =>
                     dispatch(element, "pointerleave", leaveEventInit)
                 )
             );
@@ -1188,51 +1213,43 @@ const _hover = async (target, options) => {
         }
     }
 
-    if (current) {
-        const enterEventInit = {
-            ...runTime.position,
-            relatedTarget: previous,
-            button: options?.button || 0,
-        };
-        if (runTime.isDragging) {
-            // If dragging, only drag events are triggered
-            const enterEventInitWithDT = { ...enterEventInit, dataTransfer: runTime.dataTransfer };
-            runTime.lastDragOverCancelled = false;
-            if (isDifferentTarget) {
-                const dragEnterEvent = await dispatch(target, "dragenter", enterEventInitWithDT);
-                runTime.lastDragOverCancelled = isPrevented(dragEnterEvent);
-            }
-            runTime.lastDragOverCancelled ||= await triggerDrag(target, enterEventInitWithDT);
-        } else {
-            // Regular case: pointer events are triggered
-            if (isDifferentTarget) {
-                await dispatchPointerEvent(target, "pointerover", enterEventInit, {
-                    mouse: ["mouseover"],
-                });
-                const enterEvents = await Promise.all(
-                    getDifferentParents(previous, current).map((element) =>
-                        dispatch(element, "pointerenter", enterEventInit)
-                    )
-                );
-                if (!hasTouch()) {
-                    await dispatchRelatedEvents(enterEvents, "mouseenter", enterEventInit);
-                }
-            }
-            await dispatchPointerEvent(target, "pointermove", enterEventInit, {
-                mouse: ["mousemove"],
-                touch: ["touchmove"],
-            });
-        }
+    if (!pointerTarget) {
+        return;
     }
-};
 
-/**
- * @param {EventTarget} target
- * @param {PointerOptions} [options]
- */
-const _implicitHover = async (target, options) => {
-    if (runTime.pointerTarget !== target || isDifferentPosition(target, options)) {
-        await _hover(target, options);
+    const enterEventInit = {
+        ...runTime.position,
+        relatedTarget: previousPT,
+        button: options?.button || 0,
+    };
+    if (runTime.isDragging) {
+        // If dragging, only drag events are triggered
+        const enterEventInitWithDT = { ...enterEventInit, dataTransfer: runTime.dataTransfer };
+        runTime.lastDragOverCancelled = false;
+        if (isDifferentTarget) {
+            const dragEnterEvent = await dispatch(pointerTarget, "dragenter", enterEventInitWithDT);
+            runTime.lastDragOverCancelled = isPrevented(dragEnterEvent);
+        }
+        runTime.lastDragOverCancelled ||= await triggerDrag(pointerTarget, enterEventInitWithDT);
+    } else {
+        // Regular case: pointer events are triggered
+        if (isDifferentTarget) {
+            await dispatchPointerEvent(pointerTarget, "pointerover", enterEventInit, {
+                mouse: ["mouseover"],
+            });
+            const enterEvents = await Promise.all(
+                getDifferentParents(previousPT, pointerTarget).map((element) =>
+                    dispatch(element, "pointerenter", enterEventInit)
+                )
+            );
+            if (!hasTouch()) {
+                await dispatchRelatedEvents(enterEvents, "mouseenter", enterEventInit);
+            }
+        }
+        await dispatchPointerEvent(pointerTarget, "pointermove", enterEventInit, {
+            mouse: ["mousemove"],
+            touch: ["touchmove"],
+        });
     }
 };
 
@@ -1522,11 +1539,11 @@ const _keyUp = async (target, eventInit) => {
 };
 
 /**
- * @param {EventTarget} target
  * @param {DragOptions} [options]
  */
-const _pointerDown = async (target, options) => {
-    setPointerDownTarget(target);
+const _pointerDown = async (options) => {
+    setPointerDownTarget(runTime.pointerTarget);
+
     if (options?.dataTransfer || options?.files || options?.items) {
         runTime.dataTransfer = createDataTransfer(options);
     }
@@ -1559,7 +1576,7 @@ const _pointerDown = async (target, options) => {
     }
 
     // Focus the element (if focusable)
-    await triggerFocus(target);
+    await triggerFocus(pointerDownTarget);
 
     if (
         eventInit.button === btn.LEFT &&
@@ -1574,15 +1591,15 @@ const _pointerDown = async (target, options) => {
          *      event on an element
          *  Do: triggers a 'contextmenu' event
          */
-        await dispatch(target, "contextmenu", eventInit);
+        await dispatch(pointerDownTarget, "contextmenu", eventInit);
     }
 };
 
 /**
- * @param {EventTarget} target
  * @param {PointerOptions} [options]
  */
-const _pointerUp = async (target, options) => {
+const _pointerUp = async (options) => {
+    const target = runTime.pointerTarget;
     const isLongTap = globalThis.Date.now() - runTime.touchStartTimeOffset > LONG_TAP_DELAY;
     const pointerDownTarget = runTime.pointerDownTarget;
     const eventInit = {
@@ -1909,8 +1926,8 @@ export async function check(target, options) {
 
     const checkTarget = getTag(element) === "label" ? element.control : element;
     if (!checkTarget.checked) {
-        await _implicitHover(element, options);
-        await _click(element, options);
+        await _hover(element, options, { implicit: true });
+        await _click(options);
 
         if (!checkTarget.checked) {
             throw new HootDomError(
@@ -1980,8 +1997,8 @@ export async function click(target, options) {
     const finalizeEvents = setupEvents("click", options);
     const element = queryFirst(await target, options);
 
-    await _implicitHover(element, options);
-    await _click(element, options);
+    await _hover(element, options, { implicit: true });
+    await _click(options);
 
     return finalizeEvents();
 }
@@ -2001,9 +2018,9 @@ export async function dblclick(target, options) {
     const element = queryFirst(await target, options);
 
     options = { ...options, button: btn.LEFT };
-    await _implicitHover(element, options);
-    await _click(element, options);
-    await _click(element, options);
+    await _hover(element, options, { implicit: true });
+    await _click(options);
+    await _click(options);
 
     return finalizeEvents();
 }
@@ -2125,7 +2142,7 @@ export async function drag(target, options) {
         /** @type {DragHelpers["cancel"]} */
         async function cancel(options) {
             const finalizeEvents = setupEvents("drag & drop: cancel", options);
-            const bodyElement = getDocument(initialElement).body;
+            const bodyElement = getDocument(runTime.pointerTarget).body;
 
             // Reset buttons
             runTime.buttons = 0;
@@ -2152,7 +2169,7 @@ export async function drag(target, options) {
 
             const finalizeEvents = setupEvents("drag & drop: drop", options);
 
-            await _pointerUp(runTime.pointerTarget, options);
+            await _pointerUp(options);
 
             dragEvents.push(...finalizeEvents());
 
@@ -2169,7 +2186,7 @@ export async function drag(target, options) {
             }
             const finalizeEvents = setupEvents("drag & drop: move", options);
 
-            const nextElement = to ? queryFirst(await to) : initialElement;
+            const nextElement = to ? queryFirst(await to, options) : runTime.pointerTarget;
             await _hover(nextElement, options);
 
             dragEvents.push(...finalizeEvents());
@@ -2181,13 +2198,12 @@ export async function drag(target, options) {
 
     const finalizeEvents = setupEvents("drag & drop: start", options);
     const dragHelpers = { cancel, drop, moveTo };
-    const initialElement = queryFirst(await target);
-
+    const dragStartTarget = queryFirst(await target, options);
     let dragEndReason = null;
 
     // Pointer down on main target
-    await _implicitHover(initialElement, options);
-    await _pointerDown(initialElement, options);
+    await _hover(dragStartTarget, options, { implicit: true });
+    await _pointerDown(options);
 
     const dragEvents = finalizeEvents();
 
@@ -2389,8 +2405,8 @@ export async function middleClick(target, options) {
     const element = queryFirst(await target, options);
 
     options = { ...options, button: btn.MIDDLE };
-    await _implicitHover(element, options);
-    await _click(element, options);
+    await _hover(element, options, { implicit: true });
+    await _click(options);
 
     return finalizeEvents();
 }
@@ -2445,8 +2461,8 @@ export async function pointerDown(target, options) {
     const finalizeEvents = setupEvents("pointerDown", options);
     const element = queryFirst(await target, options);
 
-    await _implicitHover(element, options);
-    await _pointerDown(element, options);
+    await _hover(element, options, { implicit: true });
+    await _pointerDown(options);
 
     return finalizeEvents();
 }
@@ -2469,8 +2485,8 @@ export async function pointerUp(target, options) {
     const finalizeEvents = setupEvents("pointerUp", options);
     const element = queryFirst(await target, options);
 
-    await _implicitHover(element, options);
-    await _pointerUp(element, options);
+    await _hover(element, options, { implicit: true });
+    await _pointerUp(options);
 
     return finalizeEvents();
 }
@@ -2549,8 +2565,8 @@ export async function rightClick(target, options) {
     const element = queryFirst(await target, options);
 
     options = { ...options, button: btn.RIGHT };
-    await _implicitHover(element, options);
-    await _click(element, options);
+    await _hover(element, options, { implicit: true });
+    await _click(options);
 
     return finalizeEvents();
 }
@@ -2654,12 +2670,12 @@ export async function select(value, options) {
     }
 
     if (options?.target) {
-        await _implicitHover(element);
-        await _pointerDown(element);
+        await _hover(element, null, { implicit: true });
+        await _pointerDown();
     }
     await _select(element, value);
     if (options?.target) {
-        await _pointerUp(element);
+        await _pointerUp();
     }
 
     return finalizeEvents();
@@ -2707,10 +2723,10 @@ export async function setInputRange(target, value, options) {
     const finalizeEvents = setupEvents("setInputRange", options);
     const element = queryFirst(await target, options);
 
-    await _implicitHover(element, options);
-    await _pointerDown(element, options);
+    await _hover(element, options, { implicit: true });
+    await _pointerDown(options);
     await _fill(element, value, options);
-    await _pointerUp(element, options);
+    await _pointerUp(options);
 
     return finalizeEvents();
 }
@@ -2800,8 +2816,8 @@ export async function uncheck(target, options) {
 
     const checkTarget = getTag(element) === "label" ? element.control : element;
     if (checkTarget.checked) {
-        await _implicitHover(element, options);
-        await _click(element, options);
+        await _hover(element, options, { implicit: true });
+        await _click(options);
 
         if (checkTarget.checked) {
             throw new HootDomError(
