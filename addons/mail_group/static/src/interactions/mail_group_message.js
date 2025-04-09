@@ -20,15 +20,19 @@ export class MailGroupMessage extends Interaction {
 
     setup() {
         this.isShown = true;
+    }
 
+    start() {
         // By default hide the mention of the previous email for which we reply
         // And add a button "Read more" to show the mention of the parent email
         const quoted = this.el.querySelector(".card-body *[data-o-mail-quote]");
-        const readMore = document.createElement("button");
-        readMore.classList.add("btn btn-light btn-sm ms-1");
-        readMore.innerText = ". . .";
-        quoted.insertBefore(readMore);
-        readMore.addEventListener("click", () => quoted.classList.toggle("visible"));
+        if (quoted) {
+            const readMore = document.createElement("button");
+            readMore.classList.add("btn", "btn-light", "btn-sm", "ms-1");
+            readMore.innerText = ". . .";
+            this.insert(readMore, quoted, "beforebegin");
+            this.addListener(readMore, "click", () => quoted.classList.toggle("visible"));
+        }
     }
 
     /**
