@@ -67,8 +67,8 @@ export class WebsiteBuilder extends Component {
                 this.onEditPage();
             }
         });
-        this.setIframeLoaded();
         this.publicRootReady = new Deferred();
+        this.setIframeLoaded();
         this.addSystrayItems();
         onWillDestroy(() => {
             this.websiteService.useMysterious = false;
@@ -151,7 +151,7 @@ export class WebsiteBuilder extends Component {
         if (this.translation) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
-        this.resolvePublicRootReady();
+        this.preparePublicRootReady();
         this.resolveIframeLoaded();
     }
 
@@ -200,8 +200,8 @@ export class WebsiteBuilder extends Component {
 
     async reloadIframe(isEditing = true, url) {
         this.ui.block();
+        this.preparePublicRootReady();
         this.setIframeLoaded();
-        this.resolvePublicRootReady();
         if (url) {
             this.websiteContent.el.contentWindow.location = url;
         } else {
@@ -215,18 +215,17 @@ export class WebsiteBuilder extends Component {
         this.ui.unblock();
     }
 
-    resolvePublicRootReady() {
-        new Promise((resolve) => {
-            this.websiteContent.el.contentWindow.addEventListener(
-                "PUBLIC-ROOT-READY",
-                (event) => {
-                    this.websiteContent.el.setAttribute("is-ready", "true");
-                    resolve();
-                    this.publicRootReady.resolve();
-                },
-                { once: true }
-            );
-        });
+    preparePublicRootReady() {
+        const deferred = new Deferred();
+        this.publicRootReady = deferred;
+        this.websiteContent.el.contentWindow.addEventListener(
+            "PUBLIC-ROOT-READY",
+            (event) => {
+                this.websiteContent.el.setAttribute("is-ready", "true");
+                deferred.resolve();
+            },
+            { once: true }
+        );
     }
 
     setIframeLoaded() {
