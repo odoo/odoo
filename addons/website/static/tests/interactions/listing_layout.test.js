@@ -45,7 +45,7 @@ test("listing_layout toggle to list mode", async () => {
         deferred.resolve();
     });
     const gridEl = queryOne(".o_website_grid");
-    await click("#apply_list");
+    await click("label[for=apply_list]");
     await microTick();
     expect(gridEl).toHaveClass("o_website_list");
     expect(gridEl).not.toHaveClass("o_website_grid");
@@ -95,7 +95,7 @@ test("listing_layout toggle to grid mode", async () => {
         deferred.resolve();
     });
     const listEl = queryOne(".o_website_list");
-    await click("#apply_grid");
+    await click("label[for=apply_grid]");
     await microTick();
     expect(listEl).toHaveClass("o_website_grid");
     expect(listEl).not.toHaveClass("o_website_list");
