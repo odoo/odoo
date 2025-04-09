@@ -70,12 +70,23 @@ class WebsiteMenu(models.Model):
     @api.depends("page_id", "is_mega_menu", "child_id")
     def _compute_url(self):
         for menu in self:
-            if menu.is_mega_menu:
-                menu.url = menu.Url
-            elif menu.child_id:
-                menu.child_id.url = menu.child_id.url
-            # else:
-            #     menu.url = (menu.page_id.url if menu.page_id else menu.url) or "#"
+            if menu.is_mega_menu or menu.child_id:
+                menu.url = "#"
+            else:
+                menu.url = (menu.page_id.url if menu.page_id else menu.url) or "#"
+
+    @api.model
+    def check_mega_menu_children(self, vals_list):
+        """
+        Prevent creating child menus under Mega Menus.
+        Raises UserError if a child menu is attempted under a Mega Menu.
+        """
+        for vals in vals_list:
+            if vals.get('parent_id'):
+                parent_menu = self.browse(vals['parent_id'])
+                if parent_menu.is_mega_menu:
+                    raise UserError(_("Mega Menus cannot have child menus. Please select a non-Mega Menu as the parent."))
+        return True
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -86,6 +97,8 @@ class WebsiteMenu(models.Model):
                   Be careful to return correct record for ir.model.data xml_id in case
                   of default main menus creation.
         '''
+        ''' Prevent child menus under Mega Menus '''
+        self.check_mega_menu_children(vals_list)
         self.env.registry.clear_cache('templates')
         # Only used when creating website_data.xml default menu
         menus = self.env['website.menu']
@@ -116,7 +129,14 @@ class WebsiteMenu(models.Model):
         return menus
 
     def write(self, values):
+        # Clear cache for menu changes
         self.env.registry.clear_cache('templates')
+        # Prevent converting to Mega Menu if has children
+        if values.get('is_mega_menu'):
+            for menu in self:
+                if menu.child_id:
+                    raise UserError(_("You cannot convert this menu to a Mega Menu because it already has child menus. ""Please remove the children first."))
+        
         res = super().write(values)
         if 'group_ids' in values and not self.env.context.get("adding_designer_group_to_menu"):
             self.filtered("group_ids").with_context(
