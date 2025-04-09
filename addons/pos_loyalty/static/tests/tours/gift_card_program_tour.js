@@ -155,3 +155,26 @@ registry.category("web_tour.tours").add("test_gift_card_no_date", {
             PosLoyalty.finalizeOrder("Cash", "42"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyEditableGiftCard", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product A"),
+            PosLoyalty.orderTotalIs("100.00"),
+            PosLoyalty.enterCode("test-card-0005"),
+            Dialog.confirm(),
+            PosLoyalty.orderTotalIs("0.00"),
+            ProductScreen.clickLine("Gift Card"),
+            ProductScreen.clickNumpad("Qty"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.selectedOrderlineHasDirect("Gift Card", "0", "0.0"),
+            PosLoyalty.orderTotalIs("100.00"),
+            ProductScreen.clickNumpad("Price"),
+            ProductScreen.clickNumpad("5"),
+            ProductScreen.clickNumpad("0"),
+            PosLoyalty.orderTotalIs("50.00"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+        ].flat(),
+});
