@@ -39,8 +39,8 @@ defineBusModels();
 describe.current.tags("desktop");
 
 test("notifications not received after stoping the service", async () => {
-    stepWorkerActions("leave");
     const firstTabEnv = await makeMockEnv();
+    stepWorkerActions("leave");
     restoreRegistry(registry);
     const secondTabEnv = await makeMockEnv(null, { makeNew: true });
     startBusService(firstTabEnv);
@@ -94,8 +94,8 @@ test("notifications are received by each tab", async () => {
 });
 
 test("second tab still receives notifications after main pagehide", async () => {
-    stepWorkerActions("leave");
     const mainEnv = await makeMockEnv();
+    stepWorkerActions("leave");
     mainEnv.services.bus_service.addChannel("lambda");
     // Prevent second tab from receiving pagehide event.
     patchWithCleanup(browser, {
