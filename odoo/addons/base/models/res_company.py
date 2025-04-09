@@ -111,8 +111,7 @@ class Company(models.Model):
             company.parent_ids = self.browse(int(id) for id in company.parent_path.split('/') if id) if company.parent_path else company
             company.root_id = company.parent_ids[0]
 
-    # TODO @api.depends(): currently now way to formulate the dependency on the
-    # partner's contact address
+    @api.depends(lambda self: [f'partner_id.{fname}' for fname in self._get_company_address_field_names()])
     def _compute_address(self):
         for company in self.filtered(lambda company: company.partner_id):
             address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
