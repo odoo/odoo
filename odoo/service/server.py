@@ -669,7 +669,7 @@ class ThreadedServer(CommonServer):
             if config['test_enable']:
                 from odoo.tests.result import _logger as logger  # noqa: PLC0415
                 with Registry.registries._lock:
-                    for db, registry in Registry.registries.d.items():
+                    for db, registry in Registry.registries.items():
                         report = registry._assertion_report
                         log = logger.error if not report.wasSuccessful() \
                          else logger.warning if not report.testsRun \

@@ -1914,11 +1914,12 @@ class TestAssetsManifest(AddonManifestPatched):
             """
         )
 
+
 @tagged('-at_install', 'post_install')
 class AssetsNodeOrmCacheUsage(TransactionCase):
 
     def cache_keys(self):
-        keys = self.env.registry._Registry__caches['assets'].d
+        keys = list(self.env.registry._Registry__caches['assets'])
 
         asset_keys = [key for key in keys if key[0] == 'ir.asset' and '_get_asset_paths' in str(key[1])] # ignore topological sort entry
         qweb_keys = [key for key in keys if key[0] == 'ir.qweb']

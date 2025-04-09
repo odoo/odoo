@@ -123,8 +123,9 @@ class ormcache:
             counter.miss += 1
             counter.cache_name = self.cache_name
             start = time.monotonic()
-            value = d[key] = self.method(*args, **kwargs)
+            value = self.method(*args, **kwargs)
             counter.gen_time += time.monotonic() - start
+            d[key] = value
             return value
         except TypeError:
             _logger.warning("cache lookup error on %r", key, exc_info=True)
