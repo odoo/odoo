@@ -1,6 +1,7 @@
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog, ConfirmationDialog, deleteConfirmationMessage } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
+import { useDeleteRecords } from "@web/views/view_hook";
 import { DataPoint } from "./datapoint";
 import { Record as RelationalRecord } from "./record";
 import { resequence } from "./utils";
@@ -28,6 +29,7 @@ export class DynamicList extends DataPoint {
         }
         this.isDomainSelected = false;
         this.evalContext = this.context;
+        this.useDeleteRecords = useDeleteRecords(this.model.dialog.add);
     }
 
     // -------------------------------------------------------------------------
@@ -226,6 +228,35 @@ export class DynamicList extends DataPoint {
         }
     }
 
+    deleteRecordsWithConfirmation(dialogProps = {}, records, archiveEnabled = false) {
+        let body = deleteConfirmationMessage;
+        if (this.isDomainSelected || this.selection.length > 1) {
+            body = _t("Are you sure you want to delete these records?");
+        }
+
+        const props = {
+            ...dialogProps,
+            body,
+            cancel: () => {},
+            cancelLabel: _t("No, keep it"),
+            confirmLabel: _t("Delete"),
+            title: _t("Bye-bye, record!"),
+        };
+
+        const archive = archiveEnabled ? async() => {
+            await this.model.orm.call(
+                this.model.root.resModel,
+                "action_archive",
+                [await this.model.root._getResIds(records)]
+            );
+            await this.model.load();
+        } : null;
+
+        const deleteFn = () => this.deleteRecords(records);
+
+        this.useDeleteRecords(props, deleteFn, archive);
+    }
+
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
@@ -263,14 +294,19 @@ export class DynamicList extends DataPoint {
         }
     }
 
-    async _deleteRecords(records) {
+    async _getResIds(records) {
         let resIds;
-        if (records.length) {
+        if (records?.length) {
             resIds = unique(records.map((r) => r.resId));
         } else {
             resIds = await this.getResIds(true);
             records = this.records.filter((r) => resIds.includes(r.resId));
         }
+        return resIds;
+    }
+
+    async _deleteRecords(records) {
+        const resIds = await this._getResIds(records);
         const unlinked = await this.model.orm.unlink(this.resModel, resIds, {
             context: this.context,
         });

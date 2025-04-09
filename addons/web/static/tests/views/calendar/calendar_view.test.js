@@ -10,6 +10,7 @@ import {
     queryFirst,
     queryOne,
     queryRect,
+    waitFor,
 } from "@odoo/hoot-dom";
 import {
     Deferred,
@@ -5795,4 +5796,66 @@ test(`Hour format mirror event`, async () => {
 
     expect(`.o_event[data-event-id="8"] .fc-event-main .o_event_title`).toHaveText("mirror_event");
     expect(`.o_event[data-event-id="8"] .fc-event-main .fc-time`).toHaveText("11:00");
+});
+
+test("Deletion raises a UserError, archive action available", async () => {
+    Event._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[4]]);
+            throw makeServerError({ message });
+        } else if (method === "action_archive") {
+            expect.step(method);
+            expect(args).toEqual([[4]]);
+            return true;
+        }
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar event_open_popup="1" date_start="start" mode="month"/>`,
+    });
+
+    await clickEvent(4);
+    await contains(`.o_cw_popover_delete`).click();
+
+    await contains(".modal-footer .btn-primary").click()
+
+    expect("h4.modal-title").toHaveText("Archive records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-primary").toHaveText("Archive");
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    await contains(".modal-footer .btn-primary").click()
+    expect.verifySteps(["unlink", "action_archive"]);
+    expect(".modal").toHaveCount(0);
+});
+
+test("Deletion raises a UserError, archive action not available", async () => {
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[4]]);
+            throw makeServerError({ message });
+        }
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar event_open_popup="1" date_start="start" mode="month"/>`,
+    });
+
+    await clickEvent(4);
+    await contains(`.o_cw_popover_delete`).click();
+    await contains(".modal-footer .btn-primary").click()
+    expect.verifySteps(["unlink"]);
+
+    expect.errors(1);
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+    expect.verifyErrors([message]);
 });
