@@ -33,6 +33,7 @@ Help your customers with this chat, and analyse their feedback.
         "views/im_livechat_channel_templates.xml",
         "views/im_livechat_chatbot_templates.xml",
         "views/im_livechat_expertise_views.xml",
+        "views/im_livechat_channel_member_history_views.xml",
         "views/res_users_views.xml",
         "views/digest_views.xml",
         "views/webclient_templates.xml",

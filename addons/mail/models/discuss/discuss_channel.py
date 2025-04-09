@@ -288,6 +288,10 @@ class DiscussChannel(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
+    @api.model
+    def _get_allowed_channel_member_create_params(self):
+        return ["partner_id", "guest_id", "unpin_dt", "last_interest_dt"]
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -304,7 +308,7 @@ class DiscussChannel(models.Model):
                 if cmd[0] != 0:
                     raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
                 for field_name in cmd[2]:
-                    if field_name not in ["partner_id", "guest_id", "unpin_dt", "last_interest_dt"]:
+                    if field_name not in self._get_allowed_channel_member_create_params():
                         raise ValidationError(
                             _(
                                 "Invalid field “%(field_name)s” when creating a channel with members.",
@@ -484,7 +488,16 @@ class DiscussChannel(models.Model):
             post_joined_message=post_joined_message,
         )
 
-    def _add_members(self, *, guests=None, partners=None, users=None, invite_to_rtc_call=False, post_joined_message=True):
+    def _add_members(
+        self,
+        *,
+        guests=None,
+        partners=None,
+        users=None,
+        create_member_params=None,
+        invite_to_rtc_call=False,
+        post_joined_message=True,
+    ):
         partners = partners or self.env["res.partner"]
         if users:
             partners |= users.partner_id
@@ -501,10 +514,12 @@ class DiscussChannel(models.Model):
                 ])
             ]))
             members_to_create += [{
+                **(create_member_params or {}),
                 'partner_id': partner.id,
                 'channel_id': channel.id,
             } for partner in partners - existing_members.partner_id]
             members_to_create += [{
+                **(create_member_params or {}),
                 'guest_id': guest.id,
                 'channel_id': channel.id,
             } for guest in guests - existing_members.guest_id]
@@ -910,12 +925,21 @@ class DiscussChannel(models.Model):
             return self._add_members(guests=guest)
         return self.env["discuss.channel.member"]
 
-    def _find_or_create_persona_for_channel(self, guest_name, timezone, country_code, post_joined_message=True):
+    def _find_or_create_persona_for_channel(
+        self,
+        guest_name,
+        timezone,
+        country_code,
+        create_member_params=None,
+        post_joined_message=True,
+    ):
         """
         :param channel: channel to add the persona to
         :param guest_name: name of the persona
         :param post_joined_message: whether to post a message to the channel
             to notify that the persona joined
+        :param create_member_params dict: optional parameters to pass to the
+            channel member create function.
         :return tuple(partner, guest):
         """
         self.ensure_one()
@@ -939,7 +963,11 @@ class DiscussChannel(models.Model):
                 guest._set_auth_cookie()
                 guest = guest.sudo(False)
                 self = self.with_context(guest=guest)
-            self._add_members(guests=guest, post_joined_message=post_joined_message)
+            self._add_members(
+                guests=guest,
+                create_member_params=create_member_params,
+                post_joined_message=post_joined_message,
+            )
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
     @api.model

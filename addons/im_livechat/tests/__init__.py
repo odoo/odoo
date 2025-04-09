@@ -13,6 +13,7 @@ from . import test_im_livechat_channel
 from . import test_im_livechat_report
 from . import test_im_livechat_support_page
 from . import test_js
+from . import test_member_history
 from . import test_message
 from . import test_upload_attachment
 from . import test_res_users

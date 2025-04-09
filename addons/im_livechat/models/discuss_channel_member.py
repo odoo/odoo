@@ -10,6 +10,47 @@ from odoo.addons.mail.tools.discuss import Store
 class DiscussChannelMember(models.Model):
     _inherit = 'discuss.channel.member'
 
+    livechat_member_history_ids = fields.One2many("im_livechat.channel.member.history", "member_id")
+    livechat_member_type = fields.Selection(
+        [("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
+        compute="_compute_livechat_member_type",
+        # sudo - reading the history of a member the user has access to is acceptable.
+        compute_sudo=True,
+        inverse="_inverse_livechat_member_type",
+    )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        members = super().create(vals_list)
+        guest = self.env["mail.guest"]._get_guest_from_context()
+        for member in members.filtered(
+            lambda m: m.channel_id.channel_type == "livechat" and not m.livechat_member_type
+        ):
+            # After login, the guest cookie is still available, allowing us to
+            # reconcile the user with their previous guest member.
+            if (
+                guest
+                and member.is_self
+                and guest in member.channel_id.channel_member_history_ids.guest_id
+            ):
+                # sudo - discuss.channel.member: setting livechat member type
+                # after member creation is allowed.
+                member.sudo().livechat_member_type = "visitor"
+                continue
+            member.sudo().livechat_member_type = "agent"
+        return members
+
+    def _compute_livechat_member_type(self):
+        for member in self:
+            member.livechat_member_type = member.livechat_member_history_ids.livechat_member_type
+
+    def _inverse_livechat_member_type(self):
+        # sudo - im_livechat.channel.member.history: creating history following
+        # "livechat_member_type" modification is acceptable.
+        self.env["im_livechat.channel.member.history"].sudo().create(
+            [{"member_id": member.id} for member in self]
+        )
+
     @api.autovacuum
     def _gc_unpin_livechat_sessions(self):
         """ Unpin read livechat sessions with no activity for at least one day to

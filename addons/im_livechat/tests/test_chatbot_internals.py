@@ -447,6 +447,12 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             )
         self.assertEqual(discuss_channel.name, "OdooBot Ernest Employee")
         self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
+        self.assertTrue(
+            discuss_channel.channel_member_ids.filtered(
+                lambda m: m.partner_id == self.partner_employee
+                and m.livechat_member_type == "agent"
+            )
+        )
 
     def test_chatbot_multiple_rules_on_same_url(self):
         bob_user = new_test_user(
