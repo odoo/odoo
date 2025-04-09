@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import {
     click,
+    edit,
     hover,
     keyDown,
     pointerDown,
@@ -429,7 +430,7 @@ test("update suggested filters in autocomplete menu with Japanese IME", async ()
     // assisted composition session as possible. Some of these events are
     // not handled but are triggered to ensure they do not interfere.
     const TEST = "TEST";
-    const テスト = "テスト";
+    const TEST_JP = "テスト";
 
     await mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -437,19 +438,24 @@ test("update suggested filters in autocomplete menu with Japanese IME", async ()
         searchViewId: false,
     });
 
+    await click(".o_searchview input");
+
     // Simulate typing "TEST" on search view.
-    await contains(`.o_searchview input`).edit(TEST, { composition: true, confirm: false });
+    await edit(TEST, { composition: true });
+    await animationFrame();
     expect(`.o_searchview_autocomplete`).toHaveCount(1);
-    expect(queryFirst`.o_searchview_autocomplete li`).toHaveText("Search Foo for: TEST");
+    expect(`.o_searchview_autocomplete li:first`).toHaveText(`Search Foo for: ${TEST}`);
 
     // Simulate soft-selection of another suggestion from IME through keyboard navigation.
-    await contains(`.o_searchview input`).edit(テスト, { composition: true, confirm: false });
-    expect(queryFirst`.o_searchview_autocomplete li`).toHaveText("Search Foo for: テスト");
+    await edit(TEST_JP, { composition: true });
+    await animationFrame();
+    expect(`.o_searchview_autocomplete li:first`).toHaveText(`Search Foo for: ${TEST_JP}`);
 
     // Simulate selection on suggestion item "TEST" from IME.
-    await contains(`.o_searchview input`).edit(TEST, { composition: true, confirm: false });
+    await edit(TEST, { composition: true });
+    await animationFrame();
     expect(`.o_searchview_autocomplete`).toHaveCount(1);
-    expect(queryFirst`.o_searchview_autocomplete li`).toHaveText("Search Foo for: TEST");
+    expect(`.o_searchview_autocomplete li:first`).toHaveText(`Search Foo for: ${TEST}`);
 });
 
 test("open search view autocomplete on paste value using mouse", async () => {
@@ -655,7 +661,7 @@ test("checks that an arrowDown always selects an item", async () => {
     await editSearch("rec");
     await contains(".o_expand").click();
     await click(".o_expand"); // don't wait for a frame
-    await hover(`.o_searchview_autocomplete li.o_menu_item.o_indent:last-child`);
+    await hover(".o_searchview_autocomplete li.o_menu_item.o_indent:last");
     await animationFrame();
     await keyDown("ArrowDown");
     await animationFrame();
@@ -676,7 +682,7 @@ test("checks that an arrowUp always selects an item", async () => {
     await editSearch("rec");
     await contains(".o_expand").click();
     await click(".o_expand"); // don't wait for a frame
-    await hover(`.o_searchview_autocomplete li.o_menu_item.o_indent:last-child`);
+    await hover(`.o_searchview_autocomplete li.o_menu_item.o_indent:last`);
     await animationFrame();
     await keyDown("ArrowUp");
     await animationFrame();
@@ -1697,9 +1703,7 @@ test("dropdown menu last element is 'Add Custom Filter'", async () => {
     });
     await editSearch("a");
     await animationFrame();
-    const dropdownMenu = queryFirst(".o_searchview_autocomplete");
-    const lastElement = dropdownMenu.querySelector("li:last-child");
-    expect(lastElement.textContent.trim()).toBe("Add Custom Filter");
+    expect(".o_searchview_autocomplete li:last").toHaveText("Add Custom Filter");
 });
 
 test("order by count resets when there is no group left", async () => {
