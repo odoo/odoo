@@ -1136,6 +1136,7 @@ test("Editing a message to clear its composer opens message delete dialog.", asy
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Message.o-editing .o-mail-Composer-input", "", { replace: true });
     triggerHotkey("Enter");
+    await contains(".o-mail-Message", { text: "not empty" });
     await contains(".modal-body p", { text: "Are you sure you want to delete this message?" });
 });
 

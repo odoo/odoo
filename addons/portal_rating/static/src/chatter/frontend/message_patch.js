@@ -11,7 +11,7 @@ patch(Message.prototype, {
     },
 
     get isEditing() {
-        return !this.state.editRating && this.props.message.composer;
+        return !this.state.editRating && super.isEditing;
     },
 
     get ratingValue() {
