@@ -154,14 +154,14 @@
                     <footer>
                         <field name="id" invisible="1"/>
                         <button id="mail_activity_schedule" string="Schedule" close="1" name="action_close_dialog" type="object" class="btn-primary"
-                            invisible="id" data-hotkey="q"/>
+                            invisible="id or not can_write" data-hotkey="q"/>
                         <button id="mail_activity_save" string="Save" name="action_close_dialog" type="object" class="btn-primary"
-                            invisible="not id" data-hotkey="q"/>
+                            invisible="not (id and can_write)" data-hotkey="q"/>
                         <button string="Mark Done" name="action_done"
-                            type="object" class="btn-secondary" data-hotkey="w"
+                            type="object" class="btn-secondary" invisible="not can_write" data-hotkey="w"
                             context="{'mail_activity_quick_update': True}"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
-                        <button string="Delete" type="object" name="unlink" icon="fa-trash" class="btn-danger ms-auto" invisible="not id"/>
+                        <button string="Delete" type="object" name="unlink" icon="fa-trash" class="btn-danger ms-auto" invisible="not (id and can_write)"/>
                     </footer>
                 </sheet>
             </form>
@@ -278,7 +278,7 @@
                 <field name="date_done" string="Done Date" optional="hide"/>
                 <field name="feedback" optional="hide"/>
                 <widget name="mail_activity_list_reschedule_dropdown"/>
-                <button name="action_done" type="object" string="Done" icon="fa-check" invisible="active == False"/>
+                <button name="action_done" type="object" string="Done" icon="fa-check" invisible="active == False or not can_write"/>
             </list>
         </field>
     </record>
@@ -343,7 +343,7 @@
                             <footer class="align-items-center">
                                 <field name="user_id" widget="many2one_avatar_user" />
                                 <field name="date_deadline" widget="remaining_days" class="ms-2"/>
-                                <button type="object" name="action_done" class="btn btn-link btn-sm ms-auto me-1" invisible="active == False">
+                                <button type="object" name="action_done" class="btn btn-link btn-sm ms-auto me-1" invisible="active == False or not can_write">
                                     <i class="fa fa-check" /> Done
                                 </button>
                             </footer>

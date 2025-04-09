@@ -102,6 +102,9 @@ class TestActivitySchedule(ActivityScheduleCase):
                 'name': f'test_record_{idx}'
             } for idx in range(5)
         ])
+        cls.test_record_readonly = cls.env['mail.test.access.custo'].create(
+            {'name': 'Test Readonly', 'is_readonly': True}
+        )
 
         # some big dict comparisons
         cls.maxDiff = None
@@ -210,6 +213,21 @@ class TestActivitySchedule(ActivityScheduleCase):
         scheduler = scheduler.save()
         with self.assertRaises(ValidationError):
             scheduler.activity_user_id = False
+
+    @users('employee')
+    def test_activity_schedule_readonly_record(self):
+        """ Test that users without write access can schedule activities for themselves
+            but are blocked from scheduling for other users. """
+        form = self._instantiate_activity_schedule_wizard(self.test_record_readonly)
+
+        # User with no write access can schedule activity for themselves
+        form.activity_user_id = self.env.user
+        self.assertFalse(form.has_error)
+
+        # User with no write access cannot schedule activity for others
+        form.activity_user_id = self.user_admin
+        self.assertTrue(form.has_error)
+        self.assertIn("You don't have write access on this record to schedule activity for others.", form.error)
 
     def test_plan_copy(self):
         """Test plan copy"""

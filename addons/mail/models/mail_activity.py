@@ -132,7 +132,7 @@ class MailActivity(models.Model):
         compute='_compute_state')
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
     # access
-    can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
+    can_write = fields.Boolean(compute='_compute_can_write')  # used to hide buttons if the current user has no write access
     active = fields.Boolean(default=True)
 
     # if model: valid res_id
@@ -190,10 +190,11 @@ class MailActivity(models.Model):
             return 'planned'
 
     @api.depends('res_model', 'res_id', 'user_id')
+    @api.depends_context('uid')
     def _compute_can_write(self):
-        valid_records = self._filtered_access('write')
         for record in self:
-            record.can_write = record in valid_records
+            # sudo: mail.activity - can check write access on related record
+            record.can_write = record.sudo().res_access_write or self.env.user == record.user_id
 
     @api.depends('activity_type_id')
     def _compute_date_deadline(self):

@@ -89,7 +89,7 @@ class TestActivityRights(TestActivityCommon):
         )
 
         for activity, can_write in [
-            (act_emp_for_adm, True), (act_emp_for_emp, True),
+            (act_emp_for_adm, False), (act_emp_for_emp, True),
             (act_adm_for_adm, False), (act_adm_for_emp, True),
         ]:
             with self.subTest(user=activity.user_id.name, creator=activity.create_uid.name):
@@ -99,12 +99,9 @@ class TestActivityRights(TestActivityCommon):
                     self.assertEqual(activity.can_write, can_write)
                     if can_write:
                         activity.write({'summary': 'Caramba'})
-                    else:
-                        with self.assertRaises(exceptions.AccessError):
-                            activity.write({'summary': 'Caramba'})
 
                 # document access -> ok bypass
-                activity.write({'summary': 'Caramba caramba'})
+                activity.with_user(self.user_admin).write({'summary': 'Caramba caramba'})
 
     def test_activity_security_user_access_customized(self):
         """ Test '_mail_get_operation_for_mail_message_operation' support when scheduling activities. """
