@@ -56,6 +56,7 @@ import { waitUntil } from "./time";
  * @typedef {{
  *  displayed?: boolean;
  *  exact?: number;
+ *  pointable?: boolean;
  *  root?: HTMLElement;
  *  viewPort?: boolean;
  *  visible?: boolean;
@@ -295,6 +296,11 @@ const isDocument = (object) => object?.nodeType === Node.DOCUMENT_NODE;
  * @returns {T extends Element ? true: false}
  */
 const isElement = (object) => object?.nodeType === Node.ELEMENT_NODE;
+
+/**
+ * @param {Node} node
+ */
+const isNodePointable = (node) => getStyle(node).pointerEvents !== "none";
 
 /**
  * @param {Node} node
@@ -775,6 +781,11 @@ customPseudoClasses
             return nodes.length === 1;
         };
     })
+    .set("pointable", () => {
+        return function pointable(node) {
+            return isNodePointable(node);
+        };
+    })
     .set("scrollable", () => {
         return function scrollable(node) {
             return isNodeScrollable(node);
@@ -927,6 +938,21 @@ export function getNodeText(node, options) {
         content = content.replace(R_LINEBREAK, " ");
     }
     return content;
+}
+
+/**
+ * @param {Node} node
+ * @returns {Node | null}
+ */
+export function getPointableNode(node) {
+    let currentEl = ensureElement(node);
+    if (!currentEl) {
+        return null;
+    }
+    while (currentEl && !isNodePointable(currentEl)) {
+        currentEl = currentEl.parentElement;
+    }
+    return currentEl;
 }
 
 /**
@@ -1576,7 +1602,7 @@ export function queryAll(target, options) {
         return queryAll(String.raw(...arguments));
     }
 
-    const { exact, displayed, root, viewPort, visible } = options || {};
+    const { exact, displayed, pointable, root, viewPort, visible } = options || {};
 
     /** @type {Node[]} */
     let nodes = [];
@@ -1600,29 +1626,38 @@ export function queryAll(target, options) {
         }
     }
 
-    /** @type {string} */
-    let prefix, suffix;
+    /** @type {string[]} */
+    const prefix = [];
+    /** @type {string[]} */
+    const suffix = [];
     if (visible + displayed > 1) {
         throw new HootDomError(
             `cannot use more than one visibility modifier ('visible' implies 'displayed')`
         );
     }
+
     if (viewPort) {
         nodes = nodes.filter(isNodeInViewPort);
-        suffix = "in viewport";
-    } else if (visible) {
-        nodes = nodes.filter(isNodeVisible);
-        prefix = "visible";
-    } else if (displayed) {
+        suffix.push("in viewport");
+    }
+    if (displayed) {
         nodes = nodes.filter(isNodeDisplayed);
-        prefix = "displayed";
+        prefix.push("displayed");
+    }
+    if (pointable) {
+        nodes = nodes.filter(isNodePointable);
+        prefix.push("pointable");
+    }
+    if (visible) {
+        nodes = nodes.filter(isNodeVisible);
+        prefix.push("visible");
     }
 
     const count = nodes.length;
     if ($isInteger(exact) && count !== exact) {
         const s = count === 1 ? "" : "s";
-        const strPrefix = prefix ? `${prefix} ` : "";
-        const strSuffix = suffix ? ` ${suffix}` : "";
+        const strPrefix = prefix.join(" and ");
+        const strSuffix = suffix.join(" and ");
         const strSelector = typeof target === "string" ? `(selector: "${target}")` : "";
         throw new HootDomError(
             `found ${count} ${strPrefix}node${s}${strSuffix} instead of ${exact} ${strSelector}`
