@@ -8,6 +8,7 @@ export class MailingListSubscribeOption extends BaseOptionComponent {
     };
 
     setup() {
+        super.setup();
         this.mailingLists = [];
         onWillStart(async () => {
             this.mailingLists = await this.props.fetchMailingLists();

@@ -24,7 +24,7 @@ class MailingListSubscribeOptionPlugin extends Plugin {
                     isApplied: ({ editingElement }) =>
                         editingElement
                             .querySelector(".js_subscribed_wrap")
-                            .classList.contains("o_enable_preview"),
+                            ?.classList.contains("o_enable_preview"),
                 },
             },
         ],
