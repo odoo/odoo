@@ -19,7 +19,7 @@ from odoo.tools.which import which
 _logger = logging.getLogger(__name__)
 
 
-class FileInfo:
+class DiffFile:
     root_path = os.path.abspath(config.root_path)
     addons_paths = [
         os.path.normpath(os.path.normcase(addons_path)) + os.sep
@@ -174,7 +174,7 @@ def generate_diff(output_dir: str):
 class DiffCase(BaseCase):
     test_tags = {'no_install', 'standard'}
 
-    diff_linenos: dict[Literal['python', 'xml'], dict[str, FileInfo]] | None = None
+    diff_files: dict[Literal['python', 'xml'], dict[str, DiffFile]] | None = None
     """ {file_category: {abs_path: file_info}} """    
 
     diff_dir: str | None = None
@@ -186,7 +186,7 @@ class DiffCase(BaseCase):
     def get_xml_diff_elements(cls, abs_path: str, diff_linenos: set[int] | None = None) -> Generator[Element, None, None]:
         assert abs_path.endswith('.xml')
         if diff_linenos is None:
-            file_info = cls.diff_linenos['xml'].get(abs_path)
+            file_info = cls.diff_files['xml'].get(abs_path)
             if not file_info:
                 return
             diff_linenos = file_info.diff_linenos
@@ -219,7 +219,7 @@ class DiffCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        """Parse a custom diff file and initialize the diff_linenos dictionary
+        """Parse a custom diff file and initialize the diff_files dictionary
         
         :param diff_path: Path to a directory containing .txt diff files
         
@@ -227,9 +227,9 @@ class DiffCase(BaseCase):
         - First line: Repository path
         - Remaining lines: Output of 'git diff --unified=0 base_version'
         """
-        if cls.diff_linenos is not None:
+        if cls.diff_files is not None:
             return
-        cls.diff_linenos = defaultdict(dict)
+        cls.diff_files = defaultdict(dict)
 
         if cls.diff_dir is None:
             raise ValueError("DiffCase.diff_dir is not set")
@@ -266,7 +266,7 @@ class DiffCase(BaseCase):
                     # Process each patched file
                     for patched_file in patch_set:
                         abs_path = os.path.join(repo_path, patched_file.path)
-                        file_info = FileInfo(repo_path, patched_file)
+                        file_info = DiffFile(repo_path, patched_file)
 
                         # Add line numbers from the diff
                         for hunk in patched_file:
@@ -276,9 +276,9 @@ class DiffCase(BaseCase):
 
                         # Store the file info based on file type
                         if abs_path.endswith('.py'):
-                            cls.diff_linenos['python'][abs_path] = file_info
+                            cls.diff_files['python'][abs_path] = file_info
                         elif abs_path.endswith('.xml'):
-                            cls.diff_linenos['xml'][abs_path] = file_info
+                            cls.diff_files['xml'][abs_path] = file_info
 
             except Exception as e:
                 _logger.error(f"Error processing diff file {file_path}: {e}")

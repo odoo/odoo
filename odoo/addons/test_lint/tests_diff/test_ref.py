@@ -4,7 +4,7 @@ import os
 from collections import defaultdict
 from typing import Collection
 
-from odoo.tests.diffcase import DiffCase, Element, FileInfo
+from odoo.tests.diffcase import DiffCase, Element, DiffFile
 from odoo.modules.module import get_manifest
 
 
@@ -92,7 +92,7 @@ class FileEnvRefVisitor(EvalRefVisitor):
         self.generic_visit(node)
 
 
-def check_ref_for_python_file(fileinfo: FileInfo, protected_xml_ids: Collection[str] = ()) -> list[tuple[int, int]]:
+def check_ref_for_python_file(fileinfo: DiffFile, protected_xml_ids: Collection[str] = ()) -> list[tuple[int, int]]:
     with open(fileinfo.abs_path, 'r') as f:
         content = f.read()
     try:
@@ -104,7 +104,7 @@ def check_ref_for_python_file(fileinfo: FileInfo, protected_xml_ids: Collection[
         return []
 
 
-def check_ref_for_data_xml_element(element: Element, file_info: FileInfo, init: bool = True, protected_xml_ids: Collection[str] = ()) -> tuple[str, int, int] | None:
+def check_ref_for_data_xml_element(element: Element, file_info: DiffFile, init: bool = True, protected_xml_ids: Collection[str] = ()) -> tuple[str, int, int] | None:
     """Check for references in xml files
     
     :param element: the xml element to check
@@ -207,7 +207,7 @@ class TestRef(DiffCase):
     def test_env_ref_usage(self):
         """Check for env.ref calls without raise_if_not_found=False"""
         issues = []
-        for file_info in self.diff_linenos['python'].values():
+        for file_info in self.diff_files['python'].values():
             if not os.path.exists(file_info.abs_path):
                 continue
             if not file_info.module_name or file_info.module_name.startswith('test_') or file_info.module_path.startswith('tests/'):
@@ -233,8 +233,8 @@ class TestRef(DiffCase):
 
     def test_data_xml_ref_usage(self):
         """Check for ref for other modules"""
-        module_files: dict[str, list[FileInfo]] = defaultdict(list)
-        for file_info in self.diff_linenos['xml'].values():
+        module_files: dict[str, list[DiffFile]] = defaultdict(list)
+        for file_info in self.diff_files['xml'].values():
             if file_info.module_name and file_info.module_name != 'base' and not file_info.module_name.startswith('test_'):
                 module_files[file_info.module_name].append(file_info)
 
