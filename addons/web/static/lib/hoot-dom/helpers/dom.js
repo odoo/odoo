@@ -100,6 +100,7 @@ const {
     Object: { keys: $keys, values: $values },
     RegExp,
     Set,
+    window,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -555,19 +556,19 @@ const parseSelector = (selector) => {
  */
 const parseXml = (xmlString, type) => {
     const wrapperTag = type === "html" ? "body" : "templates";
-    const document = parser.parseFromString(
+    const doc = parser.parseFromString(
         `<${wrapperTag}>${xmlString}</${wrapperTag}>`,
         `text/${type}`
     );
-    if (document.getElementsByTagName("parsererror").length) {
+    if (doc.getElementsByTagName("parsererror").length) {
         const trimmed = xmlString.length > 80 ? xmlString.slice(0, 80) + "…" : xmlString;
         throw new HootDomError(
             `error while parsing ${trimmed}: ${getNodeText(
-                document.getElementsByTagName("parsererror")[0]
+                doc.getElementsByTagName("parsererror")[0]
             )}`
         );
     }
-    return document.getElementsByTagName(wrapperTag)[0].childNodes;
+    return doc.getElementsByTagName(wrapperTag)[0].childNodes;
 };
 
 /**
@@ -851,7 +852,9 @@ export function getCurrentDimensions() {
  * @returns {Document}
  */
 export function getDocument(node) {
-    node ||= getDefaultRoot();
+    if (!node) {
+        return document;
+    }
     return isDocument(node) ? node : node.ownerDocument || document;
 }
 
@@ -969,7 +972,10 @@ export function getStyle(node) {
  * @returns {Window}
  */
 export function getWindow(node) {
-    return getDocument(node).defaultView;
+    if (!node) {
+        return window;
+    }
+    return isWindow(node) ? node : getDocument(node).defaultView;
 }
 
 /**
@@ -1233,9 +1239,9 @@ export function formatXml(value, options) {
  * @param {Node} [node]
  */
 export function getActiveElement(node) {
-    const document = getDocument(node);
-    const window = getWindow(node);
-    const { activeElement } = document;
+    const doc = getDocument(node);
+    const view = doc.defaultView;
+    const { activeElement } = doc;
     const { contentDocument, shadowRoot } = activeElement;
 
     if (contentDocument && contentDocument.activeElement !== contentDocument.body) {
@@ -1257,10 +1263,10 @@ export function getActiveElement(node) {
         return shadowRoot.activeElement;
     }
 
-    if (activeElement === document.body && window !== window.parent) {
+    if (activeElement === doc.body && view !== view.parent) {
         // Active element is the body of an iframe:
         // -> get the active element of its parent frame (recursively)
-        return getActiveElement(window.parent.document);
+        return getActiveElement(view.parent.document);
     }
 
     return activeElement;
@@ -1321,11 +1327,11 @@ export function getNextFocusableElement(options) {
  * @returns {HTMLIFrameElement | null}
  */
 export function getParentFrame(node) {
-    const document = getDocument(node);
-    if (!document) {
+    const doc = getDocument(node);
+    if (!doc) {
         return null;
     }
-    const view = document.defaultView;
+    const view = doc.defaultView;
     if (view !== view.parent) {
         for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
             if (iframe.contentWindow === view) {
