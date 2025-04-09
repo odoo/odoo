@@ -47,10 +47,7 @@ class ProductsListPageOptionPlugin extends Plugin {
             },
             setGap: {
                 reload: {},
-                apply: ({ value }) => {
-                    const gap = parseInt(value);
-                    return rpc("/shop/config/website", { shop_gap: gap });
-                },
+                apply: ({ value }) => rpc("/shop/config/website", { shop_gap: value }),
             },
             setDefaultSort: {
                 reload: {},

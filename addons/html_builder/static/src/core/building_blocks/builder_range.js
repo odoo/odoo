@@ -75,6 +75,8 @@ export class BuilderRange extends Component {
         let value = this.rangeInputValue;
         if (this.props.computedOutput) {
             value = this.props.computedOutput(value);
+        } else if (this.props.unit) {
+            value = `${value}${this.props.unit}`;
         }
         return value;
     }

@@ -594,8 +594,9 @@ export function useInputBuilderComponent({
     }
 
     const shouldPreview =
-        comp.props.preview !== false &&
-        (comp.props.preview === true || comp.env.weContext.preview !== false);
+        !hasReloadAction &&
+        (comp.props.preview === true ||
+            (comp.props.preview === undefined && comp.env.weContext.preview !== false));
     function preview(userInputValue) {
         if (shouldPreview) {
             callOperation(applyOperation.preview, {
