@@ -10,6 +10,14 @@
                     <span>Please note that the kiosk for INR currency only works with Razorpay terminal</span>
                 </div>
             </xpath>
+            <xpath expr="//setting[@id='pos_closeing_entry_by_product']/field[@name='pos_is_closing_entry_by_product']" position="attributes">
+                <attribute name="invisible">country_code == 'IN'</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='pos_closeing_entry_by_product']" position="inside">
+                <div class="text-warning" invisible="country_code != 'IN'">
+                    <span>NOTE: This setting is activated by default for India.</span>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
