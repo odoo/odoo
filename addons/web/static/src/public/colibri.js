@@ -106,43 +106,37 @@ export class Colibri {
         return [event, handler, options];
     }
 
-    refreshTOuts() {
-        for (const tOut of this.tOuts) {
-            tOut.nodes = this.getNodes(tOut.sel);
-        }
-    }
-
-    refreshDynamicAttrs() {
-        for (const dynamicAttr of this.dynamicAttrs) {
-            dynamicAttr.nodes = this.getNodes(dynamicAttr.sel);
-        }
-    }
-
-    refreshListeners() {
-        for (const sel of this.listeners.keys()) {
+    refreshNodes() {
+        for (const sel of this.dynamicNodes.keys()) {
             const nodes = this.getNodes(sel);
-            const newNodes = new Set(nodes);
-            const oldNodes = this.dynamicNodes.get(sel);
-            const events = this.listeners.get(sel);
-            const toRemove = new Set();
-            for (const node of oldNodes) {
-                if (newNodes.has(node)) {
-                    newNodes.delete(node);
-                } else {
-                    toRemove.add(node);
+            if (this.listeners.has(sel)) {
+                const newNodes = new Set(nodes);
+                const oldNodes = this.dynamicNodes.get(sel);
+                const events = this.listeners.get(sel);
+                const toRemove = new Set();
+                for (const node of oldNodes) {
+                    if (newNodes.has(node)) {
+                        newNodes.delete(node);
+                    } else {
+                        toRemove.add(node);
+                    }
                 }
-            }
-            for (const event of Object.keys(events)) {
-                const [handler, options] = events[event];
-                for (const node of toRemove) {
-                    node.removeEventListener(event, handler, options);
-                }
-                if (newNodes.size) {
-                    this.addListener(newNodes, event, handler, options);
+                for (const event of Object.keys(events)) {
+                    const [handler, options] = events[event];
+                    for (const node of toRemove) {
+                        node.removeEventListener(event, handler, options);
+                    }
+                    if (newNodes.size) {
+                        this.addListener(newNodes, event, handler, options);
+                    }
                 }
             }
             this.dynamicNodes.set(sel, nodes);
         }
+    }
+
+    refreshListeners() {
+        this.refreshNodes();
     }
 
     mapSelectorToListeners(sel, event, handler, options) {
@@ -251,14 +245,13 @@ export class Colibri {
                 } else if (directive.startsWith("t-att-")) {
                     const attr = directive.slice(6);
                     this.dynamicAttrs.push({
-                        nodes,
+                        sel,
                         attr,
                         definition: value,
                         initialValues: null,
-                        sel,
                     });
                 } else if (directive === "t-out") {
-                    this.tOuts.push({ nodes, definition: value, sel });
+                    this.tOuts.push({ sel, definition: value });
                 } else if (directive === "t-component") {
                     const { Component } = odoo.loader.modules.get("@odoo/owl");
                     if (Object.prototype.isPrototypeOf.call(Component, value)) {
@@ -284,18 +277,17 @@ export class Colibri {
             throw new Error("Updatecontent should not be called while interaction is updating");
         }
         this.isUpdating = true;
-        this.refreshDynamicAttrs();
-        this.refreshTOuts();
+        this.refreshNodes();
         const errors = [];
         const interaction = this.interaction;
         for (const dynamicAttr of this.dynamicAttrs) {
-            const { nodes, attr, definition, initialValues } = dynamicAttr;
+            const { sel, attr, definition, initialValues } = dynamicAttr;
             let valuePerNode;
             if (!initialValues) {
                 valuePerNode = new Map();
                 dynamicAttr.initialValues = valuePerNode;
             }
-            for (const node of nodes) {
+            for (const node of this.dynamicNodes.get(sel) || []) {
                 try {
                     const value = definition.call(interaction, node);
                     if (!initialValues) {
@@ -329,7 +321,7 @@ export class Colibri {
             }
         }
         for (const tOut of this.tOuts) {
-            for (const node of tOut.nodes) {
+            for (const node of this.dynamicNodes.get(tOut.sel) || []) {
                 this.applyTOut(node, tOut.definition.call(interaction, node));
             }
         }
@@ -346,11 +338,11 @@ export class Colibri {
     destroy() {
         // restore t-att to their initial values
         for (const dynAttrs of this.dynamicAttrs) {
-            const { nodes, attr, initialValues } = dynAttrs;
+            const { sel, attr, initialValues } = dynAttrs;
             if (!initialValues) {
                 continue;
             }
-            for (const node of nodes) {
+            for (const node of this.dynamicNodes.get(sel) || []) {
                 const initialValue = initialValues.get(node);
                 this.applyAttr(node, attr, initialValue);
             }
