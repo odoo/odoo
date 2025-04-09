@@ -57,35 +57,6 @@ class MicrosoftService(models.AbstractModel):
         return self.env["ir.config_parameter"].sudo().get_param('microsoft_account.token_endpoint', DEFAULT_MICROSOFT_TOKEN_ENDPOINT)
 
     @api.model
-    def generate_refresh_token(self, service, authorization_code):
-        """ Call Microsoft API to refresh the token, with the given authorization code
-            :param service : the name of the microsoft service to actualize
-            :param authorization_code : the code to exchange against the new refresh token
-            :returns the new refresh token
-        """
-        ICP_sudo = self.env['ir.config_parameter'].sudo()
-        scope = self._get_calendar_scope()
-
-        # Get the Refresh Token From Microsoft And store it in ir.config_parameter
-        headers = {"Content-type": "application/x-www-form-urlencoded"}
-        data = {
-            'client_id': self._get_microsoft_client_id(service),
-            'redirect_uri': ICP_sudo.get_param('microsoft_redirect_uri'),
-            'client_secret': _get_microsoft_client_secret(ICP_sudo, service),
-            'scope': scope,
-            'grant_type': "refresh_token"
-        }
-        try:
-            req = requests.post(self._get_token_endpoint(), data=data, headers=headers, timeout=TIMEOUT)
-            req.raise_for_status()
-            content = req.json()
-        except requests.exceptions.RequestException as exc:
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired")
-            raise self.env['res.config.settings'].get_config_warning(error_msg) from exc
-
-        return content.get('refresh_token')
-
-    @api.model
     def _refresh_microsoft_token(self, service, rtoken):
         """ Call Microsoft API to refresh the token, with the given authorization code
             :param service : the name of the microsoft service to actualize
