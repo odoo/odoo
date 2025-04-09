@@ -592,7 +592,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_29_website_text_edition(self):
         self.start_tour('/@/', 'website_text_edition', login='admin')
 
-    @unittest.skip
     def test_29_website_backend_menus_redirect(self):
         Menu = self.env['ir.ui.menu']
         menu_root = Menu.create({'name': 'Test Root'})
