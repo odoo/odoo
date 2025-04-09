@@ -58,10 +58,11 @@ class TestSignature(TransactionCase):
         cls.pdf_path =  "base/tests/minimal.pdf"
 
     def test_odoo_pdf_signer(self):
+        fixed_time = datetime.datetime.now(datetime.timezone.utc)
         with file_open(self.pdf_path, "rb") as stream:
             out_stream = io.BytesIO()
             with patch.object(PdfSigner, "_load_key_and_certificate", return_value=(self.private_key, self.certificate)):
-                signer = PdfSigner(stream, self.env)
+                signer = PdfSigner(stream, self.env, signing_time=fixed_time)
                 out_stream = signer.sign_pdf()
                 if not out_stream:
                     self.skipTest("Could not load the PdfSigner class properly")
@@ -102,7 +103,7 @@ class TestSignature(TransactionCase):
                 }),
                 cms.CMSAttribute({
                     'type': 'signing_time',
-                    'values': [cms.Time({'utc_time': core.UTCTime(datetime.datetime.now(datetime.timezone.utc))})]
+                    'values': [cms.Time({'utc_time': core.UTCTime(fixed_time)})]
                 }),
                 cms.CMSAttribute({
                     'type': 'cms_algorithm_protection',
