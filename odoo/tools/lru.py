@@ -1,9 +1,8 @@
-import collections
 import threading
 import typing
 from collections.abc import Iterable, Iterator, MutableMapping
 
-from .func import locked
+from .misc import SENTINEL
 
 __all__ = ['LRU']
 
@@ -13,50 +12,112 @@ V = typing.TypeVar('V')
 
 class LRU(MutableMapping[K, V], typing.Generic[K, V]):
     """
-    Implementation of a length-limited O(1) LRU map.
+    Implementation of a length-limited LRU map.
 
-    Original Copyright 2003 Josiah Carlson, later rebuilt on OrderedDict and added typing.
+    The mapping is thread-safe, and internally uses a lock to avoid concurrency
+    issues. However, access operations like ``lru[key]`` are fast and
+    lock-free.
     """
+
+    __slots__ = ('_count', '_lock', '_ordering', '_values')
+
     def __init__(self, count: int, pairs: Iterable[tuple[K, V]] = ()):
+        assert count > 0, "LRU needs a positive count"
+        self._count = count
         self._lock = threading.RLock()
-        self.count = max(count, 1)
-        self.d: collections.OrderedDict[K, V] = collections.OrderedDict()
+        self._values: dict[K, V] = {}
+        #
+        # The dict self._values contains the LRU items, while self._ordering
+        # only keeps track of their order, the most recently used ones being
+        # last. For performance reasons, we only use the lock when modifying
+        # the LRU, while reading it is lock-free (and thus faster).
+        #
+        # This strategy may result in inconsistencies between self._values and
+        # self._ordering. Indeed, concurrently accessed keys may be missing
+        # from self._ordering, but will eventually be added. This could result
+        # in keys being added back in self._ordering after their actual removal
+        # from the LRU. This results in the following invariant:
+        #
+        #     self._values <= self._ordering | "keys being accessed"
+        #
+        self._ordering: dict[K, None] = {}
+
+        # Initialize
         for key, value in pairs:
             self[key] = value
 
-    @locked
-    def __contains__(self, obj: K) -> bool:
-        return obj in self.d
+    @property
+    def count(self) -> int:
+        return self._count
 
-    @locked
-    def __getitem__(self, obj: K) -> V:
-        a = self.d[obj]
-        self.d.move_to_end(obj, last=False)
-        return a
+    def __contains__(self, key: object) -> bool:
+        return key in self._values
 
-    @locked
-    def __setitem__(self, obj: K, val: V):
-        self.d[obj] = val
-        self.d.move_to_end(obj, last=False)
-        while len(self.d) > self.count:
-            self.d.popitem(last=True)
+    def __getitem__(self, key: K) -> V:
+        val = self._values[key]
+        # move key at the last position in self._ordering
+        self._ordering[key] = self._ordering.pop(key, None)
+        return val
 
-    @locked
-    def __delitem__(self, obj: K):
-        del self.d[obj]
+    def __setitem__(self, key: K, val: V):
+        values = self._values
+        ordering = self._ordering
+        with self._lock:
+            values[key] = val
+            ordering[key] = ordering.pop(key, None)
+            while True:
+                # if we have too many keys in ordering, filter them out
+                if len(ordering) > len(values):
+                    # (copy to avoid concurrent changes on ordering)
+                    for k in ordering.copy():
+                        if k not in values:
+                            ordering.pop(k, None)
+                # check if we have too many keys
+                if len(values) <= self._count:
+                    break
+                # if so, pop the least recently used
+                try:
+                    # have a default in case of concurrent accesses
+                    key = next(iter(ordering), key)
+                except RuntimeError:
+                    # ordering modified during iteration, retry
+                    continue
+                values.pop(key, None)
+                ordering.pop(key, None)
 
-    @locked
+    def __delitem__(self, key: K):
+        self.pop(key)
+
     def __len__(self) -> int:
-        return len(self.d)
+        return len(self._values)
 
-    @locked
     def __iter__(self) -> Iterator[K]:
-        return iter(self.d)
+        return iter(self.snapshot)
 
-    @locked
-    def pop(self, key: K) -> V:
-        return self.d.pop(key)
+    @property
+    def snapshot(self) -> dict[K, V]:
+        """ Return a copy of the LRU (ordered according to LRU first). """
+        with self._lock:
+            values = self._values
+            # build result in expected order (copy self._ordering to avoid concurrent changes)
+            result = {
+                key: val
+                for key in self._ordering.copy()
+                if (val := values.get(key, SENTINEL)) is not SENTINEL
+            }
+            if len(result) < len(values):
+                # keys in value were missing from self._ordering, add them
+                result.update(values)
+        return result
 
-    @locked
+    def pop(self, key: K, /, default=SENTINEL) -> V:
+        with self._lock:
+            self._ordering.pop(key, None)
+            if default is SENTINEL:
+                return self._values.pop(key)
+            return self._values.pop(key, default)
+
     def clear(self):
-        self.d.clear()
+        with self._lock:
+            self._ordering.clear()
+            self._values.clear()
