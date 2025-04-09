@@ -6,6 +6,8 @@ import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
 import { mountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { mockService, serverState } from "@web/../tests/web_test_helpers";
+import { insertChartInSpreadsheet } from "../../helpers/chart";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 defineSpreadsheetModels();
 
@@ -209,17 +211,58 @@ test("Click on chart in dashboard mode redirect to the odoo menu", async functio
     expect(chartMenu.id).toBe(2, { message: "Odoo menu is linked to chart" });
     await animationFrame();
 
-    await click(fixture.querySelector(".o-chart-container"));
+    await click(fixture.querySelector(".o-chart-container canvas"));
     await animationFrame();
     // Clicking on a chart while not dashboard mode do nothing
     expect.verifySteps([]);
 
     model.updateMode("dashboard");
     await animationFrame();
-    await click(fixture.querySelector(".o-chart-container"));
+    await click(fixture.querySelector(".o-chart-container canvas"));
     await animationFrame();
     // Clicking on a chart while on dashboard mode redirect to the odoo menu
     expect.verifySteps([doActionStep]);
+});
+
+test("Click on chart element in dashboard mode do not redirect twice", async function () {
+    mockService("action", {
+        doAction: async (actionRequest) => {
+            console.log("actionRequest", actionRequest);
+            if (actionRequest === "menuAction2") {
+                expect.step("chartMenuRedirect");
+            } else if (
+                actionRequest.type === "ir.actions.act_window" &&
+                actionRequest.res_model === "partner"
+            ) {
+                expect.step("chartElementRedirect");
+            }
+        },
+    });
+
+    const { model } = await createModelWithDataSource({ serverData });
+    const fixture = await mountSpreadsheet(model);
+    const chartId = insertChartInSpreadsheet(model, "odoo_pie");
+    await waitForDataLoaded(model);
+    model.dispatch("LINK_ODOO_MENU_TO_CHART", { chartId, odooMenuId: 2 });
+    await animationFrame();
+    model.updateMode("dashboard");
+    await animationFrame();
+
+    // Click pie element
+    const chartCanvas = fixture.querySelector(".o-chart-container canvas");
+    const canvasRect = chartCanvas.getBoundingClientRect();
+    const canvasCenter = {
+        x: canvasRect.left + canvasRect.width / 2,
+        y: canvasRect.top + canvasRect.height / 2,
+    };
+    await click(".o-chart-container canvas", { position: canvasCenter, relative: true });
+    await animationFrame();
+    expect.verifySteps(["chartElementRedirect"]);
+
+    // Click outside the pie element
+    await click(".o-chart-container canvas", { position: "top-left" });
+    await animationFrame();
+    expect.verifySteps(["chartMenuRedirect"]);
 });
 
 test("can use menus xmlIds instead of menu ids", async function () {
