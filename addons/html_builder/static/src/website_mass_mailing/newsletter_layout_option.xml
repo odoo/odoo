@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_mass_mailing.NewsletterLayoutOption">
+    <BuilderRow label.translate="Template">
+        <BuilderSelect action="'selectTemplate'">
+            <BuilderSelectItem
+                title.translate="Email Subscription"
+                actionParam="{
+                    view: `website_mass_mailing.s_newsletter_block_default_template`,
+                    templateClass: 'js_subscribe_wrap',
+                }">Email Subscription</BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Form Subscription"
+                id="'form_opt'"
+                actionParam="{
+                    view: `website_mass_mailing.s_newsletter_block_form_template`,
+                    templateClass: 's_website_form',
+                }">Form Subscription</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>
