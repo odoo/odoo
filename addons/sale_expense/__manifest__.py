@@ -22,14 +22,6 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
     ],
     'installable': True,
     'auto_install': True,
-    'assets': {
-        'web.assets_backend': [
-            'sale_expense/static/src/**/*',
-        ],
-        'web.qunit_suite_tests': [
-            'sale_expense/static/tests/**/*',
-        ],
-    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
