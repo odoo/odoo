@@ -61,6 +61,8 @@ export class QtyAtDateWidget extends Component {
                 // Moves are created, using the forecasted data of related moves
                 this.calcData.forecasted_issue = !this.calcData.will_be_fulfilled || this.calcData.will_be_late;
             }
+            this.calcData.will_virtual_at_date_be_fulfilled = data.virtual_available_at_date >= data.qty_to_deliver;
+            this.calcData.will_available_now_be_fulfilled = data.free_qty_today >= data.qty_to_deliver;
         }
     }
 
