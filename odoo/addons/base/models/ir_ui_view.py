@@ -27,7 +27,7 @@ from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheri
 from odoo.tools import safe_eval, lazy, lazy_property, frozendict
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path
-from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
+from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS, validate_xml_encoding
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
 from odoo.osv.expression import expression
 
@@ -482,7 +482,9 @@ actual arch.
                     try:
                         if not values.get('arch') and not values.get('arch_base'):
                             raise ValidationError(_('Missing view architecture.'))
-                        values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
+                        text = values.get('arch_base')
+                        validate_xml_encoding(text)
+                        values['type'] = etree.fromstring(values.get('arch') or text).tag
                     except LxmlError:
                         # don't raise here, the constraint that runs `self._check_xml` will
                         # do the job properly.
