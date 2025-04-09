@@ -11,10 +11,10 @@
     </BuilderRow>    
     <t t-if="isActiveItem('overTheContent')">
         <BuilderRow label.translate="Background" level="1">
-            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'background-color'"/>
+            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'background-color'" enabledTabs="['custom']"/>
         </BuilderRow>
         <BuilderRow label.translate="Text Color" level="1">
-            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'color'"/>
+            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
     </t>
 </t>

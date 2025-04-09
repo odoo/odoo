@@ -15,7 +15,7 @@ defineWebsiteModels();
 test("should apply backgroundColor to the editing element", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderColorPicker styleAction="'background-color'"/>`,
+        template: xml`<BuilderColorPicker enabledTabs="['solid']" styleAction="'background-color'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -25,10 +25,23 @@ test("should apply backgroundColor to the editing element", async () => {
     expect(":iframe .test-options-target").toHaveClass("test-options-target bg-o-color-1");
 });
 
+test("should apply o_cc color", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'background-color'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await click(".o-overlay-item [data-color='o_cc3']");
+    expect(":iframe .test-options-target").toHaveClass("test-options-target o_cc3");
+});
+
 test("should apply color to the editing element", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderColorPicker styleAction="'color'"/>`,
+        template: xml`<BuilderColorPicker enabledTabs="['solid']" styleAction="'color'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -69,7 +82,7 @@ test("hide/display base on applyTo", async () => {
 test("apply color to a different style than color or backgroundColor", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderColorPicker styleAction="'border-top-color'"/>`,
+        template: xml`<BuilderColorPicker enabledTabs="['solid']" styleAction="'border-top-color'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -100,7 +113,7 @@ test("apply custom action", async () => {
     });
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderColorPicker styleAction="'${styleName}'" action="'customAction'"/>`,
+        template: xml`<BuilderColorPicker enabledTabs="['solid']" styleAction="'${styleName}'" action="'customAction'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -131,7 +144,7 @@ test("apply custom async action", async () => {
     addOption({
         selector: ".test-options-target",
         template: xml`
-            <BuilderColorPicker action="'customAction'"/>
+            <BuilderColorPicker action="'customAction'" enabledTabs="['solid']"/>
             <BuilderButton classAction="'test'" preview="false"/>
             `,
     });
@@ -161,7 +174,7 @@ test("apply custom async action", async () => {
 test("should revert preview on escape", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderColorPicker styleAction="'background-color'"/>`,
+        template: xml`<BuilderColorPicker enabledTabs="['solid']" styleAction="'background-color'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();

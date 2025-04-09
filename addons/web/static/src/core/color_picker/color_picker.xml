@@ -1,27 +1,31 @@
 <templates xml:space="preserve">
 <t t-name="web.ColorPicker">
-    <div class="o_font_color_selector user-select-none" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true">
+    <div class="o_font_color_selector user-select-none" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root">
         <div class="my-1 d-flex">
-            <t  t-if="this.props.enabledTabs.length > 1">
-                <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab"
-                    t-if="this.props.enabledTabs.includes('solid')"
-                    t-att-class="{active: state.activeTab === 'solid'}"
-                    t-on-click="() => this.setTab('solid')">
-                    Solid
-                </button>
-                <button class="btn btn-sm btn-light text-truncate btn-tab"
-                    t-if="this.props.enabledTabs.includes('custom')"
-                    t-att-class="{active: state.activeTab === 'custom'}"
-                    t-on-click="() => this.setTab('custom')">
-                    Custom
-                </button>
-                <button class="btn btn-sm btn-light text-truncate btn-tab"
-                    t-if="this.props.enabledTabs.includes('gradient')"
-                    t-att-class="{active: state.activeTab === 'gradient'}"
-                    t-on-click="() => this.setTab('gradient')">
-                    Gradient
-                </button>
-            </t>
+            <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab theme-tab"
+                t-if="this.props.enabledTabs.includes('theme')"
+                t-att-class="{active: state.activeTab === 'theme'}"
+                t-on-click="() => this.setTab('theme')">
+                Theme
+            </button>
+            <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab solid-tab"
+                t-if="this.props.enabledTabs.includes('solid')"
+                t-att-class="{active: state.activeTab === 'solid'}"
+                t-on-click="() => this.setTab('solid')">
+                Solid
+            </button>
+            <button class="btn btn-sm btn-light text-truncate btn-tab custom-tab"
+                t-if="this.props.enabledTabs.includes('custom')"
+                t-att-class="{active: state.activeTab === 'custom'}"
+                t-on-click="() => this.setTab('custom')">
+                Custom
+            </button>
+            <button class="btn btn-sm btn-light text-truncate btn-tab gradient-tab"
+                t-if="this.props.enabledTabs.includes('gradient')"
+                t-att-class="{active: state.activeTab === 'gradient'}"
+                t-on-click="() => this.setTab('gradient')">
+                Gradient
+            </button>
             <div class="flex-grow-1" />
             <button class="btn btn-sm btn-light fa fa-trash me-1"
                     title="Reset"
@@ -30,6 +34,32 @@
                     t-on-mouseout="onColorHoverOut"
                     t-on-focusin="onColorFocusin"/>
         </div>
+        <t t-if="state.activeTab==='theme'">
+            <div class="pt-2 px-2 pb-3 d-flex flex-column gap-1 o_cc_preview_wrapper"
+                t-on-click="onColorApply"
+                t-on-mouseover="onColorHover"
+                t-on-mouseleave="() => this.props.applyColorResetPreview()"
+                t-on-focusin="onColorHover"
+                t-on-focusout="onColorHoverOut"
+                >
+                <!-- List all Presets -->
+                <t t-foreach="[1, 2, 3, 4, 5]" t-as="number" t-key="number">
+                    <t t-set="className" t-value="'o_cc' + number"/>
+                    <t t-set="activeClass" t-value="this.props.state.selectedColorCombination === className ? 'selected' : ''"/>
+                    <button
+                            type="button"
+                            class="w-100 p-0 border-0 bg-transparent p-2 d-flex justify-content-between align-items-center color-combination-button"
+                            t-att-class="[className, activeClass].join(' ')"
+                            t-att-data-color="className"
+                            t-attf-title="Preset {{number}}">
+                        <h1 class="m-0 fs-4">Title</h1>
+                        <p class="m-0 flex-grow-1">Text</p>
+                        <span class="py-1 px-1 rounded-1 fs-6 btn btn-sm lh-1 btn btn-sm me-1 d-flex flex-column justify-content-center btn-primary"><small>Button</small></span>
+                        <span class="py-1 px-1 rounded-1 fs-6 btn btn-sm lh-1 btn btn-sm d-flex flex-column justify-content-center btn-secondary"><small>Button</small></span>
+                    </button>
+                </t>
+            </div>
+        </t>
         <t t-if="state.activeTab==='solid'">
             <div class="p-1"
                 t-on-click="onColorApply"

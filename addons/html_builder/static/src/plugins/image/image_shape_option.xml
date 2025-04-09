@@ -7,12 +7,13 @@
         <BuilderButton action="'setImageShape'" actionValue="" preview="false" icon="'fa-times'" t-if="state.hasShape"/>
     </BuilderRow>
     <t t-if="this.state.hasShape">
+        <t t-set="enabledTabs" t-value="['solid', 'custom']" />
         <BuilderRow label.translate="Colors" level="2">
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 0}" t-if="this.state.showImageShape0" />
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 1}" t-if="this.state.showImageShape1" />
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 2}" t-if="this.state.showImageShape2" />
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 3}" t-if="this.state.showImageShape3" />
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 4}" t-if="this.state.showImageShape4" />
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 0}" t-if="this.state.showImageShape0" enabledTabs="enabledTabs" />
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 1}" t-if="this.state.showImageShape1" enabledTabs="enabledTabs" />
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 2}" t-if="this.state.showImageShape2" enabledTabs="enabledTabs" />
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 3}" t-if="this.state.showImageShape3" enabledTabs="enabledTabs" />
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 4}" t-if="this.state.showImageShape4" enabledTabs="enabledTabs" />
         </BuilderRow>
 
         <BuilderRow label.translate="Transform" level="1" t-if="this.state.showImageShapeTransform" preview="false">

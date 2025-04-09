@@ -10,6 +10,7 @@ import {
     useHasPreview,
 } from "../utils";
 import { isColorGradient } from "@web/core/utils/colors";
+import { COLOR_COMBINATION_CLASSES_REGEX } from "@html_editor/utils/color";
 
 // TODO replace by useInputBuilderComponent after extract unit by AGAU
 export function useColorPickerBuilderComponent() {
@@ -46,6 +47,7 @@ export function useColorPickerBuilderComponent() {
         const actionValue = getAction(actionId).getValue({ editingElement, params: actionParam });
         return {
             selectedColor: actionValue || "#FFFFFF00",
+            selectedColorCombination: getColorCombination(editingElement),
         };
     }
     function getColor(colorValue) {
@@ -91,6 +93,7 @@ export class BuilderColorPicker extends Component {
     };
     static defaultProps = {
         getUsedCustomColors: () => [],
+        enabledTabs: ["theme", "gradient", "custom"],
     };
     static components = {
         ColorSelector: ColorSelector,
@@ -127,4 +130,8 @@ export class BuilderColorPicker extends Component {
         }
         return `background-color: ${this.state.selectedColor}`;
     }
+}
+
+function getColorCombination(el) {
+    return el.className.match?.(COLOR_COMBINATION_CLASSES_REGEX)?.[0];
 }

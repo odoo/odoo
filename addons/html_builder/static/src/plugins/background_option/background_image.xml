@@ -7,7 +7,7 @@
     </BuilderRow>
     <BuilderRow t-if="showMainColorPicker()" label.translate="Main Color" level="2">
         <t t-foreach="getColorPickerColorNames()" t-as="colorName" t-key="colorName_index">
-            <BuilderColorPicker action="'dynamicColor'" actionParam="colorName"/>
+            <BuilderColorPicker action="'dynamicColor'" actionParam="colorName" enabledTabs="['solid', 'custom']"/>
         </t>
     </BuilderRow>
 </t>
