@@ -131,7 +131,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_is_storable': True}"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom_id" groups="uom.group_uom" options="{'product_field': 'product_qty'}" widget="many2one_uom"/>
+                                    <field name="product_uom_id" groups="uom.group_uom" options="{'quantity_field': 'product_qty'}" widget="many2one_uom"/>
                                     <field name="cost_share" optional="hide"/>
                                     <field name="allowed_operation_ids" column_invisible="True"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" options="{'no_quick_create':True,'no_create_edit':True}"/>
