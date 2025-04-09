@@ -23,6 +23,7 @@
             'website_sale_autocomplete/static/tests/**/*.js'
         ],
     },
+    'auto_install': True,
     'installable': True,
     'license': 'LGPL-3',
 }
