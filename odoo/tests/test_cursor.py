@@ -42,8 +42,9 @@ class TestCursor(BaseCursor):
         current_test = odoo.modules.module.current_test
         assert current_test, 'Test Cursor without active test ?'
         current_test.assertCanOpenTestCursor()
-        if not self._lock.acquire(timeout=20):
-            raise Exception('Unable to acquire lock for test cursor after 20s')
+        lock_timeout = current_test.test_cursor_lock_timeout
+        if not self._lock.acquire(timeout=lock_timeout):
+            raise Exception(f'Unable to acquire lock for test cursor after {lock_timeout}s')
         try:
             # Check after acquiring in case current_test has changed.
             # This can happen if the request was hanging between two tests.
