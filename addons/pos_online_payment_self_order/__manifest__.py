@@ -15,8 +15,11 @@
     'auto_install': True,
     'assets': {
         'pos_self_order.assets': [
-            'pos_online_payment_self_order/static/src/**/*',
+            'pos_online_payment_self_order/static/src/app/**/*',
             'web/static/lib/zxing-library/zxing-library.js',
+        ],
+        'point_of_sale._assets_pos': [
+            'pos_online_payment_self_order/static/src/overrides/**/*',
         ],
         'web.assets_tests': [
             'pos_online_payment_self_order/static/tests/tours/pos_online_payment_multi_table_order.js',
