@@ -410,7 +410,7 @@ export function parseDateTime(value, options = {}) {
     const fmt = options.format || localization.dateTimeFormat;
     const parseOpts = {
         setZone: true,
-        zone: "default",
+        zone: options.tz || "default",
     };
     const switchToLatin = Settings.defaultNumberingSystem !== "latn" && /[0-9]/.test(value);
 
