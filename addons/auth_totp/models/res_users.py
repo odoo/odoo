@@ -72,6 +72,11 @@ class ResUsers(models.Model):
                 _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
                 raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
             _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
+            return {
+                'uid': self.env.user.id,
+                'auth_method': 'totp',
+                'mfa': 'default',
+            }
         else:
             return super()._check_credentials(credentials, env)
 
