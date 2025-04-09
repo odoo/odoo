@@ -96,6 +96,14 @@ export function receiptRoundingAmountIs(value) {
         },
     ];
 }
+export function paymentLineContains(paymentMethodName, amount) {
+    return [
+        {
+            content: `Check if payment line contains ${paymentMethodName} with amount ${amount}`,
+            trigger: `.receipt-screen .paymentlines:contains("${paymentMethodName}"):has(.pos-receipt-right-align:contains("${amount}"))`,
+        },
+    ];
+}
 export function receiptRoundingAmountIsNotThere() {
     return [
         {

@@ -292,9 +292,7 @@ export class PaymentScreen extends Component {
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return;
         }
-        const linesToRemove = this.currentOrder.lines.filter((line) =>
-            line.product_id.uom_id.isZero(line.qty)
-        );
+        const linesToRemove = this.currentOrder.lines.filter((line) => line.canBeRemoved);
         for (const line of linesToRemove) {
             this.currentOrder.removeOrderline(line);
         }
