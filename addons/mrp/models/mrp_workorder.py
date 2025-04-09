@@ -329,7 +329,10 @@ class MrpWorkorder(models.Model):
 
             if delta_duration > 0:
                 enddate = datetime.now()
-                date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
+                try:
+                    date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
+                except OverflowError:
+                    raise UserError(_("The duration is too long, resulting in an invalid date. Please enter a valid duration."))
                 if order.duration_expected >= new_order_duration or old_order_duration >= order.duration_expected:
                     # either only productive or only performance (i.e. reduced speed) time respectively
                     self.env['mrp.workcenter.productivity'].create(

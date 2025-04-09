@@ -418,7 +418,10 @@ class MrpWorkcenterProductivity(models.Model):
 
     @api.onchange('duration')
     def _duration_changed(self):
-        self.date_start = self.date_end - timedelta(minutes=self.duration)
+        try:
+            self.date_start = self.date_end - timedelta(minutes=self.duration)
+        except OverflowError:
+            raise UserError(_("The duration is too long, resulting in an invalid date. Please enter a valid duration."))
         self._loss_type_change()
 
     @api.onchange('date_start')
