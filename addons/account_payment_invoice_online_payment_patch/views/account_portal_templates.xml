@@ -55,7 +55,7 @@
                 invoice._has_to_be_paid()
             </attribute>
         </xpath>
-        <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('d-grid')]//a[starts-with(@href, '#')][i]" position="attributes">
+        <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('d-grid')]//a[starts-with(@href, '#')][//i]" position="attributes">
             <attribute name="t-if">
                 invoice._has_to_be_paid()
             </attribute>
