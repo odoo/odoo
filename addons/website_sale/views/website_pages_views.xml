@@ -72,6 +72,7 @@
     <record id="action_product_pages_list" model="ir.actions.act_window">
         <field name="name">Product Pages</field>
         <field name="res_model">product.template</field>
+        <field name="path">product-pages</field>
         <field name="view_mode">list,kanban</field>
         <field name="view_id" ref="product_pages_tree_view"/>
         <field name="view_ids" eval="[Command.clear(),

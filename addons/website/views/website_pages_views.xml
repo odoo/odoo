@@ -182,6 +182,7 @@
 <record id="action_website_pages_list" model="ir.actions.act_window">
     <field name="name">Website Pages</field>
     <field name="res_model">website.page</field>
+    <field name="path">website-pages</field>
     <field name="view_mode">list,kanban</field>
     <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'list', 'view_id': ref('website_pages_tree_view')}),

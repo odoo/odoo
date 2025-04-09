@@ -303,6 +303,7 @@
     <record id="website_visitor_view_action" model="ir.actions.act_window">
         <field name="name">Page Views</field>
         <field name="res_model">website.track</field>
+        <field name="path">website-page-views</field>
         <field name="view_mode">list</field>
         <field name="context">{'search_default_type_url': 1, 'create': False, 'edit': False, 'copy': False}</field>
         <field name="view_ids" eval="[(5, 0, 0),
