@@ -131,7 +131,8 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             notification_type='email',
         )
         # identify that user as being a customer
-        user.partner_id._increase_rank('customer_rank', 1)
+        user.partner_id.sudo().customer_rank += 1
+        self.assertGreater(user.partner_id.customer_rank, 0)
         user.partner_id.message_post(body='Test', partner_ids=user.partner_id.ids)
 
     def test_partner_unlink(self):
