@@ -19,7 +19,7 @@ import {
     getAggregateSpecifications,
     getBasicEvalContext,
     getFieldsSpec,
-    isRelational,
+    getGroupServerValue,
     makeActiveField,
 } from "./utils";
 import { FetchRecordError } from "./errors";
@@ -367,120 +367,90 @@ export class RelationalModel extends Model {
                 config.activeFields[propertiesFieldName] = makeActiveField();
             }
         }
-        const response = await this._webReadGroup(config);
-        const { groups: groupsData, length } = response;
-        const groupBy = config.groupBy.slice(1);
-        const groupByField = config.fields[config.groupBy[0].split(":")[0]];
+
         const commonConfig = {
             resModel: config.resModel,
             fields: config.fields,
             activeFields: config.activeFields,
+            offset: 0,
         };
-        let groupRecordConfig;
-        const groupRecordResIds = [];
-        if (this.groupByInfo[firstGroupByName]) {
-            groupRecordConfig = {
-                ...this.groupByInfo[firstGroupByName],
-                resModel: config.fields[firstGroupByName].relation,
-                context: {},
-            };
-        }
-        const proms = [];
-        let nbOpenGroups = 0;
+        const initialLimit = this.initialLimit;
+        const initialGroupsLimit = this.initialGroupsLimit;
 
-        const groups = [];
-        for (const groupData of groupsData) {
-            const group = extractInfoFromGroupData(groupData, config.groupBy, config.fields);
-            if (!config.groups[group.value]) {
-                config.groups[group.value] = {
-                    ...commonConfig,
-                    groupByFieldName: groupByField.name,
-                    isFolded:
-                        "__fold" in groupData ? groupData.__fold : !config.openGroupsByDefault,
-                    extraDomain: false,
-                    value: group.value,
-                    list: {
+        function extractGroups(currentConfig, groupsData) {
+            const groupByField = currentConfig.fields[currentConfig.groupBy[0].split(":")[0]];
+            const nextLevelGroupBy = currentConfig.groupBy.slice(1);
+            const groups = [];
+            for (const groupData of groupsData) {
+                const group = extractInfoFromGroupData(
+                    groupData,
+                    currentConfig.groupBy,
+                    currentConfig.fields,
+                    currentConfig.domain
+                );
+                if (!currentConfig.groups[group.value]) {
+                    const isFolded =
+                        !Object.hasOwn(groupData, "__records") &&
+                        !Object.hasOwn(groupData, "__groups");
+                    currentConfig.groups[group.value] = {
                         ...commonConfig,
-                        groupBy,
-                    },
-                };
-                if (isRelational(config.fields[firstGroupByName]) && !group.value) {
-                    // fold the "unset" group by default when grouped by many2one
-                    config.groups[group.value].isFolded = true;
-                }
-                if (groupRecordConfig) {
-                    config.groups[group.value].record = {
-                        ...groupRecordConfig,
-                        resId: group.value ?? false,
+                        groupByFieldName: groupByField.name,
+                        isFolded: isFolded,
+                        extraDomain: false,
+                        value: group.value,
+                        list: {
+                            ...commonConfig,
+                            groupBy: nextLevelGroupBy,
+                            limit:
+                                nextLevelGroupBy.length === 0 ? initialLimit : initialGroupsLimit,
+                        },
                     };
                 }
-            }
-            if (groupRecordConfig) {
-                const resId = config.groups[group.value].record.resId;
-                if (resId) {
-                    groupRecordResIds.push(resId);
-                }
-            }
-            const groupConfig = config.groups[group.value];
-            groupConfig.list.orderBy = config.orderBy;
-            groupConfig.initialDomain = group.domain;
-            if (groupConfig.extraDomain) {
-                groupConfig.list.domain = Domain.and([
-                    group.domain,
-                    groupConfig.extraDomain,
-                ]).toList();
-            } else {
-                groupConfig.list.domain = group.domain;
-            }
-            const context = {
-                ...config.context,
-                [`default_${firstGroupByName}`]: group.serverValue,
-            };
-            groupConfig.list.context = context;
-            groupConfig.context = context;
-            if (groupBy.length) {
-                group.groups = [];
-            } else {
-                group.records = [];
-            }
-            if (!groupConfig.isFolded) {
-                nbOpenGroups++;
-                if (nbOpenGroups > this.constructor.MAX_NUMBER_OPENED_GROUPS) {
-                    groupConfig.isFolded = true;
-                }
-            }
-            if (!groupConfig.isFolded && group.count > 0) {
-                const prom = this._loadData(groupConfig.list).then((response) => {
-                    if (groupBy.length) {
-                        group.groups = response ? response.groups : [];
-                        group.length = response ? response.length : 0;
-                    } else {
-                        group.records = response ? response.records : [];
-                    }
-                });
-                proms.push(prom);
-            }
-            groups.push(group);
-        }
-        if (groupRecordConfig && Object.keys(groupRecordConfig.activeFields).length) {
-            const prom = this._loadRecords({
-                ...groupRecordConfig,
-                resIds: groupRecordResIds,
-            }).then((records) => {
-                for (const group of groups) {
-                    if (!group.value) {
-                        group.values = { id: false };
-                        continue;
-                    }
-                    group.values = records.find((r) => group.value && r.id === group.value);
-                }
-            });
-            proms.push(prom);
-        }
-        await Promise.all(proms);
 
-        // if a group becomes empty at some point (e.g. we dragged its last record out of it), and the view is reloaded
-        // with the same domain and groupbys, we want to keep the empty group in the UI
+                const groupConfig = currentConfig.groups[group.value];
+                groupConfig.list.orderBy = currentConfig.orderBy;
+                groupConfig.initialDomain = group.domain;
+                if (groupConfig.extraDomain) {
+                    groupConfig.list.domain = Domain.and([
+                        group.domain,
+                        groupConfig.extraDomain,
+                    ]).toList();
+                } else {
+                    groupConfig.list.domain = group.domain;
+                }
+                const context = {
+                    ...currentConfig.context,
+                    [`default_${firstGroupByName}`]: group.serverValue,
+                };
+                groupConfig.list.context = context;
+                groupConfig.context = context;
+                if (nextLevelGroupBy.length) {
+                    if (!groupConfig.isFolded) {
+                        group.groups = extractGroups(groupConfig.list, groupData["__groups"]);
+                        group.length = groupData["__count"];
+                    } else {
+                        group.groups = [];
+                    }
+                } else {
+                    if (!groupConfig.isFolded) {
+                        group.records = groupData["__records"];
+                        group.length = groupData["__count"];
+                    } else {
+                        group.records = [];
+                    }
+                }
+                if (Object.hasOwn(groupData, "__offset")) {
+                    groupConfig.list.offset = group["__offset"];
+                }
+                groups.push(group);
+            }
+
+            return groups;
+        }
+
+        const response = await this._webReadGroupUnity(config);
+        const groups = extractGroups(config, response.groups);
+
         const params = JSON.stringify([
             config.domain,
             config.groupBy,
@@ -509,7 +479,7 @@ export class RelationalModel extends Model {
         }
         config.currentGroups = { params, groups };
 
-        return { groups, length };
+        return { groups, length: response.length };
     }
 
     /**
@@ -676,6 +646,76 @@ export class RelationalModel extends Model {
                 record._applyValues(serverValues);
             }
         }
+    }
+
+    async _webReadGroupUnity(config) {
+        function getGroupInfo(groups) {
+            return Object.values(groups).map((group) => {
+                // Field needed
+                const field = group.fields[group.groupByFieldName];
+                const value =
+                    field.type !== "many2many"
+                        ? getGroupServerValue(field, group.value)
+                        : group.value;
+                if (group.isFolded) {
+                    return {
+                        value: value,
+                        folded: group.isFolded,
+                    };
+                } else {
+                    return {
+                        value: value,
+                        folded: group.isFolded,
+                        limit: group.list.limit,
+                        offset: group.list.offset,
+                        extra_domain: group.extraDomain,
+                        groups: group.list.groups && getGroupInfo(group.list.groups),
+                    };
+                }
+            });
+        }
+
+        const aggregates = getAggregateSpecifications(
+            pick(config.fields, ...Object.keys(config.activeFields))
+        );
+        const currentGroupInfos = getGroupInfo(config.groups);
+        const { activeFields, fields } = config;
+        const evalContext = getBasicEvalContext(config);
+        const unfoldReadSpecification = getFieldsSpec(activeFields, fields, evalContext);
+
+        const groupByReadSpecification = {};
+        for (const groupBy of config.groupBy) {
+            const groupInfo = this.groupByInfo[groupBy];
+            if (groupInfo) {
+                const evalContext = getBasicEvalContext(groupInfo);
+                const { activeFields, fields } = this.groupByInfo[groupBy];
+                groupByReadSpecification[groupBy] = getFieldsSpec(
+                    activeFields,
+                    fields,
+                    evalContext
+                );
+            }
+        }
+
+        return this.orm.webReadGroupUnity(
+            config.resModel,
+            config.domain,
+            config.groupBy,
+            aggregates,
+            {
+                limit: config.limit !== Number.MAX_SAFE_INTEGER ? config.limit : undefined,
+                offset: config.offset,
+                forced_order: config.orderBy,
+                unfolded_group_limit: config.openGroupsByDefault
+                    ? this.constructor.MAX_NUMBER_OPENED_GROUPS
+                    : undefined,
+                current_group_info: currentGroupInfos,
+                unfold_read_specification: unfoldReadSpecification,
+                unfold_read_default_limit: this.initialLimit,
+                groupby_read_specification: groupByReadSpecification,
+                context: { read_group_expand: true, ...config.context },
+            }
+        );
     }
 
     async _webReadGroup(config) {

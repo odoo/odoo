@@ -265,7 +265,10 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                 activeField.required = "False";
             }
         }
-        if (["many2one", "many2one_reference"].includes(fields[fieldName].type) && fieldNode.views) {
+        if (
+            ["many2one", "many2one_reference"].includes(fields[fieldName].type) &&
+            fieldNode.views
+        ) {
             const viewDescr = fieldNode.views.default;
             activeField.related = extractFieldsFromArchInfo(viewDescr, viewDescr.fields);
         }
@@ -536,12 +539,12 @@ export function getAggregateSpecifications(fields) {
  * @param {Object} fields
  * @returns {Object}
  */
-export function extractInfoFromGroupData(groupData, groupBy, fields) {
+export function extractInfoFromGroupData(groupData, groupBy, fields, domain) {
     const info = {};
     const groupByField = fields[groupBy[0].split(":")[0]];
     info.count = groupData.__count;
     info.length = info.count; // TODO: remove but still used in DynamicRecordList._updateCount
-    info.domain = groupData.__domain;
+    info.domain = Domain.and([domain, groupData.__extra_domain]).toList();
     info.rawValue = groupData[groupBy[0]];
     info.value = getValueFromGroupData(groupByField, info.rawValue);
     if (["date", "datetime"].includes(groupByField.type) && info.value) {
@@ -554,6 +557,7 @@ export function extractInfoFromGroupData(groupData, groupBy, fields) {
     info.displayName = getDisplayNameFromGroupData(groupByField, info.rawValue);
     info.serverValue = getGroupServerValue(groupByField, info.value);
     info.aggregates = getAggregatesFromGroupData(groupData, fields);
+    info.values = groupData.__values; // Extra data of the relational groupby field record
     return info;
 }
 
