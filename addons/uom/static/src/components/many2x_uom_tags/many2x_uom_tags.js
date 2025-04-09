@@ -16,9 +16,11 @@ import { onWillUpdateProps } from "@odoo/owl";
 function _getProductRelatedModel() {
     const field = this.props.record.fields[this.props.productField];
     // The widget is either used alongisde a product related field or either used in a product view.
-    let resModel = field?.relation || this.props.record.resModel;
+    const resModel = field?.relation || this.props.record.resModel;
     if (!["product.product", "product.template"].includes(resModel)) {
-        throw new Error(`The widget '${this.constructor.name}' (field '${this.props.name}') needs a 'product.product' or 'product.template' field. '${this.props.productField}' is used but is related to '${field?.relation}' model.`);
+        console.warn(`The widget '${this.constructor.name}' (field '${this.props.name}') needs a 'product.product' or 'product.template' field. '${this.props.productField}' is used but is related to '${field?.relation}' model.`);
+        // In case widget's config is wrong, use `product.product` by default.
+        return "product.product";
     }
     return resModel;
 }
