@@ -66,9 +66,7 @@ class CalendarAttendee(models.Model):
                 email = [x for x in common_nameval if '@' in x]
                 values['email'] = email[0] if email else ''
                 values['common_name'] = values.get("common_name")
-        attendees = super().create(vals_list)
-        attendees._subscribe_partner()
-        return attendees
+        return super().create(vals_list)
 
     def unlink(self):
         self._unsubscribe_partner()
@@ -76,18 +74,6 @@ class CalendarAttendee(models.Model):
 
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
-
-    def _subscribe_partner(self):
-        mapped_followers = defaultdict(lambda: self.env['calendar.event'])
-        for event in self.event_id:
-            partners = (event.attendee_ids & self).partner_id - event.message_partner_ids
-            # current user is automatically added as followers, don't add it twice.
-            partners -= self.env.user.partner_id
-            mapped_followers[partners] |= event
-        for partners, events in mapped_followers.items():
-            if not partners:
-                continue
-            events.message_subscribe(partner_ids=partners.ids)
 
     def _unsubscribe_partner(self):
         for event in self.event_id:

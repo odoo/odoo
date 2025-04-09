@@ -881,7 +881,7 @@ class CalendarEvent(models.Model):
                 'default_use_template': bool(template),
                 'default_template_id': template.id,
                 'default_attendee_id': attendee_id,
-                'default_record': self.id,
+                'default_calendar_event_id': self.id,
                 'default_recurrence': recurrence,
                 'model_description': self.with_context(lang=lang),
             }
@@ -1076,15 +1076,6 @@ class CalendarEvent(models.Model):
     def _skip_send_mail_status_update(self):
         """Overridable getter to identify whether to send invitation/cancelation emails."""
         return False
-
-    def _get_attendee_emails(self):
-        """ Get comma-separated attendee email addresses. """
-        self.ensure_one()
-        defaults = self._message_get_default_recipients()[self.id]
-        email_to = defaults['email_to'] or ''
-        if defaults['partner_ids']:
-            email_to += ','.join(self.env['res.partner'].browse(defaults['partner_ids']).mapped('email'))
-        return email_to
 
     def _get_mail_tz(self):
         self.ensure_one()
