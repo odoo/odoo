@@ -376,16 +376,18 @@ function useReloadAction(getAllActions) {
     const getAction = env.editor.shared.builderActions.getAction;
     let hasReloadAction = false;
     let getReloadUrl;
+    let getReloadSelector;
     for (const descr of getAllActions()) {
         if (descr.actionId) {
             const action = getAction(descr.actionId);
             if (action.isReload) {
                 hasReloadAction = true;
                 getReloadUrl = action.getReloadUrl;
+                getReloadSelector = action.getReloadSelector;
             }
         }
     }
-    return { hasReloadAction, getReloadUrl };
+    return { hasReloadAction, getReloadUrl, getReloadSelector };
 }
 
 export function useClickableBuilderComponent() {
@@ -395,7 +397,7 @@ export function useClickableBuilderComponent() {
     const getAction = comp.env.editor.shared.builderActions.getAction;
 
     const onReady = usePrepareAction(getAllActions);
-    const { hasReloadAction, getReloadUrl } = useReloadAction(getAllActions);
+    const { hasReloadAction, getReloadUrl, getReloadSelector } = useReloadAction(getAllActions);
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
     const inheritedActionIds =
@@ -405,7 +407,7 @@ export function useClickableBuilderComponent() {
         !hasReloadAction &&
         (comp.props.preview === true ||
             (comp.props.preview === undefined && comp.env.weContext.preview !== false));
-    const operationWithReload = useOperationWithReload(callApply, getReloadUrl);
+    const operationWithReload = useOperationWithReload(callApply, getReloadUrl, getReloadSelector);
 
     const operation = {
         commit: () => {
@@ -518,13 +520,17 @@ export function useClickableBuilderComponent() {
         onReady,
     };
 }
-function useOperationWithReload(callApply, getReloadUrl) {
+function useOperationWithReload(callApply, getReloadUrl, getReloadSelector) {
     const env = useEnv();
     return async (...args) => {
         const { editingElement } = args[0][0];
         await Promise.all([callApply(...args), env.editor.shared.savePlugin.save()]);
-        const target = getReloadTarget(editingElement);
+        let target = getReloadTarget(editingElement);
         const url = getReloadUrl?.();
+        const selector = getReloadSelector?.();
+        if (selector && editingElement.closest(selector)) {
+            target = selector;
+        }
         env.editor.config.reloadEditor({ target, url });
     };
 }
@@ -540,7 +546,7 @@ export function useInputBuilderComponent({
     const state = useDomState(getState);
 
     const onReady = usePrepareAction(getAllActions);
-    const { hasReloadAction, getReloadUrl } = useReloadAction(getAllActions);
+    const { hasReloadAction, getReloadUrl, getReloadSelector } = useReloadAction(getAllActions);
 
     async function callApply(applySpecs) {
         const proms = [];
@@ -559,7 +565,7 @@ export function useInputBuilderComponent({
     }
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
-    const operationWithReload = useOperationWithReload(callApply, getReloadUrl);
+    const operationWithReload = useOperationWithReload(callApply, getReloadUrl, getReloadSelector);
     function getState(editingElement) {
         if (!editingElement || !editingElement.isConnected) {
             // TODO try to remove it. We need to move hook in BuilderComponent
