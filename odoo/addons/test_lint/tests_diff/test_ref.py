@@ -38,18 +38,15 @@ class EvalRefVisitor(ast.NodeVisitor):
 
 
 class FileEnvRefVisitor(EvalRefVisitor):
-    def __init__(self, filepath, diff_linenos, protected_xml_ids=None):
+    def __init__(self, fileinfo, protected_xml_ids=None):
         self.issues: list[tuple[int, int]] = []
-        self.filepath = filepath
-        self.diff_linenos = diff_linenos
+        self.fileinfo = fileinfo
         self.env_ref_names = set()  # Track variables that store env.ref
         self.protected_xml_ids = protected_xml_ids
 
     def _is_node_in_diff(self, node):
         """Check if any line of the node is in the diff"""
-        start_line = node.lineno
-        end_line = node.end_lineno
-        return any(line in self.diff_linenos for line in range(start_line, end_line + 1))
+        return self.fileinfo.is_lineno_in_diff(node.lineno, node.end_lineno)
 
     def visit_Assign(self, node):
         """ Track assignments of env.ref to variables to handle use cases like
@@ -95,12 +92,12 @@ class FileEnvRefVisitor(EvalRefVisitor):
         self.generic_visit(node)
 
 
-def check_ref_for_python_file(abs_path: str, diff_linenos: set[int], protected_xml_ids: Collection[str] = ()) -> list[tuple[int, int]]:
-    with open(abs_path, 'r') as f:
+def check_ref_for_python_file(fileinfo: FileInfo, protected_xml_ids: Collection[str] = ()) -> list[tuple[int, int]]:
+    with open(fileinfo.abs_path, 'r') as f:
         content = f.read()
     try:
         tree = ast.parse(content)
-        visitor = FileEnvRefVisitor(abs_path, diff_linenos, protected_xml_ids)
+        visitor = FileEnvRefVisitor(fileinfo, protected_xml_ids)
         visitor.visit(tree)
         return visitor.issues
     except SyntaxError:
@@ -214,7 +211,7 @@ class TestRef(DiffCase):
                 continue
             if not file_info.module_name or file_info.module_name.startswith('test_') or file_info.module_path.startswith('tests/'):
                 continue
-            file_issues = check_ref_for_python_file(file_info.abs_path, file_info.diff_linenos, self.protected_xml_ids)
+            file_issues = check_ref_for_python_file(file_info, self.protected_xml_ids)
             if file_issues:
                 issues.extend((file_info.abs_path, *issue) for issue in file_issues)
 

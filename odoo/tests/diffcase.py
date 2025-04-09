@@ -33,7 +33,7 @@ class FileInfo:
         """ absolute path of the file """
 
         self.odoo_path: str = self.parse_odoo_path(self.abs_path)  # base/models/res_partner.py
-        """ odoo path of the file """
+        """ relative path of the file to one of the odoo addons path """
 
         self.module_name: str = self.odoo_path.split(os.sep)[0]  # base
         """ module name of the file """
@@ -55,7 +55,12 @@ class FileInfo:
                 odoo_path = abs_path[len(addons_path):].strip(os.sep)
                 return odoo_path
         return ''
-
+    
+    def is_lineno_in_diff(self, start_lineno: int, end_lineno: int = 0) -> bool:
+        """ check if the given lines [start_lineno, end_lineno] inclusively are in the diff """
+        if not end_lineno:
+            end_lineno = start_lineno
+        return any(line_no in self.diff_linenos for line_no in range(start_lineno, end_lineno + 1))
 
 class Element:
     __slots__ = ('start_lineno', 'end_lineno', '_element')
@@ -101,6 +106,7 @@ def get_base_version(repo_path: str) -> str:
             cwd=repo_path
         ).stdout.strip()
     except Exception as e:
+        _logger.warning(f"Cannot get git base version for {repo_path}: {e}")
         return ''
 
     # master-xxx / saas-18.1-xxx / 18.0-xxx
@@ -108,6 +114,7 @@ def get_base_version(repo_path: str) -> str:
     match = re.match(pattern, branch_name)
     if match:
         return match.group(1)
+    _logger.warning(f"Cannot get git base version of {branch_name} for {repo_path}")
     return ''
 
 
@@ -139,7 +146,7 @@ def generate_diff(output_dir: str):
                 _logger.info(f"Generated diff file for {repo_name} at {diff_file_path}")
 
             except Exception as e:
-                _logger.error(f"Error generating diff for {repo}: {e}")
+                _logger.warning(f"Cannot generate diff for {repo}: {e}")
 
 
 class DiffCase:
