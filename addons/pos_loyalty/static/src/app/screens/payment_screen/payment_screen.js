@@ -76,7 +76,17 @@ patch(PaymentScreen.prototype, {
      * @override
      */
     async _postPushOrderResolve(order, server_ids) {
+<<<<<<< eadcf79c5011113115288ab4cf49083ef898a223
         if (order.isPaid()) {
+||||||| 772f9607be55f5b4b301cc7e4aad8649f5034275
+        const orders = this.pos.models["pos.order"].readMany(server_ids).filter((o) => o.isPaid());
+        for (const order of orders) {
+=======
+        const orders = this.pos.models["pos.order"]
+            .readMany(server_ids)
+            .filter((o) => !["draft", "cancel"].includes(o.state));
+        for (const order of orders) {
+>>>>>>> 0771b3fc7cbdee82138349595a70731dec393c0a
             await this._postProcessLoyalty(order);
         }
         return super._postPushOrderResolve(order, server_ids);
