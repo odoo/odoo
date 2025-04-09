@@ -14,6 +14,7 @@
             <field name="channel_id" ref="im_livechat.livechat_channel_session_9"/>
             <field name="unpin_dt" eval="DateTime.today()"/>
             <field name="last_interest_dt" eval="DateTime.today() + relativedelta(months=-1)"/>
+            <field name="livechat_member_type">agent</field>
         </record>
         <record id="im_livechat.livechat_channel_session_9_guest" model="mail.guest">
             <field name="name">Visitor</field>
@@ -21,6 +22,7 @@
         <record id="im_livechat.livechat_channel_session_9_member_guest" model="discuss.channel.member">
             <field name="guest_id" ref="im_livechat.livechat_channel_session_9_guest"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_9"/>
+            <field name="livechat_member_type">visitor</field>
         </record>
 
         <record id="livechat_channel_session_9_message_1" model="mail.message">

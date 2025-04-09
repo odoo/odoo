@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="im_livechat_channel_member_history_view_search" model="ir.ui.view">
+            <field name="name">im_livechat.channel.member.history.view.search</field>
+            <field name="model">im_livechat.channel.member.history</field>
+            <field name="arch" type="xml">
+                <search string="Search History">
+                    <field name="channel_id"/>
+                    <field name="partner_id"/>
+                    <field name="guest_id"/>
+                    <field name="livechat_member_type" string="Member Type"/>
+                </search>
+            </field>
+        </record>
+        <record id="im_livechat_channel_member_history_view_tree" model="ir.ui.view">
+            <field name="name">im_livechat.channel.member.history.view.list</field>
+            <field name="model">im_livechat.channel.member.history</field>
+            <field name="arch" type="xml">
+                <list default_order="create_date desc" string="Member History" sample="1">
+                    <field name="create_date"/>
+                    <field name="channel_id"/>
+                    <field name="partner_id"/>
+                    <field name="guest_id"/>
+                    <field name="livechat_member_type" string="Member Type"/>
+                </list>
+            </field>
+        </record>
+        <record id="im_livechat_channel_member_history_action" model="ir.actions.act_window">
+            <field name="name">Member History</field>
+            <field name="res_model">im_livechat.channel.member.history</field>
+            <field name="search_view_id" ref="im_livechat_channel_member_history_view_search"/>
+            <field name="view_mode">list,form</field>
+            <field name="context">{"create": False}</field>
+        </record>
+        <menuitem
+            action="im_livechat_channel_member_history_action"
+            id="im_livechat.menu_member_history"
+            name="Member History"
+            parent="im_livechat.livechat_technical"
+            sequence="15"
+        />
+    </data>
+</odoo>

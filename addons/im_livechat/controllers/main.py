@@ -154,6 +154,7 @@ class LivechatController(http.Controller):
                     guest_name=self._get_guest_name(),
                     country_code=request.geoip.country_code,
                     timezone=request.env['mail.guest']._get_timezone_from_request(request),
+                    create_member_params={"livechat_member_type": "visitor"},
                     post_joined_message=False
                 )
             channel = channel.with_context(guest=guest)  # a new guest was possibly created

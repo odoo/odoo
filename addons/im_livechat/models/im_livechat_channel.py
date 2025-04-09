@@ -223,13 +223,19 @@ class Im_LivechatChannel(models.Model):
         # partner to add to the discuss.channel
         operator_partner_id = user_operator.partner_id.id if user_operator else chatbot_script.operator_partner_id.id
         members_to_add = [
-            Command.create({"partner_id": operator_partner_id, "unpin_dt": fields.Datetime.now()})
+            Command.create(
+                {
+                    "livechat_member_type": "agent" if user_operator else "bot",
+                    "partner_id": operator_partner_id,
+                    "unpin_dt": fields.Datetime.now(),
+                }
+            )
         ]
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)
             if visitor_user and visitor_user.active and user_operator and visitor_user != user_operator:  # valid session user (not public)
-                members_to_add.append(Command.create({'partner_id': visitor_user.partner_id.id}))
+                members_to_add.append(Command.create({"livechat_member_type": "visitor", 'partner_id': visitor_user.partner_id.id}))
 
         if chatbot_script:
             name = chatbot_script.title

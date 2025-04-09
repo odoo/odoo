@@ -13,10 +13,12 @@
             <field name="channel_id" ref="im_livechat.livechat_channel_session_7"/>
             <field name="unpin_dt" eval="DateTime.today()"/>
             <field name="last_interest_dt" eval="DateTime.today() + relativedelta(months=-1)"/>
+            <field name="livechat_member_type">agent</field>
         </record>
         <record id="im_livechat.livechat_channel_session_7_member_portal" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_7"/>
+            <field name="livechat_member_type">visitor</field>
         </record>
 
         <record id="livechat_channel_session_7_message_1" model="mail.message">

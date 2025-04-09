@@ -13,6 +13,7 @@
         <record id="im_livechat.livechat_channel_session_11_member_admin" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_11"/>
+            <field name="livechat_member_type">agent</field>
         </record>
         <record id="im_livechat.livechat_channel_session_11_guest" model="mail.guest">
             <field name="name">Visitor</field>
@@ -20,6 +21,7 @@
         <record id="im_livechat.livechat_channel_session_11_member_guest" model="discuss.channel.member">
             <field name="guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_11"/>
+            <field name="livechat_member_type">visitor</field>
         </record>
 
         <record id="livechat_channel_session_11_message_1" model="mail.message">
