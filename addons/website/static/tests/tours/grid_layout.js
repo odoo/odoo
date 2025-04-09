@@ -66,9 +66,9 @@ registerWebsitePreviewTour("scroll_to_new_grid_item", {
     ...insertSnippet({id: "s_image_text", name: "Image - Text", groupName: "Content"}),
     // Toggle the first snippet to grid mode.
     ...clickOnSnippet({id: "s_text_image", name: "Text - Image"}),
-    changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
+    changeOption("Text - Image", "setGridLayout"),
     // Add a new grid item.
-    changeOption("layout_column", 'we-button[data-add-element="image"]'),
+    changeOption("Text - Image", "addElImage"),
     {
         content: "Select the new image in the media dialog",
         trigger: '.o_select_media_dialog img[title="s_banner_default_image.jpg"]',
