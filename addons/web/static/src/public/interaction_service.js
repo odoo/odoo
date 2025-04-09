@@ -57,7 +57,7 @@ class InteractionService {
         this.proms.push(startProm);
     }
 
-    prepareRoot(el, C, props) {
+    prepareRoot(el, C, props, position = "beforeend") {
         if (!this.owlApp) {
             const { App } = odoo.loader.modules.get("@odoo/owl");
             const appConfig = {
@@ -75,7 +75,7 @@ class InteractionService {
         const compElem = document.createElement("owl-component");
         compElem.setAttribute("contenteditable", "false");
         compElem.dataset.oeProtected = "true";
-        el.appendChild(compElem);
+        el.insertAdjacentElement(position, compElem);
         return {
             C,
             root,
