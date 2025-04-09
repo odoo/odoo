@@ -171,6 +171,15 @@ class SurveyQuestion(models.Model):
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer')
     ]
 
+    @api.constrains('constr_mandatory', 'question_type', 'suggested_answer_ids')
+    def _check_multiple_choice_question_answer(self):
+        if (
+            self.question_type in ['simple_choice', 'multiple_choice'] 
+            and self.constr_mandatory
+            and not self.suggested_answer_ids
+        ):
+            raise ValidationError(_("A suggested answer should be provided for mandatory multiple choice question."))
+
     @api.depends('is_page')
     def _compute_question_type(self):
         for question in self:
