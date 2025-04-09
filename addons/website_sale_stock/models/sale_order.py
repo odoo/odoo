@@ -98,12 +98,25 @@ class SaleOrder(models.Model):
         """Get all the lines of the current order with the given product."""
         return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
 
-    def _is_cart_ready_to_be_paid(self):
+    def _is_cart_ready_for_checkout(self):
+        """Override of `website_sale` to stop the user if his cart contains a sold out product."""
+        if sold_out_order_lines := self._get_sold_out_order_lines():
+            self.shop_warning = self.env._(
+                "Some of your products are no longer available. Please update your cart. We"
+                " apologize for any inconvenience caused."
+            )
+            sold_out_order_lines.shop_warning = self.env._(
+                "This product is no longer available."
+            )
+            return False
+        return super()._is_cart_ready_for_checkout()
+
+    def _is_cart_ready_to_confirm(self):
         """Override of `website_sale` to check that the selected warehouse can fulfill the order."""
         if not self._is_in_stock(self._get_shop_warehouse_id(), update_shop_warning=True):
             self.shop_warning = self._build_stock_warning()
             return False
-        return super()._is_cart_ready_to_be_paid()
+        return super()._is_cart_ready_to_confirm()
 
     def _build_stock_warning(self):
         """Hook to build the a stock warning when the source warehouse of the selected delivery

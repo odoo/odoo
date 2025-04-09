@@ -54,7 +54,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         # Ensure the cart is still valid before going any further.
         if not order_sudo._is_cart_ready_to_be_paid():
-            raise ValidationError(order_sudo.shop_warning)
+            raise ValidationError(request.env._(
+                "Your cart is not ready to be paid, please verify previous steps.\n%s",
+                order_sudo.shop_warning,
+            ))
 
         self._validate_transaction_kwargs(kwargs)
         kwargs.update({
