@@ -1926,3 +1926,27 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(sale_order.partner_id, self.partner)
         self.assertFalse(self.project_global.sale_line_id)
         self.assertEqual(self.project_global.reinvoiced_sale_order_id, sale_order)
+
+    def test_prevent_project_duplication_from_on_fly_so_creation(self):
+        """ Prevent creation of duplicate project when sale order is created on the fly.
+            Steps:
+                - Create a project with billable service
+                - Create a Sales Order with a service product on the fly
+                - Save and confirm the Sales Order
+                - Ensure that only one project exists
+                - Verify that the current project is correctly linked to the Sales Order
+        """
+        sale_order = self.env['sale.order'].with_context(
+            create_for_project_id=self.project_global.id
+        ).create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product_order_service4.id})],
+        })
+        self.assertEqual(self.project_global.reinvoiced_sale_order_id, sale_order)
+        self.assertEqual(self.project_global.sale_line_id, sale_order.order_line[0])
+        self.assertEqual(sale_order.project_count, 1, "Only one project should be linked to the sale order.")
+        self.assertEqual(
+            sale_order.project_ids,
+            self.project_global,
+            "The sale order should be linked to the existing project, not create a new one.",
+        )

@@ -246,6 +246,7 @@ class ProjectProject(models.Model):
             **ast.literal_eval(action_window['context']),
             "create": self.env.context.get("create_for_project_id", embedded_action_context),
             "show_sale": True,
+            "disable_project_task_generation": True,
             "default_partner_id": self.partner_id.id,
             "default_project_id": self.id,
             "create_for_project_id": self.id if not embedded_action_context else False,

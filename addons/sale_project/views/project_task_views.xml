@@ -118,7 +118,15 @@
                 </group>
             </xpath>
             <xpath expr="//page[@name='settings']//field[@name='privacy_visibility']" position="after">
-                <field name="reinvoiced_sale_order_id" invisible="not allow_billable or not partner_id or is_template"  context="{'default_partner_id': partner_id}"/>
+                <field name="reinvoiced_sale_order_id"
+                    invisible="not allow_billable or not partner_id or is_template"
+                    options="{'no_quick_create': True}"
+                    context="{
+                        'form_view_ref': 'sale_project.view_order_simple_form',
+                        'create_for_project_id': id,
+                        'default_partner_id': partner_id
+                    }"
+                />
                 <label for="sale_line_id" invisible="not allow_billable or not partner_id or is_template"/>
                 <div 
                     class="o_row" 
