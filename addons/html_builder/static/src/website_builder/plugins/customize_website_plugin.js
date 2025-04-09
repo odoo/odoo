@@ -249,7 +249,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
             }),
             websiteConfig: {
-                isReload: true,
+                reload: {},
                 prepare: async ({ actionParam }) => this.loadConfigKey(actionParam),
                 getPriority: ({ param }) => {
                     const records = [...(param.views || []), ...(param.assets || [])];

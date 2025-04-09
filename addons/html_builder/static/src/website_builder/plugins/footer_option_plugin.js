@@ -32,7 +32,7 @@ class FooterOptionPlugin extends Plugin {
         ],
         builder_actions: {
             websiteConfigFooter: {
-                isReload: true,
+                reload: {},
                 isApplied: ({ param: { vars } }) => {
                     for (const [name, value] of Object.entries(vars)) {
                         if (

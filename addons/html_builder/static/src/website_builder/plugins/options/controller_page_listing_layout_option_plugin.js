@@ -28,7 +28,7 @@ class ControllerPageListingLayoutOptionPlugin extends Plugin {
         return [
             {
                 listingLayout: {
-                    isReload: true,
+                    reload: {},
                     prepare: async () => {
                         const mainObjectRepr =
                             this.document.documentElement.getAttribute("data-main-object");
