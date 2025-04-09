@@ -106,6 +106,18 @@ export class Colibri {
         return [event, handler, options];
     }
 
+    refreshTOuts() {
+        for (const tOut of this.tOuts) {
+            tOut.nodes = this.getNodes(tOut.sel);
+        }
+    }
+
+    refreshDynamicAttrs() {
+        for (const dynamicAttr of this.dynamicAttrs) {
+            dynamicAttr.nodes = this.getNodes(dynamicAttr.sel);
+        }
+    }
+
     refreshListeners() {
         for (const sel of this.listeners.keys()) {
             const nodes = this.getNodes(sel);
@@ -218,7 +230,9 @@ export class Colibri {
     processContent(content) {
         for (const sel in content) {
             if (sel.startsWith("t-")) {
-                throw new Error(`Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`);
+                throw new Error(
+                    `Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`
+                );
             }
             let nodes;
             if (this.dynamicNodes.has(sel)) {
@@ -236,9 +250,15 @@ export class Colibri {
                     this.mapSelectorToListeners(sel, event, handler, options);
                 } else if (directive.startsWith("t-att-")) {
                     const attr = directive.slice(6);
-                    this.dynamicAttrs.push({ nodes, attr, definition: value, initialValues: null });
+                    this.dynamicAttrs.push({
+                        nodes,
+                        attr,
+                        definition: value,
+                        initialValues: null,
+                        sel,
+                    });
                 } else if (directive === "t-out") {
-                    this.tOuts.push([nodes, value]);
+                    this.tOuts.push({ nodes, definition: value, sel });
                 } else if (directive === "t-component") {
                     const { Component } = odoo.loader.modules.get("@odoo/owl");
                     if (Object.prototype.isPrototypeOf.call(Component, value)) {
@@ -264,6 +284,8 @@ export class Colibri {
             throw new Error("Updatecontent should not be called while interaction is updating");
         }
         this.isUpdating = true;
+        this.refreshDynamicAttrs();
+        this.refreshTOuts();
         const errors = [];
         const interaction = this.interaction;
         for (const dynamicAttr of this.dynamicAttrs) {
@@ -306,9 +328,9 @@ export class Colibri {
                 }
             }
         }
-        for (const [nodes, definition] of this.tOuts) {
-            for (const node of nodes) {
-                this.applyTOut(node, definition.call(interaction, node));
+        for (const tOut of this.tOuts) {
+            for (const node of tOut.nodes) {
+                this.applyTOut(node, tOut.definition.call(interaction, node));
             }
         }
         this.isUpdating = false;

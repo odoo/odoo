@@ -359,6 +359,14 @@ export class Interaction {
         this.__colibri__.refreshListeners();
     }
 
+    refreshTOuts() {
+        this.__colibri__.refreshTOuts();
+    }
+
+    refreshDynamicAttrs() {
+        this.__colibri__.refreshDynamicAttrs();
+    }
+
     /**
      * Insert and activate an element at a specific location (default position:
      * "beforeend").
