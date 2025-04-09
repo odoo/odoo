@@ -82,17 +82,19 @@ class RtcController(http.Controller):
         :param int channel_id: id of the channel from which to disconnect
         :param int session_id: id of the leaving session
         """
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
-        if not member:
+        members = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        if not members:
             raise NotFound()
+        member = members.filtered("partner_id") if len(members) > 1 else members
         # sudo: discuss.channel.rtc.session - member of current user can leave call
         member.sudo()._rtc_leave_call(session_id)
 
     @http.route("/mail/rtc/channel/upgrade_connection", methods=["POST"], type="jsonrpc", auth="user")
     def channel_upgrade(self, channel_id):
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
-        if not member:
+        members = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        if not members:
             raise NotFound()
+        member = members.filtered("partner_id") if len(members) > 1 else members
         member.sudo()._join_sfu(force=True)
 
     @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="jsonrpc", auth="public")
@@ -127,9 +129,12 @@ class RtcController(http.Controller):
     @http.route("/discuss/channel/ping", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def channel_ping(self, channel_id, rtc_session_id=None, check_rtc_session_ids=None):
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        members = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        member = members.filtered("partner_id") if len(members) > 1 else members
         if not member:
             raise NotFound()
+        if len(member) > 1:
+            member = member.filtered(lambda m: m.partner_id)
         # sudo: discuss.channel.rtc.session - member of current user can access related sessions
         channel_member_sudo = member.sudo()
         if rtc_session_id:

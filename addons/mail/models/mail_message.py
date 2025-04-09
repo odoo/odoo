@@ -998,21 +998,22 @@ class MailMessage(models.Model):
     def _message_reaction(self, content, action, partner, guest, store: Store = None):
         self.ensure_one()
         # search for existing reaction
-        domain = [
-            ("message_id", "=", self.id),
-            ("partner_id", "=", partner.id),
-            ("guest_id", "=", guest.id),
-            ("content", "=", content),
-        ]
+        domain = [("message_id", "=", self.id), ("content", "=", content)]
+        if partner:
+            domain.append(("partner_id", "=", partner.id))
+        elif guest:
+            domain.append(("guest_id", "=", guest.id))
         reaction = self.env["mail.message.reaction"].search(domain)
         # create/unlink reaction if necessary
         if action == "add" and not reaction:
             create_values = {
                 "message_id": self.id,
                 "content": content,
-                "partner_id": partner.id,
-                "guest_id": guest.id,
             }
+            if partner:
+                create_values["partner_id"] = partner.id
+            elif guest:
+                create_values["guest_id"] = guest.id
             self.env["mail.message.reaction"].create(create_values)
         if action == "remove" and reaction:
             reaction.unlink()

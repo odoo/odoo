@@ -119,24 +119,26 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_mark_as_read(self, channel_id, last_message_id):
-        member = request.env["discuss.channel.member"].search([
+        members = request.env["discuss.channel.member"].search([
             ("channel_id", "=", channel_id),
             ("is_self", "=", True),
         ])
-        if not member:
+        if not members:
             return  # ignore if the member left in the meantime
+        member = members.filtered("partner_id") if len(members) > 1 else members
         member._mark_as_read(last_message_id)
 
     @http.route("/discuss/channel/set_new_message_separator", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_set_new_message_separator(self, channel_id, message_id):
-        member = request.env["discuss.channel.member"].search([
+        members = request.env["discuss.channel.member"].search([
             ("channel_id", "=", channel_id),
             ("is_self", "=", True),
         ])
-        if not member:
+        if not members:
             raise NotFound()
-        return member._set_new_message_separator(message_id)
+        member = members.filtered("partner_id") if len(members) > 1 else members
+        member._set_new_message_separator(message_id)
 
     @http.route("/discuss/channel/notify_typing", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -145,18 +147,19 @@ class ChannelController(http.Controller):
         if not channel:
             raise request.not_found()
         if is_typing:
-            member = channel._find_or_create_member_for_self()
+            members = channel._find_or_create_member_for_self()
         else:
             # Do not create member automatically when setting typing to `False`
             # as it could be resulting from the user leaving.
-            member = request.env["discuss.channel.member"].search(
+            members = request.env["discuss.channel.member"].search(
                 [
                     ("channel_id", "=", channel_id),
                     ("is_self", "=", True),
                 ]
             )
-        if member:
-            member._notify_typing(is_typing)
+        if members:
+            for member in members:
+                member._notify_typing(is_typing)
 
     @http.route("/discuss/channel/attachments", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context

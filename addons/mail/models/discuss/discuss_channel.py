@@ -296,15 +296,9 @@ class DiscussChannel(models.Model):
         # It is expected to return hundreds of channels, a thousand at most, which is acceptable.
         # A "join" would be ideal, but the ORM is currently not able to generate it from the domain.
         user, guest = self.env["res.users"]._get_current_persona()
-        if guest:
-            # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = guest.sudo().channel_ids
-        elif user:
-            # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = user.partner_id.sudo().channel_ids
-        else:
-            channels = self.env["discuss.channel"]
-        return [('id', 'in', channels.ids)]
+        # sudo: discuss.channel - sudo for performance, just checking existence
+        channel_ids = (user.partner_id.sudo().channel_ids | guest.sudo().channel_ids).ids
+        return [("id", "in", channel_ids)]
 
     @api.depends_context("uid", "guest")
     @api.depends("channel_member_ids")
@@ -664,7 +658,8 @@ class DiscussChannel(models.Model):
                 ).add(channel, "member_count").add(existing_members).bus_send()
         if invite_to_rtc_call:
             for channel in self:
-                current_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('is_self', '=', True)])
+                members = self.env["discuss.channel.member"].search([("channel_id", "=", channel.id), ("is_self", "=", True)])
+                current_channel_member = members.filtered("partner_id") if len(members) > 1 else members
                 # sudo: discuss.channel.rtc.session - reading rtc sessions of current user
                 if current_channel_member and current_channel_member.sudo().rtc_session_ids:
                     # sudo: discuss.channel.rtc.session - current user can invite new members in call
@@ -1127,9 +1122,12 @@ class DiscussChannel(models.Model):
     def _find_or_create_member_for_self(self):
         self.ensure_one()
         domain = [("channel_id", "=", self.id), ("is_self", "=", True)]
-        member = self.env["discuss.channel.member"].search(domain)
-        if member:
-            return member
+        members = self.env["discuss.channel.member"].search(domain)
+        if members:
+            if partner := members.filtered("partner_id"):
+                return partner
+            if self.env.user._is_public() and (guest := members.filtered("guest_id")):
+                return guest
         if not self.env.user._is_public():
             return self._add_members(users=self.env.user)
         guest = self.env["mail.guest"]._get_guest_from_context()
@@ -1156,7 +1154,8 @@ class DiscussChannel(models.Model):
         """
         self.ensure_one()
         guest = self.env["mail.guest"]
-        member = self.env["discuss.channel.member"].search([("channel_id", "=", self.id), ("is_self", "=", True)])
+        members = self.env["discuss.channel.member"].search([("channel_id", "=", self.id), ("is_self", "=", True)])
+        member = members.filtered("partner_id") if len(members) > 1 else members
         if member:
             return member.partner_id, member.guest_id
         if not self.env.user._is_public():

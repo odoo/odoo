@@ -666,6 +666,6 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_current_persona(self):
-        if not self.env.user or self.env.user._is_public():
-            return (self.env["res.users"], self.env["mail.guest"]._get_guest_from_context())
-        return (self.env.user, self.env["mail.guest"])
+        user = self.env.user if not self.env.user._is_public() else self.env["res.users"]
+        guest = self.env["mail.guest"]._get_guest_from_context()
+        return (user, guest)

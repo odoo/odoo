@@ -432,11 +432,11 @@ export class ResPartner extends webModels.ResPartner {
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
-
-        if (ResUsers._is_public(this.env.uid)) {
-            return [null, MailGuest._get_guest_from_context()];
-        }
-        return [this.browse(this.env.user.partner_id)[0], null];
+        const guest = MailGuest._get_guest_from_context();
+        const partner = ResUsers._is_public(this.env.uid)
+            ? null
+            : this.browse(this.env.user.partner_id)[0];
+        return [partner, guest];
     }
 
     _get_store_avatar_card_fields() {
