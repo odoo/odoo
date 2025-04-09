@@ -2142,12 +2142,62 @@ class AccountMoveLine(models.Model):
                         exchange_lines_to_fix += debit_aml
                         amounts_list.append({'amount_residual_currency': debit_exchange_amount})
                         remaining_debit_amount_curr -= debit_exchange_amount
+                elif (
+                       credit_rate
+                    and credit_currency != company_currency
+                    and company_currency.compare_amounts(recon_debit_amount, partial_amount)
+                ):
+                    # Check the case `recon_credit_amount == recon_debit_amount`:
+                    # If `partial_credit_amount_currency` could be the same (up to rounding)
+                    # then we consider the debit to be fully matched.
+                    # We create an exchange difference for the missing amount.
+                    recon_debit_credit_currency_range = get_amount_range_after_rate(
+                        currency_from=company_currency,
+                        currency_to=credit_currency,
+                        amount=recon_debit_amount,
+                        rate=credit_rate,
+                    )
+                    if (
+                            company_currency.compare_amounts(partial_credit_amount_currency, recon_debit_credit_currency_range[2]) >= 0
+                        and company_currency.compare_amounts(partial_credit_amount_currency, recon_debit_credit_currency_range[2]) <= 0
+                    ):
+                        partial_credit_amount_currency = recon_debit_credit_currency_range[1]
+                        debit_fully_matched = True
+                        debit_exchange_amount = remaining_debit_amount - partial_amount
+                        exchange_lines_to_fix += debit_aml
+                        amounts_list.append({'amount_residual': debit_exchange_amount})
+                        remaining_credit_amount -= debit_exchange_amount
                 if credit_fully_matched:
                     credit_exchange_amount = remaining_credit_amount_curr + partial_credit_amount_currency
                     if not credit_currency.is_zero(credit_exchange_amount):
                         exchange_lines_to_fix += credit_aml
                         amounts_list.append({'amount_residual_currency': credit_exchange_amount})
                         remaining_credit_amount_curr += credit_exchange_amount
+                elif (
+                       debit_rate
+                    and debit_currency != company_currency
+                    and company_currency.compare_amounts(recon_credit_amount, partial_amount)
+                ):
+                    # Check the case `recon_debit_amount == recon_credit_amount`:
+                    # If `partial_debit_amount_currency` could be the same (up to rounding)
+                    # then we consider the credit to be fully matched.
+                    # We create an exchange difference for the missing amount.
+                    recon_credit_debit_currency_range = get_amount_range_after_rate(
+                        currency_from=company_currency,
+                        currency_to=debit_currency,
+                        amount=recon_credit_amount,
+                        rate=debit_rate,
+                    )
+                    if (
+                            company_currency.compare_amounts(partial_debit_amount_currency, recon_credit_debit_currency_range[2]) >= 0
+                        and company_currency.compare_amounts(partial_debit_amount_currency, recon_credit_debit_currency_range[2]) <= 0
+                    ):
+                        partial_debit_amount_currency = recon_credit_debit_currency_range[1]
+                        credit_fully_matched = True
+                        credit_exchange_amount = remaining_credit_amount + partial_amount
+                        exchange_lines_to_fix += credit_aml
+                        amounts_list.append({'amount_residual': credit_exchange_amount})
+                        remaining_credit_amount -= credit_exchange_amount
 
             else:
                 if debit_fully_matched:
