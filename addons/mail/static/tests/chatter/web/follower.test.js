@@ -52,8 +52,8 @@ test("base rendering editable", async () => {
     await contains(".o-mail-Follower-details");
     await contains(".o-mail-Follower-avatar");
     await contains(".o-mail-Follower");
-    await contains("button[title='Edit subscription']");
-    await contains("button[title='Remove this follower']");
+    await contains("[title='Edit subscription']");
+    await contains("[title='Remove this follower']");
 });
 
 test("click on partner follower details", async () => {
@@ -102,8 +102,8 @@ test("click on edit follower", async () => {
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
-    await contains("button[title='Edit subscription']");
-    await click("button[title='Edit subscription']");
+    await contains("[title='Edit subscription']");
+    await click("[title='Edit subscription']");
     await contains(".o-mail-Follower", { count: 0 });
     await waitForSteps(["fetch_subtypes"]);
     await contains(".o-mail-FollowerSubtypeDialog");
@@ -123,8 +123,8 @@ test("edit follower and close subtype dialog", async () => {
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
-    await contains("button[title='Edit subscription']");
-    await click("button[title='Edit subscription']");
+    await contains("[title='Edit subscription']");
+    await click("[title='Edit subscription']");
     await contains(".o-mail-FollowerSubtypeDialog");
     await waitForSteps(["fetch_subtypes"]);
     await click(".o-mail-FollowerSubtypeDialog button", { text: "Cancel" });
@@ -156,7 +156,7 @@ test("remove a follower in a dirty form view", async () => {
     await contains(".o-mail-Followers-counter", { text: "1" });
     await editInput(document.body, ".o_field_char[name=name] input", "some value");
     await click(".o-mail-Followers-button");
-    await click("button[title='Remove this follower']");
+    await click("[title='Remove this follower']");
     await contains(".o-mail-Followers-counter", { text: "0" });
     await contains(".o_field_char[name=name] input", { value: "some value" });
     await contains(".o_tag", { text: "General" });
@@ -177,7 +177,7 @@ test("removing a follower should reload form view", async function () {
     await contains(".o-mail-Followers-button");
     await waitForSteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");
-    await click("button[title='Remove this follower']");
+    await click("[title='Remove this follower']");
     await contains(".o-mail-Followers-counter", { text: "0" });
     await waitForSteps([`read ${threadId}`]);
 });
