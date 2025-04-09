@@ -24,10 +24,13 @@ class Base(models.AbstractModel):
         """Get a country likely to match the phone of the record.
 
         By default we get it from:
-        - The country field of the target record (self) based on `_phone_get_country_field`
-        - The country of any mail partner (e.g. self.partner_ids[2].phone), considering we are
-          going to contact the customer(s) of the record. Done using generic
-          `_mail_get_partner_fields` method allowing to find record customers;
+
+        - The country field of the target record (self) based on
+          :meth:`_phone_get_country_field`
+        - The country of any mail partner (e.g. ``self.partner_ids[2].phone``),
+          considering we are going to contact the customer(s) of the record.
+          Done using generic :meth:`_mail_get_partner_fields` allowing to find
+          record customers;
         """
         country_by_record = {}
         record_country_fname = self._phone_get_country_field()

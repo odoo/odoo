@@ -111,19 +111,18 @@ class ResPartner(models.Model):
         return self.write({'signup_type': None})
 
     def signup_prepare(self, signup_type="signup"):
-        """ generate a new token for the partners with the given validity, if necessary
-            :param expiration: the expiration datetime of the token (string, optional)
-        """
+        """ generate a new token for the partners with the given validity, if necessary """
         self.write({'signup_type': signup_type})
         return True
 
     @api.model
     def _signup_retrieve_partner(self, token, check_validity=False, raise_exception=False):
         """ find the partner corresponding to a token, and possibly check its validity
-            :param token: the token to resolve
-            :param check_validity: if True, also check validity
-            :param raise_exception: if True, raise exception instead of returning False
-            :return: partner (browse record) or False (if raise_exception is False)
+
+        :param token: the token to resolve
+        :param bool check_validity: if True, also check validity
+        :param bool raise_exception: if True, raise exception instead of returning False
+        :return: partner (browse record) or False (if raise_exception is False)
         """
         partner = self._get_partner_from_token(token)
         if not partner:
@@ -133,12 +132,21 @@ class ResPartner(models.Model):
     @api.model
     def _signup_retrieve_info(self, token):
         """ retrieve the user info about the token
-            :return: a dictionary with the user information if the token is valid, None otherwise:
-                - 'db': the name of the database
-                - 'token': the token, if token is valid
-                - 'name': the name of the partner, if token is valid
-                - 'login': the user login, if the user already exists
-                - 'email': the partner email, if the user does not exist
+
+        :rtype: dict | None
+        :return: a dictionary with the user information if the token is valid,
+            None otherwise:
+
+                db
+                    the name of the database
+                token
+                    the token, if token is valid
+                name
+                    the name of the partner, if token is valid
+                login
+                    the user login, if the user already exists
+                email
+                    the partner email, if the user does not exist
         """
         partner = self._get_partner_from_token(token)
         if not partner:
@@ -161,11 +169,16 @@ class ResPartner(models.Model):
         return None
 
     def _generate_signup_token(self, expiration=None):
-        """ This function generate the signup token for the partner in self.
-            pre-condition: self.signup_type must be either 'signup' or 'reset'
-            :return: the signed payload/token that can be used to reset the password/signup.
-                - 'expiration': the time in hours before the expiration of the token
-        Since the last_login_date is part of the payload, this token is invalidated as soon as the user logs in
+        """ Generate the signup token for the partner in self.
+
+        Assume that :attr:`signup_type` is either ``'signup'`` or ``'reset'``.
+
+        :param expiration: the time in hours before the expiration of the token
+        :return: the signed payload/token that can be used to reset the
+                 password/signup.
+
+        Since ``last_login_date`` is part of the payload, this token is
+        invalidated as soon as the user logs in.
         """
         self.ensure_one()
         if not expiration:
