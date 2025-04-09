@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.StatusBarBottomSheet">
+        <div class="o_status_bar_bottom_sheet list-group list-group-flush">
+            <t t-foreach="props.items" t-as="item" t-key="item.value">
+                <div
+                    role="button"
+                    class="list-group-item list-group-item-action d-flex align-items-center"
+                    t-att-class="item.isSelected ? 'active fw-bold' : ''"
+                    t-on-click="() => this.selectItem(item)"
+                    >
+                    <div class="w-100 d-flex align-items-center justify-content-between">
+                        <span t-esc="item.label"/>
+                        <i t-if="item.isSelected" class="fa fa-check ms-2" aria-hidden="true"/>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

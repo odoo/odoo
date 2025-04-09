@@ -1,11 +1,13 @@
 // ------- Kanban Menu -------
 .o-dropdown--kanban-record-menu {
+    // Records colours
+    @include o-kanban-record-color;
+}
+
+.o-dropdown--kanban-record-menu:where(:not(.o-dropdown-bottom-sheet)) {
     margin-top: -1px;
     margin-bottom: 0px;
     min-width: 9rem;
-
-    // Records colours
-    @include o-kanban-record-color;
 
     $o-kanban-manage-toggle-height: 35px;
 
@@ -55,9 +57,11 @@
             }
 
             .o_kanban_colorpicker {
+                --KanbanColorPickerField-padding: 0 0 0 #{map-get($spacers, 2)};
+                --KanbanColorPickerField-columns: 4;
+                --KanbanColorPickerField-Entry-minWidth: 1.6rem;
+
                 max-width: none;
-                padding: 0;
-                margin-left: 2px !important;
             }
 
             div[class*="col-"] + div[class*="col-"] {
@@ -70,7 +74,60 @@
             }
         }
     }
+}
 
+
+.o-dropdown--kanban-record-menu.o-dropdown-bottom-sheet:has(.o_kanban_card_manage_settings) {
+    .offcanvas-body {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding-right: var(--offcanvas-padding-x);
+        padding-left: var(--offcanvas-padding-x);
+    }
+
+    .o_kanban_card_manage_settings {
+        order: -1;
+        padding-bottom: map-get($spacers, 2);
+        border-bottom: $border-width solid $border-color;
+        margin-bottom: map-get($spacers, 3);
+
+        .text-end, .text-center {
+            text-align: start !important;
+        }
+
+        div[class*="col-"] {
+            width: 100%;
+
+            &:has(.o_field_kanban_color_picker) {
+                padding: 0;
+            }
+        }
+
+        .o_field_kanban_color_picker {
+            --fieldWidget-display: block;
+            --fieldWidget-margin-bottom: #{map-get($spacers, 3)};
+
+            --KanbanColorPickerField-columns: 12;
+            --KanbanColorPickerField-gap: #{map-get($spacers, 2)};
+            --KanbanColorPickerField-padding: 0;
+            --KanbanColorPickerField-Entry-minWidth: 2.5rem;
+            --KanbanColorPickerField-Entry-aspectRatio: 1;
+
+            .o_kanban_colorpicker {
+                overflow: auto;
+                padding: map-get($spacers, 1) var(--BottomSheet-Entry-paddingX);
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+        }
+    }
 }
 
 // ------- Kanban View -------

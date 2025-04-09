@@ -29,6 +29,11 @@
                         <t t-call="{{ this.templates[this.constructor.KANBAN_MENU_ATTRIBUTE] }}" t-call-context="renderingContext"/>
                     </KanbanDropdownMenuWrapper>
                 </t>
+                <t t-set-slot="bottomSheetContent" t-if="this.constructor.KANBAN_BOTTOM_SHEET_MENU_ATTRIBUTE in this.templates">
+                    <KanbanDropdownMenuWrapper>
+                        <t t-call="{{ this.templates[this.constructor.KANBAN_BOTTOM_SHEET_MENU_ATTRIBUTE] }}" t-call-context="renderingContext"/>
+                    </KanbanDropdownMenuWrapper>
+                </t>
             </Dropdown>
         </div>
     </t>

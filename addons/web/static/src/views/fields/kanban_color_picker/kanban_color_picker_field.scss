@@ -1,27 +1,49 @@
 @mixin o-kanban-colorpicker {
-    max-width: 150px;
-    padding: 3px ($o-dropdown-hpadding - $o-kanban-inner-hmargin) 3px $o-dropdown-hpadding;
+    --columns: var(--KanbanColorPickerField-columns, 6);
+    --gap: var(--KanbanColorPickerField-gap, #{map-get($spacers, 2)});
+
+    width: var(--KanbanColorPickerField-width, none);
+    padding: var(--KanbanColorPickerField-padding, 3px #{($o-dropdown-hpadding - $o-kanban-inner-hmargin) 3px $o-dropdown-hpadding});
+    box-sizing: content-box;
+    margin-bottom: var(--KanbanColorPickerField-marginBottom, 0);
 
     > li {
-        display: inline-block;
-        margin: $o-kanban-inner-hmargin $o-kanban-inner-hmargin 0 0;
-        border: 1px solid white;
-        box-shadow: 0 0 0 1px map-get($grays, '300');
-
         > a {
             display: block;
+            position: relative;
+            aspect-ratio: var(--KanbanColorPickerField-Entry-aspectRatio, 4/3.5);
+            min-width: var(--KanbanColorPickerField-Entry-minWidth, 1.35rem);
+            border-radius: var(--KanbanColorPickerField-Entry-borderRadius, #{$border-radius});
+            overflow: hidden;
+
+            aspect-ratio: var(--KanbanColorPickerField-Entry-aspectRatio, 1);
+            border-radius: var(--KanbanColorPickerField-Entry-borderRadius, 100%);
 
             &::after {
+                @include o-position-absolute(0, 0 , 0, 0);
+                color: white;
                 content: "";
-                display: block;
-                width: 20px;
-                height: 15px;
             }
         }
 
-        // No Color
         &:first-child > a:after {
-            background: linear-gradient(45deg, rgba($dropdown-bg, 0) 0%, rgba($dropdown-bg, 0) 48%, $danger 48%, $danger 52%, rgba($dropdown-bg, 0) 52%, rgba($dropdown-bg, 0) 100%);
+            box-shadow: inset 0 0 0 $border-width $border-color;
+            border-radius: inherit;
+            color: currentColor;
+        }
+
+        &.active {
+            order: -1;
+            > a:after {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font: normal normal normal smaller/1 FontAwesome;
+                content: "\f00c";
+            }
+        }
+        &:hover:not(.active) {
+            opacity: $o-opacity-muted;
         }
     }
 }
@@ -35,7 +57,25 @@
     }
 }
 
+%o-kanban-colorpicker-inline {
+    --KanbanColorPickerField-columns: 12;
+    --KanbanColorPickerField-gap: #{map-get($spacers, 2)};
+    --KanbanColorPickerField-padding: #{map-get($spacers, 2)};
+    --KanbanColorPickerField-marginBottom: #{map-get($spacers, 3)};
+    --KanbanColorPickerField-Entry-minWidth: 2.5rem;
+    --KanbanColorPickerField-Entry-aspectRatio: 1;
+
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+
 .o_kanban_colorpicker {
     @include o-kanban-colorpicker-colors();
     @include o-kanban-colorpicker();
+
+    &.o_kanban_colorpicker_inline {
+        @extend %o-kanban-colorpicker-inline;
+    }
 }

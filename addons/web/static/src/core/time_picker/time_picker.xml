@@ -12,6 +12,7 @@
                 position="'bottom-start'"
                 menuClass="'o_time_picker_dropdown pt-0 mt-0'"
                 navigationOptions="navigationOptions"
+                t-if="!env.isSmall"
             >
                 <input
                     type="text"
@@ -31,13 +32,27 @@
                     <t t-foreach="suggestions" t-as="value" t-key="value_index">
                         <DropdownItem
                             class="'o_time_picker_option'"
-                            t-out="value.toString()"
+                            t-out="value.toString(props.showSeconds)"
                             onSelected="() => this.onItemSelected(value)"
                             closingMode="'none'"
                         />
                     </t>
                 </t>
             </Dropdown>
+
+            <!-- Mobile display (just the input field which opens a bottom sheet) -->
+            <input
+                t-else=""
+                type="text"
+                t-ref="inputRef"
+                class="o_time_picker_input o_input cursor-pointer fs-6 fw-normal"
+                t-att-class="{ o_invalid: !state.isValid }"
+                t-att-value="state.inputValue"
+                t-on-click="ensureOpen"
+                t-att-placeholder="getPlaceholder()"
+                readonly="true"
+                tabindex="-1"
+            />
         </div>
     </t>
 </templates>

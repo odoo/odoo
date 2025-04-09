@@ -7,6 +7,7 @@ import { Widget } from "@web/views/widgets/widget";
 
 export const KANBAN_CARD_ATTRIBUTE = "card";
 export const KANBAN_MENU_ATTRIBUTE = "menu";
+export const KANBAN_BOTTOM_SHEET_MENU_ATTRIBUTE = "bottomSheetContent";
 
 export class KanbanArchParser {
     parse(xmlDoc, models, modelName) {

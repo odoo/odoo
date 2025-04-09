@@ -59,6 +59,7 @@ export class Dropdown extends Component {
             shape: {
                 default: { optional: true },
                 content: { optional: true },
+                bottomSheetContent: { optional: true },
             },
         },
 
@@ -105,6 +106,10 @@ export class Dropdown extends Component {
          * @type {import("@web/core/navigation/navigation").NavigationOptions}
          */
         navigationOptions: { type: Object, optional: true },
+
+        /** BottomSheet related props */
+        useBottomSheet: { type: Boolean, optional: true },
+        bottomSheetTitle: { type: String, optional: true },
     };
     static defaultProps = {
         disabled: false,
@@ -113,6 +118,8 @@ export class Dropdown extends Component {
         state: undefined,
         noClasses: false,
         navigationOptions: {},
+        useBottomSheet: true,
+        bottomSheetTitle: '',
     };
 
     setup() {
@@ -127,6 +134,7 @@ export class Dropdown extends Component {
             // Using deepMerge allows to keep entries of both option.hotkeys
             ...deepMerge(this.nesting.navigationOptions, this.props.navigationOptions),
         });
+        this.bottomSheetService = useService("bottomSheet");
 
         // Set up UI active element related behavior ---------------------------
         let activeEl;
@@ -189,6 +197,10 @@ export class Dropdown extends Component {
 
     get hasParent() {
         return this.nesting.hasParent;
+    }
+
+    shouldUseBottomSheet() {
+        return this.env.isSmall && this.props.useBottomSheet;
     }
 
     /** @type {HTMLElement|null} */
@@ -318,13 +330,53 @@ export class Dropdown extends Component {
             onClosed: () => this.onClosed(),
             refresher: this.popoverRefresher,
             items: this.props.items,
-            slots: this.props.slots,
         };
-        this.popover.open(this.target, props);
+
+        if (this.shouldUseBottomSheet() && this.props.slots.bottomSheetContent?.__ctx.templates?.bottomSheetContent) {
+            // BottomSheet with custom content
+            props.slots = {
+                ...this.props.slots,
+                content: this.props.slots.bottomSheetContent
+            };
+        } else {
+            // Either popover OR BottomSheet with regular content
+            props.slots = this.props.slots;
+        }
+
+        if (this.shouldUseBottomSheet()) {
+            // Get dropdown text/title from target element
+            let sheetTitle = this.props.bottomSheetTitle || '';
+            if (!sheetTitle && this.target && this.hasParent) {
+                sheetTitle = this.target.textContent?.trim() || '';
+            }
+
+            this.bottomSheetCloseFn = this.bottomSheetService.add(
+                DropdownPopover,
+                props,
+                {
+                    title: sheetTitle,
+                    withBodyPadding: this.props.bottomSheetWithBodyPadding,
+                    showBackBtn: this.hasParent,
+                    initialHeightPercent: this.props.bottomSheetInitialHeightPercent || 50,
+                    onClose: () => this.state.close(),
+                    sheetClasses: `o-dropdown-bottom-sheet ${this.props.menuClass || ''}`,
+                    env: this.__owl__.childEnv
+                }
+            );
+        } else {
+            this.popover.open(this.target, props);
+        }
     }
 
     closePopover() {
-        this.popover.close();
+        if (this.shouldUseBottomSheet()) {
+            if (this.bottomSheetCloseFn) {
+                this.bottomSheetCloseFn();
+                this.bottomSheetCloseFn = null;
+            }
+        } else {
+            this.popover.close();
+        }
         this.navigation.disable();
     }
 

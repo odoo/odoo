@@ -81,6 +81,19 @@
                         <a name="action_project_timesheets" type="object">Timesheets</a>
                     </div>
                 </xpath>
+                <xpath expr="//div[@name='card_bottom_sheet_view']" position="inside">
+                    <a
+                        t-if="record.allow_timesheets.raw_value"
+                        groups="hr_timesheet.group_hr_timesheet_user"
+                        name="action_project_timesheets"
+                        type="object"
+                        class="btn_icon"
+                        role="button"
+                        >
+                        <i class="fa fa-clock-o btn btn-secondary rounded-circle p-3 fs-2" role="img"/>
+                        Timesheets
+                    </a>
+                </xpath>
                 <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="after">
                     <t t-set="badgeColor" t-value="'border-success'"/>
                     <t t-set="badgeColor" t-value="'border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>

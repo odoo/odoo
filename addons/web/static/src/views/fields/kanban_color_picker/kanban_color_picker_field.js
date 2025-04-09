@@ -7,10 +7,21 @@ import { Component } from "@odoo/owl";
 
 class KanbanColorPickerField extends Component {
     static template = "web.KanbanColorPickerField";
-    static props = standardFieldProps;
+    static props = {
+        ...standardFieldProps,
+        inline: { type: Boolean, optional: true },
+    };
+
+    static defaultProps = {
+        inline: false,
+    };
 
     get colors() {
         return ColorList.COLORS;
+    }
+
+    isSelectedColor(color_index) {
+        return this.props.record.data?.color === color_index;
     }
 
     selectColor(colorIndex) {
@@ -24,6 +35,7 @@ export const kanbanColorPickerField = {
     extractProps(fieldInfo, dynamicInfo) {
         return {
             readonly: dynamicInfo.readonly,
+            inline: fieldInfo.attrs?.inline === "true" || fieldInfo.attrs?.inline === true || dynamicInfo.inline || false,
         };
     },
 };
