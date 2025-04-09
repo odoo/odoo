@@ -8,7 +8,7 @@
                 t-key="propertyConfiguration.name"
                 t-if="propertyConfiguration.value and propertyConfiguration.view_in_cards">
                 <!-- We purposefully hide 'Falsy' values such as a False boolean or a 0 value integer field. -->
-                <div class="mw-100 text-truncate d-flex gap-2"
+                <div class="mw-100 text-truncate text-900 d-flex gap-2"
                     t-att-class="{'border rounded-3 ps-2' : propertyConfiguration.type === 'boolean'}">
                     <label t-if="['integer', 'float', 'date', 'datetime', 'boolean'].includes(propertyConfiguration.type)"
                         t-att-class="{'fw-bold' : propertyConfiguration.type !== 'boolean'}" t-out="propertyConfiguration.string"/>

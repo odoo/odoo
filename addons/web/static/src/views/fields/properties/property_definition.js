@@ -31,7 +31,6 @@ export class PropertyDefinition extends Component {
     static props = {
         readonly: { type: Boolean, optional: true },
         canChangeDefinition: { type: Boolean, optional: true },
-        checkDefinitionWriteAccess: { type: Function, optional: true },
         propertyDefinition: { optional: true },
         context: { type: Object },
         isNewlyCreated: { type: Boolean, optional: true },
@@ -346,6 +345,19 @@ export class PropertyDefinition extends Component {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
             view_in_cards: newValue,
+        };
+        this.props.onChange(propertyDefinition);
+        this.state.propertyDefinition = propertyDefinition;
+    }
+
+    /**
+     * Ensure the section below the separator is folded/unfolded by default
+     * @param {boolean} checked
+     */
+    onFoldByDefaultChange(checked) {
+        const propertyDefinition = {
+            ...this.state.propertyDefinition,
+            fold_by_default: checked,
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
