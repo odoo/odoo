@@ -366,7 +366,7 @@ test("show dialog for errors in third-party scripts in debug mode", async () => 
     class TestError extends Error {}
     const error = new TestError();
     error.name = "Script error.";
-    serverState.debug = true;
+    serverState.debug = "1";
 
     mockService("dialog", {
         add(_dialogClass, props) {
