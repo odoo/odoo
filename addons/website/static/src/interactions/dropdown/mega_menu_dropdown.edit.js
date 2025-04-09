@@ -17,11 +17,14 @@ const MegaMenuDropdownEdit = (I) => class extends I {
     };
 
     setup() {
-        const bsDropdown = window.Dropdown.getOrCreateInstance(".o_mega_menu_toggle");
-        this.registerCleanup(() => {
-            bsDropdown.hide();
-            bsDropdown.dispose();
-        });
+        const hasMegaMenu = this.el.querySelector(".o_mega_menu_toggle");
+        if (hasMegaMenu) {
+            const bsDropdown = window.Dropdown.getOrCreateInstance(".o_mega_menu_toggle");
+            this.registerCleanup(() => {
+                bsDropdown.hide();
+                bsDropdown.dispose();
+            });
+        }
     }
 };
 
