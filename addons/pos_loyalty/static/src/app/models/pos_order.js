@@ -3,6 +3,7 @@ import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
 import { computePriceForcePriceInclude } from "@point_of_sale/app/models/utils/tax_utils";
+import { serializeDate } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -635,7 +636,7 @@ patch(PosOrder.prototype, {
                                 (rule.reward_point_amount * line.getPriceWithTax()) /
                                     line.getQuantity()
                             );
-                            if (pointsPerUnit > 0) {
+                            if (pointsPerUnit >= 0) {
                                 splitPoints.push(
                                     ...Array.apply(null, Array(line.getQuantity())).map(() => {
                                         if (line._gift_barcode && line.getQuantity() == 1) {
@@ -643,6 +644,18 @@ patch(PosOrder.prototype, {
                                                 points: pointsPerUnit,
                                                 barcode: line._gift_barcode,
                                                 giftCardId: line._gift_card_id.id,
+                                            };
+                                        } else if (program.program_type === "gift_card") {
+                                            return {
+                                                points: pointsPerUnit,
+                                                barcode: null,
+                                                code: line.uiState.gift_code,
+                                                expiration_date:
+                                                    line.uiState.gift_card_expiration_date ||
+                                                    serializeDate(
+                                                        luxon.DateTime.now().plus({ year: 1 })
+                                                    ),
+                                                partner_id: this.partner_id?.id || false,
                                             };
                                         }
                                         return { points: pointsPerUnit };

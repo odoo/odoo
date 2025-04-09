@@ -146,6 +146,14 @@ patch(PosStore.prototype, {
             this.models["loyalty.program"].get(programId)
         );
         const pointsAddedPerProgram = order.pointsForPrograms(programs);
+        const generateKey = (pointObj) => {
+            const { points, barcode = "", code = "", expiration_date = "" } = pointObj;
+            return barcode
+                ? `${points}_${barcode}`
+                : code
+                ? `${points}_null_${code}_${expiration_date}`
+                : `${points}`;
+        };
         for (const program of this.models["loyalty.program"].getAll()) {
             // Future programs may split their points per unit paid (gift cards for example), consider a non applicable program to give no points
             const pointsAdded = order._programIsApplicable(program)
@@ -158,31 +166,40 @@ patch(PosStore.prototype, {
             }
             const oldChanges = changesPerProgram[program.id] || [];
             // Update point changes for those that exist
-            for (
-                let idx = 0;
-                idx < Math.min(pointsAdded.length, oldChanges.length) && !oldChanges[idx].manual;
-                idx++
-            ) {
+            for (let idx = 0; idx < Math.min(pointsAdded.length, oldChanges.length); idx++) {
                 Object.assign(oldChanges[idx], pointsAdded[idx]);
             }
             if (pointsAdded.length < oldChanges.length || !order._programIsApplicable(program)) {
-                const removedIds = oldChanges.map((pe) => pe.coupon_id);
+                const removedIds = oldChanges.map(
+                    (pe) => !pointsAdded.includes(pe.points) && pe.coupon_id
+                );
+                const autoGiftCardPoints = pointsAdded
+                    .filter((pa) => !pa.code)
+                    .map((pa) => pa.points);
+                const giftCodes = pointsAdded.filter((pa) => pa.code).map((pa) => pa.code);
                 order.uiState.couponPointChanges = Object.fromEntries(
-                    Object.entries(order.uiState.couponPointChanges).filter(
-                        ([k, pe]) => !removedIds.includes(pe.coupon_id)
-                    )
+                    Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) => {
+                        if (pe.program_id !== program.id) {
+                            return true;
+                        } else if (pe.code && pe.manual && giftCodes.includes(pe.code)) {
+                            return true;
+                        } else if (!pe.code && autoGiftCardPoints.length) {
+                            autoGiftCardPoints.pop();
+                            return true;
+                        } else if (!removedIds.includes(pe.coupon_id)) {
+                            return true;
+                        }
+                    })
                 );
             } else if (pointsAdded.length > oldChanges.length) {
                 const pointsCount = pointsAdded.reduce((acc, pointObj) => {
-                    const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    const key = generateKey(pointObj);
                     acc[key] = (acc[key] || 0) + 1;
                     return acc;
                 }, {});
 
                 oldChanges.forEach((pointObj) => {
-                    const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    const key = generateKey(pointObj);
                     if (pointsCount[key] && pointsCount[key] > 0) {
                         pointsCount[key]--;
                     }
@@ -191,9 +208,14 @@ patch(PosStore.prototype, {
                 // Get new points added which are not in oldChanges
                 const newPointsAdded = [];
                 Object.keys(pointsCount).forEach((key) => {
-                    const [points, barcode = ""] = key.split("-");
+                    const [points, barcode = "", code = "", expiration_date = ""] = key.split("_");
                     while (pointsCount[key] > 0) {
-                        newPointsAdded.push({ points: Number(points), barcode });
+                        newPointsAdded.push({
+                            points: Number(points),
+                            barcode,
+                            code,
+                            expiration_date,
+                        });
                         pointsCount[key]--;
                     }
                 });
@@ -208,12 +230,14 @@ patch(PosStore.prototype, {
                         appliedRules: pointsForProgramsCountedRules[program.id],
                     };
                     if (program && program.program_type === "gift_card") {
-                        couponPointChange.product_id = order.getSelectedOrderline()?.product_id.id;
-                        couponPointChange.expiration_date = serializeDate(
-                            luxon.DateTime.now().plus({ year: 1 })
-                        );
-                        couponPointChange.code = order.getSelectedOrderline()?.gift_code;
-                        couponPointChange.partner_id = order.getPartner()?.id;
+                        couponPointChange.product_id =
+                            order.getSelectedOrderline()?.product_id?.id || null;
+                        couponPointChange.expiration_date =
+                            pa.expiration_date ||
+                            serializeDate(luxon.DateTime.now().plus({ year: 1 }));
+                        couponPointChange.code = pa.code;
+                        couponPointChange.partner_id = pa.partner_id || false;
+                        couponPointChange.manual = pa.code ? true : false;
                     }
 
                     order.uiState.couponPointChanges[coupon.id] = couponPointChange;
