@@ -1,14 +1,14 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-
+import { before, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, dblclick, queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Component, onWillDestroy, markup, xml } from "@odoo/owl";
+import { clearRegistry, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
 import { patchDynamicContent } from "@web/public/utils";
-import { patch } from "@web/core/utils/patch";
-import { startInteraction } from "./helpers";
-import { Component, onWillDestroy, xml } from "@odoo/owl";
+import { startInteraction, startInteractions } from "./helpers";
 
 describe.current.tags("interaction_dev");
 
@@ -1664,6 +1664,69 @@ describe("t-att and t-out", () => {
         }
         await startInteraction(Test, TemplateTest);
         expect("span").toHaveText("colibri");
+    });
+
+    test("markup'd t-out restarts the internal interactions", async () => {
+        let oldInnerInteraction, newInnerInteraction;
+        before(() => {
+            clearRegistry(registry);
+            class OldInner extends Interaction {
+                static selector = ".old-inner";
+                dynamicContent = {
+                    _root: { "t-att-animal": () => "unicorn" },
+                };
+            }
+            oldInnerInteraction = OldInner;
+            class Inner extends Interaction {
+                static selector = ".inner";
+                dynamicContent = {
+                    _root: { "t-att-animal": () => "colibri" },
+                };
+            }
+            newInnerInteraction = Inner;
+            class Test extends Interaction {
+                static selector = ".test";
+                dynamicContent = {
+                    _root: {
+                        "t-out": () => {
+                            expect.step("t-out");
+                            return markup(this.tOut);
+                        },
+                    },
+                    "span": {
+                        "t-on-click.noUpdate": () => { expect.step("clicked") },
+                    },
+                };
+                setup() {
+                    this.tOut = `<span class="old-inner">Hi</span>`;
+                }
+                start() {
+                    this.waitForTimeout(() => {
+                        this.tOut = "<span class='inner'>Hello</span>";
+                    }, 1000);
+                }
+            }
+            for (const I of [OldInner, Inner, Test]) {
+                registry.category("public.interactions").add(I.name, I);
+            }
+        });
+        const { core } = await startInteractions(`<div class="test"></div>`);
+        expect.verifySteps(["t-out"]);
+        const oldInner = queryOne(".old-inner");
+        expect("span").toHaveClass("old-inner");
+        expect("span").toHaveAttribute("animal", "unicorn");
+        expect(core.activeInteractions.map.get(oldInner).has(oldInnerInteraction)).toBe(true);
+        await advanceTime(1000);
+        expect.verifySteps(["t-out"]);
+        const inner = queryOne(".inner");
+        expect("span").not.toHaveClass("old-inner");
+        expect("span").toHaveAttribute("animal", "colibri");
+        expect("span").toHaveClass("inner");
+        expect(core.activeInteractions.map.get(oldInner)).toBe(undefined);
+        expect(core.activeInteractions.map.get(inner).has(newInnerInteraction)).toBe(true);
+        // Listeners refreshed
+        await click("span");
+        expect.verifySteps(["clicked"]);
     });
 });
 

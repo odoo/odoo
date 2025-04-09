@@ -157,7 +157,18 @@ export class Colibri {
             }
         }
         if (Markup && value instanceof Markup) {
+            let nodes = el === this.interaction.el ? el.children : [el];
+            for (const node of nodes) {
+                this.core.env.services["public.interactions"].stopInteractions(node);
+            }
             el.innerHTML = value;
+            if (el === this.interaction.el) {
+                nodes = el.children;
+            }
+            for (const node of nodes) {
+                this.core.env.services["public.interactions"].startInteractions(node);
+            }
+            this.refreshListeners();
         } else {
             el.textContent = value;
         }
