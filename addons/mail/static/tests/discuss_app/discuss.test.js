@@ -4,6 +4,8 @@ import {
     click,
     contains,
     defineMailModels,
+    dragenterFiles,
+    dropFiles,
     editInput,
     insertText,
     listenStoreFetch,
@@ -2328,4 +2330,48 @@ test("Read of unread chat where new message is deleted should mark as read", asy
         text: "Marc Demo",
         contains: [".badge", { count: 0 }],
     });
+});
+
+test("Should open the member info panel when the action button is clicked", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo", email: "marc@demo.com" });
+    const channeld = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channeld);
+    await click("button[title='Show User Profile']");
+    await contains(".o-mail-ChannelMemberInfo h2", { text: "Marc Demo" });
+});
+
+test("Open attachment panel on 'More Attachments' click form member info panel if member has over two attachments", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo", email: "marc@demo.com" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const text = new File(["hello, world!!"], "text.txt", { type: "text/plain" });
+    const text2 = new File(["how r u, world??"], "text2.txt", { type: "text/plain" });
+    const text3 = new File(["bye, world!!"], "text3.txt", { type: "text/plain" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Show User Profile']");
+    await contains(".o-mail-ChannelMemberInfo h2", { text: "Marc Demo" });
+    await contains(".o-mail-Composer-input");
+    await contains(".o-Dropzone", { count: 0 });
+    await contains(".o-mail-AttachmentCard", { count: 0 });
+    await dragenterFiles(".o-mail-Composer-input", [text, text2, text3]);
+    await dropFiles(".o-Dropzone", [text, text2, text3]);
+    await contains(".o-mail-AttachmentCard", { count: 3 });
+    await click("button[title='Send']");
+    await click("div[title='More Attachments']");
+    await contains(".o-mail-ActionPanel-header", { text: "Attachments" });
 });

@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import starmap
 from odoo import api, fields, models, _
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResPartner(models.Model):
@@ -62,6 +64,25 @@ class ResPartner(models.Model):
         employees = {employee for [employee] in employee_data}
         for partner in self:
             partner.employee = partner in employees
+
+    def _to_store_defaults(self):
+
+        def get_employee_value(field_to_get):
+            def get_for_partner(partner):
+                # sudo: res.partner-fetch employees from the partner
+                matching_employees = partner.sudo().employee_ids.filtered(
+                    lambda employee: employee.company_id == partner.company_id
+                )
+                values = matching_employees.mapped(field_to_get) or [False]
+                return values[0]
+            return get_for_partner
+
+        fields = {
+            "department": get_employee_value("department_id.name"),
+            "designation": get_employee_value("job_title"),
+            "workplace": get_employee_value("work_location_name"),
+        }
+        return super()._to_store_defaults() + list(starmap(Store.Attr, fields.items()))
 
 
 class ResPartnerBank(models.Model):

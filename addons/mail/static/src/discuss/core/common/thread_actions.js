@@ -3,11 +3,13 @@ import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
+import { ChannelMemberInfo } from "./member_info_panel";
 
 import { useComponent } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { useService } from "@web/core/utils/hooks";
 
 threadActionsRegistry
     .add("notification-settings", {
@@ -66,6 +68,9 @@ threadActionsRegistry
         sequence: 10,
         sequenceGroup: 10,
         toggle: true,
+        hideInDiscuss(component) {
+            return component.env.inDiscussApp && component.thread.channel_type === "chat";
+        },
     })
     .add("invite-people", {
         close(component, action) {
@@ -142,4 +147,43 @@ threadActionsRegistry
         sequence: 30,
         sequenceGroup: 10,
         toggle: true,
+    })
+    .add("member-info", {
+        component: ChannelMemberInfo,
+        condition(component) {
+            return (
+                component.thread?.channel_type === "chat" &&
+                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+            );
+        },
+        componentProps(action, component) {
+            return {
+                attachmentAction: component.threadActions.actions.find(
+                    (action) => action.id === "attachments"
+                ),
+            };
+        },
+        panelOuterClass: "o-discuss-ChannelMemberInfo bg-inherit",
+        icon: "fa fa-fw fa-info",
+        iconLarge: "fa fa-fw fa-lg fa-info",
+        name: _t("Show User Profile"),
+        sequence: 30,
+        sequenceGroup: 10,
+        toggle: true,
+    })
+    .add("view-contact", {
+        condition() {
+            return false;
+        },
+        icon: "fa fa-fw fa-address-book",
+        name: _t("View Contact"),
+        open() {},
+        setup(action) {
+            if (!action.condition) {
+                return;
+            }
+            this.action = useService("action");
+        },
+        sequence: 10,
+        sequenceQuick: (component) => (component.env.inDiscussApp ? 15 : 50),
     });

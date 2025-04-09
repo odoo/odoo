@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.ChannelMemberInfo">
+        <ActionPanel minWidth="200" initialWidth="300">
+            <div class="o-mail-ChannelMemberInfo d-flex justify-content-between flex-column">
+                <div class="position-relative d-flex flex-column align-items-center">
+                    <div class="position-absolute">
+                        <div class="position-relative">
+                            <img t-att-src="correspondent.persona.avatarUrl"
+                                    alt="Profile Picture" 
+                                    class="rounded bg-white" width="80" height="80" 
+                                />
+                            <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" member="thread.correspondent" className="'position-absolute start-100 translate-middle mt-n1 ms-n1'"/>
+                        </div>
+                    </div>
+                    <div class="bg-100 mt-4 w-100 rounded-3"> 
+                        <div class="d-flex flex-column align-items-center">
+                            <span class="mt-5"/>
+                            <h2 class="text-xl font-semibold mt-3 mb-3" t-out="correspondent.persona.name" />
+                        </div>
+                    </div>
+                    <div class="w-100 d-flex justify-content-evenly m-4">
+                        <button class="btn btn-outline-primary rounded-3 p-2 btn-group-item m-0 opacity-75 w-100" title="View Full Profile" t-on-click.stop="openUserRecord">
+                            <span>View Profile</span>
+                        </button>
+                    </div>
+                    <div class="info-section w-100">
+                    <t t-foreach="correspondentInfo" t-as="info" t-key="info.key">
+                        <div t-if="info.value" class="d-flex flex-column">
+                            <span class="font-medium opacity-50" t-out="info.key" />
+                            <span class="font-medium opacity-75" t-out="info.value"/>
+                            <hr class="mt-2 mb-2" />
+                        </div>
+                    </t>
+                    </div>
+                </div>
+                <div t-if="this.thread.attachments.length > 0" class="w-100 mt-2">
+                    <CompactAttachmentList thread="this.thread" attachmentAction="this.props.attachmentAction" />
+                </div>
+            </div>
+        </ActionPanel>
+    </t>
+
+    <t t-name="discuss.CompactAttachmentList">
+        <div class="o-mail-CompactAttachmentList">
+            <span class="opacity-75 text-muted">Shared media and files</span>
+            <div class="rounded-2 bg-100 d-flex flex-wrap justify-content-center opacity-75 mt-2 mb-2">
+                <t t-foreach="attachments" t-as="attachment" t-key="attachment.id">
+                    <div t-if="attachment.isImage" class="o-mail-CompactAttachmentList-image bg-200 m-2 d-flex" t-on-click="() => this.onClickAttachment(attachment)" style="width:70px;height:70px;" t-att-title="attachment.name">
+                        <img t-att-src="getImageUrl(attachment)" class="rounded bg-white" width="70" height="70" />
+                    </div>
+                    <div t-else="" class="bg-200 m-2 d-flex flex-column align-items-center"  style="width:70px;height:70px;" t-att-title="attachment.name">
+                        <div class="o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
+                        <span class="text-trucante overflow-hidden ps-2" t-out="attachment.name" />
+                    </div>
+                </t>
+                <div t-if="!env.inDiscussApp ? attachmentCount > 3 : attachmentCount > 2" class="m-2 bg-200 rounded d-flex align-items-center justify-content-center" style="width:70px;height:70px;" t-on-click="openAttachmentPanel" title="More Attachments">
+                    <span t-out="attachmentMoreText"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
