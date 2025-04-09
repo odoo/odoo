@@ -30,6 +30,8 @@ class TestManual(common.TestAr):
         self._post(invoice)
         self.assertEqual(invoice.state, 'posted', 'invoice has not been validate in Odoo')
         self.assertEqual(invoice.name, 'FA-A %05d-00000001' % self.journal.l10n_ar_afip_pos_number, 'Invoice number is wrong')
+        self.assertEqual(invoice.sequence_prefix, 'FA-A %05d-' % self.journal.l10n_ar_afip_pos_number)
+        self.assertEqual(invoice.sequence_number, 1)
 
     def test_02_fiscal_position(self):
         # ADHOC SA > IVA Responsable Inscripto > Without Fiscal Positon
