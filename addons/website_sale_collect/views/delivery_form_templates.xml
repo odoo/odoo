@@ -22,7 +22,7 @@
                 </div>
                 <div>
                     <t t-out="order_line.product_id.name"/>
-                    ( <t t-out="order_line.shop_warning"/> )
+                    ( <t t-out="order_line._get_shop_warning()"/> )
                     <div name="o_wsale_unavailable_line_button_container">
                         <a
                             title="Remove from cart"

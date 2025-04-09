@@ -887,7 +887,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order_sudo = request.cart
         request.session['sale_last_order_id'] = order_sudo.id
 
-        if redirection := self._check_cart_and_addresses(order_sudo):
+        if redirection := self._check_cart_is_ready_for_checkout(order_sudo):
             return redirection
 
         checkout_page_values = self._prepare_checkout_page_values(order_sudo, **query_params)
@@ -1371,7 +1371,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def shop_confirm_order(self, **post):
         order_sudo = request.cart
 
-        if redirection := self._check_cart_and_addresses(order_sudo):
+        if redirection := self._check_cart_is_ready_to_confirm(order_sudo):
             return redirection
 
         order_sudo._recompute_taxes()
@@ -1463,7 +1463,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order_sudo = request.cart
 
-        if redirection := self._check_cart_and_addresses(order_sudo):
+        if redirection := self._check_cart_is_ready_to_confirm(order_sudo):
             return redirection
 
         render_values = self._get_shop_payment_values(order_sudo, **post)
@@ -1564,16 +1564,36 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     # === CHECK METHODS === #
 
-    def _check_cart_and_addresses(self, order_sudo):
-        """ Check whether the cart and its addresses are valid, and redirect to the appropriate page
-        if not.
+    def _check_cart_is_ready_to_confirm(self, order_sudo):
+        """ Check whether the cart is valid and can be confirmed, and redirect to the appropriate
+        page if not.
+
+        The cart is valid if all the previous steps are valid, and it is ready to be confirmed.
 
         :param sale.order order_sudo: The cart to check.
-        :return: None if both the cart and its addresses are valid; otherwise, a redirection to the
-                 appropriate page.
+        :return: None if the cart is valid; otherwise, a redirection to the appropriate page.
+        """
+        if redirection := self._check_cart_is_ready_for_checkout(order_sudo):
+            return redirection
+
+        if not order_sudo._is_cart_ready_to_confirm():
+            return request.redirect('/shop/checkout')
+
+    def _check_cart_is_ready_for_checkout(self, order_sudo):
+        """ Check whether the cart is valid and can go to checkout, and redirect to the appropriate
+        page if not.
+
+        The cart is valid if the cart is valid, the adresses are valid, and it is ready for
+        checkout.
+
+        :param sale.order order_sudo: The cart to check.
+        :return: None if the cart is valid; otherwise, a redirection to the appropriate page.
         """
         if redirection := self._check_cart(order_sudo):
             return redirection
+
+        if not order_sudo._is_cart_ready_for_checkout():
+            return request.redirect('/shop/cart')
 
         if redirection := self._check_addresses(order_sudo):
             return redirection

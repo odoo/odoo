@@ -90,10 +90,16 @@ class Cart(PaymentPortal):
 
     def _cart_values(self, **post):
         """
-        This method is a hook to pass additional values when rendering the 'website_sale.cart' template (e.g. add
-        a flag to trigger a style variation)
+        This method is a hook to pass additional values when rendering the 'website_sale.cart'
+        template (e.g. add a flag to trigger a style variation)
         """
-        return {}
+        order_sudo = request.cart
+        return {
+            # Check here for any warnings, as they will be cleared before the main button renders.
+            'cart_not_ready': (
+                order_sudo.shop_warning or any(order_sudo.mapped('order_line.shop_warning'))
+            ),
+        }
 
     @route(
         route='/shop/cart/add',
@@ -254,7 +260,7 @@ class Cart(PaymentPortal):
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
 
         values['cart_quantity'] = order_sudo.cart_quantity
-        values['cart_ready'] = order_sudo._is_cart_ready()
+        values['cart_ready'] = order_sudo._is_cart_ready_for_checkout()
         values['amount'] = order_sudo.amount_total
         values['minor_amount'] = payment_utils.to_minor_currency_units(
             order_sudo.amount_total, order_sudo.currency_id
