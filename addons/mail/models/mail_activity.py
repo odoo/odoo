@@ -173,9 +173,12 @@ class MailActivity(models.Model):
 
     @api.depends('res_model', 'res_id', 'user_id')
     def _compute_can_write(self):
-        valid_records = self._filtered_access('write')
         for record in self:
-            record.can_write = record in valid_records
+            if record.res_model and record.res_id:
+                document = self.env[record.res_model].browse(record.res_id)
+                record.can_write = document._filtered_access('write')
+            else:
+                record.can_write = False
 
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):

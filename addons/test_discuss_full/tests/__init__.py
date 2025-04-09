@@ -2,3 +2,4 @@
 
 from . import test_livechat_hr_holidays
 from . import test_performance
+from . import test_activity_schedule_project_task
