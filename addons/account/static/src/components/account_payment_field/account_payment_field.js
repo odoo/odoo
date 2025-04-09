@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { localization } from "@web/core/l10n/localization";
-import { formatDate, deserializeDate } from "@web/core/l10n/dates";
+import { parseDate, formatDate } from "@web/core/l10n/dates";
 
 import { formatMonetary } from "@web/views/fields/formatters";
 
@@ -35,7 +35,7 @@ export class AccountPaymentField extends Component {
             value.amount_formatted = formatMonetary(value.amount, { currencyId: value.currency_id });
             if (value.date) {
                 // value.date is a string, parse to date and format to the users date format
-                value.formattedDate = formatDate(deserializeDate(value.date))
+                value.date = formatDate(parseDate(value.date));
             }
         }
         this.lines = info.content;
