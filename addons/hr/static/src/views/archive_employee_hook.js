@@ -10,7 +10,7 @@ export function useArchiveEmployee() {
             {
                 type: "ir.actions.act_window",
                 name: _t("Employee Termination"),
-                res_model: "hr.departure.wizard",
+                res_model: "hr.employee.departure.wizard",
                 views: [[false, "form"]],
                 view_mode: "form",
                 target: "new",

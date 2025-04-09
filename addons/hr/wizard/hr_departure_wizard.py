@@ -3,8 +3,8 @@
 from odoo import fields, models
 
 
-class HrDepartureWizard(models.TransientModel):
-    _name = 'hr.departure.wizard'
+class HrEmployeeDepartureWizard(models.TransientModel):
+    _name = 'hr.employee.departure.wizard'
     _description = 'Departure Wizard'
 
     def _get_default_departure_date(self):

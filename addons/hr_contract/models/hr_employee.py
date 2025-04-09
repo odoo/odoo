@@ -332,3 +332,23 @@ class HrEmployee(models.Model):
 
         action['res_id'] = self.contract_ids[0].id
         return action
+
+    def _register_departure(self):
+        """If do_set_date_end is checked, set the departure date as the end date to current running contract,
+        and cancel all draft contracts"""
+        active_contract = self.contract_id
+
+        if any(c.date_start > self.departure_date for c in active_contract):
+            raise UserError(_("Departure date can't be earlier than the start date of current contract."))
+
+        super()._register_departure()
+
+        # Write date and update state of current contracts
+        if active_contract.state in ['open', 'draft']:
+            active_contract.write({'date_end': self.departure_date})
+            self.message_post(body=self.env._("Contract end date of %s has been set", self.name))
+            active_contract.filtered(lambda c: c.state == 'open').write({'state': 'close'})
+            active_contract.message_post(body=self.env._('Contract end date has been updated due to the end of the collaboration with %s', self.name))
+
+        # Cancel draft contracts
+        self.contract_ids.filtered(lambda c: c.state == 'draft').write({'state': 'cancel'})

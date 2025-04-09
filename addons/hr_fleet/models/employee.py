@@ -17,6 +17,9 @@ class HrEmployee(models.Model):
     license_plate = fields.Char(compute="_compute_license_plate", search="_search_license_plate", groups="hr.group_hr_user")
     mobility_card = fields.Char(groups="fleet.fleet_group_user")
 
+    departure_do_unassign_campany_car = fields.Boolean("Release Company Car", groups="hr.group_hr_user",
+        default=lambda self: self.env.user.has_group('fleet.fleet_group_user'))
+
     def action_open_employee_cars(self):
         self.ensure_one()
 
@@ -86,6 +89,39 @@ class HrEmployee(models.Model):
                     car.future_driver_id = user.partner_id
                 if car.driver_id == self.work_contact_id:
                     car.driver_id = user.partner_id
+
+    def _register_departure(self):
+        super()._register_departure()
+        if self.departure_do_unassign_campany_car:
+            self._unassign_campany_car()
+
+    def _unassign_campany_car(self):
+        """Find all fleet.vehichle.assignation.log records that link to the employee, if there is no
+        end date or end date > departure date, update the date. Also check fleet.vehicle to see if
+        there is any record with its dirver_id to be the employee, set them to False."""
+        self.ensure_one()
+        drivers = self.user_id.partner_id | self.sudo().work_contact_id
+        assignations = self.env['fleet.vehicle.assignation.log'].search([
+            ('driver_id', 'in', drivers.ids),
+            '|',
+                ('date_end', '=', False),
+                ('date_end', '>', self.departure_date),
+        ])
+        assignations.write({'date_end': self.departure_date})
+
+        cars = self.env['fleet.vehicle'].search([('driver_id', 'in', drivers.ids)])
+        if cars:
+            cars.write({'driver_id': False, 'driver_employee_id': False})
+            for car in cars:
+                self.message_post(body=self.env._("The vehicle %s has been freed", car.display_name))
+                car.message_post(body=self.env._("The vehicle has been freed due to the end of collaboration with %s", self.name))
+
+        cars = self.env['fleet.vehicle'].search([('future_driver_id', 'in', drivers.ids)])
+        if cars:
+            cars.write({'future_driver_id': False, 'future_driver_employee_id': False})
+            for car in cars:
+                self.employee_id.message_post(body=self.env._("Employee has been removed from %s future driver list", car.display_name))
+                car.message_post(body=self.env._("The future driver has been freed due to the end of collaboration with %s", self.name))
 
 
 class HrEmployeePublic(models.Model):

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_departure_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.departure.wizard.view.form</field>
+        <field name="model">hr.employee.departure.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" options="{'no_open': True}" widget="many2one_avatar_user"/>
+                            <field name="has_selected_actions" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="country_id" invisible="1"/>
+                            <field name="country_code" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                            <label for="departure_date" string="Contract End Date"/>
+                            <div invisible="not departure_reason_id">
+                                <field name="departure_date" nolabel="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <div id="detailed_reason" colspan="2">
+                            <span class="o_form_label o_hr_form_label cursor-default">Note</span>
+                            <field name="departure_description" placeholder="Add more details about the reason to end the collaboration with this employee."/>
+                        </div>
+                    </group>
+                    <notebook>
+                        <page string="Planned Actions" name="planned_actions">
+                            <group>
+                                <group name="planned_actions_left">
+                                    <label for="do_archive_employee" string="Employee"/>
+                                    <div class="o_row">
+                                        <field name="do_archive_employee" nolabel="1"/>
+                                        <span>Archive</span>
+                                    </div>
+                                </group>
+                                <group name="planned_actions_right"/>
+                            </group>
+                            <group class="mt-4" invisible="not has_selected_actions">
+                                <group>
+                                    <field name="action_at"/>
+                                    <field name="action_other_date" invisible="action_at == 'departure_date'"
+                                        placeholder="Immediately"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_register_departure" string="Schedule" type="object" class="oe_highlight"
+                        invisible="apply_immediately"/>
+                    <button name="action_register_departure" string="Apply" type="object" class="oe_highlight"
+                        invisible="not apply_immediately"/>
+                    <button string="Discard" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_employee_departure_action" model="ir.actions.act_window">
+        <field name="name">Ends of Collaboration</field>
+        <field name="res_model">hr.employee.departure.wizard</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>
