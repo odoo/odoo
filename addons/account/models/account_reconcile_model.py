@@ -112,6 +112,10 @@ class AccountReconcileModel(models.Model):
         string='Next Activity')
 
     # ===== Conditions =====
+    can_be_proposed = fields.Boolean(
+        compute='_compute_can_be_proposed', store=True, readonly=True,
+        copy=False,
+    )
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
         domain="[('type', 'in', ('bank', 'cash', 'credit'))]",
         check_company=True,
@@ -137,6 +141,12 @@ class AccountReconcileModel(models.Model):
         help='The reconciliation model will only be applied to the selected customers/vendors.')
 
     line_ids = fields.One2many('account.reconcile.model.line', 'model_id', copy=True)
+
+
+    @api.depends('match_label', 'match_partner_ids', 'trigger')
+    def _compute_can_be_proposed(self):
+        for model in self:
+            model.can_be_proposed = model.match_label or model.match_partner_ids or model.trigger == 'auto_reconcile'
 
     def action_set_manual(self):
         for model in self:
