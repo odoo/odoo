@@ -73,7 +73,7 @@ export class WebsiteLoader extends Component {
             () => [this.state.selectedFeatures]
         );
 
-        // Cycle through the waitingMessages every 10s
+        // Cycle through the waitingMessages every 6s
         useEffect(
             () => {
                 if (this.state.showWaitingMessages) {
