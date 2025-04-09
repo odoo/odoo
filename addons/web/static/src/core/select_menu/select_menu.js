@@ -28,6 +28,7 @@ export class SelectMenu extends Component {
         choices: [],
         groups: [],
         disabled: false,
+        fuzzyLookupFn: (choice) => choice.label,
     };
 
     static props = {
@@ -78,6 +79,7 @@ export class SelectMenu extends Component {
         onSelect: { type: Function, optional: true },
         slots: { type: Object, optional: true },
         disabled: { type: Boolean, optional: true },
+        fuzzyLookupFn: { type: Function, optional: true },
     };
 
     static SCROLL_SETTINGS = {
@@ -269,7 +271,7 @@ export class SelectMenu extends Component {
                 filteredOptions = fuzzyLookup(
                     searchString,
                     group.choices,
-                    (choice) => choice.label
+                    this.props.fuzzyLookupFn
                 );
             } else {
                 filteredOptions = group.choices;
