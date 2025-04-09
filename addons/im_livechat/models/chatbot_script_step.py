@@ -422,6 +422,10 @@ class ChatbotScriptStep(models.Model):
             )
             channel_sudo._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
+            channel_sudo.livechat_failure = "never_answered"
+        else:
+            # sudo: discuss.channel - visitor tried getting operator, outcome must be updated
+            discuss_channel.sudo().livechat_failure = "no_one_available"
 
         return posted_message
 

@@ -25,6 +25,14 @@ class DiscussChannel(models.Model):
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
+    livechat_failure = fields.Selection(
+        selection=[
+            ("never_answered", "Never Answered"),
+            ("no_one_available", "No one Available"),
+            ("no_failure", "No Failure"),
+        ],
+        string="Live Chat Conversation Failure",
+    )
 
     _livechat_operator_id = models.Constraint(
         "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
@@ -32,6 +40,9 @@ class DiscussChannel(models.Model):
     )
 
     _livechat_active_idx = models.Index("(livechat_active) WHERE livechat_active IS TRUE")
+    _livechat_failure_idx = models.Index(
+        "(livechat_failure) WHERE livechat_failure IN ('never_answered', 'no_one_available')"
+    )
 
     @api.depends('message_ids')
     def _compute_duration(self):
@@ -285,6 +296,13 @@ class DiscussChannel(models.Model):
                     "script_step_id": self.chatbot_current_step_id.id,
                 }
             )
+
+        if (
+            self.livechat_active and
+            message.author_id == self.livechat_operator_id and
+            message.author_id != self.chatbot_current_step_id.chatbot_script_id.operator_partner_id
+        ):
+            self.livechat_failure = "no_failure"
 
         return super()._message_post_after_hook(message, msg_vals)
 
