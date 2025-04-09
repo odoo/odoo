@@ -612,7 +612,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_31_website_edit_megamenu_big_icons_subtitles(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu_big_icons_subtitles', login='admin')
 
-    @unittest.skip
     def test_32_website_background_colorpicker(self):
         self.start_tour(self.env['website'].get_client_action_url("/"), "website_background_colorpicker", login="admin")
 
