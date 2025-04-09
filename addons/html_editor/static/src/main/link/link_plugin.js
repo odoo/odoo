@@ -229,6 +229,7 @@ export class LinkPlugin extends Plugin {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
         normalize_handlers: this.normalizeLink.bind(this),
+        after_insert_handlers: this.handleAfterInsert.bind(this),
 
         /** Overrides */
         split_element_block_overrides: this.handleSplitBlock.bind(this),
@@ -293,6 +294,7 @@ export class LinkPlugin extends Plugin {
         this.getAttachmentMetadata = memoize((url) =>
             fetchAttachmentMetaData(url, this.services.orm)
         );
+        this.newlyInsertedLinks = new Set();
     }
 
     destroy() {
@@ -522,8 +524,14 @@ export class LinkPlugin extends Plugin {
             canUpload: this.config.allowFile,
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
+            showReplaceTitleBanner: this.newlyInsertedLinks.has(linkElement),
         };
         this.overlay.open({ props });
+        if (this.linkInDocument) {
+            if (this.newlyInsertedLinks.has(this.linkInDocument)) {
+                this.newlyInsertedLinks.delete(this.linkInDocument);
+            }
+        }
     }
     /**
      * close the link tool
@@ -961,6 +969,18 @@ export class LinkPlugin extends Plugin {
         blockToSplit = targetNode;
         splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
         return true;
+    }
+
+    handleAfterInsert(insertedNodes) {
+        for (const node of insertedNodes) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                for (const link of selectElements(node, "A")) {
+                    if (link.getAttribute("href") === link.textContent && !this.isImage) {
+                        this.newlyInsertedLinks.add(link);
+                    }
+                }
+            }
+        }
     }
 }
 

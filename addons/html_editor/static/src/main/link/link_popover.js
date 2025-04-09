@@ -18,6 +18,7 @@ export class LinkPopover extends Component {
         getExternalMetaData: Function,
         getAttachmentMetadata: Function,
         isImage: Boolean,
+        showReplaceTitleBanner: Boolean,
         type: String,
         recordInfo: Object,
         canEdit: { type: Boolean, optional: true },
@@ -66,6 +67,7 @@ export class LinkPopover extends Component {
                     ?.pop() ||
                 "",
             isImage: this.props.isImage,
+            showReplaceTitleBanner: this.props.showReplaceTitleBanner,
         });
 
         this.editingWrapper = useRef("editing-wrapper");
