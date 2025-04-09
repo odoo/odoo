@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { EventBus, whenReady } from "@odoo/owl";
-import { getCurrentDimensions } from "@web/../lib/hoot-dom/helpers/dom";
+import { getCurrentDimensions, getDocument, getWindow } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     mockedCancelAnimationFrame,
     mockedClearInterval,
@@ -41,6 +41,7 @@ import {
     MockXMLHttpRequestUpload,
     mockCookie,
     mockHistory,
+    mockLocation,
     mockedFetch,
 } from "./network";
 import { MockNotification } from "./notification";
@@ -52,62 +53,61 @@ import { MockBlob } from "./sync_values";
 //-----------------------------------------------------------------------------
 
 const {
-    document,
-    Document,
-    HTMLBodyElement,
-    HTMLHeadElement,
-    HTMLHtmlElement,
-    Map,
+    EventTarget,
+    HTMLAnchorElement,
     Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
         assign: $assign,
-        defineProperty: $defineProperty,
+        defineProperties: $defineProperties,
         entries: $entries,
         getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
         getPrototypeOf: $getPrototypeOf,
         keys: $keys,
         hasOwn: $hasOwn,
     },
-    ontouchcancel,
-    ontouchend,
-    ontouchmove,
-    ontouchstart,
     Reflect: { ownKeys: $ownKeys },
     Set,
-    Window,
+    WeakMap,
 } = globalThis;
 
-const touchFunctions = { ontouchcancel, ontouchend, ontouchmove, ontouchstart };
+const { addEventListener, removeEventListener } = EventTarget.prototype;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
 
 /**
- * @param {any} target
+ * @param {unknown} target
  * @param {Record<string, PropertyDescriptor>} descriptors
  */
-const applyPropertyDescriptors = (target, descriptors) => {
+function applyPropertyDescriptors(target, descriptors) {
+    if (!originalDescriptors.has(target)) {
+        originalDescriptors.set(target, {});
+    }
+    const targetDescriptors = originalDescriptors.get(target);
+    const ownerDecriptors = new Map();
     for (const [property, rawDescriptor] of $entries(descriptors)) {
         const owner = findPropertyOwner(target, property);
-        originalDescriptors.push({
-            descriptor: $getOwnPropertyDescriptor(owner, property),
-            owner,
-            property,
-            target,
-        });
+        targetDescriptors[property] = $getOwnPropertyDescriptor(owner, property);
         const descriptor = { ...rawDescriptor };
         if ("value" in descriptor) {
             descriptor.writable = false;
         }
-        $defineProperty(owner, property, descriptor);
+        if (!ownerDecriptors.has(owner)) {
+            ownerDecriptors.set(owner, {});
+        }
+        const nextDescriptors = ownerDecriptors.get(owner);
+        nextDescriptors[property] = descriptor;
     }
-};
+    for (const [owner, nextDescriptors] of ownerDecriptors) {
+        $defineProperties(owner, nextDescriptors);
+    }
+}
 
 /**
  * @param {string[]} [changedKeys]
  */
-const callMediaQueryChanges = (changedKeys) => {
+function callMediaQueryChanges(changedKeys) {
     for (const mediaQueryList of mediaQueryLists) {
         if (!changedKeys || changedKeys.some((key) => mediaQueryList.media.includes(key))) {
             const event = new MediaQueryListEvent("change", {
@@ -117,28 +117,29 @@ const callMediaQueryChanges = (changedKeys) => {
             mediaQueryList.dispatchEvent(event);
         }
     }
-};
+}
 
 /**
  * @template T
  * @param {T} target
  * @param {keyof T} property
  */
-const findOriginalDescriptor = (target, property) => {
-    for (const od of originalDescriptors) {
-        if (od.target === target && od.property === property) {
-            return od.descriptor;
+function findOriginalDescriptor(target, property) {
+    if (originalDescriptors.has(target)) {
+        const descriptors = originalDescriptors.get(target);
+        if (descriptors && property in descriptors) {
+            return descriptors[property];
         }
     }
     return null;
-};
+}
 
 /**
  * @param {unknown} object
  * @param {string} property
- * @returns {any}
+ * @returns {unknown}
  */
-const findPropertyOwner = (object, property) => {
+function findPropertyOwner(object, property) {
     if ($hasOwn(object, property)) {
         return object;
     }
@@ -147,12 +148,90 @@ const findPropertyOwner = (object, property) => {
         return findPropertyOwner(prototype, property);
     }
     return object;
-};
+}
+
+/**
+ * @param {unknown} object
+ */
+function getTouchDescriptors(object) {
+    const descriptors = {};
+    const toDelete = [];
+    for (const eventName of TOUCH_EVENTS) {
+        const fnName = `on${eventName}`;
+        if (fnName in object) {
+            const owner = findPropertyOwner(object, fnName);
+            descriptors[fnName] = $getOwnPropertyDescriptor(owner, fnName);
+        } else {
+            toDelete.push(fnName);
+        }
+    }
+    /** @type {({ descriptors?: Record<string, PropertyDescriptor>; toDelete?: string[]})} */
+    const result = {};
+    if ($keys(descriptors).length) {
+        result.descriptors = descriptors;
+    }
+    if (toDelete.length) {
+        result.toDelete = toDelete;
+    }
+    return result;
+}
+
+/**
+ * @param {typeof globalThis} view
+ */
+function getTouchTargets(view) {
+    return [view, view.Document.prototype];
+}
+
+/**
+ * @param {typeof globalThis} view
+ */
+function getWatchedEventTargets(view) {
+    return [
+        view,
+        view.document,
+        // Permanent DOM elements
+        view.HTMLDocument.prototype,
+        view.HTMLBodyElement.prototype,
+        view.HTMLHeadElement.prototype,
+        view.HTMLHtmlElement.prototype,
+        // Other event targets
+        EventBus.prototype,
+        MockEventTarget.prototype,
+    ];
+}
+
+/**
+ * @param {string} type
+ * @returns {PropertyDescriptor}
+ */
+function makeEventDescriptor(type) {
+    let callback = null;
+    return {
+        enumerable: true,
+        configurable: true,
+        get() {
+            return callback;
+        },
+        set(value) {
+            if (callback === value) {
+                return;
+            }
+            if (typeof callback === "function") {
+                this.removeEventListener(type, callback);
+            }
+            callback = value;
+            if (typeof callback === "function") {
+                this.addEventListener(type, callback);
+            }
+        },
+    };
+}
 
 /**
  * @param {string} mediaQueryString
  */
-const matchesQueryPart = (mediaQueryString) => {
+function matchesQueryPart(mediaQueryString) {
     const [, key, value] = mediaQueryString.match(R_MEDIA_QUERY_PROPERTY) || [];
     let match = false;
     if (mockMediaValues[key]) {
@@ -183,8 +262,23 @@ const matchesQueryPart = (mediaQueryString) => {
         }
     }
     return mediaQueryString.startsWith("not") ? !match : match;
-};
+}
 
+/** @type {addEventListener} */
+function mockedAddEventListener(...args) {
+    const runner = getRunner();
+    if (runner.dry || !runner.suiteStack.length) {
+        // Ignore listeners during dry run or outside of a test suite
+        return;
+    }
+    if (!R_OWL_SYNTHETIC_LISTENER.test(String(args[1]))) {
+        // Ignore cleanup for Owl synthetic listeners
+        runner.after(removeEventListener.bind(this, ...args));
+    }
+    return addEventListener.call(this, ...args);
+}
+
+/** @type {Document["elementFromPoint"]} */
 function mockedElementFromPoint(...args) {
     return mockedElementsFromPoint.call(this, ...args)[0];
 }
@@ -194,6 +288,7 @@ function mockedElementFromPoint(...args) {
  * - remove "HOOT-..." elements from the result
  * - put the <body> & <html> elements at the end of the list, as they may be ordered
  *  incorrectly due to the fixture being behind the body.
+ * @type {Document["elementsFromPoint"]}
  */
 function mockedElementsFromPoint(...args) {
     const { value: elementsFromPoint } = findOriginalDescriptor(this, "elementsFromPoint");
@@ -221,10 +316,70 @@ function mockedElementsFromPoint(...args) {
     return result;
 }
 
+function mockedHref() {
+    return this.hasAttribute("href") ? new MockURL(this.getAttribute("href")).href : "";
+}
+
+/** @type {typeof matchMedia} */
+function mockedMatchMedia(mediaQueryString) {
+    return new MockMediaQueryList(mediaQueryString);
+}
+
+/** @type {typeof removeEventListener} */
+function mockedRemoveEventListener(...args) {
+    if (getRunner().dry) {
+        // Ignore listeners during dry run
+        return;
+    }
+    return removeEventListener.call(this, ...args);
+}
+
 /**
- * @type {typeof matchMedia}
+ * @param {PointerEvent} ev
  */
-const mockedMatchMedia = (mediaQueryString) => new MockMediaQueryList(mediaQueryString);
+function onAnchorHrefClick(ev) {
+    if (ev.defaultPrevented) {
+        return;
+    }
+    const href = ev.target.closest("a[href]")?.href;
+    if (!href) {
+        return;
+    }
+
+    ev.preventDefault();
+
+    // Assign href to mock location instead of actual location
+    mockLocation.href = href;
+
+    const [, hash] = href.split("#");
+    if (hash) {
+        // Scroll to the target element if the href is/has a hash
+        getDocument().getElementById(hash)?.scrollIntoView();
+    }
+}
+
+function onWindowResize() {
+    callMediaQueryChanges();
+}
+
+/**
+ * @param {typeof globalThis} view
+ */
+function restoreTouch(view) {
+    const touchObjects = getTouchTargets(view);
+    for (let i = 0; i < touchObjects.length; i++) {
+        const object = touchObjects[i];
+        const { descriptors, toDelete } = originalTouchFunctions[i];
+        if (descriptors) {
+            $defineProperties(object, descriptors);
+        }
+        if (toDelete) {
+            for (const fnName of toDelete) {
+                delete object[fnName];
+            }
+        }
+    }
+}
 
 class MockMediaQueryList extends MockEventTarget {
     static publicListeners = ["change"];
@@ -254,30 +409,16 @@ const DEFAULT_MEDIA_VALUES = {
     "prefers-reduced-motion": "reduce",
 };
 
-const EVENT_TARGET_PROTOTYPES = new Map(
-    [
-        // Top level objects
-        Window,
-        Document,
-        // Permanent DOM elements
-        HTMLBodyElement,
-        HTMLHeadElement,
-        HTMLHtmlElement,
-        // Other event targets
-        EventBus,
-        MockEventTarget,
-    ].map(({ prototype }) => [
-        prototype,
-        [prototype.addEventListener, prototype.removeEventListener],
-    ])
-);
+const TOUCH_EVENTS = ["touchcancel", "touchend", "touchmove", "touchstart"];
 
 const R_AND = /\s*\band\b\s*/;
 const R_COMMA = /\s*,\s*/;
 const R_MEDIA_QUERY_PROPERTY = /\(\s*([\w-]+)\s*:\s*(.+)\s*\)/;
+const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 
-/** @type {{ descriptor: PropertyDescriptor; owner: any; property: string; target: any }[]} */
-const originalDescriptors = [];
+/** @type {WeakMap<unknown, Record<string, PropertyDescriptor>>} */
+const originalDescriptors = new WeakMap();
+const originalTouchFunctions = getTouchTargets(globalThis).map(getTouchDescriptors);
 
 /** @type {Set<MockMediaQueryList>} */
 const mediaQueryLists = new Set();
@@ -287,9 +428,13 @@ const mockMediaValues = { ...DEFAULT_MEDIA_VALUES };
 const mockSessionStorage = new MockStorage();
 let mockTitle = "";
 
-const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
-
 // Mock descriptors
+const ANCHOR_MOCK_DESCRIPTORS = {
+    href: {
+        ...$getOwnPropertyDescriptor(HTMLAnchorElement.prototype, "href"),
+        get: mockedHref,
+    },
+};
 const DOCUMENT_MOCK_DESCRIPTORS = {
     cookie: {
         get: () => mockCookie.get(),
@@ -319,7 +464,6 @@ const WINDOW_MOCK_DESCRIPTORS = {
     ClipboardItem: { value: MockClipboardItem },
     console: { value: mockConsole, writable: false },
     Date: { value: MockDate, writable: false },
-    EventTarget: { value: MockEventTarget },
     fetch: { value: interactor("server", mockedFetch).as("fetch"), writable: false },
     history: { value: mockHistory },
     innerHeight: { get: () => getCurrentDimensions().height },
@@ -355,6 +499,8 @@ const WINDOW_MOCK_DESCRIPTORS = {
 //-----------------------------------------------------------------------------
 
 export function cleanupWindow() {
+    const view = getWindow();
+
     // Storages
     mockLocalStorage.clear();
     mockSessionStorage.clear();
@@ -366,44 +512,50 @@ export function cleanupWindow() {
     // Title
     mockTitle = "";
 
-    // Body & head attributes
-    for (const { name } of document.head.attributes) {
-        document.head.removeAttribute(name);
+    // Listeners
+    view.removeEventListener("click", onAnchorHrefClick);
+    view.removeEventListener("resize", onWindowResize);
+
+    // Head & body attributes
+    const { head, body } = view.document;
+    for (const { name } of head.attributes) {
+        head.removeAttribute(name);
     }
-    for (const { name } of document.body.attributes) {
-        document.body.removeAttribute(name);
+    for (const { name } of body.attributes) {
+        body.removeAttribute(name);
     }
 
     // Touch
-    for (const [fnName, originalFn] of $entries(touchFunctions)) {
-        globalThis[fnName] = originalFn;
-    }
+    restoreTouch(view);
 }
 
 export function getTitle() {
-    const titleDescriptor = findOriginalDescriptor(document, "title");
+    const doc = getDocument();
+    const titleDescriptor = findOriginalDescriptor(doc, "title");
     if (titleDescriptor) {
-        return titleDescriptor.get.call(document);
+        return titleDescriptor.get.call(doc);
     } else {
-        return document.title;
+        return doc.title;
     }
 }
 
 export function getViewPortHeight() {
-    const heightDescriptor = findOriginalDescriptor(window, "innerHeight");
+    const view = getWindow();
+    const heightDescriptor = findOriginalDescriptor(view, "innerHeight");
     if (heightDescriptor) {
-        return heightDescriptor.get.call(window);
+        return heightDescriptor.get.call(view);
     } else {
-        return window.innerHeight;
+        return view.innerHeight;
     }
 }
 
 export function getViewPortWidth() {
-    const titleDescriptor = findOriginalDescriptor(window, "innerWidth");
+    const view = getWindow();
+    const titleDescriptor = findOriginalDescriptor(view, "innerWidth");
     if (titleDescriptor) {
-        return titleDescriptor.get.call(window);
+        return titleDescriptor.get.call(view);
     } else {
-        return window.innerWidth;
+        return view.innerWidth;
     }
 }
 
@@ -418,109 +570,80 @@ export function mockMatchMedia(values) {
 
 /**
  * @param {boolean} setTouch
- * @param {typeof globalThis} [window=globalThis]
  */
-export function mockTouch(setTouch, { Document, HTMLElement, SVGElement } = globalThis) {
-    const prototypes = [Document.prototype, HTMLElement.prototype, SVGElement.prototype];
+export function mockTouch(setTouch) {
+    const objects = getTouchTargets(getWindow());
     if (setTouch) {
-        for (const fnName in touchFunctions) {
-            globalThis[fnName] ??= null;
-            for (const proto of prototypes) {
-                if (!(fnName in proto)) {
-                    proto[fnName] = null;
+        for (const object of objects) {
+            const descriptors = {};
+            for (const eventName of TOUCH_EVENTS) {
+                const fnName = `on${eventName}`;
+                if (!$hasOwn(object, fnName)) {
+                    descriptors[fnName] = makeEventDescriptor(eventName);
                 }
             }
+            $defineProperties(object, descriptors);
         }
+        mockMatchMedia({ pointer: "coarse" });
     } else {
-        for (const fnName in touchFunctions) {
-            delete globalThis[fnName];
-            for (const proto of prototypes) {
-                delete proto[fnName];
+        for (const object of objects) {
+            for (const eventName of TOUCH_EVENTS) {
+                delete object[`on${eventName}`];
             }
         }
+        mockMatchMedia({ pointer: "fine" });
     }
-
-    mockMatchMedia({ pointer: setTouch ? "coarse" : "fine" });
 }
 
 /**
- * @param {typeof globalThis} global
+ * @param {typeof globalThis} [view=getWindow()]
  */
-export function patchWindow({ document, window } = globalThis) {
-    applyPropertyDescriptors(window, WINDOW_MOCK_DESCRIPTORS);
-    applyPropertyDescriptors(window.Element.prototype, ELEMENT_MOCK_DESCRIPTORS);
-    whenReady(() => {
-        applyPropertyDescriptors(document, DOCUMENT_MOCK_DESCRIPTORS);
-    });
+export function patchWindow(view = getWindow()) {
+    // Window (doesn't need to be ready)
+    applyPropertyDescriptors(view, WINDOW_MOCK_DESCRIPTORS);
 
-    window.addEventListener("resize", () => callMediaQueryChanges());
+    whenReady(() => {
+        // Document
+        applyPropertyDescriptors(view.document, DOCUMENT_MOCK_DESCRIPTORS);
+
+        // Element prototypes
+        applyPropertyDescriptors(view.Element.prototype, ELEMENT_MOCK_DESCRIPTORS);
+        applyPropertyDescriptors(view.HTMLAnchorElement.prototype, ANCHOR_MOCK_DESCRIPTORS);
+    });
 }
 
 /**
  * @param {string} value
  */
 export function setTitle(value) {
-    const titleDescriptor = findOriginalDescriptor(document, "title");
+    const doc = getDocument();
+    const titleDescriptor = findOriginalDescriptor(doc, "title");
     if (titleDescriptor) {
-        titleDescriptor.set.call(document, value);
+        titleDescriptor.set.call(doc, value);
     } else {
-        document.title = value;
+        doc.title = value;
     }
 }
 
+export function setupWindow() {
+    const view = getWindow();
+
+    // Listeners
+    view.addEventListener("click", onAnchorHrefClick);
+    view.addEventListener("resize", onWindowResize);
+}
+
 export function watchListeners() {
-    /**
-     * @param {WeakRef<EventTarget>} targetRef
-     */
-    const removeRefListener = (targetRef) => {
-        if (!listenerRefs.has(targetRef)) {
-            return;
-        }
-        const [removeEventListener, args] = listenerRefs.get(targetRef);
-        listenerRefs.delete(targetRef);
-        const target = targetRef.deref();
-        if (target) {
-            removeEventListener.call(target, ...args);
-        }
-    };
-
-    /** @type {Map<WeakRef<EventTarget>, [EventTarget["removeEventListener"], any[]]>} */
-    const listenerRefs = new Map();
-    const runner = getRunner();
-
-    for (const [proto, [addEventListener, removeEventListener]] of EVENT_TARGET_PROTOTYPES) {
-        proto.addEventListener = function mockedAddEventListener(...args) {
-            if (runner.dry) {
-                // Ignore listeners during dry run
-                return;
-            }
-            if (runner.suiteStack.length && !R_OWL_SYNTHETIC_LISTENER.test(String(args[1]))) {
-                // Do not cleanup:
-                // - listeners outside of suites
-                // - Owl synthetic listeners
-                const ref = new WeakRef(this);
-                listenerRefs.set(ref, [removeEventListener, args]);
-                runner.after(() => removeRefListener(ref));
-            }
-            return addEventListener.call(this, ...args);
-        };
-        proto.removeEventListener = function mockedRemoveEventListener(...args) {
-            if (runner.dry) {
-                // Ignore listeners during dry run
-                return;
-            }
-            return removeEventListener.call(this, ...args);
-        };
+    const targets = getWatchedEventTargets(getWindow());
+    for (const target of targets) {
+        target.addEventListener = mockedAddEventListener;
+        target.removeEventListener = mockedRemoveEventListener;
     }
 
     return function unwatchAllListeners() {
-        for (const ref of listenerRefs.keys()) {
-            removeRefListener(ref);
-        }
-
-        for (const [proto, [addEventListener, removeEventListener]] of EVENT_TARGET_PROTOTYPES) {
-            proto.addEventListener = addEventListener;
-            proto.removeEventListener = removeEventListener;
+        for (const target of targets) {
+            target.addEventListener = addEventListener;
+            target.removeEventListener = removeEventListener;
         }
     };
 }

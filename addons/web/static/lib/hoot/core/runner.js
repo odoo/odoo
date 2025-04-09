@@ -3,7 +3,7 @@
 import { Deferred, on, setFrameRate } from "@odoo/hoot-dom";
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
-import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
+import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { exposeHelpers, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
@@ -33,7 +33,13 @@ import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
 import { cleanupNetwork, throttleNetwork } from "../mock/network";
-import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
+import {
+    cleanupWindow,
+    getViewPortHeight,
+    getViewPortWidth,
+    mockTouch,
+    setupWindow,
+} from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
 import { HootFixtureElement, destroy, makeFixtureManager } from "./fixture";
@@ -1802,15 +1808,17 @@ export class Runner {
             !this.debug && on(window, "pointerdown", warnUserEvent),
             !this.debug && on(window, "keydown", warnUserEvent)
         );
-        this.beforeEach(this.fixture.setup, setupTime);
+        this.beforeEach(this.fixture.setup, setupWindow, setupTime);
         this.afterEach(
+            this.fixture.cleanup,
             cleanupAnimations,
             cleanupWindow,
             cleanupNetwork,
             cleanupNavigator,
+            cleanupEvents,
             cleanupDOM,
-            cleanupTime,
-            cleanupDate
+            cleanupDate,
+            cleanupTime
         );
 
         if (this.debug) {
