@@ -1515,7 +1515,7 @@
                     <div class="row align-items-center">
                         <div class="col d-flex align-items-center order-1 order-lg-0">
                             <ol class="o_wsale_breadcrumb breadcrumb p-0 mb-4 m-lg-0">
-                                <li class="o_not_editable breadcrumb-item d-none d-lg-inline-block">
+                                <li class="o_not_editable d-none d-lg-inline-block">
                                     <a t-att-href="keep(category=0, attribute_value=0, tags=0)">
                                         <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All Products
                                     </a>
@@ -1545,7 +1545,7 @@
                                 </li>
                             </ol>
                         </div>
-                        <div class="col-lg-4 d-flex align-items-center">
+                        <div class="col-lg-6 col-xl-5 col-xxl-4 d-flex align-items-center">
                             <div class="d-flex justify-content-between w-100">
                                 <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
                                     <t t-set="search" t-value="False"/>
@@ -1571,7 +1571,7 @@
                         </div>
                         <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
                             <t t-set="base_url" t-value="website.get_base_url()"/>
-                            <h1 t-field="product.name">Product Name</h1>
+                            <h1 class="h3" t-field="product.name">Product Name</h1>
                             <t t-if="is_view_active('website_sale.product_comment')">
                                 <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
                                     <t t-call="portal_rating.rating_widget_stars_static">
@@ -1713,7 +1713,7 @@
                             </div>
                             <div
                                 id="o_product_terms_and_share"
-                                class="d-flex justify-content-between flex-column flex-md-row align-items-md-end gap-3 mb-3"
+                                class="mb-3"
                             />
                         </div>
                     </div>
@@ -1831,7 +1831,7 @@
         priority="21"
     >
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
-            <p class="text-muted mb-0">
+            <p class="text-muted">
                 <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
                 30-day money-back guarantee<br/>
                 Shipping: 2-3 Business Days
@@ -1980,7 +1980,7 @@
             name="product_price"
             t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
         >
-            <div name="product_price_container" class="css_editable_mode_hidden h3">
+            <div name="product_price_container" class="css_editable_mode_hidden h4">
                 <span class="oe_price"
                       style="white-space: nowrap;"
                       t-out="combination_info['price']"
