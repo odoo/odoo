@@ -119,10 +119,10 @@
                     <button name="button_validate" invisible="state in ('draft', 'confirmed', 'done', 'cancel')" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
                     <button name="button_validate" invisible="state in ('waiting', 'assigned', 'done', 'cancel')" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
                     <widget name="signature" string="Sign" highlight="1"
-                            invisible="not id or picking_type_code != 'outgoing' or state != 'done'"
+                            invisible="not id or picking_type_code != 'outgoing' or state != 'done' or is_signed"
                             full_name="partner_id" groups="stock.group_stock_sign_delivery"/>
                     <widget name="signature" string="Sign"
-                            invisible="not id or picking_type_code != 'outgoing' or state == 'done'"
+                            invisible="not id or picking_type_code != 'outgoing' or state == 'done' or is_signed"
                             full_name="partner_id" groups="stock.group_stock_sign_delivery"/>
                     <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" invisible="state != 'assigned'" data-hotkey="o"/>
                     <button name="%(action_report_delivery)d" string="Print" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="o"/>
