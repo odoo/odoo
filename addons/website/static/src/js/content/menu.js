@@ -839,17 +839,16 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
                 }
             });
             if (matchingLink) {
-                const megaMenuToggleEl = megaMenuEl
-                    .closest(".nav-item")
-                    .querySelector(".o_mega_menu_toggle");
+                const navItem = megaMenuEl.closest(".nav-item");
+                const megaMenuToggleEl = navItem ? navItem.querySelector(".o_mega_menu_toggle") : null;
                 // Target the corresponding link in the mobile navigation. Since the
                 // mega-menu for mobile is dynamically rendered, it is not
                 // accessible at this moment.
                 const mobileMegaMenuToggleEl = this.el.querySelectorAll(
                     "#top_menu_collapse_mobile .top_menu .o_mega_menu_toggle"
                 )[position];
-                megaMenuToggleEl.classList.add("active");
-                mobileMegaMenuToggleEl.classList.add("active");
+                megaMenuToggleEl?.classList.add("active");
+                mobileMegaMenuToggleEl?.classList.add("active");
             }
         });
     },
