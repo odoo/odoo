@@ -727,6 +727,84 @@ class TestSaleMrpKitBom(BaseCommon):
 
         self.assertEqual(sum(sol.move_ids.mapped('product_uom_qty')), 5)
 
+    def test_sale_kit_with_mto_components_qty_change(self):
+        """
+        Check that updating the demand on a sale order line for a kit product
+        updates the associated deliveries accordingly
+        """
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        warehouse = self.env.ref('stock.warehouse0')
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.action_unarchive()
+        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
+        kit_product, comp, mto_comp, subcomp = self.env['product.product'].create([
+            {
+                'name': 'kit_product',
+                'is_storable': True,
+                'route_ids': [],
+            },
+            {
+                'name': 'component',
+                'is_storable': True,
+                'route_ids': [],
+            },
+            {
+                'name': 'mto_component',
+                'is_storable': True,
+                'route_ids': [Command.set([mto_route.id, manufacturing_route_id])],
+            },
+            {
+                'name': 'subcomponent',
+                'is_storable': True,
+                'route_ids': [],
+            },
+        ])
+        self.env['stock.quant']._update_available_quantity(comp, warehouse.lot_stock_id, 30.0)
+        self.env['mrp.bom'].create([
+            {  # 2 kit_prod -> 5 comp and 3 mto_comp
+                'product_tmpl_id': kit_product.product_tmpl_id.id,
+                'product_qty': 2.0,
+                'type': 'phantom',
+                'bom_line_ids': [
+                    Command.create({'product_id': comp.id, 'product_qty': 5}),
+                    Command.create({'product_id': mto_comp.id, 'product_qty': 3}),
+                ],
+            },
+            {  # bom to manufacture mto_comp
+                'product_tmpl_id': mto_comp.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'bom_line_ids': [
+                    Command.create({'product_id': subcomp.id, 'product_qty': 1}),
+                ],
+            }
+        ])
+
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 4,
+            })],
+        })
+        # confirm the SO and check the delivery
+        so.action_confirm()
+        self.assertRecordValues(so.picking_ids.move_ids.sorted('product_uom_qty'), [
+            {'product_id': mto_comp.id, 'product_uom_qty': 6.0},
+            {'product_id': comp.id, 'product_uom_qty': 10.0},
+        ])
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line_form:
+                line_form.product_uom_qty = 10
+        # the moves assocaited to the mto component are expected to be separated as
+        # the are linked to a different MO
+        self.assertRecordValues(so.picking_ids.move_ids.sorted('product_uom_qty'), [
+            {'product_id': mto_comp.id, 'product_uom_qty': 6.0},
+            {'product_id': mto_comp.id, 'product_uom_qty': 9.0},
+            {'product_id': comp.id, 'product_uom_qty': 25.0},
+        ])
+
     def test_inter_company_qty_delivered_with_kit(self):
         """
         Test that the delivered quantity is updated on a sale order line when selling a kit
