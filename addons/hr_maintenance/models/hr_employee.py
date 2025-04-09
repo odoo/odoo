@@ -11,7 +11,7 @@ class HrEmployee(models.Model):
 
     def _register_departure(self):
         super()._register_departure()
-        if self.departure_do_unassign_equipment:
+        if not self.departure_do_unassign_equipment:
             return
         equipments = self.equipment_ids
         if equipments:

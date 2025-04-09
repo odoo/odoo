@@ -15,6 +15,7 @@ from odoo.exceptions import ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
 from odoo.tools import convert, format_date
 
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 class HrEmployee(models.Model):
     """
@@ -834,15 +835,17 @@ class HrEmployee(models.Model):
         self.ensure_one()
         if self.departure_do_archive and self.active:
             self.action_archive()
-        self.message_post(body=self.env._(
-            """
-            This employee has been archived.\n
-            Reason: %(reason)s\n
-            Additional Information:\n %(description)s
-            """,
-            reason=self.departure_reason_id,
-            description=self.departure_description,
-        ))
+        body = self.env._(
+            "This employee has been archived.\nReason: %(reason)s",
+            reason=self.departure_reason_id.name,
+        )
+        if self.departure_description:
+            body += "\n" + self.env._(
+                "Additional Information:\n %(description)s",
+                description=self.departure_description,
+            )
+        html_body = nl2br(body)
+        self.message_post(body=html_body)
         self.departure_applied = True
 
     def _cron_apply_departure(self):

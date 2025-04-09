@@ -11,8 +11,3 @@ class HrEmployeeDepartureWizard(models.TransientModel):
         string="Set Contract End Date",
         default=lambda self: self.env.user.has_group('hr_contract.group_hr_contract_manager'),
         help="Limit contracts date to End of Contract and cancel future ones.")
-
-    def _get_departure_values(self):
-        res = super()._get_departure_values()
-        res['departure_do_set_date_end'] = self.do_set_date_end
-        return res

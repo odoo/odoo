@@ -6,7 +6,7 @@ from odoo import fields, models
 class HrEmployeeDepartureWizard(models.TransientModel):
     _inherit = 'hr.employee.departure.wizard'
 
-    do_unassign_equipment = fields.Boolean("Free Equiments", default=True, help="Unassign Employee from Equipments")
+    do_unassign_equipment = fields.Boolean("Free Equiments", default=False, help="Unassign Employee from Equipments")
 
     def _get_departure_values(self):
         res = super()._get_departure_values()
