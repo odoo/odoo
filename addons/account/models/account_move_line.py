@@ -2102,17 +2102,20 @@ class AccountMoveLine(models.Model):
             # Prevent exchange differences if amounts are close enough to be a rounding issue
             # after applying the exchange rate and then, rounding amounts to store them into
             # the monetary fields.
-            if (
-                company_currency.compare_amounts(partial_debit_amount, partial_amount)
-                and company_currency.compare_amounts(partial_debit_amount, partial_credit_amount_range[0]) >= 0
-                and company_currency.compare_amounts(partial_debit_amount, partial_credit_amount_range[2]) <= 0
-            ):
+            max_remaining_amount = min(remaining_debit_amount, -remaining_credit_amount)
+            partial_amount_candidates = [
+                amount for amount in [partial_debit_amount, partial_credit_amount, max_remaining_amount]
+                if (
+                        company_currency.compare_amounts(amount, max_remaining_amount) <= 0
+                    and company_currency.compare_amounts(amount, partial_debit_amount_range[0]) >= 0
+                    and company_currency.compare_amounts(amount, partial_debit_amount_range[2]) <= 0
+                    and company_currency.compare_amounts(amount, partial_credit_amount_range[0]) >= 0
+                    and company_currency.compare_amounts(amount, partial_credit_amount_range[2]) <= 0
+                )
+            ]
+            if partial_amount_candidates:
+                partial_amount = max(partial_amount_candidates)
                 partial_debit_amount = partial_amount
-            if (
-                company_currency.compare_amounts(partial_credit_amount, partial_amount)
-                and company_currency.compare_amounts(partial_credit_amount, partial_debit_amount_range[0]) >= 0
-                and company_currency.compare_amounts(partial_credit_amount, partial_debit_amount_range[2]) <= 0
-            ):
                 partial_credit_amount = partial_amount
 
             # Compute the partial amount expressed in foreign currency.
