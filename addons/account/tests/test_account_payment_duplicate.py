@@ -166,3 +166,26 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
         self.assertRecordValues(payment_2, [{'duplicate_payment_ids': []}])  # different amount, not a duplicate
         # Combined payments does not show payment_1 as duplicate because payment_1 is reconciled
         self.assertRecordValues(combined_payments, [{'duplicate_payment_ids': [existing_payment.id]}])
+
+    def test_journal_update_after_partner_change(self):
+        """Journal should update based on partner's default method only if not already set"""
+
+        bank_journal_B = self.bank_journal.copy()
+        bank_journal_B.sequence = 1
+        bank_journal_B.inbound_payment_method_line_ids.payment_account_id = self.env['account.account'].create({
+            'name': 'Outstanding Payment Account B',
+            'code': 'OPAB',
+            'account_type': 'asset_current',
+            'reconcile': True,
+        })
+        payment = self.env['account.payment'].new({
+            'payment_type': 'outbound',
+            'journal_id': self.bank_journal.id,  # Manually selected before setting partner
+            'company_id': self.company.id,
+        })
+
+        # Now update the partner (who has a default method line with journal_manual)
+        payment.partner_id = self.partner
+
+        # Since journal was manually set earlier, it should NOT be overridden
+        self.assertEqual(payment.journal_id.id, self.bank_journal.id, "Journal should not change after setting partner if it was already set")
