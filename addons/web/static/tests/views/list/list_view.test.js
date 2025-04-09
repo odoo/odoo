@@ -6576,7 +6576,11 @@ test(`empty list with sample data: group by date`, async () => {
     expect(`.o_list_view .o_view_sample_data`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount();
 
-    await contains(`.o_group_has_content.o_group_header`).click();
+    const firstGroup = queryFirst(".o_group_has_content.o_group_header");
+    firstGroup.classList.add("pe-auto"); // Needed to receive click
+    await click(firstGroup);
+    await animationFrame();
+
     expect(`.o_data_row`).toHaveCount(4);
 });
 

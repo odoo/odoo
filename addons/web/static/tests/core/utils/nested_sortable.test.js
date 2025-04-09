@@ -384,25 +384,19 @@ test("Sorting with nesting - move right", async () => {
     expect(".item").toHaveCount(6);
     expect.verifySteps([]);
 
-    const movedEl = queryFirst(".sortable_list > .item:nth-child(2)");
-    const { drop, moveTo } = await sortableDrag(movedEl);
-    await moveTo(movedEl, {
-        position: {
-            x: queryRect(movedEl).width / 2 + 15,
-        },
+    const { width } = queryRect(".sortable_list > .item:eq(1)");
+    const { drop, moveTo } = await sortableDrag(".sortable_list > .item:eq(1)");
+    await moveTo({
+        position: { x: width / 2 + 15 },
         relative: true,
     });
-    await moveTo(movedEl, {
-        position: {
-            x: queryRect(movedEl).width / 2 + 30,
-        },
+    await moveTo({
+        position: { x: width / 2 + 30 },
         relative: true,
     });
     // No move if row is already child
-    await moveTo(movedEl, {
-        position: {
-            x: queryRect(movedEl).width / 2 + 45,
-        },
+    await moveTo({
+        position: { x: width / 2 + 45 },
         relative: true,
     });
     await drop();
@@ -478,24 +472,18 @@ test("Sorting with nesting - move left", async () => {
     expect(".item").toHaveCount(4);
     expect.verifySteps([]);
 
-    const movedEl = queryOne(".item#dragged");
-    const { drop, moveTo } = await sortableDrag(movedEl);
+    const { width } = queryRect(".item#dragged");
+    const { drop, moveTo } = await sortableDrag(".item#dragged");
     // No move if distance traveled is smaller than the nest interval
-    await moveTo(movedEl, {
-        position: {
-            x: queryRect(movedEl).width / 2 - 10,
-        },
+    await moveTo({
+        position: { x: width / 2 - 10 },
     });
-    await moveTo(movedEl, {
-        position: {
-            x: queryRect(movedEl).width / 2 - 20,
-        },
+    await moveTo({
+        position: { x: width / 2 - 20 },
     });
     // No move if there is one element before and one after
-    await moveTo(movedEl, {
-        position: {
-            x: queryRect(movedEl).width / 2 - 40,
-        },
+    await moveTo({
+        position: { x: width / 2 - 40 },
     });
     await drop();
 

@@ -651,7 +651,7 @@ test("checks that an arrowDown always selects an item", async () => {
     await editSearch("rec");
     await contains(".o_expand").click();
     await click(".o_expand"); // don't wait for a frame
-    await hover(`.o_searchview_autocomplete li.o_menu_item.o_indent:last-child`);
+    await hover(".o_searchview_autocomplete li.o_menu_item.o_indent:last");
     await animationFrame();
     await keyDown("ArrowDown");
     await animationFrame();
@@ -672,7 +672,7 @@ test("checks that an arrowUp always selects an item", async () => {
     await editSearch("rec");
     await contains(".o_expand").click();
     await click(".o_expand"); // don't wait for a frame
-    await hover(`.o_searchview_autocomplete li.o_menu_item.o_indent:last-child`);
+    await hover(`.o_searchview_autocomplete li.o_menu_item.o_indent:last`);
     await animationFrame();
     await keyDown("ArrowUp");
     await animationFrame();
