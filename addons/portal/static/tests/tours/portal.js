@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
         },
         {
             content: "Discard the form",
-            trigger: 'a[role=button]',
+            trigger: 'a[role=button][href*="/my"], a[role=button][href*="/my/home"]',
             run: "click",
         },
     ]

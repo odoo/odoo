@@ -3,7 +3,6 @@
 import logging
 
 import psycopg2
-from werkzeug.urls import url_encode, url_parse
 
 from odoo import http
 from odoo.http import request
@@ -64,6 +63,7 @@ class PaymentPostProcessing(http.Controller):
                     monitored_tx.id, e
                 )
                 raise
+
         return {
             'provider_code': monitored_tx.provider_code,
             'state': monitored_tx.state,
