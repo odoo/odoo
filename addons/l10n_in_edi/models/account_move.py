@@ -150,7 +150,7 @@ class AccountMove(models.Model):
                 'special_economic_zone',
                 'deemed_export',
             )
-            and any(tag.id in self._get_l10n_in_gst_tags() for tag in self.line_ids.tax_tag_ids)
+            and any(tag in self._get_l10n_in_gst_tags() for tag in self.line_ids.tax_tag_ids.ids)
         )
 
     def _get_l10n_in_edi_response_json(self):
