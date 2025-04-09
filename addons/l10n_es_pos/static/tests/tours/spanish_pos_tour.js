@@ -65,13 +65,13 @@ registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
             PartnerList.clickPartnerOptions("Partner Test 1"),
             {
                 isActive: ["auto"],
-                trigger: "div.o_popover :contains('Settle Due Accounts')",
+                trigger: "div.o_popover :contains('Settle invoices')",
                 content: "Check the popover opened",
                 run: "click",
             },
             {
-                trigger: "tr.o_data_row td[name='name']:contains('Shop/0001')",
-                content: "Check the settle due account line is present",
+                trigger: "tr.o_data_row td[name='name']:contains('TSJ/2025/00001')",
+                content: "Check the settle invoice line is present",
                 run: "click",
             },
             ProductScreen.clickPayButton(),
@@ -79,5 +79,8 @@ registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
             PaymentScreen.clickValidate(),
             Chrome.confirmPopup(),
             ReceiptScreen.isShown(),
+            ReceiptScreen.paymentLineContains("Bank", "10.00"),
+            ReceiptScreen.paymentLineContains("Customer Account", "-10.00"),
+            Chrome.endTour(),
         ].flat(),
 });
