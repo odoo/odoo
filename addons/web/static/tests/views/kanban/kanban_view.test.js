@@ -20,6 +20,7 @@ import {
     resize,
     scroll,
     setInputFiles,
+    waitFor,
 } from "@odoo/hoot-dom";
 import {
     Deferred,
@@ -14395,4 +14396,85 @@ test(`cache web_read_group: less groups than in cache`, async () => {
     await animationFrame();
     expect(`.o_kanban_view .o_kanban_group`).toHaveCount(1);
     expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual(["xmo\n(4)"]);
+});
+
+test("Deletion raises a UserError, archive action available", async () => {
+    Partner._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        } else if (method === "action_archive") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            return true;
+        }
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a>
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    await click(queryFirst(".o_kanban_record .o_delete", { root: getKanbanColumn(0) }));
+    await animationFrame();
+
+    await contains(".modal-footer .btn-primary").click();
+
+    expect("h4.modal-title").toHaveText("Archive records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-primary").toHaveText("Archive");
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    await contains(".modal-footer .btn-primary").click()
+    expect(".modal").toHaveCount(0);
+    expect.verifySteps(["unlink", "action_archive"]);
+});
+
+test("Deletion raises a UserError, archive action not available", async () => {
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        }
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a>
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    await click(queryFirst(".o_kanban_record .o_delete", { root: getKanbanColumn(0) }));
+    await animationFrame();
+
+    await contains(".modal-footer .btn-primary").click();
+
+    expect.errors(1);
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+    expect.verifyErrors([message]);
+    expect.verifySteps(["unlink"]);
 });

@@ -1,7 +1,4 @@
-import {
-    deleteConfirmationMessage,
-    ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
+import { deleteConfirmationMessage } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
@@ -21,6 +18,7 @@ import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { browser } from "@web/core/browser/browser";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+import { useDeleteRecords } from "@web/views/view_hook";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -105,6 +103,12 @@ export class CalendarController extends Component {
                 await this.model.unlinkRecords(ids);
             },
         };
+        this.archiveEnabled = "active" in this.props.fields
+            ? !this.props.fields.active.readonly
+            : "x_active" in this.props.fields
+            ? !this.props.fields.x_active.readonly
+            : false;
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.displayDialog);
     }
 
     get modelParams() {
@@ -330,9 +334,6 @@ export class CalendarController extends Component {
         return {
             title: _t("Bye-bye, record!"),
             body: deleteConfirmationMessage,
-            confirm: () => {
-                this.model.unlinkRecord(record.id);
-            },
             confirmLabel: _t("Delete"),
             cancel: () => {
                 // `ConfirmationDialog` needs this prop to display the cancel
@@ -343,7 +344,19 @@ export class CalendarController extends Component {
     }
 
     deleteRecord(record) {
-        this.displayDialog(ConfirmationDialog, this.deleteConfirmationDialogProps(record));
+        const deleteFn = async() => {
+            await this.model.unlinkRecord(record.id);
+        };
+        const archive = this.archiveEnabled ? async() => {
+            await this.orm.call(
+                this.model.resModel,
+                "action_archive",
+                [[record.id]]
+            );
+            await this.model.load();
+        } : null;
+
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps(record), deleteFn, archive);
     }
 
     async setDate(move) {

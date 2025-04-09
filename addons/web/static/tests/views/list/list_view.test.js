@@ -18835,3 +18835,78 @@ test(`cache web_read_group (with sample data, change)`, async () => {
     expect(`.o_group_header`).toHaveCount(2);
     expect(queryAllTexts(`.o_group_header`)).toEqual(["-4 (1)", "44 (1)"]);
 });
+
+test("Deletion raises a UserError, archive action available", async () => {
+    Foo._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        } else if (method === "action_archive") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            return true;
+        }
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+            </list>
+        `,
+        actionMenus: {},
+    });
+    await clickRecordSelector();
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    expect("h4.modal-title").toHaveText("Bye-bye, record!");
+    await contains(".modal-footer .btn-primary").click();
+
+    expect("h4.modal-title").toHaveText("Archive records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-primary").toHaveText("Archive");
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    await contains(".modal-footer .btn-primary").click();
+    expect(".modal").toHaveCount(0);
+    expect.verifySteps(["unlink", "action_archive"]);
+});
+
+test("Deletion raises a UserError, archive action not available", async () => {
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        }
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+            </list>
+        `,
+        actionMenus: {},
+    });
+    await clickRecordSelector();
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    expect("h4.modal-title").toHaveText("Bye-bye, record!");
+    await contains(".modal-footer .btn-primary").click();
+
+    expect.errors(1);
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+    expect.verifyErrors([message]);
+    expect.verifySteps(["unlink"]);
+});
