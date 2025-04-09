@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { xml } from "@odoo/owl";
+import { animationFrame, Deferred } from "@odoo/hoot-dom";
+import { useState, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
 import {
     addBuilderAction,
@@ -79,5 +81,45 @@ describe("HTML builder tests", () => {
         await contains("[data-action-id='testAction']").click();
         expect("[data-action-id='testAction']").not.toHaveClass("active");
         expect.verifySteps(["apply"]); // clean
+    });
+
+    test("Prepare is triggered on props updated", async () => {
+        const newPropDeferred = new Deferred();
+        let prepareDeferred = new Promise((r) => r());
+        class TestOption extends BaseOptionComponent {
+            static template = xml`<BuilderCheckbox action="'customAction'" actionParam="state.param"/>`;
+            static props = {};
+            setup() {
+                super.setup();
+                this.state = useState({ param: "old param" });
+                newPropDeferred.then(() => {
+                    this.state.param = "new param";
+                });
+            }
+        }
+        addBuilderAction({
+            customAction: {
+                prepare: async () => {
+                    await prepareDeferred;
+                    expect.step("prepare");
+                },
+                apply: () => {},
+            },
+        });
+        addBuilderOption({
+            OptionComponent: TestOption,
+            selector: ".test-options-target",
+        });
+        await setupHTMLBuilder(`<section class="test-options-target">Homepage</section>`);
+        await contains(":iframe .test-options-target").click();
+        expect.verifySteps(["prepare"]);
+        prepareDeferred = new Deferred();
+        // Update prop
+        newPropDeferred.resolve();
+        await animationFrame();
+        expect.verifySteps([]);
+        prepareDeferred.resolve();
+        await animationFrame();
+        expect.verifySteps(["prepare"]);
     });
 });

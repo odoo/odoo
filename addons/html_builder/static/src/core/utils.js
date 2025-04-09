@@ -34,8 +34,6 @@ export function useDomState(getState, { checkEditingElement = true, onReady } = 
     }
 
     useBus(env.editorBus, "DOM_UPDATED", handler);
-    // Promise.resolve().then(() => env.editorBus.addEventListener("DOM_UPDATED", handler));
-    // onWillDestroy(() => env.editorBus.removeEventListener("DOM_UPDATED", handler));
     return state;
 }
 
@@ -365,6 +363,19 @@ function usePrepareAction(getAllActions) {
         });
         onWillStart(async function () {
             await Promise.all(asyncActions.map((obj) => obj.action.prepare(obj.descr)));
+            resolve();
+        });
+        onWillUpdateProps(async ({ actionParam, actionValue }) => {
+            // TODO: should we support updating actionId?
+            await Promise.all(
+                asyncActions.map((obj) =>
+                    obj.action.prepare({
+                        ...obj.descr,
+                        actionParam: convertParamToObject(actionParam),
+                        actionValue,
+                    })
+                )
+            );
             resolve();
         });
     }
@@ -728,20 +739,6 @@ export function getAllActionsAndOperations(comp) {
         }
         return specs;
     }
-    function convertParamToObject(param) {
-        if (param === undefined) {
-            param = {};
-        } else if (
-            param instanceof Array ||
-            param instanceof Function ||
-            !(param instanceof Object)
-        ) {
-            param = {
-                ["mainParam"]: param,
-            };
-        }
-        return param;
-    }
     function getShorthandActions() {
         const actions = [];
         const shorthands = [
@@ -862,7 +859,16 @@ function _shouldClean(comp, hasClean, isApplied) {
     const shouldClean = shouldToggle && isApplied;
     return comp.props.inverseAction ? !shouldClean : shouldClean;
 }
-
+function convertParamToObject(param) {
+    if (param === undefined) {
+        param = {};
+    } else if (param instanceof Array || param instanceof Function || !(param instanceof Object)) {
+        param = {
+            ["mainParam"]: param,
+        };
+    }
+    return param;
+}
 export class BaseOptionComponent extends Component {
     static components = {};
 

@@ -191,14 +191,14 @@ export function addBuilderOption({
     exclude,
     applyTo,
     template,
-    Component,
+    OptionComponent,
     sequence,
     cleanForSave,
     props,
 }) {
     const pluginId = uniqueId("test-option");
     const option = {
-        OptionComponent: Component,
+        OptionComponent: OptionComponent,
         template,
         selector,
         exclude,
