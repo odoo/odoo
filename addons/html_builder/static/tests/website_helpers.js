@@ -111,12 +111,9 @@ export async function setupWebsiteBuilder(
     });
 
     patchWithCleanup(WebsiteBuilder.prototype, {
-        setup() {
-            super.setup();
-            this.publicRootReady.resolve();
-        },
         setIframeLoaded() {
             super.setIframeLoaded();
+            this.publicRootReady.resolve();
             originalIframeLoaded = this.iframeLoaded;
             this.iframeLoaded = iframeLoaded;
         },
