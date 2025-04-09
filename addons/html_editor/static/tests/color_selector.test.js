@@ -1,23 +1,24 @@
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
-    waitFor,
-    queryOne,
+    edit,
+    getActiveElement,
     hover,
     press,
-    waitUntil,
-    edit,
     queryAll,
     queryFirst,
-    getActiveElement,
+    queryOne,
+    setInputRange,
+    waitFor,
+    waitUntil,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { contains } from "@web/../tests/web_test_helpers";
-import { execCommand } from "./_helpers/userCommands";
 import { expandToolbar } from "./_helpers/toolbar";
-import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { execCommand } from "./_helpers/userCommands";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -507,9 +508,9 @@ test("gradient picker does change the selector gradient color", async () => {
     await click("button[title='Define a custom gradient']");
     await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
-    await contains("input[name='angle'").edit("10");
-    await contains("input[name='custom gradient percentage color 1']").edit(30);
-    await contains("input[name='custom gradient percentage color 2']").edit(50);
+    await contains("input[name='angle']").edit("10");
+    await setInputRange("input[name='custom gradient percentage color 1']", 30);
+    await setInputRange("input[name='custom gradient percentage color 2']", 50);
     expect("font.text-gradient").toHaveStyle({
         backgroundImage: "linear-gradient(10deg, rgb(255, 204, 51) 30%, rgb(226, 51, 255) 50%)",
     });
