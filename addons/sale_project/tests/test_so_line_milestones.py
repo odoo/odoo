@@ -186,6 +186,43 @@ class TestSoLineMilestones(TestSaleCommon):
                       "and no ValidationError or NotNullViolation should be raised, "
                       "for a missing project on the milestone.")
 
+    def test_so_with_create_nothing_milestone_products(self):
+        """
+        If a SO contains products that has create on order nothing and invoiced based on milestones,
+        and a project is linked to the SO, then a milestone should be created for each such line
+        after any existing milestones without any associated line are linked.
+        """
+        self.product_delivery_milestones1.service_tracking = 'no'
+        project = self.env['project.project'].create({
+            'name': 'Test project',
+        })
+        self.env['project.milestone'].create({
+            'name': 'Test milestone',
+            'project_id': project.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'project_id': project.id,
+        })
+        sol1, sol2 = self.env['sale.order.line'].create([
+            {
+                'product_id': self.product_delivery_milestones1.id,
+                'product_uom_qty': 10,
+                'order_id': sale_order.id,
+            },
+            {
+                'product_id': self.product_delivery_milestones1.id,
+                'product_uom_qty': 20,
+                'order_id': sale_order.id,
+            },
+        ])
+        sale_order.action_confirm()
+
+        self.assertEqual(sale_order.milestone_count, 2, "The sale order should have two milestones, one linked to each order line.")
+        self.assertEqual(len(project.milestone_ids), 2, "The project set on sale order should have a new milestone.")
+        self.assertEqual(project.milestone_ids[0].sale_line_id, sol1, "The existing milestone should be linked to a sale order line.")
+        self.assertEqual(project.milestone_ids[1].sale_line_id, sol2, "The created milestone should be linked to another sale order line.")
+
     def test_so_with_milestone_products(self):
         """
         If a SO contains products invoiced based on milestones, a milestone should be created for each of them
