@@ -507,7 +507,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
         self.start_tour('/', 'focus_blur_snippets', login='admin')
 
-    @unittest.skip
     def test_14_carousel_snippet_content_removal(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'carousel_content_removal', login='admin')
 

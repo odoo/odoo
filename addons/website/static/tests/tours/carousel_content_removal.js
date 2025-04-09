@@ -25,7 +25,7 @@ registerWebsitePreviewTour("carousel_content_removal", {
     content: "Select the active carousel item.",
     run: "click",
 }, {
-    trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+    trigger: ".overlay .oe_snippet_remove",
     content: "Remove the active carousel item.",
     run: "click",
 }, {
@@ -42,7 +42,7 @@ registerWebsitePreviewTour("carousel_content_removal", {
     content: "Select the blockquote.",
     run: "click",
 }, {
-    trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+    trigger: ".overlay .oe_snippet_remove",
     content: "Remove the blockquote from the carousel item.",
     run: "click",
 }, {
