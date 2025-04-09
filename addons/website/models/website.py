@@ -667,6 +667,11 @@ class Website(models.Model):
 
         self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
 
+        # Extension hook: allows installed modules (e.g. website_sale, website_blog, ...) to perform
+        # additional setup steps on the generated website. This acts as an entry point for modules to
+        # customize the website.
+        self.env['website'].configurator_addons_apply(**kwargs)
+
         # We need to refresh the environment of the website because we installed
         # some new module and we need the overrides of these new menus e.g. for
         # the call to `get_cta_data`.
@@ -1067,6 +1072,12 @@ class Website(models.Model):
             pass
 
         return {'url': redirect_url, 'website_id': website.id}
+
+    # Extension hook: allows installed modules (e.g. website_sale, website_blog, ...) to perform
+    # additional setup steps on the generated website. This acts as an entry point for modules to
+    # customize the website.
+    def configurator_addons_apply(self, industry_name=None, **kwargs):
+        pass
 
     # ----------------------------------------------------------
     # Page Management
