@@ -18,7 +18,7 @@ from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface_L import PPDs, conn, cups_lock
 from odoo.addons.hw_drivers.main import iot_devices
-from odoo.addons.hw_drivers.tools import helpers, wifi
+from odoo.addons.hw_drivers.tools import helpers, wifi, route
 from odoo.addons.hw_drivers.websocket_client import send_to_controller
 
 _logger = logging.getLogger(__name__)
@@ -471,7 +471,7 @@ class PrinterDriver(Driver):
 
 class PrinterController(http.Controller):
 
-    @http.route('/hw_proxy/default_printer_action', type='jsonrpc', auth='none', cors='*')
+    @route.iot_route('/hw_proxy/default_printer_action', type='jsonrpc', cors='*')
     def default_printer_action(self, data):
         printer = next((d for d in iot_devices if iot_devices[d].device_type == 'printer' and iot_devices[d].device_connection == 'direct'), None)
         if printer:

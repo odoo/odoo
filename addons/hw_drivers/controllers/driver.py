@@ -16,15 +16,13 @@ from odoo import http, tools
 
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices, manager
-from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.tools import route
+from odoo.addons.hw_drivers.tools import helpers, route
 
 _logger = logging.getLogger(__name__)
 
 
 class DriverController(http.Controller):
-    @route.protect
-    @http.route('/hw_drivers/action', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
+    @route.iot_route('/hw_drivers/action', type='jsonrpc', cors='*', csrf=False, sign=True)
     def action(self, session_id, device_identifier, data):
         """
         This route is called when we want to make a action with device (take picture, printing,...)
@@ -49,7 +47,7 @@ class DriverController(http.Controller):
             return True
         return False
 
-    @http.route('/hw_drivers/check_certificate', type='http', auth='none', cors='*', csrf=False, save_session=False)
+    @route.iot_route('/hw_drivers/check_certificate', type='http', cors='*', csrf=False)
     def check_certificate(self):
         """
         This route is called when we want to check if certificate is up-to-date
@@ -57,8 +55,7 @@ class DriverController(http.Controller):
         """
         helpers.get_certificate_status()
 
-    @route.protect
-    @http.route('/hw_drivers/event', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
+    @route.iot_route('/hw_drivers/event', type='jsonrpc', cors='*', csrf=False, sign=True)
     def event(self, listener):
         """
         listener is a dict in witch there are a sessions_id and a dict of device_identifier to listen
@@ -81,7 +78,7 @@ class DriverController(http.Controller):
             req['result']['session_id'] = req['session_id']
             return req['result']
 
-    @http.route('/hw_drivers/download_logs', type='http', auth='none', cors='*', csrf=False, save_session=False)
+    @route.iot_route('/hw_drivers/download_logs', type='http', cors='*', csrf=False)
     def download_logs(self):
         """
         Downloads the log file
