@@ -184,7 +184,8 @@ class ProductProduct(models.Model):
         if website.is_view_active('website_sale.product_comment') and self.rating_count:
             markup_data['aggregateRating'] = {
                 '@type': 'AggregateRating',
-                'ratingValue': self.rating_avg,
+                # sudo: product.product - visitor can access product average rating
+                'ratingValue': self.sudo().rating_avg,
                 'reviewCount': self.rating_count,
             }
         return markup_data
