@@ -2000,6 +2000,64 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             },
         ])
 
+    def test_reconcile_foreign_currency_rounding_issue_company_currency_left(self):
+        comp_curr = self.company_data['currency']
+        foreign_currency = self.env['res.currency'].create({
+            'name': "Bread",
+            'symbol': '🍞',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2019-06-01', 'rate': 0.052972554919}),
+            ],
+        })
+
+        reco_account = self.company_data['default_account_revenue'].copy()
+        reco_account.reconcile = True
+        self.assertFalse(reco_account.account_type in ('asset_receivable', 'liability_payable'))
+
+        line_1 = self.create_line_for_reconciliation(
+            balance=372239.36,
+            amount_currency=19718.47,
+            currency=foreign_currency,
+            move_date='2019-06-01',
+            account_1=reco_account,
+        )
+        line_2 = self.create_line_for_reconciliation(
+            balance=-372239.38,
+            amount_currency=-372239.38,
+            currency=comp_curr,
+            move_date='2019-06-01',
+            account_1=reco_account,
+        )
+        amls = line_1 + line_2
+        amls.reconcile()
+
+        full_reconcile = amls.full_reconcile_id
+        self.assertTrue(full_reconcile)
+        self.assertFalse(full_reconcile.exchange_move_id)
+        self.assertTrue(all(line.full_reconcile_id == full_reconcile for line in amls))
+        self.assertRecordValues(
+            amls,
+            [{'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'reconciled': True}] * len(amls),
+        )
+        partials = self._get_partials(amls)
+        self.assertRecordValues(partials.sorted('amount'), [
+            {
+                'amount': 0.02,
+                'debit_amount_currency': 0.02,
+                'credit_amount_currency': 0.02,
+                'debit_move_id': partials.exchange_move_id.line_ids[0].id,
+                'credit_move_id': line_2.id,
+            },
+            {
+                'amount': 372239.36,
+                'debit_amount_currency': 19718.47,
+                'credit_amount_currency': 372239.36,
+                'debit_move_id': line_1.id,
+                'credit_move_id': line_2.id,
+            },
+        ])
+
     def test_reconcile_partial_exchange_rounding_issue(self):
         comp_curr = self.company_data['currency']
         foreign_currency = self.env['res.currency'].create({
