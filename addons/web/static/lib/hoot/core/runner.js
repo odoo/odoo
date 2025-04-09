@@ -267,6 +267,14 @@ const warnUserEvent = (ev) => {
 };
 
 class HootDebugHelpers {
+    get $() {
+        return hootDom.queryFirst;
+    }
+
+    get $$() {
+        return hootDom.queryAll;
+    }
+
     /**
      * @param {Runner} runner
      */
