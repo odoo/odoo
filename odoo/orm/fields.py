@@ -1249,8 +1249,8 @@ class Field(typing.Generic[T]):
                 return v
 
         # support for SQL value
-        # TODO deprecate this usage
         if operator in SQL_OPERATORS and isinstance(value, SQL):
+            warnings.warn("Since 19.0, use Domain(lambda model, alias, query: SQL(...))", DeprecationWarning)
             return SQL("%s%s%s", sql_field, SQL_OPERATORS[operator], value)
 
         # nullability
