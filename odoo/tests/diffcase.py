@@ -1,4 +1,3 @@
-import inspect
 import logging
 import os
 import re
@@ -8,14 +7,13 @@ from collections import defaultdict
 from lxml import etree
 from typing import Generator, Literal
 
-try:
-    from unidiff import PatchSet
-except ImportError:
-    PatchSet = None
+from unidiff import PatchSet, PatchedFile
 
 import odoo.addons
 
-from odoo.tools import OrderedSet, config
+from .common import BaseCase
+from odoo.tests import tagged
+from odoo.tools import OrderedSet, config, lazy_property
 from odoo.tools.which import which
 
 _logger = logging.getLogger(__name__)
@@ -28,7 +26,9 @@ class FileInfo:
         for addons_path in odoo.addons.__path__
     ]
 
-    def __init__(self, abs_path):
+    def __init__(self, repo_path: str, patched_file: PatchedFile):
+        abs_path = os.path.join(repo_path, patched_file.path)
+
         self.abs_path = abs_path  # /Users/username/project/odoo/odoo/addons/base/models/res_partner.py
         """ absolute path of the file """
 
@@ -41,11 +41,21 @@ class FileInfo:
         self.module_path: str = self.odoo_path[len(self.module_name) + len(os.sep):]  # models/res_partner.py
         """ relative path of the file to the odoo module's path """
 
-        self.diff_linenos: set[int] = set()
+        self.patched_file: PatchedFile = patched_file
+        """ the patched file object from unidiff """
+
+    @lazy_property
+    def diff_linenos(self) -> set[int]:
         """ line numbers of new lines in the git diff of the file """
         # TBD:
         # use list[tuple[int, int]] instead of set[int] which only stores sorted [(start_lineno, end_lineno), ...]
         # and use bisect to check if the given line numbers are in the diff O(log(n))
+        diff_linenos = set()
+        for hunk in self.patched_file:
+            for line in hunk:
+                if line.is_added and line.target_line_no:
+                    diff_linenos.add(line.target_line_no)
+        return diff_linenos
 
     @classmethod
     def parse_odoo_path(cls, abs_path: str) -> str:
@@ -61,6 +71,7 @@ class FileInfo:
         if not end_lineno:
             end_lineno = start_lineno
         return any(line_no in self.diff_linenos for line_no in range(start_lineno, end_lineno + 1))
+
 
 class Element:
     __slots__ = ('start_lineno', 'end_lineno', '_element')
@@ -149,17 +160,16 @@ def generate_diff(output_dir: str):
                 _logger.warning(f"Cannot generate diff for {repo}: {e}")
 
 
-class DiffCase:
-    diff_linenos: dict[Literal['python', 'xml'], dict[str, FileInfo]] = defaultdict(dict)
-    """ {file_category: {abs_path: file_info}} """
+class DiffCase(BaseCase):
+    test_tags = {'no_install', 'standard'}
+
+    diff_linenos: dict[Literal['python', 'xml'], dict[str, FileInfo]] | None = None
+    """ {file_category: {abs_path: file_info}} """    
+
+    diff_dir: str | None = None
+    """ Path to a directory containing .txt diff files """
 
     report: list[dict] = []
-
-    __test_classes: list[type] = []
-
-    def __init_subclass__(cls, **kwargs):
-        super().__init_subclass__(**kwargs)
-        DiffCase.__test_classes.append(cls)
 
     @classmethod
     def get_xml_diff_elements(cls, abs_path: str, diff_linenos: set[int] | None = None) -> Generator[Element, None, None]:
@@ -196,25 +206,8 @@ class DiffCase:
                     if element.tail:
                         previous_line += element.tail.count('\n')
 
-    def run(self):
-        # run methods starts with test_
-        for name, method in inspect.getmembers(self, predicate=inspect.ismethod):
-            if name.startswith('test_'):
-                method()
-
     @classmethod
-    def run_all_tests(cls):
-        if cls.__name__ != 'DiffCase':
-            raise NotImplementedError(f"DiffCase.run_all_tests is not implemented for {cls.__name__}")
-        for test_class in cls.__test_classes:
-            test_class().run()
-
-    def assertFalse(self, condition: bool, msg: str | None = None):
-        if condition:
-            print(msg)
-
-    @classmethod
-    def init_diff(cls, diff_dir: str) -> None:
+    def setUpClass(cls):
         """Parse a custom diff file and initialize the diff_linenos dictionary
         
         :param diff_path: Path to a directory containing .txt diff files
@@ -223,15 +216,20 @@ class DiffCase:
         - First line: Repository path
         - Remaining lines: Output of 'git diff --unified=0 base_version'
         """
-        if not os.path.isdir(diff_dir):
-            _logger.warning(f"'{diff_dir}' is not a directory")
+        if cls.diff_linenos is not None:
             return
-            
-        for filename in os.listdir(diff_dir):
+        cls.diff_linenos = defaultdict(dict)
+
+        if cls.diff_dir is None:
+            raise ValueError("DiffCase.diff_dir is not set")
+        if not os.path.isdir(cls.diff_dir):
+            raise ValueError(f"'{cls.diff_dir}' is not a directory")
+
+        for filename in os.listdir(cls.diff_dir):
             if not filename.endswith('.txt'):
                 continue
 
-            file_path = os.path.join(diff_dir, filename)
+            file_path = os.path.join(cls.diff_dir, filename)
             _logger.info(f"Processing diff file: {file_path}")
             
             try:
@@ -257,7 +255,7 @@ class DiffCase:
                     # Process each patched file
                     for patched_file in patch_set:
                         abs_path = os.path.join(repo_path, patched_file.path)
-                        file_info = FileInfo(abs_path)
+                        file_info = FileInfo(repo_path, patched_file)
 
                         # Add line numbers from the diff
                         for hunk in patched_file:

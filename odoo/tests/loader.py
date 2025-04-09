@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest import case
 
 from .. import tools
+from .diffcase import DiffCase
 from .tag_selector import TagsSelector
 from .suite import OdooSuite
 from .result import OdooTestResult
@@ -15,12 +16,14 @@ from .result import OdooTestResult
 _logger = logging.getLogger(__name__)
 
 
-def get_module_test_cases(module):
+def get_module_test_cases(module, mode='test_install'):
     """Return a suite of all test cases contained in the given module"""
     for obj in module.__dict__.values():
         if not isinstance(obj, type):
             continue
-        if not issubclass(obj, case.TestCase):
+        if mode == 'test_install' and not issubclass(obj, case.TestCase):
+            continue
+        if mode == 'test_diff' and not issubclass(obj, DiffCase):
             continue
         if obj.__module__ != module.__name__:
             continue
@@ -44,17 +47,18 @@ def get_module_test_cases(module):
             yield test_case_class(method_name)
 
 
-def get_test_modules(module):
+def get_test_modules(module, mode='test_install'):
     """ Return a list of module for the addons potentially containing tests to
     feed get_module_test_cases() """
-    results = _get_tests_modules(importlib.util.find_spec(f'odoo.addons.{module}'))
-    results += list(_get_upgrade_test_modules(module))
+    results = _get_tests_modules(importlib.util.find_spec(f'odoo.addons.{module}'), mode)
+    results += list(_get_upgrade_test_modules(module, mode))
 
     return results
 
 
-def _get_tests_modules(mod):
-    spec = importlib.util.find_spec('.tests', mod.name)
+def _get_tests_modules(module, mode='test_install'):
+    spec_name = '.tests' if mode == 'test_install' else '.tests_diff'
+    spec = importlib.util.find_spec(spec_name, module.name)
     if not spec:
         return []
 
@@ -66,7 +70,7 @@ def _get_tests_modules(mod):
     ]
 
 
-def _get_upgrade_test_modules(module):
+def _get_upgrade_test_modules(module, mode='test_install'):
     upgrade_modules = (
         f"odoo.upgrade.{module}",
         f"odoo.addons.{module}.migrations",
@@ -76,10 +80,11 @@ def _get_upgrade_test_modules(module):
         if not importlib.util.find_spec(module_name):
             continue
 
+        tests_path_pattern = "tests" if mode == 'test_install' else "tests_diff"
         upg = importlib.import_module(module_name)
         for path in map(Path, upg.__path__):
-            for test in path.glob("tests/test_*.py"):
-                spec = importlib.util.spec_from_file_location(f"{upg.__name__}.tests.{test.stem}", test)
+            for test in path.glob(f"{tests_path_pattern}/test_*.py"):
+                spec = importlib.util.spec_from_file_location(f"{upg.__name__}.{tests_path_pattern}.{test.stem}", test)
                 if not spec:
                     continue
                 pymod = importlib.util.module_from_spec(spec)
@@ -88,7 +93,7 @@ def _get_upgrade_test_modules(module):
                 yield pymod
 
 
-def make_suite(module_names, position='at_install'):
+def make_suite(module_names, position='at_install', mode='test_install'):
     """ Creates a test suite for all the tests in the specified modules,
     filtered by the provided ``position`` and the current test tags
 
@@ -100,8 +105,8 @@ def make_suite(module_names, position='at_install'):
     tests = (
         t
         for module_name in module_names
-        for m in get_test_modules(module_name)
-        for t in get_module_test_cases(m)
+        for m in get_test_modules(module_name, mode)
+        for t in get_module_test_cases(m, mode)
         if position_tag.check(t) and config_tags.check(t)
     )
     return OdooSuite(sorted(tests, key=lambda t: getattr(t, 'test_sequence', 0)))

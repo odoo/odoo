@@ -198,10 +198,11 @@ def _get_protected_xml_ids():
 
 
 class TestRef(DiffCase):
-    def __init__(self):
-        super().__init__()
-        # self.protected_xml_ids = set()
-        self.protected_xml_ids = _get_protected_xml_ids()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # cls.protected_xml_ids = set()
+        cls.protected_xml_ids = _get_protected_xml_ids()
 
     def test_env_ref_usage(self):
         """Check for env.ref calls without raise_if_not_found=False"""
