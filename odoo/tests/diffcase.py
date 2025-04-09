@@ -131,33 +131,44 @@ def get_base_version(repo_path: str) -> str:
 
 def generate_diff(output_dir: str):
     os.makedirs(output_dir, exist_ok=True)
-    for repo in get_repos():
-        if base_version := get_base_version(repo):
-            # Extract repo name from path for the filename
-            repo_name = os.path.basename(repo)
-            diff_file_path = os.path.join(output_dir, f"{repo_name}_diff.txt")
-            
-            try:
-                git = which('git')
-                diff_command = [git, "diff", "--unified=0", "--merge-base",base_version]
 
-                with open(diff_file_path, 'w') as f:
-                    f.write(f"{repo}\n")  # Write repo path as first line
+    for file in os.listdir(output_dir):
+        if file.endswith('.txt'):
+            os.remove(os.path.join(output_dir, file))
+    
+    repos = get_repos()
+    if len({os.path.basename(repo) for repo in repos}) == len(repos):
+        repo_names = {repo: os.path.basename(repo) for repo in repos}
+    else:
+        repo_names = {repo: repo.replace(os.sep, '.').strip('.') for repo in repos}
 
-                    diff_output = subprocess.run(
-                        diff_command,
-                        capture_output=True,
-                        check=False,
-                        text=True,
-                        cwd=repo
-                    ).stdout
-                    
-                    f.write(diff_output)
+    for repo in repos:
+        base_version = get_base_version(repo)
+        if not base_version:
+            continue
+        diff_file_path = os.path.join(output_dir, f"{repo_names[repo]}_diff.txt")
 
-                _logger.info(f"Generated diff file for {repo_name} at {diff_file_path}")
+        try:
+            git = which('git')
+            diff_command = [git, "diff", "--unified=0", "--merge-base", base_version]
 
-            except Exception as e:
-                _logger.warning(f"Cannot generate diff for {repo}: {e}")
+            with open(diff_file_path, 'w') as f:
+                f.write(f"{repo}\n")  # Write repo path as first line
+
+                diff_output = subprocess.run(
+                    diff_command,
+                    capture_output=True,
+                    check=False,
+                    text=True,
+                    cwd=repo
+                ).stdout
+                
+                f.write(diff_output)
+
+            _logger.info(f"Generated diff file for {repo} at {diff_file_path}")
+
+        except Exception as e:
+            _logger.warning(f"Cannot generate diff for {repo}:\n{e}")
 
 
 class DiffCase(BaseCase):
