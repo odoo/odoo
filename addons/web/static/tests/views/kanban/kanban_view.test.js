@@ -12489,7 +12489,7 @@ test("drag & drop: content scrolls when reaching the edges", async () => {
     expect(content.scrollLeft).toBe(0);
 
     // Cancel drag: click outside
-    await contains(".o_kanban_renderer").focus();
+    await contains(".o_kanban_renderer").click();
 
     expect(".o_kanban_record.o_dragged").toHaveCount(0);
 });
