@@ -15,6 +15,7 @@ const placeholder = "/web/static/img/placeholder.png";
 export class SignatureField extends Component {
     setup() {
         this.displaySignatureRatio = 3;
+        this.isPopupDisplayed = false;
 
         this.dialogService = useService("dialog");
         this.state = useState({
@@ -98,12 +99,21 @@ export class SignatureField extends Component {
                 nameAndSignatureProps,
                 uploadSignature: (signature) => this.uploadSignature(signature),
             };
-            this.dialogService.add(SignatureDialog, dialogProps);
+            
+            if (!this.isPopupDisplayed){
+                this.isPopupDisplayed = true;
+                this.dialogService.add(SignatureDialog, dialogProps, {
+                    onClose: async () => {
+                        this.isPopupDisplayed = false;
+                    },
+                });
+            }
         }
     }
 
     onLoadFailed() {
         this.state.isValid = false;
+        this.isPopupDisplayed = false;
         this.notification.add(this.env._t("Could not display the selected image"), {
             type: "danger",
         });
