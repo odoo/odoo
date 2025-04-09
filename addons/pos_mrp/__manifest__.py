@@ -12,6 +12,9 @@
 This is a link module between Point of Sale and Mrp.
 """,
     'depends': ['point_of_sale', 'mrp'],
+    'data': [
+        'security/ir.model.access.csv',
+    ],
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',
