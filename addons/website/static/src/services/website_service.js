@@ -226,8 +226,7 @@ export const websiteService = {
                     invalidateSnippetCache = true;
                     path = `/website/lang/${encodeURIComponent(lang)}?r=${encodeURIComponent(path)}`;
                 }
-                const actionName = htmlBuilder ? "egg_website_preview" : 'website.website_preview';
-                action.doAction(actionName, {
+                action.doAction("website.website_preview", {
                     clearBreadcrumbs: true,
                     additionalContext: {
                         params: {

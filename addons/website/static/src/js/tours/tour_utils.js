@@ -218,7 +218,7 @@ export function clickOnEditAndWaitEditMode(position = "bottom") {
 export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> dropdown")),
-        trigger: "body .o_menu_systray a:contains('Edit')",
+        trigger: "body .o_menu_systray button:contains('Edit')",
         tooltipPosition: position,
         run: "click",
     }, {
