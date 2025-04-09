@@ -450,7 +450,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_background_edition', login='admin')
 
-    @unittest.skip
     def test_12_edit_translated_page_redirect(self):
         lang = self.env['res.lang']._activate_lang('nl_NL')
         self.env['website'].browse(1).write({'language_ids': [(4, lang.id, 0)]})
