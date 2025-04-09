@@ -188,9 +188,8 @@ publicWidget.registry.customerAddress = publicWidget.Widget.extend({
                 new FormData(this.addressForm),
             )
             if (result.successUrl) {
-                let finalSuccessUrl = result.successUrl;
                 let successMessage =  result.successMessage;
-                if (finalSuccessUrl == '/my/account' && successMessage) {
+                if (result.successUrl == '/my/account' && successMessage) {
                     const successDiv = document.createElement('div');
                     successDiv.classList.add('alert', 'alert-success');
                     successDiv.textContent = successMessage;
@@ -201,10 +200,7 @@ publicWidget.registry.customerAddress = publicWidget.Widget.extend({
                     submitButton.disabled = false;
                     spinner.remove();
                 } else {
-                    if (successMessage) {
-                        finalSuccessUrl += (finalSuccessUrl.includes('?') ? '&' : '?') + `success=true`
-                    }
-                    window.location = finalSuccessUrl;
+                    window.location = result.successUrl;
                 }
             } else {
                 // Highlight missing/invalid form values

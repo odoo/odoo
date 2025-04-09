@@ -514,7 +514,7 @@ class CustomerPortal(Controller):
                 'messages': error_messages,
             }
 
-        success_message =''
+        success_message = ''
         if not partner_sudo:  # Creation of a new address.
             self._complete_address_values(
                 address_values, address_type, use_delivery_as_billing, **form_data
@@ -530,13 +530,15 @@ class CustomerPortal(Controller):
             if hasattr(partner_sudo, '_onchange_phone_validation'):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
-            success_message = _("Details saved successfully.")
+            success_message = _('Details saved successfully.')
         elif not self._are_same_addresses(address_values, partner_sudo):
             partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
             if 'phone' in address_values and hasattr(partner_sudo, '_onchange_phone_validation'):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
-            success_message = _("Details saved successfully.")
+            success_message = _('Details saved successfully.')
+        if success_message and callback == '/my/addresses':
+            callback += '?success=true'
 
         self._handle_extra_form_data(extra_form_data, address_values)
         return partner_sudo, {
