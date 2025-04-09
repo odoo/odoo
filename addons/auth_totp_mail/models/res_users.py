@@ -148,6 +148,11 @@ class ResUsers(models.Model):
             _logger.info("2FA check(mail): SUCCESS for %s %r", user, user.login)
             self._totp_rate_limit_purge('code_check')
             self._totp_rate_limit_purge('send_email')
+            return {
+                'uid': self.env.user.id,
+                'auth_method': 'totp_mail',
+                'mfa': 'default',
+            }
         else:
             return super()._check_credentials(credentials, env)
 
