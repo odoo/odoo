@@ -47,6 +47,7 @@
         <record id="action_blog_blog" model="ir.actions.act_window">
             <field name="name">Blogs</field>
             <field name="res_model">blog.blog</field>
+            <field name="path">blogs</field>
             <field name="view_mode">list,form</field>
         </record>
 
@@ -84,6 +85,7 @@
         <record id="action_tags" model="ir.actions.act_window">
             <field name="name">Blog Tags</field>
             <field name="res_model">blog.tag</field>
+            <field name="path">blog-tags</field>
             <field name="view_mode">list,form</field>
             <field name="view_id" ref="blog_tag_tree"/>
         </record>
@@ -115,6 +117,7 @@
         <record id="action_tag_category" model="ir.actions.act_window">
             <field name="name">Tag Category</field>
             <field name="res_model">blog.tag.category</field>
+            <field name="path">blog-tag-categories</field>
             <field name="view_mode">list,form</field>
             <field name="view_id" ref="blog_tag_category_tree"/>
         </record>

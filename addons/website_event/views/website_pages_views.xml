@@ -79,6 +79,7 @@
 <record id="action_event_pages_list" model="ir.actions.act_window">
     <field name="name">Event Pages</field>
     <field name="res_model">event.event</field>
+    <field name="path">event-pages</field>
     <field name="view_mode">list,kanban</field>
     <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'list', 'view_id': ref('event_pages_tree_view')}),
