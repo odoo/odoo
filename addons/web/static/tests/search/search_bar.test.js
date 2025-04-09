@@ -16,6 +16,7 @@ import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import {
     SELECTORS,
     clickOnButtonDeleteNode,
+    editValue,
     getCurrentOperator,
     getCurrentPath,
     getCurrentValue,
@@ -1292,7 +1293,7 @@ test("search a property: definition record id in the context", async () => {
 
 test("edit a filter", async () => {
     onRpc("/web/domain/validate", () => true);
-    await mountWithSearch(SearchBar, {
+    const searchBar = await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: ["groupBy"], // we need it to have facet (see facets getter in search_model)
         searchViewId: false,
@@ -1335,7 +1336,8 @@ test("edit a filter", async () => {
 
     await contains(".modal footer button").click();
     expect(`.modal`).toHaveCount(0);
-    expect(getFacetTexts()).toEqual(["Bool", "Id is equal 1"]);
+    expect(getFacetTexts()).toEqual(["Custom filter", "Bool"]);
+    expect(searchBar.env.searchModel.domain).toEqual([["id", "=", 1]]);
 });
 
 test("edit a filter with context: context is kept after edition", async () => {
@@ -1356,8 +1358,9 @@ test("edit a filter with context: context is kept after edition", async () => {
     expect(searchBar.env.searchModel.context.specialKey).toBe("abc");
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
+    await contains(`.modal ${SELECTORS.addNewRule}`).click();
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Foo is equal abc`]);
+    expect(getFacetTexts()).toEqual([`Custom filter`]);
     expect(searchBar.env.searchModel.context.specialKey).toBe("abc");
 });
 
@@ -1375,7 +1378,7 @@ test("edit a favorite", async () => {
     ];
 
     onRpc("/web/domain/validate", () => true);
-    await mountWithSearch(SearchBar, {
+    const searchBar = await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: ["groupBy"], // we need it to have facet (see facets getter in search_model)
         searchViewId: false,
@@ -1400,15 +1403,20 @@ test("edit a favorite", async () => {
     expect(getCurrentPath()).toBe("Foo");
     expect(getCurrentOperator()).toBe("contains");
     expect(getCurrentValue()).toBe("abc");
+    await editValue("def");
+    expect(getCurrentPath()).toBe("Foo");
+    expect(getCurrentOperator()).toBe("contains");
+    expect(getCurrentValue()).toBe("def");
 
     await contains(".modal footer button").click();
     expect(`.modal`).toHaveCount(0);
-    expect(getFacetTexts()).toEqual(["Bool\n>\nCompany", "Foo contains abc"]);
+    expect(getFacetTexts()).toEqual(["Custom filter", "Bool\n>\nCompany"]);
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "def"]]);
 });
 
 test("edit a field", async () => {
     onRpc("/web/domain/validate", () => true);
-    await mountWithSearch(SearchBar, {
+    const searchBar = await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchViewId: false,
         searchViewArch: `
@@ -1434,45 +1442,11 @@ test("edit a field", async () => {
     expect(getCurrentPath(0)).toBe("Foo");
     expect(getCurrentOperator(0)).toBe("contains");
     expect(getCurrentValue(0)).toBe("abc");
-    expect(getCurrentPath(1)).toBe("Foo");
-    expect(getCurrentOperator(1)).toBe("contains");
-    expect(getCurrentValue(1)).toBe("def");
+    await clickOnButtonDeleteNode();
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Foo contains abc or Foo contains def`]);
-});
-
-test("no rpc for getting display_name for facets if known", async () => {
-    onRpc("/web/domain/validate", () => true);
-    onRpc("name_search", ({ kwargs }) => {
-        expect.step(kwargs.domain);
-    });
-    onRpc(({ method }) => expect.step(method));
-
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="filter" string="Filter" domain="[('bar', 'in', [])]"/>
-            </search>
-        `,
-        context: {
-            search_default_filter: true,
-        },
-    });
-    expect(getFacetTexts()).toEqual(["Filter"]);
-    expect.verifySteps(["get_views"]);
-
-    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect.verifySteps(["fields_get"]);
-
-    await contains(".o-autocomplete--input").click();
-    expect.verifySteps(["name_search", ["!", ["id", "in", []]]]);
-
-    await contains(".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item").click();
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Bar is in ( First record )"]);
+    expect(getFacetTexts()).toEqual([`Custom filter`]);
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "def"]]);
 });
 
 test.tags`desktop`("clicking on search input trigger the search menu", async () => {
@@ -1491,129 +1465,6 @@ test("clicking on the searchview icon trigger the search", async () => {
     await editSearch("a");
     await contains(`.o_searchview button`).click();
     expect(`.o_searchview_input_container .o_facet_values`).toHaveText("a");
-});
-
-test("facets display with any / not any operator", async function () {
-    onRpc(({ method }) => expect.step(method));
-    onRpc("/web/domain/validate", () => {
-        expect.step("/web/domain/validate");
-        return true;
-    });
-
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="filter" string="Filter" domain="[('company', 'any', [('bar', 'any', [('company', 'in', ['JD7', 'KDB'])])])]"/>
-            </search>
-        `,
-        context: {
-            search_default_filter: true,
-        },
-    });
-    expect(getFacetTexts()).toEqual(["Filter"]);
-    expect.verifySteps([`get_views`]);
-
-    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect.verifySteps([`fields_get`]);
-
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([
-        "Company matches ( Bar matches ( Company is in ( JD7 , KDB ) ) )",
-    ]);
-    expect.verifySteps([`/web/domain/validate`]);
-});
-
-test("facets display with any / not any operator (with a complex path)", async function () {
-    onRpc(({ method }) => expect.step(method));
-    onRpc("/web/domain/validate", () => {
-        expect.step("/web/domain/validate");
-        return true;
-    });
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="filter" string="Filter" domain="['|', ('company.company', 'any', [('id', '=', 1)]), ('Bar', '=', false)]"/>
-            </search>
-        `,
-        context: {
-            search_default_filter: true,
-        },
-    });
-    expect(getFacetTexts()).toEqual(["Filter"]);
-    expect.verifySteps([`get_views`]);
-
-    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect.verifySteps([`fields_get`]);
-
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([
-        "Company ➔ Company matches ( Id is equal 1 ) or Bar is equal false",
-    ]);
-    expect.verifySteps([`/web/domain/validate`]);
-});
-
-test("facets display with any / not any operator (with a or)", async function () {
-    onRpc(({ method }) => expect.step(method));
-    onRpc("/web/domain/validate", () => {
-        expect.step("/web/domain/validate");
-        return true;
-    });
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="filter" string="Filter" domain="['|', ('company', 'any', [('id', '=', 1)]), ('bar', '=', false)]"/>
-            </search>
-        `,
-        context: {
-            search_default_filter: true,
-        },
-    });
-    expect(getFacetTexts()).toEqual(["Filter"]);
-    expect.verifySteps([`get_views`]);
-
-    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect.verifySteps([`fields_get`]);
-
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Company matches ( Id is equal 1 ) or Bar is equal false"]);
-    expect.verifySteps([`/web/domain/validate`]);
-});
-
-test("facets display with any / not any operator (check brackets)", async function () {
-    onRpc(({ method }) => expect.step(method));
-    onRpc("/web/domain/validate", () => {
-        expect.step("/web/domain/validate");
-        return true;
-    });
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter isDebugMode="true" name="filter" string="Filter" domain="['|', ('company', 'any', [('bar', 'any', [('bool', '=', False)]), ('bar', 'any', [('bool', '=', True)])]), ('bar', '=', false)]"/>
-            </search>
-        `,
-        context: {
-            search_default_filter: true,
-        },
-    });
-    expect(getFacetTexts()).toEqual(["Filter"]);
-    expect.verifySteps([`get_views`]);
-
-    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect.verifySteps([`fields_get`]);
-
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([
-        "Company matches ( Bar matches ( Bool not set ) and Bar matches ( Bool set ) ) or Bar is equal false",
-    ]);
-    expect.verifySteps([`/web/domain/validate`]);
 });
 
 test("select autocompleted many2one with allowed_company_ids domain (cids: 1-5)", async () => {
