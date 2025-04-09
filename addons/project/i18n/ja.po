@@ -82,12 +82,12 @@ msgstr "タスク数"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid "#{record.milestone_count_reached.value} Milestones reached out of #{record.milestone_count.value}"
+msgid "{{0}} Milestones reached out of {{1}}"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
-msgid "#{task.stage_id.name}"
+msgid "{{0}}"
 msgstr ""
 
 #. module: project
@@ -219,17 +219,17 @@ msgid ""
 "                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
+"                                <a t-attf-href=\"/rate/{{access_token}}/5\">\n"
 "                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
+"                                <a t-attf-href=\"/rate/{{access_token}}/3\">\n"
 "                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
+"                                <a t-attf-href=\"/rate/{{access_token}}/1\">\n"
 "                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
@@ -2984,7 +2984,7 @@ msgstr "優先度"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks_priority_widget_template
-msgid "Priority: {{'Important' if task.priority == '1' else 'Normal'}}"
+msgid "Priority: {{0}}"
 msgstr ""
 
 #. module: project
@@ -4930,5 +4930,5 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}"
+msgid "{{0}} sub-tasks closed out of {{1}}"
 msgstr ""

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="portal_my_tasks_priority_widget_template" name="Priority Widget Template">
-        <span t-attf-class="o_priority_star d-inline-block fa fa-star#{' text-warning' if task.priority == '1' else '-o opacity-75'} #{classes if classes else ''}" t-attf-title="Priority: {{'Important' if task.priority == '1' else 'Normal'}}"/>
+        <t t-set="important_str">Important</t>
+        <t t-set="normal_str">Normal</t>
+        <span t-attf-class="o_priority_star d-inline-block fa fa-star#{' text-warning' if task.priority == '1' else '-o opacity-75'} #{classes if classes else ''}" t-attf-title="Priority: {{important_str if task.priority == '1' else normal_str}}"/>
     </template>
 
     <template id="portal_my_tasks_state_widget_template" name="Status Widget Template">
