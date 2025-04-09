@@ -2,17 +2,21 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Message" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-Message-contentContainer')]" position="attributes">
+            <attribute name="t-att-class"></attribute>
             <attribute name="t-attf-class" add="{{ props.thread.channel_type === 'ai_composer' ? 'flex-column' : '' }}" separator=" "/>
+            <attribute name="t-attf-class" add="{{ props.thread.channel_type === 'ai_composer' ? 'flex-reverse' : isAlignedRight ? 'flex-row-reverse' : '' }}" separator=" "/>
         </xpath>
     </t>
     <t t-inherit="mail.Message.actions" t-inherit-mode="extension">
         <xpath expr="//button" position="attributes">
             <attribute name="class" remove="border-0" separator=" "/>
-            <attribute name="t-attf-class" add="{{ action.id === 'insertToComposer' ? 'rounded-1 border-2 btn-secondary' : 'border-0' }}" separator=" "/>
+            <attribute name="t-attf-class" add="{{ ['insertToComposer', 'send-message-direct', 'log-note-direct'].includes(action.id) ? 'rounded-1 border-2 btn-secondary mx-1' : 'border-0' }}" separator=" "/>
         </xpath>
         <xpath expr="//button/i" position="replace">
             <i t-if="action.icon" class="fa-lg" t-att-class="action.icon"/>
             <span t-if="action.id === 'insertToComposer'">Use this</span>
+            <span t-if="action.id === 'send-message-direct'">Send Message</span>
+            <span t-if="action.id === 'log-note-direct'">Log Note</span>
         </xpath>
     </t>
 </templates>

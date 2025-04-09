@@ -6,6 +6,7 @@ import { htmlJoin } from "@mail/utils/common/html";
 
 import { Component, markup, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { unwrapContents } from "@html_editor/utils/dom";
 
 export class MailComposerChatGPT extends Component {
     static template = "mail.MailComposerChatGPT";

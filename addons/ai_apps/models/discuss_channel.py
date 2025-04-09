@@ -84,9 +84,9 @@ class DiscussChannel(models.Model):
         }
 
     @api.model
-    def _initialise_context(self, record_model, record_id, caller_component, textSelection):
+    def _initialise_context(self, record_model, record_id, caller_component, text_selection, front_end_info):
         # Get the model and record if needed
-        if caller_component in ['html_field_record', 'html_field_composer', 'composer_ai_button', 'chatter_ai_button']:
+        if caller_component in ['html_field_composer', 'composer_ai_button']:
             model = self.env[record_model]
             record = model.browse(record_id).ensure_one()
 
@@ -95,15 +95,23 @@ class DiscussChannel(models.Model):
             'content': f'You are a helpful AI assistant to {self.env.user.display_name}. Your job is to assist with text drafting inside the ERP software odoo.',
         }]
 
-        # If required, pass some record information to the model's context
-        if caller_component in ['html_field_record', 'html_field_composer', 'composer_ai_button', 'chatter_ai_button']:
+        # If we have record info available from the front-end, pass it to the model's context
+        if caller_component in ['html_field_record', 'chatter_ai_button']:
+            temp_context.append({
+                'role': 'system',
+                'content':
+                    f'This conversation is applying on an odoo {record_model} record. The following JSON contains all of the records details.\n' + front_end_info
+            })
+
+        # If we don't have record info from the front-end and it's required, fetch the record information and pass it to the model's context
+        if caller_component in ['html_field_composer', 'composer_ai_button']:
             temp_context.append(self._get_record_info(model, record))
 
         # If required, pass the previous chatter messsages to the model's context
         if caller_component in ['html_field_composer', 'composer_ai_button', 'chatter_ai_button']:
             temp_context.append(self._get_chatter_info(record))
 
-        # Further instruction message based on where we call the AI is called from
+        # Further instruction pre-prompt based on where we call the AI from
         if caller_component in ['composer_ai_button', 'html_field_composer', 'chatter_ai_button']:
             # from the message composer
             temp_context.append({
@@ -126,7 +134,7 @@ class DiscussChannel(models.Model):
             # from the text select inside an html field
             temp_context.append({
                 'role': 'system',
-                'content': f'Your job is to suggest alternatives to a piece of text the user has written. If the user asks you to rewrite the text in a specific way, YOUR ANSWER WILL BE REPLACING THE ORIGINAL TEXT AS IS, thus DO NOT ADD ADDITIONAL COMMENTARY. The text that you will be rewritting is the following: {textSelection}'
+                'content': f'Your job is to suggest alternatives to a piece of text the user has written. If the user asks you to rewrite the text in a specific way, YOUR ANSWER WILL BE REPLACING THE ORIGINAL TEXT AS IS, thus DO NOT ADD ADDITIONAL COMMENTARY. The text that you will be rewritting is the following: {text_selection}'
             })
 
         # Finish the context by the "first" message sent by the assistant
@@ -144,7 +152,7 @@ class DiscussChannel(models.Model):
         self.ai_context = temp_context
 
     @api.model
-    def create_ai_composer_channel(self, caller_component, record_name, record_model=None, record_id=None, textSelection=None):
+    def create_ai_composer_channel(self, caller_component, record_name, record_model=None, record_id=None, front_end_info=None, text_selection=None):
         # create a new AI chat
         channel = self.create({
             'channel_member_ids': [
@@ -156,8 +164,8 @@ class DiscussChannel(models.Model):
             'name': 'AI: ' + record_name,
         })
 
-        # fetch the record's info and feed it into context
-        channel._initialise_context(record_model, record_id, caller_component, textSelection)
+        # Create the initial context for the model (add record info, chatter info, pre-prompts, etc.)
+        channel._initialise_context(record_model, record_id, caller_component, text_selection, front_end_info)
 
         return channel
 

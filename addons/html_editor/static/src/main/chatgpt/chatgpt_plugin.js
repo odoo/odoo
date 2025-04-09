@@ -8,7 +8,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
 import { isContentEditable } from "@html_editor/utils/dom_info";
 import { unwrapContents } from "../../utils/dom";
-
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
     static dependencies = [
@@ -82,13 +82,56 @@ export class ChatGPTPlugin extends Plugin {
         return cannotReplace || isEmpty;
     }
 
-    async openDialog(params = {}) {
-        // Force save the record before opening the AI dialog
-        // This ensures up-to-date info for the model + prevents launching the dialog with an empty record.
-        const saved = await this.config.onAICommandSave();
-        if (!saved){
-            return;
+    /**
+     * Converts record data to JSON, so we can pass them to the AI record's context
+     * @returns {String} String JSON representation of the record
+     */
+    recordDataToJSON(recordData, fieldsInfo) {
+        const result = {};
+
+        for (const fieldName in recordData) {
+            if (!recordData.hasOwnProperty(fieldName)) continue;
+            const fieldValue = recordData[fieldName];
+            const fieldInfo = fieldsInfo[fieldName] || {};
+            // Skip binary fields entirely - there is no easy way of placing them in the context
+            if (fieldInfo.type === 'binary') {
+                continue;
+            }
+            // Handle relational fields
+            if (['many2one', 'many2many', 'one2many'].includes(fieldInfo.type)) {
+                // Skip abnormally large relational fields which can floud the AI context
+                if (fieldValue && fieldValue.records && fieldValue.records.length > 50) {
+                    continue;
+                }
+                switch (fieldInfo.type) {
+                    case 'many2one':
+                        result[fieldName] = fieldValue ? fieldValue.display_name || fieldValue.name : null;
+                        break;
+                    case 'many2many':
+                    case 'one2many':
+                        if (fieldValue && fieldValue.records) {
+                            result[fieldName] = fieldValue.records.map(record => 
+                                record.data.display_name || record.data.name
+                            );
+                        } else {
+                            result[fieldName] = [];
+                        }
+                        break;
+                }
+            } else if (fieldInfo.type === 'date' && fieldValue) {  // handle date fields
+                const date = luxon.DateTime.fromISO(fieldValue);
+                result[fieldName] = date.isValid ? formatDate(date) : fieldValue;
+            } else if (fieldInfo.type === 'datetime' && fieldValue) {  // handle datetime fields
+                const datetime = luxon.DateTime.fromISO(fieldValue);
+                result[fieldName] = datetime.isValid ? formatDateTime(datetime) : fieldValue;
+            } else {  // handle all other types of fields
+                result[fieldName] = fieldValue;
+            }
         }
+        return result;
+    }
+
+    async openDialog(params = {}) {
         const selection = this.dependencies.selection.getEditableSelection();
         const dialogParams = {
             insert: (content) => {
@@ -143,38 +186,35 @@ export class ChatGPTPlugin extends Plugin {
                 { ...dialogParams, originalText, sanitize }
             );
         } else {
-            let recordModel, recordName, recordId, callerId, placeholderPrompt, callerComp, textSelection;
+            let recordModel, recordName, recordId, callerId, placeholderPrompt, callerComp, textSelection, frontEndRecordInfo;
             // fetch record information that we need for the channel creation
-            const { resModel, resId, data, id } = this.config.getRecordInfo();
+            const { resModel, resId, data, fields, id } = this.config.getRecordInfo();
+            const recordInfoJSON = this.recordDataToJSON(data, fields);
             if (selection.isCollapsed) {
-                if (resModel !== "mail.compose.message") {
-                    const resultName = await this.services.orm.read(resModel, [ resId ], [ 'name' ]);
-                    recordName = resultName[0]['name'];
-                    recordModel = resModel;
-                    recordId = callerId = resId;
-                    callerComp = "html_field_record";
-                    placeholderPrompt = "";
-                    // set insertButtonCaller flag to the records id
-                    this.services['mail.store']["mail.message"].insertButtonCaller = resId;
-                } else {
+                if (resModel === "mail.compose.message") {
+                    callerComp = "html_field_composer";
                     recordName = data.record_name;
                     recordModel = data.model;
                     recordId = Number(data.res_ids.slice(1,-1));
-                    callerComp = "html_field_composer";
-                    callerId = id;
                     placeholderPrompt = 'Write a follow up answer';
+                    callerId = id;
+                } else {
+                    callerComp = "html_field_record";
+                    recordName = recordInfoJSON.name;
+                    recordModel = resModel;
+                    placeholderPrompt = "";
+                    frontEndRecordInfo = JSON.stringify(recordInfoJSON);
+                    // set insertButtonCaller flag to the record's id
+                    callerId = resId || id;
+                    this.services['mail.store']["mail.message"].insertButtonCaller = resId || id;
                 }
             } else {
                 callerComp = "html_field_text_select";
-                recordName = data.record_name
-                if (!recordName) {
-                    const temp_name = await this.services.orm.read(resModel, [ resId ], [ 'name' ]);
-                    recordName = temp_name[0]['name'];
-                }
+                recordName = data.record_name || recordInfoJSON.name;
                 placeholderPrompt = "Rewrite";
                 textSelection = selection.textContent();
-                callerId = resId || id;
                 // set insertButtonCaller flag to the records id
+                callerId = resId || id;
                 this.services['mail.store']["mail.message"].insertButtonCaller = resId || id;
             }
             // create the discuss channel used for talking with the ai
@@ -186,6 +226,7 @@ export class ChatGPTPlugin extends Plugin {
                     recordName,
                     recordModel,
                     recordId,
+                    frontEndRecordInfo,
                     textSelection,
                 ], 
             );

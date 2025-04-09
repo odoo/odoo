@@ -35,12 +35,32 @@ messageActionsRegistry
         icon: "fa fa-copy",
         title: _t("Copy to Clipboard"),
         onClick: (component) => component.message.copyMessageText(),
+        sequence: 2,
+    })
+    .add("send-message-direct", {
+        condition: (component) => (
+            !!component.env.specialActions?.['sendMessage'] &&
+            component.message.author.userId !== user.userId  // don't show the buttons for the user's messages
+        ),
+        title: _t("Send as Message"),
+        onClick: (component) => {
+            component.env.specialActions['sendMessage'](component.props.message.body);
+        },
+        sequence: 0,
+    })
+    .add("log-note-direct", {
+        condition: (component) => (
+            !!component.env.specialActions?.['logNote'] &&
+            component.message.author.userId !== user.userId  // don't show the buttons for the user's messages
+        ),
+        title: _t("Log as Note"),
+        onClick: (component) => component.env.specialActions['logNote'](component.props.message.body),
         sequence: 1,
-    });;
+    });
     
 patch(messageActionsInternal, {
     condition(component, id, action) {
-        const requiredActions = ['insertToComposer', 'copy-message'];
+        const requiredActions = ['insertToComposer', 'copy-message', 'send-message-direct', 'log-note-direct'];
         if (
             component.props.thread.channel_type === 'ai_composer' && 
             !requiredActions.includes(id)

@@ -28,6 +28,12 @@ patch(Message.prototype, {
             { context: this, onClose: () => (this.state.actionMenuMobileOpen = false) }
         );
     },
+    get quickActionCount() {
+        if (this.props.thread.channel_type !== "ai_composer") {
+            return super.quickActionCount;
+        }
+        return 3;
+    },
     async copyMessageText() {
         let notification = _t("Message Copied!");
         let type = "info";

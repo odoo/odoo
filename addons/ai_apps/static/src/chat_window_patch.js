@@ -21,6 +21,9 @@ patch(ChatWindow.prototype, {
     },
     get style() {
         const res = super.style;
-        return res + ' z-index: 1057;';
+        if (this.thread.channel_type === 'ai_composer') {
+            return res + ' z-index: 1057;';
+        }
+        return res;
     }
 });
