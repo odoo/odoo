@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seller_product_list" model="ir.ui.view">
+        <field name="name">seller.product.list</field>
+        <field name="model">seller.product</field>
+        <field name="arch" type="xml">
+            <list string="Products">
+                <field name="seller_id"/>
+                <field name="date_added"/>
+                <field name="product_name"/>
+                <field name="description"/>
+                <field name="product_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="product_image" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_seller_product_form" model="ir.ui.view">
+        <field name="name">seller.product.form</field>
+        <field name="model">seller.product</field>
+        <field name="arch" type="xml">
+            <form string="Products">
+                <header>
+                    <!-- Кнопка Add -->
+                    <button name="action_add_product" type="object" string="Add" class="btn-primary"
+                            attrs="{'invisible': [('id', '!=', False)]}"/>
+                    <!-- Кнопка Edit -->
+                    <button name="action_edit_product" type="object" string="Edit" class="btn-secondary"
+                            attrs="{'invisible': [('id', '=', False)]}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="seller_id"/>
+                            <field name="date_added"/>
+                        </group>
+                        <group>
+                            <field name="product_name"/>
+                            <field name="description"/>
+                            <field name="product_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="product_image" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
+                        <field name="product_video" widget="binary" filename="product_video_filename"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+
+
+    <record id="action_seller_product" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">seller.product</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="context">{'search_default_order': 'date_added desc'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Click to create a new product.
+            </p>
+        </field>
+    </record>
+
+<record id="view_seller_product_kanban" model="ir.ui.view">
+        <field name="name">seller.product.kanban</field>
+        <field name="model">seller.product</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div style="background: white; border-radius: 12px; overflow: hidden; width: 100%; max-width: 250px; margin: auto; box-shadow: none; border: none;">
+                            <div style="width: 100%; height: 180px; background: #f4f4f4;">
+                                <t t-if="record.product_video">
+                                    <video controls="controls" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;">
+                                        <source t-att-src="'data:video/mp4;base64,%s' % record.product_video.raw_value" type="video/mp4"/>
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </t>
+                                <t t-elif="record.product_image and record.product_image.raw_value">
+                                    <img t-att-src="'data:image/png;base64,%s' % record.product_image.raw_value" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;" alt="Product Image"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="width: 100%; height: 150px; background: #f4f4f4; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                                        <span style="color: #888;">No Media</span>
+                                    </div>
+                                </t>
+                            </div>
+                            <div style="padding: 10px; text-align: center;">
+                                <div style="font-weight: bold; font-size: 16px;">
+                                    <field name="product_name"/>
+                                </div>
+                                <div style="font-size: 12px; color: #888; margin-top: 4px;">
+                                    <field name="description"/>
+                                </div>
+                                <div style="color: #e74c3c; font-weight: bold; font-size: 16px; margin-top: 8px;">
+                                    <field name="product_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

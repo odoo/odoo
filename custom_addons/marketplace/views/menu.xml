@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_seller_root" name="Cistech"/>
+    <menuitem id="menu_frontdesk" name="Front Desk" parent="menu_seller_root"/>
+    <menuitem id="menu_sellers" name="Sellers" parent="menu_frontdesk" action="action_marketplace_seller"/>
+    <menuitem id="menu_sellers_readonly" name="View Sellers" parent="menu_frontdesk" action="action_marketplace_readonly_seller"/>
+    <menuitem id="menu_products" name="Products" parent="menu_frontdesk" action="action_seller_product"/>
+</odoo>
