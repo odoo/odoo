@@ -46,15 +46,15 @@ class IotBoxOwlHomePage(http.Controller):
         super().__init__()
         self.updating = threading.Lock()
 
-    @http.route('/', auth='none', type='http')
+    @route.iot_route('/', type='http')
     def index(self):
         return http.Stream.from_path("hw_posbox_homepage/views/index.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
 
-    @http.route('/logs', auth='none', type='http')
+    @route.iot_route('/logs', type='http')
     def logs_page(self):
         return http.Stream.from_path("hw_posbox_homepage/views/logs.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
 
-    @http.route('/status', auth='none', type='http')
+    @route.iot_route('/status', type='http')
     def status_page(self):
         return http.Stream.from_path("hw_posbox_homepage/views/status_display.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
 
@@ -62,7 +62,7 @@ class IotBoxOwlHomePage(http.Controller):
     # GET methods                                                #
     # -> Always use json.dumps() to return a JSON response       #
     # ---------------------------------------------------------- #
-    @http.route('/hw_posbox_homepage/restart_odoo_service', auth='none', type='http', cors='*')
+    @route.iot_route('/hw_posbox_homepage/restart_odoo_service', type='http', cors='*')
     def odoo_service_restart(self):
         helpers.odoo_restart(0)
         return json.dumps({
@@ -70,7 +70,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Odoo service restarted',
         })
 
-    @http.route('/hw_posbox_homepage/iot_logs', auth='none', type='http', cors='*')
+    @route.iot_route('/hw_posbox_homepage/iot_logs', type='http', cors='*')
     def get_iot_logs(self):
         logs_path = "/var/log/odoo/odoo-server.log" if platform.system() == 'Linux' else Path().absolute().parent.joinpath('odoo.log')
         with open(logs_path, encoding="utf-8") as file:
@@ -79,7 +79,7 @@ class IotBoxOwlHomePage(http.Controller):
                 'logs': file.read(),
             })
 
-    @http.route('/hw_posbox_homepage/six_payment_terminal_clear', auth='none', type='http', cors='*')
+    @route.iot_route('/hw_posbox_homepage/six_payment_terminal_clear', type='http', cors='*')
     def clear_six_terminal(self):
         helpers.update_conf({'six_payment_terminal': ''})
         return json.dumps({
@@ -87,7 +87,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Successfully cleared Six Payment Terminal',
         })
 
-    @http.route('/hw_posbox_homepage/clear_credential', auth='none', type='http', cors='*')
+    @route.iot_route('/hw_posbox_homepage/clear_credential', type='http', cors='*')
     def clear_credential(self):
         helpers.update_conf({
             'db_uuid': '',
@@ -99,7 +99,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Successfully cleared credentials',
         })
 
-    @http.route('/hw_posbox_homepage/wifi_clear', auth='none', type='http', cors='*')
+    @route.iot_route('/hw_posbox_homepage/wifi_clear', type='http', cors='*')
     def clear_wifi_configuration(self):
         helpers.update_conf({'wifi_ssid': '', 'wifi_password': ''})
         wifi.disconnect()
@@ -108,7 +108,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Successfully disconnected from wifi',
         })
 
-    @http.route('/hw_posbox_homepage/server_clear', auth='none', type='http', cors='*')
+    @route.iot_route('/hw_posbox_homepage/server_clear', type='http', cors='*')
     def clear_server_configuration(self):
         helpers.disconnect_from_server()
         close_server_log_sender_handler()
@@ -117,14 +117,14 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Successfully disconnected from server',
         })
 
-    @http.route('/hw_posbox_homepage/ping', auth='none', type='http', cors='*')
+    @route.iot_route('/hw_posbox_homepage/ping', type='http', cors='*')
     def ping(self):
         return json.dumps({
             'status': 'success',
             'message': 'pong',
         })
 
-    @http.route('/hw_posbox_homepage/data', auth="none", type="http", cors='*')
+    @route.iot_route('/hw_posbox_homepage/data', type="http", cors='*')
     def get_homepage_data(self):
         network_interfaces = []
         if platform.system() == 'Linux':
@@ -183,14 +183,14 @@ class IotBoxOwlHomePage(http.Controller):
             'qr_code_url' : network_qr_codes.get('qr_url'),
         })
 
-    @http.route('/hw_posbox_homepage/wifi', auth="none", type="http", cors='*')
+    @route.iot_route('/hw_posbox_homepage/wifi', type="http", cors='*')
     def get_available_wifi(self):
         return json.dumps({
             'currentWiFi': wifi.get_current(),
             'availableWiFi': wifi.get_available_ssids(),
         })
 
-    @http.route('/hw_posbox_homepage/version_info', auth="none", type="http", cors='*')
+    @route.iot_route('/hw_posbox_homepage/version_info', type="http", cors='*')
     def get_version_info(self):
         git = ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git"]
         # Check branch name and last commit hash on IoT Box
@@ -219,7 +219,7 @@ class IotBoxOwlHomePage(http.Controller):
             'currentCommitHash': current_commit,
         })
 
-    @http.route('/hw_posbox_homepage/log_levels', auth="none", type="http", cors='*')
+    @route.iot_route('/hw_posbox_homepage/log_levels', type="http", cors='*')
     def log_levels(self):
         drivers_list = helpers.list_file_by_os(
             file_path('hw_drivers/iot_handlers/drivers'))
@@ -240,7 +240,7 @@ class IotBoxOwlHomePage(http.Controller):
             'interfaces_logger_info': self._get_iot_handlers_logger(interfaces_list, 'interfaces'),
         })
 
-    @http.route('/hw_posbox_homepage/load_iot_handlers', auth="none", type="http", cors='*')
+    @route.iot_route('/hw_posbox_homepage/load_iot_handlers', type="http", cors='*')
     def load_iot_handlers(self):
         helpers.download_iot_handlers(False)
         helpers.odoo_restart(0)
@@ -253,7 +253,7 @@ class IotBoxOwlHomePage(http.Controller):
     # POST methods                                               #
     # -> Never use json.dumps() it will be done automatically    #
     # ---------------------------------------------------------- #
-    @http.route('/hw_posbox_homepage/six_payment_terminal_add', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/six_payment_terminal_add', type="jsonrpc", methods=['POST'], cors='*')
     def add_six_terminal(self, terminal_id):
         if terminal_id.isdigit():
             helpers.update_conf({'six_payment_terminal': terminal_id})
@@ -265,7 +265,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Successfully saved Six Payment Terminal',
         }
 
-    @http.route('/hw_posbox_homepage/save_credential', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/save_credential', type="jsonrpc", methods=['POST'], cors='*')
     def save_credential(self, db_uuid, enterprise_code):
         helpers.update_conf({
             'db_uuid': db_uuid,
@@ -277,7 +277,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Successfully saved credentials',
         }
 
-    @http.route('/hw_posbox_homepage/update_wifi', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/update_wifi', type="jsonrpc", methods=['POST'], cors='*')
     def update_wifi(self, essid, password):
         if wifi.reconnect(essid, password, force_update=True):
             helpers.update_conf({'wifi_ssid': essid, 'wifi_password': password})
@@ -299,14 +299,13 @@ class IotBoxOwlHomePage(http.Controller):
 
         return res_payload
 
-    @route.protect
-    @http.route('/hw_posbox_homepage/generate_password', auth="none", type="jsonrpc", methods=["POST"], cors='*')
+    @route.iot_route('/hw_posbox_homepage/generate_password', type="jsonrpc", methods=["POST"], cors='*', sign=True)
     def generate_password(self):
         return {
             'password': helpers.generate_password(),
         }
 
-    @http.route('/hw_posbox_homepage/enable_ngrok', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/enable_ngrok', type="jsonrpc", methods=['POST'], cors='*')
     def enable_remote_connection(self, auth_token):
         if subprocess.call(['pgrep', 'ngrok']) == 1:
             subprocess.Popen(['sudo', 'systemd-run', 'ngrok', 'tcp', '--authtoken', auth_token, '--log', '/tmp/ngrok.log', '22'])
@@ -317,7 +316,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Ngrok tunnel is now enabled',
         }
 
-    @http.route('/hw_posbox_homepage/update_hostname', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/update_hostname', type="jsonrpc", methods=['POST'], cors='*')
     def update_hostname(self, hostname):
         """Update the hostname of the IoT Box.
 
@@ -350,8 +349,7 @@ class IotBoxOwlHomePage(http.Controller):
                     'message': 'Failed to update hostname, please try again.',
                 }
 
-
-    @http.route('/hw_posbox_homepage/connect_to_server', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/connect_to_server', type="jsonrpc", methods=['POST'], cors='*')
     def connect_to_odoo_server(self, token):
         if token:
             try:
@@ -383,7 +381,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Successfully connected to db, IoT will restart to update the configuration.',
         }
 
-    @http.route('/hw_posbox_homepage/log_levels_update', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/log_levels_update', type="jsonrpc", methods=['POST'], cors='*')
     def update_log_level(self, name, value):
         if not name.startswith(IOT_LOGGING_PREFIX) and name != 'log-to-server':
             return {
@@ -414,7 +412,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Logger level updated',
         }
 
-    @http.route('/hw_posbox_homepage/update_git_tree', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/update_git_tree', type="jsonrpc", methods=['POST'], cors='*')
     def update_git_tree(self):
         helpers.check_git_branch()
         return {
