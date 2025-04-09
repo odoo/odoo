@@ -15,7 +15,9 @@ export class LinkPopover extends Component {
         getInternalMetaData: Function,
         getExternalMetaData: Function,
         getAttachmentMetadata: Function,
+        onFirstPopoverOpen: Function,
         isImage: Boolean,
+        shouldDisplayWandIcon: Boolean,
         type: String,
         recordInfo: Object,
         canEdit: { type: Boolean, optional: true },
@@ -76,6 +78,7 @@ export class LinkPopover extends Component {
             buttonSize: this.props.linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
             buttonStyle: this.initButtonStyle(this.props.linkElement.className),
             isImage: this.props.isImage,
+            shouldDisplayWandIcon: this.props.shouldDisplayWandIcon,
         });
 
         this.editingWrapper = useRef("editing-wrapper");
@@ -91,6 +94,7 @@ export class LinkPopover extends Component {
         onMounted(() => {
             if (!this.state.editing) {
                 this.loadAsyncLinkPreview();
+                this.props.onFirstPopoverOpen();
             }
         });
     }

@@ -229,6 +229,7 @@ export class LinkPlugin extends Plugin {
         /** Overrides */
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
+        before_insert_processors: this.handleInsert.bind(this),
     };
     setup() {
         this.overlay = this.dependencies.overlay.createOverlay(
@@ -394,6 +395,12 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
+        const onFirstPopoverOpen = () => {
+            const link = this.linkInDocument;
+            if (link && link.hasAttribute("data-popover-uninitialized")) {
+                link.removeAttribute("data-popover-uninitialized");
+            }
+        };
         const applyCallback = (url, label, classes) => {
             if (this.linkInDocument && isImage) {
                 if (url) {
@@ -461,6 +468,7 @@ export class LinkPlugin extends Plugin {
             linkElement,
             isImage: isImage,
             onApply: applyCallback,
+            onFirstPopoverOpen: onFirstPopoverOpen,
             onRemove: () => {
                 this.removeLinkInDocument();
                 this.linkInDocument = null;
@@ -483,6 +491,7 @@ export class LinkPlugin extends Plugin {
             canUpload: this.config.allowFile,
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
+            shouldDisplayWandIcon: !linkElement.hasAttribute("data-popover-uninitialized"),
         };
         this.overlay.open({ props });
     }
@@ -736,6 +745,9 @@ export class LinkPlugin extends Plugin {
         // @todo: check for unremovables
         // @todo: preserve spaces
         for (const link of root.querySelectorAll("a")) {
+            if (link.hasAttribute("data-popover-uninitialized")) {
+                link.removeAttribute("data-popover-uninitialized");
+            }
             if ([...link.childNodes].some(isVisible)) {
                 continue;
             }
@@ -908,6 +920,24 @@ export class LinkPlugin extends Plugin {
         blockToSplit = targetNode;
         splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
         return true;
+    }
+
+    handleInsert(container) {
+        for (const nodeToInsert of container.childNodes) {
+            if (nodeToInsert.nodeType === Node.ELEMENT_NODE) {
+                for (const link of selectElements(nodeToInsert, "A")) {
+                    const href = link.getAttribute("href");
+                    if (
+                        !link.hasAttribute("data-popover-uninitialized") &&
+                        href === link.textContent &&
+                        !this.isImage
+                    ) {
+                        link.setAttribute("data-popover-uninitialized", true);
+                    }
+                }
+            }
+        }
+        return container;
     }
 }
 
