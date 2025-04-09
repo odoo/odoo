@@ -76,7 +76,7 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     expect("table input").toHaveValue("Second");
 
     await contains(".o-snippets-tabs button").click();
-    await contains(".o-snippets-tabs button:nth-child(2)").click();
+    await contains(":iframe .test-options-target").click();
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");
 });

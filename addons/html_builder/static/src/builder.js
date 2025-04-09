@@ -95,7 +95,8 @@ export class Builder extends Component {
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (!currentOptionsContainers.length) {
-                            // There is no options, fallback on the blocks tab
+                            // If there is no option, fallback on the current
+                            // fallback tab.
                             this.setTab(this.noSelectionTab);
                             return;
                         }
@@ -170,6 +171,7 @@ export class Builder extends Component {
                 this.updateInvisibleEls(nextProps.isMobile);
             }
         });
+        // Fallback tab when no option is active.
         this.noSelectionTab = "blocks";
     }
 
@@ -219,8 +221,22 @@ export class Builder extends Component {
         this.props.closeEditor();
     }
 
+    /**
+     * Called when clicking on a tab. Sets the active tab to the given tab.
+     *
+     * @param {String} tab the tab to set
+     */
+    onTabClick(tab) {
+        this.setTab(tab);
+        // Deactivate the options when clicking on the "BLOCKS" or "THEME" tabs.
+        if (tab === "theme" || tab === "blocks") {
+            this.editor.shared["builder-options"].deactivateContainers();
+        }
+    }
+
     setTab(tab) {
         this.state.activeTab = tab;
+        // Set the fallback tab on the "THEME" tab if it was selected.
         this.noSelectionTab = tab === "theme" ? "theme" : "blocks";
     }
 
