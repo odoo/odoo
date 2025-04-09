@@ -35,6 +35,22 @@ export class ListConfirmationDialog extends Component {
         useAutofocus();
     }
 
+    get validRecordsText() {
+        return _t(
+            "Among the %(total)s selected records, %(valid_count)s are valid for this update.",
+            {
+                total: this.props.nbRecords,
+                valid_count: this.props.nbValidRecords,
+            }
+        );
+    }
+
+    get updateConfirmationText() {
+        return _t("Are you sure you want to update %(count)s records?", {
+            count: this.props.nbValidRecords,
+        });
+    }
+
     _cancel() {
         if (this.props.cancel) {
             this.props.cancel();

@@ -66,7 +66,7 @@ class MaintenanceEquipmentCategory(models.Model):
     def _unlink_except_contains_maintenance_requests(self):
         for category in self:
             if category.equipment_ids or category.maintenance_ids:
-                raise UserError(_("You cannot delete an equipment category containing equipment or maintenance requests."))
+                raise UserError(_("You can’t delete an equipment category if some equipment or maintenance requests are linked to it."))
 
     def _alias_get_creation_values(self):
         values = super(MaintenanceEquipmentCategory, self)._alias_get_creation_values()

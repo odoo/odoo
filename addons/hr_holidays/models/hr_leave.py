@@ -817,19 +817,18 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_correct_states(self):
-        error_message = _('You cannot delete a time off which is in %s state')
         state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
         now = fields.Datetime.now().date()
 
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             for hol in self:
                 if hol.state not in ['confirm', 'validate1', 'cancel']:
-                    raise UserError(error_message % state_description_values.get(self[:1].state))
+                    raise UserError(_("You can't delete a time off request that is in %(leave_state)s state.", leave_state=state_description_values.get(self[:1].state)))
                 if hol.date_from.date() < now:
-                    raise UserError(_('You cannot delete a time off which is in the past'))
+                    raise UserError(_("You can't delete a time off request that is in the past."))
         else:
             for holiday in self.filtered(lambda holiday: holiday.state not in ['cancel', 'confirm']):
-                raise UserError(error_message % (state_description_values.get(holiday.state),))
+                raise UserError(_("You can't delete a time off request that is in %(leave_state)s state.", leave_state=state_description_values.get(holiday.state)))
 
     def unlink(self):
         self.sudo()._post_leave_cancel()
@@ -989,7 +988,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         # Do not check the state in case we are redirected from the dashboard
         if check_state and any(holiday.state != 'confirm' for holiday in self):
-            raise UserError(_('Time off request must be confirmed ("To Approve") in order to approve it.'))
+            raise UserError(_('You can only approve time off requests that are confirmed, i.e. in the “To approve” state'))
 
         current_employee = self.env.user.employee_id
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
