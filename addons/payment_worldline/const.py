@@ -10,20 +10,13 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 # See https://docs.direct.worldline-solutions.com/en/payment-methods-and-features/index.
 PAYMENT_METHODS_MAPPING = {
     'alipay_plus': 5405,
-    'amex': 2,
     'bancontact': 3012,
     'bizum': 5001,
-    'cartes_bancaires': 130,
     'cofidis': 3012,
-    'diners': 132,
-    'discover': 128,
     'eps': 5406,
     'floa_bank': 5139,
     'ideal': 809,
-    'jcb': 125,
     'klarna': 3301,
-    'maestro': 117,
-    'mastercard': 3,
     'mbway': 5908,
     'multibanco': 5500,
     'p24': 3124,
@@ -31,7 +24,6 @@ PAYMENT_METHODS_MAPPING = {
     'post_finance_pay': 3203,
     'twint': 5407,
     'upi': 56,
-    'visa': 1,
     'wechat_pay': 5404,
 }
 
