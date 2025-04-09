@@ -329,6 +329,7 @@ class BaseCase(case.TestCase):
 
     _registry_patched = False
     _registry_readonly_enabled = True
+    test_cursor_lock_timeout: int = 20
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
