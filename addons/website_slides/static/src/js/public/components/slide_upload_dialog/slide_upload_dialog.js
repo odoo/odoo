@@ -1,4 +1,4 @@
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useState, onWillUnmount} from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { redirect } from "@web/core/utils/urls";
@@ -64,11 +64,22 @@ export class SlideUploadDialog extends Component {
         this.pagesTemplates = this.constructor.pagesTemplates;
         this.slideCategoryData = this.constructor.categoryData;
         this.state = useState({ ...this.constructor.baseSettings });
+        this.onOutsideClick = (event) => {
+            const isInsideDialog = event.target.closest(".modal-content");
+            const isInsideDropdown = event.target.closest(".dropdown-menu");
+            if (!isInsideDialog && !isInsideDropdown) {
+                this.props.close();
+            }
+        };
         onMounted(() => {
             if (this.props.openModal && this.props.openModal in this.slideCategoryData) {
                 // Sets the appropriate category's upload template if one has to be opened on load.
                 this.onClickSlideCategoryIcon(this.props.openModal);
             }
+            document.addEventListener("click", this.onOutsideClick);
+        });
+        onWillUnmount(() => {
+            document.removeEventListener("click", this.onOutsideClick);
         });
     }
 
