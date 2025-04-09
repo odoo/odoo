@@ -54,17 +54,6 @@ class WebsiteSaleMegaMenuOptionPlugin extends Plugin {
                         },
                         true
                     );
-
-                    // TODO: find a better way to do this. Call prepare() in
-                    // onWillUpdateProps?
-                    // After toggling the checkbox, we need to load the new
-                    // templates because the selectTemplate's `prepare` isn't
-                    // called again, but we can't do it here because we don't
-                    // know the other templates' ids. Updating the containers
-                    // restarts the BuilerSelect, which calls prepare.
-                    this.dependencies.history.addStep();
-                    this.dependencies["builder-options"].updateContainers(this.editable);
-                    this.dependencies["builder-options"].updateContainers(editingElement);
                 },
             },
         };
