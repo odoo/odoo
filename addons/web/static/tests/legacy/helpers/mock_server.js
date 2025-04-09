@@ -646,8 +646,6 @@ export class MockServer {
                 return this.mockWebSave(args.model, args.args, args.kwargs);
             case "formatted_read_group":
                 return this.mockFormattedReadGroup(args.model, args.kwargs);
-            case "web_read_group":
-                return this.mockWebReadGroup(args.model, args.kwargs);
             case "web_search_read":
                 return this.mockWebSearchReadUnity(args.model, args.args, args.kwargs);
             case "read_progress_bar":
@@ -1309,19 +1307,6 @@ export class MockServer {
         }
 
         return true;
-    }
-
-    mockWebReadGroup(modelName, kwargs) {
-        const groups = this.mockFormattedReadGroup(modelName, kwargs);
-        const allGroups = this.mockFormattedReadGroup(modelName, {
-            domain: kwargs.domain,
-            groupby: kwargs.groupby,
-            aggregates: [],
-        });
-        return {
-            groups: groups,
-            length: allGroups.length,
-        };
     }
 
     mockReadProgressBar(modelName, kwargs) {

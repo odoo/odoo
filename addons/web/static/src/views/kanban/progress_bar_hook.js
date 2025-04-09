@@ -32,10 +32,10 @@ function _createFilterDomain(fieldName, bars, value) {
     return filterDomain;
 }
 
-function _groupsToAggregateValues(groups, groupBy, fields) {
+function _groupsToAggregateValues(groups, groupBy, fields, domain) {
     const groupByFieldName = groupBy[0].split(":")[0];
     return groups.map((g) => {
-        const groupInfo = extractInfoFromGroupData(g, groupBy, fields);
+        const groupInfo = extractInfoFromGroupData(g, groupBy, fields, domain);
         return Object.assign(groupInfo.aggregates, { [groupByFieldName]: groupInfo.serverValue });
     });
 }
@@ -214,7 +214,7 @@ class ProgressBarState {
             .then((groups) => {
                 if (groups.length) {
                     const groupByField = group.groupByField;
-                    const aggrValues = _groupsToAggregateValues(groups, groupBy, fields);
+                    const aggrValues = _groupsToAggregateValues(groups, groupBy, fields, domain);
                     activeBar.aggregates = _findGroup(aggrValues, groupByField, group.serverValue);
                 }
             });

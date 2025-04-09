@@ -243,6 +243,8 @@ export class DynamicGroupList extends DynamicList {
             context,
             groupByFieldName: this.groupByField.name,
             isFolded: Boolean(foldField),
+            value: id,
+            extraDomain: false,
             initialDomain: domain,
             list: {
                 ...commonConfig,
@@ -250,6 +252,8 @@ export class DynamicGroupList extends DynamicList {
                 domain: domain,
                 groupBy: [],
                 orderBy: this.orderBy,
+                limit: this.model.initialLimit,
+                offset: 0,
             },
         };
         this.model._updateConfig(this.config, { groups: nextConfigGroups }, { reload: false });

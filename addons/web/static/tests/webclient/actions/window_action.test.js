@@ -395,8 +395,6 @@ test("switching into a view with mode=edit lands in edit mode", async () => {
         "get_views",
         "web_read_group",
         "has_group",
-        "web_search_read",
-        "web_search_read",
         "onchange",
         "name_create",
         "web_read",

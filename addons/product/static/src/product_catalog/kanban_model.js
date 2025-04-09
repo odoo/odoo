@@ -19,16 +19,32 @@ export class ProductCatalogKanbanModel extends RelationalModel {
         // if orm have isSample field and its value set to be true then we have sample data as there is no product found for selected vendor, show sample data
         const isSample = this.orm.isSample !== undefined ? this.orm.isSample : false;
         const result = await super._loadData(...arguments);
-        if (!params.isMonoRecord && !params.groupBy.length) {
-            let orderLinesInfo;
-            if(!isSample) {
-                orderLinesInfo = await rpc("/product/catalog/order_lines_info", this._getOrderLinesInfoParams(params, result.records.map((rec) => rec.id)));
-            }
-            else {
-                orderLinesInfo = this._getSampleOrderLineInfo()
+        if (!params.isMonoRecord) {
+            let records;
+            if (params.groupBy?.length) {
+                // web_read_group: find all opened records from (sub)group
+                records = [];
+                const stackGroups = [...result.groups];
+                while (stackGroups.length) {
+                    const group = stackGroups.pop();
+                    if (group.groups?.length) {
+                        stackGroups.push(...group.groups);
+                    }
+                    if (group.records?.length) {
+                        records.push(...group.records);
+                    }
+                }
+            } else {
+                records = result.records;
             }
 
-            for (const record of result.records) {
+            let orderLinesInfo;
+            if (!isSample) {
+                orderLinesInfo = await rpc("/product/catalog/order_lines_info", this._getOrderLinesInfoParams(params, records.map((rec) => rec.id)));
+            } else {
+                orderLinesInfo = this._getSampleOrderLineInfo();
+            }
+            for (const record of records) {
                 record.productCatalogData = orderLinesInfo[record.id];
             }
         }

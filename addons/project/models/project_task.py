@@ -2056,7 +2056,6 @@ class ProjectTask(models.Model):
             groupby = ['personal_stage_type_ids' if fname == 'personal_stage_type_id' else fname for fname in groupby]
             if order:
                 order = order.replace('personal_stage_type_id', 'personal_stage_type_ids')
-            return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
         return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
 
     # ---------------------------------------------------

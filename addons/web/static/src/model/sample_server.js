@@ -11,8 +11,6 @@ import { parseServerValue } from "./relational_model/utils";
 
 class UnimplementedRouteError extends Error {}
 
-let searchReadNumber = 0;
-
 /**
  * Helper function returning the value from a list of sample strings
  * corresponding to the given ID.
@@ -53,6 +51,7 @@ const DESCRIPTION_REGEX = fieldNameRegex("description", "label", "title", "subje
 const EMAIL_REGEX = fieldNameRegex("email");
 const PHONE_REGEX = fieldNameRegex("phone");
 const URL_REGEX = fieldNameRegex("url");
+const MAX_NUMBER_OPENED_GROUPS = 10;
 
 /**
  * Sample server class
@@ -555,26 +554,18 @@ export class SampleServer {
 
     _mockWebSearchReadUnity(params) {
         const fields = Object.keys(params.specification);
-        let result;
-        if (this.existingGroups) {
-            const groups = this.existingGroups;
-            const group = groups[searchReadNumber++ % groups.length];
-            result = {
-                records: this._mockRead({
-                    model: params.model,
-                    args: [group.__recordIds, fields],
-                }),
-                length: group.__recordIds.length,
-            };
+        const model = this.data[params.model];
+        let rawRecords = model.records;
+        if ("recordIds" in params) {
+            rawRecords = model.records.filter((record) => params.recordIds.includes(record.id));
         } else {
-            const model = this.data[params.model];
-            const rawRecords = model.records.slice(0, SampleServer.SEARCH_READ_LIMIT);
-            const records = this._mockRead({
-                model: params.model,
-                args: [rawRecords.map((r) => r.id), fields],
-            });
-            result = { records, length: records.length };
+            rawRecords = rawRecords.slice(0, SampleServer.SEARCH_READ_LIMIT);
         }
+        const records = this._mockRead({
+            model: params.model,
+            args: [rawRecords.map((r) => r.id), fields],
+        });
+        const result = { records, length: records.length };
         // populate many2one and x2many values
         for (const fieldName in params.specification) {
             const field = this.data[params.model].fields[fieldName];
@@ -621,13 +612,34 @@ export class SampleServer {
      * @returns {{ groups: Object[], length: number }}
      */
     _mockWebReadGroup(params) {
+        const aggregates = [...params.aggregates, "__count"];
+        if (params.auto_unfold && params.unfold_read_specification) {
+            aggregates.push("id:array_agg");
+        }
         let groups;
         if (this.existingGroups) {
-            this._tweakExistingGroups(params);
+            this._tweakExistingGroups({ ...params, aggregates });
             groups = this.existingGroups;
         } else {
-            groups = this._mockFormattedReadGroup(params);
+            groups = this._mockFormattedReadGroup({ ...params, aggregates });
         }
+        // Don't care another params - and no subgroup:
+        // order / opening_info / unfold_read_default_limit / groupby_read_specification
+        let nbOpenedGroup = 0;
+        if (params.auto_unfold && params.unfold_read_specification) {
+            for (const group of groups) {
+                if (nbOpenedGroup < MAX_NUMBER_OPENED_GROUPS) {
+                    nbOpenedGroup++;
+                    group["__records"] = this._mockWebSearchReadUnity({
+                        model: params.model,
+                        specification: params.unfold_read_specification,
+                        recordIds: group["id:array_agg"],
+                    }).records;
+                }
+                delete group["id:array_agg"];
+            }
+        }
+
         return {
             groups,
             length: groups.length,
@@ -741,13 +753,17 @@ export class SampleServer {
                     g.__count = recordsInGroup.length;
                     continue;
                 }
-                const fieldName = aggregateSpec.split(":")[0];
-                const fieldType = this.data[params.model].fields[fieldName].type;
-                if (["integer, float", "monetary"].includes(fieldType)) {
+                const [fieldName, func] = aggregateSpec.split(":");
+                if (func === "array_agg") {
+                    g[aggregateSpec] = recordsInGroup.map((r) => r[fieldName]);
+                } else if (
+                    ["integer, float", "monetary"].includes(
+                        this.data[params.model].fields[fieldName].type
+                    )
+                ) {
                     g[aggregateSpec] = recordsInGroup.reduce((acc, r) => acc + r[fieldName], 0);
                 }
             }
-            g.__recordIds = recordsInGroup.map((r) => r.id);
         }
     }
 }

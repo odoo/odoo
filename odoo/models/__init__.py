@@ -17,6 +17,7 @@ from odoo.orm.models import (
     check_company_domain_parent_of,
     fix_import_export_id_paths,
     parse_read_group_spec,
+    regex_order,
     to_record_ids,
 )
 from odoo.orm.model_classes import is_model_class, is_model_definition

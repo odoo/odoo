@@ -82,7 +82,7 @@ beforeEach(() => onRpc("has_group", () => true));
 
 test.tags("desktop");
 test("SelectCreateDialog use domain, group_by and search default on desktop", async () => {
-    expect.assertions(3);
+    expect.assertions(4);
     Partner._views["list"] = /* xml */ `
         <list string="Partner">
             <field name="name"/>
@@ -99,33 +99,14 @@ test("SelectCreateDialog use domain, group_by and search default on desktop", as
     `;
     let search = 0;
     onRpc("web_read_group", ({ kwargs }) => {
-        expect(kwargs).toEqual(
-            {
-                context: {
-                    allowed_company_ids: [1],
-                    lang: "en",
-                    read_group_expand: true,
-                    tz: "taht",
-                    uid: 7,
-                }, // not part of the test, may change
-                domain: [
-                    "&",
-                    ["name", "like", "a"],
-                    "&",
-                    ["name", "ilike", "piou"],
-                    ["foo", "ilike", "piou"],
-                ],
-                aggregates: ["__count"],
-                groupby: ["bar"],
-                order: "",
-                limit: 80,
-                offset: 0,
-            },
-            {
-                message:
-                    "should search with the complete domain (domain + search), and group by 'bar'",
-            }
-        );
+        expect(kwargs.domain).toEqual([
+            "&",
+            ["name", "like", "a"],
+            "&",
+            ["name", "ilike", "piou"],
+            ["foo", "ilike", "piou"],
+        ]);
+        expect(kwargs.groupby).toEqual(["bar"]);
     });
     onRpc("web_search_read", ({ kwargs }) => {
         if (search === 0) {
@@ -196,7 +177,7 @@ test("SelectCreateDialog use domain, group_by and search default on desktop", as
 
 test.tags("mobile");
 test("SelectCreateDialog use domain, group_by and search default on mobile", async () => {
-    expect.assertions(3);
+    expect.assertions(4);
     Partner._views["search"] = /* xml */ `
         <search>
             <field name="foo" filter_domain="[('name','ilike',self), ('foo','ilike',self)]"/>
@@ -210,32 +191,14 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
     ] = /* xml */ `<kanban><templates><t t-name="card"><field name="name"/><field name="foo"/></t></templates></kanban>`;
     let search = 0;
     onRpc("web_read_group", ({ kwargs }) => {
-        expect(kwargs).toEqual(
-            {
-                context: {
-                    allowed_company_ids: [1],
-                    lang: "en",
-                    tz: "taht",
-                    uid: 7,
-                    read_group_expand: true,
-                }, // not part of the test, may change
-                domain: [
-                    "&",
-                    ["name", "like", "a"],
-                    "&",
-                    ["name", "ilike", "piou"],
-                    ["foo", "ilike", "piou"],
-                ],
-                groupby: ["bar"],
-                aggregates: ["__count"],
-                offset: 0,
-                order: "",
-            },
-            {
-                message:
-                    "should search with the complete domain (domain + search), and group by 'bar'",
-            }
-        );
+        expect(kwargs.domain).toEqual([
+            "&",
+            ["name", "like", "a"],
+            "&",
+            ["name", "ilike", "piou"],
+            ["foo", "ilike", "piou"],
+        ]);
+        expect(kwargs.groupby).toEqual(["bar"]);
     });
     onRpc("web_search_read", ({ kwargs }) => {
         if (search === 0) {
