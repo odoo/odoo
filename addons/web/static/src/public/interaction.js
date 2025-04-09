@@ -373,17 +373,6 @@ export class Interaction {
     }
 
     /**
-     * Recomputes event listeners registered through `dynamicContent`.
-     * Interaction listeners are static. If the DOM is updated at some point,
-     * you should call `refreshListeners` so that events are:
-     * - removed on nodes that don't match the selector anymore
-     * - added on new nodes or on nodes that didn't match it before but do now.
-     */
-    refreshListeners() {
-        this.__colibri__.refreshListeners();
-    }
-
-    /**
      * Inserts and activate an element at a specific location (default position:
      * "beforeend").
      * The inserted element will be removed when the interaction is destroyed.
@@ -399,7 +388,7 @@ export class Interaction {
             this.registerCleanup(() => el.remove());
         }
         this.services["public.interactions"].startInteractions(el);
-        this.refreshListeners();
+        this.__colibri__.refreshNodes();
     }
 
     /**
@@ -465,11 +454,14 @@ export class Interaction {
     }
 
     /**
+     * Mounts an Owl component.
+     *
      * @param {HTMLElement} el
      * @param {import("@odoo/owl").Component} C
      * @param {Object|null} [props]
+     * @returns {Function} destroy function for early removal
      */
-    mountComponent(el, C, props = null) {
-        this.__colibri__.mountComponent(el, C, props);
+    mountComponent(el, C, props = null, position = "beforeend") {
+        return this.__colibri__.mountComponent(el, C, props, position);
     }
 }
