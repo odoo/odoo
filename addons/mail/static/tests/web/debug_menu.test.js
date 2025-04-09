@@ -14,7 +14,7 @@ defineMailModels();
 describe.current.tags("desktop");
 
 test("Manage messages", async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
     const pyEnv = await startServer();
     MailMessage._views = {
         "list,false": "<list/>",
