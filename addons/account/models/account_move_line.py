@@ -397,7 +397,8 @@ class AccountMoveLine(models.Model):
     discount_date = fields.Date(
         string='Discount Date',
         store=True,
-        help='Last date at which the discounted amount must be paid in order for the Early Payment Discount to be granted'
+        help='Last date at which the discounted amount must be paid in order for the Early Payment Discount to be granted',
+        readonly=True
     )
     # Discounted amount to pay when the early payment discount is applied
     discount_amount_currency = fields.Monetary(
