@@ -4,6 +4,7 @@
 <t t-name="html_builder.WebsiteSystrayItem">
     <div class="d-flex">
         <PublishSystrayItem t-if="this.canPublish"/>
+        <MobilePreviewSystrayItem t-if="this.isRestrictedEditor"/>
         <NewContentSystrayItem onNewPage="props.onNewPage"/>
         <EditWebsiteSystrayItem t-props="this.editWebsiteSystrayItemProps"/>
     </div>
