@@ -59,18 +59,25 @@ export class EpsonPrinter extends BasePrinter {
      * @override
      */
     async sendPrintingJob(img) {
-        const res = await fetch(this.address, {
-            method: "POST",
-            body: img,
-        });
-        const body = await res.text();
-        const parser = new DOMParser();
-        const parsedBody = parser.parseFromString(body, "application/xml");
-        const response = parsedBody.querySelector("response");
-        return {
-            result: response.getAttribute("success") === "true",
-            printerErrorCode: response.getAttribute("code"),
-        };
+        try {
+            const res = await fetch(this.address, {
+                method: "POST",
+                body: img,
+            });
+            const body = await res.text();
+            const parser = new DOMParser();
+            const parsedBody = parser.parseFromString(body, "application/xml");
+            const response = parsedBody.querySelector("response");
+            return {
+                result: response.getAttribute("success") === "true",
+                printerErrorCode: response.getAttribute("code"),
+            };
+        } catch {
+            return {
+                result: false,
+                printerErrorCode: "Not found, the printer is not reachable",
+            };
+        }
     }
 
     /**
