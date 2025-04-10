@@ -61,7 +61,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Colleen Diaz'
         }])
 
-        cash_journal = journal_obj.create({
+        cls.cash_journal = journal_obj.create({
             'name': 'Cash Test',
             'type': 'cash',
             'company_id': main_company.id,
@@ -480,7 +480,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
             'payment_method_ids': [(0, 0, { 'name': 'Cash',
-                                            'journal_id': cash_journal.id,
+                                            'journal_id': cls.cash_journal.id,
                                             'receivable_account_id': account_receivable.id,
             })],
             'use_pricelist': True,
@@ -1110,3 +1110,12 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
+
+    def test_multiple_cash_payment_method(self):
+        cash_method = self.env['pos.payment.method'].create({
+            'name': 'New Cash',
+            'journal_id': self.cash_journal.id,
+        })
+        self.main_pos_config.payment_method_ids += cash_method
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'MultipleCashPaymentMethod', login="accountman")
