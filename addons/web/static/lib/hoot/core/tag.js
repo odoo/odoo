@@ -121,7 +121,7 @@ export function applyTags(job, tags) {
  */
 export function defineTags(...definitions) {
     return definitions.map((def) => {
-        const tagKey = def.key || normalize(def.name);
+        const tagKey = def.key || normalize(def.name.toLowerCase());
         if (existingTags[tagKey]) {
             throw new HootError(`duplicate definition for tag "${def.name}"`);
         }
@@ -137,9 +137,9 @@ export function defineTags(...definitions) {
  * @param {string[]} tagNames
  */
 export function getTags(tagNames) {
-    const tagKeys = tagNames.map(normalize);
-    return tagKeys.map((tagKey, i) => {
-        const tag = existingTags[tagKey] || defineTags({ key: tagKey, name: tagNames[i] })[0];
+    return tagNames.map((tagKey, i) => {
+        const nKey = normalize(tagKey.toLowerCase());
+        const tag = existingTags[nKey] || defineTags({ key: nKey, name: tagNames[i] })[0];
         return tag;
     });
 }
@@ -187,7 +187,7 @@ export class Tag {
         this.name = name;
         this.color = TAG_COLORS[stringToNumber(this.key) % TAG_COLORS.length];
         if (exclude) {
-            this.exclude = exclude.map(normalize);
+            this.exclude = exclude.map((id) => normalize(id.toLowerCase()));
         }
         if (before) {
             this.before = before;
