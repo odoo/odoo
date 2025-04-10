@@ -41,7 +41,7 @@ class AbstractAttachmentView extends Component {
 
     onClickNext() {
         const index = this.state.thread.attachmentsInWebClientView.findIndex((attachment) =>
-            attachment.eq(this.state.thread.mainAttachment)
+            attachment.eq(this.state.thread.message_main_attachment_id)
         );
         this.state.thread.setMainAttachmentFromIndex(
             index >= this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
@@ -50,7 +50,7 @@ class AbstractAttachmentView extends Component {
 
     onClickPrevious() {
         const index = this.state.thread.attachmentsInWebClientView.findIndex((attachment) =>
-            attachment.eq(this.state.thread.mainAttachment)
+            attachment.eq(this.state.thread.message_main_attachment_id)
         );
         this.state.thread.setMainAttachmentFromIndex(
             index <= 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
@@ -65,7 +65,7 @@ class AbstractAttachmentView extends Component {
     }
 
     get displayName() {
-        return this.state.thread.mainAttachment.name;
+        return this.state.thread.message_main_attachment_id.name;
     }
 
     onClickPopout() {}
