@@ -49,7 +49,7 @@ class TestSpeedscope(BaseCase):
                 'stack': [
                     ['/path/to/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
                     ['/path/to/file_1.py', 101, 'do_stuff1', 'cr.execute(query, params)'],
-                    ['/path/to/sql_db.py', 650, 'execute', 'res = self._obj.execute(query, params)'],
+                    ['/path/to/sql_db.py', 650, 'execute', 'res = self._obj__.execute(query, params)'],
                 ],
             }, {  # duplicate frame
                 'start': 4.0,
@@ -57,7 +57,7 @@ class TestSpeedscope(BaseCase):
                 'stack': [
                     ['/path/to/file_1.py', 10, 'main', 'do_stuff1(test=do_tests)'],
                     ['/path/to/file_1.py', 101, 'do_stuff1', 'cr.execute(query, params)'],
-                    ['/path/to/sql_db.py', 650, 'execute', 'res = self._obj.execute(query, params)'],
+                    ['/path/to/sql_db.py', 650, 'execute', 'res = self._obj__.execute(query, params)'],
                 ],
             }, {  # other frame
                 'start': 6.0,
