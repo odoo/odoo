@@ -387,8 +387,8 @@ def load_certificate():
     Send a request to Odoo with customer db_uuid and enterprise_code to get a true certificate
     """
     db_uuid = get_conf('db_uuid')
-    enterprise_code = get_conf('enterprise_code')
-    if not (db_uuid and enterprise_code):
+    enterprise_code = get_conf('enterprise_code') or ""
+    if not db_uuid:
         return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
 
     try:
@@ -398,6 +398,10 @@ def load_certificate():
             timeout=5,
         )
         response.raise_for_status()
+        error = response.json().get('error')
+        if error:
+            _logger.warning("An error received from odoo.com while trying to get the certificate: %s", error)
+            return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
         result = response.json()['result']
     except requests.exceptions.RequestException as e:
         _logger.exception("An error occurred while trying to reach odoo.com servers.")
