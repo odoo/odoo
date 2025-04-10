@@ -2816,3 +2816,43 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         with self.assertRaisesRegex(UserError, 'Any journal item on a payable account must have a due date and vice versa.'):
             move_form.save()
+
+    def test_default_tax(self):
+        ''' Tests that for invoices the default product tax is used. If none, the account default tax should be used.
+
+            In the case of receipts, the default receipt tax in the COA should take priority over the previous statement.
+        '''
+        receipt_tax = self.env['account.tax'].create({
+            'name': 'Default receipt tax',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 10,
+            'company_id': self.env.company.id,
+        })
+        product_tax = receipt_tax.copy({'name': 'Default product tax'})
+        account_tax = receipt_tax.copy({'name': 'Default account tax'})
+        invoice = self.init_invoice('in_invoice', products=self.product_a)
+        receipt = self.init_invoice('in_receipt', products=self.product_a)
+        moves = invoice + receipt
+
+        # Set up the default taxes
+        self.env.company.account_purchase_receipt_tax_id = receipt_tax
+        self.product_a.supplier_taxes_id = product_tax
+        moves.invoice_line_ids.account_id.tax_ids = account_tax
+
+        # Receipt tax (for the receipt only)
+        moves.invoice_line_ids._compute_tax_ids()
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, product_tax)
+        self.assertEqual(receipt.invoice_line_ids.tax_ids, receipt_tax)
+
+        # Product tax
+        self.env.company.account_purchase_receipt_tax_id = False
+        moves.invoice_line_ids._compute_tax_ids()
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, product_tax)
+        self.assertEqual(receipt.invoice_line_ids.tax_ids, product_tax)
+
+        # Account tax
+        self.product_a.supplier_taxes_id = False
+        moves.invoice_line_ids._compute_tax_ids()
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, account_tax)
+        self.assertEqual(receipt.invoice_line_ids.tax_ids, account_tax)
