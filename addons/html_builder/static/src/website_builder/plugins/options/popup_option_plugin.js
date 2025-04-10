@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { getElementsWithOption } from "@html_builder/utils/utils";
 
 class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
@@ -35,19 +36,14 @@ class PopupOptionPlugin extends Plugin {
     setup() {
         this.window = this.document.defaultView;
 
-        this.addDomListener(this.editable, "pointerdown", (ev) => {
+        this.addDomListener(this.editable, "click", (ev) => {
             // Note: links are excluded here so that internal modal buttons do
             // not close the popup as we want to allow edition of those buttons.
             if (ev.target.matches(".s_popup .js_close_popup:not(a, .btn)")) {
                 ev.stopPropagation();
                 const popupEl = ev.target.closest(".s_popup");
-                this.dependencies.visibility.toggleTargetVisibility(popupEl, false);
-                this.dispatchTo("update_invisible_panel", popupEl);
-                // Avoid selecting the snippet beneath the popup.
-                this.addDomListener(this.window, "pointerup", (ev) => ev.stopPropagation(), {
-                    once: true,
-                    capture: true,
-                });
+                this.onTargetHide(popupEl);
+                this.dependencies.visibility.onOptionVisibilityUpdate(popupEl, false);
             }
         });
     }
@@ -117,8 +113,11 @@ class PopupOptionPlugin extends Plugin {
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
             this.assignUniqueID(snippetEl);
-            this.window.Modal.getOrCreateInstance(snippetEl.querySelector(".modal")).show();
         }
+        const droppedEls = getElementsWithOption(snippetEl, ".s_popup");
+        droppedEls.forEach((droppedEl) =>
+            this.dependencies.visibility.toggleTargetVisibility(droppedEl, true, true)
+        );
     }
 
     onTargetShow(target) {

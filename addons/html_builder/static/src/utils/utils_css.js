@@ -1,4 +1,3 @@
-import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
 import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
 
 let editableWindow = window;
@@ -498,19 +497,6 @@ export function shouldEditableMediaBeEditable(mediaEl) {
         nonEditableAncestorRootEl.parentElement &&
         nonEditableAncestorRootEl.parentElement.isContentEditable
     );
-}
-/**
- * Checks if the view of the targeted element is mobile.
- *
- * @param {HTMLElement} targetEl - target of the editor
- * @returns {boolean}
- */
-export function isMobileView(targetEl) {
-    const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
-    const clientWidth =
-        targetEl.ownerDocument.defaultView?.frameElement?.clientWidth ||
-        targetEl.ownerDocument.documentElement.clientWidth;
-    return clientWidth && clientWidth < mobileViewThreshold;
 }
 /**
  * Returns the label of a link element.
