@@ -71,7 +71,6 @@ class EventEventTicket(models.Model):
     slot_ticket_ids = fields.One2many("event.event.ticket", "parent_ticket_id", string="Slot tickets")
     parent_ticket_id = fields.Many2one("event.event.ticket", string="Parent Ticket", ondelete="cascade")
     # seats
-    seats_max = fields.Integer(compute="_compute_seats_max", store=True, readonly=False, recursive=True)
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=False)
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=False)
     seats_used = fields.Integer(string='Used Seats', compute='_compute_seats', store=False)
@@ -234,6 +233,10 @@ class EventEventTicket(models.Model):
                 )
             ticket.display_name = name
 
+    @api.model
+    def _get_common_fields_w_parent_ticket(self):
+        return ['color', 'event_type_id', 'start_sale_datetime', 'end_sale_datetime', 'seats_max']
+
     def _get_ticket_multiline_description(self):
         """ Compute a multiline description of this ticket. It is used when ticket
         description are necessary without having to encode it manually, like sales
@@ -249,6 +252,18 @@ class EventEventTicket(models.Model):
         tickets = super().create(vals_list)
         tickets._compute_name()  # Override default name for slot tickets
         return tickets
+
+    def write(self, vals):
+        common_parent_updated_vals = {
+            field: vals[field]
+            for field in vals
+            if field in self._get_common_fields_w_parent_ticket()
+        }
+        if common_parent_updated_vals:
+            parent_tickets = self.filtered(lambda ticket: not ticket.slot_id)
+            if parent_tickets:
+                parent_tickets.slot_ticket_ids.write(common_parent_updated_vals)
+        return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_if_registrations(self):

@@ -540,16 +540,17 @@ class EventEvent(models.Model):
                 continue
             # Effective tickets = slot tickets
             effective_slot_tickets = effective_slot_tickets_per_event.get(event, self.env['event.event.ticket'])
-            expected_combinations = {(slot.id, ticket.id) for ticket in event.no_slot_ticket_ids for slot in event.slot_ids}
+            expected_combinations = {(slot, ticket) for ticket in event.no_slot_ticket_ids for slot in event.slot_ids}
             existing_combinations = {
-                (slot_ticket.slot_id.id, slot_ticket.parent_ticket_id.id)
+                (slot_ticket.slot_id, slot_ticket.parent_ticket_id)
                 for slot_ticket in effective_slot_tickets
             }
             combinations_to_add = expected_combinations - existing_combinations
             combinations_to_keep = expected_combinations & existing_combinations
             slot_tickets_to_keep = effective_slot_tickets.filtered(lambda st:
-                (st.slot_id.id, st.parent_ticket_id.id) in combinations_to_keep
+                (st.slot_id, st.parent_ticket_id) in combinations_to_keep
             )
+            common_fields_w_parent = self.env['event.event.ticket']._get_common_fields_w_parent_ticket()
             event.event_ticket_ids = (
                 # Clear to unlink past no slot tickets or non expected slot tickets
                 [Command.clear()] +
@@ -558,9 +559,16 @@ class EventEvent(models.Model):
                 # Create missing slot - ticket combinations
                 [Command.create({
                     'event_id': event.id,
-                    'slot_id': slot_id,
-                    'parent_ticket_id': ticket_id,
-                }) for slot_id, ticket_id in combinations_to_add]
+                    'slot_id': slot.id,
+                    'parent_ticket_id': ticket.id,
+                    **{
+                        field: ticket[field].id
+                            if isinstance(ticket[field], models.BaseModel)
+                            else ticket[field]
+                        for field in common_fields_w_parent
+                    }
+                })
+                for slot, ticket in combinations_to_add]
             )
 
     @api.depends('event_type_id')
