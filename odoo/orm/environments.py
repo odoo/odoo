@@ -206,6 +206,18 @@ class Environment(Mapping[str, "BaseModel"]):
         return {}
 
     @lazy_property
+    def _access_context(self) -> tuple:
+        return self['ir.rule']._get_user_context_values()
+
+    @lazy_property
+    def _access_read(self):
+        return self.transaction.access_read[self._access_context]
+
+    @lazy_property
+    def _access_write(self):
+        return self.transaction.access_write[self._access_context]
+
+    @lazy_property
     def user(self) -> BaseModel:
         """Return the current user (as an instance).
 
@@ -354,6 +366,7 @@ class Environment(Mapping[str, "BaseModel"]):
         if flush:
             self.flush_all()
         self.cache.invalidate()
+        self.transaction.clear_access_cache()
 
     def _recompute_all(self) -> None:
         """ Process all pending computations. """
@@ -520,7 +533,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
-    __slots__ = ('_Transaction__file_open_tmp_paths', 'cache', 'default_env', 'envs', 'protected', 'registry', 'tocompute')
+    __slots__ = ('_Transaction__file_open_tmp_paths', 'access_read', 'access_write', 'cache', 'default_env', 'envs', 'protected', 'registry', 'tocompute')
 
     def __init__(self, registry: Registry):
         self.registry = registry
@@ -535,6 +548,10 @@ class Transaction:
         self.protected = StackMap["Field", OrderedSet["IdType"]]()
         # pending computations {field: ids}
         self.tocompute = defaultdict["Field", OrderedSet["IdType"]](OrderedSet)
+        # permission cache for record access by user
+        # {access_context: {model_name: {record_id: bool}}}
+        self.access_read = defaultdict(lambda: defaultdict(dict))
+        self.access_write = defaultdict(lambda: defaultdict(dict))
         # temporary directories (managed in odoo.tools.file_open_temporary_directory)
         self.__file_open_tmp_paths = ()  # type: ignore # noqa: PLE0237
 
@@ -549,8 +566,32 @@ class Transaction:
                 Environment(env.cr, public_user.id, {}).flush_all()
                 break
 
+    def clear_access_cache(self, model_name: str = '') -> None:
+        """ Clear the access cache for record rule checks. """
+        if model_name:
+            def op(context_dict):
+                context_dict.pop(model_name, None)
+        else:
+            def op(context_dict):
+                context_dict.clear()
+        for context_dict in self.access_read.values():
+            op(context_dict)
+        for context_dict in self.access_write.values():
+            op(context_dict)
+
+    def _add_to_access_cache(self, record: BaseModel, operation: typing.Literal['read', 'write'] = 'read') -> None:
+        """ Patch the cache so that the user has access to a record."""
+        if operation == 'read':
+            cache = record.env._access_read
+        elif operation == 'write':
+            cache = record.env._access_write
+        else:
+            return
+        cache[record._name].update(dict.fromkeys(record._ids, True))
+
     def clear(self):
         """ Clear the caches and pending computations and updates in the transactions. """
+        self.clear_access_cache()
         self.cache.clear()
         self.tocompute.clear()
 
@@ -562,6 +603,8 @@ class Transaction:
         self.registry = Registry(self.registry.db_name)
         for env in self.envs:
             lazy_property.reset_all(env)
+        self.access_read.clear()
+        self.access_write.clear()
         self.clear()
 
 

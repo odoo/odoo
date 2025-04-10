@@ -1656,7 +1656,7 @@ class Field(typing.Generic[T]):
                 env.remove_to_compute(field, records)
 
         try:
-            with records.env.protecting(fields, records):
+            with env.protecting(fields, records):
                 records._compute_field_value(self)
         except Exception:
             for field in fields:
