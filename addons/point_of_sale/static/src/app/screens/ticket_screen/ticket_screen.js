@@ -74,7 +74,7 @@ export class TicketScreen extends Component {
             nbrByPage: NBR_BY_PAGE,
             page: 1,
             nbrPage: 1,
-            filter: null,
+            filter: this.pos.config.module_pos_restaurant ? "ONGOING" : null,
             search: this.pos.getDefaultSearchDetails(),
             selectedOrderUuid: this.pos.getOrder()?.uuid || null,
             selectedOrderlineIds: {},
@@ -191,6 +191,9 @@ export class TicketScreen extends Component {
                 this.state.selectedOrderlineIds[clickedOrder.id] = firstLine.id;
             }
         }
+    }
+    async onClickReprintAll() {
+        await this.pos.sendOrderInPreparation(this.getSelectedOrder(), { reprintAll: true });
     }
     async onNextPage() {
         if (this.state.page < this.getNbrPages()) {

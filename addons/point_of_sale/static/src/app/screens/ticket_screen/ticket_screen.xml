@@ -196,7 +196,13 @@
                                 </div>
                             </t>
                             <div t-else="" class="pads d-flex gap-2 m-2 mt-0" >
-                                <BackButton onClick="() => pos.onClickBackButton()"/>
+                                <BackButton t-if="ui.isSmall" onClick="() => pos.onClickBackButton()"/>
+                                <t t-debug="pdb"/>
+                                <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
+                                    t-on-click="() => this.onClickReprintAll()"
+                                    t-if="this.pos.unwatched.printers.length and _selectedSyncedOrder.uiState.lastPrints.length">
+                                    <i class="fa fa-cutlery" aria-hidden="true"/>
+                                </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
                                     t-att-disabled="!_selectedSyncedOrder"
                                     t-on-click="() => this._setOrder(_selectedSyncedOrder)">

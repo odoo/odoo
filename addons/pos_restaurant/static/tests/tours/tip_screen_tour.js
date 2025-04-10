@@ -36,6 +36,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             ProductScreen.totalAmountIs("4.0"),
             Chrome.clickPlanButton(),
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
             {
                 trigger: `.ticket-screen .orders .order-row:contains(Tipping):contains($ 2.00)`,
             },
@@ -63,6 +64,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             ProductScreen.clickCloseButton(),
             ProductScreen.setTab("Test"),
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
             {
                 trigger: `.ticket-screen .orders .order-row:contains(Tipping):contains($ 6.00)`,
             },
@@ -79,6 +81,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
 
             // Tip 25% on order3
             TicketScreen.selectOrderByPrice("6.0"),
