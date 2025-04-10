@@ -19,18 +19,22 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
     # Field to store the scanned PC container barcode
     pc_container_code_id = fields.Many2one(
-        'pc.container.barcode.configuration', string='Scan Barcode', required=True
+        'pc.container.barcode.configuration',
+        string='Scan PC Tote Barcode',
+        required=True,
+        domain="[('site_code_id', '=', site_code_id)]"
     )
+
     warehouse_id = fields.Many2one(related='pc_container_code_id.warehouse_id', store=True)
-    site_code_id = fields.Many2one(related='pc_container_code_id.site_code_id', store=True)
+    site_code_id = fields.Many2one('site.code.configuration', string='Site Code', store=True)
     picking_ids = fields.Many2many('stock.picking', string='Pick Numbers', store=True)
     line_ids = fields.One2many('custom.pack.app.wizard.line', 'wizard_id', string='Product Lines')
-    pack_bench_id = fields.Many2one('pack.bench.configuration', string='Pack Bench', required=True)
-    # package_box_type_id = fields.Many2one(
-    #     'package.box.configuration', string='Package Box Type',
-    #     help="Select packaging box for single picking.",
-    #     required=True
-    # )
+    pack_bench_id = fields.Many2one(
+        'pack.bench.configuration',
+        string='Pack Bench',
+        required=True,
+        domain="[('site_code_id', '=', site_code_id)]"
+    )
     show_package_box_in_lines = fields.Boolean(compute="_compute_show_package_box_in_lines",
                                                default=False,
                                                store=True)
@@ -46,6 +50,16 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     )
     next_package_number = fields.Integer(string='Next Package Number', default=1)
     confirm_increment = fields.Boolean(string="Confirm Increment")
+
+    @api.model
+    def default_get(self, fields):
+        res = super(PackDeliveryReceiptWizard, self).default_get(fields)
+        active_id = self.env.context.get('active_id')
+        if active_id:
+            pack_app = self.env['custom.pack.app'].browse(active_id)
+            if 'site_code_id' in fields and pack_app.site_code_id:
+                res['site_code_id'] = pack_app.site_code_id.id
+        return res
 
     def increment_package_number(self):
         self.ensure_one()
@@ -109,26 +123,33 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 wizard.tenant_code_id = False
                 wizard.line_count = 0
 
-
     @api.onchange('pc_container_code_id')
     def _onchange_pc_container_code_id(self):
         """
         Handles the logic when a PC container code is scanned.
-        It filters for pickings that are in 'pick' state and assigns them.
+        Filters for pickings that:
+        - are in 'pick' state,
+        - match the scanned PC container code,
+        - belong to the same site_code as the wizard.
         """
         if self.pc_container_code_id:
-            all_pickings = self.env['stock.picking'].search([('current_state', '=', 'pick'),
-                                                             ('move_ids_without_package.pc_container_code', '=', self.pc_container_code_id.name)])
-            if not all_pickings:
-                raise ValidationError(_("No Picking found for this PC container code."))
-            # Debugging Output
-            for picking in all_pickings:
-                _logger.info(f"Picking ID: {picking.id}, State: {picking.current_state}")
+            if not self.site_code_id:
+                raise ValidationError(_("Site Code must be selected before scanning the PC Tote."))
 
+            all_pickings = self.env['stock.picking'].search([
+                ('current_state', '=', 'pick'),
+                ('move_ids_without_package.pc_container_code', '=', self.pc_container_code_id.name),
+                ('site_code_id', '=', self.site_code_id.id),
+            ])
+
+            if not all_pickings:
+                raise ValidationError(_("No Picking found for this PC container code and site code."))
+
+            _logger.info(
+                f"Filtered Pickings for PC Code {self.pc_container_code_id.name} and Site {self.site_code_id.name}: {all_pickings.ids}")
             self.picking_ids = [(6, 0, all_pickings.ids)]
 
-            # Log successful selection
-            _logger.info(f"Assigned Picking IDs: {self.picking_ids}")
+            # Optionally auto-select package box
             self._auto_select_package_box_type()
 
     @api.depends('picking_ids')
@@ -315,6 +336,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                             SET current_state = %s 
                             WHERE id = %s
                         """
+                    confirm_pick = line.picking_id.button_validate()
                     self.env.cr.execute(query, (new_state, picking.id))
                     so_query = f"""
                                     UPDATE sale_order SET pick_status= 'packed'
@@ -327,7 +349,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     picking._invalidate_cache(['current_state'])
                     _logger.info(f"Picking {picking.name} forced update to '{new_state}' in database.")
                     # Container Release payload
-                    self.release_container()
+                    # self.release_container()
         else:
             for picking in self.picking_ids:
                 line_states = set(self.line_ids.filtered(lambda l: l.picking_id == picking).mapped('current_state'))
@@ -347,6 +369,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         SET current_state = %s 
                         WHERE id = %s
                     """
+                confirm_pick = line.picking_id.button_validate()
                 self.env.cr.execute(query, (new_state, picking.id))
                 so_query = f"""
                                 UPDATE sale_order SET pick_status= 'packed'
@@ -360,7 +383,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 _logger.info(f"Picking {picking.name} forced update to '{new_state}' in database.")
 
             # Container Release payload
-            self.release_container()
+            # self.release_container()
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -410,7 +433,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.error(f"Error releasing container {container_code}: {str(e)}")
             raise UserError(_("Error releasing container: %s") % str(e))
 
-        def process_single_pick(self):
+    def process_single_pick(self):
         """
         Processes the pack operation when there is only one pick number.
         Returns the formatted payload.
@@ -601,6 +624,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         ('partially_pick', 'Partially Pick')
     ], default='draft')
     product_package_number = fields.Integer(string='Package Number', required=True)
+    serial_number = fields.Char(string='Serial Number')
 
     @api.onchange('product_id', 'package_box_type_id')
     def _compute_add_line_boolean(self):
@@ -652,15 +676,35 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                 line.line_added = False
                 _logger.debug("Product, package box type, or weight not properly set, skipping payload preparation.")
 
-    @api.depends('wizard_id.picking_ids', 'product_id')
+    @api.depends('wizard_id.picking_ids', 'product_id', 'line_added')
     def _compute_picking_id(self):
         """
-        Compute the picking number based on the product.
+        Assign picking_id based on exact match between product and pc_container_code.
+        Prevent mapping of the same SKU across multiple picks.
         """
-        for line in self:
-            picking = line.wizard_id.picking_ids.filtered(
-                lambda p: line.product_id in p.move_ids_without_package.mapped('product_id'))[:1]
-            line.picking_id = picking.id if picking else False
+        for wizard in self.mapped('wizard_id'):
+            used = set()
+            multiple_picks = len(wizard.picking_ids) > 1
+            for line in wizard.line_ids:
+                if not line.product_id:
+                    line.picking_id = False
+                    continue
+
+                pickings = wizard.picking_ids.filtered(
+                    lambda p: any(
+                        m.product_id == line.product_id and
+                        m.pc_container_code == wizard.pc_container_code_id.name
+                        for m in p.move_ids_without_package
+                    )
+                )
+
+                for pick in pickings:
+                    if (line.product_id.id, pick.id) not in used:
+                        line.picking_id = pick
+                        used.add((line.product_id.id, pick.id))
+                        break
+                else:
+                    line.picking_id = False
 
     @api.depends('wizard_id.picking_ids')
     def _compute_available_products(self):

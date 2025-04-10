@@ -13,7 +13,10 @@ class CrateBarcodeConfiguration(models.Model):
     pc_container_status = fields.Selection([('release', 'Release'),
                                      ('occupied', 'Occupied'),],
                                     string='PC container Status', default='release')
-    site_code_id = fields.Many2one('site.code.configuration', string='Site Code', store=True)
+    site_code_id = fields.Many2one('site.code.configuration',
+                                   required=True,
+                                   string='Site Code',
+                                   store=True)
     warehouse_id = fields.Many2one(related='site_code_id.warehouse_id', store=True)
 
     def action_set_release(self):

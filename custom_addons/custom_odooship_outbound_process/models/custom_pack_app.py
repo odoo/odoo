@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-
+from odoo.exceptions import ValidationError
 
 class PackAPP(models.Model):
     _name = 'custom.pack.app'
@@ -45,15 +45,18 @@ class PackAPP(models.Model):
         Change the state of the Pack App to 'in_progress'
         and open the wizard to Pack an items .
         """
-        self.state = 'in_progress'
-        return {
-            'name': _('Pack Screen'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'custom.pack.app.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'active_id': self.id},
-        }
+        for record in self:
+            if not record.site_code_id:
+                raise ValidationError(_("Please select a Site Code before proceeding to the Pack Screen."))
+            self.state = 'in_progress'
+            return {
+                'name': _('Pack Screen'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'custom.pack.app.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'active_id': self.id},
+            }
 
     def button_action_done(self):
         """
@@ -96,8 +99,7 @@ class PackAPPLine(models.Model):
     sale_order_id = fields.Many2one('sale.order', string='Sale Orders')
     tenant_code_id = fields.Many2one(related='picking_id.tenant_code_id', string='Tenant ID')
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code')
-
-
+    serial_number = fields.Char(string='Serial Number')
 
     @api.model
     def create(self, vals_list):

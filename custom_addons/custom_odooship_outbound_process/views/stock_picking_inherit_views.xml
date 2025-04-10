@@ -9,6 +9,18 @@
             <field name="arch" type="xml">
                  <xpath expr="//form/header" position="inside">
                      <hr/><field name="current_state" widget="statusbar"/>
+                     <button name="action_confirm_geek_pick"
+                            string="Geek Pick confirm"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state in ('done', 'cancel')"
+                    />
+                     <button name="action_confirm_pack"
+                            string="Geek Pack confirm"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state in ('done', 'cancel')"
+                    />
                 </xpath>
 
                 <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']" position="after">
