@@ -14,7 +14,6 @@ from odoo.tools import config
 def parse_args():
     parser = argparse.ArgumentParser(description='Run diff tests for Odoo')
     parser.add_argument('--addons-path', type=str, required=True, help='Specify addons path')
-    parser.add_argument('--upgrade-path', type=str, help='Specify upgrade path')
     parser.add_argument('--diff-dir', type=str, required=True, help='Specify the absolute path for diff files')
     parser.add_argument('--gen-diff', action='store_true', help='Automatically generate git diff for debugging or local testing')
     parser.add_argument('--output', type=str, required=True, help='Specify the path for JSON results output')
@@ -27,7 +26,6 @@ if __name__ == '__main__':
     args = parse_args()
     config._parse_config([
         '--addons-path', args.addons_path,
-        '--upgrade-path', args.upgrade_path,
         '--test-enable',
         '--test-tags', args.test_tags,
     ])

@@ -74,10 +74,13 @@ class DiffFile:
 
 
 class Element:
-    __slots__ = ('start_lineno', 'end_lineno', '_element')
+    __slots__ = ('start_tag_linenos', 'end_tag_lineno', 'start_tag_in_diff', '_element')
 
     def __init__(self, element: etree._Element):
-        self._element = element
+        self._element: etree._Element = element
+        self.start_tag_linenos: tuple[int, int] = (0, 0)
+        self.end_tag_lineno: int = 0
+        self.start_tag_in_diff: bool = False
 
     def __getattr__(self, name: str) -> Any:
         if name in self.__slots__:
@@ -225,25 +228,34 @@ class DiffCase(BaseCase):
     diagnostices: list[DiagnosticMessage] = []
 
     @classmethod
-    def get_xml_diff_elements(cls, abs_path: str, diff_linenos: set[int] | None = None) -> Generator[Element, None, None]:
+    def get_xml_elements(cls, abs_path: str, diff_linenos: set[int] | None = None) -> list[Element]:
         assert abs_path.endswith('.xml')
         if diff_linenos is None:
             diff_file = cls.diff_files['.xml'].get(abs_path)
             if not diff_file:
-                return
+                return []
             diff_linenos = diff_file.diff_linenos
         _logger.info(f'Checking {abs_path}')
+
+        elements: dict[etree._Element, Element] = {}
+        def convert_element(element: etree._Element) -> Element:
+            if element in elements:
+                return elements[element]
+            e = elements[element] = Element(element)
+            return e
+
         with open(abs_path, 'rb') as fp:
             previous_line = 1
-            # `list` the iterpase result to promise each element has all the attributes
-            for event, element in list(etree.iterparse(fp, events=('start', 'end', 'comment', 'pi'))):
+            event_elements = [
+                (event, convert_element(element))
+                for event, element in etree.iterparse(fp, events=('start', 'end', 'comment', 'pi'))
+            ]
+            for event, element in event_elements:
                 if event == 'start':
                     # element.sourceline is the line number of the last line of the start tag
                     if any(line in diff_linenos for line in range(previous_line, element.sourceline + 1)):
-                        e = Element(element)
-                        e.start_lineno = previous_line
-                        e.end_lineno = element.sourceline
-                        yield e
+                        element.start_tag_linenos = (previous_line, element.sourceline)
+                        element.start_tag_in_diff = True
                     previous_line = element.sourceline
                     if element.text:
                         previous_line += element.text.count('\n')
@@ -254,10 +266,12 @@ class DiffCase(BaseCase):
                     #     >
                     if element.tail:
                         previous_line += element.tail.count('\n')
+                    element.end_tag_lineno = previous_line
                 else:  # 'comment', 'pi'
                     previous_line = element.sourceline
                     if element.tail:
                         previous_line += element.tail.count('\n')
+        return [element for event, element in event_elements if event == 'start']
 
     @classmethod
     def setUpClass(cls):

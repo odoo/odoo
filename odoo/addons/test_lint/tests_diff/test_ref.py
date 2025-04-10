@@ -144,25 +144,25 @@ def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: 
         record = element
         id_attr = record.attrib.get('id')
         if id_attr and is_ref_risky(id_attr) and 'forcecreate' not in record.attrib:
-            result.append(XML_INHERIT_ID(diff_file, record.start_lineno, record.end_lineno))
+            result.append(XML_INHERIT_ID(diff_file, *record.start_tag_linenos))
     elif element.tag == 'field':
         field = element
         ref_attr = field.attrib.get('ref')
         if ref_attr:
             if is_ref_risky(ref_attr) and 'forcecreate' not in field.attrib:
-                result.append(XML_REF(diff_file, field.start_lineno, field.end_lineno))
+                result.append(XML_REF(diff_file, *field.start_tag_linenos))
         if eval_attr := field.attrib.get('eval'):
             # parse as python ast, check function ref
             # add to issues if ref for another module without raise_if_not_found=False
             tree = ast.parse(eval_attr)
             visitor = EvalRefVisitor(protected_xml_ids=protected_xml_ids)
             visitor.visit(tree)
-            result.extend(dk(diff_file, field.start_lineno, field.end_lineno) for dk in visitor.diagnostic_kinds)
+            result.extend(dk(diff_file, *field.start_tag_linenos) for dk in visitor.diagnostic_kinds)
     elif element.tag == 'template':
         template = element
         id_attr = template.attrib.get('inherit_id')
         if id_attr and is_ref_risky(id_attr) and 'forcecreate' not in template.attrib:
-            result.append(XML_INHERIT_ID(diff_file, template.start_lineno, template.end_lineno))
+            result.append(XML_INHERIT_ID(diff_file, *template.start_tag_linenos))
     return result
 
 
@@ -214,8 +214,8 @@ class TestRef(DiffCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # cls.protected_xml_ids = set()
-        cls.protected_xml_ids = _get_protected_xml_ids()
+        cls.protected_xml_ids = set()
+        # cls.protected_xml_ids = _get_protected_xml_ids()
 
     def test_env_ref_usage(self):
         """Check for env.ref calls without raise_if_not_found=False."""
@@ -245,5 +245,6 @@ class TestRef(DiffCase):
                 init = diff_file.path_to_module in data_files
                 if not os.path.exists(diff_file.path):
                     continue
-                for element in self.get_xml_diff_elements(diff_file.path):
-                    self.diagnostices.extend(check_ref_for_data_xml_element(element, diff_file, init, self.protected_xml_ids))
+                for element in self.get_xml_elements(diff_file.path):
+                    if element.start_tag_in_diff:
+                        self.diagnostices.extend(check_ref_for_data_xml_element(element, diff_file, init, self.protected_xml_ids))
