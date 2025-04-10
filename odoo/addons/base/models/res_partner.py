@@ -468,6 +468,11 @@ class ResPartner(models.Model):
             raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
 
     @api.constrains('company_id')
+    def _check_commercial_parnter_company(self):
+        if self.commercial_partner_id.company_id and self.company_id != self.commercial_partner_id.company_id:
+            raise ValidationError(_('The commercial partner has a different company.'))
+
+    @api.constrains('company_id')
     def _check_partner_company(self):
         """
         Check that for every partner which has a company,
@@ -768,8 +773,6 @@ class ResPartner(models.Model):
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             self.env._("The selected company is not compatible with the companies of the related user(s)"))
-                if partner.child_ids:
-                    partner.child_ids.write({'company_id': company_id})
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
         if 'is_company' in vals and not self.env.su and self.env.user.has_group('base.group_partner_manager'):
@@ -777,6 +780,8 @@ class ResPartner(models.Model):
             del vals['is_company']
         result = result and super().write(vals)
         for partner in self:
+            if 'company_id' in vals and partner.child_ids:
+                partner.child_ids.write({'company_id': vals["company_id"]})
             if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access('write')
             partner._fields_sync(vals)
