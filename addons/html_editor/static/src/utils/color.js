@@ -134,3 +134,27 @@ export function getTextColorOrClass(node) {
     }
     return null;
 }
+
+export function getColor(element, mode) {
+    let fontEl = closestElement(element, "FONT,SPAN");
+    if (mode === "color") {
+        if (!fontEl || !hasColor(fontEl, "color")) {
+            // If no color found on font/span, check LI.
+            fontEl = closestElement(element, "LI");
+            if (!fontEl || !hasColor(fontEl, "color")) {
+                return false;
+            }
+        }
+    } else if (!fontEl || !hasColor(fontEl, "backgroundColor")) {
+        return false;
+    }
+    const elStyle = getComputedStyle(fontEl);
+    const backgroundImage = elStyle.backgroundImage;
+    const hasGradient = isColorGradient(backgroundImage);
+    const hasTextGradientClass = fontEl.classList.contains("text-gradient");
+    if (mode === "color") {
+        return hasGradient && hasTextGradientClass ? backgroundImage : elStyle.color;
+    } else {
+        return hasGradient && !hasTextGradientClass ? backgroundImage : elStyle.backgroundColor;
+    }
+}

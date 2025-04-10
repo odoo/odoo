@@ -822,11 +822,11 @@ describe("Toolbar", () => {
         expect(getContent(el)).toBe(`<p>this <b>is</b>[ a UX te]st.</p>`);
     });
 
-    test("Remove format button should be the last one in the decoration button group", async () => {
+    test("Remove format button should be the second last one in the decoration button group", async () => {
         await setupEditor("<p>[abc]</p>");
         await expandToolbar();
         const formatButtons = queryAll(".o-we-toolbar .btn-group[name='decoration'] .btn");
-        expect(formatButtons.at(-1)).toHaveAttribute("name", "remove_format");
+        expect(formatButtons.at(-2)).toHaveAttribute("name", "remove_format");
     });
 
     test("Remove format button should be enabled when font-sized text is selected", async () => {
