@@ -5,6 +5,7 @@ import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_tab
 import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
+import { session } from "@web/session";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -19,6 +20,7 @@ export class CartPage extends Component {
             fillInformations: false,
             cancelConfirmation: false,
         });
+        this.setDefaultTable();
     }
 
     get lines() {
@@ -185,6 +187,15 @@ export class CartPage extends Component {
             this.selfOrder.notification.add(_t("You cannot edit a posted orderline !"), {
                 type: "danger",
             });
+        }
+    }
+
+    setDefaultTable() {
+        if (session.data.table_id) {
+            const table = this.selfOrder.models["restaurant.table"].get(session.data.table_id);
+            this.selfOrder.currentOrder.table_id = table;
+            this.selfOrder.currentTable = table;
+            this.router.addTableIdentifier(table);
         }
     }
 }
