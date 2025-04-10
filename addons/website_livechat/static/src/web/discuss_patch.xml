@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Discuss-threadAvatar')]" position="before">
+            <div t-if="thread.channel_type === 'livechat' and thread.correspondent" title="Avatar" class="me-2 d-flex justify-content-center">
+                <img class="rounded o-website_livechat-Visitor-avatar o_object_fit_cover" t-att-src="thread.correspondent.persona.avatarUrl" alt="Avatar"/>
+            </div>
+        </xpath>
+        <xpath expr="//t[@name='description']" position="after">
+            <span title="Language" t-if="thread.livechat_visitor_id?.lang_id">
+                <i class="me-1 fa fa-comment-o" aria-label="Language"/>
+                <t t-out="thread.livechat_visitor_id.lang_id.name"/>
+            </span>
+        </xpath>
+    </t>
+</templates>
