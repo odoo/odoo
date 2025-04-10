@@ -978,44 +978,49 @@ class BaseModel(metaclass=MetaModel):
 
             errors = 0
             # try again, this time record by record
-            for i, rec_data in enumerate(data_list, 1):
-                try:
-                    with cr.savepoint():
+            with cr.savepoint() as savepoint:
+                for i, rec_data in enumerate(data_list, 1):
+                    try:
                         rec = self._load_records([rec_data], mode == 'update')
+                        cr.flush()  # make sure flush exceptions are raised here
                         ids.append(rec.id)
-                except psycopg2.Warning as e:
-                    info = rec_data['info']
-                    messages.append(dict(info, type='warning', message=str(e)))
-                except psycopg2.Error as e:
-                    info = rec_data['info']
-                    pg_error_info = {'message': self._sql_error_to_message(e)}
-                    if e.diag.table_name == self._table:
-                        e_fields = get_columns_from_sql_diagnostics(self.env.cr, e.diag, check_registry=True)
-                        if len(e_fields) == 1:
-                            pg_error_info['field'] = e_fields[0]
-                    messages.append(dict(info, type='error', **pg_error_info))
-                    # Failed to write, log to messages, rollback savepoint (to
-                    # avoid broken transaction) and keep going
-                    errors += 1
-                except UserError as e:
-                    info = rec_data['info']
-                    messages.append(dict(info, type='error', message=str(e)))
-                    errors += 1
-                except Exception as e:
-                    _logger.debug("Error while loading record", exc_info=True)
-                    info = rec_data['info']
-                    message = _('Unknown error during import: %(error_type)s: %(error_message)s', error_type=type(e), error_message=e)
-                    moreinfo = _('Resolve other errors first')
-                    messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
-                    # Failed for some reason, perhaps due to invalid data supplied,
-                    # rollback savepoint and keep going
-                    errors += 1
-                if errors >= 10 and (errors >= i / 10):
-                    messages.append({
-                        'type': 'warning',
-                        'message': _(u"Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
-                    })
-                    break
+                    except psycopg2.Warning as e:
+                        savepoint.rollback()
+                        info = rec_data['info']
+                        messages.append(dict(info, type='warning', message=str(e)))
+                    except psycopg2.Error as e:
+                        savepoint.rollback()
+                        info = rec_data['info']
+                        pg_error_info = {'message': self._sql_error_to_message(e)}
+                        if e.diag.table_name == self._table:
+                            e_fields = get_columns_from_sql_diagnostics(self.env.cr, e.diag, check_registry=True)
+                            if len(e_fields) == 1:
+                                pg_error_info['field'] = e_fields[0]
+                        messages.append(dict(info, type='error', **pg_error_info))
+                        # Failed to write, log to messages, rollback savepoint (to
+                        # avoid broken transaction) and keep going
+                        errors += 1
+                    except UserError as e:
+                        savepoint.rollback()
+                        info = rec_data['info']
+                        messages.append(dict(info, type='error', message=str(e)))
+                        errors += 1
+                    except Exception as e:  # noqa: BLE001
+                        savepoint.rollback()
+                        _logger.debug("Error while loading record", exc_info=True)
+                        info = rec_data['info']
+                        message = _('Unknown error during import: %(error_type)s: %(error_message)s', error_type=e.__class__, error_message=e)
+                        moreinfo = _('Resolve other errors first')
+                        messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
+                        # Failed for some reason, perhaps due to invalid data supplied,
+                        # rollback savepoint and keep going
+                        errors += 1
+                    if errors >= 10 and (errors >= i / 10):
+                        messages.append({
+                            'type': 'warning',
+                            'message': _("Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
+                        })
+                        break
             if errors > 0 and global_error_message and global_error_message not in messages:
                 # If we cannot create the records 1 by 1, we display the error raised when we created the records simultaneously
                 messages.insert(0, global_error_message)
