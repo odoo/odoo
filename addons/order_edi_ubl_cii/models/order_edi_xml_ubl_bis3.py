@@ -13,39 +13,10 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
     ##### Order EDI Export
     #####################################################################################
 
-    def _get_partner_address_vals(self, partner):
-        vals = super()._get_partner_address_vals(partner)
-        vals.pop('country_vals', None)
-        vals['country_identification_code'] = partner.country_id.code
-        return vals
-
-    def _get_partner_party_tax_scheme_vals(self, partner):
-        return {
-            'company_id': partner.vat,
-            'tax_scheme_vals': {'id': 'VAT'},
-        }
-
-    def _get_partner_party_legal_entity_vals(self, partner):
-        return {
-            'registration_name': partner.name,
-            'company_id': partner.vat,
-            'registration_address_vals': self._get_partner_address_vals(partner),
-        }
-
-    def _get_partner_party_vals(self, partner, role):
-        vals = {
-            'party_name': partner.display_name,
-            'postal_address_vals': self._get_partner_address_vals(partner),
-            'contact_vals': self._get_partner_contact_vals(partner),
-        }
-        if role == 'customer':
-            vals['party_tax_scheme_vals'] = self._get_partner_party_tax_scheme_vals(partner.commercial_partner_id)
-        return vals
-
-    def _get_payment_terms_vals(self, payment_term):
-        return {
-            'note': payment_term.name
-        }
+    def _get_order_payment_terms_vals(self, payment_term):
+        if payment_term:
+            return {'note': html2plaintext(payment_term.note)}
+        return {}
 
     def _get_tax_category_vals(self, order, order_line):
         if not order_line.tax_ids:
@@ -168,7 +139,7 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
                 'delivery_party_vals': self._get_partner_party_vals(delivery, role='delivery'),
                 'supplier_party_vals': self._get_partner_party_vals(supplier, role='supplier'),
                 'customer_party_vals': self._get_partner_party_vals(customer, role='customer'),
-                'payment_terms_vals': self._get_payment_terms_vals(order.payment_term_id),
+                'payment_terms_vals': self._get_order_payment_terms_vals(order.payment_term_id),
                 'anticipated_monetary_total_vals': anticipated_monetary_total_vals,
                 'tax_amount': order.amount_tax,
                 'order_lines': order_lines,
