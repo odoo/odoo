@@ -64,6 +64,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
+        super()._onchange_standard_price()
         if self.lot_valuated and any(p.quantity_svl for p in self.product_variant_ids):
             return {
                 'warning': {
@@ -226,6 +227,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
+        super()._onchange_standard_price()
         if self.lot_valuated:
             return {
                 'warning': {

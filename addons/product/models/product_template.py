@@ -399,6 +399,11 @@ class ProductTemplate(models.Model):
         for template in self:
             template.product_variant_count = len(template.product_variant_ids)
 
+    @api.onchange('standard_price')
+    def _onchange_standard_price(self):
+        if self.standard_price < 0:
+            raise ValidationError(_("The cost of a product can't be negative."))
+
     @api.onchange('default_code')
     def _onchange_default_code(self):
         if not self.default_code:
