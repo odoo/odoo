@@ -868,6 +868,16 @@ class MrpProduction(models.Model):
             if sum(order.move_byproduct_ids.filtered(lambda m: m.state != 'cancel').mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a manufacturing order's by-products cannot exceed 100."))
 
+    @api.readonly
+    def web_read(self, specification: dict[str, dict]) -> list[dict]:
+        res = super().web_read(specification)
+
+        for production in res:
+            if not production.get('move_byproduct_ids', False):
+                continue
+            production['move_byproduct_ids'].sort(key=lambda p: p['id'])
+        return res
+
     def write(self, vals):
         if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
             vals['move_finished_ids'] = vals.get('move_finished_ids', []) + vals['move_byproduct_ids']
@@ -1252,6 +1262,14 @@ class MrpProduction(models.Model):
             origin = '%s,%s' % (origin, self.name)
         return origin
 
+    def _pick_finished_moves(self):
+        for move in self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id):
+            # sudo needed for portal users
+            if move.sudo()._should_bypass_set_qty_producing():
+                continue
+
+            move.picked = True
+
     def _set_qty_producing(self, pick_manual_consumption_moves=True):
         if self.product_id.tracking == 'serial':
             qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -1263,6 +1281,11 @@ class MrpProduction(models.Model):
         is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
 
         for move in (self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none') | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
+            is_finished_move = move in self.move_finished_ids
+
+            if move.picked and is_finished_move:
+                continue
+
             # picked + manual means the user set the quantity manually
             if move.manual_consumption and move.picked:
                 continue
@@ -1273,7 +1296,7 @@ class MrpProduction(models.Model):
 
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
             move._set_quantity_done(new_qty)
-            if not move.manual_consumption or pick_manual_consumption_moves:
+            if not is_finished_move and (not move.manual_consumption or pick_manual_consumption_moves):
                 move.picked = True
 
     def _should_postpone_date_finished(self, date_finished):
@@ -2172,6 +2195,8 @@ class MrpProduction(models.Model):
 
         for production in self.env['mrp.production'].browse(productions_auto):
             production._set_quantities()
+        # Pick the moves if there are no productions_auto
+        self._pick_finished_moves()
 
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
@@ -2749,6 +2774,7 @@ class MrpProduction(models.Model):
         else:
             self.qty_producing = self.product_qty - self.qty_produced
         self._set_qty_producing()
+        self._pick_finished_moves()
 
         for move in self.move_raw_ids:
             if move.state in ('done', 'cancel') or not move.product_uom_qty:
