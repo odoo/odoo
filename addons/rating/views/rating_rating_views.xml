@@ -191,9 +191,9 @@
                     <field name="parent_res_name" filter_domain="[('parent_res_name','ilike',self)]"/>
                     <filter string="My Ratings" name="my_ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
                     <separator/>
-                    <filter string="Satisfied" name="rating_happy" domain="[('rating_text', '=', 'top')]"/>
-                    <filter string="Okay" name="rating_okay" domain="[('rating_text', '=', 'ok')]"/>
-                    <filter string="Dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'ko')]"/>
+                    <filter string="Happy" name="rating_happy" domain="[('rating_text', '=', 'top')]"/>
+                    <filter string="Neutral" name="rating_okay" domain="[('rating_text', '=', 'ok')]"/>
+                    <filter string="Unhappy" name="rating_unhappy" domain="[('rating_text', '=', 'ko')]"/>
                     <separator/>
                     <filter name="filter_rated_on" string="Rated On" date="rated_on">
                         <filter name="rated_on_last_7_days" string="Last 7 Days" domain="[('rated_on', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=7), datetime.time(23, 59, 59)).to_utc())]"/>
