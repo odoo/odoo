@@ -396,16 +396,15 @@ export class FileSelector extends Component {
     }
 
     async onLoadUploadedUrl(url, resolve) {
-        await this.uploadService
-            .uploadUrl(
-                url,
-                {
-                    resModel: this.props.resModel,
-                    resId: this.props.resId,
-                },
-                (attachment) => this.onUploaded(attachment)
-            )
-            .then(resolve);
+        await this.uploadService.uploadUrl(
+            url,
+            {
+                resModel: this.props.resModel,
+                resId: this.props.resId,
+            },
+            (attachment) => this.onUploaded(attachment)
+        );
+        resolve();
     }
 
     async onUploaded(attachment) {

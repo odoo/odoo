@@ -50,7 +50,7 @@
 </BuilderRow>
 
 <BuilderRow label.translate="Fill" level="2">
-    <BuilderButtonGroup action="'websiteConfig'" data-variable="thumb_size">
+    <BuilderButtonGroup action="'websiteConfig'">
         <BuilderButton
             classAction="''"
             actionParam="{views: []}"
@@ -120,7 +120,11 @@
 </BuilderRow>
 
 <BuilderRow label.translate="Buttons">
-    <BuilderButton title.translate="Add to Cart" action="'websiteConfig'" actionParam="{views: ['website_sale.products_add_to_cart']}" icon="'fa-shopping-cart'"/>
+    <BuilderButton title.translate="Add to Cart" icon="'fa-shopping-cart'"
+        action="'websiteConfig'"
+        actionParam="{views: ['website_sale.products_add_to_cart']}"
+        id="'button_add_to_cart_opt'"
+    />
 </BuilderRow>
 </t>
 
