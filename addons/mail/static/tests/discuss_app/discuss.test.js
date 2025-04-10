@@ -1843,7 +1843,7 @@ test("warning on send with shortcut when attempting to post message with still-u
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
     await contains(".o-mail-AttachmentCard");
-    await contains(".o-mail-AttachmentCard .fa.fa-circle-o-notch");
+    await contains(".o-mail-AttachmentContainer .fa.fa-circle-o-notch");
     await press("Enter"); // Try to send message
     await contains(".o_notification", { text: "Please wait while the file is uploading." });
 });
@@ -1971,7 +1971,7 @@ test("composer state: attachments save and restore", async () => {
         ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]",
         [file]
     );
-    await contains(".o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)");
+    await contains(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)");
     // Switch to #special
     await click("button", { text: "Special" });
     // Attach files in a message for #special
@@ -1988,7 +1988,7 @@ test("composer state: attachments save and restore", async () => {
         ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]",
         files
     );
-    await contains(".o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)", { count: 3 });
+    await contains(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", { count: 3 });
     // Switch back to #general
     await click("button", { text: "General" });
     await contains(".o-mail-Composer .o-mail-AttachmentCard");

@@ -49,8 +49,7 @@
                         <AttachmentList
                             t-if="props.scheduledMessage.attachment_ids.length > 0"
                             attachments="props.scheduledMessage.attachment_ids.map((a) => a)"
-                            unlinkAttachment.bind="onClickAttachmentUnlink"
-                            imagesHeight="props.scheduledMessage.attachment_ids.length === 1 ? 300 : 75"/>
+                            unlinkAttachment.bind="onClickAttachmentUnlink"/>
                     </div>
                 </div>
                 <div class="o-mail-Scheduled-Message-buttons ps-1 d-flex">
