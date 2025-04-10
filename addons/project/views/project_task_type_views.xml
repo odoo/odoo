@@ -60,7 +60,7 @@
             <field name="name">project.task.type.list</field>
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
-                <list string="Task Stage" delete="0" sample="1" multi_edit="1" editable="bottom" open_form_view="True">
+                <list string="Task Stage" delete="0" sample="1" multi_edit="1" editable="bottom" open_form_view="True" default_group_by="project_ids">
                     <field name="sequence" widget="handle" optional="show"/>
                     <field name="name" placeholder="e.g. To Do"/>
                     <field name="mail_template_id" optional="hide"/>
