@@ -5748,6 +5748,9 @@ class AccountMove(models.Model):
     def is_entry(self):
         return self.move_type == 'entry'
 
+    def is_receipt(self):
+        return self.move_type in ['out_receipt', 'in_receipt']
+
     @api.model
     def get_sale_types(self, include_receipts=False):
         return ['out_invoice', 'out_refund'] + (include_receipts and ['out_receipt'] or [])

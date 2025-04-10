@@ -886,18 +886,24 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
 
         company_domain = self.env['account.tax']._check_company_domain(self.move_id.company_id)
-        if self.move_id.is_sale_document(include_receipts=True):
-            # Out invoice.
-            filtered_taxes_id = self.product_id.taxes_id.filtered_domain(company_domain)
-            tax_ids = filtered_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
+        tax_ids = self.env['account.tax']
 
-        elif self.move_id.is_purchase_document(include_receipts=True):
-            # In invoice.
-            filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(company_domain)
-            tax_ids = filtered_supplier_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
+        if self.move_id.is_receipt():
+            tax_ids = self.company_id.account_purchase_receipt_tax_id if self.move_id.move_type == 'in_receipt' else self.company_id.account_sale_receipt_tax_id
 
-        else:
-            tax_ids = False if self.env.context.get('skip_computed_taxes') or self.move_id.is_entry() else self.account_id.tax_ids
+        if not tax_ids:
+            if self.move_id.is_sale_document(include_receipts=True):
+                # Out invoice.
+                filtered_taxes_id = self.product_id.taxes_id.filtered_domain(company_domain)
+                tax_ids = filtered_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
+
+            elif self.move_id.is_purchase_document(include_receipts=True):
+                # In invoice.
+                filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(company_domain)
+                tax_ids = filtered_supplier_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
+
+            else:
+                tax_ids = False if self.env.context.get('skip_computed_taxes') or self.move_id.is_entry() else self.account_id.tax_ids
 
         if self.company_id and tax_ids:
             tax_ids = tax_ids._filter_taxes_by_company(self.company_id)
