@@ -88,6 +88,8 @@ class Preview(models.Model):
     name = fields.Char('Name')
     somevalue = fields.Integer(string='Some Value', required=True)
     othervalue = fields.Integer(string='Other Variable')
+    date = fields.Date(string='Date')
+    datetime = fields.Datetime(string='Datetime')
 
 
 class Float(models.Model):

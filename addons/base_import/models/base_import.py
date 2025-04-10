@@ -477,9 +477,9 @@ class Import(models.TransientModel):
                     # emulate xldate_as_datetime for pre-0.9.3
                     dt = datetime.datetime(*xlrd.xldate.xldate_as_tuple(cell.value, book.datemode))
                     values.append(
-                        dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                        dt
                         if is_datetime
-                        else dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                        else dt.date()
                     )
                 elif cell.ctype is xlrd.XL_CELL_BOOLEAN:
                     values.append(u'True' if cell.value else u'False')
@@ -492,8 +492,8 @@ class Import(models.TransientModel):
                         }
                     )
                 else:
-                    values.append(cell.value)
-            if any(x for x in values if x.strip()):
+                    values.append(str(cell.value).strip())
+            if any(values):
                 rows.append(values)
 
         # return the file length as first value
@@ -529,17 +529,17 @@ class Import(models.TransientModel):
                 elif cell.is_date:
                     d_fmt = styles.is_datetime(cell.number_format)
                     if d_fmt == "datetime":
-                        values.append(cell.value.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+                        values.append(cell.value)
                     elif d_fmt == "date":
-                        values.append(cell.value.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                        values.append(cell.value.date())
                     else:
                         raise ValueError(
                         _("Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with format: %(cell_format)s, as (%(format_type)s) formats are not supported.", row=rowx, col=colx, cell_value=cell.value, cell_format=cell.number_format, format_type=d_fmt)
                         )
                 else:
-                    values.append(str(cell.value))
+                    values.append(str(cell.value).strip())
 
-            if any(x.strip() for x in values):
+            if any(values):
                 rows.append(values)
         return sheet.max_row, rows
 
@@ -638,66 +638,68 @@ class Import(models.TransientModel):
                                see :meth:`parse_preview` for more details.
         :param options: parsing options
         """
-        values = set(preview_values)
-        # If all values are empty in preview than can be any field
-        if values == {''}:
-            return ['all']
+        if all(isinstance(v, str) for v in preview_values):
+            preview_values = [v.strip() for v in preview_values]
+            values = set(preview_values)
+            # If all values are empty in preview than can be any field
+            if values == {''}:
+                return ['all']
 
-        # If all values starts with __export__ this is probably an id
-        if all(v.startswith('__export__') for v in values):
-            return ['id', 'many2many', 'many2one', 'one2many']
+            # If all values starts with __export__ this is probably an id
+            if all(v.startswith('__export__') for v in values):
+                return ['id', 'many2many', 'many2one', 'one2many']
 
-        # If all values can be cast to int type is either id, float or monetary
-        # Exception: if we only have 1 and 0, it can also be a boolean
-        if all(v.isdigit() for v in values if v):
-            field_type = ['integer', 'float', 'monetary']
-            if {'0', '1', ''}.issuperset(values):
-                field_type.append('boolean')
-            return field_type
+            # If all values can be cast to int type is either id, float or monetary
+            # Exception: if we only have 1 and 0, it can also be a boolean
+            if all(v.isdigit() for v in values if v):
+                field_type = ['integer', 'float', 'monetary']
+                if {'0', '1', ''}.issuperset(values):
+                    field_type.append('boolean')
+                return field_type
 
-        # If all values are either True or False, type is boolean
-        if all(val.lower() in ('true', 'false', 't', 'f', '') for val in preview_values):
-            return ['boolean']
+            # If all values are either True or False, type is boolean
+            if all(val.lower() in ('true', 'false', 't', 'f', '') for val in preview_values):
+                return ['boolean']
 
-        # If all values can be cast to float, type is either float or monetary
-        try:
-            thousand_separator = decimal_separator = False
-            for val in preview_values:
-                val = val.strip()
-                if not val:
-                    continue
-                # value might have the currency symbol left or right from the value
-                val = self._remove_currency_symbol(val)
-                if val:
-                    if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
-                        if options['float_decimal_separator'] == '.' and val.count('.') > 1:
-                            # This is not a float so exit this try
-                            float('a')
-                        val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
-                    # We are now sure that this is a float, but we still need to find the
-                    # thousand and decimal separator
+            # If all values can be cast to float, type is either float or monetary
+            try:
+                thousand_separator = decimal_separator = False
+                for val in preview_values:
+                    val = val.strip()
+                    if not val:
+                        continue
+                    # value might have the currency symbol left or right from the value
+                    val = self._remove_currency_symbol(val)
+                    if val:
+                        if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
+                            if options['float_decimal_separator'] == '.' and val.count('.') > 1:
+                                # This is not a float so exit this try
+                                float('a')
+                            val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
+                        # We are now sure that this is a float, but we still need to find the
+                        # thousand and decimal separator
+                        else:
+                            if val.count('.') > 1:
+                                options['float_thousand_separator'] = '.'
+                                options['float_decimal_separator'] = ','
+                            elif val.count(',') > 1:
+                                options['float_thousand_separator'] = ','
+                                options['float_decimal_separator'] = '.'
+                            elif val.find('.') > val.find(','):
+                                thousand_separator = ','
+                                decimal_separator = '.'
+                            elif val.find(',') > val.find('.'):
+                                thousand_separator = '.'
+                                decimal_separator = ','
                     else:
-                        if val.count('.') > 1:
-                            options['float_thousand_separator'] = '.'
-                            options['float_decimal_separator'] = ','
-                        elif val.count(',') > 1:
-                            options['float_thousand_separator'] = ','
-                            options['float_decimal_separator'] = '.'
-                        elif val.find('.') > val.find(','):
-                            thousand_separator = ','
-                            decimal_separator = '.'
-                        elif val.find(',') > val.find('.'):
-                            thousand_separator = '.'
-                            decimal_separator = ','
-                else:
-                    # This is not a float so exit this try
-                    float('a')
-            if thousand_separator and not options.get('float_decimal_separator'):
-                options['float_thousand_separator'] = thousand_separator
-                options['float_decimal_separator'] = decimal_separator
-            return ['float', 'monetary']  # Allow float to be mapped on a text field.
-        except ValueError:
-            pass
+                        # This is not a float so exit this try
+                        float('a')
+                if thousand_separator and not options.get('float_decimal_separator'):
+                    options['float_thousand_separator'] = thousand_separator
+                    options['float_decimal_separator'] = decimal_separator
+                return ['float', 'monetary']  # Allow float to be mapped on a text field.
+            except ValueError:
+                pass
 
         results = self._try_match_date_time(preview_values, options)
         if results:
@@ -760,7 +762,7 @@ class Import(models.TransientModel):
         """
         headers_types = {}
         for column_index, header_name in enumerate(headers):
-            preview_values = [record[column_index].strip() for record in preview]
+            preview_values = [record[column_index] for record in preview]
             type_field = self._extract_header_types(preview_values, options)
             headers_types[(column_index, header_name)] = type_field
         return headers_types
@@ -1082,8 +1084,13 @@ class Import(models.TransientModel):
             for column_index, _unused in enumerate(preview[0]):
                 vals = []
                 for record in preview:
-                    if record[column_index]:
+                    val = record[column_index]
+                    if val and isinstance(val, str):
                         vals.append("%s%s" % (record[column_index][:50], "..." if len(record[column_index]) > 50 else ""))
+                    elif isinstance(val, datetime.datetime):
+                        vals.append(val.strftime(options.get('datetime_format') or DEFAULT_SERVER_DATETIME_FORMAT))
+                    elif isinstance(val, datetime.date):
+                        vals.append(val.strftime(options.get('date_format') or DEFAULT_SERVER_DATE_FORMAT))
                     if len(vals) == 5:
                         break
                 column_example.append(
@@ -1321,7 +1328,7 @@ class Import(models.TransientModel):
         d_fmt = options.get('date_format') or DEFAULT_SERVER_DATE_FORMAT
         dt_fmt = options.get('datetime_format') or DEFAULT_SERVER_DATETIME_FORMAT
         for num, line in enumerate(data):
-            if not line[index]:
+            if not line[index] or isinstance(line[index], datetime.date):
                 continue
 
             v = line[index].strip()
@@ -1703,6 +1710,8 @@ def check_patterns(patterns, values):
     for pattern in patterns:
         p = to_re(pattern)
         for val in values:
+            if isinstance(val, datetime.date):
+                continue
             if val and not p.match(val):
                 break
 

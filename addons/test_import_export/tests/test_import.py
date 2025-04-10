@@ -1,5 +1,6 @@
 import base64
 import csv
+import datetime
 import difflib
 import io
 import pprint
@@ -43,6 +44,79 @@ def sorted_fields(fields):
     """ recursively sort field lists to ease comparison """
     recursed = [dict(field, fields=sorted_fields(field['fields'])) for field in fields]
     return sorted(recursed, key=lambda field: field['id'])
+
+
+def generate_xls(data):
+    """
+    Generates an XLS file from the given data dictionary. Each key in the `data` dictionary represents a column header,
+    and its corresponding values are written as rows under that column.
+
+    Date and datetime objects in the values will automatically set the style of the cell to a date/datetime.
+
+    :param dict data: keys are column headers, values are rows.
+    :return bytes: the xls file as bytes.
+    """
+    import xlwt
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Sheet1')
+
+    default_style = xlwt.XFStyle()
+
+    date_style = xlwt.XFStyle()
+    date_style.num_format_str = 'yyyy-mm-dd'
+
+    datetime_style = xlwt.XFStyle()
+    datetime_style.num_format_str = 'yyyy-mm-dd hh:mm:ss'
+
+    for column, (key, values) in enumerate(data.items()):
+        ws.write(0, column, key, default_style)
+        for row, value in enumerate(values, 1):
+            style = default_style
+            if isinstance(value, datetime.datetime):
+                style = datetime_style
+            elif isinstance(value, datetime.date):
+                style = date_style
+            ws.write(row, column, value, style)
+
+    output = io.BytesIO()
+    wb.save(output)
+    return output.getvalue()
+
+
+def generate_xlsx(data):
+    """
+    Generates an XLSX file from the given data dictionary. Each key in the `data` dictionary represents a column header,
+    and its corresponding values are written as rows under that column.
+
+    Date and datetime objects in the values will automatically set the style of the cell to a date/datetime.
+
+    :param dict data: keys are column headers, values are rows.
+    :return bytes: the xls file as bytes.
+    """
+
+    from openpyxl import Workbook
+    from openpyxl.styles import NamedStyle
+
+    wb = Workbook()
+    ws = wb.active
+
+    date_style = NamedStyle(name="date", number_format='yyyy-mm-dd')
+    datetime_style = NamedStyle(name="datetime", number_format='yyyy-mm-dd hh:mm:ss')
+
+    for column, (key, values) in enumerate(data.items(), 1):
+        ws.cell(row=1, column=column).value = key
+        for row, value in enumerate(values, 2):
+            cell = ws.cell(row=row, column=column)
+            cell.value = value
+            if isinstance(value, datetime.datetime):
+                cell.style = datetime_style
+            elif isinstance(value, datetime.date):
+                cell.style = date_style
+
+    output = io.BytesIO()
+    wb.save(output)
+    return output.getvalue()
 
 
 class BaseImportCase(TransactionCase):
@@ -381,7 +455,7 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue']})
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         # Order depends on iteration order of fields_get
-        self.assertItemsEqual(result['fields'], [
+        self.assertItemsEqual(result['fields'][:4], [
             get_id_field('import.preview'),
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'import.preview'},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'import.preview'},
@@ -404,7 +478,7 @@ class TestPreview(TransactionCase):
         self.assertIsNone(result.get('error'))
         self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue']})
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
-        self.assertItemsEqual(result['fields'], [
+        self.assertItemsEqual(result['fields'][:4], [
             get_id_field('import.preview'),
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'import.preview'},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'import.preview'},
@@ -427,7 +501,7 @@ class TestPreview(TransactionCase):
         self.assertIsNone(result.get('error'))
         self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue']})
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
-        self.assertItemsEqual(result['fields'], [
+        self.assertItemsEqual(result['fields'][:4], [
             get_id_field('import.preview'),
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'import.preview'},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'import.preview'},
@@ -450,7 +524,7 @@ class TestPreview(TransactionCase):
         self.assertIsNone(result.get('error'))
         self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue']})
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
-        self.assertItemsEqual(result['fields'], [
+        self.assertItemsEqual(result['fields'][:4], [
             get_id_field('import.preview'),
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'import.preview'},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'import.preview'},
@@ -813,6 +887,79 @@ foo3,US,0,persons\n""",
         self.assertEqual(tag1 | tag2 | tag3, partners[0].category_id)
         self.assertEqual(tag3, partners[1].category_id)
         self.assertEqual(tag1 | tag3, partners[2].category_id)
+
+    @mute_logger('odoo.addons.base_import.models.base_import')
+    def test_xls_datetime_values(self):
+        """ Test the support of having dates set as strings with the user format and date/datetime objects
+        in the same xls(x) file.
+
+        xls(x) allows to set a date/datetime format on a cell.
+        e.g.
+        foo,06/30/2025
+        bar,datetime.date(2025, 7, 1)
+
+        In particular, Google Spreadsheet tends to automatically convert cells to date/datetime when it detects
+        their value is a date.
+        e.g. create a new google spreadsheet
+        in the first cell, enter `foo`
+        in the second cell, enter `01/07/2025`.
+        Notice that the date has been aligned to the right of the cell, while foo remained on the left.
+        It's because the cell holding the date has been automatically converted into a date format.
+        In a third cell, enter `30/07/2025`. It's possible it stays aligned to the left,
+        because it wasn't converted automatically into the date format.
+        It's because the day is higher than 12, and Google spreadsheet didn't detect it was a date
+        because it was expecting the Americam date format `%d/%m/%Y`.
+
+        In such a case, you have a file with dates visually looking using the same format in the user interface,
+        but in reality some are stored as simple strings, some are stored as date objects within the xls(x) file.
+
+        Given how easy this is to land in such a situation using Google Spreadhseet, Odoo should support it.
+        """
+        for data, expected_preview in [
+            ({
+                'Some Value': [1, 2],
+                'Date': ['06/30/2025', datetime.date(2025, 7, 1)],
+                'Datetime': ['06/30/2025 13:37:42', datetime.datetime(2025, 7, 1, 9, 8, 7)],
+            }, [
+                ['1', '2'],
+                # /!\ American format, July 1st is 07/01
+                ['06/30/2025', '07/01/2025'],
+                ['06/30/2025 13:37:42', '07/01/2025 09:08:07'],
+            ]),
+            ({
+                'Some Value': [1, 2],
+                'Date': ['2025-06-30', datetime.date(2025, 7, 1)],
+                'Datetime': ['2025-06-30 13:37:42', datetime.datetime(2025, 7, 1, 9, 8, 7)],
+            }, [
+                ['1', '2'],
+                ['2025-06-30', '2025-07-01'],
+                ['2025-06-30 13:37:42', '2025-07-01 09:08:07'],
+            ])
+        ]:
+            for file_content, file_type in [
+                (generate_xls(data), 'application/vnd.ms-excel'),
+                (generate_xlsx(data), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+            ]:
+                import_wizard = self.env['base_import.import'].create({
+                    'res_model': 'import.preview',
+                    'file': file_content,
+                    'file_type': file_type,
+                })
+                result = import_wizard.parse_preview({'has_headers': True})
+
+                self.assertEqual(result['preview'], expected_preview)
+                options = result.get('options', {})
+
+                response = import_wizard.execute_import(
+                    ['somevalue', 'date', 'datetime',],
+                    ['Some Value', 'Date', 'Datetime'],
+                    {
+                        'has_headers': True, 'quoting': '"', 'separator': ',',
+                        'date_format': options.get('date_format'), 'datetime_format': options.get('datetime_format'),
+                    },
+                )
+
+                self.assertFalse(response.get('messages'))
 
 
 class TestBatching(TransactionCase):
