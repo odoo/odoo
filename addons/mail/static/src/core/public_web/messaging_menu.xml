@@ -6,7 +6,7 @@
 </t>
 
 <t t-name="mail.MessagingMenu.content">
-    <div t-if="!(ui.isSmall and env.inDiscussApp and store.discuss.activeTab === 'main')" t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu`">
+    <div t-if="!(ui.isSmall and env.inDiscussApp and store.discuss.activeTab === 'main')" t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu ${ui.isSmall ? 'o-small' : ''}`">
         <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto flex-grow-1 list-group list-group-flush px-2 py-1 gap-1" t-ref="notification-list">
             <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
