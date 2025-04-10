@@ -25,10 +25,6 @@ export class BooleanMultiSelector extends Component {
         placeholder: { type: String, optional: true },
     };
 
-    onSelect({ value }) {
-        this.props.update([...this.props.selectedValues, toBoolean(value)]);
-    }
-
     get placeholder() {
         return this.props.selectedValues.length ? "" : this.props.placeholder;
     }
@@ -46,9 +42,12 @@ export class BooleanMultiSelector extends Component {
     get sources() {
         return [
             {
-                options: OPTIONS.filter(
-                    (option) => !this.props.selectedValues.includes(toBoolean(option.value))
-                ),
+                options: OPTIONS
+                    .filter((option) => !this.props.selectedValues.includes(toBoolean(option.value)))
+                    .map((option) => ({
+                        label: option.label,
+                        onSelect: () => this.props.update([...this.props.selectedValues, toBoolean(option.value)]),
+                    })),
             },
         ];
     }

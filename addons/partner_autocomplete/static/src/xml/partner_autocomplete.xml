@@ -30,13 +30,12 @@
                 <PartnerAutoComplete
                     value="props.record.data[props.name] || ''"
                     sources="sources"
-                    onSelect.bind="onSelect"
                     input="inputRef"
                     placeholder="props.placeholder || ''"
                 >
                     <t t-set-slot="partnerOption" t-slot-scope="partnerOptionScope">
                         <t t-call="partner_autocomplete.DropdownOption">
-                            <t t-set="option" t-value="partnerOptionScope.option"/>
+                            <t t-set="option" t-value="partnerOptionScope"/>
                         </t>
                     </t>
                 </PartnerAutoComplete>
@@ -50,7 +49,6 @@
                 value="this.props.value || ''"
                 autoSelect="true"
                 sources="sources"
-                onSelect.bind="onSelect"
                 onChange.bind="onChange"
                 input="inputRef"
                 placeholder="placeholder || ''"
@@ -63,10 +61,10 @@
     <t t-name="partner_autocomplete.DropdownOption">
         <div style="display: flex; justify-content: space-between; align-items: center; height: 24px;">
             <div>
-                <span t-esc="option.name"/>,
-                <span class="text-muted" t-esc="option.description"/>
+                <span t-esc="option.label"/>,
+                <span class="text-muted" t-esc="option.data.description"/>
             </div>
-            <img style="width: 24px; max-height: 100%" class="ms-1" t-att-src="option.logoUrl" onerror="this.style.display='none'"/>
+            <img style="width: 24px; max-height: 100%" class="ms-1" t-att-src="option.data.logoUrl" onerror="this.style.display='none'"/>
         </div>
     </t>
 
@@ -83,10 +81,10 @@
     </t>
 
     <t t-name="partner_autocomplete.PartnerAutoCompleteMany2one">
-        <Many2One t-props="m2oProps">
+        <Many2One t-props="this.m2oProps">
             <t t-set-slot="partnerOption" t-slot-scope="partnerOptionScope">
                 <t t-call="partner_autocomplete.DropdownOption">
-                    <t t-set="option" t-value="partnerOptionScope.option"/>
+                    <t t-set="option" t-value="partnerOptionScope"/>
                 </t>
             </t>
         </Many2One>

@@ -37,10 +37,12 @@ export class PartnerAutoCompleteCharField extends CharField {
                         	queryCountryId = 0;
                         }
                         const suggestions = await this.partnerAutocomplete.autocomplete(request, queryCountryId);
-                        suggestions.forEach((suggestion) => {
-                            suggestion.classList = "partner_autocomplete_dropdown_char";
-                        });
-                        return suggestions;
+                        return suggestions.map((suggestion) => ({
+                            cssClass: "partner_autocomplete_dropdown_char",
+                            data: suggestion,
+                            label: suggestion.name,
+                            onSelect: () => this.onSelectPartnerAutocompleteOption(suggestion),
+                        }));
                     }
                     else {
                         return [];
@@ -52,8 +54,8 @@ export class PartnerAutoCompleteCharField extends CharField {
         ];
     }
 
-    async onSelect(option) {
-        let data = await this.partnerAutocomplete.getCreateData(Object.getPrototypeOf(option));
+    async onSelectPartnerAutocompleteOption(option) {
+        let data = await this.partnerAutocomplete.getCreateData(option);
         if (!data?.company) {
             return;
         }

@@ -113,7 +113,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         });
     }
 
-    async quickCreateRecipient(request, params) {
+    async quickCreateRecipient(request) {
         const [name, email] = parseEmail(request);
         const [partnerId] = await this.orm.create("res.partner", [{ name, email }]);
         return this.props.record.data[this.props.name].addAndRemove({ add: [partnerId] });

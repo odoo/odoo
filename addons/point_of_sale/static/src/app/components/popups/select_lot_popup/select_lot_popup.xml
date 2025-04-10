@@ -13,14 +13,13 @@
                         <span class="form-control" t-esc="v.text"/>
                         <button class="btn btn-danger" t-on-click="() => this.removeItem(v.id)">
                             <i class="fa fa-trash-o"></i>
-                        </button>   
+                        </button>
                     </div>
                 </t>
                 <LotAutoComplete
                     placeholder.translate="Lot/Serial number"
                     sources="getSources()"
                     value="state.value"
-                    onSelect.bind="onSelect"
                     autoSelect="true"
                     autofocus="true"
                 />
