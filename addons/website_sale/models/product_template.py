@@ -180,8 +180,19 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         # Clear empty ecommerce description content to avoid side-effects on product pages
         # when there is no content to display anyway.
-        if vals.get('description_ecommerce') and is_html_empty(vals['description_ecommerce']):
-            vals['description_ecommerce'] = ''
+        user_lang = self.env.lang
+        self_with_context = self.with_context(lang=user_lang)
+
+        for field in ('description_ecommerce', 'website_description'):
+            if vals.get(field):
+                if is_html_empty(vals[field]):
+                    vals[field] = ''
+                if self[field] and self_with_context[field] != vals.get(field):
+                    self.update_field_translations(
+                        field, {user_lang: {self[field]: vals.get(field)}},
+                    )
+                    vals[field] = self[field]
+
         return super().write(vals)
 
     #=== BUSINESS METHODS ===#
