@@ -15,24 +15,7 @@ _logger = logging.getLogger(__name__)
 
 
 class MercadoPagoController(http.Controller):
-    _return_url = '/payment/mercado_pago/return'
     _webhook_url = '/payment/mercado_pago/webhook'
-
-    @http.route(_return_url, type='http', methods=['GET'], auth='public')
-    def mercado_pago_return_from_checkout(self, **data): #will probably not need it
-        """ Process the notification data sent by Mercado Pago after redirection from checkout.
-
-        :param dict data: The notification data.
-        """
-        # Handle the notification data.
-        _logger.info("Handling redirection from Mercado Pago with data:\n%s", pprint.pformat(data))
-        if data.get('payment_id') != 'null':
-            self._verify_and_handle_notification_data(data)
-        else:  # The customer cancelled the payment by clicking on the return button.
-            pass  # Don't try to process this case because the payment id was not provided.
-
-        # Redirect the user to the status page.
-        return request.redirect('/payment/status')
 
     @http.route(
         f'{_webhook_url}/<reference>', type='http', auth='public', methods=['POST'], csrf=False
@@ -99,7 +82,7 @@ class MercadoPagoController(http.Controller):
             "installments": 1,
             "payment_method_id": payment_method_id,
             "payer": payer,
-            **self.card_payment_values(token, issuer_id)
+            **self.card_payment_values(token, issuer_id),
         }
 
         response_content = provider_sudo._mercado_pago_make_request(endpoint='/v1/payments', payload=payload, method='POST', idempotency_key=payment_utils.generate_idempotency_key(tx_sudo))

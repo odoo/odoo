@@ -7,9 +7,10 @@ from urllib.parse import quote as url_quote
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_round
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_mercado_pago import const
 from odoo.addons.payment_mercado_pago.controllers.main import MercadoPagoController
 
@@ -19,84 +20,6 @@ _logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
-
-    def _get_specific_rendering_values(self, processing_values):
-        """ Override of `payment` to return Mercado Pago-specific rendering values.
-
-        Note: self.ensure_one() from `_get_rendering_values`.
-
-        :param dict processing_values: The generic and specific processing values of the transaction
-        :return: The dict of provider-specific processing values.
-        :rtype: dict
-        """
-        res = super()._get_specific_rendering_values(processing_values)
-        if self.provider_code != 'mercado_pago':
-            return res
-
-        # Initiate the payment and retrieve the payment link data.
-        payload = self._mercado_pago_prepare_preference_request_payload()
-        _logger.info(
-            "Sending '/checkout/preferences' request for link creation:\n%s",
-            pprint.pformat(payload),
-        )
-        api_url = self.provider_id._mercado_pago_make_request(
-            '/checkout/preferences', payload=payload
-        )['init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point']
-
-        # Extract the payment link URL and params and embed them in the redirect form.
-        parsed_url = urls.url_parse(api_url)
-        url_params = urls.url_decode(parsed_url.query)
-        rendering_values = {
-            'api_url': api_url,
-            'url_params': url_params,  # Encore the params as inputs to preserve them.
-        }
-        return rendering_values
-
-    def _mercado_pago_prepare_preference_request_payload(self):
-        """ Create the payload for the preference request based on the transaction values.
-
-        :return: The request payload.
-        :rtype: dict
-        """
-        base_url = self.provider_id.get_base_url()
-        return_url = urls.url_join(base_url, MercadoPagoController._return_url)
-        sanitized_reference = url_quote(self.reference)
-        webhook_url = urls.url_join(
-            base_url, f'{MercadoPagoController._webhook_url}/{sanitized_reference}'
-        )  # Append the reference to identify the transaction from the webhook notification data.
-
-        unit_price = self.amount
-        decimal_places = const.CURRENCY_DECIMALS.get(self.currency_id.name)
-        if decimal_places is not None:
-            unit_price = float_round(unit_price, decimal_places, rounding_method='DOWN')
-
-        return {
-            'auto_return': 'all',
-            'back_urls': {
-                'success': return_url,
-                'pending': return_url,
-                'failure': return_url,
-            },
-            'external_reference': self.reference,
-            'items': [{
-                'title': self.reference,
-                'quantity': 1,
-                'currency_id': self.currency_id.name,
-                'unit_price': unit_price,
-            }],
-            'notification_url': webhook_url,
-            'payer': {
-                'name': self.partner_name,
-                'email': self.partner_email,
-                'phone': {
-                    'number': self.partner_phone,
-                },
-                'address': {
-                    'zip_code': self.partner_zip,
-                    'street_name': self.partner_address,
-                },
-            },
-        }
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on Mercado Pago data.
@@ -169,8 +92,12 @@ class PaymentTransaction(models.Model):
             if any(payment_method_type == mp_code for mp_code in mp_codes.split(',')):
                 payment_method_type = odoo_code
                 break
+        if payment_method_type == 'card':
+            payment_method_code = notification_data.get('payment_method_id')
+        else:
+            payment_method_code = payment_method_type
         payment_method = self.env['payment.method']._get_from_code(
-            payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
+            payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
         # Fall back to "unknown" if the payment method is not found (and if "unknown" is found), as
         # the user might have picked a different payment method than on Odoo's payment form.
@@ -244,6 +171,17 @@ class PaymentTransaction(models.Model):
         #generate a card token
         response = self.provider_id._mercado_pago_make_request(f'/v1/card_tokens', method='POST', payload={'card_id': card_id})
 
+        data = {
+            'transaction_amount': 100,
+            'token': response['id'],
+            'installments': 1,
+            'payer': {
+                'type': 'customer',
+                'id': customer_id,
+            }
+        }
+
+        # WHERE THE FUCK IS SECURITY CODE COMING FROM?!
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
             'payment_method_id': self.payment_method_id.id,
@@ -266,3 +204,44 @@ class PaymentTransaction(models.Model):
             },
         )
         return
+
+    def _send_payment_request(self):
+        super()._send_payment_request()
+        if self.provider_code != 'mercado_pago':
+            return
+
+        if not self.token_id:
+            raise UserError("Mercado Pago: " + _("The transaction is not linked to a token."))
+
+        data = {
+            'transaction_amount': 100,
+            'token': self.token_id.provider_ref,
+            'installments': 1,
+            'payer': {
+                'type': 'customer',
+                'id': self.token_id.mercado_pago_customer_id,
+            },
+            'payment_method_id': 'master',
+            "point_of_interaction": {
+                "type": "SUBSCRIPTIONS",
+                "transaction_data": {
+                    "first_time_use": False,
+                    "subscription_id": "COLLECTORPADRE-SUBSCRIPCION_ID",
+                    "payment_reference": {
+                        "id": "1334388021"
+                    }
+                },
+
+            }
+        }
+
+        response_content = self.provider_id._mercado_pago_make_request(
+            endpoint=f'/v1/payments',
+            payload=data,
+            method='POST',
+            idempotency_key=payment_utils.generate_idempotency_key(
+                self
+            )
+        )
+
+        self._handle_notification_data('mercado_pago', response_content)
