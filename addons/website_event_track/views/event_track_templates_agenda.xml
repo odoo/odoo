@@ -177,16 +177,11 @@
     <div class="d-flex flex-column h-100" t-att-data-publish="track.website_published and 'on' or 'off'">
         <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
             <div class="o_we_agenda_card_title mb-1">
-                <t t-if="track.website_published or is_event_user">
-                    <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset fw-bold stretched-link">
-                        <t t-out="track.name"/>
-                    </a>
-                </t>
-                <t t-else="">
-                    <span class="fw-bold">
-                        <t t-out="track.name"/>
-                    </span>
-                </t>
+                <a t-if="not (is_html_empty(track.description) and is_html_empty(track.partner_biography)) and (track.website_published or is_event_user)"
+                   t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset fw-bold stretched-link">
+                    <t t-out="track.name"/>
+                </a>
+                <span t-else="" class="fw-bold" t-out="track.name"/>
             </div>
             <div class="opacity-75 text-center" t-if="track.partner_tag_line">
                 <small t-out="track.partner_tag_line"/>
