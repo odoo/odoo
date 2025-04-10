@@ -90,15 +90,15 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Grups d'impostos: l'impost és un conjunt de sub-impostos.\n"
-"    - Fix: l'import de l'impost és sempre el mateix independent del preu.\n"
-"    - Percentatge del preu: l'import de l'impost és un % del preu:\n"
-"        p.e.. 100 * (1 + 10%) = 110 (preu no inclòs)\n"
-"        p.e 110 / (1 + 10%) = 100 (preu inclòs)\n"
-"    - Percentatge del preu amb l'impost inclosos: l'import és una fracció del preu :\n"
-"        p.e 180 / (1 - 10%) = 200 (preu no inclòs)\n"
-"        p.e 200 * (1 - 10%) = 180 (preu inclòs)\n"
-"       "
+"    - Grups d'impostos: l'impost és un conjunt de subimpostos.\n"
+"    - Fix: l'import de l'impost roman igual independentment del preu.\n"
+"    - Percentatge: l'import de l'impost és un % del preu:\n"
+"        p. ex.: 100 * (1 + 10%) = 110  (preu no inclòs)\n"
+"        p. ex.: 110 / (1 + 10%) = 100 (preu inclòs)\n"
+"    - Percentatge amb impostos inclosos: l'import de l'impost és una fracció del preu:\n"
+"        p. ex.: 180 / (1 - 10%) = 200 (preu no inclòs)\n"
+"        p. ex.: 200 * (1 - 10%) = 180 (preu inclòs)\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -319,7 +319,7 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
-"- Un camp nou « Total (tax inc.) » per a accelerar i controlar la "
+"- Un camp nou «Total (impostos inclosos)» per accelerar i controlar la "
 "codificació automatitzant la creació de línies amb el compte correcte i "
 "l'impost."
 
@@ -12766,9 +12766,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Seleccioni 'Vendes' per diaris de factures de client. Seleccioni 'Compres' per diaris de factures de proveïdor. \n"
-"Seleccioni 'Caixa' o 'Banc' per diaris que s'utilitzen per pagaments de clients i proveïdors. \n"
-"Seleccioni 'Diversos' per diaris que continguin operacions vàries."
+"Selecciona «Vendes» per visualitzar els diaris de factures de client.\n"
+"Selecciona «Compres» per visualitzar els diaris de factures de proveïdor. \n"
+"Selecciona «Caixa» o «Banc» per veure els diaris que s'utilitzen per a pagaments de clients i proveïdors. \n"
+"Selecciona «General» per veure els diaris amb diverses operacions."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -15325,7 +15326,7 @@ msgstr "Aquest trimestre"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This specific error occurred during the import:"
-msgstr ""
+msgstr "Aquest error s'ha produït durant la importació:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
@@ -15718,7 +15719,7 @@ msgid ""
 "it."
 msgstr ""
 "Per enregistrar pagaments amb %s, el compte bancari del beneficiari ha de "
-"ser validat manualment. Heu d'anar al compte bancari del contacte per a "
+"ser validat manualment. Hauries d'anar al compte bancari del contacte per a "
 "validar-lo."
 
 #. module: account
@@ -15978,6 +15979,9 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Activa alertes en crear factures i comandes de venda per a contactes amb un "
+"import total a cobrar que excedeix un límit. Estableix un valor superior a 0"
+" per activar una verificació del límit de crèdit."
 
 #. module: account
 #. odoo-python
@@ -16612,6 +16616,10 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
+"Les factures de proveïdor es poden generar prèviament a partir de comandes\n"
+"                de compra o rebuts. Això et permet controlar les factures\n"
+"                que reps d'un proveïdor segons el document\n"
+"                provisional d'Odoo."
 
 #. module: account
 #. odoo-javascript
@@ -16765,6 +16773,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"Quan selecciones una expressió per al trasllat, l'etiqueta d'aquesta "
+"expressió ha de començar amb _applied_carryover_"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -17060,6 +17070,8 @@ msgstr ""
 #, python-format
 msgid "You can't create payments for entries belonging to different branches."
 msgstr ""
+"No pots crear pagaments per a assentaments que pertanyin a diferents "
+"sucursals."
 
 #. module: account
 #. odoo-python
@@ -17579,6 +17591,7 @@ msgstr ""
 #, python-format
 msgid "You cannot switch the type of a document which has been posted once."
 msgstr ""
+"No és possible modificar el tipus d'un document que ja ha estat publicat."
 
 #. module: account
 #. odoo-python
