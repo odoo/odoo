@@ -758,7 +758,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         invoice_line.price_unit = inv_line_vals['price_unit']
         invoice_line.discount = inv_line_vals['discount']
-        invoice_line.tax_ids = inv_line_vals['taxes']
+        invoice_line.tax_ids = inv_line_vals['taxes'] or False
         return logs
 
     def _correct_invoice_tax_amount(self, tree, invoice):
