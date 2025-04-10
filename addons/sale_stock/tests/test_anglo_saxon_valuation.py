@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, fields
-from odoo.tests import Form, tagged
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.exceptions import UserError
+from odoo.tests import Form, tagged
+
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import (
+    ValuationReconciliationTestCommon,
+)
 
 
 @tagged('post_install', '-at_install')
@@ -29,7 +32,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         }).action_apply_inventory()
 
     def _so_and_confirm_two_units(self):
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -478,7 +481,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         product.list_price = 100
         product.standard_price = 50
 
-        so = self.env['sale.order'].create({
+        so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -915,7 +918,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_move_1._action_done()
 
         # Create and confirm a sale order for 2@12
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1004,7 +1007,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_move_2._action_done()
 
         # sale 1@20, deliver, invoice
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1022,7 +1025,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         invoice.action_post()
 
         # sale 6@20, deliver, invoice
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1066,7 +1069,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_move_1._action_done()
 
         # Create and confirm a sale order for 10@12
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1145,7 +1148,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         return_pick._action_done()
 
         # Create, confirm and deliver a sale order for 1@12 (SO2)
-        so_2 = self.env['sale.order'].create({
+        so_2 = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1238,7 +1241,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         })
 
         # Create, confirm and deliver a sale order for 12@1.5 without reception with std_price = 2.0 (SO1)
-        so_1 = self.env['sale.order'].create({
+        so_1 = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1298,7 +1301,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_move_1._action_done()
 
         # Create, confirm and deliver a sale order for 12@1.5 with reception (50 * 1.0, 50 * 0.0)(SO2)
-        so_2 = self.env['sale.order'].create({
+        so_2 = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1365,7 +1368,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_moves._action_done()
 
         # Sell 3 units
-        so = self.env['sale.order'].create({
+        so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1457,7 +1460,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_moves._action_done()
 
         # Sell 3 units
-        so = self.env['sale.order'].create({
+        so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1507,9 +1510,10 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         return_picking.button_validate()
 
         # Create a new invoice for the returned product
-        ctx = {'active_model': 'sale.order', 'active_ids': so.ids}
-        create_invoice_wizard = self.env['sale.advance.payment.inv'].with_context(ctx).create({'advance_payment_method': 'delivered'})
-        create_invoice_wizard.create_invoices()
+        self.env['sale.advance.payment.inv'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': so.ids,
+        }).sudo().create({}).create_invoices()
         reverse_invoice = so.invoice_ids[-1]
         with Form(reverse_invoice) as reverse_invoice_form:
             with reverse_invoice_form.invoice_line_ids.edit(0) as line:
@@ -1543,7 +1547,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_moves.write({'quantity': 1, 'picked': True})
         in_moves._action_done()
 
-        so = self.env['sale.order'].create({
+        so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1631,7 +1635,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_moves.write({'quantity': 1, 'picked': True})
         in_moves._action_done()
 
-        so = self.env['sale.order'].create({
+        so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1708,7 +1712,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         }).action_apply_inventory()
 
         # Create a SO with a product invoiced on delivered quantity
-        so = self.env['sale.order'].create({
+        so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
@@ -1722,12 +1726,12 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         so.action_confirm()
 
         # Do a 100% down payment
-        down_payment = self.env['sale.advance.payment.inv'].create({
+        self.env['sale.advance.payment.inv'].sudo().create({
             'advance_payment_method': 'percentage',
             'amount': 100,
             'sale_order_ids': so.ids,
-        })
-        down_payment.create_invoices()
+        }).create_invoices()
+
         # Invoice the delivered part from the down payment
         down_payment_invoices = so.invoice_ids
         down_payment_invoices.action_post()
@@ -1737,8 +1741,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         so.picking_ids.move_ids.picked = True
         Form.from_action(self.env, so.picking_ids.button_validate()).save().process()
 
-        invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
-        invoice_wizard.create_invoices()
+        self.env['sale.advance.payment.inv'].with_context(
+            active_ids=so.ids,
+        ).sudo().create({}).create_invoices()
         credit_note = so.invoice_ids.filtered(lambda i: i.state != 'posted')
         self.assertEqual(len(credit_note), 1)
         self.assertEqual(len(credit_note.invoice_line_ids.filtered(lambda line: line.display_type == 'product')), 2)
@@ -1751,8 +1756,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         backorder.move_ids.picked = True
         backorder.button_validate()
 
-        invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
-        invoice_wizard.create_invoices()
+        self.env['sale.advance.payment.inv'].with_context(
+            active_ids=so.ids,
+        ).sudo().create({}).create_invoices()
 
         invoice = so.invoice_ids.filtered(lambda i: i.state != 'posted')
         invoice.action_post()
@@ -1796,7 +1802,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_move.picked = True
         in_move._action_done()
 
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
                 'product_id': product.id,
@@ -1816,10 +1822,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         backorder_delivery = sale_order.picking_ids.filtered(lambda p: p.state != 'done')
         backorder_delivery.move_ids.quantity = 2
         backorder_delivery.button_validate()
-        invoice_wizard = self.env['sale.advance.payment.inv'].with_context(
-            active_ids=sale_order.ids, open_invoices=True
-        ).create({})
-        invoice_wizard.create_invoices()
+        self.env['sale.advance.payment.inv'].with_context(
+            active_ids=sale_order.ids,
+        ).sudo().create({}).create_invoices()
 
         invoice = sale_order.invoice_ids
         qty_ten_invoice_line = invoice.invoice_line_ids.filtered(lambda l: l.quantity == 10)
@@ -1827,10 +1832,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         invoice.invoice_date = fields.Date.today()
         invoice.action_post()
         product.standard_price = 50
-        invoice_wizard = self.env['sale.advance.payment.inv'].with_context(
-            active_ids=sale_order.ids, open_invoices=True
-        ).create({})
-        invoice_wizard.create_invoices()
+        self.env['sale.advance.payment.inv'].with_context(
+            active_ids=sale_order.ids,
+        ).sudo().create({}).create_invoices()
         invoice2 = sale_order.invoice_ids.filtered(lambda i: i.state != 'posted')
         invoice2.invoice_date = fields.Date.today()
         invoice2.action_post()

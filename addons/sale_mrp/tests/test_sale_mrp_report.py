@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import common
-
+from odoo.fields import Command
+from odoo.tests import tagged
 from odoo.tools import html2plaintext
 
+from odoo.addons.sale.tests.common import TestSaleCommon
 
-@common.tagged('post_install', '-at_install')
-class TestSaleMrpInvoices(AccountTestInvoicingCommon):
+
+@tagged('post_install', '-at_install')
+class TestSaleMrpInvoices(TestSaleCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -40,7 +39,6 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
                 'product_qty': 1,
             })]
         })
-        cls.partner = cls.env['res.partner'].create({'name': 'Test Partner'})
 
     def test_deliver_and_invoice_tracked_components(self):
         """

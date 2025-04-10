@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, TransactionCase, tagged
+from odoo.tests import Form, tagged
+
+from odoo.addons.base.tests.common import BaseCommon
 
 
 @tagged('post_install', '-at_install')
-class TestSaleMrpKitBom(TransactionCase):
+class TestSaleMrpKitBom(BaseCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -13,6 +14,7 @@ class TestSaleMrpKitBom(TransactionCase):
         cls.env.ref('base.user_admin').write({
             'email': 'mitchell.admin@example.com',
         })
+        cls.env.user.group_ids += cls.quick_ref('product.group_product_variant')
 
     def _create_product(self, name, storable, price):
         return self.env['product.product'].create({

@@ -47,7 +47,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
 
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': partner_test.id,
             'order_line': [(0, 0, {
                 'product_id': self.product.id,

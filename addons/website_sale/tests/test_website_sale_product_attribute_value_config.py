@@ -3,14 +3,15 @@
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
-    TestSaleProductAttributeValueCommon,
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.product.tests.test_product_attribute_value_config import (
+    TestProductAttributeValueCommon,
 )
 from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('post_install', '-at_install', 'product_attribute')
-class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, TestProductAttributeValueCommon):
 
     @classmethod
     def setUpClass(cls):

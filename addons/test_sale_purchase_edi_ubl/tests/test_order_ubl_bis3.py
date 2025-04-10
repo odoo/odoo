@@ -11,6 +11,11 @@ from odoo.addons.account_edi_ubl_cii.tests.test_ubl_cii import TestAccountEdiUbl
 class TestOrderEdiUbl(TestAccountEdiUblCii):
 
     @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('sales_team.group_sale_manager')
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.purchase_company = cls.company_data_2['company']

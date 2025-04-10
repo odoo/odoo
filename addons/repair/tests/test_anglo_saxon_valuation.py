@@ -65,7 +65,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         ro.action_repair_start()
         ro.action_repair_end()
 
-        ro.action_create_sale_order()
+        ro.sudo().action_create_sale_order()
         so = ro.sale_order_id
         so.action_confirm()
         self.assertEqual(so.order_line.qty_to_invoice, 1)

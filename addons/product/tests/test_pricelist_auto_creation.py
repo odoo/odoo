@@ -8,7 +8,7 @@ class TestPricelistAutoCreation(ProductCommon):
 
     @classmethod
     def setUpClass(cls):
-        res = super().setUpClass()
+        super().setUpClass()
 
         # Only one currency enabled and used on companies (multi-curr disabled)
         cls.currency_euro = cls._enable_currency('EUR')
@@ -18,10 +18,8 @@ class TestPricelistAutoCreation(ProductCommon):
 
         # Disabled pricelists feature
         cls.group_user = cls.env.ref('base.group_user').sudo()
-        cls.group_product_pricelist = cls.env.ref('product.group_product_pricelist')
         cls.group_user._remove_group(cls.group_product_pricelist)
         cls.env['product.pricelist'].search([]).unlink()
-        return res
 
     def test_inactive_curr_set_on_company(self):
         """Make sure that when setting an inactive currency on a company, the activation of the
