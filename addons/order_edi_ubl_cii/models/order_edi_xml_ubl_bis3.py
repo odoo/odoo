@@ -141,8 +141,8 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
         order_lines = self._get_order_lines(order)
         anticipated_monetary_total_vals = self._get_anticipated_monetary_total_vals(order, order_lines)
 
-        supplier = order._get_supplier_id()
-        customer = order.company_id.partner_id.commercial_partner_id
+        supplier = order._get_supplier_id()     # todo: function declared in submodules (sale_edi, purch_edi) -> to fix
+        customer = order._get_customer_id()     # todo: function declared in submodules (sale_edi, purch_edi) -> to fix
         customer_delivery_address = customer.child_ids.filtered(lambda child: child.type == 'delivery')
         delivery = (
             order[self._get_dest_address_field()]

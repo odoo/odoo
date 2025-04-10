@@ -62,3 +62,6 @@ class SaleOrder(models.Model):
 
     def _get_supplier_id(self):
         return self.company_id.partner_id
+
+    def _get_customer_id(self):
+        return self.partner_id
