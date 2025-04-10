@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { onEmployeeSubRedirect } from './hooks';
 
-const { Component, onWillStart, onWillRender, useState } = owl;
+const { Component, onWillStart, onWillUpdateProps, onPatched, useState, useRef, onMounted } = owl;
 
 function useUniquePopover() {
     const popover = usePopover();
@@ -64,25 +64,65 @@ export class HrOrgChart extends Field {
         this.lastParent = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
-        onWillStart(this.handleComponentUpdate.bind(this));
-        onWillRender(this.handleComponentUpdate.bind(this));
+        this.isScrollable = false;
+        this.maxDisplayedEmployees = 7;
+        this.orgChartRef = useRef("org_chart");
+        this.scrollUpBtn = useRef("scroll_up_btn");
+        this.scrollDownBtn = useRef("scroll_down_btn");
+
+        onWillStart(async () => {
+            this.employee = this.props.record.data;
+            // the widget is either dispayed in the context of a hr.employee form or a res.users form
+            this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.employee.id;
+            const parentId = (this.employee.parent_id && this.employee.parent_id[0]) ? this.employee.parent_id[0] : false;
+            const forceReload = this.lastRecord !== this.props.record || this.lastParent != parentId;
+            this.lastParent = parentId;
+            this.lastRecord = this.props.record;
+            await this.fetchEmployeeData(this.state.employee_id, parentId, forceReload);
+        });
+
+        onMounted(this.handleComponentUpdate.bind(this))
+
+        onWillUpdateProps(async (nextProps) => {
+            const newParentId = (nextProps.record.data.parent_id && nextProps.record.data.parent_id[0])
+            ? nextProps.record.data.parent_id[0] : false;
+            if(this.lastParent !== newParentId){
+                await this.fetchEmployeeData(this.state.employee_id, newParentId, true);
+            }
+            this.lastParent = newParentId;
+        })
+
+        onPatched(this.handleComponentUpdate.bind(this))
     }
 
-    /**
-     * Called on start and on render
-     */
-    async handleComponentUpdate() {
-        this.employee = this.props.record.data;
-        // the widget is either dispayed in the context of a hr.employee form or a res.users form
-        this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.employee.id;
-        const manager = this.employee.parent_id || this.employee.employee_parent_id;
-        const forceReload = this.lastRecord !== this.props.record || this.lastParent != manager;
-        this.lastParent = manager;
-        this.lastRecord = this.props.record;
-        await this.fetchEmployeeData(this.state.employee_id, forceReload);
+    handleComponentUpdate(){
+        if(this.managers || this.children){
+            const entries = document.querySelectorAll(".o_org_chart_entry");
+            if(this.isScrollable){
+                this.scrollUpBtn.el.style.visibility = "visible";
+                this.scrollDownBtn.el.style.visibility = "visible";
+                if(!this.managers_more){
+                    this.scrollUpBtn.el.style.visibility = "hidden";
+                }
+                if(this.managers.length - this.excess_managers_count + 1 + this.children.length <= this.maxDisplayedEmployees){
+                    this.scrollDownBtn.el.style.visibility = "hidden";
+                }
+            }
+            if(entries.length === 0){
+                this.orgChartRef.el.setAttribute("style",`max-height:none;`);
+                return;
+            }
+            let maxAllowedEntriesHeight = 0;
+            for(let i = this.excess_managers_count;i < Math.min(this.maxDisplayedEmployees + this.excess_managers_count, entries.length);i++){
+                maxAllowedEntriesHeight += entries[i].getBoundingClientRect().height;
+            }
+            const entryHeight = entries[0].getBoundingClientRect().height;
+            this.orgChartRef.el.setAttribute("style",`max-height:${maxAllowedEntriesHeight}px;`);
+            this.orgChartRef.el.scrollTop = entryHeight * this.excess_managers_count;
+        }
     }
 
-    async fetchEmployeeData(employeeId, force = false) {
+    async fetchEmployeeData(employeeId, newParentId = null, force = false) {
         if (!employeeId) {
             this.managers = [];
             this.children = [];
@@ -96,6 +136,7 @@ export class HrOrgChart extends Field {
                 '/hr/get_org_chart',
                 {
                     employee_id: employeeId,
+                    new_parent_id: newParentId,
                     context: Component.env.session.user_context,
                 }
             );
@@ -109,7 +150,8 @@ export class HrOrgChart extends Field {
             this.children = orgData.children;
             this.managers_more = orgData.managers_more;
             this.self = orgData.self;
-            this.render(true);
+            this.excess_managers_count = orgData.excess_managers_count;
+            this.isScrollable = this.managers.length > 0 || this.children.length > 0;
         }
     }
 
@@ -134,9 +176,28 @@ export class HrOrgChart extends Field {
         this.actionService.doAction(action); 
     }
 
-    async _onEmployeeMoreManager(managerId) {
-        await this.fetchEmployeeData(managerId);
-        this.state.employee_id = managerId;
+    _onScrollUp() {
+        if(this.isScrollable){
+            const orgCharEntry = document.querySelector(".o_org_chart_entry");
+            const entryHeight = orgCharEntry.getBoundingClientRect().height;
+            this.orgChartRef.el.scrollTop -= entryHeight;
+            this.scrollDownBtn.el.style.visibility = "visible";
+            if(this.orgChartRef.el.scrollTop <= entryHeight){
+                this.scrollUpBtn.el.style.visibility = "hidden";
+            }
+        }
+    }
+
+    _onScrollDown() {
+        if(this.isScrollable){
+            const orgCharEntry = document.querySelector(".o_org_chart_entry");
+            const entryHeight = orgCharEntry.getBoundingClientRect().height;
+            this.orgChartRef.el.scrollTop += entryHeight;
+            this.scrollUpBtn.el.style.visibility = "visible";
+            if(this.orgChartRef.el.scrollTop + this.orgChartRef.el.clientHeight >= this.orgChartRef.el.scrollHeight - entryHeight){
+                this.scrollDownBtn.el.style.visibility = "hidden";
+            }
+        }
     }
 }
 
