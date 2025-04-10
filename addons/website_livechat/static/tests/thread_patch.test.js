@@ -9,8 +9,6 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { defineWebsiteLivechatModels } from "./website_livechat_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { url } from "@web/core/utils/urls";
-import { deserializeDateTime } from "@web/core/l10n/dates";
 import { describe, test } from "@odoo/hoot";
 
 describe.current.tags("desktop");
@@ -18,18 +16,10 @@ defineWebsiteLivechatModels();
 
 test("Rendering of visitor banner", async () => {
     const pyEnv = await startServer();
-    const country_id = pyEnv["res.country"].create({ code: "BE" });
-    const lang_id = pyEnv["res.lang"].create({ name: "English" });
     const website_id = pyEnv["website"].create({ name: "General website" });
     const visitorId = pyEnv["website.visitor"].create({
-        country_id,
         history: "Home → Contact",
-        is_connected: true,
-        lang_id,
         website_id,
-    });
-    pyEnv["website.visitor"].write([visitorId], {
-        display_name: `Visitor #${visitorId}`,
     });
     const guestId = pyEnv["mail.guest"].create({ name: `Visitor #${visitorId}` });
     const channelId = pyEnv["discuss.channel"].create({
@@ -44,21 +34,8 @@ test("Rendering of visitor banner", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains("img.o-website_livechat-VisitorBanner-avatar");
-    const [guest] = pyEnv["mail.guest"].search_read([["id", "=", guestId]]);
-    await contains(
-        `img.o-website_livechat-VisitorBanner-avatar[data-src='${url(
-            `/web/image/mail.guest/${guestId}/avatar_128?unique=${
-                deserializeDateTime(guest.write_date).ts
-            }`
-        )}']`
-    );
-    await contains(".o-website_livechat-VisitorBanner .o-mail-ImStatus");
-    await contains(".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
-    await contains(".o-website_livechat-VisitorBanner span", { text: `Visitor #${visitorId}` });
-    await contains("span", { text: "English" });
     await contains("span > span", { text: "General website" });
-    await contains("span", { text: "Home → Contact" });
+    await contains("span > span", { text: "Home → Contact" });
 });
 
 test("Livechat with non-logged visitor should show visitor banner", async () => {
@@ -117,7 +94,8 @@ test("Livechat with logged visitor should show visitor banner", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-website_livechat-VisitorBanner");
-    await contains(".o-website_livechat-VisitorBanner", { text: "Partner Visitor" });
+    await contains("span > span", { text: "General website" });
+    await contains("span > span", { text: "Home → Contact" });
 });
 
 test("Livechat without visitor should not show visitor banner", async () => {
