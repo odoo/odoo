@@ -170,7 +170,7 @@ export class CarouselOptionPlugin extends Plugin {
      * - redo
      * => the active class of the carousel item and therefore it looks like the carrousel is empty.
      *
-     * Todo: find the root cause and remove this fix.
+     * @todo: find the root cause and remove this fix.
      */
     fixWrongHistoryOnCarousels(carousels) {
         for (const carousel of carousels) {
@@ -178,7 +178,6 @@ export class CarouselOptionPlugin extends Plugin {
             const activeCarouselItems = carousel.querySelectorAll(".carousel-item.active");
             if (!activeCarouselItems.length) {
                 carouselItems[0].classList.add("active");
-                // carouselItems[0].setAttribute("aria-current", "true");
                 const indicatorsEl = carousel.querySelector(".carousel-indicators");
                 const activeIndicatorEl = [...indicatorsEl.children][0];
                 activeIndicatorEl.classList.add("active");
