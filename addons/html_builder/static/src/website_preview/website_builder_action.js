@@ -28,13 +28,15 @@ export class WebsiteBuilder extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
+        this.websiteService = useService("website");
+        this.ui = useService("ui");
+
         this.websiteContent = useRef("iframe");
         useSubEnv({
             builderRef: useRef("container"),
         });
-        this.state = useState({ isEditing: false, isMobile: false, key: 1 });
-        this.websiteService = useService("website");
-        this.ui = useService("ui");
+        this.state = useState({ isEditing: false, key: 1 });
+        this.websiteContext = useState(this.websiteService.context);
         // TODO: to remove: this is only needed to not use the website systray
         // when using the "website preview" app.
         this.websiteService.useMysterious = true;
@@ -86,7 +88,7 @@ export class WebsiteBuilder extends Component {
             overlayRef: this.overlayRef,
             isTranslation: this.translation,
             iframeLoaded: this.iframeLoaded,
-            isMobile: this.state.isMobile,
+            isMobile: this.websiteContext.isMobile,
             Plugins: WebsitePlugins,
             config: { initialTarget: this.target },
         };
@@ -237,11 +239,9 @@ export class WebsiteBuilder extends Component {
     }
 
     toggleMobile() {
-        this.state.isMobile = !this.state.isMobile;
         // Adding the mobile class directly, to not wait for the component
         // re-rendering.
-        this.websitePreviewRef.el.classList.toggle("o_is_mobile", this.state.isMobile);
-        this.websiteService.context.isMobile = this.state.isMobile;
+        this.websiteService.context.isMobile = !this.websiteService.context.isMobile;
     }
 }
 
