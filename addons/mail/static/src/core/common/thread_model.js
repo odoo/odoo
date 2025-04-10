@@ -812,7 +812,7 @@ export class Thread extends Record {
             };
             tmpData.author = this.store.self;
             if (parentId) {
-                tmpData.parentMessage = this.store["mail.message"].get(parentId);
+                tmpData.parent_id = this.store["mail.message"].get(parentId);
             }
             const prettyContent = await prettifyMessageContent(body, {
                 validMentions: this.store.getMentionsFromText(body, {

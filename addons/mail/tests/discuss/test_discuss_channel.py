@@ -110,7 +110,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "message_type": "notification",
                                         "model": "discuss.channel",
                                         "notification_ids": [],
-                                        "parentMessage": False,
+                                        "parent_id": False,
                                         "pinned_at": False,
                                         "rating_id": False,
                                         "reactions": [],
