@@ -262,7 +262,7 @@
                 <div t-attf-class="collapse {{ '' if tracks_info['default_collapsed'] else 'show' }}"
                     t-attf-id="collapse_session_list_{{ tracks_info_index }}">
                     <t t-foreach="tracks" t-as="track">
-                        <a t-if="track.website_published or is_event_user"
+                        <a t-if="not (is_html_empty(track.description) and is_html_empty(track.partner_biography)) and (track.website_published or is_event_user)"
                             t-att-href="track.website_url"
                             t-att-class="'o_wesession_list_item o_color_%d d-block text-decoration-none' % (track.color)">
                             <t t-call="website_event_track.track_list_item"/>
@@ -283,7 +283,7 @@
 
 <template id="track_cards_section" name="Track Cards">
     <div t-foreach="tracks" t-as="track" class="col-md-6 col-lg-4 col-xl-3 mb-4">
-        <t t-if="track.website_published or is_event_user">
+        <t t-if="not (is_html_empty(track.description) and is_html_empty(track.partner_biography)) and (track.website_published or is_event_user)">
             <a t-att-href="'/event/%s/track/%s' % (slug(track.event_id), slug(track))" class="text-decoration-none text-reset">
                 <t t-call="website_event_track.track_card"/>
             </a>
