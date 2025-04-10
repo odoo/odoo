@@ -3,10 +3,6 @@
 Those types are understood by the RPC layer.
 Any other exception type bubbling until the RPC layer will be
 treated as a 'Server error'.
-
-.. note::
-    If you consider introducing new exceptions,
-    check out the :mod:`odoo.addons.test_exceptions` module.
 """
 
 
