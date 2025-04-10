@@ -80,4 +80,4 @@ class OrderEdiCommon(models.AbstractModel):
 
     def _get_order_partner_role(self):
         """Returns the role of the partner in the context of the order xml tree"""
-        return "BuyerCustomer"
+        return
