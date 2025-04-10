@@ -1490,7 +1490,7 @@ class PurchaseOrderLine(models.Model):
         # and doesn't actually change anything to the current record
         if  self.env.context.get('accrual_entry_date'):
             return
-        if new_qty != self.qty_received and self.order_id.state == 'purchase':
+        if not float_compare(new_qty, self.qty_received, self.product_uom.rounding) and self.order_id.state == 'purchase':
             self.order_id.message_post_with_view(
                 'purchase.track_po_line_qty_received_template',
                 values={'line': self, 'qty_received': new_qty},
