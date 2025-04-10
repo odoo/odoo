@@ -2,11 +2,13 @@
 
 from . import hr_employee
 from . import hr_employee_public
+from . import hr_job
 from . import hr_resume_line
 from . import hr_resume_line_type
 from . import hr_skill
 from . import hr_individual_skill_mixin
 from . import hr_employee_skill
+from . import hr_job_skill
 from . import hr_skill_level
 from . import hr_skill_type
 from . import res_users
