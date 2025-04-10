@@ -5,6 +5,7 @@ import werkzeug
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.http import Controller, request, route
 from odoo.osv.expression import AND, OR
+from odoo.tools import safe_eval
 
 
 class ModelPageController(Controller):
@@ -45,7 +46,16 @@ class ModelPageController(Controller):
         if not Model.check_access_rights("read", raise_exception=False):
             raise werkzeug.exceptions.Forbidden()
 
-        rec_domain = ast.literal_eval(page.record_domain or "[]")
+        domain = page.record_domain or "[]"
+        rec_domain = safe_eval.safe_eval(domain, {
+            'context_today': safe_eval.datetime.datetime.today,
+            'datetime': safe_eval.datetime,
+            'dateutil': safe_eval.dateutil,
+            'relativedelta': safe_eval.dateutil.relativedelta.relativedelta,
+            'time': safe_eval.time,
+        })
+        assert isinstance(rec_domain, list)
+
         domains = [rec_domain]
 
         if record_slug:
