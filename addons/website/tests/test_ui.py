@@ -620,7 +620,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_text_font_size(self):
         self.start_tour('/@/', 'website_text_font_size', login='admin', timeout=300)
 
-    @unittest.skip
     def test_update_column_count(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_update_column_count', login="admin")
 
