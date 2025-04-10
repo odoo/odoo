@@ -3,28 +3,25 @@
 
   <t t-name="spreadsheet.ChartTypeSwitcherMenu">
     <div
-      class="o-figure-menu-item position-absolute pt-2 pe-2 top-0 end-0"
-      t-if="shouldBeDisplayed()"
-      t-on-click.stop="toggleTypePicker">
-      <t t-call="o-spreadsheet-Icon.LIST" />
-    </div>
+      class="o-dashboard-chart-select position-absolute top-0 end-0 shadow-sm"
+      t-on-click.stop=""
+      t-if="shouldBeDisplayed">
+      <div class="d-flex flex-row p-1">
+        <t
+          t-foreach="availableTypes"
+          t-as="type"
+          t-key="type.chartSubtype">
+          <div
+            class="o-chart-type-item"
+            t-att-title="type.displayName"
+            t-on-click="() => this.onTypeChange(type.chartSubtype)"
+            t-att-data-id="type.chartSubtype"
+            t-att-class="{'selected': type.chartType === selectedChartType}">
+            <t t-call="{{type.preview}}" />
+          </div>
+        </t>
+      </div>
+      </div>
   </t>
 
-  <t t-name="spreadsheet.ChartTypeSwitcherPopover">
-    <div class="o-dashboard-chart-select d-flex flex-row p-1">
-      <t
-        t-foreach="props.availableTypes"
-        t-as="type"
-        t-key="type.chartSubtype">
-        <div
-          class="o-chart-type-item"
-          t-att-title="type.displayName"
-          t-on-click="() => props.onTypePicked(type.chartSubtype)"
-          t-att-data-id="type.chartSubtype"
-          t-att-class="{'selected': type.chartType === props.selectedType}">
-          <t t-call="{{type.preview}}" />
-        </div>
-      </t>
-    </div>
-  </t>
 </templates>

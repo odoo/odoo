@@ -1,5 +1,4 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { hover, leave } from "@odoo/hoot-dom";
 import { Model } from "@odoo/o-spreadsheet";
 import { insertChartInSpreadsheet } from "@spreadsheet/../tests/helpers/chart";
 import { createBasicChart, createScorecardChart } from "@spreadsheet/../tests/helpers/commands";
@@ -18,13 +17,10 @@ test("Can change type of odoo chart in dashboard", async () => {
     insertChartInSpreadsheet(setupModel, "odoo_bar");
     const { model } = await createDashboardActionWithData(setupModel.exportData());
 
-    await hover(".o-figure");
-    await contains(".o-figure-menu-item").click();
     expect(".o-dashboard-chart-select").toHaveCount(1);
     expect(".o-dashboard-chart-select [data-id='odoo_bar']").toHaveClass("selected");
 
-    await contains(".o-dashboard-chart-select [data-id='odoo_line']").click();
-    expect(".o-dashboard-chart-select").toHaveCount(0);
+    await contains(".o-dashboard-chart-select [data-id='odoo_line']", { visible: false }).click();
 
     const chartId = model.getters.getFigures(model.getters.getActiveSheetId())[0].id;
     const chartDefinition = model.getters.getChartDefinition(chartId);
@@ -36,13 +32,10 @@ test("Can change type of spreadsheet chart in dashboard", async () => {
     createBasicChart(setupModel, "chartId");
     const { model } = await createDashboardActionWithData(setupModel.exportData());
 
-    await hover(".o-figure");
-    await contains(".o-figure-menu-item").click();
     expect(".o-dashboard-chart-select").toHaveCount(1);
     expect(".o-dashboard-chart-select [data-id='column']").toHaveClass("selected");
 
-    await contains(".o-dashboard-chart-select [data-id='pie']").click();
-    expect(".o-dashboard-chart-select").toHaveCount(0);
+    await contains(".o-dashboard-chart-select [data-id='pie']", { visible: false }).click();
 
     const chartId = model.getters.getFigures(model.getters.getActiveSheetId())[0].id;
     const chartDefinition = model.getters.getChartDefinition(chartId);
@@ -54,14 +47,9 @@ test("Can only change type of line/pie/bar charts", async () => {
     const setupModel = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     insertChartInSpreadsheet(setupModel, "odoo_radar");
     createScorecardChart(setupModel, "chartId");
-    const { fixture } = await createDashboardActionWithData(setupModel.exportData());
+    await createDashboardActionWithData(setupModel.exportData());
 
-    const figures = fixture.querySelectorAll(".o-figure");
-    await hover(figures[0]);
-    expect(".o-figure-menu-item").toHaveCount(0);
-
-    await hover(figures[1]);
-    expect(".o-figure-menu-item").toHaveCount(0);
+    expect(".o-dashboard-chart-select").toHaveCount(0);
 });
 
 test("Original chart configuration is kept when switching back and forth", async () => {
@@ -69,14 +57,8 @@ test("Original chart configuration is kept when switching back and forth", async
     createBasicChart(setupModel, "chartId", { type: "line", stacked: true, fillArea: true });
     const { model } = await createDashboardActionWithData(setupModel.exportData());
 
-    await hover(".o-figure");
-    await contains(".o-figure-menu-item").click();
-    await contains(".o-dashboard-chart-select [data-id='pie']").click();
-    await leave(".o-figure");
-
-    await hover(".o-figure");
-    await contains(".o-figure-menu-item").click();
-    await contains(".o-dashboard-chart-select [data-id='line']").click();
+    await contains(".o-dashboard-chart-select [data-id='pie']", { visible: false }).click();
+    await contains(".o-dashboard-chart-select [data-id='line']", { visible: false }).click();
 
     const chartDefinition = model.getters.getChartDefinition("chartId");
     expect(chartDefinition.type).toBe("line");
@@ -91,13 +73,9 @@ test("Data source of cumulative line chart isn't reloaded after type change", as
     const { model } = await createDashboardActionWithData(setupModel.exportData());
 
     const dataSource = model.getters.getChartDataSource(chartId);
-    await hover(".o-figure");
-    await contains(".o-figure-menu-item").click();
-    await contains(".o-dashboard-chart-select [data-id='odoo_bar']").click();
+    await contains(".o-dashboard-chart-select [data-id='odoo_bar']", { visible: false }).click();
     expect(dataSource).toBe(model.getters.getChartDataSource(chartId));
 
-    await hover(".o-figure");
-    await contains(".o-figure-menu-item").click();
-    await contains(".o-dashboard-chart-select [data-id='odoo_line']").click();
+    await contains(".o-dashboard-chart-select [data-id='odoo_line']", { visible: false }).click();
     expect(dataSource).toBe(model.getters.getChartDataSource(chartId));
 });

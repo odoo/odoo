@@ -2,14 +2,8 @@
     <div t-name="spreadsheet_dashboard.FigureComponent"
         t-inherit="o-spreadsheet-FigureComponent"
         t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o-figure')]" position="attributes">
-            <attribute name="t-on-mouseenter">onMouseEnter</attribute>
-            <attribute name="t-on-mouseleave">onMouseLeave</attribute>
-        </xpath>
         <xpath expr="//div[hasclass('o-figure-menu')]" position="after">
-            <ChartTypeSwitcherMenu t-if="env.isDashboard()"
-                figure="props.figure"
-                isFigureHovered="hoverState.isHovered" />
+            <ChartTypeSwitcherMenu t-if="env.isDashboard()" figure="props.figure"/>
         </xpath>
     </div>
 </odoo>
