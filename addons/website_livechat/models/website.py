@@ -19,8 +19,3 @@ class Website(models.Model):
             # sudo - im_livechat.channel: getting bsaic info related to live chat channel is allowed.
             return self.channel_id.sudo().get_livechat_info()
         return {}
-
-    def get_suggested_controllers(self):
-        suggested_controllers = super(Website, self).get_suggested_controllers()
-        suggested_controllers.append((_('Live Support'), self.env['ir.http']._url_for('/livechat'), 'website_livechat'))
-        return suggested_controllers

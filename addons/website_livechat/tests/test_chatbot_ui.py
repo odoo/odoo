@@ -16,7 +16,6 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         ]).unlink()  # delete other channels to avoid them messing with the URL rules
 
         self.livechat_channel.write({
-            'is_published': True,
             'rule_ids': [(5, 0), (0, 0, {
                 'action': 'auto_popup',
                 'regex_url': '/',

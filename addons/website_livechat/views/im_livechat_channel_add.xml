@@ -7,7 +7,6 @@
     <field name="arch" type="xml">
         <form js_class="website_new_content_form">
             <group>
-                <field name="website_url" invisible="1"/>
                 <field name="name" string="Channel Name"/>
             </group>
         </form>
@@ -20,6 +19,7 @@
     <field name="view_mode">form</field>
     <field name="target">new</field>
     <field name="view_id" ref="im_livechat_channel_view_form_add"/>
+    <field name="context">{'create_from_website': True}</field>
 </record>
 
 </odoo>

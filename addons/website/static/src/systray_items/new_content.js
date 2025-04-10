@@ -132,7 +132,6 @@ export class NewContentModal extends Component {
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-comments"/>`,
                     title: _t('Livechat Widget'),
-                    redirectUrl: '/livechat'
                 },
             ]
         });

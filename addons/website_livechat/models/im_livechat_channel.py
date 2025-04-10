@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import api, models
 
 
 class Im_LivechatChannel(models.Model):
@@ -26,3 +25,17 @@ class Im_LivechatChannel(models.Model):
                 discuss_channel.is_pending_chat_request = False
 
         return discuss_channel_vals
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        channels = super().create(vals_list)
+        if self.env.context.get("create_from_website"):
+            for channel in channels:
+                self.env.user._bus_send(
+                    "simple_notification",
+                    {
+                        "type": "success",
+                        "message": self.env._("Channel created: %(name)s", name=channel.name),
+                    },
+                )
+        return channels
