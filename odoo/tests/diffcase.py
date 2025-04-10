@@ -85,6 +85,47 @@ class Element:
         return getattr(self._element, name)
 
 
+class DiagnosticKind:
+    def __init__(self, name: str, body: str, suggestion: str):
+        self.name: str = name
+        """ The identifier of the diagnostic. """
+        self.body: str = body
+        """ The message body to display to the user, to explain the diagnostic. """
+        self.suggestion: str = suggestion
+        """ The message to display to the user, to explain the suggested fix. """
+    
+    def __call__(self, file: DiffFile, range: tuple[int, int]) -> 'DiagnosticsMessage':
+        return DiagnosticsMessage(self, file, range)
+
+
+class DiagnosticsMessage:
+    def __init__(self, kind: DiagnosticKind, file: DiffFile, range: tuple[int, int]):
+        self.kind: DiagnosticKind = kind
+        self.file: DiffFile = file
+        self.range: tuple[int, int] = range
+
+    def to_ruff_json(self) -> dict:
+        # ruff like result
+        result = {
+            'code': self.kind.name,
+            'location': {
+                'row': self.range[0],
+                'column': 1,
+            },
+            'end_location': {
+                'row': self.range[1],
+                'column': 1,
+            },
+            'filename': self.file.path,
+            'message': self.kind.body,
+        }
+        if self.kind.suggestion:
+            result['fix'] = {
+                'message':self.kind.suggestion,
+            }
+        return result
+
+
 def get_repos() -> list[str]:
     """ get all git repos in the given path """
     repo_paths = OrderedSet()
@@ -102,7 +143,7 @@ def get_repos() -> list[str]:
                 repo_paths.add(repo_path)
         except Exception as e:
             continue
-    _logger.info(f"Found {len(repo_paths)} repos")
+    _logger.info(f'Found {len(repo_paths)} repos')
     return list(repo_paths)
 
 
@@ -175,21 +216,21 @@ class DiffCase(BaseCase):
     test_tags = {'no_install', 'standard'}
 
     diff_files: dict[str, dict[str, DiffFile]] = defaultdict(dict)
-    """ {file_extension: {abs_path: file_info}} """
+    """ {file_extension: {abs_path: diff_file}} """
 
     diff_dir: str | None = None
     """ Path to a directory containing .txt diff files """
 
-    report: list[dict] = []
+    diagnostices: list[DiagnosticsMessage] = []
 
     @classmethod
     def get_xml_diff_elements(cls, abs_path: str, diff_linenos: set[int] | None = None) -> Generator[Element, None, None]:
         assert abs_path.endswith('.xml')
         if diff_linenos is None:
-            file_info = cls.diff_files['.xml'].get(abs_path)
-            if not file_info:
+            diff_file = cls.diff_files['.xml'].get(abs_path)
+            if not diff_file:
                 return
-            diff_linenos = file_info.diff_linenos
+            diff_linenos = diff_file.diff_linenos
         _logger.info(f"Checking {abs_path}")
         with open(abs_path, 'rb') as fp:
             previous_line = 1
@@ -254,17 +295,17 @@ class DiffCase(BaseCase):
                     # Process each patched file
                     for patched_file in patch_set:
                         abs_path = os.path.join(repo_path, patched_file.path)
-                        file_info = DiffFile(repo_path, patched_file)
+                        diff_file = DiffFile(repo_path, patched_file)
 
                         # Add line numbers from the diff
                         for hunk in patched_file:
                             for line in hunk:
                                 if line.is_added and line.target_line_no:
-                                    file_info.diff_linenos.add(line.target_line_no)
+                                    diff_file.diff_linenos.add(line.target_line_no)
 
-                        # Store the file info based on file extension
+                        # Store the diff file based on file extension
                         ext = os.path.splitext(abs_path)[1].lower()
-                        cls.diff_files[ext][abs_path] = file_info
+                        cls.diff_files[ext][abs_path] = diff_file
 
             except Exception as e:
                 _logger.error(f"Error processing diff file {file_path}: {e}")

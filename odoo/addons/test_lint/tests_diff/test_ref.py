@@ -4,16 +4,47 @@ import os
 from collections import defaultdict
 from typing import Collection
 
-from odoo.tests.diffcase import DiffCase, Element, DiffFile
+from odoo.tests.diffcase import DiffCase, Element, DiffFile, DiagnosticKind, DiagnosticsMessage
 from odoo.modules.module import get_manifest
 
 
 _logger = logging.getLogger(__name__)
 
+
+PY_REF_ENV = DiagnosticKind(
+    name='ref_env_call',
+    body='Found env.ref calls without raise_if_not_found=False',
+    suggestion='Add raise_if_not_found=False to the env.ref call'
+)
+
+XML_ID = DiagnosticKind(
+    name='xml_id',
+    body='Found id= for another module without force_create:',
+    suggestion='Add force_create=True to the id='
+)
+
+XML_REF = DiagnosticKind(
+    name='xml_ref',
+    body='Found ref= for another module:',
+    suggestion='Use eval'
+)
+
+XML_EVAL = DiagnosticKind(
+    name='xml_eval',
+    body='Found eval uses ref( for another module without raise_if_not_found=False:',
+    suggestion='Add raise_if_not_found=False to the eval'
+)
+
+XML_INHERIT_ID = DiagnosticKind(
+    name='xml_inherit_id',
+    body='Found inherit_id= for another module without force_create:',
+    suggestion='Add force_create'
+)
+
+
 class EvalRefVisitor(ast.NodeVisitor):
-    def __init__(self, line=(0, 0), protected_xml_ids=None):
-        self.issues: list[tuple[int, int]] = []
-        self.line = line
+    def __init__(self, protected_xml_ids=None):
+        self.diagnostic_kinds: list[DiagnosticKind] = []
         self.protected_xml_ids = protected_xml_ids
 
     def _is_ref_risky(self, node):
@@ -32,21 +63,21 @@ class EvalRefVisitor(ast.NodeVisitor):
         if isinstance(node.func, ast.Name) and node.func.id == 'ref':
             if self._is_ref_risky(node):
                 # for ref() calls, check if the ref is for another module
-                self.issues.append(self.line)
+                self.diagnostic_kinds.append(XML_REF)
         
         self.generic_visit(node)
 
 
 class FileEnvRefVisitor(EvalRefVisitor):
-    def __init__(self, fileinfo, protected_xml_ids=None):
-        self.issues: list[tuple[int, int]] = []
-        self.fileinfo = fileinfo
+    def __init__(self, diff_file: DiffFile, protected_xml_ids=None):
+        self.diagnostics: list[DiagnosticsMessage] = []
+        self.diff_file = diff_file
         self.env_ref_names = set()  # Track variables that store env.ref
         self.protected_xml_ids = protected_xml_ids
 
     def _is_node_in_diff(self, node):
         """Check if any line of the node is in the diff"""
-        return self.fileinfo.is_lineno_in_diff(node.lineno, node.end_lineno)
+        return self.diff_file.is_lineno_in_diff(node.lineno, node.end_lineno)
 
     def visit_Assign(self, node):
         """ Track assignments of env.ref to variables to handle use cases like
@@ -83,72 +114,69 @@ class FileEnvRefVisitor(EvalRefVisitor):
                 is_env_ref = True
 
             if is_env_ref and self._is_node_in_diff(node) and self._is_ref_risky(node):
-                self.issues.append((node.lineno, node.end_lineno))
+                self.diagnostics.append(PY_REF_ENV(self.diff_file, (node.lineno, node.end_lineno)))
         elif isinstance(node.func, ast.Name) and node.func.id in self.env_ref_names:
             # Handle stored env.ref calls
             if self._is_node_in_diff(node) and self._is_ref_risky(node):
-                self.issues.append((node.lineno, node.end_lineno))
+                self.diagnostics.append(PY_REF_ENV(self.diff_file, (node.lineno, node.end_lineno)))
 
         self.generic_visit(node)
 
 
-def check_ref_for_python_file(fileinfo: DiffFile, protected_xml_ids: Collection[str] = ()) -> list[tuple[int, int]]:
+def check_ref_for_python_file(fileinfo: DiffFile, protected_xml_ids: Collection[str] = ()) -> list[DiagnosticsMessage]:
     with open(fileinfo.path, 'r') as f:
         content = f.read()
     try:
         tree = ast.parse(content)
         visitor = FileEnvRefVisitor(fileinfo, protected_xml_ids)
         visitor.visit(tree)
-        return visitor.issues
+        return visitor.diagnostics
     except SyntaxError:
         return []
 
 
-def check_ref_for_data_xml_element(element: Element, file_info: DiffFile, init: bool = True, protected_xml_ids: Collection[str] = ()) -> tuple[str, int, int] | None:
+def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: bool = True, protected_xml_ids: Collection[str] = ()) -> list[DiagnosticsMessage]:
     """Check for references in xml files
     
     :param element: the xml element to check
-    :param file_info: the file info of the xml file
+    :param diff_file: the file info of the xml file
     :param init: whether the file is used to init modules. If yes, we ignore references for the current module's records.
     :param protected_xml_ids: set of already protected xml ids
     """
 
     def is_ref_risky(ref: str) -> bool:
-        xml_id = ref if '.' in ref else f'{file_info.module_name}.{ref}'
+        xml_id = ref if '.' in ref else f'{diff_file.module_name}.{ref}'
         if xml_id in protected_xml_ids:
             return False
-        if init and xml_id.startswith(f'{file_info.module_name}.'):
+        if init and xml_id.startswith(f'{diff_file.module_name}.'):
             return False
         return True
 
+    result = []
     if element.tag == 'record':
         record = element
         id_attr = record.attrib.get('id')
-        if not id_attr:
-            return None
-        if is_ref_risky(id_attr) and 'forcecreate' not in record.attrib:
-            return 'inherit_id', record.start_lineno, record.end_lineno
+        if id_attr and is_ref_risky(id_attr) and 'forcecreate' not in record.attrib:
+            result.append(XML_INHERIT_ID(diff_file, (record.start_lineno, record.end_lineno)))
     elif element.tag == 'field':
         field = element
         ref_attr = field.attrib.get('ref')
         if ref_attr:
             if is_ref_risky(ref_attr) and 'forcecreate' not in field.attrib:
-                return 'ref', field.start_lineno, field.end_lineno
-        elif eval_attr := field.attrib.get('eval'):
+                result.append(XML_REF(diff_file, (field.start_lineno, field.end_lineno)))
+        if eval_attr := field.attrib.get('eval'):
             # parse as python ast, check function ref
             # add to issues if ref for another module without raise_if_not_found=False
             tree = ast.parse(eval_attr)
-            visitor = EvalRefVisitor(line=(field.start_lineno, field.end_lineno), protected_xml_ids=protected_xml_ids)
+            visitor = EvalRefVisitor(protected_xml_ids=protected_xml_ids)
             visitor.visit(tree)
-            if visitor.issues:
-                return 'eval', visitor.issues[0][0], visitor.issues[0][1]
+            result.extend(dk(diff_file, (field.start_lineno, field.end_lineno)) for dk in visitor.diagnostic_kinds)
     elif element.tag == 'template':
         template = element
         id_attr = template.attrib.get('inherit_id')
-        if not id_attr:
-            return None
-        if is_ref_risky(id_attr) and 'forcecreate' not in template.attrib:
-            return 'inherit_id', template.start_lineno, template.end_lineno
+        if id_attr and is_ref_risky(id_attr) and 'forcecreate' not in template.attrib:
+            result.append(XML_INHERIT_ID(diff_file, (template.start_lineno, template.end_lineno)))
+    return result
 
 
 def _get_protected_xml_ids():
@@ -206,80 +234,31 @@ class TestRef(DiffCase):
 
     def test_env_ref_usage(self):
         """Check for env.ref calls without raise_if_not_found=False"""
-        issues = []
-        for file_info in self.diff_files['.py'].values():
-            if not os.path.exists(file_info.path):
+        for diff_file in self.diff_files['.py'].values():
+            if not os.path.exists(diff_file.path):
                 continue
-            if not file_info.module_name or file_info.module_name.startswith('test_') or file_info.path_to_module.startswith('tests/'):
+            if not diff_file.module_name or diff_file.module_name.startswith('test_') or diff_file.path_to_module.startswith('tests/'):
                 continue
-            file_issues = check_ref_for_python_file(file_info, self.protected_xml_ids)
-            if file_issues:
-                issues.extend((file_info.path, *issue) for issue in file_issues)
-
-        for issue in issues:
-            self.report.append({
-                'code': 'code_for_env_ref',
-                'location': {
-                    'row': issue[1],
-                    'column': 1,
-                },
-                'end_location': {
-                    'row': issue[2],
-                    'column': 1,
-                },
-                'filename': issue[0],
-                'message': 'Found env.ref calls without raise_if_not_found=False'
-            })
+            self.diagnostices.extend(check_ref_for_python_file(diff_file, self.protected_xml_ids))
 
     def test_data_xml_ref_usage(self):
         """Check for ref for other modules"""
         module_files: dict[str, list[DiffFile]] = defaultdict(list)
-        for file_info in self.diff_files['.xml'].values():
-            if file_info.module_name and file_info.module_name != 'base' and not file_info.module_name.startswith('test_'):
-                module_files[file_info.module_name].append(file_info)
+        for diff_file in self.diff_files['.xml'].values():
+            if diff_file.module_name and diff_file.module_name != 'base' and not diff_file.module_name.startswith('test_'):
+                module_files[diff_file.module_name].append(diff_file)
 
-        issues: dict[str, list[tuple[str, int, int]]] = defaultdict(list)
-        for module_name, file_infos in module_files.items():
+        for module_name, diff_files in module_files.items():
             manifest = get_manifest(module_name)
             if not manifest:
                 continue
             data_files = set(manifest['data'])
             demo_files = set(manifest['demo'])
-            for file_info in file_infos:
-                if file_info.path_to_module in demo_files:
+            for diff_file in diff_files:
+                if diff_file.path_to_module in demo_files:
                     continue
-                init = file_info.path_to_module in data_files
-                # assert file exist
-                if not os.path.exists(file_info.path):
+                init = diff_file.path_to_module in data_files
+                if not os.path.exists(diff_file.path):
                     continue
-                for element in self.get_xml_diff_elements(file_info.path):
-                    if issue := check_ref_for_data_xml_element(element, file_info, init, self.protected_xml_ids):
-                        issues[issue[0]].append((file_info.path, *issue[1:]))
-
-        for error_type, issues_ in issues.items():
-            if error_type == 'id':
-                code = 'code_for_id'
-                message = 'Found id= for another module without force_create:'
-            elif error_type == 'ref':
-                code = 'code_for_ref'
-                message = 'Found ref= for another module:'
-            elif error_type == 'eval':
-                code = 'code_for_eval'
-                message = 'Found eval uses ref( for another module without raise_if_not_found=False:'
-            elif error_type == 'inherit_id':
-                code = 'code_for_inherit_id'
-                message = 'Found inherit_id= for another module without force_create:'
-            for issue in issues_:
-                self.report.append({
-                    'code': code,
-                    'location': {
-                        'row': issue[1],
-                        'column': 1,
-                    },
-                    'end_location': {
-                        'row': issue[2],
-                        'column': 1,
-                    },
-                    'filename': issue[0],
-                    'message': message
-                })
+                for element in self.get_xml_diff_elements(diff_file.path):
+                    self.diagnostices.extend(check_ref_for_data_xml_element(element, diff_file, init, self.protected_xml_ids))
