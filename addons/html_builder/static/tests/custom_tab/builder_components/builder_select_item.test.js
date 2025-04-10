@@ -305,3 +305,26 @@ test("revert a preview selected with the keyboard when cancelling with escape", 
     await press("escape");
     expect(":iframe .test").not.toHaveAttribute("data-choice");
 });
+
+test("isApplied shouldn't be called when the element is removed from the DOM", async () => {
+    addActionOption({
+        customAction: {
+            isApplied: ({ editingElement: el }) => {
+                expect(el.isConnected).toBe(true);
+            },
+            apply: () => {},
+        },
+    });
+    addOption({
+        selector: ".test",
+        template: xml`
+                <BuilderSelect action="'customAction'">
+                    <BuilderSelectItem actionParam="'0'">0</BuilderSelectItem>
+                    <BuilderSelectItem actionParam="'1'">1</BuilderSelectItem>
+                </BuilderSelect>`,
+    });
+    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await contains(":iframe .test").click();
+    await contains(".fa-trash ").click();
+    expect(":iframe .test").toHaveCount(0);
+});
