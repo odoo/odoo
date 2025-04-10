@@ -33,11 +33,13 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
             ('livechat_operator_id', '=', operator.id),
             ('message_ids', '!=', False),
         ])
-
         self.assertTrue(bool(livechat_discuss_channel))
         self.assertEqual(len(livechat_discuss_channel), 1)
 
         conversation_messages = livechat_discuss_channel.message_ids.sorted('id')
+        operator_member = livechat_discuss_channel.channel_member_ids.filtered(
+            lambda m: m.partner_id == self.operator.partner_id
+        )
 
         expected_messages = [
             ("Hello! I'm a bot!", operator, False),
@@ -76,10 +78,17 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
             ("How can I help you?", operator, self.step_dispatch_operator),
             ("I want to speak with an operator", False, False),
             ("I will transfer you to a human", operator, False),
-            ("joined the channel", self.operator.partner_id, False), # human_operator has joined the channel
+            (
+                'invited <a href="#" data-oe-model="res.partner" data-oe-id="'
+                f'{operator_member.partner_id.id}">@Operator Michel</a> to the channel',
+                self.chatbot_script.operator_partner_id,
+                False,
+            ),
         ]
 
         self.assertEqual(len(conversation_messages), len(expected_messages))
+        # "invited" notification is not taken into account in unread counter contribution.
+        self.assertEqual(len(conversation_messages) - 1, operator_member.message_unread_counter)
 
         # check that the whole conversation is correctly saved
         # including welcome steps: see chatbot.script#_post_welcome_steps
