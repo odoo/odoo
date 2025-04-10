@@ -341,8 +341,7 @@ class StockLandedCostLine(models.Model):
         self.split_method = self.product_id.product_tmpl_id.split_method_landed_cost or self.split_method or 'equal'
         self.price_unit = self.product_id.standard_price or 0.0
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
-        self.account_id = accounts_data['stock_input']
-
+        self.account_id = accounts_data['expense']
 
 class AdjustmentLines(models.Model):
     _name = 'stock.valuation.adjustment.lines'
