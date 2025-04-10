@@ -157,7 +157,7 @@ class ResCountry(models.Model):
         maintains a valid structure.
         '''
         for country in self:
-            country.country_group_codes = country.country_group_ids.mapped('code') or ['']
+            country.country_group_codes = [g.code for g in country.country_group_ids if g.code] or ['']
 
 
 class ResCountryGroup(models.Model):
