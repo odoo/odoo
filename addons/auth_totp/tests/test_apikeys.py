@@ -1,8 +1,8 @@
 import logging
 
 from odoo import api
-from odoo.tests import tagged, get_db_name, HttpCase
 from odoo.addons.auth_totp.tests.test_totp import TestTOTPMixin
+from odoo.tests import HttpCase, get_db_name, tagged
 
 _logger = logging.getLogger(__name__)
 
@@ -10,15 +10,16 @@ _logger = logging.getLogger(__name__)
 @tagged('post_install', '-at_install')
 class TestAPIKeys(TestTOTPMixin, HttpCase):
 
-
     def setUp(self):
         super().setUp()
 
         self.messages = []
+
         @api.model
         def log(inst, *args, **kwargs):
             self.messages.append((inst, args, kwargs))
         self.registry['ir.logging'].send_key = log
+
         @self.addCleanup
         def remove_callback():
             del self.registry['ir.logging'].send_key
