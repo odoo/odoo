@@ -2,16 +2,15 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { pyToJsLocale } from "@web/core/l10n/utils";
+import { getElementsWithOption, isMobileView } from "@html_builder/utils/utils";
 import { VisibilityOption } from "./visibility_option";
 
-export const device_visibility_option_selector = "section .row > div";
+const visibilityOptionSelector = "section, .s_hr";
+const deviceVisibilityOptionSelector = "section .row > div";
 
 class VisibilityOptionPlugin extends Plugin {
     static id = "visibilityOption";
-    static dependencies = ["builder-options", "visibility", "websiteSession"];
-    websiteService = this.services.website;
-    visibilityOptionSelector = "section, .s_hr";
-    deviceSelector = "section .row > div";
+    static dependencies = ["visibility", "websiteSession"];
     resources = {
         builder_options: [
             {
@@ -19,12 +18,12 @@ class VisibilityOptionPlugin extends Plugin {
                 props: {
                     websiteSession: this.dependencies.websiteSession.getSession(),
                 },
-                selector: this.visibilityOptionSelector,
+                selector: visibilityOptionSelector,
                 cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
             },
             {
                 template: "html_builder.DeviceVisibilityOption",
-                selector: this.deviceSelector,
+                selector: deviceVisibilityOptionSelector,
                 exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
                 cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
             },
@@ -32,6 +31,7 @@ class VisibilityOptionPlugin extends Plugin {
         builder_actions: this.getActions(),
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         normalize_handlers: this.normalizeCSSSelectors.bind(this),
         visibility_selector_parameters: [
             {
@@ -66,18 +66,16 @@ class VisibilityOptionPlugin extends Plugin {
             },
         ],
     };
+
     setup() {
         this.optionsAttributes = this.getResource("visibility_selector_parameters");
     }
+
     getActions() {
         return {
             forceVisible: {
-                apply: ({ editingElement: el }) => {
-                    this.dispatchTo("on_option_visibility_update", {
-                        editingEl: el,
-                        show: true,
-                    });
-                    this.dependencies["builder-options"].updateContainers(el);
+                apply: ({ editingElement }) => {
+                    this.dependencies.visibility.onOptionVisibilityUpdate(editingElement, true);
                 },
                 isApplied: () => true,
             },
@@ -97,13 +95,9 @@ class VisibilityOptionPlugin extends Plugin {
                     }
 
                     // Update invisible elements
-                    const isMobile = this.websiteService.context.isMobile;
+                    const isMobile = this.services.website.context.isMobile;
                     const show = visibility !== (isMobile ? "no_mobile" : "no_desktop");
-                    this.dispatchTo("on_option_visibility_update", {
-                        editingEl: editingElement,
-                        show: show,
-                    });
-                    this.dependencies["builder-options"].updateContainers(editingElement);
+                    this.dependencies.visibility.onOptionVisibilityUpdate(editingElement, show);
                 },
                 clean: ({ editingElement }) => {
                     this.clean(editingElement);
@@ -113,6 +107,7 @@ class VisibilityOptionPlugin extends Plugin {
             },
         };
     }
+
     clean(editingElement) {
         editingElement.classList.remove(
             "d-none",
@@ -125,8 +120,8 @@ class VisibilityOptionPlugin extends Plugin {
         const style = getComputedStyle(editingElement);
         const display = style["display"];
         editingElement.classList.remove(`d-md-${display}`, `d-lg-${display}`);
-        this.dependencies["builder-options"].updateContainers(editingElement);
     }
+
     isApplied(editingElement, visibilityParam) {
         const classList = [...editingElement.classList];
         if (
@@ -144,17 +139,45 @@ class VisibilityOptionPlugin extends Plugin {
         }
         return false;
     }
+
     onTargetHide(editingEl) {
-        this.dependencies.visibility.hideInvisibleEl(editingEl);
+        if (
+            editingEl.matches(deviceVisibilityOptionSelector) ||
+            editingEl.matches(visibilityOptionSelector)
+        ) {
+            editingEl.classList.remove("o_snippet_override_invisible");
+        }
+        // TODO o_conditional_hidden class for conditionalVisibility ?
     }
+
     onTargetShow(editingEl) {
-        this.dependencies.visibility.showInvisibleEl(editingEl);
+        if (
+            editingEl.matches(deviceVisibilityOptionSelector) ||
+            editingEl.matches(visibilityOptionSelector)
+        ) {
+            const isMobilePreview = isMobileView(editingEl);
+            const isMobileHidden = editingEl.classList.contains("o_snippet_mobile_invisible");
+            const isDesktopHidden = editingEl.classList.contains("o_snippet_desktop_invisible");
+            if ((isMobileHidden && isMobilePreview) || (isDesktopHidden && !isMobilePreview)) {
+                editingEl.classList.add("o_snippet_override_invisible");
+            }
+        }
     }
+
+    onSnippetDropped({ snippetEl }) {
+        const selector = [visibilityOptionSelector, deviceVisibilityOptionSelector].join(", ");
+        const droppedEls = getElementsWithOption(snippetEl, selector);
+        droppedEls.forEach((droppedEl) =>
+            this.dependencies.visibility.toggleTargetVisibility(droppedEl, true, true)
+        );
+    }
+
     normalizeCSSSelectors(rootEl) {
-        for (const el of selectElements(rootEl, this.visibilityOptionSelector)) {
+        for (const el of selectElements(rootEl, visibilityOptionSelector)) {
             this.updateCSSSelectors(el);
         }
     }
+
     /**
      * Reads target's attributes and creates CSS selectors.
      * Stores them in data-attributes to then be reapplied by

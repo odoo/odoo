@@ -89,14 +89,6 @@ export class BuilderOptionsPlugin extends Plugin {
             this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
             return;
         }
-        if (this.target.dataset.invisible === "1") {
-            delete this.target;
-            // The element is present on a page but is not visible
-            this.lastContainers = [];
-            this.dependencies.history.setStepExtra("optionSelection", this.target);
-            this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
-            return;
-        }
 
         const newContainers = this.computeContainers(this.target);
         // Do not update the containers if they did not change.

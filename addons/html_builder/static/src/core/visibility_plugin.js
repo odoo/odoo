@@ -3,15 +3,14 @@ import { isMobileView } from "@html_builder/utils/utils";
 
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
+    static dependencies = ["builder-options", "disableSnippets"];
     static shared = [
         "toggleTargetVisibility",
         "cleanForSaveVisibility",
-        "hideInvisibleEl",
-        "showInvisibleEl",
+        "onOptionVisibilityUpdate",
     ];
 
     resources = {
-        on_option_visibility_update: this.onOptionVisibilityUpdate.bind(this),
         on_mobile_preview_clicked: this.onMobilePreviewClicked.bind(this),
         system_attributes: ["data-invisible"],
         system_classes: ["o_snippet_override_invisible"],
@@ -42,37 +41,67 @@ export class VisibilityPlugin extends Plugin {
                 "o_snippet_mobile_invisible"
             );
             invisibleOverrideEl.classList.remove("o_snippet_override_invisible");
-            const show = isMobilePreview != isMobileHidden;
-            this.onOptionVisibilityUpdate({ editingEl: invisibleOverrideEl, show: show });
+            const show = isMobilePreview !== isMobileHidden;
+            this.toggleVisibilityStatus(invisibleOverrideEl, show);
         }
     }
 
-    toggleTargetVisibility(editingEl, show) {
-        show = this.onOptionVisibilityUpdate({ editingEl: editingEl, show: show });
+    /**
+     * Toggles the visibility of the given element.
+     *
+     * @param {HTMLElement} editingEl
+     * @param {Boolean} show true to show the element, false to hide it
+     * @param {Boolean} considerDeviceVisibility
+     * @returns {Boolean}
+     */
+    toggleTargetVisibility(editingEl, show, considerDeviceVisibility) {
+        show = this.toggleVisibilityStatus(editingEl, show, considerDeviceVisibility);
         const dispatchName = show ? "target_show" : "target_hide";
         this.dispatchTo(dispatchName, editingEl);
         return show;
     }
 
-    hideInvisibleEl(snippetEl) {
-        snippetEl.classList.remove("o_snippet_override_invisible");
-    }
+    /**
+     * Called when an option changed the visibility of its editing element.
+     *
+     * @param {HTMLElement} editingEl the editing element
+     * @param {Boolean} show true/false if the element was shown/hidden
+     */
+    onOptionVisibilityUpdate(editingEl, show) {
+        const isShown = this.toggleVisibilityStatus(editingEl, show);
 
-    showInvisibleEl(snippetEl) {
-        const isMobilePreview = isMobileView(snippetEl);
-        const isMobileHidden = snippetEl.classList.contains("o_snippet_mobile_invisible");
-        const isDesktopHidden = snippetEl.classList.contains("o_snippet_desktop_invisible");
-        if ((isMobileHidden && isMobilePreview) || (isDesktopHidden && !isMobilePreview)) {
-            snippetEl.classList.add("o_snippet_override_invisible");
+        if (!isShown) {
+            this.dependencies["builder-options"].deactivateContainers();
         }
+        this.config.updateInvisibleElementsPanel();
+        this.dependencies.disableSnippets.disableUndroppableSnippets();
     }
 
-    onOptionVisibilityUpdate({ editingEl, show }) {
+    /**
+     * Sets/removes the `data-invisible` attribute on the given element,
+     * depending on if it is considered as hidden/shown.
+     *
+     * @param {HTMLElement} editingEl the element
+     * @param {Boolean} show
+     * @param {Boolean} considerDeviceVisibility
+     * @returns {Boolean}
+     */
+    toggleVisibilityStatus(editingEl, show, considerDeviceVisibility) {
+        if (
+            considerDeviceVisibility &&
+            editingEl.matches(".o_snippet_mobile_invisible, .o_snippet_desktop_invisible")
+        ) {
+            const isMobilePreview = isMobileView(editingEl);
+            const isMobileHidden = editingEl.classList.contains("o_snippet_mobile_invisible");
+            if (isMobilePreview === isMobileHidden) {
+                // If the preview mode and the hidden type are the same, the
+                // element is considered as hidden.
+                show = false;
+            }
+        }
+
         if (show === undefined) {
             show = !isTargetVisible(editingEl);
-        }
-        if (show !== isTargetVisible(editingEl)) {
-            this.dispatchTo("option_visibility_updated", editingEl);
         }
         if (show) {
             delete editingEl.dataset.invisible;
