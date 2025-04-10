@@ -632,7 +632,7 @@ class IrModelFields(models.Model):
     domain = fields.Char(default="[]", help="The optional domain to restrict possible values for relationship fields, "
                                             "specified as a Python expression defining a list of triplets. "
                                             "For example: [('color','=','red')]")
-    groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id') # CLEANME unimplemented field (empty table)
+    groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id')
     group_expand = fields.Boolean(string="Expand Groups",
                                   help="If checked, all the records of the target model will be included\n"
                                         "in a grouped result (e.g. 'Group By' filters, Kanban columns, etc.).\n"
@@ -1351,7 +1351,6 @@ class IrModelFields(models.Model):
 
     def _reflect_fields(self, model_names):
         """ Reflect the fields of the given models. """
-        cr = self.env.cr
 
         for model_name in model_names:
             model = self.env[model_name]
@@ -1412,6 +1411,61 @@ class IrModelFields(models.Model):
                 record = self.browse(field_id)
                 data_list.append({'xml_id': xml_id, 'record': record})
         self.env['ir.model.data']._update_xmlids(data_list)
+
+    def _reflect_field_groups(self, model_names):
+        """ Synchronize the groups field based on the 'groups' attribute declared
+        in the model field's definitions.
+
+        This looks up the external IDs declared in Python (e.g.
+        `test_field = fields.Char(...,groups='base.group_user'))`, retrieves the
+        corresponding group records, and updates the 'ir_model_fields_group_rel'
+        relation.
+        """
+        if not model_names:
+            return
+
+        def lookup_group(field, xmlid):
+            try:
+                model, res_id = self.env['ir.model.data']._xmlid_lookup(xmlid)
+            except ValueError:
+                raise ValueError(f"{field} failed to lookup group xmlid {xmlid}")
+            assert model == 'res.groups' and res_id, "In"
+            return res_id
+        model_ids = []
+        expected = []
+        for model_name in model_names:
+            model_id = self.env['ir.model']._get_id(model_name)
+            model_ids.append(model_id)
+            field_ids = self.env['ir.model.fields']._get_ids(model_name)
+            for field in self.env[model_name]._fields.values():
+                if not field.groups or field.groups == fields.NO_ACCESS:
+                    continue
+                field_id = field_ids[field.name]
+                expected.extend(
+                    (field_id, lookup_group(field, xmlid))
+                    for xmlid in field.groups.split(',')
+                    if xmlid[0] != '!'  # ignore negative group specifications
+                )
+        expected = set(expected)
+        existing = {
+            (field.id, group.id)
+            for field in self.sudo().search([('model_id', 'in', model_ids)])
+            for group in field.groups
+        }
+        self.invalidate_model(['groups'])
+        if to_add := expected - existing:
+            self.env.cr.execute("""
+                INSERT INTO ir_model_fields_group_rel(field_id, group_id)
+                SELECT * FROM UNNEST(%s, %s)
+            """, [*map(list, zip(*to_add))])
+        if to_remove := existing - expected:
+            self.env.cr.execute("""
+            DELETE FROM ir_model_fields_group_rel rel
+            WHERE EXISTS (
+                SELECT FROM UNNEST(%s, %s) AS rm(field_id, group_id)
+                WHERE rm.field_id = rel.field_id AND rm.group_id = rel.group_id
+            )
+            """, [*map(list, zip(*to_remove))])
 
     @api.ormcache(cache='stable')
     def _all_manual_field_data(self):

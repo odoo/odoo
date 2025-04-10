@@ -223,6 +223,9 @@ def load_module_graph(
 
             migrations.migrate_module(package, 'post')
 
+            # Group reflection can be done only after loading the data
+            env['ir.model.fields']._reflect_field_groups(model_names)
+
             # Update translations for all installed languages
             overwrite = tools.config["overwrite_existing_translations"]
             module._update_translations(overwrite=overwrite)
