@@ -47,7 +47,7 @@ export class PresetInfoPopup extends Component {
         }
 
         if (this.preset.needsSlot && this.state.selectedSlot) {
-            this.selfOrder.currentOrder.preset_time = this.state.selectedSlot;
+            this.selfOrder.currentOrder.setPresetDateTime(this.state.selectedSlot);
         }
 
         this.props.callback(true);
