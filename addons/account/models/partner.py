@@ -134,7 +134,7 @@ class AccountFiscalPosition(models.Model):
                 elif record.country_id:
                     similar_fpos_domain += [('country_id', '=', record.country_id.id), ('country_group_id', '=', False)]
 
-                if record.state_ids:
+                if record.state_ids: #TODO OCO à limiter/revoir, non ? (au-dessus aussi)
                     similar_fpos_domain.append(('state_ids', 'in', record.state_ids.ids))
                 else:
                     similar_fpos_domain.append(('state_ids', '=', False))
