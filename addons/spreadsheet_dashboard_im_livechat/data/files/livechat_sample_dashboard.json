@@ -31,10 +31,10 @@
       "merges": [],
       "cells": {
         "A7": "[Sessions by Day](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"start_date:day\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_date:day\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Session per Day\"})",
-        "A23": "[Top Agents](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
+        "A23": "[Top Agents](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
         "A24": "=_t(\"Agent\")",
         "B24": "=_t(\"Sessions\")",
-        "D7": "[Sessions by Agent](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
+        "D7": "[Sessions by Agent](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
         "D24": "=_t(\"Session Duration (min)\")",
         "E24": "=_t(\"Time to respond (sec)\")"
       },

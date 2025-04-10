@@ -25,6 +25,7 @@ class Im_LivechatReportChannel(models.Model):
     start_date_hour = fields.Char('Hour of start Date of session', readonly=True)
     duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
     nbr_speaker = fields.Integer('# of speakers', readonly=True, aggregator="avg", help="Number of different speakers")
+    nbr_channel = fields.Integer("# of Sessions", readonly=True, aggregator="sum")
     nbr_message = fields.Integer('Average message', readonly=True, aggregator="avg", help="Number of message in the conversation")
     is_without_answer = fields.Integer('Session(s) without answer', readonly=True, aggregator="sum",
                                        help="""A session is without answer if the operator did not answer. 
@@ -58,6 +59,7 @@ class Im_LivechatReportChannel(models.Model):
                 C.uuid as uuid,
                 C.id as channel_id,
                 C.name as channel_name,
+                COUNT(DISTINCT C.id) AS nbr_channel,
                 CONCAT(L.name, ' / ', C.id) as technical_name,
                 C.livechat_channel_id as livechat_channel_id,
                 C.create_date as start_date,
