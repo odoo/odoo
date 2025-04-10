@@ -157,7 +157,7 @@ export class CarouselOptionPlugin extends Plugin {
     }
     normalize(root) {
         const carousel = root.closest(".s_carousel");
-        const allCarousels = root.querySelectorAll(".s_carousel");
+        const allCarousels = [...root.querySelectorAll(".s_carousel")];
         if (carousel) {
             allCarousels.push(carousel);
         }
