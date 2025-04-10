@@ -2321,7 +2321,7 @@ msgid ""
 "Adds fleet data to documents\n"
 msgstr ""
 "\n"
-"Lisää kulkuneuvojen tietoja asiakirjoihin\n"
+"Lisää ajokaluston tiedot asiakirjoihin\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_repair
@@ -2340,8 +2340,8 @@ msgid ""
 "option to send products' attachments to the documents app.\n"
 msgstr ""
 "\n"
-"Lisää mahdollisuuden luoda tuotteita asiakirjamoduulista ja lisää dokumenttimoduulin\n"
-"mahdollisuus lähettää tuotteiden liitetiedostot asiakirjasovellukseen.\n"
+"Lisää mahdollisuuden luoda tuotteita asiakirjamoduulista ja lisää vaihtoehdon\n"
+"lähettää tuotteiden liitetiedostot Asiakirjat-sovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project_sale
@@ -3003,12 +3003,12 @@ msgstr ""
 "Edellytykset:\n"
 "--------------\n"
 "\n"
-"- Tarvitset Belgian hallituksen vaatimusten mukaisen digitaalisen varmenteen, jonka toimittaa Global\n"
+"- Tarvitset Belgian hallituksen vaatimusten mukaisen digitaalisen varmenteen, jonka myöntää Global\n"
 "  Sign. Katso: https://shop.globalsign.com/en/belgian-government-services\n"
 "\n"
-"- Luo SSL-sertifikaatistasi varmenteetiedostot (.pfx-tiedosto), joita tarvitaan luomaan\n"
-"  teknisen käyttäjän (.cer-tiedosto) ja etätunnistautumiseen ONSS-tiedostoon (.pem). UNIX-järjestelmässä\n"
-"  järjestelmässä voit käyttää seuraavia komentoja:\n"
+"- Luo SSL-sertifikaatistasi varmennetiedostot (.pfx-tiedosto), joita tarvitaan, kun\n"
+"  teknisen käyttäjän (.cer-tiedosto) luomiseen ja etätunnistautumiseen ONSS-tiedostoon (.pem). UNIX-järjestelmässä\n"
+"  voit käyttää seuraavia komentoja:\n"
 "\n"
 "  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
 "\n"
@@ -3017,20 +3017,20 @@ msgstr ""
 "  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
 "\n"
 "- Ennen kuin voit käyttää sosiaaliturvan REST-verkkopalvelua, sinun on luotava tili\n"
-"  itsellesi tai asiakkaallesi ja määrittää tietoturva. (Koko menettely on\n"
+"  itsellesi tai asiakkaallesi ja määrittää tietoturva. (Koko kuvaus menettelystä\n"
 "  on saatavilla osoitteessa https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
 "\n"
-"  - Käyttäjätilien hallinta: Seuraa menettelyä https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"  - Käyttäjätilien hallinta: Seuraa menettelytapaa: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
 "\n"
-"  - Luo tekninen käyttäjä: Asiakkaan on nyt luotava tekninen käyttäjä käyttöoikeuksien hallinnassa\n"
-"    verkkopalvelussa. Seuraa tätä menettelyä: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"  - Luo tekninen käyttäjä: Asiakkaan on nyt luotava tekninen käyttäjä käyttöoikeuksien hallinnan\n"
+"    verkkopalvelussa. Seuraa tätä menettelytapaa: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
 "\n"
 "  - Aktivoi verkkopalvelukanava: Kun tekninen käyttäjä on luotu, asiakkaasi on\n"
 "    aktivoitava verkkopalvelukanava käyttöoikeuksien hallinnassa. Seuraavassa oppaassa selitetään\n"
 "    vaiheet kanavan aktivoimiseksi: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
 "\n"
-"  - Menettelyn päätteeksi sinun pitäisi saada \"ONSS Expeditor Number\", jonka avulla voitte\n"
-"    koodata palkka-asetuksissa .pem-tiedoston ja mahdollisen salasanan kanssa.\n"
+"  - Menettelyn päätteeksi sinun pitäisi saada \"ONSS Expeditor Number\", jonka avulla voit\n"
+"    koodata palkka-asetuksissa .pem-tiedoston ja mahdollisen siihen liittyvän salasanan.\n"
 "\n"
 
 #. module: base
@@ -3239,9 +3239,9 @@ msgstr ""
 "Brasilian lokalisoinnin perusmoduuli\n"
 "==========================================\n"
 "\n"
-"Tämä moduuli koostuu seuraavista osista:\n"
+"Tämä moduuli koostuu seuraavista osioista:\n"
 "\n"
-"- Yleinen brasilialainen tilikartta\n"
+"- Yleinen Brasilian tilikartta\n"
 "- Brasilian verot, kuten:\n"
 "\n"
 "  - IPI\n"
@@ -3252,27 +3252,27 @@ msgstr ""
 "  - IR\n"
 "  - CSLL\n"
 "\n"
-"- Asiakirjatyypit kuten NFC-e, NFS-e jne.\n"
-"- Henkilöllisyystodistukset kuten CNPJ ja CPF\n"
+"- Asiakirjatyypit, kuten NFC-e, NFS-e jne.\n"
+"- Henkilöllisyystodistukset, kuten CNPJ ja CPF\n"
 "\n"
-"Tämän moduulin lisäksi Brasilian lokalisoinnit on myös seuraava moduuli\n"
+"Tämän moduulin lisäksi Brasilian lokalisointia on\n"
 "laajennettu ja täydennetty useilla lisämoduuleilla.\n"
 "\n"
 "Brasilia - kirjanpidon raportit (l10n_br_reports)\n"
 "---------------------------------------------\n"
 "Lisää yksinkertaisen veroraportin, jonka avulla voidaan tarkistaa veron määrä veroryhmittäin\n"
-"tiettynä ajanjaksona. Lisäksi lisätään tuloslaskelma ja BS mukautettu varten\n"
+"tiettynä ajanjaksona. Lisäksi lisätään tuloslaskelma ja BS, joka on mukautettu\n"
 "Brasilian markkinoille.\n"
 "\n"
 "Avatax Brasilia (l10n_br_avatax)\n"
 "------------------------------\n"
-"Lisää Brasilian verolaskenta Avataxin kautta ja kaikki tarvittavat kentät, joita tarvitaan, jotta voidaan\n"
-"odoon konfigurointiin, jotta se voi käyttää Avataxia oikein ja lähettää tarvittavat veroilmoitukset\n"
+"Lisää Brasilian verolaskenta Avataxin kautta ja kaikki tarvittavat kentät, jotta Odoo\n"
+"voidaan konfiguroida ja jotta se voi käyttää Avataxia oikein ja lähettää tarvittavat veroilmoitusten\n"
 "tiedot oikeiden verojen hakemista varten.\n"
 "\n"
-"Avatax Brasiliassa toimiville SO:ille (l10n_br_avatax_sale)\n"
+"Avatax myyntitilauksille Brasiliassa (l10n_br_avatax_sale)\n"
 "----------------------------------------------\n"
-"Sama kuin l10n_br_avatax-moduuli laajennettuna myyntitilausmoduuliin.\n"
+"Sama kuin l10n_br_avatax-moduuli ja laajennus myyntitilausmoduuliin.\n"
 "\n"
 "Sähköinen laskutus Avataxin kautta (l10n_br_edi)\n"
 "-------------------------------------------------\n"
@@ -3376,12 +3376,12 @@ msgstr ""
 "    * Passipohjainen sopimus\n"
 "    * Korvaukset/vähennykset\n"
 "    * Mahdollistaa perus-/brutto-/nettopalkan määrittelyn\n"
-"    * Työntekijän palkkatodistus\n"
+"    * Työntekijän palkkakuitti\n"
 "    * Kuukausittainen palkkarekisteri\n"
-"    * Integroitu lomien hallintaan\n"
+"    * Integroitu lomien hallinnan kanssa\n"
 "    * Palkka Maj, ONSS, lähdevero, lapsilisä, ...\n"
 "\n"
-"Automaattinen DmfA allekirjoitus\n"
+"Automaattinen DmfA-allekirjoitus\n"
 "========================\n"
 "\n"
 "Edellytykset:\n"
@@ -3390,9 +3390,9 @@ msgstr ""
 "- Tarvitset Belgian hallituksen vaatimusten mukaisen digitaalisen varmenteen, jonka toimittaa Global\n"
 "  Sign. Katso: https://shop.globalsign.com/en/belgian-government-services\n"
 "\n"
-"- Luo SSL-sertifikaatistasi varmenteetiedostot (.pfx-tiedosto), joita tarvitaan luomaan\n"
-"  teknisen käyttäjän (.cer-tiedosto) ja etätunnistautumiseen ONSS-tiedostoon (.pem). UNIX-järjestelmässä\n"
-"  järjestelmässä voit käyttää seuraavia komentoja:\n"
+"- Luo SSL-sertifikaatistasi todistustiedostot (.pfx-tiedosto), joita tarvitaan\n"
+"  teknisen käyttäjän (.cer-tiedosto) luomisessa ja etätunnistautumiseen ONSS-tiedostoon (.pem). UNIX-järjestelmässä\n"
+"  voit käyttää seuraavia komentoja:\n"
 "\n"
 "  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
 "\n"
@@ -3403,15 +3403,15 @@ msgstr ""
 "  - PFX -> KEY: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts -nocerts\n"
 "\n"
 "- Ennen kuin voit käyttää sosiaaliturvan REST-verkkopalvelua, sinun on luotava tili\n"
-"  itsellesi tai asiakkaallesi ja määrittää tietoturva. (Koko menettely on\n"
+"  itsellesi tai asiakkaallesi ja määrittää tietoturva. (Täysi kuvaus menettelystä on\n"
 "  saatavilla osoitteessa https://www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/previewstep.htm)\n"
 "\n"
-"  - Luo tekninen käyttäjä + Aktivoi SFTP-kanava: Asiakkaasi on nyt luotava tekninen käyttäjä käyttöoikeuksien hallinnassa\n"
+"  - Luo tekninen käyttäjä + Aktivoi SFTP-kanava: Asiakkaasi on nyt luotava tekninen käyttäjä käyttöoikeuksien hallinnan\n"
 "    verkkopalvelussa. Seuraa tätä menettelyä: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
 "\n"
 "  - Konfiguroi SFTP-asiakasohjelma: https://www.socialsecurity.be/site_fr/general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
 "\n"
-"  - Menettelyn päätteeksi sinun pitäisi saada \"ONSS Expeditor Number\"\n"
+"  - Menettelyn päätteeksi sinun pitäisi saada \"ONSS Expeditor Number\", jonka voit\n"
 "    koodata palkka-asetuksissa .pem-tiedoston ja mahdollisen salasanan kanssa.\n"
 
 #. module: base
@@ -4131,13 +4131,13 @@ msgstr ""
 "Luo verkkokursseja\n"
 "=====================\n"
 "\n"
-"Mukana\n"
+"Sisältää\n"
 "\n"
 " * Integroitu kurssien ja oppituntien hallinta\n"
 " * Navigointi koko näytön alueella\n"
 " * Tukee Youtube-videoita, Google-dokumentteja, PDF-tiedostoja, kuvia ja artikkeleita\n"
-" * Testaa tietämystä tietokilpailujen avulla\n"
-" * Suodata ja merkitä\n"
+" * Testaa tietoja tietovisojen avulla\n"
+" * Suodatuksen ja tunnisteiden lisäämismahdollisuus\n"
 " * Tilastot\n"
 
 #. module: base
@@ -4407,9 +4407,9 @@ msgid ""
 "This is help to show case the documents OCR for India.\n"
 msgstr ""
 "\n"
-"Demoasiakirjat Intiaa varten\n"
+"Demoasiakirjat Intiassa\n"
 "========================\n"
-"Tämä auttaa esittelemään OCR-asiakirjoja Intian osalta.\n"
+"Tämä auttaa esittelemään asiakirjojen tekstintunnistusta Intian osalta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_themes
@@ -4453,7 +4453,7 @@ msgid ""
 "Disallowed Expenses Fleet Data for Belgium\n"
 msgstr ""
 "\n"
-"Hyväksymättömät menot Belgian laivastoa koskevat tiedot\n"
+"Hyväksymättömät menot koskien Belgian ajokaluston tietoja\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm_report
@@ -4785,9 +4785,9 @@ msgstr ""
 "\n"
 "EDI Ecuadorin lokalisointi\n"
 "===========================\n"
-"Lisää sähköisiä asiakirjoja XML:llä, RIDE:llä, sähköisellä allekirjoituksella ja suoralla yhteydellä veroviranomaiseen SRI:hen,\n"
+"Lisää sähköisiä asiakirjoja XML:llä, RIDE:llä, sähköisellä allekirjoituksella ja suoralla yhteydellä varustettuna veroviranomaiselle SRI:hen.\n"
 "\n"
-"Tuettuja asiakirjoja ovat laskut, hyvityslaskut, veloituslaskut, oston selvitykset, oston palautukset ja ennakonpidätykset\n"
+"Tuettuja asiakirjoja ovat laskut, hyvityslaskut, veloituslaskut, oston selvitykset, hankintojen  likvidointi ja ennakonpidätykset\n"
 "\n"
 "Sisältää automaatiot, joiden avulla voidaan helposti ennakoida kuhunkin ostolaskuun sovellettava lähdevero\n"
 
@@ -5510,22 +5510,23 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Functional\n"
+"Toiminnallinen osio\n"
 "----------\n"
 "\n"
-"In some Latinamerica countries, including Argentina and Chile, some accounting transactions like invoices and vendor bills are classified by a document types defined by the government fiscal authorities (In Argentina case AFIP, Chile case SII).\n"
+"Joissakin Latinalaisen Amerikan maissa, kuten Argentiinassa ja Chilessä, tietyt kirjanpitotapahtumat, kuten myyntilaskut ja ostolaskut, luokitellaan hallituksen veroviranomaisten määrittelemien asiakirjatyyppien mukaan (Argentiinassa AFIP, Chilessä SII).\n"
 "\n"
-"This module is intended to be extended by localizations in order to manage these document types and is an essential information that needs to be displayed in the printed reports and that needs to be easily identified, within the set of invoices as well of account moves.\n"
+"Tämä moduuli on suunniteltu laajennettavaksi paikallisilla lokalisoinneilla, jotta näitä asiakirjatyyppejä voidaan hallita. Ne ovat keskeinen tieto, jonka tulee näkyä tulostetuissa raporteissa ja jonka täytyy olla helposti tunnistettavissa sekä laskujen että muiden kirjanpitotapahtumien joukossa.\n"
 "\n"
-"Each document type have their own rules and sequence number, this last one is integrated with the invoice number and journal sequence in order to be easy for the localization user. In order to support or not this document types a Journal has a new option that lets to use document or not.\n"
+"Jokaisella asiakirjatyypillä on omat sääntönsä ja oma järjestysnumeronsa, joka integroidaan laskun numeroon ja kirjanpidon päiväkirjan järjestysnumeroon, jotta käyttö olisi sujuvaa lokalisaation käyttäjille. Tukeakseen tai jättäessään tukematta näitä asiakirjatyyppejä, päiväkirjaan on lisätty uusi valinta: käytetäänkö asiakirjatyyppejä vai ei.\n"
 "\n"
-"Technical\n"
+"\n"
+"Tekninen osio\n"
 "---------\n"
 "\n"
-"If your localization needs this logic will then need to add this module as dependency and in your localization module extend:\n"
+"Jos lokalisointisi tarvitsee tätä logiikkaa, sen on määritettävä tämä moduuli riippuvuudeksi ja laajennettava lokalisointisi moduulissa seuraavat asiat:\n"
 "\n"
-"* extend company's _localization_use_documents() method.\n"
-"* create the data of the document types that exists for the specific country. The document type has a country field\n"
+"* laajenna yrityksen _localization_use_documents() -metodia.\n"
+"* Luo kyseisessä maassa käytettävät asiakirjatyypit datana. Asiakirjatyyppi sisältää kentän \"country\" eli \"maa\"\n"
 "\n"
 
 #. module: base
@@ -5691,18 +5692,18 @@ msgstr ""
 "Toiminnallinen\n"
 "----------\n"
 "\n"
-"Tämä moduuli lisää kirjanpito-ominaisuudet Ecuadorin lokalisointia varten, mikä\n"
-"edustavat vähimmäisvaatimuksia, jotta yritys voi toimia Ecuadorissa vaatimusten mukaisesti\n"
-"paikallisten sääntelyelinten, kuten Ecuadorin veroviranomaisen -SRI- ja ecuadorilaisen\n"
+"Tämä moduuli lisää kirjanpito-ominaisuudet Ecuadorin lokalisointia varten, jotka\n"
+"edustavat vähimmäisvaatimuksia yrityksen toimintaan Ecuadorissa\n"
+"paikallisten sääntelyelinten vaatimusten mukaisesti, kuten Ecuadorin veroviranomaisen -SRI- ja Ecuadorin\n"
 "Super Intendencia de Compañías -Yhtiöiden valvontavirasto -Super Intendencia de Compañías-\n"
 "\n"
 "Seuraa seuraavia konfigurointivaiheita:\n"
 "1. Siirry yritykseesi ja määritä maaksi Ecuador\n"
-"2. Asenna laskutus- tai kirjanpitomoduuli, kaikki hoituu automaattisesti\n"
+"2. Asenna laskutus- tai kirjanpitomoduuli; kaikki hoituu automaattisesti\n"
 "\n"
 "Kohokohdat:\n"
 "* Asennetaan automaattisesti Ecuadorin tilikartta, joka perustuu Super Intendencia de Compañíasin antamaan esimerkkiin\n"
-"* Luettelo veroista (mukaan lukien ennakonpidätykset) asennetaan myös, voit kytkeä pois ne, joita yrityksesi ei käytä\n"
+"* Luettelo veroista (mukaan lukien ennakonpidätykset) asennetaan myös, mutta voit kytkeä pois ne, joita yrityksesi ei käytä\n"
 "* Verokanta, asiakirjatyypit, luettelo paikallisista pankeista, luettelo paikallisista osavaltioista jne. asennetaan myös\n"
 "\n"
 "Tekninen\n"
@@ -11767,7 +11768,7 @@ msgstr ""
 "\n"
 "Tämä moduuli integroi Odoon, jotta voit antaa sähköisiä asiakirjoja (CFE) DGI:lle. Esimerkki: e-lippu, e-lasku ja niihin liittyvät veloitus- ja hyvityslaskut.\n"
 "\n"
-"Kun CFE on annettu, ja koska laskun validointi on asynkroninen, Odoo suorittaa ajastetun toiminnon, joka muodostaa yhteyden DGI:hen tarkistaakseen/päivittääkseen CFE:n tilan (odottaa DGI:n vastausta, hyväksytty tai hylätty)\n"
+"Kun CFE on annettu, ja koska laskun vahvistus on asynkroninen, Odoo suorittaa ajastetun toiminnon, joka muodostaa yhteyden DGI:hen tarkistaakseen/päivittääkseen CFE:n tilan (odottaa DGI:n vastausta, hyväksytty tai hylätty)\n"
 "\n"
 "HUOMAUTUS: Jokainen yhteys muodostetaan käyttämällä kolmannen osapuolen ohjelmistoa nimeltä Uruware\n"
 "\n"
@@ -11783,7 +11784,7 @@ msgstr ""
 "======================\n"
 "\n"
 "* Varausasiakirjoja ei ole pantu täytäntöön\n"
-"* Tulevassa toteutuksessa on myyjän laskujen automaattinen synkronointi.\n"
+"* Tulevassa toteutus sisältää toimittajan laskujen automaattisen synkronisoinnin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
@@ -12246,7 +12247,7 @@ msgid ""
 "Time off documents will be automatically integrated to the Document app.\n"
 msgstr ""
 "\n"
-"Vapaa-ajan asiakirjat integroidaan automaattisesti Asiakirjat-sovellukseen.\n"
+"Lomadokumentit integroidaan automaattisesti Asiakirjat-sovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -12628,10 +12629,10 @@ msgstr ""
 "==================================\n"
 "Tämän moduulin avulla Odoo auttaa sinua hallinnoimaan kaikkia kulkuneuvojasi, \n"
 "ajoneuvoihin liittyviä sopimuksia sekä palveluita, kustannuksia\n"
-"ja monia muita ominaisuuksia, jotka ovat välttämättömiä kalustosi hallinnoinnissa\n"
-"kulkuneuvoja\n"
+"ja monia muita ominaisuuksia, jotka ovat välttämättömiä hallitaksesi\n"
+"ajokalustoasi\n"
 "\n"
-"Tärkeimmät ominaisuudet\n"
+"Keskeisimmät ominaisuudet\n"
 "-------------\n"
 "* Ajoneuvojen lisääminen ajoneuvokantaan\n"
 "* Ajoneuvojen sopimusten hallinta\n"
@@ -12761,7 +12762,7 @@ msgid ""
 "When sharing documents/folder, the domain of the shared URL can be chosen by selecting a target website.\n"
 msgstr ""
 "\n"
-"Kun jaat asiakirjoja/kansioita, jaetun URL-osoitteen verkkotunnuksen voi valita valitsemalla kohdesivuston.\n"
+"Kun jaat asiakirjoja/kansioita, jaetun URL-osoitteen domainin voi valita valitsemalla kohdesivuston.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_online_synchronization
@@ -14561,7 +14562,7 @@ msgstr "Brasilia - Kirjanpitoraportit"
 #: model:ir.module.module,shortdesc:base.module_account_accountant_fleet
 #: model:ir.module.module,shortdesc:base.module_account_fleet
 msgid "Accounting/Fleet bridge"
-msgstr "Kirjanpito / Kulkuneuvojen silta"
+msgstr "Kirjanpidon/Ajokaluston silta"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__act_window_id
@@ -17723,7 +17724,7 @@ msgstr "Omistusten hallinta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset_fleet
 msgid "Assets/Fleet bridge"
-msgstr "Kiinteät omaisuuserät / kulkuneuvojen silta"
+msgstr "Varallisuuden/Ajokaluston silta"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
@@ -18254,7 +18255,8 @@ msgstr "Avatax geolokalisointia varten"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_fsm
 msgid "Avoid auto-enabling the documents feature on fsm projects"
-msgstr "Vältä asiakirjojen automaattista aktivointia kenttätyön projekteissa"
+msgstr ""
+"Vältä asiakirjojen automaattista aktivointia kenttähuollon projekteissa"
 
 #. module: base
 #: model:res.country,name:base.az
@@ -18751,7 +18753,7 @@ msgstr "Belgia - Hylätyt menot - Tiedot"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_account_disallowed_expenses_fleet
 msgid "Belgium - Disallowed Expenses Fleet"
-msgstr "Belgia - Hylätyt kulut - Kulkuneuvot"
+msgstr "Belgia - Hylätyt kulut - Ajokalusto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
@@ -18796,7 +18798,7 @@ msgstr "Belgia - Palkanlaskenta - Vienti UCM:ään"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fleet
 msgid "Belgium - Payroll - Fleet"
-msgstr "Belgia - Palkanlaskenta - Kulkuneuvot"
+msgstr "Belgia - Palkanlaskenta - Ajokalusto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
@@ -20146,7 +20148,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_documents
 msgid "Choose the website on which documents/folder are shared"
-msgstr "Valitse verkkosivusto, jolla asiakirjat/kansio jaetaan"
+msgstr "Valitse verkkosivu, jolla asiakirjat/kansio jaetaan"
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -22521,7 +22523,7 @@ msgstr "Hyväksymättömät kulut"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_disallowed_expenses_fleet
 msgid "Disallowed Expenses on Fleets"
-msgstr "Kulkuneuvojen menot, joita ei hyväksytä"
+msgstr "Ajokaluston menot, joita ei hyväksytä"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -22813,7 +22815,7 @@ msgstr "Asiakirjat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_account
 msgid "Documents - Accounting"
-msgstr "Dokumentit - Kirjanpito"
+msgstr "Asiakirjat - Kirjanpito"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_approvals
@@ -22823,12 +22825,12 @@ msgstr "Asiakirjat - Hyväksynnät"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_l10n_be_hr_payroll
 msgid "Documents - Belgian Payroll"
-msgstr "Dokumentit - Belgian palkanlaskenta"
+msgstr "Asiakirjat - Belgian palkanlaskenta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_contract
 msgid "Documents - Contracts"
-msgstr "Dokumentit - sopimukset"
+msgstr "Asiakirjat - Sopimukset"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_expense
@@ -22838,17 +22840,17 @@ msgstr "Asiakirjat - Kulut"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fsm
 msgid "Documents - FSM"
-msgstr "Dokumentit - Kenttätyö"
+msgstr "Asiakirjat - Kenttähuollon hallinnointi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fleet
 msgid "Documents - Fleet"
-msgstr "Dokumentit - laivue"
+msgstr "Asiakirjat - Ajokalusto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr
 msgid "Documents - HR"
-msgstr "Dokumentit - HR"
+msgstr "Asiakirjat - HR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_l10n_hk_hr_payroll
@@ -22863,32 +22865,32 @@ msgstr "Asiakirjat - Kenian palkanlaskenta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_payroll
 msgid "Documents - Payroll"
-msgstr "Dokumentit - Palkkahallinto"
+msgstr "Asiakirjat - Palkanlaskenta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_product
 msgid "Documents - Product"
-msgstr "Dokumentit - Tuote"
+msgstr "Asiakirjat - Tuote"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sale
 msgid "Documents - Project - Sale"
-msgstr "Dokumentit - Projekti - Myynti"
+msgstr "Asiakirjojat - Projekti - Myynti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project
 msgid "Documents - Projects"
-msgstr "Dokumentit - Projektit"
+msgstr "Asiakirjat - Projektit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_recruitment
 msgid "Documents - Recruitment"
-msgstr "Dokumentit - Rekrytointi"
+msgstr "Asiakirjat - Rekrytointi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_sign
 msgid "Documents - Signatures"
-msgstr "Dokumentit - Allekirjoitukset"
+msgstr "Asiakirjat - Allekirjoitukset"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_l10n_ch_hr_payroll
@@ -22898,24 +22900,24 @@ msgstr "Asiakirjat - Sveitsin palkanlaskenta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_holidays
 msgid "Documents - Time Off"
-msgstr "Dokumentit - Vapaat"
+msgstr "Asiakirjat - Vapaat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sign
 msgid "Documents Project Sign"
-msgstr "Dokumentit Projektin allekirjoitus"
+msgstr "Asiakirjat, projektin allekirjoitus"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_spreadsheet
 #: model:ir.module.module,shortdesc:base.module_documents_spreadsheet
 #: model:ir.module.module,summary:base.module_documents_spreadsheet
 msgid "Documents Spreadsheet"
-msgstr "Dokumentit taulukkolaskennan työkirja"
+msgstr "Asiakirjojen datataulukot"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Documents to Delete"
-msgstr "Dokumentit poistettavaksi"
+msgstr "Poistettavat asiakirjat"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.AUD
@@ -25349,17 +25351,17 @@ msgstr "Lippu Kuva Url"
 #: model:ir.module.category,name:base.module_category_human_resources_fleet
 #: model:ir.module.module,shortdesc:base.module_fleet
 msgid "Fleet"
-msgstr "Kuljetuskalusto"
+msgstr "Ajokalusto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_fleet
 msgid "Fleet History"
-msgstr "Laivueen historia"
+msgstr "Ajokaluston historia"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_fleet
 msgid "Fleet from documents"
-msgstr "Laivue dokumenteilta"
+msgstr "Ajokalusto dokumenteista"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
@@ -28060,7 +28062,7 @@ msgstr "Integrointi"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_fleet
 msgid "Integration between Payroll and Fleet."
-msgstr "Palkanlaskennan ja kulkuneuvojen integrointi."
+msgstr "Palkanlaskennan ja Ajokaluston integrointi."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_pos
@@ -28409,7 +28411,7 @@ msgstr "Lasku"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
 msgid "Invoices from Documents"
-msgstr "Laskut dokumenteilta"
+msgstr "Laskut asiakirjoista"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -30252,42 +30254,42 @@ msgstr ""
 "Rekrytoinnin ja työhakemusten hallinnointi\n"
 "---------------------------------------\n"
 "\n"
-"Julkaise, mainosta ja organisoi työpaikkatarjouksesi Odoo:n avulla\n"
-"<a href=\"https://www.odoo.com/app/recruitment\">Avoimen lähdekoodin rekrytointisovelluksella</a>.\n"
+"Julkaise, mainosta ja organisoi työtarjouksesi Odoon\n"
+"<a href=\"https://www.odoo.com/app/recruitment\">Avoimen lähdekoodin Rekrytointi-sovelluksella</a>.\n"
 "\n"
-"Järjestä työpaikkataulusi, mainosta työpaikkailmoituksiasi ja seuraa\n"
-"hakemusten jättämistä helposti. Seuraa jokaista hakijaa ja rakenna tietokanta\n"
-"taitoja ja profiileja indeksoitujen asiakirjojen avulla.\n"
+"Järjestä työnhakusivustot, mainosta työpaikkailmoituksia ja seuraa\n"
+"hakemusten jättämistä helposti. Seuraa jokaista hakijaa ja rakenna\n"
+"taitojen ja profiilien tietokanta indeksoitujen asiakirjojen avulla.\n"
 "\n"
-"Julkaise työpaikkojasi parhailla työpaikkatauluilla\n"
+"Julkaise työpaikkojasi parhailla työnhakusivustoilla\n"
 "---------------------------------\n"
 "\n"
-"Yhdistä automaattisesti tunnetuimpiin työpaikkailmoitussivustoihin; linkedIn, Monster,\n"
-"Craigslist, ... Jokainen työpaikka on uusi sähköpostiosoite automaattisesti\n"
-"jotta hakemukset voidaan ohjata automaattisesti oikeaan työpaikkaan.\n"
+"Yhdistä automaattisesti tunnetuimpiin työnhakusivustoihin; LinkedIn, Monster,\n"
+"Craigslist, ... Jokaisella työtehtävällä on sille omistettu uusi sähköpostiosoite, joka ohjaa\n"
+" hakemukset automaattisesti oikeaan, kohdistettuun työtehtävään.\n"
 "\n"
 "Olivatpa hakijat yhteydessä sinuun sähköpostitse tai verkkolomakkeella, saat kaikki\n"
-"tiedot indeksoidaan automaattisesti (ansioluettelot, motivaatiokirje) ja voit vastata hakijoille\n"
-"vain yhdellä napsautuksella, kun käytät uudelleen vastausmalleja.\n"
+"tiedot automaattisesti indeksoituna (ansioluettelot, motivaatiokirjeet) ja voit vastata hakijoille\n"
+"vain yhdellä klikkauksella, kun käytät uudelleen vastausmalleja.\n"
 "\n"
-"Mukauta rekrytointiprosessiasi\n"
+"Räätälöi rekrytointiprosessisi\n"
 "----------------------------------\n"
 "\n"
-"Käytä kanban-näkymää ja mukauta rekrytointiprosessisi vaiheet;\n"
+"Käytä kanban-näkymää ja räätälöi rekrytointiprosessisi vaiheet;\n"
 "esikarsinta, ensimmäinen haastattelu, toinen haastattelu, neuvottelu, ...\n"
 "\n"
-"Saat tarkkoja tilastoja rekrytointiprosessistasi. Saat raportteja, joilla voit vertailla\n"
-"eri sijoitusten suorituskykyä ulkoisilla työpaikkatauluilla.\n"
+"Saat tarkkoja tilastoja rekrytointiprosessistasi. Raporttien avulla voit vertailla\n"
+"suorituskykyä ulkoisilla työnhakusivustoilla.\n"
 "\n"
 "Tehosta rekrytointiprosessiasi\n"
 "-----------------------------------\n"
 "\n"
-"Seuraa hakijoita rekrytointiprosessissasi älykkään kanban-näkymän avulla. Tallenna\n"
+"Seuraa hakijoita rekrytointiprosessissasi älykkään kanban-näkymän avulla. Säästä\n"
 "aikaa automatisoimalla osan viestinnästä sähköpostimalleilla.\n"
 "\n"
 "Asiakirjat, kuten ansioluettelot ja motivaatiokirjeet, indeksoidaan automaattisesti,\n"
-"jolloin voit helposti etsiä tiettyjä taitoja ja rakentaa tietokannan, jossa on\n"
-"profiileja.\n"
+"jolloin voit helposti etsiä tiettyjä taitoja ja rakentaa profiileista\n"
+"tietokannan.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_holidays
@@ -30309,12 +30311,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_fleet
 msgid "Manage accounting with fleet features"
-msgstr "Hallitse kirjanpitoa ajoneuvojen ominaisuuksien mukaan"
+msgstr "Hallitse kirjanpitoa ajokaluston ominaisuuksien mukaan"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_fleet
 msgid "Manage accounting with fleets"
-msgstr "Hallitse kirjanpitoa ja kulkuneuvoja"
+msgstr "Hallitse kirjanpitoa ja ajokalustoa"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -30339,7 +30341,7 @@ msgstr "Alusta verkko-oppimisen hallintaan ja julkaisuihin"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_asset_fleet
 msgid "Manage assets with fleets"
-msgstr "Hallitse omaisuuseriä ja kulkuneuvoja"
+msgstr "Hallitse omaisuuseriä ja ajokalustoa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_certificate
@@ -30355,7 +30357,7 @@ msgstr "Hylätyjen menojen hallinta"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses_fleet
 msgid "Manage disallowed expenses with fleets"
-msgstr "Hallitse kulkuneuvojen hylättyjä menoja"
+msgstr "Hallinnoi ajokaluston hylättyjä menoja"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
@@ -30493,7 +30495,7 @@ msgstr "Hallitse työntekijöidesi aikataulua"
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
-msgstr "Hallitse kulkuneuvojasi ja seuraa autojen kustannuksia"
+msgstr "Hallitse ajokalustoasi ja seuraa autojen kustannuksia"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_group
@@ -31352,7 +31354,7 @@ msgid ""
 "\n"
 "   Supported documents are SO, PO.\n"
 msgstr ""
-"Moduuli asiakirjojen synkronointiin useiden yritysten välillä. Tämän avulla voit esimerkiksi luoda myyntitilauksen automaattisesti, kun ostotilaus on vahvistettu järjestelmän toisen yrityksen kanssa myyjänä, ja päinvastoin.\n"
+"Moduuli asiakirjojen synkronointiin useiden yritysten välillä. Tämän avulla voit esimerkiksi luoda myyntitilauksen automaattisesti, kun ostotilaus on vahvistettu järjestelmän toisen yrityksen kanssa toimittajana, ja päinvastoin.\n"
 "\n"
 "   Tuetut asiakirjat ovat SO, PO.\n"
 
@@ -31363,7 +31365,7 @@ msgid ""
 "\n"
 "   Supported documents are invoices/credit notes.\n"
 msgstr ""
-"Moduuli asiakirjojen synkronointiin useiden yritysten välillä. Tämän avulla voit esimerkiksi luoda myyntitilauksen automaattisesti, kun ostotilaus on vahvistettu järjestelmän toisen yrityksen kanssa myyjänä, ja päinvastoin.\n"
+"Moduuli asiakirjojen synkronointiin useiden yritysten välillä. Tämän avulla voit esimerkiksi luoda myyntitilauksen automaattisesti, kun ostotilaus on vahvistettu järjestelmän toisen yrityksen kanssa toimittajana, ja päinvastoin.\n"
 "\n"
 "   Tuettuja asiakirjoja ovat laskut/hyvityslaskut.\n"
 
@@ -31373,8 +31375,8 @@ msgid ""
 "Module for synchronization of Inventory Documents between several companies.\n"
 "   For example, this allows you to have a delivery receipt created automatically in the receiving company when another company of the system confirms a delivery order.\n"
 msgstr ""
-"Moduuli inventaarioasiakirjojen synkronointiin useiden yritysten välillä.\n"
-"   Tämän avulla voit esimerkiksi saada toimituskuitin luotua automaattisesti vastaanottavassa yrityksessä, kun järjestelmän toinen yritys vahvistaa toimitustilauksen.\n"
+"Moduuli varastointiasiakirjojen synkronointiin useiden yritysten välillä.\n"
+"   Tämän avulla voit esimerkiksi luoda toimituskuitin automaattisesti vastaanottavassa yrityksessä, kun järjestelmän toinen yritys vahvistaa toimitustilauksen.\n"
 
 #. module: base
 #. odoo-python
@@ -34412,34 +34414,34 @@ msgstr ""
 "\n"
 "### Aikatauluta, mainosta, myy, järjestä, organisoi\n"
 "\n"
-"Hanki lisäominaisuuksia tapahtumakohtaisesti; useita sivuja, sponsoreita, useita puheenvuoroja, ehdotuslomake, esityslista, tapahtumaan liittyviä uutisia, asiakirjoja (esitysten dioja), tapahtumakohtaiset valikot.\n"
+"Hanki lisäominaisuuksia tapahtumakohtaisesti; useita sivuja, sponsoreita, useita keskusteluja, esityslomake, esityslista, tapahtumaan liittyviä uutisia, asiakirjoja (esitysten dioja), tapahtumakohtaiset valikot.\n"
 "\n"
-"Järjestä radat\n"
+"Järjestä ohjelmanumerot\n"
 "--------------------\n"
 "\n"
-"### Puheehdotuksesta julkaisuun\n"
+"### Ohjelmanumeroehdotuksesta sen julkaisuun\n"
 "\n"
-"Lisää tapahtumiin puhe-ehdotuslomake, jotta kävijät voivat ehdottaa puheita ja puhujia. Järjestä jokaisen puheenvuoron validointiprosessi ja aikatauluta helposti.\n"
+"Lisää tapahtumiin ehdotuslomake, jotta kävijät voivat ehdottaa ohjelmanumeroita ja puhujia. Järjestä jokaisen ohjelmanumeron hyväksymisprosessi ja aikatauluta helposti.\n"
 "\n"
-"Odoon ainutlaatuinen frontendin ja backendin integrointi tekee organisoinnista ja julkaisemisesta niin helppoa. Suunnittele helposti kauniit puhujien elämäkerrat ja puheiden kuvaukset.\n"
+"Odoon ainutlaatuinen selainpuolen ja palvelinpuolen integrointi tekee organisoinnista ja julkaisemisesta helppoa. Suunnittele helposti kauniit esiintyjien kertomuksen itsestään ja ohjelmanumeroiden kuvaukset.\n"
 "\n"
-"Esityslista ja keskustelujen luettelo\n"
+"Ohjelma ja ohjelmanumeroluettelo\n"
 "------------------------\n"
 "\n"
 "### Vahva käyttöliittymä\n"
 "\n"
-"Saat jokaisesta tapahtumasta esityslistan, joka julkaistaan automaattisesti verkkosivullasi. Anna kävijöiden etsiä ja selata keskusteluja, suodattaa tunnisteiden, paikkojen tai puhujien mukaan.\n"
+"Saat jokaisen tapahtuman ohjelman, joka julkaistaan automaattisesti verkkosivullasi. Anna kävijöiden etsiä ja selata ohjelmanumeroita, suodattaa tunnisteiden, paikkojen tai esiintyjien mukaan.\n"
 "\n"
-"Hallitse sponsoreita\n"
+"Hallinnoi sponsoreita\n"
 "---------------\n"
 "\n"
-"### Myy sponsorointia, mainosta sponsoreitasi\n"
+"### Myy sponsorointimahdollisuutta, mainosta sponsoreitasi\n"
 "\n"
 "Lisää sponsoreita tapahtumiin ja julkaise sponsorit tasoittain (esim. pronssi, hopea, kulta) tapahtuman jokaisen sivun alareunassa.\n"
 "\n"
 "Myy sponsorointipaketteja verkossa Odoo-verkkokaupan kautta täydellisen myyntisyklin integraatiota varten.\n"
 "\n"
-"Viestitä tehokkaasti\n"
+"Tehokkasta viestintää\n"
 "-----------------------\n"
 "\n"
 "### Aktivoi blogi joitakin tapahtumia varten\n"
@@ -35768,7 +35770,7 @@ msgstr "Palkanlaskenta - Läsnäolo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_fleet
 msgid "Payroll - Fleet"
-msgstr "Palkanlaskenta - Ajoneuvot"
+msgstr "Palkanlaskenta - Ajokalusto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_planning
@@ -37466,7 +37468,7 @@ msgstr "Rekrytointiraportointi"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_recruitment
 msgid "Recruitment resumés and letters from documents"
-msgstr "Rekrytointi ansioluettelot ja kirjeet asiakirjoista"
+msgstr "Rekrytoinnin ansioluettelot ja kirjeet asiakirjoista"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_hr_recruitment
@@ -38903,10 +38905,10 @@ msgid ""
 "                                will be redirected to the destination contact.\n"
 "                                You can remove contacts from this list to avoid merging them."
 msgstr ""
-"Listalla olevat kontaktit yhdistetään. \n"
-"Kaikki dokumentit ja tiedot kiinnitetään \n"
-"vastaanottavaan kontaktiin. Voit poistaa \n"
-"kontakteja listalta, jolloin niitä ei yhdistetä."
+"Valitut yhteystiedot yhdistetään.\n"
+"                                Kaikki asiakirjat, jotka on linkitetty yhteenkin näistä yhteystiedoista\n"
+"                                uudelleenohjataan kohdeyhteystietoon.\n"
+"                                Voit poistaa yhteystietoja listalta, jolloin niitä ei yhdistetä."
 
 #. module: base
 #. odoo-python
@@ -40013,7 +40015,7 @@ msgstr "Taulukkolaskenta Dashboard painos"
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_documents
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_documents
 msgid "Spreadsheet Documents"
-msgstr "Taulukkolaskennan dokumentit"
+msgstr "Datataulukoiden asiakirjat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_spreadsheet
@@ -40347,12 +40349,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
 msgid "Store employee's time off documents in the Document app"
-msgstr "Tallenna työntekijän vapaa-ajan dokumentit Dokumentit-sovellukseen"
+msgstr "Tallenna työntekijän lomadokumentit Asiakirjat-sovellukseen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_expense
 msgid "Store expense documents in the Document app"
-msgstr "Kuluasiakirjojen tallentaminen asiakirjasovellukseen"
+msgstr "Kuluasiakirjojen tallentaminen Asiakirjat-sovellukseen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_l10n_ch_hr_payroll
@@ -42625,7 +42627,7 @@ msgstr "Tätä moduulia käytetään verkkopankkien synkronointiin."
 msgid "This module is used to send/receive documents with PEPPOL"
 msgstr ""
 "Tätä moduulia käytetään asiakirjojen lähettämiseen/vastaanottamiseen "
-"PEPPOLin avulla"
+"PEPPOL:in avulla"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_appointment
@@ -43041,8 +43043,8 @@ msgstr "Käännökset"
 #: model:ir.module.module,description:base.module_stock_fleet
 msgid "Transport Management: organize packs in your fleet, or carriers."
 msgstr ""
-"Kuljetusten hallinta: organisoi kuljetustesi tai kuljetusliikkeiden "
-"pakkaukset."
+"Kuljetusten hallinta: organisoi ajokaluston tai kuljetusliikkeiden "
+"pakkauksia."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -43169,15 +43171,16 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
-"Palvelimen toimintatyyppi. Käytettävissä ovat seuraavat arvot:\n"
-"- päivitä tietue: päivitä tietueen arvot\n"
-"- 'Create Activity': luo toiminnon (Keskustele)\n"
-"- 'Lähetä sähköposti': lähettää viestin, huomautuksen tai sähköpostin (Keskustele)\n"
-"- 'Lähetä tekstiviesti': lähetä tekstiviestejä, kirjaa ne asiakirjoihin (tekstiviesti)- 'Lisää/poista seuraajia': lisää tai poista seuraajia tietueeseen (Keskustele)\n"
-"- 'Luo tietue': luo uusi tietue uusilla arvoilla\n"
-"- 'Execute Code': Python-koodin lohko, joka suoritetaan\n"
-"- 'Send Webhook Notification': lähetä POST-pyyntö ulkoiseen järjestelmään, joka tunnetaan myös nimellä Webhook\n"
-"- 'Execute Existing Actions': Määritä toiminto, joka käynnistää useita muita palvelintoimintoja\n"
+"Palvelintoiminnon tyyppi. Saatavilla seuraavat arvot:\n"
+"- 'Päivitä kirjaus': päivitä kirjauksen arvot\n"
+"- 'Luo toiminta': luo toiminnan (Viestintä)\n"
+"- 'Lähetä sähköposti': lähettää viestin, huomautuksen tai sähköpostin (Viestintä)\n"
+"- 'Lähetä tekstiviesti': lähetä tekstiviestejä, kirjaa ne asiakirjoihin (Tekstiviesti)\n"
+"- 'Lisää/poista seuraajia': lisää tai poista seuraajia kirjaukseen (Viestintä)\n"
+"- 'Luo kirjaus': luo uusi kirjaus uusilla arvoilla\n"
+"- 'Suorita koodi': Python-koodin pätkä, joka suoritetaan\n"
+"- 'Lähetä Webhook-ilmoitus': lähetä POST-pyyntö ulkoiseen järjestelmään, joka tunnetaan myös nimellä Webhook\n"
+"- 'Suorita nykyiset toiminnot': Määritä toiminto, joka käynnistää useita muita palvelintoimintoja\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -44698,7 +44701,7 @@ msgstr "Verkkosivu - tapaamiset"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_documents
 msgid "Website Documents"
-msgstr "Verkkosivuston asiakirjat"
+msgstr "Verkkosivun asiakirjat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
@@ -44947,7 +44950,7 @@ msgid ""
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
 "Anywhere else, time values are computed according to the time offset of your web client."
 msgstr ""
-"Kun tulostetaan asiakirjoja ja viedään tai tuodaan tietoja, aika-arvot lasketaan tämän aikavyöhykkeen mukaan.\n"
+"Tulostettaessa asiakirjoja ja viedessö tai tuodessa tietoja, aika-arvot lasketaan tämän aikavyöhykkeen mukaan.\n"
 "Jos aikavyöhykettä ei ole asetettu, käytetään UTC (Coordinated Universal Time) -aikavyöhykettä.\n"
 "Muuten arvot lasketaan verkkoselaimen aika-asetusten mukaan."
 
