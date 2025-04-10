@@ -559,6 +559,7 @@ class IrActionsServer(models.Model):
              "- 'Execute Code': a block of Python code that will be executed\n"
              "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
              "- 'Multi Actions': define an action that triggers several other server actions\n")
+    allowed_states = fields.Json(string='Allowed states', compute="_compute_allowed_states")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
@@ -695,6 +696,9 @@ class IrActionsServer(models.Model):
                                 "have to remove the following fields from the webhook payload:\n%(restricted_fields)s", restricted_fields="\n".join(restricted_fields)))
 
         return warnings
+
+    def _compute_allowed_states(self):
+        self.allowed_states = [value for value, __ in self._fields['state'].selection]
 
     @api.depends(lambda self: self._warning_depends())
     def _compute_warning(self):
