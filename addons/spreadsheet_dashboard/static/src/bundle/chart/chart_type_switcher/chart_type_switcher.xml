@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+  <t t-name="spreadsheet.ChartTypeSwitcherMenu">
+    <div
+      class="o-dashboard-chart-select position-absolute top-0 end-0 shadow-sm"
+      t-on-click.stop=""
+      t-if="shouldBeDisplayed">
+      <div class="d-flex flex-row p-1">
+        <t
+          t-foreach="availableTypes"
+          t-as="type"
+          t-key="type.chartSubtype">
+          <div
+            class="o-chart-type-item"
+            t-att-title="type.displayName"
+            t-on-click="() => this.onTypeChange(type.chartSubtype)"
+            t-att-data-id="type.chartSubtype"
+            t-att-class="{'selected': type.chartType === selectedChartType}">
+            <t t-call="{{type.preview}}" />
+          </div>
+        </t>
+      </div>
+      </div>
+  </t>
+
+</templates>

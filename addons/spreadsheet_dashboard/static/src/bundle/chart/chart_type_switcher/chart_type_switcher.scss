@@ -1,0 +1,29 @@
+.o-figure {
+    &:not(:hover) .o-dashboard-chart-select {
+        display: none !important;
+    }
+
+    .o-dashboard-chart-select {
+        background: #fff;
+        cursor: default;
+
+        .o-chart-type-item {
+            cursor: pointer;
+            padding: 3px 3px;
+            margin: 3px;
+
+            &.selected,
+            &:hover {
+                $-btn-secondary-design: map-get($o-btns-bs-override, "secondary");
+                background: map-get($-btn-secondary-design, active-background);
+                border: 1px solid $o-enterprise-action-color;
+                padding: 2px 2px;
+            }
+
+            .o-chart-preview {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    }
+}

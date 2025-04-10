@@ -7,8 +7,8 @@ const { deepEquals } = helpers;
 class ChartAnimationStore extends SpreadsheetStore {
     animationPlayed = {};
 
-    disableAnimationForChart(chartId) {
-        this.animationPlayed[chartId] = true;
+    disableAnimationForChart(chartId, chartType) {
+        this.animationPlayed[chartId] = chartType;
     }
 }
 
@@ -21,9 +21,10 @@ patch(components.ChartJsComponent.prototype, {
     },
     createChart(chartData) {
         if (this.env.model.getters.isDashboard()) {
-            if (!this.animationStore.animationPlayed[this.props.figure.id]) {
+            const chartType = this.env.model.getters.getChart(this.props.figure.id).type;
+            if (this.animationStore.animationPlayed[this.props.figure.id] !== chartType) {
                 chartData = this.enableAnimationInChartData(chartData);
-                this.animationStore.disableAnimationForChart(this.props.figure.id);
+                this.animationStore.disableAnimationForChart(this.props.figure.id, chartType);
             }
         }
         super.createChart(chartData);
