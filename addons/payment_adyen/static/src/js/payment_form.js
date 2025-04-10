@@ -170,7 +170,7 @@ odoo.define('payment_adyen.payment_form', require => {
                             ? parseInt(this.txContext.currencyId)
                             : undefined,
                     },
-                }).then(paymentMethodsResult => {
+                }).then(async (paymentMethodsResult) => {
                     // Instantiate the drop-in
                     const configuration = {
                         paymentMethodsResponse: paymentMethodsResult['payment_methods_data'],
@@ -195,8 +195,8 @@ odoo.define('payment_adyen.payment_form', require => {
                         'link[href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/4.7.3/adyen.css"]'
                     );
                     if (link) link.remove();
-                    loadJS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.js')
-                    loadCSS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.css')
+                    await loadJS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.js');
+                    await loadCSS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.css');
 
                     const { AdyenCheckout, Dropin } = window.AdyenWeb;
                     AdyenCheckout(configuration)
