@@ -204,10 +204,10 @@ class HrEmployee(models.Model):
             "res_model": "hr.attendance",
             "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "list"]],
             "context": {
-                "create": 0
+                "create": 0,
+                "search_default_check_in_filter": 1,
             },
-            "domain": [('employee_id', '=', self.id),
-                       ('check_in', ">=", fields.Datetime.today().replace(day=1))]
+            "domain": [('employee_id', '=', self.id)]
         }
 
     def action_open_last_month_overtime(self):
