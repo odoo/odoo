@@ -939,7 +939,10 @@ class SaleOrderLine(models.Model):
             return self.invoice_lines
 
     # no trigger product_id.invoice_policy to avoid retroactively changing SO
-    @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'state')
+    @api.depends(
+        'qty_invoiced', 'qty_delivered', 'product_uom_qty', 'state',
+        'linked_line_ids.qty_delivered',
+    )
     def _compute_qty_to_invoice(self):
         """
         Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
