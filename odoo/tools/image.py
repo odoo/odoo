@@ -1,18 +1,9 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# ruff: noqa: I001
+
 import base64
 import binascii
 import io
-from typing import Tuple, Union
-
-from PIL import Image, ImageOps
-# We can preload Ico too because it is considered safe
-from PIL import IcoImagePlugin
-try:
-    from PIL.Image import Transpose, Palette, Resampling
-except ImportError:
-    Transpose = Palette = Resampling = Image
-
+import sys
 from random import randrange
 
 from odoo.exceptions import UserError
@@ -20,12 +11,19 @@ from odoo.tools.misc import DotDict
 from odoo.tools.translate import LazyTranslate
 
 
+# - In case we are importing odoo.tools.image directly,
+#   then we didn't monkeypatch requirements yet, so we do it here.
+# - Otherwise, if we are starting Odoo, then we shouldn't make
+#   a circular import, so we avoid it.
+if 'odoo._monkeypatches' not in sys.modules:
+    from odoo._monkeypatches.PIL import patch_module as patch_PIL
+    patch_PIL()
+from PIL import Image, ImageOps, IcoImagePlugin  # noqa: F401
+from PIL.Image import Palette, Resampling, Transpose
+
+
 __all__ = ["image_process"]
 _lt = LazyTranslate('base')
-
-# Preload PIL with the minimal subset of image formats we need
-Image.preinit()
-Image._initialized = 2
 
 # Maps only the 6 first bits of the base64 data, accurate enough
 # for our purpose and faster than decoding the full blob first
@@ -424,7 +422,8 @@ def binary_to_image(source):
     except (OSError, binascii.Error):
         raise UserError(_lt("This file could not be decoded as an image file."))
 
-def base64_to_image(base64_source: Union[str, bytes]) -> Image:
+
+def base64_to_image(base64_source: str | bytes) -> Image:
     """Return a PIL image from the given `base64_source`.
 
     :param base64_source: the image base64 encoded
@@ -529,7 +528,7 @@ def is_image_size_above(base64_source_1, base64_source_2):
     return image_source.width > image_target.width or image_source.height > image_target.height
 
 
-def image_guess_size_from_field_name(field_name: str) -> Tuple[int, int]:
+def image_guess_size_from_field_name(field_name: str) -> tuple[int, int]:
     """Attempt to guess the image size based on `field_name`.
 
     If it can't be guessed or if it is a custom field: return (0, 0) instead.

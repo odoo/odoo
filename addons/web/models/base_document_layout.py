@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 import os
+
 from markupsafe import Markup
+from PIL.Image import Resampling
 
 from odoo import api, fields, models
-
 from odoo.addons.base.models.ir_qweb_fields import nl2br
-from odoo.tools import html2plaintext, is_html_empty, image as tools
+from odoo.tools import html2plaintext, is_html_empty
+from odoo.tools import image as tools
 from odoo.tools.misc import file_path
 
 try:
@@ -14,10 +15,6 @@ except ImportError:
     # If the `sass` python library isn't found, we fallback on the
     # `sassc` executable in the path.
     libsass = None
-try:
-    from PIL.Image import Resampling
-except ImportError:
-    from PIL import Image as Resampling
 
 DEFAULT_PRIMARY = '#000000'
 DEFAULT_SECONDARY = '#000000'
