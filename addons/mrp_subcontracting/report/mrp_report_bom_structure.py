@@ -87,7 +87,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 return {
                     'route_type': 'subcontract',
                     'route_name': subcontract_rules[0].route_id.display_name,
-                    'route_detail': supplier.display_name,
+                    'route_detail': supplier.with_context(use_simplified_supplier_name=True).display_name,
                     'lead_time': rules_delay,
                     'supplier': supplier,
                     'route_alert': product.uom_id.compare(qty_supplier_uom, supplier.min_qty) < 0,

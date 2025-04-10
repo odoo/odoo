@@ -23,7 +23,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 return {
                     'route_type': 'buy',
                     'route_name': buy_rules[0].route_id.display_name,
-                    'route_detail': supplier.display_name,
+                    'route_detail': supplier.with_context(use_simplified_supplier_name=True).display_name,
                     'lead_time': supplier.delay + rules_delay + purchase_lead,
                     'supplier_delay': supplier.delay + rules_delay + purchase_lead,
                     'supplier': supplier,

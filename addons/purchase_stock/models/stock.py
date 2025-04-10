@@ -114,7 +114,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
     supplier_id = fields.Many2one(
-        'product.supplierinfo', string='Supplier', check_company=True,
+        'product.supplierinfo', string='Vendor Pricelist', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
     vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor")
     purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")

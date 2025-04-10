@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.osv import expression
+from odoo.tools import formatLang
 
 
 class ProductCategory(models.Model):
@@ -155,12 +156,15 @@ class ProductSupplierinfo(models.Model):
                 lambda s: s.id == orderpoint.supplier_id.id
             ).show_set_supplier_button = False
 
+    @api.depends('partner_id', 'min_qty', 'product_uom_id', 'currency_id', 'price')
+    @api.depends_context('use_simplified_supplier_name')
     def _compute_display_name(self):
-        for supplier in self:
-            if self.env.context.get('display_supplier_uom_qty') and (supplier.min_qty > 1 or supplier.product_uom_id != supplier.product_tmpl_id.uom_id):
-                supplier.display_name = f'{supplier.partner_id.display_name} ({supplier.min_qty} {supplier.product_uom_id.name})'
-            else:
-                supplier.display_name = supplier.partner_id.display_name
+        if self._context.get('use_simplified_supplier_name'):
+            super()._compute_display_name()
+        else:
+            for supplier in self:
+                price_str = formatLang(self.env, supplier.price, currency_obj=supplier.currency_id)
+                supplier.display_name = f'{supplier.partner_id.display_name} ({supplier.min_qty} {supplier.product_uom_id.name} - {price_str})'
 
     def action_set_supplier(self):
         self.ensure_one()
