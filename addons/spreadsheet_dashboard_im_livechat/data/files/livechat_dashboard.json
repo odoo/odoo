@@ -32,7 +32,7 @@
       "merges": [],
       "cells": {
         "A7": "[Sessions by Day](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"start_date:day\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_date:day\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Session per Day\"})",
-        "A23": "[Top Agents](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Agent Analysis\"})",
+        "A23": "[Top Agents](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Agent Analysis\"})",
         "A24": "=_t(\"Agent\")",
         "A25": "=PIVOT.HEADER(3,\"#partner_id\",1)",
         "A26": "=PIVOT.HEADER(3,\"#partner_id\",2)",
@@ -55,7 +55,7 @@
         "B32": "=PIVOT.VALUE(3,\"nbr_channel\",\"#partner_id\",8)",
         "B33": "=PIVOT.VALUE(3,\"nbr_channel\",\"#partner_id\",9)",
         "B34": "=PIVOT.VALUE(3,\"nbr_channel\",\"#partner_id\",10)",
-        "D7": "[Sessions by Agent](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Agent Analysis\"})",
+        "D7": "[Sessions by Agent](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Agent Analysis\"})",
         "D24": "=_t(\"Session Duration (min)\")",
         "D25": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",1)",
         "D26": "=PIVOT.VALUE(3,\"duration\",\"#partner_id\",2)",
@@ -193,7 +193,7 @@
               "groupBy": ["partner_id"],
               "measure": "nbr_channel",
               "order": "DESC",
-              "resModel": "im_livechat.report.operator",
+              "resModel": "im_livechat.report.channel",
               "mode": "bar"
             },
             "searchParams": {
@@ -482,7 +482,7 @@
         { "id": "duration", "fieldName": "duration" },
         { "id": "rating", "fieldName": "rating" }
       ],
-      "model": "im_livechat.report.operator",
+      "model": "im_livechat.report.channel",
       "name": "Livechat Support Statistics by Agent",
       "sortedColumn": {
         "measure": "nbr_channel",

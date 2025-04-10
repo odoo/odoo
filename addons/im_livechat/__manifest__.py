@@ -38,7 +38,6 @@ Help your customers with this chat, and analyse their feedback.
         "views/digest_views.xml",
         "views/webclient_templates.xml",
         "report/im_livechat_report_channel_views.xml",
-        "report/im_livechat_report_operator_views.xml"
     ],
     'demo': [
         "demo/im_livechat_channel/im_livechat_channel.xml",
