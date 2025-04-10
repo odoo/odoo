@@ -27,6 +27,24 @@
                             </div>
                             <label for="discount_applicability" string="" invisible="reward_type != 'discount'"/>
                             <field name="discount_applicability" nolabel="1" widget="radio" invisible="reward_type != 'discount'"/>
+                            <field name="fixed_amount_per_unit" class="oe_inline me-1" invisible="reward_type != 'fixed'"/>
+                            <label
+                                for="repeater"
+                                string=""
+                                invisible="reward_type not in ['discount', 'fixed'] or (reward_type == 'discount' and discount_applicability != 'cheapest')"
+                            />
+                            <div
+                                class="d-flex flex-row"
+                                invisible="reward_type not in ['discount', 'fixed'] or (reward_type == 'discount' and discount_applicability != 'cheapest')"
+                            >
+                                <span class="me-1" invisible="reward_type != 'discount'">Every </span>
+                                <span class="me-1" invisible="reward_type != 'fixed'">for </span>
+                                <field name="repeater" nolabel="1" widget="integer" class="w-auto me-1" style="max-width: 2rem;"/>
+                                <span class="me-1" >products </span>
+                                <span class="text-muted small" invisible="reward_type != 'fixed'"> (i.e., </span>
+                                <field name="fixed_unit_price" nolabel="1" widget="monetary" class="w-auto text-muted small me-1" invisible="reward_type != 'fixed'"/>
+                                <span class="text-muted small me-1" invisible="reward_type != 'fixed'"> per product)</span>
+                            </div>
                         </group>
 
                         <group string="Among" invisible="reward_type != 'product'">
@@ -42,6 +60,13 @@
                             <field name="discount_product_category_id" invisible="discount_applicability == 'order'"/>
                             <field name="discount_product_tag_id" invisible="discount_applicability == 'order'"/>
                         </group>
+
+                        <group string="Among" invisible="reward_type != 'fixed'">
+                            <field name="discount_product_domain" string="Products Domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
+                            <field name="discount_product_ids" string="Products" widget="many2many_tags"/>
+                            <field name="discount_product_category_id" string="Products Categories"/>
+                            <field name="discount_product_tag_id" string="Products Tags"/>
+                        </group>
                     </group>
                     <group string="Points" invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
                         <group>
@@ -53,10 +78,10 @@
                                     style="max-width: 4rem;"
                                 />
                                 <field name="point_name" no_label="1"/>
-                                <span invisible="not clear_wallet"> (or more)</span>
+                                <span invisible="not clear_wallet and reward_type != 'fixed'"> (or more)</span>
                             </div>
-                            <label for="clear_wallet" string="Clear all promo point(s)" invisible="(not user_has_debug and program_type in ('loyalty', 'buy_x_get_y')) or program_type in ('gift_card', 'ewallet')"/>
-                            <div class="o_row" invisible="(not user_has_debug and program_type in ('loyalty', 'buy_x_get_y')) or program_type in ('gift_card', 'ewallet')">
+                            <label for="clear_wallet" string="Clear all promo point(s)" invisible="(not user_has_debug and program_type in ('loyalty', 'buy_x_get_y')) or program_type in ('gift_card', 'ewallet') or reward_type == 'fixed'"/>
+                            <div class="o_row" invisible="(not user_has_debug and program_type in ('loyalty', 'buy_x_get_y')) or program_type in ('gift_card', 'ewallet') or reward_type == 'fixed'">
                                 <field name="clear_wallet"/>
                             </div>
                         </group>
@@ -126,6 +151,11 @@
                                 <div t-if="record.reward_product_tag_id.raw_value" class="d-flex">
                                     <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="reward_product_tag_id"/>
                                 </div>
+                            </t>
+
+                            <t t-elif="record.reward_type.raw_value === 'fixed'">
+                                <field name="fixed_amount_per_unit" widget="monetary"/> for <field name="repeater" class="d-inline-flex"/> products
+                                <span class="text-muted small"><field name="fixed_unit_price" widget="monetary"/> each if more</span>
                             </t>
                         </div>
 
