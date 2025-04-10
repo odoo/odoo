@@ -594,7 +594,7 @@ export function useInputBuilderComponent({
     }
 
     const shouldPreview =
-        !hasReloadAction &&
+        !reload &&
         (comp.props.preview === true ||
             (comp.props.preview === undefined && comp.env.weContext.preview !== false));
     function preview(userInputValue) {
@@ -827,6 +827,9 @@ export function getAllActionsAndOperations(comp) {
             const { actionId, actionParam, actionValue } = o;
             // TODO isApplied === first editing el or all ?
             const editingElement = editingElements[0];
+            if (!editingElement || !editingElement.isConnected) {
+                return false;
+            }
             const isApplied = getAction(actionId).isApplied?.({
                 editingElement,
                 param: actionParam,
