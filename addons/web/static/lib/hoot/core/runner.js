@@ -5,7 +5,7 @@ import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
 import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
-import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     CASE_EVENT_TYPES,
     Callbacks,
@@ -21,9 +21,9 @@ import {
     formatHumanReadable,
     formatTechnical,
     formatTime,
-    getFuzzyScore,
     isLabel,
     normalize,
+    parseQuery,
     storageGet,
     storageSet,
     stringify,
@@ -369,8 +369,10 @@ export class Runner {
     tags = new Map();
     /** @type {Map<string, Test>} */
     tests = new Map();
-    /** @type {string | RegExp} */
-    textFilter = "";
+    /** @type {import("../hoot_utils").QueryPart[]} */
+    queryExclude = [];
+    /** @type {import("../hoot_utils").QueryPart[]} */
+    queryInclude = [];
     totalTime = "n/a";
 
     /**
@@ -439,8 +441,14 @@ export class Runner {
 
         // Text filter
         if (this.config.filter) {
-            this._hasIncludeFilter = true;
-            this.textFilter = parseRegExp(normalize(this.config.filter), { safe: true });
+            for (const queryPart of parseQuery(this.config.filter)) {
+                if (queryPart.exclude) {
+                    this.queryExclude.push(queryPart);
+                } else {
+                    this.queryInclude.push(queryPart);
+                }
+            }
+            this._hasIncludeFilter = this.queryInclude.length;
         }
 
         // Suites
@@ -816,8 +824,12 @@ export class Runner {
             delete includeSpecs[type][id];
         }
 
-        this.config.filter = "";
-        this.config[type] = formatIncludes(includeSpecs[type]);
+        for (const type of FILTER_KEYS) {
+            if (type === "filter") {
+                continue;
+            }
+            this.config[type] = formatIncludes(includeSpecs[type]);
+        }
     }
 
     manualStart() {
@@ -1473,7 +1485,7 @@ export class Runner {
         }
         const values = this.state.includeSpecs[type];
         for (const id of ids) {
-            const nId = normalize(id);
+            const nId = normalize(id.toLowerCase());
             if (id.startsWith(EXCLUDE_PREFIX)) {
                 values[nId.slice(EXCLUDE_PREFIX.length)] = priority * -1;
             } else if ((values[nId]?.[0] || 0) >= 0) {
@@ -1496,9 +1508,8 @@ export class Runner {
         }
 
         // By text filter
-        if (typeof this.textFilter === "string" && this.textFilter?.startsWith(EXCLUDE_PREFIX)) {
-            const query = this.textFilter.slice(EXCLUDE_PREFIX.length);
-            return getFuzzyScore(query, job.key) > 0;
+        if (this.queryExclude.length && this.queryExclude.some((qp) => qp.matchValue(job.key))) {
+            return true;
         }
 
         return false;
@@ -1517,12 +1528,8 @@ export class Runner {
         }
 
         // By text filter
-        if (this.textFilter) {
-            if (this.textFilter instanceof RegExp) {
-                return this.textFilter.test(job.key);
-            } else {
-                return getFuzzyScore(this.textFilter, job.key) > 0;
-            }
+        if (this.queryInclude.length && this.queryInclude.every((qp) => qp.matchValue(job.key))) {
+            return true;
         }
 
         return false;
