@@ -5,21 +5,32 @@ from odoo.fields import Domain
 
 bypass_token = object()
 DOMAINS = {
-    'account.move': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
-    'account.account': lambda operator, value: [('company_ids.check_account_audit_trail', operator, value)],
-    'account.tax': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
-    'res.partner': lambda operator, value: [
-        '|', ('company_id', '=', False), ('company_id.check_account_audit_trail', operator, value),
-        '|', ('customer_rank', '>', 0), ('supplier_rank', '>', 0),
-    ],
-    'res.company': lambda operator, value: [('check_account_audit_trail', operator, value)],
+    'res.company':
+        lambda operator, value, extra_ids=None:
+            [('id', 'in', extra_ids)] if extra_ids is not None else [],
+    'account.move':
+        lambda operator, value, extra_ids=None:
+            [('company_id.restrictive_audit_trail', operator, value)],
+    'account.account':
+        lambda operator, value, extra_ids=None:
+            [('used', operator, value), ('company_ids.restrictive_audit_trail', operator, value)],
+    'account.tax':
+        lambda operator, value, extra_ids=None:
+            ([('id', 'in', extra_ids)] if extra_ids is not None else []),
+    'res.partner':
+        lambda operator, value, extra_ids=None:
+            ['|', ('customer_rank', '>', 0), ('supplier_rank', '>', 0)] + ([('id', 'in', extra_ids)] if extra_ids is not None else []),
 }
 
 
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
-    account_audit_log_preview = fields.Text(string="Description", compute="_compute_account_audit_log_preview")
+    account_audit_log_preview = fields.Text(
+        string="Description",
+        compute="_compute_account_audit_log_preview",
+        search="_search_account_audit_log_preview",
+    )
     account_audit_log_move_id = fields.Many2one(
         comodel_name='account.move',
         string="Journal Entry",
@@ -51,14 +62,14 @@ class MailMessage(models.Model):
         search="_search_account_audit_log_company_id",
     )
     account_audit_log_activated = fields.Boolean(
-        string="Audit Log Activated",
+        string="Protected by restricted Audit Logs",
         compute="_compute_account_audit_log_activated",
         search="_search_account_audit_log_activated",
     )
 
     @api.depends('tracking_value_ids')
     def _compute_account_audit_log_preview(self):
-        audit_messages = self.filtered('account_audit_log_activated')
+        audit_messages = self.filtered(lambda m: m.message_type == 'notification')
         (self - audit_messages).account_audit_log_preview = False
         for message in audit_messages:
             title = message.subject or message.preview
@@ -77,6 +88,17 @@ class MailMessage(models.Model):
                 for fmt_vals in tracking_value_ids._tracking_value_format()
             )
             message.account_audit_log_preview = audit_log_preview
+
+    def _search_account_audit_log_preview(self, operator, value):
+        if operator != 'ilike' or not isinstance(value, str):
+            raise UserError(self.env._('Operation not supported'))
+
+        return Domain('message_type', '=', 'notification') & Domain.OR([
+            [('tracking_value_ids.old_value_char', operator, value)],
+            [('tracking_value_ids.new_value_char', operator, value)],
+            [('tracking_value_ids.old_value_text', operator, value)],
+            [('tracking_value_ids.new_value_text', operator, value)],
+        ])
 
     def _compute_account_audit_log_move_id(self):
         self._compute_audit_log_related_record_id('account.move', 'account_audit_log_move_id')
@@ -108,30 +130,57 @@ class MailMessage(models.Model):
     def _search_account_audit_log_partner_id(self, operator, value):
         return self._search_audit_log_related_record_id('res.partner', operator, value)
 
+    def _get_extra_ids(self, model):
+        # Note: Under standard record rules, self.env['account.move.line'] is already limited
+        if model == 'res.partner':
+            return self.env['account.move.line'].sudo().search([
+                ('partner_id', '!=', False),
+                ('company_id.restrictive_audit_trail', '=', True),
+            ]).mapped('partner_id').ids
+
+        elif model == 'account.tax':
+            return self.env['account.move.line'].sudo().search([
+                ('tax_line_id', '!=', False),
+                ('company_id.restrictive_audit_trail', '=', True),
+            ]).mapped('tax_line_id').ids
+
+        elif model == 'res.company':
+            return self.env['account.move.line'].sudo().search([
+                ('company_id.restrictive_audit_trail', '=', True),
+            ]).mapped('company_id').ids
+
     def _compute_account_audit_log_activated(self):
-        for message in self:
-            message.account_audit_log_activated = message.message_type == 'notification' and (
-                message.account_audit_log_move_id
-                or message.account_audit_log_account_id
-                or message.account_audit_log_tax_id
-                or message.account_audit_log_partner_id
-                or message.account_audit_log_company_id
-            )
+        self['account_audit_log_activated'] = False
+
+        for model, domain_factory in DOMAINS.items():
+            messages_of_related = self.filtered(lambda m: m.model == model and m.res_id)
+            if messages_of_related:
+                domain = domain_factory(operator='=', value=True, extra_ids=self._get_extra_ids(model))
+                related_recs = self.env[model].sudo().search([('id', 'in', messages_of_related.mapped('res_id'))] + domain)
+                recs_by_id = {record.id: record for record in related_recs}
+                for message in messages_of_related:
+                    if message.message_type == 'notification' and recs_by_id.get(message.res_id):
+                        message.account_audit_log_activated = True
 
     def _search_account_audit_log_activated(self, operator, value):
-        if operator not in ('in', 'not in'):
+        if operator not in {'in', 'not in'}:
             return NotImplemented
-        return Domain('message_type', '=', 'notification') & Domain.OR(
-            [('model', '=', model), ('res_id', 'in', self.env[model]._search(domain_factory(operator, value)))]
-            for model, domain_factory in DOMAINS.items()
-        )
+
+        extra_ids = self._get_extra_ids()
+        subdomains = []
+
+        for model, domain_factory in DOMAINS.items():
+            domain = domain_factory(operator, value, extra_ids.get(model, None))
+            rec_ids = self.env[model].sudo()._search(domain)
+            subdomains.append([('model', '=', model), ('res_id', 'in', rec_ids)])
+
+        return Domain('message_type', '=', 'notification') & Domain.OR(subdomains)
 
     def _compute_audit_log_related_record_id(self, model, fname):
         messages_of_related = self.filtered(lambda m: m.model == model and m.res_id)
         (self - messages_of_related)[fname] = False
         if messages_of_related:
-            domain = DOMAINS[model](operator='=', value=True)
-            related_recs = self.env[model].sudo().search([('id', 'in', messages_of_related.mapped('res_id'))] + domain)
+            related_recs = self.env[model].sudo().search([('id', 'in', messages_of_related.mapped('res_id'))])
             recs_by_id = {record.id: record for record in related_recs}
             for message in messages_of_related:
                 message[fname] = recs_by_id.get(message.res_id, False)
@@ -167,16 +216,15 @@ class MailMessage(models.Model):
             # Invoicing/Customers menu)
             has_related_move = self.env['account.move'].sudo().search_count([
                 ('partner_id', 'in', partner_message.account_audit_log_partner_id.ids),
-                ('company_id.check_account_audit_trail', '=', True),
             ], limit=1)
             if not has_related_move:
                 to_check -= partner_message
         for message in to_check:
-            if message.account_audit_log_activated and not (
-                message.account_audit_log_move_id
-                and not message.account_audit_log_move_id.posted_before
-            ):
-                raise UserError(self.env._("You cannot remove parts of the audit trail. Archive the record instead."))
+            # When a company has no move line yet, they can delete every log, as none is linked to a journal Item
+            # But we always want to know when was the last time the setting was set to True, so we need an additional check
+            setting_toggling = message.account_audit_log_company_id and "Restrictive Audit Trail" in message.account_audit_log_preview
+            if message.account_audit_log_activated or (setting_toggling and message.account_audit_log_company_id.restrictive_audit_trail):
+                raise UserError(self.env._("You cannot remove parts of a restricted audit trail. Archive the record instead."))
 
     def write(self, vals):
         # We allow any whitespace modifications in the subject

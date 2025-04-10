@@ -14,7 +14,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             mail_create_nolog=False,
             mail_notrack=False,
         ).env
-        cls.env.company.check_account_audit_trail = True
+        cls.env.company.restrictive_audit_trail = False
         cls.move = cls.create_move()
 
     @classmethod
@@ -33,11 +33,11 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             ],
         })
 
-    def get_trail(self, move):
+    def get_trail(self, record):
         self.env.cr.precommit.run()
         return self.env['mail.message'].search([
-            ('model', '=', 'account.move'),
-            ('res_id', '=', move.id),
+            ('model', '=', record._name),
+            ('res_id', '=', record.id),
         ])
 
     def assertTrail(self, trail, expected):
@@ -45,35 +45,41 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         for message, expected_needle in zip(trail, expected[::-1]):
             self.assertIn(expected_needle, message.account_audit_log_preview)
 
-    def test_can_unlink_draft(self):
-        self.move.unlink()
+    def test_cant_unlink_draft(self):
+        self.env.company.restrictive_audit_trail = True
+        with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
+            self.move.unlink()
 
     def test_cant_unlink_posted(self):
+        self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         self.move.button_draft()
-        with self.assertRaisesRegex(UserError, "remove parts of the audit trail"):
+        with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
             self.move.unlink()
 
     def test_cant_unlink_message(self):
+        self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         audit_trail = self.get_trail(self.move)
-        with self.assertRaisesRegex(UserError, "remove parts of the audit trail"):
+        with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
             audit_trail.unlink()
 
     def test_cant_unown_message(self):
+        self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         audit_trail = self.get_trail(self.move)
-        with self.assertRaisesRegex(UserError, "remove parts of the audit trail"):
+        with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
             audit_trail.res_id = 0
 
     def test_cant_unlink_tracking_value(self):
+        self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         self.env.cr.precommit.run()
         self.move.name = 'track this!'
         audit_trail = self.get_trail(self.move)
         trackings = audit_trail.tracking_value_ids.sudo()
         self.assertTrue(trackings)
-        with self.assertRaisesRegex(UserError, "remove parts of the audit trail"):
+        with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
             trackings.unlink()
 
     def test_content(self):
@@ -123,6 +129,10 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             "deleted\n101402 Bank Suspense Account ⇨  (Account)\n-45.0 ⇨ 0.0 (Balance)\nAutomatic Balancing Line ⇨ False (Label)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
+
+        self.env.company.restrictive_audit_trail = True
+        messages_company = ["Updated\nFalse ⇨ True (Restrictive Audit Trail)"]
+        self.assertTrail(self.get_trail(self.company), messages_company)
 
     def test_partner_notif(self):
         """Audit trail should not block partner notification."""

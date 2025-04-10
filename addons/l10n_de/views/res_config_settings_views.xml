@@ -1,0 +1,12 @@
+<odoo>
+        <record id="view_company_settings_inherit_l10n_de" model="ir.ui.view">
+            <field name="name">res.config.settings.form.inherit.l10n_de</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account_reports.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//setting[field[@name='restrictive_audit_trail']]" position="attributes">
+                    <attribute name="invisible">company_country_code=="DE"</attribute>
+                </xpath>
+            </field>
+        </record>
+</odoo>
