@@ -154,35 +154,31 @@ export class PropertyTags extends Component {
                         if (!request || !request.length) {
                             return [
                                 {
-                                    value: null,
                                     label: _t("Start typing..."),
-                                    classList: "fst-italic",
+                                    cssClass: "fst-italic",
                                 },
                             ];
                         } else if (!this.props.canChangeTags) {
                             return [
                                 {
-                                    value: null,
                                     label: _t("No result"),
-                                    classList: "fst-italic",
+                                    cssClass: "fst-italic",
                                 },
                             ];
                         }
 
                         return [
                             {
-                                value: { toCreate: true, value: request },
                                 label: _t('Create "%s"', request),
-                                classList: "o_field_property_dropdown_add",
+                                cssClass: "o_field_property_dropdown_add",
+                                onSelect: () => this.onTagCreate(request),
                             },
                         ];
                     }
-                    return tagsFiltered.map((tag) => {
-                        return {
-                            value: tag[0],
-                            label: tag[1],
-                        };
-                    });
+                    return tagsFiltered.map((tag) => ({
+                        label: tag[1],
+                        onSelect: () => this.onOptionSelected(tag[0]),
+                    }));
                 },
             },
         ];
@@ -201,18 +197,9 @@ export class PropertyTags extends Component {
      *      - value, to select an existing value
      */
     onOptionSelected(tagValue) {
-        if (!tagValue) {
-            // clicked on "Start typing..."
-            return;
-        }
-
-        if (tagValue.toCreate) {
-            this.onTagCreate(tagValue.value);
-        } else {
-            const selectedTags = this.selectedTags;
-            const newValue = [...selectedTags, tagValue];
-            this.props.onValueChange(newValue);
-        }
+        const selectedTags = this.selectedTags;
+        const newValue = [...selectedTags, tagValue];
+        this.props.onValueChange(newValue);
     }
 
     /**

@@ -31,11 +31,15 @@ export class ModelSelector extends Component {
             }
 
             this.models = this.models.map((record) => ({
-                label: record.display_name,
-                technical: record.model,
-                classList: {
-                    [`o_model_selector_${record.model}`]: 1,
+                cssClass: `o_model_selector_${record.model}`,
+                data: {
+                    technical: record.model,
                 },
+                label: record.display_name,
+                onSelect: () => this.props.onModelSelected({
+                    label: record.display_name,
+                    technical: record.model,
+                }),
             }));
         });
     }
@@ -55,26 +59,18 @@ export class ModelSelector extends Component {
         };
     }
 
-    onSelect(option) {
-        this.props.onModelSelected({
-            label: option.label,
-            technical: option.technical,
-        });
-    }
-
     filterModels(name) {
         if (!name) {
             const visibleModels = this.models.slice(0, 8);
             if (this.models.length - visibleModels.length > 0) {
                 visibleModels.push({
                     label: _t("Start typing..."),
-                    unselectable: true,
-                    classList: "o_m2o_start_typing",
+                    cssClass: "o_m2o_start_typing",
                 });
             }
             return visibleModels;
         }
-        return fuzzyLookup(name, this.models, (model) => model.technical + model.label);
+        return fuzzyLookup(name, this.models, (model) => model.data.technical + model.label);
     }
 
     loadOptionsSource(request) {
@@ -83,8 +79,7 @@ export class ModelSelector extends Component {
         if (!options.length) {
             options.push({
                 label: _t("No records"),
-                classList: "o_m2o_no_result",
-                unselectable: true,
+                cssClass: "o_m2o_no_result",
             });
         }
         return options;

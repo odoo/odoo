@@ -51,7 +51,7 @@
                             <t t-foreach="source.options" t-as="option" t-key="option.id">
                                 <li
                                     class="o-autocomplete--dropdown-item ui-menu-item d-block"
-                                    t-att-class="option.classList"
+                                    t-att-class="option.cssClass"
                                     t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
                                     t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
                                     t-on-click="() => this.onOptionClick(option)"
@@ -65,7 +65,7 @@
                                         t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
                                         t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                                     >
-                                        <t t-slot="{{ source.optionSlot }}" option="Object.getPrototypeOf(option)">
+                                        <t t-slot="{{ source.optionSlot }}" label="option.label" data="option.data">
                                             <t t-out="option.label"/>
                                         </t>
                                     </t>

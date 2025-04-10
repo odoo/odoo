@@ -51,22 +51,22 @@ export class L10nInHsnAutoComplete extends CharField {
                         throw new Error(res.statusText);
                     }
                     const resData = await res.json();
-                    if (resData.data) {
-                        suggestions.push(
-                            ...resData.data
-                                .filter((item) => item.c.length > 3)
-                                .map((item) => ({
-                                    label: item.c,
+                    for (const item of resData.data || []) {
+                        if (item.c.length > 3) {
+                            suggestions.push({
+                                data: {
                                     description: item.n,
-                                }))
-                        );
+                                },
+                                label: item.c,
+                                onSelect: () => this.selectSuggestion(item.c, item.n),
+                            });
+                        }
                     }
                 })
             );
         } catch (e) {
             suggestions.push({
                 label: _t("Could not contact API"),
-                unselectable: false,
             });
             console.warn("HSN Autocomplete API error:", e);
         }
@@ -89,10 +89,10 @@ export class L10nInHsnAutoComplete extends CharField {
         ];
     }
 
-    onSelect(option) {
-        const data = { [this.props.name]: option.label };
+    selectSuggestion(label, description) {
+        const data = { [this.props.name]: label };
         if (this.props.l10nInHsnDescription) {
-            data[this.props.l10nInHsnDescription] = option.description;
+            data[this.props.l10nInHsnDescription] = description;
         }
         setTimeout(() => this.props.record.update(data));
     }

@@ -42,10 +42,10 @@
                 </div>
                 <AutoComplete t-if="section.canAddFilter" t-props="autoCompleteProps">
                     <t t-set-slot="option" t-slot-scope="optionScope">
-                        <t t-if="optionScope.option.value and section.avatar.field">
-                            <img class="rounded me-1 o_avatar" t-attf-src="/web/image/{{ section.avatar.model }}/{{ optionScope.option.value }}/{{ section.avatar.field }}"/>
+                        <t t-if="optionScope.data.id and section.avatar.field">
+                            <img class="rounded me-1 o_avatar" t-attf-src="/web/image/{{ section.avatar.model }}/{{ optionScope.data.id }}/{{ section.avatar.field }}"/>
                         </t>
-                        <t t-esc="optionScope.option.label" />
+                        <t t-esc="optionScope.label" />
                     </t>
                 </AutoComplete>
             </t>

@@ -5,14 +5,13 @@
         <AutoComplete
             value="props.record.data[props.name] || ''"
             sources="sources"
-            onSelect.bind="onSelect"
             placeholder="props.placeholder"
             searchOnInputClick="false"
             inputDebounceDelay="350"
             input="input"
         >
             <t t-set-slot="option" t-slot-scope="optionScope">
-                <strong t-esc="optionScope.option.formatted_address or '&#160;'"/>
+                <strong t-esc="optionScope.label"/>
             </t>
         </AutoComplete>
     </t>

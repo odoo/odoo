@@ -68,10 +68,14 @@ export class AddressAutoComplete extends CharField {
                             partial_address: request,
                             use_employees_key: true,
                         });
+                        suggestions.results = suggestions.results.map((result) => ({
+                            label: result.formatted_address,
+                            onSelect: () => this.selectAddressProposition(result),
+                        }));
                         if (suggestions.results.length) {
                             suggestions.results.push({
-                                type: "credits",
-                                classList: "pe-none o-google-credits",
+                                label: "&#160;",
+                                cssClass: "pe-none o-google-credits",
                             });
                         }
                         return suggestions.results;
@@ -85,10 +89,7 @@ export class AddressAutoComplete extends CharField {
         ];
     }
 
-    async onSelect(option) {
-        if (option.type === "credits") {
-            return;
-        }
+    async selectAddressProposition(option) {
         const address = await googlePlacesSession.getAddressDetails({
             address: option.formatted_address,
             google_place_id: option.google_place_id,

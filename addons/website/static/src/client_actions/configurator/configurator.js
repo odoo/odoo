@@ -183,10 +183,10 @@ export class DescriptionScreen extends Component {
      * and update the selected industry.
      *
      * @private
-     * @param {Object} suggestion an industry
+     * @param {string} label
+     * @param {number} id
      */
-    _setSelectedIndustry(suggestion) {
-        const { label, id } = Object.getPrototypeOf(suggestion);
+    _setSelectedIndustry(label, id) {
         this.state.selectIndustry(label, id);
         this.checkDescriptionCompletion();
     }
@@ -238,7 +238,11 @@ export class DescriptionScreen extends Component {
             // Sort results by ascending label if few of them.
             matches = matches.sort((x, y) => (x.label < y.label ? -1 : x.label > y.label ? 1 : 0));
         }
-        return matches.length ? matches : [{ label: term, id: -1 }];
+        matches = matches.length ? matches : [{ label: term, id: -1 }];
+        return matches.map((match) => ({
+            label: match.label,
+            onSelect: () => this._setSelectedIndustry(match.label, match.id),
+        }));
     }
 
     selectWebsiteType(id) {

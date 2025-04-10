@@ -367,17 +367,17 @@ test("Edit contenteditable", async () => {
 test("Selecting item in autocomplete field through Enter", async () => {
     class Dummy extends Component {
         static components = { AutoComplete };
-        static template = xml`
-            <t>
-                <AutoComplete
-                    id="'autocomplete'"
-                    value="'World'"
-                    sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
-                    onSelect="() => {}"
-                />
-            </t>
-        `;
+        static template = xml`<AutoComplete id="'autocomplete'" value="'World'" sources="sources"/>`;
         static props = ["*"];
+
+        sources = [
+            {
+                options: [
+                    { label: "World", onSelect() {} },
+                    { label: "Hello", onSelect() {} },
+                ],
+            }
+        ];
     }
 
     expect(".o_tour_recorder").toHaveCount(1);

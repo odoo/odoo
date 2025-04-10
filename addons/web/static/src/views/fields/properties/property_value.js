@@ -1,5 +1,4 @@
 import { Component } from "@odoo/owl";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Domain } from "@web/core/domain";
@@ -55,7 +54,6 @@ export class PropertyValue extends Component {
         DateTimeInput,
         Many2XAutocomplete,
         TagsList,
-        AutoComplete,
         PropertyTags,
     };
 
@@ -319,9 +317,8 @@ export class PropertyValue extends Component {
      * Ask to create a record from a relational property.
      *
      * @param {string} name
-     * @param {object} params
      */
-    async onQuickCreate(name, params = {}) {
+    async onQuickCreate(name) {
         const result = await this.orm.call(this.props.comodel, "name_create", [name], {
             context: this.props.context,
         });

@@ -40,20 +40,6 @@ export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {
             this.props.context
         );
     }
-
-    /**
-     * @override
-     */
-    mapRecordToOption(result) {
-        return {
-            resModel: this.props.resModel,
-            value: result.id,
-            resourceType: result.resource_type,
-            colorIndex: result.color,
-            label: result.display_name,
-            color: result.color,
-        };
-    }
 }
 
 class Many2ManyAvatarResourceTagsList extends Many2ManyAvatarUserTagsList {

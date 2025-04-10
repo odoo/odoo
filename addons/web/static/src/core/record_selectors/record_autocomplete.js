@@ -57,16 +57,22 @@ export class RecordAutocomplete extends Component {
             label ? label.split("\n")[0] : _t("Unnamed"),
         ]);
         this.addNames(nameGets);
-        const options = nameGets.map(([value, label]) => ({ value, label, record: true }));
+        const options = nameGets.map(([id, label]) => ({
+            data: {
+                record: { id, display_name: label },
+            },
+            label,
+            onSelect: () => this.props.update([id]),
+        }));
         if (SEARCH_LIMIT < nameGets.length) {
             options.push({
+                cssClass: "o_m2o_dropdown_option",
                 label: _t("Search More..."),
-                action: this.onSearchMore.bind(this, name),
-                classList: "o_m2o_dropdown_option",
+                onSelect: this.onSearchMore.bind(this, name),
             });
         }
         if (options.length === 0) {
-            options.push({ label: _t("(no result)"), unselectable: true });
+            options.push({ label: _t("(no result)") });
         }
         return options;
     }
@@ -115,13 +121,6 @@ export class RecordAutocomplete extends Component {
             return Domain.and([this.props.domain, domainIds]).toList();
         }
         return domainIds.toList();
-    }
-
-    onSelect({ value: resId, action }, params) {
-        if (action) {
-            return action(params);
-        }
-        this.props.update([resId]);
     }
 
     search(name, limit) {

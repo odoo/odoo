@@ -282,7 +282,6 @@ export class Many2XAutocomplete extends Component {
             onCancel: this.onCancel.bind(this),
             onChange: this.onChange.bind(this),
             onInput: this.onInput.bind(this),
-            onSelect: this.onSelect.bind(this),
             placeholder: this.props.placeholder,
             resetOnSelect: this.props.value === "",
             sources: this.sources,
@@ -321,15 +320,6 @@ export class Many2XAutocomplete extends Component {
         this.props.setInputFloats(false);
     }
 
-    onSelect(option, params = {}) {
-        if (option.action) {
-            return option.action(option, params, {
-                openRecord: (openParams) => this.openMany2X(openParams),
-            });
-        }
-        this.props.update([option.record], params);
-    }
-
     abortableSearch(name) {
         const originalPromise = this.search(name);
         return {
@@ -361,8 +351,9 @@ export class Many2XAutocomplete extends Component {
     mapRecordToOption(record) {
         const label = record.__formatted_display_name || record.display_name;
         return {
-            value: record.id,
+            data: { record },
             label: label ? odoomark(label.split("\n")[0]) : _t("Unnamed"),
+            onSelect: () => this.props.update([record]),
         };
     }
 
@@ -382,12 +373,11 @@ export class Many2XAutocomplete extends Component {
         if (request.length < this.props.searchThreshold) {
             if (!this.props.value) {
                 options.push({
+                    cssClass: "o_m2o_start_typing",
                     label:
                         this.props.searchThreshold > 1
                             ? _t("Start typing %s characters", this.props.searchThreshold)
                             : _t("Start typing..."),
-                    classList: "o_m2o_start_typing",
-                    unselectable: true,
                 });
             }
         } else {
@@ -396,16 +386,12 @@ export class Many2XAutocomplete extends Component {
             addSearchMore = records.length > 0;
             if (records.length) {
                 for (const record of records) {
-                    options.push({
-                        ...this.mapRecordToOption(record),
-                        record,
-                    });
+                    options.push(this.mapRecordToOption(record));
                 }
             } else if (!this.activeActions.createEdit && !this.props.quickCreate) {
                 options.push({
+                    cssClass: "o_m2o_no_result",
                     label: _t("No records"),
-                    classList: "o_m2o_no_result",
-                    unselectable: true,
                 });
             }
         }
@@ -419,11 +405,11 @@ export class Many2XAutocomplete extends Component {
 
             if (this.props.quickCreate) {
                 options.push({
+                    cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
                     label: _t('Create "%s"', request),
-                    classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
-                    action: async (params) => {
+                    onSelect: async () => {
                         try {
-                            await this.props.quickCreate(request, params);
+                            await this.props.quickCreate(request);
                         } catch (e) {
                             if (
                                 e instanceof RPCError &&
@@ -439,18 +425,18 @@ export class Many2XAutocomplete extends Component {
 
             if (canCreateEdit) {
                 options.push({
+                    cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
                     label: _t("Create and edit..."),
-                    classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
-                    action: slowCreate,
+                    onSelect: slowCreate,
                 });
             }
         }
 
         if (!this.props.noSearchMore && addSearchMore) {
             options.push({
+                cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
                 label: this.SearchMoreButtonLabel,
-                action: this.onSearchMore.bind(this, request),
-                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
+                onSelect: this.onSearchMore.bind(this, request),
             });
         }
 

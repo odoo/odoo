@@ -47,27 +47,38 @@ export class SelectLotPopup extends Component {
                             option.name.includes(currentInput) &&
                             !this.state.values.some((value) => value.text === option.name)
                     );
-                    return filteredOptions.length
-                        ? filteredOptions.map((option) => ({
-                              label: option.name,
-                              id: option.id,
-                              create: true,
-                          }))
-                        : this.props.customInput && currentInput
-                        ? [
-                              {
-                                  label: _t("Create Lot/Serial number..."),
-                                  currentInput: currentInput,
-                                  id: currentInput,
-                                  create: true,
-                              },
-                          ]
-                        : [
-                              {
-                                  label: _t("No existing Lot/Serial number found..."),
-                                  create: false,
-                              },
-                          ];
+                    if (filteredOptions.length) {
+                        return filteredOptions.map((option) => ({
+                            label: option.name,
+                            onSelect: () =>
+                                this.onSelect({
+                                    create: true,
+                                    id: option.id,
+                                    label: option.name,
+                                }),
+                        }));
+                    } else if (this.props.customInput && currentInput) {
+                        const label = _t("Create Lot/Serial number...");
+                        return [
+                            {
+                                label,
+                                onSelect: () =>
+                                    this.onSelect({
+                                        create: true,
+                                        currentInput,
+                                        id: currentInput,
+                                        label,
+                                    }),
+                            },
+                        ];
+                    } else {
+                        return [
+                            {
+                                label: _t("No existing Lot/Serial number found..."),
+                                onSelect: () => this.onSelect({ create: false }),
+                            },
+                        ];
+                    }
                 },
             },
         ];

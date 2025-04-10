@@ -11,7 +11,6 @@ export class AutoComplete extends Component {
     static props = {
         value: { type: String, optional: true },
         id: { type: String, optional: true },
-        onSelect: { type: Function },
         sources: {
             type: Array,
             element: {
@@ -227,9 +226,13 @@ export class AutoComplete extends Component {
         }
     }
     makeOption(option) {
-        return Object.assign(Object.create(option), {
+        return {
+            cssClass: "",
+            data: {},
+            ...option,
             id: ++this.nextOptionId,
-        });
+            unselectable: !option.onSelect,
+        };
     }
     makeSource(source) {
         return {
@@ -249,7 +252,7 @@ export class AutoComplete extends Component {
         );
     }
 
-    selectOption(option, params = {}) {
+    selectOption(option) {
         this.inEdition = false;
         if (option.unselectable) {
             return;
@@ -260,10 +263,7 @@ export class AutoComplete extends Component {
         }
 
         this.forceValFromProp = true;
-        this.props.onSelect(option, {
-            ...params,
-            input: this.inputRef.el,
-        });
+        option.onSelect();
         this.close();
     }
 

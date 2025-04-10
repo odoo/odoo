@@ -83,7 +83,7 @@ export class AutoCompleteWithPages extends AutoComplete {
      * @private
      */
     _isCategory(option) {
-        return !!option?.separator;
+        return !!option?.data.separator;
     }
 
     getOption(indices) {
@@ -118,7 +118,7 @@ export class AutoCompleteWithPages extends AutoComplete {
      */
     selectOption(option) {
         if (!this._isCategory(option)) {
-            const { value } = Object.getPrototypeOf(option);
+            const { value } = option.data;
             this.targetDropdown.value = value;
             return super.selectOption(...arguments);
         }
@@ -133,12 +133,11 @@ export class AutoCompleteWithPages extends AutoComplete {
             let [sourceIndex, optionIndex] = this.state.activeSourceOption;
             const option = this.sources[sourceIndex]?.options[optionIndex];
             if (option) {
-                if (!!option.separator) {
+                if (!!option.data.separator) {
                     this.navigate(direction);
                 }
-                const suggestion = Object.getPrototypeOf(option);
-                if (suggestion && suggestion.value) {
-                    this.inputRef.el.value = suggestion.value;
+                if (option.data && option.data.value) {
+                    this.inputRef.el.value = option.data.value;
                 }
             }
         }

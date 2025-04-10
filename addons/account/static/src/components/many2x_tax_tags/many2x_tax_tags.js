@@ -52,15 +52,6 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
             });
     }
 
-    mapRecordToOption(result) {
-        return {
-            value: result.id,
-            label: result.name ? result.name.split("\n")[0] : _t("Unnamed"),
-            displayName: result.name,
-            tax_scope: result.tax_scope,
-        };
-    }
-
     async onSearchMore(request) {
         const { resModel, getDomain, context, fieldString } = this.props;
 

@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Component } from "@odoo/owl";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
 import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
@@ -29,6 +29,23 @@ class PartnerAutoCompleteMany2one extends Component {
     setup() {
         super.setup();
         this.partnerAutocomplete = usePartnerAutocomplete();
+        this.openRecord = useOpenMany2XRecord({
+            resModel: this.props.record.fields[this.props.name].relation,
+            activeActions: {
+                create: this.props.canCreate,
+                createEdit: this.props.canCreateEdit,
+                write: this.props.canWrite,
+            },
+            isToMany: false,
+            onRecordSaved: (record) => this.props.record.update({
+                [this.props.name]: {
+                    id: record.resId,
+                    display_name: record.data.display_name || record.data.name,
+                },
+            }),
+            onRecordDiscarded: () => this.props.record.update(false),
+            fieldString: this.props.string || this.props.record.fields[this.props.name].string,
+        });
     }
 
     validateSearchTerm(request) {
@@ -55,11 +72,12 @@ class PartnerAutoCompleteMany2one extends Component {
 							queryCountryId = 0;
 						}
                         const suggestions = await this.partnerAutocomplete.autocomplete(request, queryCountryId);
-                        suggestions.forEach((suggestion) => {
-                            suggestion.classList = "partner_autocomplete_dropdown_many2one";
-                            suggestion.action = this.onSelectPartnerAutocompleteOption.bind(this);
-                        });
-                        return suggestions;
+                        return suggestions.map((suggestion) => ({
+                            cssClass: "partner_autocomplete_dropdown_many2one",
+                            data: suggestion,
+                            label: suggestion.name,
+                            onSelect: () => this.onSelectPartnerAutocompleteOption(suggestion),
+                        }));
                     }
                     else {
                         return [];
@@ -71,8 +89,8 @@ class PartnerAutoCompleteMany2one extends Component {
         ];
     }
 
-    async onSelectPartnerAutocompleteOption(option, params, { openRecord }) {
-        const data = await this.partnerAutocomplete.getCreateData(Object.getPrototypeOf(option));
+    async onSelectPartnerAutocompleteOption(option) {
+        const data = await this.partnerAutocomplete.getCreateData(option);
 		if (!data?.company) {
 			return;
 		}
@@ -87,7 +105,7 @@ class PartnerAutoCompleteMany2one extends Component {
         if (data.logo) {
             context.default_image_1920 = data.logo;
         }
-        return openRecord({ context });
+        return this.openRecord({ context });
     }
 }
 
