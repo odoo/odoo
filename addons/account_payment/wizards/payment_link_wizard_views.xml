@@ -26,6 +26,7 @@
 
             <field name="amount" position="after">
                 <field name="invoice_amount_due" invisible="res_model != 'account.move'"/>
+                <field name="invoice_auto_post" invisible="res_model != 'account.move' or invoice_state != 'draft'"/>
             </field>
 
             <field name="currency_id" position="after">

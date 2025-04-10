@@ -24,6 +24,7 @@ class AccountMove(models.Model):
         string="Amount paid",
         compute='_compute_amount_paid'
     )
+    is_invoice_auto_post = fields.Boolean(string='Invoice auto post', default=True)
 
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):
@@ -61,13 +62,17 @@ class AccountMove(models.Model):
         )
         return enabled_feature and bool(
             (self.amount_residual or not transactions)
-            and self.state == 'posted'
+            and self.state in ['posted', 'draft']
             and self.payment_state in ('not_paid', 'in_payment', 'partial')
             and not self.currency_id.is_zero(self.amount_residual)
             and self.amount_total
             and self.move_type == 'out_invoice'
             and not pending_transactions
         )
+
+    def _has_successful_payment_in_draft(self):
+        self.ensure_one()
+        return self.state == 'draft' and self.get_portal_last_transaction()
 
     def get_portal_last_transaction(self):
         self.ensure_one()

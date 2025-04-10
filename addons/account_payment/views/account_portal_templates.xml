@@ -174,7 +174,7 @@
                                     </button>
                                 </div>
                                 <div class="tab-content" id="o_payment_tabcontent">
-                                    <div t-if="payment_state == 'in_payment'" class="alert alert-danger mt-2">
+                                    <div t-if="payment_state == 'in_payment' or invoice._has_successful_payment_in_draft()" class="alert alert-danger mt-2">
                                         A payment has already been made on this invoice, please make sure to not pay twice.
                                     </div>
                                     <div
@@ -238,7 +238,7 @@
                                 <div t-if="show_epd" class="alert alert-success">
                                     Early Payment Discount of <span t-out="epd_discount_amount_currency" t-options="{'widget': 'monetary', 'display_currency': currency}"/> has been applied.
                                 </div>
-                                <div t-if="payment_state == 'in_payment'" class="alert alert-danger">
+                                <div t-if="payment_state == 'in_payment' or invoice._has_successful_payment_in_draft()" class="alert alert-danger">
                                     A payment has already been made on this invoice, please make sure to not pay twice.
                                 </div>
                                 <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
@@ -292,7 +292,7 @@
             <div t-if="invoice.currency_id.is_zero(invoice.amount_residual)" class="rounded text-bg-success fw-normal badge">
                 <i class="fa fa-fw fa-check-circle"/> Paid
             </div>
-            <div t-if="invoice.payment_state == 'in_payment' and not invoice.currency_id.is_zero(invoice.amount_residual)" class="rounded text-bg-info fw-normal badge">
+            <div t-if="(invoice.payment_state == 'in_payment' or invoice._has_successful_payment_in_draft()) and not invoice.currency_id.is_zero(invoice.amount_residual)" class="rounded text-bg-info fw-normal badge">
                 <i class="fa fa-fw fa-check-circle"/> Processing Payment
             </div>
             <div t-elif="pending_txs" class="rounded text-bg-info fw-normal badge">
@@ -310,7 +310,7 @@
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">
             <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
-            <div t-if="invoice.get_portal_last_transaction() and invoice.amount_total and not success and not error and (invoice.payment_state != 'not_paid' or tx.state in ('pending', 'authorized'))"
+            <div t-if="invoice.get_portal_last_transaction() and invoice.amount_total and not success and not error and (invoice.payment_state != 'not_paid' or tx.state in ('pending', 'authorized') or invoice.state == 'draft')"
                  class="o_account_payment_tx_status"
                  t-att-data-invoice-id="invoice.id">
                 <t t-call="payment.state_header"/>
