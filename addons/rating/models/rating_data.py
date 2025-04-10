@@ -12,11 +12,16 @@ RATING_AVG_MIN = 1
 RATING_LIMIT_SATISFIED = 4
 RATING_LIMIT_OK = 3
 RATING_LIMIT_MIN = 1
+RATING_HAPPY_VALUE = 5
+RATING_NEUTRAL_VALUE = 3
+RATING_UNHAPPY_VALUE = 1
+RATING_NONE_VALUE = 0
+
 RATING_TEXT = [
-    ('top', 'Satisfied'),
-    ('ok', 'Okay'),
-    ('ko', 'Dissatisfied'),
-    ('none', 'No Rating yet'),
+    ('top', 'Happy'),
+    ('ok', 'Neutral'),
+    ('ko', 'Unhappy'),
+    ('none', 'Not Rated yet'),
 ]
 
 OPERATOR_MAPPING = {
@@ -38,7 +43,7 @@ def _rating_avg_to_text(rating_avg):
     return 'none'
 
 def _rating_assert_value(rating_value):
-    assert 0 <= rating_value <= 5
+    assert RATING_NONE_VALUE <= rating_value <= RATING_HAPPY_VALUE
 
 def _rating_to_grade(rating_value):
     """ From a rating value give a text-based mean value. """
@@ -65,9 +70,9 @@ def _rating_to_threshold(rating_value):
     notably for images. """
     _rating_assert_value(rating_value)
     if rating_value >= RATING_LIMIT_SATISFIED:
-        return 5
+        return RATING_HAPPY_VALUE
     if rating_value >= RATING_LIMIT_OK:
-        return 3
+        return RATING_NEUTRAL_VALUE
     if rating_value >= RATING_LIMIT_MIN:
-        return 1
-    return 0
+        return RATING_UNHAPPY_VALUE
+    return RATING_NONE_VALUE
