@@ -1524,7 +1524,7 @@ test("ignore sorted column if not part of measures", async () => {
     const { model } = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", "=PIVOT(1)");
     await waitForDataLoaded(model);
-    expect(model.getters.getPivot(1).getTableStructure().isSorted).toBe(false);
+    expect(model.getters.getPivot(1).getCollapsedTableStructure().isSorted).toBe(false);
 });
 
 test("Load pivot spreadsheet with models that cannot be accessed", async function () {

@@ -30,7 +30,7 @@ async function insertStaticPivot(model, pivotId, params) {
     }
     const [col, row] = params.anchor || [0, 0];
     await ds.load();
-    const { cols, rows, measures, fieldsType } = ds.getTableStructure().export();
+    const { cols, rows, measures, fieldsType } = ds.getExpandedTableStructure().export();
     const table = {
         cols,
         rows,
