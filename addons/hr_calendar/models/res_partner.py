@@ -14,6 +14,12 @@ from odoo.tools.date_intervals import Intervals
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    def get_worklocation(self, start_date, end_date):
+        employee_id = self.env['hr.employee'].search([
+            ('work_contact_id.id', 'in', self.ids),
+            ('company_id.id', '=', self.env.company.id)])
+        return employee_id._get_worklocation(start_date, end_date)
+
     def _get_employees_from_attendees(self, everybody=False):
         domain = [
             ('company_id', 'in', self.env.companies.ids),

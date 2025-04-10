@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -7,6 +6,7 @@ from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.tools.misc import clean_context
 
+from .hr_employee_location import DAYS
 
 HR_READABLE_FIELDS = [
     'active',
@@ -155,6 +155,15 @@ class ResUsers(models.Model):
     can_edit = fields.Boolean(compute='_compute_can_edit')
     is_system = fields.Boolean(compute="_compute_is_system")
 
+    # Remote work
+    monday_location_id = fields.Many2one("hr.work.location", related="employee_id.monday_location_id", readonly=False, string='Monday')
+    tuesday_location_id = fields.Many2one("hr.work.location", related="employee_id.tuesday_location_id", readonly=False, string='Tuesday')
+    wednesday_location_id = fields.Many2one("hr.work.location", related="employee_id.wednesday_location_id", readonly=False, string='Wednesday')
+    thursday_location_id = fields.Many2one("hr.work.location", related="employee_id.thursday_location_id", readonly=False, string='Thursday')
+    friday_location_id = fields.Many2one("hr.work.location", related="employee_id.friday_location_id", readonly=False, string='Friday')
+    saturday_location_id = fields.Many2one("hr.work.location", related="employee_id.saturday_location_id", readonly=False, string='Saturday')
+    sunday_location_id = fields.Many2one("hr.work.location", related="employee_id.sunday_location_id", readonly=False, string='Sunday')
+
     @api.depends_context('uid')
     def _compute_is_system(self):
         self.is_system = self.env.user._is_system()
@@ -171,11 +180,11 @@ class ResUsers(models.Model):
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + HR_READABLE_FIELDS + HR_WRITABLE_FIELDS
+        return super().SELF_READABLE_FIELDS + HR_READABLE_FIELDS + HR_WRITABLE_FIELDS + DAYS
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + HR_WRITABLE_FIELDS
+        return super().SELF_WRITEABLE_FIELDS + HR_WRITABLE_FIELDS + DAYS
 
     @api.model
     def get_views(self, views, options=None):
@@ -229,7 +238,7 @@ class ResUsers(models.Model):
     def _get_employee_fields_to_sync(self):
         """Get values to sync to the related employee when the User is changed.
         """
-        return ['name', 'email', 'image_1920', 'tz']
+        return ['name', 'email', 'image_1920', 'tz'] + DAYS
 
     def _get_personal_info_partner_ids_to_notify(self, employee):
         # To override in appropriate module
@@ -310,6 +319,17 @@ class ResUsers(models.Model):
         }
         for user in self:
             user.employee_id = employee_per_user.get(user)
+
+    def _compute_im_status(self):
+        super()._compute_im_status()
+        dayfield = self.env['hr.employee']._get_current_day_location_field()
+        for user in self:
+            location_type = user[dayfield].location_type
+            if not location_type:
+                continue
+            im_status = user.im_status
+            if im_status == "online" or im_status == "away" or im_status == "offline":
+                user.im_status = "presence_" + location_type + "_" + im_status
 
     def _search_company_employee(self, operator, value):
         return [('employee_ids', operator, value)]

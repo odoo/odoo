@@ -242,7 +242,7 @@ class HrLeaveType(models.Model):
             return NotImplemented
         if operator != 'in':
             value = float(value)
-        employee = self.env['hr.employee']._get_contextual_employee()
+        employee = self.env['hr.employee']._get_contextual_employees()
         leaves = defaultdict(int)
 
         if employee:
@@ -268,7 +268,7 @@ class HrLeaveType(models.Model):
 
     @api.depends_context('employee_id', 'default_employee_id', 'leave_date_from', 'default_date_from')
     def _compute_leaves(self):
-        employee = self.env['hr.employee']._get_contextual_employee()
+        employee = self.env['hr.employee']._get_contextual_employees()
         # This is a workaround to save the date value in context for next triggers
         # when context gets cleaned and 'default_' context keys gets removed
         target_date = self.env.context.get('leave_date_from') or self.env.context.get('default_date_from')
@@ -391,7 +391,7 @@ class HrLeaveType(models.Model):
         is an employee_id in context and that no other order has been given
         to the method.
         """
-        employee = self.env['hr.employee']._get_contextual_employee()
+        employee = self.env['hr.employee']._get_contextual_employees()
         if order == self._order and employee:
             # retrieve all leaves, sort them, then apply offset and limit
             leaves = self.browse(super()._search(domain))
@@ -445,7 +445,7 @@ class HrLeaveType(models.Model):
 
     @api.model
     def has_accrual_allocation(self):
-        employee = self.env['hr.employee']._get_contextual_employee()
+        employee = self.env['hr.employee']._get_contextual_employees()
         if not employee:
             return False
         return bool(self.env['hr.leave.allocation'].search_count([
@@ -467,7 +467,7 @@ class HrLeaveType(models.Model):
         if not hidden_allocations:
             domain.append(('show_on_dashboard', '=', True))
         leave_types = self.search(domain, order='id')
-        employee = self.env['hr.employee']._get_contextual_employee()
+        employee = self.env['hr.employee']._get_contextual_employees()
         if employee:
             return leave_types.get_allocation_data(employee, target_date)[employee]
         return []

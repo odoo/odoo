@@ -7,6 +7,9 @@
     'depends': ['hr', 'calendar'],
     'auto_install': True,
     'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'wizard/homework_location_wizard.xml',
         'views/calendar_views_calendarApp.xml',
         'views/res_partner_views.xml',
     ],

@@ -40,3 +40,33 @@
         }
     }
 }
+
+.o_calendar_renderer {
+    @for $size from 1 through length($o-colors) {
+        .o_mandatory_day_#{$size - 1} {
+            background: rgba(nth($o-colors, $size),0.4) !important;
+            border-radius: 50rem;
+        }
+    }
+
+    .holiday_icon {
+        background-color: rgb(211, 209, 209);
+        border-color:  rgb(211, 209, 209);
+        &.fa-plane {
+            padding-left: 3px;
+            padding-right: 3px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        &.fa-lock {
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        align-self: baseline;
+    }
+    .holiday_title {
+        text-transform: capitalize !important;
+    }
+}
