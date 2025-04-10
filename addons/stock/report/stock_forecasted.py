@@ -127,6 +127,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
         res.update(self._get_report_header(product_template_ids, product_ids, wh_location_ids))
 
         res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_location_ids, wh_stock_location)
+        res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_user')
         return res
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
@@ -156,7 +157,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             'uom_id' : product.uom_id.read()[0] if read else product.uom_id,
         }
         if move_in:
-            document_in = move_in._get_source_document()
+            document_in = move_in.sudo()._get_source_document()
             line.update({
                 'move_in': move_in.read(fields=self._get_report_moves_fields())[0] if read else move_in,
                 'document_in' : {
@@ -168,7 +169,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             })
 
         if move_out:
-            document_out = move_out._get_source_document()
+            document_out = move_out.sudo()._get_source_document()
             line.update({
                 'move_out': move_out.read(fields=self._get_report_moves_fields())[0] if read else move_out,
                 'document_out' : {
