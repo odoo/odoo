@@ -106,7 +106,6 @@ export class TourAutomatic {
 
         this.macro = new Macro({
             name: this.name,
-            checkDelay: this.checkDelay || 200,
             steps: macroSteps,
             onError: (error) => {
                 if (error.type === "Timeout") {
