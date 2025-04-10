@@ -275,7 +275,7 @@ class StockWarehouseOrderpoint(models.Model):
                 if not float_is_zero(remainder, precision_rounding=orderpoint.product_uom.rounding):
                     orderpoint.qty_to_order += orderpoint.replenishment_uom_id - remainder
         try:
-            self._procure_orderpoint_confirm(company_id=self.env.company)
+            self.with_context(from_orderpoint=True)._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
             if len(self) != 1:
                 raise e
