@@ -8,7 +8,7 @@ class CustomerPortal(portal.CustomerPortal):
         builder = edi_builders[0]
 
         xml_content = builder._export_order(order)
-        download_name = builder._export_order_filename(order)
+        download_name = builder._export_invoice_filename(order)     # works even if it's a SO or PO
         http_headers = [
             ('Content-Type', 'text/xml'),
             ('Content-Length', len(xml_content)),

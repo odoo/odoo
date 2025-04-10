@@ -27,7 +27,7 @@ class IrActionsReport(models.Model):
             xml_content = builder._export_order(order)
 
             writer.addAttachment(
-                builder._export_order_filename(order),
+                builder._export_invoice_filename(order),    # works even if it's a SO or PO
                 xml_content,
                 subtype='text/xml'
             )

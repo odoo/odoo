@@ -13,16 +13,6 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
     ##### Order EDI Export
     #####################################################################################
 
-    def _export_order_filename(self, order):
-        return f"{order.name.replace('/', '_')}_ubl_bis3.xml"
-
-    def _get_country_vals(self, country):
-        return {
-            'country': country,
-            'identification_code': country.code,
-            'name': country.name,
-        }
-
     def _get_partner_address_vals(self, partner):
         vals = super()._get_partner_address_vals(partner)
         vals.pop('country_vals', None)
