@@ -6,7 +6,8 @@ import copy
 import json
 import typing
 import uuid
-from collections import defaultdict
+from collections import defaultdict, UserDict
+from collections.abc import Mapping
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError, ValidationError
@@ -144,7 +145,8 @@ class Properties(Field):
     #       }
     #
     def convert_to_record(self, value, record):
-        return False if value is None else copy.deepcopy(value)
+        value = value or {}
+        return PropertiesValue(value, self, record)
 
     # Read format: the value is a list, where each element is a dict containing
     # the definition of a property, together with the property's corresponding
@@ -177,7 +179,7 @@ class Properties(Field):
         for record, value in zip(records, values):
             if definition := self._get_properties_definition(record):
                 value = value or {}
-                assert isinstance(value, dict), f"Wrong type {value!r}"
+                assert isinstance(value, Mapping), f"Wrong type {value!r}"
                 result.append(self._dict_to_list(value, definition))
             else:
                 result.append([])
@@ -223,7 +225,9 @@ class Properties(Field):
 
                 if type_ == 'many2one':
                     default = [default] if default else []
-                    property_value = [property_value] if isinstance(property_value, int) else []
+                    property_value = [property_value] if isinstance(property_value, int) else [property_value.id] if isinstance(property_value, BaseModel) else []
+                elif isinstance(property_value, BaseModel):
+                    property_value = list(property_value._ids)
                 elif not is_list_of(property_value, int):
                     property_value = []
 
@@ -257,7 +261,7 @@ class Properties(Field):
         if isinstance(value, str):
             value = json.loads(value)
 
-        if isinstance(value, dict):
+        if isinstance(value, Mapping):
             # don't need to write on the container definition
             return super().write(records, value)
 
@@ -331,12 +335,13 @@ class Properties(Field):
             # the definition, in that case we can just ignored the passed values
             return {}
 
-        assert isinstance(properties_values, (list, dict))
         if isinstance(properties_values, list):
             self._remove_display_name(properties_values)
             properties_list_values = properties_values
-        else:
+        elif isinstance(properties_values, Mapping):
             properties_list_values = self._dict_to_list(properties_values, properties_definition)
+        else:
+            raise TypeError("properties_values must be a list or a mapping")
 
         for properties_value in properties_list_values:
             if properties_value.get('value') is None:
@@ -350,11 +355,12 @@ class Properties(Field):
 
         return properties_list_values
 
-    def _get_properties_definition(self, record):
+    def _get_properties_definition(self, record: BaseModel) -> PropertiesDefinition | None:
         """Return the properties definition of the given record."""
         container = record[self.definition_record]
         if container:
             return container.sudo()[self.definition_record_field]
+        return None
 
     @classmethod
     def _add_display_name(cls, values_list, env, value_keys=('value', 'default')):
@@ -456,6 +462,9 @@ class Properties(Field):
             property_type = property_definition.get('type')
             res_model = property_definition.get('comodel')
 
+            if isinstance(property_value, BaseModel):
+                property_value = list(property_value._ids)
+
             if property_type not in cls.ALLOWED_TYPES:
                 raise ValueError(f'Wrong property type {property_type!r}')
 
@@ -480,13 +489,19 @@ class Properties(Field):
                 property_value = [tag for tag in property_value if tag in all_tags]
 
             elif property_type == 'many2one':
-                if not isinstance(property_value, int) \
+                if isinstance(property_value, list) and len(property_value) == 1:
+                    property_value = property_value[0]
+                if isinstance(property_value, BaseModel):
+                    property_value = property_value.id
+                elif not isinstance(property_value, int) \
                         or res_model not in env \
                         or property_value not in res_ids_per_model[res_model]:
                     property_value = False
 
             elif property_type == 'many2many':
-                if not is_list_of(property_value, int):
+                if isinstance(property_value, BaseModel):
+                    property_value = list(property_value._ids)
+                elif not is_list_of(property_value, int):
                     property_value = []
 
                 elif len(property_value) != len(set(property_value)):
@@ -877,3 +892,52 @@ class PropertiesDefinition(Field):
                 if len(all_tags) != len(set(all_tags)):
                     duplicated = set(filter(lambda x: all_tags.count(x) > 1, all_tags))
                     raise ValueError(f'Some tags are duplicated: {", ".join(duplicated)}.')
+
+
+class PropertiesValue(Mapping[str, typing.Any]):
+    """Used in `convert_to_record` to return values similar to what other fields
+    would do if they had the given value in cache.
+    """
+
+    def __init__(self, values: dict, field: Properties, record: BaseModel):
+        super().__init__()
+        self.values = values
+        self.record = record
+        self.field = field
+
+    def __getitem__(self, property_name):
+        record = self.record
+        if not record:
+            raise KeyError("no record in PropertiesValue")
+
+        values = self.field.convert_to_read(self.values, record)
+        for prop in values:
+            if prop['name'] == property_name:
+                break
+        else:
+            raise KeyError(property_name)
+        value = prop.get('value')
+
+        if prop.get('type') == 'many2one' and prop.get('comodel'):
+            comodel = record.env[prop['comodel']]
+            return comodel.browse(value[0]) if value else comodel
+
+        if prop.get('type') == 'many2many' and prop.get('comodel'):
+            return record.env[prop['comodel']].browse(v[0] for v in value)
+
+        if prop.get('type') == 'selection' and value:
+            return next((sel_label for sel, sel_label in prop['selection'] if sel == value), False)
+
+        if prop.get('type') == 'tags' and value:
+            return ', '.join(tag[1] for tag in prop['tags'] if tag[0] in value)
+
+        return value or False
+
+    def __repr__(self):
+        return f"PropertiesValue({self.record}){self.values!r}"
+
+    def __iter__(self):
+        return iter(self.values)
+
+    def __len__(self):
+        return len(self.values)
