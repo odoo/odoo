@@ -23,6 +23,15 @@ class HrJob(models.Model):
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
     description = fields.Html(string='Job Description', sanitize_attributes=False)
     requirements = fields.Text('Requirements')
+    user_id = fields.Many2one(
+        "res.users",
+        "Recruiter",
+        domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+        default=lambda self: self.env.user,
+        tracking=True,
+        help="The Recruiter will be the default value for all Applicants in this job \
+            position. The Recruiter is automatically added to all meetings with the Applicant.",
+    )
     department_id = fields.Many2one('hr.department', string='Department', check_company=True, tracking=True, index='btree_not_null')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True)
     contract_type_id = fields.Many2one('hr.contract.type', string='Employment Type', tracking=True)

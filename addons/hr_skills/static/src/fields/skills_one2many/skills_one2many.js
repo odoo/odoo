@@ -39,7 +39,7 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
     async openSkillsReport() {
         // fetch id through employee or public.employee
         const id = this.env.model.root.data.id || this.env.model.root.data.employee_id.id;
--        this.actionService.doAction({
+        this.actionService.doAction({
             type: "ir.actions.act_window",
             name: _t("Skills Report"),
             res_model: "hr.employee.skill.history.report",
