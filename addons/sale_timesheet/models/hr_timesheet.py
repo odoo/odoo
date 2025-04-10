@@ -36,7 +36,7 @@ class AccountAnalyticLine(models.Model):
     timesheet_invoice_type = fields.Selection(TIMESHEET_INVOICE_TYPES, string="Billable Type",
             compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
-    timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet", index='btree_not_null')
+    timesheet_invoice_id = fields.Many2one('account.move', domain="[('line_ids.sale_line_ids', '=', so_line), ('state', '=', 'posted')]", string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet", index='btree_not_null')
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False,
         domain=_domain_so_line,
         help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.")
@@ -45,6 +45,7 @@ class AccountAnalyticLine(models.Model):
     is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     sale_order_state = fields.Selection(related='order_id.state')
+    service_policy = fields.Selection(related='so_line.product_id.service_policy')
 
     @api.depends('project_id.partner_id.commercial_partner_id', 'task_id.partner_id.commercial_partner_id')
     def _compute_commercial_partner(self):
@@ -165,6 +166,21 @@ class AccountAnalyticLine(models.Model):
     def _get_timesheets_to_merge(self):
         res = super()._get_timesheets_to_merge()
         return res.filtered(lambda l: not l.timesheet_invoice_id or l.timesheet_invoice_id.state != 'posted')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('so_line'):
+                continue
+            so_line = self.env['sale.order.line'].browse(vals['so_line'])
+            if so_line.product_id.service_policy != 'ordered_prepaid':
+                continue
+            moves = so_line.invoice_lines.move_id.filtered(
+                lambda m: m.move_type == 'out_invoice' and m.state == 'posted'
+            ).sorted('create_date', reverse=True)
+            if moves:
+                vals['timesheet_invoice_id'] = moves[0].id
+        return super().create(vals_list)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_invoiced(self):
