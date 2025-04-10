@@ -231,7 +231,16 @@ class SaleOrderLine(models.Model):
                 ('product_id.service_tracking', 'in', ['project_only', 'task_in_project']),
             ])
             if project_only_sol_count == 1:
-                values['name'] = "%s - [%s] %s" % (values['name'], self.product_id.default_code, self.product_id.name) if self.product_id.default_code else "%s - %s" % (values['name'], self.product_id.name)
+                if self.order_id.client_order_ref:
+                    values['name'] = "%s - [%s] %s" % (values['name'], self.product_id.default_code, self.product_id.name) if self.product_id.default_code else "%s - %s" % (values['name'], self.product_id.name)
+                else:
+                    if self.order_id.partner_id.company_type == "person":
+                        if self.order_id.partner_id.commercial_company_name:
+                            values['name'] = "%s - [%s] %s - %s" % (values['name'], self.product_id.default_code, self.product_id.name, self.order_id.partner_id.commercial_company_name) if self.product_id.default_code else "%s - %s - %s" % (values['name'], self.product_id.name, self.order_id.partner_id.commercial_company_name)
+                        else:
+                            values['name'] = "%s - [%s] %s - %s" % (values['name'], self.product_id.default_code, self.product_id.name, self.order_id.partner_id.name) if self.product_id.default_code else "%s - %s - %s" % (values['name'], self.product_id.name, self.order_id.partner_id.name)
+                    else:
+                        values['name'] = "%s - [%s] %s - %s" % (values['name'], self.product_id.default_code, self.product_id.name, self.order_id.partner_id.name) if self.product_id.default_code else "%s - %s - %s" % (values['name'], self.product_id.name, self.order_id.partner_id.name)
             values.update(self._timesheet_create_project_account_vals(self.order_id.project_id))
             project = self.env['project.project'].create(values)
 
@@ -273,8 +282,20 @@ class SaleOrderLine(models.Model):
             title = sale_line_name_parts[0]
             description = '<br/>'.join(sale_line_name_parts[1:])
 
+        name = title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title)
+        if not self.order_id.client_order_ref:
+            if self.order_id.partner_id.company_type == "person":
+                if self.order_id.partner_id.commercial_company_name:
+                    name = title if project.sale_line_id and not self.product_id.project_id else '%s - %s - %s' % (self.order_id.name or '', title, self.order_id.partner_id.commercial_company_name)
+                else:
+                    name = title if project.sale_line_id and not self.product_id.project_id else '%s - %s - %s' % (self.order_id.name or '', title, self.order_id.partner_id.name)
+            else:
+                name = title if project.sale_line_id and not self.product_id.project_id else '%s - %s - %s' % (self.order_id.name or '', title, self.order_id.partner_id.name)
+        else:
+            name = title if project.sale_line_id and not self.product_id.project_id else '%s - %s - %s' % (self.order_id.client_order_ref, self.order_id.name or '', title)
+
         return {
-            'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
+            'name': name,
             'allocated_hours': allocated_hours,
             'partner_id': self.order_id.partner_id.id,
             'description': description,
