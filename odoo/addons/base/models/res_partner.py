@@ -629,10 +629,35 @@ class ResPartner(models.Model):
     def _commercial_fields(self):
         """ Returns the list of fields that are managed by the commercial entity
         to which a partner belongs. These fields are meant to be hidden on
-        partners that aren't `commercial entities` themselves, and will be
+        partners that aren't `commercial entities` themselves, or synchronized
+        at update (if present in _synced_commercial_fields), and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'company_registry', 'industry_id']
+        return self._synced_commercial_fields() + ['company_registry', 'industry_id']
+
+    @api.model
+    def _synced_commercial_fields(self):
+        """ Returns the list of fields that are managed by the commercial entity
+        to which a partner belongs. When modified on a children, update is
+        propagated until the commercial entity. """
+        return ['vat']
+
+    def _get_commercial_values(self):
+        """ Get commercial values from record. Return only set values, as they
+        are considered individually, and only set values should be taken into
+        account. """
+        set_commercial_fields = [fname for fname in self._commercial_fields() if self[fname]]
+        if set_commercial_fields:
+            return self._convert_fields_to_values(set_commercial_fields)
+        return {}
+
+    def _get_synced_commercial_values(self):
+        """ Get synchronized commercial values from ercord. Return only set values
+        as for other commercial values. """
+        set_synced_fields = [fname for fname in self._synced_commercial_fields() if self[fname]]
+        if set_synced_fields:
+            return self._convert_fields_to_values(set_synced_fields)
+        return {}
 
     @api.model
     def _company_dependent_commercial_fields(self):
@@ -646,10 +671,11 @@ class ResPartner(models.Model):
         as if they were related fields """
         commercial_partner = self.commercial_partner_id
         if commercial_partner != self:
-            sync_vals = commercial_partner._convert_fields_to_values(self._commercial_fields())
-            self.write(sync_vals)
-            self._company_dependent_commercial_sync()
-            self._commercial_sync_to_descendants()
+            sync_vals = commercial_partner._get_commercial_values()
+            if sync_vals:
+                self.write(sync_vals)
+                self._company_dependent_commercial_sync()
+                self._commercial_sync_to_descendants()
 
     def _company_dependent_commercial_sync(self):
         """ Propagate sync of company dependant commercial fields to other
@@ -694,7 +720,7 @@ class ResPartner(models.Model):
                 if address_values := self.parent_id._get_address_values():
                     self._update_address(address_values)
 
-        # 2. To UPSTREAM: sync parent address
+        # 2. To UPSTREAM: sync parent address, as well as editable synchronized commercial fields
         address_to_upstream = (
             # parent is set, potential address update as contact address = parent address
             bool(self.parent_id) and bool(self.type == 'contact') and
@@ -706,6 +732,17 @@ class ResPartner(models.Model):
         if address_to_upstream:
             new_address = self._get_address_values()
             self.parent_id.write(new_address)  # is going to trigger _fields_sync again
+        commercial_to_upstream = (
+            # has a parent and is not a commercial entity itself
+            bool(self.parent_id) and (self.commercial_partner_id != self) and
+            # actually updated, or parent updated
+            (any(field in values for field in self._synced_commercial_fields()) or 'parent_id' in values) and
+            # something is actually updated
+            any(self[fname] != self.parent_id[fname] for fname in self._synced_commercial_fields())
+        )
+        if commercial_to_upstream:
+            new_synced_commercials = self._get_synced_commercial_values()
+            self.parent_id.write(new_synced_commercials)
 
         # 3. To DOWNSTREAM: sync children
         self._children_sync(values)
