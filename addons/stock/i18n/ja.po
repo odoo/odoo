@@ -521,7 +521,7 @@ msgstr "<span><strong>顧客アドレス:</strong></span>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Delivery Address:</strong></span>"
-msgstr "<span><strong>お届け先:</strong></span>"
+msgstr "<span><strong>配送先住所:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -2854,7 +2854,7 @@ msgstr "配達予定"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
 msgid "Expiration Dates"
-msgstr "有効期限"
+msgstr "使用期限"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -5814,7 +5814,7 @@ msgstr "ロット番号とシリアル番号のGS1バーコードを印刷"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lots & Serial Numbers"
-msgstr "ロット番号とシリアル番号のGS1バーコードを印刷"
+msgstr "ロット/シリアル番号のGS1バーコードを印刷"
 
 #. module: stock
 #. odoo-javascript
@@ -6634,7 +6634,7 @@ msgstr "部分的に処理されたピッキングの残部分"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_removal
 msgid "Removal"
-msgstr "除去"
+msgstr "払出"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_removal
@@ -7375,17 +7375,17 @@ msgstr ""
 "FIFO：最初にストックされたプロダクト/ロットが最初に出庫されます。\n"
 "LIFO：最後にストックされたプロダクト/ロットが最初に出庫されます。\n"
 "最寄ロケーション：対象位置に最も近いプロダクト/ロットが先に出庫されます。\n"
-"FEFO：払出日が最も近いプロダクト/ロットから出庫されます(この方法が利用できるかどうかは、\"有効期限\"の設定に依存します)"
+"FEFO：払出期限が最も近いプロダクト/ロットから出庫されます(この方法が利用できるかどうかは、\"使用期限\"の設定に依存します)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots &amp; serial numbers"
-msgstr "有効期限日をロット/シリアル番号に指定"
+msgstr "ロット/シリアル番号に使用期限を設定する"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set owner on stored products"
-msgstr "在庫に所有者を設定"
+msgstr "プロダクト在庫に所有者を設定する"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8651,7 +8651,8 @@ msgid ""
 "Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n"
 " Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
 msgstr ""
-"ロットとシリアル番号の次の日付を追跡します:ベストビフォア、削除、サポート終了、アラート。このような日付は、製品に設定された値(日数)に基づいて、ロット/シリアル番号の作成時に自動的に設定されます。"
+"ロット/シリアル番号の以下の日付を追跡: 品質保持期限、払出、使用期限、アラート。\n"
+"これらの日付は、プロダクトに設定された値(日数)に基づき、ロット/シリアル番号の作成時に自動的に設定されます。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8660,7 +8661,8 @@ msgid ""
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
 msgstr ""
-"ロットとシリアル番号の次の日付を追跡します:ベストビフォア、削除、サポート終了、アラート。このような日付は、製品に設定された値(日数)に基づいて、ロット/シリアル番号の作成時に自動的に設定されます。"
+"ロット/シリアル番号の以下の日付を追跡: "
+"品質保持期限、払出、使用期限、アラート。これらの日付は、プロダクトに設定された値(日数)に基づき、ロット番号/シリアル番号の作成時に自動的に設定されます。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

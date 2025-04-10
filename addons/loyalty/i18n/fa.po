@@ -14,14 +14,15 @@
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2024
 # Abbas Ebadian, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Naser mars, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1029,7 +1030,7 @@ msgstr "تاریخ انقضا"
 #: code:addons/loyalty/models/loyalty_card.py:0
 #, python-format
 msgid "Expiration date cannot be set on a loyalty card."
-msgstr ""
+msgstr "تاریخ انقضا را نمی توان روی کارت وفاداری تنظیم کرد."
 
 #. module: loyalty
 #. odoo-python
@@ -1140,6 +1141,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
 msgstr "تولید کیف پول الکترونیکی"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "ایجاد {{props.context.program_item_name}}"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1709,6 +1717,7 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "پاداش‌ها"
 
@@ -1821,6 +1830,13 @@ msgstr "کد تبلیغاتی باید منحصر به فرد باشد."
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
 msgstr "امتیازهای لازم برای یک جایزه باید مطلقاً مثبت باشد."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "فیلد توضیحات پاداش نمی‌تواند خالی باشد."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -1968,13 +1984,6 @@ msgstr "با یک کد تبلیغاتی"
 #, python-format
 msgid "You can not delete a program in an active state"
 msgstr "شما نمی‌توانید یک برنامه در حالت فعال را حذف کنید"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_reward.py:0
-#, python-format
-msgid "The reward description field cannot be empty."
-msgstr "فیلد توضیحات پاداش نمی‌تواند خالی باشد."
 
 #. module: loyalty
 #. odoo-python
@@ -2146,3 +2155,10 @@ msgstr "استفاده‌ها"
 #, python-format
 msgid "your order"
 msgstr "سفارش شما"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr ""

@@ -162,7 +162,7 @@ msgstr "%(name)s(העתק)(%(id)s)"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
-msgstr ""
+msgstr "%(warehouse)s: ספק מוצר מ %(supplier)s"
 
 #. module: stock
 #. odoo-python
@@ -313,7 +313,7 @@ msgstr "חודש אחד"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__week
 msgid "1 Week"
-msgstr ""
+msgstr "שבוע  1"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -3067,14 +3067,14 @@ msgstr "תבנית"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__free_qty
 msgid "Free Qty"
-msgstr ""
+msgstr "כמות פנויה"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock"
-msgstr ""
+msgstr "מלאי פנוי"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -3448,6 +3448,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
+"אם תיבה זו מסומנת, אודו יראה אוטומטית את דוח הקבלה (אם יש העברות שצריך "
+"להקצות להן) כאשר יאומת."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -3719,7 +3721,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
-msgstr ""
+msgstr "קונפיגורציה שגויה של הכלל, הכלל הבא גורם ללולאת אינסוף:%s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -4001,6 +4003,8 @@ msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
 msgstr ""
+"שמור את <strong>ההפרש</strong> (הכמות שנספרה תעודכן לשקף את אותו הפרש כפי "
+"שספרת)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
@@ -4613,13 +4617,15 @@ msgid ""
 "Maximum number of days before scheduled date that priority picking products "
 "should be reserved."
 msgstr ""
+"מספר הימים המקסימלי לפני התאריך המתוזמן שבהם יש לשמור מוצרים בעלי עדיפות "
+"לליקוט."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before
 msgid ""
 "Maximum number of days before scheduled date that products should be "
 "reserved."
-msgstr ""
+msgstr "מספר הימים המקסימלי לפני התאריך המתוזמן שבהם יש לשמור מוצרים."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__max_weight
@@ -7869,7 +7875,7 @@ msgstr "דוח כללי מלאי"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
-msgstr ""
+msgstr "מידע על אספקת מלאי מספק"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_option
@@ -8184,6 +8190,8 @@ msgid ""
 "precision defined on the unit of measure \"%s\". Please change the quantity "
 "done or the rounding precision of your unit of measure."
 msgstr ""
+"הכמות שבוצעה עבור המוצר \"%s\" לא תואמת את דיוק העיגול שהוגדר עבור יחידת "
+"המידה \"%s\". אנא שנה את הכמות שבוצעה או את דיוק העיגול של יחידת המידה שלך."
 
 #. module: stock
 #. odoo-python
@@ -8776,7 +8784,7 @@ msgstr "העברות לקבוצות"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid ""
 "Transfers that are late on scheduled time or one of pickings will be late"
-msgstr ""
+msgstr "העברות שעברו את הזמן המתוזמן או שאחד מהליקוטים יהיו באיחור."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -8860,7 +8868,7 @@ msgstr "חיבור ל USPS"
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Unassign"
-msgstr ""
+msgstr "הסר הקצאה"
 
 #. module: stock
 #. odoo-javascript
@@ -8968,7 +8976,7 @@ msgstr "בטל שמירה"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Unsafe unit of measure"
-msgstr ""
+msgstr "יחידת מידה לא בטוחה"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
@@ -9346,7 +9354,7 @@ msgstr "משקל של סוג החבילה"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "יחידת משקל"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -9579,7 +9587,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "You can either :"
-msgstr ""
+msgstr "אתה יכול : "
 
 #. module: stock
 #. odoo-python
@@ -9704,7 +9712,7 @@ msgstr "אינך יכול לשנות את התאריך המתוזמן בהעבר
 #, python-format
 msgid ""
 "You cannot change the UoM for a stock move that has been set to 'Done'."
-msgstr ""
+msgstr "אינך יכול לשנות את יחידת המידה עבור העברת מלאי שכבר הוגדרה כ'בוצע'."
 
 #. module: stock
 #. odoo-python
@@ -9809,7 +9817,7 @@ msgstr ""
 msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
-msgstr ""
+msgstr "אינך יכול לקבוע מיקום פסולים כמיקום יעד לפעולה מסוג ייצור."
 
 #. module: stock
 #. odoo-python
