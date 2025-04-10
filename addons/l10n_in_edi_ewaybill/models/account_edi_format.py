@@ -416,6 +416,7 @@ class AccountEdiFormat(models.Model):
         tax_details = self._l10n_in_prepare_edi_tax_details(invoices)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
+        rounding_amount = sum(line.balance for line in invoices.line_ids if line.display_type == 'rounding') * sign
         json_payload = {
             # Note:
             # Customer Invoice, Sales Receipt and Vendor Credit Note are Outgoing
@@ -455,8 +456,8 @@ class AccountEdiFormat(models.Model):
             "igstValue": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
             "cessValue": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
             "cessNonAdvolValue": self._l10n_in_round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
-            "totInvValue": self._l10n_in_round_value((tax_details.get("base_amount") + tax_details.get("tax_amount"))),
+            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount),
+            "totInvValue": self._l10n_in_round_value(tax_details.get("base_amount") + tax_details.get("tax_amount") + rounding_amount),
         }
         is_overseas = invoices.l10n_in_gst_treatment in ("overseas", "special_economic_zone")
         if invoices.is_outbound():
