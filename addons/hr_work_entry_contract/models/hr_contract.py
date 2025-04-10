@@ -133,6 +133,14 @@ class HrContract(models.Model):
 
     def _get_valid_leave_intervals(self, attendances, interval):
         self.ensure_one()
+        is_leave_calendar_attendances = WorkIntervals([
+            (start, end, attendance) for (start, end, attendance) in attendances
+            if start <= interval[1] and end > interval[0]
+                and isinstance(attendance, self.env['resource.calendar.attendance'].__class__)
+                and attendance.work_entry_type_id.is_leave])
+        if is_leave_calendar_attendances:
+            leave_interval = WorkIntervals([interval])
+            return list(leave_interval - is_leave_calendar_attendances)
         return [interval]
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
@@ -141,7 +149,7 @@ class HrContract(models.Model):
         contract_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
 
-        attendances_by_resource = self._get_attendance_intervals(start_dt, end_dt)
+        attendances_by_resource = self.with_context({'with_is_leave': True})._get_attendance_intervals(start_dt, end_dt)
 
         resource_calendar_leaves = self._get_resource_calendar_leaves(start_dt, end_dt)
         # {resource: resource_calendar_leaves}
