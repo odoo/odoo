@@ -54,6 +54,6 @@ class MailThreadMainAttachment(models.AbstractModel):
         if request_list and "attachments" in request_list:
             store.add(
                 self,
-                Store.One("message_main_attachment_id", [], rename="mainAttachment"),
+                Store.One("message_main_attachment_id", []),
                 as_thread=True,
             )
