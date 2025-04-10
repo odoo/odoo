@@ -63,16 +63,25 @@ class LoyaltyCard(models.Model):
         if self.env['loyalty.rule'].search_count([('mode', '=', 'with_code'), ('code', 'in', self.mapped('code'))]):
             raise ValidationError(_("A trigger with the same code as one of your coupon already exists."))
 
+    @api.constrains('active', 'partner_id', 'program_id')
+    def _check_single_loyalty_card_per_partner(self):
+        for card in self:
+            if not card.partner_id or card.program_type != 'loyalty':
+                continue
+            loyalty_card_count = self.search_count([
+                ('id', '!=', card.id),
+                ('partner_id', '=', card.partner_id.id),
+                ('program_id', '=', card.program_id.id),
+            ], limit=1)
+            if loyalty_card_count:
+                raise ValidationError(self.env._(
+                    "A customer can only have one active loyalty card per program."
+                ))
+
     @api.depends('points', 'point_name')
     def _compute_points_display(self):
         for card in self:
             card.points_display = card._format_points(card.points)
-
-    @api.onchange('expiration_date')
-    def _restrict_expiration_on_loyalty(self):
-        for card in self:
-            if card.program_type == 'loyalty' and card.expiration_date:
-                raise ValidationError(_("Expiration date cannot be set on a loyalty card."))
 
     def _format_points(self, points):
         self.ensure_one()
