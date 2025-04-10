@@ -11,7 +11,7 @@ from odoo.modules.module import get_manifest
 _logger = logging.getLogger(__name__)
 
 
-PY_REF_ENV = DiagnosticKind(
+PY_ENV_REF = DiagnosticKind(
     name='ref_env_call',
     body='Found env.ref calls without raise_if_not_found=False',
     suggestion='Add raise_if_not_found=False to the env.ref call'
@@ -48,7 +48,14 @@ class EvalRefVisitor(ast.NodeVisitor):
         self.protected_xml_ids = protected_xml_ids
 
     def _is_ref_risky(self, node):
-        """Check if the node is risky"""
+        """Check if the node is risky.
+        
+        Args:
+            node: The AST node to check
+            
+        Returns:
+            bool: True if the node is risky, False otherwise
+        """
         if not node.args or node.args[0].value in self.protected_xml_ids:
             return False
         raise_if_not_found = True  # default to True
@@ -59,7 +66,11 @@ class EvalRefVisitor(ast.NodeVisitor):
         return raise_if_not_found
 
     def visit_Call(self, node):
-        """ check for env.ref calls """
+        """Check for env.ref calls.
+        
+        Args:
+            node: The AST node to visit
+        """
         if isinstance(node.func, ast.Name) and node.func.id == 'ref':
             if self._is_ref_risky(node):
                 # for ref() calls, check if the ref is for another module
@@ -80,11 +91,6 @@ class FileEnvRefVisitor(EvalRefVisitor):
         return self.diff_file.is_lineno_in_diff(node.lineno, node.end_lineno)
 
     def visit_Assign(self, node):
-        """ Track assignments of env.ref to variables to handle use cases like
-
-            ref = self.env.ref
-            ref('xxx', raise_if_not_found=False)
-        """
         if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
             value = node.value
             if (isinstance(value, ast.Attribute) and value.attr == 'ref' and
@@ -102,7 +108,6 @@ class FileEnvRefVisitor(EvalRefVisitor):
         self.generic_visit(node)
 
     def visit_Call(self, node):
-        """ check for env.ref calls """
         if isinstance(node.func, ast.Attribute) and node.func.attr == 'ref':
             current = node.func.value
             is_env_ref = False
@@ -114,11 +119,11 @@ class FileEnvRefVisitor(EvalRefVisitor):
                 is_env_ref = True
 
             if is_env_ref and self._is_node_in_diff(node) and self._is_ref_risky(node):
-                self.diagnostics.append(PY_REF_ENV(self.diff_file, (node.lineno, node.end_lineno)))
+                self.diagnostics.append(PY_ENV_REF(self.diff_file, (node.lineno, node.end_lineno)))
         elif isinstance(node.func, ast.Name) and node.func.id in self.env_ref_names:
             # Handle stored env.ref calls
             if self._is_node_in_diff(node) and self._is_ref_risky(node):
-                self.diagnostics.append(PY_REF_ENV(self.diff_file, (node.lineno, node.end_lineno)))
+                self.diagnostics.append(PY_ENV_REF(self.diff_file, (node.lineno, node.end_lineno)))
 
         self.generic_visit(node)
 
@@ -136,13 +141,6 @@ def check_ref_for_python_file(fileinfo: DiffFile, protected_xml_ids: Collection[
 
 
 def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: bool = True, protected_xml_ids: Collection[str] = ()) -> list[DiagnosticsMessage]:
-    """Check for references in xml files
-    
-    :param element: the xml element to check
-    :param diff_file: the file info of the xml file
-    :param init: whether the file is used to init modules. If yes, we ignore references for the current module's records.
-    :param protected_xml_ids: set of already protected xml ids
-    """
 
     def is_ref_risky(ref: str) -> bool:
         xml_id = ref if '.' in ref else f'{diff_file.module_name}.{ref}'
@@ -179,12 +177,10 @@ def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: 
     return result
 
 
-def _get_protected_xml_ids():
-    
-    """Get protected records from imported Python files in addons directories.
+def _get_protected_xml_ids() -> set[str]:
+    """Get protected records from all Python files in addons directories.
     
     Scans for comments in the format "# PROTECT module.record_name" in Python files
-    that are imported (directly or indirectly) through __init__.py files.
     
     Returns:
         set[str]: Set of protected record external IDs
@@ -204,7 +200,7 @@ def _get_protected_xml_ids():
         return python_files
 
     protected = set()
-    _logger.info("Getting protected records from Python files")
+    _logger.info('Getting protected records from Python files')
     for addons_path in odoo.addons.__path__:
         for addon_path in Path(addons_path).glob('*'):
             if not addon_path.is_dir():
@@ -229,11 +225,11 @@ class TestRef(DiffCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.protected_xml_ids = set()
-        # cls.protected_xml_ids = _get_protected_xml_ids()
+        # cls.protected_xml_ids = set()
+        cls.protected_xml_ids = _get_protected_xml_ids()
 
     def test_env_ref_usage(self):
-        """Check for env.ref calls without raise_if_not_found=False"""
+        """Check for env.ref calls without raise_if_not_found=False."""
         for diff_file in self.diff_files['.py'].values():
             if not os.path.exists(diff_file.path):
                 continue
@@ -242,7 +238,7 @@ class TestRef(DiffCase):
             self.diagnostices.extend(check_ref_for_python_file(diff_file, self.protected_xml_ids))
 
     def test_data_xml_ref_usage(self):
-        """Check for ref for other modules"""
+        """Check for ref for other modules."""
         module_files: dict[str, list[DiffFile]] = defaultdict(list)
         for diff_file in self.diff_files['.xml'].values():
             if diff_file.module_name and diff_file.module_name != 'base' and not diff_file.module_name.startswith('test_'):

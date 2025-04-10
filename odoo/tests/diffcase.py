@@ -151,14 +151,14 @@ def get_base_version(repo_path: str) -> str:
     """ use git to get the base version of the current Odoo branch """
     try:
         branch_name = subprocess.run(
-            ['git', "rev-parse", "--abbrev-ref", "HEAD"],
+            ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
             capture_output=True,
             check=False,
             text=True,
             cwd=repo_path
         ).stdout.strip()
     except Exception as e:
-        _logger.warning(f"Cannot get git base version for {repo_path}: {e}")
+        _logger.warning(f'Cannot get git base version for {repo_path}: {e}')
         return ''
 
     # master-xxx / saas-18.1-xxx / 18.0-xxx
@@ -166,7 +166,7 @@ def get_base_version(repo_path: str) -> str:
     match = re.match(pattern, branch_name)
     if match:
         return match.group(1)
-    _logger.warning(f"Cannot get git base version of {branch_name} for {repo_path}")
+    _logger.warning(f'Cannot get git base version of {branch_name} for {repo_path}')
     return ''
 
 
@@ -187,14 +187,14 @@ def generate_diff(output_dir: str):
         base_version = get_base_version(repo)
         if not base_version:
             continue
-        diff_file_path = os.path.join(output_dir, f"{repo_names[repo]}_diff.txt")
+        diff_file_path = os.path.join(output_dir, f'{repo_names[repo]}_diff.txt')
 
         try:
             git = which('git')
-            diff_command = [git, "diff", "--unified=0", "--merge-base", base_version]
+            diff_command = [git, 'diff', '--unified=0', '--merge-base', base_version]
 
             with open(diff_file_path, 'w') as f:
-                f.write(f"{repo}\n")  # Write repo path as first line
+                f.write(f'{repo}\n')  # Write repo path as first line
 
                 diff_output = subprocess.run(
                     diff_command,
@@ -206,10 +206,10 @@ def generate_diff(output_dir: str):
                 
                 f.write(diff_output)
 
-            _logger.info(f"Generated diff file for {repo} at {diff_file_path}")
+            _logger.info(f'Generated diff file for {repo} at {diff_file_path}')
 
         except Exception as e:
-            _logger.warning(f"Cannot generate diff for {repo}:\n{e}")
+            _logger.warning(f'Cannot generate diff for {repo}:\n{e}')
 
 
 class DiffCase(BaseCase):
@@ -231,12 +231,12 @@ class DiffCase(BaseCase):
             if not diff_file:
                 return
             diff_linenos = diff_file.diff_linenos
-        _logger.info(f"Checking {abs_path}")
+        _logger.info(f'Checking {abs_path}')
         with open(abs_path, 'rb') as fp:
             previous_line = 1
             # `list` the iterpase result to promise each element has all the attributes
-            for event, element in list(etree.iterparse(fp, events=("start", "end", "comment", "pi"))):
-                if event == "start":
+            for event, element in list(etree.iterparse(fp, events=('start', 'end', 'comment', 'pi'))):
+                if event == 'start':
                     # element.sourceline is the line number of the last line of the start tag
                     if any(line in diff_linenos for line in range(previous_line, element.sourceline + 1)):
                         e = Element(element)
@@ -246,14 +246,14 @@ class DiffCase(BaseCase):
                     previous_line = element.sourceline
                     if element.text:
                         previous_line += element.text.count('\n')
-                elif event == "end":
+                elif event == 'end':
                     # We assume the end tag is always on a single line.
                     # Bad example that we don't support:
                     #     </record
                     #     >
                     if element.tail:
                         previous_line += element.tail.count('\n')
-                else:  # "comment", "pi"
+                else:  # 'comment', 'pi'
                     previous_line = element.sourceline
                     if element.tail:
                         previous_line += element.tail.count('\n')
@@ -266,7 +266,7 @@ class DiffCase(BaseCase):
         cls.diff_files['.py']
 
         if cls.diff_dir is None:
-            raise ValueError("DiffCase.diff_dir is not set")
+            raise ValueError('DiffCase.diff_dir is not set')
         if not os.path.isdir(cls.diff_dir):
             raise ValueError(f"'{cls.diff_dir}' is not a directory")
 
@@ -275,13 +275,13 @@ class DiffCase(BaseCase):
                 continue
 
             file_path = os.path.join(cls.diff_dir, filename)
-            _logger.info(f"Processing diff file: {file_path}")
+            _logger.info(f'Processing diff file: {file_path}')
             
             try:
                 with open(file_path, 'r') as f:
                     repo_path = f.readline().strip()
                     if not os.path.isdir(repo_path):
-                        _logger.warning(f"Invalid repository path: {repo_path}")
+                        _logger.warning(f'Invalid repository path: {repo_path}')
                         continue
 
                     # Read the rest of the file content for diff
@@ -289,7 +289,7 @@ class DiffCase(BaseCase):
 
                     # Parse diff using unidiff
                     if PatchSet is None:
-                        raise ImportError("unidiff is not installed")
+                        raise ImportError('unidiff is not installed')
                     patch_set = PatchSet.from_string(diff_content)
 
                     # Process each patched file
@@ -308,4 +308,4 @@ class DiffCase(BaseCase):
                         cls.diff_files[ext][abs_path] = diff_file
 
             except Exception as e:
-                _logger.error(f"Error processing diff file {file_path}: {e}")
+                _logger.error(f'Error processing diff file {file_path}: {e}')
