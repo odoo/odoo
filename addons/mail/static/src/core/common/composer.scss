@@ -10,6 +10,17 @@
         grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
     }
 
+    &:not(.o-hasSelfAvatar) {
+        .o-mail-Composer-coreHeader {
+            grid-column: 2/3;
+        }
+
+        .o-mail-Composer-footer,
+        .o-mail-Composer-coreMain {
+            grid-column: 1/3;
+        }
+    }
+
     .o-mail-Composer-sidebarMain {
         padding-top: 0.125rem; // avatar centered with composer text input: 38px (avatar) + 2*2px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
         width: $o-mail-Message-sidebarWidth;
