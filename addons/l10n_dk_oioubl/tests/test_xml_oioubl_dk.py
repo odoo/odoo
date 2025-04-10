@@ -10,9 +10,9 @@ from odoo.tools import file_open
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
+    country_code = 'DK'
 
     @classmethod
-    @TestUBLCommon.setup_country('dk')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].write({

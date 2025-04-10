@@ -7,9 +7,7 @@ from odoo.addons.event.tests.common import EventCase
 class TestEventBoothCommon(EventCase):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestEventBoothCommon, cls).setUpClass()
-
+    def setUpCommonData(cls):
         cls.event_booth_category_1 = cls.env['event.booth.category'].create({
             'name': 'Standard',
             'description': '<p>Standard</p>',

@@ -20,9 +20,9 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
     to test the features of the EDI.
     These will fully replace the old tests in master.
     """
+    country_code = 'MY'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('my')
     def setUpClass(cls):
         super().setUpClass()
 

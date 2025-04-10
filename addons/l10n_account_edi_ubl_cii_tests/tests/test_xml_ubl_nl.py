@@ -8,9 +8,9 @@ from lxml import etree
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLNL(TestUBLCommon):
+    country_code = 'NL'
 
     @classmethod
-    @TestUBLCommon.setup_country('nl')
     def setUpClass(cls):
         super().setUpClass()
 

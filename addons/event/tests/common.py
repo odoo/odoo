@@ -9,9 +9,7 @@ from odoo.tests import common
 class EventCase(common.TransactionCase):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         cls.admin_user = cls.env.ref('base.user_admin')
         cls.admin_user.write({
             'country_id': cls.env.ref('base.be').id,

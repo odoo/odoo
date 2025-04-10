@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from unittest.mock import patch, Mock
 
 from odoo import Command, modules
-from odoo.tests.common import new_test_user, TransactionCase, HttpCase
+from odoo.tests.common import new_test_user, TransactionCase, HttpCase, data_depends
 from odoo.tools.mail import email_split_and_format
 
 DISABLED_MAIL_CONTEXT = {
@@ -19,10 +19,12 @@ DISABLED_MAIL_CONTEXT = {
 
 class BaseCommon(TransactionCase):
 
+    @data_depends(
+        'default_env_context', 'setup_independent_user',
+        'setup_independent_company', 'setup_main_company',
+    )
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         # Mail logic won't be tested by default in other modules.
         # Mail API overrides should be tested with dedicated tests on purpose
         # Hack to use with_context and avoid manual context dict modification

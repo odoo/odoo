@@ -7,10 +7,10 @@ from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
 
 class TestEGEdiCommon(AccountEdiTestCommon):
+    country_code = 'EG'
 
     @classmethod
     @AccountEdiTestCommon.setup_edi_format('l10n_eg_edi_eta.edi_eg_eta')
-    @AccountEdiTestCommon.setup_country('eg')
     def setUpClass(cls):
         super().setUpClass()
 

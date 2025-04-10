@@ -54,7 +54,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(channel.channel_partner_ids, self.env['res.partner'])
 
         emp_partner_write_date = fields.Datetime.to_string(self.env.user.partner_id.write_date)
-        test_partner_write_date = fields.Datetime.to_string(self.env.user.partner_id.write_date)
+        test_partner_write_date = fields.Datetime.to_string(self.test_partner.write_date)
 
         def get_add_member_bus():
             message = self.env["mail.message"].search([], order="id desc", limit=1)

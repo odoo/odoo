@@ -5,9 +5,9 @@ from odoo.tests import tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class InvoiceGetReferenceTest(AccountTestInvoicingCommon):
+    country_code = 'FI'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('fi')
     def setUpClass(cls):
         super().setUpClass()
 

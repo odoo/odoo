@@ -28,7 +28,7 @@ from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.addons.mail.models.res_users import ResUsers
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tests import common, RecordCapturer, new_test_user
+from odoo.tests import common, RecordCapturer, new_test_user, data_depends
 from odoo.tools import mute_logger
 from odoo.tools.mail import (
     email_normalize, email_split_and_format_normalize, formataddr
@@ -1705,9 +1705,12 @@ class MailCommon(MailCase):
     """ Almost-void class definition setting the savepoint case + mock of mail.
     Used mainly for class inheritance in other applications and test modules. """
 
+    @data_depends(
+        '_activate_multi_company',
+        '_init_mail_gateway', '_init_mail_servers',
+    )
     @classmethod
-    def setUpClass(cls):
-        super(MailCommon, cls).setUpClass()
+    def setUpCommonData(cls):
         # ensure admin configuration
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.partner_admin = cls.env.ref('base.partner_admin')

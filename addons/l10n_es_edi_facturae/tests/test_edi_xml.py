@@ -27,8 +27,8 @@ def _compute_is_valid(self):
 @tagged('post_install_l10n', 'post_install', '-at_install')
 @patch('odoo.addons.certificate.models.certificate.CertificateCertificate._compute_is_valid', _compute_is_valid)
 class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
+    country_code = 'ES'
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('es')
     def setUpClass(cls):
         super().setUpClass()
         cls.frozen_today = datetime(year=2023, month=1, day=1, hour=0, minute=0, second=0)
