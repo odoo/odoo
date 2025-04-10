@@ -50,3 +50,15 @@ class ResCompany(models.Model):
         modules_sudo = self.env['ir.module.module'].sudo().search([('name', 'in', module_names)])
         STATES = ['installed', 'to install', 'to upgrade']
         modules_sudo.filtered(lambda m: m.state not in STATES).button_immediate_install()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super().create(vals_list)
+        providers_sudo = self.env['payment.provider'].sudo().search(
+            [('company_id', '=', self.env.user.company_id.id)]
+        )
+        for company in companies:
+            for provider_sudo in providers_sudo:
+                provider_sudo.copy({'company_id': company.id})
+
+        return companies

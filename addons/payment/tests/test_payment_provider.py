@@ -372,3 +372,18 @@ class TestPaymentProvider(PaymentCommon):
         )._get_validation_currency()
         self.assertIn(validation_currency, self.provider.available_currency_ids)
         self.assertIn(validation_currency, self.payment_method.supported_currency_ids)
+
+    def test_payment_providers_duplication_for_new_company(self):
+        """Ensure that payment providers of an existing company are correctly duplicated
+        when a new company is created."""
+        main_company = self.env.company
+        main_company_providers = self.env['payment.provider'].search_count(
+            [('company_id', '=', main_company.id)]
+        )
+
+        new_company = self.env['res.company'].create({'name': 'New Company'})
+        new_company_providers = self.env['payment.provider'].search_count(
+            [('company_id', '=', new_company.id)]
+        )
+
+        self.assertEqual(new_company_providers, main_company_providers)
