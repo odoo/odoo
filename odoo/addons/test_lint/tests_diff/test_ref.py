@@ -4,7 +4,7 @@ import os
 from collections import defaultdict
 from typing import Collection
 
-from odoo.tests.diffcase import DiffCase, Element, DiffFile, DiagnosticKind, DiagnosticsMessage
+from odoo.tests.diffcase import DiffCase, Element, DiffFile, DiagnosticKind, DiagnosticMessage
 from odoo.modules.module import get_manifest
 
 
@@ -81,7 +81,7 @@ class EvalRefVisitor(ast.NodeVisitor):
 
 class FileEnvRefVisitor(EvalRefVisitor):
     def __init__(self, diff_file: DiffFile, protected_xml_ids=None):
-        self.diagnostics: list[DiagnosticsMessage] = []
+        self.diagnostics: list[DiagnosticMessage] = []
         self.diff_file = diff_file
         self.env_ref_names = set()  # Track variables that store env.ref
         self.protected_xml_ids = protected_xml_ids
@@ -119,16 +119,16 @@ class FileEnvRefVisitor(EvalRefVisitor):
                 is_env_ref = True
 
             if is_env_ref and self._is_node_in_diff(node) and self._is_ref_risky(node):
-                self.diagnostics.append(PY_ENV_REF(self.diff_file, (node.lineno, node.end_lineno)))
+                self.diagnostics.append(PY_ENV_REF(self.diff_file, node.lineno, node.end_lineno))
         elif isinstance(node.func, ast.Name) and node.func.id in self.env_ref_names:
             # Handle stored env.ref calls
             if self._is_node_in_diff(node) and self._is_ref_risky(node):
-                self.diagnostics.append(PY_ENV_REF(self.diff_file, (node.lineno, node.end_lineno)))
+                self.diagnostics.append(PY_ENV_REF(self.diff_file, node.lineno, node.end_lineno))
 
         self.generic_visit(node)
 
 
-def check_ref_for_python_file(fileinfo: DiffFile, protected_xml_ids: Collection[str] = ()) -> list[DiagnosticsMessage]:
+def check_ref_for_python_file(fileinfo: DiffFile, protected_xml_ids: Collection[str] = ()) -> list[DiagnosticMessage]:
     with open(fileinfo.path, 'r') as f:
         content = f.read()
     try:
@@ -140,7 +140,7 @@ def check_ref_for_python_file(fileinfo: DiffFile, protected_xml_ids: Collection[
         return []
 
 
-def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: bool = True, protected_xml_ids: Collection[str] = ()) -> list[DiagnosticsMessage]:
+def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: bool = True, protected_xml_ids: Collection[str] = ()) -> list[DiagnosticMessage]:
 
     def is_ref_risky(ref: str) -> bool:
         xml_id = ref if '.' in ref else f'{diff_file.module_name}.{ref}'
@@ -155,25 +155,25 @@ def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: 
         record = element
         id_attr = record.attrib.get('id')
         if id_attr and is_ref_risky(id_attr) and 'forcecreate' not in record.attrib:
-            result.append(XML_INHERIT_ID(diff_file, (record.start_lineno, record.end_lineno)))
+            result.append(XML_INHERIT_ID(diff_file, record.start_lineno, record.end_lineno))
     elif element.tag == 'field':
         field = element
         ref_attr = field.attrib.get('ref')
         if ref_attr:
             if is_ref_risky(ref_attr) and 'forcecreate' not in field.attrib:
-                result.append(XML_REF(diff_file, (field.start_lineno, field.end_lineno)))
+                result.append(XML_REF(diff_file, field.start_lineno, field.end_lineno))
         if eval_attr := field.attrib.get('eval'):
             # parse as python ast, check function ref
             # add to issues if ref for another module without raise_if_not_found=False
             tree = ast.parse(eval_attr)
             visitor = EvalRefVisitor(protected_xml_ids=protected_xml_ids)
             visitor.visit(tree)
-            result.extend(dk(diff_file, (field.start_lineno, field.end_lineno)) for dk in visitor.diagnostic_kinds)
+            result.extend(dk(diff_file, field.start_lineno, field.end_lineno) for dk in visitor.diagnostic_kinds)
     elif element.tag == 'template':
         template = element
         id_attr = template.attrib.get('inherit_id')
         if id_attr and is_ref_risky(id_attr) and 'forcecreate' not in template.attrib:
-            result.append(XML_INHERIT_ID(diff_file, (template.start_lineno, template.end_lineno)))
+            result.append(XML_INHERIT_ID(diff_file, template.start_lineno, template.end_lineno))
     return result
 
 

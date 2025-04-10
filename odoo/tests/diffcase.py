@@ -94,31 +94,33 @@ class DiagnosticKind:
         self.suggestion: str = suggestion
         """ The message to display to the user, to explain the suggested fix. """
     
-    def __call__(self, file: DiffFile, range: tuple[int, int]) -> 'DiagnosticsMessage':
-        return DiagnosticsMessage(self, file, range)
+    def __call__(self, file: DiffFile, start: int | tuple[int, int], end: int | tuple[int, int] | None = None) -> 'DiagnosticMessage':
+        return DiagnosticMessage(self, file, start, end)
 
 
-class DiagnosticsMessage:
-    def __init__(self, kind: DiagnosticKind, file: DiffFile, range: tuple[int, int]):
+class DiagnosticMessage:
+    def __init__(self, kind: DiagnosticKind, file: DiffFile, start: int | tuple[int, int], end: int | tuple[int, int] | None = None):
         self.kind: DiagnosticKind = kind
         self.file: DiffFile = file
-        self.range: tuple[int, int] = range
+        self.start = (start, 0) if isinstance(start, int) else start
+        self.end = (end, 0) if isinstance(end, int) else end
 
     def to_ruff_json(self) -> dict:
         # ruff like result
         result = {
             'code': self.kind.name,
             'location': {
-                'row': self.range[0],
-                'column': 1,
-            },
-            'end_location': {
-                'row': self.range[1],
-                'column': 1,
+                'row': self.start[0],
+                'column': self.start[1] or 1,
             },
             'filename': self.file.path,
             'message': self.kind.body,
         }
+        if self.end is not None and self.end != self.start:
+            result['end_location'] = {
+                'row': self.end[0],
+                'column': self.end[1] or 1,
+            }
         if self.kind.suggestion:
             result['fix'] = {
                 'message':self.kind.suggestion,
@@ -221,7 +223,7 @@ class DiffCase(BaseCase):
     diff_dir: str | None = None
     """ Path to a directory containing .txt diff files """
 
-    diagnostices: list[DiagnosticsMessage] = []
+    diagnostices: list[DiagnosticMessage] = []
 
     @classmethod
     def get_xml_diff_elements(cls, abs_path: str, diff_linenos: set[int] | None = None) -> Generator[Element, None, None]:
