@@ -5,8 +5,8 @@
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Jessica Jakara, 2025
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            <span class=\"text-muted small\">Aika vastaamiseen</span>\n"
+"            <span class=\"text-muted small\">Vastausaika</span>\n"
 "            <h6>2 avointa päivää</h6>\n"
 "            <span class=\"text-muted small\">Prosessi</span>\n"
 "            <h6>1 puhelinsoitto</h6>\n"
@@ -56,7 +56,7 @@ msgstr " Ongelmatapauksissa ota yhteyttä %(contact_infos)s"
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid "%s's Application"
-msgstr "%s:n sovellus"
+msgstr "%s:n hakemus"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -80,7 +80,7 @@ msgid ""
 "                        Job Page"
 msgstr ""
 "<i class=\"fa fa-fw fa-external-link\" role=\"img\"/>\n"
-"                        Työn sivu"
+"                        Työsivu"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
@@ -122,14 +122,13 @@ msgid ""
 "<span class=\"h5 fw-light\">In the meantime,</span><br/>\n"
 "                                            <span class=\"h3 mt8 mb32 fw-bold\">Take a look around our website:</span>"
 msgstr ""
-"<span class=\"h5 fw-light\">Sillä välin,</span><br/>\n"
-"                                            <span class=\"h3 mt8 mb32 fw-bold\">Tutustu verkkosivuihimme:</span>"
+"<span class=\"h5 fw-light\">Sillä välin</span><br/>\n"
+"                                            <span class=\"h3 mt8 mb32 fw-bold\">Voit tutustua verkkosivuihimme:</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "<span class=\"navbar-brand h5 my-0 me-sm-auto\">Our Job Offers</span>"
-msgstr ""
-"<span class=\"navbar-brand h5 my-0 me-sm-auto\">Työpaikkatarjontamme</span>"
+msgstr "<span class=\"navbar-brand h5 my-0 me-sm-auto\">Työtarjouksemme</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -149,7 +148,7 @@ msgstr "<span class=\"s_website_form_label_content\">LinkedIn-profiili</span>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">Resume</span>"
-msgstr "<span class=\"s_website_form_label_content\">Yhteenveto</span>"
+msgstr "<span class=\"s_website_form_label_content\">Ansioluettelo</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -209,30 +208,34 @@ msgid ""
 "<span class=\"text-muted small\">Provide either a resume file or a linkedin "
 "profile</span>"
 msgstr ""
-"<span class=\"text-muted small\">Toimita joko ansioluettelo tai LinkedIn-"
+"<span class=\"text-muted small\">Anna joko ansioluettelo tai LinkedIn-"
 "profiili</span>"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "A clickable label for the toggle. Contains text for the false state."
-msgstr "Klikattavan kytkimen otsikko. Sisältää tekstin false-tilaa varten."
+msgstr ""
+"Klikattavan vaihtopainikkeen otsikko. Sisältää tekstin epätosi-tilaa (false)"
+" varten."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "A clickable label for the toggle. Contains text for the true state."
-msgstr "Klikattavan kytkimen otsikko. Sisältää tekstin true-tilaa varten."
+msgstr ""
+"Klikattavan vaihtopainikkeen otsikko. Sisältää tekstin tosi-tilaa (true) "
+"varten."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "A full-time position <br/>Attractive salary package."
-msgstr "Kokoaikainen tehtävä <br/>Houkutteleva palkkapaketti."
+msgstr "Kokoaikainen työsuhde <br/>Houkutteleva palkkapaketti."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "About Us"
-msgstr "Tietoja meistä"
+msgstr "Tietoa meistä"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -281,7 +284,7 @@ msgid ""
 "An application already exists for %(value)s. Duplicates might be rejected. "
 "%(recruiter_contact)s"
 msgstr ""
-"Hakemus %(value)s on jo olemassa. Kaksoishakemukset saatetaan hylätä. "
+"Hakemus %(value)s on jo olemassa. Tuplahakemukset saatetaan hylätä. "
 "%(recruiter_contact)s"
 
 #. module: website_hr_recruitment
@@ -324,14 +327,14 @@ msgid ""
 "                        spirit. To be successful, you will have solid solving problem skills."
 msgstr ""
 "Yrityksemme työntekijänä <b>teet yhteistyötä jokaisen osaston kanssa\n"
-"                        luomaan ja ottamaan käyttöön mullistavia tuotteita.</b> Tule töihin kasvavaan yritykseen\n"
-"                        joka tarjoaa loistavat edut ja mahdollisuuksia edetä ja oppia\n"
+"                        mullistavien tuotteiden luomisessa ja käyttöönotossa.</b> Tule osaksi kasvavaan yritystä,\n"
+"                        joka tarjoaa loistavat edut ja mahdollisuuksia kasvaa ja oppia\n"
 "                        ansioituneiden johtajien rinnalla. Etsimme kokenutta ja erinomaista\n"
 "                        työntekijää.\n"
 "                       <br/><br/>\n"
-"                        Tämä asema on luonteeltaan sekä <b>luova että tiukka</b> sinun täytyy ajatella\n"
-"                        laatikon ulkopuolella. Odotamme, että hakija on proaktiivinen ja että hänellä on \"saa sen tehtyä\"\n"
-"                        henkeä. Onnistuaksesi sinulla on vankat ongelmanratkaisutaidot."
+"                        Tämä asema on luonteeltaan sekä <b>luova että vaativa;</b> sinun täytyy ajatella\n"
+"                        laatikon ulkopuolella. Odotamme, että hakija on proaktiivinen ja että hänellä on \"get it done\"\n"
+"                        henkeä. Onnistuaksesi sinulla on oltava vankat ongelmanratkaisutaidot."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -357,7 +360,7 @@ msgstr "Voi julkaista"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__job_details
 msgid "Complementary information that will appear on the job submission page"
-msgstr "Täydentävät tiedot, jotka näkyvät työn jättösivulla"
+msgstr "Täydentävät tiedot, jotka näkyvät työnhakusivulla"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -378,7 +381,7 @@ msgstr "Kopioitu"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Countries Filter"
-msgstr "Maiden suodatin"
+msgstr "Maasuodatin"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -392,7 +395,7 @@ msgid ""
 "button."
 msgstr ""
 "Luo uusia työsivuja oikean yläkulman <strong>+ <i>Uusi</i></strong> "
-"-painikkeesta."
+"-painikkeella."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -409,7 +412,7 @@ msgstr "Osasto"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Departments Filter"
-msgstr "Osastojen suodatin"
+msgstr "Osastosuodatin"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
@@ -440,10 +443,10 @@ msgid ""
 "                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
 "Jokaisella työntekijällä on mahdollisuus nähdä työnsä vaikutus.\n"
-"                            Voit antaa todellisen panoksen yrityksen menestykseen.\n"
+"                            Voit todella vaikuttaa yrityksen menestykseen.\n"
 "                           <br>\n"
-"                            Usein järjestetään useita toimintoja ympäri vuoden, kuten viikoittaisia\n"
-"                            urheilutilaisuudet, tiiminrakennustapahtumat, kuukausittaiset juomat ja paljon muuta."
+"                            Tapahtumia järjestetään ympäri vuoden, kuten viikoittaisia\n"
+"                            urheilutilaisuuksia, tiiminrakennustapahtumia, kuukausittaisia juomailtamia ja paljon muuta."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -453,7 +456,7 @@ msgstr "Syö &amp; Juo"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Employment Types Filter"
-msgstr "Työsuhdetyyppien suodatin"
+msgstr "Työsuhdetyyppisuodatin"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -463,7 +466,7 @@ msgstr "Laajenna tietämystäsi eri yritystoimialoista"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Experience in writing online content"
-msgstr "Kokemus verkkosisällön kirjoittamisesta"
+msgstr "Kokemusta verkkosisällön kirjoittamisesta"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -488,8 +491,7 @@ msgstr "Google Adwords -kokemus"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Great team of smart people, in a friendly and open culture"
-msgstr ""
-"Hieno tiimi älykkäitä ihmisiä ystävällisessä ja avoimessa kulttuurissa"
+msgstr "Mahtava, älykäs tiimi ystävällisessä ja avoimessa kulttuurissa"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -514,16 +516,16 @@ msgid ""
 msgstr ""
 "<strong>Vastaan hakemuksiin</strong> yleensä <strong>3 päivän kuluessa</strong>.\n"
 "                                               <br/><br/>\n"
-"                                                Seuraava vaihe on joko puhelu tai tapaaminen toimistossamme.\n"
+"                                                Seuraava vaihe on joko puhelu tai tapaaminen toimistllsamme.\n"
 "                                               <br/><br/>\n"
-"                                               <strong>Ota</strong> rohkeasti <strong>yhteyttä, jos haluat nopeamman yhteydenoton\n"
-"                                                palautetta</strong> tai jos et saa minulta palautetta\n"
+"                                               <strong>Ota</strong> rohkeasti <strong>yhteyttä, jos haluat nopeamman\n"
+"                                                vastauksen</strong> tai jos et saa minulta vastausta\n"
 "                                                riittävän nopeasti."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "I'm feeling lucky"
-msgstr "Minulla on taatusti onni myötä"
+msgstr "Minulla on onnea matkassa"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__id
@@ -532,14 +534,14 @@ msgstr "Minulla on taatusti onni myötä"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid ""
 "If checked, the record will be saved immediately when the field is modified."
-msgstr "Jos valittu, tietue tallennetaan heti, kun kenttää muutetaan."
+msgstr "Jos valittu, kirjaus tallennetaan heti, kun kenttää muutetaan."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -554,7 +556,7 @@ msgstr "On julkaistu"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Job Application Form"
-msgstr "Työhakemus"
+msgstr "Työhakemuslomake"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__description
@@ -564,12 +566,12 @@ msgstr "Työnkuva"
 #. module: website_hr_recruitment
 #: model:ir.actions.act_window,name:website_hr_recruitment.action_job_pages_list
 msgid "Job Pages"
-msgstr "Työn sivut"
+msgstr "Työsivut"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_job
 msgid "Job Position"
-msgstr "Tehtävänimike"
+msgstr "Työtehtävä"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -580,7 +582,7 @@ msgstr "Tehtävänimike"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Job not found"
-msgstr "Tehtävää ei löydy"
+msgstr "työpaikkaa ei löytynyt"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -590,12 +592,12 @@ msgstr "Tehtävää ei löydy"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
 msgid "Jobs"
-msgstr "Tehtävät"
+msgstr "Työehtävät"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Jobs Page"
-msgstr "Töiden sivu"
+msgstr "Työsivu"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -637,7 +639,7 @@ msgstr "Neuvottelut ja sopimukset"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Nice to have"
-msgstr "Olisi etua, jos olisi"
+msgstr "Eduksi katsotaan"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
@@ -647,19 +649,20 @@ msgstr "Osoitetta ei ole määritetty"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
-msgstr "Ei typeriä esimiehiä, ei typeriä työvälineitä, ei jäykkiä työaikoja"
+msgstr ""
+"Ei typeriä esimiehiä, ei typeriä työvälineitä, ei joustamattomia työaikoja"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "No results found for '"
-msgstr "Ei tuloksia. Kokeile jotain muuta hakusanaa. '"
+msgstr "Ei tuloksia hakusanalla '"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "No waste of time in enterprise processes, real responsibilities and autonomy"
 msgstr ""
-"Ei ajanhukkaa yrityksen prosesseissa, todellista vastuuta ja itsenäisyyttä"
+"Ei aikaa vieviä yrityksen prosesseja, vain aitoa vastuuta ja itsenäisyyttä"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -670,12 +673,12 @@ msgstr "Ei julkaistu"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Offices Filter"
-msgstr "Toimistojen suodatin"
+msgstr "Toimipaikkasuodatin"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Optional introduction, or any question you might have about the job…"
-msgstr "Vapaaehtoinen esittely, tai mitä tahansa työtä koskevia kysymyksiä…"
+msgstr "Vapaaehtoinen esittely, tai jos haluat kysyä työtehtävästä jotakin…"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_departments
@@ -717,7 +720,7 @@ msgstr "Puhelinnumero"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
 msgstr ""
-"Pelaa mitä tahansa urheilulajia kollegoiden kanssa, <br/>lasku on katettu."
+"Pelaa mitä tahansa urheilulajia kollegoiden kanssa, <br/>lasku on hoidossa."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
@@ -752,14 +755,14 @@ msgstr "Asiakkaan tarpeiden määrittäminen"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr "Todellisia vastuita ja haasteita nopeasti kehittyvässä yrityksessä"
+msgstr "Aitoa vastuuta ja haasteita nopeasti kehittyvässä yrityksessä"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "Remote"
-msgstr "Etänä"
+msgstr "Etä"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -769,7 +772,7 @@ msgstr "Vastuut"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
 msgid "Restrict to a specific website."
-msgstr "Rajoita tiettyyn verkkosivustoon."
+msgstr "Rajoita tiettyyn verkkosivuun."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
@@ -794,7 +797,7 @@ msgstr "SEO-nimi"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_published
 msgid "Set if the application is published on the website of the company."
-msgstr "Määritä, julkaistaanko hakemus yrityksen verkkosivustolla."
+msgstr "Määritä, julkaistaanko hakemus yrityksen verkkosivulla."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -836,7 +839,7 @@ msgstr "Tekninen asiantuntemus"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Dokumentin URL-osoite verkkosivustolla."
+msgstr "Asiakirjan URL-osoite verkkosivulla."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -863,7 +866,7 @@ msgid ""
 "                                            but feel free to <span class=\"fw-bold\">contact us</span> for a spontaneous application."
 msgstr ""
 "Tällä hetkellä ei ole avoimia työpaikkoja,<br class=\"mb-2\"/>\n"
-"                                            mutta <span class=\"fw-bold\">ota</span> rohkeasti <span class=\"fw-bold\">yhteyttä</span> ja hae oma-aloitteista hakemusta."
+"                                            mutta <span class=\"fw-bold\">ota</span> rohkeasti <span class=\"fw-bold\">yhteyttä</span> ja lähetäavoin hakemus."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -902,8 +905,8 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's life through disruptive products.\n"
 "                                We build great products to solve your business problems."
 msgstr ""
-"Olemme intohimoisten asiantuntijoiden joukkue, jonka tavoitteena on parantaa"
-" kaikkien elämää mullistavien tuotteiden avulla. Rakennamme loistavia "
+"Olemme joukko intohimoisia asiantuntijoita, joiden tavoitteena on parantaa "
+"kaikkien elämää mullistavien tuotteiden avulla. Rakennamme loistavia "
 "tuotteita liiketoimintasi ongelmien ratkaisemiseksi. Tuotteemme on "
 "suunniteltu pienille ja keskisuurille yrityksille, jotka haluavat optimoida "
 "suorituskykynsä."
@@ -915,8 +918,8 @@ msgid ""
 "We found a recent application with a similar name, email, phone number. You "
 "can continue if it's not a mistake."
 msgstr ""
-"Löysimme hiljattain hakemuksen, jossa oli samanlainen nimi, sähköpostiosoite"
-" ja puhelinnumero. Voit jatkaa, jos kyseessä ei ole virhe."
+"Löysimme hakemuksen, jossa oli samanlainen nimi, sähköpostiosoite ja "
+"puhelinnumero. Voit jatkaa, jos kyseessä ei ole virhe."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -925,9 +928,9 @@ msgid ""
 "We've found a previous closed application in our system within the last 6 "
 "months. Please consider before applying in order not to duplicate efforts."
 msgstr ""
-"Olemme löytäneet järjestelmästämme aikaisemman suljetun hakemuksen "
-"viimeisten 6 kuukauden aikana. Harkitse asiaa ennen hakemuksen jättämistä, "
-"jotta vältytään päällekkäisiltä ponnisteluilta."
+"Olemme löytäneet järjestelmästämme aiemmin suljetun hakemuksen viimeisten 6 "
+"kuukauden ajalta. Harkitse uuden hakemuksen lähettämistä, jotta vältytään "
+"kahdenkertaisilta ponnisteluilta."
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_website
@@ -938,12 +941,12 @@ msgstr "Verkkosivu"
 #. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
-msgstr "Verkkosivun työhakulomake"
+msgstr "Verkkosivun rekrytointilomake"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_url
 msgid "Website URL"
-msgstr "Verkkosivuston osoite"
+msgstr "Verkkosivun osoite"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_description
@@ -953,17 +956,17 @@ msgstr "Verkkosivun kuvaus"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_description
 msgid "Website meta description"
-msgstr "Verkkosivuston metakuvaus"
+msgstr "Verkkosivun metakuvaus"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Verkkosivuston meta-avainsanat"
+msgstr "Verkkosivun meta-avainsanat"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_title
 msgid "Website meta title"
-msgstr "Verkkosivuston metaotsikko"
+msgstr "Verkkosivun metaotsikko"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_og_img
@@ -978,7 +981,7 @@ msgstr "Mitä tarjoamme"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "What's great in the job?"
-msgstr "Mikä työssä on hienoa?"
+msgstr "Mikä työssä on parasta?"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -1009,7 +1012,7 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "breadcrumb"
-msgstr "murupolku"
+msgstr "linkkipolku"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_inherit_website
@@ -1017,8 +1020,8 @@ msgid ""
 "e.g. Summarize the position in one or two lines that will be displayed on "
 "the Jobs list page..."
 msgstr ""
-"esim. Tiivistä asema yhdelle tai kahdelle riville, jotka näytetään "
-"työpaikkojen luettelosivulla...."
+"esim. Tiivistä työtehtävä yhdelle tai kahdelle riville, jotka näytetään "
+"työpaikkalistauksessa työsivulla...."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply

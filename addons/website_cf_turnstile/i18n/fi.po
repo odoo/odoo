@@ -33,7 +33,7 @@ msgstr "<span class=\"o_form_label\" for=\"\">Cloudflare Turnstile</span>"
 #. module: website_cf_turnstile
 #: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__turnstile_secret_key
 msgid "CF Secret Key"
-msgstr "CF salainen avain"
+msgstr "CF-sivuston salainen avain"
 
 #. module: website_cf_turnstile
 #: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__turnstile_site_key
@@ -66,7 +66,7 @@ msgstr "HTTP-reititys"
 #: model:ir.model.fields,field_description:website_cf_turnstile.field_ir_http__id
 #: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: website_cf_turnstile
 #. odoo-python
@@ -78,7 +78,7 @@ msgstr "Turnstile CAPTCHA on havainnut epäilyttävää toimintaa."
 #. odoo-python
 #: code:addons/website_cf_turnstile/models/ir_http.py:0
 msgid "The CloudFlare human validation failed."
-msgstr "CloudFlaren ihmisyyden varmistus epäonnistui."
+msgstr "CloudFlaren ihmisyyden varmennus epäonnistui."
 
 #. module: website_cf_turnstile
 #. odoo-python
@@ -101,8 +101,8 @@ msgid ""
 "The error code is: %s.\n"
 "You can find more information about this error code here: https://developers.cloudflare.com/turnstile/reference/errors."
 msgstr ""
-"Cloudflare Turnstile, captcha -järjestelmässä oli virhe.\n"
-"Varmista, että tunnuksesi tätä palvelua varten on määritetty oikein.\n"
+"Cloudflare Turnstile, captcha -järjestelmässä tapahtui virhe.\n"
+"Varmista, että tunnuksesi tähän palveluun on määritetty oikein.\n"
 "Virhekoodi on: %s.\n"
 "Löydät lisätietoja tästä virhekoodista täältä: https://developers.cloudflare.com/turnstile/reference/errors."
 

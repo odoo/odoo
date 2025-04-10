@@ -50,9 +50,9 @@ msgid ""
 msgstr ""
 "\n"
 "        Valitse 'Myynti' asiakaslaskujen päiväkirjoille.\n"
-"        Valitse 'Osto' toimittajan laskujen päiväkirjoja varten.\n"
-"        Valitse \"Käteinen\", \"Pankki\" tai \"Luottokortti\", kun kyseessä ovat asiakas- tai toimittajamaksuissa käytettävät päiväkirjat.\n"
-"        Valitse \"General\" (Yleistä), jos haluat käyttää erilaisia toimintoja koskevia päiväkirjoja.\n"
+"        Valitse 'Osto' toimittajan laskujen päiväkirjoille.\n"
+"        Valitse 'Käteinen', 'Pankki' tai 'Luottokortti', kun kyseessä ovat asiakas- tai toimittajamaksuissa käytettävät päiväkirjat.\n"
+"        Valitse 'Yleinen', jos haluat käyttää erilaisia toimintoja koskevia päiväkirjoja.\n"
 "        "
 
 #. module: account
@@ -75,8 +75,8 @@ msgstr ""
 "    - Prosenttiosuus: Veron määrä on % of hinnasta:\n"
 "        esim. 100 * (1 + 10 %) = 110 (ei sisällä hintaa)\n"
 "        esim. 110 / (1 + 10 %) = 100 (sisältyy hintaan)\n"
-"    - Prosenttiosuus sisältävä vero: Veron määrä on jaettuna hinnalla:\n"
-"        esim. 180 / (1 - 10%) = 200 (ei sisällä hintaa)\n"
+"    - Prosenttiosuuden sisältävä vero: Veron määrä jaetaan hinnalla:\n"
+"        esim. 180 / (1 - 10%) = 200 (ei sisälly hintaa)\n"
 "        esim. 200 * (1 - 10 %) = 180 (sisältyy hintaan)\n"
 "        "
 
@@ -95,7 +95,7 @@ msgstr " voimassa %s saakka"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Täsmäytettyä ostolaskua"
+msgstr "# Täsmäytetyt ostolaskut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
@@ -135,7 +135,7 @@ msgstr "%(amount)s Ilman veroja"
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Incl. Taxes"
-msgstr "%(amount)s Verot mukaan lukien"
+msgstr "%(amount)s Sisältäen verot"
 
 #. module: account
 #. odoo-python
@@ -166,7 +166,7 @@ msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
-"%(move)s saavutti virheellisen tilan siihen liittyvän lauserivin osalta.\n"
+"%(move)s siirtyi virheelliseen tilaan sen tiliotteen rivin osalta.\n"
 "Johdonmukaisuuden vuoksi päiväkirjamerkinnässä on aina oltava täsmälleen yksi pidätysrivi."
 
 #. module: account
@@ -7154,6 +7154,9 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
+"Tapahtui virhe ladattaessa lokalisointia: puuttuva verotunniste %(tag_name)s"
+" maan %(country_name)s kohdalla. Sinun tulee todennäköisesti päivittää "
+"lokalisointisovellus ensin."
 
 #. module: account
 #. odoo-python
@@ -7821,7 +7824,7 @@ msgstr "Otsikosta"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "From last fiscal year"
-msgstr ""
+msgstr "Viimeiseltä tilikaudelta"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
@@ -7918,7 +7921,7 @@ msgstr "Luo"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Generated Documents"
-msgstr "Luodut dokumentit"
+msgstr "Luodut asiakirjat"
 
 #. module: account
 #. odoo-python
@@ -9116,7 +9119,7 @@ msgstr "Avoimet kredit debet työkalu"
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
 msgid "Invoice PDF"
-msgstr ""
+msgstr "Laskun PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
@@ -9558,7 +9561,7 @@ msgstr "Oli aiemmin '%(previous)s' ja on nyt '%(current)s'."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Items With Missing Analytic Distribution"
-msgstr ""
+msgstr "Tuotteet, joilla ei ole analyyttistä jakelua"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -11395,7 +11398,7 @@ msgstr "Yrityksen tietojen käyttöönotto"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_base_document_layout
 msgid "Onboarding Documents Layout"
-msgstr "Asiakirjojen asettelun käyttöönotto"
+msgstr "Asiakirjojen asettelun perehdytys"
 
 #. module: account
 #: model:ir.model,name:account.model_onboarding_onboarding_step
@@ -11951,7 +11954,7 @@ msgstr "Kumppani"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
 msgid "Partner Company Registry Placeholder"
-msgstr ""
+msgstr "Kumppaniyrityksen rekisterin paikanmerkki"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -13865,7 +13868,7 @@ msgstr "Näytä kaikki toiminnot"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "See items"
-msgstr ""
+msgstr "Katso kohdat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -18671,7 +18674,7 @@ msgstr "Et voi rekisteröidä maksuja sekalaisia merkintöjä varten."
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
 msgid "You cannot remove parts of the audit trail."
-msgstr ""
+msgstr "Et voi poistaa osia kirjausketjusta"
 
 #. module: account
 #. odoo-python

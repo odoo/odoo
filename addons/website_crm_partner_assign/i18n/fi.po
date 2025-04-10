@@ -3,8 +3,8 @@
 # 	* website_crm_partner_assign
 # 
 # Translators:
+# Wil Odoo, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Wil Odoo, 2025
 # Jessica Jakara, 2025
 # 
 msgid ""
@@ -24,7 +24,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__nbr_opportunities
 msgid "# of Opportunity"
-msgstr "# Mahdollisuutta"
+msgstr "# Myyntimahdollisuudesta"
 
 #. module: website_crm_partner_assign
 #. odoo-javascript
@@ -44,7 +44,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
 msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to resellers"
-msgstr "<i class=\"fa fa-chevron-left me-2\"/>Takaisin jälleenmyyjille"
+msgstr "<i class=\"fa fa-chevron-left me-2\"/>Takaisin jälleenmyyjiin"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -53,7 +53,7 @@ msgid ""
 "                There are no matching partners found for the selected country. Displaying results across all countries instead."
 msgstr ""
 "<i class=\"fa fa-info-circle me-2\"/>\n"
-"                Valitusta maasta ei löytynyt sopivia kumppaneita. Sen sijaan näytetään tulokset kaikista maista."
+"                Valitusta maasta ei löytynyt sopivia kumppaneita. Tuloksia näytetään kaikista maista."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
@@ -77,7 +77,7 @@ msgstr "<option>Maat...</option>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<option>States...</option>"
-msgstr "<option>Alueet...</option>"
+msgstr "<option>Osavaltiot/maakunnat...</option>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -150,7 +150,7 @@ msgid ""
 msgstr ""
 "<span class=\"text-danger error_partner_assign_desinterested\" "
 "style=\"display:none;\">Sinun on täytettävä seuraava toiminto ja otettava "
-"yhteyttä asiakkaaseen ennen liidien hyväksymistä</span>"
+"yhteyttä asiakkaaseen ennen liidin hyväksymistä</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -161,7 +161,7 @@ msgid ""
 msgstr ""
 "<span class=\"text-danger error_partner_assign_interested\" "
 "style=\"display:none;\">Sinun on täytettävä seuraava toiminto ja otettava "
-"yhteyttä asiakkaaseen ennen liidien hyväksymistä</span>"
+"yhteyttä asiakkaaseen ennen liidin hyväksymistä</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -171,7 +171,7 @@ msgstr "<span class=\"text-muted\"> - </span>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "<span> at </span>"
-msgstr "<span> , jossa </span>"
+msgstr "<span> osoitteessa </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -181,12 +181,12 @@ msgstr "<strong class=\"col-12 col-sm-3\">Asiakas</strong>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<strong class=\"col-12 col-sm-4\">Expected Closing</strong>"
-msgstr "<strong class=\"col-12 col-sm-4\">Odotettu sulkeminen</strong>"
+msgstr "<strong class=\"col-12 col-sm-4\">Odotettu klousaaminen</strong>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<strong class=\"col-12 col-sm-4\">Next Activity</strong>"
-msgstr "<strong class=\"col-12 col-sm-4\">Seuraava aktiviteetti</strong>"
+msgstr "<strong class=\"col-12 col-sm-4\">Seuraava toimenpide</strong>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -308,23 +308,23 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Hei,<br/>\n"
-"                            Meihin on otettu yhteyttä alueellanne sijaitsevista potentiaalisista asiakkaista. Näin ollen seuraavat liidit on annettu osoitteeseen <t t-out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
+"                            Alueellanne sijaitsevat potentiaaliset asiakkaat ovat ottaneet meihin yhteyttä. Näin ollen seuraavat liidit on lähetetty eteenpäin <t t-out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
 "                            <ol>\n"
-"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Aihe Määrittelemätön</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Yhteyshenkilön nimi Määrittelemätön</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Maa Määrittelemätön</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Sähköposti Määrittelemätön</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
+"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Aihe: Määrittelemätön</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Yhteyshenkilön nimi: Määrittelemätön</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Maa: Määrittelemätön</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Sähköposti: Määrittelemätön</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
 "                            </ol>\n"
 "                           <t t-if=\"ctx.get('partner_in_portal')\">\n"
-"                                Ota yhteys <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">kumppaniportaaliin</a> saadaksesi lisätietoja. Jokaisessa liidissä on vasemmassa yläkulmassa kaksi painiketta, joita sinun tulee painaa, kun olet ottanut yhteyttä liidiin: \"Olen kiinnostunut\" ja \"En ole kiinnostunut\".<br/>\n"
+"                                Yhdistä <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">kumppaniportaaliisi</a> saadaksesi lisätietoja. Jokaisen liidin vasemmassa yläkulmassa on kaksi painiketta, joita sinun tulee painaa, kun olet ottanut yhteyttä liidiin: \"Olen kiinnostunut\" &amp; \"En ole kiinnostunut\".<br/>\n"
 "                           </t>\n"
 "                           <t t-else=\"\">\n"
 "                                Sinulla ei ole vielä portaaliyhteyttä tietokantaamme. Ota yhteyttä\n"
 "                               <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">meihin</t>.<br/>\n"
 "                           </t>\n"
-"                            Liidi lähetetään toiselle kumppanille, jos et ota yhteyttä liidiin ennen kuin 20 päivää on kulunut.<br/><br/>\n"
+"                            Liidi lähetetään toiselle kumppanille, jos et ota yhteyttä liidiin 20 päivän kuluessa.<br/><br/>\n"
 "                            Kiitos,<br/>\n"
 "                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>\n"
 "                            <br/>\n"
 "                           <t t-if=\"not ctx['partner_id'].user_id\">\n"
-"                                PS: Näyttää siltä, että sinulle ei ole nimetty asiakaspäällikköä, ota meihin yhteyttä.\n"
+"                                PS: Näyttää siltä, että sinulle ei ole nimetty asiakasvastaavaa, ota meihin yhteyttä.\n"
 "                           </t>\n"
 "                        </div>\n"
 "                    </td>\n"
@@ -406,7 +406,7 @@ msgstr "Osoite:"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "All Categories"
-msgstr "Kaikki ryhmät"
+msgstr "Kaikki kategoriat"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -449,7 +449,7 @@ msgstr "Automaattinen määritys"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
 msgid "Automatically sanitized HTML contents"
-msgstr "Automaattisesti puhdistetut HTML-sisällöt"
+msgstr "Automaattisesti siistittyt HTML-sisällöt"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
@@ -543,7 +543,7 @@ msgstr "Maa"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Create Opportunity"
-msgstr "Luo mahdollisuus"
+msgstr "Luo myyntimahdollisuus"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
@@ -566,7 +566,7 @@ msgstr "Luonut"
 #. module: website_crm_partner_assign
 #: model:crm.tag,name:website_crm_partner_assign.tag_portal_lead_own_opp
 msgid "Created by Partner"
-msgstr "Partnerin luoma"
+msgstr "Luonut kumppani"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_date
@@ -579,7 +579,7 @@ msgstr "Luotu"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Current stage of the opportunity"
-msgstr "Myyntimahdollisuuden vaihe"
+msgstr "Myyntimahdollisuuden nykyinen vaihe"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -595,7 +595,7 @@ msgstr "Asiakas:"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"
 msgstr ""
-"PUDOTA RAKENNUSPALIKAT TÄNNE, JOTTA NE OVAT SAATAVILLA KAIKILLA "
+"PUDOTA DESIGNELEMENTIT TÄHÄN, JOTTA NE OVAT SAATAVILLA KAIKILLA "
 "JÄLLEENMYYJILLÄ"
 
 #. module: website_crm_partner_assign
@@ -607,7 +607,7 @@ msgstr "Päivämäärä"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Partnership"
-msgstr "Kumppanuuden alkupäivä"
+msgstr "Kumppanuuden alkamispäivä"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
@@ -622,7 +622,7 @@ msgstr "Kuvaus"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Details Next Activity"
-msgstr "Seuraavan aktiviteetin yksityiskohdat"
+msgstr "Seuraavan toimenpiteen yksityiskohdat"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__display_name
@@ -672,7 +672,7 @@ msgstr "Odotettu"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Expected Closing:"
-msgstr "Odotettu sulkeminen:"
+msgstr "Odotettu klousaaminen:"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -688,12 +688,12 @@ msgstr "Suodata kategorian mukaan"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by country"
-msgstr "Suodata maittain"
+msgstr "Suodata maan mukaan"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filters"
-msgstr "Suotimet"
+msgstr "Suodattimet"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -708,27 +708,27 @@ msgstr "Seuraa ja muunna liidit"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "Follow and convert your opportunities"
-msgstr "Seuraa ja muunna mahdollisuutesi"
+msgstr "Seuraa ja muunna myyntimahdollisuutesi"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__partner_id
 msgid "Forward Leads To"
-msgstr "Välitä liidit"
+msgstr "Lähetä edelleen liidit"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__forward_type
 msgid "Forward selected leads to"
-msgstr "Välitä valitut liidit"
+msgstr "Lähetä edelleen valitut liidit"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.crm_lead_forward_to_partner_act
 msgid "Forward to Partner"
-msgstr "Välitä kumppanille"
+msgstr "Lähetä edelleen kumppanille"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_crm_send_mass_forward
 msgid "Forward to partner"
-msgstr "Välitä kumppanille"
+msgstr "Lähetä edelleen kumppanille"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -754,12 +754,12 @@ msgstr "Maantieteellinen pituus"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr "Geolokaatio"
+msgstr "Maantieteellinen sijainti"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Geolocation:"
-msgstr "Paikannus:"
+msgstr "Maantieteellinen sijainti:"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__partner_weight
@@ -767,13 +767,13 @@ msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignment.)"
 msgstr ""
-"Antaa todennäköisyyden antaa liidi tälle kumppanille. (0 tarkoittaa, että "
-"liidiä ei anneta.)"
+"Antaa todennäköisyyden kohdentaa liidi tälle kumppanille. (0 tarkoittaa, "
+"että liidiä ei anneta.)"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Go to reseller"
-msgstr "Siirry jälleenmyyjälle"
+msgstr "Siirry jälleenmyyjään"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_gold
@@ -788,7 +788,7 @@ msgstr "Luokitus"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Group By"
-msgstr "Ryhmittely"
+msgstr "Ryhmittele"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -833,19 +833,19 @@ msgstr "En ole kiinnostunut"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_website__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_ids
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_ids
 msgid "Implementation References"
-msgstr "Toteutuksen viitteet"
+msgstr "Implementaation viitteet"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_count
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_count
 msgid "Implemented Partner Count"
-msgstr "Toteutettu Kumppanien määrä"
+msgstr "Implementoitujen kumppanien määrä"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id
@@ -883,7 +883,8 @@ msgstr "Viimeksi päivitetty"
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead__date_partner_assign
 msgid "Last date this case was forwarded/assigned to a partner"
 msgstr ""
-"Viimeinen päivämäärä, jolloin tämä tapaus siirrettiin/annettiin partnerille"
+"Viimeinen päivämäärä, jolloin tämä tapaus lähetettiin edelleen/määrättiin "
+"kumppanille"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -894,7 +895,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_review
 msgid "Latest Partner Review"
-msgstr "Viimeisin kumppanin katselmointi"
+msgstr "Viimeisin kumppanin tarkistus"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review
@@ -917,7 +918,7 @@ msgstr "Liidi -"
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_assignation
 msgid "Lead Assignation"
-msgstr "Liidin osoitus"
+msgstr "Liidin kohdistus"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1000,7 +1001,7 @@ msgstr "Nimi"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "New Opportunity"
-msgstr "Uusi mahdollisuus"
+msgstr "Uusi myyntimahdollisuus"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1028,7 +1029,7 @@ msgstr "Seuraava tarkistus"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "No Activities"
-msgstr "Ei toimintaa"
+msgstr "Ei toimenpiteitä"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.action_report_crm_partner_assign
@@ -1043,7 +1044,7 @@ msgstr "Ei enää kumppaneita saatavilla"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "No results found for \""
-msgstr "Ei hakutuloksia hakusanalla \""
+msgstr "Ei hakutuloksia haulle\""
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1054,34 +1055,34 @@ msgstr "Seuraavien kenttien päivittäminen ei ole sallittua: %s."
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Open categories dropdown"
-msgstr "Avaa luokkien pudotusvalikko"
+msgstr "Avaa kategorien pudotusvalikko"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Open countries dropdown"
-msgstr "Avaa avattavat maat"
+msgstr "Avaa maiden pudotusvalikko"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Opportunities"
-msgstr "Mahdollisuudet"
+msgstr "Myyntimahdollisuudet"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_graph
 msgid "Opportunities Assignment Analysis"
-msgstr "Myyntimahdollisuuksien toimeksiannon analyysi"
+msgstr "Myyntimahdollisuuksien kohdistamisen analyysi"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Opportunity"
-msgstr "Mahdollisuus"
+msgstr "Myyntimahdollisuus"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Opportunity -"
-msgstr "Mahdollisuus -"
+msgstr "Myyntimahdollisuus -"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__partner_id
@@ -1100,23 +1101,23 @@ msgstr "Kumppanin aktivointi"
 #: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_activation_act
 #: model:ir.ui.menu,name:website_crm_partner_assign.res_partner_activation_config_mi
 msgid "Partner Activations"
-msgstr "Kumppanien aktivoinnit"
+msgstr "Kumppanin aktivoinnit"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__forward_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__assignation_lines
 msgid "Partner Assignment"
-msgstr "Partnerin asetus"
+msgstr "Kumppanin määritys"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__date_partner_assign
 msgid "Partner Assignment Date"
-msgstr "Partnerin asetuspäivä"
+msgstr "Kumppanin määrityspäivä"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Partner Assignment Date:"
-msgstr "Partnerin asetuspäivä:"
+msgstr "Kumppanin määrityspäivä:"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
@@ -1142,8 +1143,8 @@ msgstr "Kumppanuustasot"
 msgid ""
 "Partner Levels allow you to rank your Partners based on their performances."
 msgstr ""
-"Kumppanitasojen avulla voit asettaa kumppanisi paremmuusjärjestykseen heidän"
-" suoritustensa perusteella."
+"Kumppanuustasojen avulla voit asettaa kumppanisi paremmuusjärjestykseen "
+"heidän suoritustensa perusteella."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__partner_location
@@ -1153,12 +1154,12 @@ msgstr "Kumppanin sijainti"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Review"
-msgstr "Kumppanin katselmointi/tarkastus"
+msgstr "Kumppanin tarkistus"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner assigned Analysis"
-msgstr "Kumppanille osoitettu analyysi"
+msgstr "Määritetyn kumppanin analyysi"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_declined_ids
@@ -1168,12 +1169,12 @@ msgstr "Kumppani ei ole kiinnostunut"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead__partner_assigned_id
 msgid "Partner this case has been forwarded/assigned to."
-msgstr "Kumppani jolle tämä tapaus on välitetty/siirretty."
+msgstr "Kumppani, jolle tämä tapaus on kohdistettu/siirretty."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.snippet_options
 msgid "Partners Page"
-msgstr "Yhteistyökumppanien sivu"
+msgstr "Kumppanuussivu"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_report_crm_partner_assign
@@ -1225,12 +1226,12 @@ msgstr "Arvostelu"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Rating: #{lead.priority} on 3"
-msgstr "Luokitus: #{lead.priority} kolmessa"
+msgstr "Luokitus: #{lead.priority} /3"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating: #{opportunity.priority} on 4"
-msgstr "Luokitus: #{opportunity.priority} neljässä"
+msgstr "Luokitus: #{opportunity.priority} /4"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1299,7 +1300,7 @@ msgstr "Katso kaikki jälleenmyyjät"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See categories filters"
-msgstr "Katso luokkien suodattimet"
+msgstr "Katso kategorioiden suodattimet"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -1319,12 +1320,12 @@ msgstr "Lähetä sähköposti"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Send Mail"
-msgstr "Lähetä sähköposti"
+msgstr "Lähetä postia"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,description:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Sent to partner when a lead has been assigned to him"
-msgstr "Lähetetään yhteistyökumppanille, kun hänelle on annettu liidi"
+msgstr "Lähetetään kumppanille, kun hänelle on määrätty liidi"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
@@ -1344,12 +1345,12 @@ msgstr "Aseta sähköposti kumppanille %s"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:0
 msgid "Set an email address for the partner(s): %s"
-msgstr "Aseta sähköposti kumppaneille %s"
+msgstr "Aseta sähköposti kumppaneille: %s"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.snippet_options
 msgid "Show Leads / Opps"
-msgstr "Näytä liidit tai myyntimahdollisuudet"
+msgstr "Näytä liidit / myyntimahdollisuudet"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_silver
@@ -1397,7 +1398,7 @@ msgstr "Sähköpostin edelleenlähetysmallia ei ole tietokannassa"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Dokumentin URL-osoite verkkosivustolla."
+msgstr "Asiakirjan URL-osoite verkkosivulla."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -1413,7 +1414,7 @@ msgstr "Ei myyntimahdollisuuksia."
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "There is no country set in addresses for %(lead_names)s."
-msgstr "Osoitteissa %(lead_names)s ei ole määritetty maata."
+msgstr "Liidin %(lead_names)s osoitteissa ei ole määritetty maata."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1428,8 +1429,7 @@ msgid ""
 "contention for this partner to take this lead/opportunity."
 msgstr ""
 "Tämän tulisi olla numeroarvo, joka on suurempi kuin 0 ja joka ratkaisee, "
-"onko tämä kumppani oikeutettu ottamaan tämän liidin tai "
-"myyntimahdollisuuden."
+"ottaako tämä kumppani tämän liidin tai myyntimahdollisuuden hoitaakseen."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
@@ -1437,7 +1437,7 @@ msgid ""
 "Those are used to know where your Partners stand in your onboarding process."
 msgstr ""
 "Niiden avulla tiedät, missä vaiheessa kumppanisi ovat "
-"sisäänottoprosessissasi."
+"perehdytysprosessissasi."
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1458,7 +1458,7 @@ msgstr "Käyttäjä"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_published
 msgid "Visible on current website"
-msgstr "Näkyy nykysellä verkkosivulla"
+msgstr "Näkyy nykyisellä verkkosivulla"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1474,13 +1474,12 @@ msgstr "Verkkosivu"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_url
 msgid "Website URL"
-msgstr "Verkkosivuston osoite"
+msgstr "Verkkosivun URL-osoite"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "What is the next action? When? What is the expected revenue?"
-msgstr ""
-"Mikä on seuraava toimenpide? Milloin? Mikä on odotettavissa oleva tulo?"
+msgstr "Mikä on seuraava toimenpide? Milloin? Mikä on odotettava liikevaihto?"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1497,7 +1496,7 @@ msgstr "Voitettu"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.snippet_options
 msgid "World Map"
-msgstr "Maailman kartta"
+msgstr "Maailmankartta"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1512,17 +1511,17 @@ msgstr "yksi kumppani: kumppanin manuaalinen valinta"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "at"
-msgstr "jossa"
+msgstr " "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr "esim. Gold Partner"
+msgstr "esim. kultatason kumppani"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "in"
-msgstr "tuumaa"
+msgstr " "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
@@ -1537,7 +1536,7 @@ msgstr "pituusaste"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "on"
-msgstr "on"
+msgstr " "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -1547,7 +1546,7 @@ msgstr "viite"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "references"
-msgstr "referenssit"
+msgstr "viitteet"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__assigned
@@ -1556,4 +1555,4 @@ msgid ""
 "grades"
 msgstr ""
 "useita kumppaneita: automaattinen määritys GPS-koordinaattien ja kumppanin "
-"arvosanojen perusteella"
+"luokittelun perusteella"

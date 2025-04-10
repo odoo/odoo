@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__quiz_questions_count
 msgid "# Quiz Questions"
-msgstr "# Koekysymyksiä"
+msgstr "# Testikysymykset"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
@@ -32,17 +33,17 @@ msgstr ". Kokeile toista hakua."
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.all_visitor_card
 msgid "<span class=\"text-muted small fw-bold\">Points</span>"
-msgstr "<span class=\"text-muted small fw-bold\">pistettä</span>"
+msgstr "<span class=\"text-muted small fw-bold\">Pisteet</span>"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
 msgid "<span class=\"text-muted\">Points</span>"
-msgstr "<span class=\"text-muted\">pistettä</span>"
+msgstr "<span class=\"text-muted\">Pisteet</span>"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_view_form
 msgid "Add Quiz"
-msgstr "Lisää koe"
+msgstr "Lisää tietovisa"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
@@ -87,17 +88,17 @@ msgstr "Betonilohkoseinä"
 #. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 msgid "Congratulations, you scored a total of"
-msgstr "Onneksi olkoon. Lopputuloksesi on"
+msgstr "Onneksi olkoon, lopullinen pistemääräsi on"
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_quiz_question
 msgid "Content Quiz Question"
-msgstr "Sisällön kyselyn kysymys"
+msgstr "Sisällön tietovisakysymys"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__is_correct
 msgid "Correct"
-msgstr "Oikea"
+msgstr "Oikein"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__correct_answer_id
@@ -125,22 +126,25 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__display_name
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__display_name
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__display_name
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__display_name
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_1
 msgid "Even if there will be some."
-msgstr "Vaikka siinä on jotain."
+msgstr "Vaikka jotain varmasti on."
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_1
 msgid "Even if you have a big trunk, some long products need to be secured."
 msgstr ""
-"Vaikka käsittelet isoa tavaratilaa, pitkät tuotteet on kiinnitettävä "
+"Vaikka sinulla on iso tavaratila, pitkät tuotteet on kiinnitettävä "
 "paikoilleen turvallisesti."
 
 #. module: website_event_track_quiz
@@ -153,18 +157,18 @@ msgstr "Tapahtuma"
 #. module: website_event_track_quiz
 #: model:ir.actions.act_window,name:website_event_track_quiz.event_quiz_question_action
 msgid "Event Quiz Questions"
-msgstr "Tapahtuman kyselyn kysymykset"
+msgstr "Tapahtuman tietovisan kysymykset"
 
 #. module: website_event_track_quiz
 #: model:ir.actions.act_window,name:website_event_track_quiz.event_quiz_action
 msgid "Event Quizzes"
-msgstr "Tapahtuman kysely"
+msgstr "Tapahtuman tietovisat"
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_track
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__event_track_id
 msgid "Event Track"
-msgstr "Tapahtuman esitys"
+msgstr "Tapahtuman ohjelmanumero"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__comment
@@ -177,25 +181,26 @@ msgid ""
 "From here you will be able to examine all quiz questions you have linked to "
 "Tracks."
 msgstr ""
-"Voit tarkastella tapahtuman kyselyn kysymyksiä, jotka liittyvät esitykseen."
+"Voit tarkastella tapahtuman tietovisan kysymyksiä, jotka liittyvät "
+"ohjelmanumeroon."
 
 #. module: website_event_track_quiz
 #: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
 msgid ""
 "From here you will be able to overview all quizzes you have linked to "
 "Tracks."
-msgstr "Voit tarkastella kokeita, jotka liittyvät esityksiin."
+msgstr "Voit tarkastella tietovisoja, jotka liittyvät ohjelmanumeroihin."
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_view_form
 msgid "Go to Quiz"
-msgstr "Mene kyselyyn"
+msgstr "Siirry tietovisaan"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 msgid "Group By"
-msgstr "Ryhmittely"
+msgstr "Ryhmittele"
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_0
@@ -208,11 +213,14 @@ msgid "Hammer won't be of any help here!"
 msgstr "Vasarasta ei ole apua tässä!"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__id
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__id
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__id
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__id
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_0
@@ -232,7 +240,7 @@ msgstr "Väärin."
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__is_quiz_completed
 msgid "Is Quiz Done"
-msgstr "Onko koe tehty"
+msgstr "On tehty tietovisa"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__write_uid
@@ -251,12 +259,12 @@ msgstr "Viimeksi päivitetty"
 #. module: website_event_track_quiz
 #: model:ir.model.fields,help:website_event_track_quiz.field_event_quiz__repeatable
 msgid "Let attendees reset the quiz and try again."
-msgstr "Salli osallistujien nollata kysely ja yrittää uudelleen"
+msgstr "Salli osallistujien nollata kysely ja yrittää uudelleen."
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_1_1
 msgid "Lumbers need first to be cut from trees!"
-msgstr "Sahatavara tulee ensin leikata puista!"
+msgstr "Sahatavara tulee ensin leikata puusta!"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
@@ -286,17 +294,17 @@ msgstr "Ei"
 #. module: website_event_track_quiz
 #: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
 msgid "No Quiz Question yet!"
-msgstr "Ei vielä koekysymyksiä!"
+msgstr "Ei vielä tietovisan kysymyksiä!"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
 msgid "No Quiz added yet!"
-msgstr "Koekysymyksiä ei ole vielä lisätty!"
+msgstr "Tietovisan kysymyksiä ei ole vielä lisätty!"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
 msgid "No user found for"
-msgstr "Käyttäjää ei löydy kohteelle"
+msgstr "Käyttäjää ei löydy"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__awarded_points
@@ -307,7 +315,7 @@ msgstr "Pisteiden määrä"
 #. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 msgid "Oopsie, you did not score any point on this quiz."
-msgstr "Oho, et saanut tästä kokeesta yhtään pistettä."
+msgstr "Hups, et saanut tässä kokeessa yhtäkään pistettä."
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_2
@@ -351,7 +359,7 @@ msgid ""
 "to be valid."
 msgstr ""
 "Kysymyksellä \"%s\" täytyy olla vähintään yksi oikea vastaus ja vähintään "
-"yhden väärän vastauksen tulee olla oikea."
+"yksi väärä vastaus, jotte se voidaan hyväksyä."
 
 #. module: website_event_track_quiz
 #. odoo-python
@@ -359,7 +367,7 @@ msgstr ""
 msgid "Question \"%s\" must have 1 correct answer to be valid."
 msgstr ""
 "Kysymyksellä \"%s\" tulee olla vähintään yksi oikea vastaus, jotta se "
-"kelpaa."
+"voidaan hyväksyä."
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_quiz_answer
@@ -379,31 +387,31 @@ msgstr "Kysymykset"
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_content
 msgid "Quiz"
-msgstr "Kysely"
+msgstr "Tietovisa"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__quiz_points
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__quiz_points
 msgid "Quiz Points"
-msgstr "Kyselyn pisteet"
+msgstr "Tietovisan pisteet"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_form
 msgid "Quiz Question"
-msgstr "Kyselyn kysymys"
+msgstr "Tietovisan kysymys"
 
 #. module: website_event_track_quiz
 #: model:ir.ui.menu,name:website_event_track_quiz.event_quiz_question_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_tree
 msgid "Quiz Questions"
-msgstr "Kyselyn kysymykset"
+msgstr "Tietovisan kysymykset"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
 msgid "Quiz validation error"
-msgstr "Kyselyn tarkastuksen virhe"
+msgstr "Tietovisan hyväksyntävirhe"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__quiz_ids
@@ -411,13 +419,13 @@ msgstr "Kyselyn tarkastuksen virhe"
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_tree
 msgid "Quizzes"
-msgstr "Kyselyt"
+msgstr "Tietovisat"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 msgid "Reset"
-msgstr "Palauta"
+msgstr "Nollaa"
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_2
@@ -432,12 +440,12 @@ msgstr "Hae"
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Search Attendees"
-msgstr "Etsi osallistujia"
+msgstr "Hae osallistujia"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Search users"
-msgstr "Etsi käyttäjiä"
+msgstr "Hae käyttäjiä"
 
 #. module: website_event_track_quiz
 #: model:event.quiz,name:website_event_track_quiz.event_7_track_5_quiz
@@ -463,7 +471,7 @@ msgstr "Kaupat!"
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_content
 msgid "Take the Quiz"
-msgstr "Tee koe"
+msgstr "Tee tietovisa"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
@@ -474,7 +482,7 @@ msgstr "Oikea vastaus oli:"
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
 msgid "There is currently no leaderboard available"
-msgstr "Pistetaulukkoa ei ole tällä hetkellä käytettävissä"
+msgstr "Pistetaulukko ei ole tällä hetkellä käytettävissä"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
@@ -488,14 +496,14 @@ msgid ""
 "This comment will be displayed to the user if they select this answer, after submitting the quiz.\n"
 "                It is used as a small informational text helping to understand why this answer is correct / incorrect."
 msgstr ""
-"Kommentti näytetään käyttäjälle, jos hän valitsee tämän vastauksen kyselyn lähettämisen jälkeen.\n"
-"                 Sitä käytetään pienenä tietotekstinä, joka auttaa ymmärtämään, miksi tämä vastaus on oikea tai väärä."
+"Kommentti näytetään käyttäjälle, jos hän valitsee tämän vastauksen tietovisan lähettämisen jälkeen.\n"
+"                 Se toimii pienenä tietoiskuna, joka auttaa ymmärtämään, miksi tämä vastaus on oikea tai väärä."
 
 #. module: website_event_track_quiz
 #. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
 msgid "This quiz is already done. Retaking it is not possible."
-msgstr "Tämä kysely on jo suoritettu. Et voi suorittaa sitä uudelleen."
+msgstr "Tämä tietovisa on jo suoritettu. Et voi suorittaa sitä uudelleen."
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_1
@@ -505,12 +513,12 @@ msgstr "Kuormanauhat ja muut puulohkot"
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 msgid "Track"
-msgstr "Esitys"
+msgstr "Ohjelmanumero"
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_track_visitor
 msgid "Track / Visitor Link"
-msgstr "Esityksen tai vierailijan linkki"
+msgstr "Ohjelmanumeron / vierailijan linkki"
 
 #. module: website_event_track_quiz
 #: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_0
@@ -530,12 +538,12 @@ msgstr "Rajaton määrä yrityksiä"
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
 msgid "User rank"
-msgstr "Käyttäjän paikka pistekisassa"
+msgstr "Käyttäjän sijoitus"
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_2
 msgid "Well, it could work but you will need a lot of tape!"
-msgstr "Voidaan tehdä noin, mutta teippiä kuluisi paljon!"
+msgstr "Se saattaisi toimia, mutta teippiä kuluisi paljon!"
 
 #. module: website_event_track_quiz
 #: model:event.quiz,name:website_event_track_quiz.event_7_track_1_quiz
@@ -550,7 +558,7 @@ msgstr "Millaisia työkaluja tarvitaan puutavaran kiinnittämiseen?"
 #. module: website_event_track_quiz
 #: model:event.quiz.question,name:website_event_track_quiz.event_7_track_13_question_0
 msgid "What kind of wall is transformed here?"
-msgstr "Minkälainen seinä tässä on muuttunut?"
+msgstr "Millaiseksi seinäksi tämä on muuttunut?"
 
 #. module: website_event_track_quiz
 #: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_0
@@ -597,7 +605,7 @@ msgstr "esim. Mikä on Jessen suosikkisanonta?"
 #. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 msgid "point!"
-msgstr "pistete!"
+msgstr "pisteen!"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
