@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="point_of_sale.PriceFormatter">
+        <span t-if="priceParts.prefix" class="me-1" style="font-size: 60%; opacity: 0.8;">
+            <t t-esc="priceParts.prefix"/>
+        </span>
+        <t t-esc="priceParts.amount"/>
+        <span t-if="priceParts.decimal" class="text-muted" style="font-size: 80%; opacity: 0.6;">
+            <t t-esc="priceParts.decimal"/>
+        </span>
+        <span t-if="priceParts.suffix" class="ms-1" style="font-size: 60%; opacity: 0.8;">
+            <t t-esc="priceParts.suffix"/>
+        </span>
+    </t>
+</templates>

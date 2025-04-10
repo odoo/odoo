@@ -4,10 +4,10 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillDestroy, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
-
+import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
-    static components = { Orderline, OrderDisplay };
+    static components = { Orderline, OrderDisplay, PriceFormatter };
     static props = {
         disallow: { type: Boolean, optional: true },
     };
@@ -205,6 +205,16 @@ export class SplitBillScreen extends Component {
 
     back() {
         this.pos.showScreen("ProductScreen");
+    }
+    adjustFontSize(amount) {
+        const length = amount.toString().length;
+        if (length > 11) {
+            return "100px";
+        } else if (length > 9) {
+            return "150px";
+        } else {
+            return "200px";
+        }
     }
 }
 
