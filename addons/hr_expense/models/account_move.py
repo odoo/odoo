@@ -10,7 +10,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     expense_sheet_id = fields.Many2one(comodel_name='hr.expense.sheet', ondelete='set null', copy=False, index='btree_not_null')
-    show_commercial_partner_warning = fields.Boolean(compute='_compute_show_commercial_partner_warning')
+    show_commercial_partner_warning = fields.Boolean(compute='_compute_show_commercial_partner_warning', compute_sudo=True)
 
     @api.depends('partner_id', 'expense_sheet_id', 'company_id')
     def _compute_commercial_partner_id(self):
