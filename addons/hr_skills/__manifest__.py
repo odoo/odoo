@@ -45,7 +45,6 @@ This module introduces skills and resume management for employees.
             'hr_skills/static/src/fields/**/*',
             'hr_skills/static/src/scss/*.scss',
             'hr_skills/static/src/views/skills_list_renderer.js',
-            'hr_skills/static/src/xml/**/*',
             'hr_skills/static/src/components/**/*',
         ],
         'web.assets_backend_lazy': [
