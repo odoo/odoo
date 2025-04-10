@@ -366,9 +366,10 @@
                             </group>
                         </group>
                         <t name="action_content" invisible="not model_id">
+                            <field name="allowed_states" invisible="1"/> <!-- Used to filter state using selection_badge_with_filter -->
                             <div class="d-flex flex-column">
                                 <label for="state"/>
-                                <field name="state" widget="selection_badge" options="{'size': 'sm'}"/>
+                                <field name="state" widget="selection_badge_with_filter" options="{'size': 'sm', 'allowed_selection_field': 'allowed_states'}"/>
                             </div>
                             <div class="alert alert-warning" role="alert" invisible="not warning">
                                 <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="warning" nolabel="1"/>
@@ -494,7 +495,7 @@ env['res.partner'].create({'name': partner_name})
                             <!-- Icon section -->
                             <i
                                 data-name="server_action_icon"
-                                t-att-title="record.state.value" 
+                                t-att-title="record.state.value"
                                 class="fa fa-fw"
                                 t-att-class="{
                                     'code': 'fa-code',
