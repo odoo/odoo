@@ -28,7 +28,7 @@
       </menuitem>
 
       <menuitem id="menu_management" name="Apps" sequence="500" web_icon="base,static/description/modules.png" groups="base.group_system"/>
-      <menuitem id="base.menu_tests" name="Tests" sequence="1000" web_icon="test_exceptions,static/description/icon.png"/>
+      <menuitem id="base.menu_tests" name="Tests" sequence="1000" web_icon="base,static/description/exception.png"/>
 
       <record model="ir.ui.menu" id="base.menu_administration">
           <field name="group_ids" eval="[Command.set([ref('group_system'), ref('group_erp_manager')])]"/>
