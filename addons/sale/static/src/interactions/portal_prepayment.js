@@ -18,38 +18,34 @@ export class PortalPrepayment extends Interaction {
             "t-att-class": () => ({ "active": !this.isPartialPayment }),
         },
         "span[id='o_sale_portal_use_amount_prepayment']": {
-            "t-att-class": () => ({ "d-none": !this.isPartialPayment }),
+            "t-att-class": () => ({ "d-none": !this.isPartialPayment}),
         },
         "span[id='o_sale_portal_use_amount_total']": {
             "t-att-class": () => ({ "d-none": this.isPartialPayment }),
         },
     };
 
-    setup() {
+    setup(){
         this.amountTotalButton = document.querySelector("button[name='o_sale_portal_amount_total_button']");
         this.amountPrepaymentButton = document.querySelector("button[name='o_sale_portal_amount_prepayment_button']");
 
-        if (!this.amountTotalButton) {
-            // Button not available in dom => confirmed SO or partial payment not enabled on this SO
-            // this widget has nothing to manage
-            return;
-        }
-
         const params = new URLSearchParams(window.location.search);
-        this.isPartialPayment = params.has('downpayment') ? params.get('downpayment') === 'true' : true;
+        this.isPartialPayment = params.has('installment') ? params.get('installment') === 'true' : true;
         this.showPaymentModal = params.get('showPaymentModal') === 'true';
     }
 
     start() {
+
         // When updating the amount re-open the modal.
         if (this.showPaymentModal) {
-            document.querySelector("#o_sale_portal_paynow")?.click();
-        }
+                document.querySelector("#o_sale_portal_paynow")?.click();
+            }
+
     }
 
     reloadAmount(isPartialPayment) {
         const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set("downpayment", isPartialPayment);
+        searchParams.set("installment", isPartialPayment);
         searchParams.set("showPaymentModal", true);
         window.location.search = searchParams.toString();
     }
