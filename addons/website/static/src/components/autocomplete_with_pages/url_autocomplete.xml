@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="website.UrlAutoComplete">
         <AutoCompleteWithPages
+            input="inputRef"
             onInput.bind="onInput"
-            onSelect.bind="onSelect"
             dropdownClass="dropdownClass"
             dropdownOptions="dropdownOptions"
             sources="sources"
@@ -11,12 +11,12 @@
         >
             <t t-set-slot="option" t-slot-scope="optionScope">
                 <div t-att-class="{
-                    'fw-bold text-capitalize p-2': optionScope.option.separator,
+                    'fw-bold text-capitalize p-2': optionScope.data.separator,
                 }">
-                    <t t-if="optionScope.option.icon and optionScope.option.icon.length">
-                        <img t-att-src="optionScope.option.icon" width="24px" height="24px" class="me-2 rounded"/>
+                    <t t-if="optionScope.data.icon and optionScope.data.icon.length">
+                        <img t-att-src="optionScope.data.icon" width="24px" height="24px" class="me-2 rounded"/>
                     </t>
-                    <t t-out="optionScope.option.label"/>
+                    <t t-out="optionScope.label"/>
                 </div>
             </t>
         </AutoCompleteWithPages>

@@ -8,12 +8,7 @@
             <div
                 t-if="!props.readonly"
                 class="o_field_property_dropdown_menu o_input_dropdown">
-                <AutoComplete
-                    id="props.id"
-                    value="''"
-                    sources="autocompleteSources"
-                    onSelect.bind="({value}) => this.onOptionSelected(value)"
-                    resetOnSelect="true"/>
+                <AutoComplete id="props.id" value="''" sources="autocompleteSources" resetOnSelect="true"/>
                 <span class="o_dropdown_button" />
             </div>
         </div>

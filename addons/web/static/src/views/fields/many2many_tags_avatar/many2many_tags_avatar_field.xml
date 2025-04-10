@@ -21,6 +21,7 @@
                     context="props.context"
                     getDomain.bind="getDomain"
                     isToMany="true"
+                    specification="specification"
                 >
                     <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                         <t t-call="{{ constructor.optionTemplate }}"/>
@@ -32,11 +33,9 @@
 
     <t t-name="web.Many2ManyTagsAvatarField.option">
         <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
-            <img t-if="autoCompleteItemScope.value" class="rounded me-1"
-                t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.value}}/avatar_128"/>
-            <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }" t-out="autoCompleteItemScope.label">
-                <t t-out="autoCompleteItemScope.label"/>
-            </span>
+            <img t-if="autoCompleteItemScope.record.id" class="rounded me-1"
+                t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
+            <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }" t-out="autoCompleteItemScope.label"/>
         </span>
     </t>
 

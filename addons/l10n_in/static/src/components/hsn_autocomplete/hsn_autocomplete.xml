@@ -4,14 +4,13 @@
         <AutoComplete
             value="props.record.data[props.name] || ''"
             sources="sources"
-            onSelect.bind="onSelect"
             input="inputRef"
             placeholder="props.placeholder || ''"
         >
             <t t-set-slot="option" t-slot-scope="optionScope">
                 <div class="text-wrap">
-                    <strong t-out="optionScope.option.label"/>
-                    <div t-out="optionScope.option.description"/>
+                    <strong t-out="optionScope.label"/>
+                    <div t-out="optionScope.data.description"/>
                 </div>
             </t>
         </AutoComplete>

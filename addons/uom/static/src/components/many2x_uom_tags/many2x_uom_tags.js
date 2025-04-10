@@ -34,7 +34,7 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
     async setup() {
         super.setup();
         onWillUpdateProps(async (nextProps) => {
-            if (nextProps.productModel !== this.props.productModel || 
+            if (nextProps.productModel !== this.props.productModel ||
                 nextProps.productId !== this.props.productId
             ) {
                 await this.updateReferenceUnit(nextProps);
@@ -76,15 +76,6 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
             records.sort((a, b) => hasCommonReference(a, this.referenceUnit) ? -1 : hasCommonReference(b, this.referenceUnit) ? 1 : 0);
         }
         return records;
-    }
-
-    mapRecordToOption(result) {
-        return {
-            value: result.id,
-            label: result.name ? result.name.split("\n")[0] : _t("Unnamed"),
-            displayName: result.name,
-            relative_info: result.relative_info,
-        };
     }
 }
 

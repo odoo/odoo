@@ -43,13 +43,6 @@ export class CalendarFilterSection extends Component {
                     optionSlot: "option",
                 },
             ],
-            onSelect: (option, params = {}) => {
-                if (option.action) {
-                    option.action(params);
-                    return;
-                }
-                this.props.model.createFilter(this.section.fieldName, option.value);
-            },
             value: "",
             class: "mt-1",
         };
@@ -106,23 +99,27 @@ export class CalendarFilterSection extends Component {
         });
 
         const options = records.map((result) => ({
-            value: result[0],
+            data: {
+                id: result[0],
+            },
             label: result[1],
+            onSelect: () => {
+                return this.props.model.createFilter(this.section.fieldName, result[0]);
+            },
         }));
 
         if (records.length > 7) {
             options.push({
+                cssClass: "o_calendar_dropdown_option",
                 label: _t("Search More..."),
-                action: () => this.onSearchMore(resModel, domain, request),
-                classList: "o_calendar_dropdown_option",
+                onSelect: () => this.onSearchMore(resModel, domain, request),
             });
         }
 
         if (records.length === 0) {
             options.push({
+                cssClass: "o_m2o_no_result",
                 label: _t("No records"),
-                classList: "o_m2o_no_result",
-                unselectable: true,
             });
         }
 

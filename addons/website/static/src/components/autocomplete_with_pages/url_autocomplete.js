@@ -1,5 +1,6 @@
 import { Component } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
+import { useChildRef } from "@web/core/utils/hooks";
 import { AutoCompleteWithPages } from "@website/components/autocomplete_with_pages/autocomplete_with_pages";
 
 export class UrlAutoComplete extends Component {
@@ -11,11 +12,8 @@ export class UrlAutoComplete extends Component {
     static template = "website.UrlAutoComplete";
     static components = { AutoCompleteWithPages };
 
-    _mapItemToSuggestion(item) {
-        return {
-            ...item,
-            classList: item.separator ? "ui-autocomplete-category" : "ui-autocomplete-item",
-        };
+    setup() {
+        this.inputRef = useChildRef();
     }
 
     get dropdownClass() {
@@ -44,9 +42,11 @@ export class UrlAutoComplete extends Component {
                             term,
                             this.props.options && this.props.options.body
                         );
-                        return anchors.map((anchor) =>
-                            this._mapItemToSuggestion({ label: anchor, value: anchor })
-                        );
+                        return anchors.map((anchor) => ({
+                            cssClass: "ui-autocomplete-item",
+                            label: anchor,
+                            onSelect: () => this.onSelect(anchor),
+                        }));
                     } else if (term.startsWith("http") || term.length === 0) {
                         // avoid useless call to /website/get_suggested_links
                         return [];
@@ -67,15 +67,19 @@ export class UrlAutoComplete extends Component {
                             );
                         }
                     });
-                    return choices.map(this._mapItemToSuggestion);
+                    return choices.map((choice) => ({
+                        cssClass: choice.separator ? "ui-autocomplete-category" : "ui-autocomplete-item",
+                        data: choice,
+                        label: choice.label,
+                        onSelect: () => this.onSelect(choice.value),
+                    }));
                 },
             },
         ];
     }
 
-    onSelect(selectedSubjection, { input }) {
-        const { value } = Object.getPrototypeOf(selectedSubjection);
-        input.value = value;
+    onSelect(value) {
+        this.inputRef.value = value;
         this.props.targetDropdown.value = value;
         this.props.options.urlChosen?.();
     }

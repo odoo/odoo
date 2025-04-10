@@ -15,6 +15,11 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
         ...Many2ManyTagsField.props,
         withCommand: { type: Boolean, optional: true },
     };
+
+    get specification() {
+        return {};
+    }
+
     getTagProps(record) {
         return {
             ...super.getTagProps(record),
