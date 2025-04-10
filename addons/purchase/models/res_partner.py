@@ -30,10 +30,6 @@ class res_partner(models.Model):
                     partner.purchase_order_count += count
                 partner = partner.parent_id
 
-    @api.model
-    def _commercial_fields(self):
-        return super(res_partner, self)._commercial_fields()
-
     property_purchase_currency_id = fields.Many2one(
         'res.currency', string="Supplier Currency", company_dependent=True,
         help="This currency will be used, instead of the default one, for purchases from the current partner")
