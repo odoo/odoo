@@ -101,7 +101,8 @@ export class SelfOrder extends Reactive {
                         this.confirmationPage(
                             "order",
                             this.config.self_ordering_mode,
-                            order.access_token
+                            order.access_token,
+                            true
                         );
                     }
                 } else {
@@ -321,7 +322,7 @@ export class SelfOrder extends Reactive {
             newLine.setDirty();
         }
     }
-    async confirmationPage(screen_mode, device, access_token) {
+    async confirmationPage(screen_mode, device, access_token, print = false) {
         if (!access_token) {
             throw new Error("No access token provided for confirmation page");
         }
@@ -330,7 +331,7 @@ export class SelfOrder extends Reactive {
             orderAccessToken: access_token,
             screenMode: screen_mode,
         });
-        if (device === "kiosk") {
+        if (device === "kiosk" && print) {
             this.printKioskChanges(access_token);
         }
     }
@@ -363,7 +364,6 @@ export class SelfOrder extends Reactive {
             this.router.navigate("stand_number");
             return;
         }
-
         order = await this.sendDraftOrderToServer(paymentMethods.length > 0);
         if (!order) {
             return;
