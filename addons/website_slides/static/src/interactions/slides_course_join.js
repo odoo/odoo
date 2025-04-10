@@ -2,7 +2,6 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { redirect } from "@web/core/utils/urls";
 import { getDataFromEl } from "@web/public/utils";
 
@@ -25,7 +24,6 @@ class WebsiteSlidesCourseJoinLink extends Interaction {
      * @param {MouseEvent} event
      */
     async onJoinClick(event) {
-        console.log("JOIN:", event, this);
         if (
             this.data.invitePreview ||
             (this.data.channelEnroll === "invite" && this.data.isMemberOrInvited)
@@ -36,7 +34,7 @@ class WebsiteSlidesCourseJoinLink extends Interaction {
 
         if (this.data.channelEnroll !== "invite") {
             if (this.data.publicUser) {
-                await this.courseJoinService.beforeJoin();
+                await this.waitFor(this.courseJoinService.beforeJoin());
                 this.redirectToLogin();
             } else if (!this.data.isMember) {
                 this.joinChannel(this.data.channelId);
@@ -88,14 +86,12 @@ class WebsiteSlidesCourseJoinLink extends Interaction {
     // TODO: use events to trigger from outside
     // OR ADD to utils function
     async joinChannel(channelId) {
-        const data = await rpc("/slides/channel/join", { channel_id: channelId });
-        if (!data.error) {
-            await this.courseJoinService.afterJoin();
-        } else {
+        const data = await this.waitFor(this.courseJoinService.joinChannel(channelId));
+        if (data.error) {
             if (data.error === "public_user") {
                 const popupContent = renderToElement("slide.course.join.popupContent", {
                     channelId: channelId,
-                    courseUrl: this.data.redirectURL, // TODO: maybe replace with encodeURIComponent(document.URL)
+                    courseUrl: encodeURIComponent(document.URL),
                     errorSignupAllowed: data.error_signup_allowed,
                     invitePreview: this.data.invitePreview,
                     inviteHash: this.data.inviteHash,

@@ -189,7 +189,7 @@ export function getDataFromEl(el) {
     const data = el.dataset;
     const parsedData = {};
     for (const key of Object.keys(data)) {
-        if (data[key] === "True") {
+        if (data[key] === "True" || data[key] === "") {
             parsedData[key] = true;
         } else if (data[key] === "False") {
             parsedData[key] = false;

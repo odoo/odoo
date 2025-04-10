@@ -1,22 +1,13 @@
-// TODO: store all quiz related data
-// TODO: move to other folder
 import { registry } from "@web/core/registry";
 import { getDataFromEl } from "@web/public/utils";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
+import { rpc } from "@web/core/network/rpc";
+import { markup } from "@odoo/owl";
 
 // TODO: check naming convention for services
 const quizService = {
     dependencies: [],
-    extractChannelData(slideData) {
-        return {
-            channelId: slideData.channelId,
-            channelEnroll: slideData.channelEnroll,
-            channelRequestedAccess: slideData.channelRequestedAccess || false,
-            signupAllowed: slideData.signupAllowed,
-        };
-    },
-
     /**
      * Extract data from exiting DOM rendered server-side, to have the list of questions with their
      * relative answers.
@@ -74,15 +65,38 @@ const quizService = {
             },
             getDataFromEl(el)
         );
-        console.log("QuizData:", data);
         return data;
     },
     start() {
         const data = this.getData();
         return {
             get: () => data,
-            updateQuestion: (question) => {
+            beginUpdatingQuestion: (question) => {
                 data.currentlyEditedQuestions[question.id] = question;
+            },
+            endUpdatingQuestion: (question) => {
+                delete data.currentlyEditedQuestions[question.id];
+            },
+            /*
+             * Fetch the quiz for a particular slide
+             */
+            // TODO: remove this once certain that not needed in toggle...
+            async fetchQuiz() {
+                const quizData = await rpc("/slides/slide/quiz/get", {
+                    slide_id: data.id,
+                });
+                Object.assign(data, {
+                    sessionAnswers: quizData.session_answers,
+                    descriptionSafe: quizData.slide_description
+                        ? markup(quizData.slide_description)
+                        : "",
+                    questions: quizData.slide_questions || [],
+                    questionsCount: quizData.slide_questions.length,
+                    quizAttemptsCount: quizData.quiz_attempts_count || 0,
+                    quizKarmaGain: quizData.quiz_karma_gain || 0,
+                    quizKarmaWon: quizData.quiz_karma_won || 0,
+                    slideResources: quizData.slide_resource_ids || [],
+                });
             },
         };
     },
@@ -91,17 +105,24 @@ const quizService = {
 const courseJoinService = {
     dependencies: [],
     start() {
-        let beforeJoinFunction = () => Promise.resolve();
-        let afterJoinFunction = () => document.location.reload();
+        let beforeJoin = async () => {};
+        let afterJoin = async () => document.location.reload();
         return {
             registerBeforeJoin: (f) => {
-                beforeJoinFunction = f;
+                beforeJoin = f;
             },
             registerAfterJoin: (f) => {
-                afterJoinFunction = f;
+                afterJoin = f;
             },
-            beforeJoin: () => beforeJoinFunction(),
-            afterJoin: () => afterJoinFunction(),
+            joinChannel: async (channelId) => {
+                const data = await rpc("/slides/channel/join", { channel_id: channelId });
+                if (!data.error) {
+                    await afterJoin();
+                }
+                return data;
+            },
+            beforeJoin: () => beforeJoin(),
+            afterJoin: () => afterJoin(),
         };
     },
 };

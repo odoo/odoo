@@ -9,10 +9,21 @@ import { rpc } from "@web/core/network/rpc";
 import { SlideQuizFinishDialog } from "@website_slides/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-// TODO: replace textContent with t-out
-// TODO: replace classList with t-att-class
-// TODO: check that should not replace some querySelectors with querySelectorAll
-// TODO: solve bug showing errors when should not
+// TODO: replace some textContent with t-out and classList with t-att-class
+// => No easy conversions left
+// TODO: fix bug that occurred while unsubscribing from course
+/*
+error_service.js:79 OwlError: Invalid props for component 'SlideUnsubscribeDialog': 'channelId' is not a number
+    Error: Invalid props for component 'SlideUnsubscribeDialog': 'channelId' is not a number
+        at Object.validateProps (:8069/web/assets/1/d…lib/owl/owl.js:3214)
+        at DialogWrapper.template (eval at compile (owl.js:5752:1), <anonymous>:10:13) (/web/static/lib/owl/owl.js:5752)
+        at Fiber._render (:8069/web/assets/1/d…lib/owl/owl.js:1783)
+        at Fiber.render (:8069/web/assets/1/d…lib/owl/owl.js:1775)
+        at ComponentNode.initiateRender (:8069/web/assets/1/d…lib/owl/owl.js:2455)
+handleError	@	error_service.js:79
+(anonymous)	@	error_service.js:154
+*/
+// TODO: check how sessionAnswers is filled to text automatic joinChannel
 
 class WebsiteSlidesQuiz extends Interaction {
     dynamicContent = {
@@ -33,7 +44,7 @@ class WebsiteSlidesQuiz extends Interaction {
         },
         ".o_wslides_js_quiz_add_question": {
             "t-att-class": () => ({
-                "d-none": !this.showAddButton || this.data.questionCount == 0,
+                "d-none": !this.showAddButton || this.data.questionCount === 0,
             }),
         },
         ".o_wslides_js_lesson_quiz_question .o_wslides_js_quiz_edit_del,\
@@ -49,29 +60,28 @@ class WebsiteSlidesQuiz extends Interaction {
         ".o_wslides_js_quiz_submit_error_text": {
             "t-out": () => this.error || "",
         },
-        ".o_wslides_js_course_join_link": {
-            "t-on-before_course_join": this.saveQuizAnswersToSession,
-            "t-on-after_course_join": this.afterJoin,
+        ".o_wslides_js_lesson_quiz_resource_info": {
+            "t-att-class": () => ({ "d-none": !this.showResourceInfo }),
         },
     };
 
     setup() {
-        // TODO: remove unused fields
         this.orm = this.services.orm;
         this.sortable = this.services.sortable;
         this.dialog = this.services.dialog;
 
         this.quizService = this.services.slides_course_quiz;
-        const courseJoinService = this.services.slides_course_join;
+        this.courseJoinService = this.services.slides_course_join;
         this.data = this.quizService.get();
-        courseJoinService.registerBeforeJoin(this.saveQuizAnswersToSession.bind(this));
-        courseJoinService.registerAfterJoin(this.afterJoin.bind(this));
+        this.courseJoinService.registerBeforeJoin(this.saveQuizAnswersToSession.bind(this));
+        this.courseJoinService.registerAfterJoin(this.afterJoin.bind(this));
 
         this.bindedSortable = null;
         this.editedQuestionEls = {};
         this.showAddButton = true;
         this.showEditOptions = true;
         this.showValidationInfo = false;
+        this.showResourceInfo = false;
         this.error = null;
     }
 
@@ -81,7 +91,7 @@ class WebsiteSlidesQuiz extends Interaction {
         this.checkLocationHref();
         if (!this.data.isMember) {
             this.renderJoinButton();
-        } else if (this.data.sessionAnswers) {
+        } else if (this.data.sessionAnswers.length > 0) {
             this.applySessionAnswers();
             this.onQuizSubmit();
         }
@@ -176,7 +186,7 @@ class WebsiteSlidesQuiz extends Interaction {
      * deleting a question.
      */
     async reorderQuestions() {
-        await this.orm.webResequence("slide.question", this.getQuestionsIds());
+        await this.waitFor(this.orm.webResequence("slide.question", this.getQuestionsIds()));
         this.modifyQuestionsSequence();
     }
 
@@ -199,7 +209,6 @@ class WebsiteSlidesQuiz extends Interaction {
     renderAnswersHighlightingAndComments() {
         for (const questionEl of this.el.querySelectorAll(".o_wslides_js_lesson_quiz_question")) {
             const questionId = getDataFromEl(questionEl).questionId;
-            console.log(this.data);
             const isCorrect = this.data.answers[questionId].is_correct;
             for (const answerEl of questionEl.querySelectorAll("a.o_wslides_quiz_answer")) {
                 for (const iconEl of answerEl.querySelectorAll("i.fa")) {
@@ -233,7 +242,7 @@ class WebsiteSlidesQuiz extends Interaction {
      * Will check if we have answers coming from the session and re-apply them.
      */
     applySessionAnswers() {
-        if (!this.data.sessionAnswers || this.data.sessionAnswers.length === 0) {
+        if (this.data.sessionAnswers.length === 0) {
             return;
         }
         for (const questionEl of this.el.querySelectorAll(".o_wslides_js_lesson_quiz_question")) {
@@ -250,7 +259,7 @@ class WebsiteSlidesQuiz extends Interaction {
         }
 
         // reset answers coming from the session
-        this.data.sessionAnswers = null;
+        this.data.sessionAnswers = [];
     }
 
     /**
@@ -262,23 +271,15 @@ class WebsiteSlidesQuiz extends Interaction {
             return;
         }
         validationEl.replaceChildren();
-        console.log(this.data);
-        this.renderAt("slide.slide.quiz.validation", this.data, validationEl);
+        this.renderAt(
+            "slide.slide.quiz.validation",
+            {
+                ...this.data,
+                redirectURL: encodeURIComponent(document.URL),
+            },
+            validationEl
+        );
         this.showValidationInfo = true;
-    }
-
-    /**
-     * Toggle additional resource info box
-     * @param {Boolean} show - Whether show or hide the information
-     */
-    toggleAdditionalResourceInfo(show) {
-        // TODO: use att-class and check if not child of this.el instead of document
-        const resourceInfoEl = document.querySelector(".o_wslides_js_lesson_quiz_resource_info");
-        if (resourceInfoEl) {
-            show
-                ? resourceInfoEl.classList.remove("d-none")
-                : resourceInfoEl.classList.add("d-none");
-        }
     }
 
     /**
@@ -303,10 +304,10 @@ class WebsiteSlidesQuiz extends Interaction {
         if (
             !this.data.publicUser &&
             this.data.channelEnroll === "public" &&
-            this.data.sessionAnswers
+            this.data.sessionAnswers.length > 0
         ) {
-            // TODO: trigger event to join channel
-            // courseJoinWidget.joinChannel(this.data.channelId);
+            // TODO: check that it works
+            this.courseJoinService.joinChannel(this.data.channelId);
         }
     }
 
@@ -326,10 +327,12 @@ class WebsiteSlidesQuiz extends Interaction {
      * according to quiz result.
      */
     async onQuizSubmit() {
-        const data = await rpc("/slides/slide/quiz/submit", {
-            slide_id: this.data.id,
-            answer_ids: this.getQuizAnswers(),
-        });
+        const data = await this.waitFor(
+            rpc("/slides/slide/quiz/submit", {
+                slide_id: this.data.id,
+                answer_ids: this.getQuizAnswers(),
+            })
+        );
         if (data.error) {
             this.showErrorMessage(data.error);
             return;
@@ -375,7 +378,7 @@ class WebsiteSlidesQuiz extends Interaction {
         this.showEditOptions = false;
         this.renderAnswersHighlightingAndComments();
         this.renderValidationInfo();
-        this.toggleAdditionalResourceInfo(!completed);
+        this.showResourceInfo = !completed;
     }
 
     /**
@@ -438,9 +441,11 @@ class WebsiteSlidesQuiz extends Interaction {
      * the quiz again
      */
     async onResetClick() {
-        await rpc("/slides/slide/quiz/reset", {
-            slide_id: this.data.id,
-        });
+        await this.waitFor(
+            rpc("/slides/slide/quiz/reset", {
+                slide_id: this.data.id,
+            })
+        );
         window.location.reload();
     }
 
@@ -461,7 +466,7 @@ class WebsiteSlidesQuiz extends Interaction {
      * and reload the page to update the view.
      */
     async afterJoin() {
-        await this.saveQuizAnswersToSession();
+        await this.waitFor(this.saveQuizAnswersToSession());
         window.location.reload();
     }
 
@@ -493,7 +498,7 @@ class WebsiteSlidesQuiz extends Interaction {
         const editedQuestionEl = event.currentTarget.closest(".o_wslides_js_lesson_quiz_question");
         const question = this.getQuestionDetails(editedQuestionEl);
         this.editedQuestionEls[question.id] = editedQuestionEl;
-        this.quizService.updateQuestion(question);
+        this.quizService.beginUpdatingQuestion(question);
         this.renderAt(
             "slide.quiz.question.input",
             {
@@ -525,7 +530,10 @@ class WebsiteSlidesQuiz extends Interaction {
             cancel: () => {},
             cancelLabel: _t("No"),
             confirm: async () => {
-                await this.orm.unlink("slide.question", [questionId]);
+                if (this.isDestroyed) {
+                    return;
+                }
+                await this.waitFor(this.orm.unlink("slide.question", [questionId]));
                 this.onDeleteQuestion(questionId);
             },
             confirmLabel: _t("Yes"),
@@ -572,7 +580,7 @@ class WebsiteSlidesQuiz extends Interaction {
     insertContent(content, locationEl, position) {
         const parser = new DOMParser();
         const contentEls = parser.parseFromString(content, "text/html").body.children;
-        if (contentEls.length == 0) {
+        if (contentEls.length === 0) {
             return;
         }
         this.insert(contentEls[0], locationEl, position);
@@ -630,7 +638,8 @@ class WebsiteSlidesCoursePageQuiz extends WebsiteSlidesCoursePage {
 
     setup() {
         super.setup();
-        this.data = this.services.slides_course_quiz.get();
+        this.quizService = this.services.slides_course_quiz;
+        this.data = this.quizService.get();
     }
 
     onQuizNextSlide() {
@@ -661,32 +670,42 @@ class WebsiteSlidesCoursePageQuiz extends WebsiteSlidesCoursePage {
 
     /**
      * After a slide has been marked as completed / uncompleted, update the state
-     * of this widget and reload the slide if needed (e.g. to re-show the questions
+     * of this interaction and reload the slide if needed (e.g. to re-show the questions
      * of a quiz).
      *
      * @override
      * @param {Object} slide
      * @param {Boolean} completed
      */
-    // TODO: fix this method (quiz does not contain fetchQuiz method)
     async toggleCompletionButton(slide, completed = true) {
         super.toggleCompletionButton(...arguments);
-        // if (
-        //     this.quiz &&
-        //     this.quiz.slide.id === slide.id &&
-        //     !completed &&
-        //     this.quiz.quiz.questionCount
-        // ) {
-        //     // The quiz has been marked as "Not Done", re-load the questions
-        //     this.quiz.quiz.answers = null;
-        //     this.quiz.quiz.sessionAnswers = null;
-        //     this.quiz.slide.completed = false;
-        //     this.quiz._fetchQuiz().then(() => {
-        //         this.quiz.renderElement();
-        //         this.quiz._renderValidationInfo();
-        //     });
-        // }
+        if (
+            this.data.hasQuiz &&
+            this.data.id === slide.id &&
+            !completed &&
+            this.data.questionCount
+        ) {
+            // The quiz has been marked as "Not Done", re-load the questions
+            // TODO: previously this did not work at all,
+            // because of error in slides_course_page widget
+            // TODO: ask if "reset" is the wanted behaviour
+            await this.waitFor(
+                rpc("/slides/slide/quiz/reset", {
+                    slide_id: this.data.id,
+                })
+            );
+            window.location.reload();
 
+            // Alternative
+            // this.data.answers = [];
+            // this.data.sessionAnswers = [];
+            // this.data.completed = false;
+            // await this.quizService.fetchQuiz();
+            // TODO: renderElement quiz + renderValidation stuff
+            // => does not update the backend
+        }
+
+        // TODO: understand what this means
         // // The quiz has been submitted in a documentation and in non fullscreen view,
         // // should update the button "Mark Done" to "Mark To Do"
         // const $doneButton = $(".o_wslides_done_button");
@@ -702,7 +721,6 @@ class WebsiteSlidesCoursePageQuiz extends WebsiteSlidesCoursePage {
     }
 }
 
-// registry.category("public.interactions").add("website_slides.WebsiteSlidesQuiz", WebsiteSlidesQuiz);
 registry
     .category("public.interactions")
     .add("website_slides.WebsiteSlidesCoursePageQuiz", WebsiteSlidesCoursePageQuiz);

@@ -83,6 +83,7 @@ Featuring
         ],
         'web.assets_frontend': [
             'website_slides/static/src/interactions/**/*',
+            'website_slides/static/src/js/slides_course_services.js',
             'website_slides/static/src/scss/website_slides.scss',
             'website_slides/static/src/scss/website_slides_profile.scss',
             'website_slides/static/src/scss/slides_slide_fullscreen.scss',

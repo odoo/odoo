@@ -5,6 +5,15 @@ import { rpc } from "@web/core/network/rpc";
 import { session } from "@web/session";
 
 export class WebsiteSlidesCoursePage extends Interaction {
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _progressPercentage: () =>
+            document.querySelector(
+                ".o_wslides_channel_completion_progressbar .o_wslides_progress_percentage"
+            ),
+        _progressBar: () =>
+            document.querySelector(".o_wslides_channel_completion_progressbar .progress-bar"),
+    };
     dynamicContent = {
         "button.o_wslides_button_complete": {
             "t-on-click.prevent": this.onCompleteClick,
@@ -15,23 +24,29 @@ export class WebsiteSlidesCoursePage extends Interaction {
                 "d-flex": this.progressbarCompletion < 100,
             }),
         },
-        ".o_wslides_channel_completion_progressbar .progress-bar": {
-            "t-att-style": () => ({ width: `${this.progressbarCompletion}%` }),
-        },
-        ".o_wslides_channel_completion_progressbar .o_wslides_progress_percentage": {
-            "t-out": () => this.progressbarCompletion,
-        },
         ".o_wslides_channel_completion_completed": {
             "t-att-class": () => ({ "d-none": this.progressbarCompletion < 100 }),
         },
+        _progressBar: {
+            "t-att-style": () => ({ width: `${this.progressbarCompletion}%` }),
+        },
+        _progressPercentage: {
+            "t-out": () => this.progressbarCompletion,
+        },
         _root: {
+            // TODO: check that required and correct selector
+            // => yes required, selector should work but not yet checked
             "t-on-slide_completed": this.onSlideCompleted,
             "t-on-slide_mark_completed": this.onSlideMarkCompleted,
         },
     };
 
     setup() {
-        this.progressbarCompletion = 0;
+        this.progressbarCompletion = parseInt(
+            document.querySelector(
+                ".o_wslides_channel_completion_progressbar .o_wslides_progress_percentage"
+            )?.textContent || 0
+        );
     }
 
     /**
@@ -76,6 +91,7 @@ export class WebsiteSlidesCoursePage extends Interaction {
      */
     updateProgressbar(channelCompletion) {
         this.progressbarCompletion = Math.min(100, channelCompletion);
+        this.updateContent();
     }
 
     /**
@@ -86,14 +102,21 @@ export class WebsiteSlidesCoursePage extends Interaction {
      *     false to mark the slide as not completed
      */
     async toggleSlideCompleted(slide, completed = true) {
-        if (!!slide.completed === !!completed || !slide.isMember || !slide.canSelfMarkCompleted) {
+        if (
+            !!slide.completed === !!completed ||
+            slide.isMember === undefined ||
+            (completed && slide.canSelfMarkCompleted === undefined) ||
+            (!completed && slide.canSelfMarkUncompleted === undefined)
+        ) {
             // no useless RPC call
             return;
         }
 
-        const data = await rpc(`/slides/slide/${completed ? "set_completed" : "set_uncompleted"}`, {
-            slide_id: slide.id,
-        });
+        const data = await this.waitFor(
+            rpc(`/slides/slide/${completed ? "set_completed" : "set_uncompleted"}`, {
+                slide_id: slide.id,
+            })
+        );
 
         this.toggleCompletionButton(slide, completed);
         this.updateProgressbar(data.channel_completion);

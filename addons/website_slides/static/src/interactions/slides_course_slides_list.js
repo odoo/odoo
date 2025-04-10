@@ -106,7 +106,7 @@ class WebsiteSlidesCourseSlidesList extends WebsiteSlidesCoursePage {
     }
 
     async reorderSlides() {
-        await this.orm.webResequence("slide.slide", this.getSlides());
+        await this.waitFor(this.orm.webResequence("slide.slide", this.getSlides()));
         this.checkForEmptySections();
     }
 

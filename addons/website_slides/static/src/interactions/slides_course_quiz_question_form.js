@@ -27,16 +27,15 @@ class WebsiteSlidesQuestionForm extends Interaction {
     };
 
     setup() {
-        this.data = this.services.slides_course_quiz.get();
+        this.quizService = this.services.slides_course_quiz;
+        this.data = this.quizService.get();
         const data = getDataFromEl(this.el);
-        console.log("DOM DATA:", data, this.el.dataset);
         this.update = data.update;
         if (this.update) {
             this.question = this.data.currentlyEditedQuestions[data.questionId];
         } else {
             this.question = {};
         }
-        console.log("QUESTION FORM:", this);
         this.el.querySelector(".o_wslides_quiz_question input").focus();
         this.error = null;
     }
@@ -135,11 +134,14 @@ class WebsiteSlidesQuestionForm extends Interaction {
         const formEl = this.el.querySelector("form");
         if (this.isValidForm(formEl)) {
             const values = this.serializeForm(formEl);
-            const renderedQuestion = await rpc("/slides/slide/quiz/question_add_or_update", values);
+            const renderedQuestion = await this.waitFor(
+                rpc("/slides/slide/quiz/question_add_or_update", values)
+            );
             if (typeof renderedQuestion === "object" && renderedQuestion.error) {
                 this.error = renderedQuestion.error;
             } else if (options.update) {
                 this.error = null;
+                this.quizService.endUpdatingQuestion(this.question);
                 this.el.dispatchEvent(
                     new CustomEvent("display_updated_question", {
                         detail: {
@@ -151,6 +153,7 @@ class WebsiteSlidesQuestionForm extends Interaction {
                 );
             } else {
                 this.error = null;
+                this.quizService.endUpdatingQuestion(this.question);
                 this.el.dispatchEvent(
                     new CustomEvent("display_created_question", {
                         detail: {
