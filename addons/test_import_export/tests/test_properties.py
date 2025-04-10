@@ -224,6 +224,49 @@ class TestPropertiesExportImport(HttpCase):
             ],
         )
 
+    def test_export_complex_path_properties(self):
+        path_records = self.env['import.path.properties'].create([
+            {
+                'properties_id': self.properties_records[0].id,
+                'another_properties_id': self.properties_records[1].id,  # Same definition
+            },
+            {
+                'properties_id': self.properties_records[3].id,
+                'another_properties_id': self.properties_records[2].id,
+            }
+        ])
+        export_fields = [
+            "properties_id/properties.m2m_prop/name",  # '' for [0], <All partner name> for [1]
+            "another_properties_id/properties.m2o_prop/name",  # Partner Name 1 for [0], '' for [1]
+            "another_properties_id/properties.bool_prop",  # '' for [0], True for [1]
+            "all_properties_ids/properties.char_prop",  # 'Not the default'/'Def' for [0], '' for [1]
+        ]
+
+        self.assertEqual(
+            path_records.with_context(import_compat=False).export_data(export_fields)['datas'],
+            [
+                ['', 'Name Partner 1', '', 'Not the default'],
+                ['', '', '', 'Def'],
+                ['Name Partner 1', '', True, ''],
+                ['Name Partner 2', '', '', ''],
+                ['Name Partner 3', '', '', ''],
+                ['', '', '', ''],  # For the path_records[1] and all_properties_ids
+            ]
+        )
+
+        export_fields = [
+            "properties_id/properties.m2m_prop",  # '' for [0], <All partner name> for [1]
+            "another_properties_id/properties.m2o_prop",  # Partner Name 1 for [0], '' for [1]
+            "another_properties_id/properties.bool_prop",  # '' for [0], True for [1]
+        ]
+        self.assertEqual(
+            path_records.export_data(export_fields)['datas'],
+            [
+                ['', 'Name Partner 1', ''],
+                ['Name Partner 1,Name Partner 2,Name Partner 3', '', True],
+            ]
+        )
+
     def test_import_properties(self):
         def_record_1 = self.definition_records[0]
         def_record_2 = self.definition_records[1]

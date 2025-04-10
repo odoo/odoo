@@ -129,6 +129,7 @@ pre {
     // use table-bordered...)
     table.table.table-bordered {
         table-layout: fixed;
+        overflow-wrap: break-word;
         td {
             min-width: 20px;
         }
@@ -577,6 +578,11 @@ pre {
                 &:hover, &:focus {
                     color: $dropdown-link-hover-color !important;
                 }
+                &.active, &:active {
+                    // Restore BS default custom property to allow contextual
+                    // active state. (see bootstrap_review_frontend.scss)
+                    color: var(--dropdown-link-active-color, #{$dropdown-link-active-color}) !important;
+                }
             }
             &.disabled,
             &:disabled {
@@ -706,20 +712,6 @@ pre {
                     color: color-contrast($-btn-primary-color);
                 }
             }
-            .dropdown-menu .dropdown-item { // Need to add +1 priority thanks to
-                                            // .dropdown-menu (see .o_cc).
-                &.active,
-                &:active {
-                    &, h6 { // Quick fix: sometimes we use h6 in dropdowns
-                        @include gradient-bg($-btn-primary-color);
-                        color: color-contrast($-btn-primary-color) !important;
-
-                        &:hover, &:focus {
-                            color: color-contrast($-btn-primary-color) !important;
-                        }
-                    }
-                }
-            }
             a.list-group-item {
                 color: $-btn-primary-color;
 
@@ -812,6 +804,9 @@ section, .oe_img_bg, [data-oe-shape-data] {
     }
     &.o_bg_img_center {
         background-position: center;
+    }
+    &.o_bg_img_origin_border_box {
+        background-origin: border-box;
     }
 }
 

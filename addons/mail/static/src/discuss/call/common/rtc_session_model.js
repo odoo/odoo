@@ -1,16 +1,38 @@
 import { Record } from "@mail/core/common/record";
+import { Deferred } from "@web/core/utils/concurrency";
 
 export class RtcSession extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").RtcSession>} */
     static records = {};
+    static awaitedRecords = new Map();
     /** @returns {import("models").RtcSession} */
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").RtcSession|import("models").RtcSession[]} */
-    static insert(data) {
-        return super.insert(...arguments);
+    /** @returns {Promies<import("models").RtcSession>} */
+    static async getWhenReady(id) {
+        const session = this.get(id);
+        if (!session) {
+            let deferred = this.awaitedRecords.get(id);
+            if (!deferred) {
+                deferred = new Deferred();
+                this.awaitedRecords.set(id, deferred);
+                setTimeout(() => {
+                    deferred.resolve();
+                    this.awaitedRecords.delete(id);
+                }, 120_000);
+            }
+            return deferred;
+        }
+        return session;
+    }
+    /** @returns {import("models").RtcSession} */
+    static new() {
+        const record = super.new(...arguments);
+        this.awaitedRecords.get(record.id)?.resolve(record);
+        this.awaitedRecords.delete(record.id);
+        return record;
     }
     static _insert() {
         /** @type {import("models").RtcSession} */
@@ -85,6 +107,14 @@ export class RtcSession extends Record {
     videoStreams = new Map();
     /** @type {string} */
     mainVideoStreamType;
+    /**
+     * Represents the sequence of the last valid connection with that session. This can be used to
+     * compare connection attempts (if they follow the last valid connection) and to validate information
+     * (if they match the sequence).
+     *
+     *  @type {number}
+     */
+    sequence = 0;
     // RTC stats
     connectionState;
     localCandidateType;

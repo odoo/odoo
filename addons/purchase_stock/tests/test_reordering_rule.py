@@ -715,6 +715,96 @@ class TestReorderingRule(TransactionCase):
         self.assertTrue(po_line)
         self.assertEqual("[A] product TEST", po_line.name)
 
+    def test_multi_lingual_orderpoints(self):
+        """
+        Define a product with description in English and French.
+        Use the same reordering rule twice with a partner (customer)
+        set up with French as language. Verify that the generated PO
+        contains a single POL with the cumulative quantity.
+        """
+        warehouse = self.env.ref("stock.warehouse0")
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'code': 'WH2',
+            'resupply_wh_ids': warehouse.ids,
+        })
+        route_buy_id = self.ref('purchase_stock.route_warehouse0_buy')
+        product = self.env["product.product"].create({
+            "name": "product TEST",
+            "standard_price": 100.0,
+            "is_storable": True,
+            "uom_id": self.ref("uom.product_uom_unit"),
+            "default_code": "A",
+            "route_ids": [Command.set([route_buy_id])],
+        })
+        # Enable french and add a french description
+        self.env['res.lang']._activate_lang('fr_FR')
+        product.with_context(lang='fr_FR').name = 'produit en français'
+        default_vendor = self.env["res.partner"].create({
+            "name": "Super Supplier",
+            "lang": "fr_FR",
+        })
+        self.env["product.supplierinfo"].create({
+            "partner_id": default_vendor.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
+            "delay": 7,
+        })
+        warehouse_2.resupply_route_ids.rule_ids.procure_method = 'make_to_order'
+        # we create a dummy reordering rule for an other product in the other warehouse to mess up the
+        # computation of the qty_to_order in case the value of both records is computed in batch
+        orderpoint, dummy = self.env['stock.warehouse.orderpoint'].create([
+            {
+                'name': 'RR for %s' % product.name,
+                'warehouse_id': warehouse_2.id,
+                'location_id': warehouse_2.lot_stock_id.id,
+                'trigger': 'auto',
+                'product_id': product.id,
+                'route_id': warehouse_2.resupply_route_ids.id,
+                'qty_to_order_manual': 5.0,
+            },
+            {
+                'name': 'RR for %s' % 'Dummy',
+                'warehouse_id': self.ref('stock.warehouse0'),
+                'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+                'trigger': 'auto',
+                'product_id': self.product_01.id,
+                'route_id': route_buy_id,
+            },
+        ])
+        french_user = self.env['res.users'].create(
+            {
+                'login': 'french user',
+                'name': 'Arnold',
+                'email': 'frenchuser@example.com',
+                'lang': 'fr_FR',
+                'groups_id': [Command.set(self.env.user.groups_id.ids)]
+            }
+        )
+        self.env.company.partner_id.lang = "fr_FR"
+        orderpoint.with_user(french_user).action_replenish() # impersonnate a french user.
+
+        po_line = self.env['purchase.order.line'].search([('partner_id', '=', default_vendor.id), ('product_id', '=', product.id)], limit=1)
+        self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 5.0}])
+        self.assertRecordValues(po_line.move_dest_ids, [{"product_uom_qty": 5.0}])
+        orderpoint.qty_to_order_manual = 4.0
+        orderpoint.with_user(french_user).action_replenish()
+        self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 9.0}])
+        self.assertEqual(len(po_line.order_id.order_line), 1)
+        self.assertRecordValues(po_line.move_dest_ids, [{"product_uom_qty": 9.0}])
+        orderpoint.product_min_qty = 10.0
+        orderpoint.product_max_qty = 20.0
+        # run the scheduler to test the use case where the user is always the SUPERUSER
+        # we invalidate the cache to force a recompute of the qty_to_order_computed in batch
+        (orderpoint | dummy).invalidate_recordset()
+        self.env['procurement.group'].run_scheduler()
+        self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 20.0}])
+        self.assertEqual(len(po_line.order_id.order_line), 1)
+        # the moves_dest_ids are not expected to be merged since the scheduler is excuted by robodoo in en_US rather fr_FR
+        self.assertRecordValues(po_line.move_dest_ids.sorted('product_uom_qty'), [
+            {"description_picking": "produit en français", "product_uom_qty": 9.0},
+            {"description_picking": "product TEST", "product_uom_qty": 11.0},
+        ])
+
     def test_multi_locations_and_reordering_rule(self):
         """ Suppose two orderpoints for the same product, each one to a different location
         If the user triggers each orderpoint separately, it should still produce two
@@ -1357,3 +1447,73 @@ class TestReorderingRule(TransactionCase):
             [("product_id", "=", self.product_01.id)])
         self.assertTrue(po_line)
         self.assertEqual(po_line.order_id.currency_id, foreign_currency)
+
+    def test_intercompany_reordering_rules(self):
+        """
+        Have 2 companies, create a procurment to fulfil a demand in COMP1 using custom route
+        with 2 rules: an intercompany transit from COMP2 to COMP1 and a buy rule linked to COMP2.
+
+        Check that the purchase order is created in COMP2, using its set of supplier.
+        """
+        company_a, company_b = self.env['res.company'].create([
+            {'name': 'Company A'},
+            {'name': 'Company B'},
+        ])
+        warehouse_a, warehouse_b = self.env['stock.warehouse'].search([('company_id', 'in', [company_a.id, company_b.id])], limit=2).sorted('company_id')
+        route_resupply_from_intercomp = self.env['stock.route'].create([
+            {
+                'name': 'ressuply from intercomp',
+                'active': True,
+                'company_id': False,
+                'product_selectable': True,
+                'rule_ids': [
+                    Command.create({
+                        'name': 'inter-comp -> Stock A',
+                        'action': 'pull',
+                        'picking_type_id': warehouse_a.int_type_id.id,
+                        'location_src_id': self.ref('stock.stock_location_inter_company'),
+                        'location_dest_id': warehouse_a.lot_stock_id.id,
+                        'company_id': company_a.id,
+                        'procure_method': 'make_to_order',
+                    }),
+                    Command.create({
+                        'name': 'Stock B -> inter-comp',
+                        'action': 'buy',
+                        'picking_type_id': warehouse_b.out_type_id.id,
+                        'location_src_id': warehouse_b.lot_stock_id.id,
+                        'location_dest_id': self.ref('stock.stock_location_inter_company'),
+                        'company_id': company_b.id,
+                        'procure_method': 'make_to_order',
+                    }),
+                    Command.create({
+                        'name': 'Buy -> Stock B',
+                        'action': 'buy',
+                        'picking_type_id': warehouse_b.in_type_id.id,
+                        'location_dest_id': warehouse_b.lot_stock_id.id,
+                        'company_id': company_b.id,
+                        'procure_method': 'make_to_stock',
+                    })
+                ]
+            },
+        ])
+        product = self.env['product.product'].create({
+            'name': 'super product',
+            'is_storable': True,
+            'route_ids': [Command.set(route_resupply_from_intercomp.ids)],
+            'seller_ids': [Command.create({'partner_id': self.partner.id, 'company_id': company_b.id})],
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_company(company_a).create({
+            'name': 'RR for %s' % product.name,
+            'warehouse_id': warehouse_a.id,
+            'location_id': warehouse_a.lot_stock_id.id,
+            'trigger': 'manual',
+            'product_id': product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 10,
+            'route_id': route_resupply_from_intercomp.id,
+        })
+        orderpoint.action_replenish()
+        # check that the a PO was created in company B for 10 units
+        self.assertRecordValues(self.env['purchase.order'].search([('company_id', '=', company_b.id), ('partner_id', '=', self.partner.id)], limit=1).order_line, [{
+            'product_id': product.id, 'product_uom_qty': 10,
+        }])

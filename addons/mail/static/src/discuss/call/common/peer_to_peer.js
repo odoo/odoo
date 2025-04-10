@@ -66,6 +66,7 @@ export class Peer {
     connection;
     /** @type {number} */
     connectRetryDelay = INITIAL_RECONNECT_DELAY;
+    sequence = 0;
     /** @type {RTCDataChannel} */
     dataChannel;
     hasPriority = false;
@@ -104,6 +105,7 @@ export class Peer {
             dataChannel,
             hasPriority = false,
             connectRetryDelay = INITIAL_RECONNECT_DELAY,
+            sequence = 0,
         }
     ) {
         this.id = id;
@@ -111,6 +113,7 @@ export class Peer {
         this.dataChannel = dataChannel;
         this.hasPriority = hasPriority;
         this.connectRetryDelay = connectRetryDelay;
+        this.sequence = sequence;
         this.ready = new Deferred();
     }
 
@@ -187,6 +190,14 @@ export class PeerToPeer extends EventTarget {
     channelId;
     /** @type {Map<number, Peer>}*/
     peers = new Map();
+    /**
+     * Predicate to check if we accept the offer from a peer, this can be useful if we want to prevent
+     * negotiations for connections that we do not want to manage.
+     *
+     * @param {number} id the id of the peer to check if we accept the offer
+     * @param {number} sequence the sequence of the offer, it indicates the order of the connection
+     */
+    acceptOffer = async (id, sequence) => true;
     /** @type {number} */
     _batchDelay = DEFAULT_BUS_BATCH_DELAY;
     /** @type {Info} */
@@ -473,6 +484,7 @@ export class PeerToPeer extends EventTarget {
                     name: UPDATE_EVENT.BROADCAST,
                     payload: { senderId: id, message: payload },
                 });
+                peer.ready.resolve(true);
                 break;
             }
             case INTERNAL_EVENT.DISCONNECT: {
@@ -504,8 +516,17 @@ export class PeerToPeer extends EventTarget {
                 break;
             }
             case INTERNAL_EVENT.OFFER: {
+                try {
+                    const accepted = await this.acceptOffer(id, payload.sequence);
+                    if (!accepted) {
+                        this._emitLog(id, "offer rejected", LOG_LEVEL.INFO);
+                        return;
+                    }
+                } catch (error) {
+                    this._emitLog(id, `offer rejected: ${error}`, LOG_LEVEL.INFO);
+                }
                 if (!peer) {
-                    peer = this._createPeer(id);
+                    peer = this._createPeer(id, { sequence: payload.sequence });
                 }
                 if (
                     INVALID_ICE_CONNECTION_STATES.has(peer.connection.iceConnectionState) ||
@@ -555,7 +576,7 @@ export class PeerToPeer extends EventTarget {
                     return;
                 }
                 peer.isBuildingAnswer = false;
-                if (!this.isActive) {
+                if (!this.isActive || !this.peers.has(id)) {
                     return;
                 }
                 this._emitLog(id, `sending answer`, LOG_LEVEL.DEBUG);
@@ -574,10 +595,8 @@ export class PeerToPeer extends EventTarget {
      * @param {LOG_LEVEL[keyof LOG_LEVEL]} logLevel
      */
     setLoggingLevel(logLevel) {
-        const makeLog = (level) => {
-            return (id, message) => {
-                this.dispatchEvent(new CustomEvent("log", { detail: { id, level, message } }));
-            };
+        const makeLog = (level) => (id, message) => {
+            this.dispatchEvent(new CustomEvent("log", { detail: { id, level, message } }));
         };
         this._loggingFunctions = {
             [LOG_LEVEL.DEBUG]: () => {},
@@ -664,7 +683,7 @@ export class PeerToPeer extends EventTarget {
                 this._emitLog(id, `attempting to recover connection: ${reason}`, LOG_LEVEL.ERROR);
                 this._busNotify(INTERNAL_EVENT.DISCONNECT, { targets: [peer.id] });
                 this.removePeer(peer.id);
-                this.addPeer(peer.id, { connectRetryDelay: delay });
+                this.addPeer(peer.id, { connectRetryDelay: delay, sequence: peer.sequence });
             }, delay)
         );
     }
@@ -788,7 +807,7 @@ export class PeerToPeer extends EventTarget {
             if (!event.candidate) {
                 return;
             }
-            if (!this.isActive) {
+            if (!this.isActive || !this.peers.has(id)) {
                 return;
             }
             await this._busNotify(INTERNAL_EVENT.ICE_CANDIDATE, {
@@ -849,17 +868,18 @@ export class PeerToPeer extends EventTarget {
                 return;
             }
             peer.isBuildingOffer = false;
-            if (!this.isActive) {
+            if (!this.isActive || !this.peers.has(id)) {
                 return;
             }
             await this._busNotify(INTERNAL_EVENT.OFFER, {
                 payload: {
                     sdp: peerConnection.localDescription,
+                    sequence: peer.sequence,
                 },
                 targets: [id],
             });
         });
-        peerConnection.addEventListener("track", ({ transceiver, track }) => {
+        peerConnection.addEventListener("track", async ({ transceiver, track }) => {
             if (!peer?.id || !this.peers.has(peer.id)) {
                 return;
             }
@@ -869,6 +889,9 @@ export class PeerToPeer extends EventTarget {
                 return;
             }
             peer.medias[streamType].track = track;
+            if (!(await peer.ready)) {
+                return;
+            }
             this._emitUpdate({
                 name: UPDATE_EVENT.TRACK,
                 payload: {
@@ -876,6 +899,7 @@ export class PeerToPeer extends EventTarget {
                     type: streamType,
                     track,
                     active: peer.medias[streamType].active,
+                    sequence: peer.sequence,
                 },
             });
         });
@@ -887,7 +911,6 @@ export class PeerToPeer extends EventTarget {
                 // can be closed by the time the event is emitted
                 return;
             }
-            peer.ready.resolve();
             dataChannel.send(
                 JSON.stringify({
                     event: INTERNAL_EVENT.INFO,
@@ -895,6 +918,7 @@ export class PeerToPeer extends EventTarget {
                     payload: this._localInfo,
                 })
             );
+            this.broadcast({ sequence: peer.sequence });
         });
         return peer;
     }

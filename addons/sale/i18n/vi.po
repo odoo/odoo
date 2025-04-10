@@ -3,16 +3,16 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-04-07 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -645,7 +645,7 @@ msgid ""
 "            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is available.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
@@ -694,7 +694,7 @@ msgstr ""
 "            có giá trị là <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span>.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">báo giá</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-out=\"doc_name or ''\">báo giá</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (với mã tham chiếu: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
@@ -1142,7 +1142,7 @@ msgstr ""
 "  - Thủ công: số lượng được nhập thủ công trên dòng\n"
 "  - Phân tích từ chi phí: số lượng dựa trên tổng các khoản chi phí đã ghi nhận\n"
 "  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với dòng bán hàng\n"
-"  - Dịch chuyển tồn kho: số lượng đến từ các phiếu lấy hàng đã xác nhận\n"
+"  - Dịch chuyển tồn kho: số lượng đến từ các phiếu xuất kho đã xác nhận\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
@@ -4200,7 +4200,7 @@ msgstr "Yêu cầu thanh toán online từ khách hàng để xác nhận đơn 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
 msgid "Request a online signature from the customer to confirm the order."
-msgstr "Yêu cầu chữ ký online từ khách hàng để xác nhận đơn hàng."
+msgstr "Yêu cầu ký tên online từ khách hàng để xác nhận đơn hàng."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4880,6 +4880,11 @@ msgstr ""
 " thái 'hoàn tất' hoặc 'đã ủy quyền' và được liên kết với đơn hàng này."
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Tham số hệ thống"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -4902,9 +4907,19 @@ msgid "Tax Country"
 msgstr "Quốc gia tính thuế"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax Excl."
+msgstr "Chưa bao gồm thuế"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax ID"
 msgstr "Mã số thuế"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax Incl."
+msgstr "Bao gồm thuế"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -5530,11 +5545,6 @@ msgid "Untaxed Total"
 msgstr "Tổng tiền trước thuế"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
-msgid "Untaxed discount"
-msgstr "Chiết khấu trước thuế"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "UoM"
 msgstr "ĐVT"
@@ -5567,8 +5577,8 @@ msgstr "Cơ hội bán thêm"
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
-"Được nhân viên kinh doanh sử dụng khi họ gửi báo giá hoặc hóa đơn chiếu lệ "
-"cho khách hàng tiềm năng"
+"Được chuyên viên sales sử dụng khi họ gửi báo giá hoặc hóa đơn chiếu lệ cho "
+"khách hàng tiềm năng"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5587,7 +5597,7 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
-"Các khoản chi phí đã xác thực, hóa đơn mua hàng hoặc phiếu lấy hàng tồn kho "
+"Các khoản chi phí đã xác thực, hóa đơn mua hàng hoặc phiếu xuất kho tồn kho "
 "(được thiết lập để theo dõi chi phí) có thể được lập hóa đơn cho khách hàng "
 "theo giá thành hoặc giá bán."
 
@@ -5704,7 +5714,7 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
-"Bạn có thể chọn tất cả đơn đặt hàng và gửi hóa đơn hàng loạt, <br>\n"
+"Bạn có thể chọn tất cả đơn đặt hàng và gửi hóa đơn theo lô, <br>\n"
 "                 hoặc kiểm tra từng đơn hàng và gửi hóa đơn cho từng đơn một."
 
 #. module: sale
@@ -5749,6 +5759,12 @@ msgid ""
 msgstr ""
 "Bạn không thể thay đổi loại của một dòng đơn bán hàng. Thay vào đó, bạn nên "
 "xóa dòng hiện tại và tạo một dòng mới cho loại thích hợp."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+msgid "You cannot modify the product of this order line."
+msgstr "Bạn không thể sửa đổi sản phẩm của dòng đơn hàng này."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days

@@ -53,4 +53,14 @@
             }
         }
     }
+
+    // TODO: Remove in Master. It is necessary to hide the prefilled button when
+    // previewing the donation button while dragging it onto the page from the
+    // snippet menu. In the case where "display options" is not True, they are
+    // removed in "start()" anyway.
+    &:not([data-display-options="true"]) {
+        .s_donation_prefilled_buttons {
+            display: none;
+        }
+    }
 }

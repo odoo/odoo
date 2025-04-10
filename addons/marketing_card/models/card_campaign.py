@@ -113,7 +113,8 @@ class CardCampaign(models.Model):
             'content_header_dyn', 'content_header_path', 'content_header_color', 'content_sub_header',
             'content_sub_header_dyn', 'content_sub_header_path', 'content_section', 'content_section_dyn',
             'content_section_path', 'content_sub_section1', 'content_sub_section1_dyn', 'content_sub_header_color',
-            'content_sub_section1_path', 'content_sub_section2', 'content_sub_section2_dyn', 'content_sub_section2_path'
+            'content_sub_section1_path', 'content_sub_section2', 'content_sub_section2_dyn', 'content_sub_section2_path',
+            'card_template_id',
         ]
 
     def _check_access_right_dynamic_template(self):

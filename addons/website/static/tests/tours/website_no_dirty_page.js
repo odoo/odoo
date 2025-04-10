@@ -96,6 +96,13 @@ registerWebsitePreviewTour('website_no_dirty_page', {
             sel.collapse(el, 0);
             el.focus();
         },
+    }, {
+        content: "Add useless space at the end of the snippet class attribute, then click on it",
+        trigger: ":iframe .s_text_image",
+        async run(actions) {
+            this.anchor.setAttribute("class", this.anchor.getAttribute("class") + " ");
+            return actions.click();
+        },
     },
 ]));
 

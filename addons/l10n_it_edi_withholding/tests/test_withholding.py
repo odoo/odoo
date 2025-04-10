@@ -295,6 +295,51 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             self.assertEqual(-8.5, enasarco_imported_tax.amount)
             self.assertEqual(self.withholding_purchase_tax_23, line.tax_ids.filtered(lambda x: x.l10n_it_withholding_reason == 'ZO'))
 
+    def test_enasarco_tax_import_global(self):
+        """Test that if we have a unique ENASARCO line with a price of 0.0,
+        the pension fund contribution will be applied on the total amount of
+        the invoice instead of the line amount because it's considered as global.
+        """
+        applied_xml = """
+            <xpath expr="//DettaglioLinee[NumeroLinea=1]/AltriDatiGestionali" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=2]/AltriDatiGestionali" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=3]/AltriDatiGestionali" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=4]/AltriDatiGestionali" position="replace"/>
+
+            <xpath expr="//DettaglioLinee[NumeroLinea=4]" position="after">
+                <DettaglioLinee>
+                    <NumeroLinea>5</NumeroLinea>
+                    <Descrizione>Contributo ENASARCO</Descrizione>
+                    <PrezzoUnitario>0.00</PrezzoUnitario>
+                    <PrezzoTotale>0.00</PrezzoTotale>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                    <AltriDatiGestionali>
+                    <TipoDato>CASSA-PREV</TipoDato>
+                    <RiferimentoTesto>TC07 - ENASARCO</RiferimentoTesto>
+                    <RiferimentoNumero>63.75</RiferimentoNumero>
+                    </AltriDatiGestionali>
+                </DettaglioLinee>
+            </xpath>
+        """
+
+        invoice = self._assert_import_invoice('IT00470550013_enasa.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 765.0,
+            'amount_tax': 15.0,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.get_real_client_invoice_data().lines]
+        }], applied_xml)
+
+        invoice_data = self.get_real_client_invoice_data()
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in invoice_data.lines]):
+            enasarco_imported_tax = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type == 'TC07')
+            self.assertEqual(self.enasarco_purchase_tax, enasarco_imported_tax)
+            self.assertEqual(-8.5, enasarco_imported_tax.amount)
+            self.assertEqual(self.withholding_purchase_tax_23, line.tax_ids.filtered(lambda x: x.l10n_it_withholding_reason == 'ZO'))
+
     def test_inps_tax_export(self):
         """
             Invoice

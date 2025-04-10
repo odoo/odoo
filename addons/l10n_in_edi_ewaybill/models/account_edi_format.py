@@ -194,8 +194,8 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_in_edi_ewaybill_handle_zero_distance_alert_if_present(self, invoice, response):
         if invoice.l10n_in_distance == 0 and (alert := response.get("data", {}).get('alert')):
-            pattern = r", Distance between these two pincodes is \d+, "
-            if re.fullmatch(pattern, alert) and (distance := int(re.search(r'\d+', alert).group())) > 0:
+            pattern = r"Distance between these two pincodes is (\d+)"
+            if (match := re.search(pattern, alert)) and (distance := int(match.group(1))) > 0:
                 invoice.l10n_in_distance = distance
 
     def _l10n_in_edi_ewaybill_irn_post_invoice_edi(self, invoices):
@@ -508,9 +508,9 @@ class AccountEdiFormat(models.Model):
         extract_digits = self._l10n_in_edi_extract_digits
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         line_details = {
-            "productName": line.product_id.name or line.name,
+            "productName": line.product_id.name,
             "hsnCode": extract_digits(line.l10n_in_hsn_code),
-            "productDesc": line.product_id.display_name,
+            "productDesc": line.name,
             "quantity": line.quantity,
             "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[0] or "OTH",
             "taxableAmount": self._l10n_in_round_value(line.balance * sign),

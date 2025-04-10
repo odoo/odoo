@@ -303,3 +303,34 @@ test("Changing filter values will create a new share", async function () {
     await animationFrame();
     expect(".o_field_CopyClipboardChar").toHaveText(`localhost:8069/share/url/2`);
 });
+
+test("Global filter with same id is not shared between dashboards", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    serverData.models["spreadsheet.dashboard"].records.push({
+        id: 790,
+        name: "Spreadsheet dup. with Pivot",
+        json_data: JSON.stringify(spreadsheetData),
+        spreadsheet_data: JSON.stringify(spreadsheetData),
+        dashboard_group_id: 1,
+    });
+    serverData.models["spreadsheet.dashboard.group"].records[0].published_dashboard_ids = [
+        789, 790,
+    ];
+    await createSpreadsheetDashboard({ serverData });
+    expect(".o-filter-value .o_tag_badge_text").toHaveCount(0);
+    await contains(".o_control_panel_actions .o-autocomplete--input.o_input").click();
+    await contains(".o_control_panel_actions .dropdown-item:first").click();
+    expect(".o-filter-value .o_tag_badge_text").toHaveCount(1);
+    await contains(".o_search_panel li:last-child").click();
+    expect(".o-filter-value .o_tag_badge_text").toHaveCount(0);
+});

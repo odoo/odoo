@@ -151,6 +151,17 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             })
         return additional_document_reference_list
 
+    def _get_invoice_line_price_vals(self, line):
+        # EXTEND 'account.edi.common'
+        invoice_line_price_vals = super()._get_invoice_line_price_vals(line)
+        invoice_line_price_vals['base_quantity_attrs'] = {'unitCode': line.product_uom_id._get_unece_code()}
+        return invoice_line_price_vals
+
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
+        invoice_line_vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
+        invoice_line_vals['line_quantity_attrs'] = {'unitCode': line.product_uom_id._get_unece_code()}
+        return invoice_line_vals
+
     # -------------------------------------------------------------------------
     # IMPORT
     # -------------------------------------------------------------------------

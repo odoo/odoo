@@ -64,6 +64,15 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
 
     def test_self_order_language_changes(self):
         self.env['res.lang']._activate_lang('fr_FR')
+
+        product = self.env['product.product'].create({
+            'name': "Test Product",
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        product.with_context(lang='fr_FR').name = "Produit Test"
+
         self.pos_config.write({
             'self_ordering_available_language_ids': [Command.link(lang.id) for lang in self.env['res.lang'].search([])],
             'self_ordering_takeaway': False,
@@ -71,6 +80,46 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
             'self_ordering_pay_after': 'each'
         })
 
+        link = self.env['pos_self_order.custom_link'].search(
+            [('pos_config_ids', '=', self.pos_config.id), ('name', '=', 'Order Now')]
+        )
+        link.with_context(lang='fr_FR').name = "Commander maintenant"
+
         self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_order_language_changes")
+        self.start_tour(self_route, 'self_order_language_changes')
+
+    def test_self_order_kiosk_combo_sides(self):
+        combo = self.env["product.combo"].create(
+            {
+                "name": "Desk Accessories Combo",
+                "combo_item_ids": [
+                    Command.create({
+                        "product_id": self.desk_organizer.id,
+                        "extra_price": 0,
+                    }),
+                ],
+            }
+        )
+        self.env["product.product"].create(
+            {
+                "available_in_pos": True,
+                "list_price": 40,
+                "name": "Office Combo",
+                "type": "combo",
+                "combo_ids": [
+                    (6, 0, [combo.id])
+                ],
+            }
+        )
+        self.pos_config.write({
+            'takeaway': False,
+            'self_ordering_takeaway': False,
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_self_order_kiosk_combo_sides")

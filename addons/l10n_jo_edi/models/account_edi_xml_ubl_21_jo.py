@@ -163,7 +163,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return [{
                 'payment_means_code': 10,
                 'payment_means_code_attrs': {'listID': "UN/ECE 4461"},
-                'instruction_note': invoice.ref.replace('/', '_'),
+                'instruction_note': invoice.ref.replace('/', '_') if invoice.ref else '',
             }]
         else:
             return []

@@ -162,15 +162,18 @@ class HrAttendance(models.Model):
         with_validation = self - no_validation
 
         for attendance in with_validation:
-            if attendance.overtime_status not in ['approved', 'refused']:
+            if attendance.overtime_status == 'to_approve':
                 attendance.validated_overtime_hours = attendance.overtime_hours
+            elif attendance.overtime_status == 'refused':
+                attendance.validated_overtime_hours = 0
 
         for attendance in no_validation:
             attendance.validated_overtime_hours = attendance.overtime_hours
 
     @api.depends('validated_overtime_hours')
     def _compute_no_validated_overtime_hours(self):
-        self.no_validated_overtime_hours = not float_compare(self.validated_overtime_hours, 0.0, precision_digits=5)
+        for attendance in self:
+            attendance.no_validated_overtime_hours = not float_compare(attendance.validated_overtime_hours, 0.0, precision_digits=5)
 
     @api.depends('employee_id')
     def _compute_overtime_status(self):

@@ -19,6 +19,9 @@ export class ProductCard extends Component {
      * @return {Boolean} Whether to show the PTAL.
      */
     shouldShowPtal(ptal) {
-        return ptal.hasSelectedCustomPtav || ptal.create_variant === 'no_variant';
+        return (
+            ptal.selected_ptavs.length > 0 &&
+            (ptal.hasSelectedCustomPtav || ptal.create_variant === 'no_variant')
+        );
     }
 }

@@ -9,6 +9,7 @@ from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_normalize
 from odoo.osv import expression
@@ -74,7 +75,7 @@ class Meeting(models.Model):
         """If microsoft calendar is not syncing, don't send a mail."""
         user_id = self._get_event_user_m()
         if self.with_user(user_id)._check_microsoft_sync_status() and user_id._get_microsoft_sync_status() == "sync_active":
-            return True
+            return self.microsoft_id or self.need_sync_m
         return super()._skip_send_mail_status_update()
 
     @api.model_create_multi
@@ -86,7 +87,8 @@ class Meeting(models.Model):
         if self._check_microsoft_sync_status() and not notify_context and recurrency_in_batch:
             self._forbid_recurrence_creation()
 
-        for vals in vals_list:
+        vals_check_organizer = self._check_organizer_validation_conditions(vals_list)
+        for vals in [vals for vals, check_organizer in zip(vals_list, vals_check_organizer) if check_organizer]:
             # If event has a different organizer, check its sync status and verify if the user is listed as attendee.
             sender_user, partner_ids = self._get_organizer_user_change_info(vals)
             partner_included = partner_ids and len(partner_ids) > 0 and sender_user.partner_id.id in partner_ids
@@ -281,16 +283,23 @@ class Meeting(models.Model):
         day_range = int(ICP.get_param('microsoft_calendar.sync.range_days', default=365))
         lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
+
         # Define 'custom_lower_bound_range' param for limiting old events updates in Odoo and avoid spam on Microsoft.
         custom_lower_bound_range = ICP.get_param('microsoft_calendar.sync.lower_bound_range')
         if custom_lower_bound_range:
             lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=int(custom_lower_bound_range))
         domain = [
-            ('partner_ids.user_ids', 'in', self.env.user.id),
+            ('partner_ids.user_ids', 'in', [self.env.user.id]),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
             '!', '&', '&', ('recurrency', '=', True), ('recurrence_id', '!=', False), ('follow_recurrence', '=', True)
         ]
+
+        # Synchronize events that were created after the first synchronization date, when applicable.
+        first_synchronization_date = ICP.get_param('microsoft_calendar.sync.first_synchronization_date')
+        if first_synchronization_date:
+            domain = expression.AND([domain, [('create_date', '>=', first_synchronization_date)]])
+
         return self._extend_microsoft_domain(domain)
 
 

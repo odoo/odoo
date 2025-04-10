@@ -204,7 +204,7 @@ WebsiteSale.include({
         // Custom attributes.
         serializedProduct.product_custom_attribute_values = [];
         for (const ptal of product.attribute_lines) {
-            const selectedCustomPtav = getSelectedCustomPtav(ptal);
+            const selectedCustomPtav = ptal.customValue && getSelectedCustomPtav(ptal);
             if (selectedCustomPtav) {
                 serializedProduct.product_custom_attribute_values.push({
                     custom_product_template_attribute_value_id: selectedCustomPtav.id,

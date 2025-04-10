@@ -18,7 +18,7 @@ export {
     tick,
 } from "@odoo/hoot-dom";
 export { disableAnimations, enableTransitions } from "./mock/animation";
-export { mockDate, mockTimeZone } from "./mock/date";
+export { mockDate, mockLocale, mockTimeZone, onTimeZoneChange } from "./mock/date";
 export { makeSeededRandom } from "./mock/math";
 export { mockPermission, mockSendBeacon, mockUserAgent, mockVibrate } from "./mock/navigator";
 export { mockFetch, mockLocation, mockWebSocket, mockWorker } from "./mock/network";

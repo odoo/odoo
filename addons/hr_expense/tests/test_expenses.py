@@ -1805,3 +1805,25 @@ class TestExpenses(TestExpenseCommon):
         expense.quantity = 0
         self.assertTrue(expense.currency_id.is_zero(expense.total_amount_currency))
         self.assertEqual(expense.company_currency_id.compare_amounts(expense.price_unit, self.product_b.standard_price), 0)
+
+    def test_move_creation_with_quantity(self):
+        expense_sheet = self.create_expense_report({
+            'name': 'Expense for John Smith',
+            'expense_line_ids': [Command.create({
+                'name': 'Test expense line',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'quantity': 5,
+                'payment_mode': 'company_account',
+                'company_id': self.company_data['company'].id,
+                'tax_ids': False,
+            })],
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_post()
+        self.assertRecordValues(expense_sheet.account_move_ids.line_ids, [
+            {'balance': 4000.0, 'name': 'expense_employee: Test expense line', 'quantity': 5},
+            {'balance': -4000.0, 'name': 'expense_employee: Test expense line', 'quantity': 1},
+        ])

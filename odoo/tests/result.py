@@ -1,10 +1,12 @@
 """Test result object"""
 
-import logging
 import collections
 import contextlib
 import inspect
+import logging
+import os
 import re
+import sys
 import time
 import traceback
 
@@ -18,6 +20,7 @@ __unittest = True
 STDOUT_LINE = '\nStdout:\n%s'
 STDERR_LINE = '\nStderr:\n%s'
 
+ODOO_TEST_MAX_FAILED_TESTS = max(1, int(os.environ.get('ODOO_TEST_MAX_FAILED_TESTS', sys.maxsize)))
 
 stats_logger = logging.getLogger('odoo.tests.stats')
 
@@ -68,7 +71,7 @@ class OdooTestResult(object):
     _previousTestClass = None
     _moduleSetUpFailed = False
 
-    def __init__(self, stream=None, descriptions=None, verbosity=None):
+    def __init__(self, stream=None, descriptions=None, verbosity=None, global_report=None):
         self.failures_count = 0
         self.errors_count = 0
         self.testsRun = 0
@@ -80,6 +83,24 @@ class OdooTestResult(object):
         self._soft_fail = False
         self.had_failure = False
         self.stats = collections.defaultdict(Stat)
+        self.global_report = global_report
+        self.shouldStop = self.global_report and self.global_report.shouldStop or False
+
+    def total_errors_count(self):
+        result = self.errors_count + self.failures_count
+        if self.global_report:
+            result += self.global_report.total_errors_count()
+        return result
+
+    def _checkShouldStop(self):
+        if self.total_errors_count() >= ODOO_TEST_MAX_FAILED_TESTS:
+            global_report = self.global_report or self
+            if not global_report.shouldStop:
+                _logger.error(
+                    "Test suite halted: max failed tests already reached (%s). "
+                    "Remaining tests will be skipped.", ODOO_TEST_MAX_FAILED_TESTS)
+                global_report.shouldStop = True
+            self.shouldStop = True
 
     def printErrors(self):
         "Called by TestRunner after test run"
@@ -108,6 +129,7 @@ class OdooTestResult(object):
         else:
             self.errors_count += 1
         self.logError("ERROR", test, err)
+        self._checkShouldStop()
 
     def addFailure(self, test, err):
         """Called when an error has occurred. 'err' is a tuple of values as
@@ -117,6 +139,7 @@ class OdooTestResult(object):
         else:
             self.failures_count += 1
         self.logError("FAIL", test, err)
+        self._checkShouldStop()
 
     def addSubTest(self, test, subtest, err):
         if err is not None:

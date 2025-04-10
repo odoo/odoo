@@ -171,7 +171,18 @@ export default class DevicesSynchronisation {
         const localIds = serverOpenOrders.map((o) => o.id);
         let domain = new Domain(["&", ["state", "=", "draft"], ["id", "not in", localIds]]);
         domain = Domain.or([domain, ...localDomain]);
-        domain = Domain.and([domain, new Domain([["config_id", "=", odoo.pos_config_id]])]);
+        domain = Domain.and([
+            domain,
+            new Domain([
+                "|",
+                ["config_id", "=", odoo.pos_config_id],
+                [
+                    "config_id",
+                    "in",
+                    this.models["pos.config"].get(odoo.pos_config_id).raw.trusted_config_ids,
+                ],
+            ]),
+        ]);
         return domain.toList();
     }
 

@@ -232,6 +232,7 @@ class WebJsonController(http.Controller):
             action._get_eval_context(action),
             active_id=active_id,
             context=context,
+            allowed_company_ids=request.env.user.company_ids.ids,
         )
         # update the context and return
         context.update(safe_eval(action.context, eval_context))

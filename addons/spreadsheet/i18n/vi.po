@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-03-19 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -655,7 +655,7 @@ msgstr "Thêm bất kỳ ký tự hoặc biểu tượng nào"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Add calculated measure"
-msgstr "Thêm thước đo tính toán"
+msgstr "Thêm chỉ số tính toán"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1264,7 +1264,7 @@ msgstr "Tăng dần (A ⟶ Z)"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "At least one measure and/or dimension is not correct."
-msgstr "Có ít nhất một thước đo và/hoặc danh mục không chính xác."
+msgstr "Có ít nhất một chỉ số và/hoặc danh mục không chính xác."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1476,7 +1476,7 @@ msgstr "ĐẾM"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Calculated measure %s"
-msgstr "Thước đo tính toán %s"
+msgstr "Chỉ số tính toán %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3279,7 +3279,7 @@ msgstr "Tháng 2"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Field \"%s\" not found in pivot for measure display calculation"
-msgstr "Không tìm thấy trường \"%s\" trong pivot để tính toán hiển thị thước đo"
+msgstr "Không tìm thấy trường \"%s\" trong pivot để tính toán hiển thị chỉ số"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3299,7 +3299,7 @@ msgstr "Trường %s không tồn tại"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Field %s is not a measure"
-msgstr "Trường %s không phải là một thước đo"
+msgstr "Trường %s không phải là một chỉ số"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4506,7 +4506,7 @@ msgstr "Nhỏ hơn hoặc bằng"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is not between"
-msgstr "Nằm ngoài"
+msgstr "Không nằm giữa"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4929,7 +4929,7 @@ msgstr "Đo \"%s\" tuỳ chọn"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Measures"
-msgstr "Thước đo"
+msgstr "Chỉ số"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5210,7 +5210,7 @@ msgstr "Tên trường."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Name of the measure."
-msgstr "Tên thước đo."
+msgstr "Tên chỉ số."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6559,7 +6559,7 @@ msgstr "Hiện trợ giúp công thức"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Show measure as:"
-msgstr "Hiện thước đo dưới dạng:"
+msgstr "Hiện chỉ số dưới dạng:"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6607,7 +6607,7 @@ msgstr "Giá trị đơn nhất từ một phạm vi dạng bảng."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Some measures are not available: %s"
-msgstr "Không có một số thước đo: %s"
+msgstr "Không có một số chỉ số: %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7153,7 +7153,7 @@ msgstr "Lãi suất hàng năm."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The argument %s is not a valid measure. Here are the measures: %s"
-msgstr "Đối số %s không phải là thước đo hợp lệ. Dưới đây là các thước đo: %s"
+msgstr "Đối số %s không phải là chỉ số hợp lệ. Dưới đây là các chỉ số: %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7324,6 +7324,24 @@ msgstr "Mảng sẽ được chuyển đổi."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "Cơ số (%s) phải nằm trong khoảng tính từ 2 đến cả 36."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The base (%s) must be strictly positive."
+msgstr "Cơ số (%s) phải là số dương tuyệt đối."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The base must be different from 1."
+msgstr "Cơ số phải khác 1."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The base of the logarithm."
+msgstr "Cơ số của logarit."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8340,6 +8358,12 @@ msgstr "Số kỳ khấu hao (%s) bắt buộc phải là số dương."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The logarithm of a number, base e (euler's number)."
 msgstr "Logarit của một số, cơ số e (số euler)."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The logarithm of a number, for a given base."
+msgstr "Logarit của một số với một cơ số nhất định."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10002,6 +10026,12 @@ msgstr "Giá trị để tính tang nghịch đảo."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "Giá trị để tính logarit, cơ số e."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The value for which to calculate the logarithm."
+msgstr "Giá trị để tính logarit."
 
 #. module: spreadsheet
 #. odoo-javascript

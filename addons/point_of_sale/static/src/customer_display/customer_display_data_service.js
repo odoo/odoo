@@ -1,5 +1,5 @@
 import { reactive } from "@odoo/owl";
-import { deduceUrl, getOnNotified } from "@point_of_sale/utils";
+import { getOnNotified } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
@@ -25,7 +25,7 @@ export const CustomerDisplayDataService = {
             const intervalId = setInterval(async () => {
                 try {
                     const response = await fetch(
-                        `${deduceUrl(session.proxy_ip)}/hw_proxy/customer_facing_display`,
+                        `http://localhost:8069/hw_proxy/customer_facing_display`,
                         {
                             method: "POST",
                             headers: {

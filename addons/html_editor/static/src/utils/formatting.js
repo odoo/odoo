@@ -94,7 +94,10 @@ export const formatsSpecs = {
         isFormatted: (node) =>
             FONT_SIZE_CLASSES.find((cls) => closestElement(node)?.classList?.contains(cls)),
         hasStyle: (node, props) => FONT_SIZE_CLASSES.find((cls) => node.classList.contains(cls)),
-        addStyle: (node, props) => node.classList.add(props.className),
+        addStyle: (node, props) => {
+            node.style.removeProperty("font-size");
+            node.classList.add(props.className);
+        },
         removeStyle: (node) => removeClass(node, ...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES),
     },
     switchDirection: {

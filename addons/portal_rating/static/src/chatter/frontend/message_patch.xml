@@ -8,7 +8,7 @@
                 </t>
             </div>
         </xpath>
-        <xpath expr="//div[hasclass('o-mail-Message-contentContainer')]" position="after">
+        <xpath expr="//*[@t-ref='messageContent']" position="inside">
             <!--Only possible if a rating is link to the message, for now we can't comment if no rating
                 is link to the message (because publisher comment data
                 is on the rating.rating model - one comment max) -->
@@ -20,7 +20,7 @@
                     <i class="fa fa-comment text-muted me-1"/>Comment
                 </button>
                 <div t-if="state.editRating" class="mt-2">
-                    <Composer autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditCommentMode" onPostCallback.bind="exitEditCommentMode" mode="'compact'"/>
+                    <Composer autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditCommentMode" onPostCallback.bind="exitEditCommentMode" mode="'compact'"/>
                 </div>
                 <div t-if="message.rating.publisher_comment and !state.editRating" class="o_wrating_publisher_comment mt-2 mb-2">
                     <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">

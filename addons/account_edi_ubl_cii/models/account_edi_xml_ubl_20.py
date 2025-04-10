@@ -349,8 +349,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:    An invoice line.
         :return:        A list of python dictionaries.
         """
+        fixed_tax_charge_vals_list = []
         if self._context.get('convert_fixed_taxes'):
-            fixed_tax_charge_vals_list = []
             for grouping_key, tax_details in tax_values_list['tax_details'].items():
                 if grouping_key['tax_amount_type'] == 'fixed':
                     fixed_tax_charge_vals_list.append({
@@ -698,6 +698,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree) or
                     self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree),
             'country_code': self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
+            'street': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:StreetName', tree),
+            'street2': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:AdditionalStreetName', tree),
+            'city': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CityName', tree),
+            'zip_code': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:PostalZone', tree),
         }
 
     def _import_fill_invoice(self, invoice, tree, qty_factor):

@@ -291,14 +291,16 @@ describe(parseUrl(import.meta.url), () => {
 
         test("toBeCloseTo", () => {
             expect(0.2 + 0.1).toBeCloseTo(0.3);
-            expect(0.2 + 0.1).toBeCloseTo(0.3, { digits: 2 });
-            expect(0.2 + 0.1).toBeCloseTo(0.3, { digits: 16 });
-            expect(0.2 + 0.1).not.toBeCloseTo(0.3, { digits: 17 });
+            expect(0.2 + 0.1).toBeCloseTo(0.3, { margin: Number.EPSILON });
+            expect(0.2 + 0.1).not.toBeCloseTo(0.3, { margin: 1e-17 });
 
-            expect(3.51).toBeCloseTo(3.5, { digits: 1 });
-            expect(3.51).not.toBeCloseTo(3.5);
-            expect(3.51).not.toBeCloseTo(3.5, { digits: 2 });
-            expect(3.51).not.toBeCloseTo(3.5, { digits: 17 });
+            expect(3.51).toBeCloseTo(3);
+            expect(3.51).toBeCloseTo(3.52, { margin: 2e-2 });
+            expect(3.502).not.toBeCloseTo(3.503, { margin: 1e-3 });
+
+            expect(3).toBeCloseTo(4 - 1e-15);
+            expect(3 + 1e-15).toBeCloseTo(4);
+            expect(3).not.toBeCloseTo(4);
         });
 
         test("toEqual", () => {
@@ -535,10 +537,12 @@ describe(parseUrl(import.meta.url), () => {
 
             expect(".div").toHaveStyle({ width: `${3 * documentFontSize}px`, height: 26 });
             expect(".div").toHaveStyle({ display: "block" });
+            expect(".div").toHaveStyle("border-top");
             expect(".div").not.toHaveStyle({ height: 50 });
 
             expect(".div").toHaveStyle("height: 26px ; width : 3rem", { inline: true });
             expect(".div").not.toHaveStyle({ display: "block" }, { inline: true });
+            expect(".div").not.toHaveStyle("border-top", { inline: true });
         });
     });
 });

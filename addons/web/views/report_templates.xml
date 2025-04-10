@@ -320,7 +320,7 @@
                             </span>
                         </li>
                         <li t-else="">
-                            <span t-field="company.company_details">
+                            <span t-field="company.company_details" class="text-nowrap">
                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                     <strong>Company details block</strong>
                                     <div>Contains the company details.</div>
@@ -375,7 +375,7 @@
                                 </div>
                             </span></li>
                             <li t-else="">
-                                <span t-field="company.company_details">
+                                <span t-field="company.company_details" class="text-nowrap">
                                     <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                         <strong>Company details block</strong>
                                         <div>Contains the company details.</div>
@@ -434,7 +434,7 @@
                             </div>
                         </span></li>
                         <li t-else="">
-                            <span t-field="company.company_details">
+                            <span t-field="company.company_details" class="text-nowrap">
                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                     <strong>Company details block</strong>
                                     <div>Contains the company details.</div>
@@ -494,7 +494,7 @@
                             </div>
                         </span></li>
                         <li t-else="">
-                            <span t-field="company.company_details">
+                            <span t-field="company.company_details" class="text-nowrap">
                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                     <strong>Company details block</strong>
                                     <div>Contains the company details.</div>
@@ -568,7 +568,7 @@
                             </div>
                         </span></li>
                         <li t-else="">
-                            <span t-field="company.company_details">
+                            <span t-field="company.company_details" class="text-nowrap">
                                 <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
                                     <strong>Company details block</strong>
                                     <div>Contains the company details.</div>
@@ -636,7 +636,7 @@
                             </div>
                         </span></li>
                         <li t-else="">
-                            <span t-field="company.company_details">
+                            <span t-field="company.company_details" class="text-nowrap">
                                 <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
                                     <strong>Company details block</strong>
                                     <div>Contains the company details.</div>
@@ -702,7 +702,7 @@
                             </div>
                         </span></li>
                         <li t-else="">
-                            <span t-field="company.company_details">
+                            <span t-field="company.company_details" class="text-nowrap">
                                 <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
                                     <strong>Company details block</strong>
                                     <div>Contains the company details.</div>
@@ -728,12 +728,23 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <div t-att-class="not information_block and 'd-flex justify-content-between align-items-end'">
-                <t t-call="web.address_layout">
-                    <t t-set="custom_layout_address" t-value="true"/>
-                </t>
-                <h2 t-attf-class="{{not information_block and 'mb-4'}} text-end" t-out="layout_document_title"/>
-            </div>
+            <table class="o_ignore_layout_styling table table-borderless mb-0">
+                <tbody>
+                    <tr>
+                        <td t-call="web.address_layout" class="p-0">
+                            <t t-set="custom_layout_address" t-value="true"/>
+                        </td>
+                        <td t-if="not information_block" class="align-bottom p-0 ps-2">
+                            <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>
+                        </td>
+                    </tr>
+                    <tr t-if="information_block">
+                        <td colspan="2" class="align-bottom p-0">
+                            <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <t t-out="0"/>
         </div>
 

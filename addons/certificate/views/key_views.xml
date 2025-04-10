@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="key form">
                 <sheet>
-                    <div class="alert alert-warning" role="alert" invisible="loading_error == ''">
+                    <div class="alert alert-warning" role="alert" invisible="not loading_error">
                         <field name="loading_error"/>
                     </div>
                     <group id="key_input">

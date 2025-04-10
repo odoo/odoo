@@ -512,19 +512,23 @@ export class ListPlugin extends Plugin {
      */
     indentLI(li) {
         const lip = this.document.createElement("li");
+        const parentLi = li.parentElement;
+        const nextSiblingLi = li.nextSibling;
         lip.classList.add("oe-nested");
         const destul =
             li.previousElementSibling?.querySelector("ol, ul") ||
             li.nextElementSibling?.querySelector("ol, ul") ||
             li.closest("ol, ul");
-
+        const cursors = this.dependencies.selection.preserveSelection();
+        // Remove the LI first to force a removal mutation in collaboration.
+        parentLi.removeChild(li);
         const ul = createList(this.document, this.getListMode(destul));
         lip.append(ul);
 
-        const cursors = this.dependencies.selection.preserveSelection();
         // lip replaces li
         li.before(lip);
         ul.append(li);
+        parentLi.insertBefore(lip, nextSiblingLi);
         cursors.update((cursor) => {
             if (cursor.node === lip.parentNode) {
                 const childIndex = childNodeIndex(lip);
@@ -696,11 +700,11 @@ export class ListPlugin extends Plugin {
             return nodeToInsert;
         }
         const mode = container && this.getListMode(listEl);
-        if (
-            (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) ||
-            isListElement(nodeToInsert)
-        ) {
+        if (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) {
             return this.convertList(nodeToInsert, mode);
+        }
+        if (isListElement(nodeToInsert)) {
+            return this.convertList(nodeToInsert, this.getListMode(nodeToInsert));
         }
         return nodeToInsert;
     }

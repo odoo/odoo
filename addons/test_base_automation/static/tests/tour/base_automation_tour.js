@@ -1,7 +1,5 @@
 /** @odoo-module */
-import { ORM } from "@web/core/orm_service";
-import { patch } from "@web/core/utils/patch";
-
+import { waitUntil } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -14,26 +12,6 @@ function assertEqual(actual, expected) {
 async function nextTick() {
     await new Promise(setTimeout);
     await new Promise(requestAnimationFrame);
-}
-
-function observeOrmCalls() {
-    const calls = [];
-
-    const unpatch = patch(ORM.prototype, {
-        call() {
-            const prom = super.call(...arguments);
-            calls.push([prom, arguments]);
-            return prom;
-        },
-    });
-
-    async function wait(unobserve = true) {
-        await Promise.all(calls.map((i) => i[0]));
-        if (unobserve) {
-            unpatch();
-        }
-    }
-    return wait;
 }
 
 registry.category("web_tour.tours").add("test_base_automation", {
@@ -483,7 +461,6 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
     ],
 });
 
-let waitOrmCalls;
 registry.category("web_tour.tours").add("test_form_view_model_id", {
     steps: () => [
         {
@@ -514,31 +491,16 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         },
         {
             trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
-            run(helpers) {
-                waitOrmCalls = observeOrmCalls();
-                helpers.click();
-                return nextTick();
-            },
-        },
-        {
-            trigger: "body",
-            async run() {
-                await waitOrmCalls();
-                await nextTick();
-            },
+            run: "click",
         },
         {
             trigger: ".o_field_widget[name='trigger']",
             run() {
-                const triggerGroups = Array.from(this.anchor.querySelectorAll("optgroup"));
-                assertEqual(
-                    triggerGroups.map((el) => el.getAttribute("label")).join(" // "),
-                    "Values Updated // Timing Conditions // Custom // External"
-                );
-                assertEqual(
-                    triggerGroups.map((el) => el.innerText).join(" // "),
-                    "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On saveOn deletionOn UI change // On webhook"
-                );
+                return waitUntil(() => {
+                    const triggerGroups = Array.from(this.anchor.querySelectorAll("optgroup"));
+                    return triggerGroups.map((el) => el.getAttribute("label")).join(" // ") === "Values Updated // Timing Conditions // Custom // External" &&
+                        triggerGroups.map((el) => el.innerText).join(" // ") === "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On saveOn deletionOn UI change // On webhook";
+                }, { timeout: 500 });
             },
         },
         {
@@ -635,28 +597,17 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         },
         {
             trigger: ".dropdown-menu li a:contains(Threaded Lead Test)",
-            run(helpers) {
-                waitOrmCalls = observeOrmCalls();
-                helpers.click();
-                return nextTick();
-            },
-        },
-        {
-            trigger: "body",
-            async run() {
-                await waitOrmCalls();
-                await nextTick();
-            },
+            run: "click",
         },
         {
             trigger: ".o_field_widget[name='trigger']",
             run() {
-                assertEqual(
-                    Array.from(this.anchor.querySelectorAll("select optgroup"))
+                return waitUntil(() => {
+                    const textLabels = Array.from(this.anchor.querySelectorAll("select optgroup"))
                         .map((el) => el.label)
-                        .join(", "),
-                    "Values Updated, Email Events, Timing Conditions, Custom, External"
-                );
+                        .join(", ");
+                    return textLabels === "Values Updated, Email Events, Timing Conditions, Custom, External"
+                }, { timeout: 500 });
             },
         },
         {

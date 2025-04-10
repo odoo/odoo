@@ -73,6 +73,7 @@ class StockMoveLine(models.Model):
                 'move_ids': [],
                 'move_line_ids': [],
                 'batch_id': wave.id,
+                'scheduled_date': picking.scheduled_date,
             })[0]
             for move, move_lines in line_by_move.items():
                 picking_to_wave_vals['move_line_ids'] += [Command.link(line.id) for line in lines]

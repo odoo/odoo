@@ -193,6 +193,13 @@
                 <field name="vat" position="attributes">
                     <attribute name="options">{'placeholder_field': 'partner_vat_placeholder'}</attribute>
                 </field>
+
+                <field name="company_registry" position="before">
+                    <field name="partner_company_registry_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                </field>
+                <field name="company_registry" position="attributes">
+                    <attribute name="options">{'placeholder_field': 'partner_company_registry_placeholder'}</attribute>
+                </field>
             </field>
         </record>
 

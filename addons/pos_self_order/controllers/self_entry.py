@@ -26,7 +26,7 @@ class PosSelfKiosk(http.Controller):
                 }
             )
 
-    @http.route("/pos-self/data/<config_id>", type='json', auth='public')
+    @http.route("/pos-self/data/<config_id>", type='json', auth='public', website=True)
     def get_self_ordering_data(self, config_id=None, access_token=None, table_identifier=None):
         pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier)
         data = pos_config.load_self_data()
@@ -52,7 +52,7 @@ class PosSelfKiosk(http.Controller):
 
         company = pos_config_sudo.company_id
         user = pos_config_sudo.self_ordering_default_user_id
-        pos_config = pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
+        pos_config = pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids, lang=request.cookies.get('frontend_lang'))
 
         if not pos_config:
             raise werkzeug.exceptions.NotFound()

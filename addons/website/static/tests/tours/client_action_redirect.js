@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { delay } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 const testUrl = '/test_client_action_redirect';
@@ -7,9 +8,10 @@ const testUrl = '/test_client_action_redirect';
 const goToFrontendSteps = [{
     content: "Go to the frontend",
     trigger: 'body',
-    run: () => {
-        window.location.href = testUrl;
-    },
+    async run() {
+        await delay(2000);
+        window.location.assign(testUrl);
+    }
 }, {
     content: "Check we are in the frontend",
     trigger: 'body:not(:has(.o_website_preview)) #test_contact_FE',
@@ -17,12 +19,13 @@ const goToFrontendSteps = [{
 const goToBackendSteps = [{
     content: "Go to the backend",
     trigger: 'body',
-    run: () => {
-        window.location.href = `/@${testUrl}`;
-    },
+    async run() {
+        await delay(2000);
+        window.location.assign(`/@${testUrl}`);
+    }
 }, {
     content: "Check we are in the backend",
-    trigger: '.o_website_preview',
+    trigger: ".o_website_preview[data-view-xmlid='website.test_client_action_redirect'] :iframe",
 }];
 const checkEditorSteps = [{
     content: "Check that the editor is loaded",
@@ -30,8 +33,9 @@ const checkEditorSteps = [{
     timeout: 30000,
 }, {
     content: "exit edit mode",
-    trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
+    trigger: "button[data-action=save]:enabled:contains(save)",
     run: "click",
+    timeout: 30000,
 }, {
     content: "wait for editor to close",
     trigger: ':iframe body:not(.editor_enable)',

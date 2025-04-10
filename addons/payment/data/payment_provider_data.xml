@@ -278,6 +278,25 @@
 
     </record>
 
+    <record id="payment_provider_nuvei" model="payment.provider">
+        <field name="name">Nuvei</field>
+        <field name="image_128" type="base64" file="payment_nuvei/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_nuvei"/>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_astropay'),
+                         ref('payment.payment_method_boleto'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_nuvei_local'),
+                         ref('payment.payment_method_oxxopay'),
+                         ref('payment.payment_method_pix'),
+                         ref('payment.payment_method_pse'),
+                         ref('payment.payment_method_spei'),
+                         ref('payment.payment_method_webpay'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_provider_paypal" model="payment.provider">
         <field name="name">PayPal</field>
         <field name="image_128" type="base64" file="payment_paypal/static/description/icon.png"/>

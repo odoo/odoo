@@ -51,13 +51,13 @@
 
             <div t-if="showQtyButtons and !props.onValidate" class="page-buttons d-flex p-3 gap-3 bg-view border-top"
                 t-att-class="(isArchivedCombination() ? 'justify-content-between': 'justify-content-end')">
-                <div t-if="isArchivedCombination() and !this.isEveryValueSelected()" class="alert alert-warning m-0">
+                <div t-if="isArchivedCombination() and this.isEveryValueSelected()" class="alert alert-warning m-0">
                     This combination does not exist.
                 </div>
                 <button
                     t-if="showQtyButtons and !props.onValidate and selfOrder.ordering"
                     class="btn btn-primary btn-lg"
-                    t-att-disabled="this.isEveryValueSelected() or isArchivedCombination()"
+                    t-att-disabled="!this.isEveryValueSelected() or isArchivedCombination()"
                     t-on-click="addToCart">
                     Add to cart
                 </button>

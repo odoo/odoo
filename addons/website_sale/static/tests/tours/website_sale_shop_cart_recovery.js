@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "Wait the modal is opened and form is fullfilled",
-        trigger: ".modal main .o_form_view_container [name=subject] input:value(/^S00/)",
+        trigger: ".modal main .o_form_view_container [name=subject] input:value(/^S0/)",
     },
     {
         content: "select template",

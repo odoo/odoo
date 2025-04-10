@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -5372,9 +5372,9 @@ msgid ""
 "to appear as a third party in the context of any claim for damages filed "
 "against the client by an end consumer."
 msgstr ""
-"My Company (Chicago)는 합의된 기간에 따라 적시에 성능 기준에 맞는 서비스를 제공하기 위해 최선을 다할 것을 약속합니다."
-" 그러나 이러한 의무 중 어떤 것도 결과를 달성하기 위한 의무 사항으로 간주될 수 없습니다. My Company (Chicago)는 어떤"
-" 상황에서도 최종 소비자가 고객에게 제기한 손해 배상 청구와 관련하여 고객이 당사를 제3자 업체로 표시되도록 할 수 없습니다."
+"My Company(Chicago)는 합의된 기간 내 적시에 성실히 서비스를 제공하여 성과를 달성하기 위해 최선을 다할 것을 약속합니다."
+" 단, 상기 사항 중 어떠한 의무도 결과 달성을 보장하는 의무 사항으로 간주될 수 없습니다. My Company(Chicago)는 어떤 "
+"상황에서도 최종 소비자가 고객에게 제기한 손해배상 청구와 관련하여 고객이 당사를 제3자 업체로 표시하도록 요구할 수 없습니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -6002,9 +6002,9 @@ msgid ""
 "My Company (Chicago) will be authorized to suspend any provision of services"
 " without prior warning in the event of late payment."
 msgstr ""
-"청구서나 주문서에 다른 지불 기간이 명시되어 있지 않는 한, 당사의 청구서는 영업일 기준 21일 이내에 지불하도록 되어 있습니다. "
-"기한일까지 결제가 완료되지 않은 경우 My Company (Chicago)는 미납금의 10%에 해당하는 고정 이자를 요청할 권한을 "
-"가집니다. 또한 My Company (Chicago)는 연체 시 사전 경고 없이 서비스 제공을 중단할 권한이 있습니다."
+"당사 청구서는 청구서 또는 주문서에 별도의 지급 기간이 명시되어 있지 않는 한, 영업일 기준 21일 이내에 지급하도록 되어 있습니다. "
+"기한일까지 결제가 완료되지 않은 경우 My Company(Chicago)는 미납 금액의 10%에 해당하는 고정 이자에 대한 지급을 요청할"
+" 권한을 보유합니다. 또한 My Company(Chicago)는 연체 발생 시 사전 고지 없이 서비스 제공을 중단할 권한이 있습니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -8288,12 +8288,12 @@ msgstr "Shiprocket 배송"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
 msgid "Short Name"
-msgstr "약식 이름"
+msgstr "약칭"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__code
 msgid "Short name used to identify your warehouse"
-msgstr "창고를 식별하는데 사용되는 약식 이름"
+msgstr "창고를 식별할 때 사용하는 약칭"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_allocation
@@ -8906,6 +8906,14 @@ msgstr "로트/일련 번호(%s)가 다른 제품에 연결되어 있습니다."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr "피킹 작업 보고서가 삭제되었으므로 지금은 인쇄할 수 없습니다. 인쇄하려면 보고서를 복구하세요. "
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
 "The Serial Number (%(serial_number)s) is already used in location(s): %(location_list)s.\n"
@@ -9155,7 +9163,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
 msgid "The short name of the warehouse must be unique per company!"
-msgstr "창고의 약식 이름은 회사별로 다르게 지정해야 합니다!"
+msgstr "창고 약칭은 회사별로 다르게 지정해야 합니다!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer

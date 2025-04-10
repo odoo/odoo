@@ -2,6 +2,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
+    getActiveElement,
     keyDown,
     keyUp,
     manuallyDispatchProgrammaticEvent,
@@ -10,11 +11,17 @@ import {
     press,
     queryAll,
     queryAllTexts,
+    queryOne,
     waitFor,
     waitForNone,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
-import { contains, patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    onRpc,
+    patchTranslations,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { fontItems, fontSizeItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
@@ -28,6 +35,7 @@ import {
     setSelection,
 } from "./_helpers/selection";
 import { strong } from "./_helpers/tags";
+import { delay } from "@web/core/utils/concurrency";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -298,26 +306,24 @@ test("toolbar works: can select font size", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
     setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [name='font-size']").toHaveText(
-        getFontSizeFromVar("body-font-size").toString()
-    );
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    expect(inputEl).toHaveValue(getFontSizeFromVar("body-font-size").toString());
 
     await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
     const sizes = new Set(
-        fontSizeItems.map((item) => {
-            return getFontSizeFromVar(item.variableName).toString();
-        })
+        fontSizeItems.map((item) => getFontSizeFromVar(item.variableName).toString())
     );
-    expect(queryAllTexts(".o_font_selector_menu .dropdown-item")).toEqual([...sizes]);
+    expect(queryAllTexts(".o_font_size_selector_menu .dropdown-item")).toEqual([...sizes]);
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
-    await contains(`.o_font_selector_menu .dropdown-item:contains('${h1Size}')`).click();
+    await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
     expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
-    expect(".o-we-toolbar [name='font-size']").toHaveText(h1Size);
+    expect(inputEl).toHaveValue(h1Size);
     await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
     const oSmallSize = getFontSizeFromVar("small-font-size").toString();
-    await contains(`.o_font_selector_menu .dropdown-item:contains('${oSmallSize}')`).click();
+    await contains(`.o_font_size_selector_menu .dropdown-item:contains('${oSmallSize}')`).click();
     expect(getContent(el)).toBe(`<p><span class="o_small-fs">[test]</span></p>`);
-    expect(".o-we-toolbar [name='font-size']").toHaveText(oSmallSize);
+    expect(inputEl).toHaveValue(oSmallSize);
 });
 
 test.tags("desktop");
@@ -336,16 +342,87 @@ test("toolbar works: display correct font size on select all", async () => {
         return Math.round(pxValue);
     };
     await waitFor(".o-we-toolbar");
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
     await animationFrame();
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
-    await contains(`.o_font_selector_menu .dropdown-item:contains('${h1Size}')`).click();
+    await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
     expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
     setContent(el, `<p><span class="h1-fs">te[]st</span></p>`);
     await waitForNone(".o-we-toolbar");
     await press(["ctrl", "a"]); // Select all
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [name='font-size']").toHaveText(`${h1Size}`);
+    expect(inputEl).toHaveValue(`${h1Size}`);
+});
+
+test("toolbar works: displays correct font size on input", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    expect(iframeEl).toHaveCount(1);
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(inputEl).click();
+    // Ensure that the input has the default font size value.
+    expect(inputEl).toHaveValue("14");
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    // Ensure that the selection is still present in the editable.
+    expect(getContent(el)).toBe(`<p>[test]</p>`);
+    expect(getActiveElement()).toBe(inputEl);
+
+    await press("8");
+    expect(inputEl).toHaveValue("8");
+    await advanceTime(200);
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    expect(getContent(el)).toBe(`<p><span style="font-size: 8px;">[test]</span></p>`);
+    expect(".o-we-toolbar").toHaveCount(1);
+});
+
+test("toolbar works: font size dropdown closes on Enter and Tab key press", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    expect(iframeEl).toHaveCount(1);
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(inputEl).click();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+
+    await press("Enter");
+    await animationFrame();
+    expect(".o_font_size_selector_menu").toHaveCount(0);
+
+    await contains(inputEl).click();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    await press("Tab");
+    await animationFrame();
+    expect(".o_font_size_selector_menu").toHaveCount(0);
+});
+
+test("toolbar works: ArrowUp/Down moves focus to font size dropdown", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    expect(iframeEl).toHaveCount(1);
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(inputEl).click();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    expect(getActiveElement()).toBe(inputEl);
+
+    const fontSizeSelectorMenu = queryOne(".o_font_size_selector_menu");
+    await press("ArrowDown");
+    await animationFrame();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    expect(getActiveElement()).toBe(fontSizeSelectorMenu.firstElementChild);
+
+    await contains(inputEl).click();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    await press("ArrowUp");
+    await animationFrame();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    expect(getActiveElement()).toBe(fontSizeSelectorMenu.lastElementChild);
 });
 
 test.tags("desktop");
@@ -689,6 +766,53 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
     await tick(); // selectionChange
     await animationFrame();
     expect(".o-we-toolbar").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("should not close image cropper while loading media", async () => {
+    onRpc("/html_editor/get_image_info", () => {
+        return {
+            original: {
+                image_src: "#",
+            },
+        };
+    });
+    onRpc("/web/image/__odoo__unknown__src__/", async () => {
+        await delay(50);
+        return {};
+    });
+
+    await setupEditor(`<p>[<img src="#">]</p>`);
+    await waitFor(".o-we-toolbar");
+
+    await click('div[name="image_transform"] > .btn');
+    await animationFrame();
+
+    await click('.btn[name="image_crop"]');
+    await animationFrame();
+
+    await waitFor('.btn[title="Discard"]', { timeout: 1000 });
+    await click('.btn[title="Discard"]');
+    await animationFrame();
+
+    // cropper should not close as the cropper still loading the image.
+    expect('.btn[title="Discard"]').toHaveCount(1);
+
+    // once the image loaded we should be able to close
+    await waitFor('img[src^="blob:"]', { timeout: 2000 });
+    await click('.btn[title="Discard"]');
+    await waitForNone('.btn[title="Discard"]', { timeout: 1000 });
+
+    await click("img");
+    await waitFor(".o-we-toolbar", { timeout: 1000 });
+
+    await click('div[name="image_transform"] > .btn');
+    await animationFrame();
+
+    await waitFor('.btn[name="image_crop"]', { timeout: 1000 });
+    await click('.btn[name="image_crop"]');
+    await waitFor('.btn[title="Discard"]', { timeout: 1000 });
+    expect('.btn[title="Discard"]').toHaveCount(1);
 });
 
 describe.tags("desktop");

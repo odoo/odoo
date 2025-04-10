@@ -191,7 +191,7 @@ options.registry.NavTabsStyle = options.Class.extend({
 
         switch (methodName) {
             case 'setStyle':
-                const matchingValue = params.possibleValues.find(value => navEl.classList.contains(value));
+                const matchingValue = params.possibleValues.find(value => !navEl || navEl.classList.contains(value));
                 return matchingValue;
             case 'setDirection':
                 return this.$target.find('.s_tabs_nav:first .nav').hasClass('flex-sm-column') ? 'vertical' : 'horizontal';

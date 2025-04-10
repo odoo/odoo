@@ -11,7 +11,7 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _is_vn_edi_applicable(self, move):
-        return move.l10n_vn_edi_invoice_state == 'ready_to_send' and move._l10n_vn_edi_get_credentials_company()
+        return bool(move.l10n_vn_edi_invoice_state == 'ready_to_send' and move._l10n_vn_edi_get_credentials_company())
 
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'

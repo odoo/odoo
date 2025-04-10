@@ -537,6 +537,9 @@ class ProductTemplate(models.Model):
                 'image_128',
                 'can_image_1024_be_zoomed',
             ])
+        for product_template in self:
+            if "type" in vals and vals.get("type") != "combo":
+                product_template.combo_ids = False
         return res
 
     def copy_data(self, default=None):

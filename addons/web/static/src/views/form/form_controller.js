@@ -223,7 +223,11 @@ export class FormController extends Component {
 
         onError((error) => {
             const suggestedCompany = error.cause?.data?.context?.suggested_company;
-            if (error.cause?.data?.name === "odoo.exceptions.AccessError" && suggestedCompany) {
+            if (
+                error.cause?.data?.name === "odoo.exceptions.AccessError" &&
+                suggestedCompany &&
+                !this.env.inDialog
+            ) {
                 this.env.pushStateBeforeReload();
                 const activeCompanyIds = this.companyService.activeCompanyIds;
                 activeCompanyIds.push(suggestedCompany.id);
@@ -424,6 +428,7 @@ export class FormController extends Component {
         const proceed = await new Promise((resolve) => {
             this.model.dialog.add(FormErrorDialog, {
                 message: error.data.message,
+                data: error.data,
                 onDiscard: () => {
                     discard();
                     resolve(true);

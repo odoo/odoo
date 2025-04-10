@@ -20,6 +20,27 @@ class BaseModel(models.AbstractModel):
             number_fname for number_fname in ('mobile', 'phone') if number_fname in self
         ]
 
+    def _phone_get_country(self):
+        """Get a country likely to match the phone of the record.
+
+        By default we get it from:
+        - The country field of the target record (self) based on `_phone_get_country_field`
+        - The country of any mail partner (e.g. self.partner_ids[2].phone), considering we are
+          going to contact the customer(s) of the record. Done using generic
+          `_mail_get_partner_fields` method allowing to find record customers;
+        """
+        country_by_record = {}
+        record_country_fname = self._phone_get_country_field()
+        for record in self:
+            if record_country_fname and (record_country := record[record_country_fname]):
+                country_by_record[record.id] = record_country
+                continue
+            for partner_field in self.env[self._name]._mail_get_partner_fields():
+                partner_records = record[partner_field]
+                if countries := partner_records.country_id:
+                    country_by_record[record.id] = countries[0]
+        return country_by_record
+
     @api.model
     def _phone_get_country_field(self):
         if 'country_id' in self:
@@ -60,8 +81,7 @@ class BaseModel(models.AbstractModel):
         # effectively try to find a country
         if not country and self:
             self.ensure_one()
-            country_fname = self._phone_get_country_field()
-            country = self[country_fname] if country_fname and country_fname in self else self.env['res.country']
+            country = self._phone_get_country().get(self.id)
         if not country:
             country = self.env.company.country_id
 

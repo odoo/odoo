@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import common
+from odoo import Command
 from odoo.tests import Form, tagged
+from odoo.tools.float_utils import float_split_str
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
@@ -172,3 +174,108 @@ class TestManual(common.TestAr):
 
         # If we create an invoice it will not use manual numbering
         self.assertFalse(bill.l10n_latam_manual_document_number)
+
+    def test_17_corner_cases(self):
+        """ RI partner with VAT exempt and 21. Test price unit digits """
+        self._post(self.demo_invoices['test_invoice_4'])
+        decimal_price_digits_setting = self.env.ref('product.decimal_price').digits
+        invoice_line_ids = self.demo_invoices['test_invoice_4'].invoice_line_ids
+        for line in invoice_line_ids:
+            l10n_ar_line_prices = line._l10n_ar_prices_and_taxes()
+            _unitary_part, l10n_ar_price_unit_decimal_part = float_split_str(l10n_ar_line_prices['price_unit'], decimal_price_digits_setting)
+            len_l10n_ar_price_unit_digits = len(l10n_ar_price_unit_decimal_part)
+            _unitary_part, line_price_unit_decimal_part = float_split_str(line.price_unit, decimal_price_digits_setting)
+            len_line_price_unit_digits = len(line_price_unit_decimal_part)
+            if len_l10n_ar_price_unit_digits == len_line_price_unit_digits == decimal_price_digits_setting:
+                self.assertEqual(l10n_ar_price_unit_decimal_part, line_price_unit_decimal_part)
+
+    def test_16_invoice_b_tax_breakdown_1(self):
+        """ Display Both VAT and Other Taxes """
+        invoice = self._create_invoice_from_dict({
+            'ref': 'test_invoice_20:  Final Consumer Invoice B with multiple vat/perceptions/internal/other/national taxes',
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.service_iva_21, 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
+                 'tax_ids': [Command.set([self.tax_21.id, self.tax_perc_iibb.id])]},
+                {'product_id': self.service_iva_27, 'price_unit': 2250.0,
+                 'tax_ids': [Command.set([self.tax_27.id, self.tax_national.id])]},
+                {'product_id': self.product_iva_105_perc, 'price_unit': 1740.0,
+                 'tax_ids': [Command.set([self.tax_10_5.id, self.tax_internal.id])]},
+                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0,
+                 'tax_ids': [Command.set([self.tax_0.id, self.tax_other.id])]},
+            ],
+        })
+        results = invoice._l10n_ar_get_invoice_custom_tax_summary_for_report()
+        self.assertEqual(results, [
+            {
+                'tax_amount_currency': 868.51,
+                'formatted_tax_amount_currency': '868.51',
+                'name': 'VAT Content $',
+            },
+            {
+                'tax_amount_currency': 142.20,
+                'formatted_tax_amount_currency': '142.20',
+                'name': 'Other National Ind. Taxes $',
+            },
+        ])
+        self._assert_tax_totals_summary(invoice._l10n_ar_get_invoice_totals_for_report(), {
+            'same_tax_base': False,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 15373.61,
+            'tax_amount_currency': 100.0,
+            'total_amount_currency': 15473.61,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 15373.61,
+                    'tax_amount_currency': 100.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_perc_iibb.tax_group_id.id,
+                            'base_amount_currency': 372.9,
+                            'tax_amount_currency': 0.0,
+                            'display_base_amount_currency': 372.9,
+                        },
+                        {
+                            'id': self.tax_other.tax_group_id.id,
+                            'base_amount_currency': 10000.0,
+                            'tax_amount_currency': 100.0,
+                            'display_base_amount_currency': None,
+                        },
+                    ],
+                },
+            ],
+        })
+
+    def test_17_invoice_b_tax_breakdown_2(self):
+        """ Display only Other Taxes (VAT taxes are 0) """
+        invoice = self._create_invoice_from_dict({
+            'ref': 'test_invoice_21:  inal Consumer Invoice B with 0 tax and internal tax',
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0,
+                 'tax_ids': [Command.set([self.tax_no_gravado.id, self.tax_internal.id])]},
+            ],
+        })
+        results = invoice._l10n_ar_get_invoice_custom_tax_summary_for_report()
+        self.assertEqual(results, [
+            {
+                'tax_amount_currency': 300.00,
+                'formatted_tax_amount_currency': '300.00',
+                'name': 'Other National Ind. Taxes $',
+            },
+        ])
+        self._assert_tax_totals_summary(invoice._l10n_ar_get_invoice_totals_for_report(), {
+            'same_tax_base': True,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 10300.0,
+            'tax_amount_currency': 0.0,
+            'total_amount_currency': 10300.0,
+            'subtotals': [],
+        })

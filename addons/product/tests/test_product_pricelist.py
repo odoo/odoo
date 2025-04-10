@@ -310,3 +310,35 @@ class TestProductPricelist(ProductCommon):
 
         # Assert: The set value is kept
         self.assertEqual(pricelist_item.min_quantity, precise_value)
+
+    def test_pricelist_sync_on_partners(self):
+        ResPartner = self.env['res.partner']
+
+        company_1, company_2 = self.env['res.company'].create([
+            {'name': 'company_1'},
+            {'name': 'company_2'},
+        ])
+
+        test_partner_company = ResPartner.create({
+            'name': 'This company',
+            'is_company': True,
+        })
+        test_partner_company.with_company(company_1).property_product_pricelist = self.business_pricelist.id
+        test_partner_company.with_company(company_2).property_product_pricelist = self.customer_pricelist.id
+
+        child_address = ResPartner.create({
+            'name': 'Contact',
+            'parent_id': test_partner_company.id,
+        })
+        self.assertEqual(
+            child_address.property_product_pricelist,
+            test_partner_company.property_product_pricelist,
+        )
+        self.assertEqual(
+            child_address.with_company(company_1).property_product_pricelist,
+            self.business_pricelist,
+        )
+        self.assertEqual(
+            child_address.with_company(company_2).property_product_pricelist,
+            self.customer_pricelist,
+        )

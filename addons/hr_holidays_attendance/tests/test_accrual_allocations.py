@@ -89,7 +89,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'check_in': datetime.datetime(2024, 4, 1, 8, 0, 0),
                 'check_out': datetime.datetime(2024, 4, 1, 17, 0, 0),
             })
-        with Form(self.env['hr.leave.allocation']) as allocation_form:
+        with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
             allocation_form.allocation_type = 'accrual'
             allocation_form.employee_id = self.employee_emp
             allocation_form.accrual_plan_id = accrual_plan
