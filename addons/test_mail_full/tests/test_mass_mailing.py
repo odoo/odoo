@@ -47,10 +47,8 @@ class TestMassMailing(TestMailFullCommon):
             'name': 'TestRecord_falsy_1',
             'email_from': 'falsymail'
         })
-        recipients_all = (
-            recipients + recipient_dup_1 + recipient_dup_2 + recipient_dup_3 + recipient_dup_4
-            + recipient_void_1 + recipient_falsy_1
-        )
+        local_recipients = [(k, v) for k, vals in locals().items() if k.startswith('recipient') for v in vals]
+        recipients_all = self.env['mailing.test.optout'].browse([v.id for k, v in local_recipients])
 
         mailing.write({'mailing_domain': [('id', 'in', recipients_all.ids)]})
         mailing.action_put_in_queue()
@@ -58,7 +56,7 @@ class TestMassMailing(TestMailFullCommon):
             mailing.action_send_mail()
 
         for recipient in recipients_all:
-          with self.subTest(recipient=next(key for key, val in locals().items() if key.startswith('recipient') if val == recipient)):
+          with self.subTest(recipient=next(key for key, val in local_recipients if val == recipient)):
             recipient_info = {
                 'email': recipient.email_normalized,
                 'content': f'Hello {recipient.name}',
