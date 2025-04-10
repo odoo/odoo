@@ -10,6 +10,24 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
     # Test the basic operation (apply_coupon) on an coupon program on which we should
     # apply the reward when the code is correct or remove the reward automatically when the reward is
     # not valid anymore.
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.discount_with_multi_rewards = cls.env['loyalty.program'].create({
+            'name': 'Loyalty program with multiple discount rewards',
+            'program_type': 'coupons',
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 20,
+                }),
+                (0, 0, {
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 5,
+                })],
+        })
 
     def test_program_usability(self):
         # After clicking "Generate coupons", there is no domain so it shows "Match all records".
@@ -411,3 +429,113 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self._apply_promo_code(order, 'test')
         # But the above line should not add any reward
         self.assertEqual(len(order.order_line), 2, "You should get a discount line") # product + discount
+
+    def test_apply_max_discount_from_multiple_rewards_1(self):
+        """ Test applying the maximum reward discount from multiple rewards when the applied
+            coupon discount is lower.
+
+        1. Create a two loyalty program of type `coupons`.
+        2. Add multiple rewards to the second program.
+        3. Generate a coupon for each program.
+        2. Create a sale order and add a product to it.
+        3. Apply the Coupon to the sale order.
+        4. Try to apply the second coupon with multiple rewards.
+        5. Reward with best discount will be shown.
+        """
+        self.code_promotion_program_with_discount.rule_ids.unlink()
+        coupon_1 = self._generate_coupons(self.code_promotion_program_with_discount)
+        coupon_2 = self._generate_coupons(self.discount_with_multi_rewards)
+
+        order = self.empty_order
+        order.write({'order_line': [
+            (0, 0, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            }),
+            (0, 0, {
+                'product_id': self.product_B.id,
+                'name': '1 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            }),
+        ]})
+
+        expected_total = order.amount_total * 0.80
+        self._apply_promo_code(order, coupon_1.code)
+        self.assertEqual(len(order.order_line.ids), 3)
+        self._apply_promo_code(order, coupon_2.code)
+        self.assertEqual(order.order_line[2].price_unit, -21.0)
+        self.assertAlmostEqual(order.amount_total, expected_total)
+
+    def test_apply_max_discount_from_multiple_rewards_2(self):
+        """ Test applying the maximum reward discount from multiple rewards when the applied
+            coupon discount is lower.
+
+        1. Create a two loyalty program of type `coupons`.
+        2. Add multiple rewards of higher discount than the applied discount.
+        3. Generate a coupon for each program.
+        2. Create a sale order and add a product to it.
+        3. Apply the Coupon to the sale order.
+        4. Try to apply the second coupon with multiple rewards.
+        5. Reward with max discount will be shown.
+        """
+        self.code_promotion_program_with_discount.rule_ids.unlink()
+        coupon_1 = self._generate_coupons(self.code_promotion_program_with_discount)
+        self.discount_with_multi_rewards.reward_ids[1].discount = 15
+        coupon_2 = self._generate_coupons(self.discount_with_multi_rewards)
+
+        order = self.empty_order
+        order.write({'order_line': [
+            (0, 0, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+
+        expected_total = order.amount_total * 0.80
+        self._apply_promo_code(order, coupon_1.code)
+        self.assertEqual(len(order.order_line.ids), 2)
+        rewards = self._apply_promo_code(order, coupon_2.code)
+        self.assertEqual(len(rewards), 2)
+
+        chosen_reward = rewards.filtered(lambda r: r.discount == 20)
+        order._apply_program_reward(chosen_reward, coupon_2)
+        self.assertEqual(len(order.order_line), 2)
+        self.assertEqual(order.order_line[1].price_unit, -20.0)
+        self.assertAlmostEqual(order.amount_total, expected_total)
+
+    def test_apply_max_discount_from_multiple_rewards_3(self):
+        """ Test raising validation when the new coupon discount from multiple rewards
+            is less than the applied coupon discount.
+
+        1. Create a two loyalty program of type `coupons`.
+        2. Add multiple rewards to the second program.
+        3. Generate a coupon for each program.
+        2. Create a sale order and add a product to it.
+        3. Apply the Coupon to the sale order.
+        4. Try to apply the second coupon with multiple rewards.
+        5. Verify that it raises a validation error.
+        """
+        self.code_promotion_program_with_discount.rule_ids.unlink()
+        coupon_1 = self._generate_coupons(self.code_promotion_program_with_discount)
+        self.discount_with_multi_rewards.reward_ids[0].discount = 7
+        coupon_2 = self._generate_coupons(self.discount_with_multi_rewards)
+
+        order = self.empty_order
+        order.write({'order_line': [
+            (0, 0, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+
+        self._apply_promo_code(order, coupon_1.code)
+        self.assertEqual(len(order.order_line.ids), 2)
+        with self.assertRaises(ValidationError):
+            self._apply_promo_code(order, coupon_2.code)
