@@ -685,7 +685,7 @@ class TestPartnerAddressCompany(TransactionCase):
         """ When creating parent company, it should be populated with information
         coming from children when possible, and not erase child with void values
         from parent. """
-        commercial_fields = self.env['res.partner']._commercial_fields()
+        sync_commercial_fields = self.env['res.partner']._synced_commercial_fields()
 
         # create your contact
         individual = self.env['res.partner'].create({
@@ -712,19 +712,19 @@ class TestPartnerAddressCompany(TransactionCase):
         })
         # set it as parent of individual
         with patch.object(
-            self.env['res.partner'].__class__, '_commercial_fields',
-            lambda self: commercial_fields + ['ref'],
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
         ):
             individual.write({'parent_id': company})
         self.assertFalse(company.industry_id, 'Industry is not considered for upstream')
         self.assertEqual(company.ref, 'COMPANYREF', 'not updated from contact child')
-        self.assertFalse(company.vat, 'FIXME: did not take from contact child')
+        self.assertEqual(company.vat, 'BEINDIVIDUAL')
         for fname, fvalue in self.test_address_values_cmp.items():
             self.assertEqual(company[fname], fvalue, 'Void parent should have been updated when adding a contact with address')
             self.assertEqual(individual[fname], fvalue, 'Setting parent with void address should not reset child')
-        self.assertFalse(individual.industry_id, 'FIXME: erased using parent void value')
+        self.assertEqual(individual.industry_id, self.test_industries[0], 'No upstream sync, but no reset either')
         self.assertEqual(individual.ref, 'COMPANYREF', 'downstream update')
-        self.assertFalse(individual.vat, 'FIXME: erased using parent void value')
+        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
 
     def test_commercial_partner_nullcompany(self):
         """ The commercial partner is the first/nearest ancestor-or-self which
@@ -818,48 +818,48 @@ class TestPartnerAddressCompany(TransactionCase):
             for fname, fvalue in (('company_registry', 'new'), ('industry_id', self.test_industries[1]), ('vat', 'BEnew')):
                 self.assertEqual(partner[fname], fvalue, "Commercial field should be updated from the company 2")
 
-        # UPSTREAM: not supported (but desyncs it)
+        # UPSTREAM: now supported
         contactvat = 'BE445566'
         contact.write({'vat': contactvat})
-        for partner in company_2 + contact_dlr + contact_ct + contact2:
-            self.assertEqual(partner.vat, 'BEnew', 'Sync to children should only work downstream and on commercial entities')
-        for partner in contact:
-            self.assertEqual(partner.vat, contactvat, 'Sync to children should only work downstream and on commercial entities')
+        for partner in company_2 + contact + contact_dlr + contact_ct + contact2:
+            self.assertEqual(partner.vat, contactvat, 'Commercial sync works upstream, therefore also for siblings')
 
         # MISC PARENT MANIPULATION
         # promote p1 to commercial entity
+        newcontactvat = 'BE998877'
         contact.write({
             'parent_id': company_1.id,
             'is_company': True,
             'name': 'Sunhelm Subsidiary',
+            'vat': newcontactvat,
         })
-        self.assertEqual(contact.vat, contactvat, 'Setting is_company should stop auto-sync of commercial fields')
+        self.assertEqual(contact.vat, newcontactvat, 'Setting is_company should stop auto-sync of commercial fields')
         self.assertEqual(contact.commercial_partner_id, contact, 'Incorrect commercial entity resolution after setting is_company')
+        self.assertEqual(contact2.vat, contactvat, 'Old sibling untouched')
         self.assertEqual(company_1.vat, 'BE013456789', 'Should not impact parent')
-        self.assertEqual(contact_dlr.vat, 'BEnew', 'Promotion not propagated')
-        self.assertEqual(contact_ct.vat, 'BEnew', 'Promotion not propagated')
+        self.assertEqual(contact_dlr.vat, newcontactvat, 'Promotion propagated')
+        self.assertEqual(contact_ct.vat, newcontactvat, 'Promotion propagated')
 
         # change parent of commercial entity
-        (contact_dlr + contact_ct).write({'vat': contactvat})
         contact.write({'parent_id': company_2.id})
-        self.assertEqual(contact.vat, contactvat, 'Setting is_company should stop auto-sync of commercial fields')
+        self.assertEqual(contact.vat, newcontactvat, 'Setting is_company should stop auto-sync of commercial fields')
         self.assertEqual(contact.commercial_partner_id, contact, 'Incorrect commercial entity resolution after setting is_company')
-        self.assertEqual(company_2.vat, 'BEnew', 'Should not impact parent')
-        self.assertEqual(contact_dlr.vat, contactvat, 'Parent company stop auto sync')
-        self.assertEqual(contact_ct.vat, contactvat, 'Parent company stop auto sync')
+        self.assertEqual(company_2.vat, contactvat, 'Should not impact parent')
+        self.assertEqual(contact_dlr.vat, newcontactvat, 'Parent company stop auto sync')
+        self.assertEqual(contact_ct.vat, newcontactvat, 'Parent company stop auto sync')
 
         # writing on parent should not touch child commercial entities
         sunhelmvat2 = 'BE0112233453'
         company_2.write({'vat': sunhelmvat2})
         for partner in contact + contact_ct + contact_dlr:
-            self.assertEqual(contact.vat, contactvat, 'Setting is_company should stop auto-sync of commercial fields')
+            self.assertEqual(contact.vat, newcontactvat, 'Setting is_company should stop auto-sync of commercial fields')
         for partner in contact2:
             self.assertEqual(partner.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
 
     def test_commercial_field_sync_reset(self):
         """ Test voiding fields propagation. We would like to allow forcing void
         values from parent, but limiting upstream reset from children. """
-        commercial_fields = self.env['res.partner']._commercial_fields()
+        sync_commercial_fields = self.env['res.partner']._synced_commercial_fields()
 
         # create your contact
         individual = self.env['res.partner'].create({
@@ -887,8 +887,8 @@ class TestPartnerAddressCompany(TransactionCase):
         })
         # set it as parent of individual
         with patch.object(
-            self.env['res.partner'].__class__, '_commercial_fields',
-            lambda self: commercial_fields + ['ref'],
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
         ):
             individual.write({'parent_id': company})
         for fname, fvalue in self.test_address_values_2_cmp.items():
@@ -904,8 +904,8 @@ class TestPartnerAddressCompany(TransactionCase):
 
         # void from parent: DOWNSTREAM reset
         with patch.object(
-            self.env['res.partner'].__class__, '_commercial_fields',
-            lambda self: commercial_fields + ['ref'],
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
         ):
             company.write({
                 'industry_id': False,
