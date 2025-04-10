@@ -746,7 +746,15 @@ class AccountEdiCommon(models.AbstractModel):
                 taxes.append(tax.id)
                 if tax.price_include:
                     line_values['price_unit'] *= (1 + tax.amount / 100)
+<<<<<<< 09d76aa85bb6a69f60f8c31c20a3b18ce48cc46e
         return taxes, logs
+||||||| 75206ca553f919cb72e5584d800f2fffd03d5040
+        return logs
+=======
+        if not line_values['tax_ids']:
+            line_values['tax_ids'] = False
+        return logs
+>>>>>>> ba78386b6dc7ad1d925f08e69e02c8f07c7a796e
 
     def _retrieve_line_charges(self, record, line_values, taxes):
         """
