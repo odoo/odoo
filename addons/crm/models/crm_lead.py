@@ -1078,8 +1078,11 @@ class CrmLead(models.Model):
 
     def action_set_automated_probability(self):
         """ Update the automated probability and align probability to that value """
-        self._compute_probabilities()
-        self.write({'probability': self.automated_probability})
+        if self.won_status == 'lost':
+            self.action_restore()
+        else:
+            self._compute_probabilities()
+            self.write({'probability': self.automated_probability})
 
     def action_set_won_rainbowman(self):
         self.ensure_one()
@@ -2693,6 +2696,9 @@ class CrmLead(models.Model):
                 top_3_data: list of field-value couples for top 3 criterions, highest first
             }
         '''
+        if not self:
+            return False
+
         tooltip_data = self._pls_get_naive_bayes_probabilities(is_tooltip=True)
         sorted_scores_with_name = []
 

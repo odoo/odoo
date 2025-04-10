@@ -25,11 +25,10 @@ export class CrmPlsTooltipButton extends Component {
 
     setup() {
         super.setup();
-        const position = localization.direction === "rtl" ? "left" : "right";
         this.orm = useService("orm");
         this.popover = usePopover(CrmPlsTooltip, {
-            popoverClass: 'ms-2',
-            position: position,
+            popoverClass: 'mt-2 me-2',
+            position: "bottom-start",
         });
     }
 
@@ -50,6 +49,9 @@ export class CrmPlsTooltipButton extends Component {
                 "prepare_pls_tooltip_data",
                 [this.props.record.resId]
             )
+            if (!tooltipData) {
+                return;
+            }
             // Update the form
             await this.props.record.load();
 

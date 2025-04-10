@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="crm.PlsTooltipButton">
-        <a class="o_crm_pls_tooltip_button btn btn-light lh-base ms-1 p-1" role="button"
-            title="Update the value and analyse the probability"
-            aria-label="Update the value and analyse the probability"
+        <a class="o_crm_pls_tooltip_button border-0 mx-1 p-0 mb-1 mb-md-0 btn btn-light"
+            role="button"
+            title="See AI-computed chances details"
+            aria-label="See AI-computed chances details"
             t-on-click.prevent.stop="onClickPlsTooltipButton">
-            <img class="h-100 align-top" role="img" src="/crm/static/src/img/pls-tooltip-ai-icon.png" alt="AI"/>
+            <img class="m-1" role="img" src="/crm/static/src/img/pls-tooltip-ai-icon.png" alt="AI"/>
         </a>
     </t>
 
@@ -28,7 +29,8 @@
                     </div>
                 </div>
                 <div class="d-inline-block d-flex flex-column justify-content-center">
-                    <div>AI-computed chances of winning for</div>
+                    <div t-if="props.teamName">AI-computed chances of winning for</div>
+                    <div t-else="">AI-computed chances of winning</div>
                     <div class="fw-bolder fs-3">
                         <t t-if="props.teamName" t-out="props.teamName"/>
                         <t t-else="">this lead</t>
@@ -62,7 +64,7 @@
             <div class="o_crm_pls_tooltip_footer d-flex justify-content-between text-muted fs-xs pt-3 px-2">
                 <span>Computed by Odoo AI using your data.</span>
                 <a role="button" class="ms-2 btn-link"
-                    href="https://www.odoo.com/documentation/master/applications/sales/crm/track_leads/lead_scoring.html" target="_blank">
+                    href="https://www.odoo.com/documentation/master/applications/sales/crm/track_leads/lead_scoring.html#predictive-lead-scoring" target="_blank">
                     <i class="fa fa-info-circle pe-1"/>Learn More
                 </a>
             </div>
