@@ -37,7 +37,6 @@ const getRandomProduct = () => {
 };
 
 registry.category("web_tour.tours").add("PoSFakeTourRestaurant", {
-    checkDelay: 50,
     steps: () =>
         [
             FloorScreen.clickTable(getRandomTable()),
@@ -57,7 +56,6 @@ registry.category("web_tour.tours").add("PoSFakeTourRestaurant", {
 });
 
 registry.category("web_tour.tours").add("PoSFakeTourTransferOrder", {
-    checkDelay: 50,
     steps: () =>
         [
             FloorScreen.clickTable(getRandomTableWithOrder()),
