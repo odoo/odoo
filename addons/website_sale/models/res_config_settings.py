@@ -14,12 +14,6 @@ class ResConfigSettings(models.TransientModel):
         implied_group='account.group_delivery_invoice_address',
         group='base.group_portal,base.group_user,base.group_public',
     )
-    group_show_uom_price = fields.Boolean(
-        string="Base Unit Price",
-        default=False,
-        implied_group="website_sale.group_show_uom_price",
-        group='base.group_user',
-    )
     group_product_price_comparison = fields.Boolean(
         string="Comparison Price",
         implied_group="website_sale.group_product_price_comparison",

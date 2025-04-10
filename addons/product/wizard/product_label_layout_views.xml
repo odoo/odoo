@@ -14,8 +14,11 @@
                         <field name="print_format" widget="radio"/>
                     </group>
                     <group>
-                        <field name="pricelist_id" groups="product.group_product_pricelist"/>
-                        <field name="extra_html" invisible="print_format != '2x7xprice'"/>
+                        <field name="with_price"/>
+                        <field name="pricelist_id" invisible="not with_price" placeholder="Sales Price" groups="product.group_product_pricelist"/>
+                        <field name="zpl_template" invisible="print_format != 'zpl'"/>
+                        <field name="zpl_preview" invisible="print_format != 'zpl'" widget="image" options="{'img_class': 'border'}" nolabel="1"/>
+                        <field name="extra_html" invisible="print_format != '2x7'"/>
                     </group>
                 </group>
                 <footer>
