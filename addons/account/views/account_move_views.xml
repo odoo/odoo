@@ -315,7 +315,7 @@
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="move_id" string="Journal Entry" filter_domain="[
-                        '|', '|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self), ('move_id.partner_id', 'ilike', self)]"/>
+                        '|', '|', ('move_name', 'ilike', self), ('ref', 'ilike', self), ('move_id.partner_id', 'ilike', self)]"/>
                     <field name="tax_ids" />
                     <field name="tax_line_id" string="Originator Tax"/>
                     <field name="reconcile_model_id"/>
