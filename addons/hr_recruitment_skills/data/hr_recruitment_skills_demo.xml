@@ -19,32 +19,74 @@
         <field name="skill_type_id" ref="hr_skills.hr_skill_type_softskill"/>
     </record>
 
-    <record id="hr_case_mkt1_skill_lang_en" model="hr.applicant.skill">
+    <record id="hr_case_mkt1_skill_softskill_org" model="hr.applicant.skill">
         <field name="applicant_id" ref="hr_recruitment.hr_case_mkt1"/>
-        <field name="skill_id" ref="hr_skills.hr_skill_english"/>
-        <field name="skill_level_id" ref="hr_skills.hr_skill_level_c2"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_organizational"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_intermediate_softskill"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_softskill"/>
+    </record>
+
+    <record id="hr_case_mkt2_skill_lang_fr_b2" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_salesman1"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_french"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_b1"/>
         <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
     </record>
-    <record id="hr_case_mkt1_skill_lang_fr" model="hr.applicant.skill">
-        <field name="applicant_id" ref="hr_recruitment.hr_case_mkt1"/>
-        <field name="skill_id" ref="hr_skills.hr_skill_french"/>
-        <field name="skill_level_id" ref="hr_skills.hr_skill_level_c1"/>
+    <record id="hr_case_mkt2_skill_lang_en_a1" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_salesman1"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_english"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_a1"/>
         <field name="skill_type_id" ref="hr_skills.hr_skill_type_lang"/>
     </record>
 
-     <function model="hr.job" name="write">
-            <value model="hr.job" search="[
-                ('name', '=', 'Chief Executive Officer'),
-            ]
-            "/>
-            <value eval="{
-                'skill_ids': [
-                    Command.set([
-                        ref('hr_skills.hr_skill_french'),
-                        ref('hr_skills.hr_skill_english'),
-                        ref('hr_skills.hr_skill_organizational'),
-                    ]),
-                ],
-            }"/>
-        </function>
+    <record id="hr_applicant_skill_dev0_go_beginner" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_dev0"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_go"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_beginner"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_dev"/>
+    </record>
+    <record id="hr_applicant_skill_dev0_html_expert" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_dev0"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_html"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_expert"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_dev"/>
+    </record>
+    <record id="hr_applicant_skill_dev0_css_expert" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_dev0"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_css"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_expert"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_dev"/>
+    </record>
+
+    <record id="hr_applicant_skill_dev1_go_beginner" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_dev1"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_go"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_beginner"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_dev"/>
+    </record>
+    <record id="hr_applicant_skill_dev1_html_beginner" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_dev1"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_html"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_beginner"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_dev"/>
+    </record>
+    <record id="hr_applicant_skill_dev1_css_beginner" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_dev1"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_css"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_beginner"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_dev"/>
+    </record>
+
+    <record id="hr_applicant_skill_dev2_go_intermediate" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_dev2"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_go"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_intermediate"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_dev"/>
+    </record>
+    <record id="hr_applicant_skill_dev2_ruby_expert" model="hr.applicant.skill">
+        <field name="applicant_id" ref="hr_recruitment.hr_case_dev2"/>
+        <field name="skill_id" ref="hr_skills.hr_skill_ruby"/>
+        <field name="skill_level_id" ref="hr_skills.hr_skill_level_expert"/>
+        <field name="skill_type_id" ref="hr_skills.hr_skill_type_dev"/>
+    </record>
 </odoo>

@@ -21,17 +21,22 @@
                         <notebook>
                             <page string="Details" name="recruitment_page" invisible="1">
                                 <group>
-                                    <group name="recruitment">
-                                        <field name="department_id"/>
-                                        <field name="contract_type_id"/>
+                                    <group name="hiring_process" string="Hiring Process">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
                                     </group>
-                                    <group name="recruitment2">
+                                    <group name="job_posting" string="Job Posting">
                                         <label name="no_of_recruitment_label" for="no_of_recruitment"/>
                                         <div class="o_row" name="recruitment_target">
                                             <field name="no_of_recruitment" class="o_hr_narrow_field"/>
-                                            <span>new hires</span>
+                                            <span>new employees</span>
                                         </div>
+                                    </group>
+                                    <group name="job" string="Job">
                                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
+                                        <field name="department_id"/>
+                                    </group>
+                                    <group name="contract" string="Contract">
+                                        <field name="contract_type_id"/>
                                     </group>
                                 </group>
                             </page>

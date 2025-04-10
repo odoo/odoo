@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_skills.SkillsPivotRenderer" t-inherit="web.PivotRenderer">
+        <xpath expr="//tbody//div[hasclass('o_value')][last()]" position="attributes">
+            <attribute name="t-att-class">
+                {
+                    'text-success': cell.value &gt; 1.2,
+                    'text-danger': cell.value &lt; 0.7,
+                }
+            </attribute>
+        </xpath>
+    </t>
+
+</templates>
