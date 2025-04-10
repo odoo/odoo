@@ -231,7 +231,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM09</field>
             <field name='weight'>9.54</field>
-            <field name="image_1920" type="base64" file="product/static/img/product_product_8-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_8-image.jpg"/>
         </record>
 
         <record id="product_product_9" model="product.product">
@@ -265,7 +265,7 @@
             <field name="list_price">33</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
-            <field name="image_1920" type="base64" file="product/static/img/product_product_11-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_11-image.jpg"/>
         </record>
 
         <!-- the product template attribute lines have to be defined before creating the variants -->
@@ -306,6 +306,7 @@
         <record id="product_product_11b" model="product.product">
             <field name="default_code">E-COM13</field>
             <field name="weight">0.01</field>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_11b-image.jpg"/>
         </record>
 
         <record id="product.product_4_attribute_1_value_2" model="product.template.attribute.value">
@@ -356,7 +357,7 @@
             <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_0269</field>
-            <field name="image_1920" type="base64" file="product/static/img/product_product_12-image.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_12-image.jpg"/>
         </record>
 
         <record id="product_product_13" model="product.product">
@@ -533,7 +534,7 @@
             <field name="weight">0.01</field>
             <field name="categ_id" ref="product.product_category_office"/>
             <field name="uom_id" ref="uom.product_uom_unit"/>
-            <field name="image_1920" type="base64" file="product/static/img/desk_organizer.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/desk_organizer.jpg"/>
         </record>
         <function model="ir.model.data" name="_update_xmlids">
             <value
@@ -577,7 +578,7 @@
             <field name="weight">0.01</field>
             <field name="categ_id" ref="product.product_category_office"/>
             <field name="uom_id" ref="uom.product_uom_unit"/>
-            <field name="image_1920" type="base64" file="product/static/img/desk_pad.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/desk_pad.jpg"/>
         </record>
 
         <record id="monitor_stand" model="product.product">
@@ -587,7 +588,7 @@
             <field name="weight">0.01</field>
             <field name="categ_id" ref="product.product_category_office"/>
             <field name="uom_id" ref="uom.product_uom_unit"/>
-            <field name="image_1920" type="base64" file="product/static/img/monitor_stand.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/monitor_stand.jpg"/>
         </record>
 
         <record id="desk_accessories_combo" model="product.combo">
@@ -659,7 +660,7 @@
             <field name="purchase_ok">False</field>
             <field name="categ_id" ref="product.product_category_office"/>
             <field name="uom_id" ref="uom.product_uom_unit"/>
-            <field name="image_1920" type="base64" file="product/static/img/office_combo.png"/>
+            <field name="image_1920" type="base64" file="product/static/img/office_combo.jpg"/>
             <field
                 name="combo_ids"
                 eval="[(6, 0, [
