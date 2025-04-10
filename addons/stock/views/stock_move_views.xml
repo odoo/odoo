@@ -291,11 +291,10 @@
                                     <field name="product_uom" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                 </div>
                                 <field name="name" invisible="1"/>
-                                <div class="o_td_label">
-                                    <label for="date" string="Date Scheduled" invisible="state == 'done'"/>
-                                    <label for="date" string="Date Processing" invisible="state != 'done'"/>
-                                </div>
-                                <field name="date" readonly="1" nolabel="1"/>
+                                <field name="date" readonly="1" string="Scheduled Date" invisible="state == 'done'"
+                                    help="Scheduled time for the first part of the shipment to be processed."/>
+                                <field name="date" readonly="1" string="Move Date" invisible="state != 'done'"
+                                    help="The actual date when the transfer was processed."/>
                                 <field name="date_deadline" force_save="1"/>
                             </group>
                         </group>
