@@ -6,21 +6,21 @@
 
         <record id="action_discussions" model="ir.actions.act_window">
             <field name="name">Discussions</field>
-            <field name="res_model">test_new_api.discussion</field>
+            <field name="res_model">test_orm.discussion</field>
             <field name="view_mode">list,form</field>
         </record>
         <menuitem id="menu_discussions" action="action_discussions" parent="menu_sub" sequence="10"/>
 
         <record id="action_messages" model="ir.actions.act_window">
             <field name="name">Messages</field>
-            <field name="res_model">test_new_api.message</field>
+            <field name="res_model">test_orm.message</field>
             <field name="view_mode">list,form</field>
         </record>
         <menuitem id="menu_messages" action="action_messages" parent="menu_sub" sequence="20"/>
 
         <record id="action_multi" model="ir.actions.act_window">
             <field name="name">Multi</field>
-            <field name="res_model">test_new_api.multi</field>
+            <field name="res_model">test_orm.multi</field>
             <field name="view_mode">list,form</field>
         </record>
         <menuitem id="menu_multi" action="action_multi" parent="menu_sub"/>
@@ -29,7 +29,7 @@
 
         <record id="action_categories" model="ir.actions.act_window">
             <field name="name">Categories</field>
-            <field name="res_model">test_new_api.category</field>
+            <field name="res_model">test_orm.category</field>
             <field name="view_mode">list,form</field>
         </record>
         <menuitem id="menu_categories" action="action_categories" parent="menu_config"/>
@@ -37,7 +37,7 @@
         <!-- Discussion form view -->
         <record id="discussion_form" model="ir.ui.view">
             <field name="name">discussion form view</field>
-            <field name="model">test_new_api.discussion</field>
+            <field name="model">test_orm.discussion</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Discussion">
@@ -111,7 +111,7 @@
         <!-- Discussion form view with editable list -->
         <record id="discussion_form_2" model="ir.ui.view">
             <field name="name">discussion form view</field>
-            <field name="model">test_new_api.discussion</field>
+            <field name="model">test_orm.discussion</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Discussion">
@@ -146,7 +146,7 @@
 
         <record id="action_discussions_2" model="ir.actions.act_window">
             <field name="name">Discussions 2</field>
-            <field name="res_model">test_new_api.discussion</field>
+            <field name="res_model">test_orm.discussion</field>
             <field name="view_ids" eval="[Command.clear(),
                           (0,0,{'view_mode':'list'}),
                           (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_2')})]"/>
@@ -156,7 +156,7 @@
         <!-- Discussion form view with embedded list -->
         <record id="discussion_form_3" model="ir.ui.view">
             <field name="name">discussion form view</field>
-            <field name="model">test_new_api.discussion</field>
+            <field name="model">test_orm.discussion</field>
             <field name="priority" eval="11"/>
             <field name="arch" type="xml">
                 <form string="Discussion">
@@ -181,7 +181,7 @@
 
         <record id="action_discussions_3" model="ir.actions.act_window">
             <field name="name">Discussions 3</field>
-            <field name="res_model">test_new_api.discussion</field>
+            <field name="res_model">test_orm.discussion</field>
             <field name="view_ids" eval="[Command.clear(),
                           (0,0,{'view_mode':'list'}),
                           (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_3')})]"/>
@@ -192,7 +192,7 @@
         <!-- Message list view -->
         <record id="message_tree" model="ir.ui.view">
             <field name="name">message list view</field>
-            <field name="model">test_new_api.message</field>
+            <field name="model">test_orm.message</field>
             <field name="arch" type="xml">
                 <list string="Messages">
                     <field name="name"/>
@@ -206,7 +206,7 @@
         <!-- Message form view -->
         <record id="message_form" model="ir.ui.view">
             <field name="name">message form view</field>
-            <field name="model">test_new_api.message</field>
+            <field name="model">test_orm.message</field>
             <field name="arch" type="xml">
                 <form string="Message">
                     <sheet>
@@ -227,7 +227,7 @@
         <!-- Category list view -->
         <record id="category_tree" model="ir.ui.view">
             <field name="name">category list view</field>
-            <field name="model">test_new_api.category</field>
+            <field name="model">test_orm.category</field>
             <field name="arch" type="xml">
                 <list string="Categories">
                     <field name="display_name"/>
@@ -238,7 +238,7 @@
         <!-- Category form view -->
         <record id="category_form" model="ir.ui.view">
             <field name="name">category form view</field>
-            <field name="model">test_new_api.category</field>
+            <field name="model">test_orm.category</field>
             <field name="arch" type="xml">
                 <form string="Category">
                     <sheet>
@@ -257,7 +257,7 @@
         <!-- Multi list view -->
         <record id="multi_tree" model="ir.ui.view">
             <field name="name">multi list view</field>
-            <field name="model">test_new_api.multi</field>
+            <field name="model">test_orm.multi</field>
             <field name="arch" type="xml">
                 <list string="Multi">
                     <field name="name"/>
@@ -268,7 +268,7 @@
         <!-- Multi form view -->
         <record id="multi_form" model="ir.ui.view">
             <field name="name">multi form view</field>
-            <field name="model">test_new_api.multi</field>
+            <field name="model">test_orm.multi</field>
             <field name="arch" type="xml">
                 <form string="Multi">
                     <sheet>
@@ -302,7 +302,7 @@
         <!-- Multi form view -->
         <record id="model_parent_form" model="ir.ui.view">
             <field name="name">model parent form view</field>
-            <field name="model">test_new_api.model_parent_m2o</field>
+            <field name="model">test_orm.model_parent_m2o</field>
             <field name="arch" type="xml">
                 <form string="Model Parent">
                     <sheet>
@@ -324,7 +324,7 @@
 
         <record id="model_shared_cache_compute_parent_view_form" model="ir.ui.view">
             <field name="name">model_shared_cache_compute_parent_view_form</field>
-            <field name="model">test_new_api.model_shared_cache_compute_parent</field>
+            <field name="model">test_orm.model_shared_cache_compute_parent</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -346,8 +346,8 @@
 
         <!-- compute_editable view -->
         <record id="compute_editable_form" model="ir.ui.view">
-            <field name="name">test_new_api.compute_editable.form</field>
-            <field name="model">test_new_api.compute_editable</field>
+            <field name="name">test_orm.compute_editable.form</field>
+            <field name="model">test_orm.compute_editable</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -375,7 +375,7 @@
         <!-- python expression in view and groups -->
         <record id="view_model_some_access" model="ir.ui.view">
             <field name="name">Test attrs and groups</field>
-            <field name="model">test_new_api.model.some_access</field>
+            <field name="model">test_orm.model.some_access</field>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form>
@@ -395,7 +395,7 @@
 
         <record id="view_model_some_access_tree" model="ir.ui.view">
             <field name="name">Test attrs and groups list</field>
-            <field name="model">test_new_api.model.some_access</field>
+            <field name="model">test_orm.model.some_access</field>
             <field name="arch" type="xml">
                 <list string="Test python expression in list" decoration-muted="a == 1">
                     <field name="b"/>
@@ -410,7 +410,7 @@
 
         <record id="view_model_all_access" model="ir.ui.view">
             <field name="name">Test attrs and groups</field>
-            <field name="model">test_new_api.model.all_access</field>
+            <field name="model">test_orm.model.all_access</field>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form>
@@ -425,7 +425,7 @@
 
         <record id="view_model_no_access" model="ir.ui.view">
             <field name="name">Test attrs and groups</field>
-            <field name="model">test_new_api.model.no_access</field>
+            <field name="model">test_orm.model.no_access</field>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form>
@@ -440,7 +440,7 @@
 
         <record id="view_model2_some_access" model="ir.ui.view">
             <field name="name">Test attrs and groups_sub</field>
-            <field name="model">test_new_api.model2.some_access</field>
+            <field name="model">test_orm.model2.some_access</field>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form>
@@ -451,7 +451,7 @@
 
         <record id="view_model_model_active_field_tree" model="ir.ui.view">
             <field name="name">Test Active List</field>
-            <field name="model">test_new_api.model_active_field</field>
+            <field name="model">test_orm.model_active_field</field>
             <field name="arch" type="xml">
                 <list editable='bottom' decoration-muted="not active">
                     <field name="active"/>
@@ -467,7 +467,7 @@
 
         <record id="view_model_model_active_field_search" model="ir.ui.view">
             <field name="name">Test Active Search</field>
-            <field name="model">test_new_api.model_active_field</field>
+            <field name="model">test_orm.model_active_field</field>
             <field name="arch" type="xml">
                 <search string="Search Active Test">
                     <field name="name" string="By name" filter_domain="[('name', 'ilike', self)]"/>
@@ -484,7 +484,7 @@
 
         <record id="action_tests_active" model="ir.actions.act_window">
             <field name="name">Active Tests</field>
-            <field name="res_model">test_new_api.model_active_field</field>
+            <field name="res_model">test_orm.model_active_field</field>
             <field name="view_mode">list</field>
             <field name="search_view_id" ref="view_model_model_active_field_search"/>
         </record>

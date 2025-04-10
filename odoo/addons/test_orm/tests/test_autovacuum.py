@@ -4,7 +4,7 @@ from odoo.tests import common
 
 class TestAutovacuum(common.TransactionCase):
     def test_api_autovacuum(self):
-        Model = self.env['test_new_api.autovacuumed']
+        Model = self.env['test_orm.autovacuumed']
         instance = Model.create({'expire_at': datetime.now() - timedelta(days=15)})
         self.assertTrue(instance.exists())
 

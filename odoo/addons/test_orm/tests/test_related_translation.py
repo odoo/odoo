@@ -11,7 +11,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('fr_FR')
-        cls.test1 = cls.env['test_new_api.related_translation_1'].with_context(lang='en_US').create({
+        cls.test1 = cls.env['test_orm.related_translation_1'].with_context(lang='en_US').create({
             'name': 'Knife',
             'html': '<p>Knife</p><p>Fork</p><p>Spoon</p>',
         })
@@ -23,7 +23,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             'Fork': 'Fourchette',
             'Spoon': 'Cuiller',
         }})
-        cls.test12 = cls.env['test_new_api.related_translation_1'].with_context(lang='en_US').create({
+        cls.test12 = cls.env['test_orm.related_translation_1'].with_context(lang='en_US').create({
             'name': 'Knife 2',
             'html': '<p>Knife 2</p><p>Fork 2</p><p>Spoon 2</p>',
         })
@@ -35,10 +35,10 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             'Fork 2': 'Fourchette 2',
             'Spoon 2': 'Cuiller 2',
         }})
-        cls.test2 = cls.env['test_new_api.related_translation_2'].with_context(lang='en_US').create({
+        cls.test2 = cls.env['test_orm.related_translation_2'].with_context(lang='en_US').create({
             'related_id': cls.test1.id,
         })
-        cls.test3 = cls.env['test_new_api.related_translation_3'].with_context(lang='en_US').create({
+        cls.test3 = cls.env['test_orm.related_translation_3'].with_context(lang='en_US').create({
             'related_id': cls.test2.id,
         })
 
@@ -126,8 +126,8 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         self.assertEqual(self.test2.with_context(lang='fr_FR').name, 'Couteau')
         test1_xml_id = self.test1.export_data(['id']).get('datas')[0][0]
         po_string = '''
-                #. module: test_new_api
-                #: model:test_new_api.related_translation_1,name:%s
+                #. module: test_orm
+                #: model:test_orm.related_translation_1,name:%s
                 msgid "Knife"
                 msgstr "Nouveau couteau"
                 ''' % test1_xml_id

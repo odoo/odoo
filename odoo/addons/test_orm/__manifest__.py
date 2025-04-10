@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Test API',
+    'name': 'Test ORM',
     'version': '1.0',
     'category': 'Hidden/Tests',
-    'description': """A module to test the API.""",
+    'description': """A module to test the ORM.""",
     'depends': ['base', 'web', 'web_tour'],
     'installable': True,
     'data': [

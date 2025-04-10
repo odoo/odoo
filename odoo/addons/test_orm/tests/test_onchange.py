@@ -17,9 +17,9 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def setUp(self):
         super().setUp()
-        self.Discussion = self.env['test_new_api.discussion']
-        self.Message = self.env['test_new_api.message']
-        self.EmailMessage = self.env['test_new_api.emailmessage']
+        self.Discussion = self.env['test_orm.discussion']
+        self.Message = self.env['test_orm.message']
+        self.EmailMessage = self.env['test_orm.emailmessage']
 
     def test_default_get(self):
         """ checking values returned by default_get() """
@@ -28,8 +28,8 @@ class TestOnchange(SavepointCaseWithUserDemo):
         self.assertEqual(values, {})
 
         user = self.env.user
-        fields_spec = self.env['test_new_api.message']._get_fields_spec()
-        values = self.env['test_new_api.message'].onchange({}, [], fields_spec)['value']
+        fields_spec = self.env['test_orm.message']._get_fields_spec()
+        values = self.env['test_orm.message'].onchange({}, [], fields_spec)['value']
         self.assertEqual(values['discussion'], False)
         self.assertEqual(values['body'], False)
         self.assertEqual(values['author'], {'id': user.id, 'display_name': user.display_name})
@@ -38,8 +38,8 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_default_x2many(self):
         """ checking default values for x2many fields """
-        tag = self.env['test_new_api.multi.tag'].create({'name': 'alpha'})
-        model = self.env['test_new_api.multi'].with_context(default_tags=[Command.set(tag.ids)])
+        tag = self.env['test_orm.multi.tag'].create({'name': 'alpha'})
+        model = self.env['test_orm.multi'].with_context(default_tags=[Command.set(tag.ids)])
 
         values = model.default_get(['tags'])
         self.assertEqual(values, {'tags': [Command.set(tag.ids)]})
@@ -111,7 +111,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         self.assertNotIn('name', result['value'])
 
     def test_onchange_many2one(self):
-        Category = self.env['test_new_api.category']
+        Category = self.env['test_orm.category']
 
         fields_spec = Category._get_fields_spec()
         self.assertEqual(fields_spec, {
@@ -255,7 +255,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
     def test_onchange_one2many_multi(self):
         """ test the effect of multiple onchange methods on one2many fields """
         partner1 = self.env['res.partner'].create({'name': 'A partner'})
-        multi = self.env['test_new_api.multi'].create({'partner': partner1.id})
+        multi = self.env['test_orm.multi'].create({'partner': partner1.id})
         line1 = multi.lines.create({'multi': multi.id})
 
         self.assertEqual(multi.partner, partner1)
@@ -402,13 +402,13 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_onchange_default(self):
         """ test the effect of a conditional user-default on a field """
-        Foo = self.env['test_new_api.foo']
+        Foo = self.env['test_orm.foo']
         fields_spec = Foo._get_fields_spec()
         self.assertTrue(type(Foo).value1.change_default)
         self.assertIn('value1', Foo._onchange_methods)
 
         # create a user-defined default based on 'value1'
-        self.env['ir.default'].set('test_new_api.foo', 'value2', 666, condition='value1=42')
+        self.env['ir.default'].set('test_orm.foo', 'value2', 666, condition='value1=42')
 
         # setting 'value1' to 42 should trigger the change of 'value2'
         self.env.invalidate_all()
@@ -427,7 +427,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
             'name': 'X',
             'country_id': self.env.ref('base.be').id,
         })
-        with Form(self.env['test_new_api.multi']) as form:
+        with Form(self.env['test_orm.multi']) as form:
             form.partner = partner
             self.assertEqual(form.partner, partner)
             self.assertEqual(form.name, partner.name)
@@ -572,13 +572,13 @@ class TestOnchange(SavepointCaseWithUserDemo):
         }
 
         self.env.invalidate_all()
-        Message = self.env['test_new_api.related']
+        Message = self.env['test_orm.related']
         result = Message.onchange(values, ['message'], fields_spec)
 
         self.assertEqual(result['value'], expected)
 
         self.env.invalidate_all()
-        Message = self.env(user=self.user_demo.id)['test_new_api.related']
+        Message = self.env(user=self.user_demo.id)['test_orm.related']
         result = Message.onchange(values, ['message'], fields_spec)
 
         self.assertEqual(result['value'], expected)
@@ -620,7 +620,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         self.assertFalse(called[0], "discussion.messages has been read")
 
     def test_onchange_one2many_many2one_in_form(self):
-        order = self.env['test_new_api.monetary_order'].create({
+        order = self.env['test_orm.monetary_order'].create({
             'currency_id': self.env.ref('base.USD').id,
         })
 
@@ -632,16 +632,16 @@ class TestOnchange(SavepointCaseWithUserDemo):
             'order_id': {},
             'subtotal': {},
         }
-        result = self.env['test_new_api.monetary_order_line'].onchange(values, [], fields_spec)
+        result = self.env['test_orm.monetary_order_line'].onchange(values, [], fields_spec)
 
         self.assertEqual(result['value']['order_id'], order.id)
 
     def test_onchange_inherited(self):
         """ Setting an inherited field should assign the field on the parent record. """
-        foo, bar = self.env['test_new_api.multi.tag'].create([{'name': 'Foo'}, {'name': 'Bar'}])
+        foo, bar = self.env['test_orm.multi.tag'].create([{'name': 'Foo'}, {'name': 'Bar'}])
         view = self.env['ir.ui.view'].create({
             'name': 'Payment form view',
-            'model': 'test_new_api.payment',
+            'model': 'test_orm.payment',
             'arch': """
                 <form>
                     <field name="move_id" readonly="1" required="0"/>
@@ -656,7 +656,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         # both fields 'tag_id' and 'tag_name' are inherited through 'move_id';
         # assigning 'tag_id' should modify 'move_id.tag_id' accordingly, which
         # should in turn recompute `move.tag_name` and `tag_name`
-        form = Form(self.env['test_new_api.payment'], view)
+        form = Form(self.env['test_orm.payment'], view)
         self.assertEqual(form.tag_name, False)
         form.tag_id = foo
         self.assertEqual(form.tag_name, 'Foo')
@@ -685,9 +685,9 @@ class TestOnchange(SavepointCaseWithUserDemo):
         self.assertEqual(payment.tag_string, 'BarBarBar')
 
     def test_onchange_inherited_in_one2many(self):
-        move = self.env['test_new_api.move'].create({})
+        move = self.env['test_orm.move'].create({})
         view = self.env["ir.ui.view"].create({
-            "model": "test_new_api.move",
+            "model": "test_orm.move",
             "type": "form",
             "arch": """<form>
                 <field name="payment_ids">
@@ -710,8 +710,8 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_display_name(self):
         self.env['ir.ui.view'].create({
-            'name': 'test_new_api.multi.tag form view',
-            'model': 'test_new_api.multi.tag',
+            'name': 'test_orm.multi.tag form view',
+            'model': 'test_orm.multi.tag',
             'arch': """
                 <form>
                     <field name="name"/>
@@ -720,7 +720,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
             """,
         })
 
-        form = Form(self.env['test_new_api.multi.tag'])
+        form = Form(self.env['test_orm.multi.tag'])
         self.assertEqual(form.name, False)
         self.assertEqual(form.display_name, "")
 
@@ -759,7 +759,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         ])
 
     def test_reading_many2one_extra_fields(self):
-        Category = self.env['test_new_api.category']
+        Category = self.env['test_orm.category']
         root = Category.create(dict(name='root'))
 
         fields_spec = {
@@ -782,7 +782,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_one2many_field_with_context_many2one(self):
         """ test many2one fields with a context on their one2many container field """
-        multi = self.env['test_new_api.multi'].create({})
+        multi = self.env['test_orm.multi'].create({})
         line = multi.lines.create({'multi': multi.id})
 
         self.assertFalse(multi.partner)
@@ -838,7 +838,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
     def test_one2many_field_with_context_many2many(self):
         """ test relational fields with a context on their one2many container field """
         partner = self.env['res.partner'].create({'name': 'A partner'})
-        multi = self.env['test_new_api.multi'].create({'partner': partner.id})
+        multi = self.env['test_orm.multi'].create({'partner': partner.id})
         line = multi.lines.create({'multi': multi.id})
 
         self.assertEqual(multi.partner, partner)
@@ -863,7 +863,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         }
 
         # set field 'tags': this should modify 'tags' on all lines
-        tag = self.env['test_new_api.multi.tag'].create({'name': 'tag'})
+        tag = self.env['test_orm.multi.tag'].create({'name': 'tag'})
         self.assertEqual(tag.display_name, 'tag')
         self.assertEqual(tag.with_context(special_tag=True).display_name, 'tag!')
 
@@ -883,9 +883,9 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_one2many_field_with_many2many_subfield(self):
         """ test relational fields with a context on their one2many container field """
-        tag1 = self.env['test_new_api.multi.tag'].create({'name': 'a1'})
-        tag2 = self.env['test_new_api.multi.tag'].create({'name': 'a2'})
-        multi = self.env['test_new_api.multi'].create({})
+        tag1 = self.env['test_orm.multi.tag'].create({'name': 'a1'})
+        tag2 = self.env['test_orm.multi.tag'].create({'name': 'a2'})
+        multi = self.env['test_orm.multi'].create({})
         line = multi.lines.create({
             'multi': multi.id,
             'tags': [Command.set(tag1.ids)],
@@ -923,7 +923,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
 class TestComputeOnchange2(TransactionCase):
 
     def test_create(self):
-        model = self.env['test_new_api.compute.onchange']
+        model = self.env['test_orm.compute.onchange']
 
         # compute 'bar' (readonly) and 'baz' (editable)
         record = model.create({'active': True})
@@ -951,10 +951,10 @@ class TestComputeOnchange2(TransactionCase):
         self.assertEqual(record.baz, "baz")
 
     def test_copy(self):
-        Model = self.env['test_new_api.compute.onchange']
+        Model = self.env['test_orm.compute.onchange']
 
         # create tags
-        tag_foo, tag_bar = self.env['test_new_api.multi.tag'].create([
+        tag_foo, tag_bar = self.env['test_orm.multi.tag'].create([
             {'name': 'foo1'},
             {'name': 'bar1'},
         ])
@@ -986,7 +986,7 @@ class TestComputeOnchange2(TransactionCase):
         self.assertEqual(record.tag_ids, tag_foo + tag_bar)  # copied
 
     def test_copy_batch(self):
-        partners = self.env['test_new_api.partner'].create([
+        partners = self.env['test_orm.partner'].create([
             {'name': f'Partner {index}'} for index in range(5)
         ])
 
@@ -1000,7 +1000,7 @@ class TestComputeOnchange2(TransactionCase):
             self.assertEqual(new_partner.name, old_partner.name)
 
     def test_write(self):
-        model = self.env['test_new_api.compute.onchange']
+        model = self.env['test_orm.compute.onchange']
         record = model.create({'active': True, 'foo': "foo"})
         self.assertEqual(record.bar, "foor")
         self.assertEqual(record.baz, "fooz")
@@ -1026,7 +1026,7 @@ class TestComputeOnchange2(TransactionCase):
         self.assertEqual(record.baz, "baz4")
 
     def test_set(self):
-        model = self.env['test_new_api.compute.onchange']
+        model = self.env['test_orm.compute.onchange']
         record = model.create({'active': True, 'foo': "foo"})
         self.assertEqual(record.bar, "foor")
         self.assertEqual(record.baz, "fooz")
@@ -1057,7 +1057,7 @@ class TestComputeOnchange2(TransactionCase):
         self.assertEqual(record.baz, "baz4")
 
     def test_set_new(self):
-        model = self.env['test_new_api.compute.onchange']
+        model = self.env['test_orm.compute.onchange']
         record = model.new({'active': True})
         self.assertEqual(record.bar, "r")
         self.assertEqual(record.baz, "z")
@@ -1089,7 +1089,7 @@ class TestComputeOnchange2(TransactionCase):
 
     def test_onchange(self):
         # check computations of 'bar' (readonly) and 'baz' (editable)
-        form = Form(self.env['test_new_api.compute.onchange'])
+        form = Form(self.env['test_orm.compute.onchange'])
         self.assertEqual(form.bar, "r")
         self.assertEqual(form.baz, False)
         self.assertEqual(form.quux, "quux")
@@ -1143,7 +1143,7 @@ class TestComputeOnchange2(TransactionCase):
         self.assertEqual(form.baz, "baz5")
 
     def test_onchange_default(self):
-        form = Form(self.env['test_new_api.compute.onchange'].with_context(
+        form = Form(self.env['test_orm.compute.onchange'].with_context(
             default_active=True, default_foo="foo", default_baz="baz", default_quux="no",
         ))
         # 'baz' is computed editable, so when given a default value it should
@@ -1156,13 +1156,13 @@ class TestComputeOnchange2(TransactionCase):
     def test_onchange_once(self):
         """ Modifies `foo` field which will trigger an onchange method and
         checks it was triggered only one time. """
-        form = Form(self.env['test_new_api.compute.onchange'].with_context(default_foo="oof"))
+        form = Form(self.env['test_orm.compute.onchange'].with_context(default_foo="oof"))
         record = form.save()
         self.assertEqual(record.foo, "oof")
         self.assertEqual(record.count, 1, "value onchange must be called only one time")
 
     def test_onchange_one2many(self):
-        record = self.env['test_new_api.model_parent_m2o'].create({
+        record = self.env['test_orm.model_parent_m2o'].create({
             'name': 'Family',
             'child_ids': [
                 Command.create({'name': 'W', 'cost': 10}),
@@ -1191,7 +1191,7 @@ class TestComputeOnchange2(TransactionCase):
 
     def test_onchange_editable_compute_one2many(self):
         # create a record with a computed editable field ('edit') on lines
-        record = self.env['test_new_api.compute_editable'].create({
+        record = self.env['test_orm.compute_editable'].create({
             'line_ids': [Command.create({'value': 7})],
         })
         self.env.flush_all()
@@ -1228,7 +1228,7 @@ class TestComputeOnchange2(TransactionCase):
 
     def test_computed_editable_one2many_domain(self):
         """ Test a computed, editable one2many field with a domain. """
-        record = self.env['test_new_api.one2many'].create({'name': 'foo'})
+        record = self.env['test_orm.one2many'].create({'name': 'foo'})
         self.assertRecordValues(record.line_ids, [
             {'name': 'foo', 'count': 1},
         ])
@@ -1272,14 +1272,14 @@ class TestComputeOnchange2(TransactionCase):
 
     def test_one2many_compute(self):
         """ Test a computed, editable one2many field with a domain. """
-        record = self.env['test_new_api.compute_editable'].create(
+        record = self.env['test_orm.compute_editable'].create(
             {'line_ids': [Command.create({})]},
         )
         with Form(record) as form:
             form.precision_rounding = 0.0001
 
     def test_new_one2many_on_existing_record(self):
-        discussion = self.env['test_new_api.discussion'].create({
+        discussion = self.env['test_orm.discussion'].create({
             'messages': [Command.create({'body': 'Required Body', 'important': True})],
             'name': 'Required field',
             'participants': [Command.set(self.env.user.ids)],
@@ -1296,7 +1296,7 @@ class TestComputeOnchange2(TransactionCase):
 
         # Test the same flow but when the important message is archived.
         # The _compute_has_important_sibling should take in account archived siblings.
-        discussion = self.env['test_new_api.discussion'].create({
+        discussion = self.env['test_orm.discussion'].create({
             'messages': [
                 Command.create({'body': 'Archived Important sibling', 'important': True, 'active': False}),
             ],
@@ -1314,7 +1314,7 @@ class TestComputeOnchange2(TransactionCase):
             self.assertEqual(len(discussion_form.messages), 1)
 
     def test_protection_shared_compute(self):
-        model = self.env['test_new_api.shared.compute']
+        model = self.env['test_orm.shared.compute']
         START = 5
 
         with Form(model) as form:
@@ -1330,7 +1330,7 @@ class TestComputeOnchange2(TransactionCase):
             self.assertEqual(form.end, START + 20, "updating 'name' should recompute 'end'")
 
     def test_new_one2many_traversing_many2one_second_onchange(self):
-        discussion = self.env['test_new_api.discussion'].create({
+        discussion = self.env['test_orm.discussion'].create({
             'name': 'Required field',
             'messages': [Command.create({'body': 'Msg1: Existing', 'important': True})],
             'participants': [Command.set(self.env.user.ids)],

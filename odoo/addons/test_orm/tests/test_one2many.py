@@ -6,15 +6,15 @@ from odoo.exceptions import MissingError, UserError
 class One2manyCase(TransactionExpressionCase):
     def setUp(self):
         super().setUp()
-        self.Line = self.env["test_new_api.multi.line"]
-        self.multi = self.env["test_new_api.multi"].create({
+        self.Line = self.env["test_orm.multi.line"]
+        self.multi = self.env["test_orm.multi"].create({
             "name": "What is up?"
         })
 
         # data for One2many with inverse field Integer
-        self.Edition = self.env["test_new_api.creativework.edition"]
-        self.Book = self.env["test_new_api.creativework.book"]
-        self.Movie = self.env["test_new_api.creativework.movie"]
+        self.Edition = self.env["test_orm.creativework.edition"]
+        self.Book = self.env["test_orm.creativework.book"]
+        self.Movie = self.env["test_orm.creativework.movie"]
 
         book_model_id = self.env['ir.model'].search([('model', '=', self.Book._name)]).id
         movie_model_id = self.env['ir.model'].search([('model', '=', self.Movie._name)]).id
@@ -93,7 +93,7 @@ class One2manyCase(TransactionExpressionCase):
         self.operations()
 
     def test_rpcstyle_one_by_one_on_new(self):
-        self.multi = self.env["test_new_api.multi"].new({
+        self.multi = self.env["test_orm.multi"].new({
             "name": "What is up?"
         })
         for name in range(10):
@@ -106,7 +106,7 @@ class One2manyCase(TransactionExpressionCase):
         self.operations()
 
     def test_rpcstyle_single_on_new(self):
-        self.multi = self.env["test_new_api.multi"].new({
+        self.multi = self.env["test_orm.multi"].new({
             "name": "What is up?"
         })
         self.multi.lines = [Command.create({'name': str(name)}) for name in range(10)]
@@ -150,7 +150,7 @@ class One2manyCase(TransactionExpressionCase):
         self.assertItemsEqual(t(res_movies_not_of_edition_name), t(movies.filtered(lambda r: one_movie_edition not in r.editions)))
 
     def test_merge_partner(self):
-        model = self.env['test_new_api.field_with_caps']
+        model = self.env['test_orm.field_with_caps']
         partner = self.env['res.partner']
 
         p1 = partner.create({'name': 'test1'})
@@ -209,12 +209,12 @@ class One2manyCase(TransactionExpressionCase):
 
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
-        record0 = self.env['test_new_api.attachment.host'].create({})
+        record0 = self.env['test_orm.attachment.host'].create({})
         with self.assertQueryCount(0):
             self.assertFalse(record0.attachment_ids, "inconsistent cache")
 
         # creating attachment must compute name and invalidate attachment_ids
-        attachment = self.env['test_new_api.attachment'].create({
+        attachment = self.env['test_orm.attachment'].create({
             'res_model': record0._name,
             'res_id': record0.id,
         })
@@ -227,7 +227,7 @@ class One2manyCase(TransactionExpressionCase):
 
         # creating a host should not attempt to recompute attachment.name
         with self.assertQueryCount(1):
-            record1 = self.env['test_new_api.attachment.host'].create({})
+            record1 = self.env['test_orm.attachment.host'].create({})
         with self.assertQueryCount(0):
             # field res_id should not have been invalidated
             attachment.res_id
@@ -270,7 +270,7 @@ class One2manyCase(TransactionExpressionCase):
     def test_dont_write_the_existing_childs(self):
         """ test that the existing child should not be changed when adding a new child to the parent.
         This is the behaviour of the form view."""
-        parent = self.env['test_new_api.model_parent_m2o'].create({
+        parent = self.env['test_orm.model_parent_m2o'].create({
             'name': 'parent',
             'child_ids': [Command.create({'name': 'A'})],
         })
@@ -279,23 +279,23 @@ class One2manyCase(TransactionExpressionCase):
 
     def test_create_with_commands(self):
         # create lines and warm up caches
-        order = self.env['test_new_api.order'].create({
+        order = self.env['test_orm.order'].create({
             'line_ids': [Command.create({'product': name}) for name in ('set', 'sept')],
         })
         line1, line2 = order.line_ids
 
         # INSERT, UPDATE of line1
         with self.assertQueryCount(2):
-            self.env['test_new_api.order'].create({
+            self.env['test_orm.order'].create({
                 'line_ids': [Command.set(line1.ids)],
             })
 
         # INSERT order, INSERT thief, UPDATE of line1+line2
         with self.assertQueryCount(3):
-            order = self.env['test_new_api.order'].create({
+            order = self.env['test_orm.order'].create({
                 'line_ids': [Command.set(line1.ids)],
             })
-            thief = self.env['test_new_api.order'].create({
+            thief = self.env['test_orm.order'].create({
                 'line_ids': [Command.set((line1 + line2).ids)],
             })
 
@@ -305,8 +305,8 @@ class One2manyCase(TransactionExpressionCase):
 
     def test_recomputation_ends(self):
         """ Regression test for neverending recomputation. """
-        parent = self.env['test_new_api.model_parent_m2o'].create({'name': 'parent'})
-        child = self.env['test_new_api.model_child_m2o'].create({'name': 'A', 'parent_id': parent.id})
+        parent = self.env['test_orm.model_parent_m2o'].create({'name': 'parent'})
+        child = self.env['test_orm.model_child_m2o'].create({'name': 'A', 'parent_id': parent.id})
         self.assertEqual(child.size1, 6)
 
         # delete parent, and check that recomputation ends
@@ -314,9 +314,9 @@ class One2manyCase(TransactionExpressionCase):
         self.env.flush_all()
 
     def test_compute_stored_many2one_one2many(self):
-        container = self.env['test_new_api.compute.container'].create({'name': 'Foo'})
+        container = self.env['test_orm.compute.container'].create({'name': 'Foo'})
         self.assertFalse(container.member_ids)
-        member = self.env['test_new_api.compute.member'].create({'name': 'Foo'})
+        member = self.env['test_orm.compute.member'].create({'name': 'Foo'})
         # at this point, member.container_id must be computed for member to
         # appear in container.member_ids
         self.assertEqual(container.member_ids, member)
@@ -334,7 +334,7 @@ class One2manyCase(TransactionExpressionCase):
         self.assertEqual(container.member_count, 1)
 
     def test_reward_line_delete(self):
-        order = self.env['test_new_api.order'].create({
+        order = self.env['test_orm.order'].create({
             'line_ids': [
                 Command.create({'product': 'a'}),
                 Command.create({'product': 'b'}),
@@ -369,8 +369,8 @@ class One2manyCase(TransactionExpressionCase):
         ##############
         # REAL - NEW #
         ##############
-        parent = self.env['test_new_api.model_parent_m2o'].create({'name': 'parentB'})
-        new_child = self.env['test_new_api.model_child_m2o'].new({'name': 'B', 'parent_id': parent.id})
+        parent = self.env['test_orm.model_parent_m2o'].create({'name': 'parentB'})
+        new_child = self.env['test_orm.model_child_m2o'].new({'name': 'B', 'parent_id': parent.id})
 
         # wanted behavior: when creating a new with a real parent id, the child
         # isn't present in the parent childs until true creation
@@ -388,7 +388,7 @@ class One2manyCase(TransactionExpressionCase):
         # NEW - NEW #
         #############
         # wanted behavior: linking new records to new records is totally fine
-        new_parent = self.env['test_new_api.model_parent_m2o'].new({
+        new_parent = self.env['test_orm.model_parent_m2o'].new({
             "name": 'parentC3PO',
             "child_ids": [(0, 0, {"name": "C3"})],
         })
@@ -397,7 +397,7 @@ class One2manyCase(TransactionExpressionCase):
         self.assertTrue(new_parent.child_ids)
         self.assertFalse(new_parent.child_ids.ids)
 
-        new_child = self.env['test_new_api.model_child_m2o'].new({
+        new_child = self.env['test_orm.model_child_m2o'].new({
             'name': 'PO',
         })
         new_parent.child_ids += new_child
@@ -405,7 +405,7 @@ class One2manyCase(TransactionExpressionCase):
         self.assertEqual(len(new_parent.child_ids), 2)
         self.assertListEqual(new_parent.child_ids.mapped('name'), ['C3', 'PO'])
 
-        new_child2 = self.env['test_new_api.model_child_m2o'].new({
+        new_child2 = self.env['test_orm.model_child_m2o'].new({
             'name': 'R2D2',
             'parent_id': new_parent.id,
         })
@@ -421,7 +421,7 @@ class One2manyCase(TransactionExpressionCase):
         # working fine on the way.
         name = type(new_parent).name
         child_ids = type(new_parent).child_ids
-        parent = self.env['test_new_api.model_parent_m2o'].create({
+        parent = self.env['test_orm.model_parent_m2o'].create({
             'name': name.convert_to_write(new_parent.name, new_parent),
             'child_ids': child_ids.convert_to_write(new_parent.child_ids, new_parent),
         })
@@ -430,8 +430,8 @@ class One2manyCase(TransactionExpressionCase):
         self.assertEqual(parent.child_ids.mapped('name'), ['C3', 'PO', 'R2D2'])
 
     def test_parent_id(self):
-        Team = self.env['test_new_api.team']
-        Member = self.env['test_new_api.team.member']
+        Team = self.env['test_orm.team']
+        Member = self.env['test_orm.team.member']
 
         team1 = Team.create({'name': 'ORM'})
         team2 = Team.create({'name': 'Bugfix', 'parent_id': team1.id})
@@ -454,7 +454,7 @@ class One2manyCase(TransactionExpressionCase):
         self._search(Team, [('id', 'child_of', team1.id)])
 
     def test_create_one2many_with_unsearchable_field(self):
-        unsearchableO2M = self.env['test_new_api.unsearchable.o2m']
+        unsearchableO2M = self.env['test_orm.unsearchable.o2m']
 
         # Create a parent record
         parent_record1 = unsearchableO2M.create({
