@@ -1271,11 +1271,12 @@ class ProductTemplate(models.Model):
                 if line_index == len(product_template_attribute_values_per_line) - 1:
                     # submit combination if we're on the last line
                     yield partial_combination
+                    # will break or continue further down as current_ptav_index is always -1 here
                 else:
                     line_index += 1
                     continue
-
-            current_ptav = current_line_values[current_ptav_index]
+            else:
+                current_ptav = current_line_values[current_ptav_index]
 
             # removing exclusions from current_ptav as we're removing it from partial_combination
             if current_ptav_index >= 0:
