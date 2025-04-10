@@ -2993,10 +2993,11 @@ we-select.o_grid we-toggler {
                 padding: 6px 12px;
                 border-bottom-left-radius: 5px;
             }
-            &:not(:has([data-preview-interaction-enabled="true"]))::after {
+            &::after {
                 content: "";
                 @include o-position-absolute(0, 0, 0, 0);
                 outline: 6px solid transparent;
+                pointer-events: none;
                 z-index: 1;
             }
             &:hover {
