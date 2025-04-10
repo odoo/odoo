@@ -66,5 +66,5 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         response = self.url_open(portal_message[0]['author_avatar_url'])
         # Ensure that the avatar is visible
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.headers.get('Content-Type'), 'image/png')
-        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
+        self.assertEqual(response.headers.get('Content-Type'), 'image/svg+xml; charset=utf-8')
+        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.svg')
