@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderMany2One">
+    <BuilderComponent>
+        <BasicMany2One
+            model="props.model"
+            limit="props.limit"
+            domain="props.domain"
+            fields="props.fields"
+            selected="domState.selected"
+            select="select.bind(this)"
+            unselect="props.allowUnselect ? unselect.bind(this) : undefined"
+            defaultMessage="props.defaultMessage"
+        />
+    </BuilderComponent>
+</t>
+
+</templates>

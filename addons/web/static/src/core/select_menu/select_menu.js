@@ -159,11 +159,11 @@ export class SelectMenu extends Component {
     async onBeforeOpen() {
         if (this.state.searchValue.length) {
             this.state.searchValue = "";
-            if (this.props.onInput) {
-                // This props can be used by the parent to fetch items dynamically depending
-                // the search value. It must be called with the empty search value.
-                await this.executeOnInput("");
-            }
+        }
+        if (this.props.onInput) {
+            // This props can be used by the parent to fetch items dynamically depending
+            // the search value. It must be called with the empty search value.
+            await this.executeOnInput("");
         }
         this.filterOptions();
     }
