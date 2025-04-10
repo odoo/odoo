@@ -22,6 +22,8 @@ class StockValuationLayer(models.Model):
     company_id = fields.Many2one('res.company', 'Company', readonly=True, required=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True, auto_join=True, index=True)
     categ_id = fields.Many2one('product.category', related='product_id.categ_id')
+    is_scrap = fields.Boolean(related='stock_move_id.scrapped')
+    is_inventory = fields.Boolean(related='stock_move_id.is_inventory')
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     quantity = fields.Float('Quantity', readonly=True, digits='Product Unit')
     uom_id = fields.Many2one(related='product_id.uom_id', readonly=True, required=True)
@@ -38,6 +40,7 @@ class StockValuationLayer(models.Model):
     account_move_line_id = fields.Many2one('account.move.line', 'Invoice Line', readonly=True, check_company=True, index="btree_not_null")
     reference = fields.Char(related='stock_move_id.reference')
     price_diff_value = fields.Float('Invoice value correction with invoice currency')
+    picking_code = fields.Selection(related='stock_move_id.picking_type_id.code')
     warehouse_id = fields.Many2one('stock.warehouse', string="Receipt WH", compute='_compute_warehouse_id', search='_search_warehouse_id')
     lot_id = fields.Many2one('stock.lot', 'Lot/Serial Number', check_company=True, index=True)
 
