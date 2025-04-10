@@ -680,6 +680,9 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.partner_a.email = None
         self.assertTrue(bool(self.partner_b.email))
         wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertEqual(wizard.summary_data, {
+            'email': {'count': 1, 'label': 'by Email'},  # Only one will be actually sent by email
+        })
         self.assertTrue('account_missing_email' in wizard.alerts)
         self.assertEqual(wizard.alerts['account_missing_email']['level'], 'warning')
         wizard.action_send_and_print()
@@ -1077,6 +1080,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
         self.assertFalse(invoice.invoice_pdf_report_id)
         wizard = self.create_send_and_print(invoice, sending_methods=[])
+        self.assertFalse(wizard.sending_methods)
         wizard.action_send_and_print()
         self.assertTrue(invoice.is_move_sent)
         self.assertTrue(invoice.invoice_pdf_report_id)

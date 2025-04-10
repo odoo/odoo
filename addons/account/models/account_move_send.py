@@ -36,7 +36,7 @@ class AccountMoveSend(models.AbstractModel):
         return {edi_key for edi_key, edi_vals in extra_edis.items() if edi_vals['is_applicable'](move)}
 
     @api.model
-    def _get_default_invoice_edi_format(self, move) -> str:
+    def _get_default_invoice_edi_format(self, move, **context) -> str:
         """ By default, we generate the EDI format set on partner. """
         return move.partner_id.with_company(move.company_id).invoice_edi_format
 
@@ -58,12 +58,12 @@ class AccountMoveSend(models.AbstractModel):
 
         vals = {
             'sending_methods': get_setting('sending_methods', default_value={self._get_default_sending_method(move)}) or {},
-            'invoice_edi_format': get_setting('invoice_edi_format', default_value=self._get_default_invoice_edi_format(move)),
             'extra_edis': get_setting('extra_edis', default_value=self._get_default_extra_edis(move)) or {},
             'pdf_report': get_setting('pdf_report') or self._get_default_pdf_report_id(move),
             'author_user_id': get_setting('author_user_id', from_cron=from_cron) or self.env.user.id,
             'author_partner_id': get_setting('author_partner_id', from_cron=from_cron) or self.env.user.partner_id.id,
         }
+        vals['invoice_edi_format'] = get_setting('invoice_edi_format', default_value=self._get_default_invoice_edi_format(move, sending_methods=vals['sending_methods']))
         if 'email' in vals['sending_methods']:
             mail_template = get_setting('mail_template') or self._get_default_mail_template_id(move)
             mail_lang = get_setting('mail_lang') or self._get_default_mail_lang(move, mail_template)
@@ -301,8 +301,10 @@ class AccountMoveSend(models.AbstractModel):
         return True
 
     @api.model
-    def _is_applicable_to_move(self, method, move):
+    def _is_applicable_to_move(self, method, move, **context):
         """ TO OVERRIDE - """
+        if method == 'email':
+            return bool(context.get('mail_partner_ids')) or bool(move.partner_id.commercial_partner_id.email)
         return True
 
     @api.model
@@ -411,7 +413,7 @@ class AccountMoveSend(models.AbstractModel):
         to_send_mail = {
             move: move_data
             for move, move_data in moves_data.items()
-            if 'email' in move_data['sending_methods'] and self._is_applicable_to_move('email', move)
+            if 'email' in move_data['sending_methods'] and self._is_applicable_to_move('email', move, mail_partner_id=move_data['mail_partner_ids'])
         }
         self._send_mails(to_send_mail)
 
@@ -667,7 +669,7 @@ class AccountMoveSend(models.AbstractModel):
         self._check_invoice_report(moves, **custom_settings)
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
-            for sending_method in custom_settings.get('sending_methods', [])
+            for sending_method in (custom_settings.get('sending_methods') or [])
         ) if 'sending_methods' in custom_settings else True
 
     @api.model

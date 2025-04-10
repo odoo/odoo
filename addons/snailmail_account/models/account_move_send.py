@@ -41,12 +41,12 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
     # SENDING METHODS
     # -------------------------------------------------------------------------
-    def _is_applicable_to_move(self, method, move):
+    def _is_applicable_to_move(self, method, move, **context):
         # EXTENDS 'account'
         if method == 'snailmail':
             return self.env['snailmail.letter']._is_valid_address(move.partner_id)
         else:
-            return super()._is_applicable_to_move(method, move)
+            return super()._is_applicable_to_move(method, move, **context)
 
     def _hook_if_success(self, moves_data):
         # EXTENDS 'account'
