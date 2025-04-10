@@ -17,14 +17,17 @@ export class Many2OneAvatarField extends Component {
     }
 }
 
-registry.category("fields").add("many2one_avatar", {
+export const many2OneAvatarField = {
     ...buildM2OFieldDescription(Many2OneAvatarField),
     extractProps(staticInfo, dynamicInfo) {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),
-            canOpen: "no_open" in staticInfo.options
-                ? !staticInfo.options.no_open
-                : staticInfo.viewType === "form",
+            canOpen:
+                "no_open" in staticInfo.options
+                    ? !staticInfo.options.no_open
+                    : staticInfo.viewType === "form",
         };
     },
-});
+};
+
+registry.category("fields").add("many2one_avatar", many2OneAvatarField);
