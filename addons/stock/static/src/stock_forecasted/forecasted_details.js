@@ -45,7 +45,7 @@ export class ForecastedDetails extends Component {
     }
 
     displayReserve(line){
-        return !line.in_transit && this.canReserveOperation(line);
+        return this.props.docs.user_can_edit_pickings && !line.in_transit && this.canReserveOperation(line);
     }
 
     canReserveOperation(line){
