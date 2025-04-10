@@ -1221,6 +1221,15 @@ export class PosStore extends WithLazyGetterTrap {
             return this.addNewOrder();
         }
     }
+    getEmptyOrder() {
+        const orders = this.models["pos.order"].filter(
+            (order) => !order.finalized && order.isEmpty()
+        );
+        if (orders.length > 0) {
+            return orders[0];
+        }
+        return this.addNewOrder();
+    }
 
     addPendingOrder(orderIds, remove = false) {
         if (remove) {
@@ -2276,10 +2285,6 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.router.state.current === "ProductScreen") {
             return this.ui.isSmall ? this.mobile_pane === "right" : true;
         }
-        return false;
-    }
-
-    doNotAllowRefundAndSales() {
         return false;
     }
 
