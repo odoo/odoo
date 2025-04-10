@@ -706,9 +706,12 @@ export class Rtc extends Record {
     }
 
     async _initConnection() {
-        this.localSession.connectionState = "selecting network type";
         this.state.connectionType = CONNECTION_TYPES.P2P;
         this.network?.disconnect();
+        for (const session of this.state.channel.rtcSessions) {
+            session.connectionState = undefined;
+        }
+        this.localSession.connectionState = "selecting network type";
         // loading p2p in any case as we may need to receive peer-to-peer connections from users who failed to connect to the SFU.
         this.p2pService.connect(this.localSession.id, this.state.channel.id, {
             info: this.formatInfo(),
@@ -732,6 +735,7 @@ export class Rtc extends Record {
                 }
             } catch (e) {
                 this.state.fallbackMode = true;
+                this.localSession.connectionState = "p2p fallback";
                 this.notification.add(
                     _t("Failed to load the SFU server, falling back to peer-to-peer"),
                     {
@@ -745,6 +749,7 @@ export class Rtc extends Record {
             }
             this.selfSession.connectionState = "initializing";
         } else {
+            this.localSession.connectionState = undefined;
             this.log(this.localSession, "no sfu server info, using peer-to-peer");
         }
         this.network.addEventListener("stateChange", this._handleSfuClientStateChange);
@@ -752,7 +757,7 @@ export class Rtc extends Record {
         this.network.addEventListener("log", ({ detail: { id, level, message } }) => {
             const session = this.store["discuss.channel.rtc.session"].get(id);
             if (session) {
-                this.log(session, message, { step: "p2p", level, important: true });
+                this.log(session, message, { level, important: true });
             }
         });
         if (this.state.channel) {
@@ -917,7 +922,6 @@ export class Rtc extends Record {
      */
     log(session, entry, param2 = {}) {
         const { error, step, state, important, ...data } = param2;
-        session.logStep = entry;
         if (!this.store.settings.logRtc && !important) {
             return;
         }
@@ -974,6 +978,7 @@ export class Rtc extends Record {
                         return;
                     }
                     session.connectionState = state;
+                    this.log(session, "connection state changed", { state });
                 }
                 return;
             case "disconnect":
@@ -1126,6 +1131,7 @@ export class Rtc extends Record {
     async _downgradeConnection() {
         this.serverInfo = undefined;
         this.state.fallbackMode = true;
+        this.localSession.connectionState = "p2p fallback";
         this.state.connectionType = CONNECTION_TYPES.P2P;
         this.network.removeSfu();
         await this.call();
@@ -1385,7 +1391,6 @@ export class Rtc extends Record {
         }
         this.removeCallNotification("raise_hand_" + session.id);
         session.raisingHand = undefined;
-        session.logStep = undefined;
         session.audioError = undefined;
         session.videoError = undefined;
         session.connectionState = undefined;

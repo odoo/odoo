@@ -4,8 +4,6 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
-
 const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TURN" };
 
 export class CallContextMenu extends Component {
@@ -13,7 +11,6 @@ export class CallContextMenu extends Component {
     static template = "discuss.CallContextMenu";
 
     updateStatsTimeout;
-    rtcConnectionTypes = CONNECTION_TYPES;
 
     setup() {
         super.setup();
@@ -41,18 +38,16 @@ export class CallContextMenu extends Component {
     }
 
     get inboundConnectionTypeText() {
-        const candidateType =
-            this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
-                ? this.state.downloadStats.remoteCandidateType
-                : this.state.peerStats.remoteCandidateType;
+        const candidateType = this.rtc.localSession?.eq(this.props.rtcSession)
+            ? this.state.downloadStats.remoteCandidateType
+            : this.state.peerStats.remoteCandidateType;
         return this.formatProtocol(candidateType);
     }
 
     get outboundConnectionTypeText() {
-        const candidateType =
-            this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
-                ? this.state.uploadStats.localCandidateType
-                : this.state.peerStats.localCandidateType;
+        const candidateType = this.rtc.localSession?.eq(this.props.rtcSession)
+            ? this.state.uploadStats.localCandidateType
+            : this.state.peerStats.localCandidateType;
         return this.formatProtocol(candidateType);
     }
 
