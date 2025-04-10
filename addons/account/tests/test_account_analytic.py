@@ -428,3 +428,33 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
 
         # This invoice should not be blocked, as all lines have plans
         invoice.with_context({'validate_analytic': True}).action_post()
+
+    def test_tax_line_sync_with_analytic(self):
+        """
+        Test that the line syncs, especially the tax line, keep the analytic distribution when saving the move
+        """
+        account_with_tax = self.company_data['default_account_revenue'].copy({'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)]})
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'line_ids': [Command.create({'account_id': account_with_tax.id, 'debit': 100})]
+        })
+
+        # Check that the balancing line and the tax line have been created
+        self.assertEqual(len(move.line_ids), 3)
+
+        move.line_ids.write({'analytic_distribution': {self.analytic_account_1.id: 100}})
+
+        self.assertRecordValues(move.line_ids.sorted('balance'), [
+            {
+                'name': 'Automatic Balancing Line',
+                'analytic_distribution': {str(self.analytic_account_1.id): 100.00},
+            },
+            {
+                'name': self.company_data['default_tax_sale'].name,
+                'analytic_distribution': {str(self.analytic_account_1.id): 100.00},
+            },
+            {
+                'name': False,
+                'analytic_distribution': {str(self.analytic_account_1.id): 100.00},
+            },
+        ])
