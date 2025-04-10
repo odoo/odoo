@@ -94,6 +94,12 @@ export class OdooPivotModel extends PivotModel {
         this.resetTableStructure();
     }
 
+    updateCollapsedDomains(collapsedDomains) {
+        console.log("updateCollapsedDomains", collapsedDomains);
+        this.definition.collapsedDomains = collapsedDomains;
+        this.resetTableStructure();
+    }
+
     getDefinition() {
         return this.definition;
     }
@@ -225,15 +231,24 @@ export class OdooPivotModel extends PivotModel {
     }
 
     resetTableStructure() {
-        this._tableStructure = undefined;
+        this._collapsedTableStructure = undefined;
+        this._expandedTableStructure = undefined;
     }
 
-    getTableStructure() {
-        if (this._tableStructure === undefined) {
+    getCollapsedTableStructure() {
+        if (this._collapsedTableStructure === undefined) {
             // lazy build the structure
-            this._tableStructure = this._buildTableStructure();
+            this._collapsedTableStructure = this._buildTableStructure("collapsed");
         }
-        return this._tableStructure;
+        return this._collapsedTableStructure;
+    }
+
+    getExpandedTableStructure() {
+        if (this._expandedTableStructure === undefined) {
+            // lazy build the structure
+            this._expandedTableStructure = this._buildTableStructure("expanded");
+        }
+        return this._expandedTableStructure;
     }
 
     /**
@@ -268,9 +283,11 @@ export class OdooPivotModel extends PivotModel {
     }
 
     /**
+     * Build the table structure
+     * @param {"collapsed" | "expanded"} mode
      * @returns {SpreadsheetPivotTable}
      */
-    _buildTableStructure() {
+    _buildTableStructure(mode) {
         const cols = this._getSpreadsheetCols();
         const rows = this._getSpreadsheetRows(this.data.rowGroupTree);
         rows.push(rows.shift()); //Put the Total row at the end.
@@ -285,7 +302,9 @@ export class OdooPivotModel extends PivotModel {
         for (const row of this.getDefinition().rows) {
             fieldsType[row.fieldName] = row.type;
         }
-        return new SpreadsheetPivotTable(cols, rows, measures, fieldsType);
+        const collapsedDomains =
+            mode === "collapsed" ? this.getDefinition().collapsedDomains : undefined;
+        return new SpreadsheetPivotTable(cols, rows, measures, fieldsType, collapsedDomains);
     }
 
     //--------------------------------------------------------------------------
@@ -415,7 +434,7 @@ export class OdooPivotModel extends PivotModel {
      */
     _parsePivotFormulaWithPosition(dimensionWithGranularity, groupValueString, cols, rows) {
         const position = toNumber(groupValueString, DEFAULT_LOCALE) - 1;
-        const table = this.getTableStructure();
+        const table = this.getExpandedTableStructure();
         let tree;
         if (this._isCol(dimensionWithGranularity)) {
             tree = table.getColTree();
