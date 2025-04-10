@@ -43,7 +43,10 @@ class EvalRefVisitor(ast.NodeVisitor):
 
     def _is_ref_risky(self, node):
         """Check if the node is risky."""
-        if not node.args or node.args[0].value in self.protected_xml_ids:
+        if not node.args:
+            return False
+        ref = node.args[0]
+        if isinstance(ref, ast.Constant) and ref.value in self.protected_xml_ids:
             return False
         raise_if_not_found = True  # default to True
         for keyword in node.keywords:
