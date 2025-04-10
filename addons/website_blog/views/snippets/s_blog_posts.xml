@@ -6,7 +6,7 @@
         <t t-set="main_page_url" t-value="'/blog'"/>
         <t t-set="snippet_name" t-value="'s_blog_posts'"/>
         <t t-set="snippet_classes" t-value="'s_dynamic_snippet_blog_posts %s' % snippet_extra_classes"/>
-        <t t-set="custom_template_data" t-valuef='{"blog_posts_post_author_active":true, "blog_posts_post_teaser_active":true, "blog_posts_post_date_active":true}'/>
+        <t t-set="custom_template_data" t-valuef='{"blog_posts_post_author_active":true, "blog_posts_post_teaser_active":true, "blog_posts_post_date_active":true, "blog_posts_post_category_active":true}'/>
         <t t-out="0"/>
     </t>
 </template>
@@ -294,6 +294,12 @@
     <span t-if="blog_posts_post_date_active" t-attf-class="s_blog_posts_post_date text-muted {{ date_custom_class }}" t-field="record.post_date" t-options='{"format": "MMM d, yyyy"}' />
 </template>
 
+<!-- Blog Post Category (optional) -->
+<template id="website_blog.s_dynamic_snippet_template_category" name="Blog Post Category">
+    <a t-if="blog_posts_post_category_active" t-attf-class="s_blog_posts_post_category {{ category_custom_class }}" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
+    <a t-if="is_sample" href="#">Sample</a>
+</template>
+
 <!-- Options -->
 <template id="s_blog_posts_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
@@ -349,6 +355,13 @@
             class="o_we_sublevel_1"
             data-no-preview="true"
             data-customize-template-key="blog_posts_post_date_active"
+            data-customize-template-values="false|true"/>
+        <we-checkbox t-if="snippet_name == 'dynamic_snippet_blog_posts'"
+            data-name="date_opt"
+            string="Category"
+            class="o_we_sublevel_1"
+            data-no-preview="true"
+            data-customize-template-key="blog_posts_post_category_active"
             data-customize-template-values="false|true"/>
     </xpath>
     <xpath expr="//we-select[@data-name='template_opt']" position="after">
