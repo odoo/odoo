@@ -136,8 +136,10 @@
                                         <tr>
                                             <td class="text-start">
                                                 <span t-field="move.product_id.display_name">Customizable Desk</span><br/>
-                                                <span t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name"
-                                                t-field="move.description_picking">Description on transfer</span>
+                                                <span t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
+                                                    <t t-set="trimmed_description" t-value="move.description_picking.split(move.product_id.display_name)[1] if move.description_picking.startswith(move.product_id.display_name) else move.description_picking.split(move.product_id.name)[1] if move.description_picking.startswith(move.product_id.name) else move.description_picking"/>
+                                                    <span t-out="trimmed_description">Description on transfer</span>
+                                                </span>
                                             </td>
                                             <td class="text-end">
                                                 <span t-out="format_number(move.quantity)">3.00</span>

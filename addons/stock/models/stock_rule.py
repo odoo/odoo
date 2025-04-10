@@ -321,8 +321,9 @@ class StockRule(models.Model):
         )
         date_deadline = values.get('date_deadline') and (fields.Datetime.to_datetime(values['date_deadline']) - relativedelta(days=self.delay or 0)) or False
         partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
-        product_id = product_id.with_context(lang=(partner and partner.lang) or self.env.user.lang)
-        picking_description = product_id._get_description(self.picking_type_id)
+        if partner:
+            product_id = product_id.with_context(lang=(partner and partner.lang) or self.env.user.lang)
+        picking_description = ''
         if values.get('product_description_variants'):
             picking_description += values['product_description_variants']
         # it is possible that we've already got some move done, so check for the done qty and create
