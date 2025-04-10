@@ -304,6 +304,10 @@ patch(PosStore.prototype, {
         super.setPartnerToCurrentOrder(partner);
     },
     addLineToCurrentOrder(vals, opt = {}, configure = true) {
+        if (!vals.product_tmpl_id && vals.product_id) {
+            vals.product_tmpl_id = vals.product_id.product_tmpl_id;
+        }
+
         const productTemplate = vals.product_tmpl_id;
         if (productTemplate.sale_line_warn_msg) {
             this.dialog.add(AlertDialog, {
