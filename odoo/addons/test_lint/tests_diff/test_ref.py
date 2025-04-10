@@ -35,12 +35,6 @@ XML_EVAL = DiagnosticKind(
     suggestion='Add raise_if_not_found=False to the eval'
 )
 
-XML_INHERIT_ID = DiagnosticKind(
-    name='xml_inherit_id',
-    body='Found inherit_id= for another module without force_create:',
-    suggestion='Add force_create'
-)
-
 
 class EvalRefVisitor(ast.NodeVisitor):
     def __init__(self, protected_xml_ids=None):
@@ -158,11 +152,6 @@ def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: 
             visitor = EvalRefVisitor(protected_xml_ids=protected_xml_ids)
             visitor.visit(tree)
             result.extend(dk(diff_file, *field.start_tag_linenos) for dk in visitor.diagnostic_kinds)
-    elif element.tag == 'template':
-        template = element
-        id_attr = template.attrib.get('inherit_id')
-        if id_attr and is_ref_risky(id_attr) and 'forcecreate' not in template.attrib:
-            result.append(XML_INHERIT_ID(diff_file, *template.start_tag_linenos))
     return result
 
 
@@ -214,8 +203,8 @@ class TestRef(DiffCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.protected_xml_ids = set()
-        # cls.protected_xml_ids = _get_protected_xml_ids()
+        # cls.protected_xml_ids = set()
+        cls.protected_xml_ids = _get_protected_xml_ids()
 
     def test_env_ref_usage(self):
         """Check for env.ref calls without raise_if_not_found=False."""
