@@ -595,6 +595,13 @@ export class PropertiesField extends Component {
     }
 
     async onPropertyCreate() {
+        if (this.props.record.data.hasOwnProperty('categ_id') && !this.props.record.data.categ_id) {
+            this.notification.add(
+                _t("You must set a product category to create a property field."),
+                { type: "warning" }
+            );
+            return;
+        }
         if (!this.state.canChangeDefinition || !(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
                 _t("You need edit access on the parent document to update these property fields"),
