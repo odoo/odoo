@@ -65,6 +65,10 @@ class AccountMoveSend(models.AbstractModel):
                     xml_data = None
 
                 invoice._l10n_ro_edi_send_invoice(xml_data)
+
+                if self._can_commit():
+                    self.env.cr.commit()
+
                 active_document = invoice.l10n_ro_edi_document_ids.sorted()[0]
 
                 if active_document.state == 'invoice_sending_failed':
