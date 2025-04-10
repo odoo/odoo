@@ -2869,7 +2869,7 @@ class AccountMove(models.Model):
             return self.env['account.move.line']._fields[field].convert_to_write(record[field], record)
 
         def get_tax_line_tracked_fields(line):
-            return ('amount_currency', 'balance')
+            return ('amount_currency', 'balance', 'analytic_distribution')
 
         def get_base_line_tracked_fields(line):
             grouping_key = AccountTax._prepare_base_line_grouping_key(fake_base_line)
