@@ -75,7 +75,7 @@ class IrCron(models.Model):
     _inherits = {'ir.actions.server': 'ir_actions_server_id'}
 
     ir_actions_server_id = fields.Many2one(
-        'ir.actions.server', 'Server action',
+        'ir.actions.server', 'Server action', index='btree_not_null',
         delegate=True, ondelete='restrict', required=True)
     cron_name = fields.Char('Name', compute='_compute_cron_name', store=True)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
@@ -814,6 +814,9 @@ class IrCron(models.Model):
         progress.write(vals)
         self.env.cr.commit()
         return max(ctx.get('cron_end_time', float('inf')) - time.monotonic(), 0)
+
+    def action_open_record_from_server_action(self):
+        return self.env["ir.actions.server"].action_open_record_from_server_action()
 
 
 class IrCronTrigger(models.Model):
