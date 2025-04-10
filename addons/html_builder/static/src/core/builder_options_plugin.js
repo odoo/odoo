@@ -48,15 +48,25 @@ export class BuilderOptionsPlugin extends Plugin {
         this.builderHeaderMiddleButtons = this.getResource("builder_header_middle_buttons").map(
             (headerMiddleButton) => ({ ...headerMiddleButton, id: uniqueId() })
         );
-        this.addDomListener(this.editable, "pointerup", (e) => {
-            this.updateContainers(e.target);
-        });
+        // doing this manually instead of using addDomListener. This is because
+        // addDomListener will ignore all events from protected targets. But in
+        // our case, we still want to update the containers.
+        this.onClick = this.onClick.bind(this);
+        this.editable.addEventListener("click", this.onClick, { capture: true });
 
         this.lastContainers = [];
         if (this.config.initialTarget) {
             const el = this.editable.querySelector(this.config.initialTarget);
             this.updateContainers(el);
         }
+    }
+
+    destroy() {
+        this.editable.removeEventListener("click", this.onClick, { capture: true });
+    }
+
+    onClick(ev) {
+        this.updateContainers(ev.target);
     }
 
     updateContainers(target) {
