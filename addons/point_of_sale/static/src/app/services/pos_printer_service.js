@@ -51,7 +51,9 @@ export class PosPrinterService extends PrinterService {
                 // We want to call the _printWeb when the dialog is fully gone
                 // from the screen which happens after the next animation frame.
                 await new Promise(requestAnimationFrame);
-                this.printWeb(...arguments);
+
+                // Element is the first argument of the printHtml function
+                this.printWeb(printArguments[0]);
             },
         });
     }
