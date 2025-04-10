@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="estate.group_real_estate_user" model="res.groups">
+            <field name="name">Real Estate User</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <record id="estate.group_real_estate_admin" model="res.groups">
+            <field name="name">Real Estate Admin</field>
+            <field name="implied_ids" eval="[(4, ref('group_real_estate_user'))]"/>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+    </data>
+</odoo>

@@ -18,20 +18,17 @@
                                 <field name="expected_price" />
                             </div>
                             <div t-if="record.status.raw_value == 'offer_received'">
-                                <!-- nếu không có raw_value, mặc định sẽ là value, in ra giá trị
-                                    string=...-->
+                                <!-- nếu không có raw_value, mặc định sẽ là value, in ra giá trị string=...-->
                                 <span>Best Offer: </span>
                                 <field name="best_price" />
                             </div>
                             <div t-if="record.status.raw_value == 'offer_accepted'">
-                                <!-- nếu không có raw_value, mặc định sẽ là value, in ra giá trị
-                                    string=...-->
+                                <!-- nếu không có raw_value, mặc định sẽ là value, in ra giá trị string=...-->
                                 <span>Selling Price: </span>
                                 <field name="selling_price" />
                             </div>
                             <div>
-                                <field name="tag_ids" widget="many2many_tags"
-                                    options="{'color_field': 'color'}" />
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
                             </div>
                         </div>
                     </t>
@@ -41,17 +38,15 @@
     </record>
 
     <!-- Estate property Form -->
-    <record id="estate_property_view_form" model="ir.ui.view">
+    <record id="estate.estate_property_view_form" model="ir.ui.view">
         <field name="name">estate.property.view.form</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <form string="Estate Property">
                 <!-- Sold & Cancel button -->
                 <header>
-                    <button name="action_sold" type="object" string="Sold"
-                        invisible="status not in ['offer_accepted']" />
-                    <button name="action_cancel" type="object" string="Cancel"
-                        invisible="status in ['sold', 'canceled']" />
+                    <button name="action_sold" type="object" string="Sold" invisible="status not in ['offer_accepted'] or salesperson_id != uid" groups="estate.group_real_estate_user"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="status in ['sold', 'canceled'] or salesperson_id != uid" groups="estate.group_real_estate_user"/>
                     <field name="status" widget="statusbar" />
                 </header>
                 <sheet>
@@ -59,24 +54,22 @@
                     <!-- Form header title -->
                     <div class="oe_title">
                         <h1>
-                            <field name="name" />
+                            <field name="name" readonly="salesperson_id != uid" groups="estate.group_real_estate_user"/>
                         </h1>
                     </div>
 
                     <!-- Form header information -->
                     <group>
-                        <field name="tag_ids" widget="many2many_tags"
-                            options="{'color_field': 'color'}" />
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="salesperson_id != uid" groups="estate.group_real_estate_user"/>
                         <group>
-                            <field name="property_type_id" widget="many2one"
-                                options="{'no_create': True, 'no_open': True}" />
-                            <field name="postcode" />
-                            <field name="date_availability" />
+                            <field name="property_type_id" widget="many2one" options="{'no_create': True, 'no_open': True}" readonly="salesperson_id != uid" groups="estate.group_real_estate_user"/>
+                            <field name="postcode" readonly="salesperson_id != uid" groups="estate.group_real_estate_user"/>
+                            <field name="date_availability" readonly="salesperson_id != uid" groups="estate.group_real_estate_user"/>
                         </group>
                         <group>
-                            <field name="expected_price" />
-                            <field name="best_price" />
-                            <field name="selling_price" />
+                            <field name="expected_price" readonly="salesperson_id != uid" groups="estate.group_real_estate_user"/>
+                            <field name="best_price" readonly="salesperson_id != uid" groups="estate.group_real_estate_user"/>
+                            <field name="selling_price" readonly="salesperson_id != uid" groups="estate.group_real_estate_user"/>
                         </group>
                     </group>
 
@@ -100,8 +93,7 @@
 
                         <!-- Form body page 2 -->
                         <page id="page_2" string="Offers">
-                            <field name="offer_ids" widget="one2many"
-                                readonly="status in ['offer_accepted', 'sold', 'canceled']" />
+                            <field name="offer_ids" widget="one2many" readonly="status in ['offer_accepted', 'sold', 'canceled']" />
                         </page>
                         <!-- Form body page 3 -->
                         <page id="page_3" string="Other info">
@@ -121,10 +113,7 @@
         <field name="name">estate.property.view.tree</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <list decoration-success="status in ['offer_received', 'offer_accepted']"
-                decoration-bf="status=='offer_accepted'"
-                decoration-muted="status=='sold'"
-                decoration-danger="status=='canceled'">
+            <list decoration-success="status in ['offer_received', 'offer_accepted']" decoration-bf="status=='offer_accepted'" decoration-muted="status=='sold'" decoration-danger="status=='canceled'">
                 <field name="name" width="auto" />
                 <field name="property_type_id" />
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
@@ -154,14 +143,14 @@
                 <field name="living_area" filter_domain="[('living_area', '>=', self)]" />
 
                 <!-- Filter -->
-                <filter name="status" string="Available"
-                    domain="[('status', 'in', ['new', 'offer_received'])]" />
+                <filter name="status" string="Available" domain="[('status', 'in', ['new', 'offer_received'])]" />
 
                 <!-- Group by -->
-                <filter name="postcode" string="Postcode" context="{'group_by':'postcode'}" /> <!--
+                <filter name="postcode" string="Postcode" context="{'group_by':'postcode'}" />
+                <!--
                 name ở đây là ID nội bộ của lọc-->
-                <filter name="property_type_id" string="Property Type"
-                    context="{'group_by':'property_type_id'}" /> <!-- còn trong context là trỏ tới 1
+                <filter name="property_type_id" string="Property Type" context="{'group_by':'property_type_id'}" />
+                <!-- còn trong context là trỏ tới 1
                 trường-->
             </search>
         </field>

@@ -1,4 +1,6 @@
-import { NumberCard } from "./number_card/number_card.js";
+/** @odoo-module */
+
+import { NumberCard } from "./number_card/number_card";
 import { PieChartCard } from "./pie_chart_card/pie_chart_card";
 import { registry } from "@web/core/registry";
 

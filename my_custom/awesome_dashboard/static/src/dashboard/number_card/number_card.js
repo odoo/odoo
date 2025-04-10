@@ -9,7 +9,7 @@ export class NumberCard extends Component {
       type: String,
     },
     value: {
-      type: Number,
-    },
+        type: Number
+    }
   };
 }

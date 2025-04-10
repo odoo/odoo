@@ -3,16 +3,16 @@
     'name': "Awesome Dashboard",
 
     'summary': """
-        Companion addon for the Odoo Smartclass 2024 on the JS Framework
+        Starting module for "Discover the JS framework, chapter 2: Build a dashboard"
     """,
 
     'description': """
-        Companion addon for the Odoo Smartclass 2024 on the JS Framework
+        Starting module for "Discover the JS framework, chapter 2: Build a dashboard"
     """,
 
     'author': "Odoo",
     'website': "https://www.odoo.com/",
-    'category': 'Tutorials',
+    'category': 'Tutorials/AwesomeDashboard',
     'version': '0.1',
     'application': True,
     'installable': True,
@@ -25,11 +25,9 @@
         'web.assets_backend': [
             'awesome_dashboard/static/src/**/*',
             ('remove', 'awesome_dashboard/static/src/dashboard/**/*'),
-            # ('remove', 'awesome_dashboard/static/src/dashboard/PieChardCard/*'),
         ],
         'awesome_dashboard.dashboard': [
-            'awesome_dashboard/static/src/dashboard/**/*',
-            # 'awesome_dashboard/static/src/dashboard/pie_chart_card/pie'
+            'awesome_dashboard/static/src/dashboard/**/*'
         ]
 
     },
