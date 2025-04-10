@@ -1158,14 +1158,13 @@ class Channel(models.Model):
             message = self.env["mail.message"].search([("id", "=", from_message_id)])
         sub_channel = self.create(
             {
-                "channel_member_ids": [Command.create({"partner_id": self.env.user.partner_id.id})],
                 "channel_type": "channel",
                 "from_message_id": message.id,
                 "name": name or (message.body.striptags()[:30] if message.body else _("New Thread")),
                 "parent_channel_id": self.id,
             }
         )
-        self.env.user.partner_id._bus_send_store(Store(sub_channel))
+        sub_channel.add_members(partner_ids=(self.env.user.partner_id | message.author_id).ids, post_joined_message=False)
         notification = (
             Markup('<div class="o_mail_notification">%s</div>')
             % _(

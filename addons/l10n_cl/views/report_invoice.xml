@@ -261,7 +261,8 @@
             <tr class="o_total">
                 <td><strong>Total</strong></td>
                 <td class="text-end">
-                    <span t-out="subtotal_amounts['total_amount']" t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/>
+                    <span t-if="0" t-out="subtotal_amounts['total_amount']" t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/>
+                    <strong t-out="subtotal_amounts['total_amount']" t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/>
                 </td>
             </tr>
         </tr>

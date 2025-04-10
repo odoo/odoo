@@ -1,11 +1,8 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
-import {
-    getTaxesAfterFiscalPosition,
-    getTaxesValues,
-} from "@point_of_sale/app/models/utils/tax_utils";
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
+import { lt } from "@point_of_sale/utils";
 
 patch(PosOrder.prototype, {
     export_for_printing(baseUrl, headerData) {
@@ -16,38 +13,29 @@ patch(PosOrder.prototype, {
         return result;
     },
     _prepareL10nInHsnSummary() {
-        const fiscalPosition = this.fiscal_position_id;
-        const baseLines = [];
-        this.lines.forEach((line) => {
-            const hsnCode = line.get_product()?.l10n_in_hsn_code;
-            if (!hsnCode) {
-                return;
-            }
+        const currency = this.config.currency_id;
+        const company = this.company;
+        const orderLines = this.lines;
 
-            let taxes = line.tax_ids || line.product.taxes_id;
-            if (fiscalPosition) {
-                taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
-            }
+        // If each line is negative, we assume it's a refund order.
+        // It's a normal order if it doesn't contain a line (useful for pos_settle_due).
+        // TODO: Properly differentiate refund orders from normal ones.
+        const documentSign =
+            this.lines.length === 0 ||
+            !this.lines.every((l) => lt(l.qty, 0, { decimals: currency.decimal_places }))
+                ? 1
+                : -1;
 
-            const priceUnit = line.get_unit_price();
-            baseLines.push({
-                l10n_in_hsn_code: hsnCode,
-                price_unit: priceUnit,
-                quantity: line.get_quantity(),
-                discount: line.get_discount(),
-                uom: null,
-                ...getTaxesValues(
-                    taxes,
-                    priceUnit,
-                    1,
-                    line.product_id,
-                    this.config._product_default_values,
-                    this.company,
-                    this.currency
-                ),
-            });
+        const baseLines = orderLines.map((line) => {
+            return accountTaxHelpers.prepare_base_line_for_taxes_computation(
+                line,
+                line.prepareBaseLineForTaxesComputationExtraValues({
+                    quantity: documentSign * line.qty,
+                })
+            );
         });
-
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
         const hsnSummary = accountTaxHelpers.l10n_in_get_hsn_summary_table(baseLines, false);
         if (hsnSummary) {
             for (const item of hsnSummary.items) {

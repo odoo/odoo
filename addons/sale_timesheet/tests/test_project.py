@@ -211,3 +211,43 @@ class TestProject(TestCommonSaleTimesheet):
     def test_duplicate_project_allocated_hours(self):
         self.project_global.allocated_hours = 10
         self.assertEqual(self.project_global.copy().allocated_hours, 10)
+
+    def test_task_with_newid_partner(self):
+        """
+        Test that creating a task with a NewId partner doesn't raise errors.
+        """
+        contact = self.env['res.partner'].new({
+            'name': 'contact 1',
+            'email': 'contact1@example.com',
+        })
+        task = self.env['project.task'].create({
+            'name': 'task 1',
+            'partner_id': contact.id,
+        })
+        task.project_id = self.project_global.id
+        sol = task._get_last_sol_of_customer()
+        self.assertEqual(sol, self.env['sale.order.line'], "SOL should be an empty record set")
+        sol = task._get_last_sol_of_customer()
+
+        contact = self.env['res.partner'].create({
+            'name': 'contact 2',
+            'email': 'contact2@test.com',
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': contact.id,
+        })
+        task = self.env['project.task'].create({
+            'name': 'task 2',
+            'partner_id': contact.id,
+            'project_id': self.project_global.id,
+        })
+        expected_sol = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_delivery_timesheet1.id,
+            'product_uom_qty': 10,
+            'task_id' : task.id,
+        })
+        sale_order.action_confirm()
+        expected_sol.write({'remaining_hours': 10})
+        sol = task._get_last_sol_of_customer()
+        self.assertEqual(sol, expected_sol, "SOL should match the expected one")

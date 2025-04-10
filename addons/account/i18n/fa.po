@@ -18,17 +18,17 @@
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2025
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # ebrahim khorami, 2025
-# Tiffany Chang, 2025
 # Nader Jafari, 2025
 # Naser mars, 2025
+# Tiffany Chang, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Naser mars, 2025\n"
+"Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +82,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " for '%s'"
-msgstr ""
+msgstr " برای'%s'"
 
 #. module: account
 #. odoo-python
@@ -735,8 +735,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Reversed</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
-"role=\"img\"/> <span class=\"d-none d-md-inline\"> رزرو شده</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> برگشتی</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -744,6 +744,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Processing Payment</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> پردازش پرداخت</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -751,8 +753,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Waiting for Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/> <span class=\"d-none d-md-inline\">منتظر پرداخت</span>\n"
-" "
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> منتظر پرداخت</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -761,6 +763,9 @@ msgid ""
 "                        Don't worry, you can always change this setting later on the vendor's form.\n"
 "                        You also have the option to disable the feature for all vendors in the accounting settings."
 msgstr ""
+"<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
+"                        نگران نباشید، همیشه می‌توانید این تنظیم را بعداً در فرم فروشنده تغییر دهید.\n"
+"                         شما همچنین می توانید این ویژگی را برای همه فروشندگان در تنظیمات حسابداری غیرفعال کنید."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -798,9 +803,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> Cancelled</span>\n"
 "                                </span>"
 msgstr ""
-"<span class=\"badge rounded-pill text-bg-warning\"> <i class=\"fa fa-fw fa-"
-"remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/> <span "
-"class=\"d-none d-md-inline\"> بازگشت</span> </span>"
+"<span class=\"badge rounded-pill text-bg-warning\">\n"
+"                                    <i class=\"fa fa-fw fa-remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> لغو شده</span>\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -828,6 +834,9 @@ msgid ""
 "                                        <span groups=\"base.group_multi_currency\">in </span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only\" groups=\"account.group_account_readonly\" invisible=\"move_type == 'entry'\">\n"
+"                                        <span groups=\"base.group_multi_currency\">در </span>\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -877,6 +886,9 @@ msgid ""
 "                                        Audit\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        حسابرسی\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -1003,6 +1015,8 @@ msgstr "<span class=\"text-warning\">ریسک متوسط</span>: Iban"
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"name or name_placeholder or "
+"quick_edit_mode\">پیش‌نویس</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1219,7 +1233,7 @@ msgstr "<span>این پیش نمایشی از شرایط و ضوابط شما ا
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<span>This payment has the same partner, amount and date as </span>"
-msgstr ""
+msgstr "<span>این پرداخت دارای همان شریک، مبلغ و تاریخ است </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1250,7 +1264,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code</strong>"
-msgstr ""
+msgstr "<strong>کد مشتری</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1260,17 +1274,17 @@ msgstr "<strong>تاریخ</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Delivery Date</strong>"
-msgstr ""
+msgstr "<strong>تاریخ تحویل</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<strong>Due Date:</strong>"
-msgstr "<strong>تاریخ انجام<strong/>"
+msgstr "<strong>تاریخ انجام:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date</strong>"
-msgstr ""
+msgstr "<strong>تاریخ انجام</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1290,17 +1304,17 @@ msgstr "<strong>تاریخ فاکتور:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date</strong>"
-msgstr ""
+msgstr "<strong>تاریخ فاکتور</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Receipt Date</strong>"
-msgstr ""
+msgstr "<strong>تاریخ دریافت</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference</strong>"
-msgstr ""
+msgstr "<strong>مرجع</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2289,7 +2303,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Add a description to your item."
-msgstr ""
+msgstr "توضیحاتی را به مورد خود اضافه کنید."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -9173,6 +9187,12 @@ msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "قبلاً '%(previous)s' بود و اکنون '%(current)s' است."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
 msgid "January"
 msgstr "ژانویه"
@@ -11024,6 +11044,12 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "امکان پردازش یک یا چند فاکتور وجود ندارد."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "یک یا چند سطر نیازمند توزیع تحلیلی 100 درصدی هستند."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -13444,6 +13470,12 @@ msgstr "توکن امنیتی"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "مشاهده همه فعالیت ها"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id

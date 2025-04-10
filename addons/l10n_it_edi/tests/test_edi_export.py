@@ -524,3 +524,27 @@ class TestItEdiExport(TestItEdi):
         )
 
         self._assert_export_invoice(invoice, 'prezzio_unitario_converted_company_currency.xml')
+
+    def test_export_XML_lowercase_fields(self):
+        partner = self.env['res.partner'].create({
+            'name': 'Alessi',
+            'l10n_it_codice_fiscale': 'Mrtmtt91d08f205j',
+            'l10n_it_pa_index': 'N8mimm9',
+            'is_company': False,
+        })
+
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': partner.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'invoice_lowercase_fields.xml')

@@ -45,12 +45,12 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> ממתין להגעה"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/>Preparation"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> הכנה"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -65,7 +65,7 @@ msgstr "<i class=\"fa fa-fw fa-times\"/> בוטל"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> Received"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-truck\"/> התקבל"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -87,6 +87,10 @@ msgid ""
 "                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
+"<span invisible=\"not display_delivery_alert\">\n"
+" חלק מהמשלוחים כבר בוצעו . החזרות יכולות להיווצר מתוך הזמנות המשלוח.\n"
+" \n"
+" </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -146,7 +150,7 @@ msgstr "זמין"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Available in stock"
-msgstr ""
+msgstr "זמין במלאי"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
@@ -189,7 +193,7 @@ msgstr "תאריך:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
 msgid "Default Warehouse"
-msgstr ""
+msgstr "מחסן ברירת מחדל"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -199,7 +203,7 @@ msgstr "משלוח"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
 msgid "Delivery Alert"
-msgstr ""
+msgstr "התראת משלוח"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -375,7 +379,7 @@ msgstr "תנועת יומן"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Last Delivery Orders"
-msgstr ""
+msgstr "הזמנות משלוח אחרונות"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
@@ -444,7 +448,7 @@ msgstr "לא נשלח"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Not enough future availability"
-msgstr ""
+msgstr "אין  מספיק זמינות עתידית"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -517,7 +521,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "הדרישה הנותרת זמינה ב-"
 
 #. module: sale_stock
 #. odoo-python
@@ -683,7 +687,7 @@ msgstr "דוח כללי מלאי"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "The delivery"
-msgstr ""
+msgstr "המשלוח "
 
 #. module: sale_stock
 #. odoo-python
@@ -778,7 +782,7 @@ msgstr "מתי להתחיל לשלוח"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
-msgstr ""
+msgstr "עליך שיהיה לך מחסן עבור שורה שמשתמשת במשלוח בחברה שונה."
 
 #. module: sale_stock
 #. odoo-python

@@ -194,8 +194,8 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_in_edi_ewaybill_handle_zero_distance_alert_if_present(self, invoice, response):
         if invoice.l10n_in_distance == 0 and (alert := response.get("data", {}).get('alert')):
-            pattern = r", Distance between these two pincodes is \d+, "
-            if re.fullmatch(pattern, alert) and (distance := int(re.search(r'\d+', alert).group())) > 0:
+            pattern = r"Distance between these two pincodes is (\d+)"
+            if (match := re.search(pattern, alert)) and (distance := int(match.group(1))) > 0:
                 invoice.l10n_in_distance = distance
 
     def _l10n_in_edi_ewaybill_irn_post_invoice_edi(self, invoices):

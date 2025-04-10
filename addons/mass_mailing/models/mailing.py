@@ -1094,7 +1094,7 @@ class MassMailing(models.Model):
                 'auto_delete_keep_log': mailing.reply_to_mode == 'update',
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
+                'body': mailing._prepend_preview(mailing.body_html or '', mailing.preview),
                 'composition_mode': 'mass_mail',
                 'email_from': mailing.email_from,
                 'mail_server_id': mailing.mail_server_id.id,

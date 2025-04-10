@@ -5,17 +5,17 @@
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Wil Odoo, 2025
 # Daye Jeong, 2025
 # Sarah Park, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9166,6 +9166,12 @@ msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "이전 항목은 '%(previous)s' 이며 현재는 '%(current)s' 입니다."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr "분석 분포 내역이 누락된 항목"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
 msgid "January"
 msgstr "1월"
@@ -11002,6 +11008,12 @@ msgstr "이 파트너용으로 설정된 은행 계좌들이 다음에서도 사
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "처리할 수 없는 청구서가 하나 이상 있습니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "하나 이상의 내역에는 100% 분석 분포가 필요합니다"
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -13404,6 +13416,12 @@ msgstr "보안 토큰"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "전체 활동 보기"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr "항목 보기"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id

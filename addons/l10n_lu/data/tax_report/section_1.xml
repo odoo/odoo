@@ -46,7 +46,6 @@
                                                 <field name="label">balance</field>
                                                 <field name="engine">aggregation</field>
                                                 <field name="formula">LUTAX_021.balance + LUTAX_022.balance - LUTAX_456.balance - LUTAX_455.balance - LUTAX_471.balance</field>
-                                                <field name="subformula">cross_report</field>
                                             </record>
                                         </field>
                                     </record>
@@ -80,7 +79,7 @@
                         <field name="name">021 - Exemptions and deductible amounts</field>
                         <field name="code">LUTAX_021</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="aggregation_formula">LUTAX_014.balance + LUTAX_457.balance + LUTAX_015.balance + LUTAX_016.balance + LUTAX_017.balance + LUTAX_018.balance + LUTAX_423.balance + LUTAX_424.balance + LUTAX_226.balance + LUTAX_019.balance + LUTAX_419.balance</field>
+                        <field name="aggregation_formula">LUTAX_014.balance + LUTAX_457.balance + LUTAX_015.balance + LUTAX_016.balance + LUTAX_017.balance + LUTAX_018.balance + LUTAX_423.balance + LUTAX_424.balance + LUTAX_226.balance + LUTAX_019.balance + LUTAX_481.balance + LUTAX_482.balance</field>
                         <field name="children_ids">
                             <record id="account_tax_report_line_1b_1_intra_community_goods_pi_vat" model="account.report.line">
                                 <field name="name">457 - Intra-Community supply of goods to persons identified for VAT purposes in another Member State (MS)</field>
@@ -137,6 +136,30 @@
                                     </record>
                                 </field>
                             </record>
+                            <record id="account_tax_report_line_1b_8_supplies_carried_out_domestic" model="account.report.line">
+                                <field name="name">481 - Supplies carried out within the scope of the domestic SME scheme of article 57bis (7)</field>
+                                <field name="code">LUTAX_481</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_1b_8_supplies_carried_out_domestic_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_1b_9_supplies_carried_out_cross_border" model="account.report.line">
+                                <field name="name">482 - Supplies carried out within the scope of the cross-border SME scheme of article 57quater </field>
+                                <field name="code">LUTAX_482</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_1b_9_supplies_carried_out_cross_border_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="account_tax_report_line_1b_6_a_subsequent_to_intra_community" model="account.report.line">
                                 <field name="name">018 - Supply, subsequent to intra-Community acquisitions of goods, in the context of triangular transactions, when the customer identified,...</field>
                                 <field name="code">LUTAX_018</field>
@@ -182,7 +205,7 @@
                                 </field>
                             </record>
                             <record id="account_tax_report_line_1b_6_d_supplies_other_referred" model="account.report.line">
-                                <field name="name">019 - Supplies other than referred to in 018 and 423 or 424</field>
+                                <field name="name">019 - Other supplies carried out (for which the place of supply is) abroad</field>
                                 <field name="code">LUTAX_019</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_1b_6_d_supplies_other_referred_tag" model="account.report.expression">

@@ -7,17 +7,17 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2024
 # Max-Milan Stoyanov, 2024
 # Friederike Fasterling-Nesselbosch, 2025
-# Wil Odoo, 2025
 # Tiffany Chang, 2025
 # Larissa Manderfeld, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9476,6 +9476,12 @@ msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "War vorher „%(previous)s“ und ist jetzt „%(current)s“."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr "Buchungen mit fehlender Kostenverteilung"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
 msgid "January"
 msgstr "Januar"
@@ -11357,6 +11363,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "Eine oder mehrere Rechnungen konnten nicht verarbeitet werden."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr ""
+"Eine oder mehrere Zeilen erfordern eine Verteilung der Kosten von 100 %."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -13817,6 +13830,12 @@ msgstr "Security-Token"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "Alle Aktivitäten ansehen"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr "Buchungen ansehen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
