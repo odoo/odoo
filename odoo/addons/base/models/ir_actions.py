@@ -623,11 +623,17 @@ class IrActionsServer(models.Model):
                 elif action.state == 'object_write':
                     if action.update_path:
                         # we need to traverse relations to find the target model and field
-                        model, field, _ = action._traverse_path()
-                        action.crud_model_id = model
-                        action.update_field_id = field
-                        need_update_model = action.evaluation_type == 'value' and action.update_field_id and action.update_field_id.relation
-                        action.update_related_model_id = action.env["ir.model"]._get_id(field.relation) if need_update_model else False
+                        try:
+                            model, field, _ = action._traverse_path()
+                            action.crud_model_id = model
+                            action.update_field_id = field
+                            need_update_model = action.evaluation_type == 'value' and action.update_field_id and action.update_field_id.relation
+                            action.update_related_model_id = action.env["ir.model"]._get_id(field.relation) if need_update_model else False
+                        # given field does not exist in new model
+                        except KeyError:
+                            action.crud_model_id = action.model_id
+                            action.update_field_id = False
+                            action.update_path = False
                     else:
                         action.crud_model_id = action.model_id
                         action.update_field_id = False
