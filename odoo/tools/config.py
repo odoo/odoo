@@ -27,9 +27,21 @@ DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
 REQUIRED_SERVER_WIDE_MODULES = ['base', 'web']
 
 
+def chainmap_pop(chainmap, key):
+    """ Remove all keys == key, return first item found or None """
+    values = []
+    if key in list(chainmap):
+        for mapping in chainmap.maps:
+            if value := mapping.pop(key, None):
+                values.append(value)
+    return values[0] if values else None
+
+
 class _Empty:
     def __repr__(self):
         return ''
+
+
 EMPTY = _Empty()
 
 
@@ -374,6 +386,8 @@ class configmanager:
                          help="specifies the languages for the translations you want to be loaded")
         group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False, file_exportable=False,
                          help="overwrites existing translation terms on updating a module.")
+        group.add_option("--modules", dest="translate_modules", type='comma', metavar="MODULE,...", my_default=None, file_loadable=False,
+                         help=optparse.SUPPRESS_HELP)
         parser.add_option_group(group)
 
         # Security Group
@@ -548,7 +562,6 @@ class configmanager:
                     category=PendingDeprecationWarning,
                     stacklevel=2,
                 )
-        self._warn_deprecated_options()
         self._flush_log_and_warn_entries()
         modules.module.initialize_sys_path()
         return opt
@@ -605,6 +618,7 @@ class configmanager:
             self._cli_options['log_handler'] = [handler for comma in opt.log_handler for handler in comma]
 
     def _postprocess_options(self):
+        self._warn_deprecated_options()
         self._runtime_options.clear()
 
         # check for mutualy exclusive / dependant options
@@ -677,10 +691,16 @@ class configmanager:
 
     def _warn_deprecated_options(self):
         for old_option_name, new_option_name in [
-            # there are no deprecated option at the moment
+            ('translate_modules', None),
         ]:
-            deprecated_value = self.options.pop(old_option_name, None)
-            if deprecated_value:
+            if deprecated_value := chainmap_pop(self.options, old_option_name):
+                if new_option_name is None:
+                    self._log(logging.INFO,
+                        f"The {old_option_name!r} option found in the "
+                        "configuration file is deprecated, it can "
+                        "safely be removed.")
+                    continue
+
                 default_value = self.casts[new_option_name].my_default
                 current_value = self.options[new_option_name]
 
