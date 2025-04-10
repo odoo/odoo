@@ -1,18 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
-from urllib.parse import quote as url_quote
-
-from werkzeug import urls
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import float_round
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_mercado_pago import const
-from odoo.addons.payment_mercado_pago.controllers.main import MercadoPagoController
 
 
 _logger = logging.getLogger(__name__)
@@ -150,16 +144,16 @@ class PaymentTransaction(models.Model):
     def _mercado_pago_tokenize_from_notification_data(self, notification_data):
 
         response = self.provider_id._mercado_pago_make_request(
-            f'/v1/customers/search', method='GET', payload=notification_data['email']
+            '/v1/customers/search', method='GET', payload=notification_data['email']
         )
         if not response['results']:
             response = self.provider_id._mercado_pago_make_request(
-                f'/v1/customers', method='POST', payload=notification_data['email']
+                '/v1/customers', method='POST', payload=notification_data['email']
             )
             customer_id = response['id']
         else:
             customer_id = response['results'][0]['id']
-        #assosiate card with customer
+        #  associate card with customer
         payload = {
             "token": notification_data['token'],
             "issuer_id": int(notification_data['issuer_id']),
@@ -168,20 +162,9 @@ class PaymentTransaction(models.Model):
         response = self.provider_id._mercado_pago_make_request(f'/v1/customers/{customer_id}/cards', method='POST', payload=payload)
         card_id = response['id']
         last_four_digits = response.get('last_four_digits')
-        #generate a card token
-        response = self.provider_id._mercado_pago_make_request(f'/v1/card_tokens', method='POST', payload={'card_id': card_id})
+        #  generate a card token
+        response = self.provider_id._mercado_pago_make_request('/v1/card_tokens', method='POST', payload={'card_id': card_id})
 
-        data = {
-            'transaction_amount': 100,
-            'token': response['id'],
-            'installments': 1,
-            'payer': {
-                'type': 'customer',
-                'id': customer_id,
-            }
-        }
-
-        # WHERE THE FUCK IS SECURITY CODE COMING FROM?!
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
             'payment_method_id': self.payment_method_id.id,
@@ -214,29 +197,18 @@ class PaymentTransaction(models.Model):
             raise UserError("Mercado Pago: " + _("The transaction is not linked to a token."))
 
         data = {
-            'transaction_amount': 100,
+            'transaction_amount': self.amount,
             'token': self.token_id.provider_ref,
             'installments': 1,
             'payer': {
                 'type': 'customer',
                 'id': self.token_id.mercado_pago_customer_id,
             },
-            'payment_method_id': 'master',
-            "point_of_interaction": {
-                "type": "SUBSCRIPTIONS",
-                "transaction_data": {
-                    "first_time_use": False,
-                    "subscription_id": "COLLECTORPADRE-SUBSCRIPCION_ID",
-                    "payment_reference": {
-                        "id": "1334388021"
-                    }
-                },
-
-            }
+            'payment_method_id': const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, self.payment_method_id.code)
         }
 
         response_content = self.provider_id._mercado_pago_make_request(
-            endpoint=f'/v1/payments',
+            endpoint='/v1/payments',
             payload=data,
             method='POST',
             idempotency_key=payment_utils.generate_idempotency_key(

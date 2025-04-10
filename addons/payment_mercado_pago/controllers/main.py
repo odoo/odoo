@@ -3,8 +3,6 @@
 import logging
 import pprint
 
-import requests
-
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request

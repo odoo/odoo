@@ -10,7 +10,6 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_mercado_pago import const
-from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -98,13 +97,11 @@ class PaymentProvider(models.Model):
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
-    def _mercado_pago_get_inline_form_values(self, partner_id, currency):
+    def _mercado_pago_get_inline_form_values(self, partner_id):
         self.ensure_one()
         partner = self.env['res.partner'].browse(partner_id).exists()
         inline_form_values = {
             'email': partner.email,
-            'currency': currency.name,
-            'partner_id': partner.id,
         }
         return json.dumps(inline_form_values)
 
