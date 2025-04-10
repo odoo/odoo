@@ -46,12 +46,10 @@ export class TicketScreen extends Component {
         BarcodeVideoScanner,
     };
     static props = {
-        destinationOrder: { type: Object, optional: true },
         reuseSavedUIState: { type: Boolean, optional: true },
         stateOverride: { type: Object, optional: true },
     };
     static defaultProps = {
-        destinationOrder: null,
         // When passed as true, it will use the saved _state.ui as default
         // value when this component is reinstantiated.
         // After setting the default value, the _state.ui will be overridden
@@ -294,18 +292,8 @@ export class TicketScreen extends Component {
 
         const partner = order.getPartner();
         // The order that will contain the refund orderlines.
-        // Use the destinationOrder from props if the order to refund has the same
-        // partner as the destinationOrder.
-        const destinationOrder =
-            this.props.destinationOrder &&
-            this.props.destinationOrder.lines.every(
-                (l) =>
-                    l.quantity >= 0 || order.lines.some((ol) => ol.id === l.refunded_orderline_id)
-            ) &&
-            partner === this.props.destinationOrder.getPartner() &&
-            !this.pos.doNotAllowRefundAndSales()
-                ? this.props.destinationOrder
-                : this._getEmptyOrder(partner);
+        // We select the order if it is empty, else we create a new one.
+        const destinationOrder = this._getEmptyOrder(partner);
 
         destinationOrder.is_refund = true;
         // Add orderline for each toRefundDetail to the destinationOrder.
@@ -362,9 +350,8 @@ export class TicketScreen extends Component {
 
         this.postRefund(destinationOrder);
         this.pos.ticket_screen_mobile_pane = "left";
-        this.pos.navigate("ProductScreen", {
-            orderUuid: destinationOrder.uuid,
-        });
+        destinationOrder.setScreenData({ name: "PaymentScreen" });
+        this.pos.navigate("PaymentScreen", { orderUuid: destinationOrder.uuid });
     }
 
     async onDeleteOrder(order) {

@@ -46,6 +46,8 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
             }),
             ProductScreen.clickNumpad("1"),
             TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBack(),
             ProductScreen.isShown(),
             ProductScreen.clickLine("Magnetic Board", "-1"),
             ProductScreen.selectedOrderlineHas("Magnetic Board", "-1"),

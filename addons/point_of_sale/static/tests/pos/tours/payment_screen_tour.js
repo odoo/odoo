@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
             TicketScreen.confirmRefund(),
 
             // To get negative of existing quantity just send -
-            ProductScreen.clickPayButton(),
+            PaymentScreen.isShown(),
             PaymentScreen.totalIs("-1.96"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "-2.00" }),
         ].flat(),
@@ -134,7 +134,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
             TicketScreen.confirmRefund(),
 
             // To get negative of existing quantity just send -
-            ProductScreen.clickPayButton(),
+            PaymentScreen.isShown(),
             PaymentScreen.totalIs("-1.98"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "-1.95" }),
         ].flat(),
