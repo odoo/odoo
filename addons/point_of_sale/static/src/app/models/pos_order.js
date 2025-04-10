@@ -944,7 +944,11 @@ export class PosOrder extends Base {
         return pos_categ_id_A - pos_categ_id_B;
     }
     getName() {
-        return this.floatingOrderName || "";
+        let name = this.floatingOrderName || "";
+        if (this.isRefund) {
+            name += _t(" (Refund)");
+        }
+        return name;
     }
     setGeneralCustomerNote(note) {
         this.general_customer_note = note || "";

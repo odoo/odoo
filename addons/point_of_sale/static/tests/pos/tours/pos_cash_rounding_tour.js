@@ -42,6 +42,9 @@ registry
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
 
+                PaymentScreen.isShown(),
+                PaymentScreen.clickBack(),
+
                 ProductScreen.checkTaxAmount("-2.05"),
                 ProductScreen.checkTotalAmount("-15.72"),
                 ProductScreen.clickPayButton(),
@@ -99,6 +102,9 @@ registry
                     TicketScreen.selectFilter("Paid"),
                     TicketScreen.selectOrder("0001"),
                     TicketScreen.confirmRefund(),
+
+                    PaymentScreen.isShown(),
+                    PaymentScreen.clickBack(),
 
                     ProductScreen.checkTaxAmount("-2.05"),
                     ProductScreen.checkTotalAmount("-15.72"),
@@ -162,6 +168,9 @@ registry
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
 
+                PaymentScreen.isShown(),
+                PaymentScreen.clickBack(),
+
                 ProductScreen.checkTaxAmount("-2.05"),
                 ProductScreen.checkTotalAmount("-15.72"),
                 ProductScreen.clickPayButton(),
@@ -224,6 +233,9 @@ registry
                     TicketScreen.selectOrder("0001"),
                     TicketScreen.confirmRefund(),
 
+                    PaymentScreen.isShown(),
+                    PaymentScreen.clickBack(),
+
                     ProductScreen.checkTaxAmount("-2.05"),
                     ProductScreen.checkTotalAmount("-15.72"),
                     ProductScreen.clickPayButton(),
@@ -285,6 +297,9 @@ registry
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
 
+                PaymentScreen.isShown(),
+                PaymentScreen.clickBack(),
+
                 ProductScreen.checkTaxAmount("-2.05"),
                 ProductScreen.checkTotalAmount("-15.72"),
                 ProductScreen.clickPayButton(),
@@ -341,6 +356,9 @@ registry
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
+
+                PaymentScreen.isShown(),
+                PaymentScreen.clickBack(),
 
                 ProductScreen.checkTaxAmount("-2.05"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
@@ -400,6 +418,9 @@ registry
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
 
+                PaymentScreen.isShown(),
+                PaymentScreen.clickBack(),
+
                 ProductScreen.checkTaxAmount("-2.05"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
                 ProductScreen.checkTotalAmount("-15.72"),
@@ -457,6 +478,9 @@ registry
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
 
+                PaymentScreen.isShown(),
+                PaymentScreen.clickBack(),
+
                 ProductScreen.checkTaxAmount("-2.03"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
                 ProductScreen.checkTotalAmount("-15.70"),
@@ -513,6 +537,9 @@ registry
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
+
+                PaymentScreen.isShown(),
+                PaymentScreen.clickBack(),
 
                 ProductScreen.checkTaxAmount("-2.03"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
@@ -572,6 +599,9 @@ registry
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
 
+                PaymentScreen.isShown(),
+                PaymentScreen.clickBack(),
+
                 ProductScreen.checkTaxAmount("-2.05"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
                 ProductScreen.checkTotalAmount("-15.72"),
@@ -629,6 +659,9 @@ registry
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
+
+                PaymentScreen.isShown(),
+                PaymentScreen.clickBack(),
 
                 ProductScreen.checkTaxAmount("-2.05"),
                 ProductScreen.checkRoundingAmountIsNotThere(),

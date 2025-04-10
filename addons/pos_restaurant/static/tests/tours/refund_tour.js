@@ -40,6 +40,8 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             ProductScreen.clickNumpad("2"),
             TicketScreen.toRefundTextContains("To Refund: 2"),
             TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBack(),
             ProductScreen.isShown(),
             inLeftSide(ProductScreen.orderLineHas("Coca-Cola")),
             ProductScreen.totalAmountIs("-4.40"),

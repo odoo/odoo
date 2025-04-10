@@ -4,6 +4,7 @@ import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_sc
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
+import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("EWalletProgramTour1", {
@@ -100,6 +101,8 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
             TicketScreen.filterIs("Paid"),
             TicketScreen.selectOrder("007"),
             TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBack(),
             ProductScreen.isShown(),
             PosLoyalty.eWalletButtonState({
                 highlighted: true,
