@@ -2,9 +2,6 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class ProductPageOption extends BaseOptionComponent {
     static template = "website_sale.ProductPageOption";
-    static props = {
-        getZoomLevels: Function,
-    };
     setup() {
         super.setup();
         this.domState = useDomState((el) => {

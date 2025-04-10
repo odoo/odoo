@@ -153,8 +153,6 @@ PRODUCT_PAGE_STYLE_MAPPING = {
                 'website_sale.product_picture_magnify_click',
             ],
             'disable': [
-                'website_sale.product_picture_magnify_hover',
-                'website_sale.product_picture_magnify_both',
                 'website_sale_comparison.product_add_to_compare',  # Comparison
                 'website_sale.product_custom_text',  # Terms and Conditions
             ],
@@ -191,8 +189,6 @@ PRODUCT_PAGE_STYLE_MAPPING = {
                 'website_sale.product_picture_magnify_click',
             ],
             'disable': [
-                'website_sale.product_picture_magnify_hover',
-                'website_sale.product_picture_magnify_both',
                 'website_sale_comparison.product_add_to_compare',  # Comparison
                 'website_sale.product_custom_text',  # Terms and Conditions
             ],
