@@ -42,13 +42,6 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
             vals['party_tax_scheme_vals'] = self._get_partner_party_tax_scheme_vals(partner.commercial_partner_id)
         return vals
 
-    def _get_delivery_party_vals(self, delivery):
-        return {
-            'party_name': delivery.display_name,
-            'postal_address_vals': self._get_partner_address_vals(delivery),
-            'contact_vals': self._get_partner_contact_vals(delivery),
-        }
-
     def _get_payment_terms_vals(self, payment_term):
         return {
             'note': payment_term.name
@@ -172,7 +165,7 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
                 'note': html2plaintext(order.note) if order.note else False,
                 'originator_document_reference': order.origin,
                 'document_currency_code': order.currency_id.name.upper(),
-                'delivery_party_vals': self._get_delivery_party_vals(delivery),
+                'delivery_party_vals': self._get_partner_party_vals(delivery, role='delivery'),
                 'supplier_party_vals': self._get_partner_party_vals(supplier, role='supplier'),
                 'customer_party_vals': self._get_partner_party_vals(customer, role='customer'),
                 'payment_terms_vals': self._get_payment_terms_vals(order.payment_term_id),
