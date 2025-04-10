@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_recruitment.SkillMatchGaugeField">
+        <div class="oe_gauge position-relative pt-3">
+            <canvas t-ref="canvas"/>
+            <span class="o_gauge_value position-absolute start-0 end-0 bottom-0 text-center fs-2 fw-bolder">
+                <t t-esc="this.formattedValue"/>%
+            </span>
+        </div>
+        <p class="text-center text-uppercase fw-bolder mt-2 mb-0">
+            Job Position Matching
+        </p>
+        <p class="text-center text-uppercase fw-bolder mt-0 mb-2"
+            t-if="this.matching_job_name">
+            <t t-esc="this.matching_job_name"/>
+        </p>
+    </t>
+
+</templates>
