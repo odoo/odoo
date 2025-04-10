@@ -114,6 +114,6 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: function() {
         if (queryAll("[name=api_key_ids]:visible", { root: this.anchor }).length) {
             console.error("Expected API keys to be hidden (because empty), but it's not");
-        };
+        }
     }
 }]});
