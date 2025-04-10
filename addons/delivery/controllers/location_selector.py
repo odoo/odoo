@@ -17,7 +17,7 @@ class LocationSelectorController(Controller):
         order._set_pickup_location(pickup_location_data)
 
     @route('/delivery/get_pickup_locations', type='jsonrpc', auth='user')
-    def delivery_get_pickup_locations(self, order_id, zip_code=None):
+    def delivery_get_pickup_locations(self, order_id, zip_code=None, **kwargs):
         """ Fetch the order and return the pickup locations close to a given zip code.
 
         Determine the country based on GeoIP or fallback on the order's delivery address' country.
@@ -28,10 +28,43 @@ class LocationSelectorController(Controller):
         :rtype: dict
         """
         order = request.env['sale.order'].browse(order_id)
-        if request.geoip.country_code:
-            country = request.env['res.country'].search(
-                [('code', '=', request.geoip.country_code)], limit=1,
-            )
+        if request.geoip.country_code and not kwargs.get('country_code'):
+            kwargs['country_code'] = request.geoip.country_code
+        return order._get_pickup_locations(zip_code, **kwargs)
+
+    @route('/delivery/get_delivery_method_countries', type='jsonrpc', auth='public', website=True)
+    def get_delivery_method_countries(self, order_id=None):
+        """ Fetch the countries associated with a delivery carrier.
+
+        Determine the country based the carrier selected on the order or fallback on the carrier
+        of the website.
+
+        :param int order_id: The order id, as a `sale.order` id.
+        :return: The available countries to select from.
+        :rtype: dict
+        """
+        countries = None
+        if order_id:
+            carrier_sudo = request.env['sale.order'].sudo().browse(order_id).carrier_id
+        elif website_sudo := request.website.sudo():
+            carrier_sudo = website_sudo.in_store_dm_id
+        if carrier_sudo.country_ids:
+            countries = carrier_sudo.country_ids
         else:
-            country = order.partner_shipping_id.country_id
-        return order._get_pickup_locations(zip_code, country)
+            if carrier_sudo.warehouse_ids:
+                countries = carrier_sudo.warehouse_ids.partner_id.country_id
+        if not countries:
+            countries = request.env['res.country'].search_fetch(
+                [], ['id', 'name', 'code', 'image_url']
+            )
+        return [
+            {
+                'value': {
+                    'name': c.name,
+                    'code': c.code,
+                    'image_url': c.image_url,
+                    'fields': c.get_address_fields(),
+                },
+                'label': c.name,
+            } for c in countries
+        ]
