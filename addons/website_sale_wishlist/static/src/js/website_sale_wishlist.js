@@ -1,4 +1,5 @@
 import { rpc, RPCError } from "@web/core/network/rpc";
+import { redirect } from "@web/core/utils/urls";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
@@ -140,7 +141,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     /**
      * @private
      */
-    _removeWish: function (e, deferred_redirect) {
+    _removeWish: function (e, deferred_redirect, redirect_url='/shop/cart') {
         var tr = $(e.currentTarget).parents('tr');
         var wish = tr.data('wish-id');
         var product = tr.data('product-id');
@@ -155,7 +156,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         if (this.wishlistProductIDs.length === 0) {
             if (deferred_redirect) {
                 deferred_redirect.then(function () {
-                    self._redirectNoWish();
+                    self._redirectNoWish(redirect_url);
                 });
             }
         }
@@ -191,8 +192,8 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     /**
      * @private
      */
-    _redirectNoWish: function () {
-        window.location.href = '/shop/cart';
+    _redirectNoWish: function (redirect_url) {
+        redirect(redirect_url);
     },
 
 
@@ -253,7 +254,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @param {Event} ev
      */
     _onClickWishRemove: function (ev) {
-        this._removeWish(ev, false);
+        this._removeWish(ev, Promise.resolve(), '/shop');
     },
     /**
      * @private
