@@ -33,7 +33,7 @@
                         previousMessage="prevMsg"
                         registerMessageRef="registerMessageRef"
                         squashed="isSquashed(msg, prevMsg)"
-                        onParentMessageClick.bind="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage, props.thread)"
+                        onParentMessageClick.bind="() => msg.parent_id and env.messageHighlight?.highlightMessage(msg.parent_id, props.thread)"
                         thread="props.thread"
                         isFirstMessage="msg_first"
                         hasActions="props.messageActions and !msg.eq(props.thread.from_message_id)"
