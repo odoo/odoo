@@ -24,13 +24,14 @@
           </div>
 
           <!-- Products -->
+           <t t-set="productList" t-value="products"/>
            <div class="d-flex flex-grow-1 justify-content-center position-relative overflow-y-auto  align-items-start "
-                t-att-class="{'align-items-end': products.length &lt; 5}">
+                t-att-class="{'align-items-end': productList.length &lt; 5}">
               <div class=" d-flex my-auto">
               <div class="product_list d-flex flex-wrap justify-content-center px-4 "
-                   t-att-class="{'product_list_small': products.length &lt; 5}">
+                   t-att-class="{'product_list_small': productList.length &lt; 5}">
                 <div class="spacer"></div>
-                  <button t-foreach="products"
+                  <button t-foreach="productList"
                           t-as="product" t-key="product.id"
                           t-on-click="(evt) => this.selectProduct(product, evt.target)"
                           role="button"

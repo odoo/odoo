@@ -3,6 +3,7 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { KioskAttributeSelection } from "@pos_self_order/app/components/kiosk_attribute_selection/attribute_selection";
 import { KioskQuantityWidget } from "@pos_self_order/app/components/kiosk_quantity/quantity_widget";
+import { computeProductPrice } from "../../services/card_utils";
 
 export class KioskProductPage extends Component {
     static template = "pos_self_order.KioskProductPage";
@@ -78,20 +79,40 @@ export class KioskProductPage extends Component {
         if (!selection) {
             return false;
         }
-
         const variantAttributeValueIds = selection
             .getAllSelectedAttributeValuesIds()
             .map((attr) => Number(attr));
         return this.props.productTemplate._isArchivedCombination(variantAttributeValueIds);
     }
 
+    getProductPrice() {
+        return computeProductPrice(
+            this.selfOrder,
+            this.props.productTemplate,
+            this.getSelectedAttributesValues(),
+            this.state.qty
+        );
+    }
+
+    getSelectedAttributesValues() {
+        return (
+            this.state.selectedValues[
+                this.productTemplate.id
+            ]?.getAllSelectedAttributeValuesIds() || []
+        );
+    }
+
     addToCart() {
         if (!this.isAddToCartEnabled()) {
             return;
         }
-        const selectedValueIds =
-            this.state.selectedValues[this.productTemplate.id].getAllSelectedAttributeValuesIds();
-        this.selfOrder.addToCart(this.props.productTemplate, this.state.qty, "", selectedValueIds);
+
+        this.selfOrder.addToCart(
+            this.props.productTemplate,
+            this.state.qty,
+            "",
+            this.getSelectedAttributesValues()
+        );
         this.router.back();
     }
 }

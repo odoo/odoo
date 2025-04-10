@@ -21,8 +21,10 @@
 
              <!-- Product selection -->
              <div class="d-flex flex-grow-1 justify-content-center position-relative overflow-y-auto  align-items-start "  t-if="!isAttributeSelection() and !this.state.showResume ">
-              <div class="product_list d-flex flex-wrap justify-content-center w-100 px-4"  t-att-class="{'product_list_small': comboItems.length &lt; 5}">
+                <div class="product_list d-flex flex-wrap justify-content-center w-100 px-4"  t-att-class="{'product_list_small': comboItems.length &lt; 5}">
                 <div class="spacer"></div>
+                    <div class="text-center fs-2  flex-fill w-100" t-if="selectedChoice.qty_free &lt; selectedChoice.qty_max"><t t-esc="selectedChoice.qty_free"/> free</div>
+
                   <t t-foreach="comboItems" t-as="comboItem" t-key="comboItem.id" t-if="comboItem.product_id">
                       <t t-set="product" t-value="comboItem.product_id"/>
                       <t t-set="itemState" t-value="getItemState(comboItem)"/>
@@ -116,15 +118,13 @@
                      <i class="oi oi-chevron-left d-md-none" />
                      <span>Back</span>
                 </button>
-
-                 <button t-if="!state.showResume" class="btn btn-lg btn-primary" t-on-click="next" t-att-disabled="!this.isNextEnabled()">
+                <button t-if="!state.showResume" class="btn btn-lg btn-primary" t-on-click="next" t-att-disabled="!this.isNextEnabled()">
                      <span>Next</span>
-                 </button>
+                </button>
                 <button t-elif="selfOrder.ordering" class="btn btn-lg btn-primary" t-on-click="next" t-att-disabled="!this.isNextEnabled()">
                      <span >Add to cart</span>
-                 </button>
-
-
+                </button>
+                <div class="position-absolute start-50 translate-middle-x fs-2 fw-bold"><t t-esc="selfOrder.formatMonetary(getComboPrice())" /></div>
            </div>
 
          </div>

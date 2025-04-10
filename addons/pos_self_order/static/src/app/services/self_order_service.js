@@ -14,6 +14,7 @@ import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
+import { getOrderLineValues, computeInitialComboPrice } from "./card_utils";
 import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
 import {
     getTaxesAfterFiscalPosition,
@@ -65,7 +66,6 @@ export class SelfOrder extends Reactive {
         this.currentCategory = null;
         this.productByCategIds = {};
         this.availableCategories = [];
-        this.categoryList = new Set();
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
@@ -149,16 +149,14 @@ export class SelfOrder extends Reactive {
             : this.config.self_ordering_service_mode;
     }
 
-    computeAvailableCategories() {
+    getAvailableCategories() {
         let now = luxon.DateTime.now();
         now = now.hour + now.minute / 60;
         const prodByCategIds = this.productByCategIds;
         const availableCategories = this.productCategories
             .filter((c) => prodByCategIds[c.id])
             .sort((a, b) => a.sequence - b.sequence);
-
-        this.categoryList = new Set(availableCategories);
-        this.availableCategories = availableCategories.filter((c) => {
+        return availableCategories.filter((c) => {
             const hourStart = c.hour_after;
             const hourUntil = c.hour_until;
             if (hourStart === hourUntil || (hourStart === 0 && hourUntil === 24)) {
@@ -172,6 +170,9 @@ export class SelfOrder extends Reactive {
                 return !(now >= hourStart && now <= hourUntil);
             }
         });
+    }
+    computeAvailableCategories() {
+        this.availableCategories = this.getAvailableCategories();
         this.currentCategory = this.productCategories[0] || null;
     }
 
@@ -205,145 +206,21 @@ export class SelfOrder extends Reactive {
         comboValues = {}
     ) {
         const product = productTemplate.product_variant_ids[0];
-        const productPrice = this.getProductPriceInfo(productTemplate, product);
-        const values = {
-            order_id: this.currentOrder,
-            product_id: product,
-            tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
-            qty: qty,
-            note: customer_note || "",
-            price_unit: productPrice.pricelist_price,
-            price_extra: 0,
-        };
-
-        if (Object.entries(selectedValues).length > 0) {
-            const productVariant = this.models["product.product"].find(
-                (prd) =>
-                    prd.product_tmpl_id.id === productTemplate.id &&
-                    prd.product_template_variant_value_ids.every((ptav) =>
-                        Object.values(selectedValues).some((value) => ptav.id == value)
-                    )
-            );
-            if (productVariant) {
-                Object.assign(values, {
-                    product_id: productVariant,
-                    price_unit: productVariant.lst_price,
-                    tax_ids: productVariant.taxes_id.map((tax) => ["link", tax]),
-                });
-            }
-
-            values.attribute_value_ids = Object.entries(selectedValues).reduce(
-                (acc, [attributeId, options]) => {
-                    const optionEntries = Object.entries(
-                        typeof options === "object" ? options : { [options]: true }
-                    ).filter(([, isSelected]) => isSelected); // Only true values
-
-                    optionEntries.forEach(([optionId]) => {
-                        const attrVal = this.models["product.template.attribute.value"].get(
-                            Number(optionId)
-                        );
-                        if (attrVal.attribute_id.create_variant !== "always") {
-                            values.price_extra += attrVal.price_extra;
-                            acc.push(["link", attrVal]);
-                        }
-                    });
-                    return acc;
-                },
-                []
-            );
-
-            if (Object.values(customValues).length > 0) {
-                values.custom_attribute_value_ids = Object.values(customValues)
-                    .filter((c) => c.custom_value !== "")
-                    .map((c) => ["create", c]);
-            }
-        }
-
-        if (Object.entries(comboValues).length > 0) {
-            const freeItems = [];
-            const extraItems = [];
-
-            // Group comboValues by combo_id
-            const groupedByCombo = new Map();
-            for (const item of comboValues) {
-                const comboId = item.combo_item_id.combo_id;
-                if (!groupedByCombo.has(comboId)) {
-                    groupedByCombo.set(comboId, []);
-                }
-                groupedByCombo.get(comboId).push(item);
-            }
-
-            for (const [combo, items] of groupedByCombo) {
-                const maxFree = combo.qty_free;
-                // Split items between free items and extra items.
-                let freeCount = 0;
-                for (const item of items) {
-                    const availableFreeQty = Math.max(0, maxFree - freeCount);
-                    const freeQty = Math.min(item.qty, availableFreeQty);
-                    const extraQty = item.qty - freeQty;
-
-                    if (freeQty > 0) {
-                        freeItems.push({ ...item, qty: freeQty });
-                        freeCount += freeQty;
-                    }
-
-                    if (extraQty > 0) {
-                        extraItems.push({ ...item, qty: extraQty });
-                    }
-                }
-            }
-
-            const comboPrices = computeComboItems(
-                product,
-                freeItems,
-                this.currentOrder.pricelist_id,
-                this.models["decimal.precision"].getAll(),
-                this.models["product.template.attribute.value"].getAllBy("id"),
-                extraItems
-            );
-
-            values.price_unit = 0;
-            values.combo_id = ["link", product.combo_id];
-            values.combo_line_ids = comboPrices.map((comboItem) => [
-                "create",
-                {
-                    product_id: comboItem.combo_item_id.product_id,
-                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
-                        "link",
-                        tax,
-                    ]),
-                    combo_item_id: comboItem.combo_item_id,
-                    price_unit: comboItem.price_unit,
-                    order_id: this.currentOrder,
-                    qty: comboItem.qty * qty,
-                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
-                        "link",
-                        attr,
-                    ]),
-                    custom_attribute_value_ids: Object.entries(
-                        comboItem.attribute_custom_values
-                    ).map(([id, cus]) => ["create", cus]),
-                },
-            ]);
-        }
-
-        if (values.price_extra > 0) {
-            const price = values.product_id.getPrice(
-                this.currentOrder.pricelist_id,
-                values.qty,
-                values.price_extra
-            );
-
-            values.price_unit = price;
-        }
-
+        const values = getOrderLineValues(
+            this,
+            productTemplate,
+            qty,
+            customer_note,
+            selectedValues,
+            customValues,
+            comboValues
+        );
         const newLine = this.models["pos.order.line"].create(values);
         newLine.full_product_name = constructFullProductName(
             newLine,
             this.models["product.template.attribute.value"].getAllBy("id"),
             product.name
         );
-
         const lineToMerge = this.currentOrder.lines.find(
             (l) => l.canBeMergedWith(newLine) && l.id !== newLine.id
         );
@@ -450,7 +327,12 @@ export class SelfOrder extends Reactive {
             this.selectedOrderUuid = existingOrder.uuid;
             return existingOrder;
         }
+        const newOrder = this.createNewOrder();
+        this.selectedOrderUuid = newOrder.uuid;
+        return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
+    }
 
+    createNewOrder() {
         const autoSelectedPresets =
             this.models["pos.preset"].length === 1 && this.config.use_presets;
 
@@ -462,7 +344,7 @@ export class SelfOrder extends Reactive {
             ? this.config.default_preset_id?.pricelist_id
             : this.config.default_pricelist_id;
 
-        const newOrder = this.models["pos.order"].create({
+        return this.models["pos.order"].create({
             company_id: this.company,
             ticket_code: random5Chars(),
             session_id: this.session,
@@ -471,8 +353,6 @@ export class SelfOrder extends Reactive {
             pricelist_id: pricelist,
             preset_id: autoSelectedPresets ? this.config.default_preset_id : false,
         });
-        this.selectedOrderUuid = newOrder.uuid;
-        return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
 
     get kioskMode() {
@@ -919,6 +799,10 @@ export class SelfOrder extends Reactive {
         return { pricelist_price: price, ...taxesData };
     }
     getProductDisplayPrice(productTemplate, product) {
+        if (productTemplate.isCombo()) {
+            return computeInitialComboPrice(this, productTemplate);
+        }
+
         const taxesData = this.getProductPriceInfo(productTemplate, product);
         if (this.isTaxesIncludedInPrice()) {
             return taxesData.total_included;
@@ -926,6 +810,7 @@ export class SelfOrder extends Reactive {
             return taxesData.total_excluded;
         }
     }
+
     isTaxesIncludedInPrice() {
         return this.config.iface_tax_included === "total";
     }
@@ -972,7 +857,11 @@ export class SelfOrder extends Reactive {
     }
 
     displayCategoryPage() {
-        return this.kioskMode && this.models["pos.category"].length > 1;
+        if (!this.kioskMode) {
+            return;
+        }
+
+        return this.getAvailableCategories().length > 1;
     }
 
     get kioskBackgroundImage() {

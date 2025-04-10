@@ -43,6 +43,7 @@
                  <button t-if="selfOrder.ordering" class="btn btn-lg btn-primary" t-on-click="addToCart" t-att-disabled="!this.isAddToCartEnabled()" >
                      <span>Add to cart</span>
                 </button>
+               <div class="position-absolute start-50 translate-middle-x fs-2 fw-bold"><t t-esc="selfOrder.formatMonetary(getProductPrice())" /></div>
           </div>
 
          </div>

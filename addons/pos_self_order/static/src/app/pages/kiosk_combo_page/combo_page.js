@@ -3,6 +3,7 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { KioskAttributeSelection } from "@pos_self_order/app/components/kiosk_attribute_selection/attribute_selection";
 import { KioskQuantityWidget } from "@pos_self_order/app/components/kiosk_quantity/quantity_widget";
+import { computeTotalComboPrice } from "../../services/card_utils";
 
 export class KioskComboPage extends Component {
     static template = "pos_self_order.KioskComboPage";
@@ -23,6 +24,7 @@ export class KioskComboPage extends Component {
             showResume: false,
             qty: 1,
             selectedValues: this.env.selectedValues,
+            comboPrice: 0,
         });
 
         this.onAttributeSelection = this.onAttributeSelection.bind(this);
@@ -275,32 +277,28 @@ export class KioskComboPage extends Component {
     getSelection() {
         return this.comboChoices.map((choice, index) => {
             const choiceState = this.state.choices[index];
-            const comboItems = [];
-
-            this.getSelectedItems(choiceState).forEach((itm) => {
-                const comboItem = itm.item;
+            const selectedItems = choiceState ? this.getSelectedItems(choiceState) : [];
+            const comboItems = selectedItems.map((selectedItem) => {
+                const comboItem = selectedItem.item;
                 const product = comboItem.product_id;
                 const selectedAttributes = [];
-                const productSelectedValues = this.state.selectedValues[product.id];
-
-                product.attribute_line_ids.forEach((line) => {
-                    const selection = productSelectedValues.getSelectedAttributeValues(line);
-
-                    if (selection.length > 0) {
+                const selectedValues = this.state.selectedValues[product.id] ?? {};
+                for (const line of product.attribute_line_ids) {
+                    const selected = selectedValues.getSelectedAttributeValues?.(line) ?? [];
+                    if (selected.length > 0) {
                         selectedAttributes.push({
                             attribute_line_id: line,
-                            attribute_ids: selection,
-                            names: selection.map((x) => x.name).join(", "),
+                            attribute_ids: selected,
+                            names: selected.map((attr) => attr.name).join(", "),
                         });
                     }
-                });
-
-                comboItems.push({
+                }
+                return {
                     combo_item_id: comboItem,
-                    qty: itm.qty,
+                    qty: selectedItem.qty,
                     product_id: product,
                     attributes: selectedAttributes,
-                });
+                };
             });
 
             return {
@@ -310,32 +308,42 @@ export class KioskComboPage extends Component {
         });
     }
 
-    addToCart() {
-        const selectedCombos = [];
-        this.getSelection().forEach((choice) => {
-            choice.combo_items.forEach((item) => {
-                const combo = {
-                    combo_item_id: item.combo_item_id,
-                    qty: item.qty,
-                    configuration: {
-                        attribute_custom_values: [],
-                        attribute_value_ids:
-                            item.attributes?.flatMap((s) => s.attribute_ids.map((x) => x.id)) || [],
-                        price_extra: 0,
-                    },
-                };
-                selectedCombos.push(combo);
-            });
-        });
+    getComboSelection() {
+        return this.getSelection().flatMap((choice) =>
+            choice.combo_items.map((item) => ({
+                combo_item_id: item.combo_item_id,
+                qty: item.qty,
+                configuration: {
+                    attribute_custom_values: [],
+                    attribute_value_ids:
+                        item.attributes?.flatMap((attr) =>
+                            attr.attribute_ids.map((attrVal) => attrVal.id)
+                        ) || [],
+                    price_extra: 0,
+                },
+            }))
+        );
+    }
 
+    addToCart() {
         this.selfOrder.addToCart(
             this.props.productTemplate,
             this.state.qty,
             "",
             {},
             {},
-            selectedCombos
+            this.getComboSelection()
         );
+
         this.router.back();
+    }
+
+    getComboPrice() {
+        return computeTotalComboPrice(
+            this.selfOrder,
+            this.props.productTemplate,
+            this.getComboSelection(),
+            this.state.qty
+        );
     }
 }
