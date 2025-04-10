@@ -28,7 +28,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
      * @param {boolean} options.isPartnerWithoutUser whether invited partner has users. Used
      *   to redirect properly to sign up / log in.
      * @param {string} [options.joinMessage] the message to use for the simple join case
-     *   when the course is free and the user is logged in, defaults to "Join this Course".
+     *   when the course is free and the user is logged in, defaults to "Enroll now".
      * @param {Promise} [options.beforeJoin] a promise to execute before we redirect to
      *   another url within the join process (login / buy course / ...)
      * @param {function} [options.afterJoin] a callback function called after the user has
@@ -44,7 +44,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
         this.invitePreview = options.invitePreview;
         this.isPartnerWithoutUser = options.isPartnerWithoutUser;
         this.publicUser = options.publicUser;
-        this.joinMessage = options.joinMessage || _t('Join this Course');
+        this.joinMessage = options.joinMessage || _t('Enroll now');
         this.beforeJoin = options.beforeJoin || function () {return Promise.resolve();};
         this.afterJoin = options.afterJoin || function () {document.location.reload();};
     },
