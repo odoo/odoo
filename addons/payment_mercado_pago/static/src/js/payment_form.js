@@ -28,7 +28,6 @@ paymentForm.include({
             return;
         }
 
-
         // Check if instantiation of the component is needed.
         this.mercadoPagoComponents ??= {}; // Store the component of each instantiated payment method.
         if (flow === 'token') {
@@ -48,14 +47,6 @@ paymentForm.include({
         const mercadoPagoContainer = inlineForm.querySelector('[id="o_mercado_pago_component_container"]');
         this.mercadoPagoComponents ??= {};
         const amount = this.paymentContext['amount'];
-        // const response = await rpc('/mercado_pago/create_preference', {
-        //     partner_id: inlineFormValues['partner_id'],
-        //     amount: amount,
-        //     currency: inlineFormValues['currency'],
-        //     payment_method: inlineFormValues['payment_method'],
-        //     provider_id: inlineFormValues['provider'],//maybe don't need this?
-        // });
-
 
         // Create the checkout object if not already done for another payment method.
             try {
@@ -72,7 +63,6 @@ paymentForm.include({
                           "amout" is the total sum to be paid from all payment methods but Mercado Pago Wallet and Parcels without credit card which have their processing value determined on the backend via "preferenceId"
                         */
                         amount: amount,
-                        // preferenceId: response,
                         payer: {
                             email: inlineFormValues['email'],
                         },
@@ -87,8 +77,8 @@ paymentForm.include({
                         },
                         paymentMethods: {
                             ...item,
-                            minInstallments: 1,
-                            maxInstallments: 12,
+                            maxInstallments: 1,
+
                         },
 
                     },
@@ -102,10 +92,8 @@ paymentForm.include({
                         },
                     },
                 };
-                //i dont need this function at all i just need
                 const brickType = paymentMethodCode === 'card' ? 'cardPayment' : 'payment';
                 const method_container = `o_mercado_pago_express_checkout_container_${providerId}_${paymentOptionId}`
-                const key = paymentMethodCode
 
                 settings.paymentMethodCode = 'all'
                 this.mercadoPagoCheckout = await bricksBuilder.create(
@@ -113,10 +101,7 @@ paymentForm.include({
                     method_container,
                     settings
                 );
-                //maybe I will need to unmout it?
 
-                // Await the RPC to let it create AdyenCheckout before using it.
-                // Create the Adyen Checkout SDK.
                 const providerState = this._getProviderState(radio);
             } catch (error) {
                 if (error instanceof RPCError) {
@@ -158,24 +143,6 @@ paymentForm.include({
         return await _super(...arguments);
     },
 
-    _mercadoPagoSubmitTransaction(formData){
-        rpc(
-            this.paymentContext['transactionRoute'],
-            this._prepareTransactionRouteParams(),
-        ).then(processingValues => {
-            // Initiate the payment.
-
-        }).then(paymentResponse => {
-                window.location = '/payment/status';
-        }).catch((error) => {
-            if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                this._enableButton();
-            } else {
-                return Promise.reject(error);
-            }
-        });
-    },
     async _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
         if (providerCode !== 'mercado_pago') {
             this._super(...arguments);
@@ -199,32 +166,7 @@ paymentForm.include({
             } else {
                 return Promise.reject(error);
             }
-        });;
+        });
     },
 
-    _renderPaymentBrick(brick)  {
-        const settings = {
-            initialization: {
-                // preferenceId: "To be done, maybe use the function earlier to get methds",
-                payer: {
-                    firstName: "to be done",
-                },
-            },
-            customization: {
-                paymentMethods: {
-                    ticket: "all",
-                    bankTransfer: "all",
-                    atm: "all",
-                    onboarding_credits: "all",
-                    maxInstallments: 1,
-
-                },
-                visual: {
-                    hideFormTitle: true,
-                    hidePaymentButton: true,
-                },
-            }
-        }
-        this.mercadoPagoCheckout = brick.create("payment", "o_mercado_pago_component_container", settings);
-    }
 });
