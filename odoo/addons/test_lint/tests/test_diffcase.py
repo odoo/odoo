@@ -15,7 +15,7 @@ class TestDiffCase(BaseCase):
             self.assertEqual(len(diff_linenos), expected_lines)
         return diff_linenos
     
-    def test_yield_xml_diff_elements(self):
+    def test_get_xml_elements(self):
         abs_path = file_path('test_lint/tests/data/test_diff_case.xml')
         diff_linenos = self.get_diff_linenos(
             abs_path,

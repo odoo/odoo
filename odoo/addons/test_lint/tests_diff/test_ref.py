@@ -63,7 +63,7 @@ class EvalRefVisitor(ast.NodeVisitor):
         if isinstance(node.func, ast.Name) and node.func.id == 'ref':
             if self._is_ref_risky(node):
                 # for ref() calls, check if the ref is for another module
-                self.diagnostic_kinds.append(XML_REF)
+                self.diagnostic_kinds.append(XML_EVAL)
         
         self.generic_visit(node)
 
@@ -144,7 +144,7 @@ def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: 
         record = element
         id_attr = record.attrib.get('id')
         if id_attr and is_ref_risky(id_attr) and 'forcecreate' not in record.attrib:
-            result.append(XML_INHERIT_ID(diff_file, *record.start_tag_linenos))
+            result.append(XML_ID(diff_file, *record.start_tag_linenos))
     elif element.tag == 'field':
         field = element
         ref_attr = field.attrib.get('ref')
@@ -239,6 +239,7 @@ class TestRef(DiffCase):
                 continue
             data_files = set(manifest['data'])
             demo_files = set(manifest['demo'])
+            protected_xml_ids = set(self.protected_xml_ids)
             for diff_file in diff_files:
                 if diff_file.path_to_module in demo_files:
                     continue
@@ -247,4 +248,10 @@ class TestRef(DiffCase):
                     continue
                 for element in self.get_xml_elements(diff_file.path):
                     if element.start_tag_in_diff:
-                        self.diagnostices.extend(check_ref_for_data_xml_element(element, diff_file, init, self.protected_xml_ids))
+                        self.diagnostices.extend(check_ref_for_data_xml_element(element, diff_file, init, protected_xml_ids))
+                    if element.tag == 'record':
+                        record = element
+                        id_attr = record.attrib.get('id')
+                        forcecreate = record.attrib.get('forcecreate') not in ('False', '0', None)
+                        if (id_attr := record.attrib.get('id')) and '.' in id_attr and id_attr.split('.')[0] != diff_file.module_name and forcecreate:
+                            protected_xml_ids.add(id_attr)
