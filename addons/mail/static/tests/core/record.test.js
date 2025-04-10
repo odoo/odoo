@@ -1048,3 +1048,52 @@ test("insert with id relation keeps existing field values", async () => {
     expect(member2.channel.eq(channel1)).toBe(true);
     expect(member2.is_internal).toBe(true);
 });
+
+test("accessing to inverse of a computed field should trigger recomputation", async () => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        messageToCompute = Record.one("Message", {
+            compute() {
+                return this.messages[0];
+            },
+            inverse: "threadOfComputedMessage",
+        });
+        messages = Record.many("Message");
+    }).register(localRegistry);
+
+    (class Message extends Record {
+        static id = "id";
+        id;
+        thread = Record.one("Thread", { inverse: "messages" });
+        threadOfComputedMessage = Record.one("Thread", { inverse: "messageToCompute" });
+    }).register(localRegistry);
+
+    const store = await start();
+    const thread = store.Thread.insert({ id: 1 });
+
+    function render() {
+        for (const message of reactiveThread.messages) {
+            void message.threadOfComputedMessage;
+        }
+    }
+    const reactiveThread = reactive(thread, render);
+    render();
+    const message1 = store.Message.insert({ id: 1, thread: thread });
+    // expect(
+    //     `${toRaw(message1)._raw.threadOfComputedMessage.data.map(
+    //         (localId) => toRaw(thread)._raw.store.get(localId).id
+    //     )}`
+    // ).toBe("1", { message: "threadOfComputedMessage should be computed when inserting message1" });
+    // expect(
+    //     `${toRaw(thread)._raw.messageToCompute.data.map(
+    //         (localId) => toRaw(thread)._raw.store.get(localId).id
+    //     )}`
+    // ).toBe("1", { message: "messageToCompute should be computed when inserting message1" });
+    const message2 = store.Message.insert({ id: 2, thread: thread });
+    // expect(
+    //     `${toRaw(message2)._raw.threadOfComputedMessage.data.map(
+    //         (localId) => toRaw(thread)._raw.store.get(localId).id
+    //     )}`
+    // ).toBe("1", { message: "threadOfComputedMessage should be computed when inserting message2" });
+});
