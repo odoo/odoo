@@ -256,7 +256,7 @@ export class PeerToPeer extends EventTarget {
      */
     constructor({
         notificationRoute = DEFAULT_NOTIFICATION_ROUTE,
-        logLevel = LOG_LEVEL.WARN,
+        logLevel = LOG_LEVEL.ERROR,
         batchDelay = DEFAULT_BUS_BATCH_DELAY,
         antiGlare = true,
         enableStreaming = true,
