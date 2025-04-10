@@ -62,13 +62,16 @@ from datetime import date, datetime, time, timedelta, timezone
 
 from odoo.exceptions import UserError
 from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
+
 from .identifiers import NewId
-from .utils import COLLECTION_TYPES
+from .utils import COLLECTION_TYPES, parse_field_expr
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable
     from odoo.fields import Field
     from odoo.models import BaseModel
+
+    M = typing.TypeVar('M', bound=BaseModel)
 
 
 _logger = logging.getLogger('odoo.domains')
@@ -364,6 +367,13 @@ class Domain:
         # just execute the optimization code that goes through all the fields
         self.optimize(model, full=True)
 
+    def filter_records(self, records: M) -> M:
+        """Filter a recordset using this domain.
+
+        The implentation does not keep the prefetch of the given records.
+        """
+        raise NotImplementedError
+
     def optimize(self, model: BaseModel, *, full: bool = False) -> Domain:
         """Perform optimizations of the node given a model.
 
@@ -467,6 +477,9 @@ class DomainBool(Domain):
     def __iter__(self):
         yield _TRUE_LEAF if self.value else _FALSE_LEAF
 
+    def filter_records(self, records: M) -> M:
+        return records if self.value else records.browse()
+
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         return SQL("TRUE") if self.value else SQL("FALSE")
 
@@ -511,6 +524,9 @@ class DomainNot(Domain):
 
     def __hash__(self):
         return ~hash(self.child)
+
+    def filter_records(self, records: M) -> M:
+        return (records - self.child.filter_records(records))
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         condition = self.child._to_sql(model, alias, query)
@@ -631,6 +647,14 @@ class DomainAnd(DomainNary):
             return DomainAnd(self.children + other.children)
         return super().__and__(other)
 
+    def filter_records(self, records: M) -> M:
+        prefetch = records._prefetch_ids
+        for child in self.children:
+            records = child.filter_records(records.with_prefetch(prefetch))
+            if not records:
+                break
+        return records
+
 
 class DomainOr(DomainNary):
     """Domain: OR with multiple children"""
@@ -648,6 +672,20 @@ class DomainOr(DomainNary):
         if isinstance(other, DomainOr):
             return DomainOr(self.children + other.children)
         return super().__or__(other)
+
+    def filter_records(self, records: M) -> M:
+        if not records:
+            return records
+        to_check = records
+        prefetch = records._prefetch_ids
+        for child in self.children:
+            if matched := child.filter_records(to_check):
+                to_check = (to_check - matched)
+                if not to_check:
+                    # all records already matched
+                    return records
+                to_check = to_check.with_prefetch(prefetch)
+        return (records - to_check)
 
 
 class DomainCondition(Domain):
@@ -777,14 +815,14 @@ class DomainCondition(Domain):
 
     def __get_field(self, model: BaseModel) -> tuple[Field, str]:
         """Get the field or raise an exception"""
-        field_name, *props = self.field_expr.split('.', 1)
+        field_name, property_name = parse_field_expr(self.field_expr)
         try:
             field = model._fields[field_name]
         except KeyError:
             self._raise("Invalid field %s.%s", model._name, field_name)
         # cache field value, with this hack to bypass immutability
         object.__setattr__(self, '_field_instance', field)
-        return field, (props[0] if props else '')
+        return field, property_name or ''
 
     def _optimize(self, model: BaseModel, full: bool) -> Domain:
         """Optimization step.
@@ -896,6 +934,51 @@ class DomainCondition(Domain):
             field_label=self._field(model).get_description(model.env, ['string'])['string'],
             model_label=f"{model.env['ir.model']._get(model._name).name!r} ({model._name})",
         ))
+
+    def filter_records(self, records: M) -> M:
+        if not records:
+            return records
+        if self._opt_level < OptimizationLevel.BASIC:
+            return self.optimize(records, full=False).filter_records(records)
+        operator = self.operator
+        if operator not in STANDARD_CONDITION_OPERATORS:
+            # basic optimization was done before calling this, we may resort to SQL
+            return self.optimize(records, full=True).filter_records(records)
+        field_expr, value = self.field_expr, self.value
+        positive_operator = NEGATIVE_CONDITION_OPERATORS.get(operator, operator)
+
+        if isinstance(value, SQL):
+            # transform into an Query value
+            if positive_operator == operator:
+                condition = self
+                operator = 'any'
+            else:
+                condition = ~self
+                operator = 'not any'
+            positive_operator = 'any'
+            field_expr = 'id'
+            value = records.with_context(active_test=False)._search(DomainCondition('id', 'in', OrderedSet(records.ids)) & condition)
+            assert isinstance(value, Query)
+        if isinstance(value, Query):
+            # rebuild a domain with an 'in' values
+            if positive_operator not in ('in', 'any'):
+                self._raise("Cannot filter using Query without the 'any' or 'in' operator")
+            if positive_operator == 'any':
+                operator = 'in' if positive_operator == operator else 'not in'
+                positive_operator = 'in'
+            value = set(value.get_result_ids())
+            return DomainCondition(field_expr, operator, value).filter_records(records)
+
+        field = self._field(records)
+        if field_expr == 'display_name':
+            # when searching by name, ignore AccessError
+            field_expr = 'display_name.no_error'
+        elif field_expr == 'id':
+            # for new records, compare to their origin
+            field_expr = 'id.origin'
+        func = field.filter_function(records, field_expr, positive_operator, value)
+        final_func = func if positive_operator == operator else lambda rec: not func(rec)
+        return records.browse(rec_id for rec_id, rec in zip(records._ids, records) if final_func(rec))
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         return model._condition_to_sql(alias, self.field_expr, self.operator, self.value, query)
@@ -1104,6 +1187,8 @@ def _optimize_in_required(condition, model):
         field.falsy_value is None
         and field.required
         and field in model.env.registry.not_null_fields
+        # only optimize if there are no NewId's
+        and all(model._ids)
     ):
         value = OrderedSet(v for v in value if v is not False)
     if len(value) == len(condition.value):
