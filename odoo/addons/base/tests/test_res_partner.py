@@ -764,8 +764,8 @@ class TestPartnerAddressCompany(TransactionCase):
 
         p1vat = 'BE0987654394'
         p1.write({'vat': p1vat})
-        for p in (sunhelm, p0, p11, p2, p3):
-            self.assertEqual(p.vat, sunhelmvat, 'Sync to children should only work downstream and on commercial entities')
+        for p in (sunhelm, p0, p1, p11, p2, p3):
+            self.assertEqual(p.vat, p1vat, 'Sync to children also works upstream')
 
         # promote p1 to commercial entity
         p1.write({'parent_id': sunhelm.id,
