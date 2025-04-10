@@ -112,7 +112,12 @@ class CrmLead(models.Model):
             leads = self.browse(all_lead_ids).try_lock_for_update(limit=batch_size)
             if not leads:
                 _logger.error('A batch of leads could not be enriched (locked): %s', repr(self.browse(all_lead_ids)))
-                break  # all are locked
+                # all are locked, schedule the cron later when the records might be unlocked
+                self.env.ref('crm_iap_enrich.ir_cron_lead_enrichment')._trigger(self.env.cr.now() + datetime.timedelta(minutes=5))
+                if from_cron:
+                    # mark the cron as fully done to prevent immediate reschedule
+                    self.env['ir.cron']._commit_progress(remaining=0)
+                break
             all_lead_ids -= set(leads._ids)
 
             if from_cron:
