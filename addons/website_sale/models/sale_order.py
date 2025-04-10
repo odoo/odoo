@@ -431,7 +431,7 @@ class SaleOrder(models.Model):
                 and 'product_uom_qty' in update_values
             ):
                 for linked_line_id in order_line.linked_line_ids:
-                    if quantity != linked_line_id.product_uom_qty:
+                    if linked_line_id.combo_item_id and quantity != linked_line_id.product_uom_qty:
                         self.with_context(skip_cart_verification=True)._cart_update_line_quantity(
                             line_id=linked_line_id.id,
                             quantity=quantity,

@@ -16,6 +16,15 @@
                     t-out="this.props.description_sale"
                     class="text-muted small text-truncate"
                 />
+                <div t-if="this.props.selectedComboItems" class="text-muted small">
+                    <t
+                        t-foreach="this.props.selectedComboItems"
+                        t-as="product"
+                        t-key="product_index"
+                    >
+                        <div t-out="product"/>
+                    </t>
+                </div>
             </div>
             <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
                 <PTAL
@@ -44,6 +53,7 @@
                     quantity="this.props.quantity"
                     setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
                     isMinusButtonDisabled="this.props.quantity === 1 &amp;&amp; isMainProduct"
+                    canUpdateQuantity="isMainProduct &amp;&amp; this.props.selectedComboItems.length > 0"
                 />
                 <a
                     class="d-block mt-2 text-end"
