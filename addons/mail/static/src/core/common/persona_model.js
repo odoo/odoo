@@ -31,6 +31,14 @@ export class Persona extends Record {
 
     /** @type {string} */
     avatar_128_access_token;
+    /** @type {string} */
+    commercial_company_name;
+    /**
+     * function = job position (Frenchism)
+     *
+     * @type {string}
+     */
+    function;
     /** @type {number} */
     id;
     /** @type {boolean | undefined} */
