@@ -1,18 +1,20 @@
 /** @odoo-module */
 
-import { Component, useRef, useState, xml } from "@odoo/owl";
+import { Component, onPatched, onWillPatch, useRef, useState, xml } from "@odoo/owl";
 import { getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
-import { isRegExpFilter, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { R_REGEX, REGEX_MARKER } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { Suite } from "../core/suite";
 import { Tag } from "../core/tag";
 import { Test } from "../core/test";
-import { EXCLUDE_PREFIX, refresh } from "../core/url";
+import { refresh } from "../core/url";
 import {
-    INCLUDE_LEVEL,
-    STORAGE,
     debounce,
+    EXACT_MARKER,
+    INCLUDE_LEVEL,
     lookup,
-    normalize,
+    parseQuery,
+    R_QUERY_EXACT,
+    STORAGE,
     storageGet,
     storageSet,
     stringify,
@@ -48,10 +50,22 @@ const {
 /**
  * @param {string} query
  */
-const getPattern = (query) => {
-    query = query.match(R_QUERY_CONTENT)[1];
-    return parseRegExp(normalize(query), { safe: true });
-};
+const addExact = (query) => EXACT_MARKER + query + EXACT_MARKER;
+
+/**
+ * @param {string} query
+ */
+const addRegExp = (query) => REGEX_MARKER + query + REGEX_MARKER;
+
+/**
+ * @param {string} query
+ */
+const removeExact = (query) => query.replaceAll(EXACT_MARKER, "");
+
+/**
+ * @param {string} query
+ */
+const removeRegExp = (query) => query.slice(1, -1);
 
 /**
  * /!\ Requires "job" and "category" to be in scope
@@ -131,16 +145,49 @@ const templateIncludeWidget = (tagName) => /* xml */ `
     </${tagName}>
 `;
 
+/**
+ *
+ * @param {ReturnType<typeof useRef<HTMLInputElement>>} ref
+ */
+const useKeepSelection = (ref) => {
+    /**
+     * @param {number} nextOffset
+     */
+    const keepSelection = (nextOffset) => {
+        offset = nextOffset || 0;
+    };
+
+    let offset = null;
+    let start = 0;
+    let end = 0;
+    onWillPatch(() => {
+        if (offset === null || !ref.el) {
+            return;
+        }
+        start = ref.el.selectionStart;
+        end = ref.el.selectionEnd;
+    });
+    onPatched(() => {
+        if (offset === null || !ref.el) {
+            return;
+        }
+        ref.el.selectionStart = start + offset;
+        ref.el.selectionEnd = end + offset;
+        offset = null;
+    });
+
+    return keepSelection;
+};
+
 const EMPTY_SUITE = new Suite(null, "…", []);
 const SECRET_SEQUENCE = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
-const R_QUERY_CONTENT = new RegExp(`^\\s*${EXCLUDE_PREFIX}?\\s*(.*)\\s*$`);
 const RESULT_LIMIT = 5;
 
 // Template parts, because 16 levels of indent is a bit much
 
 const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
     <div class="flex mb-2">
-        <t t-if="state.query.trim()">
+        <t t-if="trimmedQuery">
             <button
                 class="flex items-center gap-1"
                 type="submit"
@@ -149,14 +196,14 @@ const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
             >
                 <h4 class="text-primary m-0">
                     Filter using
-                    <t t-if="useRegExp">
+                    <t t-if="hasRegExpFilter()">
                         regular expression
                     </t>
                     <t t-else="">
                         text
                     </t>
                 </h4>
-                <t t-esc="wrappedQuery" />
+                <t t-esc="wrappedQuery()" />
             </button>
         </t>
         <t t-else="">
@@ -167,17 +214,14 @@ const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
     </div>
     <t t-foreach="categories" t-as="category" t-key="category">
         <t t-set="jobs" t-value="state.categories[category][0]" />
-        <t t-set="checkedCount" t-value="state.categories[category][1]" />
+        <t t-set="remainingCount" t-value="state.categories[category][1]" />
         <t t-if="jobs?.length">
             <div class="flex flex-col mb-2 max-h-48 overflow-hidden">
-                <h4 class="text-primary font-bold flex items-center mb-2">
-                    <span class="w-full">
-                        <t t-esc="title(category)" />
-                        (<t t-esc="checkedCount" />)
-                    </span>
-                </h4>
+                <h4
+                    class="text-primary font-bold flex items-center mb-2"
+                    t-esc="title(category)"
+                />
                 <ul class="flex flex-col overflow-y-auto gap-1">
-                    <t t-set="remainingCount" t-value="state.categories[category][2]" />
                     <t t-foreach="jobs" t-as="job" t-key="job.id">
                         ${templateIncludeWidget("li")}
                     </t>
@@ -281,12 +325,28 @@ export class HootSearch extends Component {
                         autofocus="autofocus"
                         placeholder="Filter suites, tests or tags"
                         t-ref="search-input"
+                        t-att-class="{ 'text-gray': !config.filter }"
                         t-att-disabled="isRunning"
                         t-att-value="state.query"
                         t-on-change="onSearchInputChange"
                         t-on-input="onSearchInputInput"
                         t-on-keydown="onSearchInputKeyDown"
                     />
+                    <label
+                        class="hoot-search-icon cursor-pointer p-1"
+                        title="Use exact match (Alt + X)"
+                        tabindex="0"
+                        t-on-keydown="onRegExpKeyDown"
+                    >
+                        <input
+                            type="checkbox"
+                            class="hidden"
+                            t-att-checked="hasExactFilter()"
+                            t-att-disabled="isRunning"
+                            t-on-change="toggleExact"
+                        />
+                        <i class="fa fa-quote-right text-gray transition-colors" />
+                    </label>
                     <label
                         class="hoot-search-icon cursor-pointer p-1"
                         title="Use regular expression (Alt + R)"
@@ -296,7 +356,7 @@ export class HootSearch extends Component {
                         <input
                             type="checkbox"
                             class="hidden"
-                            t-att-checked="useRegExp"
+                            t-att-checked="hasRegExpFilter()"
                             t-att-disabled="isRunning"
                             t-on-change="toggleRegExp"
                         />
@@ -332,24 +392,13 @@ export class HootSearch extends Component {
     `;
 
     categories = ["suite", "test", "tag"];
-    useTextFilter = false;
+    debouncedUpdateSuggestions = debounce(this.updateSuggestions.bind(this), 16);
     refresh = refresh;
     title = title;
 
-    get useRegExp() {
-        return isRegExpFilter(this.state.query.trim());
+    get trimmedQuery() {
+        return this.state.query.trim();
     }
-
-    get wrappedQuery() {
-        const query = this.state.query.trim();
-        return this.useRegExp ? query : stringify(query);
-    }
-
-    updateSuggestions = debounce(() => {
-        this.state.empty = this.isEmpty();
-        this.state.categories = this.findSuggestions();
-        this.state.showDropdown = true;
-    }, 16);
 
     setup() {
         const { runner } = this.env;
@@ -387,49 +436,49 @@ export class HootSearch extends Component {
                 if (this.runnerState.status !== "running") {
                     const shouldOpen = ev.composedPath().includes(this.rootRef.el);
                     if (shouldOpen && !this.state.showDropdown) {
-                        this.updateSuggestions();
+                        this.debouncedUpdateSuggestions();
                     }
                     this.state.showDropdown = shouldOpen;
                 }
             },
             { capture: true }
         );
+
+        this.keepSelection = useKeepSelection(this.searchInputRef);
     }
 
     /**
-     * @param {string} query
+     * @param {string} parsedQuery
      * @param {Map<string, Suite | Tag | Test>} items
      * @param {SearchFilter} category
      */
-    filterItems(query, items, category) {
+    filterItems(parsedQuery, items, category) {
         const checked = this.runnerState.includeSpecs[category];
 
         const result = [];
         const remaining = [];
-        let checkedCount = 0;
         for (const item of items.values()) {
             const value = $abs(checked[item.id]);
             if (value === INCLUDE_LEVEL.url) {
                 result.push(item);
-                checkedCount++;
             } else {
                 remaining.push(item);
             }
         }
 
-        const matching = lookup(query, remaining);
+        const matching = lookup(parsedQuery, remaining);
         result.push(...matching.slice(0, RESULT_LIMIT));
 
-        return [result, checkedCount, matching.length - RESULT_LIMIT];
+        return [result, matching.length - RESULT_LIMIT];
     }
 
     findSuggestions() {
         const { suites, tags, tests } = this.env.runner;
-        const pattern = getPattern(this.state.query);
+        const parsedQuery = parseQuery(this.trimmedQuery);
         return {
-            suite: this.filterItems(pattern, suites, "suite"),
-            tag: this.filterItems(pattern, tags, "tag"),
-            test: this.filterItems(pattern, tests, "test"),
+            suite: this.filterItems(parsedQuery, suites, "suite"),
+            tag: this.filterItems(parsedQuery, tags, "tag"),
+            test: this.filterItems(parsedQuery, tests, "test"),
         };
     }
 
@@ -493,9 +542,18 @@ export class HootSearch extends Component {
         return [...items].sort((a, b) => b.weight - a.weight).slice(0, 5);
     }
 
+    hasExactFilter(query = this.trimmedQuery) {
+        R_QUERY_EXACT.lastIndex = 0;
+        return R_QUERY_EXACT.test(query);
+    }
+
+    hasRegExpFilter(query = this.trimmedQuery) {
+        return R_REGEX.test(query);
+    }
+
     isEmpty() {
         return !(
-            this.state.query.trim() ||
+            this.trimmedQuery ||
             $values(this.runnerState.includeSpecs).some((values) =>
                 $values(values).some((value) => $abs(value) === INCLUDE_LEVEL.url)
             )
@@ -556,18 +614,21 @@ export class HootSearch extends Component {
         };
 
         switch (ev.key) {
+            case "ArrowDown": {
+                return navigate(+1);
+            }
+            case "ArrowUp": {
+                return navigate(-1);
+            }
+            case "Enter": {
+                return refresh();
+            }
             case "Escape": {
                 if (this.state.showDropdown) {
                     ev.preventDefault();
                     this.state.showDropdown = false;
                 }
                 return;
-            }
-            case "ArrowDown": {
-                return navigate(+1);
-            }
-            case "ArrowUp": {
-                return navigate(-1);
             }
         }
     }
@@ -587,11 +648,11 @@ export class HootSearch extends Component {
     }
 
     onSearchInputChange() {
-        if (!this.state.query) {
+        if (!this.trimmedQuery) {
             return;
         }
         const latestSearches = this.getLatestSearches();
-        latestSearches.unshift(this.state.query);
+        latestSearches.unshift(this.trimmedQuery);
         storageSet(STORAGE.searches, [...new Set(latestSearches)].slice(0, 5));
     }
 
@@ -604,7 +665,7 @@ export class HootSearch extends Component {
         this.env.ui.resultsPage = 0;
 
         this.updateFilterParam();
-        this.updateSuggestions();
+        this.debouncedUpdateSuggestions();
     }
 
     /**
@@ -624,6 +685,12 @@ export class HootSearch extends Component {
                 }
                 break;
             }
+            case "x": {
+                if (ev.altKey) {
+                    this.toggleExact();
+                }
+                break;
+            }
         }
 
         if (this.config.fun) {
@@ -637,6 +704,7 @@ export class HootSearch extends Component {
      * @param {number} [value]
      */
     setInclude(categoryId, id, value) {
+        this.config.filter = "";
         this.env.runner.include(categoryId, id, value);
     }
 
@@ -655,15 +723,52 @@ export class HootSearch extends Component {
         this.config.debugTest = !this.config.debugTest;
     }
 
-    toggleRegExp() {
-        const query = this.state.query.trim();
-        if (this.useRegExp) {
-            this.state.query = query.slice(1, -1);
-        } else {
-            this.state.query = `/${query}/`;
+    toggleExact() {
+        const currentQuery = this.trimmedQuery;
+        let query = currentQuery;
+        if (this.hasRegExpFilter(query)) {
+            query = removeRegExp(query);
         }
-        this.updateFilterParam();
-        this.updateSuggestions();
+        if (this.hasExactFilter(query)) {
+            query = removeExact(query);
+        } else {
+            query = addExact(query);
+        }
+        this.keepSelection((query.length - currentQuery.length) / 2);
+        this.setQuery(query);
+    }
+
+    /**
+     * @param {SearchFilter} categoryId
+     * @param {string} id
+     */
+    toggleInclude(categoryId, id) {
+        const currentValue = this.runnerState.includeSpecs[categoryId][id];
+        if (this.isReadonly(currentValue)) {
+            return; // readonly
+        }
+        if (currentValue > 0) {
+            this.setInclude(categoryId, id, -INCLUDE_LEVEL.url);
+        } else if (currentValue < 0) {
+            this.setInclude(categoryId, id, 0);
+        } else {
+            this.setInclude(categoryId, id, +INCLUDE_LEVEL.url);
+        }
+    }
+
+    toggleRegExp() {
+        const currentQuery = this.trimmedQuery;
+        let query = currentQuery;
+        if (this.hasExactFilter(query)) {
+            query = removeExact(query);
+        }
+        if (this.hasRegExpFilter(query)) {
+            query = removeRegExp(query);
+        } else {
+            query = addRegExp(query);
+        }
+        this.keepSelection((query.length - currentQuery.length) / 2);
+        this.setQuery(query);
     }
 
     uncheckLastCategory() {
@@ -684,30 +789,13 @@ export class HootSearch extends Component {
     }
 
     updateFilterParam() {
-        this.useTextFilter = true;
-
-        this.config.filter = this.state.query.trim();
-        this.config.suite = [];
-        this.config.tag = [];
-        this.config.test = [];
+        this.config.filter = this.trimmedQuery;
     }
 
-    /**
-     * @param {SearchFilter} categoryId
-     * @param {string} id
-     */
-    toggleInclude(categoryId, id) {
-        const currentValue = this.runnerState.includeSpecs[categoryId][id];
-        if (this.isReadonly(currentValue)) {
-            return; // readonly
-        }
-        if (currentValue > 0) {
-            this.setInclude(categoryId, id, -INCLUDE_LEVEL.url);
-        } else if (currentValue < 0) {
-            this.setInclude(categoryId, id, 0);
-        } else {
-            this.setInclude(categoryId, id, +INCLUDE_LEVEL.url);
-        }
+    updateSuggestions() {
+        this.state.empty = this.isEmpty();
+        this.state.categories = this.findSuggestions();
+        this.state.showDropdown = true;
     }
 
     /**
@@ -753,5 +841,9 @@ export class HootSearch extends Component {
             this.__owl__.app.root.render(true);
             console.warn("Secret sequence activated: all tests pass!");
         }
+    }
+
+    wrappedQuery(query = this.trimmedQuery) {
+        return this.hasRegExpFilter(query) ? query : stringify(query);
     }
 }
