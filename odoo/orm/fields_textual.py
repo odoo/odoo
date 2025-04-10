@@ -273,13 +273,6 @@ class BaseString(Field[str | typing.Literal[False]]):
                 return cache_value
         return super()._cache_update(records, cache_value, dirty)
 
-    def _cache_view(self, env):
-        cache = super()._cache_view(env)
-        if not self.translate or env.context.get('prefetch_langs'):
-            return cache
-        lang = self.translation_lang(env)
-        return LangProxyDict(cache, lang)
-
     def _get_cache_impl(self, env):
         cache = super()._get_cache_impl(env)
         if not self.translate or env.context.get('prefetch_langs'):

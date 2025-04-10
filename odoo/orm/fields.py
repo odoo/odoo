@@ -1463,19 +1463,6 @@ class Field(typing.Generic[T]):
             for id_ in ids:
                 field_cache.pop(id_, None)
 
-    def _cache_view(self, env: Environment) -> dict[IdType, typing.Any]:
-        """ A mapping from id to a cache value for the given environment.
-
-        A new empty dict is returned when there are no values yet in the cache.
-        Otherwise, the result is similar to `_get_cache_impl`.
-        """
-        cache = env.transaction.data.get(self)
-        if not cache:
-            return {}
-        if self in env._field_depends_context:
-            cache = cache.get(env.cache_key(self)) or {}
-        return cache
-
     def _get_cache(self, env: Environment) -> dict[IdType, typing.Any]:
         """ A mutable mapping from id to a cache value for the given environment.
 

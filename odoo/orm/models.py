@@ -6801,13 +6801,13 @@ class RecordCache(Mapping[str, typing.Any]):
         """ Return whether `record` has a cached value for field ``name``. """
         record = self._record
         field = record._fields[name]
-        return record.id in field._cache_view(record.env)
+        return record.id in field._get_cache(record.env)
 
     def __getitem__(self, name):
         """ Return the cached value of field ``name`` for `record`. """
         record = self._record
         field = record._fields[name]
-        return field._cache_view(record.env)[record.id]
+        return field._get_cache(record.env)[record.id]
 
     def __iter__(self):
         """ Iterate over the field names with a cached value. """
@@ -6815,7 +6815,7 @@ class RecordCache(Mapping[str, typing.Any]):
         id_ = record.id
         env = record.env
         for name, field in record._fields.items():
-            if id_ in field._cache_view(env):
+            if id_ in field._get_cache(env):
                 yield name
 
     def __len__(self):

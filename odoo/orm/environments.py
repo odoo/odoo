@@ -674,7 +674,7 @@ class Cache:
 
     def _get_field_cache(self, model: BaseModel, field: Field) -> Mapping[IdType, typing.Any]:
         """ Return the field cache of the given field, but not for modifying it. """
-        return field._cache_view(model.env)
+        return self._set_field_cache(model, field)
 
     def _set_field_cache(self, model: BaseModel, field: Field) -> dict[IdType, typing.Any]:
         """ Return the field cache of the given field for modifying it. """
@@ -682,7 +682,7 @@ class Cache:
 
     def contains(self, record: BaseModel, field: Field) -> bool:
         """ Return whether ``record`` has a value for ``field``. """
-        return record.id in field._cache_view(record.env)
+        return record.id in self._get_field_cache(record, field)
 
     def contains_field(self, field: Field) -> bool:
         """ Return whether ``field`` has a value for at least one record. """
@@ -697,7 +697,7 @@ class Cache:
     def get(self, record: BaseModel, field: Field, default=SENTINEL):
         """ Return the value of ``field`` for ``record``. """
         try:
-            field_cache = field._cache_view(record.env)
+            field_cache = self._get_field_cache(record, field)
             return field_cache[record._ids[0]]
         except KeyError:
             if default is SENTINEL:
@@ -785,7 +785,7 @@ class Cache:
     def get_until_miss(self, records: BaseModel, field: Field) -> list[typing.Any]:
         """ Return the cached values of ``field`` for ``records`` until a value is not found. """
         warnings.warn("Since 19.0, this is managed directly by Field")
-        field_cache = field._cache_view(records.env)
+        field_cache = self._get_field_cache(records, field)
         vals = []
         for record_id in records._ids:
             try:
@@ -820,10 +820,7 @@ class Cache:
 
     def get_missing_ids(self, records: BaseModel, field: Field) -> Iterator[IdType]:
         """ Return the ids of ``records`` that have no value for ``field``. """
-        field_cache = field._cache_view(records.env)
-        for record_id in records._ids:
-            if record_id not in field_cache:
-                yield record_id
+        return field._cache_missing_ids(records)
 
     def get_dirty_fields(self) -> Collection[Field]:
         """ Return the fields that have dirty records in cache. """
