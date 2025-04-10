@@ -612,6 +612,11 @@ class TestHrEmployee(TestHrCommon):
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeWebJson(HttpCase):
 
+    def setUp(self):
+        super().setUp()
+        # JSON route needs to be enabled for the tests
+        self.env['ir.config_parameter'].sudo().set_param('web.json.enabled', True)
+
     def test_webjson_employees(self):
         # Check that json employees can be accessed
         url = "/json/1/employees"
