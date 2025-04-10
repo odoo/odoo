@@ -711,6 +711,15 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
 
+    def open_barcode_scanner(self):
+        return {
+            "type": "ir.actions.client",
+            "tag": "simple_barcode_scanner",
+            "params": {
+                "employeeId": self.id,
+            }
+        }
+
     def _get_tz(self):
         self.ensure_one()
         return self.tz or\

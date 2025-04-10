@@ -7,12 +7,14 @@
 
 <t t-name="hr_attendance.BarcodeScanner" t-inherit="barcodes.BarcodeScanner" t-inherit-mode="primary">
     <xpath expr="//div[hasclass('o_barcode_mobile_container')]" position="replace">
-        <div class="o_hr_attendance_kiosk d-flex justify-content-around" t-att-class="{'position-relative' : !isDisplayStandalone}">
-            <button t-if="isBarcodeScannerSupported" t-on-click="openMobileScanner" class="o_mobile_barcode btn btn-light btn-lg p-5 rounded-3" t-att-class="{'position-absolute' : !isDisplayStandalone}">
-                <i class="fa fa-3x fa-barcode mb-3"/>
-                <span class="d-block">Scan your badge</span>
-            </button>
-            <a t-if="!isDisplayStandalone" class="o_hr_attendance_install_btn btn btn-secondary d-flex align-items-center justify-content-center fw-bolder position-relative" t-att-href="installURL" target="_blank">Install</a>
+        <div class="d-flex flex-column align-items-center text-center gap-3">
+            <div class="o_hr_attendance_kiosk d-flex justify-content-around" t-att-class="{'position-relative' : !isDisplayStandalone}">
+                <button t-if="isBarcodeScannerSupported" class="o_mobile_barcode btn btn-light btn-lg p-5 rounded-3" t-att-class="{'position-absolute' : !isDisplayStandalone}">
+                    <i class="fa fa-3x fa-barcode mb-3"/>
+                    <span class="d-block">Scan your badge</span>
+                </button>
+                <a t-if="!isDisplayStandalone" class="o_hr_attendance_install_btn btn btn-secondary d-flex align-items-center justify-content-center fw-bolder position-relative" t-att-href="installURL" target="_blank">Install</a>
+            </div>
         </div>
     </xpath>
 </t>
@@ -85,9 +87,6 @@
             </t>
         </div>
     </div>
-    <div class="o_hr_kiosk_mode_bottom my-5 mx-auto">
-        Powered by <img t-att-height="env.isSmall ? 21 : 32" src="/web/static/img/logo.png" alt="Odoo Logo"/>
-    </div>
 </t>
 
 <t t-name="hr_attendance.NoBadgeEmployeeScreen">
@@ -129,17 +128,23 @@
                     t-att-style="!env.isSmall? 'min-width: fit-content;' : ''">
                         <div>
                             Connect an RFID reader, and scan a token.
-                            <DocumentationLink path="'/applications/hr/attendances/hardware.html'" label.translate="'Documentation'" alertLink="true"/>
+                            <DocumentationLink path="'/applications/hr/attendances/hardware.html'" label.translate="'Read the Documentation'" alertLink="true"/>/
+                            <DocumentationLink path="'https://neuftech.net/Neuftech-USB-RFID-Reader-ID-Kartenleseger%C3%A4t-Kartenleser-Kontaktlos-Card-Reader-f%C3%BCr-EM4100'" label.translate="'Buy an Rfid device'" alertLink="true"/>
                         </div>
                         <button t-on-click="removeDemoMessage" type="button" class="btn-close float-end ms-2" title="Close"/>
                 </div>
             </t>
-            <div class="o_hr_kiosk_mode_main d-flex flex-column flex-sm-row gap-3 m-auto">
+            <div class="o_hr_kiosk_mode_main d-flex flex-column gap-3 m-auto">
                 <t t-if="this.props.kioskMode !== 'manual'">
                 <KioskBarcodeScanner
                     token="this.props.token"
                     barcodeSource="this.props.barcodeSource"
                     onBarcodeScanned="(ev) => this.onBarcodeScanned(ev)"/>
+                <div class="o_hr_kiosk_mode_main mt-5">
+                    <button t-on-click="() => this.newSetUp()" class="btn btn-light btn-lg rounded-3 mt-5" style="top: 120px;">
+                        <span >New Set-up(Employee/Badge)</span>
+                    </button>
+                </div>
                 </t>
             </div>
             <div class="o_hr_kiosk_mode_bottom d-flex flex-column flex-md-row gap-2 align-items-center justify-content-between my-5">

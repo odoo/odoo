@@ -13,6 +13,7 @@
     ],
     'depends': [
         'base_setup',
+        'barcodes',
         'digest',
         'phone_validation',
         'resource_mail',

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.NewEmployeeDialog" owl="1">
+        <Dialog title="props.title" footer="props.footer">
+            <div class="p-3">
+                <div class="mb-3">
+                    <label class="form-label">Create the name of the new employee below</label>
+                    <div class="d-flex">
+                        <input type="text" t-model="state.name" class="form-control me-2" placeholder="e.g. John Doe" style="flex: 1;"/>
+                        <button class="btn btn-primary" t-on-click="onCreate">Confirm</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Select Employee Without Badge</label>
+                    <div class="d-flex align-items-center">
+                        <select t-model="state.selectedEmployee" class="form-control me-2">
+                            <option t-att-selected="!state.selectedEmployee" value="" disabled="">Select an employee</option>
+                            <option t-foreach="state.noBadgeEmployees" t-as="employee" t-key="employee.id" t-att-value="employee.id">
+                                <t t-esc="employee.name"/>
+                            </option>
+                        </select>
+                        <input type="text" t-model="state.badge" class="form-control me-2" placeholder="Enter Badge Number"/>
+                        <button class="btn btn-primary" style="white-space: nowrap;" t-on-click="onSetBadge">Set the Badge</button>
+                    </div>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>
