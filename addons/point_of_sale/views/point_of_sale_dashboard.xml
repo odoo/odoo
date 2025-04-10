@@ -129,7 +129,9 @@
                                     <div class="col-6">
                                         <span>Balance</span>
                                     </div>
-                                    <field name="last_session_closing_cash" widget="monetary" class="col-6"/>
+                                    <div name="last_session_closing_cash" class="col-6">
+                                        <field name="last_session_closing_cash"/>                             
+                                    </div>
                                 </div>
 
                                 <a t-if="record.number_of_rescue_session.value &gt; 0" class="col-12" name="open_opened_rescue_session_form" type="object">

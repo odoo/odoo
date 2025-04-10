@@ -12,7 +12,7 @@ class CrmTeam(models.Model):
 
     pos_config_ids = fields.One2many('pos.config', 'crm_team_id', string="Point of Sales")
     pos_sessions_open_count = fields.Integer(string='Open POS Sessions', compute='_compute_pos_sessions_open_count')
-    pos_order_amount_total = fields.Float(string="Session Sale Amount", compute='_compute_pos_order_amount_total')
+    pos_order_amount_total = fields.Monetary(string="Session Sale Amount", compute='_compute_pos_order_amount_total')
 
     def _compute_pos_sessions_open_count(self):
         for team in self:
