@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from collections import deque
 import io
 import json
+from collections import deque
 
+import xlsxwriter
 from werkzeug.datastructures import FileStorage
 
 from odoo import http, _
 from odoo.http import content_disposition, request
 from odoo.tools import osutil
-from odoo.tools.misc import xlsxwriter
 
 
 class TableExporter(http.Controller):
