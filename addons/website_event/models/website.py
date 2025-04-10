@@ -76,13 +76,6 @@ class Website(models.Model):
         suggested_controllers.append((_('Events'), self.env['ir.http']._url_for('/event'), 'website_event'))
         return suggested_controllers
 
-    def get_cta_data(self, website_purpose, website_type):
-        cta_data = super(Website, self).get_cta_data(website_purpose, website_type)
-        if website_purpose == 'sell_more' and website_type == 'event':
-            cta_btn_text = _('Next Events')
-            return {'cta_btn_text': cta_btn_text, 'cta_btn_href': '/event'}
-        return cta_data
-
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)
         if search_type in ['events', 'all']:

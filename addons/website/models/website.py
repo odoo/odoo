@@ -455,6 +455,16 @@ class Website(models.Model):
         return self._api_rpc(route, params, 'website.olg_api_endpoint', DEFAULT_OLG_ENDPOINT, timeout=45)
 
     def get_cta_data(self, website_purpose, website_type):
+
+        if website_type == 'online_store' or website_purpose == 'sell_more':
+            cta_btn_text = _('Shop now')
+            return {'cta_btn_text': cta_btn_text, 'cta_btn_href': '/shop'}
+        if website_purpose == 'schedule_appointments':
+            cta_btn_text = _('Appointment')
+            return {'cta_btn_text': cta_btn_text, 'cta_btn_href': '/appointment'}
+        if website_type == 'event':
+            cta_btn_text = _('Next Events')
+            return {'cta_btn_text': cta_btn_text, 'cta_btn_href': '/event'}
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
 
     @api.model
