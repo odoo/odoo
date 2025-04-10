@@ -87,7 +87,8 @@ paymentForm.include({
                         },
                         paymentMethods: {
                             ...item,
-                            maxInstallments: 1
+                            minInstallments: 1,
+                            maxInstallments: 12,
                         },
 
                     },
@@ -145,6 +146,7 @@ paymentForm.include({
             this.response = await this.mercadoPagoCheckout.getFormData()
             if (!this.response){
                 this._displayErrorDialog(_t("Incorrect payment details"));
+                this._enableButton();
                 return
             }
         } catch (error) {
@@ -184,8 +186,6 @@ paymentForm.include({
                 'payer': this.response.payer || this.response.formData.payer,
                 'payment_method_id': this.response.payment_method_id || this.response.formData.payment_method_id,
                 'transaction_amount': processingValues.amount,
-                'currency_id': processingValues.currency_id,
-                'partner_id': processingValues.partner_id,
                 'token': this.response.token,
                 'provider_id': processingValues.provider_id,
                 'reference': processingValues.reference,
