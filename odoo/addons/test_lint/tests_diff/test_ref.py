@@ -48,14 +48,7 @@ class EvalRefVisitor(ast.NodeVisitor):
         self.protected_xml_ids = protected_xml_ids
 
     def _is_ref_risky(self, node):
-        """Check if the node is risky.
-        
-        Args:
-            node: The AST node to check
-            
-        Returns:
-            bool: True if the node is risky, False otherwise
-        """
+        """Check if the node is risky."""
         if not node.args or node.args[0].value in self.protected_xml_ids:
             return False
         raise_if_not_found = True  # default to True
@@ -66,11 +59,7 @@ class EvalRefVisitor(ast.NodeVisitor):
         return raise_if_not_found
 
     def visit_Call(self, node):
-        """Check for env.ref calls.
-        
-        Args:
-            node: The AST node to visit
-        """
+        """Check for env.ref calls."""
         if isinstance(node.func, ast.Name) and node.func.id == 'ref':
             if self._is_ref_risky(node):
                 # for ref() calls, check if the ref is for another module

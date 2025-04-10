@@ -103,7 +103,7 @@ class DiagnosticMessage:
         self.kind: DiagnosticKind = kind
         self.file: DiffFile = file
         self.start = (start, 0) if isinstance(start, int) else start
-        self.end = (end, 0) if isinstance(end, int) else end
+        self.end = (end, 0) if isinstance(end, int) else end if end else self.start
 
     def to_ruff_json(self) -> dict:
         # ruff like result
@@ -113,14 +113,13 @@ class DiagnosticMessage:
                 'row': self.start[0],
                 'column': self.start[1] or 1,
             },
+            'end_location': {
+                'row': self.end[0],
+                'column': self.end[1] or 1,
+            },
             'filename': self.file.path,
             'message': self.kind.body,
         }
-        if self.end is not None and self.end != self.start:
-            result['end_location'] = {
-                'row': self.end[0],
-                'column': self.end[1] or 1,
-            }
         if self.kind.suggestion:
             result['fix'] = {
                 'message':self.kind.suggestion,
