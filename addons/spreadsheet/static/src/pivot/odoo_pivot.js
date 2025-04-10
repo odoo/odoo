@@ -89,6 +89,9 @@ export class OdooPivot {
         if (!deepEquals(actualDefinition.sortedColumn, nextDefinition.sortedColumn)) {
             this.model.updateSortColumn(nextDefinition.sortedColumn);
         }
+        if (!deepEquals(actualDefinition.collapsedDomains, nextDefinition.collapsedDomains)) {
+            this.model.updateCollapsedDomains(nextDefinition.collapsedDomains);
+        }
         if (
             deepEquals(actualDefinition.columns, nextDefinition.columns) &&
             deepEquals(actualDefinition.rows, nextDefinition.rows) &&
@@ -233,7 +236,7 @@ export class OdooPivot {
             const { dimensionWithGranularity, isPositional, field } =
                 this.parseGroupField(nameWithGranularity);
             if (isPositional) {
-                const table = this.getTableStructure();
+                const table = this.getExpandedTableStructure();
                 // @ts-ignore: That's a VERY ugly hack to make sure the table is computed and sorted (which is needed for
                 // positional arguments), calling a method from the CHILD class PivotPresentationLayer...
                 this.sortTableStructure(table);
@@ -340,9 +343,14 @@ export class OdooPivot {
         return this.model.getLastPivotGroupValue(domain);
     }
 
-    getTableStructure() {
+    getCollapsedTableStructure() {
         this.assertIsValid();
-        return this.model.getTableStructure();
+        return this.model.getCollapsedTableStructure();
+    }
+
+    getExpandedTableStructure() {
+        this.assertIsValid();
+        return this.model.getExpandedTableStructure();
     }
 
     /**

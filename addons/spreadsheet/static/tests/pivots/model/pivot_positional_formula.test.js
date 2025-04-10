@@ -4,7 +4,7 @@ import {
     defineSpreadsheetModels,
 } from "@spreadsheet/../tests/helpers/data";
 
-import { setCellContent } from "@spreadsheet/../tests/helpers/commands";
+import { setCellContent, updatePivot } from "@spreadsheet/../tests/helpers/commands";
 import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
@@ -349,4 +349,29 @@ test("Formatting a pivot positional preserves the interval", async () => {
     });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#date:day",1)`);
     expect(getEvaluatedCell(model, "A1").formattedValue).toBe("14 Apr 2016");
+});
+
+test("pivot positional formula with collapsed pivot", async () => {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+                <pivot>
+                    <field name="date" interval="year" type="row"/>
+                    <field name="date" interval="month" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+    });
+    const pivotId = model.getters.getPivotIds()[0];
+    updatePivot(model, pivotId, {
+        collapsedDomains: {
+            ROW: [[{ field: "date:year", value: 2016, type: "date" }]],
+            COL: [],
+        },
+    });
+
+    setCellContent(model, "H1", `=PIVOT.HEADER(1,"#date:year",1,"#date:month",1)`);
+    expect(getEvaluatedCell(model, "H1").formattedValue).toBe("April 2016");
+    setCellContent(model, "H2", `=PIVOT.HEADER(1,"#date:year",1,"#date:month",2)`);
+    expect(getEvaluatedCell(model, "H2").formattedValue).toBe("October 2016");
+    setCellContent(model, "H3", `=PIVOT.HEADER(1,"#date:year",1,"#date:month",3)`);
+    expect(getEvaluatedCell(model, "H3").formattedValue).toBe("December 2016");
 });
