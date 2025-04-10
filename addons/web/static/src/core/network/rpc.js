@@ -1,5 +1,7 @@
 import { EventBus } from "@odoo/owl";
 import { browser } from "../browser/browser";
+import { debounce } from "@web/core/utils/timing";
+import { pick } from "@web/core/utils/objects";
 
 export const rpcBus = new EventBus();
 
@@ -44,7 +46,54 @@ export function makeErrorFromResponse(reponse) {
 // Main RPC method
 // -----------------------------------------------------------------------------
 let rpcId = 0;
+
+let batchedRPCId = 0;
+let batchedRPCs = {};
+export const FETCH_DATA_DEBOUNCE_DELAY = 1;
+
+const _rpcDebounce = debounce(() => {
+    const rpcs = [];
+    const callbacks = {};
+    let fetchBatchSilent = true;
+    for (const id in batchedRPCs) {
+        const batchedRPC = batchedRPCs[id];
+        fetchBatchSilent = fetchBatchSilent && batchedRPC.silent;
+        rpcs.push(pick(batchedRPC, "id", "url", "params"));
+        callbacks[`${batchedRPC.id}`] = pick(batchedRPC, "resolve", "error");
+    }
+    rpc("/web/batch", { rpcs }, { silent: fetchBatchSilent }).then(
+        (response) => {
+            for (const id in response) {
+                callbacks[`${id}`].resolve(response[`${id}`]);
+            }
+        },
+        (error) => {
+            Object.values(callbacks).forEach((c) => c.error(error));
+        }
+    );
+    // reset
+    batchedRPCs = {};
+}, FETCH_DATA_DEBOUNCE_DELAY);
+
+function _rpcBatch(url, params = {}, settings = {}) {
+    batchedRPCId++;
+    return new Promise((resolve, error) => {
+        batchedRPCs[`${batchedRPCId}`] = {
+            id: batchedRPCId,
+            url,
+            silent: settings.silent,
+            params,
+            resolve,
+            error,
+        };
+        _rpcDebounce();
+    });
+}
+
 export function rpc(url, params = {}, settings = {}) {
+    if (settings.batched) {
+        return _rpcBatch(url, params, settings);
+    }
     return rpc._rpc(url, params, settings);
 }
 // such that it can be overriden in tests
@@ -101,7 +150,7 @@ rpc._rpc = function (url, params, settings) {
         request.open("POST", url);
         const headers = settings.headers || {};
         headers["Content-Type"] = "application/json";
-        for (let [header, value] of Object.entries(headers)) {
+        for (const [header, value] of Object.entries(headers)) {
             request.setRequestHeader(header, value);
         }
         request.send(JSON.stringify(data));

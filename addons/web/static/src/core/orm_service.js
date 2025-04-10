@@ -99,11 +99,17 @@ export class ORM {
         this.rpc = rpc; // to be overridable by the SampleORM
         /** @protected */
         this._silent = false;
+        this._batched = false;
     }
 
     /** @returns {ORM} */
     get silent() {
         return Object.assign(Object.create(this), { _silent: true });
+    }
+
+    /** @returns {ORM} */
+    get batched() {
+        return Object.assign(Object.create(this), { _batched: true });
     }
 
     /**
@@ -124,7 +130,7 @@ export class ORM {
             args,
             kwargs: fullKwargs,
         };
-        return this.rpc(url, params, { silent: this._silent });
+        return this.rpc(url, params, { silent: this._silent, batched: this._batched });
     }
 
     /**
@@ -159,7 +165,7 @@ export class ORM {
         return this.call(model, "read", [ids, fields], kwargs);
     }
 
-     /**
+    /**
      * @param {string} model
      * @param {import("@web/core/domain").DomainListRepr} domain
      * @param {string[]} fields

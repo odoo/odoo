@@ -20,7 +20,7 @@ import {
 
 import { Store } from "@mail/core/common/store_service";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
-import { rpc } from "@web/core/network/rpc";
+import { rpc, FETCH_DATA_DEBOUNCE_DELAY } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -97,7 +97,7 @@ test('assume other member typing status becomes "no longer is typing" after long
     });
     await start();
     await openDiscuss(channelId);
-    await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
+    await advanceTime(FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
     // simulate receive typing notification from demo "is typing"
@@ -125,7 +125,7 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
     });
     await start();
     await openDiscuss(channelId);
-    await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
+    await advanceTime(FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
     // simulate receive typing notification from demo "is typing"
@@ -244,7 +244,7 @@ test("current partner notify is typing again to other members for long continuou
     });
     await start();
     await openDiscuss(channelId);
-    await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
+    await advanceTime(FETCH_DATA_DEBOUNCE_DELAY);
     await insertText(".o-mail-Composer-input", "a");
     await waitForSteps(["notify_typing:true"]);
     // simulate current partner typing a character for a long time.
@@ -265,7 +265,7 @@ test("current partner notify no longer is typing to thread members after 5 secon
     );
     await start();
     await openDiscuss(channelId);
-    await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
+    await advanceTime(FETCH_DATA_DEBOUNCE_DELAY);
     await insertText(".o-mail-Composer-input", "a");
     await waitForSteps(["notify_typing:true"]);
     await advanceTime(SHORT_TYPING);

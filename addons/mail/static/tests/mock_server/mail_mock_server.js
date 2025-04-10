@@ -1400,13 +1400,12 @@ class Store {
     }
 }
 
-registerRoute("/web/dataset/call_kw/ir.http/lazy_session_info", async function (request) {
-    const { kwargs } = await parseRequestParams(request);
+registerRoute("/web/batch", async function (request) {
+    const { rpcs } = await parseRequestParams(request);
     const res = {}; // missing super call for simplicity
-    if (kwargs.store_fetch_params) {
-        res.store_data = processRequest
-            .call(this, kwargs.store_fetch_params, kwargs.context)
-            .get_result();
+    for (const id in rpcs) {
+        const { params } = rpcs[id];
+        res[id] = processRequest.call(this, params.fetch_params, params.context).get_result();
     }
     return res;
 });

@@ -2,13 +2,6 @@
 
 import json
 import logging
-import warnings
-
-import werkzeug
-import werkzeug.exceptions
-import werkzeug.utils
-import werkzeug.wrappers
-import werkzeug.wsgi
 
 import odoo
 import odoo.modules.registry
@@ -112,3 +105,13 @@ class WebClient(http.Controller):
         } for tag, attrs in files]
 
         return request.make_json_response(data)
+
+    @http.route('/web/batch', methods=['POST'], type='jsonrpc', auth='public')
+    def batch(self, **kwargs):
+        res = {}
+        routing_map = request.env['ir.http'].routing_map()
+        map_adapter = routing_map.bind_to_environ(request.httprequest.environ)
+        for rpc in request.params.get('rpcs', []):
+            endpoint, _args = map_adapter.match(path_info=rpc.get('url'))
+            res[rpc.get('id')] = endpoint(**rpc.get('params'))
+        return res

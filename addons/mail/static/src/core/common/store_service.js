@@ -9,7 +9,6 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
-import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { browser } from "@web/core/browser/browser";
 import { loader } from "@web/core/emoji_picker/emoji_picker";
@@ -37,7 +36,6 @@ export const addFieldsByPyModel = {
 };
 
 export class Store extends BaseStore {
-    static FETCH_DATA_DEBOUNCE_DELAY = 1;
     static OTHER_LONG_TYPING = 60000;
 
     FETCH_LIMIT = 30;
@@ -211,7 +209,7 @@ export class Store extends BaseStore {
         dataRequest._autoResolve = !requestData;
         this.fetchParams.push([name, params, dataRequest]);
         this.fetchReadonly = this.fetchReadonly && readonly;
-        this.fetchSilent = this.fetchSilent && silent;
+        this.fetchSilent = silent;
         this._fetchStoreDataDebounced();
         return dataRequest._resultDef;
     }
@@ -305,7 +303,7 @@ export class Store extends BaseStore {
         return rpc(
             this.fetchReadonly ? "/mail/data" : "/mail/action",
             { fetch_params: fetchParams, context: user.context },
-            { silent: this.fetchSilent }
+            { silent: this.fetchSilent, batched: true }
         );
     }
 
@@ -398,14 +396,6 @@ export class Store extends BaseStore {
             return true;
         }
         return false;
-    }
-
-    setup() {
-        super.setup();
-        this._fetchStoreDataDebounced = debounce(
-            this._fetchStoreDataDebounced,
-            Store.FETCH_DATA_DEBOUNCE_DELAY
-        );
     }
 
     /** Provides an override point for when the store service has started. */
