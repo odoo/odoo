@@ -87,7 +87,7 @@ export class Message extends Record {
     is_transient;
     message_link_preview_ids = fields.Many("mail.message.link.preview", { inverse: "message_id" });
     /** @type {number[]} */
-    parentMessage = fields.One("mail.message");
+    parent_id = fields.One("mail.message");
     /**
      * When set, this temporary/pending message failed message post, and the
      * value is a callback to re-attempt to post the message.

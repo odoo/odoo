@@ -13,7 +13,7 @@ class MailMessage(models.Model):
             # sudo: mail.message: access to parent is allowed
             store.add(
                 self.sudo().filtered(lambda message: message.model == "discuss.channel"),
-                Store.One("parent_id", format_reply=False, rename="parentMessage"),
+                Store.One("parent_id", format_reply=False),
             )
 
     def _bus_channel(self):
