@@ -1,11 +1,11 @@
 import { patch } from "@web/core/utils/patch";
-import { composerActionsInternal } from "@mail/core/common/composer_actions";
+import { threadActionsInternal } from "@mail/core/common/thread_actions";
 
-patch(composerActionsInternal, {
+patch(threadActionsInternal, {
     condition(component, id, action) {
-        const requiredActions = ["send-message"];
+        const requiredActions = ["close", "fold-chat-window", "expand-discuss"];
         if (
-            component.props.composer.thread.channel_type === 'ai_composer' && 
+            component.thread?.channel_type === 'ai_composer' && 
             !requiredActions.includes(id)
         ) {
             return false;

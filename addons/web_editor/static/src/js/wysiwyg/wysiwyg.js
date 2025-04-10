@@ -256,8 +256,8 @@ export class Wysiwyg extends Component {
         });
         onWillDestroy(() => {
             this.destroy();
-            // set the insertButtonCaller parameter to false so the "use this" button dissapears
-            this.env.services['mail.store']["mail.message"].insertButtonCaller = false;
+            // set the aiInsertButtonTarget parameter to false so the "use this" button dissapears
+            this.env.services['mail.store'].aiInsertButtonTarget = false;
         });
         onWillUpdateProps((newProps) => {
             this.options = this._getEditorOptions(newProps.options);
@@ -1614,18 +1614,17 @@ export class Wysiwyg extends Component {
                 { onClose: restore },
             );
         } else {
-            let recordName, placeholderPrompt, recordModel, recordId, callerComp, textSelection;
+            let recordName, placeholderPrompt, recordModel, recordId, callerComp, recordInfo, textSelection;
             if (mode === 'prompt') {
                 recordName = 'Website Editor';
                 placeholderPrompt = '';
                 callerComp = 'html_field_editor';
             } else {
                 recordName = "Text Refine"
-                placeholderPrompt = "Rewrite";
+                placeholderPrompt = _t("Rewrite");
                 callerComp = "html_field_text_select";
                 textSelection = params.originalText;
             }
-            // create the discuss channel used for talking with the ai
             const ai_channel_id = await this.env.services.orm.call(
                 'discuss.channel',
                 'create_ai_composer_channel',
@@ -1634,24 +1633,24 @@ export class Wysiwyg extends Component {
                     recordName,
                     recordModel,
                     recordId,
+                    recordInfo,
                     textSelection,
                 ], 
             );
-            // create and open the thread for the discuss channel
             const thread = await this.env.services['mail.store'].Thread.getOrFetch({
                 model: "discuss.channel",
                 id: Number(ai_channel_id), 
             });
+            thread.composerText = placeholderPrompt;
+            thread.aiChatSource = this.id;
+            thread.aiSpecialActions = {
+                'insert': params.insert,
+            };
             thread.open({ 
-                focus: true, 
-                specialActions: {
-                    'insert': params.insert,
-                },
-                chatCaller: this.id,
-                composerText: placeholderPrompt,
+                focus: true,
             });
-            // set the insertButtonCaller parameter so the "use this" button appears
-            this.env.services['mail.store']["mail.message"].insertButtonCaller = this.id;
+            // set the aiInsertButtonTarget parameter so the "use this" button appears
+            this.env.services['mail.store'].aiInsertButtonTarget = this.id;
         }
     }
     /**

@@ -233,7 +233,7 @@ export class Editor {
         this.isDestroyed = true;
         const { resModel } = this.config.getRecordInfo();
         if (resModel !== "mail.compose.message") {
-            this.services['mail.store']["mail.message"].insertButtonCaller = false;
+            this.services['mail.store'].aiInsertButtonTarget = false;
         }
     }
 }

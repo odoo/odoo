@@ -38,20 +38,6 @@ patch(Thread.prototype, {
         }
         return message;
     },
-    async openChatWindow({focus = false, fromMessagingMenu, specialActions, composerText, chatCaller} = {}) {
-        if (this.channel_type !== "ai_composer") {
-            return super.openChatWindow(focus, fromMessagingMenu);
-        }
-        await this.store.chatHub.initPromise;
-        const cw = this.store.ChatWindow.insert(
-            assignDefined({ thread: this, specialActions, composerText, chatCaller }, { fromMessagingMenu })
-        );
-        cw.open({ focus: focus });
-        if (isMobileOS()) {
-            this.markAsRead();
-        }
-        return cw;
-    },
     get avatarUrl() {
         if (this.channel_type === "ai_composer") {
             return url("/ai_apps/static/description/icon.png");

@@ -13,22 +13,17 @@ export class MailComposerChatGPT extends Component {
     static props = { ...standardFieldProps };
 
     setup() {
-        this.btnLabel = _t("AI"); // workaround to translate short string
         this.store = useService("mail.store");
         this.orm = useService("orm");
-        this.areWeInDiscuss = this.store.discuss.isActive
         onMounted(() => {
-            this.store["mail.message"].insertButtonCaller = this.props.record.id
-            this.store.discuss.isActive = false;
+            this.store.aiInsertButtonTarget = this.props.record.id
         });
         onWillUnmount(() => {
-            this.store["mail.message"].insertButtonCaller = false
-            this.store.discuss.isActive = this.areWeInDiscuss;
+            this.store.aiInsertButtonTarget = false
         });
     }
 
     async onOpenChatGPTPromptDialogBtnClick() {
-        // create the discuss channel used for talking with the ai
         const ai_channel_id = await this.orm.call(
             'discuss.channel',
             'create_ai_composer_channel',
@@ -36,28 +31,27 @@ export class MailComposerChatGPT extends Component {
                 'composer_ai_button',
                 this.props.record.data.record_name,
                 this.props.record.data.model,
-                Number(this.props.record.data.res_ids.slice(1,-1)),
+                Number(this.props.record.data.res_ids.slice(1,-1)),  // resIds should look like so `[id]`, the slice and cast allows to extact the id
             ], 
         );
-        // create and open the thread for the discuss channel
         const thread = await this.store.Thread.getOrFetch({
             model: "discuss.channel",
             id: Number(ai_channel_id), 
         });
-        thread.open({ 
-            focus: true, 
-            specialActions: {
-                'insert': (content) => {
-                    const root = document.createElement("div");
-                    root.appendChild(content);
-                    const { body } = this.props.record.data;
-                    this.props.record.update({
-                        body: htmlJoin(markup(root.innerHTML), body),
-                    });
-                },
+        thread.composer.text = _t('Write a follow up answer');
+        thread.aiSpecialActions = {
+            'insert': (content) => {
+                const root = document.createElement("div");
+                root.appendChild(content);
+                const { body } = this.props.record.data;
+                this.props.record.update({
+                    body: htmlJoin(markup(root.innerHTML), body),
+                });
             },
-            chatCaller: this.props.record.id,
-            composerText: 'Write a follow up answer',
+        };
+        thread.aiChatSource = this.props.record.id;
+        thread.open({ 
+            focus: true,
         });
         return;
     }

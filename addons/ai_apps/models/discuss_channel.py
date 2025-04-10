@@ -25,6 +25,7 @@ class DiscussChannel(models.Model):
 
     channel_type = fields.Selection(selection_add=[('ai_composer', 'Draft with AI')], ondelete={'ai_composer': 'cascade'})
     ai_context = fields.Json("Context for AI agent")
+    ai_composer = fields.Many2one('ai.composer')
 
     @api.model
     def _get_record_info(self, model, record):
@@ -80,13 +81,13 @@ class DiscussChannel(models.Model):
 
         return {
             'role': 'system',
-            'content': 'The previous correspondance, from oldest to newest, for this record is this: ' + chatter_messages
+            'content': 'The previous chatter correspondance, from oldest to newest, for this record is this: ' + chatter_messages
         }
 
     @api.model
     def _initialise_context(self, record_model, record_id, caller_component, text_selection, front_end_info):
         # Get the model and record if needed
-        if caller_component in ['html_field_composer', 'composer_ai_button']:
+        if caller_component in ['html_field_composer', 'composer_ai_button', 'chatter_ai_button']:
             model = self.env[record_model]
             record = model.browse(record_id).ensure_one()
 
@@ -111,48 +112,48 @@ class DiscussChannel(models.Model):
         if caller_component in ['html_field_composer', 'composer_ai_button', 'chatter_ai_button']:
             temp_context.append(self._get_chatter_info(record))
 
-        # Further instruction pre-prompt based on where we call the AI from
-        if caller_component in ['composer_ai_button', 'html_field_composer', 'chatter_ai_button']:
-            # from the message composer
-            temp_context.append({
-                'role': 'system',
-                'content': 'Your job is to help with drafting messages. If the user asks you to write a reply or a message, YOUR REPLY WILL BE INSERTED AS IS for the correspondance. Follow the tone from the previous correspondance, and WRITE ONLY THE BODY OF THE MESSAGE. DO NOT ADD ADDITIONAL COMMENTARY, A SUBJECT LINE, OR A SIGNATURE. ALWAYS FORMAT YOUR ANSWERS USING MARKDOWN, AVOID USING HTML'
-            })
-        elif caller_component in ['html_field_record']:
-            # from an html field in model record descriptions
-            temp_context.append({
-                'role': 'system',
-                'content': f'Your job is to help with drafting the description of a {record_model} record. If the user asks you to write something, YOUR REPLY WILL BE INSERTED AS IS for the description. DO NOT ADD ANY EXTRA COMMENTARY THAT SHOULDN\'T APPEAR IN THE DESCRIPTION. Give your answers succinctly and to the point. ALWAYS FORMAT YOUR ANSWERS USING MARKDOWN, AVOID USING HTML'
-            })
-        elif caller_component in ['html_field_editor']:
-            # from an html field in the web editor
-            temp_context.append({
-                'role': 'system',
-                'content': 'Your job is to help with drafting text for the user\'s website inside the website editor. If the user asks you to write something, YOUR REPLY WILL BE INSERTED AS IS in the website. DO NOT ADD ANY EXTRA COMMENTARY THAT SHOULDN\'T APPEAR IN THE WEBSITE. Give your answers succinctly and to the point. ALWAYS FORMAT YOUR ANSWERS USING MARKDOWN, AVOID USING HTML'
-            })
-        elif caller_component in ['html_field_text_select']:
+        # Apply the pre-prompt linked the the different ai "composers"
+        temp_context.append({
+            'role': 'system',
+            'content': self.ai_composer.default_prompt,
+        })
+
+        # Add some additional details for some special cases
+        if caller_component in ['html_field_text_select']:
             # from the text select inside an html field
             temp_context.append({
                 'role': 'system',
-                'content': f'Your job is to suggest alternatives to a piece of text the user has written. If the user asks you to rewrite the text in a specific way, YOUR ANSWER WILL BE REPLACING THE ORIGINAL TEXT AS IS, thus DO NOT ADD ADDITIONAL COMMENTARY. The text that you will be rewritting is the following: {text_selection}'
+                'content': f'The text that you will be rewritting is the following: {text_selection}',
             })
 
         # Finish the context by the "first" message sent by the assistant
-        if caller_component in ['html_field_record', 'html_field_composer', 'composer_ai_button', 'html_field_editor']:
-            temp_context.append({
-                'role': 'assistant',
-                'content': 'Hello, what can I help you with?',
-            })
-        else:
+        if caller_component in ['html_field_text_select']:
             temp_context.append({
                 'role': 'assistant',
                 'content': 'Hello, how can I rewrite your text?',
             })
+        else:
+            temp_context += [{
+                'role': 'system',
+                'content': 'ALWAYS FORMAT YOUR ANSWERS USING MARKDOWN, AVOID USING HTML. Don\'t use unecessary formatting like code blocks if not needed.',
+            }, {
+                'role': 'assistant',
+                'content': 'Hello, what can I help you with?',
+            }]
 
         self.ai_context = temp_context
 
     @api.model
     def create_ai_composer_channel(self, caller_component, record_name, record_model=None, record_id=None, front_end_info=None, text_selection=None):
+        caller_to_composer_map = {
+            'composer_ai_button': 'ai_mail_composer',
+            'html_field_composer': 'ai_mail_composer',
+            'chatter_ai_button': 'ai_mail_composer',
+            'html_field_record': 'ai_html_record',
+            'html_field_editor': 'ai_html_web',
+            'html_field_text_select': 'ai_mail_selector',
+        }
+        ai_composer_id = self.env['ir.model.data']._xmlid_to_res_id('ai_apps.' + caller_to_composer_map[caller_component])
         # create a new AI chat
         channel = self.create({
             'channel_member_ids': [
@@ -162,6 +163,7 @@ class DiscussChannel(models.Model):
             ],
             'channel_type': 'ai_composer',
             'name': 'AI: ' + record_name,
+            'ai_composer': ai_composer_id,
         })
 
         # Create the initial context for the model (add record info, chatter info, pre-prompts, etc.)

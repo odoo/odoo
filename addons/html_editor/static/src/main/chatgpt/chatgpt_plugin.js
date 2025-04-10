@@ -187,7 +187,6 @@ export class ChatGPTPlugin extends Plugin {
             );
         } else {
             let recordModel, recordName, recordId, callerId, placeholderPrompt, callerComp, textSelection, frontEndRecordInfo;
-            // fetch record information that we need for the channel creation
             const { resModel, resId, data, fields, id } = this.config.getRecordInfo();
             const recordInfoJSON = this.recordDataToJSON(data, fields);
             if (selection.isCollapsed) {
@@ -195,8 +194,8 @@ export class ChatGPTPlugin extends Plugin {
                     callerComp = "html_field_composer";
                     recordName = data.record_name;
                     recordModel = data.model;
-                    recordId = Number(data.res_ids.slice(1,-1));
-                    placeholderPrompt = 'Write a follow up answer';
+                    recordId = Number(data.res_ids.slice(1,-1));  // resIds should look like so `[id]`, the slice and cast allows to extact the id
+                    placeholderPrompt = _t('Write a follow up answer');
                     callerId = id;
                 } else {
                     callerComp = "html_field_record";
@@ -204,20 +203,17 @@ export class ChatGPTPlugin extends Plugin {
                     recordModel = resModel;
                     placeholderPrompt = "";
                     frontEndRecordInfo = JSON.stringify(recordInfoJSON);
-                    // set insertButtonCaller flag to the record's id
                     callerId = resId || id;
-                    this.services['mail.store']["mail.message"].insertButtonCaller = resId || id;
+                    this.services['mail.store'].aiInsertButtonTarget = resId || id;
                 }
             } else {
                 callerComp = "html_field_text_select";
                 recordName = data.record_name || recordInfoJSON.name;
-                placeholderPrompt = "Rewrite";
+                placeholderPrompt = _t("Rewrite");
                 textSelection = selection.textContent();
-                // set insertButtonCaller flag to the records id
                 callerId = resId || id;
-                this.services['mail.store']["mail.message"].insertButtonCaller = resId || id;
+                this.services['mail.store'].aiInsertButtonTarget = resId || id;
             }
-            // create the discuss channel used for talking with the ai
             const ai_channel_id = await this.services.orm.call(
                 'discuss.channel',
                 'create_ai_composer_channel',
@@ -230,18 +226,17 @@ export class ChatGPTPlugin extends Plugin {
                     textSelection,
                 ], 
             );
-            // create and open the thread for the discuss channel
             const thread = await this.services['mail.store'].Thread.getOrFetch({
                 model: "discuss.channel",
                 id: Number(ai_channel_id), 
             });
+            thread.composerText = placeholderPrompt;
+            thread.aiChatSource = callerId;
+            thread.aiSpecialActions = {
+                'insert': dialogParams.insert,
+            };
             thread.open({ 
-                focus: true, 
-                specialActions: {
-                    'insert': dialogParams.insert,
-                },
-                chatCaller: callerId,
-                composerText: placeholderPrompt,
+                focus: true,
             });
         } 
         if (this.services.ui.isSmall) {

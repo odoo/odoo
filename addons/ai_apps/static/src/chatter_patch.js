@@ -1,4 +1,5 @@
 import { Chatter } from "@mail/chatter/web_portal/chatter";
+import { _t } from "@web/core/l10n/translation";
 
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
@@ -66,9 +67,7 @@ patch(Chatter.prototype, {
         if (!saved) {
             return;
         }
-        // Fetch the record information from the front-end
         const recordInfo = this.recordDataToJSON(this.props.record.data, this.props.record.fields);
-        // Create the discuss channel used for talking with the ai
         const ai_channel_id = await this.orm.call(
             'discuss.channel',
             'create_ai_composer_channel',
@@ -80,22 +79,21 @@ patch(Chatter.prototype, {
                 JSON.stringify(recordInfo),
             ], 
         );
-        // create and open the thread for the discuss channel
         const thread = await this.store.Thread.getOrFetch({
             model: "discuss.channel",
             id: Number(ai_channel_id), 
         });
-        thread.open({ 
-            focus: true, 
-            specialActions: {
-                'sendMessage': (content) => {
-                    this.state.thread.post(content);
-                },
-                'logNote': (content) => {
-                    this.state.thread.post(content, { 'isNote': true });
-                }
+        thread.composerText = _t('Summarize the chatter conversation');
+        thread.aiSpecialActions = {
+            'sendMessage': (content) => {
+                this.state.thread.post(content);
             },
-            composerText: 'Summarize the chatter conversation',
+            'logNote': (content) => {
+                this.state.thread.post(content, { 'isNote': true });
+            }
+        };
+        thread.open({ 
+            focus: true,
         });
         return;
     },

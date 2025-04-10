@@ -1,13 +1,32 @@
+$o-mailChatWindow-zindex: 1057;
+
 .o-mail-ChatHub-bubbles {
-    z-index: 1056 !important;
+    z-index: $o-mailChatWindow-zindex - 1;
 }
 
 .o-overlay-item:has(.o-mail-ChatBubble-preview) {
-    z-index: 1058 !important;
+    z-index: $o-mailChatWindow-zindex + 1;
 }
 
 .o-overlay-item:has(.o-mail-Message-moreMenu) {
-    z-index: 1058 !important;
+    z-index: $o-mailChatWindow-zindex + 1;
+}
+
+.o-overlay-item:has(.o-EmojiPicker) {
+    z-index: $o-mailChatWindow-zindex + 1;
+}
+
+.o-overlay-item:has(.o-dropdown--menu) {
+    z-index: $o-mailChatWindow-zindex + 1;
+}
+
+.o-overlay-item:has(.o-discuss-mobileContextMenu) {
+    z-index: $o-mailChatWindow-zindex + 1;
+}
+
+// this is for notification to be rendered over the chat-window (z-index=1056) - like above
+.o_notification_manager {
+    z-index: $o-mailChatWindow-zindex + 1;
 }
 
 .btn-ai-chatter {

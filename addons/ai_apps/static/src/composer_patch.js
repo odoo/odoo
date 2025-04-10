@@ -6,16 +6,14 @@ patch(Composer.prototype, {
     setup() {
         super.setup();
         if (this.props.composer.thread?.channel_type === "ai_composer") {
-            this.props.composer.text = this.props.composer.text || this.env.composerPreText || "";
+            this.props.composer.text = this.props.composer.text || this.props.composer.thread?.composerText || "";
         }
     },
     saveContent() {
-        // no point in saving the content in an AI chat since chats are independent 
         if (this.thread?.channel_type === "ai_composer") {
-            return;
-        } else {
-            super.saveContent();
+            return;  // no point in saving the content in an AI chat since chats are independent 
         }
+        super.saveContent();
     },
     onFocusin(ev) {
         super.onFocusin();

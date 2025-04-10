@@ -12,8 +12,7 @@
             <attribute name="class" remove="border-0" separator=" "/>
             <attribute name="t-attf-class" add="{{ ['insertToComposer', 'send-message-direct', 'log-note-direct'].includes(action.id) ? 'rounded-1 border-2 btn-secondary mx-1' : 'border-0' }}" separator=" "/>
         </xpath>
-        <xpath expr="//button/i" position="replace">
-            <i t-if="action.icon" class="fa-lg" t-att-class="action.icon"/>
+        <xpath expr="//button" position="inside">
             <span t-if="action.id === 'insertToComposer'">Use this</span>
             <span t-if="action.id === 'send-message-direct'">Send Message</span>
             <span t-if="action.id === 'log-note-direct'">Log Note</span>
