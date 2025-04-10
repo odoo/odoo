@@ -1856,6 +1856,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_admin.write({
             'group_ids': [Command.link(self.env.ref('base.group_system').id)],
         })
+        self.env['pos.category'].search([('id', '!=', self.pos_cat_chair_test.id)]).write({'sequence': 100})
+        self.pos_cat_chair_test.write({'sequence': 1})
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour('/pos/ui?config_id=%d' % self.main_pos_config.id, 'test_product_create_update_from_frontend', login='pos_admin')
 
