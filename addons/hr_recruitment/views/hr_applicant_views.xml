@@ -30,14 +30,14 @@
                 <field name="last_stage_id" column_invisible="True"/>
                 <field name="date_last_stage_update" column_invisible="True"/>
                 <field name="partner_name" string="Name" readonly="1" optional="show"/>
-                <field name="priority" widget="priority" nolabel="1" optional="show"/>
                 <field name="create_date" readonly="1" optional="show" options="{'show_time': False}"/>
                 <field name="email_from" readonly="1" optional="hide"/>
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="job_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
-                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="stage_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
+                <field name="priority" widget="priority" nolabel="1" optional="show"/>
+                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="type_id" column_invisible="True"/>
                 <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>

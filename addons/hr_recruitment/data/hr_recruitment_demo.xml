@@ -16,30 +16,28 @@
     <record id="hr.job_developer" model="hr.job">
         <field name="no_of_recruitment">4</field>
         <field name="no_of_hired_employee">56</field>
-        <field name="user_id" ref="base.user_admin" />
+        <field name="expected_degree" ref="degree_graduate"/>
     </record>
     <record id="hr.job_cto" model="hr.job">
         <field name="no_of_hired_employee">1</field>
-        <field name="user_id" ref="base.user_admin" />
+        <field name="expected_degree" ref="degree_licenced"/>
     </record>
     <record id="hr.job_consultant" model="hr.job">
         <field name="no_of_recruitment">1</field>
         <field name="no_of_hired_employee">17</field>
-        <field name="user_id" ref="base.user_demo" />
+        <field name="expected_degree" ref="degree_bachelor"/>
     </record>
     <record id="hr.job_hrm" model="hr.job">
         <field name="no_of_recruitment">1</field>
         <field name="no_of_hired_employee">5</field>
-        <field name="user_id" ref="base.user_admin" />
+        <field name="expected_degree" ref="degree_graduate"/>
     </record>
     <record id="hr.job_marketing" model="hr.job">
         <field name="no_of_recruitment">3</field>
         <field name="no_of_hired_employee">2</field>
-        <field name="user_id" ref="base.user_demo" />
     </record>
     <record id="hr.job_trainee" model="hr.job">
         <field name="no_of_recruitment">6</field>
-        <field name="user_id" ref="base.user_admin" />
     </record>
 
     <record id="hr_recruitment_linkedin_developer" model="hr.recruitment.source">
