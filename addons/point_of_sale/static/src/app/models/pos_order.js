@@ -972,7 +972,11 @@ export class PosOrder extends Base {
         }
     }
     getName() {
-        return this.floatingOrderName || "";
+        let name = this.floatingOrderName || "";
+        if (this._isRefundOrder()) {
+            name += _t(" (Refund)");
+        }
+        return name;
     }
     setGeneralCustomerNote(note) {
         this.general_customer_note = note || "";
