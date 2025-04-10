@@ -441,6 +441,41 @@
             </field>
         </record>
 
+        <record id="hr_employee_list_activites_view" model="ir.ui.view">
+            <field name="name">hr.employee.list.activites.view</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="work_phone" class="o_force_ltr" readonly="1" optional="hide"/>
+                    <field name="work_email" optional="hide"/>
+                    <field name="contract_date_start" optional="hide"/>
+                    <field name="contract_date_end" optional="hide"/>
+                    <field name="currency_id" column_invisible="1"/>
+                    <field name="wage" widget="monetary" optional="hide"/>
+                    <field name="employee_type" optional="hide"/>
+                    <field name="contract_type_id" optional="hide"/>
+                    <field name="structure_type_id" optional="hide"/>
+                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
+                    <field name="activity_date_deadline" widget="remaining_days" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
+                    <field name="parent_id" widget="many2one_avatar_employee" optional="hide"/>
+                    <field name="address_id" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/>
+                    <field name="birthday" optional="hide"/>
+                    <field name="work_location_id" optional="hide"/>
+                    <field name="coach_id" widget="many2one_avatar_employee" optional="hide"/>
+                    <field name="user_id" string="Related User" widget="many2one_avatar_user" optional="hide"/>
+                    <field name="active" column_invisible="True"/>
+                    <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                    <field name="country_id" optional="hide"/>
+                </list>
+            </field>
+        </record>
         <record id="hr_kanban_view_employees" model="ir.ui.view">
             <field name="name">hr.employee.kanban</field>
             <field name="model">hr.employee</field>
@@ -735,7 +770,9 @@
             ]</field>
             <field name="context">{'chat_icon': True, 'searchpanel_default_company_id': allowed_company_ids[0]}</field>
             <field name="view_mode">activity,list,kanban,form,graph,pivot</field>
-            <field name="view_id" eval="False"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('hr_employee_list_activites_view')})]"/>
             <field name="search_view_id" ref="view_employee_filter"/>
         </record>
 

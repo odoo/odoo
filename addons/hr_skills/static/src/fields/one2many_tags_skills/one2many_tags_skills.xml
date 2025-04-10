@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_recruitment_skills.One2ManyTagsSkillsField">
+        <div class="d-flex align-items-baseline"
+            t-attf-class="{{ tags.length &amp;&amp; 'gap-1'}}">
+            <div class=" d-inline-flex flex-wrap gap-1 mw-100">
+                <TagsList tags="tags" />
+            </div>
+            <button t-on-click="onAdd"
+                class="btn btn-link text-action"
+                role="button"
+                style="padding: 0; line-height: 0; height: min-content;">
+                <i class="fa fa-plus" />
+            </button>
+        </div>
+    </t>
+
+</templates>
