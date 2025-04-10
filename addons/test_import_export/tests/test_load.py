@@ -1,5 +1,6 @@
 import contextlib
 import json
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
@@ -1565,6 +1566,23 @@ class test_unique(ImporterCase):
         self.assertEqual(message['rows'], {'from': 3, 'to': 3})
         self.assertIn("The value for 'value2, value3' (Value2 and Value3) already exists.", message['message'])
 
+    @mute_logger('odoo.sql_db')
+    def test_unique_update_record(self):
+        existing_records = self.env[self.model_name].create([{'value': 1}, {'value': 2}])
+        result = self.import_(
+            ['.id', 'value'],
+            [
+                [str(existing_records[1].id), '1'],
+            ],
+        )
+        self.assertFalse(result['ids'])
+        self.assertEqual(len(result['messages']), 1)
+        message = result['messages'][0]
+        self.assertEqual(message['type'], 'error')
+        self.assertEqual(message['record'], 0)
+        self.assertEqual(message['rows'], {'from': 0, 'to': 0})
+        self.assertIn("The value for 'value' (Value) already exists.", message['message'])
+
 
 class test_inherits(ImporterCase):
     """The import process should only assign a new xid (derived from the
@@ -1756,3 +1774,20 @@ class test_inherits(ImporterCase):
             parent._get_external_ids()[parent.id],
             ['xxx.parent'],
         )
+
+
+class CheckSavepoint(ImporterCase):
+    model_name = 'export.unique'
+
+    @mute_logger("odoo.sql_db")
+    def test_max_savepoint(self):
+        from odoo.sql_db import Cursor  # noqa: PLC0415
+        with (
+            patch.object(Cursor, 'savepoint', autospec=True, side_effect=Cursor.savepoint) as sp_mock,
+            patch.object(Cursor, 'flush', autospec=True, side_effect=Cursor.flush) as sp_flush,
+        ):
+            data = [[str(i)] for i in range(100)] + [[str(i)] for i in range(20)]
+            self.import_(['value'], data)
+            self.assertLess(sp_mock.call_count, 100, "Too many savepoints in the same transaction, load method should not create a savepoint for each record")
+            self.assertEqual(sp_mock.call_count, 3, "Too many savepoints in the same transaction")
+            self.assertGreater(sp_flush.call_count, 120, "We should flush after each record to bind errors to the record")
