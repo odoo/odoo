@@ -816,8 +816,12 @@ export class Runner {
             delete includeSpecs[type][id];
         }
 
-        this.config.filter = "";
-        this.config[type] = formatIncludes(includeSpecs[type]);
+        for (const type of FILTER_KEYS) {
+            if (type === "filter") {
+                continue;
+            }
+            this.config[type] = formatIncludes(includeSpecs[type]);
+        }
     }
 
     manualStart() {
