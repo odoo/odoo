@@ -1224,26 +1224,6 @@ class CalendarEvent(models.Model):
             'day': event_date.day,
         }
 
-    def _split_recurrence(self, time_values):
-        """Apply time changes to events and update the recurrence accordingly.
-
-        :return: detached events
-        """
-        self.ensure_one()
-        if not time_values:
-            return self.browse()
-        if self.follow_recurrence and self.recurrency:
-            previous_week_day_field = weekday_to_field(self._get_start_date().weekday())
-        else:
-            # When we try to change recurrence values of an event not following the recurrence, we get the parameters from
-            # the base_event
-            previous_week_day_field = weekday_to_field(self.recurrence_id.base_event_id._get_start_date().weekday())
-        self.write(time_values)
-        return self._apply_recurrence_values({
-            previous_week_day_field: False,
-            **self._get_recurrence_params(),
-        }, future=True)
-
     def _break_recurrence(self, future=True):
         """Breaks the event's recurrence.
         Stop the recurrence at the current event if `future` is True, leaving past events in the recurrence.
