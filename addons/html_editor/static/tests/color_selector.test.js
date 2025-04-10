@@ -9,6 +9,7 @@ import {
     edit,
     queryAllValues,
     queryAll,
+    manuallyDispatchProgrammaticEvent,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
@@ -406,6 +407,36 @@ test("gradient picker correctly shows the current selected gradient", async () =
     expect("input[name='angle']").toHaveValue("2");
     expect("input[name='firstColorPercentage']").toHaveValue(10);
     expect("input[name='secondColorPercentage']").toHaveValue(90);
+});
+
+test("should be able to apply custom color when selected text has gradient", async () => {
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    expect(".o_hex_input").toHaveValue("#FF0000");
+    const colorSlider = queryOne(".o_color_slider");
+    const colorSliderRect = colorSlider.getBoundingClientRect();
+    const mouseDownPositionX = colorSliderRect.left + colorSliderRect.width / 2;
+    const mouseDownPositionY = colorSliderRect.top + colorSliderRect.height / 2; // Middle position of slider.
+
+    // Simulate mousedown event at the middle of the slider.
+    manuallyDispatchProgrammaticEvent(colorSlider, "mousedown", {
+        clientX: mouseDownPositionX,
+        clientY: mouseDownPositionY,
+    });
+    manuallyDispatchProgrammaticEvent(colorSlider, "mouseup", {
+        clientX: mouseDownPositionX,
+        clientY: mouseDownPositionY,
+    });
+    await animationFrame();
+    expect(".o_hex_input").toHaveValue("#00FFFF");
 });
 
 test("gradient picker does change the selector gradient color", async () => {
