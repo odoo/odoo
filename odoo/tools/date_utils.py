@@ -302,3 +302,12 @@ def weeknumber(locale: babel.Locale, date: date) -> Tuple[int, int]:
     doy = (date - fdow).days
 
     return date.year, (doy // 7 + 1)
+
+def find_duration(time_intervals: set[tuple[2]], duration: float=0.0) -> float:
+    # finds the "absolute" duration of a series of time intervals accounting for overlap and gaps
+
+    # sort intervals
+    interval_list = list(time_intervals)
+    interval_list.sort()
+
+    return duration

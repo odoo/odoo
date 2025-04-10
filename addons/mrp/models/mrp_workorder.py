@@ -8,7 +8,7 @@ import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, float_round, format_datetime
+from odoo.tools import float_compare, float_round, format_datetime, find_duration
 
 
 class MrpWorkorder(models.Model):
@@ -551,24 +551,24 @@ class MrpWorkorder(models.Model):
         self.write(vals)
 
     def _cal_cost(self):
-        def find_duration(time_intervals, duration=0):
-            if not time_intervals:
-                return duration
-            min_start = min_start_end = None
-            for interval in time_intervals:
-                if min_start is None or interval[0] < min_start:
-                    min_start = interval[0]
-                    min_start_end = interval[1]
-            adjusted_intervals = set()
-            for interval in time_intervals:
-                # if interval is a subset of the one we're counting, exclude it from recounting
-                if interval[0] >= min_start and interval[1] <= min_start_end:
-                    continue
-                # if interval start overlaps with the one we're counting, exclude the overlap from recounting
-                if interval[0] < min_start_end:
-                    interval[0] = min_start_end
-                adjusted_intervals.add(interval)
-            return find_duration(adjusted_intervals, ((min_start_end - min_start).total_seconds() / 60) + duration)
+        # def find_duration(time_intervals, duration=0):
+        #     if not time_intervals:
+        #         return duration
+        #     min_start = min_start_end = None
+        #     for interval in time_intervals:
+        #         if min_start is None or interval[0] < min_start:
+        #             min_start = interval[0]
+        #             min_start_end = interval[1]
+        #     adjusted_intervals = set()
+        #     for interval in time_intervals:
+        #         # if interval is a subset of the one we're counting, exclude it from recounting
+        #         if interval[0] >= min_start and interval[1] <= min_start_end:
+        #             continue
+        #         # if interval start overlaps with the one we're counting, exclude the overlap from recounting
+        #         if interval[0] < min_start_end:
+        #             interval[0] = min_start_end
+        #         adjusted_intervals.add(interval)
+        #     return find_duration(adjusted_intervals, ((min_start_end - min_start).total_seconds() / 60) + duration)
 
         total = 0
         for wo in self:
