@@ -121,7 +121,7 @@ class SaleOrder(models.Model):
 
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
-            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            rounding = 10 ** -self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for order in self:
                 to_log = {}
                 for order_line in order.order_line:
