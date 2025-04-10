@@ -166,7 +166,7 @@ export class MailMessage extends models.ServerModel {
                         (notification) => notification.mail_message_id == message.id
                     )
                 ),
-                parentMessage: mailDataHelpers.Store.one(
+                parent_id: mailDataHelpers.Store.one(
                     MailMessage.browse(message.parent_id),
                     makeKwArgs({ format_reply: false })
                 ),
