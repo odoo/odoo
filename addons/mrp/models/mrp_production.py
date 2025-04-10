@@ -1441,8 +1441,6 @@ class MrpProduction(models.Model):
     def action_generate_serial(self):
         self.ensure_one()
         self._set_lot_producing()
-        if self.product_id.tracking == 'serial':
-            self._set_qty_producing(False)
         if self.picking_type_id.auto_print_generated_mrp_lot:
             return self._autoprint_generated_lot(self.lot_producing_id)
 

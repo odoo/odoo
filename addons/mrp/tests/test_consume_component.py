@@ -212,6 +212,9 @@ class TestConsumeComponentCommon(common.TransactionCase):
         i = 1
         if isSerial:
             mrp_productions[i].action_generate_serial()
+            mo_form = Form(mrp_productions[i])
+            mo_form.qty_producing = 1.0
+            mo_form.save()
             i += 1
 
         if isAvailable:
@@ -325,6 +328,9 @@ class TestConsumeComponent(TestConsumeComponentCommon):
                 mo = mo_form.save()
             elif serialTrigger == 2:
                 mo.action_generate_serial()
+                mo_form = Form(mo)
+                mo_form.qty_producing = 1.0
+                mo = mo_form.save()
 
             for mov in mo.move_raw_ids:
                 if mov.has_tracking == "none":
