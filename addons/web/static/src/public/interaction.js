@@ -1,6 +1,6 @@
 import { renderToFragment } from "@web/core/utils/render";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
-import { SKIP_IMPLICIT_UPDATE } from "./colibri";
+import { INITIAL_VALUE, SKIP_IMPLICIT_UPDATE } from "./colibri";
 import { makeAsyncHandler, makeButtonHandler } from "./utils";
 
 /**
@@ -39,6 +39,11 @@ export class Interaction {
      * @type {string}
      */
     static selectorHas = "";
+
+    /**
+     * Constant to reset dynamicContent t-att-* and t-out.
+     */
+    static INITIAL_VALUE = INITIAL_VALUE;
 
     /**
      * Note that a dynamic selector is allowed to return a falsy value, for ex
@@ -82,6 +87,9 @@ export class Interaction {
      * - other falsy values (`""`, `0`) are applied as such (`required=""`)
      * - boolean `true` is applied as the attribute's name
      *   (e.g. `{ "t-att-required": () => true }` applies `required="required"`)
+     *
+     * t-att-* and t-out directives also accept `Interaction.INITIAL_VALUE`,
+     * which resets them to the value they had before the interaction's start.
      *
      * Note that this is not owl! It is similar, to make it easy to learn, but
      * it is different, the syntax and semantics are somewhat different.
