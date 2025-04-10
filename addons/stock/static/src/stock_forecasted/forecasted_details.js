@@ -44,11 +44,11 @@ export class ForecastedDetails extends Component {
         this.props.reloadReport();
     }
 
-    displayReserve(line){
-        return !line.in_transit && this.canReserveOperation(line);
+    displayReserve(line) {
+        return this.props.docs.user_can_edit_pickings && !line.in_transit && this.canReserveOperation(line);
     }
 
-    canReserveOperation(line){
+    canReserveOperation(line) {
         return line.move_out?.picking_id;
     }
 
