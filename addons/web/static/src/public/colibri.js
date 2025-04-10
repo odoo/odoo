@@ -246,6 +246,10 @@ export class Colibri {
                     } else {
                         this.mountComponent(nodes, ...value());
                     }
+                } else if (directive === "t-close.bs.alert") {
+                    const ev = directive.slice(2);
+                    const [event, handler, options] = this.addListener(nodes, ev, value);
+                    this.mapSelectorToListeners(sel, event, handler, options);
                 } else {
                     const suffix = directive.startsWith("t-") ? "" : " (should start with t-)";
                     throw new Error(`Invalid directive: '${directive}'${suffix}`);
