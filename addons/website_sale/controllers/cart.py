@@ -60,6 +60,7 @@ class Cart(PaymentPortal):
             values['suggested_products'] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 
+        values.update({'reorder_notifications': request.session.pop('reorder_notifications', [])})
         values.update(self._cart_values(**post))
         return request.render('website_sale.cart', values)
 
