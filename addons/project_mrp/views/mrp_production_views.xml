@@ -23,9 +23,7 @@
                 }</attribute>
             </field>
             <xpath expr="//page[@name='miscellaneous']//field[@name='is_delayed']" position="after">
-                <t groups="stock.group_stock_manager">
-                    <field name="project_id" groups="project.group_project_user"/>
-                </t>
+                <field name="project_id" groups="project.group_project_user"/>
             </xpath>
         </field>
     </record>
