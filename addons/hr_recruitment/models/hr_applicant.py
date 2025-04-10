@@ -700,10 +700,6 @@ class HrApplicant(models.Model):
                         record_name=applicant.display_name,
                         model_description="Applicant",
                     )
-        if vals.get('date_closed'):
-            for applicant in self:
-                if applicant.job_id.date_to:
-                    applicant.availability = applicant.job_id.date_to + relativedelta(days=1)
 
         return res
 

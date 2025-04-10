@@ -34,12 +34,11 @@ class HrApplicant(models.Model):
     @api.depends_context("active_id")
     @api.depends("skill_ids")
     def _compute_matching_skill_ids(self):
+        # TODO: Rename the job_id variable
+        # TODO: Do the prooper matching calculation
         job_id = self.env.context.get("active_id")
-        if not job_id:
-            self.matching_skill_ids = False
-            self.missing_skill_ids = False
-            self.matching_score = 0
-        else:
+        if job_id:
+            # If you are coming from the 'Search Matching Applicant' option on the job
             for applicant in self:
                 job_skills = self.env["hr.job"].browse(job_id).skill_ids
                 applicant.matching_skill_ids = job_skills & applicant.skill_ids
@@ -49,6 +48,22 @@ class HrApplicant(models.Model):
                     if job_skills
                     else 0
                 )
+        else:
+            for applicant in self:
+                if applicant.job_id:
+                    job_skills = applicant.job_id.skill_ids
+                    applicant.matching_skill_ids = job_skills & applicant.skill_ids
+                    applicant.missing_skill_ids = job_skills - applicant.skill_ids
+                    applicant.matching_score = (
+                        (len(applicant.matching_skill_ids) / len(job_skills)) * 100
+                        if job_skills
+                        else 0
+                    )
+
+                else:
+                    applicant.matching_skill_ids = False
+                    applicant.missing_skill_ids = False
+                    applicant.matching_score = 0
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()
