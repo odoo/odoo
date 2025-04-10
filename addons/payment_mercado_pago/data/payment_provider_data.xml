@@ -3,7 +3,8 @@
 
     <record id="payment.payment_provider_mercado_pago" model="payment.provider">
         <field name="code">mercado_pago</field>
-        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="inline_form_view_id" ref="inline_form"/>
+        <field name="allow_tokenization">True</field>
     </record>
 
 </odoo>

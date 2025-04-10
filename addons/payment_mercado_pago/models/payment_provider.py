@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import json
 import logging
 import pprint
 
@@ -10,7 +10,7 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_mercado_pago import const
-
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
-    def _mercado_pago_make_request(self, endpoint, payload=None, method='POST'):
+    def _mercado_pago_make_request(self, endpoint, payload=None, method='POST', idempotency_key=None):
         """ Make a request to Mercado Pago API at the specified endpoint.
 
         Note: self.ensure_one()
@@ -55,7 +55,9 @@ class PaymentProvider(models.Model):
         url = urls.url_join('https://api.mercadopago.com', endpoint)
         headers = {
             'Authorization': f'Bearer {self.mercado_pago_access_token}',
-            'X-Platform-Id': 'dev_cdf1cfac242111ef9fdebe8d845d0987',
+            'Content-Type': 'application/json',
+            'X-Idempotency-Key': idempotency_key,
+            'X-Platform-Id': 'dev_cdf1cfac242111ef9fdebe8d845d0987'
         }
         try:
             if method == 'GET':
@@ -95,3 +97,20 @@ class PaymentProvider(models.Model):
         if self.code != 'mercado_pago':
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
+
+    def _mercado_pago_get_inline_form_values(self, partner_id, currency):
+        self.ensure_one()
+        partner = self.env['res.partner'].browse(partner_id).exists()
+        inline_form_values = {
+            'email': partner.email,
+            'currency': currency.name,
+            'partner_id': partner.id,
+        }
+        return json.dumps(inline_form_values)
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda p: p.code == 'mercado_pago').update({
+            'support_tokenization': True,
+        })
