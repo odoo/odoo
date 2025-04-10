@@ -2515,7 +2515,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>xy<a href="http://odoo.com">http://odoo.com</a>[]z</p>`
+                `<p>xy<a href="http://odoo.com" data-popover-uninitialized="true">http://odoo.com</a>[]z</p>`
             );
         });
 
@@ -2547,7 +2547,7 @@ describe("link", () => {
 
             await animationFrame();
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>xy<a href="${imgUrl}">${imgUrl}</a>[]z</p>`
+                `<p>xy<a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a>[]z</p>`
             );
         });
 
@@ -2603,7 +2603,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>abc <a href="${url}">${url}</a> def[]</p>`
+                `<p>abc <a href="${url}" data-popover-uninitialized="true">${url}</a> def[]</p>`
             );
             undo(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
@@ -2617,7 +2617,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>abc <a href="${imgUrl}">${imgUrl}</a> def[]</p>`
+                `<p>abc <a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a> def[]</p>`
             );
         });
 
@@ -2627,7 +2627,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>abc <a href="${videoUrl}">${videoUrl}</a> def[]</p>`
+                `<p>abc <a href="${videoUrl}" data-popover-uninitialized="true">${videoUrl}</a> def[]</p>`
             );
         });
 
@@ -2637,7 +2637,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p><a href="${url}">${url}</a> <a href="${videoUrl}">${videoUrl}</a> <a href="${imgUrl}">${imgUrl}</a>[]</p>`
+                `<p><a href="${url}" data-popover-uninitialized="true">${url}</a> <a href="${videoUrl}" data-popover-uninitialized="true">${videoUrl}</a> <a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a>[]</p>`
             );
             undo(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
@@ -2651,7 +2651,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p><a href="${url}">${url}</a> abc <a href="${videoUrl}">${videoUrl}</a> def <a href="${imgUrl}">${imgUrl}</a>[]</p>`
+                `<p><a href="${url}" data-popover-uninitialized="true">${url}</a> abc <a href="${videoUrl}" data-popover-uninitialized="true">${videoUrl}</a> def <a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a>[]</p>`
             );
             undo(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
@@ -2766,7 +2766,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>abc <a href="${url}">${url}</a> def[]</p>`
+                `<p>abc <a href="${url}" data-popover-uninitialized="true">${url}</a> def[]</p>`
             );
         });
 
@@ -2776,7 +2776,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>abc <a href="${imgUrl}">${imgUrl}</a> def[]</p>`
+                `<p>abc <a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a> def[]</p>`
             );
         });
 
@@ -2786,7 +2786,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>abc <a href="${videoUrl}">${videoUrl}</a> def[]</p>`
+                `<p>abc <a href="${videoUrl}" data-popover-uninitialized="true">${videoUrl}</a> def[]</p>`
             );
         });
 
@@ -2796,7 +2796,7 @@ describe("link", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p><a href="${url}">${url}</a> <a href="${videoUrl}">${videoUrl}</a> <a href="${imgUrl}">${imgUrl}</a>[]</p>`
+                `<p><a href="${url}" data-popover-uninitialized="true">${url}</a> <a href="${videoUrl}" data-popover-uninitialized="true">${videoUrl}</a> <a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a>[]</p>`
             );
         });
 
@@ -2874,7 +2874,7 @@ describe("link", () => {
             await press("ArrowDown");
             await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>ab<a href="${imgUrl}">${imgUrl}</a>[]cd</p>`
+                `<p>ab<a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a>[]cd</p>`
             );
         });
 
@@ -2952,7 +2952,7 @@ describe("images", () => {
             await press("ArrowDown");
             await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p><a href="${imgUrl}">${imgUrl}</a>[]</p>`
+                `<p><a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a>[]</p>`
             );
         });
 
@@ -2968,7 +2968,7 @@ describe("images", () => {
             await press("ArrowDown");
             await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>*should not disappear*<a href="${imgUrl}">${imgUrl}</a>[]</p>`
+                `<p>*should not disappear*<a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a>[]</p>`
             );
         });
     });
@@ -3021,7 +3021,7 @@ describe("images", () => {
             await press("ArrowDown");
             await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>ab<a href="${imgUrl}">${imgUrl}</a>[]cd</p>`
+                `<p>ab<a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a>[]cd</p>`
             );
         });
 
@@ -3047,7 +3047,7 @@ describe("images", () => {
             await press("ArrowDown");
             await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>ab<a href="${imgUrl}">${imgUrl}</a>[]cd</p>`
+                `<p>ab<a href="${imgUrl}" data-popover-uninitialized="true">${imgUrl}</a>[]cd</p>`
             );
         });
 
@@ -3138,7 +3138,7 @@ describe("youtube video", () => {
             // Pick the second command (Paste as URL)
             await press("ArrowDown");
             await press("Enter");
-            expect(cleanLinkArtifacts(getContent(el))).toBe(`<p><a href="${url}">${url}</a>[]</p>`);
+            expect(cleanLinkArtifacts(getContent(el))).toBe(`<p><a href="${url}" data-popover-uninitialized="true">${url}</a>[]</p>`);
         });
 
         test("should not revert a history step when pasting a youtube URL as a link (1)", async () => {
@@ -3153,7 +3153,7 @@ describe("youtube video", () => {
             await press("ArrowDown");
             await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>*should not disappear*<a href="${url}">${url}</a>[]</p>`
+                `<p>*should not disappear*<a href="${url}" data-popover-uninitialized="true">${url}</a>[]</p>`
             );
         });
     });
@@ -3218,7 +3218,7 @@ describe("youtube video", () => {
             await press("ArrowDown");
             await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>ab<a href="${videoUrl}">${videoUrl}</a>[]cd</p>`
+                `<p>ab<a href="${videoUrl}" data-popover-uninitialized="true">${videoUrl}</a>[]cd</p>`
             );
         });
 
@@ -3245,7 +3245,7 @@ describe("youtube video", () => {
             await press("ArrowDown");
             await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>ab<a href="${videoUrl}">${videoUrl}</a>[]cd</p>`
+                `<p>ab<a href="${videoUrl}" data-popover-uninitialized="true">${videoUrl}</a>[]cd</p>`
             );
         });
 
