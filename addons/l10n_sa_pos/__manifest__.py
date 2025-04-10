@@ -3,7 +3,6 @@
 {
     'name': 'Saudi Arabia - Point of Sale',
     'category': 'Accounting/Localizations/Point of Sale',
-    'countries': ['sa'],
     'description': """
 Saudi Arabia POS Localization
 ===========================================================
