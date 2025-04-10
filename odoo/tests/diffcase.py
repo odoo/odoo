@@ -180,7 +180,7 @@ def generate_diff(output_dir: str):
     for file in os.listdir(output_dir):
         if file.endswith('.txt'):
             os.remove(os.path.join(output_dir, file))
-    
+
     repos = get_repos()
     if len({os.path.basename(repo) for repo in repos}) == len(repos):
         repo_names = {repo: os.path.basename(repo) for repo in repos}

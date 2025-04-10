@@ -1,9 +1,12 @@
 import ast
 import logging
 import os
+import tokenize
 from collections import defaultdict
+from pathlib import Path
 from typing import Collection
 
+import odoo.addons
 from odoo.tests.diffcase import DiffCase, Element, DiffFile, DiagnosticKind, DiagnosticMessage
 from odoo.modules.module import get_manifest
 
@@ -159,37 +162,28 @@ def check_ref_for_data_xml_element(element: Element, diff_file: DiffFile, init: 
 
 
 def _get_protected_xml_ids() -> set[str]:
-    """Get protected records from all Python files in addons directories.
+    """Get protected records from all python files in addons.
     
     Scans for comments in the format "# PROTECT module.record_name" in Python files
     
     Returns:
         set[str]: Set of protected record external IDs
     """
-    import tokenize
-    import os
-    import odoo.addons
-    from pathlib import Path
 
-    def get_python_files(package_path):
-        python_files = []
-        for root, _, files in os.walk(package_path):
-            for file in files:
-                if file.endswith(".py"):
-                    full_path = os.path.join(root, file)
-                    python_files.append(full_path)
+    def get_addon_model_files(addon_path: Path) -> list[str]:
+        python_files = list(str(f) for f in addon_path.glob('*.py') if not f.name.startswith('__'))
+        for root, _, files in os.walk(os.path.join(addon_path, 'models')):
+            python_files.extend(os.path.join(root, f) for f in files if f.endswith('.py'))
         return python_files
 
     protected = set()
     _logger.info('Getting protected records from Python files')
     for addons_path in odoo.addons.__path__:
         for addon_path in Path(addons_path).glob('*'):
-            if not addon_path.is_dir():
+            if not addon_path.is_dir() or addon_path.name.startswith('test_'):
                 continue
-            for py_file in get_python_files(addon_path):
+            for py_file in get_addon_model_files(addon_path):
                 try:
-                    if py_file.endswith('__init__.py') or py_file.endswith('__manifest__.py'):
-                        continue
                     with tokenize.open(py_file) as f:
                         tokens = tokenize.generate_tokens(f.readline)
                         for token in tokens:
