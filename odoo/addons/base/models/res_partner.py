@@ -629,10 +629,26 @@ class ResPartner(models.Model):
     def _commercial_fields(self):
         """ Returns the list of fields that are managed by the commercial entity
         to which a partner belongs. These fields are meant to be hidden on
-        partners that aren't `commercial entities` themselves, and will be
+        partners that aren't `commercial entities` themselves, or synchronized
+        at update (if present in _synced_commercial_fields), and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'company_registry', 'industry_id']
+        return self._synced_commercial_fields() + ['company_registry', 'industry_id']
+
+    @api.model
+    def _synced_commercial_fields(self):
+        """ Returns the list of fields that are managed by the commercial entity
+        to which a partner belongs. When modified on a children, update is
+        propagated until the commercial entity. """
+        return ['vat']
+
+    def _get_synced_commercial_values(self):
+        """ Get synchronized commecial values if at least one value is set. Otherwise
+        it is considered empty and nothing is returned. """
+        synced_fields = self._synced_commercial_fields()
+        if any(self[key] for key in synced_fields):
+            return self._convert_fields_to_values(self._synced_commercial_fields())
+        return {}
 
     @api.model
     def _company_dependent_commercial_fields(self):
@@ -694,7 +710,7 @@ class ResPartner(models.Model):
                 if address_values := self.parent_id._get_address_values():
                     self._update_address(address_values)
 
-        # 2. To UPSTREAM: sync parent address
+        # 2. To UPSTREAM: sync parent address, as well as editable synchronized commercial fields
         address_to_upstream = (
             bool(self.parent_id) and bool(self.type == 'contact') and
             any(field in values for field in self._address_fields()) and
@@ -703,6 +719,17 @@ class ResPartner(models.Model):
         if address_to_upstream:
             new_address = self._get_address_values()
             self.parent_id.write(new_address)  # is going to trigger _fields_sync again
+        commercial_to_upstream = (
+            # has a parent and is not a commercial entity itself
+            bool(self.parent_id) and (self.commercial_partner_id != self) and
+            # actually updated
+            any(field in values for field in self._synced_commercial_fields()) and
+            # different from already stored
+            any(self[fname] != self.parent_id[fname] for fname in self._synced_commercial_fields())
+        )
+        if commercial_to_upstream:
+            new_synced_commercials = self._get_synced_commercial_values()
+            self.parent_id.write(new_synced_commercials)
 
         # 3. To DOWNSTREAM: sync children
         self._children_sync(values)
