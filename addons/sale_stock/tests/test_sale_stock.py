@@ -382,6 +382,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         lines to the moves and edit a last time the ordered quantities. Deliver, check the
         quantities.
         """
+        self.env.ref('product.decimal_product_uom').digits = 0
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
         item1 = self.company_data['product_order_no']
@@ -391,13 +392,11 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         # sell a dozen
         so1 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
-                'name': item1.name,
-                'product_id': item1.id,
-                'product_uom_qty': 1,
-                'product_uom': uom_dozen.id,
-                'price_unit': item1.list_price,
-            })],
+            'order_line': [
+                Command.create({'name': "UoM Test", 'display_type': 'line_note'}),
+                Command.create({'product_id': item1.id, 'product_uom': uom_dozen.id}),
+                Command.create({'name': "Downpayment", 'is_downpayment': True}),
+            ],
         })
         so1.action_confirm()
 
@@ -410,9 +409,10 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(move1.product_qty, 12)
 
         # edit the so line, sell 2 dozen, the move should now be 24 units
+        product_line = so1.order_line.filtered('product_id')
         so1.write({
             'order_line': [
-                (1, so1.order_line.id, {'product_uom_qty': 2}),
+                Command.update(product_line.id, {'product_uom_qty': 2}),
             ]
         })
         # The above will create a second move, and then the two moves will be merged in _merge_moves`
@@ -438,7 +438,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
         so1.write({
             'order_line': [
-                (1, so1.order_line.id, {'product_uom_qty': 3}),
+                Command.update(product_line.id, {'product_uom_qty': 3}),
             ]
         })
         move2 = so1.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
@@ -452,7 +452,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so1.picking_ids.button_validate()
 
         # check the delivered quantity
-        self.assertEqual(so1.order_line.qty_delivered, 3.0)
+        self.assertEqual(product_line.qty_delivered, 3.0)
 
     def test_07_forced_qties(self):
         """ Make multiple sale order lines of the same product which isn't available in stock. On
