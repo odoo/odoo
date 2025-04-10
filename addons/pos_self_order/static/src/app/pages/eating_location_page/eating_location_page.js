@@ -13,7 +13,7 @@ export class EatingLocationPage extends Component {
         this.router = useService("router");
     }
 
-    back() {
+    onClickBack() {
         this.router.navigate("default");
     }
 

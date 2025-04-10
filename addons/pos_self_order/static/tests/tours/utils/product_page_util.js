@@ -34,6 +34,14 @@ export function checkKioskReferenceNotInProductName(productName, reference) {
     };
 }
 
+export function clickBack() {
+    return {
+        content: `Click on back button`,
+        trigger: `.btn.btn-back`,
+        run: "click",
+    };
+}
+
 export function clickCancel() {
     return [
         {

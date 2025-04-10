@@ -24,7 +24,7 @@ export class KioskCategoryListPage extends Component {
         return Object.keys(order.changes).length === 0 || order.lines.length === 0;
     }
 
-    back() {
+    onClickBack() {
         if (!this.shouldGoBack()) {
             this.dialog.add(CancelPopup, {
                 title: _t("Cancel order"),

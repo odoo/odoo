@@ -94,7 +94,6 @@ export class OrderWidget extends Component {
 
     get leftButton() {
         const back = this.shouldGoBack();
-
         return {
             name: back ? _t("Back") : _t("Cancel"),
             icon: back ? "fa fa-arrow-left btn-back" : "btn-close btn-cancel",

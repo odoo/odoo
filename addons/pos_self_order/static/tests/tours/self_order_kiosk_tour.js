@@ -4,6 +4,7 @@ import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirmation_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
+import * as CategoryPage from "@pos_self_order/../tests/tours/utils/category_page_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
@@ -11,6 +12,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
         ProductPage.checkKioskReferenceNotInProductName("Coca-Cola", "12345"),
         ProductPage.clickKioskProduct("Coca-Cola"),
         Utils.clickBtn("Checkout"),
@@ -21,6 +23,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
         Utils.checkIsDisabledBtn("Checkout"),
     ],
 });
@@ -30,6 +33,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_out", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
         ProductPage.clickKioskProduct("Coca-Cola"),
         Utils.clickBtn("Checkout"),
         CartPage.checkKioskProduct("Coca-Cola", "2.53", "1"),
@@ -37,6 +41,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_out", {
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
         Utils.checkIsDisabledBtn("Checkout"),
     ],
 });
@@ -47,7 +52,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_in", {
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         LandingPage.selectKioskLocation("Test-In"),
-        ProductPage.clickKioskCategory("Miscellaneous"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
         ProductPage.clickKioskProduct("Coca-Cola"),
         ProductPage.clickKioskCategory("Uncategorised"),
         ProductPage.clickKioskProduct("Yummy Burger"),
@@ -64,7 +69,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_in", {
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         LandingPage.selectKioskLocation("Test-In"),
-        ProductPage.clickKioskCategory("Miscellaneous"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
         Utils.checkIsDisabledBtn("Checkout"),
     ],
 });
@@ -75,7 +80,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_out", 
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         LandingPage.selectKioskLocation("Test-Takeout"),
-        ProductPage.clickKioskCategory("Miscellaneous"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
         ProductPage.clickKioskProduct("Coca-Cola"),
         Utils.clickBtn("Checkout"),
         CartPage.checkKioskProduct("Coca-Cola", "2.53"),
@@ -86,7 +91,7 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_out", 
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         LandingPage.selectKioskLocation("Test-Takeout"),
-        ProductPage.clickKioskCategory("Miscellaneous"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
         Utils.checkIsDisabledBtn("Checkout"),
     ],
 });
@@ -96,15 +101,17 @@ registry.category("web_tour.tours").add("self_order_kiosk_cancel", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        ProductPage.clickKioskCategory("Miscellaneous"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
         ProductPage.clickKioskProduct("Coca-Cola"),
         ProductPage.clickKioskProduct("Fanta"),
         Utils.clickBtn("Checkout"),
         CartPage.checkKioskProduct("Coca-Cola", "2.53", "1"),
         CartPage.checkKioskProduct("Fanta", "2.53", "1"),
         CartPage.clickBack(),
-        ...ProductPage.clickCancel(),
+        ProductPage.clickBack(),
+        ...CategoryPage.clickCancel(),
         Utils.clickBtn("Order Now"),
+        ProductPage.clickKioskCategory("Miscellaneous"),
         Utils.checkIsDisabledBtn("Checkout"),
     ],
 });
@@ -146,9 +153,10 @@ registry.category("web_tour.tours").add("self_order_language_changes", {
         LandingPage.checkKioskCountryFlagShown("us"),
 
         LandingPage.selectKioskLocation("Test-Takeout"),
-        ProductPage.clickKioskCategory("Uncategorised"),
+        CategoryPage.clickKioskCategory("Uncategorised"),
         ProductPage.clickKioskProduct("Test Product"),
-        ...ProductPage.clickCancel(),
+        ProductPage.clickBack(),
+        ...CategoryPage.clickCancel(),
 
         Utils.clickBtn("Order Now"),
         ...Utils.changeKioskLanguage("Français"),
@@ -156,7 +164,7 @@ registry.category("web_tour.tours").add("self_order_language_changes", {
 
         Utils.clickBtn("Commander maintenant"),
         LandingPage.selectKioskLocation("Test-Takeout"),
-        ProductPage.clickKioskCategory("Uncategorised"),
+        CategoryPage.clickKioskCategory("Uncategorised"),
         ProductPage.clickKioskProduct("Produit Test"),
     ],
 });
@@ -165,7 +173,7 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
     steps: () => [
         Utils.clickBtn("Order Now"),
         LandingPage.selectKioskLocation("Test-In"),
-        ProductPage.clickKioskCategory("Uncategorised"),
+        CategoryPage.clickKioskCategory("Uncategorised"),
         ProductPage.clickKioskProduct("Office Combo"),
         ProductPage.clickKioskProduct("Desk Organizer"),
         {

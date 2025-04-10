@@ -81,7 +81,16 @@ class PosConfig(models.Model):
         help="Choose when the customer will pay",
         required=True,
     )
-
+    self_ordering_image_brand = fields.Image(
+        string="Self Order Kiosk Image Brand",
+        help="Image to display on the self order screen",
+        max_width=1200,
+        max_height=250,
+    )
+    self_ordering_image_brand_name = fields.Char(
+        string="Self Order Kiosk Image Brand Name",
+        help="Name of the image to display on the self order screen",
+    )
     has_paper = fields.Boolean("Has paper", default=True)
 
     def _update_access_token(self):

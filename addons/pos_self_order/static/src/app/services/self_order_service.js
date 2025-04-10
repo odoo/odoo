@@ -15,7 +15,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
 import { getOrderLineValues, computeInitialComboPrice } from "./card_utils";
-import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
+
 import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
@@ -173,7 +173,7 @@ export class SelfOrder extends Reactive {
     }
     computeAvailableCategories() {
         this.availableCategories = this.getAvailableCategories();
-        this.currentCategory = this.productCategories[0] || null;
+        this.currentCategory = this.availableCategories[0] || null;
     }
 
     isCategoryAvailable(categId) {
