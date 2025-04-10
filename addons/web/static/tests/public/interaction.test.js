@@ -1305,6 +1305,45 @@ describe("t-att-class", () => {
         expect(span).toHaveClass(["a", "c"]);
         expect(span).not.toHaveClass("b");
     });
+
+    test("reset t-att-class to initial content", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-att-class": () => ({
+                        a: true, // will remain toggled on
+                        b: false, // will remain toggled off
+                        c: this.withClass, // initial = false
+                        d: this.withClass, // initial = true
+                        "e f": this.withClass, // multi class with initial = false
+                    }),
+                },
+            };
+            setup() {
+                this.withClass = true;
+            }
+            start() {
+                this.waitForTimeout(() => {
+                    this.withClass = Interaction.INITIAL_VALUE;
+                }, 1000);
+            }
+        }
+        await startInteraction(Test, `<div class="test"><span class="b d">Hi</span></div>`);
+        expect("span").toHaveClass("a");
+        expect("span").not.toHaveClass("b");
+        expect("span").toHaveClass("c");
+        expect("span").toHaveClass("d");
+        expect("span").toHaveClass("e");
+        expect("span").toHaveClass("f");
+        await advanceTime(1000);
+        expect("span").toHaveClass("a");
+        expect("span").not.toHaveClass("b");
+        expect("span").not.toHaveClass("c");
+        expect("span").toHaveClass("d");
+        expect("span").not.toHaveClass("e");
+        expect("span").not.toHaveClass("f");
+    });
 });
 
 describe("t-att-style", () => {
@@ -1491,6 +1530,34 @@ describe("t-att-style", () => {
         }
         await startInteraction(Test, TemplateBase);
         expect("span").toHaveOuterHTML(`<span style="color: red !important;">coucou</span>`);
+    });
+
+    test("reset t-att-style to initial content", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-att-style": () => ({
+                        "background-color": this.bgColor,
+                        "color": this.color,
+                    }),
+                },
+            };
+            setup() {
+                this.bgColor = "rgb(0, 255, 0)";
+                this.color = "rgb(255, 0, 0)";
+            }
+            start() {
+                this.waitForTimeout(() => {
+                    this.bgColor = Interaction.INITIAL_VALUE;
+                    this.color = Interaction.INITIAL_VALUE;
+                }, 1000);
+            }
+        }
+        await startInteraction(Test, `<div class="test" style="color: black;"><span style="background-color: rgb(0, 0, 255);">Hi</span></div>`);
+        expect("span").toHaveStyle({ "background-color": "rgb(0, 255, 0)", "color": "rgb(255, 0, 0)" });
+        await advanceTime(1000);
+        expect("span").toHaveStyle({ "background-color": "rgb(0, 0, 255)", "color": "rgb(0, 0, 0)" });
     });
 });
 
@@ -1728,6 +1795,56 @@ describe("t-att and t-out", () => {
         await click("span");
         expect.verifySteps(["clicked"]);
     });
+
+    test("reset t-out to initial content", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: { "t-out": () => this.tOut },
+            };
+            setup() {
+                this.tOut = "colibri";
+            }
+            start() {
+                this.waitForTimeout(() => {
+                    this.tOut = Interaction.INITIAL_VALUE;
+                }, 1000);
+            }
+        }
+        await startInteraction(Test, TemplateTest);
+        expect("span").toHaveText("colibri");
+        await advanceTime(1000);
+        expect("span").toHaveText("coucou");
+    });
+
+    test("reset t-att to initial content", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-att-animal": () => this.animal,
+                    "t-att-egg": () => this.egg,
+                },
+            };
+            setup() {
+                this.animal = "colibri";
+                this.egg = "easter";
+            }
+            start() {
+                this.waitForTimeout(() => {
+                    this.animal = Interaction.INITIAL_VALUE;
+                    this.egg = Interaction.INITIAL_VALUE;
+                }, 1000);
+            }
+        }
+        await startInteraction(Test, `<div class="test"><span egg="mysterious"></span></div>`);
+        expect("span").toHaveAttribute("animal", "colibri");
+        expect("span").toHaveAttribute("egg", "easter");
+        await advanceTime(1000);
+        expect("span").not.toHaveAttribute("animal");
+        expect("span").toHaveAttribute("egg", "mysterious");
+    });
+
 });
 
 describe("components", () => {
