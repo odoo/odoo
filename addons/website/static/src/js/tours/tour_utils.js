@@ -248,7 +248,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
             trigger: `:iframe ${trigger}`,
             content: markup(_t("<b>Click on a snippet</b> to access its options menu.")),
             tooltipPosition: position,
-            run: "pointerup",
+            run: "click",
         },
     ];
 }
