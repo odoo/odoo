@@ -48,8 +48,6 @@ const {
 // Internal
 //-----------------------------------------------------------------------------
 
-const R_REGEX_PATTERN = /^\/(.*)\/([dgimsuvy]+)?$/;
-
 const interactionBus = new EventTarget();
 
 //-----------------------------------------------------------------------------
@@ -154,23 +152,15 @@ export function isIterable(object) {
 }
 
 /**
- * @param {string} filter
- * @returns {boolean}
- */
-export function isRegExpFilter(filter) {
-    return R_REGEX_PATTERN.test(filter);
-}
-
-/**
  * @param {string} value
  * @param {{ safe?: boolean }} [options]
  * @returns {string | RegExp}
  */
 export function parseRegExp(value, options) {
-    const regexParams = value.match(R_REGEX_PATTERN);
+    const regexParams = value.match(R_REGEX);
     if (regexParams) {
-        const unified = regexParams[1].replace(/\s+/g, "\\s+");
-        const flag = regexParams[2] || "i";
+        const unified = regexParams[1].replace(R_WHITE_SPACE, "\\s+");
+        const flag = regexParams[2];
         try {
             return new RegExp(unified, flag);
         } catch (error) {
@@ -204,3 +194,9 @@ export function toSelector(node, options) {
 export class HootDomError extends Error {
     name = "HootDomError";
 }
+
+export const REGEX_MARKER = "/";
+
+// Common regular expressions
+export const R_REGEX = new RegExp(`^${REGEX_MARKER}(.*)${REGEX_MARKER}([dgimsuvy]+)?$`);
+export const R_WHITE_SPACE = /\s+/g;
