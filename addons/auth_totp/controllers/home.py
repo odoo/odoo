@@ -9,7 +9,7 @@ from odoo.http import request
 from odoo.addons.web.controllers import home as web_home
 
 TRUSTED_DEVICE_COOKIE = 'td_id'
-TRUSTED_DEVICE_AGE = 90*86400 # 90 days expiration
+TRUSTED_DEVICE_AGE_DAYS = 90
 
 
 class Home(web_home.Home):
@@ -66,15 +66,16 @@ class Home(web_home.Home):
                     if request.geoip.city.name:
                         name += f" ({request.geoip.city.name}, {request.geoip.country_name})"
 
+                    trusted_device_age = request.env['auth_totp.device']._get_trusted_device_age()
                     key = request.env['auth_totp.device'].sudo()._generate(
                         "browser",
                         name,
-                        datetime.now() + timedelta(seconds=TRUSTED_DEVICE_AGE)
+                        datetime.now() + timedelta(seconds=trusted_device_age)
                     )
                     response.set_cookie(
                         key=TRUSTED_DEVICE_COOKIE,
                         value=key,
-                        max_age=TRUSTED_DEVICE_AGE,
+                        max_age=trusted_device_age,
                         httponly=True,
                         samesite='Lax'
                     )
