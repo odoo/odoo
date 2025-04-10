@@ -17,6 +17,21 @@ class ResPartner(models.Model):
     calendar_last_notif_ack = fields.Datetime(
         'Last notification marked as read from base Calendar', default=fields.Datetime.now)
 
+    def _compute_activity_counts(self):
+        # OVERRIDE
+        super()._compute_activity_counts()
+        for partner in self:
+            count = {
+                'title': 'Meetings',
+                'count': partner.meeting_count,
+                'icon_name': 'fa-calendar',
+                'action_name': 'schedule_meeting',
+            }
+            if not isinstance(partner.activity_counts, list):
+                partner.activity_counts = [count]
+            else:
+                partner.activity_counts.append(count)
+
     def _compute_meeting_count(self):
         result = self._compute_meeting()
         for p in self:

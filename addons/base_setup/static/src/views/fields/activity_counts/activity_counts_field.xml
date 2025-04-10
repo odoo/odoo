@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="base.ActivityCountsField">
+        <t t-if="this.props.record.data.activity_counts">
+            <t t-foreach="this.props.record.data.activity_counts" t-as="item" t-key="item.title">
+                <a t-if="item.count>0"
+                    class="btn btn-sm btn-link smaller"
+                    groups="item.groups"
+                    name="item.action_name"
+                    role="button"
+                    type="object">
+                    <i t-attf-class="fa #{item.icon_name} me-1" aria-label="item.title" role="img" title="item.title"/>
+                    <t t-esc="item.count"/>
+                </a>
+            </t>
+        </t>
+    </t>
+
+</templates>

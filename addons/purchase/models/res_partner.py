@@ -47,3 +47,21 @@ class ResPartner(models.Model):
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', company_dependent=True,
         help="Number of days to send reminder email before the promised receipt date")
     buyer_id = fields.Many2one('res.users', string='Buyer')
+
+    def _compute_activity_counts(self):
+        # OVERRIDE
+        super()._compute_activity_counts()
+        if not self.env.user.has_group('purchase.group_purchase_user'):
+            return
+        for partner in self:
+            count = {
+                'title': 'Purchases',
+                'count': partner.purchase_order_count,
+                'icon_name': 'fa-credit-card',
+                'action_name': '%(purchase.act_res_partner_2_purchase_order)d',
+                'groups': 'purchase.group_purchase_user',
+            }
+            if not isinstance(partner.activity_counts, list):
+                partner.activity_counts = [count]
+            else:
+                partner.activity_counts.append(count)

@@ -44,6 +44,24 @@ class ResPartner(models.Model):
     def _get_contact_opportunities_domain(self):
         return [('partner_id', 'in', self._fetch_children_partners_for_hierarchy().ids)]
 
+    def _compute_activity_counts(self):
+        # OVERRIDE
+        super()._compute_activity_counts()
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return
+        for partner in self:
+            count = {
+                'title': 'Opportunities',
+                'count': partner.opportunity_count,
+                'icon_name': 'fa-star',
+                'action_name': 'action_view_opportunity',
+                'groups': 'sales_team.group_sale_salesman',
+            }
+            if not isinstance(partner.activity_counts, list):
+                partner.activity_counts = [count]
+            else:
+                partner.activity_counts.append(count)
+
     def _compute_opportunity_count(self):
         self.opportunity_count = 0
         if not self.env.user.has_group('sales_team.group_sale_salesman'):

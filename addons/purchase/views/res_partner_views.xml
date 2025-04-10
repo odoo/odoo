@@ -56,7 +56,7 @@
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//footer/div" position="inside">
-                    <a t-if="record.purchase_order_count?.value"
+                    <a t-if="record.purchase_order_count.value>0"
                         class="btn btn-sm btn-link smaller"
                         groups="purchase.group_purchase_user"
                         name="%(purchase.act_res_partner_2_purchase_order)d"

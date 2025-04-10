@@ -68,6 +68,24 @@ class ResPartner(models.Model):
             'barcode', 'write_date', 'property_product_pricelist', 'parent_name', 'pos_contact_address', 'invoice_emails', 'fiscal_position_id'
         ]
 
+    def _compute_activity_counts(self):
+        # OVERRIDE
+        super()._compute_activity_counts()
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            return
+        for partner in self:
+            count = {
+                'title': 'Shopping Cart',
+                'count': partner.pos_order_count,
+                'icon_name': 'shopping-bag',
+                'action_name': 'action_view_pos_order',
+                'groups': 'point_of_sale.group_pos_user',
+            }
+            if not isinstance(partner.activity_counts, list):
+                partner.activity_counts = [count]
+            else:
+                partner.activity_counts.append(count)
+
     def _compute_pos_order(self):
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search_fetch(

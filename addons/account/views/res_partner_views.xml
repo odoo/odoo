@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <!-- Partner kanban view inherit -->
+        <record id="res_partner_kanban_view_inherit_account" model="ir.ui.view">
+            <field name="name">res.partner.kanban.view.inherit.account</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <xpath expr="//footer/div" position="inside">
+                    <a t-if="record.move_count.value>0"
+                        class="btn btn-sm btn-link smaller"
+                        groups="account.group_account_user"
+                        name="open_partner_moves"
+                        role="button"
+                        type="object">
+                        <i class="fa fa-pencil-square-o me-1" aria-label="Journal Entries" role="img" title="Journal Entries"/>
+                        <field name="move_count"/>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>
