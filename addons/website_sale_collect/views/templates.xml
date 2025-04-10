@@ -39,4 +39,68 @@
         </xpath>
     </template>
 
+    <template id="delivery_location_selector" inherit_id="website_sale.delivery_address_row">
+        <div id="delivery_address_row" position="inside">
+            <div name="o_pickup_location" class="o_portal_address_row d-none">
+                <t t-set="pickup_location_data" t-value="order.pickup_location_data or {}"/>
+                <a
+                    t-if="not pickup_location_data"
+                    name="o_pickup_location_selector"
+                    role="button"
+                    class="o_address_find_store d-flex align-items-center justify-content-center rounded no-decoration"
+                >
+                    <div>
+                        <span class="d-md-inline">
+                            <i class="fa fa-search"/>
+                        </span>
+                        <span>
+                            Choose Store
+                        </span>
+                    </div>
+                </a>
+                <span
+                    name="o_pickup_location_selector"
+                    t-attf-class="card position-relative
+                        {{'bg-primary border border-primary js_change_address'
+                        if pickup_location_data else 'border border-0 d-none'}}"
+                    t-att-data-location-id="pickup_location_data.get('id')"
+                    t-att-data-zip-code="pickup_location_data.get('zip_code')"
+                    t-att-data-pickup-location-data="json.dumps(pickup_location_data)"
+                >
+                    <div t-attf-class="card-body d-flex flex-column align-items-start">
+                        <div class="d-flex justify-content-between w-100">
+                            <span
+                                name="o_pickup_location_name"
+                                class="d-block fw-bold"
+                                t-out="pickup_location_data.get('name', '')"
+                            />
+                            <a
+                                name="edit_pickup_address"
+                                t-attf-class="js_edit_address btn btn-link p-0 mt-auto
+                                    {{'d-none' if not pickup_location_data else ''}}"
+                                role="button"
+                            >
+                                <i class="fa fa-search me-1"/>Change Store
+                            </a>
+                        </div>
+                        <span name="o_pickup_location_address" class="lh-sm">
+                            <t t-out="pickup_location_data.get('street', '')"/>
+                            <br/>
+                            <t
+                                t-out="pickup_location_data.get('city', '')
+                                + ' ' + pickup_location_data.get('zip_code', '')"
+                            />
+                            <br/>
+                            <t t-out="pickup_location_data.get('country', '')"/>
+                        </span>
+                        <span name="o_pickup_location_details"></span>
+                    </div>
+                </span>
+            </div>
+        </div>
+        <div id="delivery_address_row" position="attributes">
+            <attribute name="class" separator=" " add="delivery_address_row"/>
+        </div>
+    </template>
+
 </odoo>
