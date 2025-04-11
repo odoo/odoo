@@ -24,9 +24,11 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         landed_costs_lines = self.line_ids.filtered(lambda line: line.is_landed_costs_line)
+        landed_cost_picking_ids = self._get_landed_cost_picking_ids()
 
         landed_costs = self.env['stock.landed.cost'].with_company(self.company_id).create({
             'vendor_bill_id': self.id,
+            'picking_ids': landed_cost_picking_ids.ids,
             'cost_lines': [(0, 0, {
                 'product_id': l.product_id.id,
                 'name': l.product_id.name,
@@ -37,6 +39,13 @@ class AccountMove(models.Model):
         })
         action = self.env["ir.actions.actions"]._for_xml_id("stock_landed_costs.action_stock_landed_cost")
         return dict(action, view_mode='form', res_id=landed_costs.id, views=[(False, 'form')])
+
+    def _get_landed_cost_picking_ids(self):
+        """Return pickings relevant for landed cost.
+        Can be overridden by other modules (e.g. subcontracting).
+        """
+        self.ensure_one()
+        return self.line_ids.purchase_order_id.picking_ids.filtered(lambda p: any(m.stock_valuation_layer_ids for m in p.move_ids))
 
     def action_view_landed_costs(self):
         self.ensure_one()

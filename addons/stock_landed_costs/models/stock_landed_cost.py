@@ -41,6 +41,7 @@ class StockLandedCost(models.Model):
     picking_ids = fields.Many2many(
         'stock.picking', string='Transfers',
         copy=False)
+    picking_count = fields.Integer(compute='_compute_picking_count')
     cost_lines = fields.One2many(
         'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
         copy=True)
@@ -73,6 +74,11 @@ class StockLandedCost(models.Model):
     def _compute_total_amount(self):
         for cost in self:
             cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
+
+    @api.depends('picking_ids')
+    def _compute_picking_count(self):
+        for order in self:
+            order.picking_count = len(order.picking_ids)
 
     @api.onchange('target_model')
     def _onchange_target_model(self):
@@ -310,6 +316,21 @@ class StockLandedCost(models.Model):
         domain = [('id', 'in', self.stock_valuation_layer_ids.ids)]
         action = self.env["ir.actions.actions"]._for_xml_id("stock_account.stock_valuation_layer_action")
         return dict(action, domain=domain)
+
+    def action_view_pickings(self):
+        """ Returns an action that displays pickings related to the Purchase Order.
+        It shows a list view if there are multiple pickings, or a form view if there's only one.
+        """
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
+        if len(self.picking_ids) > 1:
+            action['domain'] = [('id', 'in', self.picking_ids.ids)]
+        elif self.picking_ids:
+            picking_form_view = self.env.ref('stock.view_picking_form', False)
+            form_view = [(picking_form_view and picking_form_view.id or False, 'form')]
+            action['views'] = form_view + [(state, view) for state, view in action.get('views', []) if view != 'form']
+            action['res_id'] = self.picking_ids.id
+        return action
 
     def _get_targeted_move_ids(self):
         return self.picking_ids.move_ids
