@@ -13,7 +13,7 @@ import {
 } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, toRaw, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import { Component, toRaw, useChildSubEnv, useRef, useState, onMounted } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -22,6 +22,8 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { browser } from "@web/core/browser/browser";
+import { router } from "@web/core/browser/router";
 
 /**
  * @typedef {Object} Props
@@ -62,12 +64,23 @@ export class ChatWindow extends Component {
         this.threadActions = useThreadActions();
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");
+        this.boundHandlePopstate = this.handlePopstate.bind(this);
+        this.chatWindowHistoryState = null;
 
         useChildSubEnv({
             closeActionPanel: () => this.threadActions.activeAction?.close(),
             inChatWindow: true,
             messageHighlight: this.messageHighlight,
         });
+
+        onMounted(()=>{
+            router.skipLoad = true;
+            if(this.ui.isSmall){
+                this.chatWindowHistoryState = { chatWindowOpen: this.props.chatWindow.localId };
+                browser.history.pushState(this.chatWindowHistoryState, '');
+                browser.addEventListener('popstate', this.boundHandlePopstate);
+            }
+        })
     }
 
     get composerType() {
@@ -161,6 +174,12 @@ export class ChatWindow extends Component {
     }
 
     async close(options) {
+        // Always remove the event listener when the ChatWindow is closed.
+        browser.removeEventListener('popstate', this.boundHandlePopstate);
+        const isCurrentStateOurs = this.chatWindowHistoryState && browser.history.state?.chatWindowOpen === this.chatWindowHistoryState.chatWindowOpen;
+        if(isCurrentStateOurs){
+            browser.history.back();
+        }
         const chatWindow = toRaw(this.props.chatWindow);
         await chatWindow.close(options);
     }
@@ -186,5 +205,14 @@ export class ChatWindow extends Component {
     async onActionsMenuStateChanged(isOpen) {
         // await new Promise(setTimeout); // wait for bubbling header
         this.state.actionsMenuOpened = isOpen;
+    }
+
+    handlePopstate(event){
+        if(this.ui.isSmall){
+            const navigatedAwayFromOurState = event.state?.chatWindowOpen !== this.chatWindowHistoryState.chatWindowOpen;
+            if(navigatedAwayFromOurState){
+                this.close()
+            }
+        }
     }
 }
