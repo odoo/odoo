@@ -24,7 +24,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _("Withholding Tax on Purchases - Transition Account"),
                 'code': '252002',
                 'account_type': 'liability_current',
-                'reconcile': False,
+                'reconcile': True,
             },
         }
 

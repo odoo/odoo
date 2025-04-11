@@ -811,6 +811,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         taxes should see their tax lines use the final tax account, not the transition account.
         """
         tax_account = self.company_data['default_account_tax_sale']
+        tax_account.reconcile = True
 
         caba_tax = self.env['account.tax'].create({
             'name': "CABA",
