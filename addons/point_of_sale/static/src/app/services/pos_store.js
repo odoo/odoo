@@ -30,6 +30,7 @@ import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popu
 import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
 import { user } from "@web/core/user";
 import { normalize } from "@web/core/l10n/utils";
+import { sprintf } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
@@ -1908,11 +1909,27 @@ export class PosStore extends WithLazyGetterTrap {
         return receiptsData;
     }
 
+<<<<<<< 6e6e2a8c740de110208b00bc516bd1fefc63d5b9
     async printChanges(order, orderChange, reprint = false, printers = this.unwatched.printers) {
         let isPrinted = false;
         const unsuccessfulPrints = [];
         const retryPrinters = new Set();
+||||||| e0bb3a3bbfd485e68f2e5b8591bc13a3362c191d
+    async printChanges(order, orderChange, reprint = false) {
+        let isPrinted = false;
+        const unsuccedPrints = [];
+=======
+    async printChanges(
+        order,
+        orderChange,
+        reprint = false,
+        printers = this.unwatched.printers,
+        isPrinted = false
+    ) {
+        const unsuccedPrinters = [];
+>>>>>>> 4f5bd876bdcc3532437302c3c731c9146d846afa
 
+<<<<<<< 6e6e2a8c740de110208b00bc516bd1fefc63d5b9
         for (const printer of printers) {
             for (const change of orderChange) {
                 const { orderData, changes } = this.generateOrderChange(
@@ -1939,10 +1956,50 @@ export class PosStore extends WithLazyGetterTrap {
                     } else if (result.warningCode) {
                         this.displayPrinterWarning(result, printer.config.name);
                     }
+||||||| e0bb3a3bbfd485e68f2e5b8591bc13a3362c191d
+        for (const printer of this.unwatched.printers) {
+            const { orderData, changes } = this.generateOrderChange(
+                order,
+                orderChange,
+                printer.config.product_categories_ids,
+                reprint
+            );
+            const receiptsData = await this.generateReceiptsDataToPrint(
+                orderData,
+                changes,
+                orderChange
+            );
+            for (const data of receiptsData) {
+                const result = await this.printOrderChanges(data, printer);
+                if (!result.successful) {
+                    unsuccedPrints.push(printer.config.name);
+                } else {
+                    isPrinted = true;
+=======
+        for (const printer of printers) {
+            const { orderData, changes } = this.generateOrderChange(
+                order,
+                orderChange,
+                printer.config.product_categories_ids,
+                reprint
+            );
+            const receiptsData = await this.generateReceiptsDataToPrint(
+                orderData,
+                changes,
+                orderChange
+            );
+            for (const data of receiptsData) {
+                const result = await this.printOrderChanges(data, printer);
+                if (!result.successful) {
+                    unsuccedPrinters.push(printer);
+                } else {
+                    isPrinted = true;
+>>>>>>> 4f5bd876bdcc3532437302c3c731c9146d846afa
                 }
             }
         }
 
+<<<<<<< 6e6e2a8c740de110208b00bc516bd1fefc63d5b9
         // printing errors
         if (unsuccessfulPrints.length) {
             const failedReceipts = unsuccessfulPrints.join("\n");
@@ -1954,7 +2011,52 @@ export class PosStore extends WithLazyGetterTrap {
                 },
             });
         }
+||||||| e0bb3a3bbfd485e68f2e5b8591bc13a3362c191d
+        // printing errors
+        if (unsuccedPrints.length) {
+            const failedReceipts = unsuccedPrints.join(", ");
+            this.dialog.add(AlertDialog, {
+                title: _t("Printing failed"),
+                body: _t("Failed in printing %s changes of the order", failedReceipts),
+            });
+        }
+=======
+        if (unsuccedPrinters.length) {
+            const printerNames = unsuccedPrinters
+                .map(
+                    (printer) =>
+                        `\n\t${printer.config.name} (${
+                            printer.config.printer_type === "iot"
+                                ? printer.config.proxy_ip
+                                : printer.config.epson_printer_ip
+                        })`
+                )
+                .join("");
+>>>>>>> 4f5bd876bdcc3532437302c3c731c9146d846afa
 
+            const retry = await makeAwaitable(this.dialog, AlertDialog, {
+                title: _t("Printing failed"),
+                body: sprintf(
+                    _t(
+                        "Please note that some printers could not be contacted. The changes will be taken into account locally, but a preparation ticket may be missing. Here is the list of printers with errors: %s\nDo you want to retry ?"
+                    ),
+                    printerNames
+                ),
+                confirmLabel: _t("Retry"),
+                cancelLabel: _t("Discard"),
+                cancel: () => {},
+            });
+
+            if (retry) {
+                return await this.printChanges(
+                    order,
+                    orderChange,
+                    reprint,
+                    unsuccedPrinters,
+                    isPrinted
+                );
+            }
+        }
         return isPrinted;
     }
 
