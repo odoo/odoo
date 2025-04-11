@@ -50,6 +50,7 @@ class Partner extends models.Model {
     _records = [
         { id: 1, name: "first", txt: "<p>first</p>" },
         { id: 2, name: "second", txt: "<p>second</p>" },
+        { id: 3, name: "third", txt: "<p></p>" },
     ];
 
     _onChanges = {
@@ -1373,6 +1374,41 @@ test("edit and save a html field in collaborative should keep the same wysiwyg",
 
     await clickSave();
     expect.verifySteps(["web_save"]);
+});
+
+test("'checklist' command is not available when 'disable_checkbox' = True", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'disable_checkbox': True}"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/chec");
+    await waitFor(".o-we-powerbox");
+
+    expect(queryAllTexts(".o-we-command-name")[0]).not.toBe("Checklist");
+});
+
+test("'checklist' toolbar option is not available when 'disable_checkbox' = True", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'disable_checkbox': True}"/>
+            </form>`,
+    });
+    const node = queryOne(".odoo-editor-editable p");
+    setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    await contains(".o-we-toolbar button[name='list_selector']").click();
+    expect("button[name='checklist']").toHaveCount(0);
 });
 
 describe("sandbox", () => {

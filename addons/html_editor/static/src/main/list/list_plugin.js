@@ -85,6 +85,7 @@ export class ListPlugin extends Plugin {
                 title: _t("Checklist"),
                 description: _t("Track tasks with a checklist"),
                 icon: "fa-check-square-o",
+                isAvailable: () => !this.config.disableCheckbox,
                 run: () => this.toggleListCommand({ mode: "CL" }),
             },
         ],
@@ -1067,11 +1068,16 @@ export class ListPlugin extends Plugin {
     }
 
     getListSelectorButtons() {
-        return listSelectorItems.map((item) => {
-            const command = this.resources.user_commands.find((cmd) => cmd.id === item.commandId);
-            // We want short descriptions for these buttons.
-            item.description = command.title;
-            return composeToolbarButton(command, item);
-        });
+        const getCommand = (item) => this.resources.user_commands.find((cmd) => cmd.id === item.commandId);
+        return listSelectorItems
+            .filter((item) => {
+                const command = getCommand(item);
+                return command && (!command.isAvailable || command.isAvailable());
+            })
+            .map((item) => {
+                const command = getCommand(item);
+                item.description = command.title;
+                return composeToolbarButton(command, item);
+            });
     }
 }
