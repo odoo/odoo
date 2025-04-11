@@ -10,18 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout odoo_18.0 branch
+      - name: Checkout odoo_18.0 (full history)
         uses: actions/checkout@v3
         with:
           ref: odoo_18.0
-	  fetch-depth: 0  # fetch full history (not shallow)
+          fetch-depth: 0
 
-      - name: Push to Bitbucket (odoo_18.0 only)
+      - name: Set up Git identity
         run: |
-          git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          git remote add bitbucket https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/it_dev_1010/odoo_18.0_github.git
-          git push -f bitbucket odoo_18.0
+          git config --global user.email "github-actions@github.com"
+
+      - name: Push to Bitbucket
         env:
           BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
           BITBUCKET_APP_PASSWORD: ${{ secrets.BITBUCKET_APP_PASSWORD }}
+        run: |
+          git remote add bitbucket https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/it_dev_1010/odoo_18.0_github.git
+          git push -f bitbucket odoo_18.0
