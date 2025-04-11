@@ -22,6 +22,7 @@ publicWidget.registry.customerAddress = publicWidget.Widget.extend({
         this._changeCountry = debounce(this._changeCountry.bind(this), 500);
         this.addressForm = document.querySelector('form.address_autoformat');
         this.errorsDiv = document.getElementById('errors');
+        this.successDiv = document.getElementById('success');
         this.addressType = this.addressForm['address_type'].value;
         this.countryCode = this.addressForm.dataset.companyCountryCode;
         this.requiredFields = this.addressForm.required_fields.value.split(',');
@@ -187,7 +188,20 @@ publicWidget.registry.customerAddress = publicWidget.Widget.extend({
                 new FormData(this.addressForm),
             )
             if (result.successUrl) {
-                window.location = result.successUrl;
+                let successMessage =  result.successMessage;
+                if (result.successUrl == '/my/account' && successMessage) {
+                    const successDiv = document.createElement('div');
+                    successDiv.classList.add('alert', 'alert-success');
+                    successDiv.textContent = successMessage;
+                    this.successDiv.replaceChildren(successDiv);
+                    this.successDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+                    
+                    // Re-enable button and remove spinner
+                    submitButton.disabled = false;
+                    spinner.remove();
+                } else {
+                    window.location = result.successUrl;
+                }
             } else {
                 // Highlight missing/invalid form values
                 document.querySelectorAll('.is-invalid').forEach(element => {

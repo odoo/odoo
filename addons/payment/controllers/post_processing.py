@@ -63,7 +63,6 @@ class PaymentPostProcessing(http.Controller):
                     monitored_tx.id, e
                 )
                 raise
-
         return {
             'provider_code': monitored_tx.provider_code,
             'state': monitored_tx.state,

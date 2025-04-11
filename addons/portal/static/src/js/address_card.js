@@ -13,6 +13,11 @@ publicWidget.registry.addressCard = publicWidget.Widget.extend({
      async start() {
         this.use_delivery_as_billing_toggle = document.querySelector('#use_delivery_as_billing');
         this.billingContainer = this.el.querySelector('#billing_container');
+        const url = new URL(window.location);
+        if (url.searchParams.has('success')) {
+            url.searchParams.delete('success');
+            window.history.replaceState({}, document.title, url.pathname + url.search);
+        }
     },
 
     // #=== EVENT HANDLERS ===#

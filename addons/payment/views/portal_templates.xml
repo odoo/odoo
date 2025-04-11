@@ -99,6 +99,10 @@
                     <!-- Payment methods page -->
                     <div class="row justify-content-center">
                         <div class="col-lg-7">
+                            <!-- === Success banner === -->
+                            <div t-if="success" class="alert alert-success">
+                                <t t-esc="success"/>
+                            </div>
                             <t t-call="payment.form"/>
                         </div>
                     </div>
