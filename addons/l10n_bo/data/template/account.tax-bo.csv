@@ -1,100 +1,230 @@
-"id","sequence","name","description","invoice_label","amount","amount_type","type_tax_use","include_base_amount","tax_group_id","is_base_affected","children_tax_ids","repartition_line_ids/repartition_type","repartition_line_ids/document_type","repartition_line_ids/tag_ids","repartition_line_ids/account_id","description@es","price_include_override"
-"l10n_bo_iva_13_sale","100","13%","IVA 13%","","13.0","division","sale","True","tax_group_iva_13","","","base","invoice","+IVA 13","","","tax_included"
-"","","","","","","","","","","","","tax","invoice","+IVA 13||+IVA 19","l10n_bo_2135","",""
-"","","","","","","","","","","","","base","refund","+IVA 27","","",""
-"","","","","","","","","","","","","tax","refund","+IVA 27||+IVA 30","l10n_bo_2135","",""
-"l10n_bo_iva_13_discount_sale","105","13% D","IVA 13% - for Discounts","","13.0","division","sale","True","tax_group_iva_13","","","base","invoice","-IVA 28","","IVA 13% - por Descuentos","tax_included"
-"","","","","","","","","","","","","tax","invoice","-IVA 28||-IVA 30","l10n_bo_2135","",""
-"","","","","","","","","","","","","base","refund","-IVA 27","","",""
-"","","","","","","","","","","","","tax","refund","-IVA 27||-IVA 19","l10n_bo_2135","",""
-"l10n_bo_iva_0_sale","110","0%","IVA 0% - Zero Rate","","0.0","percent","sale","","tax_group_iva_0","","","base","invoice","+IVA 15","","IVA 0% - Tasa Cero",""
-"","","","","","","","","","","","","tax","invoice","","","",""
-"","","","","","","","","","","","","base","refund","+IVA 27","","",""
-"","","","","","","","","","","","","tax","refund","","","",""
-"l10n_bo_iva_0_exempt_sale","120","0% EXEMPT","0% IVA Exempt","","0.0","percent","sale","","tax_group_iva_0_exempt","","","base","invoice","+IVA 14","","0% Exento de IVA",""
-"","","","","","","","","","","","","tax","invoice","","","",""
-"","","","","","","","","","","","","base","refund","+IVA 27","","",""
-"","","","","","","","","","","","","tax","refund","","","",""
-"l10n_bo_iva_0_untaxed_sale","130","0% N","0% Not Subject to IVA","","0.0","percent","sale","","tax_group_iva_0_untaxed","","","base","invoice","+IVA 505","","0% No Sujeto al IVA",""
-"","","","","","","","","","","","","tax","invoice","","","",""
-"","","","","","","","","","","","","base","refund","+IVA 27","","",""
-"","","","","","","","","","","","","tax","refund","","","",""
-"l10n_bo_it_3_sale_tax","140","3% IT","IT 3% (tax line)","","3.0","percent","none","","tax_group_it_3","True","","base","invoice","+IT 24","","IT 3% (tasa)",""
-"","","","","","","","","","","","","tax","invoice","","l10n_bo_2136","",""
-"","","","","","","","","","","","","base","refund","-IT 24","","",""
-"","","","","","","","","","","","","tax","refund","","l10n_bo_2136","",""
-"l10n_bo_it_3_sale_expense","150","3% WH IT","IT 3% (expense line)","","-3.0","percent","none","","tax_group_it_3","True","","base","invoice","","","IT 3% (gasto)","tax_excluded"
-"","","","","","","","","","","","","tax","invoice","","l10n_bo_52091","",""
-"","","","","","","","","","","","","base","refund","","","",""
-"","","","","","","","","","","","","tax","refund","","l10n_bo_52091","",""
-"l10n_bo_it_3_sale","160","3% IT","IT 3%","","","group","sale","","tax_group_it_3","","l10n_bo_it_3_sale_tax,l10n_bo_it_3_sale_expense","","","","","",""
-"l10n_bo_it_0_sale","170","0% N IT","0% Not Subject to IT","","0.0","percent","sale","","tax_group_it_0","","","base","invoice","+IT 32","","0% No Sujeto al IT",""
-"","","","","","","","","","","","","tax","invoice","","","",""
-"","","","","","","","","","","","","base","refund","-IT 32","","",""
-"","","","","","","","","","","","","tax","refund","","","",""
-"l10n_bo_iva_13_purchase","300","13%","IVA 13%","","13.0","division","purchase","True","tax_group_iva_13","","","base","invoice","+IVA 11||+IVA 26","","",""
-"","","","","","","","","","","","","tax","invoice","+IVA 11||+IVA 26||+IVA 30","l10n_bo_2135","",""
-"","","","","","","","","","","","","base","refund","+IVA 17","","",""
-"","","","","","","","","","","","","tax","refund","+IVA 17||+IVA 19","l10n_bo_2135","",""
-"l10n_bo_iva_13_discount_purchase","305","13% Disc","IVA 13% - for Discounts","","13.0","division","purchase","True","tax_group_iva_13","","","base","invoice","-IVA 28","","IVA 13% - por Descuentos",""
-"","","","","","","","","","","","","tax","invoice","-IVA 28||-IVA 19","l10n_bo_2135","",""
-"","","","","","","","","","","","","base","refund","-IVA 17","","",""
-"","","","","","","","","","","","","tax","refund","-IVA 17||-IVA 30","l10n_bo_2135","",""
-"l10n_bo_iva_13_purchase_personal","310","13% P C","IVA 13% - for Private Consumption","","13.0","division","purchase","True","tax_group_iva_13","","","base","invoice","+IVA 11||+IVA 26||+IVA 16","","IVA 13% - por Consumos Particulares",""
-"","","","","","","","","","","","","tax","invoice","+IVA 11||+IVA 26||+IVA 16||+IVA 30||+IVA 19","l10n_bo_2135","",""
-"","","","","","","","","","","","","base","refund","+IVA 17","","",""
-"","","","","","","","","","","","","tax","refund","+IVA 17","","",""
-"l10n_bo_iva_13_purchase_donations","320","13% D","IVA 13% - for Donations","","13.0","division","purchase","True","tax_group_iva_13","","","base","invoice","+IVA 11||+IVA 26","","IVA 13% - por Donaciones",""
-"","","","","","","","","","","","","tax","invoice","+IVA 11||+IVA 26||+IVA 30||+IVA 19||+IVA 55","l10n_bo_2135","",""
-"","","","","","","","","","","","","base","refund","+IVA 17","","",""
-"","","","","","","","","","","","","tax","refund","+IVA 17","","",""
-"l10n_bo_iva_0_purchase","330","0%","IVA 0% - Zero Rate","","0.0","percent","purchase","","tax_group_iva_0","","","base","invoice","+IVA 11","","IVA 0% - Tasa Cero",""
-"","","","","","","","","","","","","tax","invoice","","","",""
-"","","","","","","","","","","","","base","refund","+IVA 17","","",""
-"","","","","","","","","","","","","tax","refund","","","",""
-"l10n_bo_iva_mixed_purchase","340","13% M T U","IVA - Mixed Taxed and Untaxed","","13.0","division","purchase","True","tax_group_iva_mixed","","","base","invoice","+IVA 11||+IVA 31","","IVA - Mixto Gravado y no Gravado",""
-"","","","","","","","","","","","","tax","invoice","+IVA 11||+IVA 31||+IVA 30","l10n_bo_2135","",""
-"","","","","","","","","","","","","base","refund","+IVA 17","","",""
-"","","","","","","","","","","","","tax","refund","+IVA 17||+IVA 19","l10n_bo_2135","",""
-"l10n_bo_iva_0_exempt_purchase","350","0% EXEMPT","0% IVA Exempt","","0.0","percent","purchase","","tax_group_iva_0_exempt","","","base","invoice","+IVA 11","","0% Exento de IVA",""
-"","","","","","","","","","","","","tax","invoice","","","",""
-"","","","","","","","","","","","","base","refund","+IVA 17","","",""
-"","","","","","","","","","","","","tax","refund","","","",""
-"l10n_bo_iva_0_untaxed_purchase","360","0% N","0% Not Subject to IVA","","0.0","percent","purchase","","tax_group_iva_0_untaxed","","","base","invoice","+IVA 11","","0% No Sujeto al IVA",""
-"","","","","","","","","","","","","tax","invoice","","","",""
-"","","","","","","","","","","","","base","refund","+IVA 17","","",""
-"","","","","","","","","","","","","tax","refund","","","",""
-"l10n_bo_whh_services_it_tax","370","3,5503% WHH IT S T","3% Whh. IT services gross-up (tax)","","3.5503","percent","none","","tax_group_whh_services","","","base","invoice","","","3% Ret. IT servicios gross-up (tasa)",""
-"","","","","","","","","","","","","tax","invoice","+Ret IT 13","l10n_bo_2137","",""
-"","","","","","","","","","","","","base","refund","","","",""
-"","","","","","","","","","","","","tax","refund","-Ret IT 13","l10n_bo_2137","",""
-"l10n_bo_whh_services_it_expense","380","3,5503% WHH IT S","3% Whh. IT services gross-up (expense)","","-3.5503","percent","none","","tax_group_whh_services","","","base","invoice","","","3% Ret. IT servicios gross-up (gasto)","tax_excluded"
-"","","","","","","","","","","","","tax","invoice","","l10n_bo_52092","",""
-"","","","","","","","","","","","","base","refund","","","",""
-"","","","","","","","","","","","","tax","refund","","l10n_bo_52092","",""
-"l10n_bo_whh_services_iue_tax","390","14,7929% WHH IUE S","12.5% Whh. IUE services gross-up (tax)","","14.7929","percent","none","","tax_group_whh_services","","","base","invoice","+Ret IUE 13","","12.5% Ret. IUE servicios gross-up (tasa)",""
-"","","","","","","","","","","","","tax","invoice","","l10n_bo_2138","",""
-"","","","","","","","","","","","","base","refund","-Ret IUE 13","","",""
-"","","","","","","","","","","","","tax","refund","","l10n_bo_2138","",""
-"l10n_bo_whh_services_iue_expense","400","14,7929% WH WHH IUE S","12.5% Whh. IUE services gross-up (expense)","","-14.7929","percent","none","","tax_group_whh_services","","","base","invoice","","","12.5% Ret. IUE servicios gross-up (gasto)","tax_excluded"
-"","","","","","","","","","","","","tax","invoice","","l10n_bo_52093","",""
-"","","","","","","","","","","","","base","refund","","","",""
-"","","","","","","","","","","","","tax","refund","","l10n_bo_52093","",""
-"l10n_bo_whh_services_purchase","410","15.5% Whh. IT+IUE S","15.5% Whh. IT+IUE services gross-up","","","group","purchase","","tax_group_whh_services","","l10n_bo_whh_services_it_tax,l10n_bo_whh_services_it_expense,l10n_bo_whh_services_iue_tax,l10n_bo_whh_services_iue_expense","","","","","15.5% Ret. IT+IUE servicios gross-up",""
-"l10n_bo_whh_goods_it_tax","420","3,2609%% WHH IT G","3% Whh. IT goods gross-up (tax)","","3.2609","percent","none","","tax_group_whh_goods","","","base","invoice","","","3% Ret. IT bienes gross-up (tasa)",""
-"","","","","","","","","","","","","tax","invoice","+Ret IT 13","l10n_bo_2137","",""
-"","","","","","","","","","","","","base","refund","","","",""
-"","","","","","","","","","","","","tax","refund","-Ret IT 13","l10n_bo_2137","",""
-"l10n_bo_whh_goods_it_expense","430","3% WH WHH IT G","3% Whh. IT goods gross-up (expense)","","-3.2609","percent","none","","tax_group_whh_goods","","","base","invoice","","","3% Ret. IT bienes gross-up (gasto)","tax_excluded"
-"","","","","","","","","","","","","tax","invoice","","l10n_bo_52092","",""
-"","","","","","","","","","","","","base","refund","","","",""
-"","","","","","","","","","","","","tax","refund","","l10n_bo_52092","",""
-"l10n_bo_whh_goods_iue_tax","440","5,4348% WHH IUE G","5% Whh. IUE goods gross-up (tax)","","5.4348","percent","none","","tax_group_whh_goods","","","base","invoice","+Ret IUE 26","","5% Ret. IUE bienes gross-up (tasa)",""
-"","","","","","","","","","","","","tax","invoice","","l10n_bo_2138","",""
-"","","","","","","","","","","","","base","refund","-Ret IUE 26","","",""
-"","","","","","","","","","","","","tax","refund","","l10n_bo_2138","",""
-"l10n_bo_whh_goods_iue_expense","450","5,4348% WH WHH IUE G","5% Whh. IUE goods gross-up (expense)","","-5.4348","percent","none","","tax_group_whh_goods","","","base","invoice","","","5% Ret. IUE bienes gross-up (gasto)","tax_excluded"
-"","","","","","","","","","","","","tax","invoice","","l10n_bo_52093","",""
-"","","","","","","","","","","","","base","refund","","","",""
-"","","","","","","","","","","","","tax","refund","","l10n_bo_52093","",""
-"l10n_bo_whh_goods_purchase","460","8% WHH IT+IUE G","8% Whh. IT+IUE goods gross-up","","","group","purchase","","tax_group_whh_goods","","l10n_bo_whh_goods_it_tax,l10n_bo_whh_goods_it_expense,l10n_bo_whh_goods_iue_tax,l10n_bo_whh_goods_iue_expense","","","","","8% Ret. IT+IUE bienes gross-up",""
+sequence,name@es,name,id,active,description@es,description,invoice_label,formula,amount,amount_type,type_tax_use,include_base_amount,price_include,tax_group_id,price_include_override,is_base_affected,include_base_amount,children_tax_ids,invoice_repartition_line_ids/repartition_type,invoice_repartition_line_ids/document_type,invoice_repartition_line_ids/tag_ids,invoice_repartition_line_ids/account_id,tax_exigibility,cash_basis_transition_account_id
+1,Débito Fiscal IVA | Ventas,Fiscal debit VAT | Sales,l10n_bo_sales_iva,True,Débito Fiscal IVA por Venta,Tax Debit VAT for Sale,,,13.0,division,none,True,True,iva_tax_group,tax_included,True,True,,base,invoice,+iva13,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iva13||+iva39l,l10n_bo_2140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,+iva27,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iva27||+iva114r,l10n_bo_1140101,,
+2,IVA Ventas,Sales Tax,l10n_bo_fiscal_debit,True,,,,,13.0,group,sale,,,iva_tax_group,,,False,"l10n_bo_sales_iva,l10n_bo_payable_transaction_tax,l10n_bo_sale_transaction_tax",,,,,,
+3,Exentos y Exportaciones,Exemptions and Exports,l10n_bo_sale_iva_exempt,True,Exportación u Operación Exenta,Exempt Export or Operation,,,0.0,division,sale,True,True,iva_exempt_tax_group,tax_included,True,True,,base,invoice,+iva14||+it13||+it32,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva14||-it13||-it32,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,,,
+4,Tasa cero,Zero rate,l10n_bo_sale_zero_rate,True,Venta Gravada a Tasa Cero,Taxable Sale at Zero Rate,,,0.0,division,sale,True,True,no_iva_tax_group,tax_included,True,True,,base,invoice,+iva15,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva15,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,,,
+5,No gravada,Not recorded,l10n_bo_no_sale_iva,True,Venta no Gravada u Operación que no es Objeto del IVA,Non-Taxable Sale or Operation that is not Subject to VAT,,,0.0,division,sale,True,True,no_iva_tax_group,tax_included,True,True,,base,invoice,+iva505,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva505,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,,,
+6,Consumo particular,Private consumption,l10n_bo_particular_consumption_sales_iva,True,Producto Retirado por Consumo Particular,Product Withdrawn for Personal Consumption,,,13.0,division,sale,True,True,iva_tax_group,tax_included,True,True,,base,invoice,+iva16,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iva16||+iva39p,l10n_bo_2140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva16,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iva27||+iva114r,l10n_bo_1140101,,
+7,Reintegro IVA,VAT refund,l10n_bo_purchase_fiscal_credit_refund,True,"Débito Fiscal IVA por Reintegro, Donación o Entrega a Título Gratuito","Fiscal VAT Debit for Refund, Donation or Free Delivery",,,-13.0,percent,none,True,True,iva_tax_group,tax_included,True,True,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iva55,l10n_bo_2140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iva55,l10n_bo_1140101,,
+8,IVA Conciliaciones,VAT Reconciliations,l10n_bo_conciliation_sales_iva,True,Débito Fiscal IVA por Conciliación,Fiscal Debit VAT for Reconciliation,,,13.0,division,sale,True,True,iva_tax_group,tax_included,True,True,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iva19,l10n_bo_2140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iva19,l10n_bo_1140101,,
+9,Descuentos otorgados,Granted discounts,l10n_bo_sale_discount_iva,True,Descuento Otorgado,Discount Granted,,,13.0,division,none,True,True,discount_tax_group,tax_included,True,True,,base,invoice,-iva28,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iva28||-iva114d,l10n_bo_1140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,+iva28,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iva28||+iva114d,l10n_bo_1140101,,
+10,Descuento,Discount,l10n_bo_sale_discount,True,,,,,13.0,group,sale,,,discount_tax_group,,,False,"l10n_bo_sale_discount_iva,l10n_bo_payable_transaction_tax,l10n_bo_sale_transaction_tax",,,,,,
+11,IVA Compras,Purchase VAT,l10n_bo_fiscal_credit,True,Crédito Fiscal IVA por Compra Directamente Vinculada a Actividades Gravadas,VAT Tax Credit for Purchases Directly Linked to Taxable Activities,,,13.0,division,purchase,True,True,iva_tax_group,tax_included,True,True,,base,invoice,+iva26l,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iva26l||+iva114l,l10n_bo_1140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,+iva17,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iva17||+iva39r,l10n_bo_2140101,,
+12,IVA Importaciones,Import VAT,l10n_bo_policy_fiscal_credit,True,Crédito Fiscal IVA por Importación Directamente Vinculada a Actividades Gravadas,VAT Tax Credit for Import Directly Linked to Taxable Activities,,,100.0,division,purchase,True,True,iva_tax_group,tax_included,True,True,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iva114i,l10n_bo_1140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,-iva114i,l10n_bo_2140101,,
+13,Exento,Exempt,l10n_bo_purchase_iva_exempt,True,Compra Exenta de IVA,VAT Exempt Purchase,,,0.0,division,purchase,True,True,iva_exempt_tax_group,tax_included,True,True,,base,invoice,+iva31e||+it13,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva31e||-it13,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,,,
+14,No discriminable | Local,No discrimination | Local,l10n_bo_un_relatable_to_taxable_activity_purchase,True,Compra en la que no es Posible Discriminar su Vinculación con Actividades Gravadas y no Gravadas,Purchase in which it is not Possible to Discriminate its Connection with Taxable and Non-Taxable Activities,,,0.0,division,purchase,True,True,no_iva_tax_group,tax_included,True,True,,base,invoice,+iva31l,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva31l,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,,,
+15,No discriminable | Importación,No discrimination | Import,l10n_bo_non_activity_related_policy_fiscal_credit,True,Importación en la que no es Posible Discriminar su Vinculación con Actividades Gravadas y no Gravadas,Importation in which it is not possible to discern its connection with Taxable and non-Taxable Activities,,,0.0,division,purchase,True,True,no_iva_tax_group,tax_included,True,True,,base,invoice,+iva31i,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva31i,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,,,
+16,No gravada,Not recorded,l10n_bo_not_taxed_purchase,True,Compra no Gravada,Non-Taxable Purchase,,,0.0,division,purchase,True,True,no_iva_tax_group,tax_included,True,True,,base,invoice,+iva31n,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva31n,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,,,
+17,Tasa cero,Zero rate,l10n_bo_purchase_zero_rate,True,Compra Gravada a Tasa Cero,Purchase Taxed at Zero Rate,,,0.0,division,purchase,True,True,no_iva_tax_group,tax_included,True,True,,base,invoice,+iva31z,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva31z,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,,,
+18,IVA Conciliaciones,VAT Reconciliations,l10n_bo_conciliation_fiscal_credit,True,Crédito Fiscal IVA por Conciliaciones,VAT Tax Credit for Reconciliations,,,13.0,division,purchase,True,True,iva_tax_group,tax_included,True,True,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iva30,l10n_bo_1140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iva30,l10n_bo_2140101,,
+19,Descuento,Discount,l10n_bo_purchase_discount,True,Descuento Obtenido,Discount Obtained,,,13.0,division,purchase,True,True,discount_tax_group,tax_included,True,True,,base,invoice,-iva18,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iva18||-iva39d,l10n_bo_2140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,+iva18,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iva18||+iva39d,l10n_bo_2140101,,
+20,Tasas,Rates,l10n_bo_rates_tax,True,Tasas,Rates,,,100.0,division,purchase,True,True,no_iva_tax_group,tax_included,True,True,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,l10n_bo_6111011,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,l10n_bo_6111011,,
+21,ONSCF,ONSCF,l10n_bo_other_no_credit_debit_tax,True,Otros no sujetos a IVA,Others not subject to VAT,,,100.0,division,purchase,True,True,other_no_iva_tax_group,tax_included,True,True,,base,invoice,+iva31l,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iva31l,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,,,
+22,Crédito Fiscal No Declarado,Undeclared Tax Credit,l10n_bo_not_declared_fiscal_credit,True,IVA no Declarado,Undeclared VAT,,,13.0,division,purchase,True,True,undeclared_iva_tax_group,tax_included,True,True,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,l10n_bo_6111018,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,l10n_bo_6111018,,
+22,Crédito Fiscal Diferido,Deferred Tax Credit,l10n_bo_deferred_fiscal_credit,True,Crédito Fiscal IVA por Compra Directamente Vinculada a Actividades Gravadas,VAT Tax Credit for Purchases Directly Linked to Taxable Activities,,,13.0,division,purchase,True,True,iva_tax_group,tax_included,True,True,,base,invoice,+iva26l,,on_payment,l10n_bo_1140102
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iva26l||+iva114l,l10n_bo_1140101,,
+,,,,,,,,,,,,,,,,,,,base,refund,+iva17,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iva17||+iva39r,l10n_bo_2140101,,
+23,IT(-) 3%,IT is down 3%.,l10n_bo_payable_transaction_tax,True,IT 3%,IT 3%,,,3.0,percent,none,,,it_tax_group,,True,False,,base,invoice,+it13,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+it909,l10n_bo_2140102,,
+,,,,,,,,,,,,,,,,,,,base,refund,-it13,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,-it909,l10n_bo_2140102,,
+24,IT(+) 3%,IT(+) 3%,l10n_bo_sale_transaction_tax,True,IT 3%,IT 3%,,,-3.0,percent,none,,,it_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,l10n_bo_6111005,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,l10n_bo_6111005,,
+25,Retención IT | Servicios IUE,IT Retention | IUE Services,l10n_bo_services_transaction_tax,False,Retención IT | IUE Servicios Nacionales 3%,IT Withholding | National Services IUE 3%,,,-3.0,percent,none,,,it_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13s,l10n_bo_2140103,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13s,l10n_bo_2140103,,
+26,Grossing Up IT | Servicios IUE,Grossing Up IT | IUE Services,l10n_bo_services_transaction_tax_grossing_up,False,Retención IT | IUE Servicios Nacionales 3%,IT Withholding | National Services IUE 3%,,,-3.0,percent,none,,True,it_tax_group,tax_included,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13gs,l10n_bo_2140103,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13gs,l10n_bo_2140103,,
+27,Retención IT | Bienes IUE,IT Withholding | IUE Goods,l10n_bo_goods_transaction_tax,True,Retención IT | IUE Bienes 3%,IT Withholding | IUE Property 3%,,,-3.0,percent,none,,,it_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13g,l10n_bo_2140104,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13g,l10n_bo_2140104,,
+28,Grossing Up IT | Bienes IUE,Increasing IT | Assets IUE,l10n_bo_goods_transaction_tax_grossing_up,True,Retención IT | IUE Bienes 3%,IT Withholding | IUE Property 3%,,,-3.0,percent,none,,True,it_tax_group,tax_included,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13gg,l10n_bo_2140104,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13gg,l10n_bo_2140104,,
+29,Retención IT | Internacionales IUE,IT Withholding | International IUE,l10n_bo_rc_iva_international_services_transaction_tax,True,Retención IT | IUE Servicios Internacionales 3%,IT Withholding | IUE International Services 3%,,,-3.0,percent,none,,,it_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13s,l10n_bo_2140105,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13s,l10n_bo_2140105,,
+30,Grossing Up IT | Internacionales IUE,Grossing Up IT | International IUE,l10n_bo_rc_iva_international_services_transaction_tax_grossing_up,True,Retención IT | IUE Servicios Internacionales 3%,IT Withholding | IUE International Services 3%,,,-3.0,percent,none,,True,it_tax_group,tax_included,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13gs,l10n_bo_2140105,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13gs,l10n_bo_2140105,,
+31,Retención IT | Servicios RC-IVA,IT Withholding | RC-VAT Services,l10n_bo_rc_iva_local_services_transaction_tax,True,Retención IT | RC-IVA Servicios Nacionales 3%,IT Withholding | RC-VAT National Services 3%,,,-3.0,percent,none,,,it_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13m,l10n_bo_2140106,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13m,l10n_bo_2140106,,
+32,Grossing Up IT | Servicios RC-IVA,Grossing Up IT | RC-VAT Services,l10n_bo_rc_iva_local_services_transaction_tax_grossing_up,True,Retención IT | RC-IVA Servicios Nacionales 3%,IT Withholding | RC-VAT National Services 3%,,,-3.0,percent,none,,True,it_tax_group,tax_included,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13gm,l10n_bo_2140106,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13gm,l10n_bo_2140106,,
+33,Retención IT por | Misc. RC-IVA,IT Withholding | Misc. RC-VAT,l10n_bo_miscellaneous_transaction_tax,True,Retención IT | RC-IVA por Otros Conceptos 3%,IT Withholding | RC-VAT for Other Concepts 3%,,,-3.0,percent,none,,,it_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13m,l10n_bo_2140107,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13m,l10n_bo_2140107,,
+34,Grossing Up IT por | Misc. RC-IVA,Increasing IT for | Misc. RC-VAT,l10n_bo_miscellaneous_transaction_tax_grossing_up,True,Retención IT | RC-IVA por Otros Conceptos 3%,IT Withholding | RC-VAT for Other Concepts 3%,,,-3.0,percent,none,,True,it_tax_group,tax_included,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-itRet13gm,l10n_bo_2140107,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+itRet13gm,l10n_bo_2140107,,
+35,Retención IUE-BE Total,Total IUE-BE Withholding,l10n_bo_international_purchase_retentions,True,Retención IUE Beneficiarios del Exterior 12.5%,IUE Withholding for Foreign Beneficiaries 12.5%,,,-12.5,percent,purchase,,,iue_ret_tax_group,,True,False,,base,invoice,+iueBe13,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iueBe909,l10n_bo_2140109,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueBe13,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iueBe909,l10n_bo_2140109,,
+36,Grossing Up IUE-BE Total,Adjusting the Total IUE-BE Upward,l10n_bo_international_purchase_grossing_up,True,Retención IUE Beneficiarios del Exterior 12.5%,IUE Withholding for Foreign Beneficiaries 12.5%,,,-12.5,percent,purchase,,True,iue_ret_tax_group,tax_included,True,False,,base,invoice,+iueBe13,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iueBe909,l10n_bo_2140109,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueBe13,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iueBe909,l10n_bo_2140109,,
+37,Retención IUE-BE Parcial,Partial IUE-BE Withholding,l10n_bo_international_purchase_partial_retentions,True,Retención IUE Beneficiarios del Exterior 2.5%,IUE Withholding for Foreign Beneficiaries 2.5%,,,-2.5,percent,purchase,,,iue_ret_tax_group,,True,False,,base,invoice,+iueBep13,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iueBep909,l10n_bo_2140110,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueBep13,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iueBep909,l10n_bo_2140110,,
+38,Grossing Up IUE-BE Parcial,Partial Gross Up IUE-BE,l10n_bo_international_purchase_partial_grossing_up,True,Retención IUE Beneficiarios del Exterior 2.5%,IUE Withholding for Foreign Beneficiaries 2.5%,,,-2.5,percent,purchase,,True,iue_ret_tax_group,tax_included,True,False,,base,invoice,+iueBep13,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iueBep909,l10n_bo_2140110,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueBep13,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iueBeps909,l10n_bo_2140110,,
+39,Retención IUE-BE Parcial Sucursal,Partial IUE-BE Withholding Branch,l10n_bo_international_purchase_partial_foreign_company_retentions,True,Retención IUE Beneficiarios del Exterior Sucursales 1.5%,IUE Withholding for Foreign Beneficiaries Branches 1.5%,,,-1.5,percent,purchase,,,iue_ret_tax_group,,True,False,,base,invoice,+iueBeps101,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iueBeps909,l10n_bo_2140111,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueBeps101,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iueBeps909,l10n_bo_2140111,,
+40,Grossing Up IUE-BE Parcial Sucursal,Partial Branch Netting Up IUE-BE,l10n_bo_international_purchase_partial_foreign_company_grossing_up,True,Retención IUE Beneficiarios del Exterior Sucursales 1.5%,IUE Withholding for Foreign Beneficiaries Branches 1.5%,,,-1.5,percent,purchase,,True,iue_ret_tax_group,tax_included,True,False,,base,invoice,+iueBeps101,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iueBeps909,l10n_bo_2140111,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueBeps101,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iueBep909,l10n_bo_2140111,,
+41,Retención IUE Servicios 12.5%,IUE Service Withholding 12.5%,l10n_bo_iue_services_retention,False,IUE Servicios 12.5%,IUE Services 12.5%,,,-12.5,percent,none,,,iue_ret_tax_group,,True,False,,base,invoice,+iueRet13s,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-iueRet909s,l10n_bo_2140112,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueRet13s,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+iueRet909s,l10n_bo_2140112,,
+42,Retención IUE Servicios,IUE Services Withholding,l10n_bo_service_retention_tax,False,,,,,0.0,group,purchase,,,iue_ret_tax_group,,,False,"l10n_bo_services_transaction_tax,l10n_bo_iue_services_retention",,,,,,
+43,Grossing Up IUE Servicios 12.5%,Increasing IUE Services by 12.5%,l10n_bo_iue_services_grossing_up,False,IUE Servicios 12.5%,IUE Services 12.5%,,,-12.5,percent,none,,True,iue_ret_tax_group,tax_included,True,False,,base,invoice,+iueRet13gs,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iueRet909gs,l10n_bo_2140112,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueRet13gs,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,-iueRet909gs,l10n_bo_2140112,,
+44,Grossing Up IUE Servicios,Increasing IUE Services,l10n_bo_service_grossing_up_tax,False,,,,,0.0,group,purchase,,,iue_ret_tax_group,,,False,"l10n_bo_services_transaction_tax_grossing_up,l10n_bo_iue_services_grossing_up",,,,,,
+45,Retención IUE Bienes 5%,IUE Withholding on Goods 5%,l10n_bo_iue_goods_retention,True,IUE Bienes 5%,IUE Property 5%,,,-5.0,percent,none,,,iue_ret_tax_group,,True,False,,base,invoice,+iueRet26g,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iueRet909g,l10n_bo_2140113,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueRet26g,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,-iueRet909g,l10n_bo_2140113,,
+46,Retención IUE Bienes,IUE Retention Goods,l10n_bo_goods_retention_tax,True,,,,,0.0,group,purchase,,,iue_ret_tax_group,,,False,"l10n_bo_goods_transaction_tax,l10n_bo_iue_goods_retention",,,,,,
+47,Grossing Up IUE Bienes 5%,Increasing IUE Property 5%,l10n_bo_iue_goods_grossing_up,True,IUE Bienes 5%,IUE Property 5%,,,-5.0,percent,none,,True,iue_ret_tax_group,tax_included,True,False,,base,invoice,+iueRet26gg,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,+iueRet909gg,l10n_bo_2140113,,
+,,,,,,,,,,,,,,,,,,,base,refund,-iueRet26gg,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,-iueRet909gg,l10n_bo_2140113,,
+48,Grossing Up IUE Bienes,Grossing Up Property IUE,l10n_bo_goods_grossing_up_tax,True,,,,,0.0,group,purchase,,,iue_ret_tax_group,,,False,"l10n_bo_goods_transaction_tax_grossing_up,l10n_bo_iue_goods_grossing_up",,,,,,
+49,Retención RC-IVA Servicios Nacionales,National Services RC-VAT Withholding,l10n_bo_rc_iva_local_services_retention,True,RC-IVA Servicios Nacionales 13%,RC-VAT National Services 13%,,,-13.0,percent,none,,,rc_iva_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-rcIva404s,l10n_bo_2140115,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+rcIva404s,l10n_bo_2140115,,
+50,Retención RC-IVA Servicios,RC-VAT Services Retention,l10n_bo_rc_iva_local_service_retention_tax,True,,,,,0.0,group,purchase,,,rc_iva_tax_group,,,False,"l10n_bo_rc_iva_local_services_transaction_tax,l10n_bo_rc_iva_local_services_retention",,,,,,
+51,Grossing Up RC-IVA Servicios Nacionales,Grossing Up National Services RC-VAT,l10n_bo_rc_iva_local_services_grossing_up,True,RC-IVA Servicios Nacionales 13%,RC-VAT National Services 13%,,,-13.0,percent,none,,True,rc_iva_tax_group,tax_included,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-rcIva404gs,l10n_bo_2140115,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+rcIva404gs,l10n_bo_2140115,,
+52,Grossing Up RC-IVA Servicios,Grossing Up RC-VAT Services,l10n_bo_rc_iva_local_service_grossing_up_tax,True,,,,,0.0,group,purchase,,,rc_iva_tax_group,,,False,"l10n_bo_rc_iva_local_services_transaction_tax_grossing_up,l10n_bo_rc_iva_local_services_grossing_up",,,,,,
+53,Retención RC-IVA Internacional desde Exterior,International RC-VAT Retention from Abroad,l10n_bo_rc_iva_international_services_retention,True,RC-IVA Servicios Internacionales 13%,RC-VAT International Services 13%,,,-13.0,percent,none,,,rc_iva_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-rcIva405s,l10n_bo_2140116,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+rcIva405s,l10n_bo_2140116,,
+54,RC-IVA Internacionales en Bolivia,International VAT in Bolivia,l10n_bo_rc_iva_international_service_retention_tax,True,,,,,0.0,group,purchase,,,rc_iva_tax_group,,,False,"l10n_bo_rc_iva_international_services_transaction_tax,l10n_bo_rc_iva_international_services_retention",,,,,,
+55,Grossing Up RC-IVA Internacional desde Exterior,International RC-VAT Gross Up from Abroad,l10n_bo_rc_iva_international_services_grossing_up,True,RC-IVA Servicios Internacionales 13%,RC-VAT International Services 13%,,,-13.0,percent,none,,True,rc_iva_tax_group,tax_included,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-rcIva405gs,l10n_bo_2140116,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+rcIva405gs,l10n_bo_2140116,,
+56,Grossing Up RC-IVA Internacionales en Bolivia,Grossing Up International RC-VAT in Bolivia,l10n_bo_rc_iva_international_service_grossing_up_tax,True,,,,,0.0,group,purchase,,,rc_iva_tax_group,,,False,"l10n_bo_rc_iva_international_services_transaction_tax_grossing_up,l10n_bo_rc_iva_international_services_grossing_up",,,,,,
+57,Retención RC-IVA por Otros Conceptos,RC-VAT Retention for Other Concepts,l10n_bo_rc_iva_miscellaneous_retentions,True,RC-IVA por Otros Conceptos 13%,RC-VAT for Other Concepts 13%,,,-13.0,percent,none,,,rc_iva_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-rcIva406s,l10n_bo_2140117,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+rcIva406s,l10n_bo_2140117,,
+58,RC-IVA Otros Conceptos,RC-VAT Other Concepts,l10n_bo_miscellaneous_retention_tax,True,,,,,0.0,group,purchase,,,rc_iva_tax_group,,,False,"l10n_bo_miscellaneous_transaction_tax,l10n_bo_rc_iva_miscellaneous_retentions",,,,,,
+59,Grossing Up RC-IVA por Otros Conceptos,Grossing Up RC-VAT for Other Concepts,l10n_bo_rc_iva_miscellaneous_grossing_up,True,RC-IVA por Otros Conceptos 13%,RC-VAT for Other Concepts 13%,,,-13.0,percent,none,,True,rc_iva_tax_group,tax_included,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,-rcIva406gs,l10n_bo_2140117,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,+rcIva406gs,l10n_bo_2140117,,
+60,Grossing Up RC-IVA Otros Conceptos,Grossing up RC-VAT Other Concepts,l10n_bo_miscellaneous_grossing_up_tax,True,,,,,0.0,group,purchase,,,rc_iva_tax_group,,,False,"l10n_bo_miscellaneous_transaction_tax_grossing_up,l10n_bo_rc_iva_miscellaneous_grossing_up",,,,,,
+61,ICE X%,ICE X%,l10n_bo_specific_consumption_tax_percent_example,True,ICE X% | Ventas,ICE X% | Sales,,,1.0,code,sale,,,ice_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,l10n_bo_2140119,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,l10n_bo_2140119,,
+62,ICE X Bs/Y UoM,Ice X Bob/Y Uom,l10n_bo_uom_specific_fee_example,True,ICE X Bs/Y UoM | Ventas,ICE X Bs/Y Measurement Unit | Sales,,,0.0,code,sale,,,ice_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,l10n_bo_2140119,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,l10n_bo_2140119,,
+63,IEHD X Bs/Y Uom,IEHD X Bob/Y Uom,l10n_bo_hydrocarbon_special_tax,True,IEHD X Bs/Y Uom,"I'm sorry, your input seems to be coded or in an unclear language. Please provide a clear phrase or sentence in a recognized language.",,,0.0,code,sale,,,no_iva_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,l10n_bo_2140120,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,l10n_bo_2140120,,
+64,IPJ,IPJ,l10n_bo_game_participation_tax,True,IPJ 15%,Interest Rate 15%,,,-15.0,percent,sale,,True,no_iva_tax_group,,True,False,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,l10n_bo_2140121,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,l10n_bo_2140121,,
+65,Subvención 30%,30% subsidy,l10n_bo_gasoline_subvention_tax,True,Subvención gasolina,Gasoline subsidy,,price_unit * quantity * 0.30,1.0,code,none,True,True,other_no_iva_tax_group,,True,True,,base,invoice,,,on_invoice,
+,,,,,,,,,,,,,,,,,,,tax,invoice,,l10n_bo_6111108,,
+,,,,,,,,,,,,,,,,,,,base,refund,,,,
+,,,,,,,,,,,,,,,,,,,tax,refund,,l10n_bo_6111108,,
+66,IVA Gasolina,Gasoline Tax,l10n_bo_gasoline_iva_tax,True,,,,,0,group,purchase,,,iva_tax_group,,,False,"l10n_bo_fiscal_credit,l10n_bo_gasoline_subvention_tax",,,,,,
