@@ -521,15 +521,15 @@ describe("Selection collapsed", () => {
         });
         test("should insert a paragraph break outside the ending edge of an anchor", async () => {
             await testEditor({
-                contentBefore: "<p><a>ab[]</a></p>",
+                contentBefore: `<p><a href="#">ab[]</a></p>`,
                 stepFunction: async (editor) => {
                     splitBlock(editor);
                     await press("enter");
                     editor.shared.selection.focusEditable();
                     await tick();
                 },
-                contentAfterEdit: `<p>\ufeff<a href="">\ufeffab\ufeff</a>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
-                contentAfter: `<p><a href="">ab</a></p><p>[]<br></p>`,
+                contentAfterEdit: `<p>\ufeff<a href="#">\ufeffab\ufeff</a>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentAfter: `<p><a href="#">ab</a></p><p>[]<br></p>`,
             });
             await testEditor({
                 contentBefore: "<p><a>ab[]</a>cd</p>",

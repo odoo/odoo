@@ -282,6 +282,7 @@ export class LinkPlugin extends Plugin {
         this.getAttachmentMetadata = memoize((url) =>
             fetchAttachmentMetaData(url, this.services.orm)
         );
+        this.LinkPopoverState = { editing: false };
     }
 
     destroy() {
@@ -399,6 +400,7 @@ export class LinkPlugin extends Plugin {
             getAttachmentMetadata: this.getAttachmentMetadata,
             recordInfo: this.config.getRecordInfo?.() || {},
             type: this.type || "",
+            LinkPopoverState: this.LinkPopoverState,
         };
         if (
             this._isNavigatingByMouse &&
@@ -457,6 +459,7 @@ export class LinkPlugin extends Plugin {
                 if (this.linkElement !== imageNode.parentElement) {
                     this.overlay.close();
                     this.removeCurrentLinkIfEmtpy();
+                    this.LinkPopoverState.editing = false;
                 }
                 this.linkElement = imageNode.parentElement;
 
@@ -469,6 +472,7 @@ export class LinkPlugin extends Plugin {
                         this.dependencies.selection.setCursorEnd(this.linkElement);
                         this.dependencies.selection.focusEditable();
                         this.removeCurrentLinkIfEmtpy();
+                        this.LinkPopoverState.editing = false;
                         this.dependencies.history.addStep();
                     },
                 };
@@ -492,6 +496,7 @@ export class LinkPlugin extends Plugin {
                 this.removeCurrentLinkIfEmtpy();
                 this.overlay.close();
                 this.linkElement = linkEl;
+                this.LinkPopoverState.editing = false;
             }
 
             // if the link includes an inline image, we close the previous opened popover to reposition it
@@ -528,6 +533,7 @@ export class LinkPlugin extends Plugin {
                         cleanTrailingBR(closestBlock(this.linkElement));
                         this.dependencies.selection.focusEditable();
                         this.removeCurrentLinkIfEmtpy();
+                        this.LinkPopoverState.editing = false;
                         this.dependencies.history.addStep();
                     },
                     canEdit: !this.linkElement.classList.contains("o_link_readonly"),
@@ -571,6 +577,7 @@ export class LinkPlugin extends Plugin {
             return linkElement;
         } else {
             // create a new link element
+            this.LinkPopoverState.editing = true;
             const selectedNodes = this.dependencies.selection.getSelectedNodes();
             const imageNode = selectedNodes.find((node) => node.tagName === "IMG");
 
