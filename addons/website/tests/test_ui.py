@@ -538,7 +538,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_23_website_multi_edition(self):
         self.start_tour('/@/', 'website_multi_edition', login='admin')
 
-    @unittest.skip
     def test_24_snippet_cache_across_websites(self):
         default_website = self.env.ref('website.default_website')
         website = self.env['website'].create({
@@ -549,7 +548,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
             name='custom_snippet_test',
             arch="""
-                <section class="s_text_block" data-snippet="s_text_block">
+                <section class="s_text_block s_custom_snippet" data-snippet="s_text_block">
                     <div class="custom_snippet_website_1">Custom Snippet Website 1</div>
                 </section>
             """,
