@@ -119,6 +119,24 @@ class TestPropertiesMixin(TransactionCase):
 
 class PropertiesCase(TestPropertiesMixin):
 
+    def test_base_properties_model_access(self):
+        with self.assertRaises(AccessError):
+            self.env['res.partner'].with_user(self.test_user).create({
+                'name': 'test', 'properties': [{'name': 'test', 'type': 'char', 'definition_changed': True}]})
+
+        definition_record = self.env['properties.base.definition']._get_record_for_properties('res.partner', 'properties')
+        self.assertEqual(definition_record.properties_definition, [])
+
+        record_0 = self.env['res.partner'].create([{'properties': [{'name': 'test', 'type': 'char', 'definition_changed': True, 'value': 'test'}], 'name': 'test'}, {'name': 'test'}])[0]
+        self.assertEqual(record_0.properties_base_definition_id, definition_record)
+        self.assertEqual(definition_record.properties_definition, [{'name': 'test', 'type': 'char'}])
+
+        record_2 = self.env['test_new_api.emailmessage'].create([{}, {}])[0]
+        record_2.write({'common_attributes': [{'name': 'test_2', 'type': 'char', 'definition_changed': True, 'value': 'test'}]})
+        self.assertNotEqual(definition_record, record_2.properties_base_definition_id)
+        self.assertEqual(record_2.properties_base_definition_id.properties_definition, [{'name': 'test_2', 'type': 'char'}])
+        self.assertEqual(definition_record.properties_definition, [{'name': 'test', 'type': 'char'}])
+
     def test_properties_field(self):
         self.assertTrue(isinstance(self.message_1.attributes, dict))
         # testing assigned value
@@ -127,10 +145,7 @@ class PropertiesCase(TestPropertiesMixin):
             'moderator_partner_id': self.partner.id,
         })
 
-        self.assertEqual(self.message_2.attributes, {
-            'discussion_color_code': 'blue',
-            'moderator_partner_id': False,
-        })
+        self.assertEqual(self.message_2.attributes, {'discussion_color_code': 'blue'})
         # testing default value
         self.assertEqual(
             self.message_3.attributes, {'state': 'draft'},
@@ -165,13 +180,11 @@ class PropertiesCase(TestPropertiesMixin):
         self.env.invalidate_all()
 
         expected = self.discussion_2.attributes_definition
-        for property_definition in expected:
-            property_definition['value'] = False
-
         self.assertEqual(self.message_3.read(['attributes'])[0]['attributes'], expected)
         self.assertEqual(self.get_read_dict(self.message_3, 'attributes'), {
             definition['name']: definition['value']
             for definition in expected
+            if 'value' in definition
         })
 
         with self.assertRaises(ValueError):
@@ -398,7 +411,7 @@ class PropertiesCase(TestPropertiesMixin):
         # first create to cache the access rights
         self.env['test_new_api.message'].create({'name': 'test'})
 
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(4):
             messages = self.env['test_new_api.message'].create([{
                 'name': 'Test Message',
                 'discussion': False,
@@ -514,7 +527,7 @@ class PropertiesCase(TestPropertiesMixin):
         message.attributes = [{'name': 'state', 'value': None}]
         self.assertEqual(
             message.attributes,
-            {'state': False},
+            {},
             msg='Writing None should not reset to the default value')
 
         # test the case where the definition record come from a default as well
@@ -676,9 +689,9 @@ class PropertiesCase(TestPropertiesMixin):
             })
 
         sql_values = self._get_sql_properties(message)
-        self.assertEqual(sql_values, {'my_many2one': False})
+        self.assertEqual(sql_values, {})
         properties = message.read(['attributes'])[0]['attributes']
-        self.assertEqual(properties[0]['value'], False)
+        self.assertNotIn('value', properties[0])
 
     def test_properties_field_read(self):
         """Test the behavior of the read method.
@@ -782,7 +795,7 @@ class PropertiesCase(TestPropertiesMixin):
             # 1 query to read the field
             # 1 query to read the definition
             # 2 queries to check if the many2one still exists / display_name
-            self.assertFalse(self.message_2.read(['attributes'])[0]['attributes'][0]['value'])
+            self.assertTrue(self.message_2.read(['attributes'])[0]['attributes'][0].get('value') is None)
 
         # remove the partner, and use the read method
         self.message_2.attributes = [{
@@ -813,7 +826,6 @@ class PropertiesCase(TestPropertiesMixin):
                 'type': 'many2one',
                 'comodel': 'res.partner',
                 'default': (partner.id, partner.display_name),
-                'value': False,
             }],
         )
         partner.unlink()
@@ -824,7 +836,6 @@ class PropertiesCase(TestPropertiesMixin):
                 'type': 'many2one',
                 'comodel': 'res.partner',
                 'default': False,
-                'value': False,
             }],
         )
 
@@ -975,12 +986,20 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(data, {
             'int_value': 0,
             'float_value': 0,
+        })
+        self.assertEqual(self._get_sql_properties(self.message_1), {'int_value': 0, 'float_value': 0})
+
+        self.message_1.attributes = {'int_value': 0, 'float_value': 0, 'boolean_value': False}
+        data = self.get_read_dict(self.message_1, 'attributes')
+        self.assertEqual(data, {
+            'int_value': 0,
+            'float_value': 0,
             'boolean_value': False,
         })
         self.assertTrue(isinstance(data['int_value'], int))
         self.assertTrue(isinstance(data['float_value'], int))
         self.assertTrue(isinstance(data['boolean_value'], bool))
-        self.assertEqual(self._get_sql_properties(self.message_1), {'int_value': 0, 'float_value': 0})
+        self.assertEqual(self._get_sql_properties(self.message_1), {'int_value': 0, 'float_value': 0, 'boolean_value': False})
 
     def test_properties_field_integer_float_falsy_value_edge_cases(self):
         self.discussion_1.attributes_definition = [
@@ -1367,10 +1386,7 @@ class PropertiesCase(TestPropertiesMixin):
             }
         ]
         self.env.invalidate_all()
-        self.assertEqual(self.get_read_dict(self.message_1, 'attributes'), {
-            'discussion_color_code': False,
-            'moderator_partner_id': False,
-        })
+        self.assertEqual(self.get_read_dict(self.message_1, 'attributes'), {})
 
         # add a property on the definition record
         attributes_definition += [{'name': 'state', 'string': 'State', 'type': 'char'}]
@@ -1379,11 +1395,7 @@ class PropertiesCase(TestPropertiesMixin):
 
         self.env.invalidate_all()
 
-        self.assertEqual(self.get_read_dict(self.message_1, 'attributes'), {
-            'discussion_color_code': False,
-            'moderator_partner_id': False,
-            'state': 'ready',
-        })
+        self.assertEqual(self.get_read_dict(self.message_1, 'attributes'), {'state': 'ready'})
 
         # remove a property from the definition
         # the properties on the child can be remained, until we write on it
@@ -1436,7 +1448,6 @@ class PropertiesCase(TestPropertiesMixin):
                     'string': 'Partner',
                     'type': 'many2one',
                     'comodel': 'test_new_api.partner',
-                    'value': False,
                 }],
                 msg='Should take the new definition when changing the definition record',
             )
@@ -1494,7 +1505,6 @@ class PropertiesCase(TestPropertiesMixin):
                 'type': 'many2one',
                 'string': 'Partner',
                 'comodel': 'test_new_api.partner',
-                'value': False,
             }],
         )
 
@@ -2118,7 +2128,7 @@ class PropertiesSearchCase(TestPropertiesMixin):
         }]
 
         message_values = Model.search_read([('id', '=', message.id)])
-        self.assertEqual(message_values[0]['attributes'][0]['value'], False, 'Value should be set as False')
+        self.assertNotIn('value', message_values[0]['attributes'][0], 'Value should not be set')
 
 
 class PropertiesGroupByCase(TestPropertiesMixin):
@@ -2972,7 +2982,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         def _get_records_values(records):
             return [
                 next(
-                    (pro['value'] for pro in properties['attributes']
+                    (pro.get('value') for pro in properties['attributes']
                      if pro['name'] == property_name),
                 )
                 for properties in records.read(['attributes'])

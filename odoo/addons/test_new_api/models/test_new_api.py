@@ -6,6 +6,7 @@ import logging
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
+from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import html_translate
@@ -246,6 +247,22 @@ class Test_New_ApiEmailmessage(models.Model):
                               required=True, ondelete='cascade')
     email_to = fields.Char('To')
     active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
+
+    # Properties shared for all records
+    common_attributes = fields.Properties(string="Common Properties", definition="properties_base_definition_id.properties_definition")
+    properties_base_definition_id = fields.Many2one("properties.base.definition", compute="_compute_properties_base_definition_id", search="_search_properties_base_definition_id")
+
+    def _compute_properties_base_definition_id(self):
+        self.properties_base_definition_id = self.env['properties.base.definition'].sudo()._get_record_for_properties(
+            'test_new_api.emailmessage', 'common_attributes')
+
+    def _search_properties_base_definition_id(self, operator, value):
+        properties_base_definition_id = self.env['properties.base.definition'].sudo()._get_record_id_for_properties(
+            'test_new_api.emailmessage', 'common_attributes')
+        if not isinstance(value, (list, tuple)):
+            value = (value,)
+        value = properties_base_definition_id in value
+        return Domain.TRUE if operator in ('=', 'in') else Domain.FALSE
 
 
 class Test_New_ApiPartner(models.Model):
