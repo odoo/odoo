@@ -114,6 +114,7 @@ Featuring
             'website_slides/static/src/xml/slide_course_join.xml',
             'website_slides/static/src/xml/slide_quiz_create.xml',
             'website_slides/static/src/xml/slide_quiz.xml',
+            'website_slides/static/src/xml/portal_chatter.xml',
         ],
         'website.assets_editor': [
             'website_slides/static/src/js/systray_items/*.js',

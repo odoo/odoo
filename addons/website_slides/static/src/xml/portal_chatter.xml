@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-extend="portal.chatter_messages">
+        <t t-jquery=".o_portal_chatter_attachments" t-operation="after">
+            <t t-set="is_user_manager" t-value="widget.options['is_user_manager']"/>
+            <t t-set="partner_id" t-value="widget.options['partner_id']"/>
+        </t>
+    </t>
+
+    <t t-extend="portal_rating.chatter_rating_publisher_comment">
+        <t t-jquery=".dropdown" t-operation="attributes">
+            <attribute name="t-if">is_publisher and (is_user_manager or rating.publisher_id == partner_id)</attribute>
+        </t>
+        <t t-jquery="button.o_wrating_js_publisher_comment_edit" t-operation="attributes">
+            <attribute name="t-if">rating.publisher_id == partner_id</attribute>
+        </t>
+    </t>
+
+</templates>
