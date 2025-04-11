@@ -1,5 +1,7 @@
 import { Domain } from '@web/core/domain';
 import { rpc } from "@web/core/network/rpc";
+import { user } from '@web/core/user';
+import { useBus } from '@web/core/utils/hooks';
 import { SearchModel } from '@web/search/search_model';
 import { useState, onWillStart } from "@odoo/owl";
 
@@ -11,12 +13,15 @@ export class LunchSearchModel extends SearchModel {
             locationId: false,
             userId: false,
             date: new Date(),
+            infos: {},
         });
 
-        onWillStart(async () => {
-            const locationId = await rpc('/lunch/user_location_get', {});
-            this.updateLocationId(locationId);
-        });
+        // onWillStart(async () => {
+        //     const locationId = await rpc('/lunch/user_location_get', {});
+        //     this.updateLocationId(locationId);
+        // });
+        onWillStart(() => this.fetchLunchInfos());
+        useBus(this.env.bus, 'lunch_update_dashboard', () => this.fetchLunchInfos());
     }
 
     exportState() {
@@ -35,6 +40,14 @@ export class LunchSearchModel extends SearchModel {
         if (state.userId) {
             this.lunchState.userId = state.userId;
         }
+    }
+    
+    async fetchLunchInfos() {
+        this.lunchState.infos = await rpc('/lunch/infos', {
+            context: user.context,
+            user_id: this.lunchState.userId,
+        });
+        this.updateLocationId(this.lunchState.infos.user_location[0]);
     }
 
     updateUserId(userId) {

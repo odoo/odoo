@@ -113,19 +113,19 @@
     </t>
 
     <t t-name="lunch.LunchDashboardOrder">
-        <LunchAlerts alerts="state.infos.alerts"/>
+        <LunchAlerts alerts="lunchState.infos.alerts"/>
 
         <div class="o_lunch_banner container-fluid mt-3 mt-md-0 py-md-4 bg-view">
             <div class="row row-gap-3 h-100">
                 <div class="col-12 col-lg-3">
                     <div class="d-flex gap-2 align-content-center h-100">
                         <div>
-                            <img class="o_image_64_cover rounded" t-att-src="state.infos.userimage"/>
+                            <img class="o_image_64_cover rounded" t-att-src="lunchState.infos.userimage"/>
                         </div>
                         <div class="w-100">
                             <LunchUser
-                                isManager="state.infos.is_manager"
-                                username="state.infos.username"
+                                isManager="lunchState.infos.is_manager"
+                                username="lunchState.infos.username"
                                 onUpdateUser.bind="onUpdateUser"/>
 
                             <LunchLocation
@@ -142,7 +142,7 @@
                             <div class="d-flex pb-1">
                                 <span class="flex-grow-1">Your Account</span>
                                 <span>
-                                    <LunchCurrency currency="currency" amount="state.infos.wallet"/>
+                                    <LunchCurrency currency="currency" amount="lunchState.infos.wallet"/>
                                 </span>
                             </div>
                         </div>
@@ -152,13 +152,13 @@
                     <h4 class="">
                         Your Order
                         <button
-                            t-if="(['new', 'ordered'].includes(state.infos.raw_state))"
+                            t-if="(['new', 'ordered'].includes(lunchState.infos.raw_state))"
                             class="btn btn-sm btn-icon btn-link fa fa-trash"
                             t-on-click.prevent="emptyCart"/>
                     </h4>
                     <table class="o_lunch_widget_lines w-100">
-                        <t t-foreach="state.infos.lines" t-as="line" t-key="line.id">
-                            <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine" infos="state.infos"/>
+                        <t t-foreach="lunchState.infos.lines" t-as="line" t-key="line.id">
+                            <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine" infos="lunchState.infos"/>
                         </t>
                     </table>
                 </div>
@@ -168,7 +168,7 @@
                             Total
                         </span>
                         <span class="col-5">
-                            <LunchCurrency currency="currency" amount="state.infos.total"/>
+                            <LunchCurrency currency="currency" amount="lunchState.infos.total"/>
                         </span>
                     </span>
                     <span class="d-flex column-gap-1 text-muted">
@@ -176,7 +176,7 @@
                             Already Paid
                         </span>
                         <span class="col-5">
-                            <LunchCurrency currency="currency" amount="state.infos.paid_subtotal"/>
+                            <LunchCurrency currency="currency" amount="lunchState.infos.paid_subtotal"/>
                         </span>
                     </span>
                     <h4 class="d-flex column-gap-1 mt-auto">
@@ -184,7 +184,7 @@
                             To Pay
                         </span>
                         <span class="col-5">
-                            <LunchCurrency currency="currency" amount="state.infos.unpaid_subtotal"/>
+                            <LunchCurrency currency="currency" amount="lunchState.infos.unpaid_subtotal"/>
                         </span>
                     </h4>
                     <button class="btn btn-primary" t-if="canOrder" t-on-click="orderNow">Order Now</button>
@@ -194,7 +194,7 @@
     </t>
 
     <t t-name="lunch.LunchDashboard">
-        <t t-set="currency" t-value="state.infos.currency"/>
+        <t t-set="currency" t-value="lunchState.infos.currency"/>
         <t t-if="!env.isSmall">
             <t t-call="lunch.LunchDashboardOrder"/>
         </t>
@@ -202,7 +202,7 @@
             <details class="fixed-bottom mh-100 bg-view p-2 overflow-y-auto" t-att-open="state.mobileOpen">
                 <summary class="btn btn-primary w-100" t-on-click="() => state.mobileOpen = !state.mobileOpen">
                     <i class="fa fa-fw fa-shopping-cart"/>
-                    Your Cart (<LunchCurrency currency="currency" amount="state.infos.total || 0"/>)
+                    Your Cart (<LunchCurrency currency="currency" amount="lunchState.infos.total || 0"/>)
                 </summary>
 
                 <t t-call="lunch.LunchDashboardOrder"/>
