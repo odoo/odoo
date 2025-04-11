@@ -421,3 +421,22 @@ registry.category("web_tour.tours").add("test_settle_order_with_lot", {
             PosSale.selectedOrderLinesHasLots("Product A", ["1001", "1002"]),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settle_down_payment_then_settle_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            PosSale.settleNthOrder(1),
+            ProductScreen.totalAmountIs("90.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});

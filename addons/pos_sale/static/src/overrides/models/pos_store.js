@@ -82,9 +82,10 @@ patch(PosStore.prototype, {
         const converted_lines = await this.data.call("sale.order.line", "read_converted", [
             sale_order.order_line.map((l) => l.id),
         ]);
-
-        for (let i = 0; i < sale_order.order_line.length; ++i) {
-            const line = sale_order.order_line[i];
+        //TODO-manv: after paying the first down_payment, the sale_order.order_line.length == 1, while .raw correctly contains the id of the first down payment line
+        // is there a better fix?
+        for (let i = 0; i < sale_order.raw.order_line.length; ++i) {
+            const line = this.models["sale.order.line"].get(sale_order.raw.order_line[i]);
             if (line.display_type === "line_note") {
                 if (previousProductLine) {
                     const previousNote = previousProductLine.customer_note;
