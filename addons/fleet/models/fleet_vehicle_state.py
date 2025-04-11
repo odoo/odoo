@@ -11,6 +11,7 @@ class FleetVehicleState(models.Model):
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer()
+    fold = fields.Boolean(string='Folded in Kanban')
 
     _fleet_state_name_unique = models.Constraint(
         'unique(name)',
