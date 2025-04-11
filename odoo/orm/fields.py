@@ -613,9 +613,9 @@ class Field(typing.Generic[T]):
 
         # determine dependencies, compute, inverse, and search
         self.compute = self._compute_related
-        if self.inherited or not (self.readonly or field.readonly):
+        if not self.inverse and (self.inherited or not (self.readonly or field.readonly)):
             self.inverse = self._inverse_related
-        if not self.store and field._description_searchable:
+        if not self.search and not self.store and field._description_searchable:
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
