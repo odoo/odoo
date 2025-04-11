@@ -7,19 +7,19 @@ class TestProductTemplate(TransactionCase):
         'name': 'Azure Interior',
       })
 
-      seller = self.env['product.supplierinfo'].create({
-        'partner_id': partner.id,
-        'price': 12.0,
-        'delay': 1,
-        'product_code': 'VOB2a',
-      })
-
       product_tmpl = self.env['product.template'].create({
         'name': 'Rubber Duck',
         'is_storable': True,
         'default_code': 'VOB2A',
-        'seller_ids': [seller.id],
         'purchase_ok': True,
+      })
+
+      self.env['product.supplierinfo'].create({
+        'product_id': product_tmpl.product_variant_id.id,
+        'partner_id': partner.id,
+        'price': 12.0,
+        'delay': 1,
+        'product_code': 'VOB2a',
       })
       ns = self.env['product.template'].with_context(partner_id=partner.id).name_search('VOB2', [['purchase_ok', '=', True]])
       self.assertEqual(len(ns), 1, "name_search should have 1 item")
