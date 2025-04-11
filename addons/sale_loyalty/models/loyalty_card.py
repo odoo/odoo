@@ -22,6 +22,13 @@ class LoyaltyCard(models.Model):
     def _get_mail_partner(self):
         return super()._get_mail_partner() or self.order_id.partner_id
 
+    def _get_mail_author(self):
+        """Default author is the order's salesperson if set, otherwise the order's company."""
+        if not self.order_id:
+            return super()._get_mail_author()
+        self.ensure_one()
+        return (self.order_id.user_id or self.order_id.company_id).partner_id
+
     def _get_signature(self):
         return self.order_id.user_id.signature or super()._get_signature()
 
