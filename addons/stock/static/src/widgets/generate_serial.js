@@ -41,6 +41,15 @@ export class GenerateDialog extends Component {
             }
         });
     }
+    async _onGenerateCustomSerial() {
+        const product = (await this.orm.searchRead("product.product", [["id", "=", this.props.move.data.product_id[0]]], ["lot_sequence_id"]))[0];
+        this.sequence = product.lot_sequence_id;
+        if (product.lot_sequence_id) {
+            this.sequence = (await this.orm.searchRead("ir.sequence", [["id", "=", this.sequence[0]]], ["number_next_actual"]))[0];
+            this.nextCustomSerialNumber = await this.orm.call("ir.sequence", "next_by_id", [this.sequence.id]);
+            this.nextSerial.el.value = this.nextCustomSerialNumber;
+        }
+    }
     async _onGenerate() {
         let count;
         let qtyToProcess;
@@ -91,6 +100,9 @@ export class GenerateDialog extends Component {
         ]));
         lines._currentIds.push(...newlines.map((record) => record._virtualId));
         await lines._onUpdate();
+        if (this.sequence && this.nextSerial.el.value === this.nextCustomSerialNumber) {
+            await this.orm.write("ir.sequence", [this.sequence.id], {number_next_actual: this.sequence.number_next_actual + newlines.length});
+        }
         this.props.close();
     }
 }
