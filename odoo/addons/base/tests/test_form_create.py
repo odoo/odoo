@@ -23,7 +23,7 @@ class TestFormCreate(TransactionCase):
         partner_form = Form(self.env['res.partner'])
         partner_form.name = 'a partner'
         # YTI: Clean that brol
-        if hasattr(self.env['res.partner'], 'property_account_payable_id'):
+        if hasattr(self.env['res.partner'], 'property_account_payable_id') and partner_form.is_coa_installed:
             property_account_payable_id = self.env['account.account'].create({
                 'name': 'Test Account',
                 'account_type': 'liability_payable',
