@@ -53,6 +53,9 @@ class SaleOrderLine(models.Model):
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
+
+    def post_compute_qty_delivered(self):
+        super().post_compute_qty_delivered()
         for sale_line in self:
             if all(picking.state == 'done' for picking in sale_line.pos_order_line_ids.order_id.picking_ids):
                 sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids if sale_line.product_id.type != 'service'), 0)

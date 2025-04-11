@@ -50,7 +50,7 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _compute_qty_delivered(self):
+    def compute_qty_delivered(self):
         remaining_so_lines = self
         for so_line in self:
             move = so_line.move_ids.sudo().filtered(lambda m: m.repair_id and m.state == 'done')
@@ -58,7 +58,7 @@ class SaleOrderLine(models.Model):
                 continue
             remaining_so_lines -= so_line
             so_line.qty_delivered = move.quantity
-        return super(SaleOrderLine, remaining_so_lines)._compute_qty_delivered()
+        return super(SaleOrderLine, remaining_so_lines).compute_qty_delivered()
 
     @api.model_create_multi
     def create(self, vals_list):

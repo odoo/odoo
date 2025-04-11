@@ -114,8 +114,11 @@ class SaleOrderLine(models.Model):
 
     @api.depends('qty_delivered_method', 'product_uom_qty', 'reached_milestones_ids.quantity_percentage')
     def _compute_qty_delivered(self):
+        super()._compute_qty_delivered()
+
+    def compute_qty_delivered(self):
         lines_by_milestones = self.filtered(lambda sol: sol.qty_delivered_method == 'milestones')
-        super(SaleOrderLine, self - lines_by_milestones)._compute_qty_delivered()
+        super(SaleOrderLine, self - lines_by_milestones).compute_qty_delivered()
 
         if not lines_by_milestones:
             return

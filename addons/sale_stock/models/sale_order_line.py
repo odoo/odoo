@@ -168,8 +168,10 @@ class SaleOrderLine(models.Model):
 
     @api.depends('move_ids.state', 'move_ids.scrapped', 'move_ids.quantity', 'move_ids.product_uom')
     def _compute_qty_delivered(self):
-        super(SaleOrderLine, self)._compute_qty_delivered()
+        super()._compute_qty_delivered()
 
+    def compute_qty_delivered(self):
+        super().compute_qty_delivered()
         for line in self:  # TODO: maybe one day, this should be done in SQL for performance sake
             if line.qty_delivered_method == 'stock_move':
                 qty = 0.0
