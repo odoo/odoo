@@ -217,7 +217,8 @@ export class Message extends Component {
         return {
             [this.props.className]: true,
             "o-card p-2 ps-1 mx-1 mt-2 mb-2 border border-secondary rounded-3": this.props.asCard,
-            "pt-1": !this.props.asCard,
+            "pt-1": !this.props.asCard && !this.props.squashed,
+            "o-pt-0_5": !this.props.asCard && this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
             "o-selected": this.props.thread?.composer.replyToMessage?.eq(this.props.message),
             "o-squashed": this.props.squashed,

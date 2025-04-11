@@ -16,7 +16,7 @@
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0 justify-content-center" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-att-class="getAvatarContainerAttClass()">
-                            <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
+                            <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
@@ -27,7 +27,7 @@
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }" name="header">
-                            <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author small" t-att-class="getAuthorAttClass()">
+                            <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="getAuthorAttClass()">
                                 <strong class="me-1" t-esc="message.authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
