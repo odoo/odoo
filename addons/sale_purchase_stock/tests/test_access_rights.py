@@ -123,3 +123,10 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         self.assertEqual(po.order_line[0].product_qty, 21)
         po.button_confirm()
         self.assertEqual(po.state, 'purchase')
+
+    def test_sales_user_can_access_forecast_report(self):
+        report_values = self.env['stock.forecasted_product_product'].with_user(
+            self.user_salesperson
+        ).get_report_values(docids=self.product.ids)
+        # No exception was raised, but user is not allowed to edit pickings
+        self.assertEqual(report_values['docs']['user_can_edit_pickings'], False)
