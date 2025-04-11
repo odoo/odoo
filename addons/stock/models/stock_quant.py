@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import heapq
 import logging
+import operator as py_operator
 from collections import namedtuple
 
 from ast import literal_eval
@@ -14,6 +15,17 @@ from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import SQL, check_barcode_encoding, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero
+
+PY_OPERATORS = {
+    '<': py_operator.lt,
+    '>': py_operator.gt,
+    '<=': py_operator.le,
+    '>=': py_operator.ge,
+    '=': py_operator.eq,
+    '!=': py_operator.ne,
+    'in': lambda elem, container: elem in container,
+    'not in': lambda elem, container: elem not in container,
+}
 
 _logger = logging.getLogger(__name__)
 
@@ -111,7 +123,7 @@ class StockQuant(models.Model):
     inventory_date = fields.Date(
         'Scheduled Date', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
-    last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
+    last_count_date = fields.Date(compute='_compute_last_count_date', search='_search_last_count_date', help='Last time the Quantity was Updated')
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
@@ -177,6 +189,31 @@ class StockQuant(models.Model):
             _update_dict(date_by_quant, (location_dest_id, result_package_id, product_id, lot_id, owner_id), move_line_date)
         for quant in self:
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
+
+    def _search_last_count_date(self, operator, value):
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            return NotImplemented
+
+        quants = self.env['stock.quant'].search([])
+
+        if operator == 'in' and list(value) == [False]:
+            filtered_quants = quants.filtered(lambda q: not q.last_count_date)
+
+        elif operator == 'not in' and list(value) == [False]:
+            filtered_quants = quants.filtered(lambda q: q.last_count_date)
+
+        elif operator == 'not in':
+            filtered_quants = quants.filtered(
+                lambda q: not q.last_count_date or q.last_count_date not in value
+            )
+
+        else:
+            filtered_quants = quants.filtered(
+                lambda q: q.last_count_date and op(q.last_count_date, value)
+            )
+
+        return [('id', 'in', filtered_quants.ids)]
 
     def _search(self, domain, *args, **kwargs):
         domain = Domain(domain).map_conditions(
