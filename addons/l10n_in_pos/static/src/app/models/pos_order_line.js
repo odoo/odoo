@@ -6,4 +6,11 @@ patch(PosOrderline.prototype, {
         this.l10n_in_hsn_code = this.product_id.l10n_in_hsn_code || "";
         return super.setup(...arguments);
     },
+
+    // EXTENDS 'point_of_sale'
+    prepareBaseLineForTaxesComputationExtraValues(customValues = {}) {
+        const extraValues = super.prepareBaseLineForTaxesComputationExtraValues(customValues);
+        extraValues.l10n_in_hsn_code = this.product_id.l10n_in_hsn_code;
+        return extraValues;
+    },
 });
