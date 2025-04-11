@@ -947,12 +947,12 @@ class SaleOrderLine(models.Model):
         For combo product lines, first compute all other lines, and then set quantity to invoice
         only if at least one of its combo item lines is invoiceable.
         """
-        combo_lines = []
+        combo_lines = set()
         for line in self:
             if line.state == 'sale' and not line.display_type:
-                if line.product_id.type == 'combo':
-                    combo_lines.append(line)
-                elif line.product_id.invoice_policy == 'order':
+                if line.linked_line_id:
+                    combo_lines.add(line.linked_line_id)
+                if line.product_id.invoice_policy == 'order':
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
                 else:
                     line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
