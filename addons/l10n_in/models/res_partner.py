@@ -217,8 +217,9 @@ class ResPartner(models.Model):
     @api.model
     def _l10n_in_get_partner_vals_by_vat(self, vat):
         partner_data = self.enrich_by_gst(vat)
-        partner_data.pop('domain', None)
-        partner_data.pop('unspsc_codes', None)
+        for fname in partner_data:
+            if fname not in self.env['res.partner']._fields:
+                partner_data.pop(fname, None)
         partner_data.update({
             'country_id': partner_data.get('country_id', {}).get('id'),
             'state_id': partner_data.get('state_id', {}).get('id'),
