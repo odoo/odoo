@@ -198,7 +198,6 @@
             'web/static/src/webclient/actions/**/*',
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
-            'point_of_sale/static/src/customer_display/customer_display_adapter.js',
             'partner_autocomplete/static/src/**/*',
         ],
         'point_of_sale.base_tests': [
@@ -225,7 +224,6 @@
             "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/customer_display/**/*",
-            ('remove', 'point_of_sale/static/src/customer_display/customer_display_adapter.js'),
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),
