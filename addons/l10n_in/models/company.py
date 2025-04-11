@@ -30,3 +30,4 @@ class ResCompany(models.Model):
     def action_update_state_as_per_gstin(self):
         self.ensure_one()
         self.partner_id.action_update_state_as_per_gstin()
+        self._update_l10n_in_fiscal_position()
