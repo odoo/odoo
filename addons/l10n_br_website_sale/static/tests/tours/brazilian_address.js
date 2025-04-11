@@ -26,7 +26,10 @@ registry.category("web_tour.tours").add("test_brazilian_address", {
         {
             content: "Set Brazil first",
             trigger: 'select[name="country_id"]',
-            run: "selectByLabel Brazil",
+            async run(helpers) {
+                await new Promise((r) => setTimeout(r, 1000));
+                await helpers.selectByLabel("Brazil");
+            },
         },
         {
             content: "Click to select a city",

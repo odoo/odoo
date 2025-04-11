@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { contains, click } from "@web/../tests/utils";
+import { waitForStable } from "@web/core/macro";
 
 const sendFirstMessageSteps = [
     {
@@ -12,6 +13,10 @@ const sendFirstMessageSteps = [
     },
     {
         trigger: ".o-livechat-root:shadow .o-mail-Message:contains('Hello, I need help!')",
+        async run() {
+            //Livechat is rerendered after sending a message
+            await waitForStable(document.body, 1000);
+        },
     },
 ];
 registry.category("web_tour.tours").add("website_livechat_no_session_with_hide_rule", {
