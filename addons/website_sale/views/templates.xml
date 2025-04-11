@@ -2105,7 +2105,6 @@
         <div id="cart_products"
              t-if="website_sale_order and website_sale_order.website_order_line"
              class="js_cart_lines d-flex flex-column mb32">
-            <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
                 <div
@@ -2192,7 +2191,7 @@
                         </div>
                         <div
                             name="o_wsale_cart_line_button_container_mobile"
-                            class="d-flex d-md-none flex-wrap"
+                            class="d-flex d-md-none"
                         >
                             <div
                                 class="d-flex d-md-none align-items-center me-auto"
@@ -2218,60 +2217,54 @@
             class="css_quantity input-group justify-content-end h-100"
             t-attf-name="{{'website_sale_cart_line_quantity' if not is_mobile else 'website_sale_cart_line_quantity_mobile'}}"
         >
-            <t t-if="line._is_sellable()">
-                <t t-if="show_qty">
-                    <a
-                        href="#"
-                        class="js_add_cart_json btn btn-link d-inline-block border-end-0"
-                        aria-label="Remove one"
-                        title="Remove one"
-                    >
-                        <i class="position-relative z-1 fa fa-minus"/>
-                    </a>
-                    <input
-                        type="text"
-                        class="js_quantity quantity form-control border-start-0 border-end-0"
-                        t-att-data-line-id="line.id"
-                        t-att-data-product-id="line.product_id.id"
-                        t-att-value="line._get_displayed_quantity()"
-                    />
-                    <t t-if="line._get_shop_warning(clear=False)">
-                        <a href="#" class="btn btn-link">
-                            <i
-                                class="fa fa-warning text-warning"
-                                t-att-title="line._get_shop_warning()"
-                                role="img"
-                                aria-label="Warning"
-                            />
-                        </a>
-                    </t>
-                    <a
-                        t-else=""
-                        href="#"
-                        class="js_add_cart_json d-inline-block btn btn-link border-start-0"
-                        aria-label="Add one"
-                        title="Add one"
-                    >
-                        <i class="fa fa-plus position-relative z-1"/>
-                    </a>
-                </t>
-                <t t-else="">
-                    <input
-                        type="hidden"
-                        class="js_quantity form-control quantity"
-                        t-att-data-line-id="line.id"
-                        t-att-data-product-id="line.product_id.id"
-                        t-att-value="line._get_displayed_quantity()"
-                    />
-                </t>
-            </t>
-            <t t-else="">
+            <t
+                t-set="should_show_quantity_selector"
+                t-value="is_view_active('website_sale.product_quantity')"
+            />
+            <t t-if="should_show_quantity_selector and line._is_sellable()">
+                <a
+                    href="#"
+                    class="js_add_cart_json btn btn-link d-inline-block border-end-0"
+                    aria-label="Remove one"
+                    title="Remove one"
+                >
+                    <i class="position-relative z-1 fa fa-minus"/>
+                </a>
                 <input
-                    type="hidden"
-                    class="js_quantity quantity form-control"
+                    type="text"
+                    class="js_quantity quantity form-control border-start-0 border-end-0"
                     t-att-data-line-id="line.id"
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
+                />
+                <t t-if="line._get_shop_warning(clear=False)">
+                    <a href="#" class="btn btn-link">
+                        <i
+                            class="fa fa-warning text-warning"
+                            t-att-title="line._get_shop_warning()"
+                            role="img"
+                            aria-label="Warning"
+                        />
+                    </a>
+                </t>
+                <a
+                    t-else=""
+                    href="#"
+                    class="js_add_cart_json d-inline-block btn btn-link border-start-0"
+                    aria-label="Add one"
+                    title="Add one"
+                >
+                    <i class="fa fa-plus position-relative z-1"/>
+                </a>
+            </t>
+            <t t-else="">
+                <input
+                    type="text"
+                    class="js_quantity form-control quantity text-start text-md-end text-md-end border-0 p-0 shadow-none mw-100"
+                    t-att-data-line-id="line.id"
+                    t-att-data-product-id="line.product_id.id"
+                    t-att-value="line._get_displayed_quantity()"
+                    readonly="True"
                 />
             </t>
         </div>
@@ -2282,7 +2275,7 @@
             class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end small fw-bold"
             name="website_sale_cart_line_price"
         >
-            <t t-if="line.discount and line._is_sellable()">
+            <t t-if="line.discount and line._is_sellable() and line._get_displayed_unit_price()">
                 <del
                     class="me-md-2 text-muted text-nowrap opacity-50"
                     t-out="line._get_displayed_unit_price() * line.product_uom_qty"
