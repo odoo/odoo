@@ -774,7 +774,7 @@ class CustomerPortal(Controller):
     @route(
         '/my/address/country_info/<model("res.country"):country>',
         type='jsonrpc',
-        auth='user',
+        auth='public',
         methods=['POST'],
         website=True,
         readonly=True,

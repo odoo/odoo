@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 import odoo
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
@@ -109,3 +109,44 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', timeout=30000)
         self.assertTrue(self.pos_order.is_invoiced, "The pos order should have an invoice")
         self.assertTrue("my/invoices" in res.url)
+
+    def test_qr_code_receipt_user_not_connected(self):
+        """This test make sure that when the user is not connected (public user). Order should invoiced with public user data."""
+
+        self.product1 = self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'is_storable': True,
+            'list_price': 10.0,
+            'taxes_id': False,
+        })
+        self.main_pos_config.open_ui()
+        self.pos_order = self.env['pos.order'].create({
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.env.company.id,
+            'access_token': '1234567890',
+            'lines': [(0, 0, {
+                'name': "Test Product 1",
+                'product_id': self.product1.id,
+                'price_unit': 10,
+                'tax_ids': False,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'amount_tax': 10,
+            'amount_total': 10,
+            'amount_paid': 10.0,
+            'amount_return': 10.0,
+            'pos_reference': '2500-002-00002',
+            'ticket_code': 'inPoS',
+            'date_order': datetime.today(),
+        })
+        context_make_payment = {"active_ids": [self.pos_order.id], "active_id": self.pos_order.id}
+        self.pos_make_payment = self.env['pos.make.payment'].with_context(context_make_payment).create({
+            'amount': 10.0,
+            'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
+        })
+        context_payment = {'active_id': self.pos_order.id}
+        self.pos_make_payment.with_context(context_payment).check()
+        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.start_tour('/pos/ticket', 'invoicePoSOrderWithSelfInvocing', login=None)
+        self.assertTrue(self.pos_order.account_move, "The pos order should have an invoice after self invoicing")

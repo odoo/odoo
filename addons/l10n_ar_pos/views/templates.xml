@@ -12,7 +12,7 @@
         </xpath>
 
         <!-- If the user is NOT log in we should hide the partner form, this one lost functionality because the get my invoice button is not shown and then the partner info is never save. In they want they can sign up and fill data from there -->
-        <xpath expr="//div[hasclass('o_portal_details')]" position="attributes">
+        <xpath expr="//div[hasclass('o_customer_address_fill')]" position="attributes">
             <attribute name="t-if">pos_order.company_id.country_code != 'AR'</attribute>
         </xpath>
         <xpath expr="//div[@id='get_info_div']" position="attributes">
