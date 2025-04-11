@@ -170,7 +170,7 @@ export class RelationalModel extends Model {
      */
     async load(params = {}) {
         const config = this._getNextConfig(this.config, params);
-        if (!this.isReady && !config.isMonoRecord) {
+        if (!this.isReady && !config.isMonoRecord && !config.resIds) {
             // make an empty root available asap s.t. the controller can be rendered directly,
             // especially the control panel
             const data = config.groupBy.length
