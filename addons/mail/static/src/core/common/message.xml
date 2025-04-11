@@ -69,7 +69,7 @@
                                                     'o-green': message.bubbleColor === 'green',
                                                     'o-orange': message.bubbleColor === 'orange',
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
-                                                <MessageInReply t-if="message.parentMessage" message="message" onClick="props.onParentMessageClick"/>
+                                                <MessageInReply t-if="message.parent_id" message="message" onClick="props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.is_note,
                                                             'fs-1': !isEditing and !env.inChatter and message.onlyEmojis,
