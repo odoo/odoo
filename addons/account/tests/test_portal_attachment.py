@@ -7,6 +7,7 @@ import json
 
 from odoo import http
 from odoo.tools import file_open, mute_logger
+from odoo.tools.misc import limited_field_access_token
 
 
 @tagged('post_install', '-at_install')
@@ -72,7 +73,10 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertEqual(res_binary.status_code, 404)
 
         # Test created access_token is working
-        res_binary = self.url_open('/web/content/%d?access_token=%s' % (create_res['id'], create_res['access_token']))
+        res_binary = self.url_open(
+            "/web/content/%d?access_token=%s"
+            % (create_res["id"], create_res["raw_access_token"])
+        )
         self.assertEqual(res_binary.status_code, 200)
 
         # Test mimetype is neutered as non-admin
@@ -91,11 +95,17 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         create_res = json.loads(res.content.decode('utf-8'))['data']['ir.attachment'][0]
         self.assertEqual(create_res['mimetype'], 'text/plain')
 
-        res_binary = self.url_open('/web/content/%d?access_token=%s' % (create_res['id'], create_res['access_token']))
+        res_binary = self.url_open(
+            "/web/content/%d?access_token=%s"
+            % (create_res["id"], create_res["raw_access_token"])
+        )
         self.assertEqual(res_binary.headers['Content-Type'], 'text/plain; charset=utf-8')
         self.assertEqual(res_binary.content, b'<svg></svg>')
 
-        res_image = self.url_open('/web/image/%d?access_token=%s' % (create_res['id'], create_res['access_token']))
+        res_image = self.url_open(
+            "/web/image/%d?access_token=%s"
+            % (create_res["id"], create_res["raw_access_token"])
+        )
         self.assertEqual(res_image.headers['Content-Type'], 'application/octet-stream')
         self.assertEqual(res_image.content, b'<svg></svg>')
 
@@ -111,43 +121,47 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         )
         self.assertEqual(res.status_code, 200)
         self.assertTrue(self.env['ir.attachment'].sudo().search([('id', '=', create_res['id'])]))
-        self.assertIn("The requested URL was not found on the server.", res.text)
-
+        self.assertIn(
+            "The attachment %s does not exist or you do not have the rights to access it."
+            % create_res["id"],
+            res.text,
+        )
         # Test attachment can be removed with token if "pending" state
         res = self.url_open(
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
                     'attachment_id': create_res['id'],
-                    'access_token': create_res['access_token'],
+                    "access_token": create_res["as_author_access_token"],
                 },
             },
         )
         self.assertEqual(res.status_code, 200)
         self.assertFalse(self.env['ir.attachment'].sudo().search([('id', '=', create_res['id'])]))
 
-        # Test attachment can't be removed if not "pending" state
+        # Test attachment can be removed with token if not "pending" state
         attachment = self.env['ir.attachment'].create({
             'name': 'an attachment',
-            'access_token': self.env['ir.attachment']._generate_access_token(),
         })
         res = self.url_open(
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
                     'attachment_id': attachment.id,
-                    'access_token': attachment.access_token,
+                    "access_token": limited_field_access_token(
+                        attachment, "as_author_access_token"
+                    ),
                 },
             },
         )
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(self.env['ir.attachment'].sudo().search([('id', '=', attachment.id)]))
-        self.assertIn("The requested URL was not found on the server.", res.text)
+        self.assertFalse(self.env['ir.attachment'].sudo().search([('id', '=', attachment.id)]))
 
         # Test attachment can be removed if attached to a message
-        attachment.write({
-            'res_model': 'mail.compose.message',
-            'res_id': 0,
+        attachment = self.env["ir.attachment"].create({
+            "name": "an attachment",
+            "res_model": "mail.compose.message",
+            "res_id": 0,
         })
         attachment.flush_recordset()
         message = self.env['mail.message'].create({
@@ -158,7 +172,9 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             json={
                 'params': {
                     'attachment_id': attachment.id,
-                    'access_token': attachment.access_token,
+                    "access_token": limited_field_access_token(
+                        attachment, "as_author_access_token"
+                    ),
                 },
             },
         )
@@ -169,7 +185,6 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         # Test attachment can't be associated if no attachment token.
         attachment = self.env['ir.attachment'].create({
             'name': 'an attachment',
-            'access_token': self.env['ir.attachment']._generate_access_token(),
             'res_model': 'mail.compose.message',
             'res_id': 0,
         })
@@ -198,7 +213,9 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
                     'post_data': {'body': "test message 1", 'attachment_ids': [attachment.id]},
-                    'attachment_tokens': [attachment.access_token],
+                    "attachment_tokens": [
+                        limited_field_access_token(attachment, "as_author_access_token")
+                    ],
                 },
             },
         )
@@ -217,7 +234,9 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
                     'post_data': {'body': "test message 1", 'attachment_ids': [attachment.id]},
-                    'attachment_tokens': [attachment.access_token],
+                    "attachment_tokens": [
+                        limited_field_access_token(attachment, "as_author_access_token")
+                    ],
                     'token': self.out_invoice._portal_ensure_token(),
                 },
             },
@@ -239,7 +258,9 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
                     'post_data': {'body': "test message 2", 'attachment_ids': [attachment.id]},
-                    'attachment_tokens': [attachment.access_token],
+                    "attachment_tokens": [
+                        limited_field_access_token(attachment, "as_author_access_token")
+                    ],
                     'token': self.out_invoice._portal_ensure_token(),
                 },
             },
@@ -277,7 +298,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
                     'post_data': {'body': "test message 3", 'attachment_ids': [create_res['id']]},
-                    'attachment_tokens': [create_res['access_token']],
+                    "attachment_tokens": [create_res["as_author_access_token"]],
                     'token': self.out_invoice._portal_ensure_token(),
                 },
             },

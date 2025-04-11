@@ -245,10 +245,6 @@ class ThreadController(http.Controller):
     def _can_edit_message(cls, message, **kwargs):
         return message.sudo().is_current_user_or_guest_author or request.env.user._is_admin()
 
-    @classmethod
-    def _can_delete_attachment(cls, message, **kwargs):
-        return cls._can_edit_message(message, **kwargs)
-
     @http.route("/mail/thread/unsubscribe", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
