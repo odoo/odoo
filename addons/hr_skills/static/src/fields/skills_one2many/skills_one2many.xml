@@ -52,7 +52,7 @@
                 <th tabindex="-1" class="o_group_name" t-att-colspan="colspan">
                     <div class="d-flex justify-content-between align-items-center">
                         <span t-esc="skill_group[1].name"/>
-                        <button class="btn btn-secondary btn-sm"
+                        <button id="add_button" class="btn btn-secondary btn-sm"
                             t-if="isEditable"
                             t-on-click="() => props.onAdd({ context: { default_skill_type_id: skill_group[1].id }})"
                             role="button">ADD</button>
