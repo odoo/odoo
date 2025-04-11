@@ -5,6 +5,7 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 var core = require('web.core');
 const { loadBundle, loadCSS } = require("@web/core/assets");
 var Dialog = require('web.Dialog');
+const concurrency = require('web.concurrency');
 const {Markup, sprintf} = require('web.utils');
 const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
@@ -1873,34 +1874,42 @@ options.registry.Carousel = options.Class.extend({
             setTimeout(() => this.trigger_up('hide_overlay'));
         });
 
-        return new Promise(resolve => {
-            this.$bsTarget.one("slid.bs.carousel", () => {
-                // slid.bs.carousel is most of the time fired too soon by bootstrap
-                // since it emulates the transitionEnd with a setTimeout. We wait
-                // here an extra 20% of the time before retargeting edition, which
-                // should be enough...
-                const _slideDuration = (window.performance.now() - _slideTimestamp);
-                setTimeout(() => {
-                    // Setting the active indicator manually, as Bootstrap could
-                    // not do it because the `data-bs-slide-to` attribute is not
-                    // here in edit mode anymore.
-                    const $activeSlide = this.$target.find(".carousel-item.active");
-                    const activeIndex = [...$activeSlide[0].parentElement.children].indexOf($activeSlide[0]);
-                    const activeIndicatorEl = [...this.$indicators[0].children][activeIndex];
-                    activeIndicatorEl.classList.add("active");
-                    activeIndicatorEl.setAttribute("aria-current", "true");
+        // The code execution is synchronized using a mutex to ensure that only
+        // one operation related to the carousel runs at a time. This avoids
+        // race conditions or overlapping logic.
+        return new concurrency.Mutex().exec(() => {
+            return new Promise((resolve) => {
+                this.$bsTarget.one("slid.bs.carousel", () => {
+                    // slid.bs.carousel is most of the time fired too soon by bootstrap
+                    // since it emulates the transitionEnd with a setTimeout. We wait
+                    // here an extra 20% of the time before retargeting edition, which
+                    // should be enough...
+                    const _slideDuration = (window.performance.now() - _slideTimestamp);
+                    setTimeout(() => {
+                        // Setting the active indicator manually, as Bootstrap could
+                        // not do it because the `data-bs-slide-to` attribute is not
+                        // here in edit mode anymore.
+                        const $activeSlide = this.$target.find(".carousel-item.active");
+                        const activeIndex = [...$activeSlide[0].parentElement.children].indexOf(
+                            $activeSlide[0]
+                        );
+                        const activeIndicatorEl = [...this.$indicators[0].children][activeIndex];
+                        activeIndicatorEl.classList.add("active");
+                        activeIndicatorEl.setAttribute("aria-current", "true");
+                        if (document.contains(this.$target[0])) {
+                            this.trigger_up("activate_snippet", {
+                                $snippet: $activeSlide,
+                                ifInactiveOptions: true,
+                            });
+                        }
+                        this.$bsTarget.trigger("active_slide_targeted"); // TODO remove in master: kept for compatibility.
+                        this.trigger_up("enable_loading_effect");
+                        resolve();
+                    }, 0.2 * _slideDuration);
+                });
 
-                    this.trigger_up("activate_snippet", {
-                        $snippet: $activeSlide,
-                        ifInactiveOptions: true,
-                    });
-                    this.$bsTarget.trigger("active_slide_targeted"); // TODO remove in master: kept for compatibility.
-                    this.trigger_up("enable_loading_effect");
-                    resolve();
-                }, 0.2 * _slideDuration);
+                this.$bsTarget.carousel(direction);
             });
-
-            this.$bsTarget.carousel(direction);
         });
     },
 
