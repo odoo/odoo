@@ -532,7 +532,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_20_snippet_editor_panel_options(self):
         self.start_tour('/@/', 'snippet_editor_panel_options', login='admin')
 
-    @unittest.skip
     def test_21_website_start_cloned_snippet(self):
         self.start_tour('/odoo', 'website_start_cloned_snippet', login='admin')
 
