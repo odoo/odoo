@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { AllocationFormViewDialog } from "./view_dialog/allocation_form_view_dialog";
 import { useComponent } from "@odoo/owl";
 
 export function formatNumber(lang, number, maxDecimals = 2) {
@@ -31,6 +31,7 @@ export function useLeaveCancelWizard() {
                 target: "new",
                 views: [[false, "form"]],
                 context: {
+                    dialog_size: "medium",
                     default_leave_id: leaveId,
                 },
             },
@@ -45,11 +46,13 @@ export function useNewAllocationRequest() {
     const addDialog = useOwnedDialogs();
     const component = useComponent();
     return async (employeeId, holidayStatusId) => {
+        let size = "md";
         const context = {
             form_view_ref: "hr_holidays.hr_leave_allocation_view_form_dashboard",
             is_employee_allocation: true,
         };
         if (employeeId) {
+            size = "lg";
             context["default_employee_id"] = employeeId;
             context["form_view_ref"] =
                 "hr_holidays.hr_leave_allocation_view_form_manager_dashboard";
@@ -57,10 +60,11 @@ export function useNewAllocationRequest() {
         if (holidayStatusId) {
             context["default_holiday_status_id"] = holidayStatusId;
         }
-        addDialog(FormViewDialog, {
+        addDialog(AllocationFormViewDialog, {
             resModel: "hr.leave.allocation",
             title: _t("New Allocation"),
             context: context,
+            size: size,
             onRecordSaved: () => {
                 component.env.timeOffBus.trigger("update_dashboard");
             },

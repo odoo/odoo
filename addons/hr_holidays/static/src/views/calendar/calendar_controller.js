@@ -1,7 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
@@ -30,7 +29,10 @@ export class TimeOffCalendarController extends CalendarController {
 
     newTimeOffRequest() {
         const context = {};
-        if (this.employeeId) {
+        if (this.props.context.active_id) {
+            context["default_employee_id"] = this.props.context.active_id;
+        }
+        else if (this.employeeId) {
             context["default_employee_id"] = this.employeeId;
         }
         if (this.model.meta.scale == "day") {
@@ -44,7 +46,7 @@ export class TimeOffCalendarController extends CalendarController {
             );
         }
 
-        this.displayDialog(FormViewDialog, {
+        this.displayDialog(TimeOffFormViewDialog, {
             resModel: "hr.leave",
             title: _t("New Time Off"),
             viewId: this.model.formViewId,
@@ -52,6 +54,9 @@ export class TimeOffCalendarController extends CalendarController {
                 this.model.load();
                 this.env.timeOffBus.trigger("update_dashboard");
             },
+            onRecordDeleted: (record) => {},
+            onLeaveCancelled: (record) => {},
+            size: "md",
             context: context,
         });
     }

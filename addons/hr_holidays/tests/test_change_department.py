@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
@@ -14,7 +13,7 @@ class TestChangeDepartment(TestHrHolidaysCommon):
         HolidayStatusManagerGroup = self.env['hr.leave.type'].with_user(self.user_hrmanager_id)
         self.holidays_status_1 = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         def create_holiday(name, start, end):
@@ -60,7 +59,7 @@ class TestChangeDepartment(TestHrHolidaysCommon):
         hol3_user_group.action_refuse()
         self.env.flush_all()
         self.employee_emp.department_id = self.hr_dept # Change department
-        self.assertEqual(hol3_employee_group.department_id, self.rd_dept, 'hr_holidays: refused passed leave request should stay in previous department if employee change department')
+        self.assertEqual(hol3_user_group.department_id, self.rd_dept, 'hr_holidays: refused passed leave request should stay in previous department if employee change department')
 
         # Refused future leave request change department
         self.employee_emp.department_id = self.rd_dept

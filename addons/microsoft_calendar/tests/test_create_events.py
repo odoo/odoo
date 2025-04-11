@@ -584,7 +584,7 @@ class TestCreateEvents(TestCommon):
         })
         self.hr_leave_type = self.env['hr.leave.type'].with_user(self.user_hrmanager).create({
             'name': 'Time Off Type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         self.holiday = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).with_user(self.user_employee).create({
             'name': 'Time Off Employee',
@@ -593,7 +593,7 @@ class TestCreateEvents(TestCommon):
             'request_date_from': datetime(2020, 1, 15),
             'request_date_to': datetime(2020, 1, 15),
         })
-        self.holiday.with_user(self.user_hrmanager).action_validate()
+        self.holiday.with_user(self.user_hrmanager).action_approve()
 
         # Ensure the event exists in the calendar and is correctly linked to the time off
         search_domain = [

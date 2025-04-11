@@ -145,7 +145,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'time_type': 'leave',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         self.employee_emp.resource_calendar_id = self.calendar_1.id
 
@@ -206,7 +206,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'request_date_from': datetime(2024, 12, 3, 7, 0),
             'request_date_to': datetime(2024, 12, 5, 18, 0),
         })
-        partially_covered_leave.action_validate()
+        partially_covered_leave.action_approve()
 
         global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
             'name': 'Public holiday',

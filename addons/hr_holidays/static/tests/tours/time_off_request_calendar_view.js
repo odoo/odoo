@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add("time_off_request_calendar_view", {
         },
         {
             content: "Save the leave",
-            trigger: '.btn:contains("Save")',
+            trigger: '.btn:contains("Submit Request")',
             run: "click",
         },
     ],

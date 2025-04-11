@@ -26,7 +26,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
         # This would cause the test case that uses the tour to fail.
         cls.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'request_unit': 'day',
             'company_id': cls.company.id,
         })
@@ -39,6 +39,8 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.user_hrmanager_id = cls.user_hrmanager.id
         cls.user_hrmanager.tz = 'Europe/Brussels'
 
+        cls.user_responsible = mail_new_test_user(cls.env, login='Titus', groups='base.group_user,hr_holidays.group_hr_holidays_responsible')
+        cls.user_responsible_id = cls.user_responsible.id
         cls.user_employee = mail_new_test_user(cls.env, login='enguerran', password='enguerran', groups='base.group_user')
         cls.user_employee_id = cls.user_employee.id
 
@@ -52,9 +54,16 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'name': 'Research and devlopment',
         })
 
+        cls.employee_responsible = cls.env['hr.employee'].create({
+            'name': 'David Employee',
+            'user_id': cls.user_responsible_id,
+            'department_id': cls.rd_dept.id,
+        })
+
         cls.employee_emp = cls.env['hr.employee'].create({
             'name': 'David Employee',
             'user_id': cls.user_employee_id,
+            'leave_manager_id': cls.user_responsible_id,
             'department_id': cls.rd_dept.id,
         })
         cls.employee_emp_id = cls.employee_emp.id

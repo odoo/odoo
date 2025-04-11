@@ -23,8 +23,8 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
 
             holiday_status_paid_time_off = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
-                'requires_allocation': 'yes',
-                'employee_requests': 'no',
+                'requires_allocation': True,
+                'employee_requests': False,
                 'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
@@ -51,7 +51,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
             leave = self.env['hr.leave'].create(leave_vals)
             leave.action_approve()
             with self.mock_mail_gateway():
-                leave.action_validate()
+                leave.action_approve()
                 admin_emails = self._new_mails.filtered(lambda x: x.partner_ids.employee_ids.id == self.ref('hr.employee_admin'))
                 self.assertEqual(len(admin_emails), 1, "Mitchell Admin should receive an email")
                 self.assertTrue("has been accepted" in admin_emails.preview)

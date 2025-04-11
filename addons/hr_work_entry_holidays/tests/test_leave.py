@@ -39,7 +39,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         work_entry_1 = self.create_work_entry(datetime(2019, 10, 8, 9, 0), datetime(2019, 10, 11, 9, 0))  # overlaps
         work_entry_2 = self.create_work_entry(datetime(2019, 10, 11, 9, 0), datetime(2019, 10, 11, 10, 0))  # included
         adjacent_work_entry = self.create_work_entry(datetime(2019, 10, 12, 18, 0), datetime(2019, 10, 13, 18, 0))  # after and don't overlap
-        leave.action_validate()
+        leave.action_approve()
         self.assertNotEqual(adjacent_work_entry.state, 'conflict', "It should not conflict")
         self.assertFalse(work_entry_2.active, "It should have been archived")
         self.assertEqual(work_entry_1.state, 'conflict', "It should conflict")
@@ -56,7 +56,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         contract.date_generated_to = datetime(2019, 10, 10, 9, 0)
         leave = self.create_leave(datetime(2019, 10, 10, 9, 0), datetime(2019, 10, 12, 18, 0))
         work_entry = self.create_work_entry(datetime(2019, 10, 11, 9, 0), datetime(2019, 10, 11, 10, 0))  # included
-        leave.action_validate()
+        leave.action_approve()
         self.assertFalse(work_entry[:1].active, "It should have been archived")
 
         leave_work_entry = self.env['hr.work.entry'].search([('leave_id', '=', leave.id)])
@@ -83,7 +83,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         contract.date_generated_to = start - relativedelta(hours=1)
 
         leave = self.create_leave(start, end)
-        leave.action_validate()
+        leave.action_approve()
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id), ('date_start', '<=', end), ('date_stop', '>=', start)])
         leave_work_entry = self.richard_emp.contract_ids.generate_work_entries(start.date(), end.date())
         self.assertEqual(leave_work_entry[:1].leave_id, leave)
@@ -116,7 +116,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
                 'request_date_from': date(2022, 3, 22),
                 'request_date_to': date(2022, 3, 25),
             })
-            leave.with_user(SUPERUSER_ID).action_validate()
+            leave.with_user(SUPERUSER_ID).action_approve()
             # No work entries exist yet
             self.assertTrue(leave.can_cancel, "The leave should still be cancellable")
             # can not create in the future
@@ -133,8 +133,6 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
     def test_work_entry_generation_company_time_off(self):
         existing_leaves = self.env['hr.leave'].search([])
         existing_leaves.action_refuse()
-        existing_leaves.action_reset_confirm()
-        existing_leaves.unlink()
         start = date(2022, 8, 1)
         end = date(2022, 8, 31)
         self.contract_cdi.generate_work_entries(start, end)
@@ -181,13 +179,13 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
         leave_type_paid, leave_type_unpaid = self.env['hr.leave.type'].create([{
             'name': 'Paid leave type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'request_unit': 'hour',
             'work_entry_type_id': entry_type_paid.id,
         },
         {
             'name': 'Unpaid leave type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'request_unit': 'hour',
             'work_entry_type_id': entry_type_unpaid.id,
         }])
@@ -213,7 +211,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'request_hour_to': '10',
         }])
 
-        (leave_paid | leave_unpaid).with_user(SUPERUSER_ID).action_validate()
+        (leave_paid | leave_unpaid).with_user(SUPERUSER_ID).action_approve()
         entries = self.contract_cdi._generate_work_entries(datetime(2024, 9, 10, 0, 0, 0), datetime(2024, 9, 10, 23, 59, 59))
         paid_leave_entry = entries.filtered_domain([('work_entry_type_id', '=', entry_type_paid.id)])
         unpaid_leave_entry = entries.filtered_domain([('work_entry_type_id', '=', entry_type_unpaid.id)])

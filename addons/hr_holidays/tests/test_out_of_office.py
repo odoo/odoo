@@ -21,7 +21,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
     @freeze_time('2024-06-06')
@@ -86,7 +86,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         cls.leave_date_end = (datetime.today() + relativedelta(days=2))
         cls.leave = cls.env['hr.leave'].create({

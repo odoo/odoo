@@ -18,8 +18,8 @@ class ResUsers(models.Model):
     def _compute_request_overtime(self):
         is_holiday_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         time_off_types = self.env['hr.leave.type'].search_count([
-            ('requires_allocation', '=', 'yes'),
-            ('employee_requests', '=', 'yes'),
+            ('requires_allocation', '=', True),
+            ('employee_requests', '=', True),
             ('overtime_deductible', '=', True)
         ])
         for user in self:

@@ -31,7 +31,7 @@ class TestHrHolidaysTour(HttpCase):
 
         holidays_type_1 = LeaveType.create({
             'name': 'NotLimitedHR',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'hr',
         })
         # add allocation

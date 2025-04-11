@@ -35,7 +35,7 @@ class TestCancelTimeOff(TransactionCase):
         })
         cls.generic_time_off_type = cls.env['hr.leave.type'].create({
             'name': 'Generic Time Off',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
         })
@@ -59,7 +59,7 @@ class TestCancelTimeOff(TransactionCase):
             'date_from': '2020-01-07 08:00:00',
             'date_to': '2020-01-09 17:00:00',
         })
-        time_off.action_validate()
+        time_off.action_approve()
         self.assertEqual(time_off.state, 'validate')
         HrHolidaysCancelLeave = self.env[
             'hr.holidays.cancel.leave'].with_user(self.employee_user).with_company(self.company.id)
