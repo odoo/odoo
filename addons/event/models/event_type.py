@@ -28,11 +28,13 @@ class EventType(models.Model):
                  })]
 
     def _default_question_ids(self):
-        return [
-            (0, 0, {'title': _('Name'), 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': _('Email'), 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': _('Phone'), 'question_type': 'phone'}),
-        ]
+        """
+            Get default question_ids from ir.model.data.
+        """
+        Data = self.env['ir.model.data'].sudo()
+        default_question_xmlids = ['event.event_question_name', 'event.event_question_email', 'event.event_question_phone']
+        default_question_ids = [Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in default_question_xmlids]
+        return self.env['event.question'].search([('id', 'in', default_question_ids)])
 
     name = fields.Char('Event Template', required=True, translate=True)
     note = fields.Html(string='Note')
@@ -55,8 +57,8 @@ class EventType(models.Model):
     # ticket reports
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
         help="This information will be printed on your tickets.")
-    question_ids = fields.One2many(
-        'event.question', 'event_type_id', default=_default_question_ids,
+    question_ids = fields.Many2many(
+        'event.question', default=_default_question_ids,
         string='Questions', copy=True)
 
     @api.depends('has_seats_limitation')

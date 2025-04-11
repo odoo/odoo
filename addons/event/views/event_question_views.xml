@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record model="ir.actions.act_window" id="action_event_question_view">
+       <field name="name">Event Question</field>
+       <field name="res_model">event.question</field>
+       <field name="view_mode">list,form</field>
+       <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create an question
+          </p>
+        </field>
+    </record>
+
+    <record id="menu_event_questions" model="ir.ui.menu">
+        <field name="action" ref="event.action_event_question_view"/>
+    </record>
+
+    <record id="event_question_view_list" model="ir.ui.view">
+        <field name="name">Event Question</field>
+        <field name="model">event.question</field>
+        <field name="arch" type="xml">
+            <list js_class="event_question_list">
+                <field name="title"/>
+                <field name="is_mandatory_answer" string="Mandatory"/>
+                <field name="once_per_order" string="Once per Order"/>
+                <field name="question_type" string="Type" />
+                <field name="answer_ids" widget="many2many_tags"
+                    invisible="question_type != 'simple_choice'" />
+                <button name="action_view_question_answers" type="object" class="p-0" icon="fa-bar-chart pe-1" string="Stats"
+                        title="Answer Breakdown" invisible="question_type != 'simple_choice'"/>
+            </list>
+        </field>
+    </record>
+
     <record id="event_question_view_form" model="ir.ui.view">
         <field name="name">event.question.view.form</field>
         <field name="model">event.question</field>
         <field name="arch" type="xml">
-            <form string="Question">
+            <form string="Question" js_class="event_question_form">
                 <sheet>
                     <h1 class="d-flex"><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' class="flex-grow-1"/></h1>
                     <group>
@@ -16,10 +49,23 @@
                             <field name="once_per_order"/>
                         </group>
                     </group>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_question_answers"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-line-chart"
+                                invisible="question_type != 'simple_choice'">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Registration answers
+                                </span>
+                            </div>
+                        </button>
+                    </div>
                     <notebook invisible="question_type != 'simple_choice'">
                         <page string="Answers" name="answers">
-                            <field name="answer_ids">
-                                <list editable="bottom">
+                            <field name="answer_ids" widget="question_answer_one2many">
+                                <list editable="bottom" name="answers">
                                     <!-- 'display_name' is necessary for the many2many_tags to work on the event view -->
                                     <field name="display_name" column_invisible="True" />
                                     <field name="sequence" widget="handle" />
