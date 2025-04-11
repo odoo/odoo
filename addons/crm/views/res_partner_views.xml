@@ -9,15 +9,12 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <xpath expr="//footer/div" position="inside">
-                    <a t-if="record.opportunity_count?.value"
-                        class="btn btn-sm btn-link smaller"
-                        groups="sales_team.group_sale_salesman"
-                        name="action_view_opportunity"
-                        role="button"
-                        type="object">
+                    <span t-if="record.opportunity_count?.raw_value"
+                        class="badge bg-secondary mx-1 rounded-pill smaller"
+                        groups="sales_team.group_sale_salesman">
                         <i class="fa fa-star me-1" aria-label="Opportunities" role="img" title="Opportunities"/>
                         <field name="opportunity_count"/>
-                    </a>
+                    </span>
                 </xpath>
             </field>
         </record>
@@ -40,6 +37,25 @@
                         </button>
                     </div>
                 </data>
+            </field>
+        </record>
+
+        <!-- Add opportunity count on list view with widget -->
+        <record id="view_partner_tree" model="ir.ui.view">
+            <field name="name">res.partner.list.crm</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="before">
+                    <field name="opportunity_count"
+                        invisible="not opportunity_count"
+                        class="d-inline-flex"
+                        widget="list_stat"
+                        options="{'icon_class': 'fa-star', 'label': 'Opportunities'}"
+                        groups="sales_team.group_sale_salesman"
+                        width="42"
+                        nolabel="1"/>
+                </xpath>
             </field>
         </record>
 

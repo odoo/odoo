@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ListStatField">
+        <span class="badge bg-secondary mx-1 rounded-pill smaller">
+            <i t-attf-class="fa me-1 {{props.iconClass}}" t-att-aria-label="props.label" role="img" t-att-title="props.label"/>
+            <t t-out="props.record.data[props.name]"/>
+        </span>
+    </t>
+
+</templates>
