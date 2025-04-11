@@ -28,7 +28,9 @@ patch(OrderSummary.prototype, {
             selectedLine &&
             selectedLine.is_reward_line &&
             !selectedLine.manual_reward &&
-            (key === "Backspace" || key === "Delete")
+            ((key === "Backspace" &&
+                (!selectedLine.isGiftCardOrEWalletReward() || !selectedLine.getDisplayPrice())) ||
+                key === "Delete")
         ) {
             const reward = selectedLine.reward_id;
             const confirmed = await ask(this.dialog, {
@@ -76,15 +78,36 @@ patch(OrderSummary.prototype, {
                 coupon.delete();
             }
         }
+        const isGiftCardOrEWalletReward = selectedLine.isGiftCardOrEWalletReward();
+        const changeTotal =
+            this.currentOrder.lines
+                .filter((l) => l.id != selectedLine.id)
+                .reduce((agg, l) => (agg += l.getDisplayPrice()), 0) * -1;
         if (
-            !selectedLine ||
             !selectedLine.is_reward_line ||
-            (selectedLine.is_reward_line && ["", "remove"].includes(val))
+            (selectedLine.is_reward_line &&
+                (["", "remove"].includes(val) ||
+                    (this.pos.numpadMode == "price" &&
+                        isGiftCardOrEWalletReward &&
+                        !isNaN(parseFloat(val)) &&
+                        Math.abs(parseFloat(selectedLine.getPriceChange(-val))) <=
+                            Math.abs(
+                                Math.min(selectedLine.coupon_id?.points ?? Infinity, changeTotal)
+                            ))))
         ) {
+            if (isGiftCardOrEWalletReward && !isNaN(parseFloat(val))) {
+                val = val * -1;
+            }
             super._setValue(val);
         }
         if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === "remove")) {
             this.pos.updateRewards();
+        }
+        if (isGiftCardOrEWalletReward && !isNaN(parseFloat(val))) {
+            if (!selectedLine.getQuantity() && val) {
+                selectedLine.setQuantity(1);
+            }
+            selectedLine.points_cost = Math.abs(selectedLine.getDisplayPrice());
         }
     },
 
