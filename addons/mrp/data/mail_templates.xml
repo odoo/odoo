@@ -14,13 +14,14 @@
                         <t t-set="order" t-value="exception[0]"/>
                         <t t-set="new_qty" t-value="exception[1][0]"/>
                         <t t-set="old_qty" t-value="exception[1][1]"/>
+                            <t t-set="uom" t-value="move_raw_id.product_uom_id if 'product_uom_id' in move_raw_id else move_raw_id.product_uom"/>
                             <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="production_order.id"><t t-esc="production_order.name"/></a>:
-                            <t t-esc="new_qty"/> <t t-esc="move_raw_id.product_uom.name"/> of <t t-esc="move_raw_id.product_id.name"/>
+                            <t t-esc="new_qty"/> <t t-esc="uom.name"/> of <t t-esc="move_raw_id.product_id.name"/>
                             <t t-if="cancel">
                                 cancelled
                             </t>
                             <t t-if="not cancel">
-                                ordered instead of <t t-esc="old_qty"/> <t t-esc="move_raw_id.product_uom.name"/>
+                                ordered instead of <t t-esc="old_qty"/> <t t-esc="uom.name"/>
                             </t>
                       </li>
                 </ul>
