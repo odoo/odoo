@@ -343,7 +343,7 @@
                         <t invisible="not model_id">
                             <div class="d-flex flex-column">
                                 <label for="state"/>
-                                <field name="state" widget="selection_badge" options="{'size': 'sm'}"/>
+                                <field name="state" widget="selection_badge_with_filter" context="{'allowed_selection': allowed_states}" options="{'horizontal': True}"/>
                             </div>
                             <div class="alert alert-warning" role="alert" invisible="not warning">
                                 <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="warning" nolabel="1"/>
