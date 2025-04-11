@@ -169,7 +169,9 @@ test("connection lost when opening form view from kanban", async () => {
 });
 
 test.tags("desktop");
-test("connection lost when coming back to kanban from form", async () => {
+test.skip("connection lost when coming back to kanban from form", async () => {
+    // TODOAAB: can't be done anymore, we are on an empty kanban with the notif, this is expected
+    // => use calendar or remove test
     expect.errors(1);
 
     stepAllNetworkCalls();

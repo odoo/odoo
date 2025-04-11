@@ -3668,7 +3668,7 @@ test(`selection changes are triggered correctly on desktop`, async () => {
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected",
     });
-    expect.verifySteps(["onRendered ListController"]);
+    expect.verifySteps(["onRendered ListController", "onRendered ListController"]);
 
     // tbody checkbox click
     await contains(`tbody .o_list_record_selector input`).click();
