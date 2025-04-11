@@ -31,9 +31,9 @@
                         <group>
                             <field name="pricelist_id"/>
                             <field name="fiscal_position_id"/>
-                            <field name="use_timing" />
-                            <field name="resource_calendar_id" invisible="not use_timing" />
-                            <label for="slot_params" string="Capacity" invisible="not use_timing" />
+                            <field name="use_timing" string="Enable Time Slots" />
+                            <field name="resource_calendar_id" string="Schedule" invisible="not use_timing" />
+                            <label for="slot_params" string="Order Limit" invisible="not use_timing" />
                             <div invisible="not use_timing">
                                 <field id="slot_params" name="slots_per_interval" class="oe_inline border-bottom text-center" />
                                 <label for="interval_time" string="orders per" style="font-weight:bold;" />
