@@ -2430,7 +2430,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                     ),
                 ),
             ),
-            'readOnly': False,
+            'readOnly': len(self) > 1,
         }
 
     def _visible_quantity(self):
