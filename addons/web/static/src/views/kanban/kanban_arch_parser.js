@@ -51,11 +51,10 @@ export class KanbanArchParser {
                 headerButtons = [...node.children]
                     .filter((node) => node.tagName === "button")
                     .map((node) => ({
-                        ...processButton(node),
+                        ...this.processButton(node),
                         type: "button",
                         id: button_id++,
-                    }))
-                    .filter((button) => button.invisible !== "True" && button.invisible !== "1");
+                    }));
                 return false;
             } else if (node.tagName === "control") {
                 for (const childNode of node.children) {
@@ -180,5 +179,9 @@ export class KanbanArchParser {
             sumField: fields[attrs.sum_field] || false,
             help: attrs.help,
         };
+    }
+
+    processButton(node) {
+        return processButton(node);
     }
 }

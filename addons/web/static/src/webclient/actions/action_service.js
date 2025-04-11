@@ -1456,6 +1456,9 @@ export function makeActionManager(env, router = _router) {
      * @returns {Promise<void>}
      */
     async function doActionButton(params, { isEmbeddedAction, newWindow } = {}) {
+        if (!params.name) {
+            return;
+        }
         // determine the action to execute according to the params
         let action;
         if (!isEmbeddedAction) {
