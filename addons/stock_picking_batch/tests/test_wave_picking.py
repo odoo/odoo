@@ -636,6 +636,7 @@ class TestBatchPicking(TransactionCase):
         wave = self.env['stock.picking.batch'].create({
             'name': 'Wave transfer',
             'picking_ids': [Command.link(picking_1.id), Command.link(picking_2.id)],
+            'is_wave': True,
         })
         self.assertEqual((picking_1 | picking_2).mapped('state'), ['assigned', 'assigned'])
         picking_1.move_ids.quantity = 0.0
