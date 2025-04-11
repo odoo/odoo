@@ -1,0 +1,347 @@
+from lxml import etree
+from markupsafe import Markup
+
+from odoo import _, models, Command
+from odoo.tools import html2plaintext, cleanup_xml_node
+
+
+class OrderEdiXmlUbl_Bis3(models.AbstractModel):
+    _name = 'order.edi.xml.ubl_bis3'
+    _inherit = ['account.edi.xml.ubl_bis3']
+    _description = "UBL BIS 3 Peppol Order transaction 3.4"
+
+    #####################################################################################
+    ##### Order EDI Export
+    #####################################################################################
+
+    def _get_order_payment_terms_vals(self, payment_term):
+        if payment_term:
+            return {'name': payment_term.name}
+        return {}
+
+    def _get_tax_category_vals(self, order, order_line):
+        if not order_line.tax_ids:
+            return None
+        tax = order_line.tax_ids[0]
+        customer = order.company_id.partner_id.commercial_partner_id
+        supplier = order.partner_id
+        tax_unece_codes = self._get_tax_unece_codes(customer, supplier, tax)
+        return {
+            'id': tax_unece_codes.get('tax_category_code'),
+            'percent': tax.amount if tax.amount_type == 'percent' else False,
+            'tax_scheme_vals': {'id': 'VAT'},
+        }
+
+    def _get_line_item_price_vals(self, line):
+        """ Method used to fill the cac:Price node.
+        It provides information about the price applied for the goods and services.
+        """
+        # Price subtotal without discount:
+        net_price_subtotal = line.price_subtotal
+        # Price subtotal with discount:
+        if line.discount == 100.0:
+            gross_price_subtotal = 0.0
+        else:
+            gross_price_subtotal = line.currency_id.round(net_price_subtotal / (1.0 - (line.discount or 0.0) / 100.0))
+        # Price subtotal with discount / quantity:
+        line_qty = line[self._get_order_qty_field()]
+        gross_price_unit = gross_price_subtotal / line_qty if line_qty else 0.0
+
+        uom = self._get_uom_unece_code(line.product_uom_id)
+
+        vals = {
+            'currency_id': line.currency_id.name,
+            'currency_dp': self._get_currency_decimal_places(line.currency_id),
+            'price_amount': round(gross_price_unit, 10),
+            'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
+            'base_quantity': 1,
+            'base_quantity_unit_code': uom,
+        }
+
+        return vals
+
+    def _get_anticipated_monetary_total_vals(self, order, order_lines):
+        line_extension_amount = sum(line['line_extension_amount'] for line in order_lines)
+        allowance_total_amount = sum(line['price']['allowance_charge_vals']['amount'] for line in order_lines if 'allowance_charge_vals' in line['price'])
+        return {
+            'currency': order.currency_id,
+            'currency_dp': self._get_currency_decimal_places(order.currency_id),
+            'line_extension_amount': line_extension_amount,
+            'allowance_total_amount': allowance_total_amount,
+            'tax_exclusive_amount': line_extension_amount - allowance_total_amount,
+            'tax_inclusive_amount': order.amount_total,
+            'payable_amount': order.amount_total,
+        }
+
+    def _get_item_vals(self, order, order_line):
+        product = order_line.product_id
+        variant_info = [{
+            'name': value.attribute_id.name,
+            'value': value.name
+        } for value in product.product_template_attribute_value_ids]
+
+        vals = {
+            'name': product.name or order_line.name,
+            'description': order_line.name or product.description,
+            'sellers_item_identification': product.default_code,
+            'standard_item_identification': product.barcode,
+            'classified_tax_category_vals': self._get_tax_category_vals(order, order_line)
+        }
+
+        if len(variant_info) > 0:
+            vals['variant_info'] = variant_info
+        return vals
+
+    def _get_order_lines(self, order):
+        qty_field = self._get_order_qty_field()
+        filtered_order_lines = order.order_line.filtered(lambda l: l.display_type not in ['line_note', 'line_section'])
+        order_lines_to_process = []
+        for line_id, line in enumerate(filtered_order_lines, 1):
+            order_lines_to_process.append({
+                'id': line_id,
+                'quantity': line[qty_field],
+                'quantity_unit_code': self._get_uom_unece_code(line.product_uom_id),
+                'line_extension_amount': line.price_subtotal,
+                'currency_id': line.currency_id.name,
+                'currency_dp': self._get_currency_decimal_places(line.currency_id),
+                'price': self._get_line_item_price_vals(line),
+                'item': self._get_item_vals(order, line),
+            })
+        return order_lines_to_process
+
+    def _export_order_vals(self, order):
+        order_lines = self._get_order_lines(order)
+        anticipated_monetary_total_vals = self._get_anticipated_monetary_total_vals(order, order_lines)
+
+        supplier = order.company_id.partner_id if order._name == 'sale.order' else order.partner_id
+        customer = order.partner_id if order._name == 'sale.order' else order.company_id.partner_id
+        customer_delivery_address = customer.child_ids.filtered(lambda child: child.type == 'delivery')
+        delivery = (
+            order[self._get_dest_address_field()]
+            or (customer_delivery_address and customer_delivery_address[0])
+            or customer
+        )
+
+        vals = {
+            'builder': self,
+            'order': order,
+            'supplier': supplier,
+            'customer': customer,
+
+            'format_float': self.format_float,
+
+            'vals': {
+                'id': order.name,
+                'issue_date': order.create_date.date(),
+                'order_type_code': self._get_order_type_code(),
+                'note': html2plaintext(order.note) if order.note else False,
+                'originator_document_reference': order.origin,
+                'document_currency_code': order.currency_id.name.upper(),
+                'delivery_party_vals': self._get_partner_party_vals(delivery, role='delivery'),
+                'supplier_party_vals': self._get_partner_party_vals(supplier, role='supplier'),
+                'customer_party_vals': self._get_partner_party_vals(customer, role='customer'),
+                'payment_terms_vals': self._get_order_payment_terms_vals(order.payment_term_id),
+                'anticipated_monetary_total_vals': anticipated_monetary_total_vals,
+                'tax_amount': order.amount_tax,
+                'order_lines': order_lines,
+                'currency_dp': self._get_currency_decimal_places(order.currency_id),  # currency decimal places
+                'currency_id': order.currency_id.name,
+            },
+        }
+
+        return vals
+
+    def _export_order(self, order):
+        vals = self._export_order_vals(order)
+        xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.bis3_OrderType', vals)
+        return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8')
+
+    #####################################################################################
+    ##### Order EDI Import
+    #####################################################################################
+
+    def _import_order_lines(self, order, tree, xpath):
+        """ Import order lines from xml tree.
+        :param order: Order to set order line on.
+        :param tree: Xml tree to extract OrderLine from.
+        :param xpath: Xpath for order line items.
+        :return: Logging information related orderlines details.
+        :rtype: List
+        """
+        logs = []
+        lines_values = []
+        for line_tree in tree.iterfind(xpath):
+            line_values = self._retrieve_line_vals(line_tree)
+            line_values = {
+                **line_values,
+                self._get_order_qty_field(): line_values['quantity'],
+            }
+            del line_values['quantity']
+
+            if not line_values['product_id']:
+                logs += [_("Could not retrieve product for line '%s'", line_values['name'])]
+            line_values['tax_ids'], tax_logs = self._retrieve_taxes(
+                order, line_values, self._get_order_type(),
+            )
+            logs += tax_logs
+            lines_values += self._retrieve_line_charges(order, line_values, line_values['tax_ids'])
+            if not line_values['product_uom_id']:
+                line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
+            lines_values.append(line_values)
+
+        return lines_values, logs
+
+    def _import_fill_order(self, order, tree):
+        """ Fill order details by extracting details from xml tree.
+        param order: Order to fill details from xml tree.
+        param tree: Xml tree to extract details.
+        :return: list of logs to add warnig and information about data from xml.
+        """
+        logs = []
+        order_values = {}
+        partner, partner_logs = self._import_partner(
+            order.company_id,
+            **self._import_retrieve_partner_vals(tree, self._get_order_partner_role()),
+        )
+        if partner:
+            order_values['partner_id'] = partner.id
+        delivery_partner, delivery_partner_logs = self._import_delivery_partner(
+            order,
+            **self._import_retrieve_delivery_vals(tree),
+        )
+        if delivery_partner:
+            order_values[self._get_dest_address_field()] = delivery_partner.id
+        order_values['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
+
+        order_values['date_order'] = tree.findtext('./{*}IssueDate')
+        order_values[self._get_order_ref()] = tree.findtext('./{*}ID')
+        order_values['note'] = self._import_description(tree, xpaths=['./{*}Note'])
+        order_values['origin'] = tree.findtext('./{*}OriginatorDocumentReference/{*}ID')
+        order_values['payment_term_id'] = self._import_payment_term_id(order, tree, './/cac:PaymentTerms/cbc:Note')
+
+        allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, order, self._get_order_type())
+        lines_vals, line_logs = self._import_order_lines(order, tree, './{*}OrderLine/{*}LineItem')
+        lines_vals += allowance_charges_line_vals
+
+        # Update order with lines excluding discounts
+        order_values = {
+            **order_values,
+            'order_line': [Command.create(line_vals) for line_vals in lines_vals],
+        }
+        order.write(order_values)
+        logs += partner_logs + delivery_partner_logs + currency_logs + line_logs + allowance_charges_logs
+
+        return logs
+
+    def _import_payment_term_id(self, order, tree, xapth):
+        """ Return payment term from given tree. """
+        payment_term_note = self._find_value(xapth, tree)
+        if not payment_term_note:
+            return False
+
+        return self.env['account.payment.term'].search([
+            *self.env['account.payment.term']._check_company_domain(order.company_id),
+            ('name', '=', payment_term_note)
+        ], limit=1)
+
+    def _import_delivery_partner(self, order, name, phone, email):
+        """ Import delivery address from details if not found then log details."""
+        logs = []
+        dest_partner = self.env['res.partner'].with_company(
+            order.company_id
+        )._retrieve_partner(name=name, phone=phone, email=email)
+        if not dest_partner:
+            partner_detaits_str = self._get_partner_detail_str(name, phone, email)
+            logs.append(_("Could not retrieve Delivery Address with Details: { %s }", partner_detaits_str))
+
+        return dest_partner, logs
+
+    def _import_retrieve_delivery_vals(self, tree):
+        """ Returns a dict of values that will be used to retrieve the delivery address. """
+        return {
+            'phone': self._find_value('.//cac:Delivery/cac:DeliveryParty//cbc:Telephone', tree),
+            'email': self._find_value('.//cac:Delivery/cac:DeliveryParty//cbc:ElectronicMail', tree),
+            'name': self._find_value('.//cac:Delivery/cac:DeliveryParty//cbc:Name', tree),
+        }
+
+    def _import_order_ubl(self, order, file_data):
+        """ Common importing method to extract order data from file_data.
+        :param order: Order to fill details from file_data.
+        :param file_data: File data to extract order related data from.
+        :return: True if there no exception while extraction.
+        :rtype: Boolean
+        """
+        tree = file_data['xml_tree']
+
+        # Update the order.
+        logs = self._import_fill_order(order, tree)
+        if order:
+            body = Markup("<strong>%s</strong>") % \
+                _("Format used to import the invoice: %s",
+                  self.env['ir.model']._get(self._name).name)
+            if logs:
+                order._create_activity_set_details()
+                body += Markup("<ul>%s</ul>") % \
+                    Markup().join(Markup("<li>%s</li>") % l for l in logs)
+            order.message_post(body=body)
+
+        return True
+
+    def _import_partner(self, company_id, name, phone, email, vat, **kwargs):
+        """ Override of edi.mixin to set current user partner if there is no matching partner
+        found and log details related to partner."""
+        partner, logs = super()._import_partner(company_id, name, phone, email, vat, **kwargs)
+        if not partner:
+            partner_detaits_str = self._get_partner_detail_str(name, phone, email, vat)
+            if not vat:
+                logs.append(_("Insufficient details to extract Customer: { %s }", partner_detaits_str))
+            else:
+                logs.append(_("Could not retrieve Customer with Details: { %s }", partner_detaits_str))
+
+        return partner, logs
+
+    def _get_line_xpaths(self, document_type=False, qty_factor=1):
+        # Override account.edi.xml.ubl_bis3
+        return {
+            **super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor),
+            'delivered_qty': ('./{*}Quantity'),
+        }
+
+    def _get_partner_detail_str(self, name, phone=False, email=False, vat=False):
+        """ Return partner details string to help user find or create proper contact with details.
+        """
+        partner_details = _("Name: %(name)s, Vat: %(vat)s", name=name, vat=vat)
+        if phone:
+            partner_details += _(", Phone: %(phone)s", phone=phone)
+        if email:
+            partner_details += _(", Email: %(email)s", email=email)
+
+        return partner_details
+
+    # -------------------------------------------------------------------------
+    # OVERRIDES
+    # -------------------------------------------------------------------------
+
+    def _get_order_qty_field(self):
+        """Return the quantity field for the order type"""
+        return
+
+    def _get_dest_address_field(self):
+        """Return the destination address field for the order type"""
+        return
+
+    def _get_order_type_code(self):
+        """Return the order type code for the Order Transaction"""
+        return
+
+    def _get_order_type(self):
+        """Return the order type"""
+        return
+
+    def _get_order_ref(self):
+        """Returns the reference associated with the order partner"""
+        return
+
+    def _get_order_partner_role(self):
+        """Returns the role of the partner in the context of the order xml tree"""
+        return

@@ -9,7 +9,7 @@ receiver to retrieve the PDF with only the xml file.
     """,
     'depends': ['purchase', 'account_edi_ubl_cii'],
     'data': [
-        'data/bis3_templates.xml',
+        'report/purchase_documents_edi_ubl_connect_software.xml',
         'views/portal_templates_edi_ubl_connect_software.xml',
     ],
     'installable': True,

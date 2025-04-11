@@ -10,6 +10,10 @@ When uploading or pasting Files in order list view with order related data insid
 File with embedded xml data will allow seller to retrieve Order data from Files.
     """,
     'depends': ['sale', 'account_edi_ubl_cii'],
+    'data': [
+        'report/ir_actions_report_templates.xml',
+        'views/portal_templates_edi_ubl_connect_software.xml'
+    ],
     'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',

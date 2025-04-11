@@ -11,7 +11,8 @@
             <cbc:PostalZone t-out="vals.get('postal_zone')" />
             <cbc:CountrySubentity t-out="vals.get('country_subentity')" />
             <cac:Country>
-                <cbc:IdentificationCode t-out="vals.get('country_identification_code')" />
+                <t t-set="country_vals" t-value="vals.get('country_vals', {})"/>
+                <cbc:IdentificationCode t-out="country_vals.get('identification_code')" />
             </cac:Country>
         </t>
     </template>
@@ -28,45 +29,35 @@
     <template id="bis3_PartyType">
         <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-            <cac:PartyName>
-                <cbc:Name t-out="vals.get('party_name')" />
+            <cac:PartyName t-foreach="vals.get('party_name_vals', [])" t-as="foreach_vals">
+                <cbc:Name t-out="foreach_vals.get('name')" />
             </cac:PartyName>
             <cac:PostalAddress>
-                <t t-call="purchase_edi_ubl_bis3.bis3_AddressType">
+                <t t-call="account_edi_ubl_cii.bis3_AddressType">
                     <t t-set="vals" t-value="vals.get('postal_address_vals', {})" />
                 </t>
             </cac:PostalAddress>
-            <cac:PartyTaxScheme t-if="vals.get('party_tax_scheme_vals')">
-                <t t-set="party_tax_scheme_vals" t-value="vals.get('party_tax_scheme_vals')" />
-                <cbc:CompanyID t-out="party_tax_scheme_vals.get('company_id')" />
+            <cac:PartyTaxScheme t-foreach="vals.get('party_tax_scheme_vals', [])" t-as="foreach_vals">
+                <cbc:CompanyID t-out="foreach_vals.get('company_id')" />
                 <cac:TaxScheme>
-                    <t t-set="tax_scheme_vals" t-value="party_tax_scheme_vals['tax_scheme_vals']" />
-                    <cbc:ID t-out="tax_scheme_vals['id']" />
+                    <t t-set="tax_scheme_vals" t-value="foreach_vals.get('tax_scheme_vals', {})" />
+                    <cbc:ID t-out="tax_scheme_vals.get('id')" />
                 </cac:TaxScheme>
             </cac:PartyTaxScheme>
-            <cac:PartyLegalEntity t-if="'party_legal_entity_vals' in vals">
-                <t t-set="party_legal_entity_vals" t-value="vals['party_legal_entity_vals']" />
-                <cbc:RegistrationName t-out="party_legal_entity_vals['registration_name']" />
-                <cbc:CompanyID t-out="party_legal_entity_vals['company_id']" />
-                <cac:RegistrationAddress t-if="'registration_address' in party_legal_entity_vals">
-                    <t t-call="purchase_edi_ubl_bis3.bis3_AddressType">
-                        <t t-set="vals"
-                            t-value="party_legal_entity_vals['registration_address_vals']" />
+            <cac:PartyLegalEntity t-foreach="vals.get('party_legal_entity_vals', [])" t-as="foreach_vals">
+                <cbc:RegistrationName t-out="foreach_vals.get('registration_name')" />
+                <cbc:CompanyID t-out="foreach_vals.get('company_id')" />
+                <cac:RegistrationAddress>
+                    <t t-call="account_edi_ubl_cii.bis3_AddressType">
+                        <t t-set="vals" t-value="foreach_vals.get('registration_address_vals', {})" />
                     </t>
                 </cac:RegistrationAddress>
             </cac:PartyLegalEntity>
-            <cac:Contact t-if="vals.get('contact_vals')">
-                <t t-call="purchase_edi_ubl_bis3.bis3_ContactType">
-                    <t t-set="vals" t-value="vals.get('contact_vals')" />
+            <cac:Contact>
+                <t t-call="account_edi_ubl_cii.bis3_ContactType">
+                    <t t-set="vals" t-value="vals.get('contact_vals', {})" />
                 </t>
             </cac:Contact>
-        </t>
-    </template>
-
-    <template id="bis3_PaymentTermsType">
-        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-            <cbc:Note t-out="vals['note']" />
         </t>
     </template>
 
@@ -103,17 +94,17 @@
         <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cac:DeliveryParty>
-                <cac:PartyName>
-                    <cbc:Name t-out="vals.get('party_name')"/>
+                <cac:PartyName t-foreach="vals.get('party_name_vals', [])" t-as="foreach_vals">
+                    <cbc:Name t-out="foreach_vals.get('name')" />
                 </cac:PartyName>
                 <cac:PostalAddress>
-                    <t t-call="purchase_edi_ubl_bis3.bis3_AddressType">
+                    <t t-call="account_edi_ubl_cii.bis3_AddressType">
                         <t t-set="vals" t-value="vals.get('postal_address_vals')" />
                     </t>
                 </cac:PostalAddress>
-                <cac:Contact t-if="vals.get('contact_vals')">
-                    <t t-call="purchase_edi_ubl_bis3.bis3_ContactType">
-                        <t t-set="vals" t-value="vals.get('contact_vals')" />
+                <cac:Contact>
+                    <t t-call="account_edi_ubl_cii.bis3_ContactType">
+                        <t t-set="vals" t-value="vals.get('contact_vals', {})" />
                     </t>
                 </cac:Contact>
             </cac:DeliveryParty>
@@ -145,12 +136,15 @@
             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:Name t-out="vals.get('name')" />
             <cbc:Description t-out="vals.get('description')" />
+            <cac:SellersItemIdentification>
+                <cbc:ID t-out="vals.get('sellers_item_identification')"/>
+            </cac:SellersItemIdentification>
             <cac:StandardItemIdentification>
                 <cbc:ID t-out="vals.get('standard_item_identification')" />
             </cac:StandardItemIdentification>
-            <cac:ClassifiedTaxCategory t-if="vals.get('classified_tax_category_vals')" >
-                <t t-call="purchase_edi_ubl_bis3.bis3_TaxCategoryType">
-                    <t t-set="vals" t-value="vals.get('classified_tax_category_vals')" />
+            <cac:ClassifiedTaxCategory>
+                <t t-call="account_edi_ubl_cii.bis3_TaxCategoryType">
+                    <t t-set="vals" t-value="vals.get('classified_tax_category_vals', {})" />
                 </t>
             </cac:ClassifiedTaxCategory>
             <cac:AdditionalItemProperty t-foreach="vals.get('variant_info')" t-as="variant">
@@ -170,9 +164,9 @@
             <cbc:LineExtensionAmount
                 t-att-currencyID="vals.get('currency_id')"
                 t-out="vals.get('line_extension_amount')" />
-            <cac:AllowanceCharge t-if="vals.get('allowance_charge_vals')">
-                <t t-call="purchase_edi_ubl_bis3.bis3_AllowanceChargeType">
-                    <t t-set="vals" t-value="vals.get('allowance_charge_vals')"/>
+            <cac:AllowanceCharge>
+                <t t-call="account_edi_ubl_cii.bis3_AllowanceChargeType">
+                    <t t-set="vals" t-value="vals.get('allowance_charge_vals', {})"/>
                 </t>
             </cac:AllowanceCharge>
             <cac:Price>
@@ -185,7 +179,7 @@
                     t-out="price_vals.get('base_quantity')" />
             </cac:Price>
             <cac:Item>
-                <t t-call="purchase_edi_ubl_bis3.bis3_ItemType">
+                <t t-call="account_edi_ubl_cii.bis3_ItemType">
                     <t t-set="vals" t-value="vals.get('item')" />
                 </t>
             </cac:Item>
@@ -202,6 +196,7 @@
             <cbc:ProfileID>urn:fdc:peppol.eu:poacc:bis:ordering:3</cbc:ProfileID>
             <cbc:ID t-out="vals.get('id')" />
             <cbc:IssueDate t-out="vals.get('issue_date')" />
+            <cbc:OrderTypeCode t-out="vals.get('order_type_code')" />
             <cbc:Note t-out="vals.get('note')" />
             <cac:OriginatorDocumentReference>
                 <cbc:ID t-out="vals.get('originator_document_reference')"/>
@@ -209,29 +204,29 @@
             <cbc:DocumentCurrencyCode t-out="vals.get('document_currency_code')" />
             <cac:BuyerCustomerParty>
                 <cac:Party>
-                    <t t-call="purchase_edi_ubl_bis3.bis3_PartyType">
+                    <t t-call="account_edi_ubl_cii.bis3_PartyType">
                         <t t-set="vals" t-value="vals.get('customer_party_vals')" />
                     </t>
                 </cac:Party>
             </cac:BuyerCustomerParty>
             <cac:SellerSupplierParty>
                 <cac:Party>
-                    <t t-call="purchase_edi_ubl_bis3.bis3_PartyType">
+                    <t t-call="account_edi_ubl_cii.bis3_PartyType">
                         <t t-set="vals" t-value="vals.get('supplier_party_vals')" />
                     </t>
                 </cac:Party>
             </cac:SellerSupplierParty>
-            <cac:Delivery t-if="vals.get('delivery_party_vals')">
-                <t t-call="purchase_edi_ubl_bis3.bis3_DeliveryType">
-                    <t t-set="vals" t-value="vals.get('delivery_party_vals')" />
+            <cac:Delivery>
+                <t t-call="account_edi_ubl_cii.bis3_DeliveryType">
+                    <t t-set="vals" t-value="vals.get('delivery_party_vals', {})" />
                 </t>
             </cac:Delivery>
-            <cac:PaymentTerms t-if="vals.get('payment_terms_vals')">
-                <t t-set="payment_terms_vals" t-value="vals.get('payment_terms_vals')" />
-                <cbc:Note t-out="payment_terms_vals.get('note')" />
+            <cac:PaymentTerms>
+                <t t-set="payment_terms_vals" t-value="vals.get('payment_terms_vals', {})" />
+                <cbc:Note t-out="payment_terms_vals.get('name')" />
             </cac:PaymentTerms>
             <cac:AllowanceCharge>
-                <t t-call="purchase_edi_ubl_bis3.bis3_AllowanceChargeType">
+                <t t-call="account_edi_ubl_cii.bis3_AllowanceChargeType">
                     <t t-set="vals" t-value="vals.get('allowance_charge_vals', {})" />
                 </t>
             </cac:AllowanceCharge>
@@ -241,13 +236,13 @@
                     t-out="vals.get('tax_amount')" />
             </cac:TaxTotal>
             <cac:AnticipatedMonetaryTotal>
-                <t t-call="purchase_edi_ubl_bis3.bis3_AnticipatedMonetaryTotalType">
+                <t t-call="account_edi_ubl_cii.bis3_AnticipatedMonetaryTotalType">
                     <t t-set="vals" t-value="vals.get('anticipated_monetary_total_vals')" />
                 </t>
             </cac:AnticipatedMonetaryTotal>
             <cac:OrderLine t-foreach="vals.get('order_lines')" t-as="line_vals">
                 <cac:LineItem>
-                    <t t-call="purchase_edi_ubl_bis3.bis3_LineItemType">
+                    <t t-call="account_edi_ubl_cii.bis3_LineItemType">
                         <t t-set="vals" t-value="line_vals" />
                     </t>
                 </cac:LineItem>

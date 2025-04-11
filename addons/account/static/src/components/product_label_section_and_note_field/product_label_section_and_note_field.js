@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { buildM2OFieldDescription, Many2OneField, extractM2OFieldProps, m2oSupportedOptions } from "@web/views/fields/many2one/many2one_field";
 import { Component, onMounted, onPatched, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_label_autoresize";
@@ -37,7 +37,10 @@ class ProductLabelSectionAndNoteFieldMany2One extends Many2One {
 export class ProductLabelSectionAndNoteField extends Component {
     static template = "account.ProductLabelSectionAndNoteField";
     static components = { Many2One: ProductLabelSectionAndNoteFieldMany2One };
-    static props = { ...Many2OneField.props };
+    static props = {
+        ...Many2OneField.props,
+        show_label_warning: { type: Boolean, optional: true, default: false },
+    };
 
     setup() {
         super.setup();
@@ -122,6 +125,7 @@ export class ProductLabelSectionAndNoteField extends Component {
         return {
             "fw-bold": this.isSection(),
             "fst-italic": this.isNote(),
+            "text-warning": !this.productName && this.props.show_label_warning
         };
     }
 
@@ -154,6 +158,20 @@ export class ProductLabelSectionAndNoteField extends Component {
 export const productLabelSectionAndNoteField = {
     ...buildM2OFieldDescription(ProductLabelSectionAndNoteField),
     listViewWidth: [240, 400],
+    supportedOptions: [
+        ...m2oSupportedOptions,
+        {
+            label: _t("Show Label Warning"),
+            name: "show_label_warning",
+            type: "boolean",
+            default: false
+        },
+    ],
+    extractProps({ options }) {
+        const props = extractM2OFieldProps(...arguments);
+        props.show_label_warning = options.show_label_warning;
+        return props;
+    },
 };
 registry
     .category("fields")

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -8,11 +10,13 @@ from pytz import timezone
 from markupsafe import escape, Markup
 from werkzeug.urls import url_encode
 
-from odoo import api, Command, fields, models, _
+from odoo import SUPERUSER_ID, api, Command, fields, models, _
 from odoo.osv import expression
 from odoo.tools import format_amount, format_date, formatLang, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
+
+_logger = logging.getLogger(__name__)
 
 
 class PurchaseOrder(models.Model):
@@ -108,7 +112,7 @@ class PurchaseOrder(models.Model):
     acknowledged = fields.Boolean(
         'Acknowledged', copy=False, tracking=True,
         help="It indicates that the vendor has acknowledged the receipt of the purchase order.")
-    notes = fields.Html('Terms and Conditions')
+    note = fields.Html('Terms and Conditions')
 
     partner_bill_count = fields.Integer(related='partner_id.supplier_invoice_count')
     invoice_count = fields.Integer(compute="_compute_invoice", string='Bill Count', copy=False, default=0, store=True)
@@ -157,6 +161,7 @@ class PurchaseOrder(models.Model):
         store=True,
         precompute=True,
     )
+    duplicated_order_ids = fields.Many2many(comodel_name='purchase.order', compute='_compute_duplicated_order_ids')
 
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
@@ -288,6 +293,56 @@ class PurchaseOrder(models.Model):
                 if product_msg := line.purchase_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
             order.purchase_warning_text = '\n'.join(warnings)
+
+    @api.depends('partner_ref', 'date_order', 'origin', 'partner_id')
+    def _compute_duplicated_order_ids(self):
+        """Compute duplicated purchase orders based on key fields."""
+        order_to_duplicate_orders = self._fetch_duplicate_orders()
+        for order in self:
+            duplicate_ids = order_to_duplicate_orders.get(order.id, [])
+            order.duplicated_order_ids = [Command.set(duplicate_ids)]
+
+    def _fetch_duplicate_orders(self):
+        orders = self.filtered(lambda order: order.id and order.partner_ref)
+        if not orders:
+            return {}
+
+        self.env['purchase.order'].flush_model([
+            'company_id', 'partner_id', 'partner_ref', 'origin',
+            'date_order', 'state'
+        ])
+
+        result = self.env.execute_query(SQL("""
+            SELECT
+                po.id AS order_id,
+                array_agg(duplicate_po.id) AS duplicate_ids
+            FROM purchase_order po
+            JOIN purchase_order AS duplicate_po
+                ON po.company_id = duplicate_po.company_id
+                AND po.id != duplicate_po.id
+                AND duplicate_po.state != 'cancel'
+                AND po.partner_id = duplicate_po.partner_id
+                AND po.date_order = duplicate_po.date_order
+                AND po.partner_ref = duplicate_po.partner_ref
+                AND (
+                    po.origin = duplicate_po.origin
+                    OR (po.origin IS NULL AND duplicate_po.origin IS NULL)
+                )
+            WHERE po.id IN %(orders)s
+            GROUP BY po.id
+        """, orders=tuple(orders.ids)))
+
+        return {order_id: set(duplicate_ids) for order_id, duplicate_ids in result}
+
+    def action_open_business_doc(self):
+        self.ensure_one()
+        return {
+            'name': _("Order"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'res_id': self.id,
+            'views': [(False, 'form')],
+        }
 
     @api.onchange('date_planned')
     def onchange_date_planned(self):
@@ -810,7 +865,7 @@ class PurchaseOrder(models.Model):
         invoice_vals = {
             'ref': self.partner_ref or '',
             'move_type': move_type,
-            'narration': self.notes,
+            'narration': self.note,
             'currency_id': self.currency_id.id,
             'partner_id': partner_invoice.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
@@ -1226,5 +1281,82 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         return self.state == 'cancel'
 
-    def _get_edi_builders(self):
-        return []
+    # EDI #
+
+    def create_document_from_attachment(self, attachment_ids):
+        """ Create the purchase orders from given attachment_ids
+        and redirect newly create order view.
+
+        :param list attachment_ids: List of attachments process.
+        :return: An action redirecting to related sale order view.
+        :rtype: dict
+        """
+        orders = self._create_order_from_attachment(attachment_ids)
+        return orders._get_records_action(name=_("Generated Orders"))
+
+    @api.model
+    def _create_order_from_attachment(self, attachment_ids):
+        """ Create the purchase orders from given attachment_ids
+        and fill data by extracting detail from attachments and
+        return generated orders.
+
+        :param list attachment_ids: List of attachments process.
+        :return: Recordset of order.
+        """
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        if not attachments:
+            raise UserError(_("No attachment was provided"))
+
+        orders = self.browse()
+        for attachment in attachments:
+            order = self.create({
+                'partner_id': self.env.user.partner_id.id,
+            })
+            order._extend_with_attachments(attachment)
+            orders |= order
+            order.message_post(attachment_ids=attachment.ids)
+            attachment.write({'res_model': self._name, 'res_id': order.id})
+
+        return orders
+
+    def _extend_with_attachments(self, attachment):
+        """ Main entry point to extend/enhance order with attachment.
+
+        :param attachment: A recordset of ir.attachment.
+        :returns: None
+        """
+        self.ensure_one()
+
+        file_data = attachment._unwrap_edi_attachments()[0]
+        decoder = self._get_order_edi_decoder(file_data)
+        if decoder:
+            try:
+                with self.env.cr.savepoint():
+                    decoder(self, file_data)
+            except RedirectWarning:
+                raise
+            except Exception:
+                message = _(
+                    "Error importing attachment '%(file_name)s' as order (decoder=%(decoder)s)",
+                    file_name=file_data['filename'],
+                    decoder=decoder.__name__,
+                )
+                self.with_user(SUPERUSER_ID).message_post(body=message)
+                _logger.exception(message)
+
+        if file_data.get('on_close'):
+            file_data['on_close']()
+        return True
+
+    def _get_order_edi_decoder(self, file_data):
+        """ To be extended with decoding capabilities of order data from file data.
+
+        :returns:  Function to be later used to import the file.
+                   Function' args:
+                   - order: sale.order
+                   - file_data: attachemnt information / value
+                   returns True if was able to process the order
+        """
+        if file_data['type'] in ('pdf', 'binary'):
+            return lambda *args: False
+        return

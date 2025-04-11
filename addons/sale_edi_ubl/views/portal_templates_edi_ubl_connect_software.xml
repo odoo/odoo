@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="portal_connect_software_modal" name="EDI UBL : portal connect software" inherit_id="purchase.portal_my_purchase_order" priority="35">
-        <xpath expr="//div[hasclass('o_portal_purchase_sidebar')]/t/t[3]/div[hasclass('d-flex') and hasclass('flex-column') and hasclass('gap-4') and hasclass('mt-3')]" position="inside">
+    <template id="portal_connect_software_modal" name="EDI UBL : portal connect software" inherit_id="sale.sale_order_portal_template" priority="35">
+        <xpath expr="//div[hasclass('o_portal_sale_sidebar')]/t/t[3]/div[hasclass('d-flex') and hasclass('flex-column') and hasclass('gap-4') and hasclass('mt-3')]" position="inside">
             <div>
                 <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary"
-                data-bs-toggle="modal" data-bs-target="#purchase_portal_connect_software_modal">
-                    Connect with your software!
+                    data-bs-toggle="modal" data-bs-target="#sale_portal_connect_software_modal">
+                        Connect with your software!
                 </button>
             </div>
         </xpath>
 
-        <xpath expr="//div[hasclass('o_portal_purchase_sidebar')]" position="inside">
-            <div class="modal fade" id="purchase_portal_connect_software_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <xpath expr="//div[hasclass('o_portal_sale_sidebar')]" position="inside">
+            <div class="modal fade" id="sale_portal_connect_software_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-body">
@@ -22,8 +22,8 @@
                             <div>
                                 <h5>Not using Odoo?</h5>
                                 <div class="input-group mb-3 w-50">
-                                    <t t-set="base_address" t-value="order.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
-                                    <t t-set="doc_url" t-value="base_address + '/my/purchase/' + str(order.id) + '/download_edi?' + str(keep_query())"/>
+                                    <t t-set="base_address" t-value="sale_order.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                    <t t-set="doc_url" t-value="base_address + '/my/orders/' + str(sale_order.id) + '/download_edi?' + str(keep_query())"/>
                                     <input type="text" class="form-control" aria-describedby="copy-button" readonly="readonly" t-att-value="doc_url"/>
                                     <button class="btn btn-outline-secondary" type="button" id="copy-button"
                                     t-attf-onclick="navigator.clipboard.writeText('#{doc_url}')">Copy</button>
