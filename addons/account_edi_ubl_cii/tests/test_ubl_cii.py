@@ -188,3 +188,38 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'quantity': 1.0,
             'tax_ids': self.env['account.tax'],
         }])
+
+    def test_import_bill_with_products_same_name(self):
+        """ Test that 2 products with the same name but different code are correctly
+            identified when importing a bill with them.
+        """
+        file_path = "bis3_bill_products_same_name.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+        products = self.env['product.product'].create([{
+            'name': 'XYZ',
+            'default_code': '1234',
+        }, {
+            'name': 'XYZ',
+            'default_code': '5678',
+        }])
+        bill = self.env['account.journal']\
+                .with_context(default_journal_id=self.company_data['default_journal_purchase'].id)\
+                ._create_document_from_attachment(xml_attachment.id)
+
+        self.assertRecordValues(bill.invoice_line_ids, [{
+            'name': '[1234] XYZ',
+            'amount_currency': 50.00,
+            'quantity': 1.0,
+            'product_id': products[0].id,
+        }, {
+            'name': '[5678] XYZ',
+            'amount_currency': 100.00,
+            'quantity': 1.0,
+            'product_id': products[1].id,
+        }])
