@@ -1173,6 +1173,7 @@
             we-selection-items {
                 display: flex;
                 max-width: 100%;
+                flex-grow: 1;
 
                 we-button {
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
@@ -1582,6 +1583,17 @@
                     min-width: auto; // ... except for these ones
                 }
             }
+            &:has(div > we-button-group + we-select.o_grid) {
+                div {
+                    flex-grow: 1;
+                    we-button-group {
+                        min-width: 0 !important;
+                        we-button {
+                            width: 50%;
+                        }
+                    }
+                }
+            }
 
             > div {
                 display: flex;
@@ -1633,6 +1645,7 @@
             &:not(.o_we_fw) {
                 flex-flow: row nowrap;
                 align-items: center;
+                flex-grow: 1;
 
                 > we-title {
                     flex: 0 0 auto;
@@ -2597,16 +2610,12 @@ we-button:hover .o_we_shape_animated_label > span {
 
 // GRID LAYOUT
 we-button.o_grid {
-    min-width: fit-content;
+    flex: 1 !important;
     padding-left: 4.5px !important;
     padding-right: 4.5px !important;
 }
 
 we-select.o_grid we-toggler {
-    width: fit-content !important;
-}
-
-we-button-group.o_grid we-selection-items {
     width: fit-content !important;
 }
 
