@@ -231,5 +231,9 @@ export class Editor {
             this.editable = null;
         }
         this.isDestroyed = true;
+        const { resModel } = this.config.getRecordInfo();
+        if (resModel !== "mail.compose.message") {
+            this.services['mail.store'].aiInsertButtonTarget = false;
+        }
     }
 }

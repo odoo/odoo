@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        name="AI"
+        id="menu_ai_root"
+        groups="base.group_user"
+        web_icon="ai_apps,static/description/icon.png"
+        sequence="200"
+    >
+
+        <menuitem
+            name="AI Composer Prompts"
+            id="menu_ai_composer"
+            action="open_view_ai_composer_kanban"
+            sequence="1"
+        />
+
+    </menuitem>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Thread" t-inherit-mode="extension">
+        <xpath expr="//t[@name='empty-message']" position="replace">
+            <t t-if="props.thread.channel_type === 'ai_composer'" name="empty-message-ai">
+                <span class="fs-1" style="filter: grayscale(1);">🤖</span>
+                <span>Hello, how can I help you?</span>
+            </t>
+            <t t-else="" name="empty-message">
+                <span class="fs-1" style="filter: grayscale(1);">😶</span>
+                <span>The conversation is empty.</span>
+            </t>
+        </xpath>
+    </t>
+</templates>

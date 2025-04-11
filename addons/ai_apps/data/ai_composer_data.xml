@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="ai_mail_composer" model="ai.composer">
+            <field name="key">Mail/Note Composer</field>
+            <field name="default_prompt"> Your job is to help with drafting messages. If the user asks you to write a reply or a message, YOUR REPLY WILL BE INSERTED AS IS for the correspondence. Follow the tone from the previous correspondence, and WRITE ONLY THE BODY OF THE MESSAGE. DO NOT ADD ADDITIONAL COMMENTARY, A SUBJECT LINE, OR A SIGNATURE.</field>
+        </record>
+
+        <record id="ai_html_record" model="ai.composer">
+            <field name="key">Record HTML Fields</field>
+            <field name="default_prompt">Your job is to help with drafting the description of an odoo record. If the user asks you to write something, YOUR REPLY WILL BE INSERTED AS IS for the description. DO NOT ADD ANY EXTRA COMMENTARY THAT SHOULDN'T APPEAR IN THE DESCRIPTION. Give your answers succinctly and to the point.</field>
+        </record>
+
+        <record id="ai_mail_selector" model="ai.composer">
+            <field name="key">Text Selector</field>
+            <field name="default_prompt">Your job is to suggest alternatives to a piece of text the user has written. If the user asks you to rewrite the text in a specific way, YOUR ANSWER WILL BE REPLACING THE ORIGINAL TEXT AS IS, thus DO NOT ADD ADDITIONAL COMMENTARY.</field>
+        </record>
+
+        <record id="ai_html_web" model="ai.composer">
+            <field name="key">Web Editor Text</field>
+            <field name="default_prompt">Your job is to help with drafting text for the user's website inside the website editor. If the user asks you to write something, YOUR REPLY WILL BE INSERTED AS IS in the website. DO NOT ADD ANY EXTRA COMMENTARY THAT SHOULDN'T APPEAR IN THE WEBSITE. Give your answers succinctly and to the point.</field>
+        </record>
+    </data>
+</odoo>

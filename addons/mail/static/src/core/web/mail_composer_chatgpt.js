@@ -1,43 +1,59 @@
-import { ChatGPTPromptDialog } from "@html_editor/main/chatgpt/chatgpt_prompt_dialog";
-
-import { htmlJoin } from "@mail/utils/common/html";
-
-import { Component, markup } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+
+import { htmlJoin } from "@mail/utils/common/html";
+
+import { Component, markup, onMounted, onWillUnmount } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { unwrapContents } from "@html_editor/utils/dom";
 
 export class MailComposerChatGPT extends Component {
     static template = "mail.MailComposerChatGPT";
     static props = { ...standardFieldProps };
 
     setup() {
-        this.btnLabel = _t("AI"); // workaround to translate short string
+        this.store = useService("mail.store");
+        this.orm = useService("orm");
+        onMounted(() => {
+            this.store.aiInsertButtonTarget = this.props.record.id
+        });
+        onWillUnmount(() => {
+            this.store.aiInsertButtonTarget = false
+        });
     }
 
     async onOpenChatGPTPromptDialogBtnClick() {
-        this.env.services.dialog.add(ChatGPTPromptDialog, {
-            /** @param {DocumentFragment} content */
-            insert: (content) => {
+        const ai_channel_id = await this.orm.call(
+            'discuss.channel',
+            'create_ai_composer_channel',
+            [ 
+                'composer_ai_button',
+                this.props.record.data.record_name,
+                this.props.record.data.model,
+                Number(this.props.record.data.res_ids.slice(1,-1)),  // resIds should look like so `[id]`, the slice and cast allows to extact the id
+            ], 
+        );
+        const thread = await this.store.Thread.getOrFetch({
+            model: "discuss.channel",
+            id: Number(ai_channel_id), 
+        });
+        thread.composer.text = _t('Write a follow up answer');
+        thread.aiSpecialActions = {
+            'insert': (content) => {
                 const root = document.createElement("div");
                 root.appendChild(content);
                 const { body } = this.props.record.data;
                 this.props.record.update({
-                    body: htmlJoin(body, markup(root.innerHTML)),
+                    body: htmlJoin(markup(root.innerHTML), body),
                 });
             },
-            /**
-             * @param {HTMLElement} fragment
-             * @returns {string}
-             */
-            sanitize: (fragment) =>
-                DOMPurify.sanitize(fragment, {
-                    IN_PLACE: true,
-                    ADD_TAGS: ["#document-fragment"],
-                    ADD_ATTR: ["contenteditable"],
-                }),
+        };
+        thread.aiChatSource = this.props.record.id;
+        thread.open({ 
+            focus: true,
         });
+        return;
     }
 }
 

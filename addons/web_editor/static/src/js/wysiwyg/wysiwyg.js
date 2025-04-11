@@ -48,6 +48,7 @@ import {
 import { isCSSColor } from '@web/core/utils/colors';
 import { EmojiPicker } from '@web/core/emoji_picker/emoji_picker';
 import { Tooltip } from "@web/core/tooltip/tooltip";
+import { unwrapContents } from "../editor/odoo-editor/src/utils/utils";
 
 const OdooEditor = OdooEditorLib.OdooEditor;
 const getDeepRange = OdooEditorLib.getDeepRange;
@@ -255,6 +256,8 @@ export class Wysiwyg extends Component {
         });
         onWillDestroy(() => {
             this.destroy();
+            // set the aiInsertButtonTarget parameter to false so the "use this" button dissapears
+            this.env.services['mail.store'].aiInsertButtonTarget = false;
         });
         onWillUpdateProps((newProps) => {
             this.options = this._getEditorOptions(newProps.options);
@@ -1553,15 +1556,16 @@ export class Wysiwyg extends Component {
      * @param {object} options
      * @param {String} [options.language]
      */
-    openChatGPTDialog(mode = 'prompt', options={}) {
+    async openChatGPTDialog(mode = 'prompt', options={}) {
         const restore = preserveCursor(this.odooEditor.document);
         const params = {
             insert: content => {
+                restore();
                 this.odooEditor.historyPauseSteps();
                 const insertedNodes = this.odooEditor.execCommand('insert', content);
                 this.odooEditor.historyUnpauseSteps();
-                this.notification.add(_t('Your content was successfully generated.'), {
-                    title: _t('Content generated'),
+                this.notification.add(_t('Your content was successfully inserted.'), {
+                    title: _t('Content inserted'),
                     type: 'success',
                 });
                 this.odooEditor.historyStep();
@@ -1592,6 +1596,7 @@ export class Wysiwyg extends Component {
                     divContainer.prepend(div);
                     setTimeout(() => div.remove(), 2000);
                 }
+                unwrapContents(insertedNodes[0]);
             },
         };
         if (mode === 'alternatives' || mode === 'translate') {
@@ -1601,11 +1606,52 @@ export class Wysiwyg extends Component {
             params.language = options.language;
         }
         this.odooEditor.document.getSelection().collapseToEnd();
-        this.env.services.dialog.add(
-            mode === 'prompt' ? ChatGPTPromptDialog : mode === 'translate' ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
-            params,
-            { onClose: restore },
-        );
+
+        if (mode === 'translate') {
+            this.env.services.dialog.add(
+                ChatGPTTranslateDialog,
+                params,
+                { onClose: restore },
+            );
+        } else {
+            let recordName, placeholderPrompt, recordModel, recordId, callerComp, recordInfo, textSelection;
+            if (mode === 'prompt') {
+                recordName = 'Website Editor';
+                placeholderPrompt = '';
+                callerComp = 'html_field_editor';
+            } else {
+                recordName = "Text Refine"
+                placeholderPrompt = _t("Rewrite");
+                callerComp = "html_field_text_select";
+                textSelection = params.originalText;
+            }
+            const ai_channel_id = await this.env.services.orm.call(
+                'discuss.channel',
+                'create_ai_composer_channel',
+                [ 
+                    callerComp,
+                    recordName,
+                    recordModel,
+                    recordId,
+                    recordInfo,
+                    textSelection,
+                ], 
+            );
+            const thread = await this.env.services['mail.store'].Thread.getOrFetch({
+                model: "discuss.channel",
+                id: Number(ai_channel_id), 
+            });
+            thread.composerText = placeholderPrompt;
+            thread.aiChatSource = this.id;
+            thread.aiSpecialActions = {
+                'insert': params.insert,
+            };
+            thread.open({ 
+                focus: true,
+            });
+            // set the aiInsertButtonTarget parameter so the "use this" button appears
+            this.env.services['mail.store'].aiInsertButtonTarget = this.id;
+        }
     }
     /**
      * Removes the current Link.
@@ -2566,7 +2612,6 @@ export class Wysiwyg extends Component {
                 description: _t('Generate or transform content with AI.'),
                 fontawesome: 'fa-magic',
                 priority: 1,
-                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: async () => this.openChatGPTDialog(),
             },
         ];

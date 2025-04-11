@@ -245,8 +245,8 @@ export class HtmlField extends Component {
                 this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
             direction: localization.direction || "ltr",
             getRecordInfo: () => {
-                const { resModel, resId } = this.props.record;
-                return { resModel, resId };
+                const { resModel, resId, data, fields, id } = this.props.record;
+                return { resModel, resId, data, fields, id };
             },
             resources: {},
             ...this.props.editorConfig,
