@@ -1108,13 +1108,15 @@ class StockMoveLine(models.Model):
             }
         moves = self.env['stock.move'].create(move_vals)
         moves._action_done()
+        view_id = self.env.ref('stock.view_move_line_tree').id
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': 'success',
-                'message': _("The inventory adjustments have been reverted."),
-            }
+            'type': 'ir.actions.act_window',
+            'name': _('Reverted Moves'),
+            'res_model': 'stock.move.line',
+            'view_mode': 'list',
+            'views': [(view_id, 'list')],
+            'domain': [('id', 'in', moves.move_line_ids.ids + self.ids)],
+            'context': self.env.context,
         }
 
     def _get_linkable_moves(self):
