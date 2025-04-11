@@ -581,7 +581,7 @@
         <field name="power">49</field>
         <field name="horsepower">67</field>
         <field name="driver_id" ref="base.res_partner_address_17" />
-        <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+        <field name="acquisition_date" eval="DateTime.today() - relativedelta(days=481)"/>
         <field name="state_id" ref="fleet_vehicle_state_registered"/>
         <field name="odometer_unit">kilometers</field>
         <field name="car_value">20000</field>
@@ -604,7 +604,7 @@
         <field name="horsepower">110</field>
         <field name="location">Grand-Rosiere</field>
         <field name="driver_id" ref="base.res_partner_address_16" />
-        <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+        <field name="acquisition_date" eval="DateTime.today() - relativedelta(days=138)"/>
         <field name="state_id" ref="fleet_vehicle_state_registered"/>
         <field name="odometer_unit">kilometers</field>
         <field name="car_value">20000</field>

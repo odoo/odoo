@@ -25,7 +25,7 @@
                     (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'})
                 ]"
             />
-            <field name="full_time_required_hours">20</field>
+            <field name="full_time_required_hours">40</field>
         </record>
 
         <!--Department-->
@@ -258,6 +258,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="job_title">Chief Executive Officer</field>
             <field name="department_id" ref="dep_management"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">male</field>
         </record>
 
         <record id="work_contact_ngh" model="res.partner">
@@ -278,6 +279,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_ngh"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_ngh-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">male</field>
         </record>
 
         <record id="employee_qdp" model="hr.employee">
@@ -298,6 +300,8 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_phone">+3281813700</field>
             <field name="work_contact_id" ref="base.partner_demo"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">other</field>
+            <field name="distance_home_work">23</field>
         </record>
 
         <record id="work_contact_al" model="res.partner">
@@ -318,6 +322,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_al"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_al-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">male</field>
         </record>
 
         <record id="work_contact_vad" model="res.partner">
@@ -338,6 +343,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_vad"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_vad-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">female</field>
         </record>
 
         <record id="work_contact_hne" model="res.partner">
@@ -360,6 +366,8 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="image_1920" type="base64" file="hr/static/img/employee_hne-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="marital">married</field>
+            <field name="gender">female</field>
+            <field name="distance_home_work">32</field>
         </record>
 
         <record id="work_contact_fpi" model="res.partner">
@@ -382,6 +390,8 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_fpi"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_fpi-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">female</field>
+            <field name="distance_home_work">7</field>
         </record>
 
         <record id="work_contact_lur" model="res.partner">
@@ -401,6 +411,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_lur"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_lur-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">male</field>
         </record>
 
         <record id="work_contact_jod" model="res.partner">
@@ -420,6 +431,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_jod"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_jod-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">female</field>
         </record>
 
         <record id="work_contact_fme" model="res.partner">
@@ -440,6 +452,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_fme"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_fme-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">male</field>
         </record>
 
         <record id="work_contact_jep" model="res.partner">
@@ -461,6 +474,8 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_jep"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_jep-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">other</field>
+            <field name="distance_home_work">13</field>
         </record>
 
         <record id="work_contact_jgo" model="res.partner">
@@ -480,6 +495,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_jgo"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_jgo-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">male</field>
         </record>
 
         <record id="work_contact_jth" model="res.partner">
@@ -501,6 +517,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="image_1920" type="base64" file="hr/static/img/employee_jth-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
             <field name="resource_calendar_id" ref="resource_calendar_std_20h"/>
+            <field name="gender">female</field>
         </record>
 
         <record id="work_contact_mit" model="res.partner">
@@ -525,6 +542,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_mit"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_mit-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">female</field>
         </record>
 
         <record id="work_contact_niv" model="res.partner">
@@ -545,6 +563,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_niv"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_niv-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">female</field>
         </record>
 
         <record id="work_contact_stw" model="res.partner">
@@ -565,6 +584,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_stw"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_stw-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">male</field>
         </record>
 
         <record id="work_contact_chs" model="res.partner">
@@ -585,6 +605,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_chs"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_chs-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">female</field>
         </record>
 
         <record id="work_contact_jve" model="res.partner">
@@ -604,6 +625,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_jve"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_jve-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">male</field>
         </record>
 
         <record id="work_contact_han" model="res.partner">
@@ -623,6 +645,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_han"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_han-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">male</field>
         </record>
 
         <record id="work_contact_jog" model="res.partner">
@@ -644,6 +667,8 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_jog"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_jog-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="gender">female</field>
+            <field name="distance_home_work">50</field>
         </record>
 
         <!-- Assign manager for each department -->
