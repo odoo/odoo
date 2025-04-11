@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
         },
         {
             trigger:
-                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(joined the channel)",
+                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(invited @El Deboulonnator to the channel)",
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input",

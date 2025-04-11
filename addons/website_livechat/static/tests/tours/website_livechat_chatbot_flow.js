@@ -262,7 +262,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             },
             {
                 trigger:
-                    ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(joined the channel)",
+                    ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(invited @El Deboulonnator to the channel)",
             },
         ];
     },
