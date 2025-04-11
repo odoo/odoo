@@ -1032,28 +1032,44 @@ class AccountJournal(models.Model):
         if not self:
             raise UserError(self.env['account.journal']._build_no_journal_error_msg(self.env.company.display_name, [journal_type]))
 
-        # As we are coming from the journal, we assume that each attachments
-        # will create an invoice with a tentative to enhance with EDI / OCR..
-        all_invoices = self.env['account.move']
-        for attachment in attachments:
-            invoice = self.env['account.move'].with_context(skip_is_manually_modified=True).create({
-                'journal_id': self.id,
-                'move_type': move_type,
+        files_data = attachments._to_files_data()
+
+        # Extract embedded attachments
+        files_data.extend(self.env['ir.attachment']._unwrap_attachments(files_data))
+
+        # Perform a grouping to determine how many invoices to create
+        file_data_groups = self._group_uploaded_attachments(files_data)
+
+        # Create one invoice per group.
+        invoices = self.env['account.move'] \
+            .with_context(
+                default_journal_id=self.id,
+                default_move_type=move_type,
+            ) \
+            .create([{}] * len(file_data_groups))
+
+        for invoice, file_data_group in zip(invoices, file_data_groups):
+            attachment_records = self.env['ir.attachment']._from_files_data(file_data_group)
+            attachment_records.write({
+                'res_model': 'account.move',
+                'res_id': invoice.id,
             })
+            invoice.with_context(account_predictive_bills_disable_prediction=True).message_post(
+                body=_("This invoice was created from an upload on the journal."),
+                attachment_ids=attachment_records.ids
+            )
 
-            invoice.with_context(skip_is_manually_modified=True)._extend_with_attachments(attachment, new=True)
-
-            all_invoices |= invoice
-
-            invoice.with_context(
-                account_predictive_bills_disable_prediction=True,
-                no_new_invoice=True,
-            ).message_post(attachment_ids=attachment.ids)
-
-            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+        for invoice, file_data_group in zip(invoices, file_data_groups):
+            invoice.with_context(skip_is_manually_modified=True)._extend_with_attachments(file_data_group, new=True)
             invoice._autopost_bill()
 
-        return all_invoices
+        return invoices
+
+    def _group_uploaded_attachments(self, files_data):
+        """ Group the attachments in files_data (which include both original attachments
+            and embedded attachments) into one group per original attachment.
+        """
+        return [file_data_group for origin_attachment, file_data_group in groupby(files_data, lambda file_data: file_data['origin_attachment'])]
 
     def create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files.

@@ -113,7 +113,7 @@ class AccountMove(models.Model):
         if eta_invoice_pdf.get('error', False):
             _logger.warning('PDF Content Error:  %s.', eta_invoice_pdf.get('error'))
             return
-        self.with_context(no_new_invoice=True).message_post(body=_('ETA invoice has been received'),
+        self.message_post(body=_('ETA invoice has been received'),
                                                             attachments=[('ETA invoice of %s.pdf' % self.name,
                                                                           eta_invoice_pdf.get('data'))])
 
