@@ -765,11 +765,12 @@ class PaymentProvider(models.Model):
 
         # Build the request.
         url = self._build_request_url(endpoint, **kwargs)
-        headers = self._build_request_headers(method, endpoint, **kwargs)
+        payload = params or data or json
+        headers = self._build_request_headers(method, endpoint, payload, **kwargs)
         auth = self._build_request_auth(**kwargs)
 
         # Log the request.
-        self._log_request(method, url, params or data or json, reference=reference)
+        self._log_request(method, url, payload, reference=reference)
 
         # Send the request.
         try:
@@ -803,12 +804,14 @@ class PaymentProvider(models.Model):
         """
         return ''
 
-    def _build_request_headers(self, method, endpoint, **kwargs):
+    def _build_request_headers(self, method, endpoint, payload, **kwargs):
         """Build the headers of the request.
 
         This method serves as a hook to allow providers to build the request headers.
 
-        :param dict headers: The default headers.
+        :param str method: The HTTP method of the request.
+        :param str endpoint: The endpoint of the API to reach with the request.
+        :param dict payload: The payload of the request.
         :param dict kwargs: Provider-specific data.
         :return: The request headers.
         :rtype: dict
@@ -864,10 +867,23 @@ class PaymentProvider(models.Model):
         :rtype: None
         """
         if reference:
-            log_msg = "Received API response from %(url)s for transaction %(ref)s.\n%(data)s"
+            log_msg = (
+                "Received HTTP %(code)s %(status)s API response from %(url)s for transaction"
+                " %(ref)s.\n%(data)s"
+            )
         else:
-            log_msg = "Received API response from %(url)s for provider %(p_id)s.\n%(data)s"
-        log_values = {'url': response.url, 'ref': reference, 'p_id': self.id, 'data': response.text}
+            log_msg = (
+                "Received HTTP %(code)s %(status)s API response from %(url)s for provider %(p_id)s."
+                "\n%(data)s"
+            )
+        log_values = {
+            'code': response.status_code,
+            'status': response.reason,
+            'url': response.url,
+            'ref': reference,
+            'p_id': self.id,
+            'data': response.text,
+        }
         if response.ok:
             _logger.info(log_msg, log_values)
         else:
