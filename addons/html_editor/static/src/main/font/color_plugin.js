@@ -22,6 +22,7 @@ import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
+import { isBlock } from "@html_editor/utils/blocks";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -247,12 +248,19 @@ export class ColorPlugin extends Plugin {
 
         const getFonts = (selectedNodes) => {
             return selectedNodes.flatMap((node) => {
-                let font = closestElement(node, "font") || closestElement(node, "span");
+                let font =
+                    closestElement(node, "font") ||
+                    closestElement(
+                        node,
+                        '[style*="color"], [style*="background-color"], [style*="background-image"]'
+                    ) ||
+                    closestElement(node, "span");
                 const children = font && descendants(font);
                 const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
                 if (
                     font &&
-                    (font.nodeName === "FONT" || (font.nodeName === "SPAN" && font.style[mode])) &&
+                    font.nodeName !== "T" &&
+                    (font.nodeName !== "SPAN" || font.style[mode] || font.style.backgroundImage) &&
                     (isColorGradient(color) || color === "" || !hasInlineGradient)
                 ) {
                     // Partially selected <font>: split it.
@@ -260,6 +268,20 @@ export class ColorPlugin extends Plugin {
                         selectedNodes.includes(child)
                     );
                     if (selectedChildren.length) {
+                        if (isBlock(font)) {
+                            const colorStyles = ["color", "background-color", "background-image"];
+                            const newFont = this.document.createElement("font");
+                            for (const style of colorStyles) {
+                                const styleValue = font.style[style];
+                                if (styleValue) {
+                                    this.colorElement(newFont, styleValue, style);
+                                    font.style.removeProperty(style);
+                                }
+                            }
+                            newFont.append(...font.childNodes);
+                            font.append(newFont);
+                            font = newFont;
+                        }
                         const closestGradientEl = closestElement(
                             node,
                             '[style*="background-image"]'
@@ -367,6 +389,7 @@ export class ColorPlugin extends Plugin {
             if (
                 !hasColor(font, "color") &&
                 !hasColor(font, "backgroundColor") &&
+                ["FONT", "SPAN"].includes(font.nodeName) &&
                 (!font.hasAttribute("style") || !color)
             ) {
                 for (const child of [...font.childNodes]) {

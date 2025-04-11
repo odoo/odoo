@@ -651,6 +651,49 @@ test("should remove font-size style from multiple sized selected text", async ()
     });
 });
 
+test("should remove color from entire list item when fully selected", async () => {
+    await testEditor({
+        contentBefore: '<ul><li style="color: rgb(255, 0, 0);">[abcd]</li></ul>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<ul><li>[abcd]</li></ul>",
+    });
+});
+
+test("should remove color only from selected text within a list item", async () => {
+    await testEditor({
+        contentBefore: '<ul><li style="color: rgb(255, 0, 0);">a[bc]d</li></ul>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ul><li><font style="color: rgb(255, 0, 0);">a</font>[bc]<font style="color: rgb(255, 0, 0);">d</font></li></ul>',
+    });
+});
+
+test("should remove color from entire heading when fully selected", async () => {
+    await testEditor({
+        contentBefore: '<ul><h1 style="color: rgb(255, 0, 0);">[abcd]</h1></ul>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<ul><h1>[abcd]</h1></ul>",
+    });
+});
+
+test("should remove color only from selected text within a heading", async () => {
+    await testEditor({
+        contentBefore: '<ul><h1 style="color: rgb(255, 0, 0);">a[bc]d</h1></ul>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ul><h1><font style="color: rgb(255, 0, 0);">a</font>[bc]<font style="color: rgb(255, 0, 0);">d</font></h1></ul>',
+    });
+});
+
+test("should remove gradient color from span element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[ab]</span></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>[ab]</p>",
+    });
+});
+
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await waitFor(".o-we-toolbar");
@@ -768,5 +811,72 @@ describe("Toolbar", () => {
         expect(getContent(el)).toBe(
             `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
         );
+    });
+    test("should disable remove format button when formatting is inside a contenteditable false element", async () => {
+        await setupEditor('<div contenteditable="false"><p>a[bc<strong>def</strong>gh]i</p></div>');
+
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
+    test("should remove formatting from t-out even if it is inside a contenteditable false element", async () => {
+        const { el } = await setupEditor(
+            '<div contenteditable="false"><t t-out="">[abc]</t></div>'
+        );
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='bold']").toHaveCount(1);
+        await click(".btn[name='bold']");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '[<div contenteditable="false"><t t-out="" style="font-weight: bolder;">abc</t></div>]'
+        );
+
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled");
+        await click(".btn[name='remove_format']");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
+    test("should remove formatting from t-field even if it is inside a contenteditable false element", async () => {
+        const { el } = await setupEditor(
+            '<div contenteditable="false"><t t-field="">[abc]</t></div>'
+        );
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='bold']").toHaveCount(1);
+        await click(".btn[name='bold']");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '[<div contenteditable="false"><t t-field="" style="font-weight: bolder;">abc</t></div>]'
+        );
+
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled");
+        await click(".btn[name='remove_format']");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
+    test("should remove formatting from t-esc even if it is inside a contenteditable false element", async () => {
+        const { el } = await setupEditor(
+            '<div contenteditable="false"><t t-esc="">[abc]</t></div>'
+        );
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='bold']").toHaveCount(1);
+        await click(".btn[name='bold']");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '[<div contenteditable="false"><t t-esc="" style="font-weight: bolder;">abc</t></div>]'
+        );
+
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled");
+        await click(".btn[name='remove_format']");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
     });
 });
