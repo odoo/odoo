@@ -374,10 +374,15 @@ class TestWebPushNotification(SMSCommon):
                 vapid_public_key=self.vapid_public_key,
             )
 
-    @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok'))
-    def test_push_notifications_truncate_payload(self, post):
-        """
-        Ensure that when we send large bodies with various character types,
+    @patch.object(
+        odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
+    )
+    @patch.object(
+        odoo.addons.mail.models.mail_thread, 'push_to_end_point', autospec=True,
+        side_effect=odoo.addons.mail.web_push.push_to_end_point,
+    )
+    def test_push_notifications_truncate_payload(self, thread_push_mock, session_post_mock):
+        """Ensure that when we send large bodies with various character types,
         the final encrypted data (post-encryption) never exceeds 4096 bytes.
 
         Test scenarios include:
@@ -387,17 +392,17 @@ class TestWebPushNotification(SMSCommon):
         """
         test_cases = [
             # (description, body)
-            ('ASCII payload (4096 bytes)', 'X' * 4096),
-            ('ASCII payload (3900 bytes)', 'X' * 3900),
-            ('UTF-8 emojis (4096 bytes)', '😀' * 1024),
-            ('UTF-8 emojis (3900 bytes)', '😀' * 3900),
-            ('Mixed UTF-8 characters (4096 bytes)', 'こんにちは世界🌍' * 164),
-            ('Mixed UTF-8 characters (3900 bytes)', 'こんにちは世界🌍' * 780),
-            ('Accented characters (4096 bytes)', 'éèàç' * 512),
-            ('Accented characters (3900 bytes)', 'éèàç' * 488),
+            ('empty string', '', 0),
+            ('1-byte ASCII characters (below limit)', 'X' * 3815, 3815),
+            ('1-byte ASCII characters (at limit)', 'X' * 3816, 3816),
+            ('1-byte ASCII characters (past limit)', 'X' * 3817, 3816),
+            ('1-byte ASCII characters (way past limit)', 'X' * 5000, 3816),
+        ] + [ # \u00d8 check that it can be cut anywhere
+            (f'2-bytes UTF-8 characters (at limit + {n})', 'Ø' * n, (3816 // 6))
+            for n in range(3816 // 6, (3816 // 6) + 8)
         ]
 
-        for description, body in test_cases:
+        for description, body, expected_body_length in test_cases:
             with self.subTest(description):
                 self.record_simple.with_user(self.user_email).message_notify(
                     partner_ids=self.user_inbox.partner_id.ids,
@@ -406,6 +411,11 @@ class TestWebPushNotification(SMSCommon):
                     record_name=self.record_simple._name,
                 )
 
-                data_sent = post.call_args.kwargs['data']
-                self.assertLess(len(data_sent), 4096,
-                    f"Final encrypted payload should not exceed 4096 bytes for {description}")
+                encrypted_payload = session_post_mock.call_args.kwargs['data']
+                payload_before_encryption = json.loads(thread_push_mock.call_args.kwargs['payload'])
+                self.assertLess(
+                    len(encrypted_payload), 4096, 'Final encrypted payload should not exceed 4096 bytes'
+                )
+                self.assertEqual(
+                    len(payload_before_encryption['options']['body']), expected_body_length
+                )
