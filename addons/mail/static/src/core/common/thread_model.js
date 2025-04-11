@@ -886,6 +886,10 @@ export class Thread extends Record {
         }
         this.leave();
     }
+
+    _getActualModelName() {
+        return this.model === "discuss.channel" ? "discuss.channel" : "mail.thread";
+    }
 }
 
 Thread.register();

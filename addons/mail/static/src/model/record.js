@@ -13,6 +13,13 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
 /** @typedef {import("./record_list").RecordList} RecordList */
+/**
+ * @typedef {Object} Ongoing
+ * @property {Object} storeData Store insert-able data grouped by model names
+ * @property {Set<string>} seenRecords A set of localIDs to track visited records
+ * @property {boolean} depth Whether to recursively fetch deep data for all related records
+ * @property {string[]} fields An array of field names to fetch, using dot notation (e.g., `"persona.group_ids"`).
+ */
 
 export class Record {
     /** @type {import("./model_internal").ModelInternal} */
@@ -332,20 +339,75 @@ export class Record {
         return !this.in(collection);
     }
 
-    toData() {
+    /**
+     * Converts the current record and its related data into Store insert-able data.
+     * @param {Array<string> | { depth: boolean }} options Configuration options or an array of field names.
+     * @returns {Object} A data object grouped by model names.
+     */
+    toData(options = { depth: false }) {
+        const prefix = this._getActualModelName();
+        const ongoing = {
+            seenRecords: new Set(),
+            storeData: {},
+            depth: options.depth,
+            fields: undefined,
+        };
+        if (Array.isArray(options)) {
+            ongoing.fields = options.map((field) => `${prefix}.${field}`);
+        }
+        this._toData(ongoing, prefix);
+        return ongoing.storeData;
+    }
+
+    _cleanupData(data) {
+        const fieldsToDelete = [
+            "_",
+            "_fieldsValue",
+            "_proxy",
+            "_proxyInternal",
+            "_raw",
+            "env",
+            "Model",
+        ];
+        fieldsToDelete.forEach((field) => delete data[field]);
+    }
+
+    _getActualModelName() {
+        return this.Model.getName();
+    }
+
+    /**
+     * @param {Ongoing} ongoing The ongoing data conversion state.
+     * @param {string} [prefix] The prefix for the current field (used for nested fields).
+     */
+    _toData(ongoing, prefix = undefined) {
+        if (ongoing.depth && ongoing.seenRecords.has(this.localId)) {
+            return;
+        }
+        ongoing.seenRecords.add(this.localId);
+
         const recordProxy = this;
         const record = toRaw(recordProxy)._raw;
         const Model = record.Model;
         const data = { ...recordProxy };
         for (const name of Model._.fields.keys()) {
+            const fullFieldName = prefix ? `${prefix}.${name}` : name;
             if (isMany(Model, name)) {
                 data[name] = record._proxyInternal[name].map((recordProxy) => {
                     const record = toRaw(recordProxy)._raw;
-                    return record.toIdData.call(record._proxyInternal);
+                    return record._toDataRelationalRecord.call(
+                        record._proxyInternal,
+                        ongoing,
+                        fullFieldName
+                    );
                 });
             } else if (isOne(Model, name)) {
                 const otherRecord = toRaw(record._proxyInternal[name])?._raw;
-                data[name] = otherRecord?.toIdData.call(otherRecord._proxyInternal);
+                data[name] = otherRecord?._toDataRelationalRecord.call(
+                    otherRecord._proxyInternal,
+                    ongoing,
+                    fullFieldName
+                );
             } else {
                 // fields.Attr()
                 const value = recordProxy[name];
@@ -358,19 +420,26 @@ export class Record {
                 }
             }
         }
-        delete data._;
-        delete data._fieldsValue;
-        delete data._proxy;
-        delete data._proxyInternal;
-        delete data._raw;
-        delete data.Model;
-        return data;
+
+        this._cleanupData(data);
+        const pyModelName = record._getActualModelName();
+        ongoing.storeData[pyModelName] ||= [];
+        ongoing.storeData[pyModelName].push(data);
     }
-    toIdData() {
+
+    /**
+     * @param {Ongoing} ongoing The ongoing data conversion state.
+     * @param {string} prefix The prefix for the current field (used for nested fields).
+     * @returns {Object} A data object grouped by model names.
+     */
+    _toDataRelationalRecord(ongoing, prefix = undefined) {
         const data = this.Model._retrieveIdFromData(this);
+        if (ongoing.depth || ongoing.fields?.some((field) => field.startsWith(prefix))) {
+            this._toData(ongoing, prefix);
+        }
         for (const [name, val] of Object.entries(data)) {
             if (isRecord(val)) {
-                data[name] = val.toIdData();
+                data[name] = val._toDataRelationalRecord(ongoing, prefix);
             }
         }
         return data;
