@@ -10,6 +10,8 @@ class MailActivity(models.Model):
 
     calendar_event_id = fields.Many2one('calendar.event', string="Calendar Meeting", index='btree_not_null', ondelete='cascade')
 
+    # should be modified to open the popup right away, with an option to return to last breadcrumb on activity save
+    # No actually, the save should be the thing walking back the breadcrumb!
     def action_create_calendar_event(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
@@ -25,6 +27,7 @@ class MailActivity(models.Model):
             'initial_date': self.date_deadline,
             'default_calendar_event_id': self.calendar_event_id.id,
             'orig_activity_ids': self.ids,
+            'return_to_parent_breadcrumb': True,
         }
         return action
 

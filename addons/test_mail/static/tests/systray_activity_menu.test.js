@@ -75,10 +75,11 @@ test("activity menu widget: activity menu with 2 models", async () => {
     const actionChecks = {
         context: {
             force_search_count: 1,
+            search_default_activities_my: 1,
             search_default_activities_overdue: 1,
-            search_default_activities_today: 1,
+            search_default_activities_today: 1
         },
-        domain: [["activity_user_id", "=", user.userId]],
+        domain: [],
     };
     mockService("action", {
         doAction(action) {

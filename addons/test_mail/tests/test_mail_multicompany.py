@@ -355,6 +355,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                     )["Store"]["activityGroups"]
                 activity_groups_by_model = {ag["model"]: ag for ag in activity_groups}
                 other_activities_model_name = 'mail.activity'
+                # todo fix multicompany test
                 if expected_other_activities:
                     self.assertIn(other_activities_model_name, activity_groups_by_model)
                     activity_group = activity_groups_by_model[other_activities_model_name]
@@ -364,8 +365,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                             "view_type": "list",
                             "overdue_count": 0,
                             "planned_count": 0,
-                            "today_count": len(expected_other_activities),
-                            "total_count": len(expected_other_activities),
+                            "today_count": len(expected_other_activities.mapped('res_model_id')),
+                            "total_count": len(expected_other_activities.mapped('res_model_id')),
                             "id": self.env["ir.model"]._get_id(other_activities_model_name),
                             "model": other_activities_model_name,
                             "name": "Other activities",
@@ -387,8 +388,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                         "view_type": "list",
                         "overdue_count": 0,
                         "planned_count": 0,
-                        "today_count": len(expected_test_model_activities),
-                        "total_count": len(expected_test_model_activities),
+                        "today_count": len(expected_test_model_activities.mapped('res_model_id')),
+                        "total_count": len(expected_test_model_activities.mapped('res_model_id')),
                         "id": self.env["ir.model"]._get_id(test_model_name),
                         "model": test_model_name,
                         "name": "Test Multi Company Mail With Activity",

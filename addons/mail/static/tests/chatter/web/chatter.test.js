@@ -625,7 +625,7 @@ test("schedule activities on draft record should prompt with scheduling an activ
                 <chatter/>
             </form>`,
     });
-    await click("button", { text: "Activities" });
+    await click("button", { text: "Activity" });
     await wizardOpened;
     await waitForSteps(["mail.activity.schedule"]);
 });

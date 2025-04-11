@@ -6,6 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import ValidationError
+from odoo.orm.decorators import onchange
 from odoo.tools import html2plaintext
 from odoo.tools.misc import clean_context, format_date
 from odoo.osv import expression
@@ -34,11 +35,12 @@ class MailActivitySchedule(models.TransientModel):
     res_model_id = fields.Many2one(
         'ir.model', string="Applies to",
         compute="_compute_res_model_id", compute_sudo=True,
-        ondelete="cascade", precompute=True, readonly=False, required=True, store=True)
-    res_model = fields.Char("Model", readonly=True, required=True)
+        ondelete="cascade", precompute=True, readonly=False, required=False, store=True)
+    res_model = fields.Char("Model", readonly=False, required=False)
     res_ids = fields.Text(
         'Document IDs', compute='_compute_res_ids',
-        readonly=True, store=True, precompute=True)
+        readonly=False, store=True, precompute=True)
+    res_ids_by_model = fields.Many2oneReference('Resource', model_field='res_model', readonly=False)
     is_batch_mode = fields.Boolean('Use in batch', compute='_compute_is_batch_mode')
     company_id = fields.Many2one('res.company', 'Company',
                                  compute='_compute_company_id', required=True)
@@ -51,13 +53,14 @@ class MailActivitySchedule(models.TransientModel):
     plan_id = fields.Many2one('mail.activity.plan', domain="[('id', 'in', plan_available_ids)]",
                               compute='_compute_plan_id', store=True, readonly=False)
     plan_has_user_on_demand = fields.Boolean(related="plan_id.has_user_on_demand")
-    plan_summary = fields.Html(compute='_compute_plan_summary')
+    plan_summary = fields.One2many(compute='_compute_plan_summary', comodel_name='mail.activity.schedule.summary', inverse_name='schedule_id')
     plan_on_demand_user_id = fields.Many2one(
         'res.users', 'Assigned To',
         help='Choose assignation for activities with on demand assignation.',
         default=lambda self: self.env.user)
     plan_date = fields.Date(
         'Plan Date', compute='_compute_plan_date',
+        default=fields.Date.context_today,
         store=True, readonly=False)
     # activity-based
     activity_type_id = fields.Many2one(
@@ -82,7 +85,10 @@ class MailActivitySchedule(models.TransientModel):
     @api.depends('res_model')
     def _compute_res_model_id(self):
         for scheduler in self:
-            scheduler.res_model_id = self.env['ir.model']._get_id(scheduler.res_model)
+            if scheduler.res_model:
+                scheduler.res_model_id = self.env['ir.model']._get_id(scheduler.res_model)
+            else:
+                scheduler.res_model_id = False
 
     @api.depends_context('active_ids')
     def _compute_res_ids(self):
@@ -93,6 +99,11 @@ class MailActivitySchedule(models.TransientModel):
                 scheduler.res_ids = f"{context['active_ids']}"
             elif not active_res_ids and context.get('active_id'):
                 scheduler.res_ids = f"{[context['active_id']]}"
+
+    @onchange('res_model_id')
+    def _onchange_model_id(self):
+        for scheduler in self:
+            scheduler.res_model = scheduler.res_model_id.model
 
     @api.depends('res_model_id', 'res_ids')
     def _compute_company_id(self):
@@ -191,7 +202,7 @@ class MailActivitySchedule(models.TransientModel):
             if scheduler.activity_type_id.default_user_id:
                 scheduler.activity_user_id = scheduler.activity_type_id.default_user_id
             elif not scheduler.activity_user_id:
-                scheduler.activity_user_id = self.env.user
+                scheduler.activity_user_id = False
 
     # Any writable fields that can change error computed field
     @api.constrains('res_model_id', 'res_ids',  # records (-> responsible)
@@ -280,6 +291,7 @@ class MailActivitySchedule(models.TransientModel):
     def action_schedule_activities_done(self):
         self._action_schedule_activities().action_done()
 
+    # todo delete
     def action_schedule_activities_done_and_schedule(self):
         ctx = dict(
             clean_context(self.env.context),
@@ -322,9 +334,13 @@ class MailActivitySchedule(models.TransientModel):
 
         :return: a list of IDs (empty list in case of falsy strings)"""
         self.ensure_one()
+        if not self.res_ids and self.res_ids_by_model:
+            return self.res_ids_by_model
         return parse_res_ids(self.res_ids, self.env) or []
 
     def _get_applied_on_records(self):
+        if not self.res_model:
+            return self.env['mail.activity.mixin']
         return self.env[self.res_model].browse(self._evaluate_res_ids())
 
     def _get_plan_available_base_domain(self):
@@ -340,50 +356,44 @@ class MailActivitySchedule(models.TransientModel):
 
     def _get_summary_lines(self, templates):
         self.ensure_one()
-        summaries = []
+        summaries = self.env['mail.activity.schedule.summary']
         for template in templates:
             activity_type = template.activity_type_id
-            summary_line = activity_type.name
-            if template.summary:
-                summary_line += f": {template.summary}"
-            # We don't display deadlines when the user doesn't specify a plan_date
+            summary_line = summaries.new({'schedule_id': self})
+            summaries += summary_line
+            summary_line.line = template.summary or template.activity_type_id.name
             if self.plan_date:
-                summary_line += f" ({format_date(self.env, template._get_date_deadline(self.plan_date))})"
-            next_activities = []
-            # Triggered next activity
+                summary_line.summary_date_deadline = template._get_date_deadline(self.plan_date)
+            if template.responsible_id:
+                summary_line.summary_user_id = template.responsible_id
+            
+            # Triggered next activities?
             if activity_type.triggered_next_type_id:
-                triggered_activity = activity_type.triggered_next_type_id
-                triggered_delay_unit = dict(triggered_activity._fields['delay_unit']._description_selection(self.env))[triggered_activity.delay_unit]
-                triggered_delay_from = dict(triggered_activity._fields['delay_from']._description_selection(self.env))[triggered_activity.delay_from]
-
-                next_activities.append(
-                    _("%(activity_name)s %(delay_count)s %(delay_unit)s %(delay_from)s",
-                    activity_name=triggered_activity.name,
-                    delay_count=triggered_activity.delay_count,
-                    delay_unit=triggered_delay_unit,
-                    delay_from=triggered_delay_from
-                    )
-                )
+                next_line = summaries.new({'schedule_id': self, 'depth': 1})
+                next_line += summary_line
+                next_line = activity_type.triggered_next_type_id.summary or activity_type.triggered_next_type_id.activity_type_id.name
+                if self.plan_date:
+                    next_line.summary_date_deadline = activity_type.triggered_next_type_id._get_date_deadline(summary_line.summary_date_deadline)
+                if activity_type.triggered_next_type_id.responsible_id:
+                    next_line.summary_user_id = activity_type.triggered_next_type_id.responsible_id
             # Suggested next activities
             elif activity_type.suggested_next_type_ids:
-                suggested_activities = []
-                for suggested_activity in activity_type.suggested_next_type_ids:
-                    suggested_delay_unit = dict(suggested_activity._fields['delay_unit']._description_selection(self.env))[suggested_activity.delay_unit]
-                    suggested_delay_from = dict(suggested_activity._fields['delay_from']._description_selection(self.env))[suggested_activity.delay_from]
-                    suggested_activities.append(
-                        _("%(activity_name)s %(delay_count)s %(delay_unit)s %(delay_from)s",
-                        activity_name=suggested_activity.name,
-                        delay_count=suggested_activity.delay_count,
-                        delay_unit=suggested_delay_unit,
-                        delay_from=suggested_delay_from
-                        )
-                    )
-                next_activities.append(_(" or ").join(suggested_activities))
-            # Add next activities as nested list for each activity type
-            if next_activities:
-                nested_summary_line = Markup('<ul>%s</ul>') % Markup().join(
-                    Markup('<li>%s</li>') % activity for activity in next_activities
-                )
-                summary_line += nested_summary_line
-            summaries.append(Markup('<li>%s</li>') % summary_line)
-        return Markup('<ul>%s</ul>') % Markup().join(summaries) if summaries else ''
+                for suggested in activity_type.suggested_next_type_ids:
+                    next_line = summaries.new({'schedule_id': self, 'depth': 1})
+                    next_line += summary_line
+                    next_line = suggested.summary or suggested.activity_type_id.name
+                    if self.plan_date:
+                        next_line.summary_date_deadline = suggested._get_date_deadline(summary_line.summary_date_deadline)
+                    if suggested.responsible_id:
+                        next_line.summary_user_id = suggested.responsible_id
+        return summaries
+
+class MailActivityScheduleSummary(models.TransientModel):
+    _name='mail.activity.schedule.summary'
+    _description='Mail Activity Schedule Summary Line'
+    schedule_id = fields.Many2one('mail.activity.schedule')
+
+    depth = fields.Integer(default=0)
+    line = fields.Char()
+    summary_date_deadline = fields.Date()
+    summary_user_id = fields.Many2one('res.users')

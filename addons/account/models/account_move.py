@@ -89,7 +89,6 @@ class AccountMove(models.Model):
     _check_company_auto = True
     _sequence_index = "journal_id"
     _rec_names_search = ['name', 'partner_id.name', 'ref']
-    _systray_view = 'activity'
     _mailing_enabled = True
 
     @property
