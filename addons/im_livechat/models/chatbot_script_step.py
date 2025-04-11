@@ -377,9 +377,20 @@ class ChatbotScriptStep(models.Model):
                 # first post the message of the step (if we have one)
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
+<<<<<<< 042a54e418dcdd4834930d3fd87889273a1e0cee
             # next, add the human_operator to the channel and post a "Operator joined the channel" notification
             discuss_channel.with_user(human_operator).sudo()._add_members(
                 users=human_operator, create_member_params={"livechat_member_type": "agent"}
+||||||| 0812adedeea4edd70d57861f40248df4729086a0
+            # next, add the human_operator to the channel and post a "Operator joined the channel" notification
+            discuss_channel.with_user(human_operator).sudo().add_members(
+                human_operator.partner_id.ids
+=======
+            # next, add the human_operator to the channel and post a "operator invited to the channel" notification
+            discuss_channel.sudo()._add_members(
+                users=human_operator,
+                inviting_partner=self.chatbot_script_id.operator_partner_id,
+>>>>>>> 74457abf0511701134c04044712981f1145b5d67
             )
             # sudo - discuss.channel: let the chat bot proceed to the forward step (change channel operator, add human operator
             # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
