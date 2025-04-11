@@ -8,13 +8,13 @@
                 <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
                 <t t-set="currentDay" t-value="0"/>
                 <t t-if="props.order === 'asc'">
-                    <t t-if="props.thread.loadOlder and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadOlder"/>
+                    <t t-if="showLoadOlder" t-call="mail.Thread.loadOlder"/>
                     <t t-elif="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
                     <t t-elif="showStartMessage" t-call="mail.Thread.startMessage"/>
                 </t>
                 <span t-else="" class="pt-1" t-ref="load-newer"/>
                 <t t-set="messages" t-value="orderedMessages"/>
-                <t t-if="state.mountedAndLoaded" t-foreach="messages" t-as="msg" t-key="msg.id">
+                <t t-foreach="messages" t-as="msg" t-key="msg.id">
                     <t t-set="prevMsg" t-value="messages[msg_index -1]"/>
                     <t t-if="msg.dateDay !== currentDay and props.showDates">
                         <DateSection date="msg.dateDay" className="'pt-2 px-2'"/>
@@ -42,7 +42,7 @@
                 </t>
                 <span t-if="props.order === 'asc'" class="pt-1" t-ref="load-newer"/>
                 <t t-else="">
-                    <t t-if="props.thread.loadOlder and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadOlder"/>
+                    <t t-if="showLoadOlder" t-call="mail.Thread.loadOlder"/>
                     <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
                 </t>
             </div>
@@ -74,7 +74,7 @@
 </t>
 
 <t t-name="mail.Thread.loadOlder">
-    <button class="btn btn-link" t-on-click="onClickLoadOlder" t-ref="load-older">Load More</button>
+    <button class="btn btn-link" t-att-class="{ 'opacity-0': !mountedAndLoaded }" t-on-click="onClickLoadOlder" t-ref="load-older">Load More</button>
 </t>
 
 <t t-name="mail.Thread.loadingError">
