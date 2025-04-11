@@ -4,7 +4,7 @@
     <template id="profile_access_denied" inherit_id="website_profile.profile_access_denied">
         <xpath expr="//div[@id='profile_access_denied_return_link_container']" position="inside">
             <t t-if="request.params.get('channel_id')">
-                <p><a t-attf-href="/slides/course-#{request.params.get('channel_id')}">Return to the course.</a></p>
+                <p><a t-attf-href="/slides/course-#{request.params.get('channel_id')}" class="o_translate_inline">Return to the course.</a></p>
             </t>
         </xpath>
     </template>
@@ -35,7 +35,7 @@
                     </t>
                      <p t-elif="request.env.user == user" class="text-muted">
                         All the courses you attend will appear here. <br />
-                        <a href="/slides/" class="btn-link">
+                        <a href="/slides/" class="btn-link o_translate_inline">
                             <i class="fa fa-arrow-right"></i> Start Learning
                         </a>
                     </p>

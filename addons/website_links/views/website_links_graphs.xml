@@ -33,11 +33,11 @@
                                 <p>
                                     <span class="o_website_links_short_url" id="short_url"><span id="short-url-host"><t t-esc="short_url_host"/></span><span id="o_website_links_code"><t t-esc="code"/></span></span>
                                     <span class="o_website_links_edit_tools">
-                                        <a role="button" class="o_website_links_ok_edit btn btn-sm btn-primary" href="#">ok</a> or 
-                                        <a class="o_website_links_cancel_edit" href="#">cancel</a>
+                                        <a role="button" class="o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline" href="#">ok</a> or
+                                        <a class="o_website_links_cancel_edit o_translate_inline" href="#">cancel</a>
                                     </span>
-                                    <a t-attf-class="#{'' if can_create_link_tracker_code else 'd-none'} o_website_links_edit_code" aria-label="Edit code" title="Edit code"><span class="fa fa-pencil gray"></span></a>
-                                    <a class="copy-to-clipboard btn btn-sm btn-primary" t-att-data-clipboard-text="short_url"><i class="fa fa-copy me-2"/>Copy</a>
+                                    <a t-attf-class="#{'' if can_create_link_tracker_code else 'd-none'} o_website_links_edit_code o_translate_inline" aria-label="Edit code" title="Edit code"><span class="fa fa-pencil gray"></span></a>
+                                    <a class="copy-to-clipboard btn btn-sm btn-primary o_translate_inline" t-att-data-clipboard-text="short_url"><i class="fa fa-copy me-2"/>Copy</a>
                                 </p>
                                 <p class='o_website_links_code_error' style='color:red;font-weight:bold'></p>
                             </div>
