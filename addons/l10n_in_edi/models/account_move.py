@@ -335,12 +335,19 @@ class AccountMove(models.Model):
             'Pin': zip_digits and int(zip_digits) or '',
             'Stcd': partner.state_id.l10n_in_tin or '',
         }
-        if partner.street2:
+        if partner.street2 and re.match(r"^.{3,100}$", partner.street2):
             partner_details['Addr2'] = partner.street2
         if set_phone_and_email:
-            if partner.email:
+            if (
+                partner.email
+                and re.match(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", partner.email)
+                and re.match(r"^.{6,100}$", partner.email)
+            ):
                 partner_details['Em'] = partner.email
-            if partner.phone:
+            if (
+                partner.phone
+                and re.match(r"^[0-9]{10,12}$", self._l10n_in_extract_digits(partner.phone))
+            ):
                 partner_details['Ph'] = self._l10n_in_extract_digits(partner.phone)
         if pos_state_id:
             partner_details['POS'] = pos_state_id.l10n_in_tin or ''
@@ -687,7 +694,7 @@ class AccountMove(models.Model):
                 }]
             }
         if (error := response.get('error')) and '1005' in [e.get("code") for e in error]:
-            # Invalid token eror then create new token and send generate request again.
+            # Invalid token error then create new token and send generate request again.
             # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
             authenticate_response = company._l10n_in_edi_authenticate()
             if not authenticate_response.get("error"):
