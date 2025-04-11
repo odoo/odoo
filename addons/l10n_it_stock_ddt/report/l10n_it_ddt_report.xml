@@ -128,11 +128,14 @@
                                     </td>
                                     <td>
                                         <t t-if="move.sale_line_id">
-                                            <t t-set="lst_price" t-value="move.sale_line_id.price_reduce_taxinc * move.quantity"/>
+                                            <t t-set="lst_price" t-value="move.sale_line_id.price_reduce_taxexcl * move.quantity"/>
+                                            <t t-set="tax_price" t-value="move.sale_line_id.price_tax"/>
                                         </t>
                                         <t t-else="">
                                             <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)"/>
+                                            <t t-set="tax_price" t-value="0.0"/>
                                         </t>
+                                        <t t-set="lst_price" t-value="tax_price + lst_price"/>
                                         <span t-esc="lst_price"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                         <t t-set="total_value" t-value="total_value + lst_price"/>
                                     </td>
