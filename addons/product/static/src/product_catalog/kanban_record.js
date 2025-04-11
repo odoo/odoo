@@ -74,6 +74,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
             child_field: this.env.childField,
+            selected_section: this.props.record.context.selected_section,
         }
     }
 
@@ -93,6 +94,9 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
      * Add the product to the order
      */
     addProduct(qty=1) {
+        if (this.props.record.context.selected_section) {
+            this.productCatalogData.isHighlighted = true;
+        }
         this.updateQuantity(qty);
     }
 
@@ -100,6 +104,9 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
      * Remove the product to the order
      */
     removeProduct() {
+        if (this.props.record.context.selected_section) {
+            this.productCatalogData.isHighlighted = false;
+        }
         this.updateQuantity(0);
     }
 

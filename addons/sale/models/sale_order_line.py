@@ -1429,6 +1429,7 @@ class SaleOrderLine(models.Model):
                     self.order_id._is_readonly()
                     or bool(self.combo_item_id)
                 ),
+                'sequence': self.sequence,
             }
             return res
         elif self:
@@ -1451,7 +1452,8 @@ class SaleOrderLine(models.Model):
                             to_unit=line.product_id.uom_id,
                         )
                     )
-                )
+                ),
+                'sequence': order_line.sequence,
             }
             return res
         else:
