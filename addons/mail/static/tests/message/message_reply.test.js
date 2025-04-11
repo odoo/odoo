@@ -96,3 +96,31 @@ test("reply shows correct author avatar", async () => {
         }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}`}`
     );
 });
+
+test("click on message in reply highlights deleted parent message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const [oldestMessageId] = pyEnv["mail.message"].create(
+        Array(20)
+            .fill(0)
+            .map(() => ({
+                body: "",
+                message_type: "comment",
+                model: "discuss.channel",
+                res_id: channelId,
+            }))
+    );
+    pyEnv["mail.message"].create({
+        body: "Response to deleted message",
+        message_type: "comment",
+        model: "discuss.channel",
+        parent_id: oldestMessageId,
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-MessageInReply .cursor-pointer", {
+        parent: [".o-mail-Message", { text: "Response to deleted message" }],
+    });
+    await contains(".o-highlighted", { text: "This message has been removed" });
+});

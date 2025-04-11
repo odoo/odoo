@@ -23,7 +23,7 @@
                         </span>
                     </span>
                 </span>
-                <i t-else="" class="text-muted ms-2">Original message was deleted</i>
+                <i t-else="" class="cursor-pointer text-muted ms-2" t-on-click="() => this.props.onClick?.()">Original message was deleted</i>
             </small>
         </div>
     </t>
