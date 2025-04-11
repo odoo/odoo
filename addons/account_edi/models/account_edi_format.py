@@ -513,13 +513,24 @@ class AccountEdiFormat(models.Model):
         # Search for the product with the exact name, then ilike the name
         name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
         for name_domain in name_domains:
-            product = self.env['product.product'].search(
+            products = self.env['product.product'].search(
                 expression.AND([
                     expression.OR(domains + [name_domain]),
                     [('company_id', 'in', [False, self.env.company.id])],
                 ]),
-                limit=1,
             )
+            # If several products are found, search again using AND on the domain
+            if len(products) > 1:
+                product = self.env['product.product'].search(
+                    expression.AND([
+                        expression.AND(domains + [name_domain]),
+                        [('company_id', 'in', [False, self.env.company.id])],
+                    ]),
+                    limit=1,
+                )
+                product = product or products[0]
+            else:
+                product = products
             if product:
                 return product
         return self.env['product.product']
