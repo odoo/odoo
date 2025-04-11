@@ -35,6 +35,7 @@
         <field name="arch" type="xml">
             <form string="Resume">
                 <sheet>
+                    <field name="line_type_id" widget="selection_badge"/>
                     <div class="oe_title">
                         <label for="name" string="Title"/>
                         <h1>
@@ -42,21 +43,29 @@
                         </h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="employee_id" invisible="1"/>
-                            <field name="line_type_id"/>
-                            <field name="display_type" required="1"/>
+                        <group invisible="not is_course">
+                            <field name="course_type" widget="radio" invisible="1"/>
+                            <field name="external_url" placeholder="e.g. https://duolingo.com/course/xyz"/>
                         </group>
-                        <group>
-                            <label for="date_start" string="Validity"/>
-                            <div class="o_row">
+                        <group id="resume_line_dates">
+                            <label id="date_start_label" for="date_start" string="Duration" invisible="is_course"/>
+                            <div class="o_row" invisible="is_course">
                                 <field name="date_start"/>
                                 <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
-                                <field name="date_end" placeholder="Never Expires"/>
+                                <field name="date_end" placeholder="Forever"/>
                             </div>
+                            <label for="date_start" string="Date" invisible="not is_course"/>
+                            <field name="date_start" nolabel="1" invisible="not is_course"/>
+                            <label for="duration" string="Duration" invisible="not is_course"/>
+                            <span invisible="not is_course">
+                                <field name="duration" style="width: 4ch;"/> hours
+                            </span>
+                            <field name="certificate_filename" invisible="1"/>
+                            <field name="certificate_file" filename="certificate_filename"/>
                         </group>
                     </group>
-                    <field name="description" placeholder="Description"/>
+                    <field name="resume_line_properties"/>
+                    <field name="description" placeholder="Description" class="o_resume_html"/>
                 </sheet>
             </form>
         </field>
@@ -80,7 +89,9 @@
                         <field name="description"/>
                         <field name="date_start"/>
                         <field name="date_end"/>
-                        <field name="display_type" column_invisible="True"/>
+                        <field name="is_course"/>
+                        <field name="duration"/>
+                        <field name="external_url"/>
                     </list>
                 </field>
             </div>
@@ -143,7 +154,9 @@
                                 <field name="description"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
-                                <field name="display_type" column_invisible="True"/>
+                                <field name="is_course"/>
+                                <field name="duration"/>
+                                <field name="external_url"/>
                             </list>
                         </field>
                     </div>
@@ -209,7 +222,9 @@
                                     <field name="description"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
-                                    <field name="display_type" invisible="1"/>
+                                    <field name="is_course"/>
+                                    <field name="duration"/>
+                                    <field name="external_url"/>
                                 </list>
                             </field>
                         </div>
@@ -251,19 +266,22 @@
         </field>
     </record>
 
+    <!-- hr_resume_line views -->
+
     <record id="hr_resume_line_type_tree_view" model="ir.ui.view">
         <field name="name">hr.resume.line.type.list.view</field>
         <field name="model">hr.resume.line.type</field>
         <field name="arch" type="xml">
-            <list name="Resume Line Types" editable="bottom">
+            <list name="Resume Sections" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="is_course" string="Course?"/>
             </list>
         </field>
     </record>
 
     <record id="hr_resume_type_action" model="ir.actions.act_window">
-        <field name="name">Resume Line Types</field>
+        <field name="name">Resume Sections</field>
         <field name="res_model">hr.resume.line.type</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -277,7 +295,7 @@
 
     <menuitem
         id="hr_resume_line_type_menu"
-        name="Line Types"
+        name="Sections"
         action="hr_resume_type_action"
         parent="hr_skills.menu_human_resources_configuration_resume"
         sequence="3"
