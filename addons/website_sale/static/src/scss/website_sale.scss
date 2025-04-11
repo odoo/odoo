@@ -230,11 +230,6 @@ $input-border-color: $gray-400;
         }
     }
 
-    .activeDrag * {
-        cursor: grabbing !important;
-        cursor: -webkit-grabbing;
-    }
-
     .o_wsale_products_grid_before_rail{
         scrollbar-width: none;
         -ms-overflow-style: none;
@@ -243,6 +238,38 @@ $input-border-color: $gray-400;
     .o_wsale_products_grid_before_rail::-webkit-scrollbar {
         width: 0;
         height: 0;
+    }
+
+    #products_grid_before {
+        flex: 0 0 25%;
+        min-width: o-to-rem(240px);
+        max-width: var(--o-wsale-sidebar-maxwidth, 15rem);
+
+        // == Guess the distance with the navbar
+        $-container-top-gap: $grid-gutter-width / 2; // = o_wsale_products_main_row
+
+        // == Guess the distance with the viewport's top.
+        // Defined using CSS variables to ease custom-headers overrides.
+        --o_ws_sidebar_top_gap: calc(#{$navbar-padding-y * 2} + #{$btn-padding-y-lg * 2} + #{$-container-top-gap});
+
+        @if (o-website-value('header-scroll-effect') == null) or (o-website-value('header-scroll-effect') == 'fixed') {
+            top: var(--o_ws_sidebar_top_gap);
+        } @else {
+            top: $-container-top-gap;
+        }
+
+        .css_attribute_color {
+            height: 32px;
+            width: 32px;
+        }
+    }
+}
+
+// ==== Generic rules for any website_sale view
+.oe_website_sale {
+    .activeDrag * {
+        cursor: grabbing !important;
+        cursor: -webkit-grabbing;
     }
 
     .o_payment_form .card {
@@ -288,29 +315,6 @@ $input-border-color: $gray-400;
         padding-bottom: map-get($spacers, 2);
     }
 
-    #products_grid_before {
-        flex: 0 0 25%;
-        min-width: o-to-rem(240px);
-        max-width: var(--o-wsale-sidebar-maxwidth, 15rem);
-
-        // == Guess the distance with the navbar
-        $-container-top-gap: $grid-gutter-width / 2; // = o_wsale_products_main_row
-
-        // == Guess the distance with the viewport's top.
-        // Defined using CSS variables to ease custom-headers overrides.
-        --o_ws_sidebar_top_gap: calc(#{$navbar-padding-y * 2} + #{$btn-padding-y-lg * 2} + #{$-container-top-gap});
-
-        @if (o-website-value('header-scroll-effect') == null) or (o-website-value('header-scroll-effect') == 'fixed') {
-            top: var(--o_ws_sidebar_top_gap);
-        } @else {
-            top: $-container-top-gap;
-        }
-
-        .css_attribute_color {
-            height: 32px;
-            width: 32px;
-        }
-    }
     .o_pricelist_dropdown, .o_sortby_dropdown {
         //truncates the dropdown pricelist > 8rem
         .o_pricelist_dropdown_span {
