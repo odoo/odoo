@@ -342,6 +342,10 @@ class BaseCase(case.TestCase):
         # allow localhost requests
         # TODO: also check port?
         url = urlsplit(r.url)
+        timeout = kw.get('timeout')
+        if timeout and timeout < 10:
+            _logger.getChild('requests').info('request %s with timeout %s increased to 10s during tests', url, timeout)
+            kw['timeout'] = 10
         if url.hostname in (HOST, 'localhost'):
             return _super_send(s, r, **kw)
         if url.scheme == 'file':
@@ -888,7 +892,7 @@ class BaseCase(case.TestCase):
         """ Asserts that we can currently open a test cursor. """
         if odoo.modules.module.current_test != self:
             message = f"Trying to open a test cursor for {self.canonical_tag} while already in a test {odoo.modules.module.current_test.canonical_tag}"
-            _logger.error(message)
+            _logger.runbot(message)
             raise BadRequest(message)
         request = odoo.http.request
         if not request or self.http_request_allow_all:
@@ -899,7 +903,7 @@ class BaseCase(case.TestCase):
             expected = http_request_required_key
             if not expected:
                 expected = 'None (request are not enabled)'
-            _logger.error(
+            _logger.runbot(
                 'Request with path %s has been ignored during test as it '
                 'it does not contain the test_cursor cookie or it is expired.'
                 ' (required "%s", got "%s")',
