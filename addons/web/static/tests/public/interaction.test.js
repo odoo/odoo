@@ -376,6 +376,50 @@ describe("using selectors", () => {
         );
         expect("span").toHaveAttribute("animal", "colibri");
     });
+
+    test("dynamic selector can return multiple nodes", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicSelectors = {
+                _myselector: () => this.el.querySelectorAll(".my-selector"),
+            };
+            dynamicContent = {
+                _myselector: { "t-att-animal": () => "colibri" },
+            };
+        }
+        await startInteraction(
+            Test,
+            `
+            <div class="test">
+                <span class="my-selector">coucou</span>
+                <span class="my-selector">coucou</span>
+                <span class="my-selector">coucou</span>
+            </div>`
+        );
+        expect(queryAll("span")).toHaveAttribute("animal", "colibri");
+    });
+
+    test("dynamicSelector on form element is applied on form, not on controls", async () => {
+        // <form> and <select> elements are iterable. Make sure that listeners
+        // and dynamic attributes are applied on the element, not its children.
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                _root: { "t-att-animal": () => "colibri" },
+            };
+        }
+        await startInteraction(
+            Test,
+            `
+            <form class="test">
+                <input type="text">coucou</input>
+                <button type="button"/>Submit</button>
+            </form>`
+        );
+        expect(".test").toHaveAttribute("animal", "colibri");
+        expect(".test input").not.toHaveAttribute("animal");
+        expect(".test button").not.toHaveAttribute("animal");
+    });
 });
 
 describe("removing listeners", () => {

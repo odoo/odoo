@@ -173,10 +173,6 @@ export class DynamicSnippet extends Interaction {
                     delete carouselEl.dataset.bsRide;
                     delete carouselEl.dataset.bsInterval;
                 }
-                window.Carousel.getInstance(carouselEl)?.dispose();
-                if (!this.withSample) {
-                    window.Carousel.getOrCreateInstance(carouselEl);
-                }
             });
         }, 0);
     }
