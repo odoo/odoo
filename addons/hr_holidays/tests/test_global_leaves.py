@@ -19,6 +19,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Classic 40h/week',
             'tz': 'UTC',
             'hours_per_day': 8.0,
+            'company_id': cls.company.id,
             'attendance_ids': [
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
@@ -220,3 +221,39 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             ('holiday_id', '=', partially_covered_leave.id)
         ])
         self.assertTrue(resource_leaves, 'Resource leaves linked to the employee leave should exist.')
+
+    @freeze_time('2025-04-01')
+    def test_load_public_holidays(self):
+        self.company.country_id = self.env.ref('base.in')
+        self.env['resource.calendar.leaves'].load_public_holidays(company_ids=[self.company.id], from_ui=False)
+
+        current_year = datetime.now().year
+        holidays = self.env['resource.calendar.leaves'].search_count([
+            ('company_id', '=', self.company.id),
+            ('resource_id', '=', False),
+            ('date_from', '>=', datetime(current_year, 1, 1)),
+            ('date_to', '<=', datetime(current_year + 4, 12, 31)),
+        ])
+        self.assertEqual(holidays, 71, "Public holidays not created for the next 4 years.")
+
+    @freeze_time('2025-04-01')
+    def test_load_public_holidays_with_existing_holidays(self):
+        self.company.country_id = self.env.ref('base.in')
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Christmas Day',
+            'date_from': datetime(2025, 1, 14, 8, 0, 0),
+            'date_to': datetime(2025, 1, 14, 17, 0, 0),
+            'resource_id': False,
+            'calendar_id': self.company.resource_calendar_id.id,
+        })
+        self.env['resource.calendar.leaves'].load_public_holidays(company_ids=[self.company.id], from_ui=False)
+
+        current_year = datetime.now().year
+        holidays = self.env['resource.calendar.leaves'].search_count([
+            ('company_id', '=', self.company.id),
+            ('resource_id', '=', False),
+            ('date_from', '>=', datetime(current_year, 1, 1)),
+            ('date_to', '<=', datetime(current_year + 4, 12, 31)),
+        ])
+        # check that it will not create a new public holiday for the existing one
+        self.assertEqual(holidays, 71, "Public holidays not created for the next 4 years.")

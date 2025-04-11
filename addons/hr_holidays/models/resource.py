@@ -1,10 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import holidays
+import pytz
+
+
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-import pytz
-from datetime import datetime
+from datetime import datetime, time
 
 
 class ResourceCalendarLeaves(models.Model):
@@ -126,7 +129,7 @@ class ResourceCalendarLeaves(models.Model):
                 continue
             user_tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
             calendar_tz = pytz.timezone(self.env['resource.calendar'].browse(vals['calendar_id']).tz)
-            if user_tz != calendar_tz:
+            if user_tz != calendar_tz and self.env.context.get('convert_datetime', True):
                 datetime_from = self._ensure_datetime(vals['date_from'], '%Y-%m-%d %H:%M:%S')
                 datetime_to = self._ensure_datetime(vals['date_to'], '%Y-%m-%d %H:%M:%S')
                 if datetime_from and datetime_to:
@@ -156,6 +159,71 @@ class ResourceCalendarLeaves(models.Model):
         self._reevaluate_leaves(time_domain_dict)
 
         return res
+
+    @api.model
+    def load_public_holidays(self, company_ids=[], from_ui=True):
+        if not company_ids:
+            return {
+                'title': _('No Company'),
+                'type': 'danger',
+                'message': _('Please select a company to load public holidays.'),
+            }
+        response = []
+        companies = self.env['res.company'].browse(company_ids)
+        current_year = datetime.now().year
+        existing_holidays = self.env["resource.calendar.leaves"].search([
+            ('company_id', 'in', company_ids),
+            ('resource_id', '=', False),
+        ])
+        for company in companies:
+            if not company.country_code:
+                response.append({
+                    'title': _('No Country Code'),
+                    'type': 'danger',
+                    'message': _('Please select a country in %(company)s company to load public holidays.', company=company.name),
+                })
+                continue
+            user_tz = pytz.timezone(company.resource_calendar_id.tz)
+            public_holiday_values = []
+            public_holiday_dict = holidays.country_holidays(
+                company.country_code,
+                subdiv=company.state_id.code if company.state_id else None,
+                years=range(current_year, current_year + 4)
+            )
+
+            for holiday_date, holiday_name in public_holiday_dict.items():
+                holiday_start_utc = user_tz.localize(datetime.combine(holiday_date, time.min)).astimezone(pytz.utc).replace(tzinfo=None)
+                holiday_end_utc = user_tz.localize(
+                    datetime.combine(holiday_date, time.max)).astimezone(pytz.utc).replace(tzinfo=None)
+                same_date_holiday = next((
+                    holiday
+                    for holiday in public_holiday_values
+                    if holiday['date_from'] == holiday_start_utc and holiday['company_id'] == company.id),
+                    None,
+                )
+                overlapping_holidays = existing_holidays.filtered(lambda leave:
+                    (leave.company_id == company or not leave.company_id) and
+                    leave.date_from <= holiday_end_utc and
+                    leave.date_to >= holiday_start_utc
+                )
+                if not overlapping_holidays:
+                    public_holiday_values.append({
+                        'name': f"{holiday_name} / {same_date_holiday['name']}" if same_date_holiday else holiday_name,
+                        'date_from': holiday_start_utc,
+                        'date_to': holiday_end_utc,
+                        'calendar_id': company.resource_calendar_id.id,
+                    })
+            if from_ui:
+                self.create(public_holiday_values)
+            else:
+                self.with_context(convert_datetime=False).create(public_holiday_values)
+            response.append({
+                'title': _('Public Holidays Loaded'),
+                'type': 'success',
+                'message': _('Public Holidays for Five years were successfully created for %(company)s company.', company=company.name),
+            })
+
+        return response
 
 
 class ResourceCalendar(models.Model):

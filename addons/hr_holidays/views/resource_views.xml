@@ -29,6 +29,9 @@
         <field name="mode">primary</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
+        <xpath expr="//list" position="attributes">
+            <attribute name="class" separator=" " add="o_load_from_website" />
+        </xpath>
             <xpath expr="//list" position="attributes">
                 <attribute name="editable">bottom</attribute>
             </xpath>
