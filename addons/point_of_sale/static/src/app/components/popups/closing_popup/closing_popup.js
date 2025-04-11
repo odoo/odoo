@@ -2,6 +2,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
+import { PosConfirmationDialog } from "@point_of_sale/app/components/popups/pos_dialog/pos_confirmation_dialog/pos_confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -306,7 +307,7 @@ export class ClosePosPopup extends Component {
         );
     }
     async handleClosingError(response) {
-        this.dialog.add(ConfirmationDialog, {
+        this.dialog.add(PosConfirmationDialog, {
             title: response.title || "Error",
             body: response.message,
             confirmLabel: _t("Review Orders"),
@@ -324,7 +325,7 @@ export class ClosePosPopup extends Component {
                     this.closeSession();
                 }
             },
-            dismiss: async () => {},
+            hideCloseButton: true,
         });
 
         if (response.redirect) {
