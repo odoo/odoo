@@ -1400,17 +1400,6 @@ class Store {
     }
 }
 
-registerRoute("/web/dataset/call_kw/ir.http/lazy_session_info", async function (request) {
-    const { kwargs } = await parseRequestParams(request);
-    const res = {}; // missing super call for simplicity
-    if (kwargs.store_fetch_params) {
-        res.store_data = processRequest
-            .call(this, kwargs.store_fetch_params, kwargs.context)
-            .get_result();
-    }
-    return res;
-});
-
 export const mailDataHelpers = {
     _process_request_for_all,
     _process_request_for_internal_user,
