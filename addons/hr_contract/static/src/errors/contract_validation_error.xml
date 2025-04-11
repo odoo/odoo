@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_contract.contract_validation_dialog">
+        <Dialog size="'xl'" contentClass="'o_error_dialog'">
+            <t t-set-slot="header">
+                <h4 class="modal-title text-break flex-grow-1">
+                    <t t-out="title"/>
+                </h4>
+                <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="onClose"></button>
+            </t>
+            <div role="alert">
+                <p t-out="message" class="text-prewrap"/>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o-default-button" t-on-click="onClose">Close</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
