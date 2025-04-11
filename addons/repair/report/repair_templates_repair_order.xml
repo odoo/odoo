@@ -40,6 +40,7 @@
                     </div>
                     <div class="oe_structure"/>
                     <h2 class="mb-3 border-bottom border-2 border-dark">Parts</h2>
+                    <t t-set="format_number" t-value="lambda x: int(x) if x.is_integer() else x"/>
                     <table class="table table-borderless o_main_table">
                         <thead>
                             <tr>
@@ -55,7 +56,7 @@
                                     <p t-if="line.repair_line_type == 'recycle'">(<i>Recycle</i>) <span t-field="line.product_id" data-oe-demo="Product C"/></p>
                                 </td>
                                 <td class="text-end">
-                                    <span t-field="line.product_uom_qty">5</span>
+                                    <span t-out="format_number(line.product_uom_qty)">5</span>
                                     <span groups="uom.group_uom" t-field="line.product_uom.name">Units</span>
                                 </td>
                             </tr>
