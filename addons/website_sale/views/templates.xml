@@ -1847,7 +1847,7 @@
     >
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
             <p class="text-muted">
-                <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
+                <a href="/terms" class="text-muted o_translate_inline"><u>Terms and Conditions</u></a><br/>
                 30-day money-back guarantee<br/>
                 Shipping: 2-3 Business Days
             </p>
@@ -2372,12 +2372,12 @@
                         <p>This is your current cart.</p>
                         <p>
                             <strong>
-                                <a t-attf-href="/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash">Click here</a>
+                                <a class="o_translate_inline" t-attf-href="/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash">Click here</a>
                             </strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart.
                         </p>
                         <p>
                             <strong>
-                                <a t-attf-href="/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge">Click here</a>
+                                <a class="o_translate_inline" t-attf-href="/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge">Click here</a>
                             </strong> if you want to merge your previous cart into current cart.
                         </p>
                     </t>
@@ -2691,7 +2691,7 @@
                             You are editing your <b>delivery and billing</b> addresses
                             at the same time!<br/>
                             If you want to modify your billing address, create a
-                            <a href="/shop/address?address_type=billing">new address</a>.
+                            <a class="o_translate_inline" href="/shop/address?address_type=billing">new address</a>.
                         </p>
                     </div>
                     <div id="errors"/> <!-- for js -->
@@ -3009,7 +3009,7 @@
             </div>
             <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
                 <p class="alert alert-info mt-3" role="status">
-                    <a role="button" t-att-href="order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()" class="btn btn-primary">Sign Up</a>
+                    <a role="button" t-att-href="order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()" class="btn btn-primary o_translate_inline">Sign Up</a>
                     to follow your order.
                 </p>
             </t>
