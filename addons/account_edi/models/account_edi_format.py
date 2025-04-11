@@ -495,6 +495,11 @@ class AccountEdiFormat(models.Model):
 
     def _retrieve_product(self, name=None, default_code=None, barcode=None):
         '''Search all products and find one that matches one of the parameters.
+        Use the following priority:
+        1. barcode
+        2. default_code
+        3. name (exact match)
+        4. name (ilike)
 
         :param name:            The name of the product.
         :param default_code:    The default_code of the product.
@@ -505,23 +510,23 @@ class AccountEdiFormat(models.Model):
             # cut Sales Description from the name
             name = name.split('\n')[0]
         domains = []
-        if default_code:
-            domains.append([('default_code', '=', default_code)])
         if barcode:
             domains.append([('barcode', '=', barcode)])
-
-        # Search for the product with the exact name, then ilike the name
-        name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
-        for name_domain in name_domains:
-            product = self.env['product.product'].search(
-                expression.AND([
-                    expression.OR(domains + [name_domain]),
-                    [('company_id', 'in', [False, self.env.company.id])],
-                ]),
-                limit=1,
-            )
-            if product:
-                return product
+        if default_code:
+            domains.append([('default_code', '=', default_code)])
+        if name:
+            domains += [[('name', '=', name)], [('name', 'ilike', name)]]
+        products = self.env['product.product'].search(
+            expression.AND([
+                expression.OR(domains),
+                [('company_id', 'in', [False, self.env.company.id])],
+            ]),
+        )
+        if products:
+            for domain in domains:
+                products_by_domain = products.filtered_domain(domain)
+                if products_by_domain:
+                    return products_by_domain[0]
         return self.env['product.product']
 
     def _retrieve_tax(self, amount, type_tax_use):
