@@ -1,3 +1,4 @@
+import { ChatHub } from "@mail/core/common/chat_hub";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
@@ -8,8 +9,9 @@ export class PortalChatter extends Component {
     static template = xml`
         <Chatter threadId="props.resId" threadModel="props.resModel" composer="props.composer" twoColumns="props.twoColumns"/>
         <div class="position-fixed" style="z-index:1030"><OverlayContainer overlays="overlayService.overlays"/></div>
+        <ChatHub />
     `;
-    static components = { Chatter, OverlayContainer };
+    static components = { Chatter, OverlayContainer, ChatHub };
     static props = ["resId", "resModel", "composer", "twoColumns", "displayRating"];
 
     setup() {
