@@ -9,7 +9,7 @@
                 </div>
             </t>
         </Dropdown>
-        <div t-else="" class="o-mail-DiscussSidebarCategories-search rounded mx-3 my-2 border border-secondary position-relative d-flex align-items-center justify-content-center gap-1" t-on-click="onClickFindOrStartConversation">
+        <div t-else="" class="o-mail-DiscussSidebarCategories-search rounded-3 mx-3 my-2 border border-secondary position-relative d-flex align-items-center justify-content-center gap-1" t-on-click="onClickFindOrStartConversation">
             <input class="form-control rounded-3 border-0 bg-inherit" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Find or start a conversation" tabindex="0"/>
             <div class="o-mail-DiscussSidebarCategories-searchClickable position-absolute z-1 opacity-0 cursor-pointer w-100 h-100"/>
         </div>
@@ -93,7 +93,7 @@
                     </t>
                 </Dropdown>
                 <t t-else="" t-call="mail.DiscussSidebarChannel.main"/>
-                <ul t-if="subChannels.length > 0" class="list-unstyled position-relative flex-grow-1 my-0 d-flex flex-column gap-1">
+                <ul t-if="subChannels.length > 0" class="list-unstyled position-relative flex-grow-1 my-0 d-flex flex-column gap-1" t-att-class="{ 'mb-1': store.discuss.isSidebarCompact }">
                     <t t-foreach="subChannels" t-as="sub" t-key="sub.localId">
                         <DiscussSidebarSubchannel t-if="showThread(sub)" thread="sub" isFirst="sub_first or !thread.discussAppCategory.open"/>
                     </t>
@@ -124,7 +124,7 @@
                     <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
                 </svg>
             </t>
-            <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded text-start text-truncate align-items-center" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName" t-on-click="(ev) => this.openThread(ev, thread)" t-att-class="{
+            <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded-3 text-start text-truncate align-items-center" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName" t-on-click="(ev) => this.openThread(ev, thread)" t-att-class="{
                 'o-active': thread.eq(this.store.discuss.thread),
                 'px-1 py-2 mx-1 text-wrap word-break lh-1': store.discuss.isSidebarCompact,
                 'o-nonCompact me-1 p-0 ps-1': !store.discuss.isSidebarCompact,
@@ -148,14 +148,14 @@
     </t>
 
     <t t-name="mail.DiscussSidebarChannel.main">
-        <button class="o-mail-DiscussSidebarChannel btn o-mail-DiscussSidebar-item d-flex align-items-center cursor-pointer o-py-0_5 mb-0 position-relative rounded-2 gap-1 border-0"
+        <button class="o-mail-DiscussSidebarChannel btn o-mail-DiscussSidebar-item d-flex align-items-center cursor-pointer o-py-0_5 mb-0 position-relative rounded-3 gap-1 border-0"
             t-att-class="attClass"
             t-on-click="(ev) => this.openThread(ev, thread)"
             t-ref="root"
         >
             <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0" t-att-class="{ 'overflow-hidden': !store.discuss.isSidebarCompact }" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName">
                 <div class="bg-inherit position-relative d-flex flex-shrink-0 o-my-0_5" style="width:32px;height:32px;" t-att-class="{ 'ms-2': !store.discuss.isSidebarCompact }">
-                    <img class="w-100 h-100 rounded o_object_fit_cover shadow-sm" t-att-src="thread.avatarUrl" alt="Thread Image"/>
+                    <img class="w-100 h-100 rounded-3 o_object_fit_cover shadow-sm" t-att-src="thread.avatarUrl" alt="Thread Image"/>
                     <ThreadIcon t-if="thread.channel_type?.includes('chat') or (thread.channel_type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
                     <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'position-absolute o-mail-DiscussSidebarChannel-country border'"/>
                 </div>
