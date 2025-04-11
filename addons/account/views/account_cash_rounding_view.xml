@@ -26,9 +26,9 @@
                             <group>
                                 <field name="rounding"/>
                                 <field name="strategy"/>
-                                <field name="profit_account_id" options="{'no_create': True}" invisible="strategy != 'add_invoice_line'" required="strategy == 'add_invoice_line'"
+                                <field name="profit_account_id" options="{'no_create': True}" required="1"
                                     groups="account.group_account_invoice,account.group_account_readonly"/>
-                                <field name="loss_account_id" options="{'no_create': True}" invisible="strategy != 'add_invoice_line'" required="strategy == 'add_invoice_line'"
+                                <field name="loss_account_id" options="{'no_create': True}" required="1"
                                     groups="account.group_account_invoice,account.group_account_readonly"/>
                                 <field name="rounding_method"/>
                             </group>
