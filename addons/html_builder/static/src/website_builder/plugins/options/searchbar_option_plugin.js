@@ -26,27 +26,27 @@ class SearchbarOptionPlugin extends Plugin {
         searchbar_option_display_items: [
             {
                 label: _t("Description"),
-                dataAttributeAction: "displayDescription",
+                dataAttribute: "displayDescription",
                 dependency: "search_all_opt",
             },
             {
                 label: _t("Content"),
-                dataAttributeAction: "displayDescription",
+                dataAttribute: "displayDescription",
                 dependency: "search_pages_opt",
             },
             {
                 label: _t("Extra Link"),
-                dataAttributeAction: "displayExtraLink",
+                dataAttribute: "displayExtraLink",
                 dependency: "search_all_opt",
             },
             {
                 label: _t("Detail"),
-                dataAttributeAction: "displayDetail",
+                dataAttribute: "displayDetail",
                 dependency: "search_all_opt",
             },
             {
                 label: _t("Image"),
-                dataAttributeAction: "displayImage",
+                dataAttribute: "displayImage",
                 dependency: "search_all_opt",
             },
         ],
@@ -89,16 +89,16 @@ class SearchbarOptionPlugin extends Plugin {
                     // Reset display options. Has to be done in 2 steps, because
                     // the same option may be on 2 dependencies, and we don't
                     // want the 1st to add it and the 2nd to delete it.
-                    const displayDataAttributeActions = new Set();
+                    const displayDataAttributes = new Set();
                     for (const item of this.getResource("searchbar_option_display_items")) {
                         if (isDependencyActive(item.dependency)) {
-                            displayDataAttributeActions.add(item.dataAttributeAction);
+                            displayDataAttributes.add(item.dataAttribute);
                         } else {
-                            delete editingElement.dataset[item.dataAttributeAction];
+                            delete editingElement.dataset[item.dataAttribute];
                         }
                     }
-                    for (const dataAttributeAction of displayDataAttributeActions) {
-                        editingElement.dataset[dataAttributeAction] = "true";
+                    for (const dataAttribute of displayDataAttributes) {
+                        editingElement.dataset[dataAttribute] = "true";
                     }
                 },
             },
@@ -127,6 +127,30 @@ class SearchbarOptionPlugin extends Plugin {
                     editingElement.classList.toggle("bg-light", isLight);
                     searchButtonEl.classList.toggle("btn-light", isLight);
                     searchButtonEl.classList.toggle("btn-primary", !isLight);
+                },
+            },
+            // This resets the data attribute to an empty string on clean.
+            // TODO: modify the Python `_search_get_detail()` (grep
+            // `with_description = options['displayDescription']`) so we can use
+            // the default `dataAttributeAction`. The python should not need a
+            // value if it doesn't exist.
+            setNonEmptyDataAttribute: {
+                getValue: ({ editingElement, param: { mainParam: attributeName } = {} }) =>
+                    editingElement.dataset[attributeName],
+                isApplied: ({
+                    editingElement,
+                    param: { mainParam: attributeName } = {},
+                    value = "",
+                }) => editingElement.dataset[attributeName] === value,
+                apply: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
+                    if (value) {
+                        editingElement.dataset[attributeName] = value;
+                    } else {
+                        delete editingElement.dataset[attributeName];
+                    }
+                },
+                clean: ({ editingElement, param: { mainParam: attributeName } = {} }) => {
+                    editingElement.dataset[attributeName] = "";
                 },
             },
         };
