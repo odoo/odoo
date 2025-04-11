@@ -195,8 +195,9 @@ class PasskeyTest(HttpCaseWithUserDemo):
             wizard_id = self.rpc('res.users', 'action_create_passkey', self.admin_user.id)['result']['res_id']
 
             # Adding a passkey triggers an identity check. Confirm using the password and run the check.
-            self.rpc('res.users.identitycheck', 'write', wizard_id, {'password': self.admin_user.login})
-            action = self.rpc('res.users.identitycheck', 'run_check', wizard_id)['result']
+            action = self.rpc('res.users.identitycheck', 'run_check', wizard_id,
+                context={'password': self.admin_user.login}
+            )['result']
 
             # Create the passkey creation wizard and set a name for the key
             wizard_id = self.rpc(action['res_model'], 'create', {'name': 'test-yubikey'})['result']
@@ -284,11 +285,11 @@ class PasskeyTest(HttpCaseWithUserDemo):
                 # It sets the webauthn challenge in the session
                 self.url_open('/auth/passkey/start-auth', '{}', headers={"Content-Type": "application/json"})
 
-                # 2. Set the webauthn response in the password field
-                self.rpc('res.users.identitycheck', 'write', wizard_id, {'password': json.dumps(webauthn_response)})
-
-                # 3. Call the check method, which if successful returns the action to run following the identity check
-                response = self.rpc('res.users.identitycheck', 'run_check', wizard_id)
+                # 2. Call the check method with the webauthn response in the password,
+                # which if successful returns the action to run following the identity check
+                response = self.rpc('res.users.identitycheck', 'run_check', wizard_id,
+                    context={'password': json.dumps(webauthn_response)}
+                )
 
                 # Assert the identity check is successful
                 self.assertTrue(response.get('result'))
@@ -299,10 +300,11 @@ class PasskeyTest(HttpCaseWithUserDemo):
                 else:
                     self.assertEqual(passkey['passkey'].sign_count, sign_count)
 
-                # 4. Attempt a replay attack, without reseting the challenge
-                self.rpc('res.users.identitycheck', 'write', wizard_id, {'password': json.dumps(webauthn_response)})
+                # 3. Attempt a replay attack, without reseting the challenge
                 with mute_logger('odoo.http'):
-                    response = self.rpc('res.users.identitycheck', 'run_check', wizard_id)
+                    response = self.rpc('res.users.identitycheck', 'run_check', wizard_id,
+                        context={'password': json.dumps(webauthn_response)}
+                    )
 
                 # Assert the authentication failed
                 self.assertFalse(response.get('result'))
@@ -315,15 +317,16 @@ class PasskeyTest(HttpCaseWithUserDemo):
                 # The authentication fail, hence the sign count doesn't increase
                 self.assertEqual(passkey['passkey'].sign_count, sign_count)
 
-                # 5. Do a second authentication with the same challenge and same response
+                # 4. Do a second authentication with the same challenge and same response
 
                 # Reset the challenge, which is forced to the same challenge with a mock patch above
                 self.url_open('/auth/passkey/start-auth', '{}', headers={"Content-Type": "application/json"})
 
                 # Write the same webauthn response
-                self.rpc('res.users.identitycheck', 'write', wizard_id, {'password': json.dumps(webauthn_response)})
                 with mute_logger('odoo.http'):
-                    response = self.rpc('res.users.identitycheck', 'run_check', wizard_id)
+                    response = self.rpc('res.users.identitycheck', 'run_check', wizard_id,
+                        context={'password': json.dumps(webauthn_response)}
+                    )
 
                 if passkey.get('supports_sign_count', True):
                     # If the passkey supports sign_count, a replay attack with the same challenge must fail
@@ -336,13 +339,14 @@ class PasskeyTest(HttpCaseWithUserDemo):
 
                 self.assertEqual(passkey['passkey'].sign_count, sign_count)
 
-            # 6. Do a third authentication, with another challenge but the same reponse
+            # 5. Do a third authentication, with another challenge but the same reponse
             # This block is outside the block `with self.patch_start_auth(webauthn_challenge):`
             # hence it will generate a random challenge.
             self.url_open('/auth/passkey/start-auth', '{}', headers={"Content-Type": "application/json"})
-            self.rpc('res.users.identitycheck', 'write', wizard_id, {'password': json.dumps(webauthn_response)})
             with mute_logger('odoo.http'):
-                response = self.rpc('res.users.identitycheck', 'run_check', wizard_id)
+                response = self.rpc('res.users.identitycheck', 'run_check', wizard_id,
+                    context={'password': json.dumps(webauthn_response)}
+                )
             self.assertFalse(response.get('result'))
             self.assertTrue(response.get('error'))
             self.assertEqual(passkey['passkey'].sign_count, sign_count)
