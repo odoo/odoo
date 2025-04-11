@@ -20,10 +20,17 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
         'data/account_chart_template_post_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_configuration_data.xml',
+        
+        'views/account_move.xml'
     ],
     'demo': [
         'demo/demo_company.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_id/static/src/js/tax_totals.js',
+        ],
+    },
     'post_init_hook': 'load_translations',
     'license': 'LGPL-3',
 }
