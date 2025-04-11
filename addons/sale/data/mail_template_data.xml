@@ -49,7 +49,6 @@
 </div>
             </field>
             <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -81,7 +80,6 @@
 </div>
             </field>
             <field name="report_template_ids" eval="[(4, ref('sale.action_report_pro_forma_invoice'))]"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -336,7 +334,6 @@
 </t>
 </div></field>
             <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -391,7 +388,6 @@
 </div>
             </field>
             <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 

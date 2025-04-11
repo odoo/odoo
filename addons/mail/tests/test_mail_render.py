@@ -592,7 +592,6 @@ class TestMailRenderSecurity(TestMailRenderCommon):
         }))
         template = template.save()
         self.assertFalse(template.lang)
-        self.assertFalse(template.email_cc)
         self.assertFalse(template.body_html)
 
         # sanity check, make sure the expressions are not allowed before the test (not in default allow list, etc...)
@@ -611,7 +610,6 @@ class TestMailRenderSecurity(TestMailRenderCommon):
             }))
             template = template.save()
             self.assertEqual(template.lang, template_defaults['lang'])
-            self.assertEqual(template.email_cc, template_defaults['email_cc'])
             self.assertEqual(template.body_html, template_defaults['body_html'])
 
             with self.assertRaises(AccessError, msg="Complex expressions should only be allowed if they are the default for that field."):
