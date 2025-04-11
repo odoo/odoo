@@ -38,6 +38,8 @@ class Im_LivechatReportChannel(models.Model):
     rating_text = fields.Char('Satisfaction Rate', readonly=True)
     is_unrated = fields.Integer('Session not rated', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Operator', readonly=True)
+    handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
+    handled_by_agent = fields.Integer("Handled by Agent", readonly=True, aggregator="sum")
 
     def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
@@ -138,7 +140,9 @@ class Im_LivechatReportChannel(models.Model):
                     WHEN rate.rating > 0 THEN 0
                     ELSE 1
                 END as is_unrated,
-                C.livechat_operator_id as partner_id
+                C.livechat_operator_id as partner_id,
+                CASE WHEN channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_agent,
+                CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot
             """,
         )
 
