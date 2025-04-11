@@ -728,7 +728,9 @@ class PosConfig(models.Model):
     def _get_available_product_domain(self):
         domain = [
             *self.env['product.product']._check_company_domain(self.company_id),
-            ('active', '=', True),
+            # Necessary to check 'active' on template as query will be done on variant and active field
+            # is not present on that table
+            ('product_tmpl_id.active', '=', True),
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ]
