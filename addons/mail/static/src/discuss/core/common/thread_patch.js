@@ -10,10 +10,9 @@ const threadPatch = {
     setup() {
         super.setup(...arguments);
         useEffect(
-            (loadNewer, mountedAndLoaded, unreadSynced) => {
+            (loadNewer, mountedAndLoaded) => {
                 if (
                     loadNewer ||
-                    unreadSynced || // just marked as unread (local and server state are synced)
                     !mountedAndLoaded ||
                     !this.props.thread.selfMember ||
                     !this.scrollableRef.el
@@ -25,12 +24,7 @@ const threadPatch = {
                     this.props.thread.selfMember.hideUnreadBanner = true;
                 }
             },
-            () => [
-                this.props.thread.loadNewer,
-                this.state.mountedAndLoaded,
-                this.props.thread.selfMember?.unreadSynced,
-                this.state.scrollTop,
-            ]
+            () => [this.props.thread.loadNewer, this.state.mountedAndLoaded, this.state.scrollTop]
         );
     },
     /** @override */
@@ -54,6 +48,9 @@ const threadPatch = {
                 this.setScroll(scrollTop);
             }
             thread.scrollUnread = false;
+            if (this.isAtBottom && !thread.markedAsUnread && thread.isFocused) {
+                thread.markAsRead();
+            }
         } else {
             super.applyScrollContextually(...arguments);
         }
@@ -67,13 +64,13 @@ const threadPatch = {
         }
     },
     get newMessageBannerText() {
-        if (this.props.thread.selfMember?.totalUnreadMessageCounter > 1) {
-            return _t("%s new messages", this.props.thread.selfMember.totalUnreadMessageCounter);
+        if (this.props.thread.selfMember?.message_unread_counter > 1) {
+            return _t("%s new messages", this.props.thread.selfMember.message_unread_counter);
         }
         return _t("1 new message");
     },
     async onClickUnreadMessagesBanner() {
-        await this.props.thread.loadAround(this.props.thread.selfMember.localNewMessageSeparator);
+        await this.props.thread.loadAround(this.props.thread.selfMember.new_message_separator_ui);
         this.messageHighlight?.highlightMessage(
             this.props.thread.firstUnreadMessage,
             this.props.thread

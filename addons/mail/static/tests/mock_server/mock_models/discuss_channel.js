@@ -831,7 +831,7 @@ export class DiscussChannel extends models.ServerModel {
         kwargs.message_type ||= "notification";
         const [channel] = this.browse(id);
         this.write([id], {
-            last_interest_dt: serializeDateTime(today()),
+            last_interest_dt: serializeDateTime(DateTime.now()),
         });
         if (kwargs.special_mentions?.includes("everyone")) {
             kwargs["partner_ids"] = DiscussChannelMember._filter([

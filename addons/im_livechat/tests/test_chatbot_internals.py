@@ -289,7 +289,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     "message_unread_counter_bus_id": 0,
                                     "new_message_separator": messages[0].id + 1,
                                     "persona": {"id": self.partner_employee.id, "type": "partner"},
-                                    "syncUnread": True,
                                     "thread": {
                                         "id": discuss_channel.id,
                                         "model": "discuss.channel",
