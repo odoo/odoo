@@ -79,7 +79,7 @@
                                 <DropdownItem t-if="pos.receiptPrinter" onSelected="() => this.showSaleDetails()">
                                     Print Report
                                 </DropdownItem>
-                                <DropdownItem onSelected="() => pos.closePos()">
+                                <DropdownItem onSelected="() => this.clickBackend()">
                                     Backend
                                 </DropdownItem>
                                 <DropdownItem onSelected="() => this.pos.closeSession()">

@@ -158,6 +158,10 @@ export class Navbar extends Component {
         this.notification.add(_t("PoS Customer Display opened in a new window"));
     }
 
+    clickBackend() {
+        this.pos.closePos();
+    }
+
     get showCreateProductButton() {
         return this.isSystemUser;
     }

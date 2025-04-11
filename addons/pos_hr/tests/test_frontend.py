@@ -139,6 +139,40 @@ class TestUi(TestPosHrHttpCommon):
             login="pos_user",
         )
 
+    def test_admin_login_screen_with_and_without_pin(self):
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.admin.pin = False
+        self.manager_user.group_ids -= self.env.ref('point_of_sale.group_pos_manager')
+
+        # Restrict cashier list to include only the admin user
+        self.main_pos_config.write({'basic_employee_ids': [Command.set([self.admin.id])], "minimal_employee_ids": [Command.clear()], "advanced_employee_ids": [Command.set([self.admin.id])]})
+
+        # Tour when admin has no pin
+        self.start_pos_tour(
+            "PosHrTourAdminLoginNoPin",
+            login="pos_admin",
+        )
+
+        # Tour when admin has a pin
+        self.admin.pin = "1234"
+        self.start_pos_tour(
+            "PosHrTourAdminLoginWithPin",
+            login="pos_admin",
+        )
+
+    def test_employee_selection_screen_when_employees_have_no_pin(self):
+        # Restrict cashier list to include only admin user and one basic user
+        self.manager_user.group_ids -= self.env.ref('point_of_sale.group_pos_manager')
+        self.main_pos_config.write({'basic_employee_ids': [Command.set([self.emp2.id])], "minimal_employee_ids": [Command.clear()], "advanced_employee_ids": [Command.set([self.admin.id])]})
+
+        self.emp2.pin = False
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_pos_tour(
+            "PosHrTourEmployeeSelectionNoPins",
+            login="pos_admin",
+        )
+
     def test_basic_user_can_change_price(self):
         self.main_pos_config.advanced_employee_ids = []
         self.main_pos_config.basic_employee_ids = [

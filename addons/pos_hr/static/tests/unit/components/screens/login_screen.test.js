@@ -11,7 +11,7 @@ describe("pos_login_screen.js", () => {
         const store = await setupPosEnv();
         const comp = await mountWithCleanup(LoginScreen, {});
         comp.openRegister();
-        expect(store.login).toBe(true);
+        expect(store.login).toBe(store.models["hr.employee"].some((emp) => emp._pin));
     });
     test("backBtnName", async () => {
         const store = await setupPosEnv();

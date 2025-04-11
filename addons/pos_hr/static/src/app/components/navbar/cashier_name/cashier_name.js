@@ -25,7 +25,7 @@ patch(CashierName.prototype, {
         }
         return super.cssClass;
     },
-    async selectCashier(pin = false, login = false, list = false) {
+    async selectCashier(pin = false, login = false, list = false, excludeCurrentCashier = true) {
         return await this.cashierSelector(...arguments);
     },
 });

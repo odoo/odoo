@@ -31,13 +31,13 @@ export class CashierSelector {
         if (!pin) {
             inputPin = await makeAwaitable(this.dialog, NumberPopup, {
                 formatDisplayedValue: (x) => x.replace(/./g, "•"),
-                title: _t("Password?"),
+                title: _t("Pin code"),
             });
         } else {
             if (employee._pin !== Sha1.hash(inputPin)) {
                 inputPin = await makeAwaitable(this.dialog, NumberPopup, {
                     formatDisplayedValue: (x) => x.replace(/./g, "•"),
-                    title: _t("Password?"),
+                    title: _t("Pin code"),
                 });
             }
         }
@@ -51,7 +51,7 @@ export class CashierSelector {
         return true;
     }
 
-    async selectCashier(pin = false, login = false, list = false) {
+    async selectCashier(pin = false, login = false, list = false, excludeCurrentCashier = true) {
         if (!this.pos.config.module_pos_hr) {
             return;
         }
@@ -64,9 +64,10 @@ export class CashierSelector {
         };
 
         let employee = false;
-        const allEmployees = this.pos.models["hr.employee"].filter(
-            (employee) => employee.id !== this.pos.getCashier()?.id
-        );
+        const employeeList = list?.length ? list : this.pos.models["hr.employee"];
+        const allEmployees = excludeCurrentCashier
+            ? employeeList.filter((employee) => employee.id !== this.pos.getCashier()?.id)
+            : employeeList;
         const pinMatchEmployees = allEmployees.filter(
             (employee) => !pin || Sha1.hash(pin) === employee._pin
         );
@@ -83,10 +84,13 @@ export class CashierSelector {
         }
 
         if (pinMatchEmployees.length > 1 || list) {
-            employee = await makeAwaitable(this.dialog, CashierSelectionPopup, {
-                currentCashier: this.pos.getCashier() || undefined,
-                employees: this.getCashierSelectionList(allEmployees),
-            });
+            employee =
+                allEmployees.length == 1
+                    ? allEmployees[0]
+                    : await makeAwaitable(this.dialog, CashierSelectionPopup, {
+                          currentCashier: this.pos.getCashier() || undefined,
+                          employees: this.getCashierSelectionList(allEmployees),
+                      });
 
             if (!employee) {
                 return;

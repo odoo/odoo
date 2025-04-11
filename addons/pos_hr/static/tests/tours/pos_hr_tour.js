@@ -148,6 +148,69 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosHrTourAdminLoginNoPin", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            Dialog.is("Opening Control"),
+            Dialog.confirm(),
+            PosHr.clickLockButton(),
+            Chrome.clickBtn("Backend", {
+                expectUnloadPage: true,
+            }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosHrTourAdminLoginWithPin", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Unlock Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            NumberPopup.enterValue("1234"),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm(),
+            PosHr.clickLockButton(),
+            Chrome.clickBtn("Backend"),
+            NumberPopup.enterValue("1234"),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm("", ".btn-primary", true),
+            Chrome.clickBtn("Continue selling", {
+                expectUnloadPage: true,
+            }),
+            // to verify PIN prompt when navigating to backend via menu
+            Chrome.clickBtn("Unlock Register"),
+            PosHr.clickLoginButton(),
+            NumberPopup.enterValue("1234"),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm(),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Backend"),
+            NumberPopup.enterValue("1234"),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm("", ".btn-primary", true),
+            Chrome.clickBtn("Continue selling", {
+                expectUnloadPage: true,
+            }),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosHrTourEmployeeSelectionNoPins", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            CashierSelectionPopup.has("Pos Employee2"),
+            CashierSelectionPopup.has("Mitchell Admin"),
+            CashierSelectionPopup.has("Pos Employee2", { run: "click" }),
+            Dialog.is("Opening Control"),
+            Dialog.confirm(),
+            PosHr.clickCashierName(),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_basic_user_can_change_price", {
     steps: () =>
         [
@@ -267,33 +330,8 @@ registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
 registry.category("web_tour.tours").add("pos_hr_go_backend_closed_registered", {
     steps: () =>
         [
-            // Admin --> 403: not the one that opened the session
-            Chrome.clickBtn("Backend"),
-            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
-            PosHr.loginScreenIsShown(),
-
-            // Employee with user --> 403
-            Chrome.clickBtn("Backend"),
-            CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
-            PosHr.enterPin("2580"),
-            PosHr.loginScreenIsShown(),
-
-            // Employee without user --> 403
-            Chrome.clickBtn("Backend"),
-            CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
-            PosHr.loginScreenIsShown(),
-
-            // Manager without user --> 403
-            Chrome.clickBtn("Backend"),
-            CashierSelectionPopup.clickMore(),
-            CashierSelectionPopup.has("Test Manager 2", { run: "click" }),
-            PosHr.enterPin("5652"),
-            PosHr.loginScreenIsShown(),
-
             // Manager that opened the session --> access granted
             Chrome.clickBtn("Backend"),
-            CashierSelectionPopup.clickMore(),
-            CashierSelectionPopup.has("Test Manager 1", { run: "click" }),
             PosHr.enterPin("5651").map((step, index, array) => {
                 if (index === array.length - 1) {
                     return {
@@ -346,7 +384,7 @@ registry.category("web_tour.tours").add("pos_hr_go_backend_opened_registered", {
             CashierSelectionPopup.has("Test Manager 1", { run: "click" }),
             PosHr.enterPin("5651"),
             Chrome.existMenuOption("Close Register"),
-            Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
+            Chrome.existMenuOption("Backend"),
         ].flat(),
 });
 
