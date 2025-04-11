@@ -7,7 +7,7 @@ import { renderToMarkup } from '@web/core/utils/render';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
-    selector: '#o_payment_form',
+    selector: '#o_payment_form, .o_payment_field_form',
     events: Object.assign({}, publicWidget.Widget.prototype.events, {
         'click [name="o_payment_radio"]': '_selectPaymentOption',
         'click [name="o_payment_delete_token"]': '_fetchTokenData',
@@ -125,6 +125,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
 
         const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
 
+        if (!checkedRadio) {
+            return;
+        }
         // Block the entire UI to prevent fiddling with other widgets.
         this._disableButton(true);
 
@@ -512,7 +515,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {Element | null} The inline form of the selected payment option, if any.
      */
     _getInlineForm(radio) {
-        const inlineFormContainer = radio.closest('[name="o_payment_option"]');
+        const inlineFormContainer = radio?.closest('[name="o_payment_option"]');
         return inlineFormContainer?.querySelector('[name="o_payment_inline_form"]');
     },
 
