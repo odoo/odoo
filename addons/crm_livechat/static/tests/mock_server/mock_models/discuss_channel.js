@@ -14,7 +14,7 @@ const discussChannelPatch = {
         this.env["bus.bus"]._sendone(serverState.partnerId, "discuss.channel/transient_message", {
             body: `
                     <span class="o_mail_notification">
-                        Create a new lead: <a href="#" data-oe-model="crm.lead" data-oe-id="${leadId}">${leadName}</a>
+                        Created a new lead: <a href="#" data-oe-model="crm.lead" data-oe-id="${leadId}">${leadName}</a>
                     </span>`,
             channel_id: ids[0],
         });
