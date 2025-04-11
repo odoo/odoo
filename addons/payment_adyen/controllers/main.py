@@ -68,7 +68,9 @@ class AdyenController(http.Controller):
             'value': converted_amount,
             'currency': request.env['res.currency'].browse(currency_id).name,  # ISO 4217
         }
-        partner_country_code = partner_sudo.country_id.code or None
+        partner_country_code = (
+            partner_sudo.country_id.code or provider_sudo.company_id.country_id.code or 'NL'
+        )
         data = {
             'merchantAccount': provider_sudo.adyen_merchant_account,
             'amount': amount,
