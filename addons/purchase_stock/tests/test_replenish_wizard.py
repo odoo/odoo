@@ -14,19 +14,18 @@ class TestReplenishWizard(TestStockCommon):
         cls.vendor = cls.env['res.partner'].create(dict(name='The Replenisher'))
         cls.product1_price = 500
 
-        # Create a supplier info witch the previous vendor
-        cls.supplierinfo = cls.env['product.supplierinfo'].create({
-            'partner_id': cls.vendor.id,
-            'price': cls.product1_price,
-        })
-
         # Create a product with the 'buy' route and
         # the 'supplierinfo' prevously created
         cls.product1 = cls.env['product.product'].create({
             'name': 'product a',
             'is_storable': True,
-            'seller_ids': [(4, cls.supplierinfo.id, 0)],
             'route_ids': [(4, cls.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
+        })
+        # Create a supplier info witch the previous vendor
+        cls.supplierinfo = cls.env['product.supplierinfo'].create({
+            'product_id': cls.product1.id,
+            'partner_id': cls.vendor.id,
+            'price': cls.product1_price,
         })
 
         # Additional Values required by the replenish wizard

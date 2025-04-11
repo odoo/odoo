@@ -76,8 +76,8 @@
                     <field name="move_lines_count" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
                     <field name="product_id" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
-                    <field name="packaging_uom_qty" optional="hide"/>
-                    <field name="packaging_uom_id" optional="hide"/>
+                    <field name="packaging_uom_qty" optional="hide" groups="uom.group_uom"/>
+                    <field name="packaging_uom_id" optional="hide" groups="uom.group_uom"/>
                     <field name="is_initial_demand_editable" column_invisible="True"/>
                     <field name="is_quantity_done_editable" column_invisible="True"/>
                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>

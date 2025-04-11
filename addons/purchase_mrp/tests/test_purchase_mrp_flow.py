@@ -478,16 +478,16 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         manufacture_route = warehouse.manufacture_pull_id.route_id
 
         vendor1 = self.env['res.partner'].create({'name': 'aaa', 'email': 'from.test@example.com'})
-        supplier_info1 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
-            'price': 50,
-        })
 
         component = self.env['product.product'].create({
             'name': 'component',
             'is_storable': True,
             'route_ids': [(4, buy_route.id)],
-            'seller_ids': [(6, 0, [supplier_info1.id])],
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': component.id,
+            'partner_id': vendor1.id,
+            'price': 50,
         })
         finished = self.env['product.product'].create({
             'name': 'finished',
