@@ -142,7 +142,7 @@ class ProjectProject(models.Model):
         for project in self:
             project.display_sales_stat_buttons = project.allow_billable and project.partner_id
 
-    def action_customer_preview(self):
+    def action_preview(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
