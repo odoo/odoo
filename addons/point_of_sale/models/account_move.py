@@ -5,7 +5,8 @@ from odoo import fields, models, api
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _name = 'account.move'
+    _inherit = ['account.move', 'pos.load.mixin']
 
     pos_order_ids = fields.One2many('pos.order', 'account_move')
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
@@ -98,6 +99,11 @@ class AccountMove(models.Model):
         else:
             action['domain'] = [('id', 'in', self.pos_order_ids.ids)]
         return action
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        result = super()._load_pos_data_fields(config_id)
+        return result or ['id']
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
