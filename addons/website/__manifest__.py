@@ -32,6 +32,7 @@
         'data/ir_asset.xml',
         'data/ir_cron_data.xml',
         'data/mail_mail_data.xml',
+        'data/auth_signup_data.xml',
         'data/website_data.xml',
         'data/website_visitor_cron.xml',
         'data/digest_data.xml',
@@ -184,6 +185,7 @@
         'views/website_pages_views.xml',
         'views/website_controller_pages_views.xml',
         'views/website_visitor_views.xml',
+        'views/website_signup_form.xml',
         'views/res_config_settings_views.xml',
         'views/website_rewrite.xml',
         'views/ir_actions_server_views.xml',
@@ -415,6 +417,7 @@
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.xml',
             'website/static/src/snippets/s_embed_code/options.js',
+            'website/static/src/js/website_signup_form_options.js'
         ],
         'web_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/*',
