@@ -231,8 +231,24 @@ class ResGroups(models.Model):
 
     def _search_all_implied_by_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_by_ids. """
+<<<<<<< 4166373af58f2b250147ab577c97fe05a945550c
         if operator not in ('in', 'not in'):
             return NotImplemented
+||||||| 3f4d44f9517779263d9eb84358950b928e1dbcba
+        assert isinstance(value, (int, list, tuple))
+
+        if isinstance(value, int):
+            value = [value]
+=======
+        if operator in ("any", "not any") and isinstance(value, Domain):
+            value = self.search(value).ids
+            operator = "in" if operator == "any" else "not in"
+
+        assert isinstance(value, (int, list, tuple))
+
+        if isinstance(value, int):
+            value = [value]
+>>>>>>> 117a4c2c6bdb815626931219e9c7b4f3fc2638cd
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_superset_ids(value)]
 
