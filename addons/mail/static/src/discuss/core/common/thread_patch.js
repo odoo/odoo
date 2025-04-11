@@ -1,9 +1,10 @@
 import { Thread } from "@mail/core/common/thread";
 
-import { useEffect, toRaw } from "@odoo/owl";
+import { useEffect, toRaw, useExternalListener } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 /** @type {Thread} */
 const threadPatch = {
@@ -31,6 +32,17 @@ const threadPatch = {
                 this.props.thread.selfMember?.unreadSynced,
                 this.state.scrollTop,
             ]
+        );
+        useExternalListener(window, "keydown", (ev) => {
+                if (
+                    getActiveHotkey(ev) === "escape" &&
+                    this.props.thread?.composer?.isFocused &&
+                    this.props.thread.model == 'discuss.channel'
+                ) {
+                    this.jumpToPresent();
+                }
+            },
+            { capture: true }
         );
     },
     /** @override */
