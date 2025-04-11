@@ -4,7 +4,9 @@
 from datetime import datetime
 import time
 
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.tests import Form
 from odoo.tools import float_compare
 
 from odoo.addons.product.tests.common import ProductCommon
@@ -341,3 +343,12 @@ class TestProductPricelist(ProductCommon):
             child_address.with_company(company_2).property_product_pricelist,
             self.customer_pricelist,
         )
+
+    def test_no_negative_cost(self):
+        form = Form(self.product)
+        with self.assertRaises(ValidationError):
+            form.standard_price = -5
+
+        form = Form(self.product.product_tmpl_id)
+        with self.assertRaises(ValidationError):
+            form.standard_price = -5
