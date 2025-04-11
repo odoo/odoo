@@ -264,4 +264,40 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.hasAttrValue(phone, "href", "tel:+12345678900", "href should not contain any space");
     });
+
+    QUnit.test("save the record when clicking the call icon", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="display_name"/>
+                            <field name="foo" widget="phone"/>
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+
+        await editInput(target, "div[name='display_name'] input[type='text']", 'TEST');
+        await editInput(target, "div[name='foo'] input[type='tel']", '+12345678900');
+
+        target.querySelector(".o_field_widget[name=foo] input").focus();
+        await click(target.querySelector(".o_phone_form_link"));
+
+        assert.ok(
+            target.querySelector(".o_form_status_indicator_buttons").classList.contains("invisible"),
+            "Save button should be hidden after clicking call icon"
+        );
+        assert.deepEqual(
+            target.querySelector(".o_field_widget[name=display_name] input").value,
+            "TEST",
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_phone[name=foo] input").value,
+            "+12345678900"
+        );
+    });
 });
