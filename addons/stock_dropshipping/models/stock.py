@@ -21,6 +21,11 @@ class StockRule(models.Model):
             return False
         return super()._get_partner_id(values, rule)
 
+    def _get_picking_type_code_domain(self):
+        if self.action == 'buy':
+            return [('code', 'in', ['incoming', 'dropship'])]
+        return super()._get_picking_type_code_domain()
+
 
 class ProcurementGroup(models.Model):
     _inherit = "procurement.group"

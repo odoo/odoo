@@ -30,15 +30,10 @@ class StockRule(models.Model):
         })
         return message_dict
 
-    @api.depends('action')
-    def _compute_picking_type_code_domain(self):
-        remaining = self.browse()
-        for rule in self:
-            if rule.action == 'buy':
-                rule.picking_type_code_domain = 'incoming'
-            else:
-                remaining |= rule
-        super(StockRule, remaining)._compute_picking_type_code_domain()
+    def _get_picking_type_code_domain(self):
+        if self.action == 'buy':
+            return [('code', 'in', ['incoming'])]
+        return super()._get_picking_type_code_domain()
 
     @api.onchange('action')
     def _onchange_action(self):
