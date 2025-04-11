@@ -989,6 +989,7 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
 
 export function getAdjacentCharacter(editable, side) {
     let { focusNode, focusOffset } = editable.ownerDocument.getSelection();
+    [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
     const originalBlock = closestBlock(focusNode);
     let adjacentCharacter;
     while (!adjacentCharacter && focusNode) {
