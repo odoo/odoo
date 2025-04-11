@@ -315,7 +315,7 @@ class AccountMove(models.Model):
             'ref': self.ref,
             'is_refund': self.move_type == 'in_refund',
             'invoice_date': self.invoice_date,
-            'tipofactura': 'F5' if self._l10n_es_is_dua() else 'F1',
+            'tipofactura': 'F5' if self._l10n_es_is_dua() else 'F2' if self.l10n_es_is_simplified else 'F1',
              **self._l10n_es_tbai_get_vendor_bill_tax_values(),
         }
         # Check if intracom
