@@ -305,7 +305,6 @@
         <menuitem action="ir_client_actions_report" id="menu_ir_client_actions_report" parent="base.next_id_6"/>
 
         <!-- ir.actions.server -->
-
         <record id="view_server_action_form" model="ir.ui.view">
             <field name="name">Server Action</field>
             <field name="model">ir.actions.server</field>
@@ -325,6 +324,39 @@
                                 help="Run this action manually."/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button
+                                type="object"
+                                name="action_open_record_from_server_action"
+                                invisible="not parent_id"
+                                context="{
+                                    'res_model': 'ir.actions.server',
+                                    'res_id': parent_id,
+                                }"
+                                class="oe_stat_button"
+                                icon="fa-database"
+                            >
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Parent Action</span>
+                                </div>
+                            </button>
+                            <button
+                                type="object"
+                                name="action_open_record_from_server_action"
+                                invisible="not ir_cron_ids or context.key != 'server_action'"
+                                context="{
+                                    'res_model': 'ir.cron',
+                                    'res_id': ir_cron_ids[0],
+                                    'key': 'ir_cron',
+                                }"
+                                class="oe_stat_button"
+                                icon="fa-refresh"
+                            >
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Scheduled Action</span>
+                                </div>
+                            </button>
+                        </div>
                         <h1 class="oe_title">
                             <field name="automated_name" invisible="1"/> <!-- needed for name compute -->
                             <field name="name" placeholder="Set an explicit name"/>
@@ -517,9 +549,9 @@ env['res.partner'].create({'name': partner_name})
             <field name="model">ir.actions.server</field>
             <field name="arch" type="xml">
                 <list string="Server Actions">
-                    <field name="name"/>
-                    <field name="state"/>
+                    <field name="name" string="Name"/>
                     <field name="model_id"/>
+                    <field name="state"/>
                     <field name="usage"/>
                 </list>
             </field>
