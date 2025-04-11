@@ -57,6 +57,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         self.start_tour('/', 'sale_combo_configurator', login='salesman')
 
     def test_sale_combo_configurator_preselect_single_unconfigurable_items(self):
+        self.env['res.users'].search([('login', '=', 'salesman')]).group_ids += self.env.ref("product.group_product_manager")
         if self.env['ir.module.module']._get('sale_management').state != 'installed':
             self.skipTest("Sale App is not installed, Sale menu is not accessible.")
 
