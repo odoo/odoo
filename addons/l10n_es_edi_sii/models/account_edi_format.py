@@ -347,6 +347,8 @@ class AccountEdiFormat(models.Model):
                     invoice_node['TipoFactura'] = 'F6'
                 elif invoice._l10n_es_is_dua():
                     invoice_node['TipoFactura'] = 'F5'
+                elif invoice.l10n_es_is_simplified:
+                    invoice_node['TipoFactura'] = 'F2'
                 else:
                     invoice_node['TipoFactura'] = 'F1'
             elif invoice.move_type == 'in_refund':
