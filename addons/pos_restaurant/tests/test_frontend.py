@@ -6,6 +6,7 @@ from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_c
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo import Command
+from odoo import fields
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontendCommon(TestPointOfSaleHttpCommon):
@@ -503,3 +504,83 @@ class TestFrontend(TestFrontendCommon):
     def test_15_pos_refund_qty(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('RefundQtyTour')
+
+    def test_config_duplicate_order_same_table(self):
+        """This test makes sure that the 2 orders made on the same table but on different config are not considered as the same order
+        """
+        self.product_test = self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 100,
+        })
+        new_pos_config = self.pos_config.copy()
+        new_pos_config.open_ui()
+        self.pos_config.open_ui()
+        new_pos_order = {
+            'amount_paid': 100,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 100,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'to_invoice': False,
+            'partner_id': False,
+            'pricelist_id': new_pos_config.pricelist_id.id,
+            'lines': [[0, 0, {
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 100,
+                'product_id': self.product_test.id,
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+                'qty': 1,
+                'tax_ids': []
+            }]],
+            'name': 'New Config Order',
+            'session_id': new_pos_config.current_session_id.id,
+            'sequence_number': new_pos_config.journal_id.id,
+            'payment_ids': [],
+            'uuid': 'new-config-order-uuid',
+            'user_id': self.env.uid,
+            'table_id': self.main_floor_table_5.id,
+            'company_id': self.env.company.id,
+            'state': 'draft',
+            'access_token': new_pos_config.access_token,
+        }
+
+        old_pos_order = {
+            'amount_paid': 100,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 100,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'to_invoice': False,
+            'partner_id': False,
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'lines': [[0, 0, {
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 100,
+                'product_id': self.product_test.id,
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+                'qty': 1,
+                'tax_ids': []
+            }]],
+            'name': 'Old Config Order',
+            'session_id': self.pos_config.current_session_id.id,
+            'sequence_number': self.pos_config.journal_id.id,
+            'payment_ids': [],
+            'uuid': 'old-config-order-uuid',
+            'user_id': self.env.uid,
+            'table_id': self.main_floor_table_5.id,
+            'company_id': self.env.company.id,
+            'state': 'draft',
+            'access_token': self.pos_config.access_token,
+        }
+
+        self.env['pos.order'].sync_from_ui([new_pos_order])
+        self.env['pos.order'].sync_from_ui([old_pos_order])
+        order_ids = self.env['pos.order'].search([('table_id', '=', self.main_floor_table_5.id)]).lines.mapped('order_id')
+        self.assertEqual(len(order_ids), 2, "The 2 lines should reference 2 different orders")
