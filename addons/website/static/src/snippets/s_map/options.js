@@ -36,28 +36,46 @@ options.registry.Map = options.Class.extend({
      */
     async showDescription(previewMode, widgetValue, params) {
         const descriptionEl = this.$target[0].querySelector('.description');
+        const descriptionTextEl = this.el.querySelector("[data-description-text-value]");
+        const inputField = descriptionTextEl.querySelector('input[type="text"]');
         if (widgetValue && !descriptionEl) {
-            this.$target.append($(`
-                <div class="description">
-                    <font>${_t('Visit us:')}</font>
-                    <span>${_t('Our office is open Monday – Friday 8:30 a.m. – 4:00 p.m.')}</span>
-                </div>`)
-            );
+            const divEl = document.createElement("div");
+            divEl.className = "description";
+            divEl.contentEditable = false;
+            divEl.textContent = _t("Visit us: Our office is open Monday – Friday 8:30 a.m. – 4:00 p.m.");
+            this.$target[0].querySelector('.map_container')?.appendChild(divEl);
         } else if (!widgetValue && descriptionEl) {
+            // Clean Up: Remove entered value from input field
+            if (descriptionTextEl && inputField) {
+                    inputField.value = '';
+            }
             descriptionEl.remove();
         }
     },
-
+    /**
+     * Sets the description text.
+     *
+     * @see this.selectClass for parameters
+     */
+    descriptionTextValue: function (previewMode, widgetValue, params) {
+        let value = widgetValue;
+        const descriptionEl = this.$target[0].querySelector(".description");
+        if (descriptionEl) {
+            descriptionEl.textContent = value;
+        }
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
     /**
      * @override
      */
     _computeWidgetState(methodName, params) {
         if (methodName === 'showDescription') {
             return !!this.$target[0].querySelector('.description');
+        }
+        if (methodName === 'descriptionTextValue') {
+            return this.$target[0].querySelector('.description')?.textContent;
         }
         return this._super(...arguments);
     },
