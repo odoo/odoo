@@ -38,6 +38,21 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             ._create_document_from_attachment(attachment.id)
 
     def test_import_product(self):
+        products = self.env['product.product'].create([{
+            'name': 'XYZ',
+            'default_code': '1234',
+        }, {
+            'name': 'XYZ',
+            'default_code': '5678',
+        }, {
+            'name': 'XXX',
+            'default_code': '1111',
+            'barcode': '00001',
+        }, {
+            'name': 'YYY',
+            'default_code': '1111',
+            'barcode': '00002',
+        }])
         line_vals = [
             {
                 'product_id': self.place_prdct.id,
@@ -55,7 +70,23 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
                 'product_id': self.displace_prdct.id,
                 'product_uom_id': self.uom_dozens.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
-            }
+            }, {
+                'product_id': products[0].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            }, {
+                'product_id': products[1].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            }, {
+                'product_id': products[2].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            }, {
+                'product_id': products[3].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            },
         ]
         company = self.company_data_2['company']
         company.country_id = self.env['res.country'].search([('code', '=', 'FR')])
