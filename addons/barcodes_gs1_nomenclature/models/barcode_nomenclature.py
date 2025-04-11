@@ -142,7 +142,7 @@ class BarcodeNomenclature(models.Model):
         """
         domain = Domain(domain)
         nomenclature = self.env.company.nomenclature_id
-        if nomenclature.is_gs1_nomenclature:
+        if not self.env.context.get('skip_preprocess_gs1') and nomenclature.is_gs1_nomenclature:
             def map_gs1_barcode(condition):
                 if condition.field_expr != field:
                     return condition
@@ -150,6 +150,9 @@ class BarcodeNomenclature(models.Model):
                 # handle `in` first and check the rest
                 operator = condition.operator
                 value = condition.value
+                if not value:
+                    return condition
+
                 if operator in ('in', 'not in') and len(value) > 1:
                     sub_domain = Domain.OR(
                         map_gs1_barcode(Domain(field, '=', v))
@@ -165,8 +168,6 @@ class BarcodeNomenclature(models.Model):
                     return condition
 
                 # Parse the value
-                if not value:
-                    return condition
                 try:
                     parsed_data = nomenclature.parse_barcode(value) or []
                 except (ValidationError, ValueError):
