@@ -1159,5 +1159,10 @@ class StockWarehouse(models.Model):
             'context': dict(self._context, default_warehouse_selectable=True, default_warehouse_ids=self.ids)
         }
 
+    def action_open_internal_locations(self):
+        action = self.env.ref('stock.action_location_form').read()[0]
+        action['domain'] = [('usage', '=', 'internal')]
+        return action
+
     def get_current_warehouses(self):
         return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])

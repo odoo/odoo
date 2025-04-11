@@ -1467,15 +1467,33 @@ class StockPicking(models.Model):
                     if not report_actions:
                         return action
                     another_action = action
-        if report_actions:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'do_multi_print',
-                'params': {
-                    'reports': report_actions,
-                    'anotherAction': another_action,
+            if report_actions:
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'do_multi_print',
+                    'params': {
+                        'reports': report_actions,
+                        'anotherAction': another_action,
+                    }
                 }
-            }
+
+        internal_pickings = self.filtered(lambda p: p.picking_type_id == self.env.ref('stock.picking_type_internal') and p.origin == 'Relocation Wizard' and p.state == 'done')
+        if internal_pickings:
+            picking_ids = internal_pickings.ids
+            move_lines = self.env['stock.move.line'].search([('picking_id', 'in', picking_ids)])
+            product_ids = move_lines.mapped('product_id.id')
+
+            zero_quants_domain = [('product_id', 'in', product_ids), ('quantity', '<=', 0)]
+            trackable_products = self.env['product.product'].search([
+                    ('id', 'in', product_ids),
+                    ('tracking', 'in', ['lot', 'serial'])
+             ])
+            if trackable_products:
+                lot_ids = move_lines.mapped('lot_id.id')
+                zero_quants_domain.append(('lot_id', 'in', lot_ids))
+            zero_quants = self.env['stock.quant'].search(zero_quants_domain)
+            if zero_quants:
+                zero_quants._unlink_zero_quants()
         return True
 
     def action_split_transfer(self):
