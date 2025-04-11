@@ -24,7 +24,7 @@ export class EnrollEmail extends Interaction {
             title: _t("Request Access."),
             body: _t("Do you want to request access to this course?"),
             confirmLabel: _t("Yes"),
-            confim: async () => {
+            confirm: async () => {
                 const { error, done } = await this.waitFor(
                     this.services.orm.call(
                         "slide.channel",
