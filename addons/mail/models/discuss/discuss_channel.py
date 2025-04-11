@@ -494,10 +494,19 @@ class DiscussChannel(models.Model):
         guests=None,
         partners=None,
         users=None,
+<<<<<<< 042a54e418dcdd4834930d3fd87889273a1e0cee
         create_member_params=None,
         invite_to_rtc_call=False,
         post_joined_message=True,
     ):
+||||||| 0812adedeea4edd70d57861f40248df4729086a0
+=======
+        invite_to_rtc_call=False,
+        post_joined_message=True,
+        inviting_partner=None,
+    ):
+        inviting_partner = inviting_partner or self.env["res.partner"]
+>>>>>>> 74457abf0511701134c04044712981f1145b5d67
         partners = partners or self.env["res.partner"]
         if users:
             partners |= users.partner_id
@@ -545,7 +554,14 @@ class DiscussChannel(models.Model):
                         else _("invited %s to the channel", member._get_html_link(for_persona=True))
                     )
                     member.channel_id.message_post(
+<<<<<<< 042a54e418dcdd4834930d3fd87889273a1e0cee
                         body=Markup('<div class="o_mail_notification" data-oe-type="channel-joined">%s</div>') % notification,
+||||||| 0812adedeea4edd70d57861f40248df4729086a0
+                        body=Markup('<div class="o_mail_notification">%s</div>') % notification,
+=======
+                        author_id=inviting_partner.id or None,
+                        body=Markup('<div class="o_mail_notification">%s</div>') % notification,
+>>>>>>> 74457abf0511701134c04044712981f1145b5d67
                         message_type="notification",
                         subtype_xmlid="mail.mt_comment",
                     )

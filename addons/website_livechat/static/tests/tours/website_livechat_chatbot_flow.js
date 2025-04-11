@@ -248,8 +248,16 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 trigger: messagesContain("I will transfer you to a human."),
             },
             {
+<<<<<<< 042a54e418dcdd4834930d3fd87889273a1e0cee
                 // Wait for the operator to be added: composer is only enabled at that point.
                 trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
+||||||| 0812adedeea4edd70d57861f40248df4729086a0
+                trigger:
+                    ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(joined the channel)",
+=======
+                trigger:
+                    ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(invited @El Deboulonnator to the channel)",
+>>>>>>> 74457abf0511701134c04044712981f1145b5d67
             },
         ];
     },
