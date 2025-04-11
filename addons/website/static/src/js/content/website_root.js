@@ -1,5 +1,5 @@
 import publicRootData from '@web/legacy/js/public/public_root';
-import "@website/libs/zoomodoo/zoomodoo";
+import { zoomOdoo } from "@website/libs/zoomodoo/zoomodoo";
 import { pick } from "@web/core/utils/objects";
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend({
@@ -31,7 +31,9 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     start: function () {
         // Enable magnify on zommable img
-        this.$('.zoomable img[data-zoom]').zoomOdoo();
+        this.el.querySelectorAll(".zoomable img[data-zoom]").forEach((imgEl) => {
+            zoomOdoo(imgEl);
+        });
 
         return this._super.apply(this, arguments);
     },
