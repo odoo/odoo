@@ -62,3 +62,27 @@ class TestHrAttendance(TransactionCase):
         # now = 2019/3/2 14:00 in the employee's timezone
         with patch.object(fields.Datetime, 'now', lambda: tz_datetime(2019, 3, 2, 14, 0).astimezone(pytz.utc).replace(tzinfo=None)):
             self.assertEqual(employee.hours_today, 5, "It should have counted 5 hours")
+
+    def test_kiosk_translation(self):
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR').code
+        lang_ar = self.env['res.lang']._activate_lang('ar_001').code
+
+        company = self.env.company
+        self.user.env.lang = lang_fr
+
+        # Company contact has language set
+        company.partner_id.lang = lang_ar
+        company._compute_attendance_kiosk_url()
+        self.assertIn('/ar_001/', company.attendance_kiosk_url)
+
+        # User env as language set
+        company.partner_id.lang = None
+        company._compute_attendance_kiosk_url()
+        self.assertIn('/fr_FR/', company.attendance_kiosk_url)
+
+        # No language is set, default language routing
+        self.user.env.lang = None
+        company._compute_attendance_kiosk_url()
+
+        self.assertNotIn('/ar_001/', company.attendance_kiosk_url)
+        self.assertNotIn('/fr_FR/', company.attendance_kiosk_url)
