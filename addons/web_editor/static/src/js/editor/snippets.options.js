@@ -3454,8 +3454,11 @@ const SnippetOptionWidget = publicWidget.Widget.extend({
     onClone: function (options) {},
     /**
      * Called when the associated snippet is moved to another DOM location.
+     * If a Promise is returned, it is awaited upon before proceeding with the
+     * ongoing move.
      *
      * @abstract
+     * @returns {Promise|undefined}
      */
     onMove: function () {},
     /**
@@ -5843,9 +5846,10 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      * @override
      */
     onMove() {
-        this._super.apply(this, arguments);
+        const result = this._super.apply(this, arguments);
         // Remove all the mobile order classes after a drag and drop.
         this._removeMobileOrders(this.$target[0].parentElement.children);
+        return result;
     },
     /**
      * @override
