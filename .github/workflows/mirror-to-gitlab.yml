@@ -1,30 +1,33 @@
-name: Mirror GitHub to GitLab
+name: Fresh Mirror to GitLab (No History)
 
 on:
   push:
     branches:
-      - odoo_18.0_gitlab  # Trigger workflow on push to odoo_18.0_gitlab branch
+      - odoo_18.0_gitlab
 
 jobs:
-  push_to_gitlab:
+  fresh-mirror:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Fetch full history (unshallow)
-        run: |
-          git fetch --unshallow
+      - name: Checkout shallow copy
+        uses: actions/checkout@v3
+        with:
+          ref: odoo_18.0_gitlab
+          fetch-depth: 1  # Only latest commit
 
-      - name: Set Git config
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+      - name: Remove Git history
+        run: rm -rf .git
 
-      - name: Add GitLab remote and push
+      - name: Reinitialize Git & push to GitLab
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         run: |
-          git remote add gitlab https://oauth2:${GITLAB_TOKEN}@${{ secrets.GITLAB_REPO }}
-          git push --mirror gitlab
+          git init
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Fresh mirror from GitHub (no history)"
+          git branch -M main
+          git remote add origin https://oauth2:${GITLAB_TOKEN}@gitlab.com/IT-Dev-1010/odoo_18.0_github.git
+          git push -f origin main
