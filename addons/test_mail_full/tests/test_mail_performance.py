@@ -90,7 +90,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         record_ticket = self.env['mail.test.ticket.mc'].browse(self.record_ticket.ids)
         attachments = self.env['ir.attachment'].create(self.test_attachments_vals)
 
-        with self.assertQueryCount(employee=87):  # test_mail_full: 87
+        with self.assertQueryCount(employee=91):  # test_mail_full: 87
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
@@ -406,10 +406,10 @@ class TestRatingPerformance(FullBaseMailPerformance):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs(self):
-        with self.assertQueryCount(employee=233):  # tmf: 233
+        with self.assertQueryCount(employee=236):  # tmf: 233
             self.create_ratings('mail.test.rating.thread')
 
-        with self.assertQueryCount(employee=263):  # tmf: 263
+        with self.assertQueryCount(employee=283):  # tmf: 263
             self.apply_ratings(1)
 
         with self.assertQueryCount(employee=222):  # tmf: 222
@@ -418,10 +418,10 @@ class TestRatingPerformance(FullBaseMailPerformance):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs_with_rating_mixin(self):
-        with self.assertQueryCount(employee=256):  # tmf: 256
+        with self.assertQueryCount(employee=259):  # tmf: 256
             self.create_ratings('mail.test.rating')
 
-        with self.assertQueryCount(employee=285):  # tmf: 285
+        with self.assertQueryCount(employee=305):  # tmf: 285
             self.apply_ratings(1)
 
         with self.assertQueryCount(employee=264):  # tmf: 264

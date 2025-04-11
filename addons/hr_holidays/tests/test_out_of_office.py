@@ -67,11 +67,11 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         partner_info = next(p for p in data["res.partner"] if p["id"] == partner.id)
         partner2_info = next(p for p in data["res.partner"] if p["id"] == partner2.id)
         self.assertFalse(
-            partner2_info["out_of_office_date_end"], "current user should not be out of office"
+            partner2_info["leave_date_to"], "current user should not be out of office"
         )
         # The employee will be back in the office the day after his second leave ends
         self.assertEqual(
-            partner_info["out_of_office_date_end"],
+            partner_info["leave_date_to"],
             fields.Date.to_string(second_leave_date_end + relativedelta(days=1)),
             "correspondent should be out of office",
         )

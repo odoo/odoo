@@ -140,8 +140,10 @@ class TestChannelInternals(MailCommon, HttpCase):
                                             self.env.user.partner_id, "avatar_128"
                                         ),
                                         "id": self.env.user.partner_id.id,
+                                        "im_status": "offline",
                                         "isInternalUser": True,
                                         "is_company": False,
+                                        "leave_date_to": False,
                                         "name": "Ernest Employee",
                                         "userId": self.env.user.id,
                                         "write_date": emp_partner_write_date,
@@ -178,7 +180,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "isInternalUser": False,
                                     "is_company": False,
                                     "name": "Test Partner",
-                                    "out_of_office_date_end": False,
+                                    "leave_date_to": False,
                                     "userId": False,
                                     "write_date": test_partner_write_date,
                                 },
@@ -225,7 +227,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "isInternalUser": False,
                                     "is_company": False,
                                     "name": "Test Partner",
-                                    "out_of_office_date_end": False,
+                                    "leave_date_to": False,
                                     "userId": False,
                                     "write_date": test_partner_write_date,
                                 }

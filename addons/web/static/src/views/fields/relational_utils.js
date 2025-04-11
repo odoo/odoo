@@ -338,6 +338,14 @@ export class Many2XAutocomplete extends Component {
             abort: originalPromise.abort ? originalPromise.abort.bind(originalPromise) : () => {},
         };
     }
+
+    get searchSpecification() {
+        return {
+            display_name: {},
+            ...this.props.specification,
+        };
+    }
+
     search(name) {
         if (name.length < this.props.searchThreshold) {
             return [];
@@ -348,10 +356,7 @@ export class Many2XAutocomplete extends Component {
             domain: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
             context: this.props.context,
-            specification: {
-                display_name: {},
-                ...this.props.specification,
-            },
+            specification: this.searchSpecification,
         });
     }
     mapRecordToOption(record) {

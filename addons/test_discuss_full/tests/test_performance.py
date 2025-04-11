@@ -64,7 +64,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - _get_on_leave_ids (_compute_im_status override)
     #                   - search hr_employee (_compute_im_status override)
     #                   - fetch hr_employee (_compute_im_status override)
-    #                   - search hr_leave (out_of_office_date_end)
+    #                   - search hr_leave (leave_date_to)
     #                   - fetch res_users (internal user)
     #           - _bus_last_id (_to_store_defaults)
     #           - search ir_attachment (_compute_avatar_128)
@@ -100,7 +100,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - _get_on_leave_ids (_compute_im_status override)
     #               - search hr_employee (_compute_im_status override)
     #               - fetch hr_employee (_compute_im_status override)
-    #               - search hr_leave (out_of_office_date_end)
+    #               - search hr_leave (leave_date_to)
     #               - fetch res_users (internal user)
     #               - search res_users_settings (livechat username)
     #               - fetch res_users_settings (livechat username)
@@ -378,7 +378,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "isInternalUser": True,
                     "is_company": False,
                     "name": "OdooBot",
-                    "out_of_office_date_end": False,
+                    "leave_date_to": False,
                     "userId": self.user_root.id,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
@@ -1604,7 +1604,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "Ernest Employee",
-                "out_of_office_date_end": False,
+                "leave_date_to": False,
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1660,7 +1660,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test2",
-                "out_of_office_date_end": False,
+                "leave_date_to": False,
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1676,7 +1676,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test3",
-                "out_of_office_date_end": False,
+                "leave_date_to": False,
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
@@ -1692,7 +1692,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test12",
-                "out_of_office_date_end": False,
+                "leave_date_to": False,
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1708,7 +1708,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test14",
-                "out_of_office_date_end": False,
+                "leave_date_to": False,
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1724,7 +1724,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test15",
-                "out_of_office_date_end": False,
+                "leave_date_to": False,
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
