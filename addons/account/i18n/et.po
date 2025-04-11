@@ -17,7 +17,6 @@
 # Marek Pontus, 2024
 # Peeter Mark, 2024
 # Anna, 2024
-# Katrin Kampura, 2024
 # Aveli Kannel <aveli@avalah.ee>, 2024
 # Andre Roomet <andreroomet@gmail.com>, 2024
 # Piia Paurson <piia@avalah.ee>, 2025
@@ -25,14 +24,15 @@
 # Siim Raasuke, 2025
 # Tairi Tiimann, 2025
 # Birgit Vijar, 2025
+# Katrin Kampura, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Birgit Vijar, 2025\n"
+"Last-Translator: Katrin Kampura, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9210,6 +9210,12 @@ msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "See oli varem '%(previous)s' ja on nüüd '%(current)s'."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
 msgid "January"
 msgstr "Jaanuar"
@@ -11057,6 +11063,12 @@ msgstr "Valitud pangakonto on kasutusel ka teisel partneril"
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "Ühte või mitut arvet ei õnnestunud töödelda."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Üks või rohkem ridu nõuavad analüütiliseks jaotuseks 100%."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -13477,6 +13489,12 @@ msgstr "Turvamärgis"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "Vaata kõiki tegevusi"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id

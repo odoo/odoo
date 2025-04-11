@@ -357,9 +357,11 @@ class StockMoveLine(models.Model):
 
         mls = super().create(vals_list)
 
+        created_moves = set()
         def create_move(move_line):
             new_move = self.env['stock.move'].create(move_line._prepare_stock_move_vals())
             move_line.move_id = new_move.id
+            created_moves.add(new_move.id)
 
         # If the move line is directly create on the picking view.
         # If this picking is already done we should generate an
@@ -393,13 +395,14 @@ class StockMoveLine(models.Model):
                 reservation = not move._should_bypass_reservation()
             else:
                 reservation = product.is_storable and not location.should_bypass_reservation()
-            if move_line.quantity and reservation:
+            if move_line.quantity_product_uom and reservation:
                 self.env.context.get('reserved_quant', self.env['stock.quant'])._update_reserved_quantity(
                     product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
 
                 if move:
                     move_to_recompute_state.add(move.id)
         self.env['stock.move'].browse(move_to_recompute_state)._recompute_state()
+        self.env['stock.move'].browse(created_moves)._post_process_created_moves()
 
         for ml, vals in zip(mls, vals_list):
             if ml.state == 'done':
@@ -841,10 +844,12 @@ class StockMoveLine(models.Model):
         move = move or move_line.move_id
         uom = move.product_uom or move_line.product_uom_id
         name = move.product_id.display_name
-        description = move.description_picking
-        if description == name or description == move.product_id.name:
-            description = False
+        description = move.description_picking or ""
         product = move.product_id
+        if description.startswith(name):
+            description = description.removeprefix(name).strip()
+        elif description.startswith(product.name):
+            description = description.removeprefix(product.name).strip()
         line_key = f'{product.id}_{product.display_name}_{description or ""}_{uom.id}_{move.product_packaging_id or ""}'
         return {
             'line_key': line_key,

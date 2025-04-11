@@ -27,6 +27,10 @@ import { getRunner } from "./main_runner";
  *  | "url"
  *  | "undefined"} ArgumentPrimitive
  *
+ * @typedef {{
+ *  ignoreOrder?: boolean;
+ * }} DeepEqualOptions
+ *
  * @typedef {[string, ArgumentType]} Label
  *
  * @typedef {"expected" | "group" | "received" | "technical"} MarkupType
@@ -62,6 +66,7 @@ import { getRunner } from "./main_runner";
 
 const {
     Array: { from: $from, isArray: $isArray },
+    BigInt,
     Boolean,
     clearTimeout,
     console: { debug: $debug },
@@ -93,6 +98,8 @@ const {
     String,
     Symbol,
     TypeError,
+    URL,
+    URLSearchParams,
     WeakSet,
     window,
 } = globalThis;
@@ -168,6 +175,26 @@ const getFunctionString = (fn) => {
 };
 
 /**
+ * @param {unknown} value
+ */
+const getGenericSerializer = (value) => {
+    for (const [constructor, serialize] of GENERIC_SERIALIZERS) {
+        if (value instanceof constructor) {
+            return serialize;
+        }
+    }
+    return null;
+};
+
+const makeObjectCache = () => {
+    const cache = new Set();
+    return {
+        add: (...values) => values.forEach((value) => cache.add(value)),
+        has: (...values) => values.every((value) => cache.has(value)),
+    };
+};
+
+/**
  * @template {(...args: any[]) => T} T
  * @param {T} instanceGetter
  * @returns {T}
@@ -194,98 +221,283 @@ const truncate = (value, length = MAX_HUMAN_READABLE_SIZE) => {
 };
 
 /**
+ * @param {unknown} a
+ * @param {unknown} b
+ * @param {boolean} ignoreOrder
+ * @param {ReturnType<makeObjectCache>} cache
+ * @returns {boolean}
+ */
+const _deepEqual = (a, b, ignoreOrder, cache) => {
+    // Primitives
+    if (strictEqual(a, b)) {
+        return true;
+    }
+    const aType = typeof a;
+    if (aType !== typeof b || !a || !b || aType !== "object") {
+        return false;
+    }
+
+    // Objects
+    if (cache.has(a, b)) {
+        return true;
+    }
+    cache.add(a, b);
+
+    // Nodes
+    if (isNode(a)) {
+        return isNode(b) && a.isEqualNode(b);
+    }
+
+    // Files
+    if (a instanceof File) {
+        // Files
+        return a.name === b.name && a.size === b.size && a.type === b.type;
+    }
+
+    // Generic objects
+    const serialize = getGenericSerializer(a);
+    if (serialize) {
+        return strictEqual(serialize(a), serialize(b));
+    }
+
+    const aIsIterable = isIterable(a);
+    if (aIsIterable !== isIterable(b)) {
+        return false;
+    }
+
+    // Non-iterable objects
+    if (!aIsIterable) {
+        const aKeys = $ownKeys(a);
+        if (aKeys.length !== $ownKeys(b).length) {
+            return false;
+        }
+        for (const key of aKeys) {
+            if (!_deepEqual(a[key], b[key], ignoreOrder, cache)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Iterable objects
+    const aIsArray = $isArray(a);
+    if (aIsArray !== $isArray(b)) {
+        return false;
+    }
+    if (!aIsArray) {
+        a = [...a];
+    }
+    b = [...b];
+    if (a.length !== b.length) {
+        return false;
+    }
+
+    // Unordered iterables
+    if (ignoreOrder) {
+        // Needs a different cache since the deepEqual calls here are not "definitive",
+        // meaning that values may need to be re-evaluated later.
+        const comparisonCache = makeObjectCache();
+        for (let i = 0; i < a.length; i++) {
+            const bi = b.findIndex((bValue) =>
+                _deepEqual(a[i], bValue, ignoreOrder, comparisonCache)
+            );
+            if (bi < 0) {
+                return false;
+            }
+            b.splice(bi, 1);
+        }
+    } else {
+        // Ordered iterables
+        for (let i = 0; i < a.length; i++) {
+            if (!_deepEqual(a[i], b[i], ignoreOrder, cache)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+};
+
+/**
  * @param {unknown} value
  * @param {number} length
+ * @param {ReturnType<makeObjectCache>} cache
  * @returns {[string, number]}
  */
-const _formatHumanReadable = (value, length) => {
-    let humanReadableValue = "";
-    if (typeof value === "string") {
-        humanReadableValue = stringify(truncate(value));
-    } else if (typeof value === "number") {
-        if (value << 0 === value) {
-            humanReadableValue = truncate(value);
-        } else {
+const _formatHumanReadable = (value, length, cache) => {
+    // Primitives
+    switch (typeof value) {
+        case "function": {
+            return getFunctionString(value);
+        }
+        case "number": {
+            if (value << 0 === value) {
+                return truncate(value);
+            }
             let fixed = value.toFixed(3);
             while (fixed.endsWith("0")) {
                 fixed = fixed.slice(0, -1);
             }
-            humanReadableValue = truncate(fixed);
+            return truncate(fixed);
         }
-    } else if (typeof value === "function") {
-        humanReadableValue = getFunctionString(value);
-    } else if (value && typeof value === "object") {
-        if (value instanceof RegExp || value instanceof URL) {
-            humanReadableValue = truncate(value);
-        } else if (value instanceof Date) {
-            humanReadableValue = value.toISOString();
-        } else if (isNode(value)) {
-            const name = value.nodeName.toLowerCase();
-            humanReadableValue = value.nodeType === Node.ELEMENT_NODE ? `<${name}>` : name;
-        } else if (isIterable(value)) {
-            const values = [...value];
-            if (values.length === 1 && isNode(values[0])) {
-                // Special case for single-element nodes arrays
-                const hValue = _formatHumanReadable(values[0], length);
-                humanReadableValue = hValue;
-                length += hValue.length;
-            } else {
-                const constructor = getConstructor(value);
-                const constructorPrefix =
-                    constructor.name === "Array" ? "" : `${constructor.name} `;
-                const content = [];
-                if (values.length) {
-                    const bitSize = $max(
-                        MIN_HUMAN_READABLE_SIZE,
-                        $floor(MAX_HUMAN_READABLE_SIZE / values.length)
-                    );
-                    for (const val of values) {
-                        const hVal = truncate(_formatHumanReadable(val, length), bitSize);
-                        content.push(hVal);
-                        length += hVal.length;
-                        if (length > MAX_HUMAN_READABLE_SIZE) {
-                            content.push(ELLIPSIS);
-                            break;
-                        }
-                    }
-                }
-                humanReadableValue = `${constructorPrefix}[${truncate(content.join(", "))}]`;
-            }
-        } else {
-            const keys = $keys(value);
-            const constructor = getConstructor(value);
-            const constructorPrefix = constructor.name === "Object" ? "" : `${constructor.name} `;
-            const content = [];
-            if (constructor.name !== "Window" && keys.length) {
-                const bitSize = $max(
-                    MIN_HUMAN_READABLE_SIZE,
-                    $floor(MAX_HUMAN_READABLE_SIZE / keys.length)
-                );
-                const descriptors = $getOwnPropertyDescriptors(value);
-                for (const key of keys) {
-                    if (!("value" in descriptors[key])) {
-                        continue;
-                    }
-                    const hVal = truncate(
-                        _formatHumanReadable(descriptors[key].value, length),
-                        bitSize
-                    );
-                    content.push(`${key}: ${hVal}`);
-                    length += hVal.length;
-                    if (length > MAX_HUMAN_READABLE_SIZE) {
-                        content.push(ELLIPSIS);
-                        break;
-                    }
-                }
-            }
-            humanReadableValue = `${constructorPrefix}{ ${truncate(content.join(", "))} }`;
+        case "string": {
+            return stringify(truncate(value));
         }
-    } else {
-        humanReadableValue = String(value);
+    }
+    if (!value || typeof value !== "object") {
+        return String(value);
     }
 
-    return humanReadableValue;
+    // Objects
+    if (cache.has(value)) {
+        return ELLIPSIS;
+    }
+    cache.add(value);
+
+    // Generic objects
+    const serialize = getGenericSerializer(value);
+    if (serialize) {
+        return truncate(serialize(value));
+    }
+
+    // Iterable objects
+    if (isIterable(value)) {
+        const values = [...value];
+        if (values.length === 1 && isNode(values[0])) {
+            // Special case for single-element nodes arrays
+            return _formatHumanReadable(values[0], length, cache);
+        }
+        const constructor = getConstructor(value);
+        const constructorPrefix = constructor.name === "Array" ? "" : `${constructor.name} `;
+        const content = [];
+        if (values.length) {
+            const bitSize = $max(
+                MIN_HUMAN_READABLE_SIZE,
+                $floor(MAX_HUMAN_READABLE_SIZE / values.length)
+            );
+            for (const val of values) {
+                const hVal = truncate(_formatHumanReadable(val, length, cache), bitSize);
+                content.push(hVal);
+                length += hVal.length;
+                if (length > MAX_HUMAN_READABLE_SIZE) {
+                    content.push(ELLIPSIS);
+                    break;
+                }
+            }
+        }
+        return `${constructorPrefix}[${truncate(content.join(", "))}]`;
+    }
+
+    // Non-iterable objects
+    const keys = $keys(value);
+    const constructor = getConstructor(value);
+    const constructorPrefix = constructor.name === "Object" ? "" : `${constructor.name} `;
+    const content = [];
+    if (constructor.name !== "Window" && keys.length) {
+        const bitSize = $max(
+            MIN_HUMAN_READABLE_SIZE,
+            $floor(MAX_HUMAN_READABLE_SIZE / keys.length)
+        );
+        const descriptors = $getOwnPropertyDescriptors(value);
+        for (const key of keys) {
+            if (!("value" in descriptors[key])) {
+                continue;
+            }
+            const hVal = truncate(
+                _formatHumanReadable(descriptors[key].value, length, cache),
+                bitSize
+            );
+            content.push(`${key}: ${hVal}`);
+            length += hVal.length;
+            if (length > MAX_HUMAN_READABLE_SIZE) {
+                content.push(ELLIPSIS);
+                break;
+            }
+        }
+    }
+    return `${constructorPrefix}{ ${truncate(content.join(", "))} }`;
 };
+
+/**
+ * @param {unknown} value
+ * @param {number} depth
+ * @param {boolean} isObjectValue
+ * @param {ReturnType<makeObjectCache>} cache
+ * @returns {string}
+ */
+const _formatTechnical = (value, depth, isObjectValue, cache) => {
+    if (value === S_ANY || value === S_NONE) {
+        // Special case: internal symbols
+        return "";
+    }
+
+    // Primitives
+    const baseIndent = isObjectValue ? "" : " ".repeat(depth * 2);
+    switch (typeof value) {
+        case "function": {
+            return `${baseIndent}${getFunctionString(value)}`;
+        }
+        case "number": {
+            return `${baseIndent}${value << 0 === value ? String(value) : value.toFixed(3)}`;
+        }
+        case "string": {
+            return `${baseIndent}${stringify(value)}`;
+        }
+    }
+    if (!value || typeof value !== "object") {
+        return `${baseIndent}${String(value)}`;
+    }
+
+    // Objects
+    if (cache.has(value)) {
+        return `${baseIndent}${$isArray(value) ? `[${ELLIPSIS}]` : `{ ${ELLIPSIS} }`}`;
+    }
+    cache.add(value);
+
+    const startIndent = " ".repeat((depth + 1) * 2);
+    const endIndent = " ".repeat(depth * 2);
+    const constructor = getConstructor(value);
+
+    const serialize = getGenericSerializer(value);
+    if (serialize) {
+        return `${baseIndent}${serialize(value)}`;
+    }
+
+    // Iterable objects
+    if (isIterable(value)) {
+        const proto = constructor.name === "Array" ? "" : `${constructor.name} `;
+        const content = [...value].map(
+            (val) => `${startIndent}${_formatTechnical(val, depth + 1, true, cache)},\n`
+        );
+        return `${baseIndent}${proto}[${
+            content.length ? `\n${content.join("")}${endIndent}` : ""
+        }]`;
+    }
+
+    // Non-iterable objects
+    const proto = !constructor.name || constructor.name === "Object" ? "" : `${constructor.name} `;
+    const content = $ownKeys(value)
+        .sort()
+        .map(
+            (key) =>
+                `${startIndent}${key}: ${_formatTechnical(value[key], depth + 1, true, cache)},\n`
+        );
+    return `${baseIndent}${proto}{${content.length ? `\n${content.join("")}${endIndent}` : ""}}`;
+};
+
+/** @type {Map<Function, (value: unknown) => string>} */
+const GENERIC_SERIALIZERS = new Map([
+    [BigInt, (v) => v.valueOf()],
+    [Boolean, (v) => v.valueOf()],
+    [Date, (v) => v.toISOString()],
+    [Error, (v) => v.toString()],
+    [Node, (v) => (v.nodeType === Node.ELEMENT_NODE ? `<${toSelector(v)}>` : toSelector(v))],
+    [Number, (v) => v.valueOf()],
+    [RegExp, (v) => v.toString()],
+    [String, (v) => v.valueOf()],
+    [URL, (v) => v.toString()],
+    [URLSearchParams, (v) => v.toString()],
+]);
 
 const BACK_TICK = "`";
 const DOUBLE_QUOTES = '"';
@@ -549,54 +761,11 @@ export function debounce(fn, delay) {
 /**
  * @param {unknown} a
  * @param {unknown} b
- * @param {Set<unknown>} [cache=new Set()]
+ * @param {DeepEqualOptions} [options]
  * @returns {boolean}
  */
-export function deepEqual(a, b, cache = new Set()) {
-    if (strictEqual(a, b) || cache.has(a)) {
-        return true;
-    }
-    const aType = typeof a;
-    if (aType !== typeof b || !a || !b || aType !== "object") {
-        return false;
-    }
-
-    cache.add(a);
-    if (isNode(a)) {
-        return isNode(b) && a.isEqualNode(b);
-    }
-    if (a instanceof File) {
-        // Files
-        return a.name === b.name && a.size === b.size && a.type === b.type;
-    }
-    if (a instanceof Date || a instanceof RegExp) {
-        // Dates & regular expressions
-        return strictEqual(String(a), String(b));
-    }
-
-    const aIsIterable = isIterable(a);
-    if (aIsIterable !== isIterable(b)) {
-        return false;
-    }
-    if (!aIsIterable) {
-        // All non-iterable objects
-        const aKeys = $ownKeys(a);
-        return (
-            aKeys.length === $ownKeys(b).length &&
-            aKeys.every((key) => deepEqual(a[key], b[key], cache))
-        );
-    }
-
-    // Iterables
-    const aIsArray = $isArray(a);
-    if (aIsArray !== $isArray(b)) {
-        return false;
-    }
-    if (!aIsArray) {
-        a = [...a];
-        b = [...b];
-    }
-    return a.length === b.length && a.every((v, i) => deepEqual(v, b[i], cache));
+export function deepEqual(a, b, options) {
+    return _deepEqual(a, b, options?.ignoreOrder, makeObjectCache());
 }
 
 /**
@@ -656,77 +825,15 @@ export function ensureError(value) {
  * @returns {string}
  */
 export function formatHumanReadable(value) {
-    return _formatHumanReadable(value, 0);
+    return _formatHumanReadable(value, 0, makeObjectCache());
 }
 
 /**
  * @param {unknown} value
- * @param {Set<unknown>} [cache=new Set()]
- * @param {number} [depth=0]
  * @returns {string}
  */
-export function formatTechnical(
-    value,
-    { cache = new Set(), depth = 0, isObjectValue = false } = {}
-) {
-    const baseIndent = isObjectValue ? "" : " ".repeat(depth * 2);
-    if (value === S_ANY || value === S_NONE) {
-        return "";
-    } else if (typeof value === "string") {
-        return `${baseIndent}${stringify(value)}`;
-    } else if (typeof value === "number") {
-        return `${baseIndent}${value << 0 === value ? String(value) : value.toFixed(3)}`;
-    } else if (typeof value === "function") {
-        return `${baseIndent}${getFunctionString(value)}`;
-    } else if (value && typeof value === "object") {
-        if (cache.has(value)) {
-            return `${baseIndent}${$isArray(value) ? `[${ELLIPSIS}]` : `{ ${ELLIPSIS} }`}`;
-        } else {
-            cache.add(value);
-            const startIndent = " ".repeat((depth + 1) * 2);
-            const endIndent = " ".repeat(depth * 2);
-            const constructor = getConstructor(value);
-            if (value instanceof RegExp || value instanceof Error) {
-                return `${baseIndent}${value.toString()}`;
-            } else if (value instanceof Date) {
-                return `${baseIndent}${value.toISOString()}`;
-            } else if (isNode(value)) {
-                return `<${toSelector(value)} />`;
-            } else if (isIterable(value)) {
-                const proto = constructor.name === "Array" ? "" : `${constructor.name} `;
-                const content = [...value].map(
-                    (val) =>
-                        `${startIndent}${formatTechnical(val, {
-                            cache,
-                            depth: depth + 1,
-                            isObjectValue: true,
-                        })},\n`
-                );
-                return `${baseIndent}${proto}[${
-                    content.length ? `\n${content.join("")}${endIndent}` : ""
-                }]`;
-            } else {
-                const proto =
-                    !constructor.name || constructor.name === "Object"
-                        ? ""
-                        : `${constructor.name} `;
-                const content = $ownKeys(value)
-                    .sort()
-                    .map(
-                        (key) =>
-                            `${startIndent}${key}: ${formatTechnical(value[key], {
-                                cache,
-                                depth: depth + 1,
-                                isObjectValue: true,
-                            })},\n`
-                    );
-                return `${baseIndent}${proto}{${
-                    content.length ? `\n${content.join("")}${endIndent}` : ""
-                }}`;
-            }
-        }
-    }
-    return `${baseIndent}${String(value)}`;
+export function formatTechnical(value) {
+    return _formatTechnical(value, 0, false, makeObjectCache());
 }
 
 /**
@@ -1251,8 +1358,9 @@ export class Callbacks {
      */
     add(type, callback, once) {
         if (callback instanceof Promise) {
+            const promiseValue = callback;
             callback = () =>
-                Promise.resolve(callback).then((result) => {
+                Promise.resolve(promiseValue).then((result) => {
                     if (typeof result === "function") {
                         result();
                     }

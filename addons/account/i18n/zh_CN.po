@@ -4,22 +4,22 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
 # ChunYi Fu, 2024
 # Zhongbo Zhao, 2024
 # Raymond Yu <cl_yu@hotmail.com>, 2024
 # kunqing shi, 2025
 # huang jun, 2025
-# Chloe Wang, 2025
 # 何彬 <vnsoft.he@gmail.com>, 2025
+# Chloe Wang, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9355,6 +9355,12 @@ msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "之前是“%(previous)s”，现在是“%(current)s”。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
 msgid "January"
 msgstr "一月"
@@ -11214,6 +11220,12 @@ msgstr "为该合作伙伴设置的一个或多个银行科目被其他合作伙
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "有一张或多张发票无法处理。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "一条或多条线需要 100% 的分析分摊。"
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -13642,6 +13654,12 @@ msgstr "安全令牌"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "查看所有活动"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -18474,7 +18492,7 @@ msgstr "You cannot register payments for miscellaneous entries."
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
 msgid "You cannot remove parts of the audit trail."
-msgstr ""
+msgstr "不能删除审计追踪的部分。"
 
 #. module: account
 #. odoo-python

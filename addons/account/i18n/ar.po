@@ -6,15 +6,16 @@
 # Mustafa Rawi <mustafa@mrawi.com>, 2024
 # Martin Trigaux, 2024
 # Ibrahim Elnahas, 2024
-# Wil Odoo, 2025
 # Beshoy Nabeih, 2025
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2025
+# Wil Odoo, 2025
 # Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -9324,6 +9325,12 @@ msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "كان سابقاً '%(previous)s' وأصبح الآن '%(current)s'."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
 msgid "January"
 msgstr "يناير"
@@ -11175,6 +11182,12 @@ msgstr "يوجد حساب بنكي واحد أو أكثر لهذا الشريك 
 #: code:addons/account/models/account_move.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "تعذرت معالجة فاتورة واحدة أو أكثر. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "هناك بند واحد أو أكثر بحاجة إلى التوزيع التحليلي بنسبة 100%. "
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -13593,6 +13606,12 @@ msgstr "رمز الحماية"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "رؤية كافة الأنشطة "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -16456,7 +16475,7 @@ msgstr "لا يمكن تغيير هذا الإعداد بعد إنشاء الف�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This specific error occurred during the import:"
-msgstr ""
+msgstr "هذا الخطأ بالتحديد ظهر في أثناء الاستيراد"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -18325,7 +18344,7 @@ msgstr "لا يمكنك تسجيل المدفوعات للقيود المتنو�
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
 msgid "You cannot remove parts of the audit trail."
-msgstr ""
+msgstr "لا يمكنك إزالة أجزاء من سجل المراجعة. "
 
 #. module: account
 #. odoo-python

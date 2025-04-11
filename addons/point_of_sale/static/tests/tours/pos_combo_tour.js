@@ -4,7 +4,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_scre
 import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import { inLeftSide, scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ...ProductScreen.clickDisplayedProduct("Office Combo"),
+            scan_barcode("SuperCombo"),
             combo.select("Combo Product 3"),
             combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 9"),

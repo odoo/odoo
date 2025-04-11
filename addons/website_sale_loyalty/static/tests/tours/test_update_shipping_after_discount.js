@@ -9,7 +9,6 @@ import {
 
 registry.category('web_tour.tours').add('update_shipping_after_discount', {
     url: '/shop',
-    checkDelay: 100,
     steps: () => [
         ...addToCart({ productName: "Plumbus" }),
         goToCart(),
@@ -47,5 +46,13 @@ registry.category('web_tour.tours').add('update_shipping_after_discount', {
             total: '0.00', // $50 total is covered by eWallet
             delivery: '5.00', // $50 is below $75 `free_over` amount, so no free shipping
         }),
+        {
+            content: "check discount code discount",
+            trigger: '[data-reward-type=discount] .oe_currency_value:not(:visible):contains(/^- 50.00$/)',
+        },
+        {
+            content: "check eWallet discount",
+            trigger: '[data-reward-type=discount] .oe_currency_value:not(:visible):contains(/^- 55.00$/)',
+        },
     ],
 });

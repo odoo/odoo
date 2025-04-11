@@ -278,20 +278,18 @@ class SaleOrder(models.Model):
         reward.ensure_one()
         assert reward.discount_applicability == 'order'
 
-        if reward.program_id.is_payment_program:
+        lines = self.order_line.filtered(lambda line: not line.display_type)
+        if not reward.program_id.is_payment_program:
             # Gift cards and eWallets are applied on the total order amount
-            lines = self.order_line
-        else:
             # Other types of programs are not expected to apply on delivery lines
-            lines = self.order_line - self._get_no_effect_on_threshold_lines()
+            lines -= self._get_no_effect_on_threshold_lines()
 
         discountable = 0
         discountable_per_tax = defaultdict(float)
 
         AccountTax = self.env['account.tax']
-        order_lines = self.order_line.filtered(lambda x: not x.display_type)
         base_lines = []
-        for line in order_lines:
+        for line in lines:
             base_line = line._prepare_base_line_for_taxes_computation()
             taxes = base_line['tax_ids'].flatten_taxes_hierarchy()
             if not reward.program_id.is_payment_program:

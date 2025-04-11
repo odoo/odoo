@@ -43,7 +43,6 @@ const StepSchema = {
 };
 
 const TourSchema = {
-    checkDelay: { type: Number, optional: true },
     name: { type: String, optional: true },
     steps: Function,
     url: { type: String, optional: true },

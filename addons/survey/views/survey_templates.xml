@@ -558,7 +558,7 @@
                         <span class="ms-2" t-out="question.comments_message or default_comments_message" />
                     </label>
                 </div>
-                <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">
+                <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 h-auto #{'d-none' if not comment_line else ''}">
                     <textarea type="text" class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
                         t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
                 </div>
@@ -623,7 +623,7 @@
                         <span class="ms-2" t-out="question.comments_message or default_comments_message" />
                     </label>
                 </div>
-                <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">
+                <div t-attf-class="o_survey_comment_container mt-3 py-0 h-auto px-1 #{'d-none' if not comment_line else ''}">
                     <textarea type="text" class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
                         t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
                 </div>

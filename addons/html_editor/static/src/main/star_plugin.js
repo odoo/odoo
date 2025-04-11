@@ -1,8 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import {
-    getAdjacentNextSiblings,
-    getAdjacentPreviousSiblings,
-} from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { _t } from "@web/core/l10n/translation";
 
@@ -52,8 +48,10 @@ export class StarPlugin extends Plugin {
             node.parentElement &&
             node.parentElement.className.includes("o_stars")
         ) {
-            const previousStars = getAdjacentPreviousSiblings(node, isStar);
-            const nextStars = getAdjacentNextSiblings(node, isStar);
+            const allStars = Array.from(node.parentElement.childNodes).filter(isStar);
+            const currentStarIndex = allStars.indexOf(node);
+            const previousStars = allStars.slice(0, currentStarIndex);
+            const nextStars = allStars.slice(currentStarIndex + 1);
             if (nextStars.length || previousStars.length) {
                 const shouldToggleOff =
                     node.classList.contains("fa-star") &&

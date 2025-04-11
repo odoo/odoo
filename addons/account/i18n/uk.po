@@ -8,16 +8,16 @@
 # Larissa Manderfeld, 2024
 # Yana Bystrytska, 2024
 # Bohdan Lisnenko, 2025
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # Wil Odoo, 2025
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3313,6 +3313,8 @@ msgid ""
 "Auto-post was disabled on this invoice because a potential duplicate was "
 "detected."
 msgstr ""
+"Для цього рахунка-фактури було вимкнено автоматичне розміщення, оскільки "
+"виявлено потенційний дублікат."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -4705,7 +4707,7 @@ msgstr "Фіскальний код країни компанії"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "Заповнювач реєстру компаній"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -7071,6 +7073,9 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
+"Помилка під час завантаження локалізації: відсутній податковий тег "
+"%(tag_name)s для країни %(country_name)s. Ймовірно, вам слід спочатку "
+"оновити модуль локалізації."
 
 #. module: account
 #. odoo-python
@@ -7727,7 +7732,7 @@ msgstr "З мітки"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "From last fiscal year"
-msgstr ""
+msgstr "З останнього звітного періоду"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
@@ -8972,7 +8977,7 @@ msgstr "Віджет дебета і кредита переплати раху�
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
 msgid "Invoice PDF"
-msgstr ""
+msgstr "PDF рахунка-фактури"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
@@ -9413,6 +9418,12 @@ msgstr "Здається, потрібно опублікувати деяку �
 #: code:addons/account/models/account_move.py:0
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "Це було раніше '%(previous)s' а це зараз '%(current)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr "Елементи з відсутнім аналітичним розподілом"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -11289,6 +11300,12 @@ msgid "One or more invoices couldn't be processed."
 msgstr "Один або більше рахунків-фактур не можуть бути оброблені."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Один або кілька рядків вимагають 100% аналітичного розподілу."
+
+#. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
 msgstr "Онлайн платежі"
@@ -11784,7 +11801,7 @@ msgstr "Партнер"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
 msgid "Partner Company Registry Placeholder"
-msgstr ""
+msgstr "Заповнювач реєстру партнерських компаній"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -13722,6 +13739,12 @@ msgstr "Токен безпеки"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "Переглянути усі дії"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr "Переглянути елементи"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -16650,7 +16673,7 @@ msgstr "Цей параметр не можна змінити після ств
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This specific error occurred during the import:"
-msgstr ""
+msgstr "Ця конкретна помилка сталася під час імпорту:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17728,6 +17751,10 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
+"Рахунки постачальників можуть бути попередньо створені на \n"
+"основі замовлень на купівлю або квитанцій. Це дозволяє вам \n"
+"контролювати рахунки, які ви отримуєте від свого \n"
+"постачальника відповідно до чернетки документа в Odoo."
 
 #. module: account
 #. odoo-javascript
@@ -18401,6 +18428,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid "You cannot deprecate an account that is used in a tax distribution."
 msgstr ""
+"Ви не можете вилучити рахунок, який використовується для розподілу податків."
 
 #. module: account
 #. odoo-python
@@ -18573,7 +18601,7 @@ msgstr "Ви не можете зареєструвати платежі для 
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
 msgid "You cannot remove parts of the audit trail."
-msgstr ""
+msgstr "Ви не можете видалити частини відстеження аудиту."
 
 #. module: account
 #. odoo-python
@@ -18648,7 +18676,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot switch the type of a document which has been posted once."
-msgstr ""
+msgstr "Ви не можете змінити тип документа, який був опублікований один раз."
 
 #. module: account
 #. odoo-python

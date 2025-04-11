@@ -279,8 +279,15 @@ registerWebsitePreviewTour('test_html_editor_scss_2', {
         },
         {
             content: "confirm reset warning",
-            trigger: '.modal-footer .btn-primary',
+            trigger: ".modal:contains(careful) .modal-footer .btn-primary",
             run: "click",
+        },
+        {
+            content: "Wait for the reload of the iframe",
+            trigger: "[is-ready=false]:iframe #wrapwrap",
+        },
+        {
+            trigger: "[is-ready=true]:iframe #wrapwrap",
         },
         {
             trigger: `body:not(:has(div.ace_line:contains("${adminCssModif}")))`,

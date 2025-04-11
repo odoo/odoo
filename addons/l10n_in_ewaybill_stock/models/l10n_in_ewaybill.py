@@ -408,8 +408,8 @@ class Ewaybill(models.Model):
 
     def _l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(self, response):
         if self.distance == 0 and (alert := response.get('data').get('alert')):
-            pattern = r", Distance between these two pincodes is \d+, "
-            if re.fullmatch(pattern, alert) and (dist := int(re.search(r'\d+', alert).group())) > 0:
+            pattern = r"Distance between these two pincodes is (\d+)"
+            if (match := re.search(pattern, alert)) and (dist := int(match.group(1))) > 0:
                 self.distance = dist
 
     def _generate_ewaybill_direct(self):

@@ -91,6 +91,9 @@
             'point_of_sale/static/src/utils.js',
             'point_of_sale/static/src/app/models/data_service.js',
             'point_of_sale/static/tests/unit/**/*',
+            # for the render_service.test.js
+            'point_of_sale/static/src/app/utils/html-to-image.js',
+            'point_of_sale/static/src/app/printer/render_service.js',
         ],
 
         # PoS assets

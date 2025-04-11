@@ -425,6 +425,17 @@ class HolidaysRequest(models.Model):
                 continue
             if calendar.flexible_hours:
                 days = (leave.date_to - leave.date_from).days + (1 if not leave.request_unit_half else 0.5)
+                public_holidays = self.env['resource.calendar.leaves'].search([
+                    ('resource_id', '=', False),
+                    ('calendar_id', '=', calendar.id),
+                    ('date_from', '<=', leave.date_to),
+                    ('date_to', '>=', leave.date_from)
+                ])
+                excluded_days = sum(
+                    (min(holiday.date_to, leave.date_to) - max(holiday.date_from, leave.date_from)).days + 1
+                    for holiday in public_holidays
+                )
+                days = days - excluded_days
                 hours = min(leave.request_hour_to - leave.request_hour_from, calendar.hours_per_day) if leave.request_unit_hours \
                     else (days * calendar.hours_per_day)
                 result[leave.id] = (days, hours)

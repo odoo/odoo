@@ -8,17 +8,17 @@
 # Chill Liao <chill421@qq.com>, 2024
 # Raymond Yu <cl_yu@hotmail.com>, 2024
 # Tiffany Chang, 2024
-# Wil Odoo, 2025
 # Chloe Wang, 2025
 # 何彬 <vnsoft.he@gmail.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4751,6 +4751,12 @@ msgid "Order number"
 msgstr "订单号"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "Order saved for later"
+msgstr "保存订单以备后用"
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr "此字段中的订单明细是已退款给该订单明细的行。"
@@ -8770,6 +8776,18 @@ msgstr "在POS界面需要定义一个能代表您所卖的每一样东西的产
 #: code:addons/point_of_sale/models/product.py:0
 msgid "You must first remove this product from the %s combo"
 msgstr "您必须首先将该产品从 %s 组合中移除"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You must have 'Administration Settings' access to load clothes data."
+msgstr "您必须具有“管理设置”权限才能加载服装数据。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "You must have 'Administration Settings' access to load furniture data."
+msgstr "您必须具有“管理设置”权限才能加载家具数据。"
 
 #. module: point_of_sale
 #. odoo-python
