@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { queryValue } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("portal_compute_codice_fiscale", {
     url: "/my",
@@ -29,15 +30,13 @@ registry.category("web_tour.tours").add("portal_compute_codice_fiscale", {
             id: 'o_country_id',
             content: "Select country with code 'IT' to trigger compute of Codice Fiscale",
             trigger: 'select[name="country_id"]',
-            run: function () {
-                $('select[name="country_id"]').val($('#o_country_id option[code="IT"]').val()).change();
-            }
+            run: `selectByLabel Italy`,
         },
         {
             content: "Check if the Codice Fiscale value matches",
             trigger: "input[name='l10n_it_codice_fiscale']",
-            run: function () {
-                if ($("input[name='l10n_it_codice_fiscale']").val() !== "12345670017") {
+            run: () => {
+                if (queryValue("input[name='l10n_it_codice_fiscale']") !== "12345670017") {
                     console.error('Expected "12345670017" for Codice Fiscale.');
                 }
             }

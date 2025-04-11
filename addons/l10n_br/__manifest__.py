@@ -80,7 +80,7 @@ Create electronic sales invoices with Avatax.
     ],
     'assets': {
         'web.assets_frontend': [
-            'l10n_br/static/src/js/address.js',
+            'l10n_br/static/src/interactions/**/*',
         ],
     },
     'license': 'LGPL-3',
