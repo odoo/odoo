@@ -9,6 +9,14 @@ _logger = logging.getLogger(__name__)
 
 TEST_GST_NUMBER = "36AABCT1332L011"
 
+L10N_IN_GST_TREATMENT_MAPPING = {
+    "Regular": "regular",
+    "SEZ Unit": "special_economic_zone",
+    "SEZ Developer": "special_economic_zone",
+    "Composition": "composition",
+    "Consulate or Embassy of Foreign Country": "uin_holders",
+}
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -85,12 +93,12 @@ class ResPartner(models.Model):
                 partner.l10n_in_gstin_verified_status = False
                 partner.l10n_in_gstin_verified_date = False
 
-    def action_l10n_in_verify_gstin_status(self):
+    def action_l10n_in_verify_gstin_status(self, ignore_errors=False):
         self.ensure_one()
         self.check_access('write')
         if self.env.company.sudo().account_fiscal_country_id.code != 'IN':
             raise UserError(_('You must be logged in an Indian company to use this feature'))
-        if not self.vat:
+        if not self.vat and not ignore_errors:
             raise ValidationError(_("Please enter the GSTIN"))
         if not self.env.company.l10n_in_gstin_status_feature:
             raise ValidationError(_("This feature is not activated. Go to Settings to activate this feature."))
@@ -107,8 +115,9 @@ class ResPartner(models.Model):
                 "l10n_in.endpoint"
             )
         except AccessError:
-            raise UserError(_("Unable to connect with GST network"))
-        if response.get('error') and any(e.get('code') == 'no-credit' for e in response['error']):
+            if not ignore_errors:
+                raise UserError(_("Unable to connect with GST network"))
+        if not ignore_errors and response.get('error') and any(e.get('code') == 'no-credit' for e in response['error']):
             return self.env["bus.bus"]._sendone(self.env.user.partner_id, "iap_notification",
                 {
                     "type": "no_credit",
@@ -117,10 +126,27 @@ class ResPartner(models.Model):
                 },
             )
         gst_status = response.get('data', {}).get('sts', "")
+        values = {}
         if gst_status.casefold() == 'active':
             l10n_in_gstin_verified_status = True
+            gst_treatment = L10N_IN_GST_TREATMENT_MAPPING.get(response.get('data', {}).get('dty'), 'regular')
+            fiscal_position = (
+                gst_treatment == 'special_economic_zone'
+                and self.env['account.chart.template'].ref(
+                    'fiscal_position_in_export_sez_in', raise_if_not_found=False
+                )
+            )
+            values['l10n_in_gst_treatment'] = gst_treatment
+            if fiscal_position:
+                values['property_account_position_id'] = fiscal_position.id
+            elif gst_treatment != 'special_economic_zone':
+                values['property_account_position_id'] = False
         elif gst_status:
             l10n_in_gstin_verified_status = False
+            values.update({
+                'l10n_in_gst_treatment': 'unregistered',
+                'property_account_position_id': False
+            })
             date_from = response.get("data", {}).get("cxdt", '')
             if date_from and re.search(r'\d', date_from):
                 message = _(
@@ -138,7 +164,7 @@ class ResPartner(models.Model):
             if not is_production:
                 message += _(" Warning: You are currently in a test environment. The result is a dummy.")
             self.message_post(body=message)
-        else:
+        elif not ignore_errors:
             _logger.info("GST status check error %s", response)
             if response.get('error') and any(e.get('code') == 'SWEB_9035' for e in response['error']):
                 raise UserError(
@@ -160,8 +186,9 @@ class ResPartner(models.Model):
                 or default_error_message
             )
         self.write({
-            "l10n_in_gstin_verified_status": l10n_in_gstin_verified_status,
-            "l10n_in_gstin_verified_date": fields.Date.today(),
+            'l10n_in_gstin_verified_status': l10n_in_gstin_verified_status,
+            'l10n_in_gstin_verified_date': fields.Date.today(),
+            **values
         })
         return {
             "type": "ir.actions.client",
