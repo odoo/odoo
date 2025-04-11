@@ -28,7 +28,7 @@ class OdooBaseChecker(BaseChecker):
     @only_required_for_messages('gettext-variable')
     def visit_call(self, node):
         if isinstance(node.func, astroid.Name) and node.func.name in ('_', '_lt'):
-            first_arg = node.args[0]
+            first_arg = node.args and node.args[0]
             if not (isinstance(first_arg, astroid.Const) and isinstance(first_arg.value, str)):
                 self.add_message('gettext-variable', node=node)
 

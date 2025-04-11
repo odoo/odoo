@@ -123,3 +123,17 @@ registry.category("web_tour.tours").add("PosComboChangeFP", {
         ProductScreen.isShown(),
     ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_combo_with_custom_attribute", {
+    test: true,
+    steps: () => [
+        ProductScreen.confirmOpeningPopup(),
+        ProductScreen.clickDisplayedProduct("Custom Attr Combo"),
+        combo.select("Custom Attr Product"),
+        ProductConfigurator.fillCustomAttribute("asf"),
+        ProductConfigurator.confirmAttributes(),
+        combo.confirm(),
+        ...inLeftSide(Order.hasLine({productName: "Custom Attr Product (Custom Value: asf)"})),
+        ProductScreen.isShown(),
+    ].flat(),
+});

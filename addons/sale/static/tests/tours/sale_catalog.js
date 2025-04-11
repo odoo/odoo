@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('sale_catalog', {
         },
         {
             content: "Wait for the field to be active",
-            trigger: "input[id*='partner_id']",
+            trigger: "ul.o-autocomplete--dropdown-menu",
         },
         {
             content: "Select a customer from the dropdown",

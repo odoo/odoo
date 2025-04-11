@@ -318,3 +318,53 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         self.assertEqual(score, 2)
         score = applicability_with_company._get_score(business_domain='invoice', product=self.product_a.id)
         self.assertEqual(score, 1)
+
+    def test_analytic_lines_partner_compute(self):
+        ''' Ensures analytic lines partner is changed when changing partner on move line'''
+        def get_analytic_lines():
+            return self.env['account.analytic.line'].search([
+                ('move_line_id', 'in', entry.line_ids.ids)
+            ]).sorted('amount')
+
+        entry = self.env['account.move'].create([{
+            'move_type': 'entry',
+            'partner_id': self.partner_a.id,
+            'line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'debit': 200.0,
+                    'partner_id': self.partner_a.id,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'credit': 200.0,
+                    'partner_id': self.partner_b.id,
+                    'analytic_distribution': {
+                        self.analytic_account_a.id: 100,
+                    },
+                }),
+            ]
+        }])
+        entry.action_post()
+
+        # Analytic lines are created when posting the invoice
+        analytic_line = get_analytic_lines()
+        self.assertRecordValues(analytic_line, [{
+            'amount': 200,
+            self.default_plan._column_name(): self.analytic_account_a.id,
+            'partner_id': self.partner_b.id,
+        }])
+        # Change the move line on the analytic line, partner changes on the analytic line
+        analytic_line.move_line_id = entry.line_ids[0]
+        self.assertRecordValues(analytic_line, [{
+            'amount': 200,
+            self.default_plan._column_name(): self.analytic_account_a.id,
+            'partner_id': self.partner_a.id,
+        }])
+        # Change the move line's partner, partner changes on the analytic line
+        entry.line_ids.write({'partner_id': self.partner_b.id})
+        self.assertRecordValues(analytic_line, [{
+            'amount': 200,
+            self.default_plan._column_name(): self.analytic_account_a.id,
+            'partner_id': self.partner_b.id,
+        }])

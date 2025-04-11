@@ -351,6 +351,17 @@ class MailTestTicketMC(models.Model):
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     container_id = fields.Many2one('mail.test.container.mc', tracking=True)
 
+    def _creation_subtype(self):
+        if self.container_id:
+            return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
+        return super()._creation_subtype()
+
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'container_id' in init_values and self.container_id:
+            return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
+        return super()._track_subtype(init_values)
+
 
 class MailTestContainer(models.Model):
     """ This model can be used in tests when container records like projects

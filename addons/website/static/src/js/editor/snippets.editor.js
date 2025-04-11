@@ -241,6 +241,14 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         if (snippetSaveOptionEl) {
             snippetSaveOptionEl.dataset.selector += ", .s_searchbar_input";
         }
+        // TODO remove in 18.0
+        const navTabsStyleEl = $html.find(`[data-js="NavTabsStyle"]`)[0];
+        if (navTabsStyleEl) {
+            const divEl = document.createElement("div");
+            divEl.setAttribute("data-js", "TabsNavItems");
+            divEl.setAttribute("data-selector", ".nav-item");
+            navTabsStyleEl.append(divEl);
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
@@ -296,8 +304,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 onMounted(() => this.props.onMounted(this.modalRef));
             }
             onClickSave() {
-                this.props.confirm(this.modalRef, this.state.apiKey);
-                this.props.close();
+                this.props.confirm(this.modalRef, this.state.apiKey, this.props.close);
             }
         };
 
@@ -309,7 +316,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                         applyError.call($(modalRef.el), apiKeyValidation.message);
                     }
                 },
-                confirm: async (modalRef, valueAPIKey) => {
+                confirm: async (modalRef, valueAPIKey, close = undefined) => {
                     if (!valueAPIKey) {
                         applyError.call($(modalRef.el), _t("Enter an API Key"));
                         return;
@@ -320,7 +327,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                     if (res.isValid) {
                         await this.orm.write("website", [websiteId], {google_maps_api_key: valueAPIKey});
                         invalidated = true;
-                        return true;
+                        if (close) {
+                            close();
+                        } else {
+                            resolve(true);
+                        }
                     } else {
                         applyError.call($(modalRef.el), res.message);
                     }

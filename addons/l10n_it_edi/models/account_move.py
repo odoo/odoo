@@ -1353,6 +1353,7 @@ class AccountMove(models.Model):
         }
 
     def _l10n_it_edi_send(self, attachments_vals):
+        self.env['res.company']._with_locked_records(self)
         files_to_upload = []
         filename_move = {}
 

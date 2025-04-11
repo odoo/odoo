@@ -45,7 +45,7 @@ class StockLot(models.Model):
             'domain': [('lot_id', '=', self.id)],
             'context': {
                 'default_product_id': self.product_id.id,
-                'default_lot_id': self.id,
+                'default_repair_lot_id': self.id,
                 'default_company_id': self.company_id.id,
             },
         })

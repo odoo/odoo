@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-29 09:38+0000\n"
-"PO-Revision-Date: 2024-10-29 09:38+0000\n"
+"POT-Creation-Date: 2025-03-28 16:01+0000\n"
+"PO-Revision-Date: 2025-03-28 16:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,11 +39,6 @@ msgid "API KEY"
 msgstr ""
 
 #. module: l10n_tr_nilvera
-#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_account_journal__is_nilvera_journal
-msgid "Journal used for Nilvera"
-msgstr "Nilvera için kullanılan dergi"
-
-#. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_partner__l10n_tr_nilvera_customer_alias_id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_users__l10n_tr_nilvera_customer_alias_id
 msgid "Alias"
@@ -51,11 +46,20 @@ msgstr "Takma ad"
 
 #. module: l10n_tr_nilvera
 #. odoo-python
-#: code:addons/l10n_tr_nilvera/lib/nilvera_client.py:0
-#: code:addons/l10n_tr_nilvera/lib/nilvera_client.py:0
+#: code:addons/l10n_tr_nilvera/models/res_config_settings.py:0
 #, python-format
 msgid "An error occurred. Try again later."
 msgstr "Bir hata oluştu. Daha sonra tekrar deneyin."
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_sa
+msgid "Bags"
+msgstr "Çuval"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_bx
+msgid "Box"
+msgstr "Kutu"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model,name:l10n_tr_nilvera.model_res_company
@@ -75,7 +79,12 @@ msgstr "Nilvera ayarlarını yapılandırma"
 #. module: l10n_tr_nilvera
 #: model:ir.model,name:l10n_tr_nilvera.model_res_partner
 msgid "Contact"
-msgstr "İletişim"
+msgstr "Kontak"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_cr
+msgid "Crate"
+msgstr "Sandik"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__create_uid
@@ -86,6 +95,16 @@ msgstr "Tarafından oluşturuldu"
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__create_date
 msgid "Created on"
 msgstr "Üzerinde oluşturuldu"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_cmq
+msgid "Cubic Centimeter - cm³"
+msgstr "Santimetre Küp - cm³"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mmq
+msgid "Cubic Millimeter - mm³"
+msgstr "Milimetre Küp - mm³"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model,name:l10n_tr_nilvera.model_l10n_tr_nilvera_alias
@@ -108,6 +127,11 @@ msgid "E-Invoice"
 msgstr "E-Fatura"
 
 #. module: l10n_tr_nilvera
+#: model:uom.category,name:l10n_tr_nilvera.product_uom_categ_energy
+msgid "Energy"
+msgstr "Enerji"
+
+#. module: l10n_tr_nilvera
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
 msgid "Environment"
 msgstr "Çevre"
@@ -117,6 +141,11 @@ msgstr "Çevre"
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_users__ubl_cii_format
 msgid "Format"
 msgstr "Biçim"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_gt
+msgid "Gross Ton"
+msgstr "Brüt Ton"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__id
@@ -131,7 +160,28 @@ msgstr "Gelen Faturalar Günlüğü"
 #. module: l10n_tr_nilvera
 #: model:ir.model,name:l10n_tr_nilvera.model_account_journal
 msgid "Journal"
-msgstr "Dergi"
+msgstr "Yevmiye"
+
+#. module: l10n_tr_nilvera
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_account_journal__is_nilvera_journal
+msgid "Journal used for Nilvera"
+msgstr "Nilvera için kullanılan dergi"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_kwt
+msgid "Kilowatt"
+msgstr "Kilowatt"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_kwh
+msgid "Kilowatt Hour"
+msgstr "Kilowatt Saat"
+
+#. module: l10n_tr_nilvera
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_partner__l10n_tr_nilvera_customer_alias_ids
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_users__l10n_tr_nilvera_customer_alias_ids
+msgid "L10N Tr Nilvera Customer Alias"
+msgstr "L10N Tr Nilvera Müşteri Takma Adı"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__write_uid
@@ -142,6 +192,31 @@ msgstr "Son Güncelleme Tarihi"
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme Tarihi"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mwh
+msgid "Megawatt Hour"
+msgstr "Megawatt Saat"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mgm
+msgid "Milligram - mg"
+msgstr "Miligram - mg"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mlt
+msgid "Milliliter - ml"
+msgstr "Mililitre - ml"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_d61
+msgid "Minute"
+msgstr "Dakika"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_mon
+msgid "Month"
+msgstr "Ay"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__name
@@ -183,8 +258,11 @@ msgstr "Nilvera Durumu"
 #: code:addons/l10n_tr_nilvera/models/res_config_settings.py:0
 #, python-format
 msgid ""
-"Nilvera connection successful but the tax number on Nilvera and Odoo doesn't match. Check Nilvera."
-msgstr "Nilvera bağlantısı başarılı ancak Nilvera ve Odoo'daki vergi numarası eşleşmiyor. Nilvera'yı kontrol edin."
+"Nilvera connection successful but the tax number on Nilvera and Odoo doesn't"
+" match. Check Nilvera."
+msgstr ""
+"Nilvera bağlantısı başarılı ancak Nilvera ve Odoo'daki vergi numarası "
+"eşleşmiyor. Nilvera'yı kontrol edin."
 
 #. module: l10n_tr_nilvera
 #. odoo-python
@@ -206,22 +284,29 @@ msgid "Not Checked"
 msgstr "Kontrol Edilmedi"
 
 #. module: l10n_tr_nilvera
-#. odoo-python
-#: code:addons/l10n_tr_nilvera/lib/nilvera_client.py:0
-#, python-format
-msgid "Odoo could not perform this action at the moment, try again later."
-msgstr "Odoo şu anda bu işlemi gerçekleştiremedi, daha sonra tekrar deneyin."
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_bg
+msgid "Pack"
+msgstr "Poşet"
 
 #. module: l10n_tr_nilvera
-#. odoo-python
-#: code:addons/l10n_tr_nilvera/lib/nilvera_client.py:0
-#, python-format
-msgid ""
-"Oops, seems like you're unauthorised to do this. Try another API key with "
-"more rights or contact Nilvera."
-msgstr ""
-"Oops, bunu yapmak için yetkiniz yok gibi görünüyor. Daha fazla hakka sahip başka bir API anahtarı"
-"deneyin veya Nilvera ile iletişime geçin."
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_pa
+msgid "Package"
+msgstr "Paket"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_pr
+msgid "Pair"
+msgstr "Çift"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_pf
+msgid "Pallet"
+msgstr "Palet"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_pk
+msgid "Parcel"
+msgstr "Koli"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__partner_id
@@ -231,11 +316,31 @@ msgstr "Ortak"
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera.selection__res_company__l10n_tr_nilvera_environment__production
 msgid "Production"
-msgstr ""
+msgstr "Üretim"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_d62
+msgid "Second"
+msgstr "Saniye"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_set
+msgid "Set"
+msgstr "Set"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_cmk
+msgid "Square Centimeter - cm²"
+msgstr "Santimetre Kare - cm²"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_standard_cubic_meter
+msgid "Standard Cubic Meter"
+msgstr "Standart Metreküp"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera.selection__res_company__l10n_tr_nilvera_environment__sandbox
-msgid "Sandbox"
+msgid "Test"
 msgstr ""
 
 #. module: l10n_tr_nilvera
@@ -252,3 +357,8 @@ msgstr "Doğrulama"
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.view_partner_property_form_inherit_ubl_tr
 msgid "Verify partner on Nilvera"
 msgstr "Nilvera'daki ortağı doğrulayın"
+
+#. module: l10n_tr_nilvera
+#: model:uom.uom,name:l10n_tr_nilvera.product_uom_ann
+msgid "Year"
+msgstr "Yıl"

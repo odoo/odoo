@@ -20,19 +20,19 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
 # Jonatan Gk, 2023
 # Martin Trigaux, 2023
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # Carles Antoli <carlesantoli@hotmail.com>, 2023
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024
 # Arnau Ros, 2024
 # Iván Infantes Castarnado, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
-# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Xavier, 2024
 # marcescu, 2025
 # Ivan Espinola, 2025
 # Óscar Fonseca <tecnico@pyming.com>, 2025
-# Josep Anton Belchi, 2025
 # Noemi Pla, 2025
+# Josep Anton Belchi, 2025
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Noemi Pla, 2025\n"
+"Last-Translator: Josep Anton Belchi, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -720,17 +720,17 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
-"        Estimat <t t-out=\"object.partner_id.name or ''\">usuari</t>,\n"
+"        Benvolgut/da<t t-out=\"object.partner_id.name or ''\">usuari</t>,\n"
 "        <br><br>\n"
-"        T'informem que el teu\n"
+"        Us informem que el vostre/la vostra\n"
 "        <t t-out=\"doc_name or ''\">pressupost</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (amb referència: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
-"        ha estat cancel·lat. PEr tant no serà cobret per aquesta comanda.\n"
-"        Si cal algun reemborsament serà acordat amb vosté.\n"
+"        ha estat cancel·lat/da. Per tant, ja no se us carregarà res per aquesta comanda.\n"
+"        En cas que calgués fer algun abonament, aquest serà realitzat convenientment..\n"
 "        <br><br>\n"
-"        Contacti amb nosaltres per qualsevol dubte.\n"
+"        No dubteu a contactar amb nosaltres per qualsevol dubte.\n"
 "        <br>\n"
 "    </p>\n"
 "</div>\n"
@@ -1303,7 +1303,7 @@ msgstr "Esteu segur que voleu cancelar els"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected quotation?"
-msgstr ""
+msgstr "Segur que voleu cancelar el pressupost seleccionat?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1406,12 +1406,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this <u>down payment</u> of"
-msgstr ""
+msgstr "Al pagar aquesta <u>bestreta</u> de"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this proposal, I agree to the following terms:"
-msgstr ""
+msgstr "Al pagar aquesta proposta, estic d'acord amb aquests termes:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1603,7 +1603,7 @@ msgstr "Calcula els costos d'enviament i d'enviament amb Sendcloud"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr ""
+msgstr "Calcular cost d'enviament i enviar amb Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1648,7 +1648,7 @@ msgstr "Missatge de confirmació"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__sale_order
 msgid "Confirmed order"
-msgstr ""
+msgstr "Comanda confirmada"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1698,7 +1698,7 @@ msgstr "Data de creació"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft Invoice"
-msgstr ""
+msgstr "Crea factura esborrany"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1751,6 +1751,8 @@ msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
 msgstr ""
+"Crear una factura per a totes les comandes relacionades al mateix client i "
+"la mateixa adreça de facturació"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1940,18 +1942,18 @@ msgstr "Validesa per defecte del pressupost"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "Producte per defecte utilitzat pels descomptes"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_down_payment_product_id
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for down payments"
-msgstr ""
+msgstr "Producte per defecte utilitzat per a les bestretes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default values"
-msgstr ""
+msgstr "Valors per defecte"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1959,6 +1961,8 @@ msgid ""
 "Default values used when creating new quotations. Those can still be changed"
 " on each quotation."
 msgstr ""
+"Valors per defecte que es fan servir per a nous pressupostos. Es poden "
+"canviar a cada pressupost."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2104,7 +2108,7 @@ msgstr "Descompte: %(percent)s%%"
 #, python-format
 msgid ""
 "Discount: %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "Descompte: %(percent)s%%- En productes amb aquests impostos %(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2422,7 +2426,7 @@ msgstr "Rebre avisos en comandes per productes o clients"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
 msgid "Global Discount"
-msgstr ""
+msgstr "Descompte global"
 
 #. module: sale
 #. odoo-javascript
@@ -2819,7 +2823,7 @@ msgstr "Idioma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Last Invoices"
-msgstr ""
+msgstr "Darreres factures"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -2891,7 +2895,7 @@ msgstr "Bloquejat"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "Les comandes blocades no poden ser modificades."
 
 #. module: sale
 #. odoo-javascript
@@ -3085,7 +3089,7 @@ msgstr "Sense missatge"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "No hi ha més requisits per aquest pagament"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3169,7 +3173,7 @@ msgstr "Nombre de vendes a facturar"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
 msgid "On All Order Lines"
-msgstr ""
+msgstr "A totes les línies de comanda"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
@@ -3242,17 +3246,17 @@ msgstr "Signatura online"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
 msgid "Online payment"
-msgstr ""
+msgstr "Pagament en línia"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online signature"
-msgstr ""
+msgstr "Signatura en línia"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "Només són tingudes en compte les bestretes confirmades"
 
 #. module: sale
 #. odoo-python
@@ -3425,7 +3429,7 @@ msgstr "Comandes addicionals a realitzar"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oscar Morgan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3964,7 +3968,7 @@ msgstr "Rebutjar aquest pressupost"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__order_reference
 msgid "Related Order"
-msgstr ""
+msgstr "Comanda relacionada"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__render_model
@@ -4079,7 +4083,7 @@ msgstr "Comandes de venda"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr ""
+msgstr "Nombre de comandes de venda"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
@@ -4104,7 +4108,7 @@ msgstr "Venda incorporant el mètode de pagament seleccionat"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr ""
+msgstr "Comandes a cancelar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -4145,12 +4149,12 @@ msgstr "Anàlisi de vendes per comercials"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
 msgid "Sales Analysis Per Customers"
-msgstr ""
+msgstr "Anàlisi de vendes per clients"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
 msgid "Sales Analysis Products"
-msgstr ""
+msgstr "Anàlisi de vendes per productes"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -4298,7 +4302,7 @@ msgstr "Vendes: confirmació de la comanda"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "Vendes: pagament realitzat"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -4517,7 +4521,7 @@ msgstr "Direcció d'enviament"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr ""
+msgstr "Connector Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4862,7 +4866,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "Import fix per facturar anticipadament."
 
 #. module: sale
 #. odoo-python
@@ -4908,11 +4912,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
+"La nova factura deduirà les factures en esborrany enllaçades a aquesta "
+"comanda de venda."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "The order is not in a state requiring customer payment."
 msgstr ""
+"La comanda no és en un estat que requereixi pagament per part del client."
 
 #. module: sale
 #. odoo-python
@@ -5011,7 +5018,7 @@ msgstr "No hi ha pressupostos en el teu compte"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no sales orders for your account."
-msgstr ""
+msgstr "Actualment no hi ha comandes de venda pel vostre compte."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -5086,7 +5093,7 @@ msgstr ""
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 #, python-format
 msgid "This payment will confirm the quotation."
-msgstr ""
+msgstr "Aquest pagament confirmarà el pressupost"
 
 #. module: sale
 #. odoo-python
@@ -5268,12 +5275,12 @@ msgstr "Tipus d'activitat d'excepció registrada."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Teclegeu per a trobar un client..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Teclegeu per a cercar un producte..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -5433,7 +5440,7 @@ msgstr "Veure pressupost"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_document__attached_on
 msgid "Visible at"
-msgstr ""
+msgstr "Visible a"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5544,6 +5551,8 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
 msgstr ""
+"Les comandes blocades no es poden cancelar. Si us plau, desbloqueu-la "
+"primer."
 
 #. module: sale
 #. odoo-python
@@ -5595,12 +5604,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
-msgstr ""
+msgstr "Les vostres comandes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Your Reference:"
-msgstr ""
+msgstr "La vostra referència:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5663,7 +5672,7 @@ msgstr "dies"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr ""
+msgstr "per aquesta comanda de venda."
 
 #. module: sale
 #. odoo-python

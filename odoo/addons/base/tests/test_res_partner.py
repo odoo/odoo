@@ -754,6 +754,11 @@ class TestPartnerAddressCompany(TransactionCase):
             self.assertEqual(child_address.with_company(company_1).barcode, 'Company 1')
             self.assertEqual(child_address.with_company(company_2).barcode, 'Company 2')
 
+            child_address.parent_id = False
+
+            # Reassigning a parent (or a new one) shouldn't fail
+            child_address.parent_id = test_partner_company.id
+
     def test_company_change_propagation(self):
         """ Check propagation of company_id across children """
         User = self.env['res.users']

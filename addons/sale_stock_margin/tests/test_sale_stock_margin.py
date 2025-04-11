@@ -318,6 +318,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
 
         self.assertEqual(so.state, 'sent')
         self.assertEqual(so.order_line[0].purchase_price, 15)
+        so.action_confirm()
+        self.assertEqual(so.order_line[0].purchase_price, 15)
 
     def test_add_product_on_delivery_price_unit_on_sale(self):
         """ Adding a product directly on a sale order's delivery should result in the new SOL

@@ -19,6 +19,22 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
+    def _get_specific_processing_values(self, processing_values):
+        """ Override of payment to redirect pending token-flow transactions.
+
+        If the financial institution insists on 3-D Secure authentication, this
+        override will redirect the user to the provided authorization page.
+
+        Note: `self.ensure_one()`
+        """
+        res = super()._get_specific_processing_values(processing_values)
+        if self._flutterwave_is_authorization_pending():
+            res['redirect_form_html'] = self.env['ir.qweb']._render(
+                self.provider_id.redirect_form_view_id.id,
+                {'api_url': self.provider_reference},
+            )
+        return res
+
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Flutterwave-specific rendering values.
 
@@ -77,6 +93,7 @@ class PaymentTransaction(models.Model):
             raise UserError("Flutterwave: " + _("The transaction is not linked to a token."))
 
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
+        base_url = self.provider_id.get_base_url()
         data = {
             'token': self.token_id.provider_ref,
             'email': self.token_id.flutterwave_customer_email,
@@ -87,6 +104,7 @@ class PaymentTransaction(models.Model):
             'first_name': first_name,
             'last_name': last_name,
             'ip': payment_utils.get_customer_ip_address(),
+            'redirect_url': urls.url_join(base_url, FlutterwaveController._auth_return_url),
         }
 
         # Make the payment request to Flutterwave.
@@ -115,7 +133,7 @@ class PaymentTransaction(models.Model):
         if provider_code != 'flutterwave' or len(tx) == 1:
             return tx
 
-        reference = notification_data.get('tx_ref')
+        reference = notification_data.get('tx_ref') or notification_data.get('txRef')
         if not reference:
             raise ValidationError("Flutterwave: " + _("Received data with missing reference."))
 
@@ -160,6 +178,10 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         payment_status = verified_data['status'].lower()
         if payment_status in const.PAYMENT_STATUS_MAPPING['pending']:
+            auth_url = notification_data.get('meta', {}).get('authorization', {}).get('redirect')
+            if auth_url:
+                # will be set back to the actual value after moving away from pending
+                self.provider_reference = auth_url
             self._set_pending()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['done']:
             self._set_done()
@@ -211,3 +233,11 @@ class PaymentTransaction(models.Model):
                 'ref': self.reference,
             },
         )
+
+    def _flutterwave_is_authorization_pending(self):
+        return self.filtered_domain([
+            ('provider_code', '=', 'flutterwave'),
+            ('operation', '=', 'online_token'),
+            ('state', '=', 'pending'),
+            ('provider_reference', 'ilike', 'https'),
+        ])

@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="holiday_id"/>
+                <field name="holiday_id" options="{'no_quick_create': True}"/>
             </field>
         </field>
     </record>

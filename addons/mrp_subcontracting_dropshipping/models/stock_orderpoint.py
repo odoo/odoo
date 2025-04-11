@@ -9,7 +9,6 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _prepare_procurement_values(self, date=False, group=False):
         vals = super()._prepare_procurement_values(date, group)
-        if not vals.get('partner_id') and self.location_id.is_subcontracting_location:
-            subcontractors = self.location_id.subcontractor_ids
-            vals['partner_id'] = subcontractors.id if len(subcontractors) == 1 else False
+        if not vals.get('partner_id') and self.location_id.is_subcontracting_location and len(self.location_id.subcontractor_ids) == 1:
+            vals['partner_id'] = self.location_id.subcontractor_ids.id
         return vals

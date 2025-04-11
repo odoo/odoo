@@ -1319,11 +1319,10 @@
 
     <template id="product_price">
         <div
-            t-if="not combination_info['prevent_zero_price_sale']"
             itemprop="offers"
             itemscope="itemscope"
             itemtype="http://schema.org/Offer"
-            t-attf-class="product_price mt-2 mb-3 d-inline-block"
+            t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
         >
             <h3 class="css_editable_mode_hidden">
                 <span class="oe_price"
@@ -1347,7 +1346,11 @@
                     </bdi>
                 </del>
             </h3>
-            <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
+            <h3
+                t-if="editable"
+                class="css_non_editable_mode_hidden decimal_precision"
+                t-att-data-precision="str(website.currency_id.decimal_places)"
+            >
                 <span t-field="product.list_price"
                       t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>

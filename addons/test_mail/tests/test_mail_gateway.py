@@ -2267,14 +2267,14 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 partner_ids=self.partner_1.ids,
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )
-        reply, _log, email = gateway_record.message_ids
+        reply, log, email = gateway_record.message_ids
         self.assertMailNotifications(
             reply,
             [{
                 'content': 'Odoo Reply',
                 'email_values': {
                     'message_id': reply.message_id,
-                    'references': f'{email.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
+                    'references': f'{email.message_id} {log.message_id} {reply.message_id}',  # should contain reference to OdooExternal message, logs to fill up history
                 },
                 'fields_values': {
                     'notified_partner_ids': self.partner_1,
@@ -2337,7 +2337,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 'content': 'Odoo Reply',
                 'email_values': {
                     'message_id': reply.message_id,
-                    'references': f'{odooext_msg.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
+                    'references': f'{log.message_id} {odooext_msg.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
                 },
                 'fields_values': {
                     'notified_partner_ids': self.partner_1 + self.partner_admin,
@@ -2372,7 +2372,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 'email_values': {
                     'email_from': self.email_from,
                     'message_id': reply_2.message_id,
-                    'references': f'{odooext_msg.message_id} {reply.message_id} {reply_2.message_id}',  # should contain reference to OdooExternal message
+                    'references': f'{log.message_id} {odooext_msg.message_id} {reply.message_id} {reply_2.message_id}',  # should contain reference to OdooExternal message
                 },
                 'fields_values': {
                     'author_id': self.env['res.partner'],

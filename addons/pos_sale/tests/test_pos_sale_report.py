@@ -13,6 +13,9 @@ class TestPoSSaleReport(TestPoSCommon):
         super(TestPoSSaleReport, self).setUp()
         self.config = self.basic_config
         self.product0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
+        # Ensure that adding a uom to the product with a factor != 1 
+        # does not cause an error in weight and volume calculation
+        self.product0.uom_id = self.env['uom.uom'].search([('name', '=', 'Dozens')], limit=1)
 
     def test_weight_and_volume(self):
         self.product0.product_tmpl_id.weight = 3

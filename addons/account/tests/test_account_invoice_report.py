@@ -196,7 +196,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
 
         report = self.env['account.invoice.report'].read_group(
             [('product_id', '=', product.id)],
-            ['price_subtotal', 'quantity', 'price_average:avg'],
+            ['price_subtotal:sum', 'quantity:sum', 'price_average:avg'],
             [],
         )
         self.assertEqual(report[0]['quantity'], 35)
@@ -210,3 +210,15 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             [],
         )
         self.assertEqual(round(report[0]['price_average'], 2), 4.71)
+
+        def _apply_combination_on_report_pivot(combination):
+            report = self.env['account.invoice.report'].read_group(
+                [],
+                combination,
+                [],
+            )
+            for field in combination:
+                self.assertTrue(field.split(':')[0] in report[0])
+
+        _apply_combination_on_report_pivot(['price_average:avg', 'price_subtotal:sum'])
+        _apply_combination_on_report_pivot(['price_average:avg', 'quantity:sum'])

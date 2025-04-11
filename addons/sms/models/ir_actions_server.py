@@ -57,7 +57,7 @@ class ServerActions(models.Model):
     def _check_sms_model_coherency(self):
         for action in self:
             if action.state == 'sms' and (action.model_id.transient or not action.model_id.is_mail_thread):
-                raise ValidationError(_("Sending SMS can only be done on a mail.thread or a transient model"))
+                raise ValidationError(_("Sending SMS can only be done on a not transient mail.thread model"))
 
     @api.constrains('model_id', 'template_id')
     def _check_sms_template_model(self):
