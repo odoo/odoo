@@ -578,6 +578,9 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_32_website_background_colorpicker(self):
         self.start_tour(self.env['website'].get_client_action_url("/"), "website_background_colorpicker", login="admin")
 
+    def test_33_website_background_shape_color(self):
+        self.start_tour(self.env['website'].get_client_action_url("/"), "snippet_background_shape_color", login="admin")
+
     def test_website_media_dialog_image_shape(self):
         self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
 
