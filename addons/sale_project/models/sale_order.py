@@ -252,7 +252,7 @@ class SaleOrder(models.Model):
 
     def action_view_milestone(self):
         self.ensure_one()
-        default_project = self.project_ids and self.project_ids[0]
+        default_project = self.project_id or (self.project_ids and self.project_ids[0])
         sorted_line = self.order_line.sorted('sequence')
         default_sale_line = next((
             sol for sol in sorted_line
@@ -274,6 +274,7 @@ class SaleOrder(models.Model):
             """),
             'context': {
                 **self.env.context,
+                'create': bool(default_project),
                 'default_project_id': default_project.id,
                 'default_sale_line_id': default_sale_line.id,
             }

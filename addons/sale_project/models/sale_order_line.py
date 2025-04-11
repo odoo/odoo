@@ -301,6 +301,9 @@ class SaleOrderLine(models.Model):
         task.message_post(body=task_msg)
         return task
 
+    def _get_so_lines_create_nothing(self):
+        return self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking == 'no')
+
     def _get_so_lines_task_global_project(self):
         return self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking == 'task_global_project')
 
@@ -400,6 +403,9 @@ class SaleOrderLine(models.Model):
                         order=so_line.order_id.name,
                         product_name=so_line.product_id.name,
                     ))
+
+        for so_line in self._get_so_lines_create_nothing().filtered(lambda sol: sol.order_id.project_id):
+            so_line._handle_milestones(so_line.order_id.project_id)
 
     def _handle_milestones(self, project):
         self.ensure_one()
