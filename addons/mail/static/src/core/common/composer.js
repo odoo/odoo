@@ -123,7 +123,6 @@ export class Composer extends Component {
         });
         this.suggestion = this.store.self.type === "partner" ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
-        this.isMobileOS = isMobileOS;
         this.onDropFile = this.onDropFile.bind(this);
         this.saveContentDebounced = useDebounced(this.saveContent, 5000, {
             execBeforeUnmount: true,
@@ -452,7 +451,7 @@ export class Composer extends Component {
                     ev.preventDefault();
                     return;
                 }
-                if (this.isMobileOS()) {
+                if (this.isMobileOS) {
                     return;
                 }
                 const shouldPost = this.props.mode === "extended" ? ev.ctrlKey : !ev.shiftKey;
