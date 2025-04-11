@@ -2,13 +2,22 @@
 
 from datetime import datetime, timedelta
 
-from odoo import models, fields
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
+
+    @api.constrains("holiday_status_id", "request_date_from", "request_date_to")
+    def _l10n_in_check_request_dates(self):
+        for leave in self:
+            if leave.holiday_status_id.l10n_in_is_limited_to_optional_days:
+                domain = [("date", "=", leave.request_date_from), ("date", "=", leave.request_date_to)]
+                if not self.env["l10n.in.hr.leave.optional.holiday"].search_count(domain, limit=1):
+                    raise ValidationError(_("The selected date(s) is(are) not Optional Holiday(s)"))
 
     def _l10n_in_apply_sandwich_rule(self, public_holidays, employee_leaves):
         self.ensure_one()
