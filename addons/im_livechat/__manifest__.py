@@ -40,6 +40,10 @@ Help your customers with this chat, and analyse their feedback.
     ],
     'demo': [
         "demo/im_livechat_channel/im_livechat_channel.xml",
+        "demo/im_livechat_channel/im_livechat_chatbot.xml",
+        "demo/im_livechat_channel/im_livechat_chatbot_session_1.xml",
+        "demo/im_livechat_channel/im_livechat_chatbot_session_2.xml",
+        "demo/im_livechat_channel/im_livechat_chatbot_session_3.xml",
         "demo/im_livechat_channel/im_livechat_session_1.xml",
         "demo/im_livechat_channel/im_livechat_session_2.xml",
         "demo/im_livechat_channel/im_livechat_session_3.xml",
