@@ -65,6 +65,10 @@ class SlideChannelPartner(models.Model):
             record.invitation_link = f'{record.channel_id.get_base_url()}/slides/{record.channel_id.id}/invite?invite_partner_id={record.partner_id.id}&invite_hash={invitation_hash}'
 
     def _compute_next_slide_id(self):
+        if not self.ids:
+            self.next_slide_id = False
+            return
+
         self.env['slide.channel.partner'].flush_model()
         self.env['slide.slide'].flush_model()
         self.env['slide.slide.partner'].flush_model()
