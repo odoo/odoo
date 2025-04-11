@@ -2,7 +2,7 @@ from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import _, api, models, modules, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -331,6 +331,8 @@ class AccountMoveSend(models.AbstractModel):
 
             content, report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
             content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
+            if len(content_by_id) == 1 and False in content_by_id:
+                raise ValidationError(_("Cannot identify the invoices in the generated PDF: %s", ids))
 
             for invoice, invoice_data in group_invoices_data.items():
                 invoice_data['pdf_attachment_values'] = {
