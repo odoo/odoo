@@ -50,7 +50,7 @@ export class Many2OneUomField extends Component {
 
     get m2oProps() {
         const productModel = getProductRelatedModel.call(this);
-        let productId = this.props.record.data[this.props.productField]?.[0] || 0;
+        let productId = this.props.record.data[this.props.productField]?.id || 0;
         if (["product.template", "product.product"].includes(this.props.record.resModel)) {
             productId = this.props.record.resId || 0;
         }

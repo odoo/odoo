@@ -61,7 +61,7 @@ export function getRawValue(record, fieldName) {
             return value.count ? value.currentIds : [];
         }
         case "many2one": {
-            return (value && value[0]) || false;
+            return (value && value.id) || false;
         }
         case "date":
         case "datetime": {

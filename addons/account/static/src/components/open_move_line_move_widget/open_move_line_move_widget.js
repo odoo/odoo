@@ -23,7 +23,7 @@ class LineOpenMoveWidget extends Component {
     async openAction() {
         return this.action.doActionButton({
             type: "object",
-            resId: this.props.record.data[this.props.name][0],
+            resId: this.props.record.data[this.props.name].id,
             name: "action_open_business_doc",
             resModel: "account.move.line",
         });

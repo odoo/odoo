@@ -27,7 +27,7 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 patch(HrPresenceStatusPrivate.prototype, {
     get label() {
         return this.props.record.data.current_leave_id
-            ? this.props.record.data.current_leave_id[1]
+            ? this.props.record.data.current_leave_id.display_name
             : super.label;
     }
 });

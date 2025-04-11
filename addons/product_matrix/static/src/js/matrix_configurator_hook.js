@@ -38,7 +38,7 @@ export function useMatrixConfigurator() {
         openDialog(
             rootRecord,
             rootRecord.data.grid,
-            record.data.product_template_id[0],
+            record.data.product_template_id.id,
             updatedLineAttributes
         );
 

@@ -97,7 +97,7 @@ export class SignatureField extends Component {
                 const fullNameData = record.data[fullName];
                 if (record.fields[fullName].type === "many2one") {
                     // If m2o is empty, it will have falsy value in recordData
-                    signName = fullNameData && fullNameData[1];
+                    signName = fullNameData && fullNameData.display_name;
                 } else {
                     signName = fullNameData;
                 }

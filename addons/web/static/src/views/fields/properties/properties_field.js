@@ -281,7 +281,7 @@ export class PropertiesField extends Component {
      * @returns {integer}
      */
     get definitionRecordId() {
-        return this.props.record.data[this.definitionRecordField][0];
+        return this.props.record.data[this.definitionRecordField].id;
     }
 
     /**
@@ -693,7 +693,7 @@ export class PropertiesField extends Component {
      * @returns {string}
      */
     _getSeparatorFoldKey() {
-        const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
+        const definitionRecordId = this.props.record.data[this.definitionRecordField].id;
         const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
         // store the fold / unfold information per definition record
         // to clean the keys (to not keep information about removed separator)
@@ -769,7 +769,7 @@ export class PropertiesField extends Component {
      * and therefor update the properties definition.
      */
     async _checkDefinitionAccess() {
-        this.parentName = this.props.record.data[this.definitionRecordField][1];
+        this.parentName = this.props.record.data[this.definitionRecordField].display_name;
         this.parentString = this.props.record.fields[this.definitionRecordField].string;
 
         if (!this.definitionRecordModel) {

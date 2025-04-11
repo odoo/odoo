@@ -29,13 +29,13 @@ patch(SaleOrderLineProductField.prototype, {
     },
     async _openEventConfigurator() {
         const actionContext = {
-            default_product_id: this.props.record.data.product_id[0],
+            default_product_id: this.props.record.data.product_id.id,
         };
         if (this.props.record.data.event_id) {
-            actionContext.default_event_id = this.props.record.data.event_id[0];
+            actionContext.default_event_id = this.props.record.data.event_id.id;
         }
         if (this.props.record.data.event_ticket_id) {
-            actionContext.default_event_ticket_id = this.props.record.data.event_ticket_id[0];
+            actionContext.default_event_ticket_id = this.props.record.data.event_ticket_id.id;
         }
         this.action.doAction(
             'event_sale.event_configurator_action',

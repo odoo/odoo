@@ -196,7 +196,7 @@ patch(Chatter.prototype, {
         this.mailImpactingFields.recordFields.forEach((field) => {
             const value = record._changes[field];
             if (record.data[field] !== undefined && value) {
-                partnerIds.push(value[0]);
+                partnerIds.push(value.id);
             }
         });
         this.mailImpactingFields.emailFields.forEach((field) => {

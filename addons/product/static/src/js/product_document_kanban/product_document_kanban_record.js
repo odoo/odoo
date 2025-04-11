@@ -18,7 +18,7 @@ export class ProductDocumentKanbanRecord extends KanbanRecord {
             return;
         } else if (ev.target.closest(".o_kanban_previewer")) {
             const attachment = this.store["ir.attachment"].insert({
-                id: this.props.record.data.ir_attachment_id[0],
+                id: this.props.record.data.ir_attachment_id.id,
                 name: this.props.record.data.name,
                 mimetype: this.props.record.data.mimetype,
             });
