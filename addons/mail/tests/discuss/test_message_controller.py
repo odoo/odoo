@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from urllib.parse import urlparse
 
 import odoo
 from odoo.tests import tagged, users
@@ -494,39 +495,60 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(response.status_code, 200)
 
 
-@tagged("mail_message")
+@tagged("mail_message", "post_install", "-at_install")
 class TestMessageLinks(MailCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.user_employee_1 = mail_new_test_user(cls.env, login='tao1', groups='base.group_user', name='Tao Lee')
-        cls.public_channel = cls.env['discuss.channel'].channel_create(name='Public Channel1', group_id=None)
-        cls.private_group = cls.env['discuss.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
-
-    @users('employee')
-    def test_message_link_by_employee(self):
-        channel_message = self.public_channel.message_post(body='Public Channel Message', message_type='comment')
-        private_message_id = self.private_group.with_user(self.user_employee_1).message_post(
-            body='Private Message',
-            message_type='comment',
-        ).id
-        self.authenticate('employee', 'employee')
-        with self.subTest(channel_message=channel_message):
-            expected_url = self.base_url() + f'/odoo/action-mail.action_discuss?active_id={channel_message.res_id}&highlight_message_id={channel_message.id}'
-            res = self.url_open(f'/mail/message/{channel_message.id}')
-            self.assertEqual(res.url, expected_url)
-        with self.subTest(private_message_id=private_message_id):
-            res = self.url_open(f'/mail/message/{private_message_id}')
-            self.assertEqual(res.status_code, 401)
-
-    @users('employee')
-    def test_message_link_by_public(self):
-        message = self.public_channel.message_post(
-            body='Public Channel Message',
-            message_type='comment',
-            subtype_xmlid='mail.mt_comment'
+        cls.channel = cls.env["discuss.channel"].channel_create(
+            name="Channel",
+            group_id=cls.env.ref("base.group_user").id
         )
-        res = self.url_open(f'/mail/message/{message.id}')
-        self.assertEqual(res.status_code, 200)
+        cls.channel_message = cls.channel.message_post(
+            body="Here is the pizza menu",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment"
+        )
+        cls.chatter_message = cls.partner_employee.message_post(
+            body="Here is the pizza menu",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment"
+        )
+
+    def test_message_link_employee_channel(self):
+        self.start_tour(
+            f"/mail/view?model=discuss.channel&res_id={self.channel.id}&highlight_message_id={self.channel_message.id}",
+            "message_link_tour", login="employee",
+        )
+
+    def test_message_link_public_user_channel(self):
+        res = self.url_open(
+            f"/mail/view?model=discuss.channel&res_id={self.channel.id}&highlight_message_id={self.channel_message.id}",
+        )
+        self.assertEqual(res.status_code, 404)
+
+    def test_message_link_employee_chatter(self):
+        self.start_tour(
+            f"/mail/view?model=res.partner&res_id={self.partner_employee.id}&highlight_message_id={self.chatter_message.id}",
+            "message_link_tour", login="employee",
+        )
+
+    def test_message_link_public_user_chatter(self):
+        res = self.url_open(
+            f"/mail/view?model=res.partner&res_id={self.partner_employee.id}&highlight_message_id={self.chatter_message.id}"
+        )
+        self.assertEqual(urlparse(res.url).path, "/web/login")
+
+    def test_message_link_guest_user_public_channel(self):
+        public_channel = self.env["discuss.channel"].channel_create(name="Public Channel", group_id=None)
+        public_channel_message = public_channel.message_post(
+            body="Here is the pizza menu",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment"
+        )
+        self.start_tour(
+            f"/mail/view?model=discuss.channel&res_id={public_channel.id}&highlight_message_id={public_channel_message.id}",
+            "message_link_tour", cookies={self.guest._cookie_name: self.guest._format_auth_cookie()}
+        )

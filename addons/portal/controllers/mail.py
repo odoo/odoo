@@ -54,7 +54,11 @@ class PortalChatter(http.Controller):
                 )
                 can_react = has_react_access and portal_partner
                 partner = portal_partner or partner
-            store.add(thread, {"can_react": bool(can_react)}, as_thread=True)
+            store.add(thread, {
+                "can_react": bool(can_react),
+                "hasReadAccess": request.env[thread_model].has_access("read")
+                }, as_thread=True
+            )
         store.add({"self": Store.one(partner, fields=["active", "avatar_128", "name", "user"])})
         if request.env.user.has_group("website.group_website_restricted_editor"):
             store.add(partner, {"is_user_publisher": True})

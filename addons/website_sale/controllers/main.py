@@ -669,6 +669,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ],
             'product': product,
             'view_track': view_track,
+            "open_reviews": bool(kwargs.get("highlight_message_id")),
         }
 
     @route(['/shop/change_pricelist/<model("product.pricelist"):pricelist>'], type='http', auth="public", website=True, sitemap=False)

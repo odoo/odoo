@@ -424,7 +424,13 @@ export class Message extends Record {
         let notification = _t("Message Link Copied!");
         let type = "info";
         try {
-            await browser.navigator.clipboard.writeText(url(`/mail/message/${this.id}`));
+            await browser.navigator.clipboard.writeText(
+                url("/mail/view", {
+                    model: this.thread.model,
+                    res_id: this.thread.id,
+                    highlight_message_id: this.id,
+                })
+            );
         } catch {
             notification = _t("Message Link Copy Failed (Permission denied?)!");
             type = "danger";

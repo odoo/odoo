@@ -1633,11 +1633,11 @@
         <xpath expr="//div[@t-field='product.website_description']" position="after">
             <div class="o_shop_discussion_rating" data-anchor='true'>
                 <section id="o_product_page_reviews" class="container pt32 pb32" data-anchor='true'>
-                    <a class="o_product_page_reviews_title d-flex justify-content-between text-decoration-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#o_product_page_reviews_content" aria-expanded="false" aria-controls="o_product_page_reviews_content">
+                    <a t-attf-class="o_product_page_reviews_title d-flex justify-content-between text-decoration-none {{'collapsed' if not open_reviews else ''}}" type="button" data-bs-toggle="collapse" data-bs-target="#o_product_page_reviews_content" t-att-aria-expanded="'true' if open_reviews else 'false'" aria-controls="o_product_page_reviews_content">
                         <h3 class="mb32">Customer Reviews</h3>
                         <i class="fa align-self-start"/>
                     </a>
-                    <div id="o_product_page_reviews_content" class="collapse">
+                    <div id="o_product_page_reviews_content" t-att-class="'show' if open_reviews else 'collapse'">
                         <t t-call="portal.message_thread">
                             <t t-set="object" t-value="product"/>
                             <t t-set="display_rating" t-value="True"/>

@@ -27,6 +27,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { router } from "@web/core/browser/router";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 
 export class Discuss extends Component {
@@ -92,7 +93,12 @@ export class Discuss extends Component {
                 () => [this.thread, this.ui.isSmall]
             );
         }
-        onMounted(() => (this.store.discuss.isActive = true));
+        onMounted(() => {
+            this.store.discuss.isActive = true;
+            if (this.thread) {
+                this.thread.highlightMessage = router.current.highlight_message_id;
+            }
+        });
         onWillUnmount(() => (this.store.discuss.isActive = false));
         useEffect(
             (memberListAction) => {
