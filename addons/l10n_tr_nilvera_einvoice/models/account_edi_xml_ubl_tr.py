@@ -151,6 +151,13 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             })
         return additional_document_reference_list
 
+    def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
+        # EXTENDS account.edi.xml.ubl_20
+        vals_list = super()._get_invoice_line_allowance_vals_list(line, tax_values_list)
+        for vals in vals_list:
+            vals.pop('allowance_charge_reason_code', None)
+        return vals_list
+
     def _get_invoice_line_price_vals(self, line):
         # EXTEND 'account.edi.common'
         invoice_line_price_vals = super()._get_invoice_line_price_vals(line)
