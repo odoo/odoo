@@ -16,9 +16,9 @@
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
                     <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
-                        <i class="fa fa-bars"/><span class="d-none d-md-inline-block ms-1">Lessons</span>
+                        <i class="fa fa-bars" role="img"/><span class="d-none d-md-inline-block ms-1">Lessons</span>
                     </a>
-                    <a class="o_wslides_fs_review d-flex align-items-center" title="Reviews" t-if="slide.channel_id.allow_comment">
+                    <a class="o_wslides_fs_review d-flex align-items-center" title="Reviews" t-if="slide.channel_id.allow_comment and channel.is_member">
                         <t t-call="portal_rating.rating_stars_static_popup_composer">
                             <t t-set="rating_avg" t-value="rating_avg"/>
                             <t t-set="rating_total" t-value="rating_count"/>
@@ -42,14 +42,14 @@
                 </div>
                 <div class="d-flex ms-auto">
                     <a class="o_wslides_fs_share d-flex align-items-center px-3" href="#" title="Share">
-                        <i class="fa fa-share-alt"/>
+                        <i class="fa fa-share-alt" role="img"/>
                         <span class="d-none d-md-inline-block ms-2">Share</span>
                     </a>
                     <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}" title="Exit Fullscreen">
-                        <i class="fa fa-sign-out"/><span class="d-none d-md-inline-block ms-1">Exit Fullscreen</span>
+                        <i class="fa fa-sign-out" role="img"/><span class="d-none d-md-inline-block ms-1">Exit Fullscreen</span>
                     </a>
                     <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}" title="Back to course">
-                        <i class="fa fa-home"/><span class="d-none d-md-inline-block ms-1">Back to course</span>
+                        <i class="fa fa-home" role="img"/><span class="d-none d-md-inline-block ms-1">Back to course</span>
                     </a>
                 </div>
             </div>
@@ -105,8 +105,8 @@
             t-attf-href="#collapse-#{category.id if category else 0}" t-attf-aria-controls="collapse-#{category.id if category else 0}">
             <b t-field="category.name"/>
             <div class="flex-grow-1"/>
-            <i class="fa fa-fw fa-caret-left" role="img"/>
             <i class="fa fa-fw fa-caret-down" role="img"/>
+            <i class="fa fa-fw fa-caret-up" role="img"/>
         </a>
         <ul t-attf-class="o_wslides_fs_sidebar_section_slides position-relative px-0 pb-1 my-0 mx-n3 collapse #{'show' if category_collapsed else ''}"
             t-attf-id="collapse-#{category.id if category else 0}">

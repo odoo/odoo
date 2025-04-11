@@ -15,7 +15,7 @@
             <a t-if="(channel.is_member or channel.visibility == 'public') and slide.channel_id.forum_id" id="fullscreen_forum_button"
                 class="d-flex align-items-center px-3" t-attf-href="/forum/#{slug(slide.channel_id.forum_id)}"
                 target="new" title="Forum">
-                <i class="fa fa-comments"/><span class="ms-1 d-none d-md-inline-block">Forum</span>
+                <i class="fa fa-comments" role="img"/><span class="ms-1 d-none d-md-inline-block">Forum</span>
             </a>
         </xpath>
     </template>
