@@ -213,6 +213,7 @@ export class PosOrder extends Base {
     }
 
     getRoundedRemaining(roundingMethod, remaining) {
+        remaining = roundPrecision(remaining, this.config_id.currency_id.rounding);
         let { rounding_method: method, rounding } = roundingMethod;
         if (
             lt(remaining, 0, {
