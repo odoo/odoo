@@ -10,7 +10,6 @@ class StockMoveLine(models.Model):
                                                ('partially_received', 'Partially Received'),
                                                ('fully_received', 'Fully Received')],
                                               string='Delivery Receipt Status', default='draft')
-    packed = fields.Boolean('Packed', default=False)
     released_manual = fields.Boolean('Released', default=False)
     xdock_packaging_qty = fields.Float(
         string="Xdock Packaging Quantity")
@@ -91,12 +90,3 @@ class StockMoveLine(models.Model):
                 move.delivery_receipt_state = 'partially_received'
             else:
                 move.delivery_receipt_state = 'fully_received'
-
-    @api.onchange('packed')
-    def _onchange_packed(self):
-        """
-        Prevent unpacking if the item is already marked as manually released.
-        """
-        for move in self:
-            if not move.packed and move.released_manual:
-                raise ValidationError("This item has already been delivered manually and cannot be unpacked.")
