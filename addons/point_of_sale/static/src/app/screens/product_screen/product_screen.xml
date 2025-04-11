@@ -30,6 +30,7 @@
                             t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             productId="product.id"
                             product="product"
+                            showProductImages="pos.config.show_product_images"
                             class="pos.productViewMode"
                             name="getProductName(product)"
                             color="product.color || product.pos_categ_ids?.at(-1)?.color"
