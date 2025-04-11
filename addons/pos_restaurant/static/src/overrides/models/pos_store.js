@@ -159,12 +159,18 @@ patch(PosStore.prototype, {
     //@override
     add_new_order() {
         const order = super.add_new_order(...arguments);
-        this.addPendingOrder([order.id]);
+        if (this.config.module_pos_restaurant) {
+            this.addPendingOrder([order.id]);
+        }
         return order;
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        if (this.config.module_pos_restaurant && !this.get_order().uiState.booked) {
-            this.get_order().setBooked(true);
+        if (this.config.module_pos_restaurant) {
+            const order = this.get_order();
+            this.addPendingOrder([order.id]);
+            if (!this.get_order().uiState.booked) {
+                this.get_order().setBooked(true);
+            }
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
     },
