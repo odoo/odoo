@@ -264,7 +264,11 @@ class SaleOrderLine(models.Model):
         allocated_hours = 0.0
         if self.product_id.service_type not in ['milestones', 'manual']:
             allocated_hours = self._convert_qty_company_hours(self.company_id)
-        sale_line_name_parts = self.name.split('\n')
+        if self.name.startswith((self.product_id.display_name + '\n', self.product_id.name + '\n')):
+            # keep first line of description in task title
+            sale_line_name_parts = self.name.replace('\n', ' - ', 1).split('\n')
+        else:
+            sale_line_name_parts = self.name.split('\n')
         products_inside_template_line_with_name = self.order_id.sale_order_template_id.sale_order_template_line_ids.filtered(
             lambda line: line.product_id and line.name).product_id
         if self.product_id in products_inside_template_line_with_name:
