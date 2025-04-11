@@ -1,0 +1,15 @@
+<odoo>
+    <record id="view_payment_provider_form_inherit_cinetpay" model="ir.ui.view">
+        <field name="name">payment.provider.form.inherit.cinetpay</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.view_payment_provider_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='credentials']" position="inside">
+                <group attrs="{'invisible': [('code', '!=', 'cinetpay')]}">
+                    <field name="cinetpay_api_key"/>
+                    <field name="cinetpay_site_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

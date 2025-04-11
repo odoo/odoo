@@ -1,0 +1,13 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Ajouter un fournisseur de paiement CinetPay -->
+        <record id="payment_provider_cinetpay" model="payment.provider">
+            <field name="name">CinetPay</field>
+            <field name="code">cinetpay</field> <!-- Code pour CinetPay -->
+            <field name="state">enabled</field> <!-- L'état du fournisseur (activé) -->
+            <field name="cinetpay_api_key">178011212167efc7628d1cf3.91649419</field> <!-- Clé API de CinetPay -->
+            <field name="cinetpay_site_id">105891419</field> <!-- ID du site CinetPay -->
+            <field name="cinetpay_notify_url">https://votre-domaine.com/payment/cinetpay/notify</field> <!-- URL de notification -->
+        </record>
+    </data>
+</odoo>
