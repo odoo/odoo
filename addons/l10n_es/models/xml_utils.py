@@ -1,19 +1,22 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from base64 import b64encode, encodebytes
+from datetime import datetime
 import hashlib
 import re
-from base64 import b64encode, encodebytes
+from uuid import uuid4
 
-from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.x509.oid import NameOID
 from lxml import etree
 from odoo.tools.xml_utils import cleanup_xml_node
 
 
-# Utility Methods for Basque Country's TicketBAI XML-related stuff.
+# Utility methods for xades digital signature
 
 NS_MAP = {'': 'http://www.w3.org/2000/09/xmldsig#'}  # default namespace matches signature's `ds:``
+
 
 def canonicalize_node(node):
     """
@@ -24,6 +27,7 @@ def canonicalize_node(node):
     """
     node = etree.fromstring(node) if isinstance(node, str) else node
     return etree.tostring(node, method='c14n', with_comments=False, exclusive=False)
+
 
 def cleanup_xml_signature(xml_sig):
     """
@@ -40,6 +44,7 @@ def cleanup_xml_signature(xml_sig):
             elem.text = ''  # keeps the signature in one line, prevents self-closing tags
         elem.tail = ''  # removes line feed and whitespace after the tag
     return sig_elem
+
 
 def get_uri(uri, reference, base_uri):
     """
@@ -69,10 +74,10 @@ def get_uri(uri, reference, base_uri):
         if len(results) == 1:
             return canonicalize_node(results[0])
         if len(results) > 1:
-            raise Exception("Ambiguous reference URI {} resolved to {} nodes".format(
-                uri, len(results)))
+            raise Exception(f"Ambiguous reference URI {uri} resolved to {len(results)} nodes")
 
     raise Exception(f"URI {uri!r} not found")
+
 
 def calculate_references_digests(node, base_uri=''):
     """
@@ -84,6 +89,7 @@ def calculate_references_digests(node, base_uri=''):
         ref_node = get_uri(reference.get('URI', ''), reference, base_uri)
         hash_digest = hashlib.new('sha256', ref_node).digest()
         reference.find('DigestValue', namespaces=NS_MAP).text = b64encode(hash_digest)
+
 
 def fill_signature(node, private_key):
     """
@@ -102,11 +108,13 @@ def fill_signature(node, private_key):
     node.find('SignatureValue', namespaces=NS_MAP).text =\
         bytes_as_block(signature)
 
+
 def int_as_bytes(number):
     """
     Converts an integer to an ASCII/UTF-8 byte string (with no leading zeroes).
     """
     return number.to_bytes((number.bit_length() + 7) // 8, byteorder='big')
+
 
 def bytes_as_block(string):
     """
@@ -116,3 +124,44 @@ def bytes_as_block(string):
     https://www.ietf.org/rfc/rfc2045.txt
     """
     return encodebytes(string).decode()
+
+
+def get_xades_template_render_values(sigpolicy, cert_public):
+    public_key = cert_public.public_key()
+
+    # Identifiers
+    document_id = "Document-" + str(uuid4())
+    signature_id = "Signature-" + document_id
+    keyinfo_id = "KeyInfo-" + document_id
+    sigproperties_id = "SignatureProperties-" + document_id
+
+    # Render digital signature scaffold from QWeb
+    common_name = cert_public.issuer.get_attributes_for_oid(NameOID.COMMON_NAME)[0].value
+    org_unit = cert_public.issuer.get_attributes_for_oid(NameOID.ORGANIZATIONAL_UNIT_NAME)[0].value
+    org_name = cert_public.issuer.get_attributes_for_oid(NameOID.ORGANIZATION_NAME)[0].value
+    country_name = cert_public.issuer.get_attributes_for_oid(NameOID.COUNTRY_NAME)[0].value
+    # TODO: check; we may need to add other keys ('L', '2.5.4.97')
+    return {
+        'dsig': {
+            'document_id': document_id,
+            'x509_certificate': bytes_as_block(cert_public.public_bytes(encoding=serialization.Encoding.DER)),
+            'public_modulus': bytes_as_block(int_as_bytes(public_key.public_numbers().n)),
+            'public_exponent': bytes_as_block(int_as_bytes(public_key.public_numbers().e)),
+            'iso_now': datetime.now().isoformat(),
+            'keyinfo_id': keyinfo_id,
+            'signature_id': signature_id,
+            'sigproperties_id': sigproperties_id,
+            'reference_uri': "Reference-" + document_id,
+            'sigpolicy_url': sigpolicy['url'],
+            'sigpolicy_digest': sigpolicy['digest'],
+            'sigcertif_digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
+            'x509_issuer_description': f'CN={common_name}, OU={org_unit}, O={org_name}, C={country_name}',
+            'x509_serial_number': cert_public.serial_number,
+        }
+    }
+
+
+def sign_xades(xml_sig, cert_private):
+    xml_sig = cleanup_xml_signature(xml_sig)
+    calculate_references_digests(xml_sig.find("SignedInfo", namespaces=NS_MAP))
+    fill_signature(xml_sig, cert_private)

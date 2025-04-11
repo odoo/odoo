@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="verifactu_record_registration">
+        <sum:RegFactuSistemaFacturacion
+            xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+            xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <t t-call="l10n_es_edi_verifactu.verifactu_cabecera"/>
+        </sum:RegFactuSistemaFacturacion>
+    </template>
+
+    <template id="verifactu_cabecera">
+        <sum:Cabecera
+            xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+            xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <sum1:ObligadoEmision>
+                <sum1:NombreRazon t-out="sender_name"/>
+                <sum1:NIF t-out="sender_NIF"/>
+            </sum1:ObligadoEmision>
+            <sum1:RemisionVoluntaria>
+                <sum1:Incidencia t-out="incident"/>
+            </sum1:RemisionVoluntaria>
+        </sum:Cabecera>
+    </template>
+
+    <template id="verifactu_registro_factura">
+        <sum:RegistroFactura xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd">
+            <t t-if="cancellation">
+                <t t-call="l10n_es_edi_verifactu.verifactu_registro_anulacion"/>
+            </t>
+            <t t-else="">
+                <t t-call="l10n_es_edi_verifactu.verifactu_registro_alta"/>
+            </t>
+        </sum:RegistroFactura>
+    </template>
+
+    <template id="verifactu_registro_alta">
+        <sum1:RegistroAlta
+            xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+            xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <sum1:IDVersion t-out="verifactu_version"/>
+            <sum1:IDFactura>
+                <sum1:IDEmisorFactura t-out="company_NIF"/>
+                <sum1:NumSerieFactura t-out="invoice_name"/>
+                <sum1:FechaExpedicionFactura t-out="invoice_date"/>
+            </sum1:IDFactura>
+            <sum1:NombreRazonEmisor t-out="company_name"/>
+            <sum1:Subsanacion t-out="subsanacion"/>
+            <sum1:RechazoPrevio t-out="rechazo_previo"/>
+            <sum1:TipoFactura t-out="tipo_factura"/>
+            <sum1:TipoRectificativa t-out="tipo_rectificativa"/>
+            <sum1:FacturasRectificadas t-if="refunded_record">
+                <sum1:IDFacturaRectificada>
+                    <sum1:IDEmisorFactura t-out="refunded_record['IDEmisorFactura']"/>
+                    <sum1:NumSerieFactura t-out="refunded_record['NumSerieFactura']"/>
+                    <sum1:FechaExpedicionFactura t-out="refunded_record['FechaExpedicionFactura']"/>
+                </sum1:IDFacturaRectificada>
+            </sum1:FacturasRectificadas>
+            <sum1:FechaOperacion t-out="fecha_operacion"/>
+            <sum1:DescripcionOperacion t-out="descripcion_operacion"/>
+            <sum1:FacturaSimplificadaArt7273 t-out="simplificada_art7273"/>
+            <sum1:FacturaSinIdentifDestinatarioArt61d t-out="sin_identif_destinatario_art61d"/>
+            <sum1:Macrodato t-out="macrodato"/>
+            <sum1:Destinatarios t-if="partner_info">
+                <sum1:IDDestinatario>
+                    <sum1:NombreRazon t-out="partner_info['NombreRazon']"/>
+                    <!-- NIF or IDOtro -->
+                    <sum1:NIF t-if="'NIF' in partner_info" t-out="partner_info['NIF']"/>
+                    <sum1:IDOtro t-if="'NIF' not in partner_info and 'IDOtro' in partner_info">
+                        <sum1:CodigoPais t-out="partner_info['IDOtro'].get('CodigoPais')"/>
+                        <sum1:IDType t-out="partner_info['IDOtro'].get('IDType')"/>
+                        <sum1:ID t-out="partner_info['IDOtro'].get('ID')"/>
+                    </sum1:IDOtro>
+                </sum1:IDDestinatario>
+            </sum1:Destinatarios>
+            <sum1:Cupon t-out="cupon"/>
+            <sum1:Desglose>
+                <sum1:DetalleDesglose t-foreach="detalles" t-as="detalle">
+                    <sum1:Impuesto t-out="detalle['Impuesto']"/>
+                    <sum1:ClaveRegimen t-out="detalle['ClaveRegimen']"/>
+                    <sum1:CalificacionOperacion t-out="detalle['CalificacionOperacion']"/>
+                    <sum1:OperacionExenta t-if="not detalle['CalificacionOperacion']" t-out="detalle['OperacionExenta']"/>
+                    <sum1:TipoImpositivo t-out="detalle['TipoImpositivo']"/>
+                    <sum1:BaseImponibleOimporteNoSujeto t-out="detalle['BaseImponibleOimporteNoSujeto']"/>
+                    <sum1:BaseImponibleACoste t-out="detalle['BaseImponibleACoste']"/>
+                    <sum1:CuotaRepercutida t-out="detalle['CuotaRepercutida']"/>
+                    <sum1:TipoRecargoEquivalencia t-out="detalle['TipoRecargoEquivalencia']"/>
+                    <sum1:CuotaRecargoEquivalencia t-out="detalle['CuotaRecargoEquivalencia']"/>
+                </sum1:DetalleDesglose>
+            </sum1:Desglose>
+            <sum1:CuotaTotal t-out="tax_amount"/>
+            <sum1:ImporteTotal t-out="total_amount"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_encadenamiento"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_sistema_informatico"/>
+            <sum1:FechaHoraHusoGenRegistro t-out="generation_time_string"/>
+            <sum1:TipoHuella t-out="tipo_huella"/>
+            <sum1:Huella t-out="huella"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_signature_xades"/>
+        </sum1:RegistroAlta>
+    </template>
+
+    <template id="verifactu_registro_anulacion">
+        <sum1:RegistroAnulacion
+            xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+            xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <sum1:IDVersion t-out="verifactu_version"/>
+            <sum1:IDFactura>
+                <sum1:IDEmisorFacturaAnulada t-out="company_NIF"/>
+                <sum1:NumSerieFacturaAnulada t-out="invoice_name"/>
+                <sum1:FechaExpedicionFacturaAnulada t-out="invoice_date"/>
+            </sum1:IDFactura>
+            <sum1:SinRegistroPrevio t-out="sin_registro_previo"/>
+            <sum1:RechazoPrevio t-out="rechazo_previo"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_encadenamiento"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_sistema_informatico"/>
+            <sum1:FechaHoraHusoGenRegistro t-out="generation_time_string"/>
+            <sum1:TipoHuella t-out="tipo_huella"/>
+            <sum1:Huella t-out="huella"/>
+            <t t-call="l10n_es_edi_verifactu.verifactu_signature_xades"/>
+        </sum1:RegistroAnulacion>
+    </template>
+
+    <template id="verifactu_encadenamiento">
+       <sum1:Encadenamiento xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+           <!-- Only one of the PrimerRegistro and RegistroAnterior tags should be output -->
+           <sum1:PrimerRegistro t-if="first_registration" t-out="chaining['PrimerRegistro']"/>
+           <sum1:RegistroAnterior t-if="not first_registration">
+               <sum1:IDEmisorFactura t-out="chaining['IDEmisorFactura']"/>
+               <sum1:NumSerieFactura t-out="chaining['NumSerieFactura']"/>
+               <sum1:FechaExpedicionFactura t-out="chaining['FechaExpedicionFactura']"/>
+               <sum1:Huella t-out="chaining['Huella']"/>
+           </sum1:RegistroAnterior>
+       </sum1:Encadenamiento>
+    </template>
+
+    <template id="verifactu_sistema_informatico">
+        <sum1:SistemaInformatico xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+            <sum1:NombreRazon t-out="sistema_informatico['NombreRazon']"/>
+            <sum1:NIF t-out="sistema_informatico['NIF']"/>
+            <sum1:NombreSistemaInformatico t-out="sistema_informatico['NombreSistemaInformatico']"/>
+            <sum1:IdSistemaInformatico t-out="sistema_informatico['IdSistemaInformatico']"/>
+            <sum1:Version t-out="sistema_informatico['Version']"/>
+            <sum1:NumeroInstalacion t-out="sistema_informatico['NumeroInstalacion']"/>
+            <sum1:TipoUsoPosibleSoloVerifactu t-out="sistema_informatico['TipoUsoPosibleSoloVerifactu']"/>
+            <sum1:TipoUsoPosibleMultiOT t-out="sistema_informatico['TipoUsoPosibleMultiOT']"/>
+            <sum1:IndicadorMultiplesOT t-out="sistema_informatico['IndicadorMultiplesOT']"/>
+        </sum1:SistemaInformatico>
+    </template>
+
+    <!-- TODO: in master: move template to 'l10n_es' so that tbai and verifactu can use the same one -->
+    <template id="verifactu_signature_xades">
+        <ds:Signature t-att-Id="dsig['signature_id']" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:SignedInfo>
+                <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+                <ds:Reference t-att-Id="dsig['reference_uri']" Type="http://www.w3.org/2000/09/xmldsig#Object" URI="">
+                    <ds:Transforms>
+                        <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                    </ds:Transforms>
+                    <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                    <ds:DigestValue></ds:DigestValue>
+                </ds:Reference>
+                <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" t-attf-URI="##{dsig['sigproperties_id']}">
+                    <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                    <ds:DigestValue></ds:DigestValue>
+                </ds:Reference>
+                <ds:Reference t-attf-URI="##{dsig['keyinfo_id']}">
+                    <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                    <ds:DigestValue></ds:DigestValue>
+                </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue></ds:SignatureValue>
+            <ds:KeyInfo t-att-Id="dsig['keyinfo_id']">
+                <ds:X509Data>
+                    <ds:X509Certificate t-out="dsig['x509_certificate']"/>
+                </ds:X509Data>
+                <ds:KeyValue>
+                    <ds:RSAKeyValue>
+                        <ds:Modulus t-out="dsig['public_modulus']"/>
+                        <ds:Exponent t-out="dsig['public_exponent']"/>
+                    </ds:RSAKeyValue>
+                </ds:KeyValue>
+            </ds:KeyInfo>
+            <ds:Object>
+                <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" t-attf-Target="##{dsig['signature_id']}">
+                    <xades:SignedProperties t-att-Id="dsig['sigproperties_id']">
+                        <xades:SignedSignatureProperties>
+                            <xades:SigningTime t-out="dsig['iso_now']"/>
+                            <xades:SigningCertificateV2>
+                                <xades:Cert>
+                                    <xades:CertDigest>
+                                        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                        <ds:DigestValue t-out="dsig['sigcertif_digest']"/>
+                                    </xades:CertDigest>
+                                    <xades:IssuerSerial>
+                                        <ds:X509IssuerName t-out="dsig['x509_issuer_description']"/>
+                                        <ds:X509SerialNumber t-out="dsig['x509_serial_number']"/>
+                                    </xades:IssuerSerial>
+                                </xades:Cert>
+                            </xades:SigningCertificateV2>
+                            <xades:SignaturePolicyIdentifier>
+                                <xades:SignaturePolicyId>
+                                    <xades:SigPolicyId>
+                                        <xades:Identifier t-out="dsig['sigpolicy_url']"/>
+                                    </xades:SigPolicyId>
+                                    <xades:SigPolicyHash>
+                                        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                        <ds:DigestValue t-out="dsig['sigpolicy_digest']"/>
+                                    </xades:SigPolicyHash>
+                                </xades:SignaturePolicyId>
+                            </xades:SignaturePolicyIdentifier>
+                        </xades:SignedSignatureProperties>
+                    </xades:SignedProperties>
+                </xades:QualifyingProperties>
+            </ds:Object>
+        </ds:Signature>
+    </template>
+
+    <template id="soap_request_verifactu">
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+            <soapenv:Header/>
+            <soapenv:Body>
+           </soapenv:Body>
+        </soapenv:Envelope>
+    </template>
+
+</odoo>
