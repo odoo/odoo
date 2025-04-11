@@ -364,8 +364,13 @@ class HrAttendance(models.Model):
                             work_duration += (local_check_out - local_check_in).total_seconds() / 3600.0
                         # In case of fully flexible employee, no overtime is computed
                         if not emp.is_fully_flexible:
-                            overtime_duration = work_duration - emp.resource_id.calendar_id.hours_per_day
-                            overtime_duration_real = overtime_duration
+                            # If the attendance is for absence but the employee is on a leave
+                            if float_is_zero(work_duration, 2) and not working_times:
+                                overtime_duration = work_duration
+                                overtime_duration_real = overtime_duration
+                            else:
+                                overtime_duration = work_duration - emp.resource_id.calendar_id.hours_per_day
+                                overtime_duration_real = overtime_duration
 
                     # The employee usually doesn't work on that day
                     elif not working_times[attendance_date]:
