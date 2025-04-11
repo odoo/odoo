@@ -182,7 +182,7 @@
             ('remove', 'point_of_sale/static/src/backend/**/*'),
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
             'point_of_sale/static/src/customer_display/utils.js',
-            'point_of_sale/static/src/customer_display/customer_display_qr_code_popup/*',
+            'point_of_sale/static/src/app/customer_display/**/*',
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
             ("include", "point_of_sale.base_tests"),
@@ -199,7 +199,6 @@
             'web/static/src/webclient/actions/**/*',
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
-            'point_of_sale/static/src/customer_display/customer_display_adapter.js',
             'partner_autocomplete/static/src/**/*',
         ],
         'point_of_sale.base_tests': [
@@ -226,8 +225,6 @@
             "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/customer_display/**/*",
-            ('remove', 'point_of_sale/static/src/customer_display/customer_display_adapter.js'),
-            ('remove', 'point_of_sale/static/src/customer_display/customer_display_qr_code_popup/*'),
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),

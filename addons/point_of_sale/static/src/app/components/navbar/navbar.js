@@ -22,7 +22,7 @@ import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { uuidv4 } from "@point_of_sale/utils";
-import { QrCodeCustomerDisplay } from "@point_of_sale/customer_display/customer_display_qr_code_popup/customer_display_qr_code_popup";
+import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 
 const { DateTime } = luxon;
 
