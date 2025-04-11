@@ -161,6 +161,8 @@ patch(Message.prototype, {
 
     openRecord() {
         this.message.thread.open({ focus: true });
+        this.store.highlightMessage = this.message;
+        this.env.messageHighlight?.highlightMessage(this.message, this.message.thread);
     },
 
     /**

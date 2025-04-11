@@ -172,6 +172,29 @@ export class Thread extends Component {
         );
         useEffect(
             () => {
+                if (this.store.highlightMessage && this.props.thread) {
+                    this.messageHighlight.highlightedMessageId = this.store.highlightMessage;
+                    this.messageHighlight?.highlightMessage(
+                        this.messageHighlight.highlightedMessageId,
+                        this.props.thread
+                    );
+                }
+            },
+            () => [this.store.highlightMessage, this.props.thread]
+        );
+        useEffect(
+            () => {
+                if (
+                    this.store?.highlightMessage &&
+                    this.messageHighlight?.highlightedMessageId === null
+                ) {
+                    this.store.highlightMessage = null;
+                }
+            },
+            () => [this.messageHighlight]
+        );
+        useEffect(
+            () => {
                 if (!this.state.mountedAndLoaded) {
                     return;
                 }
