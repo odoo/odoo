@@ -1,11 +1,13 @@
 /* global Stripe */
 
-import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
-import { StripeOptions } from '@payment_stripe/js/stripe_options';
+import { patch } from '@web/core/utils/patch';
 import { _t } from '@web/core/l10n/translation';
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from '@web/core/network/rpc';
+import { redirect } from '@web/core/utils/urls';
+import { ExpressCheckout } from '@payment/interactions/express_checkout';
+import { StripeOptions } from '@payment_stripe/js/stripe_options';
 
-paymentExpressCheckoutForm.include({
+patch(ExpressCheckout.prototype, {
     /**
      * Get the order details to display on the payment form.
      *
@@ -16,13 +18,11 @@ paymentExpressCheckoutForm.include({
      */
     _getOrderDetails(deliveryAmount, amountFreeShipping) {
         const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
-        let minorAmount = parseInt(this.paymentContext['minorAmount'])
-        const displayItems = [
-            {
-                label: _t("Your order"),
-                amount: minorAmount,
-            },
-        ];
+        const minorAmount = parseInt(this.paymentContext['minorAmount']);
+        const displayItems = [{
+            label: _t("Your order"),
+            amount: minorAmount,
+        }];
         if (this.paymentContext['shippingInfoRequired'] && deliveryAmount !== undefined) {
             displayItems.push({
                 label: _t("Delivery"),
@@ -61,7 +61,7 @@ paymentExpressCheckoutForm.include({
          * the value when it equals '0'.
          */
         if (providerData.providerCode !== 'stripe' || !this.paymentContext['amount']) {
-            this._super(...arguments);
+            super._prepareExpressCheckoutForm(...arguments);
             return;
         }
 
@@ -88,7 +88,7 @@ paymentExpressCheckoutForm.include({
         });
 
         // Check the availability of the Payment Request API first.
-        const canMakePayment = await paymentRequest.canMakePayment();
+        const canMakePayment = await this.waitFor(paymentRequest.canMakePayment());
         if (canMakePayment) {
             paymentRequestButton.mount(
                 `#o_stripe_express_checkout_container_${providerData.providerId}`
@@ -128,18 +128,20 @@ paymentExpressCheckoutForm.include({
                 addresses.shipping_option = ev.shippingOption;
             }
             // Update the customer addresses on the related document.
-            this.paymentContext.partnerId = parseInt(await rpc(
+            this.paymentContext.partnerId = parseInt(await this.waitFor(rpc(
                 this.paymentContext['expressCheckoutRoute'],
                 addresses,
-            ));
+            )));
             // Call the transaction route to create the transaction and retrieve the client secret.
-            const { client_secret } = await rpc(
+            const { client_secret } = await this.waitFor(rpc(
                 this.paymentContext['transactionRoute'],
                 this._prepareTransactionRouteParams(providerData.providerId),
-            );
+            ));
             // Confirm the PaymentIntent without handling eventual next actions (e.g. 3DS).
-            const { paymentIntent, error: confirmError } = await stripeJS.confirmCardPayment(
-                client_secret, {payment_method: ev.paymentMethod.id}, {handleActions: false}
+            const { paymentIntent, error: confirmError } = await this.waitFor(
+                stripeJS.confirmCardPayment(
+                    client_secret, {payment_method: ev.paymentMethod.id}, {handleActions: false}
+                )
             );
             if (confirmError) {
                 // Report to the browser that the payment failed, prompting it to re-show the
@@ -150,9 +152,10 @@ paymentExpressCheckoutForm.include({
                 // the browser payment method collection interface.
                 ev.complete('success');
                 if (paymentIntent.status === 'requires_action') { // A next step is required.
-                    await stripeJS.confirmCardPayment(client_secret); // Trigger the step.
+                    // Trigger the step.
+                    await this.waitFor(stripeJS.confirmCardPayment(client_secret));
                 }
-                window.location = '/payment/status';
+                redirect('/payment/status');
             }
         });
 
@@ -163,7 +166,7 @@ paymentExpressCheckoutForm.include({
             // shipping address, the shipping options need to be fetched again.
             paymentRequest.on('shippingaddresschange', async (ev) => {
                 // Call the shipping address update route to fetch the shipping options.
-                const availableCarriersData = await rpc(
+                const availableCarriersData = await this.waitFor(rpc(
                     this.paymentContext['shippingAddressUpdateRoute'],
                     {
                         partial_delivery_address: {
@@ -173,7 +176,7 @@ paymentExpressCheckoutForm.include({
                             state: ev.shippingAddress.region,
                         },
                     },
-                );
+                ));
                 const { delivery_methods, delivery_discount_minor_amount } = availableCarriersData;
                 if (delivery_methods.length === 0) {
                     ev.updateWith({status: 'invalid_shipping_address'});
@@ -196,9 +199,9 @@ paymentExpressCheckoutForm.include({
 
             // When the customer selects a different shipping option, update the displayed total.
             paymentRequest.on('shippingoptionchange', async (ev) => {
-                const result = await rpc('/shop/set_delivery_method', {
+                const result = await this.waitFor(rpc('/shop/set_delivery_method', {
                     dm_id: parseInt(ev.shippingOption.id),
-                });
+                }));
                 ev.updateWith({
                     status: 'success',
                     ...this._getOrderDetails(
@@ -220,7 +223,7 @@ paymentExpressCheckoutForm.include({
      * @return {void}
      */
     _updateAmount(newAmount, newMinorAmount) {
-        this._super(...arguments);
+        super._updateAmount(...arguments);
         this.stripePaymentRequests && this.stripePaymentRequests.map(
             paymentRequest => paymentRequest.update(this._getOrderDetails())
         );
