@@ -58,6 +58,7 @@ registry.category("web_tour.tours").add('configurator_translation', {
         trigger: '.card:contains(Parseltongue_privacy)',
         run: "click",
     }, {
+        id: "build_website",
         content: "Click on build my website",
         trigger: 'button.btn-primary',
         run: "click",
