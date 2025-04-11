@@ -4430,17 +4430,32 @@ class MailThread(models.AbstractModel):
 
     def _truncate_payload(self, payload):
         """
-        Check the payload limit of 4096 bytes to avoid 413 error return code.
+        Check the payload limit of 3990 bytes to avoid 413 error return code.
         If the payload is too big, we trunc the body value.
+        This limit has been chosen based on the extra bytes added by the encryption
+        using AES128GCM. Taking into account what are the extra bytes added at the header:
+        salt(16) + record_size(4) + key_len(1) + public_key (sender_public_key.len)
         :param dict payload: Current payload to trunc
         :return: The truncate payload;
         """
-        payload_length = len(str(payload).encode())
-        body = payload['options']['body']
+        payload_length = len(json.dumps(payload).encode())
+        # json.dumps defaults to translating unicode to hex codepoints (ensure_ascii=True)
+        # hence we need to check the length the body takes up in that format
+        # json string quotes are removed and the body is not encoded as it's already all ASCII
+        body = json.dumps(payload['options']['body'])[1:-1]
         body_length = len(body)
-        if payload_length > 4096:
-            body_max_length = 4096 - payload_length - body_length
-            payload['options']['body'] = body.encode()[:body_max_length].decode(errors="ignore")
+
+        if payload_length > 3990:
+            body_max_length = max(0, 3990 - payload_length + body_length)
+            # truncate to max length and try to loads again
+            # if there's any error, it will be a unicode error
+            # the error position gives us the start of the codepoint
+            # remove everything after that + the preceding escape marker (\u)
+            try:
+                truncated_body = json.loads(f'"{body[:body_max_length + 1]}"')
+            except json.decoder.JSONDecodeError as json_error:
+                truncated_body = json.loads(f'"{body[:json_error.pos-2]}"')
+            payload['options']['body'] = truncated_body
         return payload
 
     def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
