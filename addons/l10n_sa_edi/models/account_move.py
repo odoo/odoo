@@ -245,6 +245,13 @@ class AccountMove(models.Model):
             'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
         }
 
+    def _l10n_sa_edi_get_invoice_zatca_filename(self):
+        self.ensure_one()
+        date = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), datetime.now()).strftime('%Y%m%dT%H%M%S')
+        taxid = self.company_id.vat
+        name = self.name.replace("/", "-")
+        return f"{taxid}_{date}_{name}.xml"
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
