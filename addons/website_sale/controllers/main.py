@@ -1763,3 +1763,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'currency_id': website.currency_id.id,
             'pricelist_id': request.pricelist.id,
         })
+
+    @route('/website_sale/get_snippet_data', type='jsonrpc', auth='public', website=True)
+    def get_snippet_data(self, template_data, **kwargs):
+        results = {}
+        for key, value in template_data.items():
+            # Here, sudo() is added because, on Runbot, the "category_page_and_products_snippet_edition"
+            # tour is failing due to access rights issues with the website.snippet.filter model.
+            results[key] = request.env['website.snippet.filter'].sudo().get_dummy_product_records(key, value)
+        return results
