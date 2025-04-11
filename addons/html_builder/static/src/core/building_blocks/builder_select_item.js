@@ -17,6 +17,9 @@ export class BuilderSelectItem extends Component {
         className: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
+    static defaultProps = {
+        className: "",
+    };
     static components = { BuilderComponent };
 
     setup() {
