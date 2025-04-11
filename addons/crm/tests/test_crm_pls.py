@@ -626,6 +626,7 @@ class TestCrmPls(CrmPlsCommon):
         Lead._cron_update_automated_probabilities()
         self.env.invalidate_all()
 
+        # Values for leads[5]:
         # pW / pL is the probability that a won / lost lead has the lead value for a given field
         # [Score = pW / (pW + pL)] -> A score above .5 is a TOP, below .5 a LOW, equal to .5 ignored
         # Exception : for stage_id -> Score = 1 - P(current stage or lower for a lost lead)
@@ -653,6 +654,38 @@ class TestCrmPls(CrmPlsCommon):
             self.assertEqual(expected_top, data_top['field'])
         for expected_low, data_low in zip(expected_low_3, tooltip_data['low_3_data']):
             self.assertEqual(expected_low, data_low['field'])
+
+        # Assert scores for phone/email_state are excluded if absurd,
+        # e.g. in top 3 when incorrect / not set or in low 3 if correct
+        # Stage does not change and always has a score of 0.645
+        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "email_state,phone_state")
+
+        leads[5].phone_state = False
+        leads[5].email_state = 'incorrect'
+        leads[:2].phone_state = False
+        leads[:2].email_state = 'incorrect'
+        leads[2:5].phone_state = 'correct'
+        leads[2:5].email_state = 'correct'
+        Lead._cron_update_automated_probabilities()
+        self.env.invalidate_all()
+
+        # phone_state: pW = 2.1/2.2  pL = 0.1/3.2            -> Score = 0.968
+        # email_state: pW = 2.1/2.2  pL = 0.1/3.2            -> Score = 0.968
+        tooltip_data = leads[5].prepare_pls_tooltip_data()
+        self.assertEqual(['stage_id'], [entry['field'] for entry in tooltip_data['top_3_data']])
+        self.assertFalse(tooltip_data['low_3_data'])
+
+        leads[5].email_state = 'correct'
+        leads[5].phone_state = 'incorrect'
+        leads[:2].phone_state = 'incorrect'
+        Lead._cron_update_automated_probabilities()
+        self.env.invalidate_all()
+
+        # phone_state: pW = 2.1/2.2  pL = 0.1/3.2            -> Score = 0.968
+        # email_state: pW = 0.1/2.2  pL = 3.1/3.2            -> Score = 0.045
+        tooltip_data = leads[5].prepare_pls_tooltip_data()
+        self.assertEqual(['stage_id'], [entry['field'] for entry in tooltip_data['top_3_data']])
+        self.assertFalse(tooltip_data['low_3_data'])
 
 
 @tagged('post_install', '-at_install', 'crm_lead_pls')
