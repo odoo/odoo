@@ -394,3 +394,30 @@ registry.category("web_tour.tours").add("PoSSettleQuotation", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("POSSalePaymentScreenInvoiceOrder", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_order_with_lot", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            PosSale.selectedOrderLinesHasLots("Product A", ["1001", "1002"]),
+        ].flat(),
+});

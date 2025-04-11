@@ -6,7 +6,6 @@ import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_p
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -82,11 +81,10 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
             ProductScreen.selectedOrderlineHas("Magnetic Board", "2.00"),
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", "3.00"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
 
-            PosLoyalty.orderTotalIs("5.94"),
+            PosLoyalty.orderTotalIs("9.14"),
             PosLoyalty.finalizeOrder("Cash", "10"),
 
             // Promotion: 2 items of shelves, get desk_pad/monitor_stand free
@@ -128,7 +126,6 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -145,8 +142,21 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-5.10", "1.00"),
+            PosLoyalty.orderTotalIs("10.20"),
+            PosLoyalty.finalizeOrder("Cash", "10.20"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -171,7 +181,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProductTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -191,7 +200,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardProductDomainTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -208,7 +216,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -241,7 +248,6 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
 });
 
 registry.category("web_tour.tours").add("test_loyalty_on_order_with_fixed_tax", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),

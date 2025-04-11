@@ -10,15 +10,15 @@
 # Fernanda Alvarez, 2024
 # Wil Odoo, 2024
 # Lucia Pacheco, 2024
-# Larissa Manderfeld, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-19 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -273,6 +273,11 @@ msgid "ACTIVATE STRIPE"
 msgstr "ACTIVAR STRIPE"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_abitab
+msgid "Abitab"
+msgstr "Abitab"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 msgid "Account"
@@ -451,6 +456,11 @@ msgid "Asiapay"
 msgstr "Asiapay"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_astropay
+msgid "Astropay TEF"
+msgstr "Astropay TEF"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_atome
 msgid "Atome"
 msgstr "Atome"
@@ -534,6 +544,16 @@ msgstr "BRI"
 #: model:payment.method,name:payment.payment_method_bancnet
 msgid "BancNet"
 msgstr "BancNet"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_banco_guayaquil
+msgid "Banco Guayaquil"
+msgstr "Banco Guayaquil"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_banco_pichincha
+msgid "Banco Pichincha"
+msgstr "Banco Pichincha"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_de_bogota
@@ -1125,6 +1145,11 @@ msgid "FPX"
 msgstr "FPX"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_facilito
+msgid "Facilito"
+msgstr "Facilito"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_floa_bank
 msgid "Floa Bank"
 msgstr "Floa Bank"
@@ -1453,6 +1478,11 @@ msgid "LinkAja"
 msgstr "LinkAja"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_nuvei_local
+msgid "Local Payments"
+msgstr "Pagos locales"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_lydia
 msgid "Lydia"
 msgstr "Lydia"
@@ -1678,6 +1708,11 @@ msgid "None is configured for:"
 msgstr "No hay ninguno configurado para:"
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_nuvei
+msgid "Nuvei"
+msgstr "Nuvei"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
 msgid "OVO"
 msgstr "OVO"
@@ -1800,6 +1835,11 @@ msgstr "Otro"
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Other payment methods"
 msgstr "Otros métodos de pago "
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_oxxopay
+msgid "Oxxo Pay"
+msgstr "Oxxo Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_p24
@@ -2228,6 +2268,11 @@ msgid "Redirect Form Template"
 msgstr "Plantilla de formulario de redirección"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_redpagos
+msgid "Redpagos"
+msgstr "Redpagos"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2294,6 +2339,11 @@ msgstr "RuPay"
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
 msgid "SEPA Direct Debit"
 msgstr "Domiciliación bancaria SEPA"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_spei
+msgid "SPEI"
+msgstr "SPEI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_samsung_pay
@@ -3044,6 +3094,11 @@ msgid "WeLend"
 msgstr "WeLend"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_webpay
+msgid "WebPay"
+msgstr "WebPay"
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
 msgid ""
 "Whether a payment token should be created when post-processing the "
@@ -3144,6 +3199,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -3166,6 +3222,7 @@ msgstr "Su pago ha sido autorizado."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -3188,6 +3245,7 @@ msgstr "Su pago ha sido cancelado."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -3211,6 +3269,7 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,done_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit

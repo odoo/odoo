@@ -5,7 +5,6 @@
     import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
     registry.category("web_tour.tours").add('website_sale_tour_1', {
-        checkDelay: 150,
         url: '/shop?search=Storage Box Test',
         steps: () => [
     // Testing b2c with Tax-Excluded Prices
@@ -79,11 +78,6 @@
         run: "click",
     },
     {
-        content: "Click for edit address",
-        trigger: 'a:contains("Edit") i',
-        run: "click",
-    },
-    {
         content: "Billing address is not same as delivery address",
         trigger: '#use_delivery_as_billing',
         run: "click",
@@ -139,11 +133,6 @@
         trigger: '#billing_address_row:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
     },
     {
-        content: "Click for edit address",
-        trigger: 'a:contains("Edit") i',
-        run: "click",
-    },
-    {
         content: "Click for edit billing address",
         trigger: '.all_billing .js_edit_address:first',
         run: "click",
@@ -179,7 +168,7 @@
         tourUtils.confirmOrder(),
     {
         content: "Check selected billing address is same as typed in previous step",
-        trigger: '#billing_address_row:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
+        trigger: '#delivery_and_billing :contains(Billing:):contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
     },
     {
         content: "Select `Wire Transfer` payment method",
@@ -374,6 +363,7 @@
         trigger: '.oe_cart .btn:contains("Save address")',
         run: "click",
     },
+        tourUtils.confirmOrder(),
     {
         content: "Select `Wire Transfer` payment method",
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
@@ -445,7 +435,6 @@
 
     registry.category("web_tour.tours").add('website_sale_tour_2', {
         url: '/shop/cart',
-        checkDelay: 150,
         steps: () => [
     {
         trigger: '.o_wizard:contains("Extra Info")',
@@ -496,6 +485,11 @@
     },
         tourUtils.goToCart(),
         tourUtils.goToCheckout(),
+    {
+        content: "Click on 'Confirm' button (redirect to the 'extra info' form)",
+        trigger: 'a[href^="/shop/extra_info"]',
+        run: "click",
+    },
     {
         content: "Click on 'Continue checkout' button",
         trigger: '.oe_cart .btn:contains("Continue checkout")',

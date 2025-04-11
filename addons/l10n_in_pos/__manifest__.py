@@ -24,6 +24,9 @@
             'l10n_in/static/src/helpers/hsn_summary.js',
             'l10n_in_pos/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'l10n_in_pos/static/tests/tours/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }

@@ -57,6 +57,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { config as transitionConfig } from "@web/core/transition";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
@@ -4461,7 +4462,9 @@ test(`clicking on stat buttons in edit mode on desktop`, async () => {
         },
     });
 
-    onRpc("web_save", ({ args }) => expect(args[1].foo).toBe("tralala"));
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].foo).toBe("tralala");
+    });
     onRpc(({ method }) => expect.step(method));
     await mountView({
         resModel: "partner",
@@ -4502,7 +4505,9 @@ test(`clicking on stat buttons in edit mode on mobile`, async () => {
         },
     });
 
-    onRpc("web_save", ({ args }) => expect(args[1].foo).toBe("tralala"));
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].foo).toBe("tralala");
+    });
     onRpc(({ method }) => expect.step(method));
     await mountView({
         resModel: "partner",
@@ -7859,10 +7864,12 @@ test(`no autofocus with disable_autofocus option`, async () => {
         type: "form",
         arch: `<form disable_autofocus="1"><field name="int_field"/></form>`,
     });
-    expect(`.o_field_widget[name="foo"] input`).not.toBeFocused();
+
+    expect(`.o_field_widget[name="int_field"] input`).not.toBeFocused();
 
     await contains(`.o_form_button_save`).click();
-    expect(`.o_field_widget[name="foo"] input`).not.toBeFocused();
+
+    expect(`.o_field_widget[name="int_field"] input`).not.toBeFocused();
 });
 
 test.tags("desktop");
@@ -9059,9 +9066,9 @@ test(`buttons with "confirm" attribute: click twice on "Ok" on desktop`, async (
     await contains(`.o_statusbar_buttons button`).click();
     expect.verifySteps([]);
 
-    contains(`.modal-footer button.btn-primary`).click();
-    await animationFrame();
+    await click(`.modal-footer button.btn-primary`);
     expect(`.modal-footer button.btn-primary`).not.toBeEnabled();
+    await animationFrame();
     expect.verifySteps(["web_save", "execute_action"]);
 });
 
@@ -9091,9 +9098,9 @@ test(`buttons with "confirm" attribute: click twice on "Ok" on mobile`, async ()
     await contains(`.o-dropdown-item-unstyled-button button`).click();
     expect.verifySteps([]);
 
-    contains(`.modal-footer button.btn-primary`).click();
-    await animationFrame();
+    await click(`.modal-footer button.btn-primary`);
     expect(`.modal-footer button.btn-primary`).not.toBeEnabled();
+    await animationFrame();
     expect.verifySteps(["web_save", "execute_action"]);
 });
 
@@ -12584,4 +12591,21 @@ test("executing new action, closes dialog, and avoid reload previous view", asyn
         "get_views",
         "web_search_read",
     ]);
+});
+
+test.tags("mobile")(`pager is up to date`, async () => {
+    patchWithCleanup(transitionConfig, { disabled: true });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"/></form>`,
+        resIds: [1, 2],
+        resId: 1,
+    });
+    await contains(`.o_pager_next`).click();
+    await animationFrame();
+    expect(".o_pager_indicator").toHaveCount(1, {
+        message: "the pager indicator should be displayed",
+    });
+    expect(".o_pager_indicator").toHaveText("2 / 2");
 });

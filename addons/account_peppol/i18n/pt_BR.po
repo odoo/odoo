@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 13:23+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -23,20 +23,32 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid " (Demo/Test mode)"
-msgstr ""
+msgid " (Customer not on Peppol)"
+msgstr "(Cliente não está no Peppol)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid " (customer not on Peppol)"
-msgstr ""
+msgid " (Demo)"
+msgstr " (Demo)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid "%(peppol_label)s%(not_valid)s%(peppol_proxy_mode)s"
-msgstr "%(peppol_label)s%(not_valid)s%(peppol_proxy_mode)s"
+msgid " (Test)"
+msgstr " (Teste)"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid " (no VAT)"
+msgstr " (sem VAT)"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
+msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 
 #. module: account_peppol
 #. odoo-python
@@ -650,6 +662,12 @@ msgstr ""
 "color\">enviada no Peppol</b>."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid "Partner doesn't have a valid Peppol configuration."
+msgstr "O parceiro não tem uma configuração válida da Peppol."
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
 msgid "Pending Reception"
 msgstr "Recebimento pendente"
@@ -811,21 +829,9 @@ msgstr "Registrar como receptor"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "Registered as a receiver."
-msgstr "Registrado como destinatário."
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "Registered as a sender (demo)."
 msgstr "Registrado como remetente (demo)."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "Registered as a sender."
-msgstr "Registrado como remetente."
 
 #. module: account_peppol
 #. odoo-python
@@ -836,7 +842,6 @@ msgstr "Registrado para receber documentos via Peppol (demo)."
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Registrado para receber documentos via Peppol."
 
@@ -975,8 +980,6 @@ msgstr ""
 "tempo real."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid ""
 "The recommended identification method for Belgium is your Company Registry "
@@ -1176,6 +1179,25 @@ msgid "Your Peppol ID"
 msgstr "Seu ID Peppol"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid ""
+"Your Peppol registration will be activated soon. You can already send "
+"invoices."
+msgstr ""
+"Seu registro na Peppol será ativado em breve. Você já pode enviar faturas."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid ""
+"Your company is already registered on another Access Point for receiving "
+"invoices.We will register you as a sender only."
+msgstr ""
+"Sua empresa já está registrada em outro para recebimento de faturas em outro"
+" Ponto de Acesso. Vamos registrá-lo apenas como remetente."
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Your endpoint"
 msgstr "Seu endpoint"
@@ -1188,7 +1210,6 @@ msgstr "Sua chave de migração é:"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."

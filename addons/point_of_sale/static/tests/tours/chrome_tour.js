@@ -6,10 +6,9 @@ import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
-import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("ChromeTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -115,7 +114,6 @@ registry.category("web_tour.tours").add("ChromeTour", {
 });
 
 registry.category("web_tour.tours").add("OrderModificationAfterValidationError", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -138,7 +136,6 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 });
 
 registry.category("web_tour.tours").add("SearchMoreCustomer", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -152,7 +149,6 @@ registry.category("web_tour.tours").add("SearchMoreCustomer", {
 });
 
 registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -171,5 +167,36 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.totalAmountContains("100"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_limited_categories", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickSubcategory("Parent"),
+            ProductScreen.productIsDisplayed("Product 1"),
+            ProductScreen.productIsDisplayed("Product 2"),
+            ProductScreen.clickSubcategory("Child 1"),
+            ProductScreen.productIsDisplayed("Product 1"),
+            ProductScreen.productIsDisplayed("Product 2").map(negateStep),
+            ProductScreen.clickSubcategory("Child 2"),
+            ProductScreen.productIsDisplayed("Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Product 2"),
         ].flat(),
 });

@@ -6,7 +6,10 @@ import { MockEventTarget } from "../hoot_utils";
 // Global
 //-----------------------------------------------------------------------------
 
-const { console } = globalThis;
+const {
+    console,
+    Object: { entries: $entries },
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -20,7 +23,7 @@ const DISPATCHING_METHODS = ["error", "trace", "warn"];
 
 export class MockConsole extends MockEventTarget {
     static {
-        for (const [name, value] of Object.entries(console)) {
+        for (const [name, value] of $entries(console)) {
             if (DISPATCHING_METHODS.includes(name)) {
                 this.prototype[name] = function (...args) {
                     this.dispatchEvent(new CustomEvent(name, { detail: args }));

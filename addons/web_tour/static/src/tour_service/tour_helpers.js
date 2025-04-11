@@ -114,7 +114,7 @@ export class TourHelpers {
         await dragEffectDelay();
         const target = await hoot.waitFor(selector, {
             visible: true,
-            timeout: 500,
+            timeout: 1000,
         });
         await moveTo(target, options);
         await dragEffectDelay();

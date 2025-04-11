@@ -412,12 +412,13 @@ class AccountPayment(models.Model):
             if not payment.state:
                 payment.state = 'draft'
             # in_process --> paid
-            if payment.state == 'in_process' and payment.outstanding_account_id:
-                move = payment.move_id
+            if (move := payment.move_id) and payment.state in ('paid', 'in_process'):
                 liquidity, _counterpart, _writeoff = payment._seek_for_lines()
-                if move and move.currency_id.is_zero(sum(liquidity.mapped('amount_residual'))):
-                    payment.state = 'paid'
-                    continue
+                payment.state = (
+                    'paid'
+                    if move.currency_id.is_zero(sum(liquidity.mapped('amount_residual'))) else
+                    'in_process'
+                )
             if payment.state == 'in_process' and payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
                 payment.state = 'paid'
 

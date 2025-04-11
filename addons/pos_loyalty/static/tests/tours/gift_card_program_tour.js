@@ -144,3 +144,14 @@ registry.category("web_tour.tours").add("GiftCardProgramInvoice", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_gift_card_no_date", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            PosLoyalty.createManualGiftCard("test", "42", ""),
+            PosLoyalty.finalizeOrder("Cash", "42"),
+        ].flat(),
+});

@@ -12243,17 +12243,17 @@ msgid ""
 "Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.\n"
 msgstr ""
 "\n"
-"製品と生産ロットの異なる日付を追跡します。\n"
+"プロダクトおよび製造ロットに対して、さまざまな日付を追跡します。\n"
 "==========================================\n"
 "\n"
 "次の日付を追跡できます：\n"
 "-------------------------------\n"
-"- 廃棄\n"
-"- 賞味・使用期限\n"
-"- 除去日\n"
+"- 使用終了日\n"
+"- 品質保持期限\n"
+"- 払出期限\n"
 "- アラート日\n"
 "\n"
-"また、食品業界において、例えば、除去戦略、使用期限ファーストアウト(FEFO)の、広く使用されている実装がされています。\n"
+"食品業界などで広く使用されている払出(廃棄)戦略である、使用期限順先出(FEFO)も実装されています。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -17756,7 +17756,7 @@ msgstr "添付ファイルのリストとドキュメントのインデックス
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance_gantt
 msgid "Attendance Gantt"
-msgstr "出勤ガント"
+msgstr "勤怠ガントビュー"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_attendance
@@ -17767,12 +17767,12 @@ msgstr "勤怠 休暇"
 #: model:ir.module.category,name:base.module_category_human_resources_attendances
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
 msgid "Attendances"
-msgstr "勤怠"
+msgstr "勤怠管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_planning_attendance
 msgid "Attendances - Planning"
-msgstr "勤怠 - 計画"
+msgstr "勤怠管理 - 計画連携"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mass_mailing
@@ -22012,7 +22012,7 @@ msgstr "配送 - 在庫"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__delivery
 msgid "Delivery Address"
-msgstr "配送先"
+msgstr "配送先住所"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
@@ -23203,7 +23203,7 @@ msgstr "従業員契約レポート"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_employee_hourly_cost
 msgid "Employee Hourly Cost"
-msgstr "従業員毎時コスト"
+msgstr "従業員の時間単価"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
@@ -28050,7 +28050,7 @@ msgstr "インバースレート"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
 msgid "Invoice Address"
-msgstr "請求先"
+msgstr "請求先住所"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
@@ -41773,6 +41773,8 @@ msgid ""
 "This module allows connection to CodaBox and automatically imports CODA and "
 "SODA statements in Odoo."
 msgstr ""
+"このモジュールはCodaBoxへの接続を可能にし、CODAおよびSODA明細をOdooに自動的にインポートします。\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_online_payment
@@ -42190,7 +42192,7 @@ msgstr "休暇 - 契約ガント"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
 msgid "Time off Gantt"
-msgstr "ガントの休暇"
+msgstr "休暇ガントビュー"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__timed_out_counter
@@ -44255,7 +44257,7 @@ msgstr "ウェブサイトがリード生成企業版にアクセス"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
 msgid "Website profile"
-msgstr "ウェブサイトプロフィール"
+msgstr "ウェブサイトプロファイル"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3

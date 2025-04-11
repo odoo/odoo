@@ -16,7 +16,12 @@ import {
     waitForNone,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
-import { contains, patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    onRpc,
+    patchTranslations,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { fontItems, fontSizeItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
@@ -30,6 +35,7 @@ import {
     setSelection,
 } from "./_helpers/selection";
 import { strong } from "./_helpers/tags";
+import { delay } from "@web/core/utils/concurrency";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -760,6 +766,53 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
     await tick(); // selectionChange
     await animationFrame();
     expect(".o-we-toolbar").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("should not close image cropper while loading media", async () => {
+    onRpc("/html_editor/get_image_info", () => {
+        return {
+            original: {
+                image_src: "#",
+            },
+        };
+    });
+    onRpc("/web/image/__odoo__unknown__src__/", async () => {
+        await delay(50);
+        return {};
+    });
+
+    await setupEditor(`<p>[<img src="#">]</p>`);
+    await waitFor(".o-we-toolbar");
+
+    await click('div[name="image_transform"] > .btn');
+    await animationFrame();
+
+    await click('.btn[name="image_crop"]');
+    await animationFrame();
+
+    await waitFor('.btn[title="Discard"]', { timeout: 1000 });
+    await click('.btn[title="Discard"]');
+    await animationFrame();
+
+    // cropper should not close as the cropper still loading the image.
+    expect('.btn[title="Discard"]').toHaveCount(1);
+
+    // once the image loaded we should be able to close
+    await waitFor('img[src^="blob:"]', { timeout: 2000 });
+    await click('.btn[title="Discard"]');
+    await waitForNone('.btn[title="Discard"]', { timeout: 1000 });
+
+    await click("img");
+    await waitFor(".o-we-toolbar", { timeout: 1000 });
+
+    await click('div[name="image_transform"] > .btn');
+    await animationFrame();
+
+    await waitFor('.btn[name="image_crop"]', { timeout: 1000 });
+    await click('.btn[name="image_crop"]');
+    await waitFor('.btn[title="Discard"]', { timeout: 1000 });
+    expect('.btn[title="Discard"]').toHaveCount(1);
 });
 
 describe.tags("desktop");

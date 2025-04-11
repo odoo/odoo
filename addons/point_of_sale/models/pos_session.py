@@ -897,7 +897,7 @@ class PosSession(models.Model):
                 base_lines = order.with_context(linked_to_pos=True)._prepare_tax_base_line_values()
                 AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
                 AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
-                AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, order.company_id)
+                AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, order.company_id, include_caba_tags=True)
                 tax_results = AccountTax._prepare_tax_lines(base_lines, order.company_id)
                 total_amount_currency = 0.0
                 for base_line, to_update in tax_results['base_lines_to_update']:
@@ -1389,10 +1389,10 @@ class PosSession(models.Model):
         else:
             product_name = ""
             product_uom = False
-        title = 'Sales' if sign == 1 else 'Refund'
-        name = '%s untaxed' % title
+        title = _('Sales') if sign == 1 else _('Refund')
+        name = _('%s untaxed', title)
         if applied_taxes:
-            name = '%s %s with %s' % (title, product_name, ', '.join([tax.name for tax in applied_taxes]))
+            name = _('%(title)s %(product_name)s with %(taxes)s', title=title, product_name=product_name, taxes=', '.join([tax.name for tax in applied_taxes]))
         partial_vals = {
             'name': name,
             'account_id': account_id,

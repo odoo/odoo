@@ -58,6 +58,23 @@ describe("visibility", () => {
         await setupEditor("<p>[]<br><br></p>");
         expect(".o_we_power_buttons").not.toBeVisible();
     });
+
+    test("should not overlap with long placeholders", async () => {
+        const placeholder = "This is a very very very very long placeholder";
+        const tempP = document.createElement("p");
+        tempP.innerText = placeholder;
+        tempP.style.width = "fit-content";
+        const { el } = await setupEditor(
+            `<p placeholder="${placeholder}" class="o-we-hint">[]<br></p>`
+        );
+        el.appendChild(tempP);
+        const placeholderWidth = tempP.getBoundingClientRect().width;
+        el.removeChild(tempP);
+        const powerButtons = document.querySelector(
+            'div[data-oe-local-overlay-id="oe-power-buttons-overlay"]'
+        );
+        expect(powerButtons.getBoundingClientRect().left).toEqual(placeholderWidth + 20);
+    });
 });
 
 describe.tags("desktop");

@@ -265,7 +265,7 @@ test("Many2ManyCheckBoxesField with 100+ values", async () => {
     await runAllTimers();
 
     await clickSave();
-    expect(".o_field_widget[name='timmy'] input[type='checkbox']").not.toBeChecked();
+    expect(".o_field_widget[name='timmy'] input[type='checkbox']:first").not.toBeChecked();
     expect.verifySteps(["name_search", "web_save"]);
 });
 

@@ -135,7 +135,14 @@ export class ComboPage extends Component {
             this.selfOrder.editedLine.delete();
         }
 
-        this.selfOrder.addToCart(this.props.product, 1, "", {}, {}, this.state.selectedCombos);
+        this.selfOrder.addToCart(
+            this.props.product,
+            this.state.qty,
+            "",
+            {},
+            {},
+            this.state.selectedCombos
+        );
         this.router.back();
     }
 

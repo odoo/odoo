@@ -2,7 +2,7 @@ from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import _, api, models, modules, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -331,6 +331,8 @@ class AccountMoveSend(models.AbstractModel):
 
             content, report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
             content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
+            if len(content_by_id) == 1 and False in content_by_id:
+                raise ValidationError(_("Cannot identify the invoices in the generated PDF: %s", ids))
 
             for invoice, invoice_data in group_invoices_data.items():
                 invoice_data['pdf_attachment_values'] = {
@@ -381,7 +383,7 @@ class AccountMoveSend(models.AbstractModel):
         if not attachment_to_create:
             return
 
-        attachments = self.env['ir.attachment'].create(attachment_to_create)
+        attachments = self.sudo().env['ir.attachment'].create(attachment_to_create)
         res_id_to_attachment = {attachment.res_id: attachment for attachment in attachments}
 
         for invoice, invoice_data in invoices_data.items():
@@ -524,7 +526,11 @@ class AccountMoveSend(models.AbstractModel):
 
         self._generate_dynamic_reports(moves_data)
 
-        for move, move_data in [(move, move_data) for move, move_data in moves_data.items() if move.partner_id.email]:
+        for move, move_data in [
+            (move, move_data)
+            for move, move_data in moves_data.items()
+            if move.partner_id.email or move_data.get('mail_partner_ids')
+        ]:
             mail_template = move_data['mail_template']
             mail_lang = move_data['mail_lang']
             mail_params = self._get_mail_params(move, move_data)
@@ -677,7 +683,7 @@ class AccountMoveSend(models.AbstractModel):
         """
         self._check_sending_data(moves, **custom_settings)
         moves_data = {
-            move: {
+            move.sudo(): {
                 **self._get_default_sending_settings(move, from_cron=from_cron, **custom_settings),
             }
             for move in moves

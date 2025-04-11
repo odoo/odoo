@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-19 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Siim Raasuke, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -151,11 +151,9 @@ msgstr "<span>)</span>"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid ""
-"A project must be defined on the quotation or on the form of products creating a task on order.\n"
-"The following products need a project in which to put their task: %(product_names)s"
+"A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
+"The following product need a project in which to put its task: %(product_name)s"
 msgstr ""
-"Projekt peab olema määratletud kas hinnapakkumisel või tellimuse täitmisel toodete vormis, mis loob ülesande.\n"
-"Järgmised tooted vajavad projekti, kuhu nende ülesanne paigutada: %(product_names)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -728,6 +726,12 @@ msgstr "Ülesanded"
 #: model:ir.model,name:sale_project.model_report_project_task_user
 msgid "Tasks Analysis"
 msgstr "Ülesannete analüüs"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid "The Sale Order Item should contain a service product."
+msgstr ""
 
 #. module: sale_project
 #. odoo-python

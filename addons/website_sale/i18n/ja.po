@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -579,6 +579,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>利用規約</u>"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid "A combo product can't be empty. Please select at least one option."
+msgstr "コンボプロダクトは空にすることはできません。 少なくとも1つのオプションを選択して下さい。"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -1760,11 +1766,6 @@ msgid "Delivery and Installation"
 msgstr "配送と設置"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.total
-msgid "Delivery will be updated after choosing a new delivery method"
-msgstr "配送は、新しい配送方法を選択した後に更新されます。"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Description"
 msgstr "説明"
@@ -2591,12 +2592,12 @@ msgstr "左"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer enter a delivery address"
-msgstr "顧客が配送先を入力できるようにします"
+msgstr "顧客が配送先住所を入力できるようにします"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer select a Mondial Relay shipping point"
-msgstr "ご客様がMondial Relay配送ポイントを選択できるようにします"
+msgstr "顧客がMondial Relay配送ポイントを選択できるようにします"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__force_dialog
@@ -2607,7 +2608,7 @@ msgstr "ユーザが決める (ダイアログ)"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Let's create your first product."
-msgstr "初めての製品を作成しましょう"
+msgstr "初めてのプロダクトを作成しましょう"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3161,7 +3162,7 @@ msgstr "支払取引"
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "Payment is already being processed."
-msgstr ""
+msgstr "支払いはすでに処理中です。"
 
 #. module: website_sale
 #. odoo-python
@@ -3852,7 +3853,7 @@ msgstr "販売担当者"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Same as delivery address"
-msgstr "配送住所と同じ"
+msgstr "配送先住所と同じ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_add_to_cart
@@ -4280,7 +4281,7 @@ msgstr "アクセストークンは無効です。"
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has already been paid. Please refresh the page."
-msgstr ""
+msgstr "カートはすでに支払済みです。ページを更新して下さい。"
 
 #. module: website_sale
 #. odoo-python
@@ -4318,6 +4319,7 @@ msgstr "指定した製品は存在しないので、カートに入れること
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given product does not have a price therefore it cannot be added to "

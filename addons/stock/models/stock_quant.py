@@ -250,6 +250,10 @@ class StockQuant(models.Model):
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate stock quants.'))
 
+    @api.model
+    def name_create(self, name):
+        return False
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Override to handle the "inventory mode" and create a quant as
@@ -307,7 +311,7 @@ class StockQuant(models.Model):
                 quant = super().create(vals)
                 _add_to_cache(quant)
                 quants |= quant
-                if self._is_inventory_mode():
+                if self._is_inventory_mode() and quant.company_id:
                     quant._check_company()
         return quants
 

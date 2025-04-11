@@ -13,7 +13,7 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
-import { constructFullProductName, deduceUrl } from "@point_of_sale/utils";
+import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
 import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
 import {
     getTaxesAfterFiscalPosition,
@@ -259,7 +259,7 @@ export class SelfOrder extends Reactive {
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
                     order_id: this.currentOrder,
-                    qty: 1,
+                    qty: values.qty,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,
@@ -395,6 +395,7 @@ export class SelfOrder extends Reactive {
 
         const newOrder = this.models["pos.order"].create({
             company_id: this.company,
+            ticket_code: random5Chars(),
             session_id: this.session,
             config_id: this.config,
             fiscal_position_id: fiscalPosition,

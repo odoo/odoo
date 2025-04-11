@@ -781,6 +781,16 @@ export function getOrCreateLink({ containerNode, startNode } = {}) {
         }
     } else if (!link && isContained) {
         link = document.createElement('a');
+        // We force links added in paragraphs to be translated "as a whole".
+        // This should allow them to be considered part of the whole text content
+        // and not as separate terms, and will prevent breaking the translation
+        // of a text when only a part of it is transformed into a link.
+        const commonAncestor = range.commonAncestorContainer;
+        const commonAncestorEl = commonAncestor.nodeType !== Node.ELEMENT_NODE ?
+            commonAncestor.parentElement : commonAncestor;
+        if (commonAncestorEl.closest("p")) {
+            link.className = "o_translate_inline";
+        }
         if (range.collapsed) {
             range.insertNode(link);
             needLabel = true;

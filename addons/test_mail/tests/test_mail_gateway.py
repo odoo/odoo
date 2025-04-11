@@ -214,8 +214,6 @@ class MailGatewayCommon(MailCommon):
         self.assertEqual(len(self._mails), 1)
         mail = self._mails[0]
         extra = f'References: {mail["references"]}'
-        if mail["headers"].get("X-Odoo-Message-Id"):
-            extra += f'\nX-Odoo-Message-Id: {mail["headers"]["X-Odoo-Message-Id"]}'
         with self.mock_mail_gateway(), self.mock_mail_app():
             self.format_and_process(
                 MAIL_TEMPLATE, mail['email_from'], ','.join(mail['email_to']),
@@ -2186,7 +2184,6 @@ class TestMailGatewayLoops(MailGatewayCommon):
                 body='Answer',
                 partner_ids=self.alias_partner.ids,
             )
-        last_mail = self._mails  # save to reuse
         self.assertSentEmail(self.user_employee.email_formatted, [self.alias_partner.email_formatted])
 
         # simulate this email coming back to the same Odoo server -> msg_id is
@@ -2198,17 +2195,6 @@ class TestMailGatewayLoops(MailGatewayCommon):
         self.assertFalse(capture_gateway.records)
         self.assertNotSentEmail()
         self.assertFalse(bool(self._new_msgs))
-
-        # simulate stupid email providers that rewrites msg_id -> thanks to
-        # a custom header, it is rejected as already managed by mailgateway
-        self._mails = last_mail
-        with RecordCapturer(self.env['mail.test.ticket'], []) as capture_ticket, \
-             RecordCapturer(self.env['mail.test.gateway'], []) as capture_gateway:
-            self._reinject(force_msg_id='123donotnamemailjet456')
-        self.assertFalse(capture_ticket.records)
-        self.assertFalse(capture_gateway.records)
-        self.assertFalse(bool(self._new_msgs))
-        self.assertNotSentEmail()
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     def test_routing_loop_forward_catchall(self):
@@ -2278,14 +2264,14 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 partner_ids=self.partner_1.ids,
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )
-        reply, _log, email = gateway_record.message_ids
+        reply, log, email = gateway_record.message_ids
         self.assertMailNotifications(
             reply,
             [{
                 'content': 'Odoo Reply',
                 'email_values': {
                     'message_id': reply.message_id,
-                    'references': f'{email.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
+                    'references': f'{email.message_id} {log.message_id} {reply.message_id}',  # should contain reference to OdooExternal message, logs to fill up history
                 },
                 'mail_mail_values': {
                     'notified_partner_ids': self.partner_1,
@@ -2348,7 +2334,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 'content': 'Odoo Reply',
                 'email_values': {
                     'message_id': reply.message_id,
-                    'references': f'{odooext_msg.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
+                    'references': f'{log.message_id} {odooext_msg.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
                 },
                 'mail_mail_values': {
                     'notified_partner_ids': self.partner_1 + self.partner_admin,
@@ -2383,7 +2369,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 'email_values': {
                     'email_from': self.email_from,
                     'message_id': reply_2.message_id,
-                    'references': f'{odooext_msg.message_id} {reply.message_id} {reply_2.message_id}',  # should contain reference to OdooExternal message
+                    'references': f'{log.message_id} {odooext_msg.message_id} {reply.message_id} {reply_2.message_id}',  # should contain reference to OdooExternal message
                 },
                 'mail_mail_values': {
                     'author_id': self.env['res.partner'],

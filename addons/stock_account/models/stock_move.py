@@ -56,7 +56,7 @@ class StockMove(models.Model):
             layers |= layers.stock_valuation_layer_ids
             if self.product_id.lot_valuated:
                 layers_by_lot = layers.grouped('lot_id')
-                prices = {}
+                prices = defaultdict(lambda: 0)
                 for lot, stock_layers in layers_by_lot.items():
                     qty = sum(stock_layers.mapped("quantity"))
                     val = sum(stock_layers.mapped("value"))
@@ -93,7 +93,7 @@ class StockMove(models.Model):
         move_out_ids = set()
         locations_should_be_valued = (self.move_line_ids.location_id | self.move_line_ids.location_dest_id).filtered(lambda l: l._should_be_valued())
         for record in self:
-            for move_line in self.move_line_ids:
+            for move_line in record.move_line_ids:
                 if move_line._should_exclude_for_valuation() or not move_line.picked:
                     continue
                 if move_line.location_id not in locations_should_be_valued and move_line.location_dest_id in locations_should_be_valued:

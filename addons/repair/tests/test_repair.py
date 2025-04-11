@@ -479,6 +479,26 @@ class TestRepair(common.TransactionCase):
         ], limit=1)
         self.assertEqual(repair.move_ids[0].location_dest_id, location_dest_id)
 
+    def test_no_recompute_location_when_change_user_after_confirm(self):
+        user1 = self.env['res.users'].create({
+            'name': 'A User',
+            'login': 'a_user',
+            'email': 'a@user.com',
+        })
+        repair_order = self._create_simple_repair_order()
+        repair_order.location_id = self.stock_location_14
+        repair_order.recycle_location_id = self.stock_location_14
+        repair_order.action_validate()
+        repair_order.user_id = user1
+        self.assertEqual(repair_order.location_id, self.stock_location_14)
+        self.assertEqual(repair_order.recycle_location_id, self.stock_location_14)
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        with Form(repair_order) as ro_form:
+            ro_form.user_id = user1
+        self.assertEqual(repair_order.location_id, self.stock_location_14)
+        self.assertEqual(repair_order.recycle_location_id, self.stock_location_14)
+
     def test_purchase_price_so_create_from_repair(self):
         """
         Test that the purchase price is correctly set on the SO line,
@@ -651,24 +671,44 @@ class TestRepair(common.TransactionCase):
         """
         Test that when changing the picking_type_id, the name of the repair order should be changed too
         """
-        repair_order = self.env['repair.order'].create({
-            'product_id': self.product_product_3.id,
-            'picking_type_id': self.stock_warehouse.repair_type_id.id,
-        })
+        stock_location_1 = self.env.ref('stock.stock_location_stock')
+        stock_location_2 = stock_location_1.copy()
         picking_type_1 = self.env['stock.picking.type'].create({
             'name': 'new_picking_type_1',
             'code': 'repair_operation',
             'sequence_code': 'PT1/',
+            'default_location_src_id': stock_location_1.id,
         })
         picking_type_2 = self.env['stock.picking.type'].create({
             'name': 'new_picking_type_2',
             'code': 'repair_operation',
             'sequence_code': 'PT2/',
+            'default_location_src_id': stock_location_2.id,
         })
-        repair_order.picking_type_id = picking_type_1
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'picking_type_id': picking_type_1.id,
+        })
+        part = self.env['product.product'].create({
+            'name': 'Part',
+            'is_storable': True,
+        })
+        self.env['stock.move'].create({
+            'repair_line_type': 'add',
+            'product_id': part.id,
+            'product_uom_qty': 1,
+            'repair_id': repair_order.id,
+        })
+        self.env['stock.quant']._update_available_quantity(part, stock_location_2, 1)
+        repair_order._action_repair_confirm()
+        move = repair_order.move_ids[0]
         self.assertEqual(repair_order.name, "PT1/00001")
+        self.assertEqual(move.location_id, stock_location_1)
+        self.assertEqual(move.quantity, 0.0)
         repair_order.picking_type_id = picking_type_2
         self.assertEqual(repair_order.name, "PT2/00001")
+        self.assertEqual(move.location_id, stock_location_2)
+        self.assertEqual(move.quantity, 1.0)
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
         repair_order.picking_type_id = picking_type_1

@@ -864,17 +864,37 @@ class WebsiteSale(payment_portal.PaymentPortal):
             no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs
         )
+
         # If the line is a combo product line, and it already has combo items, we need to update
         # the combo item quantities as well.
         line = request.env['sale.order.line'].browse(values['line_id'])
         if line.product_type == 'combo' and line.linked_line_ids:
-            for linked_line_id in line.linked_line_ids:
-                if values['quantity'] != linked_line_id.product_uom_qty:
-                    order._cart_update(
-                        product_id=linked_line_id.product_id.id,
-                        line_id=linked_line_id.id,
-                        set_qty=values['quantity'],
+            quantity = values['quantity']
+            combo_quantity = quantity
+            # A combo product and its items should have the same quantity (by design). So, if the
+            # requested quantity isn't available for one or more combo items, we should lower the
+            # quantity of the combo product and its items to the maximum available quantity of the
+            # combo item with the least available quantity.
+            for linked_line in line.linked_line_ids:
+                if quantity != linked_line.product_uom_qty:
+                    combo_item_quantity, warning = order._verify_updated_quantity(
+                        linked_line, linked_line.product_id.id, quantity, **kwargs
                     )
+                    combo_quantity = min(combo_quantity, combo_item_quantity)
+            for linked_line in line.linked_line_ids:
+                order._cart_update(
+                    product_id=linked_line.product_id.id,
+                    line_id=linked_line.id,
+                    set_qty=combo_quantity,
+                    **kwargs,
+                )
+            if combo_quantity < quantity:
+                order._cart_update(
+                    product_id=product_id,
+                    line_id=line_id,
+                    set_qty=combo_quantity,
+                    **kwargs,
+                )
 
         values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])
         values['notification_info']['warning'] = values.pop('warning', '')
@@ -1217,7 +1237,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order_sudo = request.website.sale_get_order()
         if redirection := self._check_cart(order_sudo):
-            return redirection
+            return json.dumps({'redirectUrl': redirection.location})
 
         partner_sudo, address_type = self._prepare_address_update(
             order_sudo, partner_id=partner_id and int(partner_id), address_type=address_type
@@ -1292,7 +1312,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         self._handle_extra_form_data(extra_form_data, address_values)
 
         return json.dumps({
-            'successUrl': callback,
+            'redirectUrl': callback,
         })
 
     def _prepare_address_update(self, order_sudo, partner_id=None, address_type=None):

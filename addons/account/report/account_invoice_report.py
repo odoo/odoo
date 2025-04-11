@@ -169,9 +169,9 @@ class AccountInvoiceReport(models.Model):
             for data in res:
                 data['price_average'] = data['price_subtotal'] / data['quantity'] if data['quantity'] else 0
 
-                if 'quantity' not in fields:
+                if 'quantity:sum' not in fields:
                     del data['quantity']
-                if 'price_subtotal' not in fields:
+                if 'price_subtotal:sum' not in fields:
                     del data['price_subtotal']
 
         return res

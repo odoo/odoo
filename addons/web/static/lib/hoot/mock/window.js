@@ -25,7 +25,7 @@ import {
     mockedWindowScrollTo,
 } from "./animation";
 import { MockConsole } from "./console";
-import { MockDate } from "./date";
+import { MockDate, MockIntl } from "./date";
 import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
     MockBroadcastChannel,
@@ -65,6 +65,7 @@ const {
         entries: $entries,
         getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
         getPrototypeOf: $getPrototypeOf,
+        keys: $keys,
         hasOwn: $hasOwn,
     },
     ontouchcancel,
@@ -323,6 +324,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     history: { value: mockHistory },
     innerHeight: { get: () => getCurrentDimensions().height },
     innerWidth: { get: () => getCurrentDimensions().width },
+    Intl: { value: MockIntl },
     localStorage: { value: mockLocalStorage, writable: false },
     matchMedia: { value: mockedMatchMedia },
     MessageChannel: { value: MockMessageChannel },
@@ -411,7 +413,7 @@ export function getViewPortWidth() {
 export function mockMatchMedia(values) {
     $assign(mockMediaValues, values);
 
-    callMediaQueryChanges(Object.keys(values));
+    callMediaQueryChanges($keys(values));
 }
 
 /**

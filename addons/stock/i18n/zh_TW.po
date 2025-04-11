@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -7204,7 +7204,7 @@ msgstr "配額會適時自動刪除。如果必須手動刪除，請要求庫存
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Quants cannot be created for consumables or services."
-msgstr "不能為消耗品或者服務建立數量."
+msgstr "消耗品或服務不可建立數量。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -8875,11 +8875,10 @@ msgstr "批次/序號（%s）已連結至另一個產品。"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, python-format
 msgid ""
 "The Picking Operations report has been deleted so you cannot print at this "
 "time unless the report is restored."
-msgstr ""
+msgstr "揀貨操作報告已被刪除，因此目前無法列印，除非將報告復原。"
 
 #. module: stock
 #. odoo-python
@@ -10381,7 +10380,7 @@ msgstr "重量計量單位標籤"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight
 msgid "Weighted Product"
-msgstr "稱重的產品"
+msgstr "秤重的產品"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__wh_replenishment_option_ids

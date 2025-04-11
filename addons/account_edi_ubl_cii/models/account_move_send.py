@@ -120,7 +120,7 @@ class AccountMoveSend(models.AbstractModel):
 
         # during tests, no wkhtmltopdf, create the attachment for test purposes
         if tools.config['test_enable']:
-            self.env['ir.attachment'].create({
+            self.env['ir.attachment'].sudo().create({
                 'name': 'factur-x.xml',
                 'raw': xml_facturx,
                 'res_id': invoice.id,
@@ -189,7 +189,6 @@ class AccountMoveSend(models.AbstractModel):
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                 <cbc:ID>{escape(filename)}</cbc:ID>
-                <cbc:IssueDate>{invoice.invoice_date}</cbc:IssueDate>
                 {doc_type_node}
                 <cac:Attachment>
                     <cbc:EmbeddedDocumentBinaryObject

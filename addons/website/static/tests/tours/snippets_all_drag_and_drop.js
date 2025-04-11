@@ -98,14 +98,19 @@ for (let snippet of snippetsNames) {
             run: "click",
         });
     } else if (isModal) {
-        snippetSteps.splice(4, 3, {
-            content: `Hide the ${snippet.name} popup`,
-            trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
-            run: "click",
-        }, {
-            content: `Make sure ${snippet.name} is hidden`,
-            trigger: ":iframe body:not(.modal-open)",
-        });
+        snippetSteps.splice(
+            4,
+            3,
+            {
+                content: `Make sure ${snippet.name} is shown`,
+                trigger: ":iframe body.modal-open",
+            },
+            {
+                content: `Hide the ${snippet.name} popup`,
+                trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
+                run: "click",
+            }
+        );
     } else if (isDropInOnlySnippet) {
         // The 'drop in only' snippets have their 'data-snippet' attribute
         // removed once they are dropped, so we need to use a different selector.
@@ -115,7 +120,6 @@ for (let snippet of snippetsNames) {
 }
 
 registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
-    checkDelay: 100,
     // To run the tour locally, you need to insert the URL sent by the python
     // tour here. There is currently an issue with tours which don't have an URL
     // url: '/?enable_editor=1&snippets_names=s_process_steps:columns,s_website_form:,s_...',

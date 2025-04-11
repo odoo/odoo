@@ -3,6 +3,10 @@
 import { DEFAULT_EVENT_TYPES } from "../hoot_utils";
 import { generateSeed } from "../mock/math";
 
+/**
+ * @typedef {keyof typeof FILTER_SCHEMA} SearchFilter
+ */
+
 //-----------------------------------------------------------------------------
 // Global
 //-----------------------------------------------------------------------------
@@ -133,6 +137,16 @@ export const CONFIG_SCHEMA = {
     manual: {
         default: false,
         parse: parseBoolean(true),
+    },
+    /**
+     * Artifical delay introduced for each network call. It can be a fixed integer,
+     * or an integer range (in the form "min-max") to generate a random delay between
+     * "min" and "max".
+     * @default 0
+     */
+    networkDelay: {
+        default: "0",
+        parse: parseString("0"),
     },
     /**
      * Removes the safety of 'try .. catch' statements around each test's run function

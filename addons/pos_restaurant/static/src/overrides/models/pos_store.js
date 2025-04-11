@@ -18,6 +18,7 @@ patch(PosStore.prototype, {
             {
                 timeout: 180000, // 3 minutes
                 action: () =>
+                    this.dialog.closeAll() &&
                     this.config.module_pos_restaurant &&
                     this.mainScreen.component.name !== "PaymentScreen" &&
                     this.showScreen("FloorScreen"),
@@ -191,12 +192,9 @@ patch(PosStore.prototype, {
     async setTable(table, orderUuid = null) {
         this.deviceSync.readDataFromServer();
         this.selectedTable = table;
-
-        const tableOrders = table.orders;
-
-        let currentOrder = tableOrders.find((order) =>
-            orderUuid ? order.uuid === orderUuid : !order.finalized
-        );
+        let currentOrder = table
+            ? table.orders.find((o) => o.uuid === orderUuid || !o.finalized)
+            : null;
 
         if (currentOrder) {
             this.set_order(currentOrder);
@@ -360,5 +358,8 @@ patch(PosStore.prototype, {
     },
     _shouldLoadOrders() {
         return super._shouldLoadOrders() || this.config.module_pos_restaurant;
+    },
+    get showSaveOrderButton() {
+        return super.showSaveOrderButton && !this.config.module_pos_restaurant;
     },
 });

@@ -11,7 +11,6 @@ import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -160,7 +159,6 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -185,7 +183,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
 });
 
 registry.category("web_tour.tours").add("LotRefundTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -210,7 +207,6 @@ registry.category("web_tour.tours").add("LotRefundTour", {
 });
 
 registry.category("web_tour.tours").add("RefundFewQuantities", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -239,7 +235,6 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
 });
 
 registry.category("web_tour.tours").add("LotTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -276,6 +271,11 @@ registry.category("web_tour.tours").add("LotTour", {
             ProductScreen.enterLastLotNumber("3"),
             inLeftSide({
                 trigger: ".info-list:not(:contains('SN 3'))",
+            }),
+            // Check auto assign lot number if there is only one available option
+            ProductScreen.clickDisplayedProduct("Product B"),
+            inLeftSide({
+                trigger: ".info-list:contains('Lot Number 1001')",
             }),
         ].flat(),
 });

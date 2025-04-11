@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -588,6 +588,12 @@ msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Điều khoản và điều kiện</u>"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid "A combo product can't be empty. Please select at least one option."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
 msgid ""
 "A description of the Product that you want to communicate to your customers."
@@ -595,7 +601,7 @@ msgid ""
 "Customer Invoice/Credit Note"
 msgstr ""
 "Mô tả sản phẩm mà bạn muốn giới thiệu cho khách hàng của mình. Mô tả này sẽ "
-"được sao chép vào mọi đơn bán hàng, phiếu xuất kho và hóa đơn bán hàng/giấy "
+"được sao chép vào mọi đơn bán hàng, lệnh giao hàng và hóa đơn bán hàng/giấy "
 "báo có."
 
 #. module: website_sale
@@ -1801,12 +1807,6 @@ msgstr "Địa chỉ giao hàng"
 #: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
 msgid "Delivery and Installation"
 msgstr "Giao hàng và lắp đặt"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.total
-msgid "Delivery will be updated after choosing a new delivery method"
-msgstr ""
-"Thông tin giao hàng sẽ được cập nhật sau khi chọn phương thức giao hàng mới"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -4407,6 +4407,7 @@ msgstr "Không thể thêm vào giỏ hàng do sản phẩm không tồn tại."
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given product does not have a price therefore it cannot be added to "
