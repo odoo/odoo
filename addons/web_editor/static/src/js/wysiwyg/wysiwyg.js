@@ -402,13 +402,30 @@ export class Wysiwyg extends Component {
         }
 
         const getYoutubeVideoElement = async (url) => {
-            const { embed_url: src } = await this._serviceRpc(
-                '/web_editor/video_url/data',
-                { video_url: url },
-            );
-            const [savedVideo] = VideoSelector.createElements([{src}]);
-            savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
-            return savedVideo;
+            if (URL.canParse(url)) {
+                const urlParams = new URLSearchParams(new URL(url).search);
+
+                const autoplay = url.includes('autoplay=1') || false;
+                const loop = url.includes('loop=1') || false;
+                const hide_controls = url.includes('controls=0') || false;
+                const start_from = urlParams.get('start') || false;
+                const hide_fullscreen = url.includes('fs=0') || false;
+
+                const { embed_url: src } = await this._serviceRpc(
+                    '/web_editor/video_url/data',
+                    {
+                        video_url: url,
+                        autoplay,
+                        loop,
+                        hide_controls,
+                        hide_fullscreen,
+                        start_from,
+                    },
+                );
+                const [savedVideo] = VideoSelector.createElements([{src}]);
+                savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
+                return savedVideo;
+            }
         };
 
         weUtils.setEditableDocument(this.options.document);
