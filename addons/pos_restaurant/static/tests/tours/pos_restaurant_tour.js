@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ]),
             ProductScreen.clickOrderButton(),
             {
-                ...Dialog.confirm(),
+                ...Dialog.discard(),
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
@@ -123,7 +123,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             checkOrderChanges([{ name: "Desk Organizer (S, Leather)", quantity: 1 }]),
             ProductScreen.clickOrderButton(),
             {
-                ...Dialog.confirm(),
+                ...Dialog.discard(),
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
@@ -157,7 +157,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
             {
-                ...Dialog.confirm(),
+                ...Dialog.discard(),
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
@@ -297,7 +297,7 @@ registry.category("web_tour.tours").add("OrderChange", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
             ProductScreen.clickOrderButton(),
             {
-                ...Dialog.confirm(),
+                ...Dialog.discard(),
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
@@ -470,8 +470,10 @@ registry.category("web_tour.tours").add("MultiPreparationPrinter", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Product 1"),
             ProductScreen.clickOrderButton(),
-            Dialog.bodyIs("Failed in printing Printer 2 changes of the order"),
-            Dialog.confirm(),
+            Dialog.bodyIs("Unable to print order changes on Printer 2.\nDo you want to Retry ?"),
+            Dialog.confirm("Retry"),
+            Dialog.bodyIs("Unable to print order changes on Printer 2.\nDo you want to Retry ?"),
+            Dialog.discard(),
         ].flat(),
 });
 
@@ -526,8 +528,14 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             ProductScreen.clickDisplayedProduct("Product 1"),
             ProductScreen.clickDisplayedProduct("Product 2"),
             ProductScreen.clickOrderButton(),
-            Dialog.bodyIs("Failed in printing Printer 1, Printer 2 changes of the order"),
-            Dialog.confirm(),
+            Dialog.bodyIs(
+                "Unable to print order changes on Printer 1, Printer 2.\nDo you want to Retry ?"
+            ),
+            Dialog.confirm("Retry"),
+            Dialog.bodyIs(
+                "Unable to print order changes on Printer 1, Printer 2.\nDo you want to Retry ?"
+            ),
+            Dialog.discard(),
         ].flat(),
 });
 
