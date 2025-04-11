@@ -355,6 +355,9 @@ class TestUsers2(UsersCommonCase):
         self.assertEqual(set(user.read(['group_ids'])[0]['group_ids']), set((group_manager + group_user).ids))
         self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user).ids))
 
+        groups = self.env['res.groups'].search([('all_user_ids', '=', user.id)])
+        self.assertEqual(groups, user.all_group_ids)
+
     def test_implied_groups_on_change(self):
         """Test that a change on a reified fields trigger the onchange of group_ids."""
         group_public = self.env.ref('base.group_public')

@@ -230,6 +230,10 @@ class ResGroups(models.Model):
 
     def _search_all_implied_by_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_by_ids. """
+        if operator in ("any", "not any") and isinstance(value, Domain):
+            value = self.search(value).ids
+            operator = "in" if operator == "any" else "not in"
+
         assert isinstance(value, (int, list, tuple))
 
         if isinstance(value, int):
