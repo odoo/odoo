@@ -2,7 +2,7 @@ import { Component, xml } from "@odoo/owl";
 import { Navigator, useNavigation } from "@web/core/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { describe, destroy, expect, test } from "@odoo/hoot";
-import { hover, press } from "@odoo/hoot-dom";
+import { hover, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -210,4 +210,36 @@ test("navigation disabled when component is destroyed", async () => {
     await waitForSteps(["enable"]);
     destroy(component);
     await waitForSteps(["disable"]);
+});
+
+test("items are focused only on mousemove, not on mouseenter", async () => {
+    class Parent extends BasicHookParent {
+        navOptions = {
+            onMouseEnter: () => expect.step("onMouseEnter"),
+        };
+    }
+    await mountWithCleanup(Parent);
+
+    expect(".one").toBeFocused();
+
+    queryOne(".two").dispatchEvent(new MouseEvent("mouseenter"));
+    await animationFrame();
+    // mouseenter should be ignored
+    expect(".two").not.toHaveClass("focus");
+
+    await press("arrowdown");
+    await animationFrame();
+    expect(".two").toHaveClass("focus");
+
+    queryOne(".three").dispatchEvent(new MouseEvent("mousemove"));
+    await animationFrame();
+    // mousemove should not be ignored
+    expect(".three").toHaveClass("focus");
+    expect(".two").not.toHaveClass("focus");
+    expect.verifySteps(["onMouseEnter"]);
+
+    queryOne(".three").dispatchEvent(new MouseEvent("mousemove"));
+    await animationFrame();
+    expect(".three").toHaveClass("focus");
+    expect.verifySteps([]); // onMouseEnter is not triggered again
 });

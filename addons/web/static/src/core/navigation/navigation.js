@@ -25,14 +25,17 @@ class NavigationItem {
      */
     target = undefined;
 
-    constructor({ index, el, setActiveItem, options }) {
+    constructor({ index, el, navigator, options }) {
         this.index = index;
 
         /**@private */
         this._options = options;
 
-        /**@private*/
-        this._setActiveItem = setActiveItem;
+        /**
+         * @private
+         * @type {Navigator}
+        */
+        this._navigator = navigator;
 
         this.el = el;
         if (this._options.shouldFocusChildInput) {
@@ -43,15 +46,15 @@ class NavigationItem {
         }
 
         const onFocus = () => this.setActive(false);
-        const onMouseEnter = () => this._onMouseEnter();
+        const onMouseMove = () => this._onMouseMove();
 
         this.target.addEventListener("focus", onFocus);
-        this.target.addEventListener("mouseenter", onMouseEnter);
+        this.target.addEventListener("mousemove", onMouseMove);
 
         /**@private*/
         this._removeListeners = () => {
             this.target.removeEventListener("focus", onFocus);
-            this.target.removeEventListener("mouseenter", onMouseEnter);
+            this.target.removeEventListener("mousemove", onMouseMove);
         };
     }
 
@@ -62,7 +65,7 @@ class NavigationItem {
 
     setActive(focus = true) {
         scrollTo(this.target);
-        this._setActiveItem(this.index);
+        this._navigator._setActiveItem(this.index);
         this.target.classList.add(ACTIVE_ELEMENT_CLASS);
 
         if (focus && !this._options.virtualFocus) {
@@ -81,9 +84,11 @@ class NavigationItem {
     /**
      * @private
      */
-    _onMouseEnter() {
-        this.setActive(false);
-        this._options.onMouseEnter?.(this);
+    _onMouseMove() {
+        if (this._navigator.activeItem !== this) {
+            this.setActive(false);
+            this._options.onMouseEnter?.(this);
+        }
     }
 }
 
@@ -270,7 +275,7 @@ export class Navigator {
                 index: i,
                 el: elements[i],
                 options: this._options,
-                setActiveItem: (index) => this._setActiveItem(index),
+                navigator: this,
             });
 
             if (i >= this.items.length) {
