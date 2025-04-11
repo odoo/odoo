@@ -21,9 +21,6 @@
                                 <!-- Override invisible="1" when inheriting -->
                                 <div class="column" id="activities" invisible="1">
                                 </div>
-                                <div class="o_td_label" id="label_info">
-                                    <span class="o_form_label o_hr_form_label cursor-default">HR Info</span>
-                                </div>
                                 <div class="column" id="info"/>
                             </group>
                         </group>
@@ -40,13 +37,6 @@
                     </footer>
                 </form>
             </field>
-        </record>
-
-        <record id="hr_departure_wizard_action" model="ir.actions.act_window">
-            <field name="name">Register Departure</field>
-            <field name="res_model">hr.departure.wizard</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
         </record>
     </data>
 </odoo>
