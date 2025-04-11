@@ -164,7 +164,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             'csrf_token': csrf_token,
             'partner_id': self.portal_user.partner_id.id,
         })
-        self.assertEqual(res, {'successUrl': '/my/addresses'})
+        self.assertEqual(res, {'redirectUrl': '/my/addresses'})
         self.assertRecordValues(
             self.portal_user.partner_id,
             [{**self.default_address_values, 'vat': 'BE0926372368'}],
@@ -195,7 +195,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             'csrf_token': csrf_token,
             'partner_id': self.portal_user.partner_id.id,
         })
-        self.assertEqual(res, {'successUrl': '/my/addresses'})
+        self.assertEqual(res, {'redirectUrl': '/my/addresses'})
         self.assertRecordValues(
             self.portal_user.partner_id,
             [self.default_address_values],
@@ -211,7 +211,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             'partner_id': self.portal_user.partner_id.id,
             'callback': '/my/beautiful/url',
         })
-        self.assertEqual(res, {'successUrl': '/my/beautiful/url'})
+        self.assertEqual(res, {'redirectUrl': '/my/beautiful/url'})
         self.assertRecordValues(
             self.portal_user.partner_id,
             [self.default_address_values],
@@ -226,7 +226,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             'csrf_token': csrf_token,
             'address_type': 'billing',
         })
-        self.assertEqual(res, {'successUrl': '/my/addresses'})
+        self.assertEqual(res, {'redirectUrl': '/my/addresses'})
         billing_address = self.portal_user.partner_id.child_ids
         self.assertTrue(len(billing_address) == 1)
         self.assertEqual(billing_address.type, 'invoice')
@@ -244,7 +244,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             'csrf_token': csrf_token,
             'address_type': 'delivery',
         })
-        self.assertEqual(res, {'successUrl': '/my/addresses'})
+        self.assertEqual(res, {'redirectUrl': '/my/addresses'})
         delivery_address = self.portal_user.partner_id.child_ids
         self.assertTrue(len(delivery_address) == 1)
         self.assertEqual(delivery_address.type, 'delivery')
@@ -263,7 +263,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             'address_type': 'delivery',
             'use_delivery_as_billing': '1',
         })
-        self.assertEqual(res, {'successUrl': '/my/addresses'})
+        self.assertEqual(res, {'redirectUrl': '/my/addresses'})
         delivery_address = self.portal_user.partner_id.child_ids
         self.assertTrue(len(delivery_address) == 1)
         self.assertEqual(delivery_address.type, 'other')
