@@ -19,16 +19,21 @@
 .o-mail-Discuss-header {
     background-color: $white;
     box-shadow: 0px 1px 6px -3px rgba(50, 50, 50, 0.15);
-    --border-opacity: .35;
+    --border-opacity: .25;
 }
 
 .o-mail-Discuss-headerActions button {
     --btn-disabled-opacity: 0.25;
-    opacity: 75%;
     background-color: transparent !important;
 
+    i {
+        opacity: 65%;
+    }
+
     &:hover, &.o-isActive {
-        opacity: 100%;
+        i {
+            opacity: 100%;
+        }
     }
     &:not(.o-isActive):hover {
         background-color: $gray-200 !important;
@@ -45,7 +50,7 @@
 }
 
 .o-mail-Discuss-headerActionsGroup {
-    --border-opacity: var(--mail-Discuss-headerActionsGroupBorderOpacity, .075);
+    background-color: mix($gray-100, $gray-200, 65%);
 }
 
 .o-mail-Discuss-headerCountry {
@@ -53,7 +58,7 @@
 }
 
 .o-mail-Discuss-panelContainer {
-    --border-opacity: .5;
+    --border-opacity: .25;
 }
 
 .o-mail-Discuss-threadAvatar {
@@ -78,5 +83,5 @@
 }
 
 .o_web_client:has(.o-mail-Discuss) .o_control_panel {
-    --ControlPanel-border-bottom: #{$border-width} solid #{rgba($border-color, .35)};
+    --ControlPanel-border-bottom: #{$border-width} solid #{rgba($border-color, 0)};
 }
