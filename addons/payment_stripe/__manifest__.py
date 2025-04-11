@@ -19,6 +19,7 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
+            'payment_stripe/static/src/interactions/**/*',
             'payment_stripe/static/src/**/*',
         ],
     },
