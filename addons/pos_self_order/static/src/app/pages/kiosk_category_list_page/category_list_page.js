@@ -49,6 +49,6 @@ export class KioskCategoryListPage extends Component {
     }
 
     get categories() {
-        return this.selfOrder.availableCategories;
+        return this.selfOrder.availableCategories.filter((c) => !c.parent_id);
     }
 }

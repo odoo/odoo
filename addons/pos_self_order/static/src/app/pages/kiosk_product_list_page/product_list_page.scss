@@ -36,6 +36,25 @@
       box-shadow: 0 0 8px 2px var(--primary);
   }
 
+  .sub_category_container{
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out, max-height 0.2s ease-out;
+  }
+
+  .sub_category_container.show{
+    max-height: 150px;
+    opacity: 1;
+  }
+
+  .child_category_btn{
+     img {
+      width:  55px;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
   .product_list {
     gap: 1.5rem;
 

@@ -370,6 +370,7 @@ export class SelfOrder extends Reactive {
     initData() {
         this.productCategories = this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
+
         const isSpecialProduct = (p) => this.config._pos_special_products_ids.includes(p.id);
         for (const category_id in this.productByCategIds) {
             this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
@@ -389,7 +390,6 @@ export class SelfOrder extends Reactive {
             });
             this.productByCategIds["0"] = productWoCat;
         }
-
         this._initLanguages();
 
         for (const printerConfig of this.models["pos.printer"].getAll()) {

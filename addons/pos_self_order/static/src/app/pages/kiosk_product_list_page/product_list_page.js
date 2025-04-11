@@ -1,12 +1,4 @@
-import {
-    Component,
-    onWillStart,
-    useRef,
-    onMounted,
-    onWillUnmount,
-    useEffect,
-    useState,
-} from "@odoo/owl";
+import { Component, useRef, onMounted, onWillUnmount, useEffect, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -25,9 +17,23 @@ export class KioskProductListPage extends Component {
         this.router = useService("router");
         this.dialog = useService("dialog");
         this.categoryListRef = useRef("category_list");
+        this.subCategoryListRef = useRef("sub_category_list");
+        this.subCategoryContainerRef = useRef("sub_cat_container");
         this.state = useState({
             quantityByProductTmplId: {},
+            topCategories: [],
+            subCategories: [],
         });
+
+        const initCategories = !this.selfOrder.currentCategory;
+        if (initCategories) {
+            this.selfOrder.computeAvailableCategories();
+        }
+        this.state.topCategories = this.selfOrder.availableCategories.filter((c) => !c.parent_id);
+        if (initCategories) {
+            this.selfOrder.currentCategory = this.state.topCategories[0];
+        }
+        this.state.subCategories = this.getSubCategories();
 
         useEffect(
             (lines) => {
@@ -43,12 +49,6 @@ export class KioskProductListPage extends Component {
             },
             () => [this.selfOrder.currentOrder.lines]
         );
-
-        onWillStart(() => {
-            if (!this.selfOrder.currentCategory) {
-                this.selfOrder.computeAvailableCategories();
-            }
-        });
 
         onMounted(() => {
             // Ensure the selected category is visible
@@ -69,13 +69,19 @@ export class KioskProductListPage extends Component {
                 }
             }
 
-            this.initCategoriesDragToScroll();
+            this.initCategoriesDragToScroll(this.categoryListRef.el, this.categoryListRef);
+            this.initCategoriesDragToScroll(
+                this.subCategoryContainerRef.el,
+                this.subCategoryListRef
+            );
         });
 
         onWillUnmount(() => {
-            if (this.catOnMouseMove) {
-                window.removeEventListener("mousemove", this.catOnMouseMove);
-                window.removeEventListener("mouseup", this.catOnMouseUp);
+            if (this.scrollMouseListeners) {
+                for (const { onMouseMove, onMouseUp } of this.scrollMouseListeners) {
+                    window.removeEventListener("mousemove", onMouseMove);
+                    window.removeEventListener("mouseup", onMouseUp);
+                }
             }
         });
     }
@@ -91,6 +97,9 @@ export class KioskProductListPage extends Component {
 
     selectCategory(category) {
         this.selfOrder.currentCategory = category;
+        if (!category.parent_id) {
+            this.toggleSubCategoryPanel();
+        }
     }
 
     isProductAvailable(product) {
@@ -100,8 +109,45 @@ export class KioskProductListPage extends Component {
         return product.pos_categ_ids.some((categ) => this.selfOrder.isCategoryAvailable(categ.id));
     }
 
+    get topSelectedCategory() {
+        return this.selectedCategory?.parent_id || this.selectedCategory;
+    }
+
     get selectedCategory() {
         return this.selfOrder.currentCategory;
+    }
+
+    getSubCategories() {
+        const currentCategory = this.selfOrder.currentCategory;
+        if (!currentCategory) {
+            return [];
+        }
+        if (currentCategory.parent_id) {
+            return currentCategory.parent_id.child_ids;
+        }
+        return currentCategory.child_ids || [];
+    }
+
+    toggleSubCategoryPanel() {
+        const el = this.subCategoryContainerRef.el;
+        const nextSubCategories = this.getSubCategories();
+        if (this.state.subCategories.length > 0 && nextSubCategories.length === 0) {
+            el.classList.remove("show");
+            const oldSelectedCat = this.selectedCategory;
+            const self = this;
+            el.addEventListener("transitionend", function handler(e) {
+                if (oldSelectedCat === self.selectedCategory) {
+                    self.state.subCategories = [];
+                }
+                el.removeEventListener("transitionend", handler);
+            });
+            return;
+        } else if (nextSubCategories.length === 0 && this.state.subCategories.length === 0) {
+            return;
+        }
+
+        this.state.subCategories = nextSubCategories;
+        el.classList.add("show");
     }
 
     review() {
@@ -110,10 +156,6 @@ export class KioskProductListPage extends Component {
 
     get products() {
         return this.selfOrder.productByCategIds[this.selectedCategory.id] || [];
-    }
-
-    get categories() {
-        return this.selfOrder.availableCategories;
     }
 
     selectProduct(product, target) {
@@ -169,9 +211,8 @@ export class KioskProductListPage extends Component {
 
     /**
      *  The category panel scrollbars are hidden, so we allow scrolling via drag-and-drop
-     *  for non-touch environments only.
      */
-    initCategoriesDragToScroll() {
+    initCategoriesDragToScroll(container, scrollContainer) {
         if (hasTouch()) {
             return;
         }
@@ -180,31 +221,39 @@ export class KioskProductListPage extends Component {
         let startX;
         let scrollLeft;
 
-        const container = this.categoryListRef.el;
-        container.addEventListener("mousedown", (e) => {
+        const onMouseDown = (e) => {
+            if (!scrollContainer.el) {
+                return;
+            }
             isDragging = true;
+            startX = e.pageX - scrollContainer.el.offsetLeft;
+            scrollLeft = scrollContainer.el.scrollLeft;
+        };
 
-            startX = e.pageX - container.offsetLeft;
-            scrollLeft = container.scrollLeft;
-        });
-        this.catOnMouseUp = (e) => {
+        const onMouseMove = (e) => {
+            if (!isDragging || !scrollContainer.el) {
+                return;
+            }
+
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.el.offsetLeft;
+            const walk = x - startX;
+            scrollContainer.el.scrollLeft = scrollLeft - walk;
+        };
+
+        const onMouseUp = (e) => {
             if (!isDragging) {
                 return;
             }
             e.preventDefault();
             isDragging = false;
         };
-        this.catOnMouseMove = (e) => {
-            if (!isDragging) {
-                return;
-            }
 
-            e.preventDefault();
-            const x = e.pageX - container.offsetLeft;
-            const walk = x - startX;
-            container.scrollLeft = scrollLeft - walk;
-        };
-        window.addEventListener("mouseup", this.catOnMouseUp);
-        window.addEventListener("mousemove", this.catOnMouseMove);
+        container.addEventListener("mousedown", onMouseDown);
+        window.addEventListener("mousemove", onMouseMove);
+        window.addEventListener("mouseup", onMouseUp);
+
+        this.scrollMouseListeners = this.scrollMouseListeners || [];
+        this.scrollMouseListeners.push({ onMouseMove, onMouseUp });
     }
 }
