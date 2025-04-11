@@ -1,0 +1,26 @@
+name: Daily Mirror to GitLab (Last 1000 Commits)
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Daily at 03:00 UTC
+  workflow_dispatch:     # Optional manual run
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout last 1000 commits of odoo_18.0_gitlab
+        uses: actions/checkout@v3
+        with:
+          ref: odoo_18.0_gitlab
+          fetch-depth: 1000
+
+      - name: Push to GitLab (force)
+        env:
+          GITLAB_USERNAME: ${{ secrets.GITLAB_USERNAME }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          GITLAB_REPO_URL: ${{ secrets.GITLAB_REPO_URL }}
+        run: |
+          git remote add gitlab https://$GITLAB_USERNAME:$GITLAB_TOKEN@$GITLAB_REPO_URL
+          git push -f gitlab HEAD:main
