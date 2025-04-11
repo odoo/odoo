@@ -58,8 +58,16 @@ class PaymentTransaction(models.Model):
         :return: The requested payload to create a Paypal order.
         :rtype: dict
         """
-        country_code = self.partner_country_id.code or self.company_id.country_id.code
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
+        if self.partner_id.is_public:
+            invoice_address_vals = {'address': {'country_code': self.company_id.country_code}}
+            shipping_address_vals = {}
+        else:
+            invoice_address_vals = paypal_utils.format_partner_address(self.partner_id)
+            shipping_address_vals = paypal_utils.format_shipping_address(self)
+        shipping_preference = 'SET_PROVIDED_ADDRESS' if shipping_address_vals else 'NO_SHIPPING'
+
+        # See https://developer.paypal.com/docs/api/orders/v2/#orders_create!ct=application/json
         payload = {
             'intent': 'CAPTURE',
             'purchase_units': [
@@ -72,37 +80,28 @@ class PaymentTransaction(models.Model):
                     },
                     'payee':  {
                         'display_data': {
-                            'business_email':  self.provider_id.company_id.email,
                             'brand_name': self.provider_id.company_id.name,
                         },
                         'email_address': paypal_utils.get_normalized_email_account(self.provider_id)
                     },
+                    **shipping_address_vals,
                 },
             ],
             'payment_source': {
                 'paypal': {
                     'experience_context': {
-                        'shipping_preference': 'NO_SHIPPING',
+                        'shipping_preference': shipping_preference,
                     },
                     'name': {
                         'given_name': partner_first_name,
                         'surname': partner_last_name,
                     },
-                    'address': {
-                        'address_line_1': self.partner_address,
-                        'admin_area_1': self.partner_state_id.name,
-                        'admin_area_2': self.partner_city,
-                        'postal_code': self.partner_zip,
-                        'country_code': country_code,
-                    },
+                    **invoice_address_vals,
                 },
             },
         }
         # PayPal does not accept None set to fields and to avoid users getting errors when email
         # is not set on company we will add it conditionally since its not a required field.
-        if self.partner_email:
-            payload['payment_source']['paypal']['email_address'] = self.partner_email
-
         if company_email := self.provider_id.company_id.email:
             payload['purchase_units'][0]['payee']['display_data']['business_email'] = company_email
 
