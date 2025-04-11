@@ -50,7 +50,7 @@ const snippets = [
     },
 ];
 
-registerThemeHomepageTour('homepage', () => [
+registerThemeHomepageTour("homepage", () => [
     ...insertSnippet(snippets[0], { position: "top" }),
     ...clickOnText(snippets[0], "h1"),
     goBackToBlocks(),
