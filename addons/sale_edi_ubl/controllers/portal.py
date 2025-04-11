@@ -16,14 +16,7 @@ class CustomerPortal(portal.CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        builders = order_sudo._get_edi_builders()
-
-        # This handles only one builder for now, more can be added in the future
-        if len(builders) != 1:
-            return request.redirect('/my')
-
-        builder = builders[0]
-
+        builder = self.env['sale.edi.xml.ubl_bis3']
         xml_content = builder._export_order(order_sudo)
         download_name = builder._export_invoice_filename(order_sudo)  # works even if it's a SO or PO
         http_headers = [

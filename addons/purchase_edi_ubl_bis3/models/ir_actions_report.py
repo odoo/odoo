@@ -16,10 +16,7 @@ class IrActionsReport(models.Model):
                 and len(res_ids) == 1 \
                 and self._is_purchase_order_report(report_ref):
             purchase_order = self.env['purchase.order'].browse(res_ids)
-            builders = purchase_order._get_edi_builders()
-
-            if len(builders) == 0:
-                return collected_streams
+            builder = self.env['purchase.edi.xml.ubl_bis3']
 
             # Read pdf content.
             pdf_stream = collected_streams[purchase_order.id]['stream']
@@ -29,15 +26,14 @@ class IrActionsReport(models.Model):
             writer = OdooPdfFileWriter()
             writer.cloneReaderDocumentRoot(reader)
 
-            # Generate and attach EDI documents from builders
-            for builder in builders:
-                xml_content = builder._export_order(purchase_order)
+            # Generate and attach EDI documents from builder
+            xml_content = builder._export_order(purchase_order)
 
-                writer.addAttachment(
-                    builder._export_invoice_filename(purchase_order),  # works even if it's a SO or PO
-                    xml_content,
-                    subtype='text/xml'
-                )
+            writer.addAttachment(
+                builder._export_invoice_filename(purchase_order),  # works even if it's a SO or PO
+                xml_content,
+                subtype='text/xml'
+            )
 
             # Replace the current content.
             pdf_stream.close()

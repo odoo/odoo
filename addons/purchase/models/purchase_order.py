@@ -1360,6 +1360,3 @@ class PurchaseOrder(models.Model):
         if file_data['type'] in ('pdf', 'binary'):
             return lambda *args: False
         return
-
-    def _get_edi_builders(self):
-        return []

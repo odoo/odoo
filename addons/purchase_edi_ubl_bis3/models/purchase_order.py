@@ -53,12 +53,3 @@ class PurchaseOrder(models.Model):
             'price_unit': price_unit,
             'taxes_id': [Command.set(tax_ids)],
         } for name, quantity, price_unit, tax_ids in lines_vals]
-
-    def _get_edi_builders(self):
-        return super()._get_edi_builders() + [self.env['purchase.edi.xml.ubl_bis3']]
-
-    def _get_supplier_id(self):
-        return self.partner_id
-
-    def _get_customer_id(self):
-        return self.company_id.partner_id
