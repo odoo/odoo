@@ -111,6 +111,7 @@ patch(Chatter.prototype, {
             showActivities: true,
             showAttachmentLoading: false,
             showScheduledMessages: true,
+            showAllAttachments: true,
         });
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(
@@ -477,6 +478,15 @@ patch(Chatter.prototype, {
 
     toggleScheduledMessages() {
         this.state.showScheduledMessages = !this.state.showScheduledMessages;
+    },
+
+    get displayLimit() {
+        const minAttachmentLimit = 10;
+        return this.state.showAllAttachments ? minAttachmentLimit : Infinity;
+    },
+
+    toggelshowAllAttachments(){
+        this.state.showAllAttachments = !this.state.showAllAttachments;
     },
 
     async unlinkAttachment(attachment) {
