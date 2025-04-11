@@ -1,0 +1,27 @@
+name: Mirror GitHub to GitLab
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Runs daily at 03:00 UTC
+  workflow_dispatch:      # Manual trigger from GitHub Actions tab
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout GitHub branch (odoo_18.0_gitlab)
+        uses: actions/checkout@v3
+        with:
+          ref: odoo_18.0_gitlab
+          fetch-depth: 100  # Shallow clone with only the last 100 commits
+
+      - name: Push to GitLab
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
+          git remote add gitlab https://$GITLAB_USERNAME:$GITLAB_TOKEN@gitlab.com/IT-Dev-1010/odoo_18.0_github.git
+          git push -f gitlab odoo_18.0_gitlab:odoo_18.0_gitlab
+        env:
+          GITLAB_USERNAME: ${{ secrets.GITLAB_USERNAME }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
