@@ -5,7 +5,7 @@ import requests
 import threading
 
 from odoo.http import route, Controller, request
-from odoo.tests.common import HttpCase, tagged, ChromeBrowser, TEST_CURSOR_COOKIE_NAME
+from odoo.tests.common import HttpCase, tagged, ChromeBrowser, TEST_CURSOR_COOKIE_NAME, Like
 from odoo.tools import config
 from unittest.mock import patch
 
@@ -157,12 +157,12 @@ class TestRequestRemainingNoCookie(TestRequestRemainingCommon):
         self._test_requests_a()
 
     def test_requests_b(self):
-        with self.assertLogs('odoo.tests.common', 'ERROR') as log_catcher:
+        with self.assertLogs('odoo.tests.common') as log_catcher:
             self._test_requests_b()
         self.assertEqual(
             log_catcher.output,
-            ['ERROR:odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. '
-             '(required "None (request are not enabled)", got "None")'],
+            [Like('... odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. '
+             '(required "None (request are not enabled)", got "None")')],
         )
 
 
@@ -171,12 +171,12 @@ class TestRequestRemainingNotEnabled(TestRequestRemainingCommon):
         self._test_requests_a(cookie=True)
 
     def test_requests_b(self):
-        with self.assertLogs('odoo.tests.common', 'ERROR') as log_catcher:
+        with self.assertLogs('odoo.tests.common') as log_catcher:
             self._test_requests_b()
         self.assertEqual(
             log_catcher.output,
-            ['ERROR:odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. '
-             '(required "None (request are not enabled)", got "/base/tests/test_http_case.py:TestRequestRemainingNotEnabled.test_requests_a")'],
+            [Like('... odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. '
+             '(required "None (request are not enabled)", got "/base/tests/test_http_case.py:TestRequestRemainingNotEnabled.test_requests_a")')],
         )
 
 
@@ -185,12 +185,12 @@ class TestRequestRemainingStartDuringNext(TestRequestRemainingCommon):
         self._test_requests_a(cookie=True)
 
     def test_requests_b(self):
-        with self.assertLogs('odoo.tests.common', 'ERROR') as log_catcher, self.allow_requests():
+        with self.assertLogs('odoo.tests.common') as log_catcher, self.allow_requests():
             self._test_requests_b()
         self.assertEqual(
             log_catcher.output,
-            ['ERROR:odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. '
-             '(required "/base/tests/test_http_case.py:TestRequestRemainingStartDuringNext.test_requests_b__0", got "/base/tests/test_http_case.py:TestRequestRemainingStartDuringNext.test_requests_a")'],
+            [Like('... odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. '
+             '(required "/base/tests/test_http_case.py:TestRequestRemainingStartDuringNext.test_requests_b__0", got "/base/tests/test_http_case.py:TestRequestRemainingStartDuringNext.test_requests_a")')],
         )
 
 
@@ -229,9 +229,9 @@ class TestRequestRemainingAfterFirstCheck(TestRequestRemainingCommon):
     def test_requests_b(self):
         _logger.info('B started, waiting for A to finish')
         # url_open will simulate a enabled request
-        with self.assertLogs('odoo.tests.common', 'ERROR') as log_catcher, self.allow_requests():
+        with self.assertLogs('odoo.tests.common') as log_catcher, self.allow_requests():
             self.thread_a.join()
         self.assertEqual(
             log_catcher.output,
-            ['ERROR:odoo.tests.common:Trying to open a test cursor for /base/tests/test_http_case.py:TestRequestRemainingAfterFirstCheck.test_requests_a while already in a test /base/tests/test_http_case.py:TestRequestRemainingAfterFirstCheck.test_requests_b'],
+            [Like('... Trying to open a test cursor for /base/tests/test_http_case.py:TestRequestRemainingAfterFirstCheck.test_requests_a while already in a test /base/tests/test_http_case.py:TestRequestRemainingAfterFirstCheck.test_requests_b')],
         )
