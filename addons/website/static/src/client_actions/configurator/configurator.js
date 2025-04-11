@@ -22,9 +22,11 @@ import {
     useSubEnv,
     onWillStart,
     useExternalListener,
+    markup,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { sprintf } from "@web/core/utils/strings";
 
 export const ROUTES = {
     descriptionScreen: 2,
@@ -404,11 +406,36 @@ export class ApplyConfiguratorScreen extends Component {
 
         if (themeName !== undefined) {
             const selectedFeatures = Object.values(this.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
+            const selectedFeaturesWaitingMessages = this.getWaitingMessages(selectedFeatures);
+            const loadingMessages = [
+                {
+                    description: _t("Applying your colors and design..."),
+                    flag: "colors",
+                },
+                {
+                    description: _t("Searching your images..."),
+                    flag: "images",
+                },
+                {
+                    description: _t("Generating inspiring text..."),
+                    flag: "text",
+                },
+                ...selectedFeaturesWaitingMessages,
+            ];
+
+            this.progressPercentage = 0;
+
             this.websiteService.showLoader({
-                showTips: true,
-                selectedFeatures: selectedFeatures,
-                showWaitingMessages: true,
+                title: _t("Building your website."),
+                loadingMessages: loadingMessages,
+                getProgress: () => this.progressPercentage,
+                bottomMessageTemplate: "website.website_loader.tour_tip",
             });
+
+            this.initFeatureInstallationProgress({
+                selectedFeaturesCount: selectedFeatures.length,
+            });
+
             let selectedPalette = this.state.selectedPalette.name;
             if (!selectedPalette) {
                 selectedPalette = [
@@ -436,12 +463,221 @@ export class ApplyConfiguratorScreen extends Component {
 
             this.props.clearStorage();
 
-            this.websiteService.prepareOutLoader();
-            // Here the website service goToWebsite method is not used because
-            // the web client needs to be reloaded after the new modules have
-            // been installed.
-            redirect(`/odoo/action-website.website_preview?website_id=${encodeURIComponent(resp.website_id)}`);
+            this.websiteService.redirectOutFromLoader({
+                url: `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
+                    resp.website_id
+                )}`,
+            });
         }
+    }
+
+    /**
+     * Simulates the progress for website creation, divided into three phases:
+     * 1. Initial Phase (0–30%): Fast progress to give an impression of quick
+     *    processing.
+     * 2. Modules Phase (30–90%): Distributes progress evenly across the
+     *    selected features(module).
+     * 3. Final Phase (90–100%): Slow progress to allow any pending operations
+     *    to complete before reaching 100%.
+     *
+     * @param {Object} options Configuration options for progress simulation
+     * @param {number} [options.initialProgress] Starting progress value (should
+     *                                           be between 0 and 100)
+     * @param {number} [options.selectedFeaturesCount] Number of features to
+     *                                                 simulate progress for
+     * @param {number} [options.timeoutInterval] Interval between progress
+     *                                           updates, in milliseconds
+     * @returns {number} The interval ID
+     */
+    initFeatureInstallationProgress({
+        initialProgress = 0,
+        selectedFeaturesCount = 0,
+        timeoutInterval = 500,
+    }) {
+        const totalProgress = 100;
+        const initialFastProgress = 30;
+        const moduleSimulationProgress = 60;
+
+        let progress = initialProgress;
+        let currentPhase = "initial";
+        let moduleIndex = 0;
+        let currentModuleProgress = 0;
+
+        const progressPerModule =
+            selectedFeaturesCount > 0
+                ? moduleSimulationProgress / selectedFeaturesCount
+                : moduleSimulationProgress;
+
+        const intervalId = setInterval(() => {
+            switch (currentPhase) {
+                // Completes 0-30%
+                case "initial":
+                    if (progress < initialFastProgress) {
+                        progress += 2;
+                    } else {
+                        currentPhase = "modules";
+                        moduleIndex = 0;
+                        currentModuleProgress = 0;
+                    }
+                    break;
+
+                // Completes 30-90%
+                case "modules": {
+                    const isNoFeaturesSelected = selectedFeaturesCount === 0;
+                    const isModulePhaseComplete = moduleIndex >= selectedFeaturesCount;
+
+                    // Use decaying speed to simulate natural progression
+                    // - Higher speed when no features are selected to ensure
+                    //   quick completion of the module phase.
+                    // - Lower speed when features are selected to ensure that
+                    //   we spend a adequate time for each module.
+                    const speed = this.getDecayingSpeed({
+                        startSpeed: isNoFeaturesSelected ? 2.5 : 1.8,
+                        endSpeed: isNoFeaturesSelected ? 1 : 0.6,
+                        currentProgress: currentModuleProgress,
+                        totalProgress: isNoFeaturesSelected
+                            ? moduleSimulationProgress
+                            : progressPerModule,
+                    });
+                    currentModuleProgress += speed;
+
+                    if (isNoFeaturesSelected) {
+                        progress = Math.min(
+                            initialFastProgress + currentModuleProgress,
+                            initialFastProgress + moduleSimulationProgress
+                        );
+                        if (progress >= initialFastProgress + moduleSimulationProgress) {
+                            currentPhase = "final";
+                        }
+                    } else if (!isModulePhaseComplete) {
+                        const moduleStartProgress =
+                            initialFastProgress + moduleIndex * progressPerModule;
+                        const moduleTargetProgress = moduleStartProgress + progressPerModule;
+
+                        if (currentModuleProgress >= progressPerModule) {
+                            moduleIndex++;
+                            currentModuleProgress = 0;
+                        } else {
+                            progress = Math.min(
+                                moduleStartProgress + currentModuleProgress,
+                                moduleTargetProgress
+                            );
+                        }
+                    } else {
+                        currentPhase = "final";
+                    }
+                    break;
+                }
+
+                // Completes 90-100%
+                case "final":
+                    if (totalProgress - progress > 0) {
+                        progress = Math.min(progress + 0.05, totalProgress);
+                    }
+                    break;
+            }
+
+            this.progressPercentage = progress;
+        }, timeoutInterval);
+
+        return intervalId;
+    }
+
+    /**
+     * Computes a progressively decreasing speed from a given start speed to an
+     * end speed as progress increases.
+     * This creates a decaying effect where movement starts fast and gradually
+     * slows down towards completion.
+     *
+     * @param {Object} options - Configuration object for speed calculation
+     * @param {number} options.currentProgress - The current progress value
+     * @param {number} options.endSpeed - The final speed when progress reaches
+     *                                    completion
+     * @param {number} options.startSpeed - The initial speed at the start of
+     *                                      the progress
+     * @param {number} options.totalProgress - The total progress required to
+     *                                         complete the process
+     * @returns {number} - The calculated speed based on the current progress
+     */
+    getDecayingSpeed({ currentProgress, endSpeed, startSpeed, totalProgress }) {
+        if (totalProgress === 0) {
+            return endSpeed;
+        }
+
+        const progressRatio = Math.min(currentProgress / totalProgress, 1);
+        return endSpeed + (startSpeed - endSpeed) * (1 - progressRatio);
+    }
+
+    /**
+     * Depending on the features selected, returns the right waiting messages.
+     *
+     * @param {integer[]} selectedFeatures
+     * @returns {Object[]} - The messages filtered by the selected features
+     */
+    getWaitingMessages(selectedFeatures) {
+        const websiteFeaturesMessages = [
+            {
+                id: 5,
+                title: _t("Adding features."),
+                name: _t("blog"),
+                description: _t("Enabling your %s."),
+                flag: "generic",
+            },
+            {
+                id: 7,
+                title: _t("Adding features."),
+                name: _t("recruitment platform"),
+                description: _t("Integrating your %s."),
+                flag: "generic",
+            },
+            {
+                id: 8,
+                title: _t("Adding features."),
+                name: _t("online store"),
+                description: _t("Activating your %s."),
+                flag: "generic",
+            },
+            {
+                id: 9,
+                title: _t("Adding features."),
+                name: _t("online appointment system"),
+                description: _t("Configuring your %s."),
+                flag: "generic",
+            },
+            {
+                id: 10,
+                title: _t("Adding features."),
+                name: _t("forum"),
+                description: _t("Setting up your %s."),
+                flag: "generic",
+            },
+            {
+                id: 12,
+                title: _t("Adding features."),
+                name: _t("e-learning platform"),
+                description: _t("Installing your %s."),
+                flag: "generic",
+            },
+        ];
+        const messagesList = websiteFeaturesMessages.filter((msg) => {
+            if (selectedFeatures.includes(msg.id)) {
+                if (msg.name) {
+                    const highlight = sprintf(
+                        '<span class="o_website_loader_text_highlight">%s</span>',
+                        msg.name
+                    );
+                    msg.description = markup(sprintf(msg.description, highlight));
+                }
+                return true;
+            }
+        });
+        const lastMessage = {
+            id: "last",
+            title: _t("Finalizing."),
+            description: _t("Activating the last features."),
+            flag: "generic",
+        };
+        return [...messagesList, lastMessage];
     }
 }
 
