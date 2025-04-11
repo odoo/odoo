@@ -61,9 +61,7 @@ class SaleEdiCommon(models.AbstractModel):
             del line_values['quantity']
             if not line_values['product_id']:
                 logs += [_("Could not retrieve product for line '%s'", line_values['name'])]
-            line_values['tax_ids'], tax_logs = self._retrieve_taxes(
-                order, line_values, 'sale',
-            )
+            line_values['tax_ids'], tax_logs = self._retrieve_taxes(order, line_values, 'sale')
             logs += tax_logs
             lines_values += self._retrieve_line_charges(order, line_values, line_values['tax_ids'])
             if not line_values['product_uom_id']:
@@ -118,3 +116,22 @@ class SaleEdiCommon(models.AbstractModel):
             partner_details += _(", Email: %(email)s", email=email)
 
         return partner_details
+
+    def _import_product(self, **product_vals):
+        """ Override of account.edi.common if no product is found first with the
+        `*ItemIdentification:ID` elements, tries again with the `*ItemIdentification:ExtendedID`
+        elements. `ExtendedID` could be used to identify a product variant.
+
+        Example:
+            StandardItemIdentification:ID == product.template.barcode           (product ID)
+            StandardItemIdentification:ExtendedID == product.product.barcode    (variant ID)
+        """
+        variant_barcode = product_vals.pop('variant_barcode', None)
+        variant_default_code = product_vals.pop('variant_default_code', None)
+
+        product = super()._import_product(**product_vals)
+        if not product and (variant_barcode or variant_default_code):
+            product = super()._import_product(
+                **product_vals, barcode=variant_barcode, default_code=variant_default_code,
+            )
+        return product

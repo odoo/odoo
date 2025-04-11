@@ -146,8 +146,11 @@
             <cbc:Name t-out="vals.get('name')" />
             <cbc:Description t-out="vals.get('description')" />
             <cac:StandardItemIdentification>
-                <cbc:ID t-out="vals.get('standard_item_identification')" />
+                <cbc:ID schemeID="0160" t-out="vals.get('standard_item_identification')"/>
             </cac:StandardItemIdentification>
+            <cac:SellersItemIdentification t-if="vals.get('seller_item_identification')">
+                <cbc:ID t-out="vals.get('seller_item_identification')"/>
+            </cac:SellersItemIdentification>
             <cac:ClassifiedTaxCategory t-if="vals.get('classified_tax_category_vals')" >
                 <t t-call="purchase_edi_ubl_bis3.bis3_TaxCategoryType">
                     <t t-set="vals" t-value="vals.get('classified_tax_category_vals')" />
