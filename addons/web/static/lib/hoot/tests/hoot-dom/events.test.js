@@ -336,6 +336,47 @@ describe(parseUrl(import.meta.url), () => {
         ]);
     });
 
+    test("click on element allowing or disallowing pointer events", async () => {
+        await mountForTest(/* xml */ `
+            <div class="container">
+                <button class="first" style="pointer-events: none">
+                    Not allowed
+                </button>
+                <div style="pointer-events: none">
+                    <button class="second" style="pointer-events: auto">
+                        Allowed
+                    </button>
+                </div>
+                <button class="third" style="pointer-events: none">
+                    Not allowed
+                </button>
+            </div>
+        `);
+
+        const container = queryOne(".container");
+        const pointableButton = queryOne(".second");
+        let events;
+
+        // Elements affected by pointer-events: none -> doesn't work
+        events = await click(".first");
+        expect(events.get("click").target).toBe(container);
+        events = await click(".third");
+        expect(events.get("click").target).toBe(container);
+
+        // Allowed button -> does work
+        events = await click(pointableButton);
+        expect(events.get("click").target).toBe(pointableButton);
+        expect("button:pointable").toHaveCount(1);
+
+        container.style.pointerEvents = "none";
+        pointableButton.style.pointerEvents = "none";
+
+        // Does not work anymore
+        events = await click(pointableButton);
+        expect(events.get("click").target).toBe(container.parentElement);
+        expect("button:pointable").not.toHaveCount();
+    });
+
     test("click on common parent", async () => {
         await mountForTest(/* xml */ `
             <main class="parent">

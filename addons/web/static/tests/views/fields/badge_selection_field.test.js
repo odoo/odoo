@@ -4,6 +4,7 @@ import {
     contains,
     defineModels,
     fields,
+    MockServer,
     models,
     mountView,
     onRpc,
@@ -122,8 +123,7 @@ test("BadgeSelectionField widget on a selection unchecking selected value", asyn
     await contains(".o_form_button_save").click();
     expect.verifySteps(["web_save"]);
 
-    const newRecord = Partner._records.at(-1);
-    expect(newRecord.color).toBe(false, {
+    expect(MockServer.env["res.partner"].at(-1).color).toBe(false, {
         message: "the new value should be false as we have selected same value as default",
     });
 });
@@ -155,6 +155,7 @@ test("BadgeSelectionField widget on a selection unchecking selected value (requi
     await contains(".o_form_button_save").click();
     expect.verifySteps(["web_save"]);
 
-    const newRecord = Partner._records.at(-1);
-    expect(newRecord.color).toBe("red", { message: "the new value should be red" });
+    expect(MockServer.env["res.partner"].at(-1).color).toBe("red", {
+        message: "the new value should be red",
+    });
 });

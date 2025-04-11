@@ -112,10 +112,25 @@ export function onServerStateChange(target, callback) {
 }
 
 export const serverState = new Proxy(SERVER_STATE_VALUES, {
-    get(target, p) {
+    deleteProperty(_target, p) {
+        return Reflect.deleteProperty(getServerStateValues(), p);
+    },
+    get(_target, p) {
         return Reflect.get(getServerStateValues(), p);
     },
-    set(target, p, newValue) {
+    has(_target, p) {
+        return Reflect.has(getServerStateValues(), p);
+    },
+    set(_target, p, newValue) {
+        if (p in SERVER_STATE_VALUES && newValue !== null && newValue !== undefined) {
+            const expectedType = typeof SERVER_STATE_VALUES[p];
+            const receivedType = typeof newValue;
+            if (receivedType !== expectedType) {
+                throw new Error(
+                    `expected server state property "${p}" to be a ${expectedType}, got: ${newValue} (${receivedType})`
+                );
+            }
+        }
         const result = Reflect.set(getServerStateValues(), p, newValue);
         if (result) {
             notifySubscribers();

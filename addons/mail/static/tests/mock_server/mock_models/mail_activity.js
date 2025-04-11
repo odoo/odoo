@@ -4,22 +4,16 @@ import { fields, getKwArgs, makeKwArgs, models, serverState } from "@web/../test
 import { Domain } from "@web/core/domain";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
 import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
-import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
-import { MailActivityType } from "./mail_activity_type";
 
 const { DateTime } = luxon;
 
 export class MailActivity extends models.ServerModel {
     _name = "mail.activity";
-    _views = {
-        [`search,${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
-        [`form,${DEFAULT_MAIL_VIEW_ID}`]: /* xml */ `<form/>`,
-    };
 
     activity_type_id = fields.Many2one({
         relation: "mail.activity.type",
         default() {
-            return MailActivityType._records[0].id;
+            return this.env["mail.activity.type"][0].id;
         },
     });
     user_id = fields.Many2one({ relation: "res.users", default: () => serverState.userId });

@@ -18,8 +18,6 @@ import { WebClient } from "@web/webclient/webclient";
 
 class Foo extends models.Model {
     _views = {
-        search: `<search/>`,
-        list: `<list/>`,
         kanban: `<kanban><t t-name="card"></t></kanban>`,
     };
 }
@@ -175,7 +173,7 @@ test.tags`desktop`("control panel layout buttons in dialog", async () => {
             char: "b",
         },
     ];
-    Foo._views["list,false"] = `<list editable="top"><field name="char"/></list>`;
+    Foo._views["list"] = `<list editable="top"><field name="char"/></list>`;
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction({

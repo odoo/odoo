@@ -1,6 +1,17 @@
 import { MockServerError } from "./mock_server_utils";
 
 /**
+ * @typedef {"array_agg"
+ *  | "avg"
+ *  | "bool_and"
+ *  | "bool_or"
+ *  | "count"
+ *  | "count_distinct"
+ *  | "max"
+ *  | "min"
+ *  | "sum"
+ * } Aggregator
+ *
  * @typedef {{
  *  compute?: (() => void) | string;
  *  default?: RecordFieldValue | ((record: ModelRecord) => RecordFieldValue);
@@ -25,17 +36,6 @@ import { MockServerError } from "./mock_server_utils";
  *  | StandardFieldDefinition} FieldDefinition
  *
  * @typedef {FieldDefinition["type"]} FieldType
- *
- * @typedef {"array_agg"
- *  | "avg"
- *  | "bool_and"
- *  | "bool_or"
- *  | "count"
- *  | "count_distinct"
- *  | "max"
- *  | "min"
- *  | "sum"
- * } Aggregator
  *
  * @typedef {{
  *  __domain: string;

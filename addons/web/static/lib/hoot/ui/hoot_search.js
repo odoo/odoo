@@ -281,6 +281,7 @@ export class HootSearch extends Component {
                         autofocus="autofocus"
                         placeholder="Filter suites, tests or tags"
                         t-ref="search-input"
+                        t-att-class="{ 'text-gray': !config.filter }"
                         t-att-disabled="isRunning"
                         t-att-value="state.query"
                         t-on-change="onSearchInputChange"
@@ -332,7 +333,6 @@ export class HootSearch extends Component {
     `;
 
     categories = ["suite", "test", "tag"];
-    useTextFilter = false;
     refresh = refresh;
     title = title;
 
@@ -556,18 +556,21 @@ export class HootSearch extends Component {
         };
 
         switch (ev.key) {
+            case "ArrowDown": {
+                return navigate(+1);
+            }
+            case "ArrowUp": {
+                return navigate(-1);
+            }
+            case "Enter": {
+                return refresh();
+            }
             case "Escape": {
                 if (this.state.showDropdown) {
                     ev.preventDefault();
                     this.state.showDropdown = false;
                 }
                 return;
-            }
-            case "ArrowDown": {
-                return navigate(+1);
-            }
-            case "ArrowUp": {
-                return navigate(-1);
             }
         }
     }
@@ -637,6 +640,7 @@ export class HootSearch extends Component {
      * @param {number} [value]
      */
     setInclude(categoryId, id, value) {
+        this.config.filter = "";
         this.env.runner.include(categoryId, id, value);
     }
 
@@ -684,12 +688,7 @@ export class HootSearch extends Component {
     }
 
     updateFilterParam() {
-        this.useTextFilter = true;
-
         this.config.filter = this.state.query.trim();
-        this.config.suite = [];
-        this.config.tag = [];
-        this.config.test = [];
     }
 
     /**

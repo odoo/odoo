@@ -44,7 +44,7 @@ const { DateTime } = luxon;
  *
  * @typedef {import("./mock_model").ModelConstructor} ModelConstructor
  *
- * @typedef {(params: OrmParams) => any} OrmCallback
+ * @typedef {(this: MockServer, params: OrmParams) => unknown} OrmCallback
  *
  * @typedef {{
  *  args: any[];
@@ -77,6 +77,8 @@ const { DateTime } = luxon;
  *  timezone?: string;
  *  translations?: Record<string, string>;
  * }} ServerParams
+ *
+ * @typedef {import("@odoo/hoot-mock").ServerWebSocket} ServerWebSocket
  *
  * @typedef {string | Iterable<string> | RegExp} StringMatcher
  *
@@ -151,11 +153,6 @@ const deepCopy = (object) => {
     }
     return object;
 };
-
-/**
- * @param {unknown} error
- */
-const ensureError = (error) => (error instanceof Error ? error : new Error(error));
 
 /**
  * @param {DefineOptions<"replace">} [options]
@@ -249,6 +246,19 @@ const toDisplayName = (value) => {
     return str[0].toUpperCase() + str.slice(1);
 };
 
+/**
+ * @param {ServerParams} params
+ * @param {DefineOptions<"replace">} [options]
+ */
+const _defineParams = (params, options) => {
+    const assign = getAssignAction(options);
+    const currentParams = getCurrentParams();
+    for (const [key, value] of Object.entries(params)) {
+        assign(currentParams, key, value);
+    }
+    return MockServer.current?.configure(params);
+};
+
 class MockServerBaseEnvironment {
     cookie = new Map();
 
@@ -327,6 +337,9 @@ const R_WEBCLIENT_ROUTE = /(?<step>\/web\/webclient\/\w+)/;
 const mockRpcRegistry = registry.category("mock_rpc");
 /** @type {WeakMap<() => any, MockServer>} */
 const mockServers = new WeakMap();
+/** @type {WeakSet<typeof Model>} */
+const seenModels = new WeakSet();
+/** @type {WeakSet<FieldDefinition>} */
 const serverFields = new WeakSet();
 
 //-----------------------------------------------------------------------------
@@ -373,8 +386,8 @@ export class MockServer {
     menus = [];
     /** @type {Record<string, Model>} */
     models = Object.create(null);
-    /** @type {Record<string, ModelConstructor>} */
-    modelSpecs = Object.create(null);
+    /** @type {ModelConstructor[]} */
+    modelSpecs = [];
     /** @type {Set<string>} */
     modelNamesToFetch = new Set();
 
@@ -385,43 +398,17 @@ export class MockServer {
     routes = [];
     started = false;
 
-    // WebSocket connections
-    /** @type {import("@odoo/hoot-mock").ServerWebSocket[]} */
+    /**
+     * WebSocket connections
+     * @type {ServerWebSocket[]}
+     */
     websockets = [];
-
-    constructor() {
-        // Set default routes
-        this._onRoute(["/web/action/load"], this.loadAction);
-        this._onRoute(["/web/action/load_breadcrumbs"], this.loadActionBreadcrumbs);
-        this._onRoute(["/web/bundle/<string:bundle_name>"], this.loadBundle, { pure: true });
-        this._onRoute(["/web/dataset/call_kw", "/web/dataset/call_kw/<path:path>"], this.callKw, {
-            final: true,
-        });
-        this._onRoute(
-            ["/web/dataset/call_button", "/web/dataset/call_button/<path:path>"],
-            this.callKw,
-            { final: true }
-        );
-        this._onRoute(["/web/dataset/resequence"], this.resequence);
-        this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage, {
-            pure: true,
-        });
-        this._onRoute(["/web/webclient/load_menus/<string:unique>"], this.loadMenus, {
-            pure: true,
-        });
-        this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations, {
-            pure: true,
-        });
-
-        mockFetch((input, init) => this._handle(input, init));
-        mockWebSocket((ws) => this.websockets.push(ws));
-    }
 
     /**
      * @param {Partial<ServerParams>} params
      * @param {DefineOptions<"replace">} [options]
      */
-    configure(params, options) {
+    async configure(params, options) {
         const assign = getAssignAction(options);
         if (params.actions) {
             assign(this, "actions", params.actions);
@@ -437,12 +424,13 @@ export class MockServer {
             assign(this, "menus", params.menus);
         }
         if (params.models) {
-            for (const ModelClass of params.models) {
-                const model = this._getModelDefinition(ModelClass);
-                assign(this.modelSpecs, model._name, model);
-            }
+            assign(
+                this,
+                "modelSpecs",
+                [...params.models].map((ModelClass) => this._getModelDefinition(ModelClass))
+            );
             if (this.started) {
-                this._loadModels();
+                await this._loadModels();
             }
         }
         if (params.modules) {
@@ -486,8 +474,46 @@ export class MockServer {
         }
         this.started = true;
 
-        await this._loadModels();
-        this._generateRecords();
+        registerDebugInfo("mock server", this);
+
+        // Intercept all server calls
+        mockFetch(this._handleRequest.bind(this));
+        mockWebSocket(this._handleWebSocket.bind(this));
+
+        // Set default routes
+        this._onRoute(["/web/action/load"], this.loadAction);
+        this._onRoute(["/web/action/load_breadcrumbs"], this.loadActionBreadcrumbs);
+        this._onRoute(["/web/bundle/<string:bundle_name>"], this.loadBundle, {
+            pure: true,
+        });
+        this._onRoute(["/web/dataset/call_kw", "/web/dataset/call_kw/<path:path>"], this.callKw, {
+            final: true,
+        });
+        this._onRoute(
+            ["/web/dataset/call_button", "/web/dataset/call_button/<path:path>"],
+            this.callKw,
+            { final: true }
+        );
+        this._onRoute(["/web/dataset/resequence"], this.resequence);
+        this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage, {
+            pure: true,
+        });
+        this._onRoute(["/web/webclient/load_menus/<string:unique>"], this.loadMenus, {
+            pure: true,
+        });
+        this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations, {
+            pure: true,
+        });
+
+        // Add routes from "mock_rpc" registry
+        for (const [route, callback] of mockRpcRegistry.getEntries()) {
+            if (typeof callback === "function") {
+                this._onRpc(route, callback);
+            }
+        }
+
+        // Register ambiant parameters
+        await this.configure(getCurrentParams());
 
         return this;
     }
@@ -588,64 +614,6 @@ export class MockServer {
 
     /**
      * @private
-     */
-    _generateRecords() {
-        for (const model of Object.values(this.models)) {
-            const seenIds = new Set();
-            for (const record of model) {
-                // Check for unknown fields
-                for (const fieldName in record) {
-                    if (!(fieldName in model._fields)) {
-                        throw new MockServerError(
-                            `unknown field "${fieldName}" on ${getRecordQualifier(
-                                record
-                            )} in model "${model._name}"`
-                        );
-                    }
-                }
-                // Apply values and default values
-                for (const [fieldName, fieldDef] of Object.entries(model._fields)) {
-                    if (fieldName === "id") {
-                        record[fieldName] ||= model._getNextId();
-                        continue;
-                    }
-                    if ("default" in fieldDef) {
-                        const def = fieldDef.default;
-                        record[fieldName] ??=
-                            typeof def === "function" ? def.call(this, record) : def;
-                    }
-                    record[fieldName] ??= DEFAULT_FIELD_VALUES[fieldDef.type]?.() ?? false;
-                }
-                if (seenIds.has(record.id)) {
-                    throw new MockServerError(
-                        `duplicate ID ${record.id} in model "${model._name}"`
-                    );
-                }
-                seenIds.add(record.id);
-            }
-        }
-
-        // creation of the ir.model.fields records, required for tracked fields
-        const IrModelFields = this.models["ir.model.fields"];
-        if (IrModelFields) {
-            for (const model of Object.values(this.models)) {
-                for (const [fieldName, field] of Object.entries(model._fields)) {
-                    if (field.tracking) {
-                        IrModelFields.create({
-                            model: model._name,
-                            name: fieldName,
-                            ttype: field.type,
-                        });
-                    }
-                }
-            }
-        }
-
-        Object.values(this.models).forEach((model) => model._applyComputesAndValidate());
-    }
-
-    /**
-     * @private
      * @param {Partial<ActionDefinition>} rawAction
      */
     _getAction(rawAction) {
@@ -741,7 +709,7 @@ export class MockServer {
         const model = ModelClass.definition;
 
         // Server model
-        if (model._fetch) {
+        if (ModelClass._fetch) {
             this.modelNamesToFetch.add(model._name);
         }
 
@@ -777,15 +745,8 @@ export class MockServer {
      * @private
      * @param {string} url
      * @param {RequestInit} init
-     * @param {RouteOptions} [options]
      */
-    async _handle(url, init, options = {}) {
-        if (!this.started) {
-            throw new MockServerError(
-                `cannot handle \`fetch\`: server has not been started (did you forget to call \`start()\`?)`
-            );
-        }
-
+    async _handleRequest(url, init) {
         const method = init?.method?.toUpperCase() || (init?.body ? "POST" : "GET");
         const request = new Request(url, { method, ...(init || {}) });
 
@@ -797,15 +758,14 @@ export class MockServer {
 
         let result = null;
         for (const [callback, routeParams, routeOptions] of listeners) {
-            const pure = options.pure ?? routeOptions.pure;
-            const final = options.final ?? routeOptions.final;
+            const { final, pure } = routeOptions;
             try {
                 result = await callback.call(this, request, routeParams);
             } catch (error) {
                 if (pure) {
                     throw error;
                 }
-                result = ensureError(error);
+                result = error instanceof Error ? error : new Error(error);
             }
             if (!isNil(result) || final) {
                 if (pure) {
@@ -834,12 +794,19 @@ export class MockServer {
     }
 
     /**
+     * @param {ServerWebSocket} webSocket
+     */
+    _handleWebSocket(webSocket) {
+        this.websockets.push(webSocket);
+    }
+
+    /**
      * @private
      */
     async _loadModels() {
-        const models = Object.values(this.modelSpecs);
+        const models = this.modelSpecs;
         const serverModelInheritances = new Set();
-        this.modelSpecs = Object.create(null);
+        this.modelSpecs = [];
         if (this.modelNamesToFetch.size) {
             const modelEntries = await fetchModelDefinitions(this.modelNamesToFetch);
             this.modelNamesToFetch.clear();
@@ -888,9 +855,11 @@ export class MockServer {
                 model._rec_name = "x_name";
             }
 
-            if (model._name in this.env) {
+            if (model._name in this.models) {
+                Object.setPrototypeOf(Object.getPrototypeOf(model), this.models[model._name]);
+            } else if (model._name in this.env) {
                 throw new MockServerError(
-                    `cannot register model "${model._name}": a model or a server environment property with the same name already exists`
+                    `cannot register model "${model._name}": a server environment property with the same name already exists`
                 );
             }
 
@@ -953,6 +922,71 @@ export class MockServer {
                     model._related.add(name);
                 }
             }
+
+            // Generate initial records
+            const recordsWithoutId = [];
+            const seenIds = new Set();
+            for (const record of model._records) {
+                // Check for unknown fields
+                for (const fieldName in record) {
+                    if (!(fieldName in model._fields)) {
+                        throw new MockServerError(
+                            `unknown field "${fieldName}" on ${getRecordQualifier(
+                                record
+                            )} in model "${model._name}"`
+                        );
+                    }
+                }
+                // Apply values and default values
+                for (const [fieldName, fieldDef] of Object.entries(model._fields)) {
+                    if (fieldName === "id") {
+                        continue; // handled later
+                    }
+                    if ("default" in fieldDef) {
+                        const def = fieldDef.default;
+                        record[fieldName] ??=
+                            typeof def === "function" ? def.call(model, record) : def;
+                    }
+                    record[fieldName] ??= DEFAULT_FIELD_VALUES[fieldDef.type]?.() ?? false;
+                }
+                if (record.id) {
+                    if (seenIds.has(record.id)) {
+                        throw new MockServerError(
+                            `duplicate ID ${record.id} in model "${model._name}"`
+                        );
+                    }
+                    seenIds.add(record.id);
+                } else {
+                    recordsWithoutId.push(record);
+                }
+                model.push(record);
+            }
+            model._records = [];
+
+            // Records without ID are assigned later to avoid collisions
+            for (const record of recordsWithoutId) {
+                record.id = model._getNextId();
+            }
+        }
+
+        // creation of the ir.model.fields records, required for tracked fields
+        const IrModelFields = this.models["ir.model.fields"];
+        if (IrModelFields) {
+            for (const model of models) {
+                for (const [fieldName, field] of Object.entries(model._fields)) {
+                    if (field.tracking) {
+                        IrModelFields.create({
+                            model: model._name,
+                            name: fieldName,
+                            ttype: field.type,
+                        });
+                    }
+                }
+            }
+        }
+
+        for (const model of models) {
+            model._applyComputesAndValidate();
         }
     }
 
@@ -1267,7 +1301,7 @@ export function authenticate(login, password) {
  * @param {DefineOptions<"add">} [options]
  */
 export function defineActions(actions, options) {
-    return defineParams({ actions }, { mode: "add", ...options }).actions;
+    before(() => _defineParams({ actions }, { mode: "add", ...options }));
 }
 
 /**
@@ -1275,7 +1309,7 @@ export function defineActions(actions, options) {
  * @param {DefineOptions<"add">} [options]
  */
 export function defineMenus(menus, options) {
-    return defineParams({ menus }, { mode: "add", ...options }).menus;
+    before(() => _defineParams({ menus }, { mode: "add", ...options }));
 }
 
 /**
@@ -1287,14 +1321,16 @@ export function defineMenus(menus, options) {
 export function defineModels(ModelClasses, options) {
     const models = Object.values(ModelClasses);
     for (const ModelClass of models) {
-        const instance = new ModelClass();
+        if (seenModels.has(ModelClass)) {
+            continue;
+        }
+        seenModels.add(ModelClass);
         // we cannot get the `definition` as this will trigger the model creation
-        if (instance._fetch) {
-            registerModelToFetch(instance._name);
+        if (ModelClass._fetch) {
+            registerModelToFetch(ModelClass.getModelName());
         }
     }
-
-    return defineParams({ models }, { mode: "add", ...options }).models;
+    before(() => _defineParams({ models }, { mode: "add", ...options }));
 }
 
 /**
@@ -1302,17 +1338,7 @@ export function defineModels(ModelClasses, options) {
  * @param {DefineOptions<"replace">} [options]
  */
 export function defineParams(params, options) {
-    const assign = getAssignAction(options);
-    before(() => {
-        const currentParams = getCurrentParams();
-        for (const [key, value] of Object.entries(params)) {
-            assign(currentParams, key, value);
-        }
-
-        MockServer.current?.configure(params);
-    });
-
-    return params;
+    before(() => _defineParams(params, options));
 }
 
 /**
@@ -1332,23 +1358,10 @@ export function logout() {
 
 /**
  * Shortcut function to create and start a {@link MockServer}.
+ * @type {MockServer["start"]}
  */
 export async function makeMockServer() {
-    const mockServer = getCurrentMockServer();
-
-    // Add routes from "mock_rpc" registry
-    for (const [route, callback] of mockRpcRegistry.getEntries()) {
-        if (typeof callback === "function") {
-            mockServer._onRpc(route, callback);
-        }
-    }
-
-    // Add other ambiant params
-    mockServer.configure(getCurrentParams());
-
-    registerDebugInfo("mock server", mockServer);
-
-    return mockServer.start();
+    return getCurrentMockServer().start();
 }
 
 /**
@@ -1378,7 +1391,7 @@ export async function makeMockServer() {
  * @type {MockServer["_onRpc"]}
  */
 export function onRpc(...args) {
-    return defineParams({ routes: [args] }, { mode: "add" }).routes;
+    before(() => _defineParams({ routes: [args] }, { mode: "add" }));
 }
 
 /**

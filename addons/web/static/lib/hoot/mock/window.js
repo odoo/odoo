@@ -54,10 +54,10 @@ import { MockBlob } from "./sync_values";
 const {
     document,
     Document,
+    EventTarget,
     HTMLBodyElement,
     HTMLHeadElement,
     HTMLHtmlElement,
-    Map,
     Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
         assign: $assign,
@@ -77,6 +77,7 @@ const {
     Window,
 } = globalThis;
 
+const { addEventListener, removeEventListener } = EventTarget.prototype;
 const touchFunctions = { ontouchcancel, ontouchend, ontouchmove, ontouchstart };
 
 //-----------------------------------------------------------------------------
@@ -185,6 +186,21 @@ const matchesQueryPart = (mediaQueryString) => {
     return mediaQueryString.startsWith("not") ? !match : match;
 };
 
+function mockedAddEventListener(...args) {
+    const runner = getRunner();
+    if (runner.dry) {
+        // Ignore listeners during dry run
+        return;
+    }
+    if (runner.suiteStack.length && !R_OWL_SYNTHETIC_LISTENER.test(String(args[1]))) {
+        // Only perform cleanup for:
+        // - listeners inside of suites
+        // - ignore Owl synthetic listeners
+        runner.after(removeEventListener.bind(this, ...args));
+    }
+    return addEventListener.call(this, ...args);
+}
+
 function mockedElementFromPoint(...args) {
     return mockedElementsFromPoint.call(this, ...args)[0];
 }
@@ -224,7 +240,17 @@ function mockedElementsFromPoint(...args) {
 /**
  * @type {typeof matchMedia}
  */
-const mockedMatchMedia = (mediaQueryString) => new MockMediaQueryList(mediaQueryString);
+function mockedMatchMedia(mediaQueryString) {
+    return new MockMediaQueryList(mediaQueryString);
+}
+
+function mockedRemoveEventListener(...args) {
+    if (getRunner().dry) {
+        // Ignore listeners during dry run
+        return;
+    }
+    return removeEventListener.call(this, ...args);
+}
 
 class MockMediaQueryList extends MockEventTarget {
     static publicListeners = ["change"];
@@ -254,23 +280,18 @@ const DEFAULT_MEDIA_VALUES = {
     "prefers-reduced-motion": "reduce",
 };
 
-const EVENT_TARGET_PROTOTYPES = new Map(
-    [
-        // Top level objects
-        Window,
-        Document,
-        // Permanent DOM elements
-        HTMLBodyElement,
-        HTMLHeadElement,
-        HTMLHtmlElement,
-        // Other event targets
-        EventBus,
-        MockEventTarget,
-    ].map(({ prototype }) => [
-        prototype,
-        [prototype.addEventListener, prototype.removeEventListener],
-    ])
-);
+const EVENT_TARGET_PROTOTYPES = [
+    // Top level objects
+    Window,
+    Document,
+    // Permanent DOM elements
+    HTMLBodyElement,
+    HTMLHeadElement,
+    HTMLHtmlElement,
+    // Other event targets
+    EventBus,
+    MockEventTarget,
+].map(({ prototype }) => prototype);
 
 const R_AND = /\s*\band\b\s*/;
 const R_COMMA = /\s*,\s*/;
@@ -319,7 +340,6 @@ const WINDOW_MOCK_DESCRIPTORS = {
     ClipboardItem: { value: MockClipboardItem },
     console: { value: mockConsole, writable: false },
     Date: { value: MockDate, writable: false },
-    EventTarget: { value: MockEventTarget },
     fetch: { value: interactor("server", mockedFetch).as("fetch"), writable: false },
     history: { value: mockHistory },
     innerHeight: { get: () => getCurrentDimensions().height },
@@ -469,56 +489,13 @@ export function setTitle(value) {
 }
 
 export function watchListeners() {
-    /**
-     * @param {WeakRef<EventTarget>} targetRef
-     */
-    const removeRefListener = (targetRef) => {
-        if (!listenerRefs.has(targetRef)) {
-            return;
-        }
-        const [removeEventListener, args] = listenerRefs.get(targetRef);
-        listenerRefs.delete(targetRef);
-        const target = targetRef.deref();
-        if (target) {
-            removeEventListener.call(target, ...args);
-        }
-    };
-
-    /** @type {Map<WeakRef<EventTarget>, [EventTarget["removeEventListener"], any[]]>} */
-    const listenerRefs = new Map();
-    const runner = getRunner();
-
-    for (const [proto, [addEventListener, removeEventListener]] of EVENT_TARGET_PROTOTYPES) {
-        proto.addEventListener = function mockedAddEventListener(...args) {
-            if (runner.dry) {
-                // Ignore listeners during dry run
-                return;
-            }
-            if (runner.suiteStack.length && !R_OWL_SYNTHETIC_LISTENER.test(String(args[1]))) {
-                // Do not cleanup:
-                // - listeners outside of suites
-                // - Owl synthetic listeners
-                const ref = new WeakRef(this);
-                listenerRefs.set(ref, [removeEventListener, args]);
-                runner.after(() => removeRefListener(ref));
-            }
-            return addEventListener.call(this, ...args);
-        };
-        proto.removeEventListener = function mockedRemoveEventListener(...args) {
-            if (runner.dry) {
-                // Ignore listeners during dry run
-                return;
-            }
-            return removeEventListener.call(this, ...args);
-        };
+    for (const proto of EVENT_TARGET_PROTOTYPES) {
+        proto.addEventListener = mockedAddEventListener;
+        proto.removeEventListener = mockedRemoveEventListener;
     }
 
     return function unwatchAllListeners() {
-        for (const ref of listenerRefs.keys()) {
-            removeRefListener(ref);
-        }
-
-        for (const [proto, [addEventListener, removeEventListener]] of EVENT_TARGET_PROTOTYPES) {
+        for (const proto of EVENT_TARGET_PROTOTYPES) {
             proto.addEventListener = addEventListener;
             proto.removeEventListener = removeEventListener;
         }
