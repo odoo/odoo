@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add('crm_forecast', {
         tooltipPosition: "bottom",
         run: "click"
     }, {
-        trigger: '.o_kanban_add_column',
+        trigger: '.o_column_quick_create.o_quick_create_folded div',
         content: "add next month",
         run: "click"
     }, {
