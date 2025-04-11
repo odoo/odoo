@@ -297,7 +297,10 @@ def translate_xml_node(node, callback, parse, serialize):
 
 
 def parse_xml(text):
-    return etree.fromstring(text)
+    try:
+        return etree.fromstring(text)
+    except ValueError as e:
+        raise UserError(str(e))
 
 def serialize_xml(node):
     return etree.tostring(node, method='xml', encoding='unicode')
