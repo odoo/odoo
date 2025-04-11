@@ -1,13 +1,66 @@
-.o_kiosk_eating_location_box {
-    @include o-so-landscape() {
-        width: calc(49% - #{map-get($spacers, 3)});
-    }
+.o_self_eating_location_box {
+  @include o-so-landscape() {
+    width: calc(49% - #{map-get($spacers, 3)});
+  }
 
-    @include o-so-portrait() {
-        width: 80%;
-    }
+  @include o-so-portrait() {
+    width: 80%;
+  }
 
-    &.o_kiosk_eating_location_away img {
-        transform: translateX(-5%);
-    }
+  &.o_self_eating_location_away img {
+    transform: translateX(-5%);
+  }
 }
+
+
+.o_kiosk_eating_location_box {
+
+  .header {
+    font-size: 5rem;
+    @media (max-width: 768px) {
+      font-size: 3rem;
+    }
+    @media (max-width: 576px) {
+      font-size: 2rem;
+    }
+  }
+
+  .preset_btn {
+    width: calc(50% - 1.5rem);
+    border-radius: 2rem;
+    max-width: 440px;
+
+
+    .img_container {
+      border-radius: 2rem 2rem 0 0;
+      img {
+        border-radius: 2rem 2rem 0 0;
+      }
+    }
+
+    h1 {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    @media (max-width: 700px) {
+      width: 75% !important;
+
+      h1 {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+    }
+
+  }
+
+  .kiosk_language_selector {
+    img {
+      height: 2em;
+    }
+  }
+
+}
+
+
+

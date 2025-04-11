@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.KioskAttributeSelection">
+         <t t-foreach="props.productTemplate.attribute_line_ids" t-as="attribute" t-key="attribute.id">
+             <h1 class="text-center p-4 fw-bold m-0" t-out="attribute.attribute_id.name"/>
+             <div class="attribute_list d-flex flex-wrap justify-content-center mb-5 w-100 px-4 gap-4">
+                <t t-foreach="availableAttributeValue(attribute)" t-as="value" t-key="value.id">
+                    <t t-set="valueSelected" t-value="isValueSelected(attribute,value)"/>
+                    <button
+                            t-on-click="() => this.selectAttribute(attribute, value)"
+                            role="button"
+                            class="d-flex flex-column align-items-center justify-content-center bg-white p-4 py-4 rounded-3 border border-light transition-base"
+                            t-att-class="{'o_kiosk_box_selected': valueSelected}">
+                        <span t-esc="value.name" class="fs-2 m-0 text-break"/>
+                        <span t-if="shouldShowPriceExtra(value)" t-esc="formatExtraPrice(value)" class="badge rounded-pill fw-bold fs-3 mt-2 py-2 text-bg-primary " />
+                    </button>
+                </t>
+            </div>
+          </t>
+    </t>
+</templates>

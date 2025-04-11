@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.KioskProductPage">
+         <div class="o_kiosk_product_page d-flex flex-column vh-100 overflow-hidden bg-secondary">
+
+             <!-- Header -->
+             <div class="" >
+                 <button class="btn btn-secondary btn-lg ms-4 mt-4 text-nowrap bg-white" t-on-click="() => this.router.back()">
+                      <span>Discard</span>
+                </button>
+            </div>
+
+             <!-- Product -->
+              <div class="d-flex flex-grow-1 flex-column overflow-y-auto">
+                  <t t-set="product" t-value="productTemplate"/>
+                  <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                     <div class="ratio ratio-1x1 w-25 my-3" style="max-width: 250px">
+                        <img class="object-fit-contain" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                     </div>
+                     <h1 t-esc="product.display_name" class="fw-bolder m-0 p-4"/>
+                     <div t-if="product.public_description" class="mt-2 fs-3 text-center" style="max-width: 90%" t-out="product.productDescriptionMarkup"/>
+                  </div>
+
+                  <!-- Attributes -->
+                  <KioskAttributeSelection t-if="productTemplate.attribute_line_ids.length"  productTemplate="productTemplate" />
+
+                  <!-- Quantity -->
+                  <div t-if="showQtyButtons"  class="d-flex flex-column align-items-center mb-5">
+                      <h1 class="text-center p-4 fw-bold m-0">Select Quantity</h1>
+                      <KioskQuantityWidget value="state.qty"  onQtyDown="() => this.changeQuantity(false)" onQtyUp="() => this.changeQuantity(true)" />
+                  </div>
+
+            </div>
+
+
+            <div t-if="isArchivedCombination()" class="alert alert-warning m-0 text-center">
+                This combination does not exist.
+            </div>
+
+            <!-- Footer -->
+          <div class="d-flex justify-content-between align-items-center position-relative px-4 py-4 bg-white border-top border-light" >
+                <div></div>
+                 <button t-if="selfOrder.ordering" class="btn btn-lg btn-primary" t-on-click="addToCart" t-att-disabled="!this.isAddToCartEnabled()" >
+                     <span>Add to cart</span>
+                </button>
+               <div class="position-absolute start-50 translate-middle-x fs-2 fw-bold"><t t-esc="selfOrder.formatMonetary(getProductPrice())" /></div>
+          </div>
+
+         </div>
+    </t>
+</templates>

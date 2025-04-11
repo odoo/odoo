@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve" >
+    <t t-name="pos_self_order.KioskCategoryListPage">
+        <div class="o_kiosk_category_list_page d-flex flex-column vh-100 overflow-hidden  bg-secondary "
+             t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size:cover; background-position:center;">
+            <div class="scroll_container position-relative d-flex flex-grow-1 overflow-y-auto justify-content-center">
+                <div class="cat_container d-flex flex-wrap justify-content-center align-self-end w-100 px-4"  t-att-class="{'cat_container_small': categories.length &lt; 5}">
+                    <div class="spacer"></div>
+                    <button t-foreach="categories"
+                                t-as="category" t-key="category.id"
+                                t-on-click="() => this.selectCategory(category)"
+                                role="button"
+                                class="category_btn d-flex flex-column align-items-center bg-white p-0">
+                           <div class="img_container bg-secondary w-100 ratio ratio-1x1">
+                               <img class="w-100 h-100 object-fit-cover"  t-attf-src="/web/image/pos.category/#{category.id}/image_512?unique=#{category.write_date} "/>
+                           </div>
+                          <h1 t-esc="category.name" class="m-0 p-4 mt-auto text-break"/>
+                        </button>
+                    <div class="spacer"></div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center position-relative mx-4 mt-4 mb-5">
+                <t t-set="isBack" t-value="shouldGoBack()"/>
+                <button class="btn btn-lg bg-white" t-att-class="{'btn-back' : isBack, 'btn-cancel': !isBack}" t-on-click="()=>this.onClickBack()">
+                    <t t-if="isBack">
+                        <i class="oi oi-chevron-left d-md-none"/><span class="d-none d-md-inline">Back</span>
+                    </t>
+                    <t t-else="">
+                        <i class="oi oi-close d-md-none"/><span class="d-none d-md-inline">Cancel</span>
+                    </t>
+                </button>
+                <div></div>
+                <KioskLanguageSelector extraClass="'position-absolute start-50 translate-middle-x'"/>
+            </div>
+        </div>
+    </t>
+</templates>
