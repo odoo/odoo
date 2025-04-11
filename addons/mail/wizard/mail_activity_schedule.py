@@ -78,6 +78,7 @@ class MailActivitySchedule(models.TransientModel):
         'res.users', 'Assigned to', compute='_compute_activity_user_id',
         readonly=False, store=True)
     chaining_type = fields.Selection(related='activity_type_id.chaining_type', readonly=True)
+    can_write = fields.Boolean(compute='_compute_can_write')  # used to hide buttons if the current user has no access
 
     @api.depends('res_model')
     def _compute_res_model_id(self):
@@ -136,6 +137,14 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_plan_available_ids(self):
         for scheduler in self:
             scheduler.plan_available_ids = self.env['mail.activity.plan'].search(scheduler._get_plan_available_base_domain())
+
+    @api.depends('res_model')
+    def _compute_can_write(self):
+        """Set can_write if the user has write access to the target record's model."""
+        for record in self:
+            record.can_write = False
+            if record.res_model:
+                record.can_write = self.env[record.res_model].has_access('write')
 
     @api.depends_context('plan_mode')
     @api.depends('plan_available_ids')

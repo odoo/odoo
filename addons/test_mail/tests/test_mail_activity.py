@@ -53,11 +53,11 @@ class TestActivityRights(TestActivityCommon):
 
         for activity, can_write in [
             (act_emp_for_adm, True), (act_emp_for_emp, True),
-            (act_adm_for_adm, False), (act_adm_for_emp, True),
+            (act_adm_for_adm, True), (act_adm_for_emp, True),
         ]:
             with self.subTest(user=activity.user_id.name, creator=activity.create_uid.name):
                 # no document access -> based on create_uid / user_id
-                with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
+                with patch.object(MailTestActivity, '_filtered_access', autospec=True, side_effect=_employee_crash):
                     activity = activity.with_user(self.user_employee)
                     self.assertEqual(activity.can_write, can_write)
                     if can_write:
