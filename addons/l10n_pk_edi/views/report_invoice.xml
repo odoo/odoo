@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <template id='l10n_pk_edi_report_invoice_document_inherit' inherit_id='account.report_invoice_document' primary='True'>
+        <!-- Custom Footer -->
+        <t t-set='o' position='after'>
+            <t t-set='custom_footer'>
+                <div class='row border-top border-dark p-3'>
+                    <div class='col-2' style='text-align: left;'>
+                        <img 
+                            src='/l10n_pk_edi/static/src/img/fbr_einvoicing_logo.jpg'
+                            style='width: 80%; aspect-ratio: 1; object-fit: contain;'
+                        />
+                    </div>
+                    <div class='col-8 text-center'>
+                        <p><strong>FBR Invoice Number: </strong></p>
+                        <p t-field='o.l10n_pk_edi_fbr_inv_ref'/>
+                        <div class='text-muted'>
+                            Page: <span class='page'/> / <span class='topage'/>
+                        </div>
+                    </div>
+                    <div class='col-2' style='text-align: right;'>
+                        <img
+                            t-att-src='o._get_l10n_pk_edi_qr_code()'
+                            style='width: 80%; aspect-ratio: 1; object-fit: contain;'
+                        />
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id='report_invoice' inherit_id='account.report_invoice'>
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position='after'>
+            <t t-elif='o._get_name_invoice_report() == "l10n_pk_edi.l10n_pk_edi_report_invoice_document_inherit"'
+               t-call='l10n_pk_edi.l10n_pk_edi_report_invoice_document_inherit'
+               t-lang='lang'/>
+        </xpath>
+    </template>
+
+</odoo>
