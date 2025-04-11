@@ -61,6 +61,19 @@ class SequenceMixin(models.AbstractModel):
                     field=SQL.identifier(self._sequence_field),
                 ))
 
+    def _get_sequence_cache(self):
+        if 'sequence.mixin' in self.env.cr.precommit.data:
+            return self.env.cr.precommit.data['sequence.mixin']
+        cache = self.env.cr.precommit.data['sequence.mixin'] = {}
+        self.env.cr.precommit.add(cache.clear)
+        self.env.cr.prerollback.add(cache.clear)
+        return cache
+
+    def write(self, vals):
+        if self._sequence_field in vals and self.env.context.get('clear_sequence_mixin_cache', True):
+            self._get_sequence_cache().clear()
+        return super().write(vals)
+
     def _get_sequence_date_range(self, reset):
         ref_date = fields.Date.to_date(self[self._sequence_date_field])
         if reset in ('year', 'year_range', 'year_range_month'):
@@ -296,6 +309,32 @@ class SequenceMixin(models.AbstractModel):
         )
         return format, format_values
 
+    def _ensure_lock(self, format_string, format_values):
+        cache = self._get_sequence_cache()
+        seq = format_values.pop('seq')
+        flag = (format_string.format(**format_values, seq=0), self._sequence_index and self[self._sequence_index])
+        if flag in cache:
+            cache[flag] += 1
+            return format_string.format(**format_values, seq=cache[flag])
+
+        self.flush_recordset()
+        with self.env.cr.savepoint(flush=False) as sp:
+            while True:
+                seq += 1
+                sequence = format_string.format(**format_values, seq=seq)
+                try:
+                    self.env.cr.execute(SQL(
+                        "UPDATE %(table)s SET %(fname)s = %(sequence)s WHERE id = %(id)s",
+                        table=SQL.identifier(self._table),
+                        fname=SQL.identifier(self._sequence_field),
+                        sequence=sequence,
+                        id=self.id,
+                    ), log_exceptions=False)
+                    cache[flag] = seq
+                    return sequence
+                except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
+                    sp.rollback()
+
     def _set_next_sequence(self):
         """Set the next sequence.
 
@@ -316,18 +355,9 @@ class SequenceMixin(models.AbstractModel):
                     continue
                 for field in registry.field_inverses[inverse_field[0]] if inverse_field else [None]:
                     self.env.add_to_compute(triggered_field, self[field.name] if field else self)
-        self.flush_recordset()
-        with self.env.cr.savepoint(flush=False) as sp:
-            while True:
-                format_values['seq'] = format_values['seq'] + 1
-                sequence = format_string.format(**format_values)
-                try:
-                    with mute_logger('odoo.sql_db'):
-                        self[self._sequence_field] = sequence
-                        self.flush_recordset([self._sequence_field])
-                        break
-                except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
-                    sp.rollback()
+
+        sequence = self._ensure_lock(format_string, format_values)
+        self.with_context(clear_sequence_mixin_cache=False)[self._sequence_field] = sequence
 
         self._compute_split_sequence()
 
