@@ -11,6 +11,7 @@
             <field name="use_default_to" eval="True"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Invitation email to new attendees</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
 <div>
     <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}"/>
@@ -134,6 +135,7 @@
             <field name="use_default_to" eval="True"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Sent to all attendees if the schedule change</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
 <div>
 
@@ -266,6 +268,7 @@
             <field name="use_default_to" eval="True"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Sent to all attendees if a reminder is set</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
 <div>
     <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />
@@ -373,6 +376,7 @@
             <field name="use_default_to" eval="True"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Used to manually notifiy attendees</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout</field>
             <field name="body_html" type="html">
 <div>
     <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />
@@ -467,6 +471,7 @@
             <field name="use_default_to" eval="True"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Used to manually notify attendees</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
                 <div>
                     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />

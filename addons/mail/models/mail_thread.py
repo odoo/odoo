@@ -2596,7 +2596,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'body', 'composition_mode', 'incoming_email_cc', 'incoming_email_to', 'model', 'res_id', 'values'}
+            forbidden_names={'body', 'composition_mode', 'incoming_email_cc', 'incoming_email_to', 'res_id', 'values'}
         )
 
         # with a view, render bodies in batch (template is managed by composer)
@@ -2716,6 +2716,13 @@ class MailThread(models.AbstractModel):
                  )
             )
 
+        # Ask TDE If we want this ?
+        # This way we try to avoid people to call notify with "rendered" template
+        if template := kwargs.get('mail_template'):
+            # Assign body/subject if empty and template is provided
+            body = body or template._render_field('body_html', res_ids=[res_id])[res_id]
+            subject = subject or template._render_field('subject', res_ids=[res_id])[res_id]
+
         # split message additional values from notify additional values
         msg_kwargs = {key: val for key, val in kwargs.items() if key in self.env['mail.message']._fields}
         notif_kwargs = {key: val for key, val in kwargs.items() if key not in msg_kwargs}
@@ -2753,6 +2760,8 @@ class MailThread(models.AbstractModel):
             'partner_ids': partner_ids,
             # notification
             'email_add_signature': True,
+            # Optionally this also
+            # 'email_layout_xmlid': kwargs.pop('mail_template', self.env['mail.template']).email_layout_xmlid
         }
         msg_values.update(msg_kwargs)
         # add default-like values afterwards, to avoid useless queries
@@ -3095,6 +3104,8 @@ class MailThread(models.AbstractModel):
             'force_email_company',
             'force_email_lang',
             'force_send',
+            'force_header',
+            'force_footer',
             'mail_auto_delete',
             'model_description',
             'notify_author',
@@ -3357,6 +3368,8 @@ class MailThread(models.AbstractModel):
             model_description=model_description,
             force_email_company=force_email_company,
             force_email_lang=force_email_lang,
+            force_header=kwargs.get('force_header', False),
+            force_footer=kwargs.get('force_footer', False),
             subtitles=subtitles,
         ):
             # generate notification email content
@@ -3426,7 +3439,7 @@ class MailThread(models.AbstractModel):
     def _notify_get_classified_recipients_iterator(
             self, message, recipients_data, msg_vals=False,
             model_description=False, force_email_company=False, force_email_lang=False,  # rendering
-            subtitles=None):
+            force_header=False, force_footer=False, subtitles=None):
         """ Make groups of recipients, based on 'recipients_data' which is a list
         of recipients informations. Purpose of this method is to group them by
         main usage ('user', 'portal_user', 'follower', 'customer', ... see
@@ -3500,6 +3513,8 @@ class MailThread(models.AbstractModel):
                 model_description=lang_model_description,
                 force_email_company=force_email_company,
                 force_email_lang=lang,
+                force_header=force_header,
+                force_footer=force_footer,
             ) # 10 queries
             if subtitles:
                 render_values['subtitles'] = subtitles
@@ -3516,7 +3531,9 @@ class MailThread(models.AbstractModel):
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False,
                                                    model_description=False,
                                                    force_email_company=False,
-                                                   force_email_lang=False):
+                                                   force_email_lang=False,
+                                                   force_header=False,
+                                                   force_footer=False):
         """ Prepare rendering context for notification email.
 
         Signature: if asked a default signature is computed based on author. Either
@@ -3621,8 +3638,8 @@ class MailThread(models.AbstractModel):
             # tools
             'is_html_empty': is_html_empty,
             # display
-            'email_notification_force_header': self.env.context.get('email_notification_force_header', False),  # force displaying the email header
-            'email_notification_force_footer': self.env.context.get('email_notification_force_footer', False),  # force displaying the email footer
+            'email_notification_force_header': self.env.context.get('email_notification_force_header') or force_header,  # force displaying the email header
+            'email_notification_force_footer': self.env.context.get('email_notification_force_footer') or force_footer,  # force displaying the email footer
             'email_notification_allow_header': self.env.context.get('email_notification_allow_header', True),
             'email_notification_allow_footer': self.env.context.get('email_notification_allow_footer', False),
         }

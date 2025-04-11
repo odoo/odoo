@@ -1068,6 +1068,8 @@ class MailComposeMessage(models.TransientModel):
                 model_description=model_description,
                 record_alias_domain_id=self.record_alias_domain_id.id,
                 record_company_id=self.record_company_id.id,
+                force_header=self.template_id.force_header,
+                force_footer=self.template_id.force_footer,
             )
             if self.notify_author:  # force only Truthy values, keeping context fallback
                 values['notify_author'] = self.notify_author
