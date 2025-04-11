@@ -343,6 +343,8 @@ class TestPoSBasicConfig(TestPoSCommon):
 
             # invoice refund
             refund_order.action_pos_order_invoice()
+        # TODO-manv: needed since we use 'pos.make.payment'
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
 
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
@@ -472,6 +474,8 @@ class TestPoSBasicConfig(TestPoSCommon):
                     ['done'] * len(move_ids),
                     'Move Lines should be in done state.'
                 )
+        # TODO-manv: needed since we use 'pos.make.payment'
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
 
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
@@ -863,7 +867,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         pos01_config = self.config
         self.cash_journal = self.env['account.journal'].create(
             {'name': 'CASH journal', 'type': 'cash', 'code': 'CSH00'})
-        self.cash_payment_method = self.env['pos.payment.method'].create({
+        self.cash_payment_method = self.env['pos.payment.method'].sudo().create({
             'name': 'Cash Test',
             'journal_id': self.cash_journal.id,
             'receivable_account_id': pos01_config.payment_method_ids.filtered(lambda s: s.is_cash_count)[
@@ -949,7 +953,8 @@ class TestPoSBasicConfig(TestPoSCommon):
                 'amount': -30,
             })
             make_payment.check()
-
+        # TODO-manv: needed since we use 'pos.make.payment'
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [

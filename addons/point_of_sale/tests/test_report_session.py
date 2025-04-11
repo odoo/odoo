@@ -11,7 +11,8 @@ class TestReportSession(TestPoSCommon):
         self.config = self.basic_config
 
     def test_report_session(self):
-
+        # TODO-manv: needed since we use 'make_payment'
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
         self.tax1 = self.env['account.tax'].create({
             'name': 'Tax 1',
             'amount': 10,
@@ -59,7 +60,8 @@ class TestReportSession(TestPoSCommon):
         self.assertEqual(report['products'][0]['products'][0]['base_amount'], 100, "Base amount of product should be 100, as we want price without tax")
 
     def test_report_session_2(self):
-
+        # TODO-manv: needed since we use 'make_payment'
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
         self.product1 = self.create_product('Product A', self.categ_basic, 100)
 
         self.config.open_ui()
@@ -114,6 +116,8 @@ class TestReportSession(TestPoSCommon):
         self.assertTrue(pdf)
 
     def test_report_listing(self):
+        # TODO-manv: needed since we use 'make_payment' & create pm
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
         product1 = self.create_product('Product 1', self.categ_basic, 150)
         product2 = self.create_product('Product 2', self.categ_basic, 150)
 
@@ -187,6 +191,8 @@ class TestReportSession(TestPoSCommon):
         self.assertEqual(order_report_lines_count_product2, 1)
 
     def test_report_session_3(self):
+        # TODO-manv: needed since we use 'make_payment'
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
         self.product1 = self.create_product('Product A', self.categ_basic, 100)
         self.config.open_ui()
         session_id = self.config.current_session_id.id
@@ -220,6 +226,8 @@ class TestReportSession(TestPoSCommon):
         self.assertEqual(report['products'][0]['products'][0]['quantity'], 74.6, "Quantity of product should be 74.6, as we want the sum of the quantity of the two orders")
 
     def test_report_bank_expected_different_than_counted(self):
+        # TODO-manv: needed since we use 'make_payment'
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
         """
         Test that in the pos session report, the difference between the expected and counted bank payment is correct.
         Test both with a default outstanding account on the payment and without.

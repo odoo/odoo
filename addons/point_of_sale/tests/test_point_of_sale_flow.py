@@ -20,6 +20,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # TODO-manv: seems needed here (becasue we call "self.PosMakePayment()")
+        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
         cls.other_currency = cls.setup_other_currency('GBP')
 
     def compute_tax(self, product, price, qty=1, taxes=None):

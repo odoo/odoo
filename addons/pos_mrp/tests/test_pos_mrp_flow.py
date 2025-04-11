@@ -9,7 +9,16 @@ from odoo.tests import Form
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosMrp(TestPointOfSaleCommon):
+
+    """
+    TODO-manv: shoudl I put the 'self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')'
+    in a setup method here?
+    """
+
     def test_bom_kit_order_total_cost(self):
+        # TODO-manv: seems needed here (becasue we call "self.PosMakePayment()")
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
+
         #create a product category that use fifo
         category = self.env['product.category'].create({
             'name': 'Category for kit',
@@ -325,6 +334,8 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.assertEqual(interim_line.filtered(lambda l: l.product_id == self.kit).credit, 6000.0)
 
     def test_bom_kit_order_total_cost_with_shared_component(self):
+        # TODO-manv: seems needed here (becasue we call "self.PosMakePayment()")
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
         category = self.env['product.category'].create({
             'name': 'Category for average cost',
             'property_cost_method': 'average',
@@ -443,6 +454,8 @@ class TestPosMrp(TestPointOfSaleCommon):
         ])
 
     def test_bom_nested_kit_order_total_cost_with_shared_component(self):
+        # TODO-manv: seems needed here (becasue we call "self.PosMakePayment()")
+        self.env.user.group_ids |= self.env.ref('point_of_sale.group_pos_manager')
         category = self.env['product.category'].create({
             'name': 'Category for average cost',
             'property_cost_method': 'average',

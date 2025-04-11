@@ -11,6 +11,8 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # TODO-manv: needed cause we call "self.PosMakePayment()"
+        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
         cls.PosMakePayment = cls.env['pos.make.payment']
         cls.PosOrder = cls.env['pos.order']
         cls.Statement = cls.env['account.bank.statement']

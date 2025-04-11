@@ -18,6 +18,14 @@ import odoo.tests
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
+    """
+    TODO-manv: here the tests run correclty with "group_pos_user", but there is log like these :
+        2025-04-09 15:23:19,792 429175 INFO 78055594-master-all odoo.addons.base.models.ir_model:
+        Access Denied by ACLs for operation: read, uid: 3, model: pos.order
+
+    => Should we use group manager?
+    """
+
     def _get_url(self):
         return f"/pos/ui?config_id={self.pos_config.id}"
 
@@ -27,7 +35,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_user')
         # Code from addons/account_payment/tests/common.py:
         Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
 
@@ -64,7 +72,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         cls.company.account_default_pos_receivable_account_id = cls.account_default_pos_receivable_account_id
         cls.receivable_cash_account = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS OP Test Receivable Cash'})
 
-        cls.cash_payment_method = cls.env['pos.payment.method'].create({
+        cls.cash_payment_method = cls.env['pos.payment.method'].sudo().create({
             'name': 'Cash',
             'journal_id': cls.cash_journal.id,
             'receivable_account_id': cls.receivable_cash_account.id,
@@ -81,7 +89,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
             'journal_id': cls.company_data['default_journal_bank'].id,
         })
 
-        cls.online_payment_method = cls.env['pos.payment.method'].create({
+        cls.online_payment_method = cls.env['pos.payment.method'].sudo().create({
             'name': 'Online payment',
             'is_online_payment': True,
             'online_payment_provider_ids': [Command.set([cls.payment_provider.id])],
@@ -94,7 +102,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
             'company_id': cls.company.id
         })
 
-        cls.pos_config = cls.env['pos.config'].create({
+        cls.pos_config = cls.env['pos.config'].sudo().create({
             'name': 'POS OP Test Shop',
             'module_pos_restaurant': False,
             'invoice_journal_id': cls.sales_journal.id,
@@ -116,7 +124,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
         archive_products(cls.env)
 
-        pos_categ_misc = cls.env['pos.category'].create({
+        pos_categ_misc = cls.env['pos.category'].sudo().create({
             'name': 'Miscellaneous',
         })
         cls.letter_tray = cls.env['product.product'].create({
