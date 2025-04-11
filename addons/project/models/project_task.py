@@ -55,6 +55,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'recurring_count',
     'duration_tracking',
     'display_follow_button',
+    'is_template',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -309,6 +310,7 @@ class ProjectTask(models.Model):
             Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !""",
     )
     link_preview_name = fields.Char(compute='_compute_link_preview_name', export_string_translation=False)
+    is_template = fields.Boolean(copy=False, export_string_translation=False)
 
     _recurring_task_has_no_parent = models.Constraint(
         'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))',
@@ -817,21 +819,33 @@ class ProjectTask(models.Model):
 
             if not default.get('stage_id'):
                 vals['stage_id'] = task.stage_id.id
-            if 'active' not in default and not task['active'] and not self.env.context.get('copy_project'):
+            if 'active' not in default and not task['active'] and not self.env.context.get('copy_project') and not self.env.context.get('has_template_ancestor'):
                 vals['active'] = True
-            vals['name'] = task.name if self.env.context.get('copy_project') else _("%s (copy)", task.name)
+            vals['name'] = task.name if self.env.context.get('copy_project') or self.env.context.get('copy_from_template') else _("%s (copy)", task.name)
             if task.recurrence_id and not default.get('recurrence_id'):
                 vals['recurrence_id'] = task.recurrence_id.copy().id
             if task.allow_milestones:
                 vals['milestone_id'] = milestone_mapping.get(vals['milestone_id'], vals['milestone_id'])
-            if task.child_ids and not default.get('child_ids'):
+            copy_from_template = task.is_template and self.env.context.get('copy_from_template')
+            active_test = self.env.context.get('active_test', True) and not copy_from_template
+            if not default.get('child_ids') and task.with_context(active_test=active_test).child_ids:
+                context = {
+                    'active_test': active_test,
+                }
                 default = {
                     'parent_id': False,
                 }
-                vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in task.child_ids]
+                if copy_from_template:
+                    default['active'] = True
+                if task.is_template:
+                    context['has_template_ancestor'] = True
+                vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in task.with_context(**context).child_ids]
             if not has_default_users and vals['user_ids']:
                 active_users = task.user_ids & active_users
                 vals['user_ids'] = [Command.set(active_users.ids)]
+            if task.is_template and not self.env.context.get('copy_from_template'):
+                vals['active'] = task.active
+                vals['is_template'] = True
         return vals_list
 
     def _create_task_mapping(self, copied_tasks):
@@ -954,6 +968,12 @@ class ProjectTask(models.Model):
     @api.model
     def default_get(self, default_fields):
         vals = super().default_get(default_fields)
+
+        if template_id := self.env.context.get('task_template_id'):
+            template = self.browse(template_id)
+            template_data = template.copy_data()[0]
+            template_data.pop('name')
+            return vals | template_data
 
         # prevent creating new task in the waiting state
         if 'state' in default_fields and vals.get('state') == '04_waiting_normal':
@@ -1915,6 +1935,87 @@ class ProjectTask(models.Model):
                 'message': _('Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.'),
             }
         }
+
+    def action_convert_to_template(self):
+        self.ensure_one()
+        if not self.project_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': _('Private tasks cannot be converted into templates.'),
+                },
+            }
+        if self.is_template:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'project_show_template_undo_confirmation_dialog',
+                'params': {
+                    'task_id': self.id,
+                },
+            }
+        self.action_archive()
+        self.is_template = True
+        self.message_post(body=_("Task converted to template."))
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'project_show_template_notification',
+            'params': {
+                'task_id': self.id,
+                'next': {
+                    'type': 'ir.actions.client',
+                    'tag': 'soft_reload',
+                },
+            },
+        }
+
+    def action_undo_convert_to_template(self):
+        self.ensure_one()
+        self.action_unarchive()
+        self.is_template = False
+        self.message_post(body=_("Template converted back to regular task."))
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': _('Template converted back to regular task.'),
+                'next': {
+                    'type': 'ir.actions.client',
+                    'tag': 'soft_reload',
+                },
+            },
+        }
+
+    @api.model
+    def _get_template_default_context_whitelist(self):
+        """
+        Whitelist of fields that can be set through the `default_` context keys when creating a task from a template.
+        """
+        return [
+            "parent_id",
+        ]
+
+    @api.model
+    def _get_template_field_blacklist(self):
+        """
+        Blacklist of fields to not copy when creating a task from a template.
+        """
+        return [
+            "partner_id",
+        ]
+
+    def action_create_from_template(self):
+        self.ensure_one()
+        default = {
+            key[8:]: value
+            for key, value in self.env.context.items()
+            if key.startswith('default_') and key[8:] in self._get_template_default_context_whitelist()
+        } | {
+            field: False
+            for field in self._get_template_field_blacklist()
+        }
+        return self.with_context(copy_from_template=True).copy(default=default).id
 
     def action_archive(self):
         child_tasks = self.child_ids.filtered(lambda child_task: not child_task.display_in_project)
