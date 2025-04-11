@@ -216,7 +216,7 @@ class HrEmployee(models.Model):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Attendances This Month"),
+            "name": _("Attendance balance"),
             "res_model": "hr.attendance",
             "views": [[self.env.ref('hr_attendance.hr_attendance_validated_hours_employee_simple_tree_view').id, "list"]],
             "context": {
@@ -224,3 +224,23 @@ class HrEmployee(models.Model):
             },
             "domain": [('employee_id', '=', self.id), ('overtime_status', '=', 'approved')]
         }
+
+    @api.model
+    def get_overtime_data(self, domain=[], employee_id=None):
+        validated_overtime = {
+            data[0].id: data[1]
+            for data in self.env["hr.attendance"]._read_group(
+                domain= domain,
+                groupby=['employee_id'],
+                aggregates=['validated_overtime_hours:sum']
+            )
+        }
+        overtime_adjustments = {
+            data[0].id: data[1]
+            for data in self.env["hr.attendance.overtime"]._read_group(
+                domain=[('employee_id', '=', employee_id), ('adjustment', '=', True)],
+                groupby=['employee_id'],
+                aggregates=['duration:sum']
+            )
+        }
+        return {"validated_overtime": validated_overtime, "overtime_adjustments": overtime_adjustments}

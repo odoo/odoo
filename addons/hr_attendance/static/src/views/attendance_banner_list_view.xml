@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_attendance.AttendanceBanner">
+        <div class="px-3 py-2 alert alert-info">
+            <p class="fw-bold text-decoration-underline">Balance</p>
+            <p>Total exta hours: <t t-out="this.state.totalExtraHours"/> </p>
+            <p>Time off Taken from Extra Hours: <t t-out="this.state.totalOvertimeAdjustment"/></p>
+            <hr/>
+            <p>Extra Hours Remaining: <t t-out="this.state.remainingExtraHours"/> </p>
+        </div>
+    </t>
+
+    <t t-name="hr_attendance.AttendanceBannerListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <AttendanceBanner/>
+        </xpath>
+    </t>
+</odoo>
