@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
-        <xpath expr="//div[hasclass('page')]/t[@t-set='layout_document_title']" position="replace">
         <t name="invoice_title" position="replace">
             <t name="invoice_title">Tax Invoice</t>
         </t>
@@ -50,7 +49,6 @@
         <t name="proforma_vendor_bill_title" position="replace">
             <t name="proforma_vendor_bill_title">Proforma Tax Vendor Bill</t>
         </t>
-        </xpath>
     </template>
 
     <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
