@@ -48,7 +48,7 @@ export class ChannelMember extends Record {
     });
     unreadSynced = fields.Attr(true, {
         compute() {
-            return this.localNewMessageSeparator === this.new_message_separator;
+            return this.localMessageUnreadCounter === this.message_unread_counter;
         },
         onUpdate() {
             if (this.unreadSynced) {

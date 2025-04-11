@@ -28,9 +28,10 @@ defineMailModels();
 test("show unread messages banner when there are unread messages", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     for (let i = 0; i < 30; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
@@ -47,9 +48,10 @@ test("show unread messages banner when there are unread messages", async () => {
 test("mark thread as read from unread messages banner", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     for (let i = 0; i < 30; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
@@ -69,10 +71,11 @@ test("mark thread as read from unread messages banner", async () => {
 test("reset new message separator from unread messages banner", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     let lastMessageId;
     for (let i = 0; i < 30; ++i) {
         lastMessageId = pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
@@ -99,7 +102,7 @@ test("reset new message separator from unread messages banner", async () => {
         },
     ];
     await Promise.all([openDiscuss(channelId), waitNotifications(markAsReadNotification)]);
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
+    await contains(".o-mail-Message", {
         text: "message 0",
     });
     await click("span", {
@@ -112,9 +115,10 @@ test("reset new message separator from unread messages banner", async () => {
 test("remove banner when scrolling to bottom", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     for (let i = 0; i < 50; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
@@ -140,8 +144,9 @@ test("remove banner when scrolling to bottom", async () => {
 test("remove banner when opening thread at the bottom", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     const messageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
+        author_id: bobPartnerId,
         body: `Hello World`,
         model: "discuss.channel",
         res_id: channelId,
@@ -166,9 +171,10 @@ test("remove banner when opening thread at the bottom", async () => {
 test("keep banner after mark as unread when scrolling to bottom", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     for (let i = 0; i < 30; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
@@ -184,18 +190,18 @@ test("keep banner after mark as unread when scrolling to bottom", async () => {
 
 test("sidebar and banner counters display same value", async () => {
     const pyEnv = await startServer();
-    const bobPatnerId = pyEnv["res.partner"].create({ name: "Bob" });
-    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPatnerId });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: bobPatnerId }),
+            Command.create({ partner_id: bobPartnerId }),
         ],
     });
     for (let i = 0; i < 30; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
