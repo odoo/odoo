@@ -634,7 +634,7 @@ class IrModuleModule(models.Model):
             'name': _('Uninstall module'),
             'view_mode': 'form',
             'res_model': 'base.module.uninstall',
-            'context': {'default_module_id': self.id},
+            'context': {'default_module_ids': self.ids},
         }
 
     def button_uninstall_cancel(self):
