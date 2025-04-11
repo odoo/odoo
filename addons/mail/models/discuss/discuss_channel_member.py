@@ -287,6 +287,12 @@ class DiscussChannelMember(models.Model):
     # RTC (voice/video)
     # --------------------------------------------------------------------------
 
+    def _should_invite_members_to_join_call(self):
+        self.ensure_one()
+        return (
+            len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type != "channel"
+        )
+
     def _rtc_join_call(self, store: Store = None, check_rtc_session_ids=None, camera=False):
         self.ensure_one()
         session_domain = []
@@ -318,7 +324,7 @@ class DiscussChannelMember(models.Model):
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
-        if len(self.channel_id.rtc_session_ids) == 1:
+        if len(self.channel_id.rtc_session_ids) == 1 and self._should_invite_members_to_join_call():
             body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
             message = self.channel_id.message_post(body=body, message_type="notification")
             self.channel_id.last_call_message_id = message
