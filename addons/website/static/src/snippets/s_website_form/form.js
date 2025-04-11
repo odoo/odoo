@@ -266,22 +266,11 @@ export class Form extends Interaction {
         buttonEl.setAttribute("disabled", "disabled");
         this.restoreBtnLoading = addLoadingEffect(buttonEl);
         this.el.querySelector("#s_website_form_result, #o_website_form_result")?.replaceChildren(); // !compatibility
+        this.el.querySelectorAll(".s_website_form_custom_error")?.forEach((error) => {
+            error.remove();
+        });
         if (!this.checkErrorFields({})) {
-            if (this.fileInputError) {
-                const errorMessage = this.fileInputError.type === "number"
-                    ? _t(
-                        "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)",
-                        this.fileInputError.limit
-                    )
-                    : _t(
-                        "Please fill in the form correctly. The file “%(file name)s” is too large. (Maximum %(max)s MB)",
-                        { "file name": this.fileInputError.fileName, max: this.fileInputError.limit }
-                    );
-                this.updateStatus("error", errorMessage);
-                delete this.fileInputError;
-            } else {
-                this.updateStatus("error", _t("Please fill in the form correctly."));
-            }
+            this.updateStatus("error", _t("Please fill in the form correctly."));
             return false;
         }
 
@@ -469,6 +458,10 @@ export class Form extends Interaction {
     resetForm() {
         this.el.reset();
 
+        // Remove previous error messages.
+        this.el.querySelectorAll(".s_website_form_custom_error")?.forEach((error) => {
+            error.remove();
+        });
         // For file inputs, remove the files zone, restore the file input
         // and remove the files list.
         this.el.querySelectorAll("input[type=file]").forEach(inputEl => {
@@ -526,6 +519,9 @@ export class Form extends Interaction {
                         return true;
                     }
                 } else if (inputEl.type === "file" && !this.isFileInputValid(inputEl)) {
+                    return true;
+                } else if (this.requirementFunction(fieldEl) === false) {
+                    this.updateStatusInline(fieldEl.dataset.errorMessage, inputEl);
                     return true;
                 }
 
@@ -593,6 +589,35 @@ export class Form extends Interaction {
         });
         resultEl.remove();
     }
+    /**
+     * Renders the error message just below the respective input field
+     * to clearly indicate the erroneous field.
+     *
+     * @param {string} message The error message to be displayed.
+     * @param {HTMLElement} inputEl The input field where the error message
+     *     should be displayed.
+     */
+    updateStatusInline(message, inputEl) {
+        if (inputEl.parentElement.classList.contains("date")) {
+            this.renderAt(
+                "website.s_website_form_status_custom_error",
+                {
+                    message,
+                },
+                inputEl.parentElement,
+                "afterend"
+            );
+        } else {
+            this.renderAt(
+                "website.s_website_form_status_custom_error",
+                {
+                    message,
+                },
+                inputEl.parentElement,
+                "beforeend"
+            );
+        }
+    }
 
     /**
      * Checks if the file input is valid: if the number of files uploaded
@@ -610,7 +635,11 @@ export class Form extends Interaction {
         const maxFilesNumber = inputEl.dataset.maxFilesNumber;
         if (maxFilesNumber && inputEl.files.length > maxFilesNumber) {
             // Store information to display the error message later.
-            this.fileInputError = { type: "number", limit: maxFilesNumber };
+            const errorMessage = _t(
+                "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)",
+                maxFilesNumber
+            );
+            this.updateStatusInline(errorMessage, inputEl);
             return false;
         }
         // Checking the files size.
@@ -619,7 +648,11 @@ export class Form extends Interaction {
         if (maxFileSize) {
             for (const file of Object.values(inputEl.files)) {
                 if (file.size / bytesInMegabyte > maxFileSize) {
-                    this.fileInputError = { type: "size", limit: maxFileSize, fileName: file.name };
+                    const errorMessage = _t(
+                        "Please fill in the form correctly. The file “%(fileName)s” is too large. (Maximum %(max)s MB)",
+                        { "fileName": file.name, "max": maxFileSize }
+                    );
+                    this.updateStatusInline(errorMessage, inputEl);
                     return false;
                 }
             }
@@ -661,6 +694,10 @@ export class Form extends Interaction {
                 return value.includes(comparable);
             case "!contains":
                 return !value.includes(comparable);
+            case "substring":
+                return value.includes(comparable);
+            case "!substring":
+                return !value.includes(comparable);
             case "equal":
             case "selected":
                 return value === comparable;
@@ -685,9 +722,15 @@ export class Form extends Interaction {
                 return value.name === "";
         }
 
-        const format = value.includes(":")
-            ? localization.dateTimeFormat
-            : localization.dateFormat;
+        let format = "";
+        const currentDate = new Date();
+        const xYearAgo = new Date();
+        if (value.includes(":")) {
+            format = localization.dateTimeFormat;
+        } else {
+            format = localization.dateFormat;
+            xYearAgo.setHours(0, 0, 0, 0);
+        }
         // Date & Date Time comparison requires formatting the value
         const dateTime = DateTime.fromFormat(value, format);
         // If invalid, any value other than "NaN" would cause certain
@@ -713,6 +756,10 @@ export class Form extends Interaction {
                 return !(value >= comparable && value <= between);
             case "equal or after":
                 return value >= comparable;
+            case "lessyears":
+                xYearAgo.setFullYear(currentDate.getFullYear() - comparable);
+                value = new Date(value * 1000);
+                return value > xYearAgo;
         }
     }
 
@@ -741,6 +788,32 @@ export class Form extends Interaction {
                 : formData.get(dependencyName);
             return this.compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
         };
+    }
+
+    /**
+     * @private
+     * @param {HTMLElement} fieldEl The field whose validity needs
+     *      to be verified according to the requirements.
+     * @returns {boolean} A boolean indicating the validity of fieldEl
+     *      based on the set requirements.
+     */
+    requirementFunction(fieldEl) {
+        const {
+            requirementCondition: condition,
+            requirementComparator: comparator,
+            requirementBetween: between,
+        } = fieldEl.dataset;
+        const value = fieldEl.querySelector(".s_website_form_input").value;
+        if (!condition && comparator) {
+            return true;
+        }
+        if (["between", "!between"].includes(comparator) && !between) {
+            return true;
+        }
+        if (!value.trim()) {
+            return true;
+        }
+        return this.compareTo(comparator, value, condition, between);
     }
 
     isFieldVisible(fieldEl) {
