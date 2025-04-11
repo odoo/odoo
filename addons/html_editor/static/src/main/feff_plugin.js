@@ -3,7 +3,7 @@ import { cleanTextNode } from "@html_editor/utils/dom";
 import { isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { leftPos } from "@html_editor/utils/position";
+import { leftPos, rightPos } from "@html_editor/utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 /** @typedef {import("../core/selection_plugin").Cursors} Cursors */
@@ -58,7 +58,7 @@ export class FeffPlugin extends Plugin {
         for (const node of descendants(root).filter((n) => hasFeff(n) && !exclude(n))) {
             // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
             // nodes visible if needed.
-            const restoreSpaces = prepareUpdate(...leftPos(node));
+            const restoreSpaces = prepareUpdate(...leftPos(node), ...rightPos(node));
             cleanTextNode(node, "\ufeff", cursors);
             restoreSpaces();
         }
@@ -115,7 +115,11 @@ export class FeffPlugin extends Plugin {
         // returning a list of them.
         const customFeffNodes = this.getResource("feff_providers").flatMap((p) => p(root, cursors));
         const feffNodesToKeep = new Set([...feffNodesBasedOnSelectors, ...customFeffNodes]);
-        this.removeFeffs(root, cursors, { exclude: (node) => feffNodesToKeep.has(node) });
+        this.removeFeffs(root, cursors, {
+            exclude: (node) =>
+                feffNodesToKeep.has(node) ||
+                this.getResource("legit_feff_predicates").some((predicate) => predicate(node)),
+        });
         cursors.restore();
     }
 

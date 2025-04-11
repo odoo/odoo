@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
-import { isVisibleTextNode } from "@html_editor/utils/dom_info";
+import { isEmptyBlock, isVisibleTextNode, isZWS } from "@html_editor/utils/dom_info";
 import {
     closestElement,
     createDOMPathGenerator,
@@ -341,7 +341,8 @@ export class FontPlugin extends Plugin {
         if (
             !closestPre ||
             (closestBlockNode.nodeName !== "PRE" &&
-                (closestBlockNode.textContent || closestBlockNode.nextSibling))
+                ((closestBlockNode.textContent && !isZWS(closestBlockNode)) ||
+                    closestBlockNode.nextSibling))
         ) {
             return;
         }
@@ -350,19 +351,30 @@ export class FontPlugin extends Plugin {
         const nodesAfterTarget = [...rightLeafOnlyNotBlockPath(targetNode, targetOffset)];
         if (
             !nodesAfterTarget.length ||
-            (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR")
+            (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR") ||
+            isEmptyBlock(closestBlockNode)
         ) {
             // Remove the last empty block node within pre tag
-            if (closestBlockNode.nodeName !== "PRE") {
-                closestBlockNode.remove();
+            const [beforeElement, afterElement] = this.dependencies.split.splitElementBlock({
+                targetNode,
+                targetOffset,
+                blockToSplit: closestBlockNode,
+            });
+            const isPreBlock = beforeElement.nodeName === "PRE";
+            const baseContainer = isPreBlock
+                ? this.dependencies.baseContainer.createBaseContainer()
+                : afterElement;
+            if (isPreBlock) {
+                baseContainer.replaceChildren(...afterElement.childNodes);
+                afterElement.replaceWith(baseContainer);
+            } else {
+                beforeElement.remove();
+                closestPre.after(afterElement);
             }
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             const dir = closestBlockNode.getAttribute("dir") || closestPre.getAttribute("dir");
             if (dir) {
                 baseContainer.setAttribute("dir", dir);
             }
-            closestPre.after(baseContainer);
-            fillEmpty(baseContainer);
             this.dependencies.selection.setCursorStart(baseContainer);
         } else {
             const lineBreak = this.document.createElement("br");
@@ -382,7 +394,8 @@ export class FontPlugin extends Plugin {
         if (
             !closestQuote ||
             (closestBlockNode.nodeName !== "BLOCKQUOTE" &&
-                (closestBlockNode.textContent || closestBlockNode.nextSibling))
+                ((closestBlockNode.textContent && !isZWS(closestBlockNode)) ||
+                closestBlockNode.nextSibling))
         ) {
             return;
         }
@@ -391,19 +404,30 @@ export class FontPlugin extends Plugin {
         const nodesAfterTarget = [...rightLeafOnlyNotBlockPath(targetNode, targetOffset)];
         if (
             !nodesAfterTarget.length ||
-            (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR")
+            (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR") ||
+            isEmptyBlock(closestBlockNode)
         ) {
-            // Remove the last empty block node within blockquote tag
-            if (closestBlockNode.nodeName !== "BLOCKQUOTE") {
-                closestBlockNode.remove();
+            const [beforeElement, afterElement] = this.dependencies.split.splitElementBlock({
+                targetNode,
+                targetOffset,
+                blockToSplit: closestBlockNode,
+            });
+            const isQuoteBlock = beforeElement.nodeName === "BLOCKQUOTE";
+            const baseContainer = isQuoteBlock
+                ? this.dependencies.baseContainer.createBaseContainer()
+                : afterElement;
+
+            if (isQuoteBlock) {
+                baseContainer.replaceChildren(...afterElement.childNodes);
+                afterElement.replaceWith(baseContainer);
+            } else {
+                beforeElement.remove();
+                closestQuote.after(afterElement);
             }
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             const dir = closestBlockNode.getAttribute("dir") || closestQuote.getAttribute("dir");
             if (dir) {
                 baseContainer.setAttribute("dir", dir);
             }
-            closestQuote.after(baseContainer);
-            fillEmpty(baseContainer);
             this.dependencies.selection.setCursorStart(baseContainer);
             return true;
         }
@@ -434,8 +458,8 @@ export class FontPlugin extends Plugin {
                 if (dir) {
                     baseContainer.setAttribute("dir", dir);
                 }
+                baseContainer.replaceChildren(...newElement.childNodes);
                 newElement.replaceWith(baseContainer);
-                baseContainer.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(baseContainer);
             }
             return true;
