@@ -17,11 +17,21 @@
                 <t t-if="!props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
                     <tr>
                         <td><strong>Forecasted Stock</strong><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
-                        <td class="text-end"><b t-out='props.record.data.virtual_available_at_date'/> <t t-out='props.record.data.product_uom_id[1]'/></td>
+                        <td class="text-end">
+                            <b t-out='props.record.data.virtual_available_at_date'/> <t t-out='props.record.data.product_uom_id[1]'/>
+                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
+                                <br/><span class="fs-7 text-muted" t-out="props.calcData.product_uom_virtual_available_at_date"/> <span class="fs-7 text-muted" t-out='props.calcData.product_uom_name'/>
+                            </t>
+                        </td>
                     </tr>
                     <tr>
                         <td><strong>Available</strong><br /><small>All planned operations included</small></td>
-                        <td class="text-end"><b t-out='props.record.data.free_qty_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out='props.record.data.product_uom_id[1]'/></td>
+                        <td class="text-end">
+                            <b t-out='props.record.data.free_qty_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out='props.record.data.product_uom_id[1]'/>
+                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
+                                <br/><span t-out="props.calcData.product_uom_free_qty_today" t-att-class="`fs-7 text-muted ${!props.calcData.will_be_fulfilled ? 'text-danger': ''}`"/> <span class="fs-7 text-muted" t-out='props.calcData.product_uom_name'/>
+                            </t>
+                        </td>
                     </tr>
                 </t>
                 <t t-elif="props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">

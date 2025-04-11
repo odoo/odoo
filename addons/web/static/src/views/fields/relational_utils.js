@@ -326,6 +326,10 @@ export class Many2XAutocomplete extends Component {
             classList: this.props.getOptionClassnames({ id: result[0], display_name: result[1] }),
         };
     }
+    _shouldFallbackToDialog(error) {
+        return error instanceof RPCError &&
+                            error.exceptionName === "odoo.exceptions.ValidationError";
+    }
     async loadOptionsSource(request) {
         if (this.lastProm) {
             this.lastProm.abort(false);
@@ -343,10 +347,7 @@ export class Many2XAutocomplete extends Component {
                     try {
                         await this.props.quickCreate(request, params);
                     } catch (e) {
-                        if (
-                            e instanceof RPCError &&
-                            e.exceptionName === "odoo.exceptions.ValidationError"
-                        ) {
+                        if (this._shouldFallbackToDialog(e)) {
                             return this.openMany2X({
                                 context: this.getCreationContext(request),
                                 nextRecordsContext: this.props.context,
