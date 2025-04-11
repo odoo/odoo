@@ -123,7 +123,6 @@ export class VideoSelector extends Component {
                     "";
                 if (src) {
                     this.state.urlInput = "https:" + src;
-                    await this.updateVideo();
                     this.syncOptionsWithUrl();
                 }
             }
@@ -148,21 +147,13 @@ export class VideoSelector extends Component {
 
         useAutofocus();
 
-        this.onChangeUrl = debounce((ev) => {
-            this.syncOptionsWithUrl();
-            this.updateVideo();
+        this.onChangeUrl = debounce(async (ev) => {
+            await this.syncOptionsWithUrl();
+            await this.updateVideo();
         }, 500);
 
         this.onChangeStartAt = debounce(async (ev, optionId) => {
-            // Regular expression for HH:MM:SS format
-            const timeRegex = /^(?:(\d+):)?([0-5]?\d):([0-5]?\d)$/;
-            let start_from = ev.target.value;
-
-            if (timeRegex.test(start_from)) {
-                start_from = start_from.split(":").reduce((acc, time) => acc * 60 + +time, 0) + "";
-            } else if (isNaN(start_from)) {
-                start_from = "0";
-            }
+            const start_from = this.convertTimestampToSeconds(ev.target.value);
 
             this.state.options = this.state.options.map(option => {
                 if (option.id === optionId) {
@@ -307,6 +298,7 @@ export class VideoSelector extends Component {
      * Utility method, called to make options and urlInput state consistent with state of component.
      */
     async syncOptionsWithUrl() {
+        await this.updateVideo();
         if (URL.canParse(this.state.urlInput)) {
             const urlParams = new URLSearchParams(new URL(this.state.urlInput).search);
             this.state.options = this.state.options.map((option) => {
@@ -317,5 +309,22 @@ export class VideoSelector extends Component {
                 return { ...option, value: urlParams.get(urlParameter) || this.state.urlInput.includes(urlParameter) };
             });
         }
+    }
+
+    /**
+     * Utility method, called to convert timestamp to seconds.
+     * @param {string} timestamp - The start time in HH:MM:SS format or seconds.
+     * @returns {string} - The start time in seconds.
+     */
+    convertTimestampToSeconds(timestamp) {
+        // Regular expression for HH:MM:SS format
+        const timeRegex = /^(?:(\d+):)?([0-5]?\d):([0-5]?\d)$/;
+
+        if (timeRegex.test(timestamp)) {
+            timestamp = timestamp.split(":").reduce((acc, time) => acc * 60 + +time, 0) + "";
+        } else if (isNaN(timestamp)) {
+            timestamp = "0";
+        }
+        return timestamp;
     }
 }
