@@ -10,13 +10,12 @@ class Im_LivechatReportChannel(models.Model):
 
     _name = 'im_livechat.report.channel'
     _description = "Livechat Support Channel Report"
-    _order = 'start_date, technical_name'
+    _order = 'start_date, livechat_channel_id, channel_id'
     _auto = False
 
     uuid = fields.Char('UUID', readonly=True)
     channel_id = fields.Many2one('discuss.channel', 'Conversation', readonly=True)
     channel_name = fields.Char('Channel Name', readonly=True)
-    technical_name = fields.Char('Code', readonly=True)
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', readonly=True)
     start_date = fields.Datetime('Start Date of session', readonly=True)
     start_hour = fields.Char('Start Hour of session', readonly=True)
@@ -49,7 +48,43 @@ class Im_LivechatReportChannel(models.Model):
         ))
 
     def _query(self) -> SQL:
-        return SQL("%s %s %s %s", self._select(), self._from(), self._where(), self._group_by())
+        return SQL("%s %s %s %s %s", self._cte(), self._select(), self._from(), self._where(), self._group_by())
+
+    def _cte(self) -> SQL:
+        return SQL(
+            """
+            WITH message_vals AS (
+                SELECT m.res_id as channel_id,
+                       COUNT(DISTINCT m.id) AS message_count,
+                       MIN(m.create_date) FILTER (
+                           WHERE m.author_id = c.livechat_operator_id
+                       ) AS first_agent_message_dt_legacy,
+                       MAX(m.create_date) AS last_message_dt,
+                       MIN(m.create_date) FILTER (
+                           WHERE h.livechat_member_type = 'agent'
+                       ) AS first_agent_message_dt,
+                       MAX(m.create_date) FILTER (
+                           WHERE h.livechat_member_type = 'bot'
+                       ) AS last_bot_message_dt
+                  FROM mail_message m
+                  JOIN discuss_channel c
+                    ON c.id = m.res_id
+                   AND m.model = 'discuss.channel'
+                   AND c.channel_type = 'livechat'
+             LEFT JOIN im_livechat_channel_member_history h
+                    ON h.channel_id = m.res_id
+                   AND m.model = 'discuss.channel'
+                   AND (h.guest_id = m.author_guest_id or h.partner_id = m.author_id)
+              GROUP BY m.res_id
+            ),
+            channel_member_history AS (
+                SELECT channel_id,
+                       BOOL_OR(livechat_member_type = 'agent') as has_agent,
+                       BOOL_OR(livechat_member_type = 'bot') as has_bot
+                  FROM im_livechat_channel_member_history
+              GROUP BY channel_id
+            )
+            """)
 
     def _select(self) -> SQL:
         return SQL(
@@ -60,32 +95,35 @@ class Im_LivechatReportChannel(models.Model):
                 C.id as channel_id,
                 C.name as channel_name,
                 COUNT(DISTINCT C.id) AS nbr_channel,
-                CONCAT(L.name, ' / ', C.id) as technical_name,
                 C.livechat_channel_id as livechat_channel_id,
                 C.create_date as start_date,
                 to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                 to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
-                extract(dow from  C.create_date) as day_number, 
-                EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date))/60 AS duration,
-                EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer,
+                EXTRACT(dow from  C.create_date) as day_number,
+                EXTRACT('epoch' FROM MAX(message_vals.last_message_dt) - c.create_date)/60 AS duration,
+                CASE
+                    WHEN channel_member_history.has_agent AND channel_member_history.has_bot THEN
+                        EXTRACT('epoch' FROM MIN(message_vals.first_agent_message_dt) - MAX(message_vals.last_bot_message_dt))
+                    WHEN channel_member_history.has_agent THEN
+                        EXTRACT('epoch' FROM MIN(message_vals.first_agent_message_dt) - c.create_date)
+                    ELSE
+                        EXTRACT('epoch' FROM MIN(message_vals.first_agent_message_dt_legacy) - c.create_date)
+                END AS time_to_answer,
                 count(distinct C.livechat_operator_id) as nbr_speaker,
-                count(distinct M.id) as nbr_message,
-                CASE 
-                    WHEN EXISTS (select distinct M.author_id FROM mail_message M
-                                    WHERE M.author_id=C.livechat_operator_id
-                                    AND M.res_id = C.id
-                                    AND M.model = 'discuss.channel'
-                                    AND C.livechat_operator_id = M.author_id)
-                    THEN 0
-                    ELSE 1
-                END as is_without_answer,
+                SUM(message_vals.message_count) as nbr_message,
+                CASE
+                    WHEN channel_member_history.has_agent AND MIN(message_vals.first_agent_message_dt) IS NULL THEN 1
+                    WHEN channel_member_history.has_bot AND MIN(message_vals.last_bot_message_dt) IS NULL THEN 1
+                    WHEN NOT channel_member_history.has_agent AND NOT channel_member_history.has_bot AND MIN(message_vals.first_agent_message_dt_legacy) IS NULL THEN 1
+                    ELSE 0
+                END AS is_without_answer,
                 (DATE_PART('day', date_trunc('day', now()) - date_trunc('day', C.create_date)) + 1) as days_of_activity,
                 CASE
                     WHEN C.anonymous_name IS NULL THEN 0
                     ELSE 1
                 END as is_anonymous,
                 C.country_id,
-                CASE 
+                CASE
                     WHEN rate.rating = 5 THEN 1
                     ELSE 0
                 END as is_happy,
@@ -96,7 +134,7 @@ class Im_LivechatReportChannel(models.Model):
                     WHEN Rate.rating = 3 THEN 'Neutral'
                     ELSE null
                 END as rating_text,
-                CASE 
+                CASE
                     WHEN rate.rating > 0 THEN 0
                     ELSE 1
                 END as is_unrated,
@@ -108,10 +146,9 @@ class Im_LivechatReportChannel(models.Model):
         return SQL(
             """
             FROM discuss_channel C
-                JOIN mail_message M ON (M.res_id = C.id AND M.model = 'discuss.channel')
-                JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
-                LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'discuss.channel' AND MO.author_id = C.livechat_operator_id)
-                LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
+            JOIN message_vals ON message_vals.channel_id = c.id
+       LEFT JOIN channel_member_history ON channel_member_history.channel_id = c.id
+       LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
             """,
         )
 
@@ -126,9 +163,10 @@ class Im_LivechatReportChannel(models.Model):
                 C.id,
                 C.name,
                 C.livechat_channel_id,
-                L.name,
                 C.create_date,
                 C.uuid,
-                Rate.rating
+                Rate.rating,
+                channel_member_history.has_bot,
+                channel_member_history.has_agent
             """,
         )
