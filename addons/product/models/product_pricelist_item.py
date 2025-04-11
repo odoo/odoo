@@ -500,7 +500,7 @@ class ProductPricelistItem(models.Model):
 
         return res
 
-    def _compute_price(self, product, quantity, uom, date, currency=None):
+    def _compute_price(self, product, quantity, uom, date, currency=None, **kwargs):
         """Compute the unit price of a product in the context of a pricelist application.
 
         Note: self and self.ensure_one()
@@ -510,6 +510,7 @@ class ProductPricelistItem(models.Model):
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
         :param currency: currency (for the case where self is empty)
+        :param dict kwargs: unused parameters available for overrides
 
         :returns: price according to pricelist rule or the product price, expressed in the param
                   currency, the pricelist currency or the company currency
@@ -557,7 +558,7 @@ class ProductPricelistItem(models.Model):
 
         return price
 
-    def _compute_base_price(self, product, quantity, uom, date, currency):
+    def _compute_base_price(self, product, quantity, uom, date, currency, **kwargs):
         """ Compute the base price for a given rule
 
         :param product: recordset of product (product.product/product.template)

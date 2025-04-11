@@ -526,10 +526,9 @@ class SaleOrderLine(models.Model):
                 line.pricelist_item_id = False
             else:
                 line.pricelist_item_id = line.order_id.pricelist_id._get_product_rule(
-                    line.product_id,
-                    quantity=line.product_uom_qty or 1.0,
-                    uom=line.product_uom_id,
-                    date=line._get_order_date(),
+                    # No need for the price context, we're not considering the price here
+                    product=line.product_id,
+                    **line._get_pricelist_kwargs(),
                 )
 
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
@@ -614,15 +613,18 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         self.product_id.ensure_one()
 
-        price = self.pricelist_item_id._compute_price(
+        return self.pricelist_item_id._compute_price(
             product=self.product_id.with_context(**self._get_product_price_context()),
-            quantity=self.product_uom_qty or 1.0,
-            uom=self.product_uom_id,
-            date=self._get_order_date(),
-            currency=self.currency_id,
+            **self._get_pricelist_kwargs(),
         )
 
-        return price
+    def _get_pricelist_kwargs(self):
+        return {
+            'quantity': self.product_uom_qty or 1.0,
+            'uom': self.product_uom_id,
+            'date': self._get_order_date(),
+            'currency': self.currency_id,
+        }
 
     def _get_product_price_context(self):
         """Gives the context for product price computation.
@@ -655,10 +657,7 @@ class SaleOrderLine(models.Model):
 
         return self.pricelist_item_id._compute_price_before_discount(
             product=self.product_id.with_context(**self._get_product_price_context()),
-            quantity=self.product_uom_qty or 1.0,
-            uom=self.product_uom_id,
-            date=self.order_id.date_order,
-            currency=self.currency_id,
+            **self._get_pricelist_kwargs()
         )
 
     def _get_combo_item_display_price(self):
