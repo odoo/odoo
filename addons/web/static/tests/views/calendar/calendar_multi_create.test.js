@@ -17,6 +17,8 @@ import { CalendarModel } from "@web/views/calendar/calendar_model";
 class Event extends models.Model {
     name = fields.Char();
     date_start = fields.Date();
+    datetime_start = fields.Datetime();
+    datetime_end = fields.Datetime();
     type = fields.Many2one({ relation: "event.type" });
     user_id = fields.Many2one({ relation: "calendar.user" });
 
@@ -72,6 +74,38 @@ class Event extends models.Model {
             date_start: "2019-04-14",
             type: 1,
             user_id: 1,
+        },
+        {
+            id: 8,
+            name: "event 8",
+            datetime_start: "2019-03-03 07:00:00",
+            datetime_end: "2019-03-03 17:00:00",
+            type: 1,
+            user_id: 1,
+        },
+        {
+            id: 9,
+            name: "event 9",
+            datetime_start: "2019-03-04 07:00:00",
+            datetime_end: "2019-03-04 16:00:00",
+            type: 1,
+            user_id: 1,
+        },
+        {
+            id: 10,
+            name: "event 10",
+            datetime_start: "2019-03-04 07:00:00",
+            datetime_end: "2019-03-04 16:00:00",
+            type: 1,
+            user_id: 2,
+        },
+        {
+            id: 11,
+            name: "event 11",
+            datetime_start: "2019-03-04 07:00:00",
+            datetime_end: "2019-03-04 16:00:00",
+            type: 1,
+            user_id: 3,
         },
     ];
 
@@ -192,7 +226,7 @@ test("multi_create: render and basic creation (simple use case)", async () => {
         message: "All new events should be added",
     });
 
-    await click(".fc-event[data-event-id='8']");
+    await click(".fc-event[data-event-id='12']");
     await runAllTimers();
     await animationFrame();
     expect(".o_popover").toHaveCount(1);
@@ -261,7 +295,7 @@ test("multi_create: render and basic functionalities (complex with filters use c
         message: "events should be added for the two users selected",
     });
 
-    await click(".fc-event[data-event-id='8']");
+    await click(".fc-event[data-event-id='12']");
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
@@ -269,10 +303,124 @@ test("multi_create: render and basic functionalities (complex with filters use c
     await expect(".o_popover .o_field_widget[name='type']").toHaveText("Event Type 3");
     await expect(".o_popover .o_field_widget[name='user_id']").toHaveText("user 1");
 
-    await click(".fc-event[data-event-id='9']");
+    await click(".fc-event[data-event-id='13']");
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
+    await expect(".o_popover .o_field_widget[name='user_id']").toHaveText("user 3");
+
+    await click(".o_calendar_filter_item[data-value='3'] input");
+    await animationFrame();
+    await advanceTime(CalendarModel.DEBOUNCED_LOAD_DELAY);
+    expect(".fc .fc-event").toHaveCount(10, { message: "events should be filter" });
+});
+
+test.tags("desktop");
+test("multi_create: basic creation (datetime field)", async () => {
+    onRpc("event", "create", ({ args: [records] }) => {
+        for (const record of records) {
+            if (record.name !== "Time off" || record.type !== 3) {
+                expect.step("error");
+            }
+            expect.step(`${record.user_id}_${record.datetime_start}_${record.datetime_end}`);
+        }
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        context: { default_name: "Sick" },
+        arch: `
+            <calendar date_start="datetime_start" date_stop="datetime_end" scales="month" multi_create_view="multi_create_form" aggregate="id:count">
+                <!-- Popover -->
+                <field name="name"/>
+                <field name="type"/>
+                
+                <!-- Filter -->
+                <field name="user_id" write_model="filter.user" write_field="filter_user_id" filter_field="is_checked"/>
+            </calendar>
+        `,
+    });
+
+    expect(".fc .fc-event").toHaveCount(3, { message: "events should be filter" });
+    expect(".o_calendar_sidebar .btn-group .btn").toHaveCount(3, {
+        message: "multi create should be enabled",
+    });
+
+    expect(".o_calendar_sidebar .btn-group .btn.active").toHaveAttribute("data-tooltip", "New", {
+        message: "multi create mode should be the default",
+    });
+    expect(".o_calendar_sidebar_container .o_time_picker_input").toHaveCount(2);
+
+    await click(".o_time_picker_input:eq(0)");
+    await animationFrame();
+    expect(".o-dropdown--menu.o_time_picker_dropdown").toHaveCount(1);
+    await click(".o_time_picker_option:contains(8:00)");
+    await animationFrame();
+
+    await click(".o_time_picker_input:eq(1)");
+    await animationFrame();
+    expect(".o-dropdown--menu.o_time_picker_dropdown").toHaveCount(1);
+    await click(".o_time_picker_option:contains(11:30)");
+    await animationFrame();
+
+    expect(".o_calendar_sidebar_container .o_form_view").toBeVisible();
+    expect(".o_calendar_sidebar_container .o_form_view [name='name'] input").toHaveValue("Sick", {
+        message: "should have a default value from the context",
+    });
+    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
+    await edit("Time off");
+    await contains(".o_calendar_sidebar_container .o_form_view [name='type'] input").click();
+    await contains(".o-autocomplete--dropdown-item:contains('Event Type 3')").click();
+
+    const { drop, moveTo } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    await moveTo(".fc-day[data-date='2019-03-14']");
+    await animationFrame();
+    expect(".fc-day.o-highlight").toHaveCount(8);
+    await drop();
+    await animationFrame();
+    expect.verifySteps([
+        "1_2019-03-04 07:00:00_2019-03-04 10:30:00",
+        "3_2019-03-04 07:00:00_2019-03-04 10:30:00",
+        "1_2019-03-05 07:00:00_2019-03-05 10:30:00",
+        "3_2019-03-05 07:00:00_2019-03-05 10:30:00",
+        "1_2019-03-06 07:00:00_2019-03-06 10:30:00",
+        "3_2019-03-06 07:00:00_2019-03-06 10:30:00",
+        "1_2019-03-07 07:00:00_2019-03-07 10:30:00",
+        "3_2019-03-07 07:00:00_2019-03-07 10:30:00",
+        "1_2019-03-11 07:00:00_2019-03-11 10:30:00",
+        "3_2019-03-11 07:00:00_2019-03-11 10:30:00",
+        "1_2019-03-12 07:00:00_2019-03-12 10:30:00",
+        "3_2019-03-12 07:00:00_2019-03-12 10:30:00",
+        "1_2019-03-13 07:00:00_2019-03-13 10:30:00",
+        "3_2019-03-13 07:00:00_2019-03-13 10:30:00",
+        "1_2019-03-14 07:00:00_2019-03-14 10:30:00",
+        "3_2019-03-14 07:00:00_2019-03-14 10:30:00",
+    ]);
+    expect(".fc .fc-event").toHaveCount(19, {
+        message: "events should be added for the two users selected",
+    });
+
+    await click(".fc-event[data-event-id='12']");
+    await runAllTimers();
+    await animationFrame();
+    await expect(".o_popover").toHaveCount(1);
+    await expect(".o_popover .fa-clock-o").toHaveCount(1);
+    await expect(".o_popover .list-group-item:has(.fa-clock-o)").toHaveText(
+        "08:00 - 11:30 (3 hours, 30 minutes)"
+    );
+    await expect(".o_popover .o_field_widget[name='name']").toHaveText("Time off");
+    await expect(".o_popover .o_field_widget[name='type']").toHaveText("Event Type 3");
+    await expect(".o_popover .o_field_widget[name='user_id']").toHaveText("user 1");
+
+    await click(".fc-event[data-event-id='13']");
+    await runAllTimers();
+    await animationFrame();
+    await expect(".o_popover").toHaveCount(1);
+    await expect(".o_popover .fa-clock-o").toHaveCount(1);
+    await expect(".o_popover .list-group-item:has(.fa-clock-o)").toHaveText(
+        "08:00 - 11:30 (3 hours, 30 minutes)"
+    );
     await expect(".o_popover .o_field_widget[name='user_id']").toHaveText("user 3");
 
     await click(".o_calendar_filter_item[data-value='3'] input");
@@ -366,7 +514,7 @@ test("multi_create: test onChange on form with no blur (input text)", async () =
     await click(".fc-day[data-date='2019-03-04']");
     await animationFrame();
 
-    await click(".fc-event[data-event-id='8']");
+    await click(".fc-event[data-event-id='12']");
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);

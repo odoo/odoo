@@ -21,6 +21,7 @@ export class CalendarRenderer extends Component {
         deleteRecord: Function,
         setDate: Function,
         sidePanelMode: String,
+        setMultiCreateTimes: Function,
         multiCreateRecord: Function,
         multiDeleteRecords: Function,
     };

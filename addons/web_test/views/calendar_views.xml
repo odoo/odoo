@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="calendar_calendar" model="ir.ui.view">
+        <field name="name">calendar_calendar</field>
+        <field name="model">web_test.calendar</field>
+        <field name="arch" type="xml">
+            <calendar string="Test" date_start="date" date_stop="date_end" scales="month" color="employee_id" show_date_picker="0" month_overflow="0" aggregate="duration" multi_create_view="web_test.calendar_calendar_form">
+                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" filter_field="is_checked" avatar_field="avatar_128" widget="many2one_avatar_employee"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="calendar_form" model="ir.ui.view">
+        <field name="name">calendar_form</field>
+        <field name="model">web_test.calendar</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="date_end"/>
+                    <field name="duration"/>
+                    <field name="work_entry_type_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="calendar_calendar_form" model="ir.ui.view">
+        <field name="name">calendar_calendar_form</field>
+        <field name="model">web_test.calendar</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="duration"/>
+                    <field name="work_entry_type_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="calendar_list" model="ir.ui.view">
+        <field name="name">calendar_list</field>
+        <field name="model">web_test.calendar</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="date_end"/>
+                <field name="duration"/>
+                <field name="work_entry_type_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="calendar_action" model="ir.actions.act_window">
+        <field name="name">Test Calendar</field>
+        <field name="res_model">web_test.calendar</field>
+<!--        <field name="view_mode">calendar,list,form</field>-->
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'calendar'}),
+            (0, 0, {'view_mode': 'list'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('calendar_form')})]"/>
+        <field name="context">
+            {
+                'default_duration': 8,
+                'default_name': 'Sick',
+            }
+        </field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="web_test_calendar_menu" name="Test Calendar" web_icon="calendar,static/description/icon.png" groups="hr.group_hr_user">
+            <menuitem id="web_test_calendar_action_menu" name="Calendar" action="calendar_action" groups="hr.group_hr_user"/>
+    </menuitem>
+</odoo>
