@@ -63,7 +63,7 @@ class AccountAnalyticLine(models.Model):
         domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('has_template_ancestor', '=', False)]")
     parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True, index='btree_not_null')
     project_id = fields.Many2one(
-        'project.project', 'Project', domain=_domain_project_id, index=True,
+        'project.project', 'Source Project', domain=_domain_project_id, index=True,
         compute='_compute_project_id', store=True, readonly=False)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
     employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False},
