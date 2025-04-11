@@ -51,6 +51,145 @@ const { DateTime } = luxon;
  * @property {boolean} [distributeNot]
  */
 
+function* zipGen(iter1, iter2) {
+    const iterator1 = iter1[Symbol.iterator]();
+    const iterator2 = iter2[Symbol.iterator]();
+    let next1 = iterator1.next();
+    let next2 = iterator2.next();
+    while (!next1.done && !next2.done) {
+        yield [next1.value, next2.value];
+        next1 = iterator1.next();
+        next2 = iterator2.next();
+    }
+}
+
+function* zipWithGen(iter1, iter2, mapFn) {
+    const iterator = zipGen(iter1, iter2);
+    let next = iterator.next();
+    while (!next.done) {
+        yield mapFn(next.value);
+        next = iterator.next();
+    }
+}
+
+function ensurePredicate(value) {
+    return typeof value === "function" ? value : (v) => v === value;
+}
+
+class Maybe {
+    static P(mvs) {
+        const results = [];
+        for (const mv of mvs) {
+            if (mv instanceof Nothing) {
+                return Nothing.of();
+            }
+            results.push(mv.value);
+        }
+        return Just.of(results);
+    }
+}
+
+class Nothing extends Maybe {
+    static of() {
+        return new Nothing();
+    }
+    bind(_fn, ..._fns) {
+        return Nothing.of();
+    }
+}
+
+class Just extends Maybe {
+    static of(value) {
+        return new Just(value);
+    }
+    constructor(value) {
+        super();
+        this.value = value;
+    }
+    bind(fn, ...fns) {
+        if (!fn) {
+            return this;
+        }
+        return fn(this.value).bind(...fns);
+    }
+}
+
+class Pattern {
+    static C(patterns) {
+        const p = new Pattern();
+        p.detect = (v) => {
+            const fns = patterns.map((p) => p.detect);
+            Just.of(v).bind(...fns);
+        };
+        p.make = (v) => {
+            const fns = patterns.map((p) => p.make).reverse();
+            Just.of(v).bind(...fns);
+        };
+        return p;
+    }
+    static P(patterns) {
+        const p = new Pattern();
+        p.detect = (values) => Maybe.P(zipWithGen(values, patterns, ([v, p]) => p.detect(v)));
+        p.make = (values) => Maybe.P(zipWithGen(values, patterns, ([v, p]) => p.make(v)));
+        return p;
+    }
+    detect(_v) {}
+    make(_v) {}
+}
+
+export class PathPattern extends Pattern {
+    constructor(lastPart) {
+        super();
+        this.lastPart = lastPart;
+    }
+    detect(path) {
+        const { initialPath, lastPart } = splitPath(path);
+        if (initialPath && lastPart === this.lastPart) {
+            return Just.of(initialPath);
+        }
+        return Nothing.of();
+    }
+    make(initialPath) {
+        if (typeof initialPath === "string" && initialPath) {
+            return Just.of([initialPath, this.lastPart].join("."));
+        }
+        return Nothing.of();
+    }
+}
+
+// const hourPathPattern = new PathPattern("hour_number");
+// const minutePathPattern = new PathPattern("minute_number");
+// const secondPathPattern = new PathPattern("second_number");
+
+class TypePattern extends Pattern {
+    constructor(validator) {
+        super();
+        this.validator = ensurePredicate(validator);
+    }
+    detect(value) {
+        if (this.validator(value)) {
+            return Just.of(value);
+        }
+        return Nothing.of();
+    }
+    make(value) {
+        return this.detect(value);
+    }
+}
+
+export const equalityPattern = new TypePattern("=");
+export const inequalityPattern = new TypePattern(">");
+export const numberPattern = new TypePattern(Number.isInteger);
+
+// const equalityOnHour = Pattern.P([hourPathPattern, equalityPattern, numberPattern]);
+// const inequalityOnHour = Pattern.P([hourPathPattern, inequalityPattern, numberPattern]);
+
+// const equalityOnMinute = Pattern.P([minutePathPattern, equalityPattern, numberPattern]);
+// const inequalityOnMinute = Pattern.P([minutePathPattern, inequalityPattern, numberPattern]);
+
+// const equalityOnSecond = Pattern.P([secondPathPattern, equalityPattern, numberPattern]);
+// const inequalityOnSecond = Pattern.P([secondPathPattern, inequalityPattern, numberPattern]);
+
 export const TERM_OPERATORS_NEGATION = {
     "<": ">=",
     ">": "<=",
