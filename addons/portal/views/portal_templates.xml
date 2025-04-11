@@ -628,7 +628,7 @@
         <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination m-0 #{_classes}" t-att-style="style or None">
             <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == 1 else ''}">
                 <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" t-attf-class="page-link #{extraLinkClass}">
-                    <span class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/>
+                    <span class="oi oi-chevron-left" role="img" aria-label="Previous" title="Previous"/>
                 </a>
             </li>
             <t t-foreach="pager['pages']" t-as="page">
@@ -638,7 +638,7 @@
             </t>
             <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
                 <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" t-attf-class="page-link #{extraLinkClass}">
-                    <span class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/>
+                    <span class="oi oi-chevron-right" role="img" aria-label="Next" title="Next"/>
                 </a>
             </li>
         </ul>
