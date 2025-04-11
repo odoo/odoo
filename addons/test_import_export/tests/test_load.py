@@ -1,5 +1,6 @@
 import contextlib
 import json
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
@@ -1756,3 +1757,20 @@ class test_inherits(ImporterCase):
             parent._get_external_ids()[parent.id],
             ['xxx.parent'],
         )
+
+
+class CheckSavepoint(ImporterCase):
+    model_name = 'export.unique'
+
+    @mute_logger("odoo.sql_db")
+    def test_max_savepoint(self):
+        from odoo.sql_db import Cursor  # noqa: PLC0415
+        with (
+            patch.object(Cursor, 'savepoint', autospec=True, side_effect=Cursor.savepoint) as sp_mock,
+            patch.object(Cursor, 'flush', autospec=True, side_effect=Cursor.flush) as sp_flush,
+        ):
+            data = [[str(i)] for i in range(100)] + [[str(i)] for i in range(20)]
+            self.import_(['value'], data)
+            self.assertLess(sp_mock.call_count, 100, "Too many savepoints in the same transaction, load method should not create a savepoint for each record")
+            self.assertEqual(sp_mock.call_count, 3, "Too many savepoints in the same transaction")
+            self.assertGreater(sp_flush.call_count, 120, "We should flush after each record to bind errors to the record")
