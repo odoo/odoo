@@ -559,6 +559,7 @@ class ResPartner(models.Model):
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
     supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
+    account_move_count = fields.Integer(compute='_compute_account_move_count', groups='account.group_account_invoice,account.group_account_readonly')
     invoice_ids = fields.One2many('account.move', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
@@ -702,6 +703,18 @@ class ResPartner(models.Model):
     @api.depends_context('company')
     def _compute_show_credit_limit(self):
         self.show_credit_limit = self.env.company.account_use_credit_limit
+
+    def _compute_application_statistics_hook(self):
+        data_list = super()._compute_application_statistics_hook()
+        if not self.env.user.has_group('account.group_account_invoice'):
+            return data_list
+        for partner in self.filtered(lambda p: p._get_account_statistics_count()):
+            stat_info = {'iconClass': 'fa-pencil-square-o', 'value': partner._get_account_statistics_count(), 'label': _('Invoices/Bills/Mandates')}
+            data_list[partner.id].append(stat_info)
+        return data_list
+
+    def _get_account_statistics_count(self):
+        return self.account_move_count + self.supplier_invoice_count
 
     def _get_suggested_invoice_edi_format(self):
         # TO OVERRIDE
@@ -1023,3 +1036,25 @@ class ResPartner(models.Model):
         for partner in self:
             country_code = partner.country_id.code or ''
             partner.partner_company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')
+
+    def _compute_account_move_count(self):
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.with_context(active_test=False).search_fetch(
+            [("id", "child_of", self.ids)],
+            ["parent_id"],
+        )
+        domain = [
+            ("partner_id", "in", all_partners.ids),
+            ("move_type", "in", ("out_invoice", "out_refund")),
+        ]
+        account_move_groups = self.env["account.move"]._read_group(
+            domain=domain, groupby=["partner_id"], aggregates=["__count"],
+        )
+        self_ids = set(self._ids)
+
+        self.account_move_count = 0
+        for partner, count in account_move_groups:
+            while partner:
+                if partner.id in self_ids:
+                    partner.account_move_count += count
+                partner = partner.parent_id

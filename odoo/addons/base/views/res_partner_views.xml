@@ -27,6 +27,7 @@
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide" readonly="1"/>
                     <field name="country_id" optional="show" readonly="1"/>
+                    <field name="application_statistics" widget="contact_statistics" nolabel="1" optional="show"/>
                     <field name="category_id" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                 </list>
@@ -367,7 +368,7 @@
                                     <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
                                     <field name="country_id"/>
                                 </div>
-                                <footer><div/></footer>
+                                <footer><field name="application_statistics" widget="contact_statistics"/></footer>
                             </main>
                         </t>
                     </templates>
