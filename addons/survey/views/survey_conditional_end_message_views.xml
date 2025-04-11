@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="survey_conditional_end_message_form" model="ir.ui.view">
+            <field name="name">survey.conditional.end.message.view.form</field>
+            <field name="model">survey.conditional.end.message</field>
+            <field name="arch" type="xml">
+                <form string="Conditional End Message Form">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="color" string="Color" widget="color_picker"/>
+                                <field name="sequence" invisible="1"/>
+                            </group>
+                            <group colspan="2">
+                                <field name="body"/>
+                            </group>
+                            <group>
+                                <field name="survey_id" readonly="1"/>
+                            </group>
+                            <group colspan="2">
+                                <field name="survey_question_ids" invisible="1"/>
+                                <field name="question_answer_ids" domain="[('question_id' ,'in', survey_question_ids), ('question_type', 'in', ['simple_choice', 'multiple_choice'])]">
+                                    <list create="false">
+                                        <field name="question_id"/>
+                                        <field name="value" string="Answer"/>
+                                        <field name="answer_score"/>
+                                        <control>
+                                            <create string="Add a Question Answer"/>
+                                        </control>
+                                    </list>
+                                </field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

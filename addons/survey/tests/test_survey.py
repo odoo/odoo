@@ -901,3 +901,56 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
                     'suggested_answer_id': answer.id,
                 })
                 self.assertEqual(user_input_line.answer_score, expected_score)
+
+    def test_survey_user_input_extra_end_message_id(self):
+        """When the survey includes extra end message based on the user's
+            answers, check this message is correctly computed."""
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Survey with conditional end messages',
+            'extra_end_message_ids': [
+                Command.create({'name': 'Msg_1', 'body': '<p>Msg 1</p>', 'sequence': 2}),
+                Command.create({'name': 'Msg_2', 'body': '<p>Msg 2</p>', 'sequence': 1}),
+            ],
+            'question_and_page_ids': [
+                Command.create({'title': 'Pick one tag.', 'question_type': 'simple_choice'}),
+                Command.create({'title': 'Pick one or more tags.', 'question_type': 'multiple_choice'})]
+        })
+        msg_1, msg_2 = test_survey.extra_end_message_ids
+        q_1, q_2 = test_survey.question_and_page_ids
+        q_1_a_1, q_1_a_2, q_2_a_1, q_2_a_2, q_2_a_3 = self.env['survey.question.answer'].create([
+            {'question_id': q_1.id, 'value': 'Msg 1', 'extra_end_message_ids': msg_1},
+            {'question_id': q_1.id, 'value': 'Msg 2', 'extra_end_message_ids': msg_2},
+            {'question_id': q_2.id, 'value': 'Msg 1', 'extra_end_message_ids': msg_1},
+            {'question_id': q_2.id, 'value': 'Msg 2', 'extra_end_message_ids': msg_2},
+            {'question_id': q_2.id, 'value': 'Msgs 1 + 2', 'extra_end_message_ids': msg_1 + msg_2}])
+        user_inputs = self.env['survey.user_input'].create([
+            {'survey_id': test_survey.id,
+            'user_input_line_ids': [
+                # Happy path: most frequent tag wins
+                Command.create({'question_id': q_1.id, 'suggested_answer_id': q_1_a_2.id}),
+                Command.create({'question_id': q_2.id, 'suggested_answer_id': q_2_a_1.id}),
+                Command.create({'question_id': q_2.id, 'suggested_answer_id': q_2_a_2.id}),
+            ]},
+            {'survey_id': test_survey.id,
+            'user_input_line_ids': [
+                # Strict equality: lowest sequence number wins
+                Command.create({'question_id': q_1.id, 'suggested_answer_id': q_1_a_1.id}),
+                Command.create({'question_id': q_2.id, 'suggested_answer_id': q_2_a_2.id}),
+            ]},
+            {'survey_id': test_survey.id,
+            'user_input_line_ids': [
+                # Answer(s) with multiple tags
+                Command.create({'question_id': q_1.id, 'suggested_answer_id': q_1_a_1.id}),
+                Command.create({'question_id': q_2.id, 'suggested_answer_id': q_2_a_3.id}),
+            ]},
+            {'survey_id': self.survey.id,
+            'user_input_line_ids': [
+                # No Answer Tag, no crash
+                Command.create({'question_id': self.question_ft.id, 'value_char_box': 'Test'}),
+                Command.create({'question_id': self.question_num.id, 'value_numerical_box': 1.5}),
+                Command.create({'question_id': self.question_scale.id, 'value_scale': 1}),
+            ]},
+        ])
+        results = [msg_2, msg_2, msg_1, self.env['survey.conditional.end.message']]
+        for user_input, extra_end_message_id in zip(user_inputs, results):
+            self.assertEqual(user_input.extra_end_message_id, extra_end_message_id)

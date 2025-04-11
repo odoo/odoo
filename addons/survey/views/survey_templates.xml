@@ -305,6 +305,11 @@
                     <t t-else="">Thank you!</t>
                 </h1>
                 <div t-field="survey.description_done" class="oe_no_empty" />
+                <div t-if="answer.extra_end_message_id" class="mt-3">
+                    <p>Based on your answers, we can say that you are a...</p>
+                    <h3 t-field="answer.extra_end_message_id.name"/>
+                    <div t-field="answer.extra_end_message_id.body"/>
+                </div>
                 <div class="row">
                     <div class="col">
                         <t t-if="survey.scoring_type != 'no_scoring' and survey.scoring_success_min">

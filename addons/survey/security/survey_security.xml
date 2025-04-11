@@ -95,6 +95,17 @@
             <field name="perm_create" eval="1"/>
         </record>
 
+        <record id="survey_conditional_end_message_rule_survey_user" model="ir.rule">
+            <field name="name">Survey conditional end message: officer: unrestricted survey or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_conditional_end_message"/>
+            <field name="domain_force">[
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)
+            ]
+            </field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+        </record>
+
         <!-- SURVEY: USER_INPUT, USER_INPUT_LINE -->
         <record id="survey_user_input_rule_survey_manager" model="ir.rule">
             <field name="name">Survey user input: manager: all non specialized surveys</field>
