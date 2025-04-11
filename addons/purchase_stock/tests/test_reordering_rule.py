@@ -47,7 +47,7 @@ class TestReorderingRule(TransactionCase):
             - There should be one move supplier -> input and two moves input -> stock
         """
         warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        warehouse_1.write({'reception_steps': 'two_steps'})
+        warehouse_1.reception_steps = 'two_steps'
         warehouse_2 = self.env['stock.warehouse'].create({'name': 'WH 2', 'code': 'WH2', 'company_id': self.env.company.id, 'partner_id': self.env.company.partner_id.id, 'reception_steps': 'one_step'})
 
         # Create and set specific buyer for partner
@@ -458,7 +458,7 @@ class TestReorderingRule(TransactionCase):
             'name': 'Tintin'
         })
         for wh in self.env['stock.warehouse'].search([]):
-            wh.write({'reception_steps': 'two_steps'})
+            wh.reception_steps = 'two_steps'
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         route_mto = self.env.ref('stock.route_warehouse0_mto')
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
 
@@ -9,25 +10,28 @@ class TestReturnPicking(TestStockCommon):
         StockReturnObj = self.env['stock.return.picking']
 
         picking_out = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
         move_1 = self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,
             'product_uom': self.uom_unit.id,
             'picking_id': picking_out.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
         move_2 = self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 1,
             'product_uom': self.uom_dozen.id,
             'picking_id': picking_out.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
         picking_out.action_confirm()
         picking_out.action_assign()
         move_1.quantity = 2
@@ -54,9 +58,6 @@ class TestReturnPicking(TestStockCommon):
         """
             Test returns of pickings with serial tracked products put in packs
         """
-        wh_stock = self.env['stock.location'].browse(self.stock_location)
-        customer_location = self.env['stock.location'].browse(self.customer_location)
-
         product_serial = self.env['product.product'].create({
             'name': 'Tracked by SN',
             'is_storable': True,
@@ -66,12 +67,12 @@ class TestReturnPicking(TestStockCommon):
             'name': 'serial1',
             'product_id': product_serial.id,
         })
-        self.env['stock.quant']._update_available_quantity(product_serial, wh_stock, 1.0, lot_id=serial1)
+        self.env['stock.quant']._update_available_quantity(product_serial, self.stock_location, 1.0, lot_id=serial1)
 
         picking = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
             'name': product_serial.name,
@@ -79,8 +80,8 @@ class TestReturnPicking(TestStockCommon):
             'product_uom_qty': 1,
             'product_uom': self.uom_unit.id,
             'picking_id': picking.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })
 
         picking.action_confirm()
@@ -89,7 +90,7 @@ class TestReturnPicking(TestStockCommon):
         picking.action_put_in_pack()
         picking.move_ids.picked = True
         picking.button_validate()
-        customer_stock = self.env['stock.quant']._gather(product_serial, customer_location, lot_id=serial1)
+        customer_stock = self.env['stock.quant']._gather(product_serial, self.customer_location, lot_id=serial1)
         self.assertEqual(len(customer_stock), 1)
         self.assertEqual(customer_stock.quantity, 1)
 
@@ -106,27 +107,26 @@ class TestReturnPicking(TestStockCommon):
         picking2.move_ids.move_line_ids.quantity = 1
         picking2.move_ids.picked = True
         picking2.button_validate()
-        self.assertFalse(self.env['stock.quant']._gather(product_serial, customer_location, lot_id=serial1))
+        self.assertFalse(self.env['stock.quant']._gather(product_serial, self.customer_location, lot_id=serial1))
 
     def test_return_location(self):
         """ test default return location are taken into account
         """
         # Make a delivery
-        wh_stock = self.env['stock.location'].browse(self.stock_location)
-        self.env['stock.quant']._update_available_quantity(self.productA, wh_stock, 100)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100)
 
         delivery_picking = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })
         out_move = self.MoveObj.create({
             'name': "OUT move",
             'product_id':self.productA.id,
             'product_uom_qty': 1,
             'picking_id': delivery_picking.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })
         out_move.quantity = 1
         delivery_picking.button_validate()
@@ -144,17 +144,17 @@ class TestReturnPicking(TestStockCommon):
         """
         partner = self.env['res.partner'].create({'name': 'Jean'})
         receipt = self.env['stock.picking'].create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'partner_id': partner.id,
-            'move_ids': [(0, 0, {
+            'move_ids': [Command.create({
                 'name': self.productA.name,
                 'product_id': self.productA.id,
                 'product_uom_qty': 1,
                 'product_uom': self.uom_unit.id,
-                'location_id': self.supplier_location,
-                'location_dest_id': self.stock_location,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
             })],
         })
         receipt.button_validate()
@@ -182,14 +182,14 @@ class TestReturnPicking(TestStockCommon):
         })
         # Create a stock picking with moves
         original_picking = self.PickingObj.create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
-            'move_ids': [(0, 0, {
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
                 'name': product_serial.name,
                 'product_id': product_serial.id,
-                'location_id': self.supplier_location,
-                'location_dest_id': self.stock_location,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
                 'product_uom_qty': 10,
                 'product_uom': self.uom_unit.id,
             })],
@@ -218,15 +218,15 @@ class TestReturnPicking(TestStockCommon):
 
         # Original: one return (return picking), type in, 10 items
         self.assertEqual(original_picking.return_count, 1)
-        self.assertEqual(original_picking.picking_type_id.id, self.picking_type_in)
+        self.assertEqual(original_picking.picking_type_id, self.picking_type_in)
         self.assertEqual(len(original_picking.move_line_ids), 10)
 
         # Return: one return (exchange picking), type out, 1 item
         self.assertEqual(return_picking.return_count, 1)
-        self.assertEqual(return_picking.picking_type_id.id, self.picking_type_out)
+        self.assertEqual(return_picking.picking_type_id, self.picking_type_out)
         self.assertEqual(len(return_picking.move_line_ids), 1)
 
         # Exchange: no returns, type in, 1 item
         self.assertEqual(exchange_picking.return_count, 0)
-        self.assertEqual(exchange_picking.picking_type_id.id, self.picking_type_in)
+        self.assertEqual(exchange_picking.picking_type_id, self.picking_type_in)
         self.assertEqual(len(exchange_picking.move_line_ids), 1)

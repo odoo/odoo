@@ -18,7 +18,7 @@ class TestMultistepManufacturing(TestMrpCommon):
         # Required for `product_id` to be visible in the view
         cls.env.user.group_ids += cls.env.ref('product.group_product_variant')
 
-        cls.env.ref('stock.route_warehouse0_mto').active = True
+        cls.route_mto.active = True
         cls.MrpProduction = cls.env['mrp.production']
         # Create warehouse
         warehouse_form = Form(cls.env['stock.warehouse'])
