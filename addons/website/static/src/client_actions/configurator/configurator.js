@@ -243,7 +243,7 @@ class PaletteSelectionScreen extends Component {
      * @param {Event} ev
      */
     async removeLogo(ev) {
-        ev.stopPropagation();
+        ev?.stopPropagation();
         // Permit to trigger onChange even with the same file.
         this.logoInputRef.el.value = "";
         if (this.state.logoAttachmentId) {
@@ -269,8 +269,25 @@ class PaletteSelectionScreen extends Component {
                 if (previousLogoAttachmentId) {
                     await this._removeAttachments([previousLogoAttachmentId]);
                 }
-                this.state.changeLogo(data, attachment.id);
-                this.updatePalettes();
+
+                try {
+                    this.state.changeLogo(data, attachment.id);
+                    this.updatePalettes();
+                } catch (e) {
+                    if (e.code === DOMException.QUOTA_EXCEEDED_ERR) {
+                        this.notification.add(
+                            _t("The uploaded image is too large. Please upload a smaller image or select one of the default color schemes."),
+                            {
+                                title: _t("Image too large"),
+                                type: "warning",
+                                sticky: true,
+                            }
+                        );
+                        this.removeLogo();
+                    } else {
+                        throw e;
+                    }
+                }
             } else {
                 this.notification.add(
                     attachment.error,
