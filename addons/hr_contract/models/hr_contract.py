@@ -179,7 +179,6 @@ class HrContract(models.Model):
 
     @api.model
     def update_state(self):
-        from_cron = 'from_cron' in self.env.context
         companies = self.env['res.company'].search([])
         contracts = self.env['hr.contract']
         work_permit_contracts = self.env['hr.contract']
@@ -222,10 +221,14 @@ class HrContract(models.Model):
                 )
             )
 
+        # cron: commit messages before starting
+        if self.env.context.get('cron_id'):
+            self.env.cr.commit()
+
         if contracts:
-            contracts._safe_write_for_cron({'kanban_state': 'blocked'}, from_cron)
+            contracts._safe_write_for_cron({'kanban_state': 'blocked'})
         if work_permit_contracts:
-            work_permit_contracts._safe_write_for_cron({'kanban_state': 'blocked'}, from_cron)
+            work_permit_contracts._safe_write_for_cron({'kanban_state': 'blocked'})
 
         contracts_to_close = self.search([
             ('state', '=', 'open'),
@@ -235,12 +238,12 @@ class HrContract(models.Model):
         ])
 
         if contracts_to_close:
-            contracts_to_close._safe_write_for_cron({'state': 'close'}, from_cron)
+            contracts_to_close._safe_write_for_cron({'state': 'close'})
 
         contracts_to_open = self.search([('state', '=', 'draft'), ('kanban_state', '=', 'done'), ('date_start', '<=', fields.Date.to_string(date.today())),])
 
         if contracts_to_open:
-            contracts_to_open._safe_write_for_cron({'state': 'open'}, from_cron)
+            contracts_to_open._safe_write_for_cron({'state': 'open'})
 
         contract_ids = self.search([('date_end', '=', False), ('state', '=', 'close'), ('employee_id', '!=', False)])
         # Ensure all closed contract followed by a new contract have a end date.
@@ -252,29 +255,26 @@ class HrContract(models.Model):
                 ('date_start', '>', contract.date_start)
             ], order="date_start asc", limit=1)
             if next_contract:
-                contract._safe_write_for_cron({'date_end': next_contract.date_start - relativedelta(days=1)}, from_cron)
+                contract._safe_write_for_cron({'date_end': next_contract.date_start - relativedelta(days=1)})
                 continue
             next_contract = self.search([
                 ('employee_id', '=', contract.employee_id.id),
                 ('date_start', '>', contract.date_start)
             ], order="date_start asc", limit=1)
             if next_contract:
-                contract._safe_write_for_cron({'date_end': next_contract.date_start - relativedelta(days=1)}, from_cron)
+                contract._safe_write_for_cron({'date_end': next_contract.date_start - relativedelta(days=1)})
 
         return True
 
-    def _safe_write_for_cron(self, vals, from_cron=False):
-        if from_cron:
-            auto_commit = not modules.module.current_test
+    def _safe_write_for_cron(self, vals):
+        if self.env.context.get('cron_id'):
             for contract in self:
                 try:
-                    with self.env.cr.savepoint():
-                        contract.write(vals)
+                    contract.write(vals)
+                    self.env.cr.commit()
                 except ValidationError as e:
-                    _logger.warning(e)
-                else:
-                    if auto_commit:
-                        self.env.cr.commit()
+                    self.env.cr.rollback()
+                    _logger.warning("%s write failed: %s", contract, e)
         else:
             self.write(vals)
 
