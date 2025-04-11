@@ -177,6 +177,17 @@ export class OrderSummary extends Component {
                 }
             } else if (numpadMode === "discount" && val !== "remove") {
                 this.pos.setDiscountFromUI(selectedLine, val);
+            } else if (
+                numpadMode === "price" &&
+                this.pos.qty_by_prices &&
+                this.pos.checkProductCategory()
+            ) {
+                if (selectedLine.combo_parent_id) {
+                    this.setLinePrice(selectedLine, val);
+                } else {
+                    const qty = val / selectedLine.get_unit_display_price();
+                    selectedLine.set_quantity(qty, true, true);
+                }
             } else if (numpadMode === "price" && val !== "remove") {
                 this.setLinePrice(selectedLine, val);
             }
