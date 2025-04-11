@@ -9,7 +9,7 @@
                  t-att-title="tag.text"
                  t-on-click="(ev) => tag.onClick and tag.onClick(ev)" t-ref="{{tagEquals(tag, state.tagToUpdate) ? 'tagToUpdate' : `tag_${tag_index}`}}">
                 <span class="o_badge_text" t-att-title="tag.email"><t t-esc="tag.text"/></span>
-                <a t-if="!readonly &amp;&amp; tag.onDelete" t-on-click.stop.prevent="tag.onDelete" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
+                <a t-if="!readonly &amp;&amp; tag.onDelete" t-on-click.stop.prevent="tag.onDelete" href="#" class="fa fa-times o_delete ms-1 my-auto" title="Delete" aria-label="Delete"/>
             </div>
         </xpath>
     </t>
