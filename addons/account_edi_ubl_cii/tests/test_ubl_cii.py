@@ -31,11 +31,30 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         })
 
     def test_import_product(self):
+        products = self.env['product.product'].create([{
+            'name': 'XYZ',
+            'default_code': '1234',
+        }, {
+            'name': 'XYZ',
+            'default_code': '5678',
+        }, {
+            'name': 'XXX',
+            'default_code': '1111',
+            'barcode': '00001',
+        }, {
+            'name': 'YYY',
+            'default_code': '1111',
+            'barcode': '00002',
+        }])
         line_vals = [
            {'product_id': self.place_prdct.id, 'product_uom_id': self.uom_units.id},
            {'product_id': self.displace_prdct.id, 'product_uom_id': self.uom_units.id},
            {'product_id': self.displace_prdct.id, 'product_uom_id': self.uom_units.id},
-           {'product_id': self.displace_prdct.id, 'product_uom_id': self.uom_dozens.id}
+           {'product_id': self.displace_prdct.id, 'product_uom_id': self.uom_dozens.id},
+           {'product_id': products[0].id, 'product_uom_id': self.uom_units.id},
+           {'product_id': products[1].id, 'product_uom_id': self.uom_units.id},
+           {'product_id': products[2].id, 'product_uom_id': self.uom_units.id},
+           {'product_id': products[3].id, 'product_uom_id': self.uom_units.id},
         ]
         # To allow for the creation of Factur-X EDI the company must be either French or German
         company = self.company_data['company']
