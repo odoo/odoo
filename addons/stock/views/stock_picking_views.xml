@@ -430,6 +430,7 @@
         <record id="action_picking_tree_internal" model="ir.actions.act_window">
             <field name="name">Internal Transfers</field>
             <field name="res_model">stock.picking</field>
+            <field name="path">internal</field>
             <field name="view_mode">list,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'internal', 'search_default_internal': 1}</field>
