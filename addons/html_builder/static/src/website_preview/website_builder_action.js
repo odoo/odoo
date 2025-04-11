@@ -91,6 +91,7 @@ export class WebsiteBuilder extends Component {
         this.addSystrayItems();
         onWillDestroy(() => {
             this.websiteService.useMysterious = false;
+            this.websiteService.currentWebsiteId = null;
             registry.category("systray").remove("website.WebsiteSystrayItem");
         });
     }
