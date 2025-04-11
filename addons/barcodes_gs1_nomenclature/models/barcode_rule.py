@@ -67,3 +67,8 @@ class BarcodeRule(models.Model):
                     rule.name))
 
         super(BarcodeRule, (self - gs1_rules))._check_pattern()
+
+    @api.constrains('encoding')
+    def _check_gs1_encoding(self):
+        if any(rule.encoding == 'gs1-128' and not rule.is_gs1_nomenclature for rule in self):
+            raise ValidationError(_("GS1-128 encoding is only available for GS1 nomenclature."))
