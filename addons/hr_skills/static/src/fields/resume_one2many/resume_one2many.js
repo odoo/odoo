@@ -54,7 +54,7 @@ export class ResumeX2ManyField extends SkillsX2ManyField {
         ListRenderer: ResumeListRenderer,
     };
     getWizardTitleName() {
-        return _t("New Resume line");
+        return _t("New Resume Line");
     }
 }
 

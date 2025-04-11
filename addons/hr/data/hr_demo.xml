@@ -221,6 +221,11 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="color" eval="3"/>
         </record>
 
+        <record id="employee_category_7" model="hr.employee.category">
+            <field name="name">High Potential</field>
+            <field name="color" eval="8"/>
+        </record>
+
         <!--Employees-->
         <record id="employee_admin" model="hr.employee">
             <field name="private_phone">+1 555-555-5555</field>
@@ -336,7 +341,7 @@ If you have development competencies, we can propose you specific traineeships</
 
         <record id="employee_vad" model="hr.employee">
             <field name="name">Tina Williamson</field>
-            <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_7')])]"/>
             <field name="work_phone">(555)-694-7266</field>
             <field name="work_contact_id" ref="hr.work_contact_vad"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_vad-image.jpg"/>
@@ -609,7 +614,7 @@ If you have development competencies, we can propose you specific traineeships</
 
         <record id="employee_niv" model="hr.employee">
             <field name="name">Sharlene Rhodes</field>
-            <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_7')])]"/>
             <field name="work_phone">(555)-719-4182</field>
             <field name="work_contact_id" ref="hr.work_contact_niv"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_niv-image.jpg"/>
@@ -665,7 +670,7 @@ If you have development competencies, we can propose you specific traineeships</
 
         <record id="employee_chs" model="hr.employee">
             <field name="name">Jennie Fletcher</field>
-            <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_7')])]"/>
             <field name="work_phone">(555)-363-8229</field>
             <field name="work_contact_id" ref="hr.work_contact_chs"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_chs-image.jpg"/>

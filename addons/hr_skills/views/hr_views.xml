@@ -10,8 +10,10 @@
                 <field name="employee_skill_ids"/>
                 <field name="resume_line_ids" string="Resume" filter_domain="
                     ['|',
-                        ('resume_line_ids.name', 'ilike', self),
-                        ('resume_line_ids.description', 'ilike', self),
+                        ('version_ids.job_title', 'ilike', self),
+                        '|',
+                            ('resume_line_ids.name', 'ilike', self),
+                            ('resume_line_ids.description', 'ilike', self),
                     ]"/>
             </xpath>
         </field>
@@ -24,7 +26,13 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
                 <field name="employee_skill_ids"/>
-                <field name="resume_line_ids" string="Resume" filter_domain="['|', ('resume_line_ids.name', 'ilike', self), ('resume_line_ids.description', 'ilike', self)]"/>
+                <field name="resume_line_ids" string="Resume" filter_domain="
+                    ['|',
+                        ('version_ids.job_title', 'ilike', self),
+                        '|',
+                            ('resume_line_ids.name', 'ilike', self),
+                            ('resume_line_ids.description', 'ilike', self),
+                    ]"/>
             </xpath>
         </field>
     </record>
@@ -32,9 +40,11 @@
     <record id="resume_line_view_form" model="ir.ui.view">
         <field name="name">hr.resume.line.form</field>
         <field name="model">hr.resume.line</field>
+        <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Resume">
                 <sheet>
+                    <field name="line_type_id" widget="selection_badge"/>
                     <div class="oe_title">
                         <label for="name" string="Title"/>
                         <h1>
@@ -42,23 +52,47 @@
                         </h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="employee_id" invisible="1"/>
-                            <field name="line_type_id"/>
-                            <field name="display_type" required="1"/>
+                        <group invisible="not is_course">
+                            <field name="course_type" widget="radio" invisible="1"/>
+                            <field name="external_url" placeholder="e.g. https://duolingo.com/course/xyz"/>
                         </group>
-                        <group>
-                            <label for="date_start" string="Validity"/>
-                            <div class="o_row">
+                        <group id="resume_line_dates">
+                            <label id="date_start_label" for="date_start" string="Duration" invisible="is_course"/>
+                            <div class="o_row" invisible="is_course">
                                 <field name="date_start"/>
                                 <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
-                                <field name="date_end" placeholder="Never Expires"/>
+                                <field name="date_end" placeholder="Forever"/>
                             </div>
+                            <label for="date_start" string="Date" invisible="not is_course"/>
+                            <field name="date_start" nolabel="1" invisible="not is_course"/>
+                            <label for="duration" string="Duration" invisible="not is_course"/>
+                            <span invisible="not is_course">
+                                <field name="duration" style="width: 4ch;"/> hours
+                            </span>
+                            <field name="certificate_filename" invisible="1"/>
+                            <field name="certificate_file" filename="certificate_filename"/>
                         </group>
                     </group>
-                    <field name="description" placeholder="Description"/>
+                    <field name="resume_line_properties"/>
+                    <field name="description" placeholder="Description" class="o_resume_html"/>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+     <record id="resume_line_view_form_inherit" model="ir.ui.view">
+         <field name="name">hr.resume.line.inherit.form</field>
+        <field name="model">hr.resume.line</field>
+        <field name="priority">100</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="hr_skills.resume_line_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='course_type']" position="before">
+                <field name="employee_id" string="Employee" invisible="not is_course"/>
+            </xpath>
+            <xpath expr="//label[@id='date_start_label']" position="before">
+                <field name="employee_id" string="Employee" invisible="is_course"/>
+            </xpath>
         </field>
     </record>
 
@@ -73,6 +107,7 @@
                 <!-- This field uses a custom list view rendered by the 'resume_one2many' widget.
                     Adding fields in the list arch below makes them accessible to the widget
                 -->
+                <widget name="internal_resume_lines"/>
                 <field mode="list" nolabel="1" name="resume_line_ids" widget="resume_one2many">
                     <list>
                         <field name="line_type_id"/>
@@ -80,7 +115,9 @@
                         <field name="description"/>
                         <field name="date_start"/>
                         <field name="date_end"/>
-                        <field name="display_type" column_invisible="True"/>
+                        <field name="is_course"/>
+                        <field name="duration"/>
+                        <field name="external_url"/>
                     </list>
                 </field>
             </div>
@@ -136,6 +173,7 @@
                         <!-- This field uses a custom list view rendered by the 'resume_one2many' widget.
                             Adding fields in the list arch below makes them accessible to the widget
                         -->
+                        <widget name="internal_resume_lines"/>
                         <field mode="list" nolabel="1" name="resume_line_ids" widget="resume_one2many">
                             <list>
                                 <field name="line_type_id"/>
@@ -143,7 +181,9 @@
                                 <field name="description"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
-                                <field name="display_type" column_invisible="True"/>
+                                <field name="is_course"/>
+                                <field name="duration"/>
+                                <field name="external_url"/>
                             </list>
                         </field>
                     </div>
@@ -198,10 +238,11 @@
                 <page name="skills_resume" string="Resume">
                     <div class="row">
                         <field name="employee_id" invisible="1"/> <!-- For skills_one2many and resume_one2many -->
-                        <div class="o_hr_skills_group o_group_resume col-lg-6 d-flex margin-left: 0.1em">
+                        <div class="o_hr_skills_group o_group_resume col-lg-6 d-flex flex-column margin-left: 0.1em">
                             <!-- This field uses a custom list view rendered by the 'resume_one2many' widget.
                                 Adding fields in the list arch below makes them accessible to the widget
                             -->
+                            <widget name="internal_resume_lines"/>
                             <field mode="list" nolabel="1" name="resume_line_ids" widget="resume_one2many" readonly="not can_edit">
                                 <list>
                                     <field name="line_type_id"/>
@@ -209,7 +250,9 @@
                                     <field name="description"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
-                                    <field name="display_type" invisible="1"/>
+                                    <field name="is_course"/>
+                                    <field name="duration"/>
+                                    <field name="external_url"/>
                                 </list>
                             </field>
                         </div>
@@ -251,21 +294,108 @@
         </field>
     </record>
 
+    <!-- hr_resume_line views -->
+
     <record id="hr_resume_line_type_tree_view" model="ir.ui.view">
         <field name="name">hr.resume.line.type.list.view</field>
         <field name="model">hr.resume.line.type</field>
         <field name="arch" type="xml">
-            <list name="Resume Line Types" editable="bottom">
+            <list name="Resume Sections" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="is_course" string="Course?"/>
             </list>
         </field>
     </record>
 
     <record id="hr_resume_type_action" model="ir.actions.act_window">
-        <field name="name">Resume Line Types</field>
+        <field name="name">Resume Sections</field>
         <field name="res_model">hr.resume.line.type</field>
         <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hr_resume_line_list_view" model="ir.ui.view">
+        <field name="name">hr.resume.line.list.view</field>
+        <field name="model">hr.resume.line</field>
+        <field name="arch" type="xml">
+            <list name="Resume Lines" editable="bottom" multi_edit="1">
+                <field name="employee_id"/>
+                <field name="name" string="Training Title"/>
+                <field name="date_start" string="Date"/>
+                <field name="course_type" string="Type" column_invisible="1"/>
+                <field name="line_type_id" string="Resume Section" optional="show" required="1" domain="[('is_course', '=', True)]"/>
+                <field name="certificate_filename" column_invisible="1"/>
+                <field name="certificate_file" filename="certificate_filename" widget="binary"/>
+                <field name="duration" string="Number of Hours" optional="hide"/>
+                <field name="external_url" optional="hide" column_invisible="1"/>
+                <field name="description" optional="hide"/>
+                <field name="resume_line_properties" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_resume_line_kanban_view" model="ir.ui.view">
+        <field name="name">hr.resume.line.kanban.view</field>
+        <field name="model">hr.resume.line</field>
+        <field name="arch" type="xml">
+            <kanban class="o_hr_employee_kanban">
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <main class="ms-2">
+                            <div class="d-flex mb-2">
+                                <field name="name" class="fw-bolder fs-5 w-100"/>
+                                <div class="flex-shrink-1 text-end align-self-baseline" style="min-width: fit-content;">
+                                    <field name="course_type" widget="badge"/>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <div class="d-flex w-100">
+                                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                                    <field name="employee_id" class="ms-1"/>
+                                </div>
+                                <field name="date_start" class="flex-shrink-1 text-end" style="min-width: fit-content;"/>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_resume_line_calendar_view" model="ir.ui.view">
+        <field name="name">hr.resume.line.calendar.view</field>
+        <field name="model">hr.resume.line</field>
+        <field name="arch" type="xml">
+            <calendar date_start="date_start" mode="year" color="color">
+                <field name="course_type" filters="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_resume_lines_filter" model="ir.ui.view">
+        <field name="name">hr.resume.line.search</field>
+        <field name="model">hr.resume.line</field>
+        <field name="arch" type="xml">
+            <search string="Resume Lines">
+                <searchpanel view_types="list,kanban">
+                    <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                    <field name="department_id" icon="fa-users" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_resume_lines_training_action" model="ir.actions.act_window">
+        <field name="name">Training Attendances</field>
+        <field name="res_model">hr.resume.line</field>
+        <field name="view_mode">list,kanban,form,calendar</field>
+        <field name="domain">[('line_type_id.is_course', '=', True)]</field>
+        <field name="search_view_id" ref="view_resume_lines_filter"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': False}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': False}),
+            (0, 0, {'view_mode': 'calendar', 'view_id': False}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hr_skills.resume_line_view_form_inherit')})]"/>
     </record>
 
     <menuitem
@@ -277,7 +407,7 @@
 
     <menuitem
         id="hr_resume_line_type_menu"
-        name="Line Types"
+        name="Sections"
         action="hr_resume_type_action"
         parent="hr_skills.menu_human_resources_configuration_resume"
         sequence="3"
@@ -554,4 +684,11 @@
             parent="hr_skill_learning_menu"
             action="action_hr_employee_skill_certification"
             sequence="94"/>
+
+        <menuitem
+            id="menu_learnings_training_attendances"
+            name="Training Attendances"
+            action="hr_resume_lines_training_action"
+            parent="hr_skill_learning_menu"
+            sequence="95"/>
 </odoo>
