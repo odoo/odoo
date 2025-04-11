@@ -25,6 +25,7 @@ class SaleOrder(models.Model):
     show_create_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user')
     show_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user')
     show_task_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user')
+    show_milestone_button = fields.Boolean(compute='_compute_show_milestone_button', store=False, groups='project.group_project_milestone')
 
     def _compute_milestone_count(self):
         read_group = self.env['project.milestone']._read_group(
@@ -51,6 +52,11 @@ class SaleOrder(models.Model):
             order.show_project_button = order.id in show_button_ids and order.project_count
             order.show_task_button = order.show_project_button or order.tasks_count
             order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count and order.order_line.product_template_id.filtered(lambda x: x.service_policy in ['delivered_timesheet', 'delivered_milestones'])
+
+    def _compute_show_milestone_button(self):
+        is_project_user = self.env.user.has_group('project.group_project_user')
+        for so in self:
+            so.show_milestone_button = is_project_user and so.is_product_milestone and so.project_ids and so.state != 'draft'
 
     def _search_tasks_ids(self, operator, value):
         if operator in NEGATIVE_TERM_OPERATORS:
