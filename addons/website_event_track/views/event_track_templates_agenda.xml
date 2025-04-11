@@ -175,51 +175,48 @@
 
 <template id="agenda_main_track" name="Track Agenda: Track">
     <div class="d-flex flex-column h-100" t-att-data-publish="track.website_published and 'on' or 'off'">
-        <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
-            <div class="o_we_agenda_card_title mb-1">
-                <t t-if="track.website_published or is_event_user">
-                    <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset fw-bold stretched-link">
+        <div class="o_we_agenda_card d-flex flex-column h-100">
+            <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
+                <div class="o_we_agenda_card_title mb-1">
+                    <a t-if="not (is_html_empty(track.description) and is_html_empty(track.partner_biography)) and (track.website_published or is_event_user)"
+                       t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset fw-bold stretched-link">
                         <t t-out="track.name"/>
                     </a>
-                </t>
-                <t t-else="">
-                    <span class="fw-bold">
-                        <t t-out="track.name"/>
-                    </span>
-                </t>
+                    <span t-else="" class="fw-bold" t-out="track.name"/>
+                </div>
+                <div class="opacity-75 text-center" t-if="track.partner_tag_line">
+                    <small t-out="track.partner_tag_line"/>
+                </div>
             </div>
-            <div class="opacity-75 text-center" t-if="track.partner_tag_line">
-                <small t-out="track.partner_tag_line"/>
-            </div>
-        </div>
-        <div class="o_we_agenda_card_filter_badges d-flex justify-content-center align-items-end gap-1 pb-1">
-            <div>
-                <t t-foreach="track.tag_ids" t-as="tag">
-                    <span t-if="tag.color" t-att-title="tag.name"
-                        t-attf-class="me-1 mt-1 badge o_badge_clickable #{'o_color_'+str(tag.color)}" t-out="tag.name"
-                        onclick="
-                        var value = this.title;
-                        var target = $('#event_track_search');
-                        if (target.val() == value) { target.val(''); } else { target.val(value); }
-                        target.trigger('input');
-                        "
-                    />
-                </t>
-            </div>
-            <div class="d-flex justify-content-end flex-wrap-reverse ms-auto align-items-center gap-1 o_weagenda_track_badges">
-                <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
-                    class="mx-1 badge text-bg-danger rounded-1">Live
-                </small>
-                <small t-if="not track.website_published and is_event_user"
-                    title="Unpublished"
-                    class="ms-1 mt-1 mt-md-0 badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</small>
-                <span t-if="option_track_wishlist">
-                    <t t-call="website_event_track.track_widget_reminder">
-                        <t t-set="reminder_light" t-value="False"/>
-                        <t t-set="reminder_small" t-value="True"/>
-                        <t t-set="light_theme" t-value="False"/>
+            <div class="o_we_agenda_card_filter_badges d-flex justify-content-center align-items-end gap-1 pb-1">
+                <div>
+                    <t t-foreach="track.tag_ids" t-as="tag">
+                        <span t-if="tag.color" t-att-title="tag.name"
+                            t-attf-class="me-1 mt-1 badge o_badge_clickable #{'o_color_'+str(tag.color)}" t-out="tag.name"
+                            onclick="
+                            var value = this.title;
+                            var target = $('#event_track_search');
+                            if (target.val() == value) { target.val(''); } else { target.val(value); }
+                            target.trigger('input');
+                            "
+                        />
                     </t>
-                </span>
+                </div>
+                <div class="d-flex justify-content-end flex-wrap-reverse ms-auto align-items-center gap-1 o_weagenda_track_badges">
+                    <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
+                        class="mx-1 badge text-bg-danger rounded-1">Live
+                    </small>
+                    <small t-if="not track.website_published and is_event_user"
+                        title="Unpublished"
+                        class="ms-1 mt-1 mt-md-0 badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</small>
+                    <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))">
+                        <t t-call="website_event_track.track_widget_reminder">
+                            <t t-set="reminder_light" t-value="False"/>
+                            <t t-set="reminder_small" t-value="True"/>
+                            <t t-set="light_theme" t-value="False"/>
+                        </t>
+                    </span>
+                </div>
             </div>
         </div>
     </div>

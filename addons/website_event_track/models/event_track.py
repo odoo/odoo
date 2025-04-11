@@ -2,14 +2,31 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from pytz import utc
+import logging
+
+from markupsafe import Markup
 from random import randint
+from textwrap import shorten
+
+from pytz import timezone, utc
+import werkzeug.urls
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools.mail import email_normalize, is_html_empty
+from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
 from odoo.tools.translate import _, html_translate
+
+_logger = logging.getLogger(__name__)
+
+try:
+    import vobject
+except ImportError:
+    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
+    vobject = None
+
+GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
+YAHOO_CALENDAR_URL = 'https://calendar.yahoo.com/?v=60&view=d&type=20&'
 
 
 class EventTrack(models.Model):
@@ -116,6 +133,7 @@ class EventTrack(models.Model):
         'Is Track Upcoming', compute='_compute_track_time_data')
     is_track_done = fields.Boolean(
         'Is Track Done', compute='_compute_track_time_data')
+    is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     track_start_remaining = fields.Integer(
         'Minutes before track starts', compute='_compute_track_time_data',
         help="Remaining time before track starts (seconds)")
@@ -415,6 +433,16 @@ class EventTrack(models.Model):
             else:
                 track.website_cta_start_remaining = 0
 
+    @api.depends('date', 'date_end', 'event_id')
+    def _compute_field_is_one_day(self):
+        for track in self:
+            # Need to localize because it could begin late and finish early in
+            # another timezone
+            track = track.with_context(tz=track.event_id.date_tz or 'UTC')
+            begin_tz = fields.Datetime.context_timestamp(track, track.date)
+            end_tz = fields.Datetime.context_timestamp(track, track.date_end)
+            track.is_one_day = (begin_tz.date() == end_tz.date())
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -596,6 +624,30 @@ class EventTrack(models.Model):
 
         return track_visitors
 
+    def _get_ics_file(self):
+        """ Return iCalendar file for the event track.
+            :return: a dict of .ics file content for each event track """
+        result = dict.fromkeys(self.ids, False)
+        if not vobject:
+            return result
+
+        for track in self:
+            cal = vobject.iCalendar()
+            cal_track = cal.add('vevent')
+
+            date_tz = track.event_id.date_tz
+            reminder_dates = track._get_track_calendar_reminder_dates()
+            cal_track.add('created').value = fields.Datetime.now().replace(tzinfo=timezone('UTC'))
+            cal_track.add('dtstart').value = reminder_dates['date_begin'].astimezone(timezone(date_tz))
+            cal_track.add('dtend').value = reminder_dates['date_end'].astimezone(timezone(date_tz))
+            cal_track.add('summary').value = track.name
+            cal_track.add('description').value = track._get_track_calendar_description()
+            if track.event_id.address_inline or track.location_id:
+                cal_track.add('location').value = ', '.join([track.event_id.address_inline, track.location_id.name or ''])
+
+            result[track.id] = cal.serialize().encode('utf-8')
+        return result
+
     def _get_track_suggestions(self, restrict_domain=None, limit=None):
         """ Returns the next tracks suggested after going to the current one
         given by self. Tracks always belong to the same event.
@@ -646,3 +698,67 @@ class EventTrack(models.Model):
         )
 
         return track_candidates[:limit]
+
+    def _get_track_calendar_description(self):
+        self.ensure_one()
+        return Markup("<a href='%(event_track_url)s'>%(name)s</a>\n%(short_description)s\n\n%(reminder_times_warning)s") % {
+            'event_track_url': werkzeug.urls.url_join(self.get_base_url(), self.website_url),
+            'name': self.name,
+            'short_description': shorten(html_to_inner_content(self.description), 1900),
+            'reminder_times_warning': self._get_track_calendar_reminder_times_warning(),
+        }
+
+    def _get_track_calendar_reminder_dates(self):
+        """ Get dates of the event if the track does not have any. A warning is
+        added in elements that display times of the event instead of those of
+        the track. This way, visitors can add a reminder and check later if the
+        track has been updated since the sending of the mail. """
+        return {
+            'date_begin': self.date or self.event_id.date_begin,
+            'date_end': self.date_end or self.event_id.date_end,
+        }
+
+    def _get_track_calendar_reminder_times_warning(self):
+        """ Generate a warning indicating that the times displayed correspond to those of
+        the event because the track does not have any, to avoid misunderstanding from visitors. """
+        return Markup('<strong><u>%(warning_title)s</u></strong>: %(warning_content)s') % {
+            'warning_title': _('Note'),
+            'warning_content': _(
+                'The start and end times of the talk were not specified when you asked to add them to your calendar, '
+                'therefore the times indicated in this reminder correspond to those of the event.'
+            )
+        } if not self.date else ''
+
+    def _get_track_calendar_urls(self):
+        date_tz = self.event_id.date_tz
+        reminder_dates = self._get_track_calendar_reminder_dates()
+        url_date_begin = reminder_dates['date_begin'].astimezone(timezone(date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_end = reminder_dates['date_end'].astimezone(timezone(date_tz)).strftime('%Y%m%dT%H%M%S')
+
+        if self.event_id.address_inline or self.location_id:
+            location = ', '.join([self.event_id.sudo().address_inline, self.location_id.sudo().name or ''])
+        else:
+            location = ''
+
+        google_params = {
+            'action': 'TEMPLATE',
+            'text': f'{self.event_id.name}: {self.name}',
+            'dates': f'{url_date_begin}/{url_date_end}',
+            'ctz': self.event_id.date_tz,
+            'details': self._get_track_calendar_description(),
+            'location': location,
+        }
+
+        yahoo_params = {
+            'title':  f'{self.event_id.name}: {self.name}',
+            'in_loc': location,
+            'st': url_date_begin,
+            'et': url_date_end,
+            'desc': shorten(html_to_inner_content(self.description), 1900) + f'\n\n{html_to_inner_content(self._get_track_calendar_reminder_times_warning())}'
+        }
+
+        return {
+            'google_url': GOOGLE_CALENDAR_URL + werkzeug.urls.url_encode(google_params),
+            'iCal_url': f'{self.get_base_url()}/event/{self.event_id.id}/track/{self.id}/ics',
+            'yahoo_url': YAHOO_CALENDAR_URL + werkzeug.urls.url_encode(yahoo_params)
+        }
