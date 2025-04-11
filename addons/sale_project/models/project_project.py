@@ -325,21 +325,14 @@ class ProjectProject(models.Model):
             ['move_id'],
         )
         invoice_ids = move_lines.move_id.ids
-        action = {
-            'name': _('Invoices'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'views': [[False, 'list'], [False, 'form'], [False, 'kanban']],
-            'domain': [('id', 'in', invoice_ids)],
-            'context': {
-                'default_move_type': 'out_invoice',
-                'default_partner_id': self.partner_id.id,
-                'project_id': self.id
-            },
-            'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" %
-            (_("Create a customer invoice"),
-                _("Create invoices, register payments and keep track of the discussions with your customers."))
+        action = self.env["ir.actions.act_window"]._for_xml_id("account.action_move_out_invoice")
+        action["domain"] = [("id", "in", invoice_ids)]
+        context = {
+            "default_move_type": "out_invoice",
+            "default_partner_id": self.partner_id.id,
+            "project_id": self.id,
         }
+        action["context"] = context
         if len(invoice_ids) == 1 and not self.env.context.get('from_embedded_action', False):
             action['views'] = [[False, 'form']]
             action['res_id'] = invoice_ids[0]
@@ -485,20 +478,12 @@ class ProjectProject(models.Model):
             ['move_id'],
         )
         vendor_bill_ids = move_lines.move_id.ids
-        action_window = {
-            'name': _('Vendor Bills'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'views': [[False, 'list'], [False, 'form'], [False, 'kanban']],
-            'domain': [('id', 'in', vendor_bill_ids)],
-            'context': {
-                'default_move_type': 'in_invoice',
-                'project_id': self.id,
-            },
-            'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" % (
-                _("Create a vendor bill"),
-                _("Create invoices, register payments and keep track of the discussions with your vendors."),
-            ),
+        action_window = self.env["ir.actions.act_window"]._for_xml_id("account.action_move_in_invoice")
+        action_window["display_name"] = _("Vendor Bills")
+        action_window["domain"] = [("id", "in", vendor_bill_ids)]
+        action_window["context"] = {
+            **ast.literal_eval(action_window["context"]),
+            "project_id": self.id,
         }
         if not self.env.context.get('from_embedded_action') and len(vendor_bill_ids) == 1:
             action_window['views'] = [[False, 'form']]
