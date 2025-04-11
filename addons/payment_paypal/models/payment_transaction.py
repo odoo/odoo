@@ -55,8 +55,17 @@ class PaymentTransaction(models.Model):
             'item_number': self.reference,
             'last_name': partner_last_name,
             'lc': self.partner_lang,
+<<<<<<< d776484cdee9abe6bef34b98aa36db65646cff28
             'no_shipping': '1',  # Do not prompt for a delivery address.
             'notify_url': urls.url_join(base_url, PaypalController._webhook_url),
+||||||| 736bf47d670acd53736b67782bf64a2b330b0bcb
+            'no_shipping': '1',  # Do not prompt for a delivery address.
+            'notify_url': webhook_url if self.provider_id.paypal_use_ipn else None,
+=======
+            'no_shipping': '1',  # TODO: in 18.0, change `NO_SHIPPING` to `SET_PROVIDED_ADDRESS`
+            'address_override': '1',  # Ensure address cannot be altered
+            'notify_url': webhook_url if self.provider_id.paypal_use_ipn else None,
+>>>>>>> 6caeb87840ca1ba33df69c86e10baa76e71c2a99
             'return_url': urls.url_join(base_url, PaypalController._return_url),
             'state': self.partner_state_id.name,
             'zip_code': self.partner_zip,
