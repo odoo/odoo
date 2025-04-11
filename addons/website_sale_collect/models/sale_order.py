@@ -3,7 +3,6 @@
 import json
 
 from odoo import models
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
 
@@ -66,47 +65,13 @@ class SaleOrder(models.Model):
             return self.warehouse_id.id
         return super()._get_shop_warehouse_id()
 
-    def _check_cart_is_ready_to_be_paid(self):
-        """ Override of `website_sale` to check if all products are in stock in the selected
-        warehouse. """
-        if (
-            self._has_deliverable_products()
-            and self.carrier_id.delivery_type == 'in_store'
-            and not self._is_in_stock(self.warehouse_id.id)
-        ):
-            raise ValidationError(self.env._(
-                "Some products are not available in the selected store."
-            ))
-        return super()._check_cart_is_ready_to_be_paid()
+    def _build_stock_warning(self):
+        """Override of `website_sale_stock` if the selected delivery method is of type `in_store`"""
+        if self.carrier_id.delivery_type == 'in_store':
+            return self.env._("Some products are not available in the selected store.")
+        return super()._build_stock_warning()
 
     # === TOOLING ===#
-
-    def _is_in_stock(self, wh_id):
-        """ Check whether all storable products of the cart are in stock in the given warehouse.
-
-        :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
-        :return: Whether all storable products are in stock.
-        :rtype: bool
-        """
-        return not self._get_unavailable_order_lines(wh_id)
-
-    def _get_unavailable_order_lines(self, wh_id):
-        """ Return the order lines with unavailable products for the given warehouse.
-
-        :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
-        :return: The order lines with unavailable products.
-        :rtype: sale.order.line
-        """
-        unavailable_order_lines = self.env['sale.order.line']
-        for ol in self.order_line:
-            if ol.is_storable:
-                product = ol.product_id
-                cart_qty = self._get_cart_qty(product.id)
-                free_qty = product.with_context(warehouse_id=wh_id).free_qty
-                if cart_qty > free_qty:
-                    ol._set_shop_warning_stock(cart_qty, max(free_qty, 0))
-                    unavailable_order_lines |= ol
-        return unavailable_order_lines
 
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         """ Override of `website_sale_stock` to skip the verification when click and collect

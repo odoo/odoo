@@ -97,3 +97,19 @@ class DeliveryCarrier(models.Model):
             'error_message': False,
             'warning_message': False,
         }
+
+    def _has_stock_for_order(self, order):
+        """Does the delivery method have stock available to fulfill the order.
+
+        The source warehouse(s) from which goods are taken are different from the website for
+        in-store deliveries.
+
+        :rtype: bool
+        """
+        self.ensure_one()
+        if not order._has_deliverable_products():
+            return True
+
+        if self.delivery_type == 'in_store':
+            return any(order._is_in_stock(wh_id) for wh_id in self.warehouse_ids.ids)
+        return order._is_in_stock(order.website_id.warehouse_id.id)

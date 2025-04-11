@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
@@ -65,8 +64,7 @@ class TestSaleOrder(ClickAndCollectCommon):
             'product_uom_qty': 5.0,
         })])
         cart.warehouse_id = self.warehouse
-        with self.assertRaises(ValidationError):
-            cart._check_cart_is_ready_to_be_paid()
+        self.assertFalse(cart._is_cart_ready_to_be_paid())
 
     def test_product_in_stock_is_available(self):
         cart = self._create_in_store_delivery_order(

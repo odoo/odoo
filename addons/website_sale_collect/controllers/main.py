@@ -74,7 +74,7 @@ class WebsiteSaleCollect(WebsiteSale):
                 ))
             else:
                 selected_wh_id = order.pickup_location_data['id']
-                if not order._is_in_stock(selected_wh_id):
+                if not order._is_in_stock(selected_wh_id, update_shop_warning=True):
                     errors.append((
                         _("Sorry, we are unable to ship your order."),
                         _("Some products are not available in the selected store."),

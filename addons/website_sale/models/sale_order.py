@@ -7,7 +7,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.http import request
 from odoo.osv import expression
@@ -772,22 +772,40 @@ class SaleOrder(models.Model):
             self.shop_warning = ''
         return warn
 
-    def _is_cart_ready(self):
-        """ Whether the cart is valid and can be confirmed (and paid for)
+    def _is_cart_ready_for_checkout(self):
+        """Hook to check that the cart is ready to go to checkout from the cart page.
+
+        This method is also meant to set the `shop_warning` with any relevent message that can help
+        the customer to get his cart to go through.
 
         :rtype: bool
         """
         return True
 
-    def _check_cart_is_ready_to_be_paid(self):
-        """ Whether the cart is valid and the user can proceed to the payment
+    def _is_cart_ready_to_confirm(self):
+        """Hook to check if the cart is ready to be confirmed and go to the payment step.
+
+        By default, the cart must have a delivery method if it contains deliverable products.
+
+        This method is also meant to set the `shop_warning` with any relevent message that can help
+        the customer to get his cart to go through.
 
         :rtype: bool
         """
-        if not self._is_cart_ready():
-            raise ValidationError(_(
-                "Your cart is not ready to be paid, please verify previous steps."
-            ))
-
         if not self.only_services and not self.carrier_id:
-            raise ValidationError(_("No shipping method is selected."))
+            self.shop_warning = self.env._("No shipping method is selected.")
+            return False
+        return True
+
+    def _is_cart_ready_to_be_paid(self):
+        """Hook to check that the cart is valid and ready to be paid for.
+
+        This method is also meant to set the `shop_warning` with any relevent message that can help
+        the customer to get his cart to go through.
+
+        :rtype: bool
+        """
+        return (
+            self._is_cart_ready_for_checkout()
+            and self._is_cart_ready_to_confirm()
+        )
