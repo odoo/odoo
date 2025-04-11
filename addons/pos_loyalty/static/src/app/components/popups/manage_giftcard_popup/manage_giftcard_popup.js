@@ -3,6 +3,8 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { serializeDate } from "@web/core/l10n/dates";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { _t } from "@web/core/l10n/translation";
 
 export class ManageGiftCardPopup extends Component {
     static template = "pos_loyalty.ManageGiftCardPopup";
@@ -21,6 +23,7 @@ export class ManageGiftCardPopup extends Component {
     };
 
     setup() {
+        this.pos = usePos();
         this.ui = useService("ui");
         this.state = useState({
             inputValue: this.props.startingValue,
@@ -31,7 +34,48 @@ export class ManageGiftCardPopup extends Component {
         });
         this.inputRef = useRef("input");
         this.amountInputRef = useRef("amountInput");
+        this.bufferedInput = "";
+        this.isBackendGiftCard = false;
         onMounted(this.onMounted);
+    }
+
+    async handleCodeInputEvents(event) {
+        const isEndCharacter = event.key?.match(/(Enter|Tab)/);
+        const isSpecialKey =
+            !["Control", "Alt"].includes(event.key) && (event.key?.length > 1 || event.metaKey);
+
+        if (isEndCharacter || event.type === "focusout") {
+            const [loyalty_card] = await this.pos.data.searchRead(
+                "loyalty.card",
+                [
+                    "&",
+                    ["program_type", "=", "gift_card"],
+                    ["code", "=", this.inputRef.el.value.trim()],
+                ],
+                []
+            );
+            if (!loyalty_card) {
+                return;
+            }
+            const linked_order_ids = await this.pos.data.call(
+                "loyalty.card",
+                "get_loyalty_card_order_ids",
+                [loyalty_card.id]
+            );
+            if (linked_order_ids.length) {
+                return this.pos.notification.add(_t("This Gift card has already been sold."), {
+                    type: "danger",
+                });
+            }
+
+            Object.assign(this.state, {
+                amountValue: loyalty_card.points?.toString(),
+                expirationDate: loyalty_card.expiration_date || false,
+            });
+            this.isBackendGiftCard = true;
+        } else if (!isSpecialKey) {
+            this.bufferedInput += event.key;
+        }
     }
 
     onMounted() {
@@ -50,7 +94,8 @@ export class ManageGiftCardPopup extends Component {
         this.props.getPayload(
             this.state.inputValue,
             parseFloat(this.state.amountValue),
-            this.state.expirationDate ? serializeDate(this.state.expirationDate) : false
+            this.state.expirationDate ? serializeDate(this.state.expirationDate) : false,
+            this.isBackendGiftCard
         );
         this.props.close();
     }
