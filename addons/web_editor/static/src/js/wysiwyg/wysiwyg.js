@@ -1604,7 +1604,7 @@ export class Wysiwyg extends Component {
         this.env.services.dialog.add(
             mode === 'prompt' ? ChatGPTPromptDialog : mode === 'translate' ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
             params,
-            { onClose: restore },
+            { onClose: () => restore() },
         );
     }
     /**
