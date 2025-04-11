@@ -263,6 +263,8 @@ class TestFrontend(TestFrontendCommon):
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour2')
+        orders = self.env['pos.order'].search([('pos_reference', '!=', '')], limit=2, order='id desc')
+        self.assertEqual(len(orders), 2)
 
     def test_07_split_bill_screen(self):
         # disable kitchen printer to avoid printing errors
