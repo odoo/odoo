@@ -1,3 +1,10 @@
+name: Mirror GitHub to GitLab
+
+on:
+  push:
+    branches:
+      - odoo_18.0_gitlab  # Trigger workflow on push to odoo_18.0_gitlab branch
+
 jobs:
   push_to_gitlab:
     runs-on: ubuntu-latest
@@ -9,7 +16,7 @@ jobs:
       - name: Fetch full history (unshallow)
         run: |
           git fetch --unshallow
-          
+
       - name: Set Git config
         run: |
           git config --global user.name "GitHub Actions"
