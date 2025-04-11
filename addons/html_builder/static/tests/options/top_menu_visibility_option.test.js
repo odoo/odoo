@@ -83,7 +83,7 @@ test("undo hidden and come back to regular", async () => {
         openEditor: true,
         beforeWrapwrapContent: `<input type="hidden" class="o_page_option_data" autocomplete="off" data-oe-model="ir.ui.view" data-oe-id="543" data-oe-field="arch" data-oe-xpath="/data/xpath[13]/t[1]/t[1]/input[1]" name="header_visible" value="True">`,
         headerContent: `
-            <header id="top" data-anchor="true" data-name="Header" class="">   
+            <header id="top" data-anchor="true" data-name="Header">   
                     Menu Content
             </header>`,
     });

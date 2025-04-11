@@ -332,7 +332,7 @@ test("applying option container button should wait for actions in progress", asy
 
     undo(editor);
     expect(editable).toHaveInnerHTML(
-        `<div class="test-options-target customAction o-paragraph">plop</div>`
+        `<div class="test-options-target o-paragraph customAction">plop</div>`
     );
 
     undo(editor);

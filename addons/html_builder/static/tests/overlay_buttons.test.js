@@ -292,7 +292,7 @@ test("Applying an overlay button action should wait for the actions in progress"
 
     undo(editor);
     expect(editable).toHaveInnerHTML(
-        `<div class="test-options-target customAction o-paragraph">plop</div>`
+        `<div class="test-options-target o-paragraph customAction">plop</div>`
     );
 
     undo(editor);
