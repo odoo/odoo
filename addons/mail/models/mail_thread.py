@@ -1194,6 +1194,18 @@ class MailThread(models.AbstractModel):
             if route is False:
                 return []
 
+        def _send_catchall_bounce_email(message_from):
+            partner = self._mail_find_partner_from_emails([message_from])[0]
+            partner_lang = partner.lang or self.env.user.lang
+            body = self.with_context(lang=partner_lang).env['ir.qweb']._render('mail.mail_bounce_catchall', {
+                'message': message,
+            })
+            self._routing_create_bounce_email(
+                email_from, body, message,
+                # add a reference with a tag, to be able to ignore response to this email
+                references=f'{message_id} {tools.generate_tracking_message_id("loop-detection-bounce-email")}',
+                reply_to=self.env.company.email)
+
         # 2. Handle new incoming email by checking aliases and applying their settings
         # prefetch catchall aliases as they are used several times
         catchall_aliases = self.env['mail.alias.domain'].search([]).mapped('catchall_email')
@@ -1206,14 +1218,7 @@ class MailThread(models.AbstractModel):
             if self._detect_write_to_catchall(message_dict):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce',
                              email_from, message_dict['to'], message_id)
-                body = self.env['ir.qweb']._render('mail.mail_bounce_catchall', {
-                    'message': message,
-                })
-                self._routing_create_bounce_email(
-                    email_from, body, message,
-                    # add a reference with a tag, to be able to ignore response to this email
-                    references=f'{message_id} {tools.generate_tracking_message_id("loop-detection-bounce-email")}',
-                    reply_to=self.env.company.email)
+                _send_catchall_bounce_email(message['From'])
                 return []
 
             dest_aliases = self.env['mail.alias'].search([
@@ -1255,14 +1260,7 @@ class MailThread(models.AbstractModel):
                 'Routing mail from %s to %s with Message-Id %s: write to catchall + other unroutable emails, bounce',
                 email_from, message_dict['to'], message_id
             )
-            body = self.env['ir.qweb']._render('mail.mail_bounce_catchall', {
-                'message': message,
-            })
-            self._routing_create_bounce_email(
-                email_from, body, message,
-                # add a reference with a tag, to be able to ignore response to this email
-                references=f'{message_id} {tools.generate_tracking_message_id("loop-detection-bounce-email")}',
-                reply_to=self.env.company.email)
+            _send_catchall_bounce_email(message['From'])
             return []
 
         # ValueError if no routes found and if no bounce occurred
