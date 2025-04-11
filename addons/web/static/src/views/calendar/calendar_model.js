@@ -18,13 +18,16 @@ import { Cache } from "@web/core/utils/cache";
 import { formatFloat } from "@web/core/utils/numbers";
 import { useDebounced } from "@web/core/utils/timing";
 import { computeAggregatedValue } from "@web/views/utils";
+import { pick } from "@web/core/utils/objects";
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
+    static services = ["notification"];
 
-    setup(params, services) {
+    setup(params, { notification }) {
         /** @protected */
         this.keepLast = new KeepLast();
+        this.notification = notification;
 
         const formViewFromConfig = (this.env.config.views || []).find((view) => view[1] === "form");
         const formViewIdFromConfig = formViewFromConfig ? formViewFromConfig[0] : false;
@@ -226,14 +229,36 @@ export class CalendarModel extends Model {
 
     async multiCreateRecords(dates, values, options = {}) {
         const records = [];
+
+        if (this.showMultiCreateTimeRange) {
+            if (!options.start || !options.end) {
+                this.notification.add(_t("Invalid time range"), {
+                    title: "User Error",
+                    type: "warning",
+                });
+                return;
+            }
+            const validKeys = ["hour", "minute", "second"];
+            if (
+                luxon.DateTime.fromObject(pick(options.start, ...validKeys)) >=
+                luxon.DateTime.fromObject(pick(options.end, ...validKeys))
+            ) {
+                this.notification.add(_t("Start time should be before end time"), {
+                    title: "User Error",
+                    type: "warning",
+                });
+                return;
+            }
+        }
+
         // we deliberately only use the values of the first filter section, to avoid combinatorial explosion
         const [section] = this.filterSections;
         for (const date of dates) {
             const initialRecordValue = {};
             if (this.showMultiCreateTimeRange) {
                 Object.assign(initialRecordValue, {
-                    start: date.plus(options.start?.toObject() || {}),
-                    end: date.plus(options.end?.toObject() || {}),
+                    start: date.plus(options.start.toObject()),
+                    end: date.plus(options.end.toObject()),
                 });
             } else {
                 Object.assign(initialRecordValue, {
