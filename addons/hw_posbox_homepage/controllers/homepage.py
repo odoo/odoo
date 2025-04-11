@@ -13,7 +13,7 @@ from itertools import groupby
 from pathlib import Path
 
 from odoo import http
-from odoo.addons.hw_drivers.tools import helpers, route, wifi
+from odoo.addons.hw_drivers.tools import helpers, iot_system, route, wifi
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
@@ -46,7 +46,7 @@ class IotBoxOwlHomePage(http.Controller):
         super().__init__()
         self.updating = threading.Lock()
 
-    @http.route('/', auth='none', type='http')
+    @http.route('/' if not iot_system.IS_IOT_TEST else '/hw_posbox_homepage', auth='none', type='http')
     def index(self):
         return http.Stream.from_path("hw_posbox_homepage/views/index.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
 
@@ -127,7 +127,7 @@ class IotBoxOwlHomePage(http.Controller):
     @http.route('/hw_posbox_homepage/data', auth="none", type="http", cors='*')
     def get_homepage_data(self):
         network_interfaces = []
-        if platform.system() == 'Linux':
+        if iot_system.IS_IOT_BOX:
             ssid = wifi.get_current() or wifi.get_access_point_ssid()
             for iface_id in netifaces.interfaces():
                 if iface_id == 'lo':
@@ -157,7 +157,7 @@ class IotBoxOwlHomePage(http.Controller):
         }
 
         six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
-        network_qr_codes = wifi.generate_network_qr_codes() if platform.system() == 'Linux' else {}
+        network_qr_codes = wifi.generate_network_qr_codes() if iot_system.IS_IOT_BOX else {}
         odoo_server_url = helpers.get_odoo_server_url() or ''
 
         return json.dumps({
@@ -172,7 +172,7 @@ class IotBoxOwlHomePage(http.Controller):
             'new_database_url': connection_manager.new_database_url,
             'pairing_code_expired': connection_manager.pairing_code_expired and not odoo_server_url,
             'six_terminal': six_terminal,
-            'is_access_point_up': platform.system() == 'Linux' and wifi.is_access_point(),
+            'is_access_point_up': iot_system.IS_IOT_BOX and wifi.is_access_point(),
             'network_interfaces': network_interfaces,
             'version': helpers.get_version(),
             'system': platform.system(),
@@ -221,9 +221,9 @@ class IotBoxOwlHomePage(http.Controller):
 
     @http.route('/hw_posbox_homepage/log_levels', auth="none", type="http", cors='*')
     def log_levels(self):
-        drivers_list = helpers.list_file_by_os(
+        drivers_list = helpers.list_file_by_iot_system(
             file_path('hw_drivers/iot_handlers/drivers'))
-        interfaces_list = helpers.list_file_by_os(
+        interfaces_list = helpers.list_file_by_iot_system(
             file_path('hw_drivers/iot_handlers/interfaces'))
         return json.dumps({
             'title': "Odoo's IoT Box - Handlers list",

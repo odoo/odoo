@@ -14,7 +14,6 @@ import netifaces
 from OpenSSL import crypto
 import os
 from pathlib import Path
-import platform
 import re
 import requests
 import secrets
@@ -22,6 +21,7 @@ import socket
 import subprocess
 from urllib.parse import parse_qs
 import urllib3.util
+import sys
 from threading import Thread, Lock
 import time
 import zipfile
@@ -29,11 +29,12 @@ import zipfile
 from odoo import http, release, service
 from odoo.tools.func import lazy_property
 from odoo.tools.misc import file_path
+from odoo.addons.hw_drivers.tools.iot_system import IOT_SYSTEM, IS_IOT_TEST, IS_IOT_BOX, IS_WINDOWS, IS_TESTING, IoTSystem
 
 lock = Lock()
 _logger = logging.getLogger(__name__)
 
-if platform.system() == 'Linux':
+if IS_IOT_BOX:
     import crypt
 
 
@@ -86,9 +87,9 @@ def toggleable(function):
     return devtools_wrapper
 
 
-if platform.system() == 'Windows':
+if IS_WINDOWS or IS_IOT_TEST:
     writable = contextlib.nullcontext
-elif platform.system() == 'Linux':
+elif IS_IOT_BOX:
     @contextlib.contextmanager
     def writable():
         with lock:
@@ -126,14 +127,14 @@ def require_db(function):
 
 
 def start_nginx_server():
-    if platform.system() == 'Windows':
+    if IS_WINDOWS:
         path_nginx = get_path_nginx()
         if path_nginx:
             os.chdir(path_nginx)
             _logger.info('Start Nginx server: %s\\nginx.exe', path_nginx)
             os.popen('nginx.exe')
             os.chdir('..\\server')
-    elif platform.system() == 'Linux':
+    elif IS_IOT_BOX:
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
 def check_certificate():
@@ -148,10 +149,12 @@ def check_certificate():
         return {"status": CertificateStatus.ERROR,
                 "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
 
-    if platform.system() == 'Windows':
+    if IS_WINDOWS:
         path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
-    elif platform.system() == 'Linux':
+    elif IS_IOT_BOX:
         path = Path('/etc/ssl/certs/nginx-cert.crt')
+    elif IS_IOT_TEST:
+        return {"status": CertificateStatus.ERROR, "error_code": "ERR_IOT_TEST_MODE"}
 
     if not path.exists():
         return {"status": CertificateStatus.NEED_REFRESH}
@@ -364,17 +367,19 @@ def get_commit_hash():
 
 @cache
 def get_version(detailed_version=False):
-    if platform.system() == 'Linux':
+    if IS_IOT_BOX:
         image_version = read_file_first_line('/var/odoo/iotbox_version')
-    elif platform.system() == 'Windows':
+    elif IS_WINDOWS:
         # updated manually when big changes are made to the windows virtual IoT
         image_version = '23.11'
+    elif IS_IOT_TEST:
+        image_version = '12.34'
 
-    version = platform.system()[0] + image_version
+    version = IOT_SYSTEM.value + image_version
     if detailed_version:
         # Note: on windows IoT, the `release.version` finish with the build date
         version += f"-{release.version}"
-        if platform.system() == 'Linux':
+        if IS_IOT_BOX:
             version += f'#{get_commit_hash()}'
 
     return version
@@ -404,19 +409,19 @@ def load_certificate():
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
     update_conf({'subject': result['subject_cn']})
-    if platform.system() == 'Linux':
+    if IS_IOT_BOX:
         with writable():
             Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
             Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
             Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
             Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
-    elif platform.system() == 'Windows':
+    elif IS_WINDOWS:
         Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
         Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
     time.sleep(3)
-    if platform.system() == 'Windows':
+    if IS_WINDOWS:
         odoo_restart(0)
-    elif platform.system() == 'Linux':
+    elif IS_IOT_BOX:
         start_nginx_server()
     return True
 
@@ -490,7 +495,7 @@ def load_iot_handlers():
     """
     for directory in ['interfaces', 'drivers']:
         path = file_path(f'hw_drivers/iot_handlers/{directory}')
-        filesList = list_file_by_os(path)
+        filesList = list_file_by_iot_system(path)
         for file in filesList:
             spec = util.spec_from_file_location(compute_iot_handlers_addon_name(directory, file), str(Path(path).joinpath(file)))
             if spec:
@@ -501,12 +506,14 @@ def load_iot_handlers():
                     _logger.exception('Unable to load handler file: %s', file)
     lazy_property.reset_all(http.root)
 
-def list_file_by_os(file_list):
-    platform_os = platform.system()
-    if platform_os == 'Linux':
-        return [x.name for x in Path(file_list).glob('*[!W].*')]
-    elif platform_os == 'Windows':
-        return [x.name for x in Path(file_list).glob('*[!L].*')]
+def list_file_by_iot_system(file_list):
+    suffix_to_ignore = IoTSystem.get_all_value_except_me()
+    iot_system_files = []
+    for filename in Path(file_list).glob('*.py'):
+        if filename.stem.endswith(suffix_to_ignore) or IS_IOT_TEST and not filename.stem.endswith(IOT_SYSTEM.value):
+            continue
+        iot_system_files.append(filename.name)
+    return iot_system_files
 
 
 def odoo_restart(delay=0):
@@ -514,6 +521,8 @@ def odoo_restart(delay=0):
     Restart Odoo service
     :param delay: Delay in seconds before restarting the service (Default: 0)
     """
+    if IS_TESTING:
+        _logger.error('Odoo restart should not be called in test mode! Make sure to mock it')
     IR = IoTRestart(delay)
     IR.start()
 
@@ -524,11 +533,7 @@ def path_file(*args):
 
     :return: The path to the file
     """
-    platform_os = platform.system()
-    if platform_os == 'Linux':
-        return Path("~pi", *args).expanduser()  # Path.home() returns odoo user's home instead of pi's
-    elif platform_os == 'Windows':
-        return Path().absolute().parent.joinpath('server', *args)
+    return Path(sys.path[0]).parent.joinpath(*args)
 
 
 def read_file_first_line(filename):
@@ -722,7 +727,7 @@ def _get_raspberry_pi_model():
 
     :rtype: int
     """
-    if platform.system() == 'Windows':
+    if IS_WINDOWS or IS_IOT_TEST:
         return -1
     with open('/proc/device-tree/model', 'r', encoding='utf-8') as model_file:
         match = re.search(r'Pi (\d)', model_file.read())
@@ -730,3 +735,8 @@ def _get_raspberry_pi_model():
 
 
 raspberry_pi_model = _get_raspberry_pi_model()
+
+if IS_TESTING:
+    # As the IoT loads before odoo it will try to reach the server (which did not start yet)
+    # To be more consistant, the server is unset on startup
+    disconnect_from_server()
