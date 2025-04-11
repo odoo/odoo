@@ -1,13 +1,9 @@
 import { fields } from "@mail/core/common/record";
-import { Store, storeService } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
-
-patch(storeService, {
-    dependencies: [...storeService.dependencies, "lazy_session"],
-});
 
 /** @type {import("models").Store} */
 const StorePatch = {
@@ -40,19 +36,6 @@ const StorePatch = {
             this.fetchStoreData("systray_get_activities"),
             super.initialize(...arguments),
         ]);
-    },
-    /**
-     * Override to group the first fetch with the lazy session fetch if it is not done yet.
-     */
-    _fetchStoreDataRpc(fetchParams) {
-        if (this.env.services.lazy_session.rpcDone()) {
-            return super._fetchStoreDataRpc(...arguments);
-        }
-        return new Promise((resolve, reject) =>
-            this.env.services.lazy_session.getValue("store_data", resolve, {
-                store_fetch_params: fetchParams,
-            })
-        );
     },
     onStarted() {
         super.onStarted(...arguments);

@@ -687,11 +687,7 @@ export function assertChatHub({ opened = [], folded = [] }) {
     expect(browser.localStorage.getItem(CHAT_HUB_KEY)).toEqual(toChatHubData(opened, folded));
 }
 
-export const STORE_FETCH_ROUTES = [
-    "/mail/action",
-    "/mail/data",
-    "/web/dataset/call_kw/ir.http/lazy_session_info",
-];
+export const STORE_FETCH_ROUTES = ["/mail/action", "/mail/data"];
 
 /**
  * Prepares listeners for the various ways a store fetch could be triggered. It is important to call
@@ -742,10 +738,6 @@ export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRp
     onRpc("/mail/data", async (request) => {
         const { params } = await request.json();
         return registerSteps(request, params.fetch_params);
-    });
-    onRpc("/web/dataset/call_kw/ir.http/lazy_session_info", async (request) => {
-        const { params } = await request.json();
-        return registerSteps(request, params.kwargs.store_fetch_params);
     });
 }
 
