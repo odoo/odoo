@@ -134,7 +134,7 @@
         'ms-3': !thread,
         'ps-2': !hasActionsMenu,
     }">
-        <img t-if="thread" class="rounded o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
+        <img t-if="thread" class="rounded-3 o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
         <ImStatus t-if="showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="thread.correspondent"/>
     </div>
     <t t-if="thread?.parent_channel_id">
