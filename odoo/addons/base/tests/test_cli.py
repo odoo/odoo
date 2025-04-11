@@ -5,38 +5,38 @@ import subprocess as sp
 import unittest
 from pathlib import Path
 
-import odoo.addons
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
 from odoo.tools import config, file_path
-from odoo.tests import BaseCase, Like
+from odoo.tests import BaseCase, Like, TransactionCase
+
+
+def run_args():
+    odoo_bin = Path(__file__).parents[4].resolve() / 'odoo-bin'
+    addons_path = config.format('addons_path', config['addons_path'])
+    return [sys.executable, odoo_bin, f'--addons-path={addons_path}']
+
+
+def run_command(*args, check=True, capture_output=True, text=True, **kwargs):
+    return sp.run(
+        run_args() + list(args or []),
+        capture_output=capture_output,
+        check=check,
+        text=text,
+        **kwargs,
+    )
+
+
+def popen_command(*args, capture_output=True, text=True, **kwargs):
+    if capture_output:
+        kwargs['stdout'] = kwargs['stderr'] = sp.PIPE
+    return sp.Popen(
+        run_args() + list(args or []),
+        text=text,
+        **kwargs,
+    )
 
 
 class TestCommand(BaseCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.odoo_bin = Path(__file__).parents[4].resolve() / 'odoo-bin'
-        addons_path = config.format('addons_path', config['addons_path'])
-        cls.run_args = (sys.executable, cls.odoo_bin, f'--addons-path={addons_path}')
-
-    def run_command(self, *args, check=True, capture_output=True, text=True, **kwargs):
-        return sp.run(
-            [*self.run_args, *args],
-            capture_output=capture_output,
-            check=check,
-            text=text,
-            **kwargs
-        )
-
-    def popen_command(self, *args, capture_output=True, text=True, **kwargs):
-        if capture_output:
-            kwargs['stdout'] = kwargs['stderr'] = sp.PIPE
-        return sp.Popen(
-            [*self.run_args, *args],
-            text=text,
-            **kwargs
-        )
 
     def test_docstring(self):
         load_internal_commands()
@@ -50,7 +50,7 @@ class TestCommand(BaseCase):
     def test_unknown_command(self):
         for name in ('bonbon', 'café'):
             with self.subTest(name):
-                command_output = self.run_command(name, check=False).stderr.strip()
+                command_output = run_command(name, check=False).stderr.strip()
                 self.assertEqual(
                     command_output, 
                     f"Unknown command '{name}'.\n"
@@ -75,7 +75,7 @@ class TestCommand(BaseCase):
         for option in ('help', '-h', '--help'):
             with self.subTest(option=option):
                 actual = set()
-                for line in self.run_command(option).stdout.splitlines():
+                for line in run_command(option).stdout.splitlines():
                     if line.startswith("   ") and (result := re.search(r'    (\w+)\s+(\w.*)$', line)):
                         actual.add(result.groups()[0])
                 self.assertGreaterEqual(actual, expected, msg="Help is not showing required commands")
@@ -85,15 +85,15 @@ class TestCommand(BaseCase):
         load_internal_commands()
         for name in commands:
             with self.subTest(command=name):
-                self.run_command(name, '--help', timeout=10)
+                run_command(name, '--help', timeout=10)
 
     def test_upgrade_code_example(self):
-        proc = self.run_command('upgrade_code', '--script', '17.5-00-example', '--dry-run')
+        proc = run_command('upgrade_code', '--script', '17.5-00-example', '--dry-run')
         self.assertFalse(proc.stdout, "there should be no file modified by the example script")
         self.assertFalse(proc.stderr)
 
     def test_upgrade_code_help(self):
-        proc = self.run_command('upgrade_code', '--help')
+        proc = run_command('upgrade_code', '--help')
         self.assertIn("usage: ", proc.stdout)
         self.assertIn("Rewrite the entire source code", proc.stdout)
         self.assertFalse(proc.stderr)
@@ -113,7 +113,7 @@ class TestCommand(BaseCase):
 
         main, child = os.openpty()
 
-        shell = self.popen_command(
+        shell = popen_command(
             'shell',
             '--shell-interface=python',
             '--shell-file', file_path('base/tests/shell_file.txt'),
@@ -133,4 +133,20 @@ class TestCommand(BaseCase):
             Like("openerp: <module 'odoo' ...>"),
             ">>> Hello from Python!",
             '>>> '
+        ])
+
+
+class TestCommandUsingDb(TransactionCase):
+
+    def cut_lines(self, buffer, n=5):
+        """ Cut before splitting """
+        max_line_len = 512
+        return buffer[:max_line_len * n].split('\n')[:n]
+
+    def test_i18n_export(self):
+        proc = run_command('i18n', 'export', '-d', self.env.cr.dbname, '-o', '-', 'base')
+        self.assertEqual(self.cut_lines(proc.stdout, n=3), [
+            '# Translation of Odoo Server.',
+            '# This file contains the translation of the following modules:',
+            '# \t* base'
         ])

@@ -370,7 +370,7 @@ def load_modules(
             if not update_module:
                 _logger.error("Database %s not initialized, you can force it with `-i base`", cr.dbname)
                 return
-            _logger.info("init db")
+            _logger.info("Initializing database %s", cr.dbname)
             modules_db.initialize(cr)
 
         if 'base' in upgrade_modules:

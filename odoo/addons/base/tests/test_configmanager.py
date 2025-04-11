@@ -137,12 +137,7 @@ class TestConfigManager(TransactionCase):
 
             # i18n
             'load_language': None,
-            'language': None,
-            'translate_out': '',
-            'translate_in': '',
             'overwrite_existing_translations': False,
-            'translate_modules': ['all'],
-
             # security
             'list_db': True,
 
@@ -253,11 +248,7 @@ class TestConfigManager(TransactionCase):
 
             # i18n
             'load_language': 'fr_FR',  # blacklist for save, read from the config file
-            'language': 'fr_FR',  # blacklist for save, read from the config file
-            'translate_out': '/tmp/translate_out.csv',  # blacklist for save, read from the config file
-            'translate_in': '/tmp/translate_in.csv',  # blacklist for save, read from the config file
             'overwrite_existing_translations': True,  # blacklist for save, read from the config file
-            'translate_modules': ['all'],  # ignored from the config file
 
             # security
             'list_db': False,
@@ -363,7 +354,6 @@ class TestConfigManager(TransactionCase):
             'test_file': '',
             'test_tags': None,
             'transient_age_limit': 1.0,
-            'translate_modules': ['all'],
             'unaccent': False,
             'update': {},
             'upgrade_path': [],
@@ -376,12 +366,9 @@ class TestConfigManager(TransactionCase):
             'dev_mode': [],
             'geoip_database': '/usr/share/GeoIP/GeoLite2-City.mmdb',
             'init': {},
-            'language': None,
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'save': False,
             'stop_after_init': False,
-            'translate_in': '',
-            'translate_out': '',
 
             # undocummented options
             'bin_path': '',
@@ -534,12 +521,7 @@ class TestConfigManager(TransactionCase):
 
             # i18n
             'load_language': 'fr_FR',
-            'language': 'fr_FR',
-            'translate_out': '/tmp/translate_out.csv',
-            'translate_in': '/tmp/translate_in.csv',
             'overwrite_existing_translations': True,
-            'translate_modules': ['hr', 'mail', 'stock'],
-
             # security
             'list_db': False,
 
@@ -570,26 +552,6 @@ class TestConfigManager(TransactionCase):
         self.parse_reset(['--syslog', '--logfile', 'logfile'])
         self.parse_reset(['-c', file_path('base/tests/config/sysloglogfile.conf')])
         error.assert_has_calls(2 * [call("the syslog and logfile options are exclusive")])
-
-    @patch('optparse.OptionParser.error')
-    def test_07_translate_in_requires_language_and_db_name(self, error):
-        self.parse_reset(['--i18n-import', '/path/to/file.csv'])
-        self.parse_reset(['--i18n-import', '/path/to/file.csv', '-d', 'dbname'])
-        self.parse_reset(['--i18n-import', '/path/to/file.csv', '-l', 'fr_FR'])
-        error.assert_has_calls(3 * [call("the i18n-import option cannot be used without the language (-l) and the database (-d) options")])
-
-    @patch('optparse.OptionParser.error')
-    def test_08_overwrite_existing_translations_requires_translate_in_or_update(self, error):
-        self.parse_reset(['--i18n-overwrite'])
-        error.assert_has_calls(1 * [call("the i18n-overwrite option cannot be used without the i18n-import option or without the update option")])
-        error.reset_mock()
-        self.parse_reset(['--i18n-overwrite', '-u', 'base'])
-        error.assert_not_called()
-
-    @patch('optparse.OptionParser.error')
-    def test_09_translate_out_requires_db_name(self, error):
-        self.parse_reset(['--i18n-export', '/path/to/file.csv'])
-        error.assert_has_calls(1 * [call("the i18n-export option cannot be used without the database (-d) option")])
 
     @patch('optparse.OptionParser.error')
     def test_10_init_update_incompatible_with_multidb(self, error):

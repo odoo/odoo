@@ -27,9 +27,21 @@ DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
 REQUIRED_SERVER_WIDE_MODULES = ['base', 'web']
 
 
+def chainmap_pop(chainmap, key):
+    """ Remove all keys == key, return first item found or None """
+    values = []
+    if key in list(chainmap):
+        for mapping in chainmap.maps:
+            if value := mapping.pop(key, None):
+                values.append(value)
+    return values[0] if values else None
+
+
 class _Empty:
     def __repr__(self):
         return ''
+
+
 EMPTY = _Empty()
 
 
@@ -372,16 +384,10 @@ class configmanager:
             )
         group.add_option('--load-language', dest="load_language", file_exportable=False,
                          help="specifies the languages for the translations you want to be loaded")
-        group.add_option('-l', "--language", dest="language", file_exportable=False,
-                         help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
-        group.add_option("--i18n-export", dest="translate_out", type='path', my_default='', file_exportable=False,
-                         help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
-        group.add_option("--i18n-import", dest="translate_in", type='path', my_default='', file_exportable=False,
-                         help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
         group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False, file_exportable=False,
-                         help="overwrites existing translation terms on updating a module or importing a CSV or a PO file.")
-        group.add_option("--modules", dest="translate_modules", type='comma', metavar="MODULE,...", my_default=['all'], file_loadable=False,
-                         help="specify modules to export. Use in combination with --i18n-export")
+                         help="overwrites existing translation terms on updating a module.")
+        group.add_option("--modules", dest="translate_modules", type='comma', metavar="MODULE,...", my_default=None, file_loadable=False,
+                         help=optparse.SUPPRESS_HELP)
         parser.add_option_group(group)
 
         # Security Group
@@ -556,7 +562,6 @@ class configmanager:
                     category=PendingDeprecationWarning,
                     stacklevel=2,
                 )
-        self._warn_deprecated_options()
         self._flush_log_and_warn_entries()
         modules.module.initialize_sys_path()
         return opt
@@ -613,20 +618,12 @@ class configmanager:
             self._cli_options['log_handler'] = [handler for comma in opt.log_handler for handler in comma]
 
     def _postprocess_options(self):
+        self._warn_deprecated_options()
         self._runtime_options.clear()
 
         # check for mutualy exclusive / dependant options
         if self.options['syslog'] and self.options['logfile']:
             self.parser.error("the syslog and logfile options are exclusive")
-
-        if self.options['translate_in'] and (not self.options['language'] or not self.options['db_name']):
-            self.parser.error("the i18n-import option cannot be used without the language (-l) and the database (-d) options")
-
-        if self.options['overwrite_existing_translations'] and not (self.options['translate_in'] or self['update']):
-            self.parser.error("the i18n-overwrite option cannot be used without the i18n-import option or without the update option")
-
-        if self.options['translate_out'] and (not self.options['db_name']):
-            self.parser.error("the i18n-export option cannot be used without the database (-d) option")
 
         if len(self['db_name']) > 1 and (self['init'] or self['update']):
             self.parser.error("Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")
@@ -648,7 +645,6 @@ class configmanager:
 
         self._runtime_options['init'] = dict.fromkeys(self['init'], True) or {}
         self._runtime_options['update'] = {'base': True} if 'all' in self['update'] else dict.fromkeys(self['update'], True)
-        self._runtime_options['translate_modules'] = sorted(self['translate_modules'])
 
         # TODO saas-22.1: remove support for the empty db_replica_host
         if self['db_replica_host'] == '':
@@ -695,10 +691,16 @@ class configmanager:
 
     def _warn_deprecated_options(self):
         for old_option_name, new_option_name in [
-            # there are no deprecated option at the moment
+            ('translate_modules', None),
         ]:
-            deprecated_value = self.options.pop(old_option_name, None)
-            if deprecated_value:
+            if deprecated_value := chainmap_pop(self.options, old_option_name):
+                if new_option_name is None:
+                    self._log(logging.INFO,
+                        f"The {old_option_name!r} option found in the "
+                        "configuration file is deprecated, it can "
+                        "safely be removed.")
+                    continue
+
                 default_value = self.casts[new_option_name].my_default
                 current_value = self.options[new_option_name]
 
