@@ -18,6 +18,8 @@ export class FileUploader extends Component {
         acceptedFileExtensions: { type: String, optional: true },
         slots: { type: Object, optional: true },
         showUploadingText: { type: Boolean, optional: true },
+        // See https://www.iana.org/assignments/media-types/media-types.xhtml
+        allowedMIMETypes: { type: String, optional: true },
     };
     static defaultProps = {
         checkSize: true,
@@ -36,11 +38,12 @@ export class FileUploader extends Component {
      * @param {Event} ev
      */
     async onFileChange(ev) {
-        if (!ev.target.files.length) {
+        const files = [...ev.target.files].filter(file => this.validFileType(file));
+        if (!files. length) {
             return;
         }
         const { target } = ev;
-        for (const file of ev.target.files) {
+        for (const file of files) {
             if (this.props.checkSize && !checkFileSize(file.size, this.notification)) {
                 return null;
             }
@@ -68,6 +71,29 @@ export class FileUploader extends Component {
         if (this.props.multiUpload && this.props.onUploadComplete) {
             this.props.onUploadComplete({});
         }
+    }
+
+    /**
+     * The `allowedMIMETypes` props can restrict the file types users are guided to select.
+     * However, the `acceptedFileExtensions` attribute doesn't enforce strict validation;
+     * it only suggests file types for browsers.
+     *
+     * @param {File} file
+     * @returns Whether the upload file's type is in the whitelist (`allowedMIMETypes`).
+     */
+     validFileType(file) {
+        if (this.props.allowedMIMETypes && !this.props.allowedMIMETypes.includes(file.type)) {
+            this.notification.add(
+                _t(`Oops! '%(fileName)s' didn’t upload since its format isn’t allowed.`, {
+                    fileName: file.name,
+                }),
+                {
+                    type: "danger",
+                }
+            );
+            return false;
+        }
+        return true;
     }
 
     async onSelectFileButtonClick(ev) {
