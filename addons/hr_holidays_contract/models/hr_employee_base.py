@@ -3,11 +3,11 @@
 from odoo import models
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+class HrEmployee(models.Model):
+    _inherit = "hr.employee"
 
     def write(self, vals):
         # Prevent the resource calendar of leaves to be updated by a write to
         # employee. When this module is enabled the resource calendar of
         # leaves are determined by those of the contracts.
-        return super(HrEmployeeBase, self.with_context(no_leave_resource_calendar_update=True)).write(vals)
+        return super(HrEmployee, self.with_context(no_leave_resource_calendar_update=True)).write(vals)

@@ -5,8 +5,8 @@ from odoo import api, fields, models
 from .hr_homeworking import DAYS
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+class HrEmployee(models.Model):
+    _inherit = "hr.employee"
 
     monday_location_id = fields.Many2one('hr.work.location', string='Monday')
     tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday')

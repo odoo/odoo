@@ -8,8 +8,8 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+class HrEmployee(models.Model):
+    _inherit = "hr.employee"
 
     def _get_worklocation(self, start_date, end_date):
         work_locations_by_employee = defaultdict(dict)

@@ -26,6 +26,7 @@
         'wizard/hr_departure_wizard_views.xml',
         'wizard/mail_activity_schedule_views.xml',
         'views/mail_activity_plan_views.xml',
+        'views/hr_contract_views.xml',
         'views/hr_departure_reason_views.xml',
         'views/hr_contract_type_views.xml',
         'views/hr_job_views.xml',

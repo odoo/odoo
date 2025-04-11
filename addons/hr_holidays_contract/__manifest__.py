@@ -9,7 +9,7 @@
     'description': """
         Bridge module to manage time off based on contracts.
     """,
-    'depends': ['hr_holidays', 'hr_contract'],
+    'depends': ['hr_holidays', 'hr'],
     'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
