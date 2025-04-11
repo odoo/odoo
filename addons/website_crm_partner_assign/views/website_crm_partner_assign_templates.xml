@@ -295,7 +295,7 @@
 <template id="partner" name="Partner Detail">
     <t t-call="website_crm_partner_assign.layout">
         <div t-if="not edit_page" class="mt-4 mb-3">
-            <a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to resellers list"><i class="fa fa-chevron-left me-2"/>Back to resellers</a>
+            <a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to resellers list"><i class="oi oi-chevron-left me-2"/>Back to resellers</a>
         </div>
         <t t-call="website_partner.partner_detail">
             <t t-set="right_column">
