@@ -1856,6 +1856,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_admin.write({
             'group_ids': [Command.link(self.env.ref('base.group_system').id)],
         })
+<<<<<<< d56a58eba32a8275b130f16d970fa3a19dca7ede
+||||||| e70ff19abc29ccd945f2112ff182af3afb3841ba
+        self.pos_cat_chair_test.write({'sequence': 1})
+=======
+        self.env['pos.category'].search([('id', '!=', self.pos_cat_chair_test.id)]).write({'sequence': 100})
+        self.pos_cat_chair_test.write({'sequence': 1})
+>>>>>>> 68bb78926cb238987c8d73cb7600adc01d770d8f
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour('/pos/ui?config_id=%d' % self.main_pos_config.id, 'test_product_create_update_from_frontend', login='pos_admin')
 
