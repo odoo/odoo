@@ -3,9 +3,9 @@
 from odoo import models, fields
 
 
-class Test_New_ApiFoo(models.Model):
-    _name = 'test_new_api.foo'
-    _inherit = ['test_new_api.foo', 'test_inherit_mixin']
+class TestOrmFoo(models.Model):
+    _name = 'test_orm.foo'
+    _inherit = ['test_orm.foo', 'test_inherit_mixin']
 
 
 class TestInheritMother(models.Model):
