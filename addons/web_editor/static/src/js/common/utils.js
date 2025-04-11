@@ -3,6 +3,7 @@ import {
     normalizeCSSColor,
     isCSSColor,
 } from '@web/core/utils/colors';
+import { session } from "@web/session";
 
 let editableWindow = window;
 const _setEditableWindow = (ew) => editableWindow = ew;
@@ -540,6 +541,38 @@ async function _isSrcCorsProtected(src) {
     return _isImageCorsProtected(dummyImg);
 }
 
+/**
+ * Checks if the given URL is using the domain where the content being
+ * edited is reachable, i.e. if this URL should be stripped of its domain
+ * part and converted to a relative URL if put as a link in the content.
+ *
+ * @param {string} url
+ * @returns {boolean}
+ */
+function _isAbsoluteURLInCurrentDomain(url, env = null) {
+    // First check if it is a relative URL: if it is, we don't want to check
+    // further as we will always leave those untouched.
+    let hasProtocol;
+    try {
+        hasProtocol = !!(new URL(url).protocol);
+    } catch {
+        hasProtocol = false;
+    }
+    if (!hasProtocol) {
+        return false;
+    }
+
+    const urlObj = new URL(url, window.location.origin);
+    return urlObj.origin === window.location.origin
+        // Chosen heuristic to detect someone trying to enter a link using
+        // its Odoo instance domain. We just suppose it should be a relative
+        // URL (if unexpected behavior, the user can just not enter its Odoo
+        // instance domain but its real domain, or opt-out from the domain
+        // stripping). Mentioning an .odoo.com domain, especially its own
+        // one, is always a bad practice anyway.
+        || new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`).test(urlObj.origin);
+}
+
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -571,4 +604,5 @@ export default {
     forwardToThumbnail: _forwardToThumbnail,
     isImageCorsProtected: _isImageCorsProtected,
     isSrcCorsProtected: _isSrcCorsProtected,
+    isAbsoluteURLInCurrentDomain: _isAbsoluteURLInCurrentDomain,
 };

@@ -707,10 +707,17 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 return event.data.onSuccess();
             case 'edit_menu':
                 return this.dialogs.add(EditMenuDialog, {
-                    rootID: params[0],
-                    save: () => {
+                    rootID: params && params[0],
+                    save: async (newPageUrl) => {
                         // TODO: Rework _onSaveRequest to not take Events
-                        this._onSaveRequest({ data: { reload: true} });
+                        await this._onSaveRequest({ data: { reload: true} });
+                        if (newPageUrl) {
+                            this.websiteService.goToWebsite({
+                                path: newPageUrl,
+                                edition: true,
+                                websiteId: this.websiteService.currentWebsite.id,
+                            });
+                        }
                     },
                 });
         }

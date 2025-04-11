@@ -87,33 +87,6 @@ patch(LinkTools.prototype, {
         }
         $selectMenu.data("anchor-for", urlInputValue);
     },
-    /**
-     * @override
-     */
-    _isAbsoluteURLInCurrentDomain(url) {
-        const res = super._isAbsoluteURLInCurrentDomain(url);
-        if (res) {
-            return true;
-        }
-
-        const w = this.websiteService.currentWebsite;
-        if (!w) {
-            return false;
-        }
-
-        // Make sure that while being on abc.odoo.com, if you edit a link and
-        // enter an absolute URL using your real domain, it is still considered
-        // to be added as relative, preferably.
-        // In the past, you could not edit your website from abc.odoo.com if you
-        // properly configured your real domain already.
-        let origin;
-        try { // Needed: "http:" would crash
-            origin = new URL(url, window.location.origin).origin;
-        } catch {
-            return false;
-        }
-        return `${origin}/`.startsWith(w.domain);
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
