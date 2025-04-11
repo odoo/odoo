@@ -456,6 +456,32 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
             {'product_id': self.component.id, 'value': 100}
         ])
 
+    def test_valuation_across_multi_companies(self):
+        """Check the valuation of the product with multiple companies using different costing methods"""
+        company_1 = self.env['res.company'].create([
+            {'name': 'company_1'}
+        ])
+        self.product.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product.with_company(company_1.id).standard_price = 90
+        self.component.standard_price = 100
+        self.component.with_company(company_1.id).standard_price = 100
+        bom_1 = self.bom.copy({'company_id': company_1.id})
+
+        mo_form = Form(self.env['mrp.production'].with_company(company_1.id))
+        mo_form.product_id = bom_1.product_id
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.with_company(company_1.id).action_confirm()
+        self._produce(mo)
+        mo.button_mark_done()
+        self.assertEqual(self.product.with_company(company_1.id).total_value, 90)
+
+        production_1 = self._make_mo(self.bom, 1)
+        self._produce(production_1)
+        production_1.with_company(company_1.id).button_mark_done()
+        self.assertEqual(self.product.total_value, 100)
+
 
 @tagged("post_install", "-at_install")
 @skip('Temporary to fast merge new valuation')

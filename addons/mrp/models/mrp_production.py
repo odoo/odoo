@@ -2108,33 +2108,45 @@ class MrpProduction(models.Model):
         res = self.pre_button_mark_done()
         if res is not True:
             return res
+        groups = [
+            (key, self.env['mrp.production'].concat(*values))
+            for key, values in tools_groupby(self, key=lambda p: p.company_id.id)
+        ]
+        backorders = self.env['mrp.production']
+        if not groups:
+            groups = [(self.env.company, self)]
 
-        if self.env.context.get('mo_ids_to_backorder'):
-            productions_to_backorder = self.browse(self.env.context['mo_ids_to_backorder'])
-            productions_not_to_backorder = self - productions_to_backorder
-        else:
-            productions_not_to_backorder = self
-            productions_to_backorder = self.env['mrp.production']
-        productions_not_to_backorder = productions_not_to_backorder.with_context(no_procurement=True)
-        self.workorder_ids.button_finish()
+        mo_ids_for_backorder = self.env.context.get('mo_ids_to_backorder')
+        for company_id, group in groups:
+            productions = group.with_company(company_id)
+            if mo_ids_for_backorder:
+                productions_to_backorder = productions.browse(mo_ids_for_backorder)
+                productions_not_to_backorder = productions - productions_to_backorder
+            else:
+                productions_not_to_backorder = productions
+                productions_to_backorder = self.env['mrp.production']
 
-        backorders = productions_to_backorder and productions_to_backorder._split_productions()
-        backorders = backorders - productions_to_backorder
+            productions_not_to_backorder = productions_not_to_backorder.with_context(no_procurement=True)
+            productions.workorder_ids.button_finish()
 
-        productions_not_to_backorder._post_inventory(cancel_backorder=True)
-        productions_to_backorder._post_inventory(cancel_backorder=True)
+            backorders_for_company = productions_to_backorder and productions_to_backorder._split_productions()
+            backorders_for_company = backorders_for_company - productions_to_backorder
+            backorders += backorders_for_company
 
-        # if completed products make other confirmed/partially_available moves available, assign them
-        done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
-        done_move_finished_ids._trigger_assign()
+            productions_not_to_backorder._post_inventory(cancel_backorder=True)
+            productions_to_backorder._post_inventory(cancel_backorder=True)
 
-        # Moves without quantity done are not posted => set them as done instead of canceling. In
-        # case the user edits the MO later on and sets some consumed quantity on those, we do not
-        # want the move lines to be canceled.
-        (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
-            'state': 'done',
-            'product_uom_qty': 0.0,
-        })
+            # if completed products make other confirmed/partially_available moves available, assign them
+            done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
+            done_move_finished_ids._trigger_assign()
+
+            # Moves without quantity done are not posted => set them as done instead of canceling. In
+            # case the user edits the MO later on and sets some consumed quantity on those, we do not
+            # want the move lines to be canceled.
+            (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
+                'state': 'done',
+                'product_uom_qty': 0.0,
+            })
         for production in self:
             production.write({
                 'date_finished': fields.Datetime.now(),
