@@ -1,41 +1,40 @@
+import { registry } from '@web/core/registry';
+import { Interaction } from '@web/public/interaction';
 
-import { Component } from '@odoo/owl';
-import publicWidget from '@web/legacy/js/public/public_widget';
+export class ExpressCheckout extends Interaction {
+    static selector = 'form[name="o_payment_express_checkout_form"]';
 
-publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
-    selector: 'form[name="o_payment_express_checkout_form"]',
-
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
+    setup() {
         this.paymentContext = {};
         Object.assign(this.paymentContext, this.el.dataset);
-        this.paymentContext.shippingInfoRequired = !!this.paymentContext['shippingInfoRequired'];
-        const expressCheckoutForms = this._getExpressCheckoutForms();
-        for (const expressCheckoutForm of expressCheckoutForms) {
+        this.paymentContext.shippingInfoRequired = !!this.paymentContext.shippingInfoRequired;
+    }
+
+    async willStart() {
+        const expressCheckoutForm = this._getExpressCheckoutForm();
+        if (expressCheckoutForm) {
             await this._prepareExpressCheckoutForm(expressCheckoutForm.dataset);
         }
-        // Monitor updates of the amount on eCommerce's cart pages.
-        Component.env.bus.addEventListener('cart_amount_changed', (ev) => this._updateAmount(...ev.detail));
-    },
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    start() {
+        // Monitor updates of the amount on eCommerce's cart pages.
+        this.env.bus.addEventListener('cart_amount_changed', (ev) =>
+            this._updateAmount(...ev.detail)
+        );
+    }
 
     /**
-     * Return all express checkout forms found on the page.
+     * Return the express checkout form, if found.
      *
      * @private
-     * @return {NodeList} - All express checkout forms found on the page.
+     * @return {Element|null} - The express checkout form.
      */
-    _getExpressCheckoutForms() {
-        return document.querySelectorAll(
+    _getExpressCheckoutForm() {
+        return document.querySelector(
             'form[name="o_payment_express_checkout_form"] div[name="o_express_checkout_container"]'
         );
-    },
+    }
 
     /**
      * Prepare the provider-specific express checkout form based on the provided data.
@@ -46,7 +45,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
      * @param {Object} providerData - The provider-specific data.
      * @return {void}
      */
-    async _prepareExpressCheckoutForm(providerData) {},
+    async _prepareExpressCheckoutForm(providerData) {}
 
     /**
      * Prepare the params for the RPC to the transaction route.
@@ -66,7 +65,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
             'access_token': this.paymentContext['accessToken'],
             'csrf_token': odoo.csrf_token,
         };
-    },
+    }
 
     /**
      * Update the amount of the express checkout form.
@@ -81,15 +80,12 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     _updateAmount(newAmount, newMinorAmount) {
         this.paymentContext.amount = parseFloat(newAmount);
         this.paymentContext.minorAmount = parseInt(newMinorAmount);
-        this._getExpressCheckoutForms().forEach(form => {
-            if (newAmount == 0) {
-                form.classList.add('d-none')}
-            else {
-                form.classList.remove('d-none')
-            }
-        })
-    },
+        this._getExpressCheckoutForm()?.classList?.toggle(
+            'd-none', this.paymentContext.amount === 0
+        );
+    }
+}
 
-});
-
-export const paymentExpressCheckoutForm = publicWidget.registry.PaymentExpressCheckoutForm;
+registry
+    .category('public.interactions')
+    .add('payment.express_checkout', ExpressCheckout);

@@ -1,48 +1,35 @@
 
+import { patch } from '@web/core/utils/patch';
+import { patchDynamicContent } from '@web/public/utils';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
-import { debounce } from '@web/core/utils/timing';
-import publicWidget from '@web/legacy/js/public/public_widget';
-
-import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
+import { ExpressCheckout } from '@payment/interactions/express_checkout';
 import paymentDemoMixin from '@payment_demo/js/payment_demo_mixin';
 
-paymentExpressCheckoutForm.include({
-    events: Object.assign({}, publicWidget.Widget.prototype.events, {
-        'click button[name="o_payment_submit_button"]': '_initiateExpressPayment',
-    }),
-
-    // #=== WIDGET LIFECYCLE ===#
-
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
+patch(ExpressCheckout.prototype, {
+    setup() {
+        super.setup();
+        patchDynamicContent(this.dynamicContent, {
+            'button[name="o_payment_submit_button"]': {
+                't-on-click.stop.prevent': this.debounced(
+                    this.initiateExpressPayment.bind(this), 500, true
+                ),
+            },
+        });
         document.querySelector('[name="o_payment_submit_button"]')?.removeAttribute('disabled');
-        this._initiateExpressPayment = debounce(this._initiateExpressPayment, 500, true);
     },
-
-    // #=== EVENT HANDLERS ===#
 
     /**
      * Process the payment.
      *
-     * @private
      * @param {Event} ev
      * @return {void}
      */
-    async _initiateExpressPayment(ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-
-        const shippingInformationRequired = document.querySelector(
-            '[name="o_payment_express_checkout_form"]'
-        ).dataset.shippingInfoRequired;
+    async initiateExpressPayment(ev) {
         const providerId = ev.target.parentElement.dataset.providerId;
         let expressDeliveryAddress = {};
-        if (shippingInformationRequired){
+        if (this.paymentContext.shippingInfoRequired) {
             const shippingInfo = document.querySelector(
                 `#o_payment_demo_shipping_info_${providerId}`
             );
@@ -56,22 +43,22 @@ paymentExpressCheckoutForm.include({
                 'country': shippingInfo.querySelector('#o_payment_demo_shipping_country').value,
             };
             // Call the shipping address update route to fetch the shipping options.
-            const { delivery_methods } = await rpc(
+            const { delivery_methods } = await this.waitFor(rpc(
                 this.paymentContext['shippingAddressUpdateRoute'],
                 {partial_delivery_address: expressDeliveryAddress},
-            );
+            ));
             if (delivery_methods.length > 0) {
                 const id = parseInt(delivery_methods[0].id);
-                await rpc('/shop/set_delivery_method', {dm_id: id});
+                await this.waitFor(rpc('/shop/set_delivery_method', {dm_id: id}));
             } else {
-                this.call('dialog', 'add', ConfirmationDialog, {
+                this.services.dialog.add(ConfirmationDialog, {
                     title: _t("Validation Error"),
                     body: _t("No delivery method is available."),
                 });
                 return;
             }
         }
-        await rpc(
+        await this.waitFor(rpc(
             document.querySelector(
                 '[name="o_payment_express_checkout_form"]'
             ).dataset['expressCheckoutRoute'],
@@ -84,14 +71,14 @@ paymentExpressCheckoutForm.include({
                     'street2': '23',
                     'country': 'BE',
                     'city':'Ramillies',
-                    'zip':'1367'
+                    'zip':'1367',
                 },
             }
-        );
-        const processingValues = await rpc(
+        ));
+        const processingValues = await this.waitFor(rpc(
             this.paymentContext['transactionRoute'],
             this._prepareTransactionRouteParams(providerId),
-        )
+        ));
         paymentDemoMixin.processDemoPayment(processingValues);
     },
 });
