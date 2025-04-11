@@ -442,12 +442,14 @@
                     Wider (21/9)
                 </we-button>
             </we-select>
-            <we-select string="Image Zoom" class="o_we_sublevel_1" data-name="o_wsale_zoom_mode" data-no-preview="true" data-reload="/">
-                <we-button data-name="o_wsale_zoom_hover" data-customize-website-views="website_sale.product_picture_magnify_hover">Magnifier on hover</we-button>
-                <we-button data-name="o_wsale_zoom_click" data-customize-website-views="website_sale.product_picture_magnify_click">Pop-up on Click</we-button>
-                <we-button data-name="o_wsale_zoom_both" data-customize-website-views="website_sale.product_picture_magnify_both">Both</we-button>
-                <we-button data-name="o_wsale_zoom_none" data-customize-website-views="">None</we-button>
-            </we-select>
+            <we-checkbox
+                string="Zoom on click"
+                class="o_we_sublevel_1"
+                data-name="o_wsale_zoom_click"
+                data-customize-website-views="website_sale.product_picture_magnify_click"
+                data-no-preview="true"
+                data-reload="/"
+            />
             <!-- Carousel config -->
             <we-button-group string="Thumbnails" class="o_we_sublevel_1" data-name="o_wsale_thumbnail_pos" data-no-preview="true" data-reload="/">
                 <we-button class="fa fa-fw fa-long-arrow-left" title="Left" data-customize-website-views="website_sale.carousel_product_indicators_left"/>

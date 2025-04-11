@@ -589,9 +589,9 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         });
     },
 
-    _getZoomOptionData() {
+    _getZoomOnClick() {
         return this._userValueWidgets.find(widget => {
-            return widget.options && widget.options.dataAttributes && widget.options.dataAttributes.name === "o_wsale_zoom_mode";
+            return widget.options && widget.options.dataAttributes && widget.options.dataAttributes.name === "o_wsale_zoom_click";
         });
     },
 
@@ -599,10 +599,9 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
      * @override
      */
     async setImageWidth(previewMode, widgetValue, params) {
-        const zoomOption = this._getZoomOptionData();
-        if (zoomOption && widgetValue === "100_pc") {
-            const defaultZoomOption = "website_sale.product_picture_magnify_click";
-            await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
+        const zoomOnClick = this._getZoomOnClick();
+        if (zoomOnClick && widgetValue === '100_pc') {
+            await this._customizeWebsiteData('website_sale.product_picture_magnify_click', { possibleValues: zoomOnClick._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
         }
         return rpc('/shop/config/website', { product_page_image_width: widgetValue });
     },
@@ -611,14 +610,9 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
      * @override
      */
     async setImageLayout(previewMode, widgetValue, params) {
-        const zoomOption = this._getZoomOptionData();
-        if (zoomOption) {
-            const imageWidthOption = this.productDetailMain.dataset.image_width;
-            let defaultZoomOption = widgetValue === "grid" ? "website_sale.product_picture_magnify_click" : "website_sale.product_picture_magnify_hover";
-            if (imageWidthOption === "100_pc" && defaultZoomOption === "website_sale.product_picture_magnify_hover") {
-                defaultZoomOption = "website_sale.product_picture_magnify_click";
-            }
-            await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
+        const zoomOnClick = this._getZoomOnClick();
+        if (zoomOnClick) {
+            await this._customizeWebsiteData('website_sale.product_picture_magnify_click', { possibleValues: zoomOnClick._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
         }
         return rpc('/shop/config/website', { product_page_image_layout: widgetValue });
     },
@@ -814,7 +808,6 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
 
     async _computeWidgetVisibility(widgetName, params) {
         const hasImages = this.productDetailMain.dataset.image_width != 'none';
-        const isFullImage = this.productDetailMain.dataset.image_width == '100_pc';
         const multipleImages = hasImages && this.productDetailMain.querySelector(
             '.o_wsale_product_images'
         ).dataset.imageAmount > 1;
@@ -831,15 +824,10 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             case "o_wsale_image_ratio":
                 return !isGrid && multipleImages;
             case 'o_wsale_zoom_click':
-            case 'o_wsale_zoom_none':
             case 'o_wsale_replace_main_image':
             case 'o_wsale_add_extra_images':
             case 'o_wsale_clear_extra_images':
-            case 'o_wsale_zoom_mode':
                 return hasImages;
-            case 'o_wsale_zoom_hover':
-            case 'o_wsale_zoom_both':
-                return hasImages && !isFullImage;
         }
         return this._super(widgetName, params);
     }
