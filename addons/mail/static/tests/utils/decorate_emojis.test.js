@@ -1,9 +1,15 @@
 import { decorateEmojis } from "@mail/utils/common/format";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+
 import { expect, test } from "@odoo/hoot";
 import { markup } from "@odoo/owl";
+
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+
 const Markup = markup().constructor;
+
+defineMailModels();
 
 test("emojis in text content are wrapped with title and marked up", async () => {
     await makeMockEnv();

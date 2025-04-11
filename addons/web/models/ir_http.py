@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hashlib
-import json
 import warnings
 
 import odoo
@@ -72,7 +70,8 @@ class IrHttp(models.AbstractModel):
             'session_info': self.session_info(),
         }
 
-    def lazy_session_info(self, **kwargs):
+    @api.model
+    def lazy_session_info(self):
         return {}
 
     def session_info(self):

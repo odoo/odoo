@@ -6,20 +6,19 @@ export const lazySession = {
     start(env, { orm }) {
         let resolveWebClientReady;
         let lazyConfigPromise;
-        const fetchServerData = async (params) => {
+        const fetchServerData = async () => {
             await webClientReadyPromise;
-            return orm.call("ir.http", "lazy_session_info", [[]], params);
+            return orm.call("ir.http", "lazy_session_info");
         };
         const webClientReadyPromise = new Promise((r) => (resolveWebClientReady = r));
         env.bus.addEventListener("WEB_CLIENT_READY", resolveWebClientReady);
         return {
-            getValue(key, callback, params) {
+            getValue(key, callback) {
                 if (!lazyConfigPromise) {
-                    lazyConfigPromise = fetchServerData(params);
+                    lazyConfigPromise = fetchServerData();
                 }
                 lazyConfigPromise.then((config) => callback(deepCopy(config)[key]));
             },
-            rpcDone: () => !!lazyConfigPromise,
         };
     },
 };
