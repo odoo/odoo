@@ -499,10 +499,8 @@ export const accountTaxHelpers = {
     },
 
     add_tax_details_in_base_line(base_line, company) {
-        const price_unit_after_discount = base_line.price_unit * (1 - (base_line.discount / 100.0));
-        const currency_pd = base_line.currency_id.rounding;
-        const company_currency_pd = company.currency_id.rounding;
-        const taxes_computation = this.get_tax_details(
+        const price_unit_after_discount = base_line.price_unit * (1 - base_line.discount / 100.0);
+        return this.get_tax_details(
             base_line.tax_ids,
             price_unit_after_discount,
             base_line.quantity,
@@ -511,9 +509,15 @@ export const accountTaxHelpers = {
                 rounding_method: company.tax_calculation_rounding_method,
                 product: base_line.product_id,
                 special_mode: base_line.special_mode,
-                manual_tax_amounts: base_line.manual_tax_amounts
+                manual_tax_amounts: base_line.manual_tax_amounts,
             }
         );
+    },
+
+    add_tax_details_in_base_line(base_line, company) {
+        const currency_pd = base_line.currency_id.rounding;
+        const company_currency_pd = company.currency_id.rounding;
+        const taxes_computation = this.add_tax_details_in_base_line(base_line, company);
 
         const rate = base_line.rate;
         const tax_details = base_line.tax_details = {
