@@ -1,10 +1,10 @@
 import { cropperDataFieldsWithAspectRatio, isGif } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { isImageCorsProtected, normalizeColor } from "@html_builder/utils/utils_css";
+import { normalizeColor } from "@html_builder/utils/utils_css";
 import { ImageToolOption } from "./image_tool_option";
 import { defaultImageFilterOptions } from "@html_editor/main/media/image_post_process_plugin";
-import { getMimetype } from "@html_editor/utils/image";
+import { isImageCorsProtected, getMimetype } from "@html_editor/utils/image";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";

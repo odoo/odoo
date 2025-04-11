@@ -555,16 +555,6 @@ export async function isImageCorsProtected(img) {
 }
 
 /**
- * @param {string} src
- * @returns {Promise<Boolean>}
- */
-export async function isSrcCorsProtected(src) {
-    const dummyImg = document.createElement("img");
-    dummyImg.src = src;
-    return isImageCorsProtected(dummyImg);
-}
-
-/**
  * Applies only the needed CSS in the style attribute:
  * - no attribute if value is already the wanted one (possibly from a class)
  * - plain attribute if that change is sufficient to make it applied
