@@ -440,6 +440,7 @@ test("between operator", async () => {
         "is lower",
         "is lower or equal",
         "is between",
+        "is not between",
         "set",
         "not set",
     ]);
@@ -456,6 +457,8 @@ test("next operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
         "is equal",
         "is not equal",
         "is greater",
@@ -463,6 +466,7 @@ test("next operator", async () => {
         "is lower",
         "is lower or equal",
         "is between",
+        "is not between",
         "next",
         "not next",
         "last",
@@ -485,6 +489,8 @@ test("not_next operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
         "is equal",
         "is not equal",
         "is greater",
@@ -492,6 +498,7 @@ test("not_next operator", async () => {
         "is lower",
         "is lower or equal",
         "is between",
+        "is not between",
         "next",
         "not next",
         "last",
@@ -514,6 +521,8 @@ test("last operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
         "is equal",
         "is not equal",
         "is greater",
@@ -521,6 +530,7 @@ test("last operator", async () => {
         "is lower",
         "is lower or equal",
         "is between",
+        "is not between",
         "next",
         "not next",
         "last",
@@ -543,6 +553,8 @@ test("not_last operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
         "is equal",
         "is not equal",
         "is greater",
@@ -550,6 +562,7 @@ test("not_last operator", async () => {
         "is lower",
         "is lower or equal",
         "is between",
+        "is not between",
         "next",
         "not next",
         "last",

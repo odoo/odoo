@@ -38,6 +38,8 @@ export function getDomainDisplayedOperators(fieldDef) {
         case "date":
         case "datetime":
             return [
+                "today",
+                "not_today",
                 "=",
                 "!=",
                 ">",
@@ -64,6 +66,7 @@ export function getDomainDisplayedOperators(fieldDef) {
                 "<",
                 "<=",
                 "between",
+                "is_not_between",
                 "ilike",
                 "not ilike",
                 "set",

@@ -35,6 +35,9 @@ const OPERATOR_DESCRIPTIONS = {
     starts_with: _t("starts with"),
     ends_with: _t("ends with"),
 
+    today: _t("today"),
+    not_today: _t("not today"),
+
     // virtual operators (equivalent to a couple (>=,<=))
     between: _t("is between"),
     last: _t("last"),
