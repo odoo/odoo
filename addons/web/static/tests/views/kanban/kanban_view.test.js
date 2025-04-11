@@ -1431,7 +1431,7 @@ test("pager, update calls onUpdatedPager", async () => {
     expect.step("next page");
     await contains(".o_pager_next").click();
     expect(getPagerValue()).toEqual([4, 4]);
-    expect.verifySteps(["render", "next page", "render", "onUpdatedPager"]);
+    expect.verifySteps(["render", "render", "next page", "render", "onUpdatedPager"]);
 });
 
 test("click on a button type='delete' to delete a record in a column", async () => {

@@ -160,7 +160,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     model.useSampleModel = false;
     const orm = model.orm;
     let sampleORM = localState.sampleORM;
-    // let started = false;
+    let started = false;
 
     async function _load(props) {
         const searchParams = getSearchParams(props);
@@ -177,9 +177,9 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
             useSampleModel = false;
             model.useSampleModel = useSampleModel;
         }
-        // if (started) {
-        model.notify();
-        // }
+        if (started) {
+            model.notify();
+        }
     }
     const race = new Race();
     const load = (props) => race.add(Promise.resolve(_load(props)));
@@ -192,7 +192,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
             await options.onWillStartAfterLoad();
         }
         model.whenReady.resolve();
-        // started = true;
+        started = true;
     }
     onWillStart(() => {
         const prom = initialLoad();
