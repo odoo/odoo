@@ -16,7 +16,6 @@ import { renderToElement } from "@web/core/utils/render";
 import { formatCurrency } from "@web/core/currency";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
-    checkDelay: 50,
     steps: () =>
         [
             // press close button in receipt screen
@@ -114,7 +113,6 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
 });
 
 registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -143,7 +141,6 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
 });
 
 registry.category("web_tour.tours").add("OrderPaidInCash", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -168,7 +165,6 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
 });
 
 registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -183,7 +179,6 @@ registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
 });
 
 registry.category("web_tour.tours").add("point_of_sale.test_printed_receipt_tour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),

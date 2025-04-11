@@ -7,7 +7,6 @@ import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -26,7 +25,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
 });
 
 registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_out", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -42,7 +40,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_out", {
 });
 
 registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_in", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -67,7 +64,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_in", {
 });
 
 registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_out", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -85,7 +81,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_out", 
 });
 
 registry.category("web_tour.tours").add("self_order_kiosk_cancel", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -102,7 +97,6 @@ registry.category("web_tour.tours").add("self_order_kiosk_cancel", {
 });
 
 registry.category("web_tour.tours").add("self_simple_order", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -116,7 +110,6 @@ registry.category("web_tour.tours").add("self_simple_order", {
 });
 
 registry.category("web_tour.tours").add("self_order_price_null", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -130,7 +123,6 @@ registry.category("web_tour.tours").add("self_order_price_null", {
 });
 
 registry.category("web_tour.tours").add("self_order_language_changes", {
-    checkDelay: 100,
     steps: () => [
         LandingPage.checkLanguageSelected("English"),
         LandingPage.checkCountryFlagShown("us"),
