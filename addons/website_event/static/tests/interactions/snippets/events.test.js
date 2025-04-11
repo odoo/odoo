@@ -45,7 +45,7 @@ test("dynamic snippet loads items and displays them through template", async () 
     });
     const { core } = await startInteractions(`
       <div id="wrapwrap">
-          <section data-snippet="s_events" class="s_events s_event_upcoming_snippet s_event_event_picture s_dynamic s_dynamic_empty pt32 pb32 o_colored_level"
+          <section data-snippet="s_events" class="s_events s_event_upcoming_snippet s_event_event_picture s_dynamic pt32 pb32 o_colored_level"
                   data-custom-template-data="{&quot;events_event_time_active&quot;:true}"
                   data-name="Events"
                   data-filter-id="1"

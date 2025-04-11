@@ -10,10 +10,16 @@
             <t t-set="snippet_name" t-value="snippet_name"/>
             <t t-set="snippet_selector" t-value="snippet_selector"/>
             <we-input string="Slider Speed"
-                  data-select-data-attribute="1s" data-name="speed_opt" data-attribute-name="carouselInterval" data-no-preview="true"
-                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
+                data-select-data-attribute="1s"
+                data-name="speed_opt"
+                data-attribute-name="carouselInterval"
+                data-dependencies="!single_record_opt"
+                data-no-preview="true"
+                data-unit="s"
+                data-save-unit="ms"
+                data-step="0.1"/>
             <t t-out="0"/>
-            <we-button-group string="Scrolling Mode" data-no-preview="true">
+            <we-button-group string="Scrolling Mode" data-dependencies="!single_record_opt" data-no-preview="true">
                 <we-button data-select-class="">All</we-button>
                 <we-button data-select-class="o_carousel_multi_items">Single</we-button>
             </we-button-group>

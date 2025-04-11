@@ -1336,13 +1336,16 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @private
      */
     _onSnippetDropped({ $target, addPostDropAsync }) {
-        addPostDropAsync(new Promise(resolve => {
-            this._websiteRootEvent('widgets_start_request', {
-                editableMode: true,
-                $target,
-                onSuccess: () => resolve(),
-            });
-        }));
+        addPostDropAsync(
+            new Promise((resolve) => {
+                this._websiteRootEvent("widgets_start_request", {
+                    skipInterations: $target[0].classList.contains("s_inactive_on_drop"),
+                    editableMode: true,
+                    $target,
+                    onSuccess: () => resolve(),
+                });
+            })
+        );
     }
     /***
      * Re-add the editor message if no content is left on the page.
