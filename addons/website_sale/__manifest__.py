@@ -23,6 +23,7 @@
         'data/digest_data.xml',
         'data/ir_cron_data.xml',
         'data/tour.xml',
+        'data/generate_primary_template.xml',
 
         # Reports
         'report/sale_report_views.xml',
@@ -188,6 +189,19 @@
             #('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
             # TODO Remove when all 000 have been adapted
             #('remove', 'website_sale/static/src/snippets/**/000.js'),
+        ],
+    },
+    'configurator_snippets': {
+        'homepage': [
+            's_banner',
+            's_text_image',
+            's_image_text',
+            's_picture',
+            's_title',
+            's_masonry_block_default_template',
+            's_company_team',
+            's_showcase',
+            's_quotes_carousel',
         ],
     },
     'author': 'Odoo S.A.',

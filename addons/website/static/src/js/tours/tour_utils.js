@@ -601,3 +601,92 @@ export function toggleMobilePreview(toggleOn) {
         },
     ];
 }
+
+/**
+ * Automates the initial flow of the Website Configurator and Description screen.
+ * Simulates user interactions to select website type, industry, and objective,
+ * helping to programmatically drive the configurator setup.
+ *
+ * @param {string} websiteType - The type of website to select.
+ * @param {string} industryInput - Text to input for industry search.
+ * @param {string} selectIndustry - Industry option to select from autocomplete.
+ * @param {string} objective - Objective to select from the list.
+ */
+export function websiteConfiguratorDescription(websiteType, industryInput, selectIndustry, objective) {
+    return [
+        {
+            content: "Start website creation",
+            trigger: 'button.o_configurator_show',
+            run: "click",
+        },
+        {
+            content: "Use browser's Back",
+            trigger: 'a.o_change_website_type',
+            run() {
+                window.history.back();
+            },
+        }, 
+        {
+            content: "Return to description screen",
+            trigger: 'button.o_configurator_show',
+            run: "click",
+        },
+        {
+            content: "Select a website type",
+            trigger: `a.o_change_website_type[title="${websiteType}"]`,
+            run: "click",
+        },
+        {
+            content: "Insert a website industry",
+            trigger: '.o_configurator_industry input',
+            run: `edit ${industryInput}`,
+        },
+        {
+            content: "Select a website industry from the autocomplete",
+            trigger: `.o_configurator_industry_wrapper ul li a:contains("${selectIndustry}")`,
+            run: "click",
+        }, 
+        {
+            content: "Select an objective",
+            trigger: '.o_configurator_purpose_dd a',
+            run: "click",
+        }, 
+        {
+            content: "Choose from the objective list",
+            trigger: `a.o_change_website_purpose[title="${objective}"]`,
+            run: "click",
+        },
+    ]
+}
+
+/**
+ * Triggers a click action on a palette card that matches the given color code.
+ * Useful for programmatically selecting a color theme in the website configurator.
+ *
+ * @param {string} colorCode - Hexcode of the theme to be selected.
+ */
+export function websiteConfiguratorPalette(colorCode) {
+    return {
+        content: "Choose a palette card",
+        trigger: `.palette_card[style="background-color: ${colorCode}"]`,
+        run: "click",
+    }
+}
+
+/**
+ * Triggers a click action to load website and its homepage.
+ * Useful for loading website with a loader.
+ */
+export function websiteConfiguratorLoadHomePage() {
+    return [
+        {
+            content: "Loader should be shown",
+            trigger: '.o_website_loader_container',
+        },
+        {
+            content: "Wait until the configurator is finished",
+            trigger: '.o_website_preview[data-view-xmlid="website.homepage"]',
+            timeout: 30000,
+        },
+    ]
+}
