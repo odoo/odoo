@@ -4,6 +4,7 @@ import logging
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import create_index
 
 _logger = logging.getLogger(__name__)
 
@@ -34,6 +35,14 @@ class ResUsers(models.Model):
         )
         if self.env.cr.rowcount:
             raise ValidationError(_('You can not have two users with the same login!'))
+        
+    def _auto_init(self):
+        result = super()._auto_init()
+        # Use unique index to implement unique constraint per website, even if website_id is null 
+        # (not possible using a constraint)
+        create_index(self.env.cr, 'res_users_login_key_unique_website_index',
+            self._table, ['login', 'COALESCE(website_id,-1)'], unique=True)
+        return result
 
     @api.model
     def _get_login_domain(self, login):
