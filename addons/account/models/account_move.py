@@ -1859,16 +1859,17 @@ class AccountMove(models.Model):
         """ Build the warning message that will be displayed in a yellow banner on top of the current record
             if the partner exceeds a credit limit (set on the company or the partner itself).
             :param record:                  The record where the warning will appear (Invoice, Sales Order...).
-            :param current_amount (float):  The partner's outstanding credit amount from the current document.
-            :param exclude_current (bool):  DEPRECATED in favor of parameter `exclude_amount`:
+            :param float current_amount:    The partner's outstanding credit amount from the current document.
+            :param bool exclude_current:    DEPRECATED in favor of parameter `exclude_amount`:
                                             Whether to exclude `current_amount` from the credit to invoice.
-            :param exclude_amount (float):  The amount to subtract from the partner's `credit_to_invoice`.
+            :param float exclude_amount:    The amount to subtract from the partner's `credit_to_invoice`.
                                             Consider the warning on a draft invoice created from a sales order.
                                             After confirming the invoice the (partial) amount (on the invoice)
                                             stemming from sales orders will be substracted from the `credit_to_invoice`.
                                             This will reduce the total credit of the partner.
                                             This parameter is used to reflect this amount.
-            :return (str):                  The warning message to be showed.
+            :return:                        The warning message to be showed.
+            :rtype: str
         """
         partner_id = record.partner_id.commercial_partner_id
         credit_to_invoice = partner_id.credit_to_invoice - exclude_amount

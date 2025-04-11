@@ -540,8 +540,9 @@ class Base(models.AbstractModel):
         all models as we could send an email through mail templates on models
         not inheriting from mail.thread.
 
-        Reply-to is formatted like '"Author Name" <reply.to@domain>".
+        Reply-to is formatted like ``'"Author Name" <reply.to@domain>'``.
         Heuristic it the following:
+
          * search for specific aliases as they always have priority; it is limited
            to aliases linked to documents (like project alias for task for example);
          * use catchall address;
@@ -552,8 +553,9 @@ class Base(models.AbstractModel):
         :param default: default email if no alias or catchall is found;
         :param author_id: author to use in name part of formatted email;
 
-        :return result: dictionary. Keys are record IDs and value is formatted
-          like an email "Company_name Document_name <reply_to@email>"
+        :return: a dict mapping record ids to email addresses as string
+            like ``'"Company_name Document_name" <reply_to@email>'``
+        :rtype: dict[int, str]
         """
         return self._notify_get_reply_to_batch(
             defaults={res_id: default for res_id in (self.ids or [False])},
@@ -644,10 +646,6 @@ class Base(models.AbstractModel):
         possible we return only the email and skip the formataddr which causes
         the issue in python. We do not use hacks like crop the name part as
         encoding and quoting would be error prone.
-
-        :param <res.company> company: if given, setup the company used to
-          complete name in formataddr. Otherwise fallback on 'company_id'
-          of self or environment company;
         """
         length_limit = 68  # 78 - len('Reply-To: '), 78 per RFC
         # address itself is too long : return only email and log warning

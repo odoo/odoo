@@ -298,28 +298,35 @@ class ResUsers(models.Model):
 
         Overrides should:
 
-        * call `super` to delegate to parents for credentials-checking
-        * catch AccessDenied and perform their own checking
-        * (re)raise AccessDenied if the credentials are still invalid
-          according to their own validation method
-        * return the auth_info
+        * call ``super`` to delegate to parents for credentials-checking
+        * catch :class:`~odoo.exceptions.AccessDenied` and perform their
+          own checking
+        * (re)raise :class:`~odoo.exceptions.AccessDenied` if the
+          credentials are still invalid according to their own
+          validation method
+        * return the ``auth_info``
 
-        When trying to check for credentials validity, call _check_credentials
-        instead.
+        When trying to check for credentials validity, call
+        :meth:`_check_credentials` instead.
 
-        Credentials are considered to be untrusted user input, for more information please check :func:`~.authenticate`
+        Credentials are considered to be untrusted user input, for more
+        information please check :meth:`authenticate`
 
-        :returns: auth_info dictionary containing:
+        :returns: ``auth_info`` dictionary containing:
+
           - uid: the uid of the authenticated user
           - auth_method: which method was used during authentication
           - mfa: whether mfa should be skipped or not, possible values:
+
             - enforce: enforce mfa no matter what (not yet implemented)
             - default: delegate to auth_totp
             - skip: skip mfa no matter what
+
           Examples:
-          - { 'uid': 20, 'auth_method': 'password',      'mfa': 'default' }
-          - { 'uid': 17, 'auth_method': 'impersonation', 'mfa': 'enforce' }
-          - { 'uid': 32, 'auth_method': 'webauthn',      'mfa': 'skip'    }
+
+          - ``{ 'uid': 20, 'auth_method': 'password',      'mfa': 'default' }``
+          - ``{ 'uid': 17, 'auth_method': 'impersonation', 'mfa': 'enforce' }``
+          - ``{ 'uid': 32, 'auth_method': 'webauthn',      'mfa': 'skip'    }``
         :rtype: dict
         """
         if not (credential['type'] == 'password' and credential.get('password')):
@@ -721,7 +728,6 @@ class ResUsers(models.Model):
         """Verifies and returns the user ID corresponding to the given
         ``credential``, or False if there was no matching user.
 
-        :param str db: the database on which user is trying to authenticate
         :param dict credential: a dictionary where the `type` key defines the authentication method and
             additional keys are passed as required per authentication method.
             For example:

@@ -487,14 +487,11 @@ GROUP BY fol.id%s%s""" % (
         :param subtypes: optional subtypes for new partner followers. This
           is a dict whose keys are partner IDs and value subtype IDs for that
           partner.
-        :param channel_subtypes: optional subtypes for new channel followers. This
-          is a dict whose keys are channel IDs and value subtype IDs for that
-          channel.
         :param check_existing: if True, check for existing followers for given
           documents and handle them according to existing_policy parameter.
           Setting to False allows to save some computation if caller is sure
           there are no conflict for followers;
-        :param existing policy: if check_existing, tells what to do with already
+        :param existing_policy: if check_existing, tells what to do with already
           existing followers:
 
           * skip: simply skip existing followers, do not touch them;

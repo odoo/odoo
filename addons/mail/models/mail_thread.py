@@ -828,18 +828,20 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _routing_check_route(self, message, message_dict, route, raise_exception=True):
-        """ Verify route validity. Check and rules:
-            1 - if thread_id -> check that document effectively exists; otherwise
-                fallback on a message_new by resetting thread_id
-            2 - check that message_update exists if thread_id is set; or at least
-                that message_new exist
-            3 - if there is an alias, check alias_contact:
-                'followers' and thread_id:
-                    check on target document that the author is in the followers
-                'followers' and alias_parent_thread_id:
-                    check on alias parent document that the author is in the
-                    followers
-                'partners': check that author_id id set
+        """
+        Verify route validity. Check and rules:
+
+        1) if thread_id -> check that document effectively exists; otherwise
+           fallback on a message_new by resetting thread_id
+        2) check that message_update exists if thread_id is set; or at least
+           that message_new exist
+        3) if there is an alias, check alias_contact:
+
+           * 'followers' and thread_id: check on target document that the
+             author is in the followers
+           * 'followers' and alias_parent_thread_id: check on alias parent
+             document that the author is in the followers
+           * 'partners': check that author_id id set
 
         Note that this method also updates 'author_id' of message_dict as route
         links an incoming message to a record and linking email to partner is
@@ -1121,15 +1123,16 @@ class MailThread(models.AbstractModel):
          * fallback on provided ``model``, ``thread_id`` and ``custom_values``;
          * raise an exception as no route has been found
 
-        :param string message: an email.message instance
+        :param str message: an email.message instance
         :param dict message_dict: dictionary holding parsed message variables
-        :param string model: the fallback model to use if the message does not match
+        :param str model: the fallback model to use if the message does not match
             any of the currently configured mail aliases (may be None if a matching
             alias is supposed to be present)
-        :type dict custom_values: optional dictionary of default field values
+        :param custom_values: optional dictionary of default field values
             to pass to ``message_new`` if a new record needs to be created.
             Ignored if the thread record already exists, and also if a matching
             mail.alias was found (aliases define their own defaults)
+        :type custom_values: dict or None
         :param int thread_id: optional ID of the record/thread from ``model`` to
             which this mail should be attached. Only used if the message does not
             reply to an existing thread and does not match any mail alias.
@@ -1408,20 +1411,21 @@ class MailThread(models.AbstractModel):
             is called with the new message (if the thread record did not exist)
             or its ``message_update`` method (if it did).
 
-           :param string model: the fallback model to use if the message
+            :param str model: the fallback model to use if the message
                does not match any of the currently configured mail aliases
                (may be None if a matching alias is supposed to be present)
-           :param message: source of the RFC2822 message
-           :type message: string or xmlrpclib.Binary
-           :type dict custom_values: optional dictionary of field values
+            :param message: source of the RFC2822 message
+            :type message: str or xmlrpclib.Binary
+            :param custom_values: optional dictionary of field values
                 to pass to ``message_new`` if a new record needs to be created.
                 Ignored if the thread record already exists, and also if a
                 matching mail.alias was found (aliases define their own defaults)
-           :param bool save_original: whether to keep a copy of the original
+            :type custom_values: dict or None
+            :param bool save_original: whether to keep a copy of the original
                 email source attached to the message after it is imported.
-           :param bool strip_attachments: whether to strip all attachments
+            :param bool strip_attachments: whether to strip all attachments
                 before processing the message, in order to save some space.
-           :param int thread_id: optional ID of the record/thread from ``model``
+            :param int thread_id: optional ID of the record/thread from ``model``
                to which this mail should be attached. When provided, this
                overrides the automatic detection based on the message
                headers.
@@ -1466,18 +1470,19 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
-        """Called by ``message_process`` when a new message is received
+        """Called by :meth:`message_process` when a new message is received
            for a given thread model, if the message did not belong to
            an existing thread.
+
            The default behavior is to create a new record of the corresponding
            model (based on some very basic info extracted from the message).
            Additional behavior may be implemented by overriding this method.
 
            :param dict msg_dict: a map containing the email details and
-                                 attachments. See ``message_process`` and
-                                ``mail.message.parse`` for details.
+                                 attachments. See :meth:`message_process` and
+                                 ``mail.message.parse`` for details.
            :param dict custom_values: optional dictionary of additional
-                                      field values to pass to create()
+                                      field values to pass to :meth:`create`
                                       when creating the new thread record.
                                       Be careful, these values may override
                                       any other values coming from the message.
@@ -1499,14 +1504,15 @@ class MailThread(models.AbstractModel):
         return self.create(data)
 
     def message_update(self, msg_dict, update_vals=None):
-        """Called by ``message_process`` when a new message is received
+        """Called by :meth:`message_process` when a new message is received
            for an existing thread. The default behavior is to update the record
            with update_vals taken from the incoming email.
            Additional behavior may be implemented by overriding this
            method.
+
            :param dict msg_dict: a map containing the email details and
-                               attachments. See ``message_process`` and
-                               ``mail.message.parse()`` for details.
+                               attachments. See :meth:`message_process`
+                               and ``mail.message.parse()`` for details.
            :param dict update_vals: a dict containing values to update records
                               given their ids; if the dict is None or is
                               void, no write operation is performed.
@@ -1739,7 +1745,7 @@ class MailThread(models.AbstractModel):
 
         Note that partner finding is delegated to a post processing as it is
         better done using gateway record as context e.g. to check for
-        followers, ... see '_message_parse_post_process'.
+        followers, ... see :meth:`_message_parse_post_process`.
 
         :param message: email to parse
         :type message: email.message.Message
@@ -1749,22 +1755,22 @@ class MailThread(models.AbstractModel):
         :return: A dict with the following structure, where each field may not
             be present if missing in original message::
 
-            { 'message_id': msg_id,
-              'subject': subject,
-              'email_from': from,
-              'to': to + delivered-to,
-              'cc': cc,
-              'recipients': delivered-to + to + cc + resent-to + resent-cc,
-              'body': unified_body,
-              'references': references,
-              'in_reply_to': in-reply-to,
-              'is_bounce': True if it has been detected as a bounce email
-              'parent_id': parent mail.message based on in_reply_to or references,
-              'is_internal': answer to an internal message (note),
-              'date': date,
-              'attachments': [('file1', 'bytes'),
-                              ('file2', 'bytes')}
-            }
+                { 'message_id': msg_id,
+                  'subject': subject,
+                  'email_from': from,
+                  'to': to + delivered-to,
+                  'cc': cc,
+                  'recipients': delivered-to + to + cc + resent-to + resent-cc,
+                  'body': unified_body,
+                  'references': references,
+                  'in_reply_to': in-reply-to,
+                  'is_bounce': True if it has been detected as a bounce email
+                  'parent_id': parent mail.message based on in_reply_to or references,
+                  'is_internal': answer to an internal message (note),
+                  'date': date,
+                  'attachments': [('file1', 'bytes'),
+                                  ('file2', 'bytes')}
+                }
         """
         if not isinstance(message, EmailMessage):
             raise ValueError(_('Message should be a valid EmailMessage instance'))
@@ -2144,10 +2150,11 @@ class MailThread(models.AbstractModel):
         :param str subject: subject of the message
         :param str message_type: see mail_message.message_type field. Can be anything but
             user_notification, reserved for message_notify
-        :param str email_from: from address of the author. See ``_message_compute_author``
-            that uses it to make email_from / author_id coherent;
+        :param str email_from: from address of the author. See :meth:`_message_compute_author`
+            that uses it to make ``email_from`` / ``author_id`` coherent;
         :param int author_id: optional ID of partner record being the author. See
-            ``_message_compute_author`` that uses it to make email_from / author_id coherent;
+            :meth:`_message_compute_author` that uses it to make ``email_from`` / ``author_id``
+            coherent;
         :param int parent_id: handle thread formation
         :param str subtype_xmlid: optional xml id of a mail.message.subtype to
           fetch, will force value of subtype_id;
@@ -2159,9 +2166,10 @@ class MailThread(models.AbstractModel):
             by incoming email;
         :param str incoming_email_cc: comma-separated list of emails, already notified
             by incoming email;
-        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
-            tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
+        :param attachments: list of attachment tuples in the form
+            ``(name, content)`` or ``(name, content, info)`` where content
             is NOT base64 encoded;
+        :type attachments: list[tuple[str, str] | tuple[str, str, dict]]
         :param list attachment_ids: list of existing attachments to link to this message
             Should not be a list of commands. Attachment records attached to mail
             composer will be attached to the related document.
@@ -2169,9 +2177,10 @@ class MailThread(models.AbstractModel):
             to be used only for RPC calls
 
         Extra keyword arguments will be used either
-          * as default column values for the new mail.message record if they match
-            mail.message fields;
-          * propagated to notification methods if not;
+
+        * as default column values for the new mail.message record if they match
+          mail.message fields;
+        * propagated to notification methods if not;
 
         :return record: newly create mail.message
         """
@@ -2485,7 +2494,7 @@ class MailThread(models.AbstractModel):
                                  auto_commit=False,
                                  **kwargs):
         """ Send a mass mail on self, using an external source to render part
-        of the content. It can be either a 'mail.template', either a view used
+        of the content. It can be either a <mail.template>, either a view used
         to render the body using QWeb.
 
         SPOILER: this method currently calls a composer in a loop when using
@@ -2494,22 +2503,23 @@ class MailThread(models.AbstractModel):
         through mail.thread and lessen usage of composer itself.
 
         Default values
-          * subtype_id: will be False, forced by composer in mass mode;
+
+        * subtype_id: will be False, forced by composer in mass mode;
 
         :param record/str source_ref: reference to a source for rendering.
           It can be one of
-            * a MailTemplate record. It will be used to render the various
-              message values (body, subject, recipients, ...). It should behave
-              like using the mail composer with a template;
-            * an IrUIView record. It will be used to render the content
-              (body). Other fields are left to the caller and/or default values
-              computation;
-            * an XmlID of a MailTemplate or of an IrUiView: see above;
-        :param dict render_values: additional rendering values for qweb context;
 
+          * a MailTemplate record. It will be used to render the various
+            message values (body, subject, recipients, ...). It should behave
+            like using the mail composer with a template;
+          * an IrUIView record. It will be used to render the content
+            (body). Other fields are left to the caller and/or default values
+            computation;
+          * an XmlID of a MailTemplate or of an IrUiView: see above;
+        :param dict render_values: additional rendering values for qweb context;
         :param str message_type: one of 'notification' or 'comment';
         :param bool auto_commit: auto commit after each batch of emails sent
-          (see ``MailComposer._action_send_mail()``);
+          (see :meth:`~odoo.addons.mail.wizard.mail_compose_message.MailComposeMessage._action_send_mail()`);
         :param dict kwargs: additional values given to the 'mail.compose.message'
           creation;
 
@@ -2567,18 +2577,20 @@ class MailThread(models.AbstractModel):
         body using QWeb.
 
         Default values
-          * subtype_id: if not given, fallback on ``note`` to be consistent
-            with what message_post does;
+
+        * subtype_id: if not given, fallback on ``note`` to be consistent
+          with what message_post does;
 
         :param record/str source_ref: reference to a source for rendering.
           It can be one of
-            * a MailTemplate record. It will be used to render the various
-              message values (body, subject, recipients, ...). It should behave
-              like using the mail composer with a template;
-            * an IrUIView record. It will be used to render the content
-              (body). Other fields are left to the caller and/or default values
-              computation;
-            * an XmlID of a MailTemplate or of an IrUiView: see above
+
+          * a MailTemplate record. It will be used to render the various
+            message values (body, subject, recipients, ...). It should behave
+            like using the mail composer with a template;
+          * an IrUIView record. It will be used to render the content
+            (body). Other fields are left to the caller and/or default values
+            computation;
+          * an XmlID of a MailTemplate or of an IrUiView: see above
         :param dict render_values: additional rendering values for qweb context;
 
         :param str message_type: one of 'notification' or 'comment';
@@ -2649,16 +2661,19 @@ class MailThread(models.AbstractModel):
         depending on the user configuration, like other notifications.
 
         Default values
-          * subtype_id: if not given, fallback on ``note`` to be consistent
-            with what message_post does;
+
+        * subtype_id: if not given, fallback on ``note`` to be consistent
+          with what :meth:`message_post` does;
 
         :param str body: body of the message, usually raw HTML that will
           be sanitized
         :param str subject: subject of the message
-        :param int author_id: optional ID of partner record being the author. See
-          ``_message_compute_author`` that uses it to make email_from / author_id coherent;
-        :param str email_from: from address of the author. See ``_message_compute_author``
-          that uses it to make email_from / author_id coherent;
+        :param int author_id: optional ID of partner record being the author.
+          See :meth:`_message_compute_author` that uses it to make
+          ``email_from`` / ``author_id`` coherent;
+        :param str email_from: from address of the author. See
+          :meth:`_message_compute_author` that uses it to make ``email_from`` /
+          ``author_id`` coherent;
         :param str model: when invoked on MailThread directly, this method
           allows to push a notification on a given record (allows to notify
           on not thread-enabled records);
@@ -2669,17 +2684,19 @@ class MailThread(models.AbstractModel):
           notification mechanism;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
             computed based on subtype / followers matching;
-        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
-            tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
-            is NOT base64 encoded;
+        :param attachments: list of attachment tuples in the form
+            ``(name, content)`` or ``(name, content, info)`` where
+            content is NOT base64 encoded;
+        :type attachments: list[tuple[str, str] | tuple[str, str, dict]]
         :param list attachment_ids: list of existing attachments to link to this message
             Should not be a list of commands. Attachment records attached to mail
             composer will be attached to the related document.
 
         Extra keyword arguments will be used either
-          * as default column values for the new mail.message record if they match
-            mail.message fields;
-          * propagated to notification methods if not;
+
+        * as default column values for the new mail.message record if they match
+          mail.message fields;
+        * propagated to notification methods if not;
 
         :return: posted mail.message records
         """
@@ -3450,28 +3467,30 @@ class MailThread(models.AbstractModel):
         :param list subtitles: optional list set as template value "subtitles";
 
         :return: iterator based on recipients classified by lang, with their
-          rendering evaluation context. Each item is a tuple containing (
-            lang: used for rendering (customer language, forced email, default
-              environment language,
-            render_values: used to render the notification layout and translated
-              using lang,
-            recipients_group: a recipients group is a dict containing data
-              defined in "_notify_get_recipients_groups" like {
-              'active': if not, it is skipped in notification process (ease
-                        inheritance to be already present);
-              'button_access': main access document button information, {'url'
-                               link of the access, 'title': link or button
-                               string};
-              'has_button_access': display access document main button in email;
-              'notification_group_name': name of the group, to ease usage;
-              'recipients_data': list of recipients data, following format used
-                                 in '_notify_get_recipients'. It is fillup when
-                                 evaluating groups;
-              'recipients_ids': list of partner IDs, based on partner ID present in
-                                recipients_data (allows mainly to speedup some
-                                data computation);
-           }
-          );
+          rendering evaluation context. Each item is a 3-items tuple containing
+
+            1) lang: used for rendering (customer language, forced email,
+               default environment language,
+            2) render_values: used to render the notification layout and
+               translated using lang,
+            3) recipients_group: a recipients group is a dict containing data
+               defined in :meth:`_notify_get_recipients_groups` with keys:
+
+               * ``'active'``: if not, it is skipped in notification process
+                 (ease inheritance to be already present);
+               * ``'button_access'``: main access document button information::
+
+                    {'url': link of the access, 'title': link or button string}
+               * ``'has_button_access'``: display access document main button
+                 in email;
+               * ``'notification_group_name'``: name of the group, to ease
+                 usage;
+               * ``'recipients_data'``: list of recipients data, following
+                 format used in :meth:`_notify_get_recipients`. It is fillup
+                 when evaluating groups;
+               * ``'recipients_ids'``: list of partner IDs, based on partner ID
+                 present in ``recipients_data`` (allows mainly to speedup some
+                 data computation);
         """
         lang_to_recipients = {}
         for data in recipients_data:
@@ -3792,8 +3811,10 @@ class MailThread(models.AbstractModel):
 
     def _web_push_send_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None):
         """
-        :param payload: JSON serializable dict following the notification api specs https://notifications.spec.whatwg.org/#api
-        :param payload_by_lang a dict mapping payload by lang, either this or payload must be provided
+        :param payload: JSON serializable dict following the notification api
+          specs https://notifications.spec.whatwg.org/#api
+        :param payload_by_lang: a dict mapping payload by lang, either this or
+          payload must be provided
         """
         if len(devices) < MAX_DIRECT_PUSH:
             session = Session()
@@ -3889,7 +3910,7 @@ class MailThread(models.AbstractModel):
         method returns data structured as expected for ``_notify_recipients``.
 
         :param record message: <mail.message> record being notified. May be
-          void as 'msg_vals' superseeds it;
+          void as ``msg_vals`` superseeds it;
         :param dict msg_vals: values dict used to create the message, allows to
           skip message usage and spare some queries if given;
 
@@ -3909,29 +3930,29 @@ class MailThread(models.AbstractModel):
             to avoid having several notifications / partner as it would make
             constraints crash. This is disabled by default to optimize speed;
 
-        TDE/XDO TODO: flag rdata directly, for example r['notif'] = 'ocn_client'
-        and r['needaction']=False and correctly override _notify_get_recipients
-
         :return list recipients_data: list of recipients information (see
-          ``MailFollowers._get_recipient_data()`` for more details) formatted
-          like [
-          {
-            'active': partner.active;
-            'email_normalized': partner.email_normalized;
-            'id': id of the res.partner being recipient to notify;
-            'is_follower': follows the message related document;
-            'name': partner name;
-            'lang': partner lang;
-            'groups': res.group IDs if linked to a user;
-            'notif': notification type, one of 'inbox', 'email', 'sms' (SMS App),
-                'whatsapp (WhatsAapp);
-            'share': is partner a customer (partner.partner_share);
-            'type': partner usage ('customer', 'portal', 'user');
-            'uid': user ID (in case of multiple users, internal then first found
-                by ID);)
-            'ushare': are users shared (if users, all users are shared);
-          }, {...}]
+            :meth:`~odoo.addons.mail.models.mail_followers.MailFollowers._get_recipient_data`
+            for more details), like::
+
+              [{
+                'active': partner.active;
+                'email_normalized': partner.email_normalized;
+                'id': id of the res.partner being recipient to notify;
+                'is_follower': follows the message related document;
+                'name': partner name;
+                'lang': partner lang;
+                'groups': res.group IDs if linked to a user;
+                'notif': notification type, one of 'inbox', 'email', 'sms' (SMS App),
+                    'whatsapp (WhatsAapp);
+                'share': is partner a customer (partner.partner_share);
+                'type': partner usage ('customer', 'portal', 'user');
+                'uid': user ID (in case of multiple users, internal then first found
+                    by ID);)
+                'ushare': are users shared (if users, all users are shared);
+              }, {...}]
         """
+        # TDE/XDO TODO: flag rdata directly, for example r['notif'] = 'ocn_client'
+        # and r['needaction']=False and correctly override _notify_get_recipients
         msg_vals = msg_vals or {}
         msg_sudo = message.sudo()
 
@@ -3995,38 +4016,46 @@ class MailThread(models.AbstractModel):
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         """ Return groups used to classify recipients of a notification email.
-        Groups is a list of tuple (group_name, group_func, group_data) where
+        Groups is a list of 3-items tuples
+        ``(group_name, group_func, group_data)`` where:
 
-         * 'group_name' is an identifier used only to be able to override and
-           manipulate groups;
-         * 'group_func' is a function pointer taking a partner data dict as
-           parameter. It is called on recipients to know if they belong to
-           the group. Only first matching group is kept, iterating on the
-           group list in order.
-         * 'group_data' is a dict containing parameters used in notification
-           process like {
-            'active': if not, it is skipped in notification process (ease
-                      inheritance to be already present);
-            'button_access': main access document button information, {'url'
-                             link of the access, 'title': link or button
-                             string};
-            'has_button_access': display access document main button in email;
-            'notification_group_name': name of the group, to ease usage;
-            'recipients_data': list of recipients data, following format used
-                               in '_notify_get_recipients'. It is fillup when
-                               evaluating groups;
-            'recipients_ids': list of partner IDs, based on partner ID present in
-                              recipients_data (allows mainly to speedup some
-                              data computation);
-           }
+        ``group_name``
+            an identifier used only to be able to override and manipulate
+            groups;
+
+        ``group_func``
+            a function pointer taking a partner data dict as parameter. It is
+            called on recipients to know if they belong to the group. Only
+            first matching group is kept, iterating on the group list in order.
+
+        ``group_data``
+            a dict containing parameters used in notification process
+            like::
+
+                {
+                    'active': if not, it is skipped in notification process
+                              (ease inheritance to be already present);
+                    'button_access': main access document button information,
+                                     {'url' link of the access,
+                                      'title': link or button string};
+                    'has_button_access': display access document main button in
+                                         email;
+                    'notification_group_name': name of the group, to ease usage;
+                    'recipients_data': list of recipients data, following
+                                       format used in '_notify_get_recipients'.
+                                       It is fillup when evaluating groups;
+                    'recipients_ids': list of partner IDs, based on partner ID
+                                      present in recipients_data (allows mainly
+                                      to speedup some data computation);
+                }
 
         Default groups:
 
-          * 'user': recipients linked to an internal user;
-          * 'portal': recipients linked to a portal user;
-          * 'follower': recipients (not internal/portal users) follower of the
-            related record;
-          * 'customer': other recipients (always partners);
+        * 'user': recipients linked to an internal user;
+        * 'portal': recipients linked to a portal user;
+        * 'follower': recipients (not internal/portal users) follower of the
+          related record;
+        * 'customer': other recipients (always partners);
 
         When having to find a group for recipients, the first matching one
         when iterating on groups is used. Reordering those groups is doable
@@ -4034,7 +4063,7 @@ class MailThread(models.AbstractModel):
         buttons for users belonging to some user groups.
 
         :param record message: <mail.message> record being notified. May be
-          void as 'msg_vals' superseeds it;
+          void as ``msg_vals`` superseeds it;
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
         :param dict msg_vals: values dict used to create the message, allows to
@@ -4114,21 +4143,22 @@ class MailThread(models.AbstractModel):
         """ Classify recipients to be notified of a message in groups to have
         specific rendering depending on their group. For example users could
         have access to buttons customers should not have in their emails.
-        Module-specific grouping should be done by overriding ``_notify_get_recipients_groups``
-        method defined here-under.
+        Module-specific grouping should be done by overriding
+        :meth:`_notify_get_recipients_groups` defined here-under.
 
         :param record message: <mail.message> record being notified. May be
-          void as 'msg_vals' superseeds it;
-        :param list recipients_data: list of recipients data based on <res.partner>
-          records formatted like a list of dicts containing information. See
-          ``MailThread._notify_get_recipients()``;
+          void as ``msg_vals`` superseeds it;
+        :param list recipients_data: list of recipients data based on
+          <res.partner> records formatted like a list of dicts containing
+          information. See :meth:`_notify_get_recipients()`;
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
         :param dict msg_vals: values dict used to create the message, allows to
           skip message usage and spare some queries if given;
 
-        :return list: list of groups (see '_notify_get_recipients_groups')
-          with 'recipients' key filled with matching partners, like
+        :return list: list of groups (see :meth:`_notify_get_recipients_groups`)
+          with 'recipients' key filled with matching partners, like::
+
             [{
                 'active': True,
                 'button_access': {'url': 'https://odoo.com/url', 'title': 'Title'},
@@ -4361,12 +4391,14 @@ class MailThread(models.AbstractModel):
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
         """ Optional method to override in addons inheriting from mail.thread.
-        Return a list tuples containing (
-          partner ID,
-          subtype IDs (or False if model-based default subtypes),
-          QWeb template XML ID for notification (or False is no specific
-            notification is required),
-          ), aka partners and their subtype and possible notification to send
+        Return a list tuples containing
+
+        1) partner ID
+        2) subtype IDs (or False if model-based default subtypes)
+        3) QWeb template XML ID for notification (or False is no specific
+           notification is required)
+
+        aka partners and their subtype and possible notification to send
         using the auto subscription mechanism linked to updated values.
 
         Default value of this method is to return the new responsible of
@@ -4378,8 +4410,8 @@ class MailThread(models.AbstractModel):
         Override this method to change that behavior and/or to add people to
         notify, using possible custom notification.
 
-        :param updated_values: see ``_message_auto_subscribe``
-        :param default_subtype_ids: coming from ``_get_auto_subscription_subtypes``
+        :param updated_values: see :meth:`_message_auto_subscribe`
+        :param default_subtype_ids: coming from :meth:`_get_auto_subscription_subtypes`
         """
         fnames = []
         field = self._fields.get('user_id')

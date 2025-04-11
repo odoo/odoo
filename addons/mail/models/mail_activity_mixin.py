@@ -365,6 +365,7 @@ class MailActivityMixin(models.AbstractModel):
 
     def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', **act_values):
         """ Schedule an activity on each record of the current record set.
+
         This method allow to provide as parameter act_type_xmlid. This is an
         xml_id of activity type instead of directly giving an activity_type_id.
         It is useful to avoid having various "env.ref" in the code and allow
@@ -374,7 +375,8 @@ class MailActivityMixin(models.AbstractModel):
         will have their "automated" field set to True.
 
         :param date_deadline: the day the activity must be scheduled on
-        the timezone of the user must be considered to set the correct deadline
+          the timezone of the user must be considered to set the correct
+          deadline
         """
         if self.env.context.get('mail_activity_automation_skip'):
             return False
@@ -413,11 +415,12 @@ class MailActivityMixin(models.AbstractModel):
 
     def _activity_schedule_with_view(self, act_type_xmlid='', date_deadline=None, summary='', views_or_xmlid='', render_context=None, **act_values):
         """ Helper method: Schedule an activity on each record of the current record set.
-        This method allow to the same mecanism as `activity_schedule`, but provide
+        This method allow to the same mecanism as :meth:`activity_schedule`, but provide
         2 additionnal parameters:
+
         :param views_or_xmlid: record of ir.ui.view or string representing the xmlid
             of the qweb template to render
-        :type views_or_xmlid: string or recordset
+        :type views_or_xmlid: str or BaseModel
         :param render_context: the values required to render the given qweb template
         :type render_context: dict
         """

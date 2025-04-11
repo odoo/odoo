@@ -404,7 +404,7 @@ class CrmTeam(models.Model):
 
         :param int creation_delta_days: see ``CrmTeam._action_assign_leads()``;
 
-        :return teams_data: dict() with each team assignment result:
+        :return: teams_data dict() with each team assignment result:
           team: {
             'assigned': set of lead IDs directly assigned to the team (no
               duplicate or merged found);

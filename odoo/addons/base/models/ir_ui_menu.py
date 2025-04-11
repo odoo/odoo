@@ -163,11 +163,15 @@ class IrUiMenu(models.Model):
         return super(IrUiMenu, self).write(values)
 
     def _compute_web_icon_data(self, web_icon):
-        """ Returns the image associated to `web_icon`.
-            `web_icon` can either be:
-              - an image icon [module, path]
-              - a built icon [icon_class, icon_color, background_color]
-            and it only has to call `_read_image` if it's an image.
+        """ Returns the image associated to ``web_icon``.
+
+        :param str web_icon: a comma-separated value string for either:
+
+          * an image icon: ``f"{module},{path}"``
+          * a built icon: ``f"{icon_class},{icon_color},{background_color}"``
+
+        The ``web_icon_data`` computed field uses :meth:`_read_image` for image
+        web icons, and is ``False`` for built icons.
         """
         if web_icon and len(web_icon.split(',')) == 2:
             return self._read_image(web_icon)

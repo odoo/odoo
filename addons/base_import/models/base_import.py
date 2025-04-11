@@ -387,12 +387,12 @@ class Base_ImportImport(models.TransientModel):
 
     def _filter_fields_by_types(self, model_fields_tree, header_types):
         """ Remove from model_fields_tree param all the fields and subfields
-        that do not match the types in header_types
+        that do not match the types in ``header_types``.
 
-        :param: list[dict] model_fields_tree: Contains recursively all the importable fields of the target model.
-                                              Generated in "get_fields_tree" method.
-        :param: list header_types: Contains the extracted fields types of the current header.
-                                   Generated in :meth:`_extract_header_types`.
+        :param list[dict] model_fields_tree: Contains recursively all the importable fields of
+            the target model. Generated in :meth:`get_fields_tree`.
+        :param list header_types: Contains the extracted fields types of the current header.
+            Generated in :meth:`_extract_header_types`.
         """
         most_likely_fields_tree = []
         for field in model_fields_tree:
@@ -1615,9 +1615,10 @@ class Base_ImportImport(models.TransientModel):
             there was already a conflict during first import run and user had to
             select a fallback value for the field.
 
-        :param: list import_field: ordered list of field that have been matched to import data
-        :param: list input_file_data: ordered list of values (list) that need to be imported in the given import_fields
-        :param: dict fallback_values:
+        :param list import_field: ordered list of field that have been matched to import data
+        :param list input_file_data: ordered list of values (list) that need to be imported in
+            the given import_fields
+        :param dict fallback_values:
 
             contains all the fields that have been tagged by the user to use a
             specific fallback value in case the value to import does not match
