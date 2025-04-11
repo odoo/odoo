@@ -1,4 +1,4 @@
-import weUtils from "@web_editor/js/common/utils";
+import { areCssValuesEqual } from "@html_builder/utils/utils_css";
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
@@ -14,33 +14,19 @@ const TARGET_BODY_COLOR_V2 = 'rgb(255, 0, 255)';
 
 const checkFontSize = function () {
     const style = document.defaultView.getComputedStyle(this.anchor);
-    if (
-        !weUtils.areCssValuesEqual(
-            style.fontSize,
-            `${TARGET_FONT_SIZE}px`,
-            "font-size",
-            this.anchor
-        )
-    ) {
+    if (!areCssValuesEqual(style.fontSize, `${TARGET_FONT_SIZE}px`, "font-size")) {
         console.error(`Expected the font-size to be equal to ${TARGET_FONT_SIZE}px but found ${style.fontSize} instead`);
     }
 };
 const checkBodyBgColor = function () {
     const style = document.defaultView.getComputedStyle(this.anchor);
-    if (
-        !weUtils.areCssValuesEqual(
-            style.backgroundColor,
-            `${TARGET_BODY_BG_COLOR}`,
-            "background-color",
-            this.anchor
-        )
-    ) {
+    if (!areCssValuesEqual(style.backgroundColor, `${TARGET_BODY_BG_COLOR}`, "background-color")) {
         console.error(`Expected the background color to be equal to ${TARGET_BODY_BG_COLOR} but found ${style.backgroundColor} instead`);
     }
 };
 const checkBodyColor = function () {
     const style = document.defaultView.getComputedStyle(this.anchor);
-    if (!weUtils.areCssValuesEqual(style.color, `${TARGET_BODY_COLOR}`, "color", this.anchor)) {
+    if (!areCssValuesEqual(style.color, `${TARGET_BODY_COLOR}`, "color")) {
         console.error(`Expected the color to be equal to ${TARGET_BODY_COLOR} but found ${style.color} instead`);
     }
 };
@@ -52,7 +38,7 @@ registerWebsitePreviewTour("website_style_edition", {
 ...goToTheme(),
 {
     content: "Change font size",
-    trigger: '[data-variable="font-size-base"] input',
+    trigger: "[data-action-param='font-size-base'] input",
     run: `edit ${TARGET_FONT_SIZE} && click body`,
 },
 {
@@ -66,25 +52,25 @@ registerWebsitePreviewTour("website_style_edition", {
     run: checkFontSize,
 }, {
     content: "Open the color combinations area",
-    trigger: '.o_we_theme_presets_collapse we-toggler',
+    trigger: "div[data-label='Color Presets'] button",
     run: "click",
 }, {
     content: "Open a color combination",
-    trigger: '.o_we_cc_preview_wrapper',
+    trigger: "div[id^='builder_collapse_content'] button.o_we_collapse_toggler",
     run: "click",
 }, {
     content: "Edit the background color of that color combination",
-    trigger: '.o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(0)',
+    trigger: "div[id^='builder_collapse_content'] div .o_we_color_preview",
     run: "click",
 }, {
     content: "Choose a color",
-    trigger: `.o_we_color_btn[style*="background-color:${TARGET_BODY_BG_COLOR}"]`,
+    trigger: `.o_font_color_selector .o_color_button[data-color="${TARGET_BODY_BG_COLOR}"]`,
     run: "click",
 },
 {
     trigger: `
-        .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(0) .o_we_color_preview[style*="${TARGET_BODY_BG_COLOR}"],
-        .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(0) .o_we_color_preview[style*="${TARGET_BODY_BG_COLOR_V2}"]
+        div[id^='builder_collapse_content'] div .o_we_color_preview[style*="${TARGET_BODY_BG_COLOR}"],
+        div[id^='builder_collapse_content'] div .o_we_color_preview[style*="${TARGET_BODY_BG_COLOR_V2}"]
     `,
 },
 {
@@ -93,17 +79,17 @@ registerWebsitePreviewTour("website_style_edition", {
     run: checkBodyBgColor,
 }, {
     content: "Edit the text color of that color combination",
-    trigger: '.o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(1)',
+    trigger: "div[id^='builder_collapse_content'] div[data-label='Text'] .o_we_color_preview",
     run: "click",
 }, {
     content: "Choose a color",
-    trigger: `.o_we_color_btn[style*="background-color:${TARGET_BODY_COLOR}"]`,
+    trigger: `.o_font_color_selector .o_color_button[data-color="${TARGET_BODY_COLOR}"]`,
     run: "click",
 },
 {
     trigger: `
-        .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(1) .o_we_color_preview[style*="${TARGET_BODY_COLOR}"],
-        .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(1) .o_we_color_preview[style*="${TARGET_BODY_COLOR_V2}"]
+        div[id^='builder_collapse_content'] div .o_we_color_preview[style*="${TARGET_BODY_COLOR}"],
+        div[id^='builder_collapse_content'] div .o_we_color_preview[style*="${TARGET_BODY_COLOR_V2}"]
     `,
 },
 {
@@ -128,11 +114,11 @@ registerWebsitePreviewTour("website_style_edition", {
 ...clickOnEditAndWaitEditMode(),
 ...goToTheme(),
 {
-    trigger: '[data-customize-body-bg-type="NONE"].active',
+    trigger: "div[data-label='Background'] button[data-action-value='NONE'].active",
 },
 {
     content: "Click on the Background Image selection",
-    trigger: '[data-customize-body-bg-type="\'image\'"]:not(.active)',
+    trigger: "div[data-label='Background'] button[data-action-value='image']:not(.active)",
     run: "click",
 }, {
     content: "The media dialog should open",
