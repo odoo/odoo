@@ -1,5 +1,6 @@
 import {
     changeOption,
+    changeOptionInPopover,
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
@@ -7,6 +8,9 @@ import {
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
+import { queryOne } from "@odoo/hoot-dom";
+
+window.queryOne = queryOne;
 
 const snippets = [
     {
@@ -54,30 +58,25 @@ registerWebsitePreviewTour('conditional_visibility_1', {
 }, () => [
 ...insertSnippet(snippets[0]),
 ...clickOnSnippet(snippets[0]),
-changeOption('ConditionalVisibility', 'we-toggler'),
-{
-    content: 'click on conditional visibility',
-    trigger: '[data-name="visibility_conditional"]',
-    run: 'click',
-},
+...changeOptionInPopover("Text - Image", "Visibility", "Conditionally"),
 {
     content: 'click on utm medium toggler',
-    trigger: '[data-save-attribute="visibilityValueUtmMedium"] we-toggler',
+    trigger: '[data-label="visibilityValueUtmMedium"] button.dropdown-toggle:contains("Choose a record...")',
     run: 'click',
 },
 {
-    trigger: '[data-save-attribute="visibilityValueUtmMedium"] we-selection-items .o_we_m2o_search input',
+    trigger: '.o_popover input',
     content: 'Search for Email',
     run: "edit Email",
 },
 {
-    trigger: '[data-save-attribute="visibilityValueUtmMedium"] we-selection-items [data-add-record="Email"]',
+    trigger: ".o_popover .o-dropdown-item:contains('Email')",
     content: 'click on Email',
     run: 'click',
 },
 ...clickOnSave(),
 {
-    trigger: ".o_website_preview:only-child",
+    trigger: ".o_website_preview",
 },
 {
     content: 'Check if the rule was applied',
