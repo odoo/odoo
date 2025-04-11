@@ -75,6 +75,7 @@ class DiscussChannel(models.Model):
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
     invited_member_ids = fields.One2many("discuss.channel.member", compute="_compute_invited_member_ids", compute_sudo=True)
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
+    message_count = fields.Integer("# Messages", readonly=True, compute="_compute_message_count")
     last_interest_dt = fields.Datetime(
         "Last Interest",
         default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
@@ -268,6 +269,19 @@ class DiscussChannel(models.Model):
         member_count_by_channel_id = {channel.id: count for channel, count in read_group_res}
         for channel in self:
             channel.member_count = member_count_by_channel_id.get(channel.id, 0)
+
+    @api.depends("message_ids")
+    def _compute_message_count(self):
+        read_group_res = self.env["mail.message"]._read_group(
+            domain=[
+                ("model", "=", "discuss.channel"),
+                ("res_id", "in", self.ids),
+                ("message_type", "not in", ["user_notification", "notification"])
+            ], groupby=["res_id"], aggregates=["__count"]
+        )
+        message_count_by_channel_id = dict(read_group_res)
+        for channel in self:
+            channel.message_count = message_count_by_channel_id.get(channel.id, 0)
 
     @api.depends("channel_type", "parent_channel_id.group_public_id")
     def _compute_group_public_id(self):
