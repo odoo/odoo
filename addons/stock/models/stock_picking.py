@@ -867,7 +867,7 @@ class StockPicking(models.Model):
                     else:
                         picking.state = relevant_move_state
 
-    @api.depends('move_ids.state', 'move_ids.date', 'move_type')
+    @api.depends('move_ids.state', 'move_type')
     def _compute_scheduled_date(self):
         for picking in self:
             moves_dates = picking.move_ids.filtered(lambda move: move.state not in ('done', 'cancel')).mapped('date')
