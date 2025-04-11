@@ -1203,3 +1203,32 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         sale_order.action_confirm()
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_order_with_lot', login="accountman")
+
+    def test_settle_down_payment_then_settle_order(self):
+        """
+        This test first settle a down payment, then it settle the rest of the quotation and check that the previous down payment is correctly applied.
+        """
+        self.product_a.available_in_pos = True
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.product_a.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+        self.downpayment_product = self.env['product.product'].create({
+            'name': 'Down Payment',
+            'available_in_pos': True,
+            'type': 'service',
+        })
+        self.main_pos_config.write({
+            'down_payment_product_id': self.downpayment_product.id,
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_down_payment_then_settle_order', login="accountman")
