@@ -49,23 +49,6 @@
             </field>
         </record>
 
-        <!-- Partner kanban view inherited -->
-        <record model="ir.ui.view" id="purchase_partner_kanban_view">
-            <field name="name">res.partner.kanban.purchaseorder.inherit</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//footer/div" position="inside">
-                    <span t-if="record.purchase_order_count?.raw_value"
-                        class="badge bg-secondary mx-1 rounded-pill smaller"
-                        groups="purchase.group_purchase_user">
-                        <i class="fa fa-credit-card me-1" aria-label="Purchases" role="img" title="Purchases"/>
-                        <field name="purchase_order_count"/>
-                    </span>
-                </xpath>
-            </field>
-        </record>
-
     <record id="act_res_partner_2_supplier_invoices" model="ir.actions.act_window">
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.move</field>
