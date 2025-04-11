@@ -71,11 +71,11 @@ class PaymentProvider(models.Model):
         else:  # 'test'
             return 'https://payment.preprod.direct.worldline-solutions.com'
 
-    def _build_request_headers(self, method, endpoint, *, idempotency_key=None, **kwargs):
+    def _build_request_headers(self, method, endpoint, *args, idempotency_key=None, **kwargs):
         """Override of `payment` to build the request headers."""
         if self.code != 'worldline':
             return super()._build_request_headers(
-               method, endpoint, idempotency_key=idempotency_key, **kwargs
+               method, endpoint, *args, idempotency_key=idempotency_key, **kwargs
             )
 
         content_type = 'application/json; charset=utf-8' if method == 'POST' else ''
