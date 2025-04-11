@@ -44,6 +44,8 @@ class ChatbotScriptStep(models.Model):
         }
         if team:
             vals["type"] = "lead" if team.use_leads else "opportunity"
+        else:
+            vals["type"] = "lead" if self.env['res.groups']._is_feature_enabled('crm.group_use_lead') else "opportunity"
         return vals
 
 

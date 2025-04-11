@@ -19,6 +19,14 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertEqual(created_lead.team_id, self.sale_team)
         self.assertEqual(created_lead.type, 'opportunity')
 
+        self.step_create_lead.crm_team_id = self.env['crm.team']
+        self.env['res.config.settings'].create({'group_use_lead': True}).execute()
+        self._play_session_with_lead()
+
+        created_lead = self.env['crm.lead'].sudo().search([], limit=1, order='id desc')
+        self.assertFalse(created_lead.team_id, "Lead should not have a sales team set")
+        self.assertEqual(created_lead.type, 'lead', "Type field should be set to 'lead'")
+
     def test_chatbot_create_lead_and_forward_public_user(self):
         """Test create_lead_and_forward properly creates a lead, assigns it to an available sales
         team member, and forwards the discussion to that member."""
@@ -94,6 +102,14 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
 
         self.assertEqual(created_lead.team_id, self.sale_team_with_lead)
         self.assertEqual(created_lead.type, 'lead')
+
+        self.step_create_lead.crm_team_id = self.env['crm.team']
+        self.env['res.config.settings'].create({'group_use_lead': True}).execute()
+        self._play_session_with_lead()
+
+        created_lead = self.env['crm.lead'].sudo().search([], limit=1, order='id desc')
+        self.assertFalse(created_lead.team_id, "Lead should not have a sales team set")
+        self.assertEqual(created_lead.type, 'lead', "Type field should be set to 'lead'")
 
     def test_chatbot_create_lead_company(self):
         self.user_portal.write({"company_ids": self.company_2, "company_id": self.company_2})
