@@ -1034,6 +1034,7 @@ test("support properties", async () => {
                 "is lower",
                 "is lower or equal",
                 "is between",
+                "is not between",
                 "contains",
                 "does not contain",
                 "set",
