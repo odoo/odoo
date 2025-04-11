@@ -3225,7 +3225,7 @@ class MailThread(models.AbstractModel):
         # cache data fetched by manual query to avoid extra queries when reading user.partner_id
         for r in filter(lambda r: r["uid"], recipients_data):
             user = self.env["res.users"].browse(r["uid"])
-            self.env.cache.insert_missing(user, user._fields["partner_id"], [r["id"]])
+            user._fields['partner_id']._cache_insert_missing(user, [r['id']])
         # if scheduled for later: add in queue instead of generating notifications
         scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
         if scheduled_date:
