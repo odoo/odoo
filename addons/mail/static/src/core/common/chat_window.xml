@@ -134,7 +134,7 @@
         'ms-3': !thread,
         'ps-2': !hasActionsMenu,
     }">
-        <img t-if="thread" class="rounded o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
+        <img t-if="thread" class="rounded-3 o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
     </div>
     <t t-if="thread?.parent_channel_id">
         <span class="fw-bold small ms-1 p-1 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-esc="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open({ focus: true })"/>
