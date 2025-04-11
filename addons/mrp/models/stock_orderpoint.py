@@ -121,6 +121,8 @@ class StockWarehouseOrderpoint(models.Model):
             ['orderpoint_id', 'product_uom_id'],
             ['product_qty:sum'])
         for orderpoint, uom, product_qty_sum in productions_group:
+            if orderpoint.id not in res:
+                continue
             res[orderpoint.id] += uom._compute_quantity(
                 product_qty_sum, orderpoint.product_uom, round=False)
 
@@ -136,8 +138,10 @@ class StockWarehouseOrderpoint(models.Model):
             date_start, date_finished, orderpoint = prod.date_start, prod.date_finished, prod.orderpoint_id
             lead_days_date = datetime.combine(orderpoint.lead_days_date, time.max)
             if date_start <= lead_days_date < date_finished:
+                if orderpoint.id not in res:
+                    continue
                 res[orderpoint.id] += prod.product_uom_id._compute_quantity(
-                        prod.product_qty, orderpoint.product_uom, round=False)
+                    prod.product_qty, orderpoint.product_uom, round=False)
         return res
 
     def _get_qty_multiple_to_order(self):
