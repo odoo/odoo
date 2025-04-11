@@ -3,7 +3,7 @@ import {
     productLabelSectionAndNoteField,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 import { useEffect } from "@odoo/owl";
-import { serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDateTime, formatDuration } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_service";
@@ -85,6 +85,32 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             }
             this.isInternalUpdate = false;
         }, () => [Array.isArray(this.value) && this.value[0]]);
+    }
+
+    async get_prioritized_product() {
+        if (this.props.context.partner_id && this.props.context.is_sale) {
+            return await this.orm.call(
+                'product.template',
+                'get_prioritized_product_and_time',
+                [{}, 'sale'],
+                {context: {partner_id: this.props.context.partner_id}});
+        }
+        return []
+    }
+
+    computeTime() {
+        if (this.prioritized_product) {
+            const product_data = this.prioritized_product.filter(key => key.product_tmpl_id == this.autoCompleteItemScope.value)
+            if (product_data.length > 0) {
+                const duration = (new Date() - new Date(product_data[0].invoice_date)) / 1000
+                if ((duration / (24 * 3600)) > 1) {
+                    return formatDuration(duration, false);
+                }
+                return '0d'
+            }
+            return ''
+        }
+        return ''
     }
 
     get productName() {
