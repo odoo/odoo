@@ -29,12 +29,13 @@ export class SlideArchive extends Interaction {
                     const categories = document.querySelectorAll(".o_wslides_slide_list_category");
                     for (const category of categories) {
                         const categoryHeaderEl = category.querySelector(".o_wslides_slide_list_category_header");
-                        const categorySlideCountEl = category.querySelector(".o_wslides_slides_list_slide:not(.o_not_editable)").length;
+                        const categorySlideEl = category.querySelector(".o_wslides_slides_list_slide:not(.o_not_editable)");
                         const emptyFlagContainerEl = categoryHeaderEl.querySelector(".o_wslides_slides_list_drag");
-                        const emptyFlag = emptyFlagContainerEl.querySelector("small").length === 0;
-                        if (categorySlideCountEl === 0 && emptyFlag) {
+                        const emptyFlagEl = emptyFlagContainerEl.querySelector("small");
+
+                        if (!categorySlideEl && !emptyFlagEl) {
                             const smallEl = document.createElement("small");
-                            smallEl.classList.add("ms-1 text-muted fw-bold");
+                            smallEl.classList.add("ms-1", "text-muted", "fw-bold");
                             smallEl.innerText = _t("(empty)");
                             this.insert(smallEl, emptyFlagContainerEl);
                         }
