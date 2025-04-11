@@ -19,12 +19,15 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
                 }
                 let date = deserializeDateTime(rawRecord.schedule_date);
                 date = this._getNextDate(date, rawRecord.repeat_unit + 's', rawRecord.repeat_interval);
+                let end_date =  deserializeDateTime(rawRecord.schedule_end);
+                end_date = this._getNextDate(end_date, rawRecord.repeat_unit + 's', rawRecord.repeat_interval);
                 let counter = 1;
                 while (date <= end) {
                     if (date > start) {
                         const rawRecordCopy = { ...rawRecord };
                         rawRecordCopy.display_name = rawRecord.display_name + " (+" + counter + ")";
                         rawRecordCopy.schedule_date = serializeDateTime(date);
+                        rawRecordCopy.schedule_end = serializeDateTime(end_date);
                         records[recordsCounter] = {
                             ...this.normalizeRecord(rawRecordCopy),
                             id: recordsCounter,
@@ -33,6 +36,7 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
                         recordsCounter++;
                     }
                     date = this._getNextDate(date, rawRecord.repeat_unit + 's', rawRecord.repeat_interval);
+                    end_date = this._getNextDate(end_date, rawRecord.repeat_unit + 's', rawRecord.repeat_interval);
                     counter++;
                 }
             }
@@ -41,5 +45,10 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
     }
     _getNextDate(date, unit, interval) {
         return date.plus({ [unit]: interval });
+    }
+    computeRangeDomain(data) {
+        const formattedEnd = serializeDateTime(data.range.end);
+        const domain = [[this.meta.fieldMapping.date_start, "<=", formattedEnd]];
+        return domain;
     }
 }
