@@ -36,10 +36,12 @@ class DiscussChannel(models.Model):
 
     @api.depends('message_ids')
     def _compute_duration(self):
+        last_msg_by_channel_id = {
+            message.res_id: message for message in self._get_last_messages()
+        }
         for record in self:
-            start = record.message_ids[-1].date if record.message_ids else record.create_date
-            end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
-            record.duration = (end - start).total_seconds() / 3600
+            end = last.date if (last := last_msg_by_channel_id.get(record.id)) else fields.Datetime.now()
+            record.duration = (end - record.create_date).total_seconds() / 3600
 
     def _sync_field_names(self):
         return super()._sync_field_names() + ["livechat_operator_id"]
