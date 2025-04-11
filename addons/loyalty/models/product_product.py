@@ -32,13 +32,3 @@ class ProductProduct(models.Model):
                 " Please archive it instead.",
                 name=product.with_context(display_default_code=False).display_name
             ))
-
-    def _get_product_placeholder_filename(self):
-        if self.env['loyalty.reward'].search_count([('discount_line_product_id', '=', self.id)], limit=1):
-            if self.env['loyalty.reward'].search_count([
-                ('program_type', '=', 'gift_card'),
-                ('discount_line_product_id', '=', self.id)
-            ], limit=1):
-                return 'loyalty/static/img/gift_card.png'
-            return 'loyalty/static/img/discount_placeholder_thumbnail.png'
-        return super()._get_product_placeholder_filename()
