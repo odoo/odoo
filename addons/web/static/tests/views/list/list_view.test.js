@@ -17849,3 +17849,128 @@ test(`hide pager in the list view with sample data`, async () => {
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_cp_pager").not.toBeVisible();
 });
+
+test.tags("desktop");
+test(`cell-level keyboard navigation in grouped list`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="bar"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+    });
+
+    expect(`.o_data_row`).toHaveCount(0);
+    expect(`.o_group_header`).toHaveCount(2);
+
+    // Expand the first and second group
+    await contains(`.o_group_header:eq(0)`).click();
+    await contains(`.o_group_header:eq(1)`).click();
+    expect(`.o_data_row`).toHaveCount(4);
+    await contains(`table thead tr th:nth-child(3)`).click();
+
+    //Navigate downward from the last cell of the first group
+    await press("ArrowDown");
+    await animationFrame();
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    // Move right to focus on the next cell in the same row
+    await press("ArrowRight");
+    await animationFrame();
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    //Ensure focus has moved to the same column in the second group
+    await animationFrame();
+    expect(`tbody tr:nth-child(4) td:nth-child(3)`).toBeFocused();
+
+    //Move back up within the second group
+    await press("ArrowUp");
+    await animationFrame();
+
+    //Verify that focus returns to the same column in the first group
+    await press("ArrowUp");
+    await animationFrame();
+    expect(`tbody tr:nth-child(2) td:nth-child(3)`).toBeFocused();
+});
+
+test.tags("desktop");
+test(`cell-level keyboard navigation in multiple grouped list`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="bar"/>
+            </list>
+        `,
+        groupBy: ["bar", "foo"],
+        noContentHelp: "<p>should not be displayed</p>",
+    });
+
+    expect(`.o_data_row`).toHaveCount(0);
+    expect(`.o_group_header`).toHaveCount(2);
+
+    // Expand the first and second group
+    await contains(`.o_group_header:eq(0)`).click();
+    await contains(`.o_group_header:eq(1)`).click();
+
+    await contains(`table thead tr th:nth-child(3)`).click();
+
+    //Navigate downward from the last cell of the sub group of first group
+    await press("ArrowDown");
+    await animationFrame();
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    // Move right to focus on the next cell in the same row
+    await press("ArrowRight");
+    await animationFrame();
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    await press("Enter");
+    await animationFrame();
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    await press("Enter");
+    await animationFrame();
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    await animationFrame();
+    expect(`tbody tr:nth-child(6) td:nth-child(3)`).toBeFocused();
+
+    await press("ArrowUp");
+    await animationFrame();
+
+    await press("ArrowUp");
+    await animationFrame();
+
+    await press("ArrowUp");
+    await animationFrame();
+
+    await animationFrame();
+    expect(`tbody tr:nth-child(3) td:nth-child(3)`).toBeFocused();
+});
