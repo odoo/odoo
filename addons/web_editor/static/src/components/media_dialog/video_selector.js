@@ -278,7 +278,10 @@ export class VideoSelector extends Component {
                 if (urlParameter === "#t=") {
                     return { ...option, value: this.state.urlInput.split("#t=")[1] };
                 }
-                return { ...option, value: urlParams.get(urlParameter) || this.state.urlInput.includes(urlParameter) };
+                if(urlParameter === "start") {
+                    return { ...option, value: urlParams.get(urlParameter) || urlParams.get("t") };
+                }
+                return { ...option, value: this.state.urlInput.includes(urlParameter) };
             });
         }
     }
