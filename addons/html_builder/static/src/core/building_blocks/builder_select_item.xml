@@ -4,7 +4,7 @@
 <t t-name="html_builder.BuilderSelectItem">
     <BuilderComponent>
         <div
-            t-attf-class="d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable #{ props.className || '' }"
+            t-attf-class="d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable #{ props.className }"
             t-att-class="{'active': this.state.isActive}"
             t-att-data-action-id="info.actionId"
             t-att-data-action-param="info.actionParam"
