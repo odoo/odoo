@@ -198,3 +198,18 @@ class LoyaltyCard(models.Model):
                 'default_card_id': self.id,
             },
         }
+
+    @api.constrains('active', 'partner_id', 'program_id')
+    def check_only_one_active_card(self):
+        for card in self:
+            if not card.partner_id or card.program_type != 'loyalty':
+                continue
+            domain = [
+                ('id', '!=', card.id),
+                ('partner_id', '=', card.partner_id.id),
+                ('program_id', '=', card.program_id.id),
+            ]
+            if self.search_count(domain, limit=1):
+                raise ValidationError(self.env._(
+                    "A customer can only have one active loyalty card per program."
+                ))
