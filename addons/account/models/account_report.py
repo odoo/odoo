@@ -70,8 +70,8 @@ class AccountReport(models.Model):
             ('previous_month', "Last Month"),
             ('previous_quarter', "Last Quarter"),
             ('previous_year', "Last Year"),
-            ('this_tax_period', "This Tax Period"),
-            ('previous_tax_period', "Last Tax Period"),
+            ('this_return_period', "This Return Period"),
+            ('previous_return_period', "Last Return Period"),
         ],
         compute=lambda x: x._compute_report_option_filter('default_opening_date_filter', 'previous_month'),
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
@@ -562,7 +562,7 @@ class AccountReportExpression(models.Model):
             ('to_beginning_of_fiscalyear', 'At the beginning of the fiscal year'),
             ('to_beginning_of_period', 'At the beginning of the period'),
             ('strict_range', 'Strictly on the given dates'),
-            ('previous_tax_period', "From previous tax period")
+            ('previous_return_period', "From previous return period")
         ],
         required=True,
         default='strict_range',
