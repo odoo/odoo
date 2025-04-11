@@ -535,8 +535,8 @@ class TestSaleToInvoice(TestSaleCommon):
 
     def test_invoice_combo_product(self):
         """ Test creating an invoice for a SO with a combo product. """
-        product_a = self._create_product(name="Horse-meat burger")
-        product_b = self._create_product(name="French fries")
+        product_a = self._create_product(name="Horse-meat burger", invoice_policy='delivery')
+        product_b = self._create_product(name="French fries", invoice_policy='delivery')
         combo_a = self.env['product.combo'].create({
             'name': "Burger",
             'combo_item_ids': [
@@ -585,6 +585,22 @@ class TestSaleToInvoice(TestSaleCommon):
 
         # Confirm the SO
         sale_order.action_confirm()
+
+        self.assertEqual(sale_order.order_line.mapped('qty_to_invoice'), [0.0, 0.0, 0.0])
+        deliverables = sale_order.order_line.filtered(
+            lambda sol: sol.product_id.invoice_policy == 'delivery'
+        )
+        self.assertEqual(
+            deliverables,
+            sale_order.order_line.linked_line_ids,
+            "Only combo item lines should be invoiced on delivery.",
+        )
+        deliverables.qty_delivered = 3
+        self.assertEqual(
+            sale_order.order_line.mapped('qty_to_invoice'),
+            [3.0, 3.0, 3.0],
+            "Delivering the combo items lines should update the combo product line as well.",
+        )
 
         # Context
         self.context = {
