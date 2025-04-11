@@ -112,6 +112,12 @@ class AccountMove(models.Model):
         )
         return super().button_draft()
 
+    def _get_fields_to_detach(self):
+        # EXTENDS account
+        fields_list = super()._get_fields_to_detach()
+        fields_list.append('l10n_jo_edi_xml_attachment_file')
+        return fields_list
+
     def _post(self, soft=True):
         # EXTENDS 'account'
         for invoice in self.filtered('l10n_jo_edi_is_needed'):

@@ -190,6 +190,12 @@ class AccountMove(models.Model):
                 result = super(AccountMove, self.with_context(disable_onchange_name_predictive=True))._extend_with_attachments(l10n_it_attachments, new)
         return result or super()._extend_with_attachments(attachments, new)
 
+    def _get_fields_to_detach(self):
+        # EXTENDS account
+        fields_list = super()._get_fields_to_detach()
+        fields_list.append('l10n_it_edi_attachment_file')
+        return fields_list
+
     # -------------------------------------------------------------------------
     # Business actions
     # -------------------------------------------------------------------------
