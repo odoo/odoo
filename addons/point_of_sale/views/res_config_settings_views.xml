@@ -375,14 +375,9 @@
                             <setting id="pos_other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box" documentation="/applications/sales/point_of_sale/configuration/epos_ssc.html">
                                 <field name="pos_other_devices"/>
                             </setting>
-                            <setting id="customer_display" string="Customer Display" help="Show checkout to customers through a second display" documentation="/applications/sales/point_of_sale/shop/customer_display.html" >
-                                <div>
-                                    <field name="pos_customer_display_type"/>
-                                    <div class="mt-1" invisible="pos_customer_display_type == 'none'">
-                                        <label for="pos_customer_display_bg_img" />
-                                        <field name="pos_customer_display_bg_img" class="w-100" filename="pos_customer_display_bg_img_name"/>
-                                    </div>
-                                </div>
+                            <setting id="customer_display" string="Customer Display" help="Set the background image of your customer display" documentation="/applications/sales/point_of_sale/shop/customer_display.html" >
+                                <label for="pos_customer_display_bg_img" />
+                                <field name="pos_customer_display_bg_img" class="w-100" filename="pos_customer_display_bg_img_name"/>
                             </setting>
                             <setting string="IoT Box" help="Connect devices using an IoT Box">
                                 <field name="pos_is_posbox"/>

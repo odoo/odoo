@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.QrCodeCustomerDisplay">
+        <Dialog footer="false">
+            <div class="text-center">
+                <img id="CustomerDisplayqrCode" t-att-src="qrCode" alt="Customer QR Code"
+                    class="img-fluid mb-3" style="max-width: 200px; width: 50%;" />
+
+                <div class="small mb-3">
+                    <t t-set="customerDisplayURL" t-value="getCustomerDisplayURL"/>
+                    <a t-att-href="customerDisplayURL" target="_blank">
+                        <t t-esc="customerDisplayURL"/>
+                    </a>
+                    <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText="successText" icon="'fa-clone'"/>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

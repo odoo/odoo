@@ -68,9 +68,6 @@ class PosConfig(models.Model):
             tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
         return tip_product_id
 
-    def _get_customer_display_types(self):
-        return [('none', 'None'), ('local', 'The same device'), ('remote', 'Another device'), ('proxy', 'An IOT-connected screen')]
-
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
     printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
     is_order_printer = fields.Boolean('Order Printer')
@@ -109,7 +106,6 @@ class PosConfig(models.Model):
     iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='total', required=True)
     iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
         help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
-    customer_display_type = fields.Selection(selection=lambda self: self._get_customer_display_types(), string='Customer Facing Display', help="Show checkout to customers.", default='local')
     customer_display_bg_img = fields.Image(string='Background Image', max_width=1920, max_height=1920)
     customer_display_bg_img_name = fields.Char(string='Background Image Name')
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
@@ -396,12 +392,6 @@ class PosConfig(models.Model):
     def _check_header_footer(self, values):
         if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
             raise AccessError(_('Only administrators can edit receipt headers and footers'))
-
-    @api.constrains('customer_display_type', 'proxy_ip', 'is_posbox')
-    def _check_customer_display_type(self):
-        for config in self:
-            if config.customer_display_type == 'proxy' and (not config.is_posbox or not config.proxy_ip):
-                raise UserError(_("You must set the iot box's IP address to use an IoT-connected screen. You'll find the field under the 'IoT Box' option."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -772,25 +762,23 @@ class PosConfig(models.Model):
     def _get_special_products(self):
         return self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
 
-    def update_customer_display(self, order, access_token):
+    def update_customer_display(self, order, device_uuid):
         self.ensure_one()
-        if not access_token or not secrets.compare_digest(self.access_token, access_token):
-            return
-        self._notify("UPDATE_CUSTOMER_DISPLAY", order)
+        self._notify(f"UPDATE_CUSTOMER_DISPLAY-{device_uuid}", order)
 
     def _get_display_device_ip(self):
         self.ensure_one()
         return self.proxy_ip
 
-    def _get_customer_display_data(self):
+    def _get_customer_display_data(self, device_uuid):
         self.ensure_one()
         return {
             'config_id': self.id,
             'access_token': self.access_token,
-            'type': self.customer_display_type,
+            'device_uuid': device_uuid,
             'has_bg_img': bool(self.customer_display_bg_img),
             'company_id': self.company_id.id,
-            **({'proxy_ip': self._get_display_device_ip()} if self.customer_display_type != 'none' else {}),
+            'proxy_ip': self._get_display_device_ip(),
         }
 
     @api.model
