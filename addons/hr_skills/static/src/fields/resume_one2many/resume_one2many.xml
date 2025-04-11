@@ -6,11 +6,6 @@
         </xpath>
         <xpath expr="//table" position="after">
             <t t-if="!showTable">
-                <div name="no_resume_line" class="ms-4 mt-3 text-muted fst-italic oe_inline">
-                    <p>
-                        There are no resume lines on this employee.
-                    </p>
-                </div>
                 <button t-on-click="props.onAdd" class="btn btn-secondary ms-4 mt-3" role="button" t-if="isEditable">
                     Create Resume Lines
                 </button>
@@ -34,27 +29,41 @@
         <xpath expr="//th[hasclass('o_group_name')]" position="after">
             <th></th>
         </xpath>
+        <xpath expr="//button[@id='add_button']" position="attributes">
+            <attribute name="t-on-click">() => props.onAdd({ context: { default_line_type_id: skill_group[1].id }})</attribute>
+        </xpath>
     </t>
 
     <t t-name="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
         <xpath expr="//t[@t-foreach='getColumns(record)']" position="replace">
             <t t-set="data" t-value="record.data"/>
-            <t t-if="data.display_type === 'classic'" id='row'>
-                <td class="o_resume_timeline_cell position-relative pe-lg-2">
-                    <div class="rounded-circle bg-info position-relative"/>
-                </td>
-                <td class="o_data_cell pt-0" t-on-click="(ev) => this.onCellClicked(record, null, ev)">
-                    <div t-attf-class="o_resume_line {{data.display_type == 'certification' ? 'o_resume_line_display_certification' : ''}}" t-att-data-id="id">
-                        <small class="o_resume_line_dates fw-bold">
-                            <t t-out="formatDate(data.date_start)"/> -
+            <td class="o_resume_timeline_cell position-relative pe-lg-2">
+                <div class="rounded-circle bg-info position-relative"/>
+            </td>
+            <td class="o_data_cell pt-0" t-on-click="(ev) => this.onCellClicked(record, null, ev)">
+                <div t-attf-class="o_resume_line" t-att-data-id="id">
+                    <small class="o_resume_line_dates fw-bold">
+                        <t t-out="formatDate(data.date_start)"/>
+                        <t t-if="!data.is_course">
+                            -
                             <t t-if="data.date_end" t-out="formatDate(data.date_end)"/>
-                            <t t-else="">Current</t>
-                        </small>
-                        <h4 class="o_resume_line_title mt-2" t-esc="data.name"/>
-                        <p t-if="data.description" class="o_resume_line_desc" t-out="data.description" t-ref="link-target-blank"/>
+                            <t t-else="">
+                                Current
+                            </t>
+                        </t>
+                        <t t-if="data.is_course &amp;&amp; data.duration > 0">
+                            (<t t-out="data.duration"/> hours)
+                        </t>
+                    </small>
+                    <div class="d-flex align-items-center">
+                        <h4 class="o_resume_line_title mt-2 me-2" t-esc="data.name"/>
+                        <t t-if="data.is_course">
+                            <a id="external_link" t-if="data.external_url" t-attf-href="#{data.external_url}" target="_blank" class="ms-2 fa fa-external-link btn-secondary" style="font-size: 1rem;"/>
+                        </t>
                     </div>
-                </td>
-            </t>
+                    <p t-if="data.description" class="o_resume_line_desc" t-out="data.description" t-ref="link-target-blank"/>
+                </div>
+            </td>
         </xpath>
     </t>
 </odoo>

@@ -25,14 +25,13 @@ class SlideChannelPartner(models.Model):
 
         if employees:
             HrResumeLine = self.env['hr.resume.line'].sudo()
-            line_type = self.env.ref('hr_skills_slides.resume_type_training', raise_if_not_found=False)
+            line_type = self.env.ref('hr_skills.resume_type_training', raise_if_not_found=False)
             line_type_id = line_type and line_type.id
 
             lines_for_channel_by_employee = dict(HrResumeLine._read_group([
                 ('employee_id', 'in', employees.ids),
                 ('channel_id', 'in', completed_membership.channel_id.ids),
-                ('line_type_id', '=', line_type_id),
-                ('display_type', '=', 'course')
+                ('line_type_id', '=', line_type_id)
             ], ['employee_id'], ['channel_id:array_agg']))
 
             lines_to_create = []
@@ -44,11 +43,10 @@ class SlideChannelPartner(models.Model):
                         'employee_id': employee.id,
                         'name': channel.name,
                         'date_start': fields.Date.today(),
-                        'date_end': fields.Date.today(),
                         'description': html2plaintext(channel.description),
                         'line_type_id': line_type_id,
-                        'display_type': 'course',
-                        'channel_id': channel.id
+                        'course_type': 'elearning',
+                        'channel_id': channel.id,
                     })
             if lines_to_create:
                 HrResumeLine.create(lines_to_create)

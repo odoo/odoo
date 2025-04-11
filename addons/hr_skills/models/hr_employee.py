@@ -5,6 +5,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tools import convert
 
@@ -42,21 +43,7 @@ class HrEmployee(models.Model):
             vals_emp_skill = vals.pop('current_employee_skill_ids', [])\
                 + vals.pop('certification_ids', []) + vals.get('employee_skill_ids', [])
             vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(vals_emp_skill, self)
-        res = super().create(vals_list)
-        if self.env.context.get('salary_simulation'):
-            return res
-        resume_lines_values = []
-        for employee in res:
-            line_type = self.env.ref('hr_skills.resume_type_experience', raise_if_not_found=False)
-            resume_lines_values.append({
-                'employee_id': employee.id,
-                'name': employee.company_id.name or '',
-                'date_start': employee.create_date.date(),
-                'description': employee.job_title or '',
-                'line_type_id': line_type and line_type.id,
-            })
-        self.env['hr.resume.line'].create(resume_lines_values)
-        return res
+        return super().create(vals_list)
 
     def write(self, vals):
         if 'current_employee_skill_ids' in vals or 'certification_ids' in vals or 'employee_skill_ids' in vals:
@@ -157,3 +144,42 @@ class HrEmployee(models.Model):
             return
         convert.convert_file(self.env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init')
         convert.convert_file(self.env, 'hr_skills', 'data/scenarios/hr_skills_scenario.xml', None, mode='init')
+
+    @api.model
+    def get_internal_resume_lines(self, res_id, res_model):
+        if not res_id:
+            return []
+        if res_model == 'res.users':
+            res_id = self.env['res.users'].browse(res_id).employee_id.id
+        if not self.env['hr.employee.public'].browse(res_id).has_access('read'):
+            raise AccessError(self.env._("You cannot access the resume of this employee."))
+        res = []
+        employee_versions = self.env['hr.employee'].sudo().browse(res_id).version_ids
+        if len(employee_versions) == 1:
+            return [{
+                'id': employee_versions[0].id,
+                'job_title': employee_versions[0].job_title,
+                'date_start': employee_versions[0].date_start,
+                'date_end': False,
+            }]
+        current_date_start = employee_versions[0].date_start
+        for i in range(len(employee_versions) - 1):
+            current_version = employee_versions[i]
+            next_version = employee_versions[i + 1]
+            if current_version.job_title != next_version.job_title:
+                res.append({
+                    'id': current_version.id,
+                    'job_title': current_version.job_title,
+                    'date_start': current_date_start,
+                    'date_end': next_version.date_start - relativedelta(days=1),
+                })
+                current_date_start = next_version.date_start
+            if i == len(employee_versions) - 2:
+                # Last version, add it to the result
+                res.append({
+                    'id': next_version.id,
+                    'job_title': next_version.job_title,
+                    'date_start': current_date_start,
+                    'date_end': False,
+                })
+        return res[::-1]
