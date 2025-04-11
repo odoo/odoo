@@ -1920,10 +1920,14 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (preset) {
-            if (preset.identification === "address" && !order.partner_id) {
-                const partner = await this.selectPartner();
+            if (preset.needsPartner) {
+                const partner = order.partner_id || (await this.selectPartner());
                 if (!partner) {
                     return;
+                }
+                if (!(partner.street || partner.street2)) {
+                    this.notification.add(_t("Customer address is required"), { type: "warning" });
+                    await this.editPartner(partner);
                 }
             }
 
