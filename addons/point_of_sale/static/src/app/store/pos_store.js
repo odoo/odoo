@@ -6,7 +6,13 @@ import { floatIsZero } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, lte, random5Chars, uuidv4 } from "@point_of_sale/utils";
+import {
+    deduceUrl,
+    lte,
+    random5Chars,
+    uuidv4,
+    computeProductPricelistCache,
+} from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -24,7 +30,6 @@ import {
     ask,
     makeActionAwaitable,
 } from "@point_of_sale/app/store/make_awaitable_dialog";
-import { deserializeDate } from "@web/core/l10n/dates";
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
@@ -472,102 +477,12 @@ export class PosStore extends Reactive {
     async _onBeforeDeleteOrder(order) {
         return true;
     }
+
     computeProductPricelistCache(data) {
         if (data) {
             data = this.models[data.model].readMany(data.ids);
         }
-        // This function is called via the addEventListener callback initiated in the
-        // processServerData function when new products or pricelists are loaded into the PoS.
-        // It caches the heavy pricelist calculation when there are many products and pricelists.
-        const date = DateTime.now();
-        let pricelistItems = this.models["product.pricelist.item"].getAll();
-        let products = this.models["product.product"].getAll();
-
-        if (data && data.length > 0) {
-            if (data[0].model.modelName === "product.product") {
-                products = data;
-            }
-
-            if (data[0].model.modelName === "product.pricelist.item") {
-                pricelistItems = data;
-                // it needs only to compute for the products that are affected by the pricelist items
-                const productTmplIds = new Set(data.map((item) => item.raw.product_tmpl_id));
-                const productIds = new Set(data.map((item) => item.raw.product_id));
-                products = products.filter(
-                    (product) =>
-                        productTmplIds.has(product.raw.product_tmpl_id) ||
-                        productIds.has(product.id)
-                );
-            }
-        }
-
-        const pushItem = (targetArray, key, item) => {
-            if (!targetArray[key]) {
-                targetArray[key] = [];
-            }
-            targetArray[key].push(item);
-        };
-
-        const pricelistRules = {};
-
-        for (const item of pricelistItems) {
-            if (
-                (item.date_start && deserializeDate(item.date_start, { zone: "utc" }) > date) ||
-                (item.date_end && deserializeDate(item.date_end, { zone: "utc" }) < date)
-            ) {
-                continue;
-            }
-            const pricelistId = item.pricelist_id.id;
-
-            if (!pricelistRules[pricelistId]) {
-                pricelistRules[pricelistId] = {
-                    productItems: {},
-                    productTmlpItems: {},
-                    categoryItems: {},
-                    globalItems: [],
-                };
-            }
-
-            const productId = item.raw.product_id;
-            if (productId) {
-                pushItem(pricelistRules[pricelistId].productItems, productId, item);
-                continue;
-            }
-            const productTmplId = item.raw.product_tmpl_id;
-            if (productTmplId) {
-                pushItem(pricelistRules[pricelistId].productTmlpItems, productTmplId, item);
-                continue;
-            }
-            const categId = item.raw.categ_id;
-            if (categId) {
-                pushItem(pricelistRules[pricelistId].categoryItems, categId, item);
-            } else {
-                pricelistRules[pricelistId].globalItems.push(item);
-            }
-        }
-
-        for (const product of products) {
-            const applicableRules = product.getApplicablePricelistRules(pricelistRules);
-            for (const pricelistId in applicableRules) {
-                if (product.cachedPricelistRules[pricelistId]) {
-                    const existingRuleIds = product.cachedPricelistRules[pricelistId].map(
-                        (rule) => rule.id
-                    );
-                    const newRules = applicableRules[pricelistId].filter(
-                        (rule) => !existingRuleIds.includes(rule.id)
-                    );
-                    product.cachedPricelistRules[pricelistId] = [
-                        ...newRules,
-                        ...product.cachedPricelistRules[pricelistId],
-                    ];
-                } else {
-                    product.cachedPricelistRules[pricelistId] = applicableRules[pricelistId];
-                }
-            }
-        }
-        if (data && data.length > 0 && data[0].model.modelName === "product.product") {
-            this._loadMissingPricelistItems(products);
-        }
+        computeProductPricelistCache(this, data);
     }
 
     async _loadMissingPricelistItems(products) {
