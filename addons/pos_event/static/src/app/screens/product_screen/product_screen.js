@@ -160,4 +160,16 @@ patch(ProductScreen.prototype, {
             }
         }
     },
+    onMouseDown(event, product) {
+        if (product.event_id) {
+            return;
+        }
+        return super.onMouseDown(event, product);
+    },
+    onTouchStart(product) {
+        if (product.event_id) {
+            return;
+        }
+        return super.onTouchStart(product);
+    },
 });
