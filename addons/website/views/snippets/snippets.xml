@@ -2254,6 +2254,18 @@
             <we-imagepicker data-name="body_bg_image_opt"
                             data-customize-body-bg=""/>
         </we-row>
+        <we-collapse>
+            <we-select string="Rounded Corners" data-variable="roundness">
+                <we-button data-customize-website-variable="'rounded-0'">Sharp</we-button>
+                <we-button data-customize-website-variable="'rounded-1'">Slightly rounded</we-button>
+                <we-button data-customize-website-variable="'rounded-2'">Default</we-button>
+                <we-button data-customize-website-variable="'rounded-3'">Very rounded</we-button>
+                <we-button data-customize-website-variable="'rounded-4'">Fully rounded</we-button>
+            </we-select>
+            <we-input string="Small" class="o_we_sublevel_1" t-attf-data-variable="border-radius-sm" data-customize-website-variable="null" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Medium" class="o_we_sublevel_1" t-attf-data-variable="border-radius" data-customize-website-variable="null" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" t-attf-data-variable="border-radius-lg" data-customize-website-variable="null" data-unit="px" data-save-unit="rem"/>
+        </we-collapse>
     </div>
     <div data-js="OptionsTab" data-selector="theme-paragraph" data-no-check="true">
         <we-collapse>
@@ -2413,9 +2425,9 @@
             <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-font-size-lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-collapse>
-            <we-input string="Round Corners" data-customize-website-variable="" data-variable="btn-border-radius" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Round Corners" data-customize-website-variable="null" data-variable="btn-border-radius" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="null" data-variable="btn-border-radius-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="null" data-variable="btn-border-radius-lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-select string="On Click Effect" data-variable="btn-ripple">
             <we-button data-customize-website-variable="false">None</we-button>
@@ -2453,9 +2465,9 @@
             <we-input string="Border Width" data-customize-website-variable="" data-variable="input-border-width" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-collapse>
-            <we-input string="Border Radius" data-customize-website-variable="" data-variable="input-border-radius" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-border-radius-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-border-radius-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Border Radius" data-customize-website-variable="null" data-variable="input-border-radius" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="null" data-variable="input-border-radius-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="null" data-variable="input-border-radius-lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-row string="Background">
             <we-colorpicker title="Background"
