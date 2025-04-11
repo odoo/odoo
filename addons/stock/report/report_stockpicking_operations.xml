@@ -121,7 +121,7 @@
                                         <td class="text-end">
                                             <span t-field="ml.quantity">3.00</span>
                                             <span t-field="ml.product_uom_id" groups="uom.group_uom">units</span>
-                                            <span t-if="ml.move_id.packaging_uom_id">
+                                            <span t-if="ml.move_id.packaging_uom_id and ml.move_id.packaging_uom_id != ml.product_uom_id" groups="uom.group_uom">
                                                 <span t-if="o.state != 'done'">
                                                     (<span t-field="ml.move_id.packaging_uom_qty" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.packaging_uom_id.name"/>)
                                                 </span>
