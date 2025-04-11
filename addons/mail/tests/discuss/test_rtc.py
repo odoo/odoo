@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
@@ -805,6 +806,7 @@ class TestChannelRTC(MailCommon):
             channel_member_test_guest._rtc_leave_call()
 
     @users('employee')
+    @freeze_time('2025-04-08 12:00:00')
     @mute_logger('odoo.models.unlink')
     def test_25_lone_call_participant_leaving_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
@@ -934,7 +936,7 @@ class TestChannelRTC(MailCommon):
                                 "attachment_ids": [],
                                 "body": [
                                     "markup",
-                                    '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                    '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited" data-oe-expression="2025-04-08 12:00:00"></span>',
                                 ],
                                 "id": channel.last_call_message_id.id,
                                 "pinned_at": False,
@@ -1156,6 +1158,7 @@ class TestChannelRTC(MailCommon):
         self.assertEqual(self._new_bus_notifs, found_bus_notifs)
 
     @users('employee')
+    @freeze_time('2025-04-08 12:00:00')
     @mute_logger('odoo.models.unlink')
     def test_40_leave_call_should_remove_existing_sessions_of_user_in_channel_and_return_data(self):
         channel = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
@@ -1195,7 +1198,7 @@ class TestChannelRTC(MailCommon):
                                 "attachment_ids": [],
                                 "body": [
                                     "markup",
-                                    '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                    '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited" data-oe-expression="2025-04-08 12:00:05"></span>',
                                 ],
                                 "id": channel.last_call_message_id.id,
                                 "pinned_at": False,
