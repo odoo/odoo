@@ -91,7 +91,7 @@
         <field name="arch" type="xml">
             <list string="Vendor Information" multi_edit="1">
                 <field name="sequence" widget="handle"/>
-                <field name="partner_id" readonly="1"/>
+                <field name="partner_id" readonly="1" widget="many2one_avatar_user"/>
                 <field name="product_id" optional="hide"
                     readonly="1"
                     column_invisible="context.get('product_template_invisible_variant', False)"

@@ -154,6 +154,9 @@
                 <xpath expr="//field[@name='categ_id']" position="after">
                     <field string="Vendor" name="seller_ids"/>
                 </xpath>
+                <filter name="filter_to_sell" position="after">
+                    <filter name="filter_to_purchase" string="Purchase" domain="[('purchase_ok', '=', True)]"/>
+                </filter>
             </field>
         </record>
 
