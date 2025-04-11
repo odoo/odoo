@@ -27,6 +27,7 @@ import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { WebsiteSystrayItem } from "@html_builder/website_preview/website_systray_item";
 
 class Website extends models.Model {
     _name = "website";
@@ -130,6 +131,14 @@ export async function setupWebsiteBuilder(
                 });
             }
             await resolveEditAssetsLoaded();
+        },
+    });
+    patchWithCleanup(WebsiteSystrayItem.prototype, {
+        get isRestrictedEditor() {
+            return true;
+        },
+        get canEdit() {
+            return true;
         },
     });
     await getService("action").doAction({

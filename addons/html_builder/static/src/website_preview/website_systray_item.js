@@ -4,7 +4,7 @@ import { Component, onWillStart } from "@odoo/owl";
 import { PublishSystrayItem } from "./publish_website_systray_item";
 import { useService } from "@web/core/utils/hooks";
 import { MobilePreviewSystrayItem } from "./mobile_preview_systray";
-import { WebsiteSwitcherSystrayItem } from "./website_switcher";
+import { WebsiteSwitcherSystrayItem } from "./website_switcher_systray_item";
 
 export class WebsiteSystrayItem extends Component {
     static template = "html_builder.WebsiteSystrayItem";
@@ -38,6 +38,13 @@ export class WebsiteSystrayItem extends Component {
 
     get isRestrictedEditor() {
         return this.website.isRestrictedEditor;
+    }
+
+    get canEdit() {
+        return (
+            this.website.currentWebsite.metadata.editable ||
+            this.website.currentWebsite.metadata.translatable
+        );
     }
 
     get editWebsiteSystrayItemProps() {
