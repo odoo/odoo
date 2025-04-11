@@ -102,6 +102,22 @@ class TestPeppolParticipant(TransactionCase):
         yield self
         self.env.context = previous_context
 
+    def test_ignore_archived_edi_users(self):
+        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard.button_peppol_sender_registration()
+
+        self.env['account_edi_proxy_client.user'].create([{
+            'active': False,
+            'id_client': f'client-demo',
+            'company_id': self.env.company.id,
+            'edi_identification': f'client-demo',
+            'private_key_id': self.env['certificate.key'].sudo()._generate_rsa_private_key(self.env.company).id,
+            'refresh_token': False,
+            'proxy_type': 'peppol',
+            'edi_mode': 'demo',
+        }])
+        self.env.company.with_context(active_test=False).partner_id.button_account_peppol_check_partner_endpoint()
+
     def test_create_participant_missing_data(self):
         # creating a participant without eas/endpoint/document should not be possible
         wizard = self.env['peppol.registration'].create({
