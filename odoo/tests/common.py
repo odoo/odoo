@@ -1113,6 +1113,11 @@ class TransactionCase(BaseCase):
         savepoint = Savepoint(self.cr)
         self.addCleanup(savepoint.close)
 
+    def tearDown(self):
+        # flush remaining computations after the test ran
+        self.env.flush_all()
+        super().tearDown()
+
     @contextmanager
     def enter_registry_test_mode(self):
         """
