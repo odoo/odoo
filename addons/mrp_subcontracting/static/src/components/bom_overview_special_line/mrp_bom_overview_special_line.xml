@@ -17,10 +17,6 @@
         <xpath expr="//td[@name='bom_cost']" position="inside">
             <span t-if="props.type == 'subcontracting'" t-esc="formatMonetary(subcontracting.bom_cost)"/>
         </xpath>
-
-        <xpath expr="//td[@name='prod_cost']" position="inside">
-            <span t-if="props.type == 'subcontracting'" t-esc="formatMonetary(subcontracting.prod_cost)"/>
-        </xpath>
     </t>
 
 </templates>

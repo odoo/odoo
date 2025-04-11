@@ -16,7 +16,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'partner_id': seller.partner_id.id,
             'quantity': bom_quantity,
             'uom': bom.product_uom_id.name,
-            'prod_cost': price / ratio_uom_seller * bom_quantity,
             'bom_cost': price / ratio_uom_seller * bom_quantity,
             'level': level or 0
         }
@@ -45,7 +44,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 'uom': False,
                 'quantity': subcontract_info['quantity'],
                 'bom_cost': subcontract_info['bom_cost'],
-                'prod_cost': subcontract_info['prod_cost'],
                 'level': subcontract_info['level'],
                 'visible': level == 1 or unfolded or parent_unfolded
             })

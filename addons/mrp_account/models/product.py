@@ -97,9 +97,7 @@ class ProductProduct(models.Model):
             if opt._skip_operation_line(self):
                 continue
 
-            duration_expected = (
-                opt.workcenter_id._get_expected_duration(self) +
-                opt.time_cycle * 100 / opt.workcenter_id.time_efficiency)
+            duration_expected = opt._get_duration_expected(bom.product_id, bom.product_qty, bom.product_uom_id)
             total += (duration_expected / 60) * opt._total_cost_per_hour()
 
         for line in bom.bom_line_ids:

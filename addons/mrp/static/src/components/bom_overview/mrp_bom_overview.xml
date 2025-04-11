@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <div t-name="mrp.BomOverviewComponent" class="o_action">
+    <div t-name="mrp.BomOverviewComponent" class="o_action o_mrp_overview">
+
         <BomOverviewControlPanel
             bomQuantity="state.bomQuantity"
             uomName="uomName"
@@ -15,8 +16,9 @@
             changeWarehouse.bind="onChangeWarehouse"
             changeVariant.bind="onChangeVariant"
             changeBomQuantity.bind="onChangeBomQuantity"
-            changeDisplay.bind="onChangeDisplay"
+            changeMode.bind="onChangeMode"
             precision="state.precision"
+            foldable="state.foldable"
             allFolded="state.allFolded"
             />
 
@@ -26,6 +28,7 @@
             currentWarehouseId="state.currentWarehouse.id"
             data="state.bomData"
             precision="state.precision"
+            bomQuantity="state.bomQuantity"
             changeFolded.bind="onChangeFolded"/>
     </div>
 
