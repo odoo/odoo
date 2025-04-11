@@ -480,7 +480,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_22_website_gray_color_palette(self):
         self.start_tour('/odoo', 'website_gray_color_palette', login='admin')
 
-    @unittest.skip
     def test_23_website_multi_edition(self):
         self.start_tour('/@/', 'website_multi_edition', login='admin')
 
