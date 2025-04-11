@@ -37,12 +37,19 @@
             </td>
         </xpath>
 
-        <xpath expr="//div[@id='qrcode_info']" position="attributes">
-            <attribute name="t-if" add="o.company_id.account_fiscal_country_id.code != 'IN'" separator="and"/>
-        </xpath>
-
-        <xpath expr="//div[@id='qrcode_info']" position="after">
-            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_upi_id">
+        <div id="qrcode" position="after">
+            <t t-set="qr_code_url" t-value="o._generate_l10n_in_qr_code()"/>
+            <div t-if="qr_code_url" class="d-flex mb-3 avoid-page-break-inside">
+                <div class="qrcode me-3">
+                    <p class="position-relative mb-0">
+                        <img t-att-src="qr_code_url"/>
+                        <img src="/account/static/src/img/Odoo_logo_O.svg"
+                             id="qrcode_odoo_logo"
+                             class="top-50 start-50 position-absolute bg-white rounded-circle"
+                             style="border: 3px solid white;"
+                        />
+                    </p>
+                </div>
                 <div style="display:-webkit-flex;" class="flex-column">
                     <strong>PAYMENT QR CODE</strong>
                     <div class="mt-1 mb-1">
@@ -56,8 +63,8 @@
                         <img src="/l10n_in/static/src/img/Upi-logo.svg" t-attf-style="#{'' if report_type != 'html' else 'padding:0.5rem;'} width:4rem;"/>
                     </div>
                 </div>
-            </t>
-        </xpath>
+            </div>
+        </div>
 
         <t name="invoice_title" position="replace">
             <t name="invoice_title" t-out="o._get_l10n_in_customer_invoice_title()"/>
