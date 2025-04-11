@@ -372,6 +372,15 @@ class Partner(models.Model):
                 name = f"{self.commercial_company_name or self.sudo().parent_id.name}, {name}"
         return name.strip()
 
+    def action_open_business_doc(self):
+        return {
+            'name': _("Partner"),
+            'type': 'ir.actions.act_window',
+            'views': [(False, 'form')],
+            'res_model': 'res.partner',
+            'res_id': self.id,
+        }
+
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
     def _compute_complete_name(self):
         for partner in self:
