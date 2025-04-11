@@ -7,3 +7,4 @@ from . import res_partner
 from . import res_company
 from . import res_config_settings
 from . import account_edi_xml_ubl_21_zatca
+from . import ir_attachment
