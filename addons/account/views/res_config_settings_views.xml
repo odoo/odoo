@@ -377,6 +377,11 @@
                             <setting string="Audit Trail" company_dependent="1" help="Activate Audit Trail">
                                 <field name="check_account_audit_trail"/>
                             </setting>
+                            <div class="alert alert-warning o_setting_box" role="alert" invisible= "previous_state_audit_trail or not check_account_audit_trail">
+                                <p>
+                                    <strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be disabled again if there are any existing journal items.
+                                </p>
+                            </div>
                         </block>
                     </app>
                 </xpath>

@@ -208,6 +208,7 @@ class ResConfigSettings(models.TransientModel):
 
     # Audit trail
     check_account_audit_trail = fields.Boolean(string='Audit Trail', related='company_id.check_account_audit_trail', readonly=False)
+    previous_state_audit_trail = fields.Boolean(compute='_compute_current_audit_trail')
 
     # Autopost of bills
     autopost_bills = fields.Boolean(related='company_id.autopost_bills', readonly=False)
@@ -305,3 +306,8 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
             'res_id': self.company_id.id,
         }
+
+    @api.depends('check_account_audit_trail')
+    def _compute_current_audit_trail(self):
+        for config in self:
+            config.previous_state_audit_trail = config.company_id.check_account_audit_trail
