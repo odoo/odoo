@@ -14,7 +14,7 @@ jobs:
 
       - name: Mirror to Bitbucket
         run: |
-          git remote add bitbucket https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/$BITBUCKET_USERNAME/odoo_18.0_github.git
+          git remote add bitbucket https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/it_dev_1010/odoo_18.0_github.git
           git push -f bitbucket HEAD:odoo_18.0
         env:
           BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
