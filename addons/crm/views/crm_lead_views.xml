@@ -222,7 +222,7 @@
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
                                 <label for="date_deadline">Expected Closing</label>
                                 <div class="d-flex gap-3 align-items-center">
-                                    <field name="date_deadline" nolabel="1" class="oe_inline"/>
+                                    <field name="date_deadline" nolabel="1" class="oe_inline" placeholder="No closing estimate"/>
                                     <field name="priority" widget="priority" nolabel="1" class="oe_inline align-top"/>
                                 </div>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
@@ -331,6 +331,9 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <list string="Leads" sample="1" multi_edit="1">
+                    <header>
+                        <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost"/>
+                    </header>
                     <field name="company_id" column_invisible="True"/>
                     <field name="user_company_ids" column_invisible="True"/>
                     <field name="date_deadline" column_invisible="True"/>
@@ -408,33 +411,68 @@
             <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <form>
-                    <group>
-                        <field name="partner_id" widget="res_partner_many2one"
-                            class="o_field_highlight"
-                            string='Contact'
-                            context="{
-                            'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
-                            'default_name': contact_name or partner_name,
-                            'default_is_company': type == 'opportunity' and contact_name == False,
-                            'default_company_name': type == 'opportunity' and partner_name,
-                            'default_type': 'contact',
-                            'default_phone': phone,
-                            'default_email': email_from,
-                            'default_user_id': user_id,
-                            'default_team_id': team_id,
-                            'show_vat': True}"/>
-                        <field name="name" placeholder="e.g. Product Pricing" />
-                        <field name="email_from" string="Email" placeholder='e.g. "email@address.com"' />
-                        <field name="phone" string="Phone" placeholder='e.g. "0123456789"' />
-                        <label for="expected_revenue"/>
-                        <div>
-                            <div class="o_row">
-                                <field name="expected_revenue" class="oe_inline me-5 o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
+                    <group class="crm_quick_create_opportunity_form_group">
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-building" title="Company"/>
+                            <field name="company_partner_id" widget="res_partner_many2one"
+                                placeholder="Company"
+                                string="Company"
+                                nolabel="1"
+                                class="o_field_highlight w-100 mb-0"
+                                context="{
+                                'default_is_company': True,
+                                'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
+                                'default_type': 'contact',
+                                'default_user_id': user_id,
+                                'default_team_id': team_id,
+                        }"/>
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-user" title="Contact"/>
+                            <field name="contact_partner_id"
+                                nolabel="1"
+                                class="o_field_highlight w-100 mb-0"
+                                placeholder='Contact'
+                                string='Contact'
+                                context="{
+                                'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
+                                'default_name': contact_name or partner_name,
+                                'default_is_company': False,
+                                'default_type': 'contact',
+                                'default_phone': phone,
+                                'default_email': email_from,
+                                'default_parent_id': company_partner_id,
+                                'default_user_id': user_id,
+                                'default_team_id': team_id,
+                                'show_vat': True}"
+                                invisible="company_partner_id and not company_has_children"
+                            />
+                            <field name="contact_name" nolabel="1" placeholder="Contact Name" class="o_field_highlight w-100 mb-0" invisible="not company_partner_id or company_has_children"/>
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-briefcase" title="Opportunity Name"/>
+                            <field name="name" nolabel="1" placeholder="Opportunity's Name" class="o_field_highlight w-100 mb-0"/>
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-envelope" title="Email"/>
+                            <field name="email_from" string="Email" placeholder='Email' nolabel="1" class="o_field_highlight w-100 mb-0"/>
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-mobile fa-lg" title="Phone"/>
+                            <field name="phone" string="Phone" placeholder='Phone' nolabel="1" class="o_field_highlight w-100 mb-0"/>
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-money" title="Expected Revenue"/>
+                            <div class="mb-0">
+                                <field name="expected_revenue" class="oe_inline me-5 o_field_highlight mb-0" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="priority" class="oe_inline mb-0" nolabel="1" widget="priority"/>
                             </div>
-                            <div class="o_row" groups="crm.group_use_recurring_revenues">
-                                <field name="recurring_revenue" class="oe_inline o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                <field name="recurring_plan" class="oe_inline" placeholder='e.g. "Monthly"'
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-refresh" title="Recurring Revenue"/>
+                            <div class="o_row">
+                                <field name="recurring_revenue" class="oe_inline mb-0 o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="recurring_plan" class="oe_inline mb-0" placeholder='e.g. "Monthly"'
                                     required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
                             </div>
                         </div>
@@ -509,13 +547,14 @@
                         <t t-name="menu">
                             <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit</a></t>
                             <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                            <div role="separator" class="dropdown-divider"></div>
                             <field name="color" widget="kanban_color_picker"/>
                         </t>
                         <t t-name="card">
                             <widget name="web_ribbon" id="lost_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
                             <widget name="web_ribbon" id="archived_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or won_status in ['lost', 'won']"/>
                             <field class="fw-bold fs-5" name="name"/>
-                            <div>
+                            <div class="o_kanban_card_crm_lead_revenue">
                                 <t t-if="record.expected_revenue.raw_value">
                                     <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                     <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
@@ -569,7 +608,7 @@
                 <xpath expr="//widget[@id='lost_ribbon']" position="after">
                     <widget name="web_ribbon" id="won_ribbon" title="Won" bg_color="text-bg-success" invisible="won_status != 'won'"/>
                 </xpath>
-                <xpath expr="//div" position="replace">
+                <xpath expr="//t[@t-name='card']//div[hasclass('o_kanban_card_crm_lead_revenue')]" position="replace">
                     <div>
                         <t t-if="record.prorated_revenue.raw_value">
                             <field name="prorated_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
@@ -684,6 +723,7 @@
             <field name="arch" type="xml">
                 <list string="Opportunities" sample="1" multi_edit="1">
                     <header>
+                        <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost" />
                         <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
                     </header>
                     <field name="company_id" column_invisible="True"/>

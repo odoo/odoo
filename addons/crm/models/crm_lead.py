@@ -161,8 +161,15 @@ class CrmLead(models.Model):
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     # Customer / contact
+    company_partner_id = fields.Many2one('res.partner', string='Company Partner', compute="_compute_partners", inverse="_inverse_partners", domain="[('is_company', '=', True)]")
+    contact_partner_id = fields.Many2one('res.partner', string='Customer Partner', compute="_compute_partners", inverse="_inverse_partners",
+        domain="[('is_company', '!=', True)] + ([('id', 'child_of', company_partner_id)] if company_partner_id else [])"
+    )
+    company_has_children = fields.Boolean(compute='_compute_company_has_children')
+    contact_has_parent = fields.Boolean(compute='_compute_contact_has_parent')
     partner_id = fields.Many2one(
         'res.partner', string='Customer', check_company=True, index=True, tracking=10,
+        compute="_compute_partner_id", readonly=False, store=True,
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
     partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
     contact_name = fields.Char(
@@ -271,6 +278,25 @@ class CrmLead(models.Model):
                 lead.company_currency = self.env.company.currency_id
             else:
                 lead.company_currency = lead.company_id.currency_id
+
+    @api.depends('company_partner_id')
+    def _compute_company_has_children(self):
+        childful_company_partners = self.env['res.partner']._read_group([
+            ('parent_id', 'in', self.company_partner_id.ids),
+            ('is_company', '!=', True),
+        ], ['parent_id'])
+        childful_company_partners = self.env['res.partner'].browse([
+            parent_tuple[0].id for parent_tuple in childful_company_partners
+        ])
+        self.company_has_children = False
+        for lead in self:
+            if lead.company_partner_id and lead.company_partner_id in childful_company_partners:
+                lead.company_has_children = True
+
+    @api.depends('contact_partner_id')
+    def _compute_contact_has_parent(self):
+        for lead in self:
+            lead.contact_has_parent = lead.contact_partner_id.parent_id.is_company
 
     def _read_group_select(self, aggregate_spec, query) -> SQL:
         """ Manage company_currency:array_agg_distinct to make all Monetary fields aggregable """
@@ -393,11 +419,58 @@ class CrmLead(models.Model):
         for lead in self:
             lead.update(lead._prepare_contact_name_from_partner(lead.partner_id))
 
+    @api.depends('contact_partner_id', 'company_partner_id')
+    def _compute_partner_id(self):
+        """Update partner on change so derived values may be computed too.
+
+        It should be consistent with the inverse on partner fields.
+        """
+        for lead in self:
+            lead.partner_id = lead.contact_partner_id or lead.company_partner_id or lead.partner_id
+
     @api.depends('partner_id')
     def _compute_partner_name(self):
         """ compute the new values when partner_id has changed """
         for lead in self:
             lead.update(lead._prepare_partner_name_from_partner(lead.partner_id))
+
+    @api.depends('partner_id')
+    def _compute_partners(self):
+        self.update({
+            'company_partner_id': False,
+            'contact_partner_id': False,
+        })
+        for lead in self:
+            if lead.partner_id.is_company:
+                lead.company_partner_id = lead.partner_id
+            else:
+                lead.contact_partner_id = lead.partner_id
+                lead.company_partner_id = lead.partner_id.parent_id
+
+    def _inverse_partners(self):
+        to_create_partner_vals = []
+        new_partner_opportunities = self.env['crm.lead']
+        for lead in self:
+            # link existing contact to company if no parent
+            if lead.contact_partner_id and lead.company_partner_id and not lead.contact_partner_id.parent_id:
+                lead.contact_partner_id.parent_id = lead.company_partner_id
+
+            # set partner_id, creating a new partner if we have a company and a contact name
+            if lead.contact_partner_id:
+                lead.partner_id = lead.contact_partner_id
+            elif (
+                lead.type == "opportunity"
+                and lead.company_partner_id
+                and (not lead.partner_id or lead.partner_id == lead.company_partner_id)
+                and lead.contact_name
+            ):
+                to_create_partner_vals.append(lead._prepare_customer_values(lead.contact_name, parent_id=lead.company_partner_id.id))
+                new_partner_opportunities += lead
+            elif lead.company_partner_id:
+                lead.partner_id = lead.company_partner_id
+        new_partners = self.env['res.partner'].create(to_create_partner_vals)
+        for opportunity, partner in zip(new_partner_opportunities, new_partners):
+            opportunity.partner_id = partner
 
     @api.depends('partner_id')
     def _compute_function(self):
@@ -649,6 +722,20 @@ class CrmLead(models.Model):
         is_debug_mode = self.env.user.has_group('base.group_no_one')
         for lead in self:
             lead.is_partner_visible = bool(lead.type == 'opportunity' or lead.partner_id or is_debug_mode)
+
+    @api.onchange('contact_partner_id')
+    def _onchange_contact_partner_id(self):
+        """Set the parent as the company."""
+        for lead in self:
+            if not lead.company_partner_id and lead.contact_partner_id.parent_id.is_company:
+                lead.company_partner_id = lead.contact_partner_id.parent_id
+
+    @api.onchange('company_partner_id')
+    def _onchange_company_partner_id(self):
+        """If the new company isn't the parent, reset contact. Unless the contact has no parent."""
+        self.filtered(lambda lead:
+            lead.contact_partner_id.parent_id and lead.contact_partner_id.parent_id != lead.company_partner_id
+        ).contact_partner_id = False
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
@@ -1744,7 +1831,7 @@ class CrmLead(models.Model):
 
         return True
 
-    def _handle_partner_assignment(self, force_partner_id=False, create_missing=True):
+    def _handle_partner_assignment(self, force_partner_id=False, create_missing=True, with_parent=None):
         """ Update customer (partner_id) of leads. Purpose is to set the same
         partner on most leads; either through a newly created partner either
         through a given partner_id.
@@ -1757,7 +1844,7 @@ class CrmLead(models.Model):
             if force_partner_id:
                 lead.partner_id = force_partner_id
             if not lead.partner_id and create_missing:
-                partner = lead._create_customer()
+                partner = lead._create_customer(with_parent=with_parent)
                 lead.partner_id = partner.id
 
     def _handle_salesmen_assignment(self, user_ids=False, team_id=False):
@@ -1865,7 +1952,7 @@ class CrmLead(models.Model):
             )
         return partner
 
-    def _create_customer(self):
+    def _create_customer(self, with_parent=None):
         """ Create a partner from lead data and link it to the lead.
 
         :return: newly-created partner browse record
@@ -1875,15 +1962,17 @@ class CrmLead(models.Model):
         if not contact_name:
             contact_name = parse_contact_from_email(self.email_from)[0] if self.email_from else False
 
-        if self.partner_name:
+        if with_parent:
+            partner_company = with_parent
+        elif self.partner_name:
             partner_company = Partner.create(self._prepare_customer_values(self.partner_name, is_company=True))
         elif self.partner_id:
             partner_company = self.partner_id
         else:
-            partner_company = None
+            partner_company = self.env['res.partner']
 
         if contact_name:
-            return Partner.create(self._prepare_customer_values(contact_name, is_company=False, parent_id=partner_company.id if partner_company else False))
+            return Partner.create(self._prepare_customer_values(contact_name, is_company=False, parent_id=partner_company.id))
 
         if partner_company:
             return partner_company

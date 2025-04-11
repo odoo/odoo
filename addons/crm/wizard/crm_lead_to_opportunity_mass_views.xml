@@ -32,12 +32,18 @@
                         </list>
                     </field>
                 </group>
-                <group invisible="name != 'convert'" string="Customers" col="1">
-                    <field name="action" class="oe_inline" widget="radio"/>
-                    <group col="2">
+                <group string="Customers">
+                    <group invisible="name != 'convert'">
+                        <field name="action" class="oe_inline" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="company_partner_id"
+                            string="Link to Company"
+                            readonly="action not in ['create', 'each_exist_or_create']"
+                            class="oe_inline"/>
                         <field name="partner_id"
                             widget="res_partner_many2one"
-                            invisible="action != 'exist'"
+                            readonly="action != 'exist'"
                             required="action == 'exist'"
                             context="{'show_vat': True}"
                             class="oe_inline"/>

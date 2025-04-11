@@ -612,13 +612,13 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.opportunity",
 }, {
     isActive: ["desktop"],
-    trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] input",
+    trigger: ".o_kanban_quick_create .o_field_widget[name=contact_partner_id] input",
     content: _t("Write the name of your customer to create one on the fly, or select an existing one."),
     tooltipPosition: "left",
     run: "edit the_flow.customer",
 }, {
     isActive: ["mobile"],
-    trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] input",
+    trigger: ".o_kanban_quick_create .o_field_widget[name=contact_partner_id] input",
     content: _t("Write the name of your customer to create one on the fly, or select an existing one."),
     tooltipPosition: "left",
     run: "click",
@@ -659,7 +659,7 @@ stepUtils.autoExpandMoreButtons(),
     trigger: "body:not(:has(.modal))",
 },
 {
-    trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] .o_external_button", // Wait name_create
+    trigger: ".o_kanban_quick_create .o_field_widget[name=contact_partner_id] .o_external_button", // Wait name_create
 },
 {
     trigger: ".o_kanban_quick_create .o_kanban_add",
