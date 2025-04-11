@@ -319,7 +319,7 @@ class PurchaseOrderLine(models.Model):
         res = super()._prepare_account_move_line(move=move)
         if 'balance' not in res:
             res['balance'] = self.currency_id._convert(
-                self.price_unit_discounted * (self.qty_received or 1),
+                self.price_unit_discounted * self.qty_to_invoice,
                 self.company_id.currency_id,
                 round=False,
             )
