@@ -32,11 +32,6 @@ export class Form extends Interaction {
                 "d-none": this.isHidden,
             })
         },
-        ".s_website_form_end_message": {
-            "t-att-class": () => ({
-                "d-none": !this.isHidden,
-            })
-        },
         "input[type=file]": { "t-on-change": this.changeFile },
         "input.o_add_files_button": { "t-on-click": this.clickAddFilesButton },
         ".s_website_form_field[data-type=binary]": { "t-on-click": this.clickFileDelete }, // delegate on ".o_file_delete"
@@ -438,6 +433,8 @@ export class Form extends Interaction {
                             await delay(400);
 
                             this.isHidden = true;
+                            this.el.parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
+                            this.updateContent();
                             break;
                         }
                         default: {
