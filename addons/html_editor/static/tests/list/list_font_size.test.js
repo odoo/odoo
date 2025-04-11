@@ -8,12 +8,39 @@ import {
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 
+function getMarkerWidth(li) {
+    const withMarker = li.cloneNode(true),
+        withoutMarker = li.cloneNode(true);
+
+    const commonStyle = {
+        position: "absolute",
+        visibility: "hidden",
+        width: "fit-content",
+    };
+    Object.assign(withMarker.style, commonStyle);
+    Object.assign(withoutMarker.style, commonStyle);
+
+    withoutMarker.style.setProperty("list-style", "none");
+
+    document.body.append(withMarker, withoutMarker);
+
+    const markerWidth =
+        withMarker.getBoundingClientRect().width - withoutMarker.getBoundingClientRect().width;
+
+    withMarker.remove();
+    withoutMarker.remove();
+
+    return Math.round(markerWidth);
+}
+
 test("should apply font-size to completely selected list item", async () => {
+    const li = document.createElement("li");
+    li.classList.add("display-4-fs");
+    const paddingLeft = getMarkerWidth(li);
     await testEditor({
         contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
         stepFunction: setFontSize("56px"),
-        contentAfter:
-            '<ol><li style="font-size: 56px; list-style-position: inside;">[abc]</li><li>def</li></ol>',
+        contentAfter: `<ol style="padding-left: ${paddingLeft}px;"><li style="font-size: 56px;">[abc]</li><li>def</li></ol>`,
     });
 });
 
@@ -22,8 +49,7 @@ test("should apply font-size to completely selected multiple list items", async 
         contentBefore: "<ul><li>[abc</li><li>def]</li></ul>",
         stepFunction: (editor) =>
             execCommand(editor, "formatFontSizeClassName", { className: "h2-fs" }),
-        contentAfter:
-            '<ul><li class="h2-fs" style="list-style-position: inside;">[abc</li><li class="h2-fs" style="list-style-position: inside;">def]</li></ul>',
+        contentAfter: '<ul><li class="h2-fs">[abc</li><li class="h2-fs">def]</li></ul>',
     });
 });
 
@@ -32,103 +58,103 @@ test("should apply font-size to completely selected and partially selected list 
         contentBefore: "<ol><li>[abc</li><li>def</li><li>gh]i</li></ol>",
         stepFunction: setFontSize("18px"),
         contentAfter:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">[abc</li><li style="font-size: 18px; list-style-position: inside;">def</li><li><span style="font-size: 18px;">gh]</span>i</li></ol>',
+            '<ol><li style="font-size: 18px;">[abc</li><li style="font-size: 18px;">def</li><li><span style="font-size: 18px;">gh]</span>i</li></ol>',
     });
 });
 
 test("should apply font-size to completely selected list items and paragraph tag", async () => {
+    const li = document.createElement("li");
+    li.classList.add("display-3-fs");
+    const paddingLeft = getMarkerWidth(li);
     await testEditor({
         contentBefore: "<ul><li>[abc</li><li>def</li></ul><p>ghi]</p>",
         stepFunction: (editor) =>
             execCommand(editor, "formatFontSizeClassName", { className: "display-3-fs" }),
-        contentAfter:
-            '<ul><li class="display-3-fs" style="list-style-position: inside;">[abc</li><li class="display-3-fs" style="list-style-position: inside;">def</li></ul><p><span class="display-3-fs">ghi]</span></p>',
+        contentAfter: `<ul style="padding-left: ${paddingLeft}px;"><li class="display-3-fs">[abc</li><li class="display-3-fs">def</li></ul><p><span class="display-3-fs">ghi]</span></p>`,
     });
 });
 
 test("should carry list item font-size to new list item", async () => {
     await testEditor({
-        contentBefore:
-            '<ol><li>abc</li><li style="font-size: 18px; list-style-position: inside;">def[]</li></ol>',
+        contentBefore: '<ol><li>abc</li><li style="font-size: 18px;">def[]</li></ol>',
         stepFunction: splitBlock,
         contentAfter:
-            '<ol><li>abc</li><li style="font-size: 18px; list-style-position: inside;">def</li><li style="font-size: 18px; list-style-position: inside;">[]<br></li></ol>',
+            '<ol><li>abc</li><li style="font-size: 18px;">def</li><li style="font-size: 18px;">[]<br></li></ol>',
     });
 });
 
 test("should carry list item font-size to new list item (2)", async () => {
     await testEditor({
-        contentBefore:
-            '<ul><li class="display-3-fs" style="list-style-position: inside;">[]abc</li><li>def</li></ul>',
+        contentBefore: '<ul><li class="display-3-fs">[]abc</li><li>def</li></ul>',
         stepFunction: splitBlock,
         contentAfter:
-            '<ul><li class="display-3-fs" style="list-style-position: inside;"><br></li><li class="display-3-fs" style="list-style-position: inside;">[]abc</li><li>def</li></ul>',
+            '<ul><li class="display-3-fs"><br></li><li class="display-3-fs">[]abc</li><li>def</li></ul>',
     });
 });
 
 test("should carry font-size of paragraph to list item", async () => {
     await testEditor({
-        contentBefore:
-            '<p><span style="font-size: 18px; list-style-position: inside;">[]abc</span></p>',
+        contentBefore: '<p><span style="font-size: 18px;">[]abc</span></p>',
         stepFunction: toggleUnorderedList,
-        contentAfter:
-            '<ul><li style="font-size: 18px; list-style-position: inside;">[]abc</li></ul>',
+        contentAfter: '<ul><li style="font-size: 18px;">[]abc</li></ul>',
     });
 });
 
 test("should carry font-size of paragraph to list item (2)", async () => {
+    const li = document.createElement("li");
+    li.classList.add("display-3-fs");
+    const paddingLeft = getMarkerWidth(li);
     await testEditor({
         contentBefore:
-            '<ol><li class="h3-fs" style="list-style-position: inside;">abc</li></ol><p><span class="display-3-fs" style="list-style-position: inside;">[]def</span></p><ol><li>ghi</li></ol>',
+            '<ol><li class="h3-fs">abc</li></ol><p><span class="display-3-fs">[]def</span></p><ol><li>ghi</li></ol>',
         stepFunction: toggleOrderedList,
-        contentAfter:
-            '<ol><li class="h3-fs" style="list-style-position: inside;">abc</li><li class="display-3-fs" style="list-style-position: inside;">[]def</li><li>ghi</li></ol>',
+        contentAfter: `<ol style="padding-left: ${paddingLeft}px;"><li class="h3-fs">abc</li><li class="display-3-fs">[]def</li><li>ghi</li></ol>`,
     });
 });
 
 test("should carry font-size of paragraph to list item (3)", async () => {
     await testEditor({
         contentBefore:
-            '<ul><li style="font-size: 18px; list-style-position: inside;">abc</li></ul><p>[]def</p><ul><li style="font-size: 18px; list-style-position: inside;">ghi</li></ul>',
+            '<ul><li style="font-size: 18px;">abc</li></ul><p>[]def</p><ul><li style="font-size: 18px;">ghi</li></ul>',
         stepFunction: toggleUnorderedList,
         contentAfter:
-            '<ul><li style="font-size: 18px; list-style-position: inside;">abc</li><li>[]def</li><li style="font-size: 18px; list-style-position: inside;">ghi</li></ul>',
+            '<ul><li style="font-size: 18px;">abc</li><li>[]def</li><li style="font-size: 18px;">ghi</li></ul>',
     });
 });
 
 test("should carry font-size of list item to paragraph", async () => {
     await testEditor({
-        contentBefore:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">[]abc</li><li>def</li></ol>',
+        contentBefore: '<ol><li style="font-size: 18px;">[]abc</li><li>def</li></ol>',
         stepFunction: toggleOrderedList,
         contentAfter: '<p><span style="font-size: 18px;">[]abc</span></p><ol><li>def</li></ol>',
     });
 });
 
 test("should carry font-size of list item to paragraph (2)", async () => {
+    const li = document.createElement("li");
+    li.classList.add("display-3-fs");
+    const paddingLeft = getMarkerWidth(li);
     await testEditor({
         contentBefore:
-            '<ul><li class="display-3-fs" style="list-style-position: inside;">abc</li><li class="display-3-fs" style="list-style-position: inside;">[]def</li><li>ghi</li></ul>',
+            '<ul><li class="display-3-fs">abc</li><li class="display-3-fs">[]def</li><li>ghi</li></ul>',
         stepFunction: toggleUnorderedList,
-        contentAfter:
-            '<ul><li class="display-3-fs" style="list-style-position: inside;">abc</li></ul><p><span class="display-3-fs">[]def</span></p><ul><li>ghi</li></ul>',
+        contentAfter: `<ul style="padding-left: ${paddingLeft}px;"><li class="display-3-fs">abc</li></ul><p><span class="display-3-fs">[]def</span></p><ul><li>ghi</li></ul>`,
     });
 });
 
 test("should carry font-size of list item to paragraph (3)", async () => {
     await testEditor({
-        contentBefore:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">abc</li><li>[]def</li><li>ghi</li></ol>',
+        contentBefore: '<ol><li style="font-size: 18px;">abc</li><li>[]def</li><li>ghi</li></ol>',
         stepFunction: toggleOrderedList,
         contentAfter:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">abc</li></ol><p>[]def</p><ol><li>ghi</li></ol>',
+            '<ol><li style="font-size: 18px;">abc</li></ol><p>[]def</p><ol><li>ghi</li></ol>',
     });
 });
 
 test("should carry font-size of list item to paragraph (4)", async () => {
     await testEditor({
         contentBefore:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">abc<span style="font-size: 32px;">def</span>ghi[]</li></ol>',
+            '<ol><li style="font-size: 18px;">abc<span style="font-size: 32px;">def</span>ghi[]</li></ol>',
         stepFunction: toggleOrderedList,
         contentAfter:
             '<p><span style="font-size: 18px;">abc<span style="font-size: 32px;">def</span>ghi[]</span></p>',
@@ -136,72 +162,84 @@ test("should carry font-size of list item to paragraph (4)", async () => {
 });
 
 test("should keep list item font-size on toggling list twice", async () => {
+    const li = document.createElement("li");
+    li.style.setProperty("font-size", "32px");
+    const paddingLeft = getMarkerWidth(li);
     await testEditor({
         contentBefore:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">[abc</li><li style="font-size: 32px; list-style-position: inside;">def]</li></ol>',
+            '<ol><li style="font-size: 18px;">[abc</li><li style="font-size: 32px;">def]</li></ol>',
         stepFunction: (editor) => {
             toggleOrderedList(editor);
             toggleOrderedList(editor);
         },
-        contentAfter:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">[abc</li><li style="font-size: 32px; list-style-position: inside;">def]</li></ol>',
+        contentAfter: `<ol style="padding-left: ${paddingLeft}px;"><li style="font-size: 18px;">[abc</li><li style="font-size: 32px;">def]</li></ol>`,
     });
 });
 
 test("should change font-size of a list item", async () => {
+    const li = document.createElement("li");
+    li.style.setProperty("font-size", "32px");
+    const paddingLeft = getMarkerWidth(li);
     await testEditor({
         contentBefore:
-            '<ul><li style="font-size: 18px; list-style-position: inside;">[abc]</li><li style="font-size: 18px; list-style-position: inside;">ghi</li></ul>',
+            '<ul><li style="font-size: 18px;">[abc]</li><li style="font-size: 18px;">ghi</li></ul>',
         stepFunction: setFontSize("32px"),
-        contentAfter:
-            '<ul><li style="font-size: 32px; list-style-position: inside;">[abc]</li><li style="font-size: 18px; list-style-position: inside;">ghi</li></ul>',
+        contentAfter: `<ul style="padding-left: ${paddingLeft}px;"><li style="font-size: 32px;">[abc]</li><li style="font-size: 18px;">ghi</li></ul>`,
     });
 });
 
 test("should change font-size of a list item (2)", async () => {
+    const li = document.createElement("li");
+    li.style.setProperty("font-size", "32px");
+    const paddingLeft = getMarkerWidth(li);
     await testEditor({
         contentBefore:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">[abc</li><li style="font-size: 18px; list-style-position: inside;">ghi]</li></ol>',
+            '<ol><li style="font-size: 18px;">[abc</li><li style="font-size: 18px;">ghi]</li></ol>',
         stepFunction: setFontSize("32px"),
-        contentAfter:
-            '<ol><li style="font-size: 32px; list-style-position: inside;">[abc</li><li style="font-size: 32px; list-style-position: inside;">ghi]</li></ol>',
+        contentAfter: `<ol style="padding-left: ${paddingLeft}px;"><li style="font-size: 32px;">[abc</li><li style="font-size: 32px;">ghi]</li></ol>`,
     });
 });
 
 test("should change font-size of subpart of a list item", async () => {
     await testEditor({
         contentBefore:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">a[b]c</li><li style="font-size: 18px; list-style-position: inside;">ghi</li></ol>',
+            '<ol><li style="font-size: 18px;">a[b]c</li><li style="font-size: 18px;">ghi</li></ol>',
         stepFunction: setFontSize("32px"),
         contentAfter:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">a<span style="font-size: 32px;">[b]</span>c</li><li style="font-size: 18px; list-style-position: inside;">ghi</li></ol>',
+            '<ol><li style="font-size: 18px;">a<span style="font-size: 32px;">[b]</span>c</li><li style="font-size: 18px;">ghi</li></ol>',
     });
 });
 
 test("should change font-size of subpart of a list item (2)", async () => {
     await testEditor({
         contentBefore:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">a[bc</li><li style="font-size: 18px; list-style-position: inside;">gh]i</li></ol>',
+            '<ol><li style="font-size: 18px;">a[bc</li><li style="font-size: 18px;">gh]i</li></ol>',
         stepFunction: setFontSize("32px"),
         contentAfter:
-            '<ol><li style="font-size: 18px; list-style-position: inside;">a<span style="font-size: 32px;">[bc</span></li><li style="font-size: 18px; list-style-position: inside;"><span style="font-size: 32px;">gh]</span>i</li></ol>',
+            '<ol><li style="font-size: 18px;">a<span style="font-size: 32px;">[bc</span></li><li style="font-size: 18px;"><span style="font-size: 32px;">gh]</span>i</li></ol>',
     });
 });
 
-test("should remove font-size style on converting the text to a block tag", async () => {
+test("should pad list based on font-size", async () => {
+    const className = "display-3-fs";
+    const li = document.createElement("li");
+    li.classList.add(className);
+    const paddingLeft = getMarkerWidth(li);
     await testEditor({
-        contentBefore:
-            '<ul><li style="font-size: 32px; list-style-position: inside;">a[]bc</li></ul>',
-        stepFunction: (editor) => editor.shared.dom.setTag({ tagName: "H1" }),
-        contentAfter: '<ul><li><h1><span style="font-size: 32px;">a[]bc</span></h1></li></ul>',
+        contentBefore: "<ol><li>[a]</li></ol>",
+        stepFunction: (editor) => execCommand(editor, "formatFontSizeClassName", { className }),
+        contentAfter: `<ol style="padding-left: ${paddingLeft}px;"><li class="${className}">[a]</li></ol>`,
     });
 });
 
-test("should remove font-size class on converting the text to a block tag", async () => {
+test("should pad list based on font-size (2)", async () => {
+    const className = "display-3-fs";
+    const li = document.createElement("li");
+    li.classList.add("display-3-fs");
+    const paddingLeft = getMarkerWidth(li);
     await testEditor({
-        contentBefore:
-            '<ul><li class="display-3-fs" style="list-style-position: inside;">a[]bc</li></ul>',
-        stepFunction: (editor) => editor.shared.dom.setTag({ tagName: "H1" }),
-        contentAfter: '<ul><li><h1><span class="display-3-fs">a[]bc</span></h1></li></ul>',
+        contentBefore: `<span class="${className}">[a]</span>`,
+        stepFunction: toggleOrderedList,
+        contentAfter: `<ol style="padding-left: ${paddingLeft}px;"><li class="${className}">[]a</li></ol>`,
     });
 });

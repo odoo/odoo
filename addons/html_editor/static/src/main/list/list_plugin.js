@@ -127,12 +127,10 @@ export class ListPlugin extends Plugin {
         ].map((item) => withSequence(15, item)),
 
         hints: [{ selector: "LI", text: _t("List") }],
-        system_style_properties: ["--placeholder-left"],
 
         /** Handlers */
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
-        make_hint_handlers: this.handleListPlaceholderPosition.bind(this),
         step_added_handlers: this.updateToolbarButtons.bind(this),
 
         /** Overrides */
@@ -143,7 +141,6 @@ export class ListPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         color_apply_overrides: this.applyColorToListItem.bind(this),
         format_selection_overrides: this.applyFormatToListItem.bind(this),
-        set_tag_overrides: this.handleListStylePosition.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
     };
@@ -360,6 +357,7 @@ export class ListPlugin extends Plugin {
             childNodes(baseContainer),
         ]);
         this.dependencies.dom.copyAttributes(baseContainer, list);
+        this.adjustListPadding(list);
         baseContainer.remove();
         cursors.remapNode(baseContainer, list.firstChild).restore();
         return list;
@@ -482,7 +480,7 @@ export class ListPlugin extends Plugin {
             previousSibling.append(...element.childNodes);
             // @todo @phoenix: what if unremovable/unmergeable?
             element.remove();
-
+            this.adjustListPadding(previousSibling);
             cursors.restore();
         }
     }
@@ -610,6 +608,8 @@ export class ListPlugin extends Plugin {
         cursors.update(callbacksForCursorUpdate.prepend(newList, li));
         newList.prepend(li);
         cursors.restore();
+        this.adjustListPadding(currentList);
+        this.adjustListPadding(newList);
         return newList;
     }
 
@@ -632,6 +632,7 @@ export class ListPlugin extends Plugin {
             cursors.update(callbacksForCursorUpdate.remove(lip));
             lip.remove();
         }
+        this.adjustListPadding(li.parentElement);
         cursors.restore();
     }
 
@@ -702,6 +703,8 @@ export class ListPlugin extends Plugin {
         if (!ul.firstElementChild) {
             cursors.update(callbacksForCursorUpdate.remove(ul));
             ul.remove();
+        } else {
+            this.adjustListPadding(ul);
         }
         cursors.restore();
     }
@@ -1012,49 +1015,53 @@ export class ListPlugin extends Plugin {
                 } else if (formatName === "fontSize") {
                     listItem.style.fontSize = formatProps.size;
                 }
-                listItem.style.listStylePosition = "inside";
             }
+            this.adjustListPadding(listItem.parentElement);
         }
         return true;
     }
 
-    handleListStylePosition(block, newEl) {
-        if (block.style.listStylePosition !== "inside" || newEl.tagName === "LI") {
-            return;
-        }
+    getMarkerWidth(li) {
+        const withMarker = li.cloneNode(true),
+            withoutMarker = li.cloneNode(true);
 
-        const fontSizeStyle = getFontSizeOrClass(block);
-        const cursors = this.dependencies.selection.preserveSelection();
+        const commonStyle = {
+            position: "absolute",
+            visibility: "hidden",
+            width: "fit-content",
+        };
+        Object.assign(withMarker.style, commonStyle);
+        Object.assign(withoutMarker.style, commonStyle);
+        withoutMarker.style.setProperty("list-style", "none");
 
-        if (fontSizeStyle) {
-            const span = document.createElement("span");
-            span.append(...newEl.childNodes);
-            newEl.replaceChildren(span);
+        this.document.body.append(withMarker, withoutMarker);
 
-            if (fontSizeStyle.type === "font-size") {
-                block.style.fontSize = "";
-                span.style.fontSize = fontSizeStyle.value;
-            } else if (fontSizeStyle.type === "class") {
-                removeClass(block, ...FONT_SIZE_CLASSES);
-                span.classList.add(fontSizeStyle.value);
-            }
-        }
-        block.style.listStylePosition = "";
-        cursors.restore();
+        const markerWidth =
+            withMarker.getBoundingClientRect().width - withoutMarker.getBoundingClientRect().width;
+
+        withMarker.remove();
+        withoutMarker.remove();
+
+        return Math.round(markerWidth);
     }
 
-    handleListPlaceholderPosition(el) {
-        if (el.tagName === "LI" && el.style.listStylePosition === "inside") {
-            this.dependencies.history.disableObserver();
-            const rangeEl = document.createElement("range-el");
-            el.prepend(rangeEl);
-            el.style.listStylePosition = "";
-            const initialRect = rangeEl.getBoundingClientRect();
-            el.style.listStylePosition = "inside";
-            const afterRect = rangeEl.getBoundingClientRect();
-            el.style.setProperty("--placeholder-left", `${afterRect.left - initialRect.left}px`);
-            rangeEl.remove();
-            this.dependencies.history.enableObserver();
+    /**
+     * Adjusts the left padding of a list (`ul` or `ol`) to ensure that
+     * its `::marker` is always visible and doesn't overflow, especially
+     * when the marker width exceeds the default padding.
+     *
+     * @param {HTMLElement} li - The `<li>` element used to determine the parent list and marker width.
+     */
+    adjustListPadding(list) {
+        // we reset the padding to the default value
+        list.style.removeProperty("padding-left");
+        const listMarkersWidth = [...list.childNodes];
+        const maxLeftPadding = Math.max(...listMarkersWidth.map((li) => this.getMarkerWidth(li)));
+        // default width is 2rem, we get it in px here and only update the padding-left
+        // if the `maxLeftPadding` is larger than 2rem
+        const defaultWidth = parseFloat(getComputedStyle(document.documentElement).fontSize) * 2;
+        if (maxLeftPadding > defaultWidth) {
+            list.style.setProperty("padding-left", `${maxLeftPadding}px`);
         }
     }
 
