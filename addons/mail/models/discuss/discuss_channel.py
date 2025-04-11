@@ -746,6 +746,12 @@ class DiscussChannel(models.Model):
         self._bus_send("discuss.channel/new_message", payload)
         return rdata
 
+    def _notify_thread_by_email(self, message, recipients_data, *args, **kwargs):
+        """ Override to prevent email notifications for discuss channels. """
+        if self._name != "discuss.channel":
+            return super()._notify_thread_by_email(message, recipients_data, *args, **kwargs)
+        return True
+
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
         payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
         payload['options']['data']['action'] = 'mail.action_discuss'
