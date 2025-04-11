@@ -34,6 +34,9 @@
             <attribute name="t-att-aria-label">getAuthorText()</attribute>
             <attribute name="t-on-click">ev => this.onClickAuthor(ev)</attribute>
         </xpath>
+        <xpath expr="//Composer" position="replace">
+            <HtmlComposer t-elif="isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
+        </xpath>
     </t>
     <t t-name="mail.Message.bodyInForward">
         <div><br/></div>

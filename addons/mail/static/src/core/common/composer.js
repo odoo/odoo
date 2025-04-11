@@ -411,7 +411,7 @@ export class Composer extends Component {
                         classList: "o-mail-Composer-suggestion",
                     })),
                 };
-            case "mail.canned.response":
+            case "CannedResponse":
                 return {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionCannedResponse",
@@ -422,7 +422,7 @@ export class Composer extends Component {
                         classList: "o-mail-Composer-suggestion",
                     })),
                 };
-            case "emoji":
+            case "Emoji":
                 return {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionEmoji",

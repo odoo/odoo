@@ -1,0 +1,39 @@
+.o-mail-SuggestionList {
+    box-shadow: $box-shadow;
+    width: 300px;
+    max-height: 40vh;
+}
+.o-mail-SuggestionList::-webkit-scrollbar {
+    background: transparent;
+}
+.o-mail-SuggestionList::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+.o-mail-SuggestionList::-webkit-scrollbar-thumb {
+    background: var(--powerbox-scrollbar-thumb-background-color, #D3D1CB);
+}
+.o-mail-SuggestionList::-webkit-scrollbar-track {
+    background: var(--powerbox-scrollbar-thumb-background-color, #EDECE9);
+}
+
+.o-mail-Composer-suggestion {
+    &.active {
+        background: rgba($o-component-active-bg, .65);
+    }
+}
+
+.o-mail-Composer-suggestionImg {
+    height: 35px;
+    width: 35px;
+    background-color: $o-gray-100;
+}
+
+.o-mail-Composer-suggestionTitle {
+    font-size: $o-font-size-base-small;
+}
+
+.o-mail-Composer-suggestionDescription {
+    font-size: $o-font-size-base-smaller;
+    color: $o-main-color-muted;
+}

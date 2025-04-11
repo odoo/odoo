@@ -6,8 +6,9 @@ import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { HtmlComposer } from "./html_composer";
 
-Object.assign(Discuss.components, { ControlPanel, MessagingMenu });
+Object.assign(Discuss.components, { ControlPanel, MessagingMenu, HtmlComposer });
 
 patch(Discuss.prototype, {
     setup() {

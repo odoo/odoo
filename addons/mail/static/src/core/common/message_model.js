@@ -5,8 +5,11 @@ import {
     decorateEmojis,
     htmlToTextContentInline,
     prettifyMessageContent,
+    formatMentionBlocksInBody,
+    isEmptyHtmlBody,
+    isMarkup,
 } from "@mail/utils/common/format";
-import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
+import { createDocumentFragmentFromContent, htmlReplace } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { stateToUrl } from "@web/core/browser/router";
@@ -300,22 +303,13 @@ export class Message extends Record {
     });
     isBodyEmpty = fields.Attr(undefined, {
         compute() {
-            return (
-                !this.body ||
-                [
-                    "",
-                    "<p></p>",
-                    "<p><br></p>",
-                    "<p><br/></p>",
-                    "<div></div>",
-                    "<div><br></div>",
-                    "<div><br/></div>",
-                ].includes(
-                    this.body
-                        .replace('<span class="o-mail-Message-edited"></span>', "")
-                        .replace(/\s/g, "")
-                )
+            let cleannedBody = htmlReplace(
+                this.body,
+                '<span class="o-mail-Message-edited"></span>',
+                ""
             );
+            cleannedBody = htmlReplace(cleannedBody, /\s/g, () => "");
+            return !this.body || isEmptyHtmlBody(cleannedBody);
         },
     });
 
@@ -479,7 +473,11 @@ export class Message extends Record {
         attachments = [],
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
-        if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
+        if (
+            (convertBrToLineBreak(this.body) === body ||
+                formatMentionBlocksInBody(this.body).toString() === body.toString()) &&
+            attachments.length === 0
+        ) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
@@ -509,16 +507,18 @@ export class Message extends Record {
 
     /** @param {import("models").Thread} thread the thread where the message is being viewed when starting edition */
     enterEditMode(thread) {
-        const text = convertBrToLineBreak(this.body);
+        const body = isMarkup(this.body)
+            ? formatMentionBlocksInBody(this.body)
+            : convertBrToLineBreak(this.body);
         if (thread?.messageInEdition) {
             thread.messageInEdition.composer = undefined;
         }
         this.composer = {
             mentionedPartners: this.recipients,
-            text,
+            body,
             selection: {
-                start: text.length,
-                end: text.length,
+                start: body.length,
+                end: body.length,
                 direction: "none",
             },
         };

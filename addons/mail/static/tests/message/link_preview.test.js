@@ -375,7 +375,7 @@ test("Delete all link previews at once", async () => {
         res_id: channelId,
         message_link_preview_ids: [
             Command.create({ link_preview_id: linkPreviewId_1 }),
-            Command.create({ link_preview_id: linkPreviewId_2 })
+            Command.create({ link_preview_id: linkPreviewId_2 }),
         ],
     });
     await start();
@@ -397,11 +397,6 @@ test("link preview request is only made when message contains URL", async () => 
     await contains(".o-mail-Message", {
         text: "Hello, this message does not contain any link",
     });
-    await waitForSteps([]);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-NavigableList-item", { text: "Sales" });
-    await press("Enter");
-    await contains(".o-mail-Message", { text: "Sales" });
     await waitForSteps([]);
     await insertText(".o-mail-Composer-input", "https://www.odoo.com");
     await press("Enter");

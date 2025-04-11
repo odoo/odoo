@@ -26,5 +26,5 @@ test("Should open chat window on send chat request to website visitor", async ()
         model: "website.visitor",
     });
     await contains(".o-mail-ChatWindow", { text: `Visitor #${visitorId}` });
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
+    await contains(".o-mail-ChatWindow .o-mail-Composer.o-focused");
 });
