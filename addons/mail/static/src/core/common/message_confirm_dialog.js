@@ -3,6 +3,7 @@ import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { discussComponentRegistry } from "./discuss_component_registry";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 export class MessageConfirmDialog extends Component {
     static components = { Dialog };
@@ -23,6 +24,10 @@ export class MessageConfirmDialog extends Component {
         title: _t("Confirmation"),
     };
     static template = "mail.MessageConfirmDialog";
+
+    setup() {
+        useHotkey("enter", () => this.onClickConfirm());
+    }
 
     get messageComponent() {
         return discussComponentRegistry.get("Message");

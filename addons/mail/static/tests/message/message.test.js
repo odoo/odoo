@@ -2020,3 +2020,27 @@ test("display the notification message's posting date and time", async () => {
         text: "Tom Riddle joined the channel1:00 PM",
     });
 });
+
+test("Pressing 'Enter' while the delete confirmation dialog is open should delete the message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Message with content",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message:contains('Message with content')");
+    await click(".o-mail-Message [title='Edit']");
+    await insertText(".o-mail-Message .o-mail-Composer-input", "", { replace: true });
+    triggerHotkey("Enter", false);
+    await contains(".modal-body p", { text: "Are you sure you want to delete this message?" });
+    triggerHotkey("Enter", false);
+    await contains(".o-mail-Message", { text: "This message has been removed" });
+});
