@@ -89,7 +89,7 @@ export class Tracking extends Interaction {
     onOrderPayment() {
         const paymentMethod = this.el.querySelector(
             '#payment_method input[name="o_payment_radio"]:checked'
-        ).parentElement.querySelector('.o_payment_option_label').textContent;
+        )?.parentElement?.querySelector('.o_payment_option_label')?.textContent;
         this._vpv('/stats/ecom/order_payment/' + paymentMethod);
     }
 }
