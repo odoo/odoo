@@ -202,7 +202,7 @@ class TestSaleCommon(AccountTestInvoicingCommon):
         return company_data
 
 
-class TestTaxCommonSale(TestTaxCommon):
+class TestTaxCommonSale(TestSaleCommon, TestTaxCommon):
 
     @classmethod
     def setUpClass(cls):
