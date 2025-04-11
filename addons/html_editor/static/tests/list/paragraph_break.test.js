@@ -233,7 +233,7 @@ describe("Selection collapsed", () => {
                                 <li class="oe-nested">
                                     <ul>
                                         <li><font style="color: red;">cd</font></li>
-                                        <li>b</li>
+                                        <li><font style="color: red;">b</font></li>
                                         <li>[]<br></li>
                                     </ul>
                                 </li>
@@ -628,7 +628,7 @@ describe("Selection collapsed", () => {
                                 <li class="oe-nested">
                                     <ul class="o_checklist">
                                         <li><font style="color: red;">cd</font></li>
-                                        <li>0</li>
+                                        <li><font style="color: red;">0</font></li>
                                         <li>[]<br></li>
                                     </ul>
                                 </li>
@@ -721,7 +721,7 @@ describe("Selection collapsed", () => {
                                 <li class="oe-nested">
                                     <ul class="o_checklist">
                                         <li class="o_checked"><font style="color: red;">cd</font></li>
-                                        <li>0</li>
+                                        <li><font style="color: red;">0</font></li>
                                         <li>[]<br></li>
                                     </ul>
                                 </li>

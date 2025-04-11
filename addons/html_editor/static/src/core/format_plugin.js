@@ -1,6 +1,14 @@
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
+<<<<<<< 27d0bedd2ceee5da2dc8a04b323fe3cc4bde2578
 import { cleanTextNode, splitTextNode, unwrapContents } from "../utils/dom";
+||||||| b4c4e4e87e186cc46be26b922089db2b6be6fbf5
+import { hasAnyNodesColor } from "@html_editor/utils/color";
+import { cleanTextNode, splitTextNode, unwrapContents } from "../utils/dom";
+=======
+import { hasAnyNodesColor } from "@html_editor/utils/color";
+import { cleanTextNode, splitTextNode, unwrapContents, fillEmpty } from "../utils/dom";
+>>>>>>> 17b87851761552b5be4cb4fafa66b4879802c3a2
 import {
     areSimilarElements,
     isContentEditable,
@@ -415,7 +423,20 @@ export class FormatPlugin extends Plugin {
 
     cleanForSave({ root, preserveSelection = false } = {}) {
         for (const element of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
+            let currentElement = element.parentElement;
             this.cleanElement(element, { preserveSelection });
+            while (
+                currentElement &&
+                !isBlock(currentElement) &&
+                !currentElement.childNodes.length
+            ) {
+                const parentElement = currentElement.parentElement;
+                currentElement.remove();
+                currentElement = parentElement;
+            }
+            if (currentElement && isBlock(currentElement)) {
+                fillEmpty(currentElement);
+            }
         }
         this.mergeAdjacentInlines(root, { preserveSelection });
     }
