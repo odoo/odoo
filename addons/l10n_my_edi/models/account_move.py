@@ -180,6 +180,12 @@ class AccountMove(models.Model):
         invoices_to_reset.l10n_my_edi_file_id.unlink()
         return res
 
+    def _get_fields_to_detach(self):
+        # EXTENDS account
+        fields_list = super()._get_fields_to_detach()
+        fields_list.append('l10n_my_edi_file')
+        return fields_list
+
     def _need_cancel_request(self):
         # EXTENDS 'account'
         # For the in_progress state, we do not want to allow resetting to draft nor cancelling. We need to wait for the result first.
