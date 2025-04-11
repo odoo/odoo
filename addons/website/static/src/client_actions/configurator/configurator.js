@@ -24,7 +24,6 @@ import {
     useExternalListener,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
-import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 
 export const ROUTES = {
     descriptionScreen: 2,
@@ -551,18 +550,21 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     }
 
     async getMoreThemes() {
-        const removeLoadingEffect = addButtonLoadingEffect(this.extraThemesButtonRef.el);
-        const themes = await getRecommendedThemes(
-            this.orm,
-            this.state,
-            this.maxNbrDisplayExtraThemes
-        );
-        // Filter the extra themes to not propose a theme that is already
-        // present in the main themes.
-        const mainThemeNames = this.state.themes.map((theme) => theme.name);
-        this.state.extraThemes = themes.filter((extraTheme) => !mainThemeNames.includes(extraTheme.name));
-        this.state.extraThemesLoaded = true;
-        removeLoadingEffect();
+        this.uiService.block();
+        try {
+            const themes = await getRecommendedThemes(
+                this.orm,
+                this.state,
+                this.maxNbrDisplayExtraThemes
+            );
+            // Filter the extra themes to not propose a theme that is already
+            // present in the main themes.
+            const mainThemeNames = this.state.themes.map((theme) => theme.name);
+            this.state.extraThemes = themes.filter((extraTheme) => !mainThemeNames.includes(extraTheme.name));
+            this.state.extraThemesLoaded = true;
+        } finally {
+            this.uiService.unblock();
+        }
     }
 
     getExtraThemeName(idx) {
