@@ -487,3 +487,33 @@ class TestAccountPayment(AccountPaymentCommon):
                 ],
             }
         )
+
+    def test_payment_has_same_receivable_account_as_invoice(self):
+        invoice = self._create_invoice_with_early_discount(
+            invoice_line_ids=[
+                Command.create({
+                    'name': 'test line',
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],
+                }),
+                Command.create({
+                    'name': 'test line 2',
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],
+                }),
+            ],
+        )
+        self.partner.property_account_receivable_id = self.env['account.account'].search([('name', '=', 'Account Payable')], limit=1)
+        payment = self._create_transaction(
+            reference='payment_3',
+            flow='direct',
+            state='done',
+            amount=invoice.invoice_payment_term_id._get_amount_due_after_discount(
+                total_amount=invoice.amount_residual,
+                untaxed_amount=invoice.amount_tax,
+            ),
+            invoice_ids=[invoice.id],
+            partner_id=self.partner.id,
+        )._create_payment()
+
+        self.assertNotEqual(self.partner.property_account_receivable_id, payment.payment_id.destination_account_id)
