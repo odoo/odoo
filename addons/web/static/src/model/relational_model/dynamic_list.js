@@ -252,14 +252,19 @@ export class DynamicList extends DataPoint {
         }
     }
 
-    async _deleteRecords(records) {
+    async _getResIds(records) {
         let resIds;
-        if (records.length) {
+        if (records?.length) {
             resIds = unique(records.map((r) => r.resId));
         } else {
             resIds = await this.getResIds(true);
             records = this.records.filter((r) => resIds.includes(r.resId));
         }
+        return resIds;
+    }
+
+    async _deleteRecords(records) {
+        const resIds = await this._getResIds(records);
         const unlinked = await this.model.orm.unlink(this.resModel, resIds, {
             context: this.context,
         });

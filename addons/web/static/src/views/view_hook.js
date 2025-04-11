@@ -188,8 +188,8 @@ export function useExportRecords(env, context, getDefaultExportList) {
     };
 }
 
-export function useDeleteRecords(model) {
-    function getDefaultDialogProps(records) {
+export function useDeleteRecords(model, archiveEnabled, resModel, displayDialog = model.dialog.add) {
+    function getDefaultDialogProps(records, resIds) {
         const isDynamicList = model.root instanceof DynamicList;
         let body = deleteConfirmationMessage;
         if (
@@ -202,17 +202,40 @@ export function useDeleteRecords(model) {
         if (isDynamicList) {
             confirm = () => model.root.deleteRecords(records);
         }
+        const cancelLabel = _t("No, keep it");
         return {
             body,
             cancel: () => {},
-            cancelLabel: _t("No, keep it"),
+            cancelLabel,
             confirm,
             confirmLabel: _t("Delete"),
+            onFailConfirm: async(e) => {
+                if (!e.data?.message) {
+                    throw e;
+                }
+
+                displayDialog(ConfirmationDialog, {
+                    title: _t("Delete records"),
+                    body: e.data.message,
+                    confirm: archiveEnabled ? async() => {
+                        await model.orm.call(
+                            resModel || model.root.resModel,
+                            "action_archive",
+                            [resIds || await model.root._getResIds(records)]
+                        );
+                        await model.load();
+                    } : () => {},
+                    confirmLabel: archiveEnabled ? _t("Archive records") : "",
+                    displayConfirmBtn: archiveEnabled,
+                    cancelLabel,
+                    cancel: () => {},
+                });
+            },
             title: _t("Bye-bye, record!"),
         };
     }
-    return (dialogProps, records) => {
-        const defaultProps = getDefaultDialogProps(records);
-        model.dialog.add(ConfirmationDialog, { ...defaultProps, ...dialogProps });
+    return (dialogProps, records, resIds) => {
+        const defaultProps = getDefaultDialogProps(records, resIds);
+        displayDialog(ConfirmationDialog, { ...defaultProps, ...dialogProps });
     };
 }

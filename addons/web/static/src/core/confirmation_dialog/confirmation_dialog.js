@@ -27,8 +27,10 @@ export class ConfirmationDialog extends Component {
         },
         body: { type: String, optional: true },
         confirm: { type: Function, optional: true },
+        onFailConfirm: { type: Function | null, optional: true },
         confirmLabel: { type: String, optional: true },
         confirmClass: { type: String, optional: true },
+        displayConfirmBtn: { type: Boolean, optional: true },
         cancel: { type: Function, optional: true },
         cancelLabel: { type: String, optional: true },
         dismiss: { type: Function, optional: true },
@@ -37,6 +39,8 @@ export class ConfirmationDialog extends Component {
         confirmLabel: _t("Ok"),
         cancelLabel: _t("Cancel"),
         confirmClass: "btn-primary",
+        displayConfirmBtn: true,
+        onFailConfirm: null,
         title: _t("Confirmation"),
     };
 
@@ -51,7 +55,7 @@ export class ConfirmationDialog extends Component {
     }
 
     async _confirm() {
-        return this.execButton(this.props.confirm);
+        return this.execButton(this.props.confirm, this.props.onFailConfirm);
     }
 
     async _dismiss() {
@@ -68,7 +72,7 @@ export class ConfirmationDialog extends Component {
         }
     }
 
-    async execButton(callback) {
+    async execButton(callback, onFailCallback) {
         if (this.isProcess) {
             return;
         }
@@ -79,7 +83,11 @@ export class ConfirmationDialog extends Component {
                 shouldClose = await callback();
             } catch (e) {
                 this.props.close();
-                throw e;
+                if (onFailCallback) {
+                    await onFailCallback(e);
+                } else {
+                    throw e;
+                }
             }
             if (shouldClose === false) {
                 this.setButtonsDisabled(false);

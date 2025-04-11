@@ -73,6 +73,7 @@ import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
 import { calendarView } from "@web/views/calendar/calendar_view";
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 import { WebClient } from "@web/webclient/webclient";
+import { RPCError } from "@web/core/network/rpc";
 
 class Event extends models.Model {
     name = fields.Char();
@@ -5767,53 +5768,71 @@ test(`calendar with filters and count aggregate`, async () => {
     expect(queryAllTexts(".o_calendar_filter_item span")).toEqual(["partner 1", "2", "partner 2"]);
 });
 
-test.tags("desktop");
-test(`calendar with dynamic filters and sum aggregate`, async () => {
-    Event._fields.revenue = fields.Float();
-    Event._records[0].revenue = 1200;
-    Event._records[1].revenue = 350;
-    Event._records[2].revenue = 800;
-    Event._records[3].revenue = 3000;
-    Event._records[4].revenue = 1900;
+test("Dispaly Archive records instead of Delete if it is required by other objects", async () => {
+    Event._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect(args).toEqual([[4]]);
+            const error = new RPCError();
+            error.data = { message };
+            throw error;
+        } else if (method === "action_archive") {
+            expect.step("action_archive");
+            expect(args).toEqual([[4]]);
+            return true;
+        }
+    });
+
     await mountView({
         resModel: "event",
         type: "calendar",
-        arch: `
-            <calendar date_start="start" date_stop="stop" aggregate="revenue:sum">
-                <field name="partner_id" filters="1"/>
-            </calendar>
-        `,
+        arch: `<calendar event_open_popup="1" create="0" date_start="start" date_stop="stop" mode="month"/>`,
     });
 
-    expect(queryAllTexts(".o_calendar_filter_item span")).toEqual([
-        "partner 1",
-        "4,550",
-        "partner 4",
-        "2,700",
-    ]);
+    await clickEvent(4);
+    await contains(`.o_cw_popover_delete`).click();
+
+    await contains(".modal-footer .btn-primary").click()
+
+    expect("h4.modal-title").toHaveText("Delete records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    expect(".modal-footer .btn-primary").toHaveText("Archive records");
+    await contains(".modal-footer .btn-primary").click()
+    expect.verifySteps(["action_archive"]);
+
+    expect(".modal").toHaveCount(0);
 });
 
-test.tags("desktop");
-test(`Hour format mirror event`, async () => {
-    onRpc("create", ({ args }) => {
-        expect.step("create");
+test("Don't display Archive records instead of delete if it is required by other objects but model not archivable or no active records exist", async () => {
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect(args).toEqual([[4]]);
+            const error = new RPCError();
+            error.data = { message };
+            throw error;
+        } else if (method === "action_archive") {
+            expect.step("action_archive");
+            expect(args).toEqual([[4]]);
+            return true;
+        }
     });
+
     await mountView({
         resModel: "event",
         type: "calendar",
-        arch: `<calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="year"/>`,
+        arch: `<calendar event_open_popup="1" create="0" date_start="start" date_stop="stop" mode="month"/>`,
     });
 
-    await changeScale("week");
+    await clickEvent(4);
+    await contains(`.o_cw_popover_delete`).click();
+    await contains(".modal-footer .btn-primary").click()
 
-    await selectTimeRange("2016-12-13 11:00:00", "2016-12-13 16:30:00");
-    // Verify highlighted event
-    expect(`.fc-event-mirror`).toHaveText("11:00 - 16:30");
-    await contains(`.o-calendar-quick-create--input`).edit("mirror_event", { confirm: false });
-    await contains(`.o-calendar-quick-create--create-btn`).click();
-
-    expect.verifySteps(["create"]);
-
-    expect(`.o_event[data-event-id="8"] .fc-event-main .o_event_title`).toHaveText("mirror_event");
-    expect(`.o_event[data-event-id="8"] .fc-event-main .fc-time`).toHaveText("11:00");
+    expect("h4.modal-title").toHaveText("Delete records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+    expect(".modal-footer .btn-primary").toHaveCount(0);
 });

@@ -57,7 +57,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
-import { makeErrorFromResponse } from "@web/core/network/rpc";
+import { makeErrorFromResponse, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { config as transitionConfig } from "@web/core/transition";
 import { SIZES } from "@web/core/ui/ui_service";
@@ -12665,4 +12665,82 @@ test.tags("mobile")(`pager is up to date`, async () => {
         message: "the pager indicator should be displayed",
     });
     expect(".o_pager_indicator").toHaveText("2 / 2");
+});
+
+test("Dispaly Archive records instead of Delete if it is required by other objects", async () => {
+    Partner._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect(args).toEqual([[1]]);
+            const error = new RPCError();
+            error.data = { message };
+            throw error;
+        } else if (method === "action_archive") {
+            expect.step("action_archive");
+            expect(args).toEqual([[1]]);
+            return true;
+        }
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"/></form>`,
+        resId: 1,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    await contains(".modal-footer .btn-primary").click()
+
+    expect("h4.modal-title").toHaveText("Delete records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    expect(".modal-footer .btn-primary").toHaveText("Archive records");
+    await contains(".modal-footer .btn-primary").click()
+    expect.verifySteps(["action_archive"]);
+
+    expect(".modal").toHaveCount(0);
+});
+
+test("Don't display Archive records instead of delete if it is required by other objects but model not archivable or no active records exist", async () => {
+    Partner._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect(args).toEqual([[1]]);
+            const error = new RPCError();
+            error.data = { message };
+            throw error;
+        } else if (method === "action_archive") {
+            expect.step("action_archive");
+            expect(args).toEqual([[1]]);
+            return true;
+        }
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form>
+            <field name="display_name"/>
+            <field name="active"/>
+        </form>
+        `,
+        resId: 1,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    await contains(".modal-footer .btn-primary").click()
+
+    expect("h4.modal-title").toHaveText("Delete records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
 });

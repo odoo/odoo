@@ -322,7 +322,15 @@ export class FormController extends Component {
             useFormViewInDialog();
         }
 
-        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
+        // archiveEnabled getter can't be used as we check if the model is archivable
+        // even if active field is not in the view
+        const archivableModel =  "active" in this.props.fields
+            ? !this.props.fields.active.readonly
+            : "x_active" in this.props.fields
+            ? !this.props.fields.x_active.readonly
+            : false;
+
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model, archivableModel);
     }
 
     get cogMenuProps() {
@@ -576,7 +584,7 @@ export class FormController extends Component {
     }
 
     async deleteRecord() {
-        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, [this.model.root]);
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, [this.model.root], [this.model.root.resId]);
     }
 
     async beforeExecuteActionButton(clickParams) {
