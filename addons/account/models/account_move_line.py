@@ -2033,6 +2033,20 @@ class AccountMoveLine(models.Model):
         debit_fully_matched = compare_amounts <= 0
         credit_fully_matched = compare_amounts >= 0
 
+        def get_amount_range_after_rate(currency_from, currency_to, amount, rate):
+            # Suppose balance=1000, rate=12.
+            # 1000.0 could be the result of a rounding of [999.995, 1000.0049999999999].
+            # Let's say the target currency could be [999.995 * 12, 1000.005 * 12] = [11999.94, 12000.06]
+            # instead of just 120000.
+            if not rate:
+                return (0.0, 0.0, 0.0)
+            half_rounding = currency_from.rounding / 2
+            return (
+                currency_to.round((amount - half_rounding) * rate),
+                currency_to.round(amount * rate),
+                currency_to.round((amount + half_rounding) * rate),
+            )
+
         # ==== Computation of partial amounts ====
         if recon_currency == company_currency:
             if exchange_line_mode:
@@ -2067,17 +2081,42 @@ class AccountMoveLine(models.Model):
                 credit_rate = credit_recon_values['rate']
 
             # Compute the partial amount expressed in foreign currency.
-            if debit_rate:
-                partial_debit_amount = company_currency.round(min_recon_amount / debit_rate)
-                partial_debit_amount = min(partial_debit_amount, remaining_debit_amount)
-            else:
-                partial_debit_amount = 0.0
-            if credit_rate:
-                partial_credit_amount = company_currency.round(min_recon_amount / credit_rate)
-                partial_credit_amount = min(partial_credit_amount, -remaining_credit_amount)
-            else:
-                partial_credit_amount = 0.0
+            partial_debit_amount_range = get_amount_range_after_rate(
+                currency_from=debit_currency,
+                currency_to=company_currency,
+                amount=min_recon_amount,
+                rate=(1 / debit_rate) if debit_rate else 0.0,
+            )
+            partial_debit_amount = partial_debit_amount_range[1]
+            partial_debit_amount = min(partial_debit_amount, remaining_debit_amount)
+            partial_credit_amount_range = get_amount_range_after_rate(
+                currency_from=credit_currency,
+                currency_to=company_currency,
+                amount=min_recon_amount,
+                rate=(1 / credit_rate) if credit_rate else 0.0,
+            )
+            partial_credit_amount = partial_credit_amount_range[1]
+            partial_credit_amount = min(partial_credit_amount, -remaining_credit_amount)
             partial_amount = min(partial_debit_amount, partial_credit_amount)
+
+            # Prevent exchange differences if amounts are close enough to be a rounding issue
+            # after applying the exchange rate and then, rounding amounts to store them into
+            # the monetary fields.
+            max_remaining_amount = min(remaining_debit_amount, -remaining_credit_amount)
+            partial_amount_candidates = [
+                amount for amount in [partial_debit_amount, partial_credit_amount, max_remaining_amount]
+                if (
+                        company_currency.compare_amounts(amount, max_remaining_amount) <= 0
+                    and company_currency.compare_amounts(amount, partial_debit_amount_range[0]) >= 0
+                    and company_currency.compare_amounts(amount, partial_debit_amount_range[2]) <= 0
+                    and company_currency.compare_amounts(amount, partial_credit_amount_range[0]) >= 0
+                    and company_currency.compare_amounts(amount, partial_credit_amount_range[2]) <= 0
+                )
+            ]
+            if partial_amount_candidates:
+                partial_amount = max(partial_amount_candidates)
+                partial_debit_amount = partial_amount
+                partial_credit_amount = partial_amount
 
             # Compute the partial amount expressed in foreign currency.
             # Take care to handle the case when a line expressed in company currency is mimicking the foreign
@@ -2103,12 +2142,62 @@ class AccountMoveLine(models.Model):
                         exchange_lines_to_fix += debit_aml
                         amounts_list.append({'amount_residual_currency': debit_exchange_amount})
                         remaining_debit_amount_curr -= debit_exchange_amount
+                elif (
+                       credit_rate
+                    and credit_currency != company_currency
+                    and company_currency.compare_amounts(recon_debit_amount, partial_amount)
+                ):
+                    # Check the case `recon_credit_amount == recon_debit_amount`:
+                    # If `partial_credit_amount_currency` could be the same (up to rounding)
+                    # then we consider the debit to be fully matched.
+                    # We create an exchange difference for the missing amount.
+                    recon_debit_credit_currency_range = get_amount_range_after_rate(
+                        currency_from=company_currency,
+                        currency_to=credit_currency,
+                        amount=recon_debit_amount,
+                        rate=credit_rate,
+                    )
+                    if (
+                            company_currency.compare_amounts(partial_credit_amount_currency, recon_debit_credit_currency_range[2]) >= 0
+                        and company_currency.compare_amounts(partial_credit_amount_currency, recon_debit_credit_currency_range[2]) <= 0
+                    ):
+                        partial_credit_amount_currency = recon_debit_credit_currency_range[1]
+                        debit_fully_matched = True
+                        debit_exchange_amount = remaining_debit_amount - partial_amount
+                        exchange_lines_to_fix += debit_aml
+                        amounts_list.append({'amount_residual': debit_exchange_amount})
+                        remaining_credit_amount -= debit_exchange_amount
                 if credit_fully_matched:
                     credit_exchange_amount = remaining_credit_amount_curr + partial_credit_amount_currency
                     if not credit_currency.is_zero(credit_exchange_amount):
                         exchange_lines_to_fix += credit_aml
                         amounts_list.append({'amount_residual_currency': credit_exchange_amount})
                         remaining_credit_amount_curr += credit_exchange_amount
+                elif (
+                       debit_rate
+                    and debit_currency != company_currency
+                    and company_currency.compare_amounts(recon_credit_amount, partial_amount)
+                ):
+                    # Check the case `recon_debit_amount == recon_credit_amount`:
+                    # If `partial_debit_amount_currency` could be the same (up to rounding)
+                    # then we consider the credit to be fully matched.
+                    # We create an exchange difference for the missing amount.
+                    recon_credit_debit_currency_range = get_amount_range_after_rate(
+                        currency_from=company_currency,
+                        currency_to=debit_currency,
+                        amount=recon_credit_amount,
+                        rate=debit_rate,
+                    )
+                    if (
+                            company_currency.compare_amounts(partial_debit_amount_currency, recon_credit_debit_currency_range[2]) >= 0
+                        and company_currency.compare_amounts(partial_debit_amount_currency, recon_credit_debit_currency_range[2]) <= 0
+                    ):
+                        partial_debit_amount_currency = recon_credit_debit_currency_range[1]
+                        credit_fully_matched = True
+                        credit_exchange_amount = remaining_credit_amount + partial_amount
+                        exchange_lines_to_fix += credit_aml
+                        amounts_list.append({'amount_residual': credit_exchange_amount})
+                        remaining_credit_amount -= credit_exchange_amount
 
             else:
                 if debit_fully_matched:
