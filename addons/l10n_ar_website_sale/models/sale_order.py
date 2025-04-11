@@ -20,6 +20,6 @@ class SaleOrder(models.Model):
         for invoice in invoices:
             if invoice.country_code == 'AR':
                 timezone = pytz.timezone('America/Buenos_Aires')
-                context_today_ar = fields.Datetime.now().astimezone(timezone).date()
+                context_today_ar = fields.Date.context_today(self.with_context(tz=timezone)).date()
                 invoice.invoice_date = context_today_ar
         return invoices
