@@ -1,5 +1,6 @@
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
+import { useMessageHighlight } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -10,6 +11,7 @@ import {
     useState,
 } from "@odoo/owl";
 
+import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -25,6 +27,7 @@ export class Chatter extends Component {
     static defaultProps = { composer: true, threadId: false, twoColumns: false };
 
     setup() {
+        this.messageHighlight = useMessageHighlight();
         this.store = useState(useService("mail.store"));
         this.state = useState({
             jumpThreadPresent: 0,
@@ -35,7 +38,6 @@ export class Chatter extends Component {
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv(this.childSubEnv);
-
         onMounted(this._onMounted);
         onWillUpdateProps((nextProps) => {
             if (
@@ -58,7 +60,7 @@ export class Chatter extends Component {
     }
 
     get childSubEnv() {
-        return { inChatter: this.state };
+        return { inChatter: this.state, messageHighlight: this.messageHighlight };
     }
 
     get onCloseFullComposerRequestList() {
@@ -110,6 +112,9 @@ export class Chatter extends Component {
                 this.env.chatter.fetchData = false;
             }
             this.load(this.state.thread, this.requestList);
+        }
+        if (this.state.thread) {
+            this.state.thread.highlightMessage = router.current.highlight_message_id;
         }
     }
 

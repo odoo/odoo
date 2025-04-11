@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import NotFound, Forbidden
+from werkzeug.urls import url_encode
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.mail.controllers import mail
 from odoo.addons.portal.controllers.mail import PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
 
@@ -77,3 +79,21 @@ class SlidesPortalChatter(PortalChatter):
             'default_attachment_ids': message.attachment_ids.sudo().read(['id', 'name', 'mimetype', 'file_size', 'access_token']),
             'force_submit_url': '/slides/mail/update_comment',
         }
+
+
+class MailController(mail.MailController):
+
+    @classmethod
+    def _redirect_to_record(cls, model, res_id, access_token=None, **kwargs):
+        if (
+            model and res_id and model in request.env and
+            isinstance(request.env[model], request.env.registry["slide.channel"]) and
+            request.env.user.is_public
+        ):
+            url_params = {
+                "active_tab": "review",
+                "highlight_message_id": kwargs.get("highlight_message_id"),
+            }
+            url = f"/slides/{res_id}?{url_encode(url_params)}"
+            return request.redirect(url)
+        return super()._redirect_to_record(model, res_id, access_token=access_token, **kwargs)

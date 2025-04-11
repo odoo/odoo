@@ -51,7 +51,8 @@ class PublicPageController(http.Controller):
 
     @http.route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
     @add_guest_to_context
-    def discuss_channel(self, channel_id):
+    # highlight_message_id is only used JS side by reading the query string
+    def discuss_channel(self, channel_id, highlight_message_id=None):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()

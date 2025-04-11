@@ -8,7 +8,7 @@ import { FollowerList } from "@mail/core/web/follower_list";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
-import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
+import { useHover } from "@mail/utils/common/hooks";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
@@ -48,7 +48,6 @@ Chatter.props.push(
     "hasParentReloadOnAttachmentsChanged?",
     "hasParentReloadOnFollowersUpdate?",
     "hasParentReloadOnMessagePosted?",
-    "highlightMessageId?",
     "isAttachmentBoxVisibleInitially?",
     "isChatterAside?",
     "isInFormSheetBg?",
@@ -75,7 +74,6 @@ Object.assign(Chatter.defaultProps, {
  */
 patch(Chatter.prototype, {
     setup() {
-        this.messageHighlight = useMessageHighlight();
         super.setup(...arguments);
         this.orm = useService("orm");
         this.attachmentPopout = usePopoutAttachment();
@@ -119,7 +117,7 @@ patch(Chatter.prototype, {
                     );
                     this.state.isAttachmentBoxOpened = true;
                 }
-            }
+            },
         });
         useEffect(
             () => {
@@ -183,7 +181,7 @@ patch(Chatter.prototype, {
     },
 
     get childSubEnv() {
-        const res = Object.assign(super.childSubEnv, { messageHighlight: this.messageHighlight });
+        const res = super.childSubEnv;
         res.inChatter.aside = this.props.isChatterAside;
         return res;
     },
@@ -312,13 +310,6 @@ patch(Chatter.prototype, {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
         this.load(thread, ["followers", "suggestedRecipients"]);
-    },
-
-    _onMounted() {
-        super._onMounted();
-        if (this.state.thread && this.props.highlightMessageId) {
-            this.state.thread.highlightMessage = this.props.highlightMessageId;
-        }
     },
 
     onPostCallback() {

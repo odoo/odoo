@@ -2,16 +2,14 @@
 
 import logging
 
+from werkzeug import urls
 from werkzeug.urls import url_encode
-from werkzeug.exceptions import NotFound, Unauthorized
 
 from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
-from odoo.addons.mail.controllers.discuss.public_page import PublicPageController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 
@@ -20,8 +18,12 @@ class MailController(http.Controller):
     _cp_path = '/mail'
 
     @classmethod
-    def _redirect_to_messaging(cls):
-        url = '/odoo/action-mail.action_discuss'
+    def _redirect_to_messaging(cls, channel_id=None, highlight_message_id=None):
+        url_params = {
+            "active_id": channel_id,
+            "highlight_message_id": highlight_message_id
+        }
+        url = f"/odoo/action-mail.action_discuss?{url_encode(url_params)}"
         return request.redirect(url)
 
     @classmethod
@@ -117,15 +119,22 @@ class MailController(http.Controller):
                 url = '/web/login?redirect=#%s' % url_encode(url_params)
                 return request.redirect(url)
 
+        url_params = {}
+        if highlight_message_id := kwargs.get("highlight_message_id"):
+            url_params["highlight_message_id"] = highlight_message_id
+
         record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
-            return request.redirect(record_action['url'])
+            url = urls.url_parse(record_action["url"])
+            action_url_params = url.decode_query()
+            action_url_params.update(url_params)
+            url = url.replace(query=urls.url_encode(action_url_params)).to_url()
+            return request.redirect(url)
         # other choice: act_window (no support of anything else currently)
         elif not record_action['type'] == 'ir.actions.act_window':
             return cls._redirect_to_messaging()
 
-        url_params = {}
         menu_id = request.env['ir.ui.menu']._get_best_backend_root_menu_id_for_model(model)
         if menu_id:
             url_params['menu_id'] = menu_id
@@ -200,32 +209,10 @@ class MailController(http.Controller):
     @http.route('/mail/message/<int:message_id>', type='http', auth='public')
     @add_guest_to_context
     def mail_thread_message_redirect(self, message_id, **kwargs):
-        message = request.env['mail.message'].search([('id', '=', message_id)])
-        if not message:
-            if request.env.user._is_public():
-                return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
-            raise Unauthorized()
-
-        # sudo: public user can access some relational fields of mail.message
-        if message.sudo()._filter_empty():
-            raise NotFound()
-        if not request.env.user._is_internal():
-            thread = request.env[message.model].search([('id', '=', message.res_id)])
-            if message.model == 'discuss.channel':
-                store = Store({'isChannelTokenSecret': True})
-                store.add(thread, {'highlightMessage': Store.one(message, only_id=True)})
-                return PublicPageController()._response_discuss_channel_invitation(store, thread)
-            elif hasattr(thread, '_get_share_url'):
-                return request.redirect(thread._get_share_url(share_token=False))
-            else:
-                raise Unauthorized()
-
-        if message.model == 'discuss.channel':
-            url = f'/odoo/action-mail.action_discuss?active_id={message.res_id}&highlight_message_id={message_id}'
-        else:
-            # @see commit c63d14a0485a553b74a8457aee158384e9ae6d3f
-            # @see router.js: heuristics to discrimate a model name from an action path
-            # is the presence of dots, or the prefix m- for models
-            model_in_url = model if "." in (model := message.model) else "m-" + model
-            url = f'/odoo/{model_in_url}/{message.res_id}?highlight_message_id={message_id}'
-        return request.redirect(url)
+        # DEPRECATED: links pointing to this route are no more being produced
+        message = request.env["mail.message"].sudo().search([("id", "=", message_id)])
+        return self.mail_action_view(
+            model=message.model,
+            res_id=message.res_id,
+            highlight_message_id=message_id
+        )

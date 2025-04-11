@@ -1959,8 +1959,16 @@ test("Copy Message Link", async () => {
     await contains("[title='Copy Link']", { count: 0 });
     await click(".o-mail-Message:eq(1) [title='Expand']");
     await click("[title='Copy Link']");
-    await assertSteps([url(`/mail/message/${messageId_2}`)]);
+    await assertSteps([
+        url(
+            `/mail/view?model=discuss.channel&res_id=${channelId}&highlight_message_id=${messageId_2}`
+        ),
+    ]);
     await press(["ctrl", "v"]);
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
+    await contains(".o-mail-Message", {
+        text: url(
+            `/mail/view?model=discuss.channel&res_id=${channelId}&highlight_message_id=${messageId_2}`
+        ),
+    });
 });
