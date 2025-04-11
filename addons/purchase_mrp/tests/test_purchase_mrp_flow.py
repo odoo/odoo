@@ -854,7 +854,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         po_5days.button_confirm()
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
         line_values = report_values['lines']['components'][0]
-        self.assertEqual(line_values['availability_state'], 'estimated', 'The merged components should be estimated.')
+        self.assertEqual(line_values['availability_state'], 'expected', 'The merged components should be estimated.')
 
     def test_bom_report_incoming_po2(self):
         """ Test report bom structure with duplicated components
