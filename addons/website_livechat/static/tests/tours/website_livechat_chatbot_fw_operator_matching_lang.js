@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add("chatbot_fw_operator_matching_lang_en", 
         ...commonSteps,
         {
             trigger:
-                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(joined the channel)",
+                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(invited @Operator en_US to the channel)",
         },
     ],
 });
@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("chatbot_fw_operator_matching_lang_fr", 
         ...commonSteps,
         {
             trigger:
-                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(a rejoint le canal)", // FIXME: lang is on behalf of who triggers the notification
+                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(@Operator fr_FR invité au canal)", // FIXME: lang is on behalf of who triggers the notification
         },
     ],
 });
