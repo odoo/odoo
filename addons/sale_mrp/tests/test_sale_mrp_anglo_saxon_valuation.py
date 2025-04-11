@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, tagged
+from odoo.tests import Command, Form, tagged
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 
@@ -12,7 +12,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls.env.ref('base.group_user').write({'implied_ids': [Command.link(cls.env.ref('product.group_product_variant').id)]})
         cls.env.user.company_id.anglo_saxon_accounting = True
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
