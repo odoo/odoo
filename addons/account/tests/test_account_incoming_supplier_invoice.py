@@ -13,87 +13,6 @@ from odoo.tests import tagged
 
 
 class TestAccountInvoiceImportMixin:
-    def _get_dummy_pdf_vals(self):
-        rawpdf_base64 = b'JVBERi0xLjYNJeLjz9MNCjI0IDAgb2JqDTw8L0ZpbHRlci9GbGF0ZURlY29kZS9GaXJzdCA0L0xlbmd0aCAyMTYvTiAxL1R5cGUvT2JqU3RtPj5zdHJlYW0NCmjePI9RS8MwFIX/yn1bi9jepCQ6GYNpFBTEMsW97CVLbjWYNpImmz/fVsXXcw/f/c4SEFarepPTe4iFok8dU09DgtDBQx6TMwT74vaLTE7uSPDUdXM0Xe/73r1FnVwYYEtHR6d9WdY3kX4ipRMV6oojSmxQMoGyac5RLBAXf63p38aGA7XPorLewyvFcYaJile8rB+D/YcwiRdMMGScszO8/IW0MdhsaKKYGA46gXKTr/cUQVY4We/cYMNpnLVeXPJUXHs9fECr7kAFk+eZ5Xr9LcAAfKpQrA0KZW5kc3RyZWFtDWVuZG9iag0yNSAwIG9iag08PC9GaWx0ZXIvRmxhdGVEZWNvZGUvRmlyc3QgNC9MZW5ndGggNDkvTiAxL1R5cGUvT2JqU3RtPj5zdHJlYW0NCmjeslAwULCx0XfOL80rUTDU985MKY42NAIKBsXqh1QWpOoHJKanFtvZAQQYAN/6C60NCmVuZHN0cmVhbQ1lbmRvYmoNMjYgMCBvYmoNPDwvRmlsdGVyL0ZsYXRlRGVjb2RlL0ZpcnN0IDkvTGVuZ3RoIDQyL04gMi9UeXBlL09ialN0bT4+c3RyZWFtDQpo3jJTMFAwVzC0ULCx0fcrzS2OBnENFIJi7eyAIsH6LnZ2AAEGAI2FCDcNCmVuZHN0cmVhbQ1lbmRvYmoNMjcgMCBvYmoNPDwvRmlsdGVyL0ZsYXRlRGVjb2RlL0ZpcnN0IDUvTGVuZ3RoIDEyMC9OIDEvVHlwZS9PYmpTdG0+PnN0cmVhbQ0KaN4yNFIwULCx0XfOzytJzSspVjAyBgoE6TsX5Rc45VdEGwB5ZoZGCuaWRrH6vqkpmYkYogGJRUCdChZgfUGpxfmlRcmpxUAzA4ryk4NTS6L1A1zc9ENSK0pi7ez0g/JLEktSFQz0QyoLUoF601Pt7AACDADYoCeWDQplbmRzdHJlYW0NZW5kb2JqDTIgMCBvYmoNPDwvTGVuZ3RoIDM1MjUvU3VidHlwZS9YTUwvVHlwZS9NZXRhZGF0YT4+c3RyZWFtDQo8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/Pgo8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjQtYzAwNSA3OC4xNDczMjYsIDIwMTIvMDgvMjMtMTM6MDM6MDMgICAgICAgICI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnBkZj0iaHR0cDovL25zLmFkb2JlLmNvbS9wZGYvMS4zLyIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgICAgICAgICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIj4KICAgICAgICAgPHBkZjpQcm9kdWNlcj5BY3JvYmF0IERpc3RpbGxlciA2LjAgKFdpbmRvd3MpPC9wZGY6UHJvZHVjZXI+CiAgICAgICAgIDx4bXA6Q3JlYXRlRGF0ZT4yMDA2LTAzLTA2VDE1OjA2OjMzLTA1OjAwPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZVBTNS5kbGwgVmVyc2lvbiA1LjIuMjwveG1wOkNyZWF0b3JUb29sPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxNi0wNy0xNVQxMDoxMjoyMSswODowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMTYtMDctMTVUMTA6MTI6MjErMDg6MDA8L3htcDpNZXRhZGF0YURhdGU+CiAgICAgICAgIDx4bXBNTTpEb2N1bWVudElEPnV1aWQ6ZmYzZGNmZDEtMjNmYS00NzZmLTgzOWEtM2U1Y2FlMmRhMmViPC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD51dWlkOjM1OTM1MGIzLWFmNDAtNGQ4YS05ZDZjLTAzMTg2YjRmZmIzNjwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPGRjOmZvcm1hdD5hcHBsaWNhdGlvbi9wZGY8L2RjOmZvcm1hdD4KICAgICAgICAgPGRjOnRpdGxlPgogICAgICAgICAgICA8cmRmOkFsdD4KICAgICAgICAgICAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ij5CbGFuayBQREYgRG9jdW1lbnQ8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6QWx0PgogICAgICAgICA8L2RjOnRpdGxlPgogICAgICAgICA8ZGM6Y3JlYXRvcj4KICAgICAgICAgICAgPHJkZjpTZXE+CiAgICAgICAgICAgICAgIDxyZGY6bGk+RGVwYXJ0bWVudCBvZiBKdXN0aWNlIChFeGVjdXRpdmUgT2ZmaWNlIG9mIEltbWlncmF0aW9uIFJldmlldyk8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6U2VxPgogICAgICAgICA8L2RjOmNyZWF0b3I+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgog' + 682 * b'ICAg' + b'Cjw/eHBhY2tldCBlbmQ9InciPz4NCmVuZHN0cmVhbQ1lbmRvYmoNMTEgMCBvYmoNPDwvTWV0YWRhdGEgMiAwIFIvUGFnZUxhYmVscyA2IDAgUi9QYWdlcyA4IDAgUi9UeXBlL0NhdGFsb2c+Pg1lbmRvYmoNMjMgMCBvYmoNPDwvRmlsdGVyL0ZsYXRlRGVjb2RlL0xlbmd0aCAxMD4+c3RyZWFtDQpIiQIIMAAAAAABDQplbmRzdHJlYW0NZW5kb2JqDTI4IDAgb2JqDTw8L0RlY29kZVBhcm1zPDwvQ29sdW1ucyA0L1ByZWRpY3RvciAxMj4+L0ZpbHRlci9GbGF0ZURlY29kZS9JRFs8REI3Nzc1Q0NFMjI3RjZCMzBDNDQwREY0MjIxREMzOTA+PEJGQ0NDRjNGNTdGNjEzNEFCRDNDMDRBOUU0Q0ExMDZFPl0vSW5mbyA5IDAgUi9MZW5ndGggODAvUm9vdCAxMSAwIFIvU2l6ZSAyOS9UeXBlL1hSZWYvV1sxIDIgMV0+PnN0cmVhbQ0KaN5iYgACJjDByGzIwPT/73koF0wwMUiBWYxA4v9/EMHA9I/hBVCxoDOQeH8DxH2KrIMIglFwIpD1vh5IMJqBxPpArHYgwd/KABBgAP8bEC0NCmVuZHN0cmVhbQ1lbmRvYmoNc3RhcnR4cmVmDQo0NTc2DQolJUVPRg0K'
-        return {
-            'raw': base64.b64decode(rawpdf_base64),
-            'type': 'binary',
-            'mimetype': 'application/pdf',
-        }
-
-    def _get_dummy_pdf_with_embedded_file_vals(self):
-        """ This PDF has an embedded file with filename 'embedded.xml' and the following content
-        <?xml version="1.0" encoding="UTF-8"?>
-        <TestFileFormat>
-            <PartnerName>partner_a</PartnerName>
-        </TestFileFormat>
-        """
-        rawpdf_base64 = b'JVBERi0xLjYKJeLjz9MKMyAwIG9iaiAKPDwKL1R5cGUgL0VtYmVkZGVkRmlsZQovRmlsdGVyIC9GbGF0ZURlY29kZQovUGFyYW1zIDEgMCBSCi9MZW5ndGggMiAwIFIKPj4Kc3RyZWFtCnics7GvyM1RKEstKs7Mz7NVMtQzUFJIzUvOT8nMS7dVCg1x07VQsrfjsglJLS5xy8xJdcsvyk0sseNSAAKbgMSikrzUIr/E3FS7Agg7PtFGH1mYy0YfXSsAc6MmMgplbmRzdHJlYW0gCmVuZG9iaiAKMiAwIG9iaiA5MwplbmRvYmogCjEgMCBvYmogCjw8Ci9TaXplIDExNQo+PgplbmRvYmogCjQgMCBvYmogCjw8Ci9UeXBlIC9GCi9GIChlbWJlZGRlZC54bWwpCi9FRiAKPDwKL0YgMyAwIFIKPj4KL1VGICj+/wBlAG0AYgBlAGQAZABlAGQALgB4AG0AbCkKPj4KZW5kb2JqIAo1IDAgb2JqIAo8PAovTmFtZXMgWyj+/wBlAG0AYgBlAGQAZABlAGQALgB4AG0AbCkgNCAwIFJdCj4+CmVuZG9iaiAKNiAwIG9iaiAKPDwKL0VtYmVkZGVkRmlsZXMgNSAwIFIKPj4KZW5kb2JqIAo3IDAgb2JqIAo8PAovU3VidHlwZSAvWE1MCi9UeXBlIC9NZXRhZGF0YQovTGVuZ3RoIDM1MjUKPj4Kc3RyZWFtCjw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNC1jMDA1IDc4LjE0NzMyNiwgMjAxMi8wOC8yMy0xMzowMzowMyAgICAgICAgIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6cGRmPSJodHRwOi8vbnMuYWRvYmUuY29tL3BkZi8xLjMvIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iPgogICAgICAgICA8cGRmOlByb2R1Y2VyPkFjcm9iYXQgRGlzdGlsbGVyIDYuMCAoV2luZG93cyk8L3BkZjpQcm9kdWNlcj4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMDYtMDMtMDZUMTU6MDY6MzMtMDU6MDA8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlUFM1LmRsbCBWZXJzaW9uIDUuMi4yPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6TW9kaWZ5RGF0ZT4yMDE2LTA3LTE1VDEwOjEyOjIxKzA4OjAwPC94bXA6TW9kaWZ5RGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxNi0wNy0xNVQxMDoxMjoyMSswODowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+dXVpZDpmZjNkY2ZkMS0yM2ZhLTQ3NmYtODM5YS0zZTVjYWUyZGEyZWI8L3htcE1NOkRvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnV1aWQ6MzU5MzUwYjMtYWY0MC00ZDhhLTlkNmMtMDMxODZiNGZmYjM2PC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8ZGM6Zm9ybWF0PmFwcGxpY2F0aW9uL3BkZjwvZGM6Zm9ybWF0PgogICAgICAgICA8ZGM6dGl0bGU+CiAgICAgICAgICAgIDxyZGY6QWx0PgogICAgICAgICAgICAgICA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPkJsYW5rIFBERiBEb2N1bWVudDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpBbHQ+CiAgICAgICAgIDwvZGM6dGl0bGU+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5EZXBhcnRtZW50IG9mIEp1c3RpY2UgKEV4ZWN1dGl2ZSBPZmZpY2Ugb2YgSW1taWdyYXRpb24gUmV2aWV3KTwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpTZXE+CiAgICAgICAgIDwvZGM6Y3JlYXRvcj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAg' + 681 * b'ICAg' + b'ICAKPD94cGFja2V0IGVuZD0idyI/PgplbmRzdHJlYW0gCmVuZG9iaiAKOCAwIG9iaiAKPDwKL051bXMgWzAgOSAwIFJdCj4+CmVuZG9iaiAKOSAwIG9iaiAKPDwKL1MgL0QKPj4KZW5kb2JqIAoxMCAwIG9iaiAKPDwKL0tpZHMgWzExIDAgUl0KL1R5cGUgL1BhZ2VzCi9Db3VudCAxCj4+CmVuZG9iaiAKMTIgMCBvYmogCjw8Ci9NZXRhZGF0YSA3IDAgUgovUGFnZUxhYmVscyA4IDAgUgovTmFtZXMgNiAwIFIKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDEwIDAgUgo+PgplbmRvYmogCjExIDAgb2JqIAo8PAovUm90YXRlIDAKL1Jlc291cmNlcyAKPDwKL1Byb2NTZXQgWy9QREYgL1RleHRdCj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMTAgMCBSCi9Db250ZW50cyAxMyAwIFIKL01lZGlhQm94IFswIDAgNjEyIDc5Ml0KL0Nyb3BCb3ggWzAgMCA2MTIgNzkyXQo+PgplbmRvYmogCjEzIDAgb2JqIAo8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQpIiQIIMAAAAAABCmVuZHN0cmVhbSAKZW5kb2JqIAoxNCAwIG9iaiAKPDwKL01vZERhdGUgKEQ6MjAxNjA3MTUxMDEyMjErMDgnMDAnKQovQ3JlYXRpb25EYXRlIChEOjIwMDYwMzA2MTUwNjMzLTA1JzAwJykKL0F1dGhvciAoRGVwYXJ0bWVudCBvZiBKdXN0aWNlIFwoRXhlY3V0aXZlIE9mZmljZSBvZiBJbW1pZ3JhdGlvbiBSZXZpZXdcKSkKL1RpdGxlIChCbGFuayBQREYgRG9jdW1lbnQpCi9DcmVhdG9yIChBZG9iZVBTNS5kbGwgVmVyc2lvbiA1LjIuMikKL1Byb2R1Y2VyIChBY3JvYmF0IERpc3RpbGxlciA2LjAgXChXaW5kb3dzXCkpCj4+CmVuZG9iaiB4cmVmCjAgMTUKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMjM4IDAwMDAwIG4gCjAwMDAwMDAyMTkgMDAwMDAgbiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMjcxIDAwMDAwIG4gCjAwMDAwMDAzNzQgMDAwMDAgbiAKMDAwMDAwMDQ0MSAwMDAwMCBuIAowMDAwMDAwNDg1IDAwMDAwIG4gCjAwMDAwMDQwOTUgMDAwMDAgbiAKMDAwMDAwNDEzNCAwMDAwMCBuIAowMDAwMDA0MTYzIDAwMDAwIG4gCjAwMDAwMDQzMjQgMDAwMDAgbiAKMDAwMDAwNDIyNCAwMDAwMCBuIAowMDAwMDA0NDg5IDAwMDAwIG4gCjAwMDAwMDQ1NzQgMDAwMDAgbiAKdHJhaWxlcgoKPDwKL0luZm8gMTQgMCBSCi9JRCBbPGRiNzc3NWNjZTIyN2Y2YjMwYzQ0MGRmNDIyMWRjMzkwPiA8YmZjY2NmM2Y1N2Y2MTM0YWJkM2MwNGE5ZTRjYTEwNmU+XQovUm9vdCAxMiAwIFIKL1NpemUgMTUKPj4Kc3RhcnR4cmVmCjQ4NTkKJSVFT0YK'
-        return {
-            'raw': base64.b64decode(rawpdf_base64),
-            'type': 'binary',
-            'mimetype': 'application/pdf',
-        }
-
-    def _get_dummy_xml_vals(self):
-        return {
-            'raw': b"""<?xml version="1.0" encoding="UTF-8"?>
-                <TestFileFormat>
-                    <PartnerName>partner_a</PartnerName>
-                </TestFileFormat>
-            """,
-            'mimetype': 'application/xml',
-        }
-
-    def _get_dummy_gif_vals(self):
-        return {
-            'raw': base64.b64decode("R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="),
-            'mimetype': 'image/gif',
-        }
-
-    def _get_raw_mail_message_str(self, attachments_vals, email_to, message_id=None):
-        """
-        :param attachments_vals: list of attachment values.
-        :param email_to: string that will fill email_to field in the email, probably you'll want to use some journal alias here.
-        :param message_id: Optional. Custom message ID for the email. If not provided, a UUID will be generated.
-
-        Returns:
-            Formatted email string.
-        """
-        if not message_id:
-            message_id = str(uuid.uuid4())
-
-        attachment_parts = []
-        for attachment in attachments_vals:
-            encoded_attachment = base64.b64encode(attachment['raw']).decode()
-            attachment_part = textwrap.dedent(f"""\
-                --000000000000a47519057e029630
-                Content-Type: {attachment['mimetype']}
-                Content-Transfer-Encoding: base64
-                Content-Disposition: attachment; filename="{attachment['name']}"
-
-                {encoded_attachment}
-            """)
-            attachment_parts.append(attachment_part)
-
-        email_raw = textwrap.dedent(f"""\
-            MIME-Version: 1.0
-            Date: Fri, 26 Nov 2021 16:27:45 +0100
-            Message-ID: {message_id}
-            Subject: Incoming bill
-            From: Someone <someone@some.company.com>
-            To: {email_to}
-            Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
-
-            --000000000000a47519057e029630
-            Content-Type: text/plain; charset="UTF-8"
-
-            Here is your requested document(s).
-        """)
-        email_raw += "\n".join(attachment_parts)
-        email_raw += "\n--000000000000a47519057e029630--"
-        return email_raw
-
     @contextmanager
     def _watch_created_records(self, models_to_watch):
         """ Context manager to watch all records that are created within.
@@ -200,23 +119,30 @@ class TestAccountInvoiceImportMixin:
         """
 
         # Because no decoders are defined in `account` itself, if we want to test the decoder flow we need
-        # to define a fictional format that will be decoded, and patch both the `_get_import_type_and_priority`
-        # and `_decode_attachment` methods to accept it.
+        # to define a fictional format that will be decoded, and patch the `_get_import_file_type`,
+        # and `_decode_attachment` methods to accept it. We also patch `_get_import_priority` so that PDFs
+        # and the test XMLs are decoded.
 
-        original_get_import_type_and_priority = self.env.registry['ir.attachment']._get_import_type_and_priority
+        original_get_import_file_type = self.env.registry['ir.attachment']._get_import_file_type
 
-        def patched_get_import_type_and_priority(self, file_data):
-            """ Patch _get_import_type_and_priority in order to recognize the 'test_xml' format
+        def patched_get_import_file_type(self, file_data):
+            """ Patch _get_import_file_type in order to recognize the 'test_xml' format
             which is an XML whose root tag is 'TestFileFormat'.
             """
             if file_data['xml_tree'] is not None and file_data['xml_tree'].tag == 'TestFileFormat':
-                return ('test_xml', 20)
-            else:
-                # Put priority=10 on PDF so that this test behaves the same regardless of whether `account_invoice_extract` is installed.
-                import_type, import_priority = original_get_import_type_and_priority(self, file_data)
-                if import_type == 'pdf':
-                    import_priority = 10
-                return import_type, import_priority
+                return 'test_xml'
+            return original_get_import_file_type(self, file_data)
+
+        original_get_import_priority = self.env.registry['account.move']._get_import_priority
+
+        def patched_get_import_priority(self, file_data):
+            """ Patch _get_import_priority so that PDFs and the test XML format are decoded. """
+            # Put priority=10 on PDF so that this test behaves the same regardless of whether `account_invoice_extract` is installed.
+            if file_data['import_file_type'] == 'test_xml':
+                return 20
+            if file_data['import_file_type'] == 'pdf':
+                return 10
+            return original_get_import_priority(self, file_data)
 
         decode_attachment_calls = []
 
@@ -225,19 +151,20 @@ class TestAccountInvoiceImportMixin:
         def patched_decode_attachment(self, file_data, new):
             decode_attachment_calls.append((self, file_data, new))
 
-            if file_data['import_type'] == 'test_xml':
+            if file_data['import_file_type'] == 'test_xml':
                 partner_name = file_data['xml_tree'].findtext('.//PartnerName')
                 if partner_name and (partner := self.env['res.partner'].search([('name', '=', partner_name)], limit=1)):
                     self.partner_id = partner.id
                 else:
                     raise ValidationError('Could not identify partner!')
-            elif file_data['import_type'] == 'pdf':
+            elif file_data['import_file_type'] == 'pdf':
                 return
             else:
                 return original_decode_attachment(self, file_data, new)
 
         with (
-            patch.object(self.env.registry['ir.attachment'], '_get_import_type_and_priority', patched_get_import_type_and_priority),
+            patch.object(self.env.registry['ir.attachment'], '_get_import_file_type', patched_get_import_file_type),
+            patch.object(self.env.registry['account.move'], '_get_import_priority', patched_get_import_priority),
             patch.object(self.env.registry['account.move'], '_decode_attachment', patched_decode_attachment),
         ):
             created_records = self._upload_and_import_attachments(origin, attachments_vals)
@@ -285,6 +212,12 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
     def setUpClass(cls):
         super().setUpClass()
 
+        # Disable OCR
+        company = cls.company_data['company']
+        if 'extract_in_invoice_digitalization_mode' in company._fields:
+            company.extract_in_invoice_digitalization_mode = 'no_send'
+            company.extract_out_invoice_digitalization_mode = 'no_send'
+
         cls.internal_user = cls._create_new_internal_user(login='internal.user@test.odoo.com')
 
         cls.supplier_partner = cls.env['res.partner'].create({
@@ -295,15 +228,103 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
 
         cls.journal = cls.company_data['default_journal_purchase']
 
+        cls.pdf1_vals = {'name': 'pdf1.pdf', **cls._get_dummy_pdf_vals()}
+        cls.pdf2_vals = {'name': 'pdf2.pdf', **cls._get_dummy_pdf_vals()}
+        cls.pdf3_vals = {'name': 'pdf3.pdf', **cls._get_dummy_pdf_with_embedded_file_vals()}
+        cls.gif1_vals = {'name': 'gif1.gif', **cls._get_dummy_gif_vals()}
+        cls.gif2_vals = {'name': 'gif2.gif', **cls._get_dummy_gif_vals()}
+        cls.xml1_vals = {'name': 'xml1.xml', **cls._get_dummy_xml_vals()}
+        cls.xml2_vals = {'name': 'xml2.xml', **cls._get_dummy_xml_vals()}
+
     @classmethod
     def default_env_context(cls):
         # OVERRIDE
         return {}
 
-    def _disable_ocr(self, company):
-        if 'extract_in_invoice_digitalization_mode' in company._fields:
-            company.extract_in_invoice_digitalization_mode = 'no_send'
-            company.extract_out_invoice_digitalization_mode = 'no_send'
+    @classmethod
+    def _get_dummy_pdf_vals(cls):
+        rawpdf_base64 = b'JVBERi0xLjYNJeLjz9MNCjI0IDAgb2JqDTw8L0ZpbHRlci9GbGF0ZURlY29kZS9GaXJzdCA0L0xlbmd0aCAyMTYvTiAxL1R5cGUvT2JqU3RtPj5zdHJlYW0NCmjePI9RS8MwFIX/yn1bi9jepCQ6GYNpFBTEMsW97CVLbjWYNpImmz/fVsXXcw/f/c4SEFarepPTe4iFok8dU09DgtDBQx6TMwT74vaLTE7uSPDUdXM0Xe/73r1FnVwYYEtHR6d9WdY3kX4ipRMV6oojSmxQMoGyac5RLBAXf63p38aGA7XPorLewyvFcYaJile8rB+D/YcwiRdMMGScszO8/IW0MdhsaKKYGA46gXKTr/cUQVY4We/cYMNpnLVeXPJUXHs9fECr7kAFk+eZ5Xr9LcAAfKpQrA0KZW5kc3RyZWFtDWVuZG9iag0yNSAwIG9iag08PC9GaWx0ZXIvRmxhdGVEZWNvZGUvRmlyc3QgNC9MZW5ndGggNDkvTiAxL1R5cGUvT2JqU3RtPj5zdHJlYW0NCmjeslAwULCx0XfOL80rUTDU985MKY42NAIKBsXqh1QWpOoHJKanFtvZAQQYAN/6C60NCmVuZHN0cmVhbQ1lbmRvYmoNMjYgMCBvYmoNPDwvRmlsdGVyL0ZsYXRlRGVjb2RlL0ZpcnN0IDkvTGVuZ3RoIDQyL04gMi9UeXBlL09ialN0bT4+c3RyZWFtDQpo3jJTMFAwVzC0ULCx0fcrzS2OBnENFIJi7eyAIsH6LnZ2AAEGAI2FCDcNCmVuZHN0cmVhbQ1lbmRvYmoNMjcgMCBvYmoNPDwvRmlsdGVyL0ZsYXRlRGVjb2RlL0ZpcnN0IDUvTGVuZ3RoIDEyMC9OIDEvVHlwZS9PYmpTdG0+PnN0cmVhbQ0KaN4yNFIwULCx0XfOzytJzSspVjAyBgoE6TsX5Rc45VdEGwB5ZoZGCuaWRrH6vqkpmYkYogGJRUCdChZgfUGpxfmlRcmpxUAzA4ryk4NTS6L1A1zc9ENSK0pi7ez0g/JLEktSFQz0QyoLUoF601Pt7AACDADYoCeWDQplbmRzdHJlYW0NZW5kb2JqDTIgMCBvYmoNPDwvTGVuZ3RoIDM1MjUvU3VidHlwZS9YTUwvVHlwZS9NZXRhZGF0YT4+c3RyZWFtDQo8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/Pgo8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjQtYzAwNSA3OC4xNDczMjYsIDIwMTIvMDgvMjMtMTM6MDM6MDMgICAgICAgICI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnBkZj0iaHR0cDovL25zLmFkb2JlLmNvbS9wZGYvMS4zLyIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgICAgICAgICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIj4KICAgICAgICAgPHBkZjpQcm9kdWNlcj5BY3JvYmF0IERpc3RpbGxlciA2LjAgKFdpbmRvd3MpPC9wZGY6UHJvZHVjZXI+CiAgICAgICAgIDx4bXA6Q3JlYXRlRGF0ZT4yMDA2LTAzLTA2VDE1OjA2OjMzLTA1OjAwPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZVBTNS5kbGwgVmVyc2lvbiA1LjIuMjwveG1wOkNyZWF0b3JUb29sPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxNi0wNy0xNVQxMDoxMjoyMSswODowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMTYtMDctMTVUMTA6MTI6MjErMDg6MDA8L3htcDpNZXRhZGF0YURhdGU+CiAgICAgICAgIDx4bXBNTTpEb2N1bWVudElEPnV1aWQ6ZmYzZGNmZDEtMjNmYS00NzZmLTgzOWEtM2U1Y2FlMmRhMmViPC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD51dWlkOjM1OTM1MGIzLWFmNDAtNGQ4YS05ZDZjLTAzMTg2YjRmZmIzNjwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPGRjOmZvcm1hdD5hcHBsaWNhdGlvbi9wZGY8L2RjOmZvcm1hdD4KICAgICAgICAgPGRjOnRpdGxlPgogICAgICAgICAgICA8cmRmOkFsdD4KICAgICAgICAgICAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ij5CbGFuayBQREYgRG9jdW1lbnQ8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6QWx0PgogICAgICAgICA8L2RjOnRpdGxlPgogICAgICAgICA8ZGM6Y3JlYXRvcj4KICAgICAgICAgICAgPHJkZjpTZXE+CiAgICAgICAgICAgICAgIDxyZGY6bGk+RGVwYXJ0bWVudCBvZiBKdXN0aWNlIChFeGVjdXRpdmUgT2ZmaWNlIG9mIEltbWlncmF0aW9uIFJldmlldyk8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6U2VxPgogICAgICAgICA8L2RjOmNyZWF0b3I+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgog' + 682 * b'ICAg' + b'Cjw/eHBhY2tldCBlbmQ9InciPz4NCmVuZHN0cmVhbQ1lbmRvYmoNMTEgMCBvYmoNPDwvTWV0YWRhdGEgMiAwIFIvUGFnZUxhYmVscyA2IDAgUi9QYWdlcyA4IDAgUi9UeXBlL0NhdGFsb2c+Pg1lbmRvYmoNMjMgMCBvYmoNPDwvRmlsdGVyL0ZsYXRlRGVjb2RlL0xlbmd0aCAxMD4+c3RyZWFtDQpIiQIIMAAAAAABDQplbmRzdHJlYW0NZW5kb2JqDTI4IDAgb2JqDTw8L0RlY29kZVBhcm1zPDwvQ29sdW1ucyA0L1ByZWRpY3RvciAxMj4+L0ZpbHRlci9GbGF0ZURlY29kZS9JRFs8REI3Nzc1Q0NFMjI3RjZCMzBDNDQwREY0MjIxREMzOTA+PEJGQ0NDRjNGNTdGNjEzNEFCRDNDMDRBOUU0Q0ExMDZFPl0vSW5mbyA5IDAgUi9MZW5ndGggODAvUm9vdCAxMSAwIFIvU2l6ZSAyOS9UeXBlL1hSZWYvV1sxIDIgMV0+PnN0cmVhbQ0KaN5iYgACJjDByGzIwPT/73koF0wwMUiBWYxA4v9/EMHA9I/hBVCxoDOQeH8DxH2KrIMIglFwIpD1vh5IMJqBxPpArHYgwd/KABBgAP8bEC0NCmVuZHN0cmVhbQ1lbmRvYmoNc3RhcnR4cmVmDQo0NTc2DQolJUVPRg0K'
+        return {
+            'raw': base64.b64decode(rawpdf_base64),
+            'type': 'binary',
+            'mimetype': 'application/pdf',
+        }
+
+    @classmethod
+    def _get_dummy_pdf_with_embedded_file_vals(cls):
+        """ This PDF has an embedded file with filename 'embedded.xml' and the following content
+        <?xml version="1.0" encoding="UTF-8"?>
+        <TestFileFormat>
+            <PartnerName>partner_a</PartnerName>
+        </TestFileFormat>
+        """
+        rawpdf_base64 = b'JVBERi0xLjYKJeLjz9MKMyAwIG9iaiAKPDwKL1R5cGUgL0VtYmVkZGVkRmlsZQovRmlsdGVyIC9GbGF0ZURlY29kZQovUGFyYW1zIDEgMCBSCi9MZW5ndGggMiAwIFIKPj4Kc3RyZWFtCnics7GvyM1RKEstKs7Mz7NVMtQzUFJIzUvOT8nMS7dVCg1x07VQsrfjsglJLS5xy8xJdcsvyk0sseNSAAKbgMSikrzUIr/E3FS7Agg7PtFGH1mYy0YfXSsAc6MmMgplbmRzdHJlYW0gCmVuZG9iaiAKMiAwIG9iaiA5MwplbmRvYmogCjEgMCBvYmogCjw8Ci9TaXplIDExNQo+PgplbmRvYmogCjQgMCBvYmogCjw8Ci9UeXBlIC9GCi9GIChlbWJlZGRlZC54bWwpCi9FRiAKPDwKL0YgMyAwIFIKPj4KL1VGICj+/wBlAG0AYgBlAGQAZABlAGQALgB4AG0AbCkKPj4KZW5kb2JqIAo1IDAgb2JqIAo8PAovTmFtZXMgWyj+/wBlAG0AYgBlAGQAZABlAGQALgB4AG0AbCkgNCAwIFJdCj4+CmVuZG9iaiAKNiAwIG9iaiAKPDwKL0VtYmVkZGVkRmlsZXMgNSAwIFIKPj4KZW5kb2JqIAo3IDAgb2JqIAo8PAovU3VidHlwZSAvWE1MCi9UeXBlIC9NZXRhZGF0YQovTGVuZ3RoIDM1MjUKPj4Kc3RyZWFtCjw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNC1jMDA1IDc4LjE0NzMyNiwgMjAxMi8wOC8yMy0xMzowMzowMyAgICAgICAgIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6cGRmPSJodHRwOi8vbnMuYWRvYmUuY29tL3BkZi8xLjMvIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iPgogICAgICAgICA8cGRmOlByb2R1Y2VyPkFjcm9iYXQgRGlzdGlsbGVyIDYuMCAoV2luZG93cyk8L3BkZjpQcm9kdWNlcj4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMDYtMDMtMDZUMTU6MDY6MzMtMDU6MDA8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlUFM1LmRsbCBWZXJzaW9uIDUuMi4yPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6TW9kaWZ5RGF0ZT4yMDE2LTA3LTE1VDEwOjEyOjIxKzA4OjAwPC94bXA6TW9kaWZ5RGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxNi0wNy0xNVQxMDoxMjoyMSswODowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+dXVpZDpmZjNkY2ZkMS0yM2ZhLTQ3NmYtODM5YS0zZTVjYWUyZGEyZWI8L3htcE1NOkRvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnV1aWQ6MzU5MzUwYjMtYWY0MC00ZDhhLTlkNmMtMDMxODZiNGZmYjM2PC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8ZGM6Zm9ybWF0PmFwcGxpY2F0aW9uL3BkZjwvZGM6Zm9ybWF0PgogICAgICAgICA8ZGM6dGl0bGU+CiAgICAgICAgICAgIDxyZGY6QWx0PgogICAgICAgICAgICAgICA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPkJsYW5rIFBERiBEb2N1bWVudDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpBbHQ+CiAgICAgICAgIDwvZGM6dGl0bGU+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5EZXBhcnRtZW50IG9mIEp1c3RpY2UgKEV4ZWN1dGl2ZSBPZmZpY2Ugb2YgSW1taWdyYXRpb24gUmV2aWV3KTwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpTZXE+CiAgICAgICAgIDwvZGM6Y3JlYXRvcj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAg' + 681 * b'ICAg' + b'ICAKPD94cGFja2V0IGVuZD0idyI/PgplbmRzdHJlYW0gCmVuZG9iaiAKOCAwIG9iaiAKPDwKL051bXMgWzAgOSAwIFJdCj4+CmVuZG9iaiAKOSAwIG9iaiAKPDwKL1MgL0QKPj4KZW5kb2JqIAoxMCAwIG9iaiAKPDwKL0tpZHMgWzExIDAgUl0KL1R5cGUgL1BhZ2VzCi9Db3VudCAxCj4+CmVuZG9iaiAKMTIgMCBvYmogCjw8Ci9NZXRhZGF0YSA3IDAgUgovUGFnZUxhYmVscyA4IDAgUgovTmFtZXMgNiAwIFIKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDEwIDAgUgo+PgplbmRvYmogCjExIDAgb2JqIAo8PAovUm90YXRlIDAKL1Jlc291cmNlcyAKPDwKL1Byb2NTZXQgWy9QREYgL1RleHRdCj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMTAgMCBSCi9Db250ZW50cyAxMyAwIFIKL01lZGlhQm94IFswIDAgNjEyIDc5Ml0KL0Nyb3BCb3ggWzAgMCA2MTIgNzkyXQo+PgplbmRvYmogCjEzIDAgb2JqIAo8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDEwCj4+CnN0cmVhbQpIiQIIMAAAAAABCmVuZHN0cmVhbSAKZW5kb2JqIAoxNCAwIG9iaiAKPDwKL01vZERhdGUgKEQ6MjAxNjA3MTUxMDEyMjErMDgnMDAnKQovQ3JlYXRpb25EYXRlIChEOjIwMDYwMzA2MTUwNjMzLTA1JzAwJykKL0F1dGhvciAoRGVwYXJ0bWVudCBvZiBKdXN0aWNlIFwoRXhlY3V0aXZlIE9mZmljZSBvZiBJbW1pZ3JhdGlvbiBSZXZpZXdcKSkKL1RpdGxlIChCbGFuayBQREYgRG9jdW1lbnQpCi9DcmVhdG9yIChBZG9iZVBTNS5kbGwgVmVyc2lvbiA1LjIuMikKL1Byb2R1Y2VyIChBY3JvYmF0IERpc3RpbGxlciA2LjAgXChXaW5kb3dzXCkpCj4+CmVuZG9iaiB4cmVmCjAgMTUKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMjM4IDAwMDAwIG4gCjAwMDAwMDAyMTkgMDAwMDAgbiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMjcxIDAwMDAwIG4gCjAwMDAwMDAzNzQgMDAwMDAgbiAKMDAwMDAwMDQ0MSAwMDAwMCBuIAowMDAwMDAwNDg1IDAwMDAwIG4gCjAwMDAwMDQwOTUgMDAwMDAgbiAKMDAwMDAwNDEzNCAwMDAwMCBuIAowMDAwMDA0MTYzIDAwMDAwIG4gCjAwMDAwMDQzMjQgMDAwMDAgbiAKMDAwMDAwNDIyNCAwMDAwMCBuIAowMDAwMDA0NDg5IDAwMDAwIG4gCjAwMDAwMDQ1NzQgMDAwMDAgbiAKdHJhaWxlcgoKPDwKL0luZm8gMTQgMCBSCi9JRCBbPGRiNzc3NWNjZTIyN2Y2YjMwYzQ0MGRmNDIyMWRjMzkwPiA8YmZjY2NmM2Y1N2Y2MTM0YWJkM2MwNGE5ZTRjYTEwNmU+XQovUm9vdCAxMiAwIFIKL1NpemUgMTUKPj4Kc3RhcnR4cmVmCjQ4NTkKJSVFT0YK'
+        return {
+            'raw': base64.b64decode(rawpdf_base64),
+            'type': 'binary',
+            'mimetype': 'application/pdf',
+        }
+
+    @classmethod
+    def _get_dummy_xml_vals(cls):
+        return {
+            'raw': b"""<?xml version="1.0" encoding="UTF-8"?>
+                <TestFileFormat>
+                    <PartnerName>partner_a</PartnerName>
+                </TestFileFormat>
+            """,
+            'mimetype': 'application/xml',
+        }
+
+    @classmethod
+    def _get_dummy_gif_vals(cls):
+        return {
+            'raw': base64.b64decode("R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="),
+            'mimetype': 'image/gif',
+        }
+
+    def _get_raw_mail_message_str(self, attachments_vals, email_to, message_id=None):
+        """
+        :param attachments_vals: list of attachment values.
+        :param email_to: string that will fill email_to field in the email, probably you'll want to use some journal alias here.
+        :param message_id: Optional. Custom message ID for the email. If not provided, a UUID will be generated.
+
+        Returns:
+            Formatted email string.
+        """
+        if not message_id:
+            message_id = str(uuid.uuid4())
+
+        attachment_parts = []
+        for attachment in attachments_vals:
+            encoded_attachment = base64.b64encode(attachment['raw']).decode()
+            attachment_part = textwrap.dedent(f"""\
+                --000000000000a47519057e029630
+                Content-Type: {attachment['mimetype']}
+                Content-Transfer-Encoding: base64
+                Content-Disposition: attachment; filename="{attachment['name']}"
+
+                {encoded_attachment}
+            """)
+            attachment_parts.append(attachment_part)
+
+        email_raw = textwrap.dedent(f"""\
+            MIME-Version: 1.0
+            Date: Fri, 26 Nov 2021 16:27:45 +0100
+            Message-ID: {message_id}
+            Subject: Incoming bill
+            From: Someone <someone@some.company.com>
+            To: {email_to}
+            Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
+
+            --000000000000a47519057e029630
+            Content-Type: text/plain; charset="UTF-8"
+
+            Here is your requested document(s).
+        """)
+        email_raw += "\n".join(attachment_parts)
+        email_raw += "\n--000000000000a47519057e029630--"
+        return email_raw
 
     def test_supplier_invoice_mailed_from_supplier(self):
         message_parsed = {
@@ -392,20 +413,10 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
         following_partners = invoice.message_follower_ids.mapped('partner_id')
         self.assertEqual(following_partners, self.env.user.partner_id)
 
-    def test_extend_with_attachments_multi_pdf(self):
-        self._disable_ocr(self.company_data['company'])
-
-        pdf1_vals = {'name': 'pdf1.pdf', **self._get_dummy_pdf_vals()}
-        pdf2_vals = {'name': 'pdf2.pdf', **self._get_dummy_pdf_vals()}
-        pdf3_vals = {'name': 'pdf3.pdf', **self._get_dummy_pdf_with_embedded_file_vals()}
-        gif1_vals = {'name': 'gif1.gif', **self._get_dummy_gif_vals()}
-        gif2_vals = {'name': 'gif2.gif', **self._get_dummy_gif_vals()}
-        xml1_vals = {'name': 'xml1.xml', **self._get_dummy_xml_vals()}
-        xml2_vals = {'name': 'xml2.xml', **self._get_dummy_xml_vals()}
-
+    def test_chatter_upload_pdfs(self):
         self.assert_attachment_import(
             origin='chatter_upload',
-            attachments_vals=[pdf1_vals, pdf2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals],
             expected_invoices={
                 1: {
                     'pdf1.pdf': {'on_invoice': True, 'is_decoded': True},
@@ -413,9 +424,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_chatter_message_pdfs(self):
         self.assert_attachment_import(
             origin='chatter_message',
-            attachments_vals=[pdf1_vals, pdf2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals],
             expected_invoices={
                 1: {
                     'pdf1.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True},
@@ -423,9 +436,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_chatter_email_pdfs(self):
         self.assert_attachment_import(
             origin='chatter_email',
-            attachments_vals=[pdf1_vals, pdf2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals],
             expected_invoices={
                 1: {
                     'pdf1.pdf': {'on_invoice': True, 'on_message': True},
@@ -433,25 +448,31 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_journal_upload_pdfs(self):
         self.assert_attachment_import(
             origin='journal',
-            attachments_vals=[pdf1_vals, pdf2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals],
             expected_invoices={
                 1: {'pdf1.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
                 2: {'pdf2.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
             },
         )
+
+    def test_mail_alias_pdfs(self):
         self.assert_attachment_import(
             origin='mail_alias',
-            attachments_vals=[pdf1_vals, pdf2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals],
             expected_invoices={
                 1: {'pdf1.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
                 2: {'pdf2.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
             },
         )
+
+    def test_chatter_upload_pdfs_and_gifs(self):
         self.assert_attachment_import(
             origin='chatter_upload',
-            attachments_vals=[pdf1_vals, pdf2_vals, gif1_vals, gif2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals, self.gif1_vals, self.gif2_vals],
             expected_invoices={
                 1: {
                     'pdf1.pdf': {'on_invoice': True, 'is_decoded': True},
@@ -461,9 +482,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_chatter_message_pdfs_and_gifs(self):
         self.assert_attachment_import(
             origin='chatter_message',
-            attachments_vals=[pdf1_vals, pdf2_vals, gif1_vals, gif2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals, self.gif1_vals, self.gif2_vals],
             expected_invoices={
                 1: {
                     'pdf1.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True},
@@ -473,9 +496,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_chatter_email_pdfs_and_gifs(self):
         self.assert_attachment_import(
             origin='chatter_email',
-            attachments_vals=[pdf1_vals, pdf2_vals, gif1_vals, gif2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals, self.gif1_vals, self.gif2_vals],
             expected_invoices={
                 1: {
                     'pdf1.pdf': {'on_invoice': True, 'on_message': True},
@@ -485,9 +510,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_journal_upload_pdfs_and_gifs(self):
         self.assert_attachment_import(
             origin='journal',
-            attachments_vals=[pdf1_vals, pdf2_vals, gif1_vals, gif2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals, self.gif1_vals, self.gif2_vals],
             expected_invoices={
                 1: {'pdf1.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
                 2: {'pdf2.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
@@ -495,9 +522,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 4: {'gif2.gif': {'on_invoice': True, 'on_message': True}},
             },
         )
+
+    def test_mail_alias_pdfs_and_gifs(self):
         self.assert_attachment_import(
             origin='mail_alias',
-            attachments_vals=[pdf1_vals, pdf2_vals, gif1_vals, gif2_vals],
+            attachments_vals=[self.pdf1_vals, self.pdf2_vals, self.gif1_vals, self.gif2_vals],
             expected_invoices={
                 1: {
                     'pdf1.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True},
@@ -507,9 +536,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 2: {'pdf2.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
             },
         )
+
+    def test_chatter_upload_pdf_and_xml(self):
         self.assert_attachment_import(
             origin='chatter_upload',
-            attachments_vals=[pdf1_vals, xml1_vals],
+            attachments_vals=[self.pdf1_vals, self.xml1_vals],
             expected_invoices={
                 1: {
                     'xml1.xml': {'on_invoice': True, 'is_decoded': True},
@@ -517,9 +548,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_chatter_message_pdf_and_xml(self):
         self.assert_attachment_import(
             origin='chatter_message',
-            attachments_vals=[pdf1_vals, xml1_vals],
+            attachments_vals=[self.pdf1_vals, self.xml1_vals],
             expected_invoices={
                 1: {
                     'xml1.xml': {'on_message': True, 'is_decoded': True},
@@ -527,9 +560,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_chatter_email_pdf_and_xml(self):
         self.assert_attachment_import(
             origin='chatter_email',
-            attachments_vals=[pdf1_vals, xml1_vals],
+            attachments_vals=[self.pdf1_vals, self.xml1_vals],
             expected_invoices={
                 1: {
                     'xml1.xml': {'on_message': True},
@@ -537,17 +572,21 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_journal_upload_pdf_and_xml(self):
         self.assert_attachment_import(
             origin='journal',
-            attachments_vals=[pdf1_vals, xml1_vals],
+            attachments_vals=[self.pdf1_vals, self.xml1_vals],
             expected_invoices={
                 1: {'pdf1.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
                 2: {'xml1.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
             },
         )
+
+    def test_mail_alias_pdf_and_xml(self):
         self.assert_attachment_import(
             origin='mail_alias',
-            attachments_vals=[pdf1_vals, xml1_vals],
+            attachments_vals=[self.pdf1_vals, self.xml1_vals],
             expected_invoices={
                 1: {
                     'xml1.xml': {'on_message': True, 'is_decoded': True, 'is_new': True},
@@ -555,9 +594,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_chatter_upload_xmls(self):
         self.assert_attachment_import(
             origin='chatter_upload',
-            attachments_vals=[xml1_vals, xml2_vals],
+            attachments_vals=[self.xml1_vals, self.xml2_vals],
             expected_invoices={
                 1: {
                     'xml1.xml': {'on_invoice': True, 'is_decoded': True},
@@ -565,9 +606,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_chatter_message_xmls(self):
         self.assert_attachment_import(
             origin='chatter_message',
-            attachments_vals=[xml1_vals, xml2_vals],
+            attachments_vals=[self.xml1_vals, self.xml2_vals],
             expected_invoices={
                 1: {
                     'xml1.xml': {'on_message': True, 'is_decoded': True},
@@ -575,9 +618,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_chatter_email_xmls(self):
         self.assert_attachment_import(
             origin='chatter_email',
-            attachments_vals=[xml1_vals, xml2_vals],
+            attachments_vals=[self.xml1_vals, self.xml2_vals],
             expected_invoices={
                 1: {
                     'xml1.xml': {'on_message': True},
@@ -585,25 +630,31 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_journal_upload_xmls(self):
         self.assert_attachment_import(
             origin='journal',
-            attachments_vals=[xml1_vals, xml2_vals],
+            attachments_vals=[self.xml1_vals, self.xml2_vals],
             expected_invoices={
                 1: {'xml1.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
                 2: {'xml2.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
             },
         )
+
+    def test_mail_alias_xmls(self):
         self.assert_attachment_import(
             origin='mail_alias',
-            attachments_vals=[xml1_vals, xml2_vals],
+            attachments_vals=[self.xml1_vals, self.xml2_vals],
             expected_invoices={
                 1: {'xml1.xml': {'on_message': True, 'is_decoded': True, 'is_new': True}},
                 2: {'xml2.xml': {'on_message': True, 'is_decoded': True, 'is_new': True}},
             },
         )
+
+    def test_chatter_upload_embedded_pdf(self):
         self.assert_attachment_import(
             origin='chatter_upload',
-            attachments_vals=[pdf3_vals, pdf2_vals],
+            attachments_vals=[self.pdf3_vals, self.pdf2_vals],
             expected_invoices={
                 1: {
                     'embedded.xml': {'is_decoded': True},
@@ -612,9 +663,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_chatter_message_embedded_pdf(self):
         self.assert_attachment_import(
             origin='chatter_message',
-            attachments_vals=[pdf3_vals, pdf2_vals],
+            attachments_vals=[self.pdf3_vals, self.pdf2_vals],
             expected_invoices={
                 1: {
                     'embedded.xml': {'is_decoded': True},
@@ -623,9 +676,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_chatter_email_embedded_pdf(self):
         self.assert_attachment_import(
             origin='chatter_email',
-            attachments_vals=[pdf3_vals, pdf2_vals],
+            attachments_vals=[self.pdf3_vals, self.pdf2_vals],
             expected_invoices={
                 1: {
                     'pdf3.pdf': {'on_invoice': True, 'on_message': True},
@@ -633,9 +688,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 },
             },
         )
+
+    def test_journal_upload_embedded_pdf(self):
         self.assert_attachment_import(
             origin='journal',
-            attachments_vals=[pdf3_vals, pdf2_vals],
+            attachments_vals=[self.pdf3_vals, self.pdf2_vals],
             expected_invoices={
                 1: {
                     'embedded.xml': {'is_decoded': True, 'is_new': True},
@@ -646,9 +703,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_mail_alias_embedded_pdf(self):
         self.assert_attachment_import(
             origin='mail_alias',
-            attachments_vals=[pdf3_vals, pdf2_vals],
+            attachments_vals=[self.pdf3_vals, self.pdf2_vals],
             expected_invoices={
                 1: {
                     'embedded.xml': {'is_decoded': True, 'is_new': True},
@@ -659,9 +718,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_journal_upload_embedded_pdf_and_xml(self):
         self.assert_attachment_import(
             origin='journal',
-            attachments_vals=[pdf3_vals, xml1_vals],
+            attachments_vals=[self.pdf3_vals, self.xml1_vals],
             expected_invoices={
                 1: {
                     'embedded.xml': {'is_decoded': True, 'is_new': True},
@@ -672,9 +733,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_mail_alias_embedded_pdf_and_xml(self):
         self.assert_attachment_import(
             origin='mail_alias',
-            attachments_vals=[pdf3_vals, xml1_vals],
+            attachments_vals=[self.pdf3_vals, self.xml1_vals],
             expected_invoices={
                 1: {
                     'embedded.xml': {'is_decoded': True, 'is_new': True},

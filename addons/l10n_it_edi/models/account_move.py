@@ -249,9 +249,14 @@ class AccountMove(models.Model):
         for move in self:
             move.show_reset_to_draft_button = not move.l10n_it_edi_transaction and move.show_reset_to_draft_button
 
+    def _get_import_priority(self, file_data):
+        if file_data['import_file_type'] == 'l10n_it.fatturapa':
+            return 20
+        return super()._get_import_priority(file_data)
+
     def _decode_attachment(self, file_data, new=False):
         # EXTENDS 'account'
-        if file_data['import_type'] == 'l10n_it.fatturapa':
+        if file_data['import_file_type'] == 'l10n_it.fatturapa':
             # Italy needs a custom order in prediction, since prediction generally deduces taxes
             # from products, while in Italian EDI, taxes are generally explicited in the XML file
             # while the product may not be labelled exactly the same as in the database.

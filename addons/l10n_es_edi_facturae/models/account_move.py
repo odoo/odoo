@@ -517,9 +517,14 @@ class AccountMove(models.Model):
     # IMPORT
     # -------------------------------------------------------------------------
 
+    def _get_import_priority(self, file_data):
+        if file_data['import_file_type'] == 'l10n_es.facturae':
+            return 20
+        return super()._get_import_priority(file_data)
+
     def _decode_attachment(self, file_data, new=False):
         # EXTENDS 'account'
-        if file_data['import_type'] == 'l10n_es.facturae':
+        if file_data['import_file_type'] == 'l10n_es.facturae':
             return self._import_invoice_facturae(file_data)
         return super()._decode_attachment(file_data, new)
 

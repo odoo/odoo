@@ -307,7 +307,7 @@ class AccountMove(models.Model):
          - PrezzoUnitario == 0.0
          - a corresponding DatiRiepilogo with the same AliquotaIVA and a ImponibileImporto
         """
-        res = super()._l10n_it_edi_import_invoice(self, file_data)
+        res = super()._l10n_it_edi_import_invoice(file_data)
         if not res:
             return
         tree = file_data['xml_tree']

@@ -87,9 +87,14 @@ class AccountMove(models.Model):
             if 'urn:cen.eu:en16931:2017' in customization_id.text:
                 return self.env['account.edi.xml.ubl_bis3']
 
+    def _get_import_priority(self, file_data):
+        if file_data['import_file_type'] == 'account_edi_ubl_cii':
+            return 20
+        return super()._get_import_priority(file_data)
+
     def _decode_attachment(self, file_data, new=False):
         # EXTENDS 'account'
-        if file_data['import_type'] == 'account_edi_ubl_cii':
+        if file_data['import_file_type'] == 'account_edi_ubl_cii':
             ubl_cii_xml_builder = self._get_ubl_cii_builder_from_xml_tree(file_data['xml_tree'])
             return ubl_cii_xml_builder._import_invoice_ubl_cii(self, file_data, new)
 

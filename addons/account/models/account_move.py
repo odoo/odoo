@@ -4372,17 +4372,16 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         # Identify the attachment to decode.
-        files_data_with_positive_priority = [file_data for file_data in files_data if file_data['import_priority'] > 0]
-        if not files_data_with_positive_priority:
-            return
-
         files_data_in_order = sorted(
-            files_data_with_positive_priority,
-            key=lambda file_data: file_data['import_priority'],
+            files_data,
+            key=self._get_import_priority,
             reverse=True,
         )
 
         file_data = files_data_in_order[0]
+
+        if self._get_import_priority(file_data) <= 0:
+            return
 
         existing_lines = self.invoice_line_ids
         try:
@@ -4400,13 +4399,13 @@ class AccountMove(models.Model):
                     "Error importing attachment '%(filename)s' (extracted from '%(root_filename)s') as invoice (type=%(type)s)",
                     filename=file_data['name'],
                     root_filename=file_data['origin_attachment'].name,
-                    type=file_data['import_type'],
+                    type=file_data['import_file_type'],
                 )
             else:
                 message = _(
                     "Error importing attachment '%(filename)s' as invoice (type=%(type)s)",
                     filename=file_data['name'],
-                    type=file_data['import_type'],
+                    type=file_data['import_file_type'],
                 )
             if isinstance(e, UserError):
                 message = Markup("%s<br/><br/>%s<br/>%s") % (
@@ -4423,6 +4422,13 @@ class AccountMove(models.Model):
             self._link_bill_origin_to_purchase_orders(timeout=4)
 
         return True
+
+    @api.model
+    def _get_import_priority(self, file_data):
+        """ Given a file_data dict representing an (embedded) attachment, return the priority
+        with which it should be extracted during invoice import.
+        """
+        return 0
 
     def _decode_attachment(self, file_data, new=False):
         """ Main method that should be overridden to implement decoders for various file types.
@@ -6442,8 +6448,7 @@ class AccountMove(models.Model):
             :return: A list of file_data groups (each group is a list), each group corresponding to a single invoice.
         """
         def order(file_data):
-            import_type = file_data['origin_import_type']
-            return (import_type is False, import_type)
+            return (file_data['origin_import_file_type'] is None, file_data['origin_import_file_type'])
 
         # Dispatch the attachments into groups.
         groups = []
@@ -6470,8 +6475,8 @@ class AccountMove(models.Model):
                 return
 
         # Special rule 2: images and non-identified attachments are just added to the first group.
-        incoming_origin_type = incoming_file_data['origin_import_type']
-        if incoming_origin_type in {False, 'jpg', 'png'}:
+        incoming_origin_type = incoming_file_data['origin_import_file_type']
+        if incoming_origin_type in {None, 'jpg', 'png'}:
             if not groups:
                 groups.append([incoming_file_data])
             else:
@@ -6483,7 +6488,7 @@ class AccountMove(models.Model):
         if groups_with_different_root_type := [
             group
             for group in groups
-            if incoming_origin_type not in (file_data['origin_import_type'] for file_data in group)
+            if incoming_origin_type not in (file_data['origin_import_file_type'] for file_data in group)
         ]:
             sorted_by_similarity = sorted(
                 groups_with_different_root_type,

@@ -8,7 +8,7 @@ from odoo.addons.account.models.ir_attachment import split_etree_on_tag
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
-    def _get_import_type_and_priority(self, file_data):
+    def _get_import_file_type(self, file_data):
         """ Identify Factura-E files. """
         # EXTENDS 'account'
         def is_facturae(tree):
@@ -18,9 +18,9 @@ class IrAttachment(models.Model):
             ]
 
         if file_data['xml_tree'] is not None and is_facturae(file_data['xml_tree']):
-            return ('l10n_es.facturae', 20)
+            return 'l10n_es.facturae'
 
-        return super()._get_import_type_and_priority(file_data)
+        return super()._get_import_file_type(file_data)
 
     def _unwrap_attachments(self, files_data, recurse=True):
         """ Divide a Facturae file into constituent invoices and create a new attachment for each invoice after the first. """
@@ -28,7 +28,7 @@ class IrAttachment(models.Model):
         embedded = super()._unwrap_attachments(files_data, recurse=False)
 
         for file_data in files_data:
-            if file_data['import_type'] == 'l10n_es.facturae' and len(file_data['xml_tree'].findall('.//Invoice')) > 1:
+            if file_data['import_file_type'] == 'l10n_es.facturae' and len(file_data['xml_tree'].findall('.//Invoice')) > 1:
                 # Create a new attachment for each invoice beyond the first.
                 trees = split_etree_on_tag(file_data['xml_tree'], 'Invoice')
                 filename_without_extension, dummy, extension = file_data['name'].rpartition('.')

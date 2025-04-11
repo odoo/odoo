@@ -51,12 +51,12 @@ class IrAttachment(models.Model):
         is_p7m = file_data['mimetype'] == 'application/pkcs7-mime'
         return (is_xml or is_p7m) and re.search(FATTURAPA_FILENAME_RE, file_data['name'])
 
-    def _get_import_type_and_priority(self, file_data):
+    def _get_import_file_type(self, file_data):
         """ Identify FatturaPA XML and P7M files. """
         # EXTENDS 'account'
         if self._is_l10n_it_edi_import_file(file_data) and file_data['xml_tree'] is not None:
-            return ('l10n_it.fatturapa', 20)
-        return super()._get_import_type_and_priority(file_data)
+            return 'l10n_it.fatturapa'
+        return super()._get_import_file_type(file_data)
 
     def _unwrap_attachments(self, files_data, recurse=True):
         """ Divide a FatturaPA file into constituent invoices and create a new attachment for each invoice after the first. """
@@ -64,7 +64,7 @@ class IrAttachment(models.Model):
         embedded = super()._unwrap_attachments(files_data, recurse=False)
 
         for file_data in files_data:
-            if file_data['import_type'] == 'l10n_it.fatturapa' and len(file_data['xml_tree'].findall('.//FatturaElettronicaBody')) > 1:
+            if file_data['import_file_type'] == 'l10n_it.fatturapa' and len(file_data['xml_tree'].findall('.//FatturaElettronicaBody')) > 1:
                 # One FatturaPA file may contain multiple invoices. In that case, create an
                 # attachment for each invoice beyond the first.
 

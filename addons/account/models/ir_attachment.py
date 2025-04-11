@@ -46,8 +46,8 @@ class IrAttachment(models.Model):
                 'attachment': attachment,
             }
             file_data['xml_tree'] = self._get_xml_tree(file_data)
-            file_data['import_type'], file_data['import_priority'] = self._get_import_type_and_priority(file_data)
-            file_data['origin_import_type'] = file_data['import_type']
+            file_data['import_file_type'] = self._get_import_file_type(file_data)
+            file_data['origin_import_file_type'] = file_data['import_file_type']
             files_data.append(file_data)
         return files_data
 
@@ -60,10 +60,9 @@ class IrAttachment(models.Model):
         ))
 
     @api.model
-    def _get_import_type_and_priority(self, file_data):
+    def _get_import_file_type(self, file_data):
         if 'pdf' in file_data['mimetype'] or file_data['name'].endswith('.pdf'):
-            return 'pdf', 10
-        return False, 0
+            return 'pdf'
 
     def _build_zip_from_attachments(self):
         """ Return the zip bytes content resulting from compressing the attachments in `self`"""
@@ -98,7 +97,7 @@ class IrAttachment(models.Model):
         """
         embedded = []
         for file_data in files_data:
-            if file_data['import_type'] == 'pdf':
+            if file_data['import_file_type'] == 'pdf':
                 with io.BytesIO(file_data['raw']) as buffer:
                     try:
                         pdf_reader = OdooPdfFileReader(buffer, strict=False)
@@ -114,10 +113,10 @@ class IrAttachment(models.Model):
                                     'mimetype': guess_mimetype(content),
                                     'attachment': None,
                                     'origin_attachment': file_data['origin_attachment'],
-                                    'origin_import_type': file_data['origin_import_type'],
+                                    'origin_import_file_type': file_data['origin_import_file_type'],
                                 }
                                 file_data['xml_tree'] = self._get_xml_tree(file_data)
-                                file_data['import_type'], file_data['import_priority'] = self._get_import_type_and_priority(file_data)
+                                file_data['import_file_type'] = self._get_import_file_type(file_data)
 
                                 embedded.append(file_data)
 
