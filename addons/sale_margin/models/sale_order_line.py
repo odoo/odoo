@@ -20,20 +20,21 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'company_id', 'currency_id', 'product_uom')
     def _compute_purchase_price(self):
         for line in self:
-            if not line.product_id:
-                line.purchase_price = 0.0
-                continue
-            line = line.with_company(line.company_id)
+            if line.state not in ['sale', 'cancel'] or not line.purchase_price:
+                if not line.product_id:
+                    line.purchase_price = 0.0
+                    continue
+                line = line.with_company(line.company_id)
 
-            # Convert the cost to the line UoM
-            product_cost = line.product_id.uom_id._compute_price(
-                line.product_id.standard_price,
-                line.product_uom,
-            )
+                # Convert the cost to the line UoM
+                product_cost = line.product_id.uom_id._compute_price(
+                    line.product_id.standard_price,
+                    line.product_uom,
+                )
 
-            line.purchase_price = line._convert_to_sol_currency(
-                product_cost,
-                line.product_id.cost_currency_id)
+                line.purchase_price = line._convert_to_sol_currency(
+                    product_cost,
+                    line.product_id.cost_currency_id)
 
     @api.depends('price_subtotal', 'product_uom_qty', 'purchase_price')
     def _compute_margin(self):
