@@ -5,8 +5,8 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
-import { BOLD_TAGS, notStrong, span, strong } from "../_helpers/tags";
-import { bold, simulateArrowKeyPress, tripleClick } from "../_helpers/user_actions";
+import { BOLD_TAGS, notStrong, span, strong, em } from "../_helpers/tags";
+import { bold, italic, simulateArrowKeyPress, tripleClick } from "../_helpers/user_actions";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -336,4 +336,41 @@ describe("inside container font-weight: 500 and strong being strong-weight: 500"
             contentAfter: `<h1>a<span style="font-weight: bolder;">[b]</span>c</h1>`,
         });
     });
+});
+
+test("should remove empty bold tag when changing selection", async () => {
+    const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+    bold(editor);
+    await tick();
+    expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
+
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await tick(); // await selectionchange
+    expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
+});
+
+test("should remove multiple formatted empty bold tag when changing selection", async () => {
+    const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+    bold(editor);
+    italic(editor);
+    await tick();
+    expect(getContent(el)).toBe(`<p>ab${strong(em("[]\u200B", "first"), "first")}cd</p>`);
+
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await tick(); // await selectionchange
+    expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
+});
+
+test("should not remove empty bold tag in an empty block when changing selection", async () => {
+    const { editor, el } = await setupEditor("<p>abcd</p><p>[]<br></p>");
+
+    bold(editor);
+    await tick();
+    expect(getContent(el)).toBe(`<p>abcd</p><p>${strong("[]\u200B", "first")}</p>`);
+
+    await simulateArrowKeyPress(editor, "ArrowUp");
+    await tick(); // await selectionchange
+    expect(getContent(el)).toBe(`<p>[]abcd</p><p>${strong("\u200B", "first")}</p>`);
 });
