@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.ScreenshareWarningOverlay">
+        <div class="d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100 bg-black bg-opacity-50 pe-none">
+            <div class="text-white bg-black fs-2 p-5 rounded pe-auto">
+                <p>
+                    To avoid an infinity mirror, don't share your entire screen or browser window. Share just a tab or a different window instead.
+                </p>
+                <div class="d-flex gap-2">
+                    <button t-on-click="stopSharing" class="btn btn-primary pe-auto">
+                        Stop Sharing
+                    </button>
+                    <button t-on-click="ignore" class="btn btn-secondary pe-auto">
+                        Ignore
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
