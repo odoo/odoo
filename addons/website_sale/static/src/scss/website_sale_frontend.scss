@@ -44,11 +44,8 @@
 
 .o_wsale_layout_list {
   .o_wsale_attribute_previewer {
-    position: relative;
+    order: 3;
     width: 80%;
-    span {
-      width: 5%;
-    }
   }
   .show_on_hover {
     max-height: 100px;
@@ -60,17 +57,10 @@
   flex-wrap: nowrap;
   background: white;
   overflow: hidden;
-  position: absolute;
-  bottom: 100%;
   width: 100%;
-  margin: auto 0;
+  margin: 0;
 
-  + .o_wsale_product_btn {
-    bottom: calc(100% + 2.5rem) !important;
-    margin-bottom: 15px;
-  }
   span {
-    width: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -85,16 +75,33 @@
       margin: 4px;
       height: 35px;
       width: 35px;
-      opacity: 0;
     }
   }
+  .css_attribute_color{
+    a {
+        margin: 4px;
+        height: 7px;
+        width: 7px;
+        opacity: 0;
+    }
+  }
+  &.show_on_hover {
+    max-height: 0;
+    position: absolute;
+    bottom: 100%;
+    padding: 0 !important;
+    transition: max-height 0.2s ease-in-out;
+    ~ .o_wsale_product_sub .o_wsale_product_btn {
+        bottom: calc(100% + 3rem) !important;
+      }
+  }
 }
-.show_on_hover {
-  max-height: 0;
-  transition: max-height 0.5s ease-in-out;
+
+.show_on_hover:has(.css_attribute_thumbnail) ~ .o_wsale_product_sub .o_wsale_product_btn{
+    bottom: calc(100% + 4rem) !important;
 }
 
 .oe_product_cart:hover .show_on_hover {
   max-height: 100px;
-  transition: max-height 0.5s ease-in-out;
+  transition: max-height 0.2s ease-in-out;
 }
