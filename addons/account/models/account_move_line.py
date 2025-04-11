@@ -3429,3 +3429,10 @@ class AccountMoveLine(models.Model):
         This method is overridden in the sale order module.
         '''
         return self.env['account.move.line']
+
+    def _filter_aml_lot_valuation(self):
+        """ Method used to filter the aml taken into account when computing the invoiced lot value in get_invoiced_lot_values
+        Intended to be overriden in localization.
+        """
+        self.ensure_one()
+        return self.move_id.state == 'posted'
