@@ -10,12 +10,40 @@ import { Base } from "./related_models";
 export class ProductProduct extends Base {
     static pythonModel = "product.product";
 
+    setup() {
+        super.setup(...arguments);
+        this.uiState = {
+            applicablePricelistRules: {},
+        };
+    }
+
     getImageUrl() {
         return (
             (this.image_128 &&
                 `/web/image?model=product.product&field=image_128&id=${this.id}&unique=${this.write_date}`) ||
             ""
         );
+    }
+
+    getApplicablePricelistRules(pricelist) {
+        if (this.uiState.applicablePricelistRules[pricelist.id]) {
+            return this.uiState.applicablePricelistRules[pricelist.id];
+        }
+        const productTmplRules =
+            this.product_tmpl_id["<-product.pricelist.item.product_tmpl_id"] || [];
+        const productRules = this["<-product.pricelist.item.product_id"] || [];
+        const rulesIds = [...new Set([...productTmplRules, ...productRules])].map(
+            (rule) => rule.id
+        );
+        const availableRules =
+            pricelist.item_ids?.filter(
+                (rule) =>
+                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
+                    (!rule.product_id || rule.product_id.id === this.id) &&
+                    (!rule.categ_id || rule.categ_id.id === this.product_tmpl_id?.categ_id?.id)
+            ) || [];
+        this.uiState.applicablePricelistRules[pricelist.id] = availableRules.map((rule) => rule.id);
+        return this.uiState.applicablePricelistRules[pricelist.id];
     }
 }
 
