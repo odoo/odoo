@@ -37,7 +37,6 @@ const webTours = registry.category("web_tour.tours");
 
 webTours.add("check_shipping_discount", {
     url: "/shop?search=Plumbus",
-    checkDelay: 50,
     steps: () => [
         {
             content: "select Plumbus",
@@ -83,7 +82,6 @@ webTours.add("check_shipping_discount", {
 
 webTours.add("update_shipping_after_discount", {
     url: "/shop",
-    checkDelay: 100,
     steps: () => [
         ...addToCart({ productName: "Plumbus" }),
         goToCart(),

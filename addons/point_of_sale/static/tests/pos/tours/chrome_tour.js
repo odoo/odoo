@@ -11,7 +11,6 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { refresh, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("ChromeTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -124,7 +123,6 @@ registry.category("web_tour.tours").add("ChromeTour", {
 });
 
 registry.category("web_tour.tours").add("OrderModificationAfterValidationError", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -147,7 +145,6 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 });
 
 registry.category("web_tour.tours").add("SearchMoreCustomer", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -172,7 +169,6 @@ registry.category("web_tour.tours").add("SearchMoreCustomer", {
 });
 
 registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -195,7 +191,6 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
 });
 
 registry.category("web_tour.tours").add("test_indexed_db_draft_order", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -223,7 +218,6 @@ registry.category("web_tour.tours").add("test_indexed_db_draft_order", {
 });
 
 registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),

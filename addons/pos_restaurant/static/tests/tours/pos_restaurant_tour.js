@@ -452,7 +452,6 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
 });
 
 registry.category("web_tour.tours").add("test_combo_preparation_receipt", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -519,7 +518,6 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt", {
 });
 
 registry.category("web_tour.tours").add("MultiPreparationPrinter", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -533,7 +531,6 @@ registry.category("web_tour.tours").add("MultiPreparationPrinter", {
 });
 
 registry.category("web_tour.tours").add("LeaveResidualOrder", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -552,7 +549,6 @@ registry.category("web_tour.tours").add("LeaveResidualOrder", {
 });
 
 registry.category("web_tour.tours").add("FinishResidualOrder", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
