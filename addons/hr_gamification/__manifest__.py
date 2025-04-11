@@ -15,6 +15,7 @@ Badge received are displayed on the user profile.
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
         'wizard/gamification_badge_user_wizard_views.xml',
+        'wizard/gamification_current_badge_wizard_views.xml',
         'views/gamification_views.xml',
         'views/hr_employee_views.xml',
         ],

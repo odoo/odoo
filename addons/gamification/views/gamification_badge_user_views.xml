@@ -15,7 +15,7 @@
                         <main class="col ps-2">
                             <field class="fw-bold fs-5" type="open" name="badge_name"/>
                             <field name="comment"/>
-                            <p>Granted by <field name="create_uid" /> the <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')" /></p>
+                            <p>Granted by <field name="create_uid" /> on <t t-out="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')" /></p>
                         </main>
                     </t>
                 </templates>

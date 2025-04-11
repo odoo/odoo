@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="view_current_badge_wizard_form" model="ir.ui.view">
+            <field name="name">gamification.current.badge.wizard.form</field>
+            <field name="model">gamification.current.badge.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="old_badge_user_id" invisible="1" />
+                    <group>
+                        <group>
+                            <field name="badge_id" string="Badge Name" readonly="not has_edit_delete_access" />
+                            <p class="o_form_label fw-bold">Description</p><br/>
+                            <field name="comment" nolabel="1" colspan="2" readonly="not has_edit_delete_access" />
+                        </group>
+                        <group>
+                            <field
+                                name="badge_id"
+                                nolabel="1"
+                                class="oe_avatar"
+                                widget="image"
+                                options="{'preview_image': 'image_1024'}"
+                            />
+                        </group>
+                    </group>
+                    <p>
+                        Granted by <field name="create_uid" options="{'no_open': True}" />
+                        on <field name="create_date" widget="datetime" options="{'show_time': false}" />
+                    </p>
+                    <footer>
+                        <button
+                            string="Save"
+                            type="object"
+                            name="action_update_current_badge"
+                            class="btn-primary"
+                            data-hotkey="q"
+                            invisible= "not has_edit_delete_access"
+                        />
+                        <button string="Discard" special="cancel" data-hotkey="x" class="btn-secondary" />
+                        <button
+                            string="Delete"
+                            type="object"
+                            name="action_delete_current_badge"
+                            confirm="Are you sure you want to delete this granted badge?"
+                            invisible= "not has_edit_delete_access"
+                        />
+                    </footer>
+                </form>
+            </field>
+        </record>
+</odoo>
