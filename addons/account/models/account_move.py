@@ -5586,7 +5586,10 @@ class AccountMove(models.Model):
             next_due_date = epd_installment['date_maturity']
             discount_date = epd_installment['line'].discount_date
             discount_amount_currency = epd_installment['discount_amount_currency']
-            days_left = (discount_date - fields.Date.context_today(self)).days  # should never be lower than 0 since epd is valid
+            if discount_date:
+                days_left = max(0, (discount_date - fields.Date.context_today(self)).days)  # should never be lower than 0 since epd is valid
+            else:
+                days_left = 0
             if days_left > 0:
                 discount_msg = _(
                     "Discount of %(amount)s if paid within %(days)s days",
