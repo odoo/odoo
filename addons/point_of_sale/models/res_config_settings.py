@@ -119,6 +119,7 @@ class ResConfigSettings(models.TransientModel):
     pos_orderlines_sequence_in_cart_by_category = fields.Boolean(related='pos_config_id.orderlines_sequence_in_cart_by_category', readonly=False)
     pos_basic_receipt = fields.Boolean(related='pos_config_id.basic_receipt', readonly=False)
     pos_fallback_nomenclature_id = fields.Many2one(related='pos_config_id.fallback_nomenclature_id', domain="[('id', '!=', barcode_nomenclature_id)]", readonly=False)
+    group_pos_preset = fields.Boolean(string="Presets", implied_group="point_of_sale.group_pos_preset", help="Hide or show the Presets menu in the Point of Sale configuration.")
 
     def open_payment_method_form(self):
         bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
@@ -152,6 +153,9 @@ class ResConfigSettings(models.TransientModel):
 
                 if vals.get('pos_use_pricelist'):
                     vals['group_product_pricelist'] = True
+
+                if vals.get('pos_use_presets') is not None:
+                    vals["group_pos_preset"] = bool(self.env["pos.config"].search_count([("use_presets", "=", True), ("id", "!=", pos_config_id)])) or vals['pos_use_presets']
 
                 for field in self._fields.values():
                     if field.name == 'pos_config_id':
