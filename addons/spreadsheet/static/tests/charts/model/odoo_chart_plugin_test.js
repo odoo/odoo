@@ -536,7 +536,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         );
     });
 
-    QUnit.test("cumulative line chart with past data before domain period", async (assert) => {
+    QUnit.module("Cumulative line chart with past data", () => {
         const serverData = getBasicServerData();
         serverData.models.partner.records = [
             { date: "2020-01-01", probability: 10 },
@@ -545,41 +545,97 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             { date: "2022-03-01", probability: 4 },
             { date: "2022-06-01", probability: 5 },
         ];
-        const { model } = await createSpreadsheetWithChart({
-            type: "odoo_line",
-            serverData,
-            definition: {
-                type: "odoo_line",
-                metaData: {
-                    groupBy: ["date"],
-                    measure: "probability",
-                    order: null,
-                    resModel: "partner",
-                },
-                searchParams: {
-                    comparison: null,
-                    context: {},
-                    domain: [
-                        ["date", ">=", "2022-01-01"],
-                        ["date", "<=", "2022-12-31"],
-                    ],
-                    groupBy: [],
-                    orderBy: [],
-                },
-                cumulative: true,
-                title: "Partners",
-                dataSourceId: "42",
-                id: "42",
-            },
-        });
-        const sheetId = model.getters.getActiveSheetId();
-        const chartId = model.getters.getChartIds(sheetId)[0];
-        await waitForDataSourcesLoaded(model);
 
-        assert.deepEqual(
-            model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
-            [15, 19, 24]
-        );
+        const definition = {
+            type: "odoo_line",
+            metaData: {
+                groupBy: ["date"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: {
+                comparison: null,
+                context: {},
+                domain: [
+                    ["date", ">=", "2022-01-01"],
+                    ["date", "<=", "2022-12-31"],
+                ],
+                groupBy: [],
+                orderBy: [],
+            },
+            title: "Partners",
+            dataSourceId: "42",
+            id: "42",
+        }
+
+
+        QUnit.test("cumulative line chart with past data before domain period without specifying cumulated start", async (assert) => {
+            const { model } = await createSpreadsheetWithChart({
+                type: "odoo_line",
+                serverData,
+                definition: {
+                    ...definition,
+                    cumulative: true,
+                },
+            });
+            const sheetId = model.getters.getActiveSheetId();
+            const chartId = model.getters.getChartIds(sheetId)[0];
+            await waitForDataSourcesLoaded(model);
+
+            assert.deepEqual(
+                model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+                [15, 19, 24]
+            );
+        });
+
+        QUnit.test("cumulative line chart with past data before domain period specifying cumulated start as true", async (assert) => {
+            const serverData = getBasicServerData();
+            serverData.models.partner.records = [
+                { date: "2020-01-01", probability: 10 },
+                { date: "2021-01-01", probability: 2 },
+                { date: "2022-01-01", probability: 3 },
+                { date: "2022-03-01", probability: 4 },
+                { date: "2022-06-01", probability: 5 },
+            ];
+            const { model } = await createSpreadsheetWithChart({
+                type: "odoo_line",
+                serverData,
+                definition: {
+                    ...definition,
+                    cumulative: true,
+                    cumulatedStart: true,
+                },
+            });
+            const sheetId = model.getters.getActiveSheetId();
+            const chartId = model.getters.getChartIds(sheetId)[0];
+            await waitForDataSourcesLoaded(model);
+
+            assert.deepEqual(
+                model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+                [15, 19, 24]
+            );
+        });
+
+        QUnit.test("cumulative line chart with past data before domain period specifying cumulated start as false", async (assert) => {
+            const { model } = await createSpreadsheetWithChart({
+                type: "odoo_line",
+                serverData,
+                definition: {
+                    ...definition,
+                    cumulative: true,
+                    cumulatedStart: false,
+                },
+            });
+            const sheetId = model.getters.getActiveSheetId();
+            const chartId = model.getters.getChartIds(sheetId)[0];
+            await waitForDataSourcesLoaded(model);
+
+            assert.deepEqual(
+                model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+                [3, 7, 12]
+            );
+        });
     });
 
     QUnit.test("update existing chart to cumulate past data", async (assert) => {
