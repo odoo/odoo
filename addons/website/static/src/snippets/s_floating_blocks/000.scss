@@ -1,0 +1,58 @@
+.s_floating_blocks {
+    // Use CSS custom properties in order to allow pro-users to performs
+    // advanced visual customizations using inline style directly in the DOM
+    // (eg. XML editor).
+    --floating-boxes-box-ratio-mobile: 0.6;
+    --floating-boxes-box-ratio-desktop: 2;
+    --floating-boxes-box-ratio-desktop-small: 1.6;
+
+    --floating-boxes-box-padding-x-small: #{map-get($spacers, 4)};
+    --floating-boxes-box-padding-x-large: #{map-get($spacers, 5)};
+
+    .s_floating_blocks_block {
+        // Inherit global values from `s_floating_blocks_wrapper`
+        border-radius: inherit;
+        box-shadow: inherit;
+
+        // Default values. Will be tweaked in JS on initialization
+        top: 0;
+        opacity: 0;
+
+        transition: opacity .2s;
+        will-change: transform;
+        transform-origin: center top;
+        contain: layout paint;
+        backface-visibility: hidden;
+
+        padding-left: var(--floating-boxes-box-padding-x, var(--floating-boxes-box-padding-x-small));
+        padding-right: var(--floating-boxes-box-padding-x, var(--floating-boxes-box-padding-x-small));
+
+        // Cards must have all the same height in order to perform the "floating
+        // effect" correctly.
+        aspect-ratio: var(--floating-boxes-box-ratio, var(--floating-boxes-box-ratio-mobile));
+
+        // Ensure that cards will never overflow the viewport, regardless by the
+        // aspect-ratio and the viewport size.
+        max-height: calc(100vh - #{map-get($spacers, 5) * 2}) !important; // Fallback
+        max-height: calc(100lvh - #{map-get($spacers, 5) * 2}) !important;
+    }
+
+    @include media-breakpoint-up(lg) {
+        > .container, > .container-fluid {
+            --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-desktop);
+            --floating-boxes-box-padding-x: var(--floating-boxes-box-padding-x-large);
+        }
+        > .o_container_small {
+            --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-desktop-small);
+        }
+        > .container-fluid > div {
+            padding-left: map-get($spacers, 5);
+            padding-right: map-get($spacers, 5);
+        }
+    }
+
+    // Options
+    .s_floating_blocks_wrapper.s_floating_blocks_wrapper_shadow {
+        box-shadow: 0px 1vh 2vh rgba($black, .175);
+    }
+}
