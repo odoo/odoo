@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import babel.dates
 import datetime
 import json
 import unittest
+from collections.abc import Mapping
 
 from unittest.mock import patch
 
@@ -120,34 +120,34 @@ class TestPropertiesMixin(TransactionCase):
 class PropertiesCase(TestPropertiesMixin):
 
     def test_properties_field(self):
-        self.assertTrue(isinstance(self.message_1.attributes, dict))
+        self.assertTrue(isinstance(self.message_1.attributes, Mapping))
         # testing assigned value
-        self.assertEqual(self.message_1.attributes, {
+        self.assertEqual(self.message_1.attributes.values, {
             'discussion_color_code': 'Test',
             'moderator_partner_id': self.partner.id,
         })
 
-        self.assertEqual(self.message_2.attributes, {
+        self.assertEqual(self.message_2.attributes.values, {
             'discussion_color_code': 'blue',
             'moderator_partner_id': False,
         })
         # testing default value
         self.assertEqual(
-            self.message_3.attributes, {'state': 'draft'},
+            self.message_3.attributes.values, {'state': 'draft'},
             msg='Should have taken the default value')
 
         self.message_1.attributes = [
             {'name': 'discussion_color_code', 'value': 'red'},
             {'name': 'moderator_partner_id', 'value': self.partner_2.id},
         ]
-        self.assertEqual(self.message_1.attributes, {
+        self.assertEqual(self.message_1.attributes.values, {
             'discussion_color_code': 'red',
             'moderator_partner_id': self.partner_2.id,
         })
 
         self.env.invalidate_all()
 
-        self.assertEqual(self.message_1.attributes, {
+        self.assertEqual(self.message_1.attributes.values, {
             'discussion_color_code': 'red',
             'moderator_partner_id': self.partner_2.id,
         })
@@ -487,8 +487,8 @@ class PropertiesCase(TestPropertiesMixin):
             sql_properties_2,
             {status_name: 'draft'})
 
-        properties_values_1 = messages[0].attributes
-        properties_values_2 = messages[1].attributes
+        properties_values_1 = messages[0].attributes.values
+        properties_values_2 = messages[1].attributes.values
 
         self.assertEqual(len(properties_values_1), 2, msg='Discussion 1 has 2 properties')
         self.assertEqual(len(properties_values_2), 1, msg='Discussion 2 has 1 property')
@@ -507,13 +507,13 @@ class PropertiesCase(TestPropertiesMixin):
             'author': self.user.id,
         })
         self.assertEqual(
-            message.attributes,
+            message.attributes.values,
             {'state': 'draft'},
             msg='Should have taken the default value')
 
         message.attributes = [{'name': 'state', 'value': None}]
         self.assertEqual(
-            message.attributes,
+            message.attributes.values,
             {'state': False},
             msg='Writing None should not reset to the default value')
 
@@ -528,7 +528,7 @@ class PropertiesCase(TestPropertiesMixin):
             })
             self.assertEqual(message.discussion, self.discussion_2)
             self.assertEqual(
-                message.attributes,
+                message.attributes.values,
                 {'state': 'draft'},
                 msg='Should have taken the default value')
 
@@ -542,7 +542,7 @@ class PropertiesCase(TestPropertiesMixin):
                 .with_context(default_discussion=self.discussion_2) \
                 .create({'name': 'Test Message', 'author': self.user.id})
             self.assertEqual(message.discussion, self.discussion_2)
-            self.assertEqual(message.attributes, {'test': 'default char'})
+            self.assertEqual(message.attributes.values, {'test': 'default char'})
 
         # test a default many2one
         self.discussion_1.attributes_definition = [
@@ -582,7 +582,7 @@ class PropertiesCase(TestPropertiesMixin):
         properties = message.read(['attributes'])[0]['attributes']
         self.assertEqual(properties[0]['value'], (self.partner.id, self.partner.display_name))
 
-        self.assertEqual(message.attributes, {'my_many2one': self.partner.id})
+        self.assertEqual(message.attributes.values, {'my_many2one': self.partner.id})
 
         # give a default value and a value for a many2one
         # the default value must be ignored
@@ -595,7 +595,7 @@ class PropertiesCase(TestPropertiesMixin):
             'attributes': property_definition,
         })
         self.assertEqual(
-            message.attributes,
+            message.attributes.values,
             {'my_many2one': self.partner_2.id},
             msg='Should not take the default value',
         )
@@ -741,7 +741,7 @@ class PropertiesCase(TestPropertiesMixin):
         ]
 
         self.assertFalse(self.message_2.attributes['discussion_color_code'])
-        self.assertEqual(self.message_2.attributes['moderator_partner_id'], self.partner_2.id)
+        self.assertEqual(self.message_2.attributes['moderator_partner_id'], self.partner_2)
         sql_values = self._get_sql_properties(self.message_2)
         self.assertEqual(
             sql_values,
@@ -1017,7 +1017,7 @@ class PropertiesCase(TestPropertiesMixin):
     def test_properties_field_selection(self):
         self.message_3.attributes = [{'name': 'state', 'value': 'done'}]
         self.env.invalidate_all()
-        self.assertEqual(self.message_3.attributes, {'state': 'done'})
+        self.assertEqual(self.message_3.attributes.values, {'state': 'done'})
 
         # the option might have been removed on the definition, write False
         self.message_3.attributes = [{'name': 'state', 'value': 'unknown_selection'}]
@@ -1094,7 +1094,7 @@ class PropertiesCase(TestPropertiesMixin):
         message = self.env['test_new_api.message'].create(
             {'discussion': self.discussion_1.id, 'author': self.user.id})
 
-        self.assertEqual(message.attributes, {'my_tags': ['be', 'de']})
+        self.assertEqual(message.attributes.values, {'my_tags': ['be', 'de']})
         self.assertEqual(self._get_sql_properties(message), {'my_tags': ['be', 'de']})
 
         self.env.invalidate_all()
@@ -1122,7 +1122,7 @@ class PropertiesCase(TestPropertiesMixin):
             ['be'],
             msg='The tag has been removed on the definition, should be removed when reading the child')
         self.assertEqual(
-            message.attributes,
+            message.attributes.values,
             {'my_tags': ['be', 'de']})
 
         # next write on the child must update the value
@@ -1390,7 +1390,7 @@ class PropertiesCase(TestPropertiesMixin):
         # when reading, the removed property must be filtered
         self.discussion_1.attributes_definition = attributes_definition[:-1]  # remove the state field
 
-        self.assertEqual(self.message_1.attributes, {
+        self.assertEqual(self.message_1.attributes.values, {
             'state': 'ready',
         })
 
@@ -1691,7 +1691,7 @@ class PropertiesCase(TestPropertiesMixin):
                     'moderator_partner_id': self.partner.id,
                 }
             })
-            self.assertEqual(message.attributes, {
+            self.assertEqual(message.attributes.values, {
                 'discussion_color_code': 'blue',
                 'moderator_partner_id': self.partner.id
             })
