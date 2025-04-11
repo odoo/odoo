@@ -828,10 +828,17 @@ class ResPartner(models.Model):
         postcommit = self.env.cr.postcommit
         data = postcommit.data.setdefault(f'account.res.partner.increase_rank.{field}', defaultdict(int))
         already_registered = bool(data)
-        for record in self:
-            data[record.id] += n
+        for record in self.sudo():
+            # In case we alrady have a value, we will increase the rank in
+            # postcommit to avoid serialization errors.  However, if the record
+            # has a rank of 0, we increase it directly so that filtering on
+            # partner_type is correctly set to customer or supplier.
+            if record[field]:
+                data[record.id] += n
+            else:
+                record[field] += n
 
-        if already_registered:
+        if already_registered or not data:
             return
 
         @postcommit.add
