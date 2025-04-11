@@ -104,8 +104,19 @@ class WebclientController(http.Controller):
                 ("group_ids", "in", request.env.user.all_group_ids.ids),
             ]
             store.add(request.env["mail.canned.response"].search(domain))
+        if name == "mentions":
+            channel_id = params.get("channel_id")
+            self._get_mention_partners(
+                store, params.get("term", ""), channel_id, params.get("limit", 8)
+            )
         if name == "res.role":
             roles = request.env["res.role"].search(
                 [("name", "ilike", params.get("term", ""))], limit=params.get("limit", 8)
             )
             store.add(roles, "name")
+
+    @classmethod
+    def _get_mention_partners(self, store: Store, term, channel_id, limit=8):
+        request.env["res.partner"]._get_mention_suggestions(
+            store, term, limit=limit
+        )

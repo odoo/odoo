@@ -24,12 +24,14 @@ import {
 } from "@web/../tests/web_test_helpers";
 import {
     defineMailModels,
+    listenStoreFetch,
     mailModels,
     openView,
     registerArchs,
     start,
     startServer,
-} from "../mail_test_helpers";
+    waitStoreFetch,
+} from "@mail/../tests/mail_test_helpers";
 
 // Need this hack to use the arch in mountView(...)
 mailModels.MailComposeMessage._views = {};
@@ -145,9 +147,7 @@ test("media dialog: upload", async function () {
 });
 
 test("mention a partner", async () => {
-    onRpc("res.partner", "get_mention_suggestions", ({ kwargs }) => {
-        expect.step(`get_mention_suggestions: ${kwargs.search}`);
-    });
+    listenStoreFetch(["mentions", "res.role"]);
     const pyEnv = await startServer();
     registerArchs({
         "mail.compose.message,false,form": `
@@ -178,7 +178,7 @@ test("mention a partner", async () => {
     expect(queryAllTexts(".overlay .o-mail-NavigableList .o-mail-NavigableList-item")).toEqual([
         "Mitchell Admin",
     ]);
-    expect.verifySteps(["get_mention_suggestions: a"]);
+    await waitStoreFetch(["mentions", "res.role"]);
 
     await press("enter");
     expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
