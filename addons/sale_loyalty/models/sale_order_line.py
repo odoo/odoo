@@ -57,7 +57,11 @@ class SaleOrderLine(models.Model):
         :return: Whether the line is sellable or not.
         :rtype: bool
         """
-        return super()._is_sellable() and not self.is_reward_line
+        return super()._is_sellable() and (
+            not self.is_reward_line
+            # Sellable so the link is clickable in the cart.
+            or self.reward_id.reward_type == 'product'
+        )
 
     def _reset_loyalty(self, complete=False):
         """

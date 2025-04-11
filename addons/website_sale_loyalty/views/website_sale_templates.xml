@@ -175,6 +175,21 @@
         </xpath>
     </template>
 
+    <template
+        id="website_sale_loyalty_cart_lines_quantity"
+        inherit_id="website_sale.cart_lines_quantity"
+        name="Shopping Cart Lines"
+    >
+        <xpath expr="//t[@t-set='should_show_quantity_selector']" position="after">
+            <!-- Keep customers from changing the quantity for free product .-->
+            <t
+                t-set="should_show_quantity_selector"
+                t-value="should_show_quantity_selector and not line.reward_id.reward_type == 'product'"
+            />
+        </xpath>
+    </template>
+
+
     <template id="cart_line_product_no_link" inherit_id="website_sale.cart_lines">
         <xpath expr="//h6[@t-field='line.name_short']" position="replace">
             <h6 t-if="line.is_reward_line" class="d-inline align-top fw-bold text-wrap small" t-field="line.name"/>
