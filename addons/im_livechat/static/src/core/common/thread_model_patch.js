@@ -18,4 +18,16 @@ patch(Thread.prototype, {
     get isChatChannel() {
         return this.channel_type === "livechat" || super.isChatChannel;
     },
+
+    async rename(name) {
+        if (this.channel_type === "livechat") {
+            const newName = name.trim();
+            if (newName && newName !== this.displayName) {
+                this.custom_channel_name = newName;
+                await this.renameChannel(newName, "channel_set_custom_name");
+            }
+        } else {
+            await super.rename(name);
+        }
+    },
 });

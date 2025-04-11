@@ -964,6 +964,15 @@ export class Thread extends Record {
         );
     }
 
+    async renameChannel(name, target = "channel_rename") {
+        await this.store.env.services.orm.call(
+            "discuss.channel",
+            target,
+            [[this.id]],
+            { name }
+        );
+    }
+
     /** @param {string} name */
     async rename(name) {
         const newName = name.trim();
@@ -975,20 +984,10 @@ export class Thread extends Record {
         ) {
             if (this.channel_type === "channel" || this.channel_type === "group") {
                 this.name = newName;
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_rename",
-                    [[this.id]],
-                    { name: newName }
-                );
+                await this.renameChannel(newName);
             } else if (this.channel_type === "chat") {
                 this.custom_channel_name = newName;
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_set_custom_name",
-                    [[this.id]],
-                    { name: newName }
-                );
+                await this.renameChannel(newName, "channel_set_custom_name");
             }
         }
     }
