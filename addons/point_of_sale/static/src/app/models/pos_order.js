@@ -944,7 +944,7 @@ export class PosOrder extends Base {
     }
     //FIXME remove this
     getShippingDate() {
-        return this.shipping_date;
+        return this.shipping_date?.toFormat?.(localization.dateFormat) || this.shipping_date;
     }
 
     getHasRefundLines() {
