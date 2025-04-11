@@ -1,3 +1,4 @@
+import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import {
     Component,
     onMounted,
@@ -8,15 +9,15 @@ import {
     useSubEnv,
 } from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
-import { registry } from "@web/core/registry";
-import { useService, useChildRef } from "@web/core/utils/hooks";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
-import { WebsiteSystrayItem } from "./website_systray_item";
-import { uniqueId } from "@web/core/utils/functions";
-import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { _t } from "@web/core/l10n/translation";
-import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
+import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
+import { uniqueId } from "@web/core/utils/functions";
+import { useChildRef, useService } from "@web/core/utils/hooks";
+import { effect } from "@web/core/utils/reactive";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
+import { WebsiteSystrayItem } from "./website_systray_item";
 
 export class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
@@ -37,6 +38,19 @@ export class WebsiteBuilder extends Component {
         });
         this.state = useState({ isEditing: false, key: 1 });
         this.websiteContext = useState(this.websiteService.context);
+        onMounted(() => {
+            // You can't wait for rendering because the Builder depends on the page style synchronously.
+            effect(
+                (websiteContext) => {
+                    if (websiteContext.isMobile) {
+                        this.websitePreviewRef.el.classList.add("o_is_mobile");
+                    } else {
+                        this.websitePreviewRef.el.classList.remove("o_is_mobile");
+                    }
+                },
+                [this.websiteContext]
+            );
+        });
         // TODO: to remove: this is only needed to not use the website systray
         // when using the "website preview" app.
         this.websiteService.useMysterious = true;
