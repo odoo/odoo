@@ -460,6 +460,22 @@ describe("Range not collapsed", () => {
                     '<ul><li style="text-align: center;">[abc</li><li style="text-align: center;">def]</li></ul>',
             });
         });
+        test("should apply text-align right when creating unordered list", async () => {
+            await testEditor({
+                contentBefore: '<p style="text-align: right;">[ab]</p>',
+                stepFunction: toggleUnorderedList,
+                contentAfter: '<ul><li style="text-align: right;">[ab]</li></ul>',
+            });
+        });
+        test("should apply text-align format when creating unordered list from multiple selected blocks", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p style="text-align: right;">[ab</p><p style="text-align: center;">cd]</p>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<ul><li style="text-align: right;">[ab</li><li style="text-align: center;">cd]</li></ul>',
+            });
+        });
     });
     describe("Remove", () => {
         test("should turn a list into a paragraph", async () => {
@@ -500,6 +516,16 @@ describe("Range not collapsed", () => {
                     '<ul><li>[ab</li></ul><p contenteditable="false">cd</p><ul><li>ef]</li></ul>',
                 stepFunction: toggleUnorderedList,
                 contentAfter: '<p>[ab</p><p contenteditable="false">cd</p><p>ef]</p>',
+            });
+        });
+
+        test("should turn an unordered list into paragraphs with text alignment", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul><li style="text-align: center;">[abc</li><li style="text-align: right;">def]</li></ul>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<p style="text-align: center;">[abc</p><p style="text-align: right;">def]</p>',
             });
         });
     });
