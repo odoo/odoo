@@ -1032,7 +1032,6 @@ class PurchaseOrder(models.Model):
     def _get_action_add_from_catalog_extra_context(self):
         return {
             **super()._get_action_add_from_catalog_extra_context(),
-            'display_uom': self.env.user.has_group('uom.group_uom'),
             'precision': self.env['decimal.precision'].precision_get('Product Unit'),
             'product_catalog_currency_id': self.currency_id.id,
             'product_catalog_digits': self.order_line._fields['price_unit'].get_digits(self.env),
@@ -1066,10 +1065,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         product_infos = {
             'price': product.standard_price,
-            'uom': {
-                'display_name': product.uom_id.display_name,
-                'id': product.uom_id.id,
-            },
+            'uomDisplayName': product.uom_id.display_name
         }
         params = {'order_id': self}
         # Check if there is a price and a minimum quantity for the order's vendor.

@@ -741,6 +741,7 @@ class MrpBomLine(models.Model):
                     )
                 ),
                 'readOnly': len(self) > 1,
+                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
             }
         return {
             'quantity': 0,
@@ -814,7 +815,8 @@ class MrpBomByproduct(models.Model):
                         )
                     )
                 ),
-                'readOnly': len(self) > 1
+                'readOnly': len(self) > 1,
+                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
             }
         return {
             'quantity': 0,
