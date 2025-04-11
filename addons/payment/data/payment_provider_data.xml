@@ -339,6 +339,19 @@
         />
     </record>
 
+    <record id="payment_provider_redsys" model="payment.provider">
+        <field name="name">Redsys</field>
+        <!--TODO-PDA logo redsys-->
+        <field name="image_128" type="base64" file="payment_razorpay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_redsys"/>
+        <!--TODO-PDA supported payment methods link and list-->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_provider_sepa_direct_debit" model="payment.provider">
         <field name="name">SEPA Direct Debit</field>
         <field name="sequence">20</field>
