@@ -82,7 +82,7 @@
                                     <widget name="survey_question_trigger" width="30px"/>
                                     <button name="copy" type="object" icon="fa-clone" title="Duplicate Question"/>
                                     <control>
-                                        <create name="add_question_control" string="Add a question"/>
+                                        <create name="add_question_control" string="Add a question" context="{'question_create': True}"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
                                     </control>
                                 </tree>
