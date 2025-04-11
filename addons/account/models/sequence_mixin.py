@@ -329,6 +329,8 @@ class SequenceMixin(models.AbstractModel):
                 except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
                     sp.rollback()
 
+        self._compute_split_sequence()
+
     def _get_next_sequence_format(self):
         """Get the next sequence format and its values.
 
