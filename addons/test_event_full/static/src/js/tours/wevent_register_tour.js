@@ -1,10 +1,50 @@
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
 /**
  * TALKS STEPS
  */
+const reminderToggleSteps = function (talkName, reminderOn, toggleReminder) {
+    let steps = [];
+    if (reminderOn) {
+        steps = steps.concat([{
+            content: `Check Favorite for ${talkName} was already on`,
+            trigger: "div.o_wetrack_js_reminder i.fa-bell",
+        }]);
+    }
+    else {
+        steps = steps.concat([{
+            content: `Check Favorite for ${talkName} was off`,
+            trigger: "div.o_wetrack_js_reminder i.fa-bell-o",
+        }]);
+        if (toggleReminder) {
+            steps = steps.concat([{
+                content: "Set Favorite",
+                trigger: "i[title='Set Favorite']",
+                run: "click",
+            }]);
+            if (session.is_public){
+                steps = steps.concat([{
+                    content: "The form of the email reminder modal is filled",
+                    trigger: "#o_wetrack_email_reminder_form input[name='email']",
+                    run: "fill visitor@odoo.com",
+                },
+                {
+                    content: "The form is submit",
+                    trigger: "#o_wetrack_email_reminder_form button[type='submit']",
+                    run: "click",
+                }]);
+            }
+            steps = steps.concat([{
+                content: `Check Favorite for ${talkName} is now on`,
+                trigger: "div.o_wetrack_js_reminder i.fa-bell",
+            }]);
+        }
+    }
+    return steps;
+};
 
-var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder) {
+const discoverTalkSteps = function (talkName, fromList, checkToggleReminder, reminderOn, toggleReminder) {
     var steps;
     if (fromList) {
         steps = [{
@@ -24,28 +64,8 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
         content: `Check we are on the "${talkName}" talk page`,
         trigger: 'div.o_wesession_track_main',
     }]);
-
-    if (reminderOn) {
-        steps = steps.concat([{
-            content: `Check Favorite for ${talkName} was already on`,
-            trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-        }]);
-    }
-    else {
-        steps = steps.concat([{
-            content: `Check Favorite for ${talkName} was off`,
-            trigger: 'div.o_wetrack_js_reminder i.fa-bell-o',
-        }]);
-        if (toggleReminder) {
-            steps = steps.concat([{
-                content: "Set Favorite",
-                trigger: 'div.o_wetrack_js_reminder',
-                run: 'click',
-            }, {
-                content: `Check Favorite for ${talkName} is now on`,
-                trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-            }]);
-        }
+    if (checkToggleReminder){
+        steps = steps.concat(reminderToggleSteps(talkName, reminderOn, toggleReminder));
     }
     return steps;
 };
@@ -167,11 +187,11 @@ registry.category("web_tour.tours").add('wevent_register', {
     steps: () => [].concat(
         initTourSteps('Online Reveal'),
         browseTalksSteps,
-        discoverTalkSteps('What This Event Is All About', true, true),
+        discoverTalkSteps('What This Event Is All About', true, true, true),
         browseBackSteps,
-        discoverTalkSteps('Live Testimonial', false, false, false),
+        discoverTalkSteps('Live Testimonial', false, false, false, false),
         browseBackSteps,
-        discoverTalkSteps('Our Last Day Together!', true, false, true),
+        discoverTalkSteps('Our Last Day Together!', true, true, false, true),
         browseBackSteps,
         registerSteps,
     )

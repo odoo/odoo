@@ -241,7 +241,7 @@
             <small class="text-muted">Add to calendar:</small>
             <div t-attf-class="d-flex align-items-center flex-shrink-0 flex-grow-1 {{'gap-1 gap-md-2' if event.is_one_day else 'gap-2'}}">
                 <a t-att-href="iCal_url" class="btn btn-light o_wevent_add_to_ical" title="Add to iCal">
-                    <i role="img" class="fa fa-apple"/>
+                    <img src="/event/static/src/img/apple-calendar.svg" alt="iCal" loading="lazy"/>
                 </a>
                 <a t-att-href="iCal_url" class="btn btn-light o_wevent_add_to_outlook" title="Add to Outlook">
                     <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
