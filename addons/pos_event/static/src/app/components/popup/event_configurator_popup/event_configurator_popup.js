@@ -7,7 +7,6 @@ import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deserializeDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -99,11 +98,9 @@ export class EventConfiguratorPopup extends Component {
             !ticket.event_id?.seats_limited || bookedTicket <= ticket.event_id.seats_available;
 
         const eventSaleEnd =
-            !ticket.end_sale_datetime ||
-            deserializeDateTime(ticket.end_sale_datetime).ts > dateTimeNow.ts;
+            !ticket.end_sale_datetime || ticket.end_sale_datetime.ts > dateTimeNow.ts;
         const eventSaleStart =
-            !ticket.start_sale_datetime ||
-            deserializeDateTime(ticket.start_sale_datetime).ts < dateTimeNow.ts;
+            !ticket.start_sale_datetime || ticket.start_sale_datetime.ts < dateTimeNow.ts;
 
         if (!eventSaleStart || !eventSaleEnd) {
             return false;
