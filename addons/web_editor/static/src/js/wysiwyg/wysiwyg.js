@@ -25,7 +25,7 @@ const weUtils = require('web_editor.utils');
 const { PeerToPeer, RequestError } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
 const snippetsOptions = require('web_editor.snippets.options');
-const { peek } = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
+const { peek, getUrlParams } = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
 var _t = core._t;
 const QWeb = core.qweb;
 
@@ -180,9 +180,10 @@ const Wysiwyg = Widget.extend({
         }
 
         const getYoutubeVideoElement = async (url) => {
+            const options = getUrlParams(url);
             const { embed_url: src } = await this._rpc({
-                route: '/web_editor/video_url/data',
-                params: { video_url: url },
+                route: "/web_editor/video_url/data",
+                params: { video_url: url, ...options },
             });
             const [savedVideo] = VideoSelector.createElements([{src}]);
             savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
