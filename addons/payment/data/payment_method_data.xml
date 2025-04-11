@@ -4248,6 +4248,15 @@
         <field name="image" type="base64" file="payment/static/img/tarjeta_mercadopago.png"/>
     </record>
 
+    <record id="payment_method_troy" model="payment.method">
+        <field name="name">Troy</field>
+        <field name="code">troy</field>
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/troy.png"/>
+    </record>
+
     <record id="payment_method_unionpay" model="payment.method">
         <field name="name">UnionPay</field>
         <field name="code">unionpay</field>

@@ -245,6 +245,19 @@
         />
     </record>
 
+    <record id="payment_provider_iyzico" model="payment.provider">
+        <field name="name">Iyzico</field>
+        <field name="image_128" type="base64" file="payment_iyzico/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_iyzico"/>
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([
+                ref('payment.payment_method_card'),
+                ref('payment.payment_method_bank_transfer'),
+            ])]"
+        />
+    </record>
+
     <record id="payment_provider_mercado_pago" model="payment.provider">
         <field name="name">Mercado Pago</field>
         <field name="image_128"
