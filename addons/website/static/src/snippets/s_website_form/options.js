@@ -529,12 +529,61 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         // we are building the UserValueWidgets.
         if (this.rerender) {
             this.rerender = false;
+            if(this.activeForm.model != "mail.mail") {
+                this.$target[0].classList.remove("o_send_a_copy");
+            }
             await this._rerenderXML();
             return;
         }
         await this._super.apply(this, arguments);
         // End Message UI
         this.updateUIEndMessage();
+    },
+    toggleEmailField: function (previewMode, widgetValue, params) {
+        if (widgetValue) {
+            const inputEl =
+                this.$target[0].querySelector("input[name=email_from]") ||
+                this.$target[0].querySelector("input[name=email]");
+
+            if (inputEl) {
+                const fieldEl = inputEl.closest("div[data-name=Field]");
+                fieldEl.classList.add("s_website_form_model_required");
+                fieldEl.setAttribute("data-remove-class-send-a-copy", true);
+            } else {
+                const field = this._getCustomField("email", "Your Email");
+                field.formatInfo = this._getDefaultFormat();
+
+                const fieldEl = this._renderField(field);
+                Object.assign(fieldEl.dataset, {
+                    type: "email",
+                    removeInputSendACopy: true,
+                });
+                fieldEl.classList.add("s_website_form_model_required")
+                fieldEl.classList.remove("s_website_form_custom");
+
+                if (this.$target[0].classList.contains("o_mark_required")) {
+                    const markEl = document.createElement("span");
+                    markEl.className = "s_website_form_mark";
+                    markEl.textContent = " " + this._getMark();
+                    fieldEl.querySelector(".s_website_form_label")?.appendChild(markEl);
+                }
+
+                const fieldInputEl = fieldEl.querySelector("input");
+                fieldInputEl.dataset.fillWith = "email";
+                Object.assign(fieldInputEl, {
+                    name: "email_from",
+                    required: true,
+                });
+
+                this.$target[0].querySelector(".s_website_form_rows").prepend(fieldEl);
+            }
+        } else {
+            this.$target[0].querySelector("div[data-remove-input-send-a-copy")?.remove();
+            this.$target[0]
+                .querySelector("div[data-remove-class-send-a-copy")
+                ?.classList.remove("s_website_form_model_required");
+        }
+        this.trigger_up("reload_snippet_template");
     },
     /**
      * @see this.updateUI
@@ -1814,9 +1863,13 @@ options.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
         const fieldName = this.$target[0]
             .querySelector("input.s_website_form_input").getAttribute("name");
         const spanEl = document.createElement("span");
+        let optionSendACopy = "";
+        if (this.$target[0].closest("form").classList.contains("o_send_a_copy")) {
+            optionSendACopy = _t("Send a Copy");
+        }
         spanEl.innerText = _t("The field “%(field)s” is mandatory for the action “%(action)s”.", {
             field: fieldName,
-            action: currentActionName,
+            action: optionSendACopy || currentActionName,
         });
         uiFragment.querySelector("we-alert").appendChild(spanEl);
     },

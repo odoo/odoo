@@ -29,9 +29,9 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     def test_website_form_contact_us_edition_with_email(self):
         self.start_tour('/odoo', 'website_form_contactus_edition_with_email', login="admin")
         self.start_tour('/contactus', 'website_form_contactus_submit', login="portal")
-        mail = self.env['mail.mail'].search([], order='id desc', limit=1)
+        mail = self.env['mail.mail'].search([], order='id desc', limit=2)
         self.assertEqual(
-            mail.email_to,
+            mail[1].email_to,
             'test@test.test',
             'The email was edited, the form should have been sent to the configured email')
 
@@ -39,9 +39,9 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
         self.env.company.email = 'website_form_contactus_edition_no_email@mail.com'
         self.start_tour('/odoo', 'website_form_contactus_edition_no_email', login="admin")
         self.start_tour('/contactus', 'website_form_contactus_submit', login="portal")
-        mail = self.env['mail.mail'].search([], order='id desc', limit=1)
+        mail = self.env['mail.mail'].search([], order='id desc', limit=2)
         self.assertEqual(
-            mail.email_to,
+            mail[1].email_to,
             self.env.company.email,
             'The email was not edited, the form should still have been sent to the company email')
 
@@ -67,6 +67,9 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
 
     def test_website_form_nested_forms(self):
         self.start_tour('/my/account', 'website_form_nested_forms', login='admin')
+
+    def test_website_form_send_a_copy_option(self):
+        self.start_tour("/", "website_form_send_a_copy_option", login="admin")
 
 @tagged('post_install', '-at_install')
 class TestWebsiteForm(TransactionCase):
