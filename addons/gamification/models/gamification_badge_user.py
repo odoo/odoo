@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -30,16 +29,15 @@ class GamificationBadgeUser(models.Model):
         The stats counters are incremented
         :param ids: list(int) of badge users that will receive the badge
         """
-        template = self.env.ref(
-            'gamification.email_template_badge_received',
-            raise_if_not_found=False
-        )
-        if not template:
-            return
-
+        body_html = self.env.ref('gamification.email_template_badge_received')._render_field('body_html', self.ids)[self.id]
         for badge_user in self:
-            template.send_mail(
-                badge_user.id,
+            self.env['mail.thread'].message_notify(
+                model=badge_user._name,
+                res_id=badge_user.id,
+                body=body_html,
+                partner_ids=[badge_user.user_partner_id.id],
+                subtype_xmlid='mail.mt_comment',
+                email_layout_xmlid='mail.mail_notification_layout',
             )
 
         return True
