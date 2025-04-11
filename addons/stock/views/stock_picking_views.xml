@@ -331,9 +331,9 @@
                                             role="img" title="Assign Serial Numbers"
                                             invisible="not display_assign_serial"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart"
-                                        invisible="quantity == 0 and forecast_availability &lt;= 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
+                                        invisible="(quantity - product_uom_qty &lt; 0) or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger"
-                                        invisible="quantity &gt; 0 or forecast_availability &gt; 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
+                                        invisible="(quantity - product_uom_qty &gt;= 0) or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
                                 </tree>
                             </field>
                             <field name="id" invisible="1"/>
