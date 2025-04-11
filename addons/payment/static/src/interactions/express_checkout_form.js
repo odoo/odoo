@@ -1,25 +1,24 @@
-
 import { Component } from '@odoo/owl';
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { registry } from '@web/core/registry';
+import { Interaction } from '@web/public/interaction';
 
-publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
-    selector: 'form[name="o_payment_express_checkout_form"]',
+export class ExpressCheckoutForm extends Interaction {
+    static selector = 'form[name="o_payment_express_checkout_form"]';
 
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
+    setup() {
         this.paymentContext = {};
         Object.assign(this.paymentContext, this.el.dataset);
-        this.paymentContext.shippingInfoRequired = !!this.paymentContext['shippingInfoRequired'];
-        const expressCheckoutForms = this._getExpressCheckoutForms();
-        for (const expressCheckoutForm of expressCheckoutForms) {
-            await this._prepareExpressCheckoutForm(expressCheckoutForm.dataset);
-        }
+        this.paymentContext.shippingInfoRequired = !!this.paymentContext.shippingInfoRequired;
         // Monitor updates of the amount on eCommerce's cart pages.
         Component.env.bus.addEventListener('cart_amount_changed', (ev) => this._updateAmount(...ev.detail));
-    },
+    }
+
+    async willStart() {
+        const expressCheckoutForms = this._getExpressCheckoutForms();
+        for (const expressCheckoutForm of expressCheckoutForms) {
+            await this.waitFor(this._prepareExpressCheckoutForm(expressCheckoutForm.dataset));
+        }
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -35,7 +34,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
         return document.querySelectorAll(
             'form[name="o_payment_express_checkout_form"] div[name="o_express_checkout_container"]'
         );
-    },
+    }
 
     /**
      * Prepare the provider-specific express checkout form based on the provided data.
@@ -46,7 +45,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
      * @param {Object} providerData - The provider-specific data.
      * @return {void}
      */
-    async _prepareExpressCheckoutForm(providerData) {},
+    async _prepareExpressCheckoutForm(providerData) {}
 
     /**
      * Prepare the params for the RPC to the transaction route.
@@ -66,7 +65,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
             'access_token': this.paymentContext['accessToken'],
             'csrf_token': odoo.csrf_token,
         };
-    },
+    }
 
     /**
      * Update the amount of the express checkout form.
@@ -82,14 +81,15 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
         this.paymentContext.amount = parseFloat(newAmount);
         this.paymentContext.minorAmount = parseInt(newMinorAmount);
         this._getExpressCheckoutForms().forEach(form => {
-            if (newAmount == 0) {
+            if (this.paymentContext.amount === 0) {
                 form.classList.add('d-none')}
             else {
                 form.classList.remove('d-none')
             }
         })
-    },
+    }
+}
 
-});
-
-export const paymentExpressCheckoutForm = publicWidget.registry.PaymentExpressCheckoutForm;
+registry
+    .category('public.interactions')
+    .add('payment.express_checkout_form', ExpressCheckoutForm);
