@@ -113,7 +113,7 @@ class CalendarAttendee(models.Model):
         # simplify computation, we have no other choice than relying on it
         return {
             attendee.id: {
-                'partner_ids': attendee.partner_id.ids,
+                'partners': attendee.partner_id,
                 'email_to_lst': [],
                 'email_cc_lst': [],
             } for attendee in self
