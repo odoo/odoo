@@ -5,11 +5,10 @@
     <div class="d-flex">
         <WebsiteSwitcherSystrayItem t-if="this.hasMultiWebsites"/>
         <PublishSystrayItem t-if="this.canPublish"/>
-        <t t-if="this.isRestrictedEditor">
-                <MobilePreviewSystrayItem />
-            <NewContentSystrayItem onNewPage="props.onNewPage"/>
-            <EditWebsiteSystrayItem t-if="this.canEdit" t-props="this.editWebsiteSystrayItemProps"/>
-        </t>
+        <MobilePreviewSystrayItem t-if="this.isRestrictedEditor" />
+        <EditInBackendSystrayItem t-if="this.hasEditableRecordInBackend"/>
+        <NewContentSystrayItem t-if="this.isRestrictedEditor" onNewPage="props.onNewPage"/>
+        <EditWebsiteSystrayItem t-if="this.isRestrictedEditor and this.canEdit" t-props="this.editWebsiteSystrayItemProps"/>
     </div>
 </t>
 
