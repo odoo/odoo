@@ -3494,10 +3494,18 @@ class TestMrpOrder(TestMrpCommon):
         mo = mo_form.save()
         mo.action_confirm()
 
-        mo.workorder_ids[1].button_start()
-        mo.workorder_ids[1].button_finish()
+        mo.workorder_ids[0].button_start()
+        self.assertTrue(mo.workorder_ids[0].date_start)
+        self.assertTrue(mo.workorder_ids[0].leave_id)
+        mo.workorder_ids[0].button_finish()
 
+        mo.workorder_ids[1].duration = 50
+        self.assertEqual(mo.workorder_ids[1].state, "progress")
+        self.assertFalse(mo.workorder_ids[1].date_start)
+        self.assertFalse(mo.workorder_ids[1].leave_id)
+        mo.workorder_ids[1].button_finish()
         self.assertTrue(mo.workorder_ids[1].date_start)
+        self.assertTrue(mo.workorder_ids[1].leave_id)
 
         with Form(mo) as mo_form:
             with mo_form.workorder_ids.new() as workorder:
@@ -3505,8 +3513,8 @@ class TestMrpOrder(TestMrpCommon):
                 workorder.workcenter_id = self.workcenter_2
             mo = mo_form.save()
 
-        self.assertTrue(mo.workorder_ids[0].date_start)
         self.assertTrue(mo.workorder_ids[2].date_start)
+        self.assertTrue(mo.workorder_ids[2].leave_id)
 
     def test_compute_product_id(self):
         """
