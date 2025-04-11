@@ -9,19 +9,22 @@ import {
     useSubEnv,
 } from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
+import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
 import { WebsiteSystrayItem } from "./website_systray_item";
 
 export class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
-    static components = { LazyComponent, LocalOverlayContainer };
+    static components = { LazyComponent, LocalOverlayContainer, ResizablePanel, ResourceEditor };
     static props = { ...standardActionServiceProps };
 
     setup() {
@@ -256,6 +259,15 @@ export class WebsiteBuilder extends Component {
         // Adding the mobile class directly, to not wait for the component
         // re-rendering.
         this.websiteService.context.isMobile = !this.websiteService.context.isMobile;
+    }
+
+    get aceEditorWidth() {
+        const storedWidth = browser.localStorage.getItem("ace_editor_width");
+        return storedWidth ? parseInt(storedWidth) : 720;
+    }
+
+    onResourceEditorResize(width) {
+        browser.localStorage.setItem("ace_editor_width", width);
     }
 }
 
