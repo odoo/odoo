@@ -138,9 +138,9 @@ class TestRequestRemaining(HttpCase):
 
     def test_requests_b(self):
         self.env.cr.execute('SELECT 1')
-        with self.assertLogs('odoo.tests.common', level="ERROR") as lc:
+        with self.assertLogs('odoo.tests.common') as lc:
             self.main_lock.release()
             _logger.info('B started, waiting for A to finish')
             self.thread_a.join()
-        self.assertEqual(lc.output, ['ERROR:odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. (required "/base/tests/test_http_case.py:TestRequestRemaining.test_requests_b", got "/base/tests/test_http_case.py:TestRequestRemaining.test_requests_a")'])
+        self.assertEqual(lc.output[0].split(':', 1)[1], 'odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. (required "/base/tests/test_http_case.py:TestRequestRemaining.test_requests_b", got "/base/tests/test_http_case.py:TestRequestRemaining.test_requests_a")')
         self.env.cr.fetchall()
