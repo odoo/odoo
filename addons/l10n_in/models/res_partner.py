@@ -59,19 +59,13 @@ class ResPartner(models.Model):
 
     @api.onchange('company_type')
     def onchange_company_type(self):
-        res = super().onchange_company_type()
-        if self.country_id and self.country_id.code == 'IN':
-            self.l10n_in_gst_treatment = (self.company_type == 'company') and 'regular' or 'consumer'
-        return res
+        # l10n_in_gst_treatment will set from PartnerAutoComplete
+        return super().onchange_company_type()
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
-        res = super()._onchange_country_id()
-        if self.country_id and self.country_id.code != 'IN':
-            self.l10n_in_gst_treatment = 'overseas'
-        elif self.country_id and self.country_id.code == 'IN':
-            self.l10n_in_gst_treatment = (self.company_type == 'company') and 'regular' or 'consumer'
-        return res
+        # l10n_in_gst_treatment will set from PartnerAutoComplete
+        return super()._onchange_country_id()
 
     @api.onchange('vat')
     def onchange_vat(self):
