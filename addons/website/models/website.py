@@ -1631,12 +1631,18 @@ class Website(models.Model):
             raise AccessError(_("Access Denied"))
 
         domain = [('url', '!=', False)]
-        if self:
-            domain = AND([domain, self.website_domain()])
-        pages = self.env['website.page'].sudo().search(domain)
-        if self:
-            pages = pages.with_context(website_id=self.id)._get_most_specific_pages()
-        return pages.ids
+        if not self or not self.exists():
+            pages = self.env['website.page'].sudo().search(domain)
+            return {None: pages.ids}
+
+        res = {}
+        for website in self:
+            website_domain = AND([domain, website.website_domain()])
+            pages = self.env['website.page'].sudo().search(website_domain)
+            pages = pages.with_context(website_id=website.id)._get_most_specific_pages()
+            res[website.id] = pages.ids
+
+        return res
 
     def _get_website_pages(self, domain=None, order='name', limit=None):
         website = self.get_current_website()
