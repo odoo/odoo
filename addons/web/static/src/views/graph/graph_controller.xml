@@ -77,7 +77,7 @@
                     </t>
                     <t t-component="props.Renderer" model="model" buttonTemplate="props.buttonTemplate" />
                 </t>
-                <t t-else="" t-call="web.NoContentHelper">
+                <t t-elif="model.isReady" t-call="web.NoContentHelper">
                     <t t-set="title">Invalid data</t>
                     <t t-set="description">Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results</t>
                 </t>

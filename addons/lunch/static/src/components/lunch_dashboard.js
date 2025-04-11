@@ -1,9 +1,9 @@
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { DateTimeInput } from '@web/core/datetime/datetime_input';
-import { Component, useState, onWillStart, markup, xml } from "@odoo/owl";
+import { Component, useState, markup, xml } from "@odoo/owl";
 
 export class LunchCurrency extends Component {
     static template = "lunch.LunchCurrency";
@@ -113,14 +113,7 @@ export class LunchDashboard extends Component {
     setup() {
         super.setup();
         this.state = useState({
-            infos: {},
             date: new Date(),
-        });
-
-        useBus(this.env.bus, 'lunch_update_dashboard', () => this._fetchLunchInfos());
-        onWillStart(async () => {
-            await this._fetchLunchInfos()
-            this.env.searchModel.updateLocationId(this.state.infos.user_location[0]);
         });
     }
 
@@ -132,25 +125,25 @@ export class LunchDashboard extends Component {
         })
     }
 
-    async _fetchLunchInfos() {
-        this.state.infos = await this.lunchRpc('/lunch/infos');
-    }
-
     async emptyCart() {
         await this.lunchRpc('/lunch/trash');
-        await this._fetchLunchInfos();
+        await this.env.searchModel.fetchLunchInfos();
+    }
+
+    get lunchState() {
+        return this.env.searchModel.lunchState;
     }
 
     get hasLines() {
-        return this.state.infos.lines && this.state.infos.lines.length !== 0;
+        return this.lunchState.infos.lines && this.lunchState.infos.lines.length !== 0;
     }
 
     get canOrder() {
-        return this.state.infos.raw_state === 'new';
+        return this.lunchState.infos.raw_state === 'new';
     }
 
     get location() {
-        return this.state.infos.user_location && this.state.infos.user_location[1];
+        return this.lunchState.infos.user_location && this.lunchState.infos.user_location[1];
     }
 
     async orderNow() {
@@ -159,11 +152,11 @@ export class LunchDashboard extends Component {
         }
 
         await this.lunchRpc('/lunch/pay');
-        await this._fetchLunchInfos();
+        await this.env.searchModel.fetchLunchInfos();
     }
 
     async onUpdateQuantity() {
-        await this._fetchLunchInfos();
+        await this.env.searchModel.fetchLunchInfos();
     }
 
     async onUpdateUser(value) {
@@ -171,7 +164,7 @@ export class LunchDashboard extends Component {
             return;
         }
         this.env.searchModel.updateUserId(value[0].id);
-        await this._fetchLunchInfos();
+        await this.env.searchModel.fetchLunchInfos();
     }
 
     async onUpdateLunchLocation(value) {
@@ -182,8 +175,7 @@ export class LunchDashboard extends Component {
         await this.lunchRpc('/lunch/user_location_set', {
             location_id: value[0].id,
         });
-        await this._fetchLunchInfos();
-        this.env.searchModel.updateLocationId(value[0].id);
+        await this.env.searchModel.fetchLunchInfos();
     }
 
     async onUpdateLunchTime(value) {

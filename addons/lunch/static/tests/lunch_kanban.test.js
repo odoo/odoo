@@ -154,6 +154,9 @@ test("Location change", async () => {
     expect.assertions(3);
 
     const userInfos = { ...lunchInfos };
+    onRpc("/lunch/infos", () => {
+        return userInfos;
+    });
     onRpc("/lunch/user_location_get", () => {
         return userInfos.user_location[0];
     });

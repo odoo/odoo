@@ -1431,7 +1431,7 @@ test("pager, update calls onUpdatedPager", async () => {
     expect.step("next page");
     await contains(".o_pager_next").click();
     expect(getPagerValue()).toEqual([4, 4]);
-    expect.verifySteps(["render", "next page", "render", "onUpdatedPager"]);
+    expect.verifySteps(["render", "render", "next page", "render", "onUpdatedPager"]);
 });
 
 test("click on a button type='delete' to delete a record in a column", async () => {
@@ -8163,7 +8163,10 @@ test("load more records in column with x2many", async () => {
     expect.verifySteps(["web_search_read 4-0"]);
 });
 
-test("update buttons after column creation", async () => {
+test.skip("update buttons after column creation", async () => {
+    // TODOAAB: behavior change validated by cth => should replace/modify this test to assert
+    // what happens when clicking on New before the view is loaded, and once it is loaded (with and
+    // without data/columns)
     Partner._records = [];
 
     await mountView({

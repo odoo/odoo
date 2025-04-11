@@ -26,7 +26,6 @@ import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
 import {
     Component,
-    onMounted,
     onWillPatch,
     onWillRender,
     onWillStart,
@@ -78,7 +77,9 @@ export class ListController extends Component {
         this.onOpenFormView = this.openRecord.bind(this);
         this.editable = (!this.props.readonly && this.archInfo.editable) || false;
         this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
-        this.model = useState(useModelWithSampleData(this.props.Model, this.modelParams));
+        this.model = useState(
+            useModelWithSampleData(this.props.Model, this.modelParams, this.modelOptions)
+        );
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
         // occurs on the change event for input fields. But we don't want to do it when clicking on
@@ -101,12 +102,15 @@ export class ListController extends Component {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
         });
 
-        onMounted(() => {
-            const { rendererScrollPositions } = this.props.state || {};
+        let { rendererScrollPositions } = this.props.state || {};
+        useEffect(() => {
             if (rendererScrollPositions) {
                 const renderer = this.rootRef.el.querySelector(".o_list_renderer");
-                renderer.scrollLeft = rendererScrollPositions.left;
-                renderer.scrollTop = rendererScrollPositions.top;
+                if (renderer) {
+                    renderer.scrollLeft = rendererScrollPositions.left;
+                    renderer.scrollTop = rendererScrollPositions.top;
+                    rendererScrollPositions = null;
+                }
             }
         });
 
@@ -139,8 +143,8 @@ export class ListController extends Component {
                 return {
                     modelState: this.model.exportState(),
                     rendererScrollPositions: {
-                        left: renderer.scrollLeft,
-                        top: renderer.scrollTop,
+                        left: renderer?.scrollLeft || 0,
+                        top: renderer?.scrollTop || 0,
                     },
                 };
             },
@@ -176,7 +180,7 @@ export class ListController extends Component {
             () => {
                 this.onSelectionChanged();
             },
-            () => [this.model.root.selection.length, this.model.root.isDomainSelected]
+            () => [this.model.root?.selection.length, this.model.root?.isDomainSelected]
         );
         this.searchBarToggler = useSearchBarToggler();
         this.firstLoad = true;
@@ -226,6 +230,10 @@ export class ListController extends Component {
                 onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
             },
         };
+    }
+
+    get modelOptions() {
+        return { lazy: true };
     }
 
     get actionMenuProps() {
@@ -287,6 +295,11 @@ export class ListController extends Component {
     async onWillSaveRecord(record) {}
 
     async createRecord({ group } = {}) {
+        if (!this.model.isReady && !this.model.config.groupBy.length && this.editable) {
+            // If the view is grouped and the list is editable, a new record row will be added, in
+            // edition. In this situation, we must wait for the model to be ready.
+            await this.model.whenReady;
+        }
         const list = (group && group.list) || this.model.root;
         if (this.editable && !list.isGrouped) {
             if (!(list instanceof DynamicRecordList)) {
