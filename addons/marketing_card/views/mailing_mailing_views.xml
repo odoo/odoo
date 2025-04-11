@@ -15,6 +15,9 @@
                     confirm-title="Confirm Cards Update" confirm-label="Update Cards">Update <field name="card_requires_sync_count"/> Cards</button>
                 </header>
             </xpath>
+            <xpath expr="//header//button[@name='action_set_favorite']" position="attributes">
+                <attribute name="invisible" separator=" or " add="card_campaign_id"/>
+            </xpath>
             <xpath expr="//field[@name='mailing_model_id']" position="attributes">
                 <attribute name="readonly" separator=" or " add="card_campaign_id"/>
             </xpath>

@@ -78,7 +78,7 @@
                     </group>
                     <group>
                         <field name="user_id" widget="many2one_avatar"/>
-                        <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+                        <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                 </group>
                 <notebook>
@@ -138,7 +138,7 @@
                             </group>
                             <group>
                                 <field name="reward_target_url" placeholder='e.g. "https://www.mycompany.com/reward"'/>
-                                <field name="reward_message" placeholder="Thanks for sharing, here is your reward!"/>
+                                <field name="reward_message" placeholder='e.g. "Thanks for sharing, here is your reward!"'/>
                             </group>
                         </group>
                     </page>
