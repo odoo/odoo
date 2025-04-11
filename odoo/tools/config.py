@@ -543,6 +543,8 @@ class configmanager(object):
             else ""
         )
 
+        self.options["without_demo"] = False if self.options['without_demo'] == 'False' else self.options['without_demo']
+
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options['demo'] = (dict(self.options['init'])
                                 if not self.options['without_demo'] else {})
