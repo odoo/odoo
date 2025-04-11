@@ -701,6 +701,14 @@ class SaleOrderLine(models.Model):
             take their concerned so lines, compute and set the `qty_delivered` field, and call super with the remaining
             records.
         """
+        self.compute_qty_delivered()
+        self.post_compute_qty_delivered()
+
+    def post_compute_qty_delivered(self):
+        """ This method should be overriden"""
+        pass
+
+    def compute_qty_delivered(self):
         # compute for analytic lines
         lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method == 'analytic')
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])

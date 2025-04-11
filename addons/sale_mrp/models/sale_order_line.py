@@ -30,8 +30,8 @@ class SaleOrderLine(models.Model):
                 if components and components != [line.product_id.id]:
                     line.display_qty_widget = True
 
-    def _compute_qty_delivered(self):
-        super(SaleOrderLine, self)._compute_qty_delivered()
+    def compute_qty_delivered(self):
+        super().compute_qty_delivered()
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
