@@ -28,6 +28,7 @@ export class StoreInternal extends RecordInternal {
     RD_QUEUE = new Map(); // record-deletes
     /** @type {Map<Record, true>} */
     RHD_QUEUE = new Map(); // record-hard-deletes
+    ERRORS = [];
     UPDATE = 0;
 
     /**

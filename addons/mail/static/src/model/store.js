@@ -19,10 +19,19 @@ export class Store extends Record {
         return this.recordByLocalId.get(localId);
     }
 
+    handleError(err) {
+        this._.ERRORS.push(err);
+    }
+
     /** @param {() => any} fn */
     MAKE_UPDATE(fn) {
         this._.UPDATE++;
-        const res = fn();
+        let res;
+        try {
+            res = fn();
+        } catch (err) {
+            this.handleError(err);
+        }
         this._.UPDATE--;
         if (this._.UPDATE === 0) {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
@@ -79,7 +88,11 @@ export class Store extends Record {
                         recMap.delete(fieldName);
                         const onAdd = record.Model._.fieldsOnAdd.get(fieldName);
                         for (const addedRec of fieldMap.keys()) {
-                            onAdd?.call(record._proxy, addedRec._proxy);
+                            try {
+                                onAdd?.call(record._proxy, addedRec._proxy);
+                            } catch (err) {
+                                this.handleError(err);
+                            }
                         }
                     }
                 }
@@ -93,7 +106,11 @@ export class Store extends Record {
                         recMap.delete(fieldName);
                         const onDelete = record.Model._.fieldsOnDelete.get(fieldName);
                         for (const removedRec of fieldMap.keys()) {
-                            onDelete?.call(record._proxy, removedRec._proxy);
+                            try {
+                                onDelete?.call(record._proxy, removedRec._proxy);
+                            } catch (err) {
+                                this.handleError(err);
+                            }
                         }
                     }
                 }
@@ -109,7 +126,11 @@ export class Store extends Record {
                     /** @type {Map<Function, true>} */
                     const cb = RO_QUEUE.keys().next().value;
                     RO_QUEUE.delete(cb);
-                    cb();
+                    try {
+                        cb();
+                    } catch (err) {
+                        this.handleError(err);
+                    }
                 }
                 while (RD_QUEUE.size > 0) {
                     /** @type {Record} */
@@ -145,6 +166,15 @@ export class Store extends Record {
                 }
             }
             this._.UPDATE--;
+            if (this._.ERRORS.length) {
+                console.warn("Store data insert aborted due to following errors:");
+                for (const err of this._.ERRORS) {
+                    console.warn(err);
+                }
+                const [error1] = this._.ERRORS;
+                this._.ERRORS = [];
+                throw error1;
+            }
         }
         return res;
     }
@@ -152,7 +182,11 @@ export class Store extends Record {
         return this._onChange(record, name, (observe) => {
             const fn = () => {
                 observe();
-                cb();
+                try {
+                    cb();
+                } catch (err) {
+                    this.handleError(err);
+                }
             };
             if (this._.UPDATE !== 0) {
                 if (!this._.RO_QUEUE.has(fn)) {
