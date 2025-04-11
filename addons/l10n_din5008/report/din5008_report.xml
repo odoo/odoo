@@ -255,6 +255,39 @@
                     </span>
                 </t>
             </xpath>
+            <!-- Insert Position Column as the First Column in the Table Header -->
+            <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="before">
+                <th name="th_position" class="text-start">Position</th>
+            </xpath>
+            <xpath expr="//table[@name='invoice_line_table']/tbody//tr[1]//td[1]" position="before">
+                <td class="text-start align-top" t-esc="line_index+1"/>
+            </xpath>
+
+            <!--adding currency to unit price-->
+            <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
+                <attribute name="t-options"  >{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+            </xpath>
+
+            <!-- Align Quantity, Unit Price, Taxes, Discount, Amount to the top -->
+            <xpath expr="//td[@name='td_quantity']" position="attributes">
+                <attribute name="class" add="align-top" separator=" " />
+            </xpath>
+
+            <xpath expr="//td[@name='td_price_unit']" position="attributes">
+                <attribute name="t-attf-class" add="align-top" separator=" " />
+            </xpath>
+
+            <xpath expr="//td[@name='td_taxes']" position="attributes">
+                <attribute name="t-attf-class" add="align-top" separator=" " />
+            </xpath>
+
+            <xpath expr="//td[@name='td_subtotal']" position="attributes">
+                <attribute name="class" add="align-top" separator=" " />
+            </xpath>
+            <!-- Insert the payments terms under the total line-->
+            <xpath expr="//div[@id='payment_term']" position="before">
+                <hr class="w-100 border-0"/>
+            </xpath>
         </template>
     </data>
 </odoo>
