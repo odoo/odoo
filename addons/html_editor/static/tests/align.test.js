@@ -1,6 +1,14 @@
 import { describe, test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
-import { alignCenter, justify, alignLeft, alignRight } from "./_helpers/user_actions";
+import {
+    alignCenter,
+    justify,
+    alignLeft,
+    alignRight,
+    alignTop,
+    alignMiddle,
+    alignBottom,
+} from "./_helpers/user_actions";
 
 describe("left", () => {
     test("should align left", async () => {
@@ -307,6 +315,138 @@ describe("justify", () => {
             stepFunction: justify,
             contentAfter:
                 '<div contenteditable="true" style="text-align: center;"><h1 style="text-align: justify;">a[]b</h1></div>',
+        });
+    });
+});
+
+describe("top", () => {
+    test("should align top a selected cell", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td>a[]b</td></tr></tbody></table>",
+            stepFunction: alignTop,
+            contentAfter:
+                '<table><tbody><tr><td style="vertical-align: top;">a[]b</td></tr></tbody></table>',
+        });
+    });
+
+    test("should align top multiple selected cells", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td>a[b</td><td>c]d</td></tr></tbody></table>",
+            stepFunction: alignTop,
+            contentAfter:
+                '<table><tbody><tr><td style="vertical-align: top;">a[b</td><td style="vertical-align: top;">c]d</td></tr></tbody></table>',
+        });
+    });
+
+    test("should change previous alignment to top", async () => {
+        await testEditor({
+            contentBefore: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="vertical-align: bottom;">a[b</td>
+                            <td style="vertical-align: middle;">c]d</td>
+                        </tr>
+                    </tbody>
+                </table>`,
+            stepFunction: alignTop,
+            contentAfter: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="vertical-align: top;">a[b</td>
+                            <td style="vertical-align: top;">c]d</td>
+                        </tr>
+                    </tbody>
+                </table>`,
+        });
+    });
+});
+
+describe("middle", () => {
+    test("should align middle a selected cell", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td>a[b]c</td></tr></tbody></table>",
+            stepFunction: alignMiddle,
+            contentAfter:
+                '<table><tbody><tr><td style="vertical-align: middle;">a[b]c</td></tr></tbody></table>',
+        });
+    });
+
+    test("should align middle multiple selected cells", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td>a[b</td><td>c]d</td></tr></tbody></table>",
+            stepFunction: alignMiddle,
+            contentAfter:
+                '<table><tbody><tr><td style="vertical-align: middle;">a[b</td><td style="vertical-align: middle;">c]d</td></tr></tbody></table>',
+        });
+    });
+
+    test("should change previous alignment to middle", async () => {
+        await testEditor({
+            contentBefore: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="vertical-align: top;">a[b</td>
+                            <td style="vertical-align: bottom;">c]d</td>
+                        </tr>
+                    </tbody>
+                </table>`,
+            stepFunction: alignMiddle,
+            contentAfter: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="vertical-align: middle;">a[b</td>
+                            <td style="vertical-align: middle;">c]d</td>
+                        </tr>
+                    </tbody>
+                </table>`,
+        });
+    });
+});
+
+describe("bottom", () => {
+    test("should align bottom a selected cell", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td>a[b]c</td></tr></tbody></table>",
+            stepFunction: alignBottom,
+            contentAfter:
+                '<table><tbody><tr><td style="vertical-align: bottom;">a[b]c</td></tr></tbody></table>',
+        });
+    });
+
+    test("should align bottom multiple selected cells", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td>a[b</td><td>c]d</td></tr></tbody></table>",
+            stepFunction: alignBottom,
+            contentAfter:
+                '<table><tbody><tr><td style="vertical-align: bottom;">a[b</td><td style="vertical-align: bottom;">c]d</td></tr></tbody></table>',
+        });
+    });
+
+    test("should change previous alignment to bottom", async () => {
+        await testEditor({
+            contentBefore: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="vertical-align: top;">a[b</td>
+                            <td style="vertical-align: middle;">c]d</td>
+                        </tr>
+                    </tbody>
+                </table>`,
+            stepFunction: alignBottom,
+            contentAfter: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="vertical-align: bottom;">a[b</td>
+                            <td style="vertical-align: bottom;">c]d</td>
+                        </tr>
+                    </tbody>
+                </table>`,
         });
     });
 });
