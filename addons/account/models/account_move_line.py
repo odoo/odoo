@@ -3307,6 +3307,25 @@ class AccountMoveLine(models.Model):
     def _check_edi_line_tax_required(self):
         return self.product_id.type != 'combo'
 
+    def _get_aml_values(self, **kwargs):
+        self.ensure_one()
+        return {
+            'name': self.name,
+            'account_id': self.account_id.id,
+            # TODO flg
+            'currency_id': self.currency_id.id,
+            'amount_currency': self.amount_currency,
+            'balance': self.balance,
+            'reconcile_model_id': self.reconcile_model_id.id,
+            'analytic_distribution': self.analytic_distribution,
+            'tax_repartition_line_id': self.tax_repartition_line_id.id,
+            'tax_ids': [Command.set(self.tax_ids.ids)],
+            'tax_tag_ids': [Command.set(self.tax_tag_ids.ids)],
+            'group_tax_id': self.group_tax_id.id,
+            'partner_id': self.partner_id.id,
+            **kwargs,
+        }
+
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
     # -------------------------------------------------------------------------
