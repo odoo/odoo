@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class ProjectProject(models.Model):
@@ -31,19 +31,9 @@ class ProjectProject(models.Model):
 
     def action_view_mrp_bom(self):
         self.ensure_one()
-        action = {
-            'type': 'ir.actions.act_window',
-            'res_model': 'mrp.bom',
-            'domain': [('project_id', '=', self.id)],
-            'name': self.env._('Bills of Materials'),
-            'view_mode': 'list,kanban,form',
-            'context': {'default_project_id': self.id},
-            'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" % (
-                _("No bill of materials found. Let's create one."),
-                _("Bills of materials allow you to define the list of required raw materials used to make a finished "
-                    "product; through a manufacturing order or a pack of products."),
-            ),
-        }
+        action = self.env["ir.actions.act_window"]._for_xml_id("mrp.mrp_bom_form_action")
+        action['domain'] = [('project_id', '=', self.id)]
+        action['context'] = {'default_project_id': self.id}
         boms = self.env['mrp.bom'].search([('project_id', '=', self.id)])
         if not self.env.context.get('from_embedded_action', False) and len(boms) == 1:
             action['views'] = [[False, 'form']]
