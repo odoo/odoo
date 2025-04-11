@@ -40,4 +40,23 @@
             </field>
         </record>
 
+        <!-- Add opportunity count on list view with widget -->
+        <record id="view_partner_tree" model="ir.ui.view">
+            <field name="name">res.partner.list.crm</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="before">
+                    <field name="opportunity_count"
+                        invisible="not opportunity_count"
+                        class="d-inline-flex"
+                        widget="list_stat"
+                        options="{'icon_class': 'fa-star', 'label': 'Opportunities'}"
+                        groups="sales_team.group_sale_salesman"
+                        width="42"
+                        nolabel="1"/>
+                </xpath>
+            </field>
+        </record>
+
 </odoo>
