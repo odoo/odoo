@@ -1829,7 +1829,7 @@
 
 <template id="template_footer_centered" inherit_id="website.layout" name="Centered" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+        <div id="footer" class="oe_structure oe_structure_solo" t-if="not no_footer">
             <section class="s_text_block pt32" data-snippet="s_text_block" data-name="Text">
                 <div class="container s_allow_columns">
                     <div class="s_social_media text-center mb-4 o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
@@ -1851,9 +1851,7 @@
                     </ul>
                     <div class="row">
                         <div class="col-lg-2 offset-lg-5">
-                            <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.svg" class="img-fluid mx-auto" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
-                            </a>
+                            <t t-call="website.placeholder_footer_logo"/>
                         </div>
                     </div>
                 </div>
@@ -1919,14 +1917,12 @@
 
 <template id="template_footer_minimalist" inherit_id="website.layout" name="Minimalist" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+        <div id="footer" class="oe_structure oe_structure_solo" t-if="not no_footer">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-lg-2 pt16 pb16">
-                            <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.svg" class="img-fluid mx-auto" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
-                            </a>
+                            <t t-call="website.placeholder_footer_logo"/>
                         </div>
                         <div class="col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start pt16 pb16">
                             <ul class="list-inline mb-0 ms-3">
@@ -1966,7 +1962,7 @@
 
 <template id="template_footer_contact" inherit_id="website.layout" name="Contact" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+        <div id="footer" class="oe_structure oe_structure_solo" t-if="not no_footer">
             <section class="s_text_block pt32 pb16" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="row o_grid_mode">
@@ -2015,10 +2011,7 @@
                         </div>
                         <div class="col-lg-2 o_grid_item g-col-lg-2 o_grid_item_image o_colored_level o_grid_item_image_contain g-height-1"
                              style="z-index: 6; grid-area: 4 / 1 / 5 / 3; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
-                            <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.svg" class="img-fluid"
-                                     aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
-                            </a>
+                            <t t-call="website.placeholder_footer_logo"/>
                         </div>
                         <div class="col-lg-8 pt16 text-end o_colored_level o_grid_item g-col-lg-8 g-height-1"
                              style="z-index: 7; grid-area: 4 / 5 / 5 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
@@ -2051,6 +2044,26 @@
                 </div>
             </section>
         </div>
+    </xpath>
+</template>
+
+<template id="placeholder_footer_logo" name="Placeholder Footer Brand">
+    <span id="o_fake_footer_brand"/>
+</template>
+
+<template id="option_footer_brand_logo" inherit_id="website.placeholder_footer_logo" name="Footer Brand Logo" active="True">
+    <xpath expr="//*[@id='o_fake_footer_brand']" position="replace">
+        <a data-name="Footer Logo" href="/" t-attf-class="o_footer_logo logo #{_link_class}">
+            <span class="d-block" t-field="website.logo"
+                t-options="{'widget': 'image'}" role="img"
+                t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+        </a>
+    </xpath>
+</template>
+
+<template id="option_footer_brand_name" inherit_id="website.placeholder_footer_logo" name="Footer Brand Name" active="False">
+    <xpath expr="//*[@id='o_fake_footer_brand']" position="replace">
+        <a href="/" t-attf-class="o_footer_logo #{_link_class}">My Website</a>
     </xpath>
 </template>
 
