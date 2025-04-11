@@ -1,0 +1,30 @@
+name: Mirror GitHub to GitLab
+
+on:
+  push:
+    branches:
+      - main  # or change to the branch you want to mirror
+
+jobs:
+  push_to_gitlab:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set Git config
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Add GitLab remote and push
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          GITLAB_REPO: ${{ secrets.GITLAB_REPO }}
+        run: |
+          # Add GitLab remote using token
+          git remote add gitlab https://oauth2:${GITLAB_TOKEN}@${GITLAB_REPO#https://}
+          
+          # Push all refs (branches and tags) to GitLab
+          git push --mirror gitlab
