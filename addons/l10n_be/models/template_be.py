@@ -80,3 +80,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'name@de': 'Bankgebühren (Ohne MwSt.)',
             },
         }
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if template_code in ['be_comp', 'be_asso']:
+            purchase_journal = self.ref('purchase', raise_if_not_found=False)
+            non_deductible_account = self.ref('a416', raise_if_not_found=False)
+            if purchase_journal and non_deductible_account:
+                purchase_journal.non_deductible_account_id = non_deductible_account
