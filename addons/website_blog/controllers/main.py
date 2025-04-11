@@ -14,6 +14,7 @@ from odoo.http import request
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
 from odoo.tools import sql
+from werkzeug.exceptions import NotFound
 
 
 class WebsiteBlog(http.Controller):
@@ -70,6 +71,9 @@ class WebsiteBlog(http.Controller):
         """ Prepare all values to display the blogs index page or one specific blog"""
         BlogPost = request.env['blog.post']
         BlogTag = request.env['blog.tag']
+
+        if blog and not isinstance(blog, models.Model):
+            raise NotFound()
 
         # prepare domain
         domain = request.website.website_domain()
