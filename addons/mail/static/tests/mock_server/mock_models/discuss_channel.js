@@ -611,7 +611,7 @@ export class DiscussChannel extends models.ServerModel {
         this.message_post(
             self.id,
             makeKwArgs({
-                body: `${partner.display_name} started a thread: <a href='#' class='o_channel_redirect' data-oe-id='${subChannels[0].id}' data-oe-model='discuss.channel'>${subChannels[0].name}</a>. <a href='#' data-oe-type='sub-channels-menu'>See all threads</a>.`,
+                body: `${partner.display_name} started a thread: <a href='#' class='o_channel_redirect' data-oe-id='${subChannels[0].id}' data-oe-model='discuss.channel'>${subChannels[0].name}</a>.`,
                 message_type: "notification",
                 subtype_xmlid: "mail.mt_comment",
             })
