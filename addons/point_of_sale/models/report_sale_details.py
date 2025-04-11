@@ -260,6 +260,7 @@ class ReportSaleDetails(models.AbstractModel):
         refund_products = sorted(refund_products, key=lambda l: str(l['name']))
 
         products, products_info = self._get_total_and_qty_per_category(products)
+        taxes_info["base_amount"] = products_info["total"]
         refund_products, refund_info = self._get_total_and_qty_per_category(refund_products)
 
         currency = {
