@@ -562,7 +562,7 @@ class AccountReportExpression(models.Model):
             ('to_beginning_of_fiscalyear', 'At the beginning of the fiscal year'),
             ('to_beginning_of_period', 'At the beginning of the period'),
             ('strict_range', 'Strictly on the given dates'),
-            ('previous_tax_period', "From previous tax period")
+            ('previous_return_period', "From previous return period")
         ],
         required=True,
         default='strict_range',
