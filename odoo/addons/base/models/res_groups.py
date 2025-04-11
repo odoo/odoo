@@ -14,7 +14,11 @@ class ResGroups(models.Model):
 
     name = fields.Char(required=True, translate=True)
     user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
-    all_user_ids = fields.Many2many('res.users', compute='_compute_all_user_ids', search='_search_all_user_ids', string='Users and implied users')
+    all_user_ids = fields.Many2many('res.users', string='Users and implied users',
+        compute='_compute_all_user_ids', search='_search_all_user_ids', inverse='_inverse_all_user_ids')
+
+    all_users_count = fields.Integer('# Users', help='Number of users having this group (implicitly or explicitly)',
+        compute='_compute_all_users_count', compute_sudo=True)
 
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
@@ -204,6 +208,19 @@ class ResGroups(models.Model):
         for group in self.with_context(active_test=False):
             group.all_user_ids = group.all_implied_by_ids.user_ids
 
+    def _inverse_all_user_ids(self):
+        for group in self:
+            user_to_add = group.all_user_ids - group.all_implied_by_ids.user_ids
+            user_to_remove = group.all_implied_by_ids.user_ids - group.all_user_ids
+            group.user_ids = group.user_ids - user_to_remove + user_to_add
+
+            cannot_remove = group.all_implied_by_ids.user_ids & user_to_remove
+            if cannot_remove:
+                raise ValidationError(_("It is not possible to remove an implied group '%(group)s' to users: %(users)s",
+                    group=group.name,
+                    users=', '.join(cannot_remove.mapped('name')),
+                ))
+
     def _search_all_user_ids(self, operator, value):
         return [('all_implied_by_ids.user_ids', operator, value)]
 
@@ -299,3 +316,20 @@ class ResGroups(models.Model):
     @api.model
     def _is_feature_enabled(self, group_reference):
         return self.env['res.users'].sudo().browse(api.SUPERUSER_ID)._has_group(group_reference)
+
+    @api.depends('all_user_ids')
+    def _compute_all_users_count(self):
+        for group in self:
+            group.all_users_count = len(group.all_user_ids)
+
+    def action_show_all_users(self):
+        self.ensure_one()
+        return {
+            'name': _('Users and implied users'),
+            'view_mode': 'list,form',
+            'res_model': 'res.users',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False, 'form_view_ref': 'base.view_users_form'},
+            'domain': [('id', 'in', self.all_user_ids.ids)],
+            'target': 'current',
+        }
