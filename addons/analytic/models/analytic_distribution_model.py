@@ -72,6 +72,7 @@ class AccountAnalyticDistributionModel(models.Model):
                 applied_plans += model.distribution_analytic_account_ids.root_plan_id
         return res
 
+<<<<<<< 58bed860302865e771d709e5dc12752c56978424
     @api.model
     def _get_default_search_domain_vals(self):
         return {
@@ -79,6 +80,21 @@ class AccountAnalyticDistributionModel(models.Model):
             'partner_id': False,
             'partner_category_id': [],
         }
+||||||| 736bf47d670acd53736b67782bf64a2b330b0bcb
+    def _get_fields_to_check(self):
+        return (
+                set(self.env['account.analytic.distribution.model']._fields)
+                - set(self.env['analytic.mixin']._fields)
+                - set(models.MAGIC_COLUMNS) - {'display_name', '__last_update'}
+        )
+=======
+    def _get_fields_to_check(self):
+        return (
+            {field.name for field in self._fields.values() if not field.manual}
+            - set(self.env['analytic.mixin']._fields)
+            - set(models.MAGIC_COLUMNS) - {'display_name', '__last_update'}
+        )
+>>>>>>> dfec9d1869a8ee931fec265991285fb74d8b902d
 
     @api.model
     def _get_applicable_models(self, vals):
