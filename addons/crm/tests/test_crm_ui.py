@@ -52,9 +52,8 @@ class TestUi(HttpCase, TestCrmCommon):
         })
         self.start_tour("/odoo", 'crm_rainbowman', login="temp_crm_user")
 
-    # def test_03_crm_tour_forecast(self):
-    #     # TDE TODO: fixme
-    #     self.start_tour("/odoo", 'crm_forecast', login="admin")
+    def test_03_crm_tour_forecast(self):
+        self.start_tour("/odoo", 'crm_forecast', login="admin")
 
     def test_email_and_phone_propagation_edit_save(self):
         """Test the propagation of the email / phone on the partner.

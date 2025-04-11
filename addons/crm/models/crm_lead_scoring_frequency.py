@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models
 
+import logging
+
+from datetime import datetime
+
+_logger = logging.getLogger(__name__)
+
 
 class CrmLeadScoringFrequency(models.Model):
     _name = 'crm.lead.scoring.frequency'
@@ -22,3 +28,55 @@ class CrmLeadScoringFrequencyField(models.Model):
         'ir.model.fields', domain=[('model_id.model', '=', 'crm.lead')], required=True,
         ondelete='cascade',
     )
+
+
+class CrmLeadScoringPendingUpdate(models.Model):
+    _name = 'crm.lead.scoring.pending.update'
+    _description = 'Lead Scoring Pending Update'
+    _order = 'create_date ASC, id'
+
+    lead_id = fields.Many2one('crm.lead', required=True, ondelete="cascade")
+    from_lost = fields.Boolean(required=True)
+    from_won = fields.Boolean(required=True)
+    to_lost = fields.Boolean(required=True)
+    to_won = fields.Boolean(required=True)
+
+    def _cron_process_pls_pending_updates(self):
+        """ CRON : Processes all the pending frequency updates and applies the corresponding frequency
+            updates on the crm.lead.scoring.frequency table. The pending updates track the different
+            status update of leads leaving / reaching 'won' or 'lost' won_status. """
+        cron_start_date = datetime.now()
+        self.env['crm.lead']._process_pls_pending_updates()
+        _logger.info(
+            "Predictive Lead Scoring - Processing Pending Updates : Cron duration = %d seconds",
+            (datetime.now() - cron_start_date).total_seconds()
+        )
+
+    def _extract_state_change_per_lead(self):
+        """ As a lead could change of won_status more than once in between the CRON running, we can
+            use this method to return the net won_status update per lead for the full table, as well
+            as the ids of records in table crm.lead.scoring.pending.update, to be deleted once they
+            have been correctly processed. """
+        state_change_per_lead = {}
+        pending_update_ids = []
+        pending_updates_per_lead = self._read_group(
+            domain=[],
+            groupby=['lead_id'],
+            aggregates=[
+                'from_lost:array_agg',
+                'from_won:array_agg',
+                'to_lost:array_agg',
+                'to_won:array_agg',
+                'id:array_agg'
+            ]
+        )
+        for lead, from_lost, from_won, to_lost, to_won, ids in pending_updates_per_lead:
+            from_state = 'lost' if from_lost[0] else 'won' if from_won[0] else 'pending'
+            to_state = 'lost' if to_lost[-1] else 'won' if to_won[-1] else 'pending'
+            if from_state != to_state:
+                state_change_per_lead[lead.id] = {
+                    'from_state': from_state,
+                    'to_state': to_state,
+                }
+            pending_update_ids += ids
+        return state_change_per_lead, pending_update_ids
