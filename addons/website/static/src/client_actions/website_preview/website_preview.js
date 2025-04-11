@@ -27,6 +27,7 @@ import {
     useState,
     useExternalListener,
 } from "@odoo/owl";
+import { isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 
 class BlockPreview extends Component {
     static template = "website.BlockPreview";
@@ -249,6 +250,10 @@ export class WebsitePreview extends Component {
     get aceEditorWidth() {
         const storedWidth = browser.localStorage.getItem("ace_editor_width");
         return storedWidth ? parseInt(storedWidth) : 720;
+    }
+
+    get isMicrosoftEdge() {
+        return isBrowserMicrosoftEdge();
     }
 
     reloadIframe(url) {
