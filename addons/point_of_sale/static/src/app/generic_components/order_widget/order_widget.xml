@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.OrderWidget">
         <t t-if="props.lines?.length">
             <div class="d-flex flex-column flex-grow-1 rounded-3 bg-white overflow-hidden">
-                <div t-ref="scrollable" t-att-style="props.style" t-att-class="props.class" class="order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
+                <div t-ref="scrollable" t-att-style="props.style" t-att-class="props.class" class="order-container d-flex flex-column flex-grow-1 text-start">
                     <t t-foreach="props.lines" t-as="line" t-key="line_index">
                         <t t-if="props.slots?.default" t-slot="default" line="line"/>
                         <Orderline t-else="" line="line" />
