@@ -40,4 +40,18 @@
         <field name="domain_force">['|', ('company_id', 'in', [False, website.company_id.id]), ('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="empty_public_categories_rule" model="ir.rule">
+        <field name="name">Hide empty eCommerce categories to public/portal users</field>
+        <field name="model_id" ref="website_sale.model_product_public_category"/>
+        <field name="domain_force">[('has_published_products', '=', True)]</field>
+        <field name="groups" eval="[
+            Command.link(ref('base.group_public')),
+            Command.link(ref('base.group_portal')),
+        ]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
 </odoo>
