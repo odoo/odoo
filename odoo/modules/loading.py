@@ -183,7 +183,7 @@ def load_module_graph(
 
         new_install = package.state == 'to install'
         if needs_update:
-            if not new_install:
+            if not new_install or package.name in registry._force_upgrade_scripts:
                 if package.name != 'base':
                     registry._setup_models__(env.cr)
                 migrations.migrate_module(package, 'pre')
