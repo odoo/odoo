@@ -1,5 +1,6 @@
 from . import sequence_mixin
 from . import partner
+from . import res_partner
 from . import res_partner_bank
 from . import account_account_tag
 from . import account_account
