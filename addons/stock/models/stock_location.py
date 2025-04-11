@@ -438,7 +438,7 @@ class StockLocation(models.Model):
                     return False
                 if product_capacity and quantity + location_qty > product_capacity.quantity:
                     return False
-            positive_quant = self.quant_ids.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0)
+            positive_quant = self.quant_ids.filtered(lambda q: q.product_id.uom_id.compare(q.quantity, 0) > 0)
             # check if only allow new product when empty
             if self.storage_category_id.allow_new_product == "empty" and positive_quant:
                 return False

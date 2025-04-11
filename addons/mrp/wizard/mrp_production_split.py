@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, Command
-from odoo.tools import float_round, float_compare
 
 
 class MrpProductionSplitMulti(models.TransientModel):
@@ -42,7 +41,7 @@ class MrpProductionSplit(models.TransientModel):
             if wizard.counter < 1 or not wizard.production_id:
                 wizard.production_detailed_vals_ids = commands
                 continue
-            quantity = float_round(wizard.product_qty / wizard.counter, precision_rounding=wizard.product_uom_id.rounding)
+            quantity = wizard.product_uom_id.round(wizard.product_qty / wizard.counter)
             remaining_quantity = wizard.product_qty
             for _ in range(wizard.counter - 1):
                 commands.append(Command.create({
@@ -50,7 +49,7 @@ class MrpProductionSplit(models.TransientModel):
                     'user_id': wizard.production_id.user_id,
                     'date': wizard.production_id.date_start,
                 }))
-                remaining_quantity = float_round(remaining_quantity - quantity, precision_rounding=wizard.product_uom_id.rounding)
+                remaining_quantity = wizard.product_uom_id.round(remaining_quantity - quantity)
             commands.append(Command.create({
                 'quantity': remaining_quantity,
                 'user_id': wizard.production_id.user_id,
@@ -63,7 +62,7 @@ class MrpProductionSplit(models.TransientModel):
         self.valid_details = False
         for wizard in self:
             if wizard.production_detailed_vals_ids:
-                wizard.valid_details = float_compare(wizard.product_qty, sum(wizard.production_detailed_vals_ids.mapped('quantity')), precision_rounding=wizard.product_uom_id.rounding) == 0
+                wizard.valid_details = wizard.product_uom_id.compare(wizard.product_qty, sum(wizard.production_detailed_vals_ids.mapped('quantity'))) == 0
 
     def action_split(self):
         productions = self.production_id._split_productions({self.production_id: [detail.quantity for detail in self.production_detailed_vals_ids]})

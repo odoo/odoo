@@ -1009,7 +1009,7 @@ class ProductTemplate(models.Model):
             ], limit=1)
             if existing_reserved_move_lines:
                 raise UserError(_("You can not change the inventory tracking of a product that is currently reserved on a stock move. If you need to change the inventory tracking, you should first unreserve the stock move."))
-        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
+        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not p.uom_id.is_zero(p.qty_available) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing inventory tracking"))
         return super().write(vals)
 

@@ -2,7 +2,6 @@
 
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_round, float_is_zero
 
 
 class StockReturnPickingLine(models.TransientModel):
@@ -42,7 +41,7 @@ class StockReturnPickingLine(models.TransientModel):
 
     def _process_line(self, new_picking):
         self.ensure_one()
-        if not float_is_zero(self.quantity, precision_rounding=self.uom_id.rounding):
+        if not self.uom_id.is_zero(self.quantity):
             vals = self._prepare_move_default_values(new_picking)
 
             if self.move_id:
@@ -215,7 +214,7 @@ class StockReturnPicking(models.TransientModel):
                 if not move.origin_returned_move_id or move.origin_returned_move_id != stock_move:
                     continue
                 quantity -= move.quantity
-            quantity = float_round(quantity, precision_rounding=stock_move.product_id.uom_id.rounding)
+            quantity = stock_move.product_id.uom_id.round(quantity)
             return_move.quantity = quantity
         return self.action_create_returns()
 
