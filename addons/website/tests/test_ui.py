@@ -531,7 +531,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_21_website_start_cloned_snippet(self):
         self.start_tour('/odoo', 'website_start_cloned_snippet', login='admin')
 
-    @unittest.skip
     def test_22_website_gray_color_palette(self):
         self.start_tour('/odoo', 'website_gray_color_palette', login='admin')
 
