@@ -310,17 +310,24 @@ body.editor_enable {
         i:not(.js_edit_menu > i) {
             color: rgba(0, 0, 0, 0.9);
         }
-        &.bs-popover-top > .popover-arrow::after {
+        &.bs-popover-auto[data-popper-placement^=top] > .popover-arrow::after {
             border-top-color: $o-we-popover-bg;
         }
-        &.bs-popover-end > .popover-arrow::after {
+        &.bs-popover-auto[data-popper-placement^=right] > .popover-arrow::after {
             border-right-color: $o-we-popover-bg;
         }
-        &.bs-popover-bottom > .popover-arrow::after {
+        &.bs-popover-auto[data-popper-placement^=bottom] > .popover-arrow::after {
             border-bottom-color: $o-we-popover-bg;
         }
-        &.bs-popover-start > .popover-arrow::after {
+        &.bs-popover-auto[data-popper-placement^=left] > .popover-arrow::after {
             border-left-color: $o-we-popover-bg;
         }
+    }
+}
+
+// tooltip
+body.editor_enable {
+     .tooltip .tooltip-inner {
+        color: white !important;
     }
 }
