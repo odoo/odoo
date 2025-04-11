@@ -9,6 +9,16 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     use_self_order_online_payment = fields.Boolean(compute='_compute_use_self_order_online_payment', store=True, readonly=True)
+    automatically_printed = fields.Boolean(string="Automatically Printed", default=False)
+
+    def get_order_to_print(self):
+        self.ensure_one()
+
+        if self.automatically_printed:
+            raise ValueError("This order has already been printed automatically.")
+
+        self.automatically_printed = True
+        return self.read_pos_data([], self.config_id.id)
 
     @api.depends('config_id.self_order_online_payment_method_id')
     def _compute_use_self_order_online_payment(self):
