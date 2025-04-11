@@ -54,7 +54,7 @@
         <record id="hr_expense_team_approver_account_move_rule" model="ir.rule">
             <field name="name">Expense Team Approver Account Move</field>
             <field name="model_id" ref="account.model_account_move"/>
-            <field name="domain_force">[('line_ids.expense_id', '!=', False)]</field>
+            <field name="domain_force">[('expense_ids', '!=', False)]</field>
             <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
         </record>
 
