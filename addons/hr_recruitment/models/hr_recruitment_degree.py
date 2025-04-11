@@ -9,6 +9,7 @@ class HrRecruitmentDegree(models.Model):
     _description = "Applicant Degree"
 
     name = fields.Char("Degree Name", required=True, translate=True)
+    score = fields.Float("Score", required=True)
     sequence = fields.Integer("Sequence", default=1)
 
     _name_uniq = models.Constraint(

@@ -24,9 +24,9 @@
                     <field name="website_published" widget="boolean_toggle_labeled"/>
                 </div>
             </xpath>
-            <xpath expr="//div[@name='recruitment_target']" position="after">
+            <group name="hiring_process" position="inside">
                 <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
-            </xpath>
+            </group>
         </field>
     </record>
 

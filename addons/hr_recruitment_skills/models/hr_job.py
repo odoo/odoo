@@ -1,13 +1,27 @@
 from markupsafe import Markup
 from ast import literal_eval
 
-from odoo import fields, models, _
+from odoo import fields, models, api, _
 
 
 class HrJob(models.Model):
     _inherit = "hr.job"
 
     skill_ids = fields.Many2many(comodel_name='hr.skill', string="Expected Skills")
+    applicant_matching_score = fields.Float(string="Matching Score(%)", compute="_compute_applicant_matching_score")
+
+    @api.depends_context("active_applicant_id")
+    def _compute_applicant_matching_score(self):
+        # TODO: Is this an ensure_one situation?
+        active_applicant_id = self.env.context.get('active_applicant_id')
+        if not active_applicant_id:
+            for job in self:
+                job.applicant_matching_score = False
+            return
+        applicant = self.env['hr.applicant'].browse(active_applicant_id)
+        for job in self:
+            # TODO: Do the proper calculation
+            job.applicant_matching_score = (len(job.skill_ids & applicant.skill_ids) / len(job.skill_ids) * 100) if job.skill_ids else False
 
     def action_search_matching_applicants(self):
         self.ensure_one()
