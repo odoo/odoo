@@ -109,6 +109,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            Dialog.discard(),
             ReceiptScreen.clickNextOrder(),
 
             // order on another table with a product variant
@@ -203,6 +204,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            Dialog.discard(),
             ReceiptScreen.clickNextOrder(),
             // At this point, there are no draft orders.
 
@@ -263,6 +265,7 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            Dialog.discard(),
             ReceiptScreen.isShown(),
         ].flat(),
 });
@@ -514,6 +517,7 @@ registry.category("web_tour.tours").add("LeaveResidualOrder", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            Dialog.discard(),
             ReceiptScreen.clickNextOrder(),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
@@ -531,6 +535,7 @@ registry.category("web_tour.tours").add("FinishResidualOrder", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            Dialog.discard(),
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });

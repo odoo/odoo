@@ -26,6 +26,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            Dialog.discard(),
             ReceiptScreen.clickNextOrder(),
 
             // Go to another table and refund one of the products
