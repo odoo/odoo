@@ -1,0 +1,21 @@
+name: Mirror GitHub to Bitbucket
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Mirror to Bitbucket
+        run: |
+          git remote add bitbucket https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/$BITBUCKET_USERNAME/odoo_18.0_github.git
+          git push -f bitbucket HEAD:odoo_18.0
+        env:
+          BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
+          BITBUCKET_APP_PASSWORD: ${{ secrets.BITBUCKET_APP_PASSWORD }}
