@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the existing form view to add configuration fields Tenant code and Site code-->
+        <record id="view_stock_picking_inherit_site_outbound_process" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit.custom</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//form/header" position="inside">
+                     <hr/><field name="current_state" widget="statusbar"/>
+                     <button name="action_confirm_geek_pick"
+                            string="Geek Pick confirm"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state in ('done', 'cancel')"
+                    />
+                     <button name="action_confirm_pack"
+                            string="Geek Pack confirm"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state in ('done', 'cancel')"
+                    />
+                </xpath>
+
+                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']" position="after">
+                    <field name="pc_container_code"/>
+                    <field name="packed" optional="hide" column_invisible="parent.state=='draft'"/>
+                    <field name="released_manual" optional="hide" column_invisible="parent.state=='draft'"/>
+                    <field name="remaining_packed_qty" optional="hide" column_invisible="parent.state=='draft'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

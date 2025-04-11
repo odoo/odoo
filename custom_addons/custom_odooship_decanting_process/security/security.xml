@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom Access Rights Category -->
+    <record id="module_category_shiperoo" model="ir.module.category">
+        <field name="name">Shiperoo Access Rights</field>
+        <field name="description">Access rights for Shiperoo module users (Admin, Supervisor, Operator)</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Operator Group -->
+    <record id="group_shiperoo_operator" model="res.groups">
+        <field name="name">Operator</field>
+        <field name="category_id" ref="module_category_shiperoo"/>
+    </record>
+
+    <!-- Supervisor Group -->
+    <record id="group_shiperoo_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="category_id" ref="module_category_shiperoo"/>
+        <!-- Supervisor implies Operator -->
+        <field name="implied_ids" eval="[(4, ref('group_shiperoo_operator'))]"/>
+    </record>
+
+    <!-- Admin Group -->
+    <record id="group_shiperoo_admin" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="category_id" ref="module_category_shiperoo"/>
+        <!-- Admin implies Supervisor and Operator -->
+        <field name="implied_ids" eval="[(4, ref('group_shiperoo_supervisor')), (4, ref('group_shiperoo_operator'))]"/>
+    </record>
+
+</odoo>
