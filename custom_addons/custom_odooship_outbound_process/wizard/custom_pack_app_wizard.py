@@ -50,6 +50,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     )
     next_package_number = fields.Integer(string='Next Package Number', default=1)
     confirm_increment = fields.Boolean(string="Confirm Increment")
+    pack_app_id = fields.Many2one(
+        'custom.pack.app',
+        string='Pack App Reference',
+        readonly=True,
+    )
 
     @api.model
     def default_get(self, fields):
@@ -57,8 +62,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         active_id = self.env.context.get('active_id')
         if active_id:
             pack_app = self.env['custom.pack.app'].browse(active_id)
+            if not pack_app.exists():
+                raise ValidationError(_("The related Pack App record no longer exists."))
             if 'site_code_id' in fields and pack_app.site_code_id:
                 res['site_code_id'] = pack_app.site_code_id.id
+            res['pack_app_id'] = pack_app.id
+        else:
+            raise ValidationError(_("No active Pack App record found. Please open this wizard from the Pack App."))
         return res
 
     def increment_package_number(self):
@@ -259,7 +269,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ) % (line.product_id.name, line.product_id.default_code or "N/A"))
 
         active_id = self.env.context.get('active_id')
-        pack_app_order = self.env['custom.pack.app'].browse(active_id)
+        pack_app_order = self.pack_app_id
         section_name = self.pc_container_code_id.name
 
         # Create a section line for the license plate
@@ -313,7 +323,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         # Process based on the number of pick numbers
         if not len(self.picking_ids) > 1:
             payloads = [self.process_single_pick()]
-
             # Send payloads to API
             for payload in payloads:
                 self.send_payload_to_api(api_url, payload)
@@ -460,7 +469,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "receipt_number": line.picking_id.name,
                 "partner_id": line.picking_id.partner_id.name,
                 "origin": line.picking_id.origin or "N/A",
-                "package_name": line.package_box_type_id.name + '_' + str(line.product_package_number),
+                "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(line.product_package_number),
                 "length": line.package_box_type_id.length or "NA",
                 "width": line.package_box_type_id.width or "NA",
                 "height": line.package_box_type_id.height or "NA",
@@ -542,29 +551,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             }
         }
 
-        # Convert the payload to JSON
-        # json_payload = json.dumps(payload, indent=4)
-        # _logger.info(f"Sending payload to API: {json_payload}")
-        # # api_url = self.determine_api_url(line.site_code_id.name)
-        # is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
-        # if self.site_code_id.name == "FC3":
-        #     api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
-        # elif self.site_code_id.name == "SHIPEROOALTONA":
-        #     api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
-        # else:
-        #     raise ValidationError(_("Unknown warehouse. Cannot determine API endpoint."))
-        # # Send the payload to the API
-        # headers = {
-        #     'Content-Type': 'application/json'
-        # }
-        # try:
-        #     # Send the data to the Automation Putaway URL
-        #     reponse_ot = requests.post(api_url, headers=headers, data=json_payload)
-        #     if reponse_ot.status_code != 200:
-        #         raise UserError(f"Failed to send data to One Tracker: {reponse_ot.content.decode()}")
-        #
-        # except requests.exceptions.RequestException as e:
-        #     raise UserError(f"Error occurred during API request: {str(e)}")
         return payload
 
 
@@ -582,7 +568,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             # Send the data to the Automation Putaway URL
             reponse_ot = requests.post(api_url, headers=headers, data=json_payload)
             if reponse_ot.status_code != 200:
-                raise UserError(f"Failed to send data to One Tracker: {reponse_ot.content.decode()}")
+                try:
+                    response_data = reponse_ot.json()
+                    error_message = response_data.get('message', reponse_ot.text)
+                except ValueError:
+                    # If JSON parsing fails, fallback to raw text
+                    error_message = reponse_ot.text
+
+                _logger.error(f"API Error (Status {reponse_ot.status_code}): {error_message}")
+                raise UserError(f"Failed to send data to API: {error_message}")
             return {
                 'warning': {
                     'title': _("Success"),
@@ -658,7 +652,15 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                     # Send the data to the One Tracker URL
                     reponse_ot = requests.post(api_url, headers=headers, data=json_payload)
                     if reponse_ot.status_code != 200:
-                        raise UserError(f"Failed to send data to One Tracker: {reponse_ot.content.decode()}")
+                        try:
+                            response_data = reponse_ot.json()
+                            error_message = response_data.get('message', reponse_ot.text)
+                        except ValueError:
+                            # If JSON parsing fails, fallback to raw text
+                            error_message = reponse_ot.text
+
+                        _logger.error(f"API Error (Status {reponse_ot.status_code}): {error_message}")
+                        raise UserError(f"Failed to send data to API: {error_message}")
 
                     line.line_added = True
                     return {
@@ -680,11 +682,13 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     def _compute_picking_id(self):
         """
         Assign picking_id based on exact match between product and pc_container_code.
-        Prevent mapping of the same SKU across multiple picks.
+        Prevent mapping of the same SKU across multiple picks **only if multiple picks** are involved.
+        If only one pick is involved, allow reusing the same picking ID even if line_added is True.
         """
         for wizard in self.mapped('wizard_id'):
-            used = set()
             multiple_picks = len(wizard.picking_ids) > 1
+            used = set()
+
             for line in wizard.line_ids:
                 if not line.product_id:
                     line.picking_id = False
@@ -698,13 +702,18 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                     )
                 )
 
+                assigned = False
                 for pick in pickings:
-                    if (line.product_id.id, pick.id) not in used:
+                    if not multiple_picks or (line.product_id.id, pick.id) not in used:
                         line.picking_id = pick
-                        used.add((line.product_id.id, pick.id))
+                        if multiple_picks:
+                            used.add((line.product_id.id, pick.id))
+                        assigned = True
                         break
-                else:
+
+                if not assigned:
                     line.picking_id = False
+
 
     @api.depends('wizard_id.picking_ids')
     def _compute_available_products(self):
