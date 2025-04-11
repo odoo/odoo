@@ -3,7 +3,7 @@ name: Mirror GitHub to GitLab
 on:
   push:
     branches:
-      - main  # or change to the branch you want to mirror
+      - odoo_18.0_gitlab  # Triggers on push to odoo_18.0_gitlab branch
 
 jobs:
   push_to_gitlab:
@@ -23,8 +23,5 @@ jobs:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
           GITLAB_REPO: ${{ secrets.GITLAB_REPO }}
         run: |
-          # Add GitLab remote using token
           git remote add gitlab https://oauth2:${GITLAB_TOKEN}@${GITLAB_REPO#https://}
-          
-          # Push all refs (branches and tags) to GitLab
           git push --mirror gitlab
