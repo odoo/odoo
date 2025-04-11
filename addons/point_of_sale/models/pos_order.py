@@ -48,7 +48,7 @@ class PosOrder(models.Model):
         ], limit=1)
 
         if open_session:
-            _logger.warning('Using open session %s for saving order %s', open_session.name, order['name'])
+            _logger.warning('Using open session %s for tracking number %s', open_session.name, order['tracking_number'])
             return open_session
 
         raise UserError(_('No open session available. Please open a new session to capture the order.'))
