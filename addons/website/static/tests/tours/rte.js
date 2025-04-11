@@ -11,7 +11,6 @@ registerWebsitePreviewTour('rte_translator', {
     url: '/',
     edition: true,
     wait_for: whenReady(),
-    checkDelay: 100,
 }, () => [
 ...goToTheme(),
 {

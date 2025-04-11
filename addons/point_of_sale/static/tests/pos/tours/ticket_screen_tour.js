@@ -165,7 +165,6 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -190,7 +189,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
 });
 
 registry.category("web_tour.tours").add("LotRefundTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -215,7 +213,6 @@ registry.category("web_tour.tours").add("LotRefundTour", {
 });
 
 registry.category("web_tour.tours").add("RefundFewQuantities", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -244,7 +241,6 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
 });
 
 registry.category("web_tour.tours").add("LotTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -293,7 +289,6 @@ registry.category("web_tour.tours").add("LotTour", {
 });
 
 registry.category("web_tour.tours").add("OrderTimeTour", {
-    checkDelay: 50,
     steps: () =>
         [
             ProductScreen.setTimeZone("Asia/Tokyo"),

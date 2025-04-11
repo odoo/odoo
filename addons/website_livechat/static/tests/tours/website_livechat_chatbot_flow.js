@@ -6,7 +6,6 @@ import { TourHelpers } from "@web_tour/tour_service/tour_helpers";
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
-    checkDelay: 50,
     steps: () => {
         patchWithCleanup(window, {
             debounceAnswerCount: 0,

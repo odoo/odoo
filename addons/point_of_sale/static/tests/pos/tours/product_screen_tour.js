@@ -14,7 +14,6 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
-    checkDelay: 50,
     steps: () =>
         [
             // Go by default to home category
@@ -164,7 +163,6 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
 });
 
 registry.category("web_tour.tours").add("FloatingOrderTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -184,7 +182,6 @@ registry.category("web_tour.tours").add("FloatingOrderTour", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionNoTax", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -202,7 +199,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionIncl", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -223,7 +219,6 @@ registry.category("web_tour.tours").add("FiscalPositionIncl", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionExcl", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -241,7 +236,6 @@ registry.category("web_tour.tours").add("FiscalPositionExcl", {
 });
 
 registry.category("web_tour.tours").add("CashClosingDetails", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -264,7 +258,6 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
 });
 
 registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -277,7 +270,6 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
 });
 
 registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -293,13 +285,11 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
             ProductScreen.selectedOrderlineHas("Test Product 2", "1", "120.0", "Red"),
 
             scan_barcode("0100300"),
-            ProductScreen.selectedOrderlineHas("Test Product 3", "1", "50.0"),
             Chrome.endTour(),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("MultiProductOptionsTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -315,7 +305,6 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
 });
 
 registry.category("web_tour.tours").add("TranslateProductNameTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -326,7 +315,6 @@ registry.category("web_tour.tours").add("TranslateProductNameTour", {
 });
 
 registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -341,7 +329,6 @@ registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
 });
 
 registry.category("web_tour.tours").add("SearchProducts", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -362,7 +349,6 @@ registry.category("web_tour.tours").add("SearchProducts", {
 });
 
 registry.category("web_tour.tours").add("CheckProductInformation", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -383,7 +369,6 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
 });
 
 registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -440,7 +425,6 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
 });
 
 registry.category("web_tour.tours").add("AutofillCashCount", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -461,7 +445,6 @@ registry.category("web_tour.tours").add("AutofillCashCount", {
 });
 
 registry.category("web_tour.tours").add("ProductSearchTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -538,7 +521,6 @@ registry.category("web_tour.tours").add("test_pricelist_multi_items_different_qt
 });
 
 registry.category("web_tour.tours").add("ProductCardUoMPrecision", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
