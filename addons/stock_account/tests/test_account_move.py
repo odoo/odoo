@@ -362,3 +362,30 @@ class TestAccountMove(TestAccountMoveStockCommon):
         })
 
         self.assertEqual(bill.invoice_line_ids.account_id, test_account)
+
+    def test_apply_inventory_adjustment_on_multiple_quants_simultaneously(self):
+        products = self.product_a + self.product_b
+        products.write({'is_storable': True, 'categ_id': self.auto_categ.id})
+        stock_loc = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+        [self.env['stock.quant']._update_available_quantity(prod, stock_loc, qty) for prod, qty in zip(products, [5, 15])]
+        quants = products.stock_quant_ids
+        quants.inventory_quantity = 10.0
+        wizard = self.env['stock.inventory.adjustment.name'].create({'quant_ids': quants})
+        wizard.action_apply()
+        inv_adjustment_journal_items = self.env['account.move.line'].search([], order='id asc')
+        stock_input_account, stock_valuation_account, stock_output_account = (
+            self.auto_categ.property_stock_account_input_categ_id,
+            self.auto_categ.property_stock_valuation_account_id,
+            self.auto_categ.property_stock_account_output_categ_id,
+        )
+        self.assertRecordValues(
+            inv_adjustment_journal_items,
+            [
+                {'account_id': stock_input_account.id, 'product_id': products[0].id},
+                {'account_id': stock_valuation_account.id, 'product_id': products[0].id},
+                {'account_id': stock_valuation_account.id, 'product_id': products[1].id},
+                {'account_id': stock_output_account.id, 'product_id': products[1].id},
+            ]
+        )
