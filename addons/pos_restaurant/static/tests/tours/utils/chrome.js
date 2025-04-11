@@ -12,7 +12,7 @@ export function isTabActive(tabText) {
 export function closePrintingWarning() {
     return [
         {
-            ...Dialog.confirm(),
+            ...Dialog.discard(),
             content: "acknowledge printing error ( because we don't have printer in the test. )",
         },
     ];

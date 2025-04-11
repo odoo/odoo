@@ -449,16 +449,14 @@ registry.category("web_tour.tours").add("test_course_restaurant_preparation_tour
                 }
             ),
             ProductScreen.clickOrderButton(),
-            Dialog.bodyIs("Failed in printing Preparation Printer, Printer changes of the order"),
-            Dialog.confirm(),
+            ...checkPrinterRetryDialog(["Preparation Printer (127.0.0.1)", "Printer (0.0.0.0)"]),
             FloorScreen.clickTable("5"),
             checkPreparationTicketData([], {
                 visibleInDom: ["Course 2"],
                 fireCourse: true,
             }),
             ProductScreen.fireCourseButton(),
-            Dialog.bodyIs("Failed in printing Preparation Printer, Printer changes of the order"),
-            Dialog.confirm(),
+            ...checkPrinterRetryDialog(["Preparation Printer (127.0.0.1)", "Printer (0.0.0.0)"]),
             FloorScreen.clickTable("5"),
             ProductScreen.selectCourseLine("Course 3"),
             checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
@@ -509,8 +507,7 @@ registry.category("web_tour.tours").add("MultiPreparationPrinter", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Product 1"),
             ProductScreen.clickOrderButton(),
-            Dialog.bodyIs("Failed in printing Printer 2 changes of the order"),
-            Dialog.confirm(),
+            ...checkPrinterRetryDialog(["Printer 2 (0.0.0.0)"]),
         ].flat(),
 });
 
@@ -563,8 +560,7 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             ProductScreen.clickDisplayedProduct("Product 1"),
             ProductScreen.clickDisplayedProduct("Product 2"),
             ProductScreen.clickOrderButton(),
-            Dialog.bodyIs("Failed in printing Printer 1, Printer 2 changes of the order"),
-            Dialog.confirm(),
+            ...checkPrinterRetryDialog(["Printer 1 (0.0.0.0)", "Printer 2 (0.0.0.0)"]),
         ].flat(),
 });
 
@@ -789,6 +785,17 @@ registry.category("web_tour.tours").add("test_direct_sales", {
             ReceiptScreen.discardOrderWarningDialog(),
         ].flat(),
 });
+
+function checkPrinterRetryDialog(printer_names) {
+    const commonSteps = [
+        Dialog.bodyIs(
+            "Please note that some printers could not be contacted. The changes will be taken into account locally, but a preparation ticket may be missing. Here is the list of printers with errors:"
+        ),
+        ...printer_names.map((printer_name) => Dialog.bodyIs(printer_name)),
+        Dialog.bodyIs("Do you want to retry ?"),
+    ];
+    return [...commonSteps, Dialog.confirm("retry"), ...commonSteps, Dialog.discard()];
+}
 
 registry.category("web_tour.tours").add("test_sync_lines_qty_update", {
     steps: () =>
