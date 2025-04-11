@@ -389,6 +389,11 @@ export class Store extends BaseStore {
             this.Thread.getOrFetch({ model, id }).then((thread) => {
                 if (thread) {
                     thread.open({ focus: true });
+                } else {
+                    this.env.services.notification.add(
+                        _t("This thread is no longer available."),
+                        { type: "warning" }
+                    );
                 }
             });
             return true;

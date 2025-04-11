@@ -919,3 +919,42 @@ test("Can scroll to notification", async () => {
     await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
     await isInViewportOf(".o-mail-NotificationMessage:contains(notification 0)", ".o-mail-Thread");
 });
+
+test("notification appears when accessing a deleted or archived thread", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Test Channel" });
+    const archivedThreadId = pyEnv["discuss.channel"].create({
+        name: "Message 1",
+        parent_channel_id: channelId,
+        active: false
+    });
+    const activeThreadId = pyEnv["discuss.channel"].create({
+        name: "Message 2",
+        parent_channel_id: channelId,
+    })
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: `<div class="o_mail_notification"> started a thread: <a href="#" class="o_channel_redirect" data-oe-id="${archivedThreadId}" data-oe-model="discuss.channel">Message 1</a>.<a href="#" data-oe-type="sub-channels-menu">See all threads</a>.</div>`,
+        message_type: "notification",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: `<div class="o_mail_notification"> started a thread:<a href="#" class="o_channel_redirect" data-oe-id="${activeThreadId}" data-oe-model="discuss.channel">Message 2</a>.<a href="#" data-oe-type="sub-channels-menu">See all threads</a>.</div>`,
+        message_type: "notification",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["discuss.channel"].unlink(activeThreadId);
+    await start();
+    await openDiscuss(channelId);
+    await click(".o_channel_redirect", { text: "Message 1" })
+    await contains(".o_notification:has(.o_notification_bar.bg-warning)", {
+        text: "This thread is no longer available.",
+    });
+    await click(".o_channel_redirect", { text: "Message 2" })
+    await contains(".o_notification:has(.o_notification_bar.bg-warning)", {
+        text: "This thread is no longer available.",
+    });
+});
