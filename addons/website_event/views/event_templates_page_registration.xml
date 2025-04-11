@@ -187,6 +187,10 @@
         <div t-elif="event.event_registrations_sold_out" class="alert alert-danger mb-3 small" role="status">
             <b>Sold Out</b>
         </div>
+        <!-- Cancelled -->
+        <div t-elif="event.kanban_state == 'cancel'" class="alert alert-danger mb-3 small text-center" role="status">
+            <b>Cancelled</b>
+        </div>
         <!-- Registrations Closed -->
         <div t-else="" class="alert alert-warning mb-3 small" role="status">
             <em>Registrations <b>Closed</b></em>
