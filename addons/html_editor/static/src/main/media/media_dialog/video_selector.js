@@ -11,7 +11,9 @@ class VideoOption extends Component {
         description: { type: String, optional: true },
         label: { type: String, optional: true },
         onChangeOption: Function,
+        onChangeStartAt: Function,
         value: { type: Boolean, optional: true },
+        name: {type: String, optional: true},
     };
 }
 
@@ -61,41 +63,43 @@ export class VideoSelector extends Component {
                 description: _t("Videos are muted when autoplay is enabled"),
                 platforms: [
                     this.PLATFORMS.youtube,
-                    this.PLATFORMS.dailymotion,
                     this.PLATFORMS.vimeo,
                 ],
-                urlParameter: "autoplay=1",
+                urlParameter: () => "autoplay=1",
             },
             loop: {
                 label: _t("Loop"),
                 platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
-                urlParameter: "loop=1",
+                urlParameter: () => "loop=1",
             },
             hide_controls: {
                 label: _t("Hide player controls"),
                 platforms: [
                     this.PLATFORMS.youtube,
-                    this.PLATFORMS.dailymotion,
                     this.PLATFORMS.vimeo,
                 ],
-                urlParameter: "controls=0",
+                urlParameter: () => "controls=0",
             },
             hide_fullscreen: {
                 label: _t("Hide fullscreen button"),
                 platforms: [this.PLATFORMS.youtube],
-                urlParameter: "fs=0",
+                urlParameter: () => "fs=0",
                 isHidden: () =>
                     this.state.options.filter((option) => option.id === "hide_controls")[0].value,
             },
-            hide_dm_logo: {
-                label: _t("Hide Dailymotion logo"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: "ui-logo=0",
-            },
-            hide_dm_share: {
-                label: _t("Hide sharing button"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: "sharing-enable=0",
+            start_from: {
+                label: _t("Start at"),
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo, this.PLATFORMS.dailymotion],
+                description: _t("Enter seconds or timestamp(HH:MM:SS)"),
+                urlParameter: () => {
+                    if (this.state.platform === this.PLATFORMS.youtube) {
+                        return "start";
+                    } else if (this.state.platform === this.PLATFORMS.vimeo) {
+                        return "#t=";
+                    } else if (this.state.platform === this.PLATFORMS.dailymotion) {
+                        return "startTime";
+                    }
+                }
             },
         };
 
@@ -118,13 +122,8 @@ export class VideoSelector extends Component {
                         this.props.media.getAttribute("src")) ||
                     "";
                 if (src) {
-                    this.state.urlInput = src;
-                    await this.updateVideo();
-
-                    this.state.options = this.state.options.map((option) => {
-                        const { urlParameter } = this.OPTIONS[option.id];
-                        return { ...option, value: src.indexOf(urlParameter) >= 0 };
-                    });
+                    this.state.urlInput = "https:" + src;
+                    this.syncOptionsWithUrl();
                 }
             }
         });
@@ -148,7 +147,24 @@ export class VideoSelector extends Component {
 
         useAutofocus();
 
-        this.onChangeUrl = debounce((ev) => this.updateVideo(ev.target.value), 500);
+        this.onChangeUrl = debounce(async (ev) => {
+            await this.syncOptionsWithUrl();
+            await this.updateVideo();
+        }, 500);
+
+        this.onChangeStartAt = debounce(async (ev, optionId) => {
+            const start_from = this.convertTimestampToSeconds(ev.target.value);
+
+            this.state.options = this.state.options.map(option => {
+                if (option.id === optionId) {
+                    return { ...option, value: start_from };
+                }
+                return option;
+            });
+            await this.updateVideo();
+            this.state.urlInput = "https:" + this.state.src;
+        }, 1000);
+
     }
 
     get shownOptions() {
@@ -163,11 +179,13 @@ export class VideoSelector extends Component {
     async onChangeOption(optionId) {
         this.state.options = this.state.options.map((option) => {
             if (option.id === optionId) {
-                return { ...option, value: !option.value };
+                // used "0" here, to set the initial "startAt" value if option is toggled on.
+                return { ...option, value: !option.value && "0" };
             }
             return option;
         });
         await this.updateVideo();
+        this.state.urlInput = "https:" + this.state.src;
     }
 
     async onClickSuggestion(src) {
@@ -274,5 +292,42 @@ export class VideoSelector extends Component {
             div.querySelector("iframe").src = video.src;
             return div;
         });
+    }
+
+    /**
+     * Utility method, called to make options and urlInput state consistent with state of component.
+     */
+    async syncOptionsWithUrl() {
+        await this.updateVideo();
+        if (URL.canParse(this.state.urlInput)) {
+            const urlParams = new URLSearchParams(new URL(this.state.urlInput).search);
+            this.state.options = this.state.options.map((option) => {
+                const urlParameter = this.OPTIONS[option.id].urlParameter();
+                if (urlParameter === "#t=") {
+                    return { ...option, value: this.state.urlInput.split("#t=")[1] };
+                }
+                if(urlParameter === "start") {
+                    return { ...option, value: urlParams.get(urlParameter) || urlParams.get("t") };
+                }
+                return { ...option, value: this.state.urlInput.includes(urlParameter) };
+            });
+        }
+    }
+
+    /**
+     * Utility method, called to convert timestamp to seconds.
+     * @param {string} timestamp - The start time in HH:MM:SS format or seconds.
+     * @returns {string} - The start time in seconds.
+     */
+    convertTimestampToSeconds(timestamp) {
+        // Regular expression for HH:MM:SS format
+        const timeRegex = /^(?:(\d+):)?([0-5]?\d):([0-5]?\d)$/;
+
+        if (timeRegex.test(timestamp)) {
+            timestamp = timestamp.split(":").reduce((acc, time) => acc * 60 + +time, 0) + "";
+        } else if (isNaN(timestamp)) {
+            timestamp = "0";
+        }
+        return timestamp;
     }
 }
