@@ -54,7 +54,7 @@ export class ProjectRightSidePanel extends Component {
             case SIZES.VSM:
                 return 3;
             case SIZES.XXL:
-                return 6;
+                return 5;
             default:
                 return 4;
         }
