@@ -64,6 +64,7 @@ export function getDomainDisplayedOperators(fieldDef) {
                 "<",
                 "<=",
                 "between",
+                "is_not_between",
                 "ilike",
                 "not ilike",
                 "set",
@@ -91,6 +92,10 @@ export function getDomainDisplayedOperators(fieldDef) {
             return ["=", "!=", "ilike", "not ilike", "set", "not_set"];
         case "properties":
             return ["set", "not_set"];
+        case "date_option":
+        case "datetime_option":
+        case "time_option":
+            return ["=", "!=", ">", ">=", "<", "<=", "between", "is_not_between", "set", "not_set"];
         case undefined:
             return ["="];
         default:
