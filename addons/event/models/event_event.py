@@ -109,7 +109,8 @@ class EventEvent(models.Model):
     seats_max = fields.Integer(
         string='Maximum Attendees',
         compute='_compute_seats_max', readonly=False, store=True,
-        help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
+        help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted. "
+        "If the event has multiple slots, this maximum number is applied per slot.")
     seats_limited = fields.Boolean('Limit Attendees', required=True, compute='_compute_seats_limited',
                                    precompute=True, readonly=False, store=True)
     seats_reserved = fields.Integer(
@@ -126,9 +127,12 @@ class EventEvent(models.Model):
         store=False, readonly=True, compute='_compute_seats')
     # Registration fields
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
+    no_slot_ticket_ids = fields.One2many("event.event.ticket", "event_id", string="No Slot Tickets", copy=True,
+        domain=[('slot_id', '=', False)],
+        compute="_compute_no_slot_ticket_ids", readonly=False, store=True, precompute=True)
     event_ticket_ids = fields.One2many(
-        'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
-        compute='_compute_event_ticket_ids', readonly=False, store=True, precompute=True)
+        'event.event.ticket', 'event_ticket_event_id', string='Event Tickets',
+        compute='_compute_event_ticket_ids', readonly=False, store=True)  # Can't precompute because need 'no_slot_ticket_ids'
     event_registrations_started = fields.Boolean(
         'Registrations started', compute='_compute_event_registrations_started',
         help="registrations have started if the current datetime is after the earliest starting date of tickets."
@@ -156,6 +160,13 @@ class EventEvent(models.Model):
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     is_finished = fields.Boolean(compute='_compute_is_finished', search='_search_is_finished')
+    # Slots
+    is_multi_slots = fields.Boolean("Is Multi Slots", default=False,
+        help="Allow multiple time slots."
+        "The communications, the maximum number of attendees and the maximum number of tickets registrations"
+        "are defined for each time slot instead of the whole event.")
+    slot_ids = fields.One2many("event.slot", "event_id", "Slots", copy=True)
+    slot_count = fields.Integer("Slots Count", compute="_compute_slot_count")
     # Location and communication
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
@@ -254,7 +265,7 @@ class EventEvent(models.Model):
             else:
                 event.kanban_state_label = event.stage_id.legend_done
 
-    @api.depends('seats_max', 'registration_ids.state', 'registration_ids.active')
+    @api.depends('is_multi_slots', 'seats_max', 'slot_ids', 'registration_ids.state', 'registration_ids.active')
     def _compute_seats(self):
         """ Determine available, reserved, used and taken seats. """
         # initialize fields to 0
@@ -282,8 +293,9 @@ class EventEvent(models.Model):
         # compute seats_available and expected
         for event in self:
             event.update(results.get(event._origin.id or event.id, base_vals))
-            if event.seats_max > 0:
-                event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
+            seats_max = event.seats_max * len(event.slot_ids.ids) if event.is_multi_slots else event.seats_max
+            if seats_max > 0:
+                event.seats_available = seats_max - (event.seats_reserved + event.seats_used)
 
             event.seats_taken = event.seats_reserved + event.seats_used
 
@@ -318,12 +330,12 @@ class EventEvent(models.Model):
                 (not event.seats_limited or not event.seats_max or event.seats_available) and \
                 (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
-    @api.depends('event_ticket_ids.start_sale_datetime')
+    @api.depends('no_slot_ticket_ids.start_sale_datetime')
     def _compute_start_sale_date(self):
         """ Compute the start sale date of an event. Currently lowest starting sale
         date of tickets if they are used, of False. """
         for event in self:
-            start_dates = [ticket.start_sale_datetime for ticket in event.event_ticket_ids if not ticket.is_expired]
+            start_dates = [ticket.start_sale_datetime for ticket in event.no_slot_ticket_ids if not ticket.is_expired]
             event.start_sale_datetime = min(start_dates) if start_dates and all(start_dates) else False
 
     @api.depends('event_ticket_ids.sale_available', 'seats_available', 'seats_limited')
@@ -339,6 +351,11 @@ class EventEvent(models.Model):
                 (event.seats_limited and event.seats_max and not event.seats_available)
                 or (event.event_ticket_ids and all(ticket.is_sold_out for ticket in event.event_ticket_ids))
             )
+
+    @api.depends("slot_ids")
+    def _compute_slot_count(self):
+        for event in self:
+            event.slot_count = len(event.slot_ids)
 
     @api.depends('date_begin', 'date_end')
     def _compute_is_ongoing(self):
@@ -406,13 +423,16 @@ class EventEvent(models.Model):
 
     # seats
 
-    @api.depends('event_type_id')
+    @api.depends('event_type_id', 'seats_limited')
     def _compute_seats_max(self):
         """ Update event configuration from its event type. Depends are set only
         on event_type_id itself, not its sub fields. Purpose is to emulate an
         onchange: if event type is changed, update event configuration. Changing
         event type content itself should not trigger this method. """
         for event in self:
+            if not event.seats_limited:
+                event.seats_max = 0  # resets seats_max to unlimited
+                continue
             if not event.event_type_id:
                 event.seats_max = event.seats_max or 0
             else:
@@ -474,7 +494,7 @@ class EventEvent(models.Model):
                 event.tag_ids = event.event_type_id.tag_ids
 
     @api.depends('event_type_id')
-    def _compute_event_ticket_ids(self):
+    def _compute_no_slot_ticket_ids(self):
         """ Update event configuration from its event type. Depends are set only
         on event_type_id itself, not its sub fields. Purpose is to emulate an
         onchange: if event type is changed, update event configuration. Changing
@@ -485,16 +505,19 @@ class EventEvent(models.Model):
           * lines that have no registrations linked are remove;
           * type lines are added;
 
-        Note that updating event_ticket_ids triggers _compute_start_sale_date
+        Note that updating no_slot_ticket_ids triggers _compute_start_sale_date
         (start_sale_datetime computation) so ensure result to avoid cache miss.
         """
         for event in self:
-            if not event.event_type_id and not event.event_ticket_ids:
-                event.event_ticket_ids = False
+            if not event.event_type_id and not event.no_slot_ticket_ids:
+                event.no_slot_ticket_ids = False
                 continue
 
             # lines to keep: those with existing registrations
-            tickets_to_remove = event.event_ticket_ids.filtered(lambda ticket: not ticket._origin.registration_ids)
+            tickets_to_remove = event.no_slot_ticket_ids.filtered(lambda ticket:
+                not ticket._origin.registration_ids and
+                (not ticket._origin.slot_ticket_ids or not ticket._origin.slot_ticket_ids.registration_ids)
+            )
             command = [Command.unlink(ticket.id) for ticket in tickets_to_remove]
             if event.event_type_id.event_type_ticket_ids:
                 command += [
@@ -503,7 +526,50 @@ class EventEvent(models.Model):
                         for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
                     }) for line in event.event_type_id.event_type_ticket_ids
                 ]
-            event.event_ticket_ids = command
+            event.no_slot_ticket_ids = command
+
+    @api.depends("is_multi_slots", "slot_ids", "no_slot_ticket_ids")
+    def _compute_event_ticket_ids(self):
+        """ Compute the event effective tickets using the declared slots and tickets. """
+        effective_slot_tickets_per_event = self.env['event.event.ticket'].search(
+            [('slot_id', '!=', False)]).grouped("event_ticket_event_id")
+        for event in self:
+            # Effective tickets = no-slot tickets
+            if not event.id or not event.is_multi_slots or not event.slot_ids or not event.no_slot_ticket_ids:
+                event.event_ticket_ids = event.no_slot_ticket_ids
+                continue
+            # Effective tickets = slot tickets
+            effective_slot_tickets = effective_slot_tickets_per_event.get(event, self.env['event.event.ticket'])
+            expected_combinations = {(slot, ticket) for ticket in event.no_slot_ticket_ids for slot in event.slot_ids}
+            existing_combinations = {
+                (slot_ticket.slot_id, slot_ticket.parent_ticket_id)
+                for slot_ticket in effective_slot_tickets
+            }
+            combinations_to_add = expected_combinations - existing_combinations
+            combinations_to_keep = expected_combinations & existing_combinations
+            slot_tickets_to_keep = effective_slot_tickets.filtered(lambda st:
+                (st.slot_id, st.parent_ticket_id) in combinations_to_keep
+            )
+            common_fields_w_parent = self.env['event.event.ticket']._get_common_fields_w_parent_ticket()
+            event.event_ticket_ids = (
+                # Clear to unlink past no slot tickets or non expected slot tickets
+                [Command.clear()] +
+                # Add relations to existing and expected slot tickets
+                [Command.link(slot_ticket.id) for slot_ticket in slot_tickets_to_keep] +
+                # Create missing slot - ticket combinations
+                [Command.create({
+                    'event_id': event.id,
+                    'slot_id': slot.id,
+                    'parent_ticket_id': ticket.id,
+                    **{
+                        field: ticket[field].id
+                            if isinstance(ticket[field], models.BaseModel)
+                            else ticket[field]
+                        for field in common_fields_w_parent
+                    }
+                })
+                for slot, ticket in combinations_to_add]
+            )
 
     @api.depends('event_type_id')
     def _compute_note(self):
@@ -534,6 +600,51 @@ class EventEvent(models.Model):
     def _compute_event_url(self):
         """Reset url field as it should only be used for events with no physical location."""
         self.filtered('address_id').event_url = ''
+
+    @api.constrains("is_multi_slots", "date_begin", "date_end")
+    def _check_slots_dates(self):
+        for event in self:
+            if not event.is_multi_slots:
+                continue
+            slots_outside_event_bounds = event.slot_ids.filtered(lambda slot:
+                not (event.date_begin <= slot.start_datetime <= event.date_end) or
+                not (event.date_begin <= slot.end_datetime <= event.date_end)
+            )
+            if slots_outside_event_bounds:
+                raise ValidationError(_(
+                    "The event slots cannot be scheduled outside of the event time range.\n\n"
+                    "Event:\n"
+                    "%(event_start)s - %(event_end)s\n\n"
+                    "Slots:\n"
+                    "%(slots)s",
+                    event_start=format_datetime(self.env, event.date_begin, tz=event.date_tz, dt_format='medium'),
+                    event_end=format_datetime(self.env, event.date_end, tz=event.date_tz, dt_format='medium'),
+                    slots="\n".join(f"- {slot.name}" for slot in slots_outside_event_bounds)
+                ))
+
+    @api.constrains('seats_max', 'seats_limited', 'registration_ids', 'is_multi_slots')
+    def _check_slot_seats_availability(self, minimal_availability=0):
+        """ Check that no registration can be made on sold out slots.
+        :minimal_availability: A minimal availability can be specified to ensure there is
+                               at least this number of seats left. Useful in the sale flow.
+
+        Raises:
+            ValidationError: If one of the event slots doesn't have the minimal availability.
+        """
+        sold_out_slots = []
+        for event in self:
+            if not event.is_multi_slots or not event.seats_limited or not event.seats_max:
+                continue
+            for slot in event.slot_ids:
+                if slot.seats_available < minimal_availability:
+                    sold_out_slots.append(_(
+                        '- "%(event_name)s": Missing %(nb_too_many)i seats.',
+                        event_name=slot.name,
+                        nb_too_many=minimal_availability - slot.seats_available,
+                    ))
+        if sold_out_slots:
+            raise ValidationError(_('There are not enough seats available for:\n%(sold_out_slots)s\n',
+                                    sold_out_slots='\n'.join(sold_out_slots)))
 
     @api.constrains('seats_max', 'seats_limited', 'registration_ids')
     def _check_seats_availability(self, minimal_availability=0):
@@ -663,8 +774,9 @@ class EventEvent(models.Model):
         description += textwrap.shorten(html_to_inner_content(self.description), 1900)
         return description
 
-    def _get_ics_file(self):
+    def _get_ics_file(self, slot_id=False):
         """ Returns iCalendar file for the event invitation.
+            :param slot_id: If a slot id is given, schedule with the given slot datetimes
             :returns a dict of .ics file content for each event
         """
         result = {}
@@ -674,10 +786,14 @@ class EventEvent(models.Model):
         for event in self:
             cal = vobject.iCalendar()
             cal_event = cal.add('vevent')
+            start, end = event.date_begin, event.date_end
+            if slot_id:
+                slot = self.env['event.slot'].sudo().browse(slot_id)
+                start, end = slot.start_datetime, slot.end_datetime
 
             cal_event.add('created').value = fields.Datetime.now().replace(tzinfo=pytz.timezone('UTC'))
-            cal_event.add('dtstart').value = event.date_begin.astimezone(pytz.timezone(event.date_tz))
-            cal_event.add('dtend').value = event.date_end.astimezone(pytz.timezone(event.date_tz))
+            cal_event.add('dtstart').value = start.astimezone(pytz.timezone(event.date_tz))
+            cal_event.add('dtend').value = end.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('summary').value = event.name
             cal_event.add('description').value = event._get_external_description()
             if event.address_id:

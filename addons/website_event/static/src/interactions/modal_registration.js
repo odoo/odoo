@@ -1,11 +1,11 @@
+import { Interaction } from "@web/public/interaction";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { Interaction } from "@web/public/interaction";
+import { _t } from "@web/core/l10n/translation";
 
-export class ModalAttendeesRegistration extends Interaction {
-    static selector = "#modal_attendees_registration";
+export class ModalRegistration extends Interaction {
+    static selector = "#modal_attendees_registration,#modal_slots_registration";
     dynamicContent = {
         "form": {
             "t-on-submit": this.onSubmit,
@@ -107,4 +107,4 @@ export class ModalAttendeesRegistration extends Interaction {
 
 registry
     .category("public.interactions")
-    .add("website_event.modal_attendees_registration", ModalAttendeesRegistration);
+    .add("website_event.modal_registration", ModalRegistration);

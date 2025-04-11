@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_event.EventSlotSelectionPopup">
+        <Dialog title="dialogTitle">
+            <div class="text-center pt-2 pb-3">
+                <h3 t-if="!this.state.selectedSlotDisplay" class="text-primary">No Slot Selected</h3>
+                <h3 t-else="" class="text-primary" t-out="this.state.selectedSlotDisplay"/>
+            </div>
+            <div class="row">
+                <div t-foreach="slots" t-as="date" t-key="date" class="col col-sm-6 col-lg-4">
+                    <span t-out="date"/>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button t-foreach="slots[date]" t-as="slot_id" t-key="slot_id"
+                            type="button" class="o_event_slot_btn lh-1 btn btn-sm btn-secondary"
+                            t-att-data-slot-id="slot_id" t-on-click="select">
+                            <span t-out="slots[date][slot_id]" class="lh-1"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary o-default-button" t-on-click="cancel">Cancel</button>
+                <button class="btn btn-primary o-default-button" t-on-click="confirm">Confirm</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

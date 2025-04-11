@@ -36,3 +36,8 @@ class EventEventTicket(models.Model):
                 event.price_incl = taxes['total_included']
             else:
                 event.price_incl = 0
+
+    @api.model
+    def _get_common_fields_w_parent_ticket(self):
+        """ Add sale specific fields to copy from parent ticket """
+        return super()._get_common_fields_w_parent_ticket() + ['price', 'product_id']
