@@ -81,11 +81,11 @@
             <t t-foreach="widget.get('messages') || []" t-as="message">
                 <div class="d-flex o_portal_chatter_message" t-att-id="'message-' + message.id">
                     <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
-                    <div class="flex-grow-1">
+                    <div class="flex-grow-1 w-75">
                         <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
 
                         <div class="o_portal_chatter_message_title">
-                            <h5 class='mb-1'><t t-esc="message.author_id[1]"/></h5>
+                            <h5 class='mb-1 text-truncate' t-att-title="message.author_id[1]"><t t-esc="message.author_id[1]"/></h5>
                             <p class="o_portal_chatter_puslished_date"><t t-esc="message.published_date_str"/></p>
                         </div>
                         <t t-out="message.body"/>
