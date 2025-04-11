@@ -31,6 +31,7 @@ export class GraphModel extends Model {
         this.initialGroupBy = null;
 
         this.metaData = params;
+        this.dataPoints = [];
         this.data = null;
         this.searchParams = null;
         // This dataset will be added as a line plot on top of stacked bar chart.

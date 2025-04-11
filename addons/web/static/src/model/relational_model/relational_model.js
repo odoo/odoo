@@ -170,11 +170,20 @@ export class RelationalModel extends Model {
      */
     async load(params = {}) {
         const config = this._getNextConfig(this.config, params);
+        if (!this.isReady && !config.isMonoRecord) {
+            // make an empty root available asap s.t. the controller can be rendered directly,
+            // especially the control panel
+            const data = config.groupBy.length
+                ? { groups: [], length: 0 }
+                : { records: [], length: 0 };
+            this.root = this._createRoot(config, data);
+            this.config = config;
+        }
         this.hooks.onWillLoadRoot(config);
         const data = await this.keepLast.add(this._loadData(config));
         this.root = this._createRoot(config, data);
         this.config = config;
-        return this.hooks.onRootLoaded(this.root);
+        await this.hooks.onRootLoaded(this.root);
     }
 
     // -------------------------------------------------------------------------

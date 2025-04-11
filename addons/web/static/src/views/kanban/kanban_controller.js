@@ -306,7 +306,7 @@ export class KanbanController extends Component {
     }
 
     get modelOptions() {
-        return {};
+        return { lazy: true };
     }
 
     get progressBarAggregateFields() {
@@ -426,18 +426,7 @@ export class KanbanController extends Component {
     }
 
     get canCreate() {
-        const { create, createGroup } = this.props.archInfo.activeActions;
-        const list = this.model.root;
-        if (!create) {
-            return false;
-        }
-        if (list.isGrouped) {
-            if (list.groupByField.type !== "many2one") {
-                return true;
-            }
-            return list.groups.length || !createGroup;
-        }
-        return true;
+        return this.props.archInfo.activeActions.create;
     }
 
     get canQuickCreate() {
