@@ -66,18 +66,7 @@ class PosSelfOrderController(http.Controller):
         # Update the order with the computed prices and lines
         order = pos_config.env["pos.order"].browse(posted_order_id)
 
-        classic_lines = []
-        combo_lines = []
-        for line in lines:
-            if line["combo_parent_uuid"]:
-                combo_lines.append(line)
-            else:
-                classic_lines.append(line)
-
-        # combo lines must be created after classic_line, as they need the classic line identifier
-        # use user admin to avoid access rights issues
-        lines = pos_config.env['pos.order.line'].with_user(pos_config.self_ordering_default_user_id).create(classic_lines)
-        lines += pos_config.env['pos.order.line'].with_user(pos_config.self_ordering_default_user_id).create(combo_lines)
+        lines = pos_config.env['pos.order.line'].with_user(pos_config.self_ordering_default_user_id).create(lines)
 
         order.write({
             'lines': lines,
@@ -231,6 +220,7 @@ class PosSelfOrderController(http.Controller):
             children = [l for l in lines if l.get('combo_parent_uuid') == line.get('uuid')]
             pos_combo_lines = combo_lines.browse([child.get('combo_line_id') for child in children])
 
+            newLines.append({})
             if len(children) > 0:
                 original_total = sum(pos_combo_lines.mapped("combo_id.base_price"))
                 remaining_total = lst_price
@@ -278,7 +268,7 @@ class PosSelfOrderController(http.Controller):
             taxes_after_fp = fiscal_pos.map_tax(product.taxes_id) if fiscal_pos else product.taxes_id
             pdetails = taxes_after_fp.compute_all(price_unit_fp, pos_config.currency_id, line_qty, product)
 
-            newLines.append({
+            newLine = {
                 'price_unit': price_unit_fp,
                 'price_subtotal': pdetails.get('total_excluded'),
                 'price_subtotal_incl': pdetails.get('total_included'),
@@ -295,7 +285,8 @@ class PosSelfOrderController(http.Controller):
                 'combo_parent_uuid': line.get('combo_parent_uuid'),
                 'combo_id': line.get('combo_id'),
                 'price_extra': price_extra
-            })
+            }
+            newLines[len(newLines) - 1 - len(children)] = newLine
             appended_uuid.append(line.get('uuid'))
 
         return newLines
