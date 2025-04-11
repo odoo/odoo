@@ -274,6 +274,25 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
+    def _get_previewed_attribute(self):
+        self.ensure_one()
+        all_variants = self._get_possible_variants_sorted()
+        available_attribute_lines = all_variants.attribute_line_ids.filtered(
+            lambda variant: variant.attribute_id.preview_variants != 'hidden'
+        )
+        if available_attribute_lines:
+            selected_attribute_values = available_attribute_lines[0].product_template_value_ids
+            previewed_attribute_values = []
+            for ptav in selected_attribute_values:
+                matching_variant = ptav.ptav_product_variant_ids[0]
+                previewed_attribute_values.append({
+                    'ptav': ptav,
+                    'variant_image_url': f'/web/image/product.product/{matching_variant.id}/image_512',
+                })
+            return previewed_attribute_values
+        return False
+
+
     def _get_sales_prices(self, website):
         if not self:
             return {}
