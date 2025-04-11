@@ -344,19 +344,54 @@
             </div>
         </t>
     </template>
+
+    <!-- Template for privacy (optional) -->
     <template id="privacy_policy" name="Privacy Policy">
         <t t-call="website.layout">
-            <div id="wrap">
-                <div class="oe_structure">
-                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
-                        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
-                        <div class="o_we_bg_filter bg-black-50"/>
-                        <div class="container">
-                            <h1>Privacy Policy</h1>
+            <div id="wrap" class="oe_structure">
+                <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24"
+                         data-vcss="001" data-snippet="s_title"
+                         data-scroll-background-ratio="1">
+                    <span class="s_parallax_bg oe_img_bg"
+                          style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
+                    <div class="o_we_bg_filter bg-black-50"/>
+                    <div class="container">
+                        <h1>Privacy Policy</h1>
+                    </div>
+                </section>
+                <section class="s_text_block pt40 pb40 o_colored_level"
+                         data-snippet="s_text_block" data-name="Text">
+                    <div class="container s_allow_columns">
+                        <div class="s_alert alert alert-info clearfix s_alert_md w-50 css_non_editable_mode_hidden"
+                             role="alert" data-vcss="001" data-snippet="s_alert"
+                             data-name="Alert">
+                            <div class="s_alert_content">
+                                <p>💡 You can create a specific Privacy Policy page by visiting
+                                    <a href="https://Termly.io">Termly.io</a>
+                                </p>
+                            </div>
                         </div>
-                    </section>
-                </div>
-                <div class="oe_structure"/>
+                        <p>This website collects personal data to power our site analytics
+                            (Plausible Analytics), including:
+                        </p>
+                        <ul>
+                            <li>Information about your browser, network, and device</li>
+                            <li>Web pages you visited prior to coming to this website</li>
+                        </ul>
+                        <p>This information may also include details about your use of this
+                            website, including:
+                        </p>
+                        <ul>
+                            <li>Clicks</li>
+                            <li>Internal links</li>
+                            <li>Pages visited</li>
+                            <li>Searches</li>
+                        </ul>
+                        <p>Those data help us understand how you use our website and
+                            to help us improve it.
+                        </p>
+                    </div>
+                </section>
             </div>
         </t>
     </template>
@@ -392,15 +427,6 @@
         <field name="icon">fa-random</field>
         <field name="menu_sequence">35</field>
         <field name="feature_url">/pricing</field>
-    </record>
-    <record id="feature_page_privacy_policy" model="website.configurator.feature">
-        <field name="name">Privacy Policy</field>
-        <field name="description">Explain how you protect privacy</field>
-        <field name="iap_page_code">privacy_policy</field>
-        <field name="sequence">5</field>
-        <field name="page_view_id" ref="privacy_policy"/>
-        <field name="icon">fa-gavel</field>
-        <field name="feature_url">/privacy</field>
     </record>
 
     <!-- Configurator apps features -->
