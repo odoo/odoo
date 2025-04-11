@@ -1,0 +1,34 @@
+name: Fresh Mirror to Bitbucket (No History)
+
+on:
+  push:
+    branches:
+      - odoo_18.0
+
+jobs:
+  fresh-mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout shallow copy
+        uses: actions/checkout@v3
+        with:
+          ref: odoo_18.0
+          fetch-depth: 1  # Only latest commit
+
+      - name: Remove Git history
+        run: rm -rf .git
+
+      - name: Reinitialize Git & push to Bitbucket
+        env:
+          BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
+          BITBUCKET_APP_PASSWORD: ${{ secrets.BITBUCKET_APP_PASSWORD }}
+        run: |
+          git init
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Fresh mirror from GitHub (no history)"
+          git branch -M main
+          git remote add origin https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/it_dev_1010/odoo_18.0_github.git
+          git push -f origin main
