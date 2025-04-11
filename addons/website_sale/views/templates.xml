@@ -2270,7 +2270,7 @@
             <t t-set="product_price" t-value="line._get_cart_display_price()"/>
             <t t-call="website_sale.cart_product_price"/>
             <small
-                t-if="not line._is_not_sellable_line() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
+                t-if="line._is_sellable() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
                 class="cart_product_base_unit_price d-block text-muted"
                 groups="website_sale.group_show_uom_price"
             >
