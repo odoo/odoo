@@ -695,7 +695,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.state, 'draft')
 
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleDraftOrder', login="accountman")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_draft_order_service_product', login="accountman")
+        self.assertEqual(sale_order.amount_to_invoice, 0, "The order should be fully invoiced")
 
     def test_ship_later_no_default(self):
         """ Verify that when settling an order the ship later is not activated by default"""

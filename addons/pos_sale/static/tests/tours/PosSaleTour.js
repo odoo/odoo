@@ -230,7 +230,7 @@ registry.category("web_tour.tours").add("PosSettleCustomPrice", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PosSettleDraftOrder", {
+registry.category("web_tour.tours").add("test_settle_draft_order_service_product", {
     test: true,
     url: "/pos/ui",
     steps: () =>
@@ -238,7 +238,11 @@ registry.category("web_tour.tours").add("PosSettleDraftOrder", {
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickQuotationButton(),
             ProductScreen.selectFirstOrder(),
-            ProductScreen.selectedOrderlineHas('Test service product', '1.00', '50.00'),
+            ProductScreen.selectedOrderlineHas("Test service product", "1.00", "50.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
 
