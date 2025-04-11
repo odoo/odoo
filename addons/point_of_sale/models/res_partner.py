@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class ResPartner(models.Model):
@@ -26,6 +26,15 @@ class ResPartner(models.Model):
     def _compute_pos_contact_address(self):
         for partner in self:
             partner.pos_contact_address = partner._display_address(without_company=True)
+
+    def _compute_application_statistics_hook(self):
+        data_list = super()._compute_application_statistics_hook()
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            return data_list
+        for partner in self.filtered('pos_order_count'):
+            stat_info = {'iconClass': 'fa-shopping-bag', 'value': partner.pos_order_count, 'label': _('Shopping cart')}
+            data_list[partner.id].append(stat_info)
+        return data_list
 
     @api.model
     def get_new_partner(self, config_id, domain, offset):

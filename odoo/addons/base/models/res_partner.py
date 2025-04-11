@@ -292,6 +292,18 @@ class ResPartner(models.Model):
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self: ResPartner = fields.Many2one(comodel_name='res.partner', compute='_compute_get_ids')
+    application_statistics = fields.Json(string="Stats", compute="_compute_application_statistics")
+
+    def _compute_application_statistics(self):
+        result = self._compute_application_statistics_hook()
+        for p in self:
+            p.application_statistics = result.get(p.id, [])
+
+    def _compute_application_statistics_hook(self):
+        """ Hook for override, as overriding compute method does not update
+        cache accordingly. All overrides receive False instead of previously
+        assigned value. """
+        return defaultdict(list)
 
     _check_name = models.Constraint(
         "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )",
