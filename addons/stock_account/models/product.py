@@ -367,6 +367,8 @@ will update the cost of every lot/serial number in stock."),
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         rounded_new_price = float_round(new_price, precision_digits=price_unit_prec)
         for product in self:
+            if product.is_storable:
+                continue
             if product.cost_method not in ('standard', 'average'):
                 continue
             if product.lot_valuated:
@@ -766,14 +768,15 @@ will update the cost of every lot/serial number in stock."),
 
     def _svl_replenish_stock(self, description, products_orig_quantity_svl):
         refill_stock_svl_list = []
+        products = self.product_variant_ids.filtered(lambda p: p.is_storable)
         lot_by_product = defaultdict(lambda: defaultdict(float))
         neg_lots = self.env['stock.quant']._read_group([
-            ('product_id', 'in', self.product_variant_ids.ids),
+            ('product_id', 'in', products.ids),
             ('lot_id', '!=', False),
             ], ['product_id', 'location_id', 'lot_id'], ['quantity:sum'],
             having=[('quantity:sum', '<', 0)])
         lots = self.env['stock.quant']._read_group([
-            ('product_id', 'in', self.product_variant_ids.ids),
+            ('product_id', 'in', products.ids),
             ('lot_id', '!=', False),
             ], ['product_id', 'location_id', 'lot_id'], ['quantity:sum'],
             having=[('quantity:sum', '>', 0)])
@@ -804,6 +807,8 @@ will update the cost of every lot/serial number in stock."),
                     ))
 
         for product in self:
+            if not product.is_storable:
+                continue
             quantity_svl = products_orig_quantity_svl[product.id]
             if not quantity_svl:
                 continue

@@ -343,6 +343,8 @@ class StockMove(models.Model):
         for move in self:
             if move.state == 'done':
                 continue
+            if not move.product_id.is_storable:
+                continue
             if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
                 continue
             if not any(move.move_line_ids.mapped('picked')):
