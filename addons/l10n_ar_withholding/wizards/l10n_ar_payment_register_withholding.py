@@ -35,6 +35,8 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
             partner=False,
             is_refund=False,
         )
+        if not taxes_res['taxes']:
+            return 0.0, None, None
         tax_amount = taxes_res['taxes'][0]['amount']
         tax_account_id = taxes_res['taxes'][0]['account_id']
         tax_repartition_line_id = taxes_res['taxes'][0]['tax_repartition_line_id']
