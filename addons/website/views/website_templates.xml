@@ -408,7 +408,9 @@
         <div class="o_main_nav container flex-wrap justify-content-between">
             <div class="d-flex flex-grow-1">
                 <!-- Brand -->
-                <t t-call="website.placeholder_header_brand"/>
+                <t t-call="website.placeholder_website_brand">
+                    <t t-set="_link_class" t-valuef="navbar-brand logo"/>
+                </t>
                 <ul class="o_header_mobile_buttons_wrap navbar-nav d-flex flex-row align-items-center gap-2 mb-0 ms-auto"/>
             </div>
             <button
@@ -548,8 +550,8 @@
 
             <div id="o_main_nav" t-attf-class="o_main_nav #{header_content_width}">
                 <!-- Brand -->
-                <t t-call="website.placeholder_header_brand">
-                    <t t-set="_link_class" t-valuef="me-4"/>
+                <t t-call="website.placeholder_website_brand">
+                    <t t-set="_link_class" t-valuef="navbar-brand logo me-4"/>
                 </t>
                 <!-- Navbar -->
                 <t t-call="website.navbar_nav">
@@ -626,8 +628,8 @@
                     <t t-set="_toggler_class" t-valuef="btn me-auto p-2"/>
                 </t>
                 <!-- Brand -->
-                <t t-call="website.placeholder_header_brand">
-                    <t t-set="_link_class" t-valuef="mw-100 mx-auto"/>
+                <t t-call="website.placeholder_website_brand">
+                    <t t-set="_link_class" t-valuef="navbar-brand logo mw-100 mx-auto"/>
                 </t>
                 <ul class="o_header_hamburger_right_col navbar-nav flex-row gap-2 align-items-center ms-auto">
                     <!-- Sign In -->
@@ -712,7 +714,7 @@
     <xpath expr="//ul[hasclass('o_header_hamburger_right_col')]" position="attributes">
         <attribute name="class" add="order-0 me-auto" remove="ms-auto" separator=" "/>
     </xpath>
-    <xpath expr="//t[@t-call='website.placeholder_header_brand']" position="inside" >
+    <xpath expr="//t[@t-call='website.placeholder_website_brand']" position="inside" >
         <t t-set="_link_class" t-valuef="order-1 mx-auto mw-100"/>
     </xpath>
     <xpath expr="//div[@id='top_menu_collapse']" position="attributes" >
@@ -756,8 +758,8 @@
 
             <div id="o_main_nav" t-attf-class="o_main_nav align-items-stretch #{header_content_width}">
                 <!-- Brand -->
-                <t t-call="website.placeholder_header_brand">
-                    <t t-set="_link_class" t-valuef="d-flex align-items-center me-4 p-2"/>
+                <t t-call="website.placeholder_website_brand">
+                    <t t-set="_link_class" t-valuef="navbar-brand logo d-flex align-items-center me-4 p-2"/>
                 </t>
                 <!-- Navbar -->
                 <t t-call="website.navbar_nav">
@@ -856,8 +858,8 @@
                         <t t-call="website.placeholder_header_text_element"/>
                     </ul>
                     <!-- Brand -->
-                    <t t-call="website.placeholder_header_brand">
-                        <t t-set="_link_class" t-valuef="mx-auto mw-100"/>
+                    <t t-call="website.placeholder_website_brand">
+                        <t t-set="_link_class" t-valuef="navbar-brand logo mx-auto mw-100"/>
                     </t>
                     <ul class="navbar-nav align-items-center gap-1 flex-wrap justify-content-end ms-auto">
                         <!-- Sign In -->
@@ -955,8 +957,8 @@
                         </t>
                     </t>
                     <!-- Brand -->
-                    <t t-call="website.placeholder_header_brand">
-                        <t t-set="_link_class" t-valuef="mw-100 mx-auto"/>
+                    <t t-call="website.placeholder_website_brand">
+                        <t t-set="_link_class" t-valuef="navbar-brand logo mw-100 mx-auto"/>
                     </t>
                     <ul class="o_header_search_right_col navbar-nav align-items-center gap-2 ms-auto ps-3">
                         <!-- Search bar -->
@@ -983,7 +985,7 @@
     <xpath expr="//t[@t-set='_nav_class']" position="replace">
         <t t-set="_nav_class" t-valuef="order-1 justify-content-center mx-auto w-100 px-4"/>
     </xpath>
-    <xpath expr="//t[@t-call='website.placeholder_header_brand']" position="inside" >
+    <xpath expr="//t[@t-call='website.placeholder_website_brand']" position="inside" >
         <t t-set="_link_class" t-valuef="order-0 me-auto mw-100"/>
     </xpath>
     <xpath expr="//ul[hasclass('o_header_search_right_col')]" position="attributes">
@@ -998,7 +1000,7 @@
     <xpath expr="//t[@t-set='_nav_class']" position="replace">
         <t t-set="_nav_class" t-valuef="order-2 justify-content-end ms-auto w-100 ps-4"/>
     </xpath>
-    <xpath expr="//t[@t-call='website.placeholder_header_brand']" position="inside" >
+    <xpath expr="//t[@t-call='website.placeholder_website_brand']" position="inside" >
         <t t-set="_link_class" t-valuef="order-1 mx-auto mw-100"/>
     </xpath>
     <xpath expr="//ul[hasclass('o_header_search_right_col')]" position="attributes">
@@ -1015,8 +1017,8 @@
             <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" t-attf-class="#{header_content_width} d-flex align-items-center justify-content-between py-3">
                     <!-- Brand -->
-                    <t t-call="website.placeholder_header_brand">
-                        <t t-set="_link_class" t-valuef="me-4"/>
+                    <t t-call="website.placeholder_website_brand">
+                        <t t-set="_link_class" t-valuef="navbar-brand logo me-4"/>
                     </t>
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav">
@@ -1133,8 +1135,8 @@
                     </div>
                     <div aria-label="Middle" t-attf-class="#{header_content_width} d-flex justify-content-between align-items-center py-1">
                         <!-- Brand -->
-                        <t t-call="website.placeholder_header_brand">
-                            <t t-set="_link_class" t-valuef="me-4"/>
+                        <t t-call="website.placeholder_website_brand">
+                            <t t-set="_link_class" t-valuef="navbar-brand logo me-4"/>
                         </t>
                         <ul class="navbar-nav align-items-center gap-1">
                             <!-- Search bar -->
@@ -1239,8 +1241,8 @@
                 </div>
                 <div aria-label="Bottom" t-attf-class="#{header_content_width} d-flex align-items-center py-2">
                     <!-- Brand -->
-                    <t t-call="website.placeholder_header_brand">
-                        <t t-set="_link_class" t-valuef="me-4"/>
+                    <t t-call="website.placeholder_website_brand">
+                        <t t-set="_link_class" t-valuef="navbar-brand logo me-4"/>
                     </t>
                     <div class="ms-auto">
                         <ul class="o_header_sales_three_small_links navbar-nav justify-content-end align-items-center gap-2 w-100 o_header_separator">
@@ -1359,9 +1361,9 @@
                                 <t t-set="_item_class" t-valuef="d-flex"/>
                             </t>
                             <!-- Brand -->
-                            <li t-if="is_view_active('website.placeholder_header_brand')">
-                            <t t-call="website.placeholder_header_brand">
-                                <t t-set="_link_class" t-valuef="mx-auto mw-100"/>
+                            <li t-if="is_view_active('website.placeholder_website_brand')">
+                            <t t-call="website.placeholder_website_brand">
+                                <t t-set="_link_class" t-valuef="navbar-brand logo mx-auto mw-100"/>
                             </t>
                             </li>
                             <li class="d-flex align-items-center gap-3 ms-auto mb-0">
@@ -1407,7 +1409,9 @@
                <div class="d-flex flex-column w-100 h-100">
                     <div class="d-flex pb-3">
                         <!-- Brand -->
-                        <t t-call="website.placeholder_header_brand"/>
+                        <t t-call="website.placeholder_website_brand">
+                            <t t-set="_link_class" t-valuef="navbar-brand logo"/>
+                        </t>
                     </div>
                     <div class="d-flex flex-column justify-content-between h-100 w-100">
                         <ul class="navbar-nav p-0">
@@ -1528,8 +1532,8 @@
 
                 <div id="o_main_nav" t-attf-class="#{header_content_width} o_main_nav">
                     <!-- Brand -->
-                    <t t-call="website.placeholder_header_brand">
-                        <t t-set="_link_class" t-valuef="me-4"/>
+                    <t t-call="website.placeholder_website_brand">
+                        <t t-set="_link_class" t-valuef="navbar-brand logo me-4"/>
                     </t>
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav">
@@ -1616,44 +1620,6 @@
 <template id="option_layout_hide_header" inherit_id="website.layout" active="False">
     <xpath expr="//header" position="before">
         <t t-set="no_header" t-value="True"/>
-    </xpath>
-</template>
-
-<template id="placeholder_header_brand" name="Placeholder Header Brand">
-    <span id="o_fake_navbar_brand"/><!-- Need a fake element so that the menu is still placed correctly -->
-</template>
-
-<template id="option_header_brand_logo" inherit_id="website.placeholder_header_brand" name="Header Brand Logo" active="True">
-    <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
-        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">
-            <!--
-            Note: setting width *and* height attributes allows to reserve some
-            space to avoid layout shift during page loading. Of course, CSS
-            rules set the height the user chose, while the width is set to
-            'auto'. But while the image is loading, it is best to already
-            reserve some width to reduce layout shift (like making the menu move
-            or even re-render itself into a "+" menu).
-
-            The chosen values for the space reservation are the ones of the
-            default logo and theme, but it does not really matter as long as
-            they are coherent. While the image is being loaded, the chosen user
-            height is still applied and the 'auto' width rule induces a width
-            that respects the aspect ratio set by the width and height
-            attributes. That could be a problem if the real logo has a larger
-            height than width, in which case the layout shift would be increased
-            because of the arbitrary values set as width and height, but in most
-            cases, this should reduce it.
-
-            This also allows to gain some page speed scoring.
-            -->
-            <span t-field="website.logo" t-options="{'widget': 'image', 'width': 95, 'height': 40}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
-        </a>
-    </xpath>
-</template>
-
-<template id="option_header_brand_name" inherit_id="website.placeholder_header_brand" name="Header Brand Name" active="False">
-    <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
-        <a href="/" t-attf-class="navbar-brand #{_link_class}">My Website</a>
     </xpath>
 </template>
 
@@ -1829,7 +1795,7 @@
 
 <template id="template_footer_centered" inherit_id="website.layout" name="Centered" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+        <div id="footer" class="oe_structure oe_structure_solo" t-if="not no_footer">
             <section class="s_text_block pt32" data-snippet="s_text_block" data-name="Text">
                 <div class="container s_allow_columns">
                     <div class="s_social_media text-center mb-4 o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
@@ -1851,9 +1817,9 @@
                     </ul>
                     <div class="row">
                         <div class="col-lg-2 offset-lg-5">
-                            <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.svg" class="img-fluid mx-auto" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
-                            </a>
+                            <t t-call="website.placeholder_website_brand">
+                                <t t-set="_link_class" t-valuef="o_footer_logo logo d-flex justify-content-center"/>
+                            </t>
                         </div>
                     </div>
                 </div>
@@ -1919,14 +1885,14 @@
 
 <template id="template_footer_minimalist" inherit_id="website.layout" name="Minimalist" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+        <div id="footer" class="oe_structure oe_structure_solo" t-if="not no_footer">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-lg-2 pt16 pb16">
-                            <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.svg" class="img-fluid mx-auto" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
-                            </a>
+                            <t t-call="website.placeholder_website_brand">
+                                <t t-set="_link_class" t-valuef="o_footer_logo logo d-flex justify-content-center"/>
+                            </t>
                         </div>
                         <div class="col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start pt16 pb16">
                             <ul class="list-inline mb-0 ms-3">
@@ -1966,7 +1932,7 @@
 
 <template id="template_footer_contact" inherit_id="website.layout" name="Contact" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+        <div id="footer" class="oe_structure oe_structure_solo" t-if="not no_footer">
             <section class="s_text_block pt32 pb16" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="row o_grid_mode">
@@ -2015,10 +1981,9 @@
                         </div>
                         <div class="col-lg-2 o_grid_item g-col-lg-2 o_grid_item_image o_colored_level o_grid_item_image_contain g-height-1"
                              style="z-index: 6; grid-area: 4 / 1 / 5 / 3; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
-                            <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.svg" class="img-fluid"
-                                     aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
-                            </a>
+                            <t t-call="website.placeholder_website_brand">
+                                <t t-set="_link_class" t-valuef="o_footer_logo logo d-flex justify-content-center"/>
+                            </t>
                         </div>
                         <div class="col-lg-8 pt16 text-end o_colored_level o_grid_item g-col-lg-8 g-height-1"
                              style="z-index: 7; grid-area: 4 / 5 / 5 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 10px;">
@@ -2051,6 +2016,24 @@
                 </div>
             </section>
         </div>
+    </xpath>
+</template>
+
+<template id="placeholder_website_brand" name="Placeholder Website Brand">
+    <span id="o_fake_website_brand"/><!-- Need a fake element so that the menu is still placed correctly -->
+</template>
+
+<template id="option_website_brand_logo" inherit_id="website.placeholder_website_brand" name="Website Brand Logo" active="True">
+    <xpath expr="//*[@id='o_fake_website_brand']" position="replace">
+        <a data-name="Website Logo" href="/" t-attf-class="#{_link_class}">
+            <span t-field="website.logo" t-options="{'widget': 'image', 'width': 95, 'height': 40}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+        </a>
+    </xpath>
+</template>
+
+<template id="option_website_brand_name" inherit_id="website.placeholder_website_brand" name="Website Brand Name" active="False">
+    <xpath expr="//*[@id='o_fake_website_brand']" position="replace">
+        <a href="/" t-attf-class="navbar-brand #{_link_class}">My Website</a>
     </xpath>
 </template>
 
