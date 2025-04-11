@@ -37,7 +37,11 @@ patch(LoginScreen.prototype, {
     },
     openRegister() {
         if (this.pos.config.module_pos_hr) {
-            this.pos.login = true;
+            if (this.pos.models["hr.employee"].some((emp) => emp._pin)) {
+                this.pos.login = true;
+            } else {
+                this.selectCashier(false, true);
+            }
         } else {
             super.openRegister();
         }
@@ -52,11 +56,10 @@ patch(LoginScreen.prototype, {
             this.state.pin = "";
             this.pos.login = false;
         } else {
-            const employee = await this.selectCashier();
-            if (
-                employee &&
-                (employee._role === "manager" || employee.user_id?.id === this.pos.user.id)
-            ) {
+            const posUserEmployee = this.pos.models["hr.employee"].find(
+                (e) => e.user_id?.id === this.pos.user.id
+            );
+            if (await this.selectCashier(false, false, [posUserEmployee])) {
                 super.clickBack();
                 return;
             }
