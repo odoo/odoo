@@ -34,7 +34,7 @@ registerWebsitePreviewTour("snippet_image", {
 },
 {
     content: "Click on the 'undo' button",
-    trigger: '#oe_snippets button.fa-undo',
+    trigger: '.o-snippets-top-actions button.fa-undo',
     run: "click",
 },
 {
