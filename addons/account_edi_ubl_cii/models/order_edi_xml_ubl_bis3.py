@@ -1,4 +1,5 @@
 from lxml import etree
+from markupsafe import Markup
 
 from odoo import _, models, Command
 from odoo.tools import html2plaintext, cleanup_xml_node
@@ -6,7 +7,7 @@ from odoo.tools import html2plaintext, cleanup_xml_node
 
 class OrderEdiXmlUbl_Bis3(models.AbstractModel):
     _name = 'order.edi.xml.ubl_bis3'
-    _inherit = ['order.edi.common', 'account.edi.xml.ubl_bis3']
+    _inherit = ['account.edi.xml.ubl_bis3']
     _description = "UBL BIS 3 Peppol Order transaction 3.4"
 
     #####################################################################################
@@ -15,7 +16,7 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _get_order_payment_terms_vals(self, payment_term):
         if payment_term:
-            return {'note': html2plaintext(payment_term.note)}
+            return {'name': payment_term.name}
         return {}
 
     def _get_tax_category_vals(self, order, order_line):
@@ -152,7 +153,7 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _export_order(self, order):
         vals = self._export_order_vals(order)
-        xml_content = self.env['ir.qweb']._render('order_edi_ubl_cii.bis3_OrderType', vals)
+        xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.bis3_OrderType', vals)
         return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8')
 
     #####################################################################################
@@ -263,9 +264,84 @@ class OrderEdiXmlUbl_Bis3(models.AbstractModel):
             'name': self._find_value('.//cac:Delivery/cac:DeliveryParty//cbc:Name', tree),
         }
 
+    def _import_order_ubl(self, order, file_data):
+        """ Common importing method to extract order data from file_data.
+        :param order: Order to fill details from file_data.
+        :param file_data: File data to extract order related data from.
+        :return: True if there no exception while extraction.
+        :rtype: Boolean
+        """
+        tree = file_data['xml_tree']
+
+        # Update the order.
+        logs = self._import_fill_order(order, tree)
+        if order:
+            body = Markup("<strong>%s</strong>") % \
+                _("Format used to import the invoice: %s",
+                  self.env['ir.model']._get(self._name).name)
+            if logs:
+                order._create_activity_set_details()
+                body += Markup("<ul>%s</ul>") % \
+                    Markup().join(Markup("<li>%s</li>") % l for l in logs)
+            order.message_post(body=body)
+
+        return True
+
+    def _import_partner(self, company_id, name, phone, email, vat, **kwargs):
+        """ Override of edi.mixin to set current user partner if there is no matching partner
+        found and log details related to partner."""
+        partner, logs = super()._import_partner(company_id, name, phone, email, vat, **kwargs)
+        if not partner:
+            partner_detaits_str = self._get_partner_detail_str(name, phone, email, vat)
+            if not vat:
+                logs.append(_("Insufficient details to extract Customer: { %s }", partner_detaits_str))
+            else:
+                logs.append(_("Could not retrieve Customer with Details: { %s }", partner_detaits_str))
+
+        return partner, logs
+
     def _get_line_xpaths(self, document_type=False, qty_factor=1):
         # Override account.edi.xml.ubl_bis3
         return {
-            **super()._get_line_xpaths(),
+            **super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor),
             'delivered_qty': ('./{*}Quantity'),
         }
+
+    def _get_partner_detail_str(self, name, phone=False, email=False, vat=False):
+        """ Return partner details string to help user find or create proper contact with details.
+        """
+        partner_details = _("Name: %(name)s, Vat: %(vat)s", name=name, vat=vat)
+        if phone:
+            partner_details += _(", Phone: %(phone)s", phone=phone)
+        if email:
+            partner_details += _(", Email: %(email)s", email=email)
+
+        return partner_details
+
+    # -------------------------------------------------------------------------
+    # OVERRIDES
+    # -------------------------------------------------------------------------
+
+    def _get_order_qty_field(self):
+        """Return the quantity field for the order type"""
+        return
+
+    def _get_dest_address_field(self):
+        """Return the destination address field for the order type"""
+        return
+
+    def _get_order_type_code(self):
+        """Return the order type code for the Order Transaction"""
+        return
+
+    def _get_order_type(self):
+        """Return the order type"""
+        return
+
+    def _get_order_ref(self):
+        """Returns the reference associated with the order partner"""
+        return
+
+    def _get_order_partner_role(self):
+        """Returns the role of the partner in the context of the order xml tree"""
+        return
