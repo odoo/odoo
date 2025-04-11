@@ -134,6 +134,18 @@
     </template>
 
     <template id="portal.address_form_fields" name="Address Details">
+        <t t-if="login_field">
+            <div id="div_login" class="col-lg-12 mb-2">
+                <label class="col-form-label" for="o_login">Login ID</label>
+                <input
+                    id="o_login"
+                    type="text"
+                    name="login"
+                    t-att-value="request.env.user.login"
+                    class="form-control"
+                />
+            </div>
+        </t>
         <div id="div_name" class="col-lg-12 mb-2">
             <label class="col-form-label" for="o_name">Full name</label>
             <input
@@ -342,6 +354,7 @@
         <input type="hidden" name="address_type" t-att-value="address_type"/>
         <input type="hidden" name="use_delivery_as_billing" t-att-value="use_delivery_as_billing"/>
         <input type="hidden" name="parent_id" t-att-value="parent_id"/>
+        <input type="hidden" name="login_field" t-att-value="login_field" />
         <t t-if="partner_id">
             <input type="hidden" name="partner_id" t-att-value="partner_id"/>
         </t>
@@ -356,16 +369,16 @@
             <a
                 role="button"
                 t-att-href="discard_url or '/my/'"
-                class="btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3"
+                class="btn btn-outline-secondary w-100 w-md-auto order-md-1 order-4"
             >
                 <i class="fw-light fa fa-angle-left me-2"/>Discard
             </a>
-            <div class="position-relative w-100 d-flex d-md-none justify-content-center align-items-center order-2 my-2 opacity-75">
+            <div class="position-relative w-100 d-flex d-md-none justify-content-center align-items-center order-3 order-md-2 my-2 opacity-75">
                 <hr class="w-100"/>
                 <span class="px-3">or</span>
                 <hr class="w-100"/>
             </div>
-            <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3">
+            <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3 ms-auto gap-2">
                 <t name="save_address_label">Save Address</t>
                 <i class="fw-light fa fa-angle-right ms-2"/>
             </button>

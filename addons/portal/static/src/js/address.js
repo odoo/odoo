@@ -1,6 +1,7 @@
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { renderToElement } from "@web/core/utils/render";
 
 publicWidget.registry.customerAddress = publicWidget.Widget.extend({
     // /my/address & /my/account
@@ -199,6 +200,8 @@ publicWidget.registry.customerAddress = publicWidget.Widget.extend({
                     fieldName => this.addressForm[fieldName].classList.add('is-invalid')
                 );
 
+                // Remove previous error message in footer
+                document.querySelector(".o_portal_error")?.remove();
                 // Display the error messages
                 // NOTE: setCustomValidity is not used as we would have to reset the error msg on
                 // input update, which is not worth catching for the rare cases where the
@@ -210,6 +213,11 @@ publicWidget.registry.customerAddress = publicWidget.Widget.extend({
                     errorHeader.appendChild(document.createTextNode(message));
                     return errorHeader;
                 });
+                submitButton.before(
+                    renderToElement("portal.error", {
+                        message: "Please fill in the form correctly.",
+                    })
+                );
 
                 this.errorsDiv.replaceChildren(...newErrors);
 
