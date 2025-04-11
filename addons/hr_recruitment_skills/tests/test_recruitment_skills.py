@@ -490,3 +490,22 @@ class TestRecruitmentSkills(TransactionCase):
 
         self.assertEqual(expected_app, app_skill, f"The applicant should have the expected skill: {expected_app}")
         self.assertFalse(talent.applicant_skill_ids, "The talent should not have any skills")
+
+    def test_move_applicant_to_matching_job(self):
+        """
+        Test that moving an applicant to a job works
+        """
+        applicant = self.t_applicant
+        first_job = self.env["hr.job"].create({"name": "First Job"})
+        second_job = self.env["hr.job"].create({"name": "Second Job"})
+        applicant.job_id = first_job
+        applicant.write({"skill_ids": [(4, self.t_skill_1.id)]})
+        second_job.write({"skill_ids": [(4, self.t_skill_1.id)]})
+        action = second_job.action_search_matching_applicants()
+        domain = action["domain"]
+        context = action["context"]
+        model = self.env[action["res_model"]]
+        applicants = model.with_context(context).search(domain)
+        self.assertIn(applicant.id, applicants.ids, "The applicant should be in the matching applicants")
+        applicant.with_context(context).action_add_to_job()
+        self.assertEqual(applicant.job_id, second_job, "The applicant should be moved to the second job")
