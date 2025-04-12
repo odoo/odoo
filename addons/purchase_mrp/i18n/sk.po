@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_mrp
-#
+# 
 # Translators:
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Martin Trigaux, 2022
-#
+# Tomáš Píšek, 2025
+# Wil Odoo, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
+"PO-Revision-Date: 2025-02-20 10:06+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
-"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: purchase_mrp
@@ -34,7 +33,7 @@ msgstr "<span class=\"o_stat_text\">Nákup</span>"
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "Rozpad kusovníka"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_bom
@@ -55,7 +54,7 @@ msgstr ""
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
 msgid "Cost Share (%)"
-msgstr ""
+msgstr "Zdielanie nákladov (%)"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
@@ -68,6 +67,34 @@ msgid "Count of generated PO"
 msgstr ""
 
 #. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_bom_structure__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_mo_overview__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný Názov"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_account_move_line__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_bom_structure__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_mo_overview__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_account_move_line
 msgid "Journal Item"
 msgstr "Položka účtovnej knihy"
@@ -75,7 +102,12 @@ msgstr "Položka účtovnej knihy"
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Prehľad nákladov výrobnej objednávky"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Výrobná objednávka"
 
 #. module: purchase_mrp
 #. odoo-python
@@ -86,13 +118,10 @@ msgstr ""
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/stock_move.py:0
-msgid "Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero."
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
 msgstr ""
-
-#. module: purchase_mrp
-#: model:ir.model,name:purchase_mrp.model_mrp_production
-msgid "Production Order"
-msgstr "Výrobná objednávka"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order
@@ -116,8 +145,15 @@ msgid "Stock Move"
 msgstr "Pohyb skladu"
 
 #. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_stock_rule
+msgid "Stock Rule"
+msgstr "Skladové pravidlo"
+
+#. module: purchase_mrp
 #: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
-msgid "The percentage of the component repartition cost when purchasing a kit.The total of all components' cost have to be equal to 100."
+msgid ""
+"The percentage of the component repartition cost when purchasing a kit.The "
+"total of all components' cost have to be equal to 100."
 msgstr ""
 
 #. module: purchase_mrp
