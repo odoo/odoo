@@ -136,6 +136,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
 
         def _patched_make_qris_request(endpoint, params):
             if endpoint == 'show_qris.php':
+                self.assertTrue(params['cliTrxNumber'])
                 return {
                     "status": "success",
                     "data": {

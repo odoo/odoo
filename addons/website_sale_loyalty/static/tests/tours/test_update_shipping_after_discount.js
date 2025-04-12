@@ -9,7 +9,6 @@ import {
 
 registry.category('web_tour.tours').add('update_shipping_after_discount', {
     url: '/shop',
-    checkDelay: 100,
     steps: () => [
         ...addToCart({ productName: "Plumbus" }),
         goToCart(),

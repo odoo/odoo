@@ -183,6 +183,15 @@
         }
     }
 
+    &, & .o_form_editable {
+        // FIXME: those specific rules shouldn't be necessary but require a more 
+        // global cleanup of the fields + .o_row styling to be removed in master.
+        .o_field_reference .o_row > * {
+            flex: 1 1 auto;
+            width: auto !important;
+        }
+    }
+
     .o_form_view_container {
         display: flex;
         flex-flow: column nowrap;

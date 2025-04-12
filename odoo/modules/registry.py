@@ -992,7 +992,7 @@ class Registry(Mapping):
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
             if readonly and not self.test_readonly_enabled:
                 _logger.info('Explicitly ignoring readonly flag when generating a cursor')
-            return TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
+            return TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled, current_test=odoo.modules.module.current_test)
 
         if readonly and self._db_readonly is not None:
             try:

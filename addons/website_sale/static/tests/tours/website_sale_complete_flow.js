@@ -5,7 +5,6 @@
     import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
     registry.category("web_tour.tours").add('website_sale_tour_1', {
-        checkDelay: 150,
         url: '/shop?search=Storage Box Test',
         steps: () => [
     // Testing b2c with Tax-Excluded Prices
@@ -436,7 +435,6 @@
 
     registry.category("web_tour.tours").add('website_sale_tour_2', {
         url: '/shop/cart',
-        checkDelay: 150,
         steps: () => [
     {
         trigger: '.o_wizard:contains("Extra Info")',

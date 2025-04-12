@@ -9,7 +9,6 @@ import { registry } from "@web/core/registry";
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("ChromeTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -115,7 +114,6 @@ registry.category("web_tour.tours").add("ChromeTour", {
 });
 
 registry.category("web_tour.tours").add("OrderModificationAfterValidationError", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -138,7 +136,6 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 });
 
 registry.category("web_tour.tours").add("SearchMoreCustomer", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -152,7 +149,6 @@ registry.category("web_tour.tours").add("SearchMoreCustomer", {
 });
 
 registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -175,7 +171,6 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
 });
 
 registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -190,7 +185,6 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
 });
 
 registry.category("web_tour.tours").add("test_limited_categories", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),

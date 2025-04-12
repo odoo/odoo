@@ -40,10 +40,10 @@
 # Ivan Espinola, 2025
 # Jonatan Gk, 2025
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
-# Santiago Payà <santiagopim@gmail.com>, 2025
 # Josep Anton Belchi, 2025
 # Noemi Pla, 2025
 # Wil Odoo, 2025
+# Santiago Payà <santiagopim@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -51,7 +51,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1586,8 +1586,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Un assentament comptable està compost d'entrades de diari, cadascuna de les "
-"quals és una transacció de dèbit o de crèdit."
+"Un assentament comptable està compost d'apunts al diari, cadascun dels quals"
+" és una transacció de dèbit o de crèdit."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1654,7 +1654,7 @@ msgid ""
 "journal entry."
 msgstr ""
 "No és possible confirmar un pagament amb un compte per pagar si no teniu un "
-"seient comptable."
+"assentament comptable."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1879,7 +1879,7 @@ msgstr "No es poden solapar grups de comptes amb la mateixa granularitat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__account_has_hashed_entries
 msgid "Account Has Hashed Entries"
-msgstr "El compte té seients amb hash"
+msgstr "El compte té assentaments amb hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -3114,8 +3114,8 @@ msgid ""
 msgstr ""
 "Qualsevol assentament amb impostos anterior o fins a aquesta data es "
 "posposarà per a una data posterior d'acord amb la seqüència del seu diari. "
-"La data de bloqueig d'impostos s'estableix automàticament en publicar el "
-"seient de tancament fiscal."
+"La data de bloqueig d'impostos s'estableix automàticament en publicar "
+"l'assentament de tancament fiscal."
 
 #. module: account
 #. odoo-python
@@ -9620,13 +9620,13 @@ msgstr "Apunt comptable"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr "L'assentament %s ha estat creat"
+msgstr "Apunt comptable %s ha estat creat"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr "S'ha eliminat l'assentament %s "
+msgstr "S'ha eliminat l'apunt comptable %s "
 
 #. module: account
 #. odoo-python
@@ -12495,7 +12495,7 @@ msgstr "Assentament assentat"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Posted Journal Items"
-msgstr "Assentament validat/assentat"
+msgstr "Apunt comptable validat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__preceding_subtotal
@@ -13709,7 +13709,7 @@ msgstr "Cerca factura"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Search Journal Items"
-msgstr "Cerca assentaments del diari"
+msgstr "Cerca apunts comptables"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__past_months_limit
@@ -15796,7 +15796,7 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
 "L'assentament %s ha assolit un estat no vàlid pel que fa a la seva línia de declaracions relacionada.\n"
-"Per a ser consistents, l'entrada de diari sempre ha de tenir exactament un apunt que identifica el compte bancari/cash."
+"Per a ser consistents, l'assentament sempre ha de tenir exactament un apunt que identifica el compte bancari/caixa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -18333,9 +18333,9 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"No podeu eliminar un assentament comptable publicat. No jugueu amb els "
-"vostres assentaments comptables; restabliu l'assentament comptable a "
-"esborrany abans d'eliminar-lo."
+"No podeu eliminar un apunt de diari publicat. No jugueu amb els vostres "
+"assentaments comptables; restabliu l'apunt de diari a esborrany abans "
+"d'eliminar-lo."
 
 #. module: account
 #. odoo-python
@@ -18698,8 +18698,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"No podeu modificar els impostos relacionats amb un assentament publicat, "
-"hauríeu de reiniciar l' entrada de diari per a fer- ho."
+"No podeu modificar els impostos relacionats amb un apunt de diari publicat, "
+"hauríeu de reiniciar l'apunt de diari a esborrany per a fer- ho."
 
 #. module: account
 #. odoo-python

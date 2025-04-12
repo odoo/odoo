@@ -89,13 +89,14 @@ class StockMoveLine(models.Model):
         for move_line in kit_lines:
             move = move_line.move_id
             bom_line = move.bom_line_id
+            kit_bom = bom_line.bom_id
 
             # Convert the move line quantity to the product's move uom
             qty_move_uom = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.move_id.product_uom)
             # Convert the product's move uom to the bom line's uom
             qty_bom_uom = move.product_uom._compute_quantity(qty_move_uom, bom_line.product_uom_id)
             # calculate the bom's kit qty in kit product uom qty
-            bom_qty_product_uom = bom_line.bom_id.product_uom_id._compute_quantity(bom_line.bom_id.product_qty, move_line.move_id.bom_line_id.bom_id.product_id.uom_id)
+            bom_qty_product_uom = kit_bom.product_uom_id._compute_quantity(kit_bom.product_qty, kit_bom.product_tmpl_id.uom_id)
             # calculate the quantity needed of packging
             move_line.product_packaging_qty = (qty_bom_uom / (bom_line.product_qty / bom_qty_product_uom)) / move_line.move_id.product_packaging_id.qty
         super(StockMoveLine, self - kit_lines)._compute_product_packaging_qty()

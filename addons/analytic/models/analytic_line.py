@@ -37,6 +37,10 @@ class AnalyticPlanFields(models.AbstractModel):
         for line in self:
             line.auto_account_id = bool(plan) and line[plan._column_name()]
 
+    def _compute_partner_id(self):
+        # TO OVERRIDE
+        pass
+
     def _inverse_auto_account(self):
         for line in self:
             line[line.auto_account_id.plan_id._column_name()] = line.auto_account_id
