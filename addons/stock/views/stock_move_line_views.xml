@@ -128,7 +128,7 @@
         <field name="arch" type="xml">
             <search string="Stock Moves">
                 <field name="location_id" string="Location" filter_domain="['|',('location_id', 'ilike', self),('location_dest_id', 'ilike', self)]" groups="stock.group_stock_multi_locations"/>
-                <field name="product_id"/>
+                <field name="product_id" filter_domain="['|', '|', '|', '|', ('product_id.default_code', 'ilike', self), ('product_id.product_variant_ids.default_code', 'ilike', self), ('product_id.name', 'ilike', self), ('product_id.barcode', 'ilike', self), ('product_id.display_name', '=', self)]"/>
                 <field name="picking_id" string="Transfer"/>
                 <field name="reference" string="Reference"/>
                 <field name="product_category_name" string="Category"/>

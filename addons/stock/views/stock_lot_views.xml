@@ -102,7 +102,7 @@
             <search string="Product Lots Filter">
                 <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
                 <field name="partner_ids" string="Customers"/>
-                <field name="product_id"/>
+                <field name="product_id" filter_domain="['|', '|', '|', '|', ('product_id.default_code', 'ilike', self), ('product_id.product_variant_ids.default_code', 'ilike', self), ('product_id.name', 'ilike', self), ('product_id.barcode', 'ilike', self), ('product_id.display_name', '=', self)]"/>
                 <field name="lot_properties"/>
                 <field name="create_date"/>
                 <filter string="At Customer" name="at_customer" domain="[('quant_ids.location_id.usage','=','customer'), ('quant_ids.quantity', '>', 0)]"/>
