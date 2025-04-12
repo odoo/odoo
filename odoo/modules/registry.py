@@ -942,7 +942,7 @@ class Registry(Mapping):
         """
         if self.test_cr is not None:
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            return TestCursor(self.test_cr, self.test_lock)
+            return TestCursor(self.test_cr, self.test_lock, current_test=odoo.modules.module.current_test)
         return self._db.cursor()
 
 

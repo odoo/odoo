@@ -34,6 +34,10 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_gal': 'GLL',
     'uom.product_uom_cubic_inch': 'INQ',
     'uom.product_uom_cubic_foot': 'FTQ',
+    'uom.uom_square_meter': 'MTK',
+    'uom.uom_square_foot': 'FTK',
+    'uom.product_uom_yard': 'YRD',
+    'uom.product_uom_millimeter': 'MMT',
 }
 
 # -------------------------------------------------------------------------
@@ -351,7 +355,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         return True
 
-    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False, peppol_eas=False, peppol_endpoint=False):
+    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False, peppol_eas=False, peppol_endpoint=False, street=False, street2=False, city=False, zip_code=False):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
         if peppol_eas and peppol_endpoint:
             domain = [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)]
@@ -361,7 +365,7 @@ class AccountEdiCommon(models.AbstractModel):
             .with_company(invoice.company_id) \
             ._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat, domain=domain)
         if not invoice.partner_id and name and vat:
-            partner_vals = {'name': name, 'email': mail, 'phone': phone}
+            partner_vals = {'name': name, 'email': mail, 'phone': phone, 'street': street, 'street2': street2, 'zip': zip_code, 'city': city}
             if peppol_eas and peppol_endpoint:
                 partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
             country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False) if country_code else False
@@ -754,7 +758,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         invoice_line.price_unit = inv_line_vals['price_unit']
         invoice_line.discount = inv_line_vals['discount']
-        invoice_line.tax_ids = inv_line_vals['taxes']
+        invoice_line.tax_ids = inv_line_vals['taxes'] or False
         return logs
 
     def _correct_invoice_tax_amount(self, tree, invoice):

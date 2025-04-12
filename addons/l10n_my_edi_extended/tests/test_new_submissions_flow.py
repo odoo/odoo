@@ -355,6 +355,86 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         failed_invoice = self.submission_invoice.filtered(lambda inv: not inv.l10n_my_edi_state)
         self.assertEqual(len(failed_invoice), 1, 'One invoice has no state.')
 
+    def test_13_multiple_cron_runs(self):
+        """
+        Simulate the cron running more than once; ensure that we correctly update l10n_my_edi_retry_at for valid invoices.
+        For the purpose of the test, we will use two separate submissions.
+        """
+        all_invoices = self.env['account.move']
+        # First submission of 5 invoices
+        with patch(CONTACT_PROXY_METHOD, new=self._test_13_mock_first_submission):
+            first_batch = self.env['account.move']
+            for i in range(5):
+                first_batch |= self.init_invoice(
+                    'out_invoice', products=self.product_a, post=True,
+                )
+            with freeze_time('2024-07-15 10:00:00'):
+                first_batch.action_l10n_my_edi_send_invoice()
+
+        all_invoices |= first_batch
+
+        # Second submission of 5 invoices.
+        self.submission_status_count = 0
+        with patch(CONTACT_PROXY_METHOD, new=self._test_13_mock):
+            second_batch = self.basic_invoice
+            for i in range(4):
+                second_batch |= self.init_invoice(
+                    'out_invoice', products=self.product_a, post=True,
+                )
+            with freeze_time('2024-07-15 10:00:00'):
+                second_batch.action_l10n_my_edi_send_invoice()
+                self.submission_status_count += 1  # Done once during the sending flow
+
+        all_invoices |= second_batch
+
+        with patch(CONTACT_PROXY_METHOD, new=self._test_13_mock):
+            with freeze_time('2024-07-15 10:00:00'):
+                # We use multiple invoices to test the cron logic, but all of them will always keep a same status so we can just validate the one.
+                self.assertRecordValues(
+                    self.basic_invoice,
+                    [{
+                        'l10n_my_edi_state': 'in_progress',
+                        'l10n_my_edi_submission_uid': '123456789',
+                        'l10n_my_edi_external_uuid': '123458974513510',
+                    }]
+                )
+
+                # ... some time later, the cron runs.
+                self.env['account.move']._cron_l10n_my_edi_synchronize_myinvois()
+                self.submission_status_count += 1
+
+                # The move got updated to valid, and the retry time should have been set.
+                self.assertRecordValues(
+                    self.basic_invoice,
+                    [{
+                        'l10n_my_edi_state': 'valid',
+                        'l10n_my_edi_validation_time': datetime.strptime('2024-07-15 05:00:00', '%Y-%m-%d %H:%M:%S'),
+                        'l10n_my_edi_invoice_long_id': '123-789-654',
+                        'l10n_my_edi_retry_at': '2024-07-15 11:00:00',
+                    }]
+                )
+
+            with freeze_time('2024-07-15 10:01:00'):
+                # We have more invoices to process, the cron got triggered again. Our invoice won't trigger an API call
+                self.env['account.move']._cron_l10n_my_edi_synchronize_myinvois()  # If failed to avoid the query, the mock method will raise.
+                self.submission_status_count += 1
+
+            with freeze_time('2024-07-15 11:00:00'):
+                # One hour later, the next cron run starts and our invoice is updated again
+                self.env['account.move']._cron_l10n_my_edi_synchronize_myinvois()
+                self.submission_status_count += 1
+                # We should have updated the status again, and thus pushed the l10n_my_edi_retry_at time to one hour later.
+                self.assertRecordValues(
+                    self.basic_invoice,
+                    [{
+                        'l10n_my_edi_state': 'valid',
+                        'l10n_my_edi_validation_time': datetime.strptime('2024-07-15 05:00:00', '%Y-%m-%d %H:%M:%S'),
+                        'l10n_my_edi_invoice_long_id': '123-789-654',
+                        'l10n_my_edi_retry_at': '2024-07-15 12:00:00',
+                    }]
+                )
+
+
     # -------------------------------------------------------------------------
     # Patched methods
     # -------------------------------------------------------------------------
@@ -716,5 +796,133 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                 },
                 'document_count': 1,
             }
+        else:
+            raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _test_13_mock_first_submission(self, endpoint, params):
+        if endpoint == 'api/l10n_my_edi/1/submit_invoices':
+            res = {
+                'submission_uid': '123456788',
+                'documents': []
+            }
+            for i, document in enumerate(params['documents']):
+                res['documents'].append({
+                    'move_id': document['move_id'],
+                    'uuid': f'12345897451350{i}',
+                    'success': True,
+                })
+            return res
+        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses':
+            return {
+                'statuses': {
+                    '123458974513500': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                    '123458974513501': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                    '123458974513502': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                    '123458974513503': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                    '123458974513504': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                },
+                'document_count': 5,
+            }
+        else:
+            raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _test_13_mock(self, endpoint, params):
+        if endpoint == 'api/l10n_my_edi/1/submit_invoices':
+            res = {
+                'submission_uid': '123456789',
+                'documents': []
+            }
+            for i, document in enumerate(params['documents']):
+                res['documents'].append({
+                    'move_id': document['move_id'],
+                    'uuid': f'12345897451351{i}',
+                    'success': True,
+                })
+            return res
+        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses' and self.submission_status_count == 0:
+            return {
+                'statuses': {
+                    '123458974513510': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                    '123458974513511': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                    '123458974513512': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                    '123458974513513': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                    '123458974513514': {
+                        'status': 'in_progress',
+                        'reason': '',
+                        'long_id': '',
+                        'valid_datetime': '',
+                    },
+                },
+                'document_count': 5,
+            }
+        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses' and self.submission_status_count == 1:
+            res = {'statuses': {}, 'document_count': 10}
+            # Build the res using loops otherwise it'd take a lot of lines.
+            for i in range(2):
+                for j in range(5):
+                    res['statuses'][f'1234589745135{i}{j}'] = {
+                        'status': 'valid',
+                        'reason': '',
+                        'long_id': '123-789-654',
+                        'valid_datetime': '2024-07-15T05:00:00Z',
+                    }
+            return res
+        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses' and self.submission_status_count == 3:
+            res = {'statuses': {}, 'document_count': 10}
+            # Build the res using loops otherwise it'd take a lot of lines.
+            for i in range(2):
+                for j in range(5):
+                    res['statuses'][f'1234589745135{i}{j}'] = {
+                        'status': 'valid',
+                        'reason': '',
+                        'long_id': '123-789-654',
+                        'valid_datetime': '2024-07-15T05:00:00Z',
+                    }
+            return res
         else:
             raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))

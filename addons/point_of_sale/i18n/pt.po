@@ -9,7 +9,6 @@
 # Dawilson Daio <dawilsondaio@gmail.com>, 2023
 # Marta Marouço, 2024
 # Samuel Afonso, 2024
-# Vasco Rodrigues, 2024
 # Camille Dantinne <cmd@odoo.com>, 2024
 # Maitê Dietze, 2024
 # Rita Bastos, 2024
@@ -17,14 +16,15 @@
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # Wil Odoo, 2025
 # J Ponte, 2025
+# Vasco Rodrigues, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"POT-Creation-Date: 2025-03-19 11:06+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: J Ponte, 2025\n"
+"Last-Translator: Vasco Rodrigues, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5110,7 +5110,7 @@ msgstr "Métodos de Pagamento do Ponto de Venda"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Pagamentos do Ponto de Vendas"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_printer
@@ -6015,7 +6015,7 @@ msgstr "Estornar"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Reverse Payment"
-msgstr ""
+msgstr "Nota de crédito"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8199,6 +8199,15 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/save_button/save_button.js:0
 #, python-format
 msgid "You cannot save an empty order"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
 msgstr ""
 
 #. module: point_of_sale

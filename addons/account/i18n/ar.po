@@ -3,11 +3,11 @@
 # 	* account
 # 
 # Translators:
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2024
 # Malaz Abuidris <msea@odoo.com>, 2025
 # Wil Odoo, 2025
 # Martin Trigaux, 2025
 # Beshoy Nabeih, 2025
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Beshoy Nabeih, 2025\n"
+"Last-Translator: Mustafa J. Kadhem <safi2266@gmail.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -656,6 +656,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        العزيز\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            براندون فريمان (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            براندون فريمان,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        تجد هنا\n"
+"        <t t-if=\"object.name\">\n"
+"            الفاتورة <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            الخاصة بك\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (بالمرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        وبمبلغ قدره <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        من <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            هذه الفاتورة مسددة مسبقاً.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            يرجى تحويل مبلغ الدفعة باسرع وقت ممكن.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                الرجاء استخدام رمز التواصل التالي لعملية الدفع: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    على الحساب <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            ملحوظة هامشية: يمكنك مراجعة ساعات العمل خاصتك <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">من البوابة.</a>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        لا تتردد في الاتصال بنا إذا كان لديك أي أسئلة.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>ميتشيل المدير</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -5723,7 +5772,7 @@ msgstr "مبلغ الخصم بالعملة "
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Discount of %(amount)s if paid %(when)s"
-msgstr ""
+msgstr "التخفيض من %(amount)s إذا تم تسديده %(when)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -15009,7 +15058,7 @@ msgstr "ربع السنة الجاري"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This specific error occurred during the import:"
-msgstr ""
+msgstr "هذا خطأ تحديداً ظهر في أثناء الاستيراد"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
@@ -17799,7 +17848,7 @@ msgstr "مع فاتورة بصيغة PDF كمرفق. "
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "within %(days)s days"
-msgstr ""
+msgstr "خلال %(days)s من الأيام"
 
 #. module: account
 #. odoo-python

@@ -36,7 +36,7 @@ class AccountMove(models.Model):
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
 
-    @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment', 'state')
+    @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment')
     def _compute_l10n_in_gst_treatment(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
         for record in indian_invoice:
@@ -72,7 +72,7 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_state_id = False
 
-    @api.depends('l10n_in_state_id')
+    @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
 
         def _get_fiscal_state(move, foreign_state):

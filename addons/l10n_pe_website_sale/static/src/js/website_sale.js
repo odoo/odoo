@@ -23,6 +23,7 @@ WebsiteSale.include({
         }).then((data) => {
             if (this.isPeruvianCompany) {
                 if (data[place]?.length) {
+                    let previousValue = selectElement.value;
                     selectElement.innerHTML = "";
                     data[place].forEach((item) => {
                         let opt = document.createElement("option");
@@ -31,6 +32,9 @@ WebsiteSale.include({
                         opt.setAttribute("data-code", item[2]);
                         selectElement.appendChild(opt);
                     });
+                if ([...selectElement.options].some(opt => opt.value === previousValue)) {
+                    selectElement.value = previousValue;
+                }
                     selectElement.parentElement.style.display = "block";
                 } else {
                     selectElement.value = "";

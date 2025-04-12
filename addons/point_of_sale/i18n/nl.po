@@ -6,19 +6,19 @@
 # Guido Leenders, 2023
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
 # Martin Trigaux, 2024
-# Larissa Manderfeld, 2024
 # Jolien De Paepe, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2025
 # Manon Rondou, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"POT-Creation-Date: 2025-03-19 11:06+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4730,7 +4730,7 @@ msgstr "PayTM-betaalterminal"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Payment"
-msgstr "Bestelling"
+msgstr "Betaling"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_date
@@ -6769,7 +6769,7 @@ msgid ""
 "the issue has been resolved."
 msgstr ""
 "Sommige orders konden niet bij de server worden ingediend vanwege problemen "
-"met de internetverbinding. Je kunt het kassa verlaten, maar de sessie niet "
+"met de internetverbinding. Je kunt de kassa verlaten, maar de sessie niet "
 "afsluiten voordat het probleem is opgelost."
 
 #. module: point_of_sale
@@ -7147,7 +7147,7 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"Het Kassa ondersteunt alleen de afrondingsstrategie \"voeg een "
+"De Kassa ondersteunt alleen de afrondingsstrategie \"voeg een "
 "afrondingsregel toe\"."
 
 #. module: point_of_sale
@@ -7353,7 +7353,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
-msgstr "De betaalmethoden voor het Kassa %s moeten van zijn bedrijf zijn."
+msgstr "De betaalmethoden voor de Kassa %s moeten van zijn bedrijf zijn."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_start_categ_id
@@ -7400,8 +7400,8 @@ msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
 msgstr ""
-"Het kassabon scherm wordt overgeslagen als de kassabon automatisch afgedrukt"
-" kan worden."
+"Het kassabonscherm wordt overgeslagen als de kassabon automatisch afgedrukt "
+"kan worden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
@@ -8492,6 +8492,17 @@ msgstr "Je kunt bestellingen van verschillende bedrijven niet factureren."
 #, python-format
 msgid "You cannot save an empty order"
 msgstr "Je kan geen lege bestelling opslaan"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr ""
+"Je kunt een afrondmethode die gebruikt wordt in een kassaconfiguratie niet "
+"verwijderen."
 
 #. module: point_of_sale
 #. odoo-python

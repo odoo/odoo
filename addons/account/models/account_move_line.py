@@ -5,7 +5,7 @@ import logging
 import re
 
 from odoo import api, fields, models, Command, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.osv import expression
 from odoo.tools import frozendict, format_date, float_compare, Query
 from odoo.tools.sql import create_index, SQL
@@ -971,7 +971,7 @@ class AccountMoveLine(models.Model):
                 include_caba_tags=line.move_id.always_tax_exigible,
                 fixed_multiplicator=sign,
             )
-            rate = line.amount_currency / line.balance if line.balance else line.currency_rate
+            rate = line.amount_currency / line.balance if (line.amount_currency and line.balance) else line.currency_rate
             line.compute_all_tax_dirty = True
             line.compute_all_tax = {
                 frozendict({
@@ -1267,7 +1267,6 @@ class AccountMoveLine(models.Model):
         # Avoid using api.constrains for fields journal_id and account_id as in case of a write on
         # account move and account move line in the same operation, the check would be done
         # before all write are complete, causing a false positive
-        self.flush_recordset()
         for line in self.filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
             account = line.account_id
             journal = line.move_id.journal_id
@@ -1697,6 +1696,18 @@ class AccountMoveLine(models.Model):
                             )
 
         return result
+
+    def _parse_flush_fnames(self, fnames):
+        if fnames and {'balance', 'amount_currency'} & set(fnames):
+            # flush the amount currency to avoid triggering check_amount_currency_balance_sign
+            fnames = {'balance', 'amount_currency'} | set(fnames)
+        return fnames
+
+    def flush_recordset(self, fnames=None):
+        return super().flush_recordset(self._parse_flush_fnames(fnames))
+
+    def flush_model(self, fnames=None):
+        return super().flush_model(self._parse_flush_fnames(fnames))
 
     def _valid_field_parameter(self, field, name):
         # EXTENDS models
@@ -3071,15 +3082,37 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
 
     def _validate_analytic_distribution(self):
+        lines_with_missing_analytic_distribution = self.env['account.move.line']
         for line in self.filtered(lambda line: line.display_type == 'product'):
-            line._validate_distribution(**{
-                        'product': line.product_id.id,
-                        'account': line.account_id.id,
-                        'business_domain': line.move_id.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice'
-                                           or line.move_id.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill'
-                                           or 'general',
-                        'company_id': line.company_id.id,
-            })
+            try:
+                line._validate_distribution(
+                    company_id=line.company_id.id,
+                    product=line.product_id.id,
+                    account=line.account_id.id,
+                    business_domain=(
+                        'invoice' if line.move_id.is_sale_document(True)
+                        else 'bill' if line.move_id.is_purchase_document(True)
+                        else 'general'
+                    ),
+                )
+            except ValidationError:
+                lines_with_missing_analytic_distribution += line
+        if lines_with_missing_analytic_distribution:
+            msg = _("One or more lines require a 100% analytic distribution.")
+            if len(self.move_id) == 1:
+                raise ValidationError(msg)
+            raise RedirectWarning(
+                message=msg,
+                action={
+                    'view_mode': 'list',
+                    'name': _('Items With Missing Analytic Distribution'),
+                    'res_model': 'account.move.line',
+                    'type': 'ir.actions.act_window',
+                    'domain': [('id', 'in', lines_with_missing_analytic_distribution.ids)],
+                    'views': [(self.env.ref('account.view_move_line_tree').id, 'list')],
+                },
+                button_text=_("See items"),
+            )
 
     def _create_analytic_lines(self):
         """ Create analytic items upon validation of an account.move.line having an analytic distribution.

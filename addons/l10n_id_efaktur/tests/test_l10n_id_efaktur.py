@@ -19,13 +19,14 @@ class TestIndonesianEfaktur(common.TransactionCase):
 
         self.maxDiff = 1500
         # change company info for csv detai later
-        self.env.company.country_id = self.env.ref('base.id')
-        self.env.company.account_fiscal_country_id = self.env.company.country_id
+        indonesia = self.env.ref('base.id')
+        self.env.company.country_id = indonesia
+        self.env.company.account_fiscal_country_id = indonesia
         self.env.company.street = "test"
         self.env.company.phone = "12345"
         self.env.company.vat = "1234567890123456"
 
-        self.partner_id = self.env['res.partner'].create({"name": "l10ntest", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "12345", "vat": "000000000000000"})
+        self.partner_id = self.env['res.partner'].create({"name": "l10ntest", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "12345", "vat": "000000000000000", "country_id": indonesia.id})
         self.env['account.tax.group'].create({
             'name': 'tax_group',
             'country_id': self.env.ref('base.id').id,
@@ -82,7 +83,7 @@ class TestIndonesianEfaktur(common.TransactionCase):
             _csv_row(OF_HEAD_LIST, ','),
         )
         # remaining lines
-        line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","","100","10","0","","0","0","0","0","INV/2019/00001","0"\n'
+        line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","Indonesia","100","10","0","","0","0","0","0","INV/2019/00001","0"\n'
         line_5 = '"OF","","","100.00","1.0","100.00","0","100.00","10.00","0","0"\n'
 
         efaktur_csv_expected = output_head + line_4 + line_5
@@ -105,7 +106,7 @@ class TestIndonesianEfaktur(common.TransactionCase):
             _csv_row(LT_HEAD_LIST, ','),
             _csv_row(OF_HEAD_LIST, ','),
         )
-        line_4 = '"FK","01","0","0000000000002","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","","40040","4004","0","","0","0","0","0","INV/2019/00002","0"\n'
+        line_4 = '"FK","01","0","0000000000002","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","Indonesia","40040","4004","0","","0","0","0","0","INV/2019/00002","0"\n'
         line_5 = '"OF","","","100.10","400.0","40040.00","0","40040.00","4004.00","0","0"\n'
 
         efaktur_csv_expected = output_head + line_4 + line_5

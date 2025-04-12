@@ -1,3 +1,5 @@
+from odoo.fields import Command
+
 def setup_pos_combo_items(self):
     tax10 = self.env["account.tax"].create(
         {
@@ -257,5 +259,50 @@ def setup_pos_combo_items(self):
             "combo_ids": [
                 (6, 0, [self.desks_combo.id, self.chairs_combo.id, self.desk_accessories_combo.id])
             ],
+        }
+    )
+
+    #Create Combo with custom attribute
+    custom_attribute = self.env['product.attribute'].create({
+        'name': 'Custom Attribute',
+        'display_type': 'radio',
+        'create_variant': 'no_variant',
+        'value_ids': [
+                Command.create({'name': 'Custom Value', 'is_custom': True}),
+        ]
+    })
+
+    self.product_tmpl_with_custom_attr = self.env["product.template"].create(
+        {
+            "name": "Custom Attr Product",
+            "available_in_pos": True,
+            "attribute_line_ids": [
+                Command.create({
+                    'attribute_id': custom_attribute.id,
+                    'value_ids': [Command.set(custom_attribute.value_ids.ids)],
+                })
+            ],
+        }
+    )
+
+    custom_combo_line = self.env["pos.combo.line"].create(
+        {
+            "product_id": self.product_tmpl_with_custom_attr.product_variant_id.id,
+            "combo_price": 100,
+        }
+    )
+
+    custom_combo = self.env["pos.combo"].create({
+        "name": "Attr Combo",
+        "combo_line_ids": custom_combo_line.ids,
+    })
+
+    self.combo_product_with_custom_attr = self.env["product.product"].create(
+        {
+            "available_in_pos": True,
+            "list_price": 40,
+            "name": "Custom Attr Combo",
+            "type": "combo",
+            "combo_ids": custom_combo.ids,
         }
     )

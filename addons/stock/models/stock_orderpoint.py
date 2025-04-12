@@ -326,13 +326,14 @@ class StockWarehouseOrderpoint(models.Model):
         """
         self = self.filtered(lambda o: not o.route_id)
         rules_groups = self.env['stock.rule']._read_group([
-            ('route_id.product_selectable', '!=', False),
+            '|', ('route_id.product_selectable', '!=', False),
+            ('route_id.product_categ_selectable', '!=', False),
             ('location_dest_id', 'in', self.location_id.ids),
             ('action', 'in', ['pull_push', 'pull']),
             ('route_id.active', '!=', False)
         ], ['location_dest_id', 'route_id'])
         for location_dest, route in rules_groups:
-            orderpoints = self.filtered(lambda o: o.location_id.id == location_dest.id)
+            orderpoints = self.filtered(lambda o: not o.route_id and route in (o.product_id.route_ids | o.product_id.categ_id.route_ids) and o.location_id.id == location_dest.id)
             orderpoints.route_id = route
 
     def _get_lead_days_values(self):
@@ -433,7 +434,7 @@ class StockWarehouseOrderpoint(models.Model):
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Group orderpoint by product-location
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
-            [('id', 'in', orderpoints.ids)],
+            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
             ['product_id', 'location_id'],
             ['qty_to_order:sum'])
         orderpoint_by_product_location = {
@@ -452,7 +453,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         # With archived ones to avoid `product_location_check` SQL constraints
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False)._read_group(
-            [('id', 'in', orderpoints.ids)],
+            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
             ['product_id', 'location_id'],
             ['id:recordset'])
         orderpoint_by_product_location = {

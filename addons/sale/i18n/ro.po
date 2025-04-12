@@ -12,9 +12,9 @@
 # Martin Trigaux, 2024
 # Larisa_nexterp, 2024
 # Betty Keresztesi, 2024
-# Lyall Kindmurr, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2025
 # Corina Calin, 2025
+# Lyall Kindmurr, 2025
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Corina Calin, 2025\n"
+"Last-Translator: Lyall Kindmurr, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +69,7 @@ msgstr "%(line_description)s (Anulat)"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Draft)"
-msgstr "%(line_description)s (Schiță)"
+msgstr "%(line_description)s (Ciornă)"
 
 #. module: sale
 #. odoo-python
@@ -235,7 +235,7 @@ msgstr ""
 "            </t>\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Mulțumesc pentru încredere!\n"
+"        Mulțumim pentru încredere!\n"
 "        <br>\n"
 "        Nu ezitați să ne contactați dacă aveți întrebări.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
@@ -711,7 +711,7 @@ msgstr ""
 "        Dragă <t t-out=\"object.partner_id.name or ''\">utilizator</t>,\n"
 "        <br><br>\n"
 "        Vâ informăm că\n"
-"        <t t-out=\"doc_name or ''\">cotația</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-out=\"doc_name or ''\">oferta</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (cu referința: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
@@ -732,7 +732,7 @@ msgstr "<i class=\"fa fa-comment\"/>Contactați-ne pentru a obține o ofertă no
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr "<i class=\"fa fa-comment\"/>Trimiteți un feedback"
+msgstr "<i class=\"fa fa-comment\"/>Trimiteți feedback"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -764,12 +764,12 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Expirat"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/>În așteptarea plății"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Așteaptă Plată"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
-msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Oferte\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -782,8 +782,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
-"title=\"Sales orders\"/>"
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Comenzi de vânzare\" "
+"title=\"Comenzi de vânzare\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -820,7 +820,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Nr comandă vânzare</span>\n"
+"<span class=\"d-none d-md-inline\">Nr comandă de vânzare</span>\n"
 "<span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
@@ -848,7 +848,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span invisible=\"advance_payment_method != 'percentage'\" class=\"oe_inline\">% </span>\n"
-"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" title=\"The Down Payment is greater than the amount remaining to be invoiced.\">\n"
+"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" title=\"Avansul este mai mare decât suma rămasă de facturat.\">\n"
 "                            <i class=\"fa fa-warning\"/>\n"
 "                        </span>"
 
@@ -873,7 +873,7 @@ msgid ""
 msgstr ""
 "<span>Sunteți sigur ca doriți să anulați această comandă? <br/></span>\n"
 "                        <span id=\"display_invoice_alert\" invisible=\"not display_invoice_alert\">\n"
-"                            Facturile în ciornă pentru această comandă vor fi anulate. <br/>\n"
+"                            Facturile ciornă pentru această comandă vor fi anulate. <br/>\n"
 "                        </span>"
 
 #. module: sale
@@ -952,7 +952,7 @@ msgstr "<strong>Semnătură</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax excl.: </strong>"
-msgstr "<strong>Fără taxe.</strong>"
+msgstr "<strong>Fără taxe.:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -962,7 +962,7 @@ msgstr "<strong>Taxe incluse.:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>Thank You!</strong><br/>"
-msgstr "<strong>Mulțumesc!</strong><br/>"
+msgstr "<strong>Mulțumim!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -977,19 +977,19 @@ msgstr "<strong>Această ofertă a fost anulată.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong><br/>"
-msgstr "<strong>Referință:</strong><br/>"
+msgstr "<strong>Referința dvs.:</strong><br/>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr "O comandă confirmată de vânzare necesită o dată de confirmare."
+msgstr "O comandă de vânzare confirmată necesită o dată de confirmare."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
-"O notă, al cărei conținut se aplică de obicei secțiunii sau produsului de "
-"mai sus."
+"O notă, a cărei conținut se aplică de obicei secțiunii sau produsului de mai"
+" sus."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1003,7 +1003,7 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
-"O factură standard este emisă cu toate liniile de comandă gata pentru "
+"O factură standard este emisă cu toate liniile de comandă pregătite pentru "
 "facturare, în funcție de politica lor de facturare (bazată pe cantitatea "
 "comandată sau livrată)."
 
@@ -1050,12 +1050,12 @@ msgstr "Acceptă și semnează oferta"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr "Acceptați și plătiți"
+msgstr "Acceptați &amp; Plătiți"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr "Acceptați și semnați"
+msgstr "Acceptați &amp; Semnați"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning

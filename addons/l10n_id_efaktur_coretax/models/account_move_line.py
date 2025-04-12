@@ -22,14 +22,18 @@ class AccountMoveLine(models.Model):
         luxury_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == luxury_tax_group)
         regular_tax = self.tax_ids - luxury_tax
 
+        # "Price" is unit price calculation excluding tax and discount
+        # "TotalDiscount" is total of "Price" * quantity * discount
+        tax_res = self.tax_ids.compute_all(self.price_unit, quantity=1, currency=self.currency_id, product=self.product_id, partner=self.partner_id, is_refund=self.is_refund)
+
         line_val = {
             "Opt": "B" if product.detailed_type == "service" else "A",  # A: goods, B: service
             "Code": product.l10n_id_product_code.code or self.env.ref('l10n_id_efaktur_coretax.product_code_000000_goods').code,
             "Name": product.name,
             "Unit": self.product_uom_id.l10n_id_uom_code.code,
-            "Price": idr.round(self.price_unit),
+            "Price": tax_res['total_excluded'],
             "Qty": self.quantity,
-            "TotalDiscount": idr.round(self.discount * self.quantity * self.price_unit / 100),
+            "TotalDiscount": idr.round(self.discount * tax_res['total_excluded'] * self.quantity / 100),
             "TaxBase": idr.round(self.price_subtotal),  # DPP
             "VATRate": 12,
             "STLGRate": luxury_tax.amount if luxury_tax else 0.0,

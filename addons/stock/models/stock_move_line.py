@@ -389,7 +389,7 @@ class StockMoveLine(models.Model):
                 reservation = not move._should_bypass_reservation()
             else:
                 reservation = product.type == 'product' and not location.should_bypass_reservation()
-            if move_line.quantity and reservation:
+            if move_line.quantity_product_uom and reservation:
                 self.env['stock.quant']._update_reserved_quantity(
                     product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
 
@@ -821,10 +821,12 @@ class StockMoveLine(models.Model):
         move = move or move_line.move_id
         uom = move.product_uom or move_line.product_uom_id
         name = move.product_id.display_name
-        description = move.description_picking
-        if description == name or description == move.product_id.name:
-            description = False
+        description = move.description_picking or ""
         product = move.product_id
+        if description.startswith(name):
+            description = description.removeprefix(name).strip()
+        elif description.startswith(product.name):
+            description = description.removeprefix(product.name).strip()
         line_key = f'{product.id}_{product.display_name}_{description or ""}_{uom.id}_{move.product_packaging_id or ""}'
         return {
             'line_key': line_key,

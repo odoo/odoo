@@ -10,7 +10,7 @@
 # Katerina Horylova, 2024
 # Jakub Smolka, 2024
 # Tereza Mokrá, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2025
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,14 +42,14 @@ msgstr "# Odeslané"
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (zbývající místa %(count)s)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (Prodáno)"
 
 #. module: event
 #. odoo-python
@@ -70,14 +70,14 @@ msgstr ""
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (zbývající místa %(count)s)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (Prodáno)"
 
 #. module: event
 #. odoo-python
@@ -114,11 +114,13 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'Celostránkový tiket - %s - %s ' % ((object.event_id.name nebo "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'Celostránkový tiket - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
@@ -130,7 +132,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr ""
+msgstr "- \"%(event_name)s\": Chybí %(nb_too_many)i místa."
 
 #. module: event
 #. odoo-python
@@ -140,6 +142,7 @@ msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
 msgstr ""
+"- tiket \"%(ticket_name)s\" (%(event_name)s): Chybí %(nb_too_many)i místa."
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
@@ -177,6 +180,8 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>Business Room</b> – Pro prodiskutování implementačních metodologií, "
+"osvědčených prodejních postupů atd."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -184,6 +189,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>Technické místnosti</b> – Jedna věnovaná pokročilým vývojářům Odoo, jedna"
+" pro nové vývojáře."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -191,6 +198,8 @@ msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
+"<b>Veletrhu designu předcházejí 2 dny školení pro odborníky!</b><br> "
+"Nabízíme 3 různá školení, každé po 2 dnech."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -199,6 +208,8 @@ msgid ""
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
 msgstr ""
+"<b>Dopolední plenární zasedání budou kratší</b> a odpoledne dáme více času "
+"na tematická setkání, konference, workshopy a konzultace."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -209,6 +220,11 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>Celá akce je přístupná široké veřejnosti!</b> <br>Požadujeme účastnický "
+"poplatek ve výši 49,50 € za náklady na 3 dny (přestávky na kávu, catering, "
+"nápoje a překvapivý koncert a pivní párty).<br> Pro ty, kteří nechtějí "
+"přispívat, je připravena volná vstupenka, takže v ceně není catering a vstup"
+" na večerní akce."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -238,6 +254,11 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>Pokud si přejete udělat prezentaci, zašlete prosím svůj návrh tématu co "
+"nejdříve ke schválení panu Famke Jenssensovi na adresu ngh (a) yourcompany "
+"(tečka) com. Prezentace by měly být např. prezentací komunitního modulu, "
+"případovou studií, metodickou zpětnou vazbou, technickou atd. Každá "
+"prezentace musí být v angličtině.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -287,6 +308,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle me-2\"></i>Tato událost a všechny konference "
+"jsou v <b>angličtině</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
@@ -332,6 +355,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-"
 "end\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary o_wevent_badge float-"
+"end\">MLUVČÍ</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
@@ -1118,6 +1143,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
 msgstr ""
+"Přidejte nějaké interní poznámky (seznamy úkolů, kontaktní informace, ...)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -1169,6 +1195,8 @@ msgid ""
 "And this time, we go fully ONLINE! Meet us in our live streams from the comfort of your house.<br>\n"
 "        Special discount codes will be handed out during the various streams, make sure to be there on time."
 msgstr ""
+"A tentokrát jdeme plně ONLINE! Seznamte se s námi v našich živých přenosech z pohodlí vašeho domova.<br>\n"
+"        Speciální slevové kódy budou rozdány během různých streamů, buďte tam včas."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1187,7 +1215,7 @@ msgstr "Odpovědi"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Apply change."
-msgstr ""
+msgstr "Použít změnu."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1198,7 +1226,7 @@ msgstr "Archivováno"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
 msgid "Are sales launched"
-msgstr ""
+msgstr "Jsou zahájeny prodeje"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -1447,7 +1475,7 @@ msgstr "Kategorie"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_sequence
 msgid "Category Sequence"
-msgstr ""
+msgstr "Sekvence kategorií"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1741,7 +1769,7 @@ msgstr "Zobrazit sponzory a vystavovatele na svých stránkách událostí"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
 msgid "Display Timezone"
-msgstr ""
+msgstr "Zobrazit časovou zónu"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1882,7 +1910,7 @@ msgstr "Organizace události"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
 msgid "Event Organizer"
-msgstr ""
+msgstr "Organizátor události"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1895,7 +1923,7 @@ msgstr "Registrace na událost"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
-msgstr ""
+msgstr "Odpovědný za událost"
 
 #. module: event
 #. odoo-python
@@ -1915,6 +1943,18 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
+"Plánovač událostí pro:\n"
+"  - Událost: %(event_name)s (%(event_id)s)\n"
+"  - Naplánováno: %(date)s\n"
+"  - Šablona: %(template_name)s (%(template_id)s)\n"
+"\n"
+"Selhalo s chybou:\n"
+"  - %(error)s\n"
+"\n"
+"Tento e-mail jste obdrželi, protože jste:\n"
+"  - pořadatel akce,\n"
+"  - nebo odpovědný za událost,\n"
+"  - nebo poslední autor šablony.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -1983,6 +2023,9 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Šablony událostí kombinují nastavení, které často používáte a jsou\n"
+"                obvykle na základě typů akcí, které pořádáte (např. „Workshop“,\n"
+"                \"Roadshow\", \"Online webinář\" atd.)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -2074,6 +2117,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc...\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"Každý rok zveme naši komunitu, partnery a koncové uživatele, aby se s námi setkali! Je to ideální událost, kde se setkat a představit nové funkce, plán budoucích verzí, úspěchy softwaru, workshopy, školení atd...\n"
+"            Tato akce je také příležitostí předvést případové studie, metodiku nebo vývoj našich partnerů. Buďte u toho a podívejte se přímo ze zdroje na funkce nové verze!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2206,17 +2251,17 @@ msgstr "Budoucí činnosti"
 #. module: event
 #: model:event.event.ticket,name:event.event_4_ticket_0
 msgid "General Admission"
-msgstr ""
+msgstr "Základní vstupné"
 
 #. module: event
 #: model:event.event,subtitle:event.event_0
 msgid "Get Inspired • Stay Connected • Have Fun"
-msgstr ""
+msgstr "Nechte se inspirovat • Zůstaňte ve spojení • Bavte se"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_state
 msgid "Global communication Status"
-msgstr ""
+msgstr "Stav globální komunikace"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2241,7 +2286,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Great Reno Ballon Race"
-msgstr ""
+msgstr "Velký balónový závod Reno"
 
 #. module: event
 #. odoo-javascript
@@ -2327,7 +2372,7 @@ msgstr "Ikona"
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 #, python-format
 msgid "Icon Selection"
-msgstr ""
+msgstr "Výběr ikony"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
@@ -2360,7 +2405,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "If you don't have this ticket, you will <b>not</b> be allowed entry!"
-msgstr ""
+msgstr "Pokud tuto vstupenku nemáte, <b>nebude</b> vám umožněn vstup!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -2399,6 +2444,7 @@ msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr ""
+"Označuje časové pásmo, ve kterém se na webu zobrazí data/časy událostí."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2486,7 +2532,7 @@ msgstr "Připojte se k této 24hodinové akci"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Join us for this 3-day Event"
-msgstr ""
+msgstr "Připojte se k této 3denní akci"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_blocked
@@ -2576,7 +2622,7 @@ msgstr "Vytvořme si Vaši první <b>událost</b>."
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Limit Attendees"
-msgstr ""
+msgstr "Limit účastníků"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2767,7 +2813,7 @@ msgstr "Typ další aktivity"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "No Attendees expected yet!"
-msgstr ""
+msgstr "Zatím se neočekávají žádní účastníci!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -2775,7 +2821,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_kanban
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_stats_from_event
 msgid "No Attendees yet!"
-msgstr ""
+msgstr "Dosud žádní účastníci!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -2806,7 +2852,7 @@ msgstr "Poznámky"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
 msgid "Nothing Scheduled yet!"
-msgstr ""
+msgstr "Zatím není nic naplánováno!"
 
 #. module: event
 #. odoo-javascript
@@ -2814,6 +2860,8 @@ msgstr ""
 #, python-format
 msgid "Now that your event is ready, click here to move it to another stage."
 msgstr ""
+"Nyní, když je vaše událost připravena, kliknutím sem ji přesunete do jiné "
+"fáze."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -2829,7 +2877,7 @@ msgstr " Počet účastníků"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Počet registrovaných"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_taken
@@ -2867,12 +2915,12 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Once again we assembled the most legendary bands in Rock history."
-msgstr ""
+msgstr "Opět jsme dali dohromady ty nejlegendárnější kapely rockové historie."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ongoing Events"
-msgstr ""
+msgstr "Probíhající události"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_1
@@ -2894,7 +2942,7 @@ msgstr "Online prodej vstupenek"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Open date range picker. Pick a Start date for your event"
-msgstr ""
+msgstr "Otevřete výběr období. Vyberte datum zahájení vaší události"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2902,11 +2950,13 @@ msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the"
 " event or change the dates on which it is held."
 msgstr ""
+"OpenElec Applications si vyhrazuje právo zrušit, přejmenovat nebo "
+"lokalizovat události nebo změnit datumy jeho konání."
 
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "Online odhalení kolekce OpenWood"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
@@ -2936,6 +2986,8 @@ msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
 msgstr ""
+"Naše nejnovější kolekce bude odhalena online! Komunikujte s námi na našich "
+"živých přenosech!"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
@@ -2953,6 +3005,7 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
 msgstr ""
+"Přepsat výchozí hodnotu zobrazenou pro dokončený stav pro výběr kanbanu."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -2994,7 +3047,7 @@ msgstr "Telefonní číslo"
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid ""
 "Please come <b>at least</b> 30 minutes before the beginning of the event."
-msgstr ""
+msgstr "Přijďte prosím <b>alespoň</b> 30 minut před začátkem akce."
 
 #. module: event
 #. odoo-python
@@ -3078,7 +3131,7 @@ msgstr "Připraveno pro další fázi"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
-msgstr ""
+msgstr "Jste připraveni <b>zorganizovat akce</b> za pár minut? Začněme!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
@@ -3128,7 +3181,7 @@ msgstr "Registrační kiosk"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
-msgstr ""
+msgstr "Konec registrace"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3153,7 +3206,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
-msgstr ""
+msgstr "Začátek registrace"
 
 #. module: event
 #. odoo-javascript

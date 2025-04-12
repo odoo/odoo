@@ -160,6 +160,12 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             self.rfile = BytesIO()
             self.wfile = BytesIO()
 
+    def log_error(self, format, *args):
+        if format == "Request timed out: %r" and config['test_enable']:
+            _logger.info(format, *args)
+        else:
+            super().log_error(format, *args)
+
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
     given by the environment, this is used by autoreload to keep the listen
@@ -1271,7 +1277,8 @@ class WorkerCron(Worker):
 server = None
 
 def load_server_wide_modules():
-    server_wide_modules = {'base', 'web'} | set(odoo.conf.server_wide_modules)
+    server_wide_modules = list(odoo.conf.server_wide_modules)
+    server_wide_modules.extend(m for m in ('base', 'web') if m not in server_wide_modules)
     for m in server_wide_modules:
         try:
             odoo.modules.module.load_openerp_module(m)

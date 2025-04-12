@@ -63,7 +63,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'name': 'Bank Holiday',
             'holiday_type': 'employee',
             'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
-            'employee_id': self.employee.id,
+            'multi_employee': True,
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 2,
             'allocation_type': 'regular',

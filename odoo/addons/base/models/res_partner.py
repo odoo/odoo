@@ -637,6 +637,12 @@ class Partner(models.Model):
                 # value was already assigned for current company
                 ('company_id', '!=', self.env.company.id),
             ])
+            # prevent duplicate keys by removing existing properties from the partner
+            self.env['ir.property'].search([
+                ('fields_id', 'in', company_dependent_commercial_field_ids),
+                ('res_id', '=', f'res.partner,{self.id}'),
+                ('company_id', '!=', self.env.company.id),
+            ]).unlink()
             for prop in parent_properties:
                 prop.copy({'res_id': f'res.partner,{self.id}'})
 

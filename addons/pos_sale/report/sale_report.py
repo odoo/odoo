@@ -69,8 +69,8 @@ class SaleReport(models.Model):
             partner.industry_id AS industry_id,
             partner.state_id AS state_id,
             partner.zip AS partner_zip,
-            (SUM(p.weight) * l.qty / u.factor) AS weight,
-            (SUM(p.volume) * l.qty / u.factor) AS volume,
+            (SUM(p.weight) * l.qty) AS weight,
+            (SUM(p.volume) * l.qty) AS volume,
             l.discount AS discount,
             SUM((l.price_unit * l.discount * l.qty / 100.0
                 / {self._case_value_or_one('pos.currency_rate')}

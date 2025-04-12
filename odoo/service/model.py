@@ -39,7 +39,7 @@ def get_public_method(model, name):
         if not cla_method:
             continue
         if name.startswith('_') or getattr(cla_method, '_api_private', False):
-            raise AccessError(f"Private methods (such as '{model._name}.{name}') cannot be called remotely.")  # pylint: disable=missing-gettext
+            raise AccessError(f"Private methods (such as '{model._name}.{name}') cannot be called remotely.")
     return method
 
 def dispatch(method, params):

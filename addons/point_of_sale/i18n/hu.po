@@ -19,14 +19,15 @@
 # krnkris, 2025
 # gezza <geza.nagy@oregional.hu>, 2025
 # Pammer József, 2025
+# lvalics, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"POT-Creation-Date: 2025-03-19 11:06+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Pammer József, 2025\n"
+"Last-Translator: lvalics, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1305,7 +1306,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_rounding
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Rounding"
-msgstr ""
+msgstr "Készpénzes kerekítés"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_cash_rounding
@@ -2259,6 +2260,7 @@ msgstr "Új kategória megadása"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
+"Határozza meg a készpénzes fizetéshez használt valuta legkisebb érméjét"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__name
@@ -3643,7 +3645,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin
@@ -4473,7 +4475,7 @@ msgstr "Egyebek"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid "Outstanding Account"
-msgstr ""
+msgstr "Kiemelkedő számla"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
@@ -6140,7 +6142,7 @@ msgstr "Mentés"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr ""
+msgstr "Mentse el ezt az oldalt, és térjen vissza ide a funkció beállításához"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7720,7 +7722,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Teljes kifizetések összege"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total
@@ -8201,6 +8203,15 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/save_button/save_button.js:0
 #, python-format
 msgid "You cannot save an empty order"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
 msgstr ""
 
 #. module: point_of_sale
