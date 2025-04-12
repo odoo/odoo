@@ -882,6 +882,8 @@ class ProductProduct(models.Model):
                     domains.append([('default_code', '=', m.group(2))])
         elif operator.endswith('like') and is_positive:
             domains.append([('barcode', 'in', [value])])
+            if isinstance(value, str) and (m := re.search(r'\[(.*?)\]', value)):
+                domains.append([('default_code', '=', m.group(1))])
         if partner_id := self.env.context.get('partner_id'):
             supplier_domain = [
                 ('partner_id', '=', partner_id),
