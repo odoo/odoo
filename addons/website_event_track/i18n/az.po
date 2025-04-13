@@ -3,9 +3,9 @@
 # 	* website_event_track
 # 
 # Translators:
-# erpgo translator <jumshud@erpgo.az>, 2024
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # Nurlan Farajov <coolinuxoid@gmail.com>, 2025
+# erpgo translator <jumshud@erpgo.az>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
+"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +41,22 @@ msgid ""
 "        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 msgstr ""
+"\n"
+"Hörmətli <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"Sizi məmnuniyyətlə məlumatlandırırıq ki, <t t-out=\"object.name or ''\">What This Event Is All About</t> adlı təklifiniz <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t> tədbiri üçün qəbul edilmiş və təsdiqlənmişdir.\n"
+"<br/>\n"
+"Ətraflı məlumatı aşağıdakı linkdə tapa bilərsiniz:\n"
+"<div style=\"margin: 16px 0px 16px 0px;\">\n"
+"    <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        Mühazirəyə bax\n"
+"    </a>\n"
+"</div>\n"
+"<br/><br/>\n"
+"Təşəkkür edirik,\n"
+"<t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"    <br/>\n"
+"    <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"</t>\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -337,7 +353,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 msgid "Application"
-msgstr "Ərizə "
+msgstr "Ərizə"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -765,7 +781,7 @@ msgstr "Tədbir"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "Event Location"
-msgstr "Tədbir yeri "
+msgstr "Tədbir Məkanı"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_location
@@ -913,7 +929,7 @@ msgstr "Gözəl şriftli ikon, məsələn fa-tapşırıqlar"
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
 msgid "Format"
-msgstr ""
+msgstr "Format"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
@@ -1419,7 +1435,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mənim Fəaliyyətlərimin Son Tarixi "
+msgstr "Mənim Fəaliyyətlərimin Son Tarixi"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
@@ -2059,7 +2075,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Track"
-msgstr "Konversiya nəticələrini təkmilləşdirmək üçün "
+msgstr "Konversiya nəticələrini təkmilləşdirmək üçün"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_visitor
@@ -2212,7 +2228,7 @@ msgstr "Qeyddəki istisna fəaliyyət növü."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 msgid "Unknown"
-msgstr "bilinməyən"
+msgstr "Bilinməyən"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -2499,7 +2515,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "hours"
-msgstr "Saatlar"
+msgstr "saat"
 
 #. module: website_event_track
 #. odoo-javascript
