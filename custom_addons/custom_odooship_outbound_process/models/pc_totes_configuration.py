@@ -4,7 +4,6 @@
 from odoo import models, fields, api
 
 
-
 class CrateBarcodeConfiguration(models.Model):
     _name = 'pc.container.barcode.configuration'
     _description = 'PC container Barcode Configuration.'
