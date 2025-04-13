@@ -203,7 +203,6 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
-"```html\n"
 "<div style=\"background: #ffffff\">\n"
 "    <div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
 "        اینجا کارت هدیه شماست!\n"
@@ -229,8 +228,7 @@ msgstr ""
 "            <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">همین الان استفاده کنید!</a>\n"
 "        </span>\n"
 "    </div>\n"
-"</div>\n"
-"```"
+"</div>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -291,11 +289,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    the value of the coupon"
 msgstr ""
-"```html\n"
 "<span class=\"fw-bold text-decoration-underline\">اعطا</span>\n"
 "                                    <br/>\n"
-"                                    ارزش کوپن\n"
-"```"
+"                                    ارزش کوپن"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -303,10 +299,8 @@ msgid ""
 "<span class=\"fw-bold text-decoration-underline\">In exchange of</span>\n"
 "                                    <br/>"
 msgstr ""
-"```html\n"
 "<span class=\"fw-bold text-decoration-underline\">در ازای</span>\n"
-"                                    <br/>\n"
-"```"
+"                                    <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -318,14 +312,12 @@ msgid ""
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eWallets</span>"
 msgstr ""
-"```html\n"
 "<span class=\"o_stat_text\" invisible=\"program_type not in ('coupons', 'next_order_coupons')\">کوپن‌ها</span>\n"
 "<span class=\"o_stat_text\" invisible=\"program_type != 'loyalty'\">کارت‌های وفاداری</span>\n"
 "<span class=\"o_stat_text\" invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">تبلیغات</span>\n"
 "<span class=\"o_stat_text\" invisible=\"program_type != 'promo_code'\">تخفیف</span>\n"
 "<span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">کارت‌های هدیه</span>\n"
-"<span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">کیف پول‌های الکترونیکی</span>\n"
-"```"
+"<span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">کیف پول‌های الکترونیکی</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -333,10 +325,8 @@ msgid ""
 "<span class=\"text-center\">OR</span>\n"
 "                                        <br/>"
 msgstr ""
-"```html\n"
-"<span class=\"text-center\">یا</span>\n"
-"                                        <br/>\n"
-"```"
+"<span class=\"text-center\">یا </span>\n"
+"                                        <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
@@ -344,17 +334,13 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount"
 " of coupon points defined as the coupon value</span>"
 msgstr ""
-"```html\n"
-"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">اعطای مقدار امتیاز کوپن تعریف شده به عنوان ارزش کوپن</span>\n"
-"```"
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">اعطای مقدار "
+"امتیاز کوپن تعریف شده به عنوان ارزش کوپن</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "<span invisible=\"not clear_wallet\"> (or more)</span>"
-msgstr ""
-"```html\n"
-"<span invisible=\"not clear_wallet\"> (یا بیشتر)</span>\n"
-"```"
+msgstr "<span invisible=\"not clear_wallet\"> (یا بیشتر)</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -366,14 +352,12 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
-"```html\n"
 "<span invisible=\"not will_send_mail\">\n"
 "                            ایجاد و ارسال\n"
 "                        </span>\n"
 "                        <span invisible=\"will_send_mail\">\n"
 "                            ایجاد\n"
-"                        </span>\n"
-"```"
+"                        </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -388,10 +372,7 @@ msgstr "<span>حداقل خرید</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Valid for purchase above</span>"
-msgstr ""
-"```html\n"
-"<span>معتبر برای خرید بالاتر از</span>\n"
-"```"
+msgstr "<span>معتبر برای خرید بالاتر از</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -401,18 +382,12 @@ msgstr "<span>رو</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>products</span>"
-msgstr ""
-"```html\n"
-"<span>محصولات</span>\n"
-"```"
+msgstr "<span>محصولات</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "<span>tax</span>"
-msgstr ""
-"```html\n"
-"<span>مالیات</span>\n"
-"```"
+msgstr "<span>مالیات </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -471,7 +446,6 @@ msgid ""
 "</tbody></table>\n"
 "        "
 msgstr ""
-"```html\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
 "<tr>\n"
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
@@ -518,8 +492,7 @@ msgstr ""
 "        </t>\n"
 "    </td>\n"
 "</tr>\n"
-"</tbody></table>\n"
-"```"
+"</tbody></table>"
 
 #. module: loyalty
 #. odoo-python
