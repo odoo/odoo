@@ -849,15 +849,29 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
 
     @api.onchange('serial_number')
     def _onchange_serial_number(self):
-        if self.product_id.is_serial_number and not self.serial_number:
-            return {
-                'warning': {
-                    'title': _("Serial Number Required"),
-                    'message': _("Please enter a serial number for product '%s'.") % self.product_id.name
-                },
-                'value': {
-                    'serial_number': self.serial_number  # Preserve the current value
+        if self.product_id.is_serial_number:
+            if not self.serial_number:
+                return {
+                    'warning': {
+                        'title': _("Serial Number Required"),
+                        'message': _("Please enter a serial number for product '%s'.") % self.product_id.name
+                    },
+                    'value': {
+                        'serial_number': self.serial_number  # Preserve current input
+                    }
                 }
-            }
+
+            #  Try to update the serial number in the matching sale order line
+            sale_order = self.sale_order_id
+            if sale_order:
+                matching_line = sale_order.order_line.filtered(lambda l: l.product_id.id == self.product_id.id)
+
+                if matching_line:
+                    matching_line[0].serial_number = self.serial_number
+                    _logger.info(
+                        f"Serial number '{self.serial_number}' updated on sale order line for product {self.product_id.name}")
+                else:
+                    _logger.warning(
+                        f"No matching sale order line found for product {self.product_id.name} in order {sale_order.name}")
 
 
