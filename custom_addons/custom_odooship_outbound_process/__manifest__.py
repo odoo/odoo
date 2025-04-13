@@ -1,3 +1,4 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 # -*- coding: utf-8 -*-
 {
     'name': 'Shiperoo Outbound Process',
@@ -14,6 +15,7 @@
         'views/pc_totes_configuration_views.xml',
         'views/custom_pack_app_views.xml',
         'views/stock_picking_inherit_views.xml',
+        'views/sale_order_inherit_view.xml',
         'views/menuitem_view.xml',
         'wizard/custom_pack_app_wizard_view.xml',
 
@@ -23,4 +25,4 @@
     'auto_install': True,
     'license': 'LGPL-3',
 }
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+

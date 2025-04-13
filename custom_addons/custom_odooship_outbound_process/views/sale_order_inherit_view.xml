@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_serial_line_id" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.serial.line.id</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <field name="serial_number"/>
+                <field name="line_item_id"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form" position="inside">
+                <field name="serial_number"/>
+                <field name="line_item_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

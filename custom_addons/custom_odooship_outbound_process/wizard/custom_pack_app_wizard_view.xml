@@ -60,12 +60,16 @@
                                 <field name="product_id"
                                        options="{'no_create': True, 'no_open': True, 'no_quick_create': True, 'no_create_edit': True}"/>
                                 <field name="default_code" readonly="1"/>
+                                <field name="show_serial_number" column_invisible="True"/>
+                                <field name="api_payload_success" column_invisible="True"/>
+                                <field name="serial_number"/>
                                 <field name="picking_id"
                                        options="{'no_create': True, 'no_open': True, 'no_quick_create': True, 'no_create_edit': True}"
                                        readonly="1"/>
                                 <field name="package_box_type_id"/>
                                 <field name="weight"/>
-                                <field name="product_package_number"  column_invisible="parent.show_package_box_in_lines == True"/>
+                                <field name="product_package_number"
+                                       column_invisible="parent.show_package_box_in_lines == True"/>
                                 <field name="current_state" column_invisible="True"/>
                                 <field name="sale_order_id"
                                        options="{'no_create': True, 'no_open': True, 'no_quick_create': True, 'no_create_edit': True}"
