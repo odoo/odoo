@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="cinetpay_return_template" name="CinetPay Payment Return">
+    <t t-call="website.layout">
+      <div class="container my-5">
+        <div class="row justify-content-center">
+          <div class="col-md-8 text-center">
+            <h1 class="text-success">🎉 Paiement réussi !</h1>
+            <p>Merci pour votre paiement via CinetPay.</p>
+            <p><strong>Référence de transaction :</strong> <t t-esc="reference" /></p>
+            <a href="/" class="btn btn-primary mt-3">Retour à l'accueil</a>
+          </div>
+        </div>
+      </div>
+    </t>
+  </template>
+</odoo>

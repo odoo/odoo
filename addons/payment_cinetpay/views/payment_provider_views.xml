@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Héritage du formulaire des providers de paiement -->
+    <record id="view_payment_provider_form_inherit_cinetpay" model="ir.ui.view">
+        <field name="name">CinetPay Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Ajout dans la section des credentials -->
+            <group name="provider_credentials" position="inside">
+
+                <!-- Groupe visible seulement si le provider est CinetPay -->
+                <group name="cinetpay_credentials"
+                       string="CinetPay Configuration"
+                       invisible="code != 'cinetpay'">
+
+                    <field name="cinetpay_api_key"
+                           string="API Key"
+                           required="code == 'cinetpay' and state != 'disabled'"/>
+
+                    <field name="cinetpay_site_id"
+                           string="Site ID"
+                           required="code == 'cinetpay' and state != 'disabled'"/>
+
+                    <field name="cinetpay_notify_url"
+                           string="Notify URL"
+                           readonly="1"
+                           nolabel="1"/>
+                </group>
+
+            </group>
+
+        </field>
+    </record>
+
+</odoo>

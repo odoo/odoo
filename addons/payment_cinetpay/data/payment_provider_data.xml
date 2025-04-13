@@ -1,8 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data>
         <!-- Ajouter un fournisseur de paiement CinetPay -->
-        <record id="payment_provider_cinetpay" model="payment.provider">
-            <field name="name">CinetPay</field>
+        <record id="payment.payment_provider_cinetpay" model="payment.provider">
             <field name="code">cinetpay</field> <!-- Code pour CinetPay -->
             <field name="state">enabled</field> <!-- L'état du fournisseur (activé) -->
             <field name="cinetpay_api_key">178011212167efc7628d1cf3.91649419</field> <!-- Clé API de CinetPay -->
