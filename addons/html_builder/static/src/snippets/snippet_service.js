@@ -291,6 +291,9 @@ export class SnippetModel extends Reactive {
      * @returns {Object}
      */
     getOriginalSnippet(snippetKey) {
+        if (!snippetKey) {
+            return;
+        }
         return [...this.snippetStructures, ...this.snippetInnerContents].find(
             (snippet) => snippet.name === snippetKey
         );
