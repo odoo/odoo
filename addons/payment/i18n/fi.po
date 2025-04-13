@@ -24,7 +24,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr " Data haettu"
+msgstr "Data noudettu"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -57,8 +57,8 @@ msgid ""
 "                                and should be tested on a test database first."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> Nämä ominaisuudet asetetaan\n"
-"                                vastaamaan palveluntarjoajien käyttäytymistä ja niiden integraation ja\n"
-"                                Odoon kanssa tämän maksutavan osalta. Kaikki muutokset voivat aiheuttaa virheitä\n"
+"                                yhteensopiviksi palveluntarjoajien käyttäytymisen, niiden integraation ja\n"
+"                                Odoon kanssa tämän maksutavan osalta. Muutokset voivat aiheuttaa virheitä\n"
 "                                ja ne tulisi testata ensin testitietokannassa."
 
 #. module: payment
@@ -130,7 +130,7 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\">\n"
-"                                Kaikkia maita tuetaan.\n"
+"                                Kaikkia maat ovat tuettuja.\n"
 "                            </span>"
 
 #. module: payment
@@ -148,7 +148,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr "<span><i class=\"fa fa-lock\"/> Varmistaja</span>"
+msgstr "<span><i class=\"fa fa-lock\"/> Suojaa</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -169,7 +169,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment method available</strong>"
-msgstr "<strong>Maksutapaa ei ole saatavilla</strong>"
+msgstr "<strong>Maksutapoja ei ole saatavilla</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -178,9 +178,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"<strong>Varoitus!</strong> Vireillä on osittainen tallennus. Odota\n"
+"<strong>Varoitus!</strong> Osittainen viimeistely on kesken. Odota\n"
 "                    hetki, kunnes se on käsitelty. Tarkista maksupalveluntarjoajan asetukset, jos\n"
-"                    tallennus on edelleen vireillä muutaman minuutin kuluttua."
+"                    maksun viimeistely on edelleen kesken muutaman minuutin kuluttua."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -197,8 +197,8 @@ msgid ""
 "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Varoitus</strong> Maksupalveluntarjoajan luominen <em>LUO-painikkeesta</em> ei ole tuettu.\n"
-"                        Käytä sen sijaan <em>Tee kaksoiskappale -toimintoa</em>."
+"<strong>Varoitus</strong> Maksupalveluntarjoajan luomista <em>LUO-painikkeella</em> ei tueta.\n"
+"                        Käytä sen sijaan <em>Luo kaksoiskappale -toimintoa</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -206,7 +206,7 @@ msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
 "                                    correct partner before making this payment."
 msgstr ""
-"<strong>Varoitus</strong> Varmista, että olet kirjautunut sisään nimellä\n"
+"<strong>Varoitus</strong> Varmista, että olet kirjautunut sisään\n"
 "                                    oikeana kumppanina ennen tämän maksun suorittamista."
 
 #. module: payment
@@ -218,8 +218,7 @@ msgstr "<strong>Varoitus</strong> Valuutta puuttuu tai on virheellinen."
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
 msgstr ""
-"<strong>Varoitus</strong> Sinun täytyy olla kirjautuneena sisään "
-"maksaaksesi."
+"<strong>Varoitus</strong> Sinun tulee olla kirjautuneena sisään maksaaksesi."
 
 #. module: payment
 #. odoo-python
@@ -255,8 +254,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
-"Maksutapahtuma, jonka viite on %(ref)s, on käynnistetty maksutapaa %(token)s"
-" (%(provider_name)s) käyttäen."
+"Maksutapahtuma, jonka viite on %(ref)s, on käynnistetty käyttäen maksutapaa "
+"%(token)s (%(provider_name)s)."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
@@ -398,7 +397,7 @@ msgstr "Arvo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
-msgstr "Määrä Max"
+msgstr "Enimmäismäärä"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -438,8 +437,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"Are you sure you want to void the authorized transaction? This action can't "
-"be undone."
+"Oletko varma, että haluat mitätöidä vahvistetun maksutapahtuman? Tätä "
+"toimintoa ei voi perua."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_argencard
@@ -660,7 +659,7 @@ msgstr "Boleto"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_boost
 msgid "Boost"
-msgstr "Mainosta"
+msgstr "Nosta"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__brand_ids
@@ -681,7 +680,7 @@ msgstr "CIMB Niaga"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cmr
 msgid "CMR"
-msgstr "CMR"
+msgstr "CMR-järjestelmä"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cabal
@@ -786,12 +785,12 @@ msgstr "Cencosud"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
 msgid "Child Transactions"
-msgstr "Lapsitapahtumat"
+msgstr "Osatapahtumat"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Child transactions"
-msgstr "Alemman tason tapahtumat"
+msgstr "Osatapahtumat"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -802,7 +801,7 @@ msgstr "Valitse maksutapa"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr "Valitse toinen menetelmä <i class=\"oi oi-arrow-down\"/>"
+msgstr "Valitse toinen tapa <i class=\"oi oi-arrow-down\"/>"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cirrus
@@ -1026,7 +1025,7 @@ msgstr "Pois käytöstä"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_discover
 msgid "Discover"
-msgstr "Löydä"
+msgstr "Tutustu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
@@ -1100,7 +1099,7 @@ msgstr "Käytössä"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Enterprise"
-msgstr "Enterprise"
+msgstr "Yritys"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
@@ -1117,12 +1116,12 @@ msgstr "Virhe: %s"
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout"
-msgstr "Express Checkout"
+msgstr "Express Checkout (pikakassa)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
 msgid "Express Checkout Form Template"
-msgstr "Express Checkout lomake malli"
+msgstr "Express Checkout -lomakemalli (pikakassa)"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_express_checkout
@@ -1131,9 +1130,9 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
-"Pikakassan avulla asiakkaat voivat maksaa nopeammin käyttämällä maksutapaa, "
-"joka antaa kaikki tarvittavat laskutus- ja toimitustiedot, jolloin "
-"kokonainen kassaprosessi voidaan ohittaa."
+"Express checkoutin eli pikakassan avulla asiakkaat voivat maksaa nopeammin "
+"käyttämällä maksutapaa, joka antaa kaikki tarvittavat laskutus- ja "
+"toimitustiedot, jolloin kokonainen kassaprosessi voidaan ohittaa."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_fps
@@ -1169,14 +1168,14 @@ msgstr "Frafinance"
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
 msgid "Full & Partial"
-msgstr "Täydellinen ja osittainen"
+msgstr "Täydellinen & osittainen"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
-msgstr "Vain täysi"
+msgstr "Vain täydellinen"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_gcash
@@ -1228,7 +1227,7 @@ msgstr "GrabPay"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Group By"
-msgstr "Ryhmittely"
+msgstr "Ryhmittele"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hd
@@ -1243,7 +1242,7 @@ msgstr "HTTP-reititys"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr "Sisältää alemman tason vedoksia"
+msgstr "Sisältää alemman tason luonnoksia"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
@@ -1273,7 +1272,7 @@ msgstr "Hoolah"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "How to configure your PayPal account"
-msgstr "Kuinka määrittää Paypal-tilisi"
+msgstr "Kuinka määrittää Paypal-tili"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_humm
@@ -1322,7 +1321,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
 msgid "Inline Form Template"
-msgstr "Inline lomakkeen malli"
+msgstr "Suoramuokkauslomakkeen malli"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1343,22 +1342,22 @@ msgstr "Asennettu"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr "Onko tallennettava määrä voimassa"
+msgstr "On voimassa oleva tallennettu määrä"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
 msgid "Is Post-processed"
-msgstr "Onko jälkikäsitelty"
+msgstr "On jälkikäsitelty"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__is_primary
 msgid "Is Primary Payment Method"
-msgstr "Onko ensisijainen maksutapa"
+msgstr "On ensisijainen maksutapa"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr "Onko Stripen tukema maa"
+msgstr "On Stripen tukema maa"
 
 #. module: payment
 #. odoo-javascript
@@ -1414,7 +1413,7 @@ msgstr "Klarna - Maksa nyt"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_klarna_pay_over_time
 msgid "Klarna - Pay over time"
-msgstr "Klarna - Maksa ajan myötä"
+msgstr "Klarna - Maksa ajan kuluessa"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kredivo
@@ -1551,7 +1550,7 @@ msgstr "Manuaalinen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr "Tuettu manuaalinen kaappaus"
+msgstr "Manuaalinen kaappaus on tuettu"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mastercard
