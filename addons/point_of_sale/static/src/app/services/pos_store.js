@@ -40,6 +40,8 @@ import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
+import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
+import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 
 const { DateTime } = luxon;
 
@@ -1232,7 +1234,6 @@ export class PosStore extends WithLazyGetterTrap {
             for (const order of orders) {
                 order.recomputeOrderData();
             }
-
             const serializedOrder = orders.map((order) =>
                 order.serialize({ orm: true, clear: true })
             );
@@ -1894,6 +1895,20 @@ export class PosStore extends WithLazyGetterTrap {
     async selectPricelist(pricelist) {
         await this.getOrder().setPricelist(pricelist);
     }
+    async editFloatingOrderName(order) {
+        const newName = await makeAwaitable(this.dialog, EditOrderNamePopup, {
+            title: _t("Edit Order Name"),
+            placeholder: _t("18:45 John 4P"),
+            startingValue: order.floating_order_name || "",
+        });
+        if (typeof order.id == "number") {
+            this.data.write("pos.order", [order.id], {
+                floating_order_name: newName,
+            });
+        } else {
+            order.floating_order_name = newName;
+        }
+    }
     async selectPreset(preset = false, order = this.getOrder()) {
         if (!preset) {
             const selectionList = this.models["pos.preset"].map((preset) => ({
@@ -1926,15 +1941,30 @@ export class PosStore extends WithLazyGetterTrap {
             if (preset.identification === "name" && !order.floating_order_name && !order.table_id) {
                 order.floating_order_name = order.getPartner()?.name;
                 if (!order.floating_order_name) {
-                    this.editFloatingOrderName(order);
+                    await this.editFloatingOrderName(order);
                 }
+                order = this.getOrder();
             }
 
             if (preset.use_timing && !order.preset_time) {
-                await this.syncPresetSlotAvaibility(preset);
-                order.preset_time = preset.nextSlot?.datetime || false;
+                this.openPresetTiming(order);
             } else if (!preset.use_timing) {
                 order.preset_time = false;
+            }
+        }
+    }
+    async openPresetTiming(order = this.getOrder()) {
+        const data = await makeAwaitable(this.dialog, PresetSlotsPopup);
+        if (data) {
+            if (order.preset_id.id != data.presetId) {
+                await this.selectPreset(this.models["pos.preset"].get(data.presetId));
+            }
+
+            order.preset_time = data.slot.datetime;
+            console.log(order.preset_time.toFormat('hh:mm'));
+            if (data.slot.datetime > DateTime.now()) {
+                this.addPendingOrder([order.id]);
+                await this.syncAllOrders();
             }
         }
     }

@@ -34,14 +34,6 @@ export class PosPreset extends Base {
         return this.models["pos.order"].filter((o) => o.preset_id?.id === this.id);
     }
 
-    get nextSlot() {
-        const dateNow = DateTime.now();
-        const sqlDate = dateNow.toFormat("yyyy-MM-dd");
-        return Object.values(this.uiState.availabilities[sqlDate]).find(
-            (s) => !s.isFull && s.datetime > dateNow
-        );
-    }
-
     get availabilities() {
         return this.uiState.availabilities;
     }
