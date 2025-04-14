@@ -240,3 +240,20 @@ registry.category("web_tour.tours").add("point_of_sale.test_printed_receipt_tour
             }, "Basic receipt doesn't have price"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("ReceiptLayoutTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1", "5"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+
+            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.hasLayout("boxes"),
+            ReceiptScreen.containsReceiptHeader("Because boring receipts are so outdated"),
+            ReceiptScreen.noReceiptLogo(),
+        ].flat(),
+});
