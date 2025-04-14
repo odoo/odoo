@@ -804,6 +804,30 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
+    @http.route(['/website/get_alt_images'], type='jsonrpc', auth="user", website=True)
+    def get_alt_images(self, models):
+        result = []
+        for model in models:
+            record = request.env[model['model']].browse(model['id'])
+            model['field'] = 'arch_db' if model['field'] == 'arch' else model['field']
+            tree = html.fromstring(str(record[model['field']]))
+            for index, el in enumerate(tree.xpath('//img')):
+                role = el.get('role')
+                decorative = role == "presentation"
+                alt = el.get('alt')
+                if not decorative or alt is None:
+                    result.append({
+                        "src": el.get("src"),
+                        "alt": alt or "",
+                        "decorative": False,
+                        "updated": False,
+                        "res_model": model['model'],
+                        "res_id": model['id'],
+                        "id": f"{model['model']}-{model['id']}-{index}",
+                        "field": model.get('field'),
+                    })
+        return json.dumps(result)
+
     @http.route(['/website/update_alt_images'], type='jsonrpc', auth="user", website=True)
     def update_alt_images(self, imgs):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
