@@ -200,12 +200,15 @@ export class ProductScreen extends Component {
         }
 
         if (!product) {
-            await this.pos.data.callRelated("pos.session", "find_product_by_barcode", [
-                odoo.pos_session_id,
-                code.base_code,
-                this.pos.config.id,
-            ]);
+            const records = await this.pos.data.callRelated(
+                "pos.session",
+                "find_product_by_barcode",
+                [odoo.pos_session_id, code.base_code, this.pos.config.id]
+            );
             await this.pos.processProductAttributes();
+            if (records && records["product.product"].length > 0) {
+                return records["product.product"][0];
+            }
         }
 
         return product;
