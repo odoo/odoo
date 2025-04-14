@@ -1,18 +1,31 @@
+import contextlib
 import inspect
+import io
 import logging
 
-import docutils
+import docutils.nodes
+import docutils.parsers.rst.directives
+import docutils.parsers.rst.directives.admonitions
+import docutils.parsers.rst.roles
 
 from odoo.modules.registry import Registry
 from odoo.tests.common import BaseCase, get_db_name, tagged
 
 logger = logging.getLogger(__name__)
 
+# There are too many broken docstrings to fix them all in one PR, we use
+# this list to fix one module at a time.
+MODULES_TO_LINT = (
+)
+
 POSITIONAL_ONLY = inspect.Parameter.POSITIONAL_ONLY
 POSITIONAL_OR_KEYWORD = inspect.Parameter.POSITIONAL_OR_KEYWORD
 VAR_POSITIONAL = inspect.Parameter.VAR_POSITIONAL
 KEYWORD_ONLY = inspect.Parameter.KEYWORD_ONLY
 VAR_KEYWORD = inspect.Parameter.VAR_KEYWORD
+
+DOCUTILS_WARNING = 2
+DOCUTILS_CRITIAL = 5
 
 RST_INFO_FIELDS_DOC = (
     "https://www.sphinx-doc.org/en/master/usage/domains/python.html#info-field-lists")
@@ -58,13 +71,7 @@ Absent from docstring: {doc_missing}
 """
 
 
-def extract_docstring_params(method):
-    docstring = inspect.cleandoc(method.__doc__)
-    doctree = docutils.core.publish_doctree(docstring, settings_overrides={
-        'report_level': 5,
-        'halt_level': 5,
-    })
-
+def extract_docstring_params(doctree):
     params = {}  # sorted set
     types = {}
     rtype = inspect._empty
@@ -127,6 +134,33 @@ def extract_docstring_params(method):
 
 @tagged('-at_install', 'post_install')
 class TestDocstring(BaseCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # The docstrings can use many more roles and directives than the
+        # one present natively in docutils. That's because we use Sphinx
+        # to render them in the documentation, and Sphinx defines the
+        # "Python Domain", a set of additional rules and directive to
+        # understand the python language.
+        #
+        # It is not desirable to add a dependency on Sphinx in
+        # community, at least not only for this linter.
+        #
+        # The following code adds a bunch of dummy elements for the
+        # missing roles and directives, so docutils is able to parse
+        # them with no warning.
+
+        def role_function(name, rawtext, text, lineno, inliner, options=None, content=None):
+            return [docutils.nodes.inline(rawtext, text)], []
+
+        for role in ('attr', 'class', 'func', 'meth', 'ref', 'const', 'samp', 'term'):
+            docutils.parsers.rst.roles.register_local_role(role, role_function)
+
+        for directive in ('attribute', ):
+            docutils.parsers.rst.directives.register_directive(
+                directive, docutils.parsers.rst.directives.admonitions.Note)
+
     def test_docstring(self):
         """ Verify that the function signature and its docstring match. """
         registry = Registry(get_db_name())
@@ -139,6 +173,9 @@ class TestDocstring(BaseCase):
                 if method_name in seen_methods:
                     continue
                 seen_methods.add((model_name, method_name))
+
+                # We don't care of the docstring in overrides, find the
+                # class that introduced the method.
                 reverse_mro = reversed(model_cls.mro()[1:-1])
                 for parent_class in reverse_mro:
                     method = getattr(parent_class, method_name, None)
@@ -147,44 +184,61 @@ class TestDocstring(BaseCase):
                 if not method.__doc__:
                     continue
 
+                report_level = DOCUTILS_WARNING if (
+                    (model_cls._original_module or model_name).startswith(MODULES_TO_LINT)
+                    and not (parent_class._name or '').startswith('mail.')  # until we lint mail
+                ) else DOCUTILS_CRITIAL
+
                 with self.subTest(
                     module=parent_class._module,
                     model=parent_class._name,
                     method=method_name,
                 ):
-                    doc_params, doc_types, doc_rtype = extract_docstring_params(method)
+                    with contextlib.redirect_stderr(io.StringIO()) as stderr:
+                        doctree = docutils.core.publish_doctree(
+                            inspect.cleandoc(method.__doc__),
+                            settings_overrides={
+                                'report_level': report_level,
+                                'halt_level': 5,  # CRITICAL TICAL!
+                            },
+                        )
+                        if stderr.tell():
+                            self.fail(stderr.getvalue())
 
-                    signature = inspect.signature(method)
-                    sign_params = list(signature.parameters.values())
-                    sign_types = {param.name: param.annotation for param in sign_params}
-                    sign_rtype = signature.return_annotation
+                    self._test_docstring_params(method, doctree)
 
-                    if sign_rtype != signature.empty and doc_rtype != signature.empty:
-                        self.assertEqual(sign_rtype, doc_rtype)
+    def _test_docstring_params(self, method, doctree):
+        doc_params, doc_types, doc_rtype = extract_docstring_params(doctree)
 
-                    try:
-                        m = "the docstring is documenting non-existing parameters"
-                        self.assertGreaterEqual(set(sign_types), set(doc_params), m)
-                    except AssertionError:
-                        if sign_params[-1].kind != VAR_KEYWORD:
-                            raise
-                        # TODO: increase verbosity to warning
-                        logger.info(ABUSE_KWARGS.format(
-                            module=parent_class._module,
-                            model=parent_class._name,
-                            method=method_name,
-                            function=signature,
-                            docstring=', '.join(tuple(doc_params)),
-                            func_missing=set(doc_params) - set(sign_types),
-                            doc_missing=(set(sign_types) - set(doc_params) - {
-                              # self               , kwargs
-                                sign_params[0].name, sign_params[-1].name}
-                            ) or {},
-                        ))
+        signature = inspect.signature(method)
+        sign_params = list(signature.parameters.values())
+        sign_types = {param.name: param.annotation for param in sign_params}
+        sign_rtype = signature.return_annotation
 
-                    for param, doc_type in doc_types.items():
-                        sign_type = sign_types.get(param, signature.empty)
-                        if sign_type != signature.empty:
-                            if isinstance(sign_type, type):
-                                sign_type = sign_type.__name__
-                            self.assertEqual(sign_type, doc_type)
+        if sign_rtype != signature.empty and doc_rtype != signature.empty:
+            self.assertEqual(sign_rtype, doc_rtype)
+
+        try:
+            m = "the docstring is documenting non-existing parameters"
+            self.assertGreaterEqual(set(sign_types), set(doc_params), m)
+        except AssertionError:
+            if sign_params[-1].kind != VAR_KEYWORD:
+                raise
+            # TODO: increase verbosity to warning
+            logger.info(ABUSE_KWARGS.format(
+                **self._subtest.params,
+                function=signature,
+                docstring=', '.join(tuple(doc_params)),
+                func_missing=set(doc_params) - set(sign_types),
+                doc_missing=(set(sign_types) - set(doc_params) - {
+                  # self               , kwargs
+                    sign_params[0].name, sign_params[-1].name}
+                ) or {},
+            ))
+
+        for param, doc_type in doc_types.items():
+            sign_type = sign_types.get(param, signature.empty)
+            if sign_type != signature.empty:
+                if isinstance(sign_type, type):
+                    sign_type = sign_type.__name__
+                self.assertEqual(sign_type, doc_type)
