@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
+from odoo.tools.misc import format_date
 
 
 class MailActivityPlan(models.Model):
@@ -61,3 +64,85 @@ class MailActivityPlan(models.Model):
             for plan, vals in zip(self, vals_list):
                 vals['name'] = _("%s (copy)", plan.name)
         return vals_list
+
+    def _get_summary_lines(self, plan_date=None):
+        self.ensure_one()
+        summaries = []
+        for template in self.template_ids:
+            activity_type = template.activity_type_id
+            summary_line = activity_type.name
+            if template.summary:
+                summary_line += f": {template.summary}"
+            # We don't display deadlines when the user doesn't specify a plan_date
+            if plan_date:
+                summary_line += f" ({format_date(self.env, template._get_date_deadline(plan_date))})"
+            next_activities = []
+            # Triggered next activity
+            if activity_type.triggered_next_type_id:
+                triggered_activity = activity_type.triggered_next_type_id
+                triggered_delay_unit = dict(triggered_activity._fields['delay_unit']._description_selection(self.env))[triggered_activity.delay_unit]
+                triggered_delay_from = dict(triggered_activity._fields['delay_from']._description_selection(self.env))[triggered_activity.delay_from]
+
+                next_activities.append(
+                    _("%(activity_name)s %(delay_count)s %(delay_unit)s %(delay_from)s",
+                    activity_name=triggered_activity.name,
+                    delay_count=triggered_activity.delay_count,
+                    delay_unit=triggered_delay_unit,
+                    delay_from=triggered_delay_from
+                    )
+                )
+            # Suggested next activities
+            elif activity_type.suggested_next_type_ids:
+                suggested_activities = []
+                for suggested_activity in activity_type.suggested_next_type_ids:
+                    suggested_delay_unit = dict(suggested_activity._fields['delay_unit']._description_selection(self.env))[suggested_activity.delay_unit]
+                    suggested_delay_from = dict(suggested_activity._fields['delay_from']._description_selection(self.env))[suggested_activity.delay_from]
+                    suggested_activities.append(
+                        _("%(activity_name)s %(delay_count)s %(delay_unit)s %(delay_from)s",
+                        activity_name=suggested_activity.name,
+                        delay_count=suggested_activity.delay_count,
+                        delay_unit=suggested_delay_unit,
+                        delay_from=suggested_delay_from
+                        )
+                    )
+                next_activities.append(_(" or ").join(suggested_activities))
+            # Add next activities as nested list for each activity type
+            if next_activities:
+                nested_summary_line = Markup('<ul>%s</ul>') % Markup().join(
+                    Markup('<li>%s</li>') % activity for activity in next_activities
+                )
+                summary_line += nested_summary_line
+            summaries.append(Markup('<li>%s</li>') % summary_line)
+        return Markup('<ul>%s</ul>') % Markup().join(summaries) if summaries else ''
+
+    def _schedule_plan(self, res_ids=[], on_demand_responsible=None, plan_date=None, activity_filter=lambda _: True):
+        applied_on = self.env[self.res_model].browse(res_ids)
+        for record in applied_on:
+            body = _('The plan "%(plan_name)s" has been started', plan_name=self.name)
+            activity_descriptions = []
+            for template in self.template_ids.filtered(activity_filter):
+                if template.responsible_type == 'on_demand':
+                    responsible = on_demand_responsible
+                else:
+                    responsible = template._determine_responsible(on_demand_responsible, record)['responsible']
+                date_deadline = template._get_date_deadline(plan_date)
+                record.activity_schedule(
+                    activity_type_id=template.activity_type_id.id,
+                    automated=False,
+                    summary=template.summary,
+                    note=template.note,
+                    user_id=responsible.id if responsible else False,
+                    date_deadline=date_deadline
+                )
+                activity_descriptions.append(
+                    _('%(activity)s, assigned to %(name)s, due on the %(deadline)s',
+                      activity=template.summary or template.activity_type_id.name,
+                      name=responsible.name, deadline=format_date(self.env, date_deadline)))
+
+            if activity_descriptions:
+                body += Markup('<ul>%s</ul>') % (
+                    Markup().join(Markup('<li>%s</li>') % description for description in activity_descriptions)
+                )
+            record.message_post(body=body)
+
+        return applied_on

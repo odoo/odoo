@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
@@ -130,6 +131,65 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.assertFalse(run_res, 'ir_actions_server: create next activity action correctly finished should return False')
         self.assertEqual(self.env['mail.activity'].search_count([]), before_count + 1)
         self.assertEqual(self.env['mail.activity'].search_count([('summary', '=', 'TestNew')]), 1)
+
+    def test_action_next_activity_plan(self):
+        activity_type_todo = self.env.ref('mail.mail_activity_data_todo')
+        activity_plan = self.env['mail.activity.plan'].create({
+            'name': 'Test Onboarding Plan',
+            'res_model': 'res.partner',
+            'template_ids': [
+                (0, 0, {
+                    'activity_type_id': activity_type_todo.id,
+                    'delay_count': 3,
+                    'delay_from': 'before_plan_date',
+                    'delay_unit': 'days',
+                    'responsible_id': self.user_admin.id,
+                    'responsible_type': 'other',
+                    'sequence': 10,
+                    'summary': 'Plan training',
+                }), (0, 0, {
+                    'activity_type_id': activity_type_todo.id,
+                    'delay_count': 2,
+                    'delay_from': 'after_plan_date',
+                    'delay_unit': 'weeks',
+                    'responsible_type': 'on_demand',
+                    'sequence': 20,
+                    'summary': 'Training',
+                }),
+            ],
+        })
+        self.test_partner.write({'user_id': self.user_employee.id})
+        self.action.write({
+            'state': 'next_activity',
+            'activity_user_type': 'generic',
+            'activity_user_field_name': 'user_id',
+            'activity_plan_id': activity_plan.id,
+            'activity_date_deadline_range': 1,
+            'activity_date_deadline_range_type': 'days',
+        })
+        before_count = self.env['mail.activity'].search_count([])
+        now = datetime.now()
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: create next activity action correctly finished should return False')
+        self.assertEqual(self.env['mail.activity'].search_count([]), before_count + 2)
+        activities = self.env['mail.activity'].search([
+            ('res_model', '=', 'res.partner'),
+            ('res_id', '=', self.test_partner.id),
+        ]).grouped('user_id')
+        self.assertRecordValues(activities[self.user_admin], [
+            {
+                'activity_type_id': activity_type_todo.id,
+                'summary': 'Plan training',
+                'date_deadline': (now + timedelta(days=-2)).date(),
+            }
+        ])
+        self.assertRecordValues(activities[self.user_employee], [
+            {
+                'activity_type_id': activity_type_todo.id,
+                'summary': 'Training',
+                'date_deadline': (now + timedelta(days=1, weeks=2)).date(),
+            }
+        ])
 
     def test_action_next_activity_warning(self):
         self.action.write({

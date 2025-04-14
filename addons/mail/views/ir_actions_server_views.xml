@@ -14,28 +14,71 @@
                     <!-- Create next activity -->
                     <group invisible="state != 'next_activity'">
                         <group>
-                            <field name="activity_type_id" options="{'no_create': True, 'no_open': True}"
-                                required="state == 'next_activity'"/>
-                            <field name="activity_summary" placeholder="e.g. Discuss proposal"/>
-                        </group>
-                        <group>
-                            <label for="activity_date_deadline_range"/>
-                            <div class="o_row">
-                                <field name="activity_date_deadline_range" class="oe_inline"/>
+                            <field name="activity_plan_id" options="{'no_create': True, 'no_open': True}" />
+
+                            <!-- Without activity plan -->
+                            <field name="activity_type_id" invisible="activity_plan_id"
+                                options="{'no_create': True, 'no_open': True}"
+                                required="not activity_plan_id and state == 'next_activity'"
+                            />
+                            <field name="activity_summary" invisible="activity_plan_id"
+                                placeholder="e.g. Discuss proposal"
+                            />
+
+                            <!-- With activity plan -->
+                            <label for="activity_date_deadline_range" invisible="not activity_plan_id"/>
+                            <div class="d-flex flex-row gap-2" invisible="not activity_plan_id">
+                                <field name="activity_date_deadline_range" class="oe_inline o_input_3ch"/>
                                 <field name="activity_date_deadline_range_type" class="oe_inline" required="state == 'next_activity' and activity_date_deadline_range &gt; 0"/>
                             </div>
-                            <field name="activity_user_type" required="state == 'next_activity'"/>
-                            <field name="activity_user_field_name"
-                                widget="field_selector" options="{'model': 'model_name'}"
-                                invisible="activity_user_type != 'generic'"
-                                required="state == 'next_activity' and activity_user_type == 'generic'"/>
-                            <field name="activity_user_id"
+                            <field name="activity_user_type" invisible="not activity_plan_id or not activity_plan_has_user_on_demand"
+                                required="state == 'next_activity'"
+                            />
+                            <field name="activity_user_field_name" invisible="not activity_plan_id or not activity_plan_has_user_on_demand or activity_user_type != 'generic'"
+                                widget="field_selector"
+                                options="{'model': 'model_name'}"
+                                required="state == 'next_activity' and activity_user_type == 'generic'"
+                            />
+                            <field name="activity_user_id" invisible="not activity_plan_id or not activity_plan_has_user_on_demand or activity_user_type != 'specific'"
                                 placeholder="Choose a user..."
-                                invisible="activity_user_type != 'specific'"
-                                required="state == 'next_activity' and activity_user_type == 'specific'"/>
-                            <field name="activity_note" class="oe-bordered-editor" placeholder="Add a description to your activity..."/>
+                                required="state == 'next_activity' and activity_user_type == 'specific'"
+                            />
+                        </group>
+                        <group>
+                            <!-- Without activity plan -->
+                            <label for="activity_date_deadline_range" invisible="activity_plan_id"/>
+                            <div class="d-flex flex-row gap-2" invisible="activity_plan_id">
+                                <field name="activity_date_deadline_range" class="oe_inline o_input_3ch"/>
+                                <field name="activity_date_deadline_range_type" class="oe_inline" required="state == 'next_activity' and activity_date_deadline_range &gt; 0"/>
+                            </div>
+                            <field name="activity_user_type" invisible="activity_plan_id"
+                                required="state == 'next_activity'"
+                            />
+                            <field name="activity_user_field_name" invisible="activity_plan_id or activity_user_type != 'generic'"
+                                widget="field_selector"
+                                options="{'model': 'model_name'}"
+                                required="state == 'next_activity' and activity_user_type == 'generic'"
+                            />
+                            <field name="activity_user_id" invisible="activity_plan_id or activity_user_type != 'specific'"
+                                placeholder="Choose a user..."
+                                required="state == 'next_activity' and activity_user_type == 'specific'"
+                            />
+
+                            <!-- With activity plan -->
+                            <label for="activity_plan_summary" invisible="not activity_plan_id"
+                                colspan="2"
+                                class="o_form_label"
+                            />
+                            <field name="activity_plan_summary" invisible="not activity_plan_id"
+                                colspan="2"
+                                nolabel="1"
+                                class="text-muted"
+                            />
                         </group>
                     </group>
+                    <field name="activity_note" invisible="state != 'next_activity' or activity_plan_id"
+                        placeholder="Log a note..."
+                    />
                     <!-- Add/Remove Followers -->
                     <group invisible="state not in ['followers', 'remove_followers']">
                         <group>
