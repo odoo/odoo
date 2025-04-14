@@ -75,7 +75,7 @@
                 <Modelo t-out="'140' if freelancer else '240'"/>
                 <Capitulo>2</Capitulo>
                 <Subcapitulo t-out="'2.1' if freelancer else None"/>
-                <Operacion t-out="'A00' if is_emission else 'AN0'"/>
+                <Operacion t-out="'M00' if batuz_correction else 'A00' if is_emission else 'AN0'"/>
                 <Version>1.0</Version>
                 <Ejercicio t-out="fiscal_year"/>
                 <ObligadoTributario>
