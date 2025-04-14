@@ -107,9 +107,12 @@ export class ORM {
         return Object.assign(Object.create(this), { _silent: true });
     }
 
-    /** @returns {ORM} */
-    get cached() {
-        return Object.assign(Object.create(this), { _cached: true });
+    /**
+     * @param {object} options
+     * @returns {ORM}
+     */
+    cached(options = {}) {
+        return Object.assign(Object.create(this), { _cached: options });
     }
 
     /**
@@ -130,7 +133,10 @@ export class ORM {
             args,
             kwargs: fullKwargs,
         };
-        return this.rpc(url, params, { silent: this._silent, cached: this._cached });
+        return this.rpc(url, params, {
+            silent: this._silent,
+            cached: this._cached,
+        });
     }
 
     /**

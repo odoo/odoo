@@ -52,13 +52,13 @@ export class IndexedDB {
     /**
      * Invalidates a table, or the whole database.
      *
-     * @param {string} [table] if not given, the whole database is invalidated
+     * @param {string|Array} [table=null] if not given, the whole database is invalidated
      * @returns Promise
      */
-    async invalidate(table = null) {
+    async invalidate(tables = null) {
         return this.execute((db) => {
             if (db) {
-                return this._invalidate(db, table);
+                return this._invalidate(db, typeof tables === "string" ? [tables] : tables);
             }
         });
     }
@@ -175,12 +175,13 @@ export class IndexedDB {
         });
     }
 
-    async _invalidate(db, table) {
+    async _invalidate(db, tables) {
         return new Promise((resolve, reject) => {
             const objectStoreNames = [...db.objectStoreNames].filter(
                 (table) => table !== VERSION_TABLE
             );
-            const tables = table && objectStoreNames.includes(table) ? [table] : objectStoreNames;
+            tables = tables ? objectStoreNames.filter((t) => tables.includes(t)) : objectStoreNames;
+
             if (tables.length === 0) {
                 return resolve();
             }

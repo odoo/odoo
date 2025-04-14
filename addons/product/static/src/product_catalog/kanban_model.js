@@ -14,6 +14,7 @@ class ProductCatalogRecord extends Record {
 
 export class ProductCatalogKanbanModel extends RelationalModel {
     static Record = ProductCatalogRecord;
+    static withCache = false;
 
     async _loadData(params) {
         // if orm have isSample field and its value set to be true then we have sample data as there is no product found for selected vendor, show sample data

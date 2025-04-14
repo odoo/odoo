@@ -13,7 +13,11 @@ function promiseState(promise) {
 test("RamCache: can cache a simple call", async () => {
     // The fist call to persistentCache.read will save the result on the RamCache.
     // Each next call will retrive the ram cache independently, without executing the fallback
-    const persistentCache = new PersistentCache("mockRpc", 1);
+    const persistentCache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
     const persistentCacheRead = (number) =>
         persistentCache.read("table", "key", () => {
             expect.step("fallback");
@@ -27,7 +31,11 @@ test("RamCache: can cache a simple call", async () => {
 
 test("RamCache: ram is set with promises", async () => {
     const def = new Deferred();
-    const persistentCache = new PersistentCache("mockRpc", 1);
+    const persistentCache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
 
     // If two identical calls are made in succession, only one fallback will be made.
     // The second call will get the result of the first call (or a promise if the first call is not yet finish).
@@ -54,7 +62,11 @@ test("RamCache: ram is set with promises", async () => {
 });
 
 test("PersistentCache: can cache a simple call", async () => {
-    const persistentCache = new PersistentCache("mockRpc", 1);
+    const persistentCache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
 
     expect(
         await persistentCache.read("table", "key", () => Promise.resolve({ test: 123 }))
@@ -62,8 +74,11 @@ test("PersistentCache: can cache a simple call", async () => {
         test: 123,
     });
     // Both caches are correctly updated with the fetch values
-    expect(persistentCache.indexedDB.mockIndexedDB.table.key).toEqual({ test: 123 });
     await microTick();
+    await microTick();
+    expect(persistentCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        'encrypted data:{"test":123}'
+    );
     expect(await promiseState(persistentCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
         value: { test: 123 },
@@ -86,9 +101,256 @@ test("PersistentCache: can cache a simple call", async () => {
     // the fallback returned a different value
     def.resolve({ test: 456 });
     await microTick();
-    // Both caches are updated with the last value
-    expect(persistentCache.indexedDB.mockIndexedDB.table.key).toEqual({ test: 456 });
     await microTick();
+    await microTick();
+    // Both caches are updated with the last value
+    expect(persistentCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        'encrypted data:{"test":456}'
+    );
+    expect(await promiseState(persistentCache.ramCache.ram.table.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 456 },
+    });
+});
+
+test("invalidate table", async () => {
+    const persistentCache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    expect(
+        await persistentCache.read("table", "key", () => Promise.resolve({ test: 123 }))
+    ).toEqual({
+        test: 123,
+    });
+
+    // Both caches are correctly updated with the fetch values
+    await microTick();
+    await microTick();
+    expect(persistentCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        'encrypted data:{"test":123}'
+    );
+    expect(await promiseState(persistentCache.ramCache.ram.table.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 123 },
+    });
+
+    //invalidate the table
+    persistentCache.invalidate("table");
+
+    // `table` is empty
+    expect(persistentCache.indexedDB.mockIndexedDB.table).toEqual({});
+    expect(persistentCache.ramCache.ram.table).toEqual({});
+});
+
+test("invalidate multiple tables", async () => {
+    const persistentCache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    expect(
+        await persistentCache.read("table", "key", () => Promise.resolve({ test: 123 }))
+    ).toEqual({
+        test: 123,
+    });
+
+    expect(
+        await persistentCache.read("table2", "key", () => Promise.resolve({ test: 456 }))
+    ).toEqual({
+        test: 456,
+    });
+
+    // Both caches are correctly updated with the fetch values
+    await microTick();
+    await microTick();
+    expect(persistentCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        'encrypted data:{"test":123}'
+    );
+    expect(persistentCache.indexedDB.mockIndexedDB.table2.key.ciphertext).toBe(
+        'encrypted data:{"test":456}'
+    );
+    expect(await promiseState(persistentCache.ramCache.ram.table.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 123 },
+    });
+    expect(await promiseState(persistentCache.ramCache.ram.table2.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 456 },
+    });
+
+    //invalidate the table
+    persistentCache.invalidate(["table", "table2"]);
+
+    // `table` is empty
+    expect(persistentCache.indexedDB.mockIndexedDB.table).toEqual({});
+    expect(persistentCache.indexedDB.mockIndexedDB.table2).toEqual({});
+    expect(persistentCache.ramCache.ram.table).toEqual({});
+    expect(persistentCache.ramCache.ram.table2).toEqual({});
+});
+
+test("IndexedDB Crypt: can cache a simple call", async () => {
+    const persistentCache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+    await persistentCache.encryptReady;
+
+    expect(
+        await persistentCache.read("table", "key", () => Promise.resolve({ test: 123 }))
+    ).toEqual({
+        test: 123,
+    });
+    // Both caches are correctly updated with the fetch values
+    await microTick();
+    await microTick();
+    expect(persistentCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        'encrypted data:{"test":123}'
+    );
+    expect(await promiseState(persistentCache.ramCache.ram.table.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 123 },
+    });
+
+    // Simulate a reload (Clear the Ram Cache)
+    persistentCache.ramCache.invalidate();
+    expect(persistentCache.ramCache.ram).toEqual({});
+    const def = new Deferred();
+
+    // we return the disk cache value - decrypted.
+    expect(
+        await persistentCache.read("table", "key", () => {
+            expect.step("Fallback");
+            return Promise.resolve(def);
+        })
+    ).toEqual({ test: 123 });
+    expect.verifySteps(["Fallback"]);
+
+    // the fallback returned a different value
+    def.resolve({ test: 456 });
+});
+
+test("update callback - Ram Value", async () => {
+    const persistentCache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    expect(
+        await persistentCache.read("table", "key", () => Promise.resolve({ test: 123 }))
+    ).toEqual({
+        test: 123,
+    });
+    // Both caches are correctly updated with the fetch values
+    await microTick();
+    await microTick();
+    expect(persistentCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        'encrypted data:{"test":123}'
+    );
+    expect(await promiseState(persistentCache.ramCache.ram.table.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 123 },
+    });
+
+    const def = new Deferred();
+
+    // we return the RAM cache value.
+    expect(
+        await persistentCache.read(
+            "table",
+            "key",
+            () => {
+                expect.step("Fallback");
+                return Promise.resolve(def);
+            },
+            {
+                onUpdate: (result) => {
+                    expect.step("Callback");
+                    expect(result).toEqual({ test: 456 });
+                },
+            }
+        )
+    ).toEqual({ test: 123 });
+    expect.verifySteps(["Fallback"]);
+
+    // the fallback returned a different value
+    def.resolve({ test: 456 });
+    await microTick();
+    await microTick();
+    await microTick();
+    expect.verifySteps(["Callback"]);
+    // Both caches are updated with the last value
+    expect(persistentCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        `encrypted data:{"test":456}`
+    );
+    expect(await promiseState(persistentCache.ramCache.ram.table.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 456 },
+    });
+});
+
+test("update callback - Disk Value", async () => {
+    const persistentCache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    expect(
+        await persistentCache.read("table", "key", () => Promise.resolve({ test: 123 }))
+    ).toEqual({
+        test: 123,
+    });
+    // Both caches are correctly updated with the fetch values
+    await microTick();
+    await microTick();
+    expect(persistentCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        `encrypted data:{"test":123}`
+    );
+    expect(await promiseState(persistentCache.ramCache.ram.table.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 123 },
+    });
+
+    // Simulate a reload (Clear the Ram Cache)
+    persistentCache.ramCache.invalidate();
+    expect(persistentCache.ramCache.ram).toEqual({});
+    const def = new Deferred();
+
+    // we return the Disk cache value.
+    expect(
+        await persistentCache.read(
+            "table",
+            "key",
+            () => {
+                expect.step("Fallback");
+                return Promise.resolve(def);
+            },
+            {
+                onUpdate: (result) => {
+                    expect.step("Callback");
+                    expect(result).toEqual({ test: 456 });
+                },
+            }
+        )
+    ).toEqual({ test: 123 });
+    expect.verifySteps(["Fallback"]);
+
+    // the fallback returned a different value
+    def.resolve({ test: 456 });
+    await microTick();
+    await microTick();
+    await microTick();
+    expect.verifySteps(["Callback"]);
+    // Both caches are updated with the last value
+    expect(persistentCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        `encrypted data:{"test":456}`
+    );
     expect(await promiseState(persistentCache.ramCache.ram.table.key)).toEqual({
         status: "fulfilled",
         value: { test: 456 },
