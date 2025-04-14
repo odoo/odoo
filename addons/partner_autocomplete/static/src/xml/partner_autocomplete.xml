@@ -32,7 +32,7 @@
                     sources="sources"
                     onSelect.bind="onSelect"
                     input="inputRef"
-                    placeholder="placeholder || ''"
+                    placeholder="props.placeholder || ''"
                 >
                     <t t-set-slot="partnerOption" t-slot-scope="partnerOptionScope">
                         <t t-call="partner_autocomplete.DropdownOption">
