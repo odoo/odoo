@@ -570,7 +570,7 @@ class IrQweb(models.AbstractModel):
     @QwebTracker.wrap_render
     @api.model
     def _render(self, template, values=None, **options):
-        """ render(template, values, **options)
+        """ ``render(template, values, **options)``
 
         Render the template specified by the given name.
 
@@ -579,11 +579,12 @@ class IrQweb(models.AbstractModel):
         :param dict values: template values to be used for rendering
         :param options: used to compile the template
             Options will be add into the IrQweb.env.context for the rendering.
+
             * ``lang`` (str) used language to render the template
             * ``inherit_branding`` (bool) add the tag node branding
             * ``inherit_branding_auto`` (bool) add the branding on fields
             * ``minimal_qcontext``(bool) To use the minimum context and options
-                from ``_prepare_environment``
+              from ``_prepare_environment``
 
         :returns: bytes marked as markup-safe (decode to :class:`markupsafe.Markup`
                   instead of `str`)
@@ -678,17 +679,18 @@ class IrQweb(models.AbstractModel):
         """ Compile the given template into a rendering function (generator)::
 
             render_template(qweb, values)
-            This method can be called only by the IrQweb `_render` method or by
-            the compiled code of t-call from an other template.
 
-            An `options` dictionary is created and attached to the function. It
-            contains rendering options that are part of the cache key in
-            addition to template references.
+        This method can be called only by :meth:`_render` method or by
+        the compiled code of t-call from an other template.
 
-            where ``qweb`` is a QWeb instance and ``values`` are the values to
-            render.
+        An ``options`` dictionary is created and attached to the function.
+        It contains rendering options that are part of the cache key in
+        addition to template references.
 
-            :returns: tuple containing code, options and main method name
+        where ``qweb`` is a QWeb instance and ``values`` are the values to
+        render.
+
+        :returns: tuple containing code, options and main method name
         """
         if not isinstance(template, (int, str, etree._Element)):
             template = str(template)
@@ -1267,14 +1269,21 @@ class IrQweb(models.AbstractModel):
     def _directives_eval_order(self):
         """ List all supported directives in the order in which they should be
         evaluated on a given element. For instance, a node bearing both
-        ``foreach`` and ``if`` should see ``foreach`` executed before ``if`` aka
+        ``foreach`` and ``if`` should see ``foreach`` executed before ``if``
+        aka
+
         .. code-block:: xml
+
             <el t-foreach="foo" t-as="bar" t-if="bar">
+
         should be equivalent to
+
         .. code-block:: xml
+
             <t t-foreach="foo" t-as="bar">
                 <t t-if="bar">
                     <el>
+
         then this method should return ``['foreach', 'if']``.
         """
         return [
@@ -1529,6 +1538,7 @@ class IrQweb(models.AbstractModel):
 
         The dynamic attributes values will be add after. The dynamic
         attributes has different origins.
+
         - value from key equal to ``t-att``: python dictionary expression;
         - value from keys that start with ``t-att-``: python expression;
         - value from keys that start with ``t-attf-``: format string
@@ -1601,6 +1611,7 @@ class IrQweb(models.AbstractModel):
 
         The dynamic attributes values will be add after. The dynamic
         attributes has different origins.
+
         - value from key equal to ``t-att``: python dictionary expression;
         - value from keys that start with ``t-att-``: python expression;
         - value from keys that start with ``t-attf-``: format string
@@ -1883,16 +1894,18 @@ class IrQweb(models.AbstractModel):
         return code
 
     def _compile_directive_foreach(self, el, compile_context, level):
-        """Compile `t-foreach` expressions into a python code as a list of
+        """Compile ``t-foreach`` expressions into a python code as a list of
         strings.
 
-        `t-as` is used to define the key name.
-        `t-foreach` compiled value can be an iterable, an dictionary or a
-        number.
+        * ``t-as`` is used to define the key name.
+        * ``t-foreach`` compiled value can be an iterable, an dictionary or a
+          number.
 
-        The code will contain loop `for` that wrap the rest of the compiled
+        The code will contain loop ``for`` that wrap the rest of the compiled
         code of this element.
-        Some key into values dictionary are create automatically:
+
+        Some key into values dictionary are create automatically::
+
             *_size, *_index, *_value, *_first, *_last, *_odd, *_even, *_parity
         """
         expr_foreach = el.attrib.pop('t-foreach')
@@ -2121,12 +2134,12 @@ class IrQweb(models.AbstractModel):
         return self._compile_directive_out(el, compile_context, level)
 
     def _compile_directive_field(self, el, compile_context, level):
-        """Compile `t-field` expressions into a python code as a list of
+        """Compile ``t-field`` expressions into a python code as a list of
         strings.
 
         The compiled code will call ``_get_field`` method at rendering time
         using the type of value supplied by the field. This behavior can be
-        changed with `t-options-widget` or `t-options={'widget': ...}.
+        changed with ``t-options-widget`` or ``t-options={'widget': ...}``.
 
         The code will contain evalution and rendering of the compiled value
         value from the record field. If the compiled value is None or False,

@@ -269,9 +269,9 @@ class ResLang(models.Model):
         For example, get_data(code='en_US') will return the LangData
         for the res.lang record whose 'code' field value is 'en_US'
 
-        :param dict kwargs: {field_name: field_value}
+        :param dict kwargs: ``{field_name: field_value}``
                 field_name is the only key in kwargs and in ``self.CACHED_FIELDS``
-                Try to reuse the used ``field_name``s: 'id', 'code', 'url_code'
+                Try to reuse the used ``field_name``: 'id', 'code', 'url_code'
         :return: Valid LangData if (field_name, field_value) pair is for an
                 **active** language. Otherwise, Dummy LangData which will return
                 ``False`` for all ``self.CACHED_FIELDS``
@@ -299,7 +299,7 @@ class ResLang(models.Model):
         """ Return a LangDataDict mapping active languages' **unique**
         **required** ``self.CACHED_FIELDS`` values to their LangData.
         Its items are ordered by languages' names
-        Try to reuse the used ``field``s: 'id', 'code', 'url_code'
+        Try to reuse the used ``field``: 'id', 'code', 'url_code'
         """
         if field not in self.CACHED_FIELDS:
             raise UserError(_('Field "%s" is not cached', field))

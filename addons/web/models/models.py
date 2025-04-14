@@ -3,6 +3,7 @@ from __future__ import annotations
 import base64
 import itertools
 import json
+import typing
 from collections import defaultdict
 
 import babel
@@ -17,6 +18,10 @@ from odoo.models import READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.translate import LazyTranslate
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Sequence
+    from odoo.orm.types import DomainType
 
 _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
@@ -271,18 +276,20 @@ class Base(models.AbstractModel):
     def web_resequence(self, specification: dict[str, dict], field_name: str = 'sequence', offset: int = 0) -> list[dict]:
         """ Re-sequences a number of records in the model, by their ids.
 
-        The re-sequencing starts at the first record of ``ids``, the sequence
-        number starts at ``offset`` and is incremented by one after each record.
+        The re-sequencing starts at the first record of ``ids``, the
+        sequence number starts at ``offset`` and is incremented by one
+        after each record.
 
-        The returning value is a read of the resequenced records with the specification given
-        in the parameter.
+        The returning value is a read of the resequenced records with
+        the specification given in the parameter.
 
-        :param specification: specification for the read of the resequenced records
-        :type specification: dict[str, dict]
-        :param str field_name: field used for sequence specification, defaults to "sequence"
-        :param int offset: sequence number for first record in ``ids``, allows
-                           starting the resequencing from an arbitrary number,
-                           defaults to ``0``
+        :param specification: specification for the read of the
+            resequenced records
+        :param field_name: field used for sequence specification,
+            defaults to ``"sequence"``
+        :param offset: sequence number for first record in ``ids``,
+            allows starting the resequencing from an arbitrary number,
+            defaults to ``0``
         """
         if field_name not in self._fields:
             return []
@@ -295,18 +302,16 @@ class Base(models.AbstractModel):
     @api.readonly
     def web_read_group(self, domain, groupby=(), aggregates=(), offset=0, limit=None, order=None):
         """
-        Returns the result of a formatted_read_group and the total number of groups matching the search domain.
+        Wrap :meth:`formatted_read_group` to return its result and the
+        total number of groups matching the search domain.
 
-        :param domain: search domain
-        :param groupby: list of groupby specification (see ``groupby``` param of ``formatted_read_group``)
-        :param aggregates: list of aggregate specification (see ``aggregates``` param of ``formatted_read_group``)
-        :param limit: see ``limit`` param of ``formatted_read_group``
-        :param offset: see ``offset`` param of ``formatted_read_group``
-        :param order: see ``order`` param of ``formatted_read_group``
-        :return: {
-            'groups': array of read groups
-            'length': total number of groups
-        }
+        :return:
+          ::
+
+            {
+                'groups': array of read groups
+                'length': total number of groups
+            }
         """
         groups = self.formatted_read_group(domain, groupby, aggregates, offset=offset, limit=limit, order=order)
 
@@ -328,36 +333,83 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
-    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
-        """ :meth:`~._read_group` with all formatting needed for the webclient.
+    def formatted_read_group(
+        self,
+        domain: DomainType,
+        groupby: Sequence[str] = (),
+        aggregates: Sequence[str] = (),
+        having: DomainType = (),
+        offset: int = 0,
+        limit: int | None = None,
+        order: str | None = None,
+    ) -> list[dict]:
+        """
+        A method similar to :meth:`_read_group` but with all the
+        formatting needed by the webclient.
 
-        :param list domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
-                list to match all records.
-        :param list groupby: list of groupby descriptions by which the records will be grouped.
-                A groupby description is either a field (then it will be grouped by that field)
-                or a string `'field:granularity'`. Right now, the only supported granularities
-                are `'day'`, `'week'`, `'month'`, `'quarter'` or `'year'`, and they only make sense for
-                date/datetime fields.
-                Additionally integer date parts are also supported:
-                `'year_number'`, `'quarter_number'`, `'month_number'`, `'iso_week_number'`, `'day_of_year'`, `'day_of_month'`,
-                'day_of_week', 'hour_number', 'minute_number' and 'second_number'.
-        :param list aggregates: list of aggregates specification.
-                Each element is `'field:agg'` (aggregate field with aggregation function `'agg'`).
-                The possible aggregation functions are the ones provided by
-                `PostgreSQL <https://www.postgresql.org/docs/current/static/functions-aggregate.html>`_,
-                 except `'count_distinct'` and `'array_agg_distinct'` with the expected meaning.
-        :param list having: A domain where the valid "fields" are the aggregates.
-        :param int offset: optional number of groups to skip
-        :param int limit: optional max number of groups to return
-        :param str order: optional ``order by`` specification, for
-                overriding the natural sort ordering of the groups,
-                see also :meth:`~.search`.
-        :return: list of dict such as ``[{'groupy_spec': value, ...}, ...]`` containing:
-                    * the groupby values: {groupby[i]: <value>}
-                    * the aggregate values: {aggregates[i]: <value>}
-                    * __extra_domain: list of tuples specifying the group search criteria
-                    * __fold: boolean if a fold_name is set on the comodel and read_group_expand is activated
-        :raise AccessError: if user is not allowed to access requested information
+        :param domain: :ref:`A search domain <reference/orm/domains>`.
+            Use an empty list to match all records.
+        :param groupby: list of groupby descriptions by which the
+            records will be grouped.
+
+            A groupby description is either a field (then it will be
+            grouped by that field) or a string
+            ``'<field>:<granularity>'``.
+
+            Right now, the only supported granularities are:
+
+            * ``day``
+            * ``week``
+            * ``month``
+            * ``quarter``
+            * ``year``
+
+            and they only make sense for date/datetime fields.
+
+            Additionally integer date parts are also supported:
+
+            * ``year_number``
+            * ``quarter_number``
+            * ``month_number``
+            * ``iso_week_number``
+            * ``day_of_year``
+            * ``day_of_month``
+            * ``day_of_week``
+            * ``hour_number``
+            * ``minute_number``
+            * ``second_number``
+
+        :param aggregates: list of aggregates specification. Each
+            element is ``'<field>:<agg>'`` (aggregate field with
+            aggregation function ``agg``). The possible aggregation
+            functions are the ones provided by
+            `PostgreSQL <https://www.postgresql.org/docs/current/static/functions-aggregate.html>`_,
+            except ``count_distinct`` and ``array_agg_distinct`` with
+            the expected meaning.
+
+        :param having: A domain where the valid "fields" are the
+            aggregates.
+
+        :param offset: optional number of groups to skip
+
+        :param limit: optional max number of groups to return
+
+        :param order: optional ``order by`` specification, for
+            overriding the natural sort ordering of the groups, see
+            :meth:`~.search`.
+
+        :return: list of dict such as
+            ``[{'groupy_spec': value, ...}, ...]`` containing:
+
+            * the groupby values: ``{groupby[i]: <value>}``
+            * the aggregate values: ``{aggregates[i]: <value>}``
+            * ``'__extra_domain'``: list of tuples specifying the group
+              search criteria
+            * ``'__fold'``: boolean if a fold_name is set on the comodel
+              and read_group_expand is activated
+
+        :raise AccessError: if user is not allowed to access requested
+            information
         """
         groupby = tuple(groupby)
         aggregates = self._web_pre_process_aggregates(aggregates)
@@ -860,13 +912,13 @@ class Base(models.AbstractModel):
         Gets the data needed for all the kanban column progressbars.
         These are fetched alongside read_group operation.
 
-        :param domain - the domain used in the kanban view to filter records
-        :param group_by - the name of the field used to group records into
-                        kanban columns
-        :param progress_bar - the <progressbar/> declaration attributes
-                            (field, colors, sum)
-        :return a dictionnary mapping group_by values to dictionnaries mapping
-                progress bar field values to the related number of records
+        :param domain: the domain used in the kanban view to filter records
+        :param group_by: the name of the field used to group records into
+            kanban columns
+        :param progress_bar: the ``<progressbar/>`` declaration
+            attributes (field, colors, sum)
+        :return: a dictionnary mapping group_by values to dictionnaries mapping
+            progress bar field values to the related number of records
         """
         def adapt(value):
             if isinstance(value, BaseModel):
@@ -890,19 +942,25 @@ class Base(models.AbstractModel):
         Return the values in the image of the provided domain by field_name.
 
         :param model_domain: domain whose image is returned
-        :param extra_domain: extra domain to use when counting records associated with field values
-        :param field_name: the name of a field (type many2one or selection)
-        :param enable_counters: whether to set the key '__count' in image values
-        :param only_counters: whether to retrieve information on the model_domain image or only
-                                counts based on model_domain and extra_domain. In the later case,
-                                the counts are set whatever is enable_counters.
-        :param limit: integer, maximal number of values to fetch
-        :param set_limit: boolean, whether to use the provided limit (if any)
-        :return: a dict of the form
-                    {
-                        id: { 'id': id, 'display_name': display_name, ('__count': c,) },
-                        ...
-                    }
+        :param extra_domain: extra domain to use when counting records
+            associated with field values
+        :param field_name: the name of a field (type ``many2one`` or
+            ``selection``)
+        :param enable_counters: whether to set the key ``'__count'`` in
+            image values
+        :param only_counters: whether to retrieve information on the
+            ``model_domain`` image or only counts based on
+            ``model_domain`` and ``extra_domain``. In the later case,
+            the counts are set whatever is enable_counters.
+        :param limit: maximal number of values to fetch
+        :param bool set_limit: whether to use the provided limit (if any)
+        :return: a dict of the form:
+            ::
+
+                {
+                    id: { 'id': id, 'display_name': display_name, ('__count': c,) },
+                    ...
+                }
         """
 
         enable_counters = kwargs.get('enable_counters')
@@ -939,11 +997,13 @@ class Base(models.AbstractModel):
         :param field_name: the name of a field (type many2one or selection)
         :param set_count: whether to set the key '__count' in image values. Default is False.
         :param limit: integer, maximal number of values to fetch. Default is False.
-        :return: a dict of the form
-                    {
-                        id: { 'id': id, 'display_name': display_name, ('__count': c,) },
-                        ...
-                    }
+        :return: a dict of the form:
+            ::
+
+                {
+                    id: { 'id': id, 'display_name': display_name, ('__count': c,) },
+                    ...
+                }
         """
         field = self._fields[field_name]
         if field.type in ('many2one', 'many2many'):
@@ -988,11 +1048,13 @@ class Base(models.AbstractModel):
         Note that we save the initial (local) counts into an auxiliary dict
         before they could be changed in the for loop below.
 
-        :param values_range: dict of the form
-            {
-                id: { 'id': id, '__count': c, parent_name: parent_id, ... }
-                ...
-            }
+        :param values_range: dict of the form:
+            ::
+
+                {
+                    id: { 'id': id, '__count': c, parent_name: parent_id, ... }
+                    ...
+                }
         :param parent_name: string, indicates which key determines the parent
         """
         local_counters = lazymapping(lambda id: values_range[id]['__count'])
@@ -1014,17 +1076,21 @@ class Base(models.AbstractModel):
         """
         Filter the provided list of records to ensure the following properties of
         the resulting sublist:
-            1) it is closed for the parent relation
-            2) every record in it is an ancestor of a record with id in ids
-                (if ids = records.ids, that condition is automatically satisfied)
-            3) it is maximal among other sublists with properties 1 and 2.
 
-        :param records, the list of records to filter, the records must have the form
-                        { 'id': id, parent_name: False or (id, display_name),... }
-        :param parent_name, string, indicates which key determines the parent
-        :param ids: list of record ids
+        1) it is closed for the parent relation
+        2) every record in it is an ancestor of a record with id in ids
+           (if ``ids = records.ids``, that condition is automatically
+           satisfied)
+        3) it is maximal among other sublists with properties 1 and 2.
+
+        :param list[dict] records: the list of records to filter, the
+            records must have the form::
+
+                { 'id': id, parent_name: False or (id, display_name),... }
+
+        :param str parent_name: indicates which key determines the parent
+        :param list[int] ids: list of record ids
         :return: the sublist of records with the above properties
-        }
         """
         def get_parent_id(record):
             value = record[parent_name]
@@ -1062,16 +1128,21 @@ class Base(models.AbstractModel):
         Return the values of a field of type selection possibly enriched
         with counts of associated records in domain.
 
-        :param enable_counters: whether to set the key '__count' on values returned.
-                                    Default is False.
-        :param expand: whether to return the full range of values for the selection
-                        field or only the field image values. Default is False.
+        :param enable_counters: whether to set the key ``'__count'`` on
+            values returned. Default is ``False``.
+        :param expand: whether to return the full range of values for
+            the selection field or only the field image values. Default
+            is ``False``.
         :param field_name: the name of a field of type selection
-        :param model_domain: domain used to determine the field image values and counts.
-                                Default is [].
+        :param model_domain: domain used to determine the field image
+            values and counts. Default is an empty list.
         :return: a list of dicts of the form
-                    { 'id': id, 'display_name': display_name, ('__count': c,) }
-                with key '__count' set if enable_counters is True
+            ::
+
+                { 'id': id, 'display_name': display_name, ('__count': c,) }
+
+            with key ``'__count'`` set if ``enable_counters`` is
+            ``True``.
         """
 
 
@@ -1107,30 +1178,41 @@ class Base(models.AbstractModel):
         possibly with counters, and the parent field (if any and required)
         used to hierarchize them.
 
-        :param field_name: the name of a field;
-            of type many2one or selection.
-        :param category_domain: domain generated by categories. Default is [].
-        :param comodel_domain: domain of field values (if relational). Default is [].
-        :param enable_counters: whether to count records by value. Default is False.
-        :param expand: whether to return the full range of field values in comodel_domain
-                        or only the field image values (possibly filtered and/or completed
-                        with parents if hierarchize is set). Default is False.
-        :param filter_domain: domain generated by filters. Default is [].
-        :param hierarchize: determines if the categories must be displayed hierarchically
-                            (if possible). If set to true and _parent_name is set on the
-                            comodel field, the information necessary for the hierarchization will
-                            be returned. Default is True.
-        :param limit: integer, maximal number of values to fetch. Default is None.
-        :param search_domain: base domain of search. Default is [].
-                        with parents if hierarchize is set)
-        :return: {
-            'parent_field': parent field on the comodel of field, or False
-            'values': array of dictionaries containing some info on the records
-                        available on the comodel of the field 'field_name'.
-                        The display name, the __count (how many records with that value)
-                        and possibly parent_field are fetched.
-        }
-        or an object with an error message when limit is defined and is reached.
+        :param field_name: the name of a field; of type many2one or selection.
+        :param kwargs: additional features
+
+            :param category_domain: domain generated by categories.
+                Default is ``[]``.
+            :param comodel_domain: domain of field values (if relational).
+                Default is ``[]``.
+            :param enable_counters: whether to count records by value.
+                Default is ``False``.
+            :param expand: whether to return the full range of field values in
+                comodel_domain or only the field image values (possibly
+                filtered and/or completed with parents if hierarchize is set).
+                Default is ``False``.
+            :param filter_domain: domain generated by filters.
+                Default is ``[]``.
+            :param hierarchize: determines if the categories must be displayed
+                hierarchically (if possible). If set to true and
+                ``_parent_name`` is set on the comodel field, the information
+                necessary for the hierarchization will be returned.
+                Default is ``True``.
+            :param limit: integer, maximal number of values to fetch.
+                Default is ``None`` (no limit).
+            :param search_domain: base domain of search. Default is ``[]``.
+
+        :return: ::
+
+                {
+                    'parent_field': parent field on the comodel of field, or False
+                    'values': array of dictionaries containing some info on the records
+                              available on the comodel of the field 'field_name'.
+                              The display name, the __count (how many records with that value)
+                              and possibly parent_field are fetched.
+                }
+
+            or an object with an error message when limit is defined and is reached.
         """
         field = self._fields[field_name]
         supported_types = ['many2one', 'selection']
@@ -1238,29 +1320,43 @@ class Base(models.AbstractModel):
 
         :param field_name: the name of a filter field;
             possible types are many2one, many2many, selection.
-        :param category_domain: domain generated by categories. Default is [].
-        :param comodel_domain: domain of field values (if relational)
-                                (this parameter is used in _search_panel_range). Default is [].
-        :param enable_counters: whether to count records by value. Default is False.
-        :param expand: whether to return the full range of field values in comodel_domain
-                        or only the field image values. Default is False.
-        :param filter_domain: domain generated by filters. Default is [].
-        :param group_by: extra field to read on comodel, to group comodel records
-        :param group_domain: dict, one domain for each activated group
-                                for the group_by (if any). Those domains are
-                                used to fech accurate counters for values in each group.
-                                Default is [] (many2one case) or None.
-        :param limit: integer, maximal number of values to fetch. Default is None.
-        :param search_domain: base domain of search. Default is [].
-        :return: {
-            'values': a list of possible values, each being a dict with keys
-                'id' (value),
-                'name' (value label),
-                '__count' (how many records with that value),
-                'group_id' (value of group), set if a group_by has been provided,
-                'group_name' (label of group), set if a group_by has been provided
-        }
-        or an object with an error message when limit is defined and reached.
+
+        :param kwargs: additional features
+
+            :param category_domain: domain generated by categories.
+                Default is ``[]``.
+            :param comodel_domain: domain of field values (if relational)
+                    (this parameter is used in :meth:`_search_panel_range`).
+                    Default is ``[]``.
+            :param enable_counters: whether to count records by value.
+                Default is ``False``.
+            :param expand: whether to return the full range of field values in
+                ``comodel_domain`` or only the field image values.
+                Default is ``False``.
+            :param filter_domain: domain generated by filters.
+                Default is ``[]``.
+            :param group_by: extra field to read on comodel, to group comodel
+                records.
+            :param group_domain: dict, one domain for each activated group for
+                the group_by (if any). Those domains are used to fech accurate
+                counters for values in each group.
+                Default is ``[]`` (many2one case) or ``None``.
+            :param limit: integer, maximal number of values to fetch.
+                Default is ``None`` (no limit).
+            :param search_domain: base domain of search. Default is ``[]``.
+
+        :return: ::
+
+                {
+                    'values': a list of possible values, each being a dict with keys
+                        'id' (value),
+                        'name' (value label),
+                        '__count' (how many records with that value),
+                        'group_id' (value of group), set if a group_by has been provided,
+                        'group_name' (label of group), set if a group_by has been provided
+                }
+
+            or an object with an error message when limit is defined and reached.
         """
         field = self._fields[field_name]
         supported_types = ['many2one', 'many2many', 'selection']
@@ -1634,7 +1730,7 @@ class Base(models.AbstractModel):
         with the provided value for each field.
 
         :param values: dictionary of the translations to apply for each field name
-        ex: { "field_name": "new_value" }
+            ex: ``{ "field_name": "new_value" }``
         """
         self.ensure_one()
         for field_name in values:

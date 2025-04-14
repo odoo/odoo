@@ -80,10 +80,14 @@ class ResCompany(models.Model):
 
     def _get_company_domain(self):
         """ Extract the company domain to be used by IAP services.
+
         The domain is extracted from the website or the email information.
-        e.g:
-            - www.info.proximus.be -> proximus.be
-            - info@proximus.be -> proximus.be """
+
+        >>> company.email, company._get_company_domain()
+        ("info@proximus.be", "proximus.be")
+        >>> company.website, company._get_company_domain()
+        ("www.info.proximus.be", "proximus.be")
+        """
         self.ensure_one()
 
         company_domain = email_domain_extract(self.email) if self.email else False

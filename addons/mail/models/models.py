@@ -542,10 +542,11 @@ class Base(models.AbstractModel):
 
         Reply-to is formatted like '"Author Name" <reply.to@domain>".
         Heuristic it the following:
-         * search for specific aliases as they always have priority; it is limited
-           to aliases linked to documents (like project alias for task for example);
-         * use catchall address;
-         * use default;
+
+        * search for specific aliases as they always have priority; it is limited
+          to aliases linked to documents (like project alias for task for example);
+        * use catchall address;
+        * use default;
 
         This method can be used as a generic tools if self is a void recordset.
 

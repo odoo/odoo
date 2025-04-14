@@ -65,8 +65,9 @@ class ResPartner(models.Model):
     def get_attendee_detail(self, meeting_ids):
         """ Return a list of dict of the given meetings with the attendees details
             Used by:
-                - many2many_attendee.js: Many2ManyAttendee
-                - calendar_model.js (calendar.CalendarModel)
+
+            - many2many_attendee.js: Many2ManyAttendee
+            - calendar_model.js (calendar.CalendarModel)
         """
         attendees_details = []
         meetings = self.env['calendar.event'].browse(meeting_ids)

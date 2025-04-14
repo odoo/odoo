@@ -175,7 +175,9 @@ class ResConfigSettings(models.TransientModel):
 
     @api.model
     def _get_classified_fields(self, fnames=None):
-        """ return a dictionary with the fields classified by category::
+        """ return a dictionary with the fields classified by category:
+
+            .. code-block:: python
 
                 {   'default': [('default_foo', 'model', 'foo'), ...],
                     'group':   [('group_bar', [browse_group], browse_implied_group), ...],
@@ -451,31 +453,51 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_config_warning(self, msg):
         """
-        Helper: return a Warning exception with the given message where the %(field:xxx)s
-        and/or %(menu:yyy)s are replaced by the human readable field's name and/or menuitem's
-        full path.
+        Helper: return a Warning exception with the given message where the ``%(field:xxx)s``
+        and/or ``%(menu:yyy)s`` are replaced by the human readable field's name and/or
+        menuitem's full path.
 
         Usage:
         ------
-        Just include in your error message %(field:model_name.field_name)s to obtain the human
-        readable field's name, and/or %(menu:module_name.menuitem_xml_id)s to obtain the menuitem's
-        full path.
+        Just include in your error message ``%(field:model_name.field_name)s`` to obtain the
+        human readable field's name, and/or %(menu:module_name.menuitem_xml_id)s to obtain the
+        menuitem's full path.
 
         Example of use:
         ---------------
-        from odoo.addons.base.models.res_config import get_warning_config
-        raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:sales_team.menu_sale_config)s."), context=context)
+
+        .. code-block:: python
+
+            raise env['ir..config.settings'](_(
+                "Error: this action is prohibited. You should check the "
+                "field %(field:sale.config.settings.fetchmail_lead)s in "
+                "%(menu:sales_team.menu_sale_config)s."))
 
         This will return an exception containing the following message:
-            Error: this action is prohibited. You should check the field Create leads from incoming mails in Settings/Configuration/Sales.
+
+            Error: this action is prohibited. You should check the field Create
+            leads from incoming mails in Settings/Configuration/Sales.
 
         What if there is another substitution in the message already?
         -------------------------------------------------------------
-        You could have a situation where the error message you want to upgrade already contains a substitution. Example:
-            Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\\Journals\\Journals.
-        What you want to do here is simply to replace the path by %menu:account.menu_account_config)s, and leave the rest alone.
-        In order to do that, you can use the double percent (%%) to escape your new substitution, like so:
-            Cannot find any account journal of %s type for this company.\n\nYou can create one in the %%(menu:account.menu_account_config)s.
+        You could have a situation where the error message you want to upgrade already contains
+        a substitution.
+
+        Example:
+
+            Cannot find any account journal of %s type for this company.
+
+            You can create one in the menu:
+            Configuration/Journals/Journals.
+
+        What you want to do here is simply to replace the path by
+        ``%menu:account.menu_account_config)s``, and leave the rest alone.
+        In order to do that, you can use the double percent (``%%``) to escape your new
+        substitution, like so:
+
+            Cannot find any account journal of %s type for this company.
+
+            You can create one in the %%(menu:account.menu_account_config)s.
         """
         self = self.sudo()
 

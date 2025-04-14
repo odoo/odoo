@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 # There are too many broken docstrings to fix them all in one PR, we use
 # this list to fix one module at a time.
 MODULES_TO_LINT = (
+    'base',
 )
 
 POSITIONAL_ONLY = inspect.Parameter.POSITIONAL_ONLY
@@ -157,7 +158,7 @@ class TestDocstring(BaseCase):
         for role in ('attr', 'class', 'func', 'meth', 'ref', 'const', 'samp', 'term'):
             docutils.parsers.rst.roles.register_local_role(role, role_function)
 
-        for directive in ('attribute', ):
+        for directive in ('attribute', 'deprecated'):
             docutils.parsers.rst.directives.register_directive(
                 directive, docutils.parsers.rst.directives.admonitions.Note)
 
