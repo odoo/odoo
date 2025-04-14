@@ -928,3 +928,36 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(len(matching_records), 2)
         self.assertEqual(matching_records.account_move_id, vendor_bill)
         self.assertEqual(matching_records.purchase_order_id, purchase_order)
+
+    def test_purchase_suggest_qty(self):
+        """
+        Checks the suggested qty of POL is correctly set based on valid supplier-info
+        leading to correctly compute the price unit, product_qty and product_desc
+        """
+        self.env['product.supplierinfo'].create([
+            {
+                'partner_id': self.partner_a.id,
+                'product_id': self.product_a.id,
+                'min_qty': 1,
+                'price': 50,
+                'date_start': fields.Date.today() - timedelta(days=5),
+                'date_end': fields.Date.today() - timedelta(days=3),
+                'product_code': 'product_code_1',
+            },
+            {
+                'partner_id': self.partner_a.id,
+                'product_id': self.product_a.id,
+                'min_qty': 10,
+                'price': 100,
+                'date_start': fields.Date.today() - timedelta(days=5),
+                'date_end': fields.Date.today() + timedelta(days=3),
+                'product_code': 'HHH',
+            },
+        ])
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+        po = po_form.save()
+        self.assertEqual(po.order_line.product_qty, 10.0)
+        self.assertEqual(po.order_line.name, '[HHH] product_a')
