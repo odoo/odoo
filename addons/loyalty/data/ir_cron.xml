@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="expire_loyalty_points_cron" model="ir.cron">
+        <field name="name">Loyalty: Expire loyalty points</field>
+        <field name="model_id" ref="loyalty.model_loyalty_history"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_expire_loyalty_points()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+
+</odoo>
