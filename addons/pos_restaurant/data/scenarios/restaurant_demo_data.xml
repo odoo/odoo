@@ -28,41 +28,18 @@
                     }]" />
         </function>
 
-        <record model="product.attribute" id="product_sides_buns_pizza">
-            <field name="name">Sides</field>
-            <field name="create_variant">no_variant</field>
-            <field name="display_type">pills</field>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_fries">
-            <field name="name">Belgian fresh homemade fries</field>
-            <field name="attribute_id" ref="product_sides_buns_pizza"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_sweet_potato">
-            <field name="name">Sweet potato fries</field>
-            <field name="attribute_id" ref="product_sides_buns_pizza"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_smashed_sweet_potatoes">
-            <field name="name">Smashed sweet potatoes</field>
-            <field name="attribute_id" ref="product_sides_buns_pizza"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_potato_thyme">
-            <field name="name">Potatoes with thyme</field>
-            <field name="attribute_id" ref="product_sides_buns_pizza"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_grilled_vegetables">
-            <field name="name">Grilled vegetables</field>
-            <field name="attribute_id" ref="product_sides_buns_pizza"/>
-        </record>
-
         <record model="product.template.attribute.line" id="product_attribute_line_bacon_sides">
             <field name="product_tmpl_id" ref="pos_restaurant.product_bacon_burger_template"/>
-            <field name="attribute_id" ref="product_sides_buns_pizza"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_fries'), ref('product_attribute_sweet_potato'), ref('product_attribute_value_smashed_sweet_potatoes'), ref('product_attribute_value_potato_thyme'), ref('product_attribute_value_grilled_vegetables')])]" />
+            <field name="attribute_id" ref="product.pa_sides"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_sides_fries'),
+                    ref('product.pav_sides_sweet_potato'),
+                    ref('product.pav_sides_smashed_sweet_potato'),
+                    ref('product.pav_sides_potato_thyme'),
+                    ref('product.pav_sides_grilled_vegetables'),
+            ])]" />
         </record>
 
         <record model="product.product" id="pos_food_cheeseburger">
@@ -89,8 +66,16 @@
 
         <record model="product.template.attribute.line" id="product_attribute_line_cheese_side">
             <field name="product_tmpl_id" ref="pos_restaurant.product_cheese_burger_template"/>
-            <field name="attribute_id" ref="product_sides_buns_pizza"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_fries'), ref('product_attribute_sweet_potato'), ref('product_attribute_value_smashed_sweet_potatoes'), ref('product_attribute_value_potato_thyme'), ref('product_attribute_value_grilled_vegetables')])]" />
+            <field name="attribute_id" ref="product.pa_sides"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_sides_fries'),
+                    ref('product.pav_sides_sweet_potato'),
+                    ref('product.pav_sides_smashed_sweet_potato'),
+                    ref('product.pav_sides_potato_thyme'),
+                    ref('product.pav_sides_grilled_vegetables'),
+            ])]" />
         </record>
 
         <record model="product.product" id="pos_food_margherita">
@@ -115,41 +100,18 @@
                     }]" />
         </function>
 
-        <record model="product.attribute" id="product_extra_pizza">
-            <field name="name">Extras</field>
-            <field name="create_variant">no_variant</field>
-            <field name="display_type">multi</field>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_peperoni">
-            <field name="name">Pepperoni</field>
-            <field name="attribute_id" ref="product_extra_pizza"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_mushroom">
-            <field name="name">Mushroom</field>
-            <field name="attribute_id" ref="product_extra_pizza"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_black_olives">
-            <field name="name">Black olives</field>
-            <field name="attribute_id" ref="product_extra_pizza"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_anchovy">
-            <field name="name">Anchovy</field>
-            <field name="attribute_id" ref="product_extra_pizza"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_extra_cheese">
-            <field name="name">Extra cheese</field>
-            <field name="attribute_id" ref="product_extra_pizza"/>
-        </record>
-
         <record model="product.template.attribute.line" id="product_attribute_line_pizza_extra">
             <field name="product_tmpl_id" ref="pos_restaurant.product_pizza_margherita_template"/>
-            <field name="attribute_id" ref="product_extra_pizza"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_peperoni'), ref('product_attribute_value_mushroom'), ref('product_attribute_value_black_olives'), ref('product_attribute_value_anchovy'), ref('product_attribute_value_extra_cheese')])]" />
+            <field name="attribute_id" ref="product.pa_extras_pizza"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_extras_pizza_pepperoni'),
+                    ref('product.pav_extras_pizza_mushroom'),
+                    ref('product.pav_extras_pizza_black_olives'),
+                    ref('product.pav_extras_pizza_anchovy'),
+                    ref('product.pav_extras_pizza_extra_cheese'),
+            ])]" />
         </record>
 
         <function model="ir.model.data" name="_update_xmlids">
@@ -222,8 +184,16 @@
 
         <record model="product.template.attribute.line" id="product_attribute_line_pizza_vege_extra">
             <field name="product_tmpl_id" ref="pos_restaurant.product_pizza_vegetarian_template"/>
-            <field name="attribute_id" ref="product_extra_pizza"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_peperoni'), ref('product_attribute_value_mushroom'), ref('product_attribute_value_black_olives'), ref('product_attribute_value_anchovy'), ref('product_attribute_value_extra_cheese')])]" />
+            <field name="attribute_id" ref="product.pa_extras_pizza"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_extras_pizza_pepperoni'),
+                    ref('product.pav_extras_pizza_mushroom'),
+                    ref('product.pav_extras_pizza_black_olives'),
+                    ref('product.pav_extras_pizza_anchovy'),
+                    ref('product.pav_extras_pizza_extra_cheese'),
+            ])]" />
         </record>
 
         <function model="ir.model.data" name="_update_xmlids">
@@ -294,26 +264,15 @@
                     }]" />
         </function>
 
-        <record model="product.attribute" id="product_extra_pasta">
-            <field name="name">Extras</field>
-            <field name="create_variant">no_variant</field>
-            <field name="display_type">multi</field>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_mushroom_pasta">
-            <field name="name">Mushroom</field>
-            <field name="attribute_id" ref="product_extra_pasta"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_extra_cheese_pasta">
-            <field name="name">Extra cheese</field>
-            <field name="attribute_id" ref="product_extra_pasta"/>
-        </record>
-
         <record model="product.template.attribute.line" id="product_attribute_line_pasta_extra">
             <field name="product_tmpl_id" ref="pos_restaurant.product_pasta_4_formaggi_template"/>
-            <field name="attribute_id" ref="product_extra_pasta"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_extra_cheese_pasta'), ref('product_attribute_value_mushroom_pasta')])]" />
+            <field name="attribute_id" ref="product.pa_extras_pizza"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_extras_pizza_extra_cheese'),
+                    ref('product.pav_extras_pizza_mushroom'),
+            ])]" />
         </record>
 
         <function model="ir.model.data" name="_update_xmlids">
