@@ -1,4 +1,6 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { onWillStart } from "@odoo/owl";
+import { Deferred } from "@web/core/utils/concurrency";
 
 export class CardImageOption extends BaseOptionComponent {
     static template = "html_builder.CardImageOption";
@@ -6,15 +8,36 @@ export class CardImageOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        this.state = useDomState((editingElement) => {
-            const imageToWrapperRatio = this.getImageToWrapperRatio(editingElement);
-            return {
-                hasCoverImage: !!editingElement.querySelector(".o_card_img_wrapper"),
-                hasSquareRatio: imageToWrapperRatio === 1,
-                imageToWrapperRatio,
-                hasShape: !!editingElement.querySelector(".o_card_img[data-shape]"),
-            };
+        const deferred = new Deferred();
+        onWillStart(async () => {
+            const editingElements = this.env.getEditingElements();
+            const promises = [];
+            for (const editingEl of editingElements) {
+                const imageEl = editingEl.querySelector(".o_card_img");
+                if (!imageEl || imageEl.complete) {
+                    continue;
+                }
+                promises.push(
+                    new Promise((resolve) => {
+                        imageEl.addEventListener("load", () => resolve());
+                    })
+                );
+            }
+            await Promise.all(promises);
+            deferred.resolve();
         });
+        this.state = useDomState(
+            (editingElement) => {
+                const imageToWrapperRatio = this.getImageToWrapperRatio(editingElement);
+                return {
+                    hasCoverImage: !!editingElement.querySelector(".o_card_img_wrapper"),
+                    hasSquareRatio: imageToWrapperRatio === 1,
+                    imageToWrapperRatio,
+                    hasShape: !!editingElement.querySelector(".o_card_img[data-shape]"),
+                };
+            },
+            { onReady: deferred }
+        );
     }
 
     /**

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.UpdateOptionOnImgChanged">
+    <!-- TODO: this is a hack until <t t-key="state.count" t-slot="default"/> is
+     fixed in OWL -->
+    <t t-if="state.bool">
+        <t t-slot="default"/>
+    </t>
+    <t t-else="" >
+        <t t-slot="default"/>
+    </t>
+</t>
+</templates>
