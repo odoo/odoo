@@ -13,11 +13,12 @@ class AccountMove(models.Model):
 
     l10n_ch_is_qr_valid = fields.Boolean(compute='_compute_l10n_ch_qr_is_valid', help="Determines whether an invoice can be printed as a QR or not")
 
-    @api.depends('partner_id', 'currency_id')
+    @api.depends('partner_id', 'currency_id', 'display_qr_code')
     def _compute_l10n_ch_qr_is_valid(self):
         for move in self:
             error_messages = move.partner_bank_id._get_error_messages_for_qr('ch_qr', move.partner_id, move.currency_id)
             move.l10n_ch_is_qr_valid = (
+                move.display_qr_code and
                 move.move_type == 'out_invoice' and
                 not error_messages and
                 (move.company_id.account_fiscal_country_id.code == 'CH' or move._is_swiss_qr_iban())
