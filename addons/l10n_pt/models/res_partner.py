@@ -1,6 +1,6 @@
 import re
 
-from odoo import models, _
+from odoo import _, models
 from odoo.exceptions import UserError
 
 
@@ -13,19 +13,18 @@ class ResPartner(models.Model):
                 values.get('name')
                 and partner.company_id and partner.company_id.account_fiscal_country_id.code == 'PT'
                 and partner.name
-                and values.get('name') != partner.name
-                and not partner.vat
+                and not (partner.vat or values.get('vat'))
             ):
                 raise UserError(_("You cannot change the name of a partner without a VAT number"))
             if (
                 values.get('vat')
                 and partner.company_id and partner.company_id.account_fiscal_country_id.code == 'PT'
                 and partner.vat
-                and re.sub("[^0-9]", "", partner.vat) != "999999990"
+                and re.sub(r"[^0-9]", "", partner.vat) != "999999990"
             ):
                 if self.env['account.move'].search_count([
                     ('partner_id', '=', partner.id),
-                    ('state', '=', 'posted'),
+                    ('state', 'in', ('posted', 'cancel')),
                 ]):
                     raise UserError(_("You cannot change the VAT number of a partner that already has issued documents"))
         return super().write(values)

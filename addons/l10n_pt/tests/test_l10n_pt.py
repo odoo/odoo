@@ -1,64 +1,13 @@
-from freezegun import freeze_time
 from unittest.mock import patch
+from datetime import timedelta
 
-from odoo import fields, Command
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.models import Model
 from odoo.tests import tagged
 from odoo.tools import format_date
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-
-
-class TestL10nPtCommon(AccountTestInvoicingCommon):
-    @classmethod
-    @AccountTestInvoicingCommon.setup_country('pt')
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.company_pt = cls.company_data['company']
-        cls.company_pt.write({
-            'street': '25 Avenida da Liberdade',
-            'city': 'Lisboa',
-            'zip': '9415-343',
-            'company_registry': '123456',
-            'phone': '+351 11 11 11 11',
-            'country_id': cls.env.ref('base.pt').id,
-            'vat': 'PT123456789',
-        })
-        cls.company_data_2 = cls.setup_other_company()
-        for move_type, preprefix in (("out_invoice", "INV"), ("out_refund", "RINV")):
-            for year in ("2017", "2024"):
-                prefix = f'{preprefix}{year}'
-                if not cls.env['l10n_pt.at.series'].search_count([("prefix", "=", prefix)]):
-                    cls.env['l10n_pt.at.series'].create({
-                        'company_id': cls.company_pt.id,
-                        'type': move_type,
-                        'prefix': prefix,
-                        'at_code': f'AT-TEST-{prefix}',
-                    })
-
-    @classmethod
-    def create_invoice(cls, move_type, invoice_date="2024-01-01", l10n_pt_hashed_on=None, amount=1000.0, partner=None, product_id=False, do_hash=False, company=None):
-        move = cls.env['account.move'].with_company(company or cls.company_pt).create({
-            'company_id': company.id if company else cls.company_pt.id,
-            'move_type': move_type,
-            'partner_id': (partner or cls.partner_a).id,
-            'invoice_date': fields.Date.from_string(invoice_date),
-            'line_ids': [
-                Command.create({
-                    'name': 'Product A',
-                    'product_id': product_id,
-                    'quantity': 1,
-                    'price_unit': amount,
-                    'tax_ids': [],
-                }),
-            ],
-        })
-        move.action_post()
-        if do_hash:
-            with freeze_time(l10n_pt_hashed_on):
-                move.button_hash()
-        return move
+from odoo.addons.l10n_pt.tests.common import TestL10nPtCommon
 
 
 @tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
@@ -85,20 +34,22 @@ class TestL10nPtHashing(TestL10nPtCommon):
                 ('1T 1/2', '2017-09-16', '2017-09-16T15:58:10', 235.15, "jABYv0ThJHWoocmbzuLPOJXknl2WHBpLRBPqhIBSYP6GRzo3WiMxh6ryFiaa8rQD2BM9tdLxjhPHOZo1XPeGR5hFGK5BI/NzTXBu9+ponV4wvASOhjy2iomBlOxISN3MYGBcG1XWLfi+aDBw0TLrVwpbsENk0MtypYGU78OPPjg="),
                 ('1T 1/3', '2017-09-16', '2017-09-16T15:58:45', 679.61, "MqvfiYZOh1L1fgfrAXBemPED1xy27MUs79vWxk/0P99Bq+jxvxwjJa3HQdElGfogj5bslcxX3ia9Tps2Oxfw1kH3GnsmfzqHbVagqnNxiI/KMZGfR4XXXNSOf7l7K7iMELz29b/c8u8eRmUwm13sgk9E9yAyk9zLuQ/s5TByG9k="),
             ]:
-                move = self.create_invoice('out_invoice', invoice_date, l10n_pt_hashed_on, amount, do_hash=True)
-                move.flush_recordset()
-                self.assertEqual(move.inalterable_hash.split("$")[2], expected_hash)
+                with self.subTest(invoice_date=invoice_date, l10n_pt_hashed_on=l10n_pt_hashed_on, amount=amount, expected_hash=expected_hash):
+                    move = self.create_invoice('out_invoice', invoice_date, l10n_pt_hashed_on, amount, self.tax_sale_0, do_hash=True)
+                    move.flush_recordset()
+                    self.assertEqual(move.inalterable_hash.split("$")[2], expected_hash)
 
             # Now we'll test with a different move_type/InvoiceType (first part of the l10n_pt_document_number is different),
             # Therefore we have a new chain and the following first move has no previous move (i.e. 1T 1/3 is not the previous).
-            for (l10n_pt_document_number, invoice_date, l10n_pt_hashed_on, amount, expected_hash) in [
-                ('2T A/1', '2017-09-16', '2017-09-16T16:02:16', 235.15, "CM1pPaqk/pTE5DajJZ3H9VejD00FL455GvHx0FjuNj3UKj1V9EkP5dPsOpB6/KXlttY1WsHGG4dcunSOKULW0FMEWAMQYxBo/HqLcIojedKxrzh6m9+P61VM4BnYxbtEBQRFdVs0MGP8X85uSc4ikPrY4OeO1UOixGR9xLIAtr4="),
-                ('2T A/2', '2017-09-16', '2017-09-16T16:03:11', 2261.34, "Y7kXSvGiS1eCSU9DY1GlWHw+HMmpI/gdZKEv17EXFC7OFdOdSCwcRNPzBUB6QjB1aQ60T8+4jvQb+tSWAQJdsCoiNUMcZl+oQJKJjJTfPJTmDBlrnh0JGXaOrg4sPe1eVvjjtCKxyJ3xoQnwU/bVBjMde2Kx0zXBsBwIWoT0ukg="),
-                ('2T A/3', '2017-09-16', '2017-09-16T16:04:45', 47.03, "W3Z1jj4rNG5CREwXq0ZCjaRHDqrB1U9U6NmyKZZ7VpruDsw+NxcbwUubuMgejYBCVr6OIRrUNlm1UvNuYx/EXFZpzhdoWRc7O1HPBSQFhAfhByE6QxvumsVtxSome95/cG2VmAU1MJUJTVQN4Y//snz8YaCy1/81bB7aGfUs0C0="),
+            for (l10n_pt_document_number, l10n_pt_hashed_on, amount, expected_hash) in [
+                ('2T A/1', '2017-09-16T16:02:16', 235.15, "CM1pPaqk/pTE5DajJZ3H9VejD00FL455GvHx0FjuNj3UKj1V9EkP5dPsOpB6/KXlttY1WsHGG4dcunSOKULW0FMEWAMQYxBo/HqLcIojedKxrzh6m9+P61VM4BnYxbtEBQRFdVs0MGP8X85uSc4ikPrY4OeO1UOixGR9xLIAtr4="),
+                ('2T A/2', '2017-09-16T16:03:11', 2261.34, "Y7kXSvGiS1eCSU9DY1GlWHw+HMmpI/gdZKEv17EXFC7OFdOdSCwcRNPzBUB6QjB1aQ60T8+4jvQb+tSWAQJdsCoiNUMcZl+oQJKJjJTfPJTmDBlrnh0JGXaOrg4sPe1eVvjjtCKxyJ3xoQnwU/bVBjMde2Kx0zXBsBwIWoT0ukg="),
+                ('2T A/3', '2017-09-16T16:04:45', 47.03, "W3Z1jj4rNG5CREwXq0ZCjaRHDqrB1U9U6NmyKZZ7VpruDsw+NxcbwUubuMgejYBCVr6OIRrUNlm1UvNuYx/EXFZpzhdoWRc7O1HPBSQFhAfhByE6QxvumsVtxSome95/cG2VmAU1MJUJTVQN4Y//snz8YaCy1/81bB7aGfUs0C0="),
             ]:
-                move = self.create_invoice('out_refund', invoice_date, l10n_pt_hashed_on, amount, do_hash=True)
-                move.flush_recordset()
-                self.assertEqual(move.inalterable_hash.split("$")[2], expected_hash)
+                with self.subTest(l10n_pt_hashed_on=l10n_pt_hashed_on, amount=amount, expected_hash=expected_hash):
+                    move = self.create_invoice('out_refund', '2017-09-16', l10n_pt_hashed_on, amount, self.tax_sale_0, do_hash=True)
+                    move.flush_recordset()
+                    self.assertEqual(move.inalterable_hash.split("$")[2], expected_hash)
 
     def test_l10n_pt_hash_inalterability(self):
         expected_error_msg = "This document is protected by a hash. Therefore, you cannot edit the following fields:*"
@@ -112,11 +63,11 @@ class TestL10nPtHashing(TestL10nPtCommon):
         with self.assertRaisesRegex(UserError, expected_error_msg):
             out_invoice.l10n_pt_hashed_on = fields.Datetime.now()
         with self.assertRaisesRegex(UserError, expected_error_msg):
-            out_invoice.amount_total = 666
+            out_invoice.amount_total_signed = 666
         with self.assertRaisesRegex(UserError, expected_error_msg):
-            out_invoice.sequence_number = 666  # Sequence number is used by l10n_pt_document_number so it cannot be modified either
+            out_invoice.name = "new name"
         with self.assertRaisesRegex(UserError, expected_error_msg):
-            out_invoice.sequence_prefix = "FAKE"  # Sequence prefix is used by l10n_pt_document_number so it cannot be modified either
+            out_invoice.l10n_pt_document_number = "new number/0001"
 
         # The following field is not part of the hash so it can be modified
         out_invoice.ref = 'new ref'
@@ -124,7 +75,6 @@ class TestL10nPtHashing(TestL10nPtCommon):
     def test_l10n_pt_move_hash_integrity_report(self):
         """Test the hash integrity report"""
         # Everything should be correctly hashed and verified
-        # Reminder: we have one chain per move_type in Portugal
         out_invoice1 = self.create_invoice('out_invoice', '2024-01-01', do_hash=True)
         self.create_invoice('out_invoice', '2024-01-02', do_hash=True)
         out_invoice3 = self.create_invoice('out_invoice', '2024-01-03', do_hash=True)
@@ -151,24 +101,49 @@ class TestL10nPtHashing(TestL10nPtCommon):
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on journal entry with id {out_invoice4.id} ({out_invoice4.name}).')
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtMiscRequirements(TestL10nPtCommon):
     def test_l10n_pt_document_no(self):
         """
-        Test that the document number for Portugal follows this format: [^ ]+ [^/^ ]+/[0-9]+
+        Test that the document number for out_invoice, out_refund and out_receipt in Portugal
+        follows this format: [^ ]+ [^/^ ]+/[0-9]+
         """
         for (move_type, date, expected) in [
-            ('out_invoice', '2024-01-01', 'out_invoice INV2024/00001'),
-            ('out_invoice', '2024-01-02', 'out_invoice INV2024/00002'),
-            ('in_invoice', '2024-01-01', 'in_invoice BILL2024-01/0001'),
-            ('out_invoice', '2024-01-03', 'out_invoice INV2024/00003'),
-            ('out_refund', '2024-01-01', 'out_refund RINV2024/00001'),
-            ('in_refund', '2024-01-01', 'in_refund RBILL2024-01/0001'),
-            ('out_invoice', '2024-01-04', 'out_invoice INV2024/00004'),
-            ('in_refund', '2024-01-02', 'in_refund RBILL2024-01/0002'),
+            ('out_invoice', '2024-01-01', 'INV 2024/00001'),
+            ('out_invoice', '2024-01-02', 'INV 2024/00002'),
+            ('in_invoice', '2024-01-01', False),
+            ('out_invoice', '2024-01-03', 'INV 2024/00003'),
+            ('out_refund', '2024-01-01', 'RINV 2024/00001'),
+            ('in_refund', '2024-01-01', False),
+            ('out_invoice', '2024-01-04', 'INV 2024/00004'),
+            ('in_refund', '2024-01-02', False),
         ]:
             move = self.create_invoice(move_type, date)
             self.assertEqual(move._get_l10n_pt_document_number(), expected)
+
+    def test_l10n_pt_invoice_lines(self):
+        """
+        Test that invoices without taxes or negative lines cannot be posted
+        """
+        with self.assertRaisesRegex(UserError, "You cannot create a move line without VAT tax."):
+            move = self.env['account.move'].with_company(self.company_pt).create({
+                'company_id': self.company_pt.id,
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': fields.Date.from_string('2024-02-04'),
+                'line_ids': [
+                    Command.create({
+                        'name': 'Product A',
+                        'quantity': 1,
+                        'price_unit': 1000,
+                        'tax_ids': [],
+                    }),
+                ],
+            })
+            move.action_post()
+
+        with self.assertRaisesRegex(UserError, "You cannot create an invoice with negative lines on it"):
+            _move = self.create_invoice('out_invoice', amount=-10)
 
     def test_l10n_pt_partner(self):
         """Test misc requirements for partner"""
@@ -186,7 +161,7 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
         self.create_invoice('out_invoice', partner=partner_a)
 
         partner_a.vat = "PT123456789"
-        with self.assertRaisesRegex(UserError, "You cannot change the VAT number of a partner that already has issued documents"):
+        with self.assertRaisesRegex(UserError, "partner that already has issued documents"):
             partner_a.vat = "PT987654321"
 
         # Do not allow change the name of client (if it already has issued docs) who has no tax number.
@@ -203,7 +178,15 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
         partner_b.name = "Partner B2"
 
     def test_l10n_pt_product(self):
-        """Test that we do not allow change ProductDescription if already issued docs"""
+        """
+        Test that Product names shorter than two characters cannot be created and that
+        we do not allow change ProductDescription if already issued docs
+        """
+
+        with self.assertRaisesRegex(UserError, "Product names have to be at least 2 characters long."):
+            self.env['product.product'].create({
+                'name': 'A',
+            })
 
         product = self.env['product.product'].create({
             'name': 'Product A',
@@ -212,5 +195,134 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
 
         self.create_invoice('out_invoice', product_id=product.id)
 
-        with self.assertRaisesRegex(UserError, "You cannot modify the name of a product that has been used in an accounting entry."):
+        with self.assertRaisesRegex(UserError, "You cannot modify the name of a product that has been used"):
             product.name = "Product A3"
+
+    def test_l10n_pt_invoice_date_validation(self):
+        """
+        Test that, if an invoice is posted in a future date, no other invoices can be posted in the same series.
+        """
+        self.create_invoice('out_invoice', fields.Date.today() + timedelta(days=1))
+        with self.assertRaisesRegex(UserError, "You cannot create an invoice with a date earlier than the date"):
+            self.create_invoice('out_invoice', fields.Date.today())
+
+    def test_l10n_pt_payment_date_validation(self):
+        """
+        Test that, if a payment is posted in a future date, no other payments can be posted in the same series.
+        """
+        payment_vals = {
+            'company_id': self.company_pt.id,
+            'payment_type': 'inbound',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': fields.Date.from_string(fields.Date.today() + timedelta(days=1)),
+            'amount': 100.0,
+            'l10n_pt_at_series_id': self.series_2024.id
+        }
+        self.env['account.payment'].create(payment_vals).action_post()
+        with self.assertRaisesRegex(UserError, "You cannot create a payment with a date earlier than the date"):
+            payment_vals['date'] = fields.Date.today()
+            self.env['account.payment'].create(payment_vals).action_post()
+
+    def test_l10n_pt_hashed_on_date_validation(self):
+        """
+        Test that an error is thrown if an invoice has a hashed_on date in the future of the system date.
+        """
+        self.create_invoice('out_invoice', l10n_pt_hashed_on=fields.Datetime.now() + timedelta(hours=1), do_hash=True)
+        with self.assertRaisesRegex(UserError, "exists secured invoices with a lock date ahead of the present time."):
+            self.create_invoice('out_invoice')
+
+    def test_l10n_pt_refund_validation(self):
+        """
+        Test that, if a refund is created, no line of the reversal move exceeds the value of the original move lines
+        and that the reversal move does not have more lines than the original move.
+        """
+        invoice = self.create_invoice('out_invoice')
+        line_data = {
+            'name': 'Product A',
+            'quantity': 1,
+            'price_unit': 1000.0,
+            'tax_ids': self.tax_sale_23.ids,
+        }
+        refund_data = {
+            'company_id': self.company_pt.id,
+            'move_type': 'out_refund',
+            'partner_id': self.partner_a.id,
+            'invoice_date': invoice.invoice_date,
+            'reversed_entry_id': invoice.id,
+            'line_ids': [
+                Command.create(line_data),
+            ],
+        }
+        move = self.env['account.move'].with_company(self.company_pt).create(refund_data)
+        with self.assertRaisesRegex(UserError, "The value or quantity per line of a reversal cannot exceed"):
+            move.invoice_line_ids.quantity = 2
+            move.action_post()
+        with self.assertRaisesRegex(UserError, "The reversal of a move should not have more lines than the original"):
+            move.line_ids = [
+                Command.create(line_data),
+                Command.create(line_data),
+            ]
+            move.action_post()
+
+    def test_l10n_pt_discount(self):
+        """
+        Test that global and line discounts are applied correctly.
+        """
+        move = self.env['account.move'].with_company(self.company_pt).create({
+            'company_id': self.company_pt.id,
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2024-02-04'),
+            'l10n_pt_global_discount': 10.0,
+            'line_ids': [
+                Command.create({
+                    'name': 'Product A',
+                    'quantity': 1,
+                    'price_unit': 1234.568,
+                    'l10n_pt_line_discount': 10.0,
+                    'tax_ids': self.tax_sale_23.ids,
+                }),
+                Command.create({
+                    'name': 'Product A',
+                    'quantity': 1,
+                    'price_unit': 756.81,
+                    'tax_ids': self.tax_sale_23.ids,
+                }),
+            ],
+        })
+        move.action_post()
+        self.assertInvoiceValues(move, [
+            {
+                'price_unit': 1234.57,
+                'price_subtotal': 1000.00,
+                'price_total': 1230.00,
+                'debit': 0.0,
+                'credit': 1000.0,
+            },
+            {
+                'price_unit': 756.81,
+                'price_subtotal': 681.13,
+                'price_total': 837.79,
+                'debit': 0.0,
+                'credit': 681.13,
+            },
+            {
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+                'debit': 0.0,
+                'credit': 386.66,
+            },
+            {
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+                'debit': 2067.79,
+                'credit': 0.0,
+            },
+        ], {
+             'amount_untaxed': 1681.13,
+             'amount_tax': 386.66,
+             'amount_total': 2067.79,
+         })
