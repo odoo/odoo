@@ -122,6 +122,7 @@ patch(PaymentScreen.prototype, {
             if (!couponData[couponId].line_codes.includes(line.reward_identifier_code)) {
                 !couponData[couponId].line_codes.push(line.reward_identifier_code);
             }
+            couponData[couponId].earned_points = couponData[couponId].points;
             couponData[couponId].points -= line.points_cost;
         }
         // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
@@ -188,6 +189,8 @@ patch(PaymentScreen.prototype, {
                 card_id: coupon_id,
                 spent: couponData[coupon_id].points < 0 ? -couponData[coupon_id].points : 0,
                 won: couponData[coupon_id].points > 0 ? couponData[coupon_id].points : 0,
+                points_to_redeem:
+                    couponData[coupon_id].earned_points - couponData[coupon_id].points,
             }));
 
             const couponUpdates = payload.coupon_updates.map((item) => ({

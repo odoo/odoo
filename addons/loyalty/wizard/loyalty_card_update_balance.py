@@ -30,10 +30,20 @@ class LoyaltyCardUpdateBalance(models.TransientModel):
         else:
             used = abs(difference)
 
-        self.env['loyalty.history'].create({
+        redemption_records = []
+        loyalty_history = self.env['loyalty.history']
+        loyalty_history.create({
             'card_id': self.card_id.id,
             'description': self.description or _("Gift for customer"),
             'used': used,
             'issued': issued,
+            'available_issued_points': issued,
         })
+
+        if used:
+            redemption_records.append({
+                'card_id': self.card_id.id,
+                'points_to_redeem': used,
+            })
+            loyalty_history.redeem_loyalty_points(redemption_records)
         self.card_id.points = self.new_balance
