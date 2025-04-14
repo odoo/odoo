@@ -2740,3 +2740,16 @@ test("today operator for datetime field", async () => {
         `["&", ("datetime", ">=", "2019-03-10 23:00:00"), ("datetime", "<=", "2019-03-11 22:59:59")]`,
     ]);
 });
+
+test("remove all conditions in a sub connector", async () => {
+    await makeDomainSelector({
+        domain: `["&", ("bar", "!=", False), "|", ("id", "=", 1), ("id", "=", False)]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    await clickOnButtonDeleteNode(3);
+    expect.verifySteps([`["&", ("bar", "!=", False), ("id", "=", 1)]`]);
+    await clickOnButtonDeleteNode(2);
+    expect.verifySteps([`[("bar", "!=", False)]`]);
+});
