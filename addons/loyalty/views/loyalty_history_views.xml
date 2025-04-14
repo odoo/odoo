@@ -13,10 +13,18 @@
                             <field name="description"/>
                             <field name="order_id" invisible="not order_id"/>
                             <field name="order_model" invisible="True"/>
+                            <field
+                                name="is_line_expired"
+                                string="Status"
+                                widget="badge"
+                                decoration-danger="is_line_expired == 'expired'"
+                                decoration-success="is_line_expired == 'valid'"
+                            />
                         </group>
                         <group>
                             <field name="issued"/>
                             <field name="used"/>
+                            <field name="expiration_date" readonly="is_line_expired == 'expired'"/>
                         </group>
                     </group>
                 </sheet>
