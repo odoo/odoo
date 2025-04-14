@@ -67,17 +67,21 @@ export class WebsiteBuilder extends Component {
         this.websitePreviewRef = useRef("website_preview");
 
         onWillStart(async () => {
-            const [backendWebsiteRepr] = await Promise.all([
-                this.orm.call("website", "get_current_website"),
-                this.websiteService.fetchWebsites(),
-                this.websiteService.fetchUserGroups(),
-            ]);
-            this.backendWebsiteId = backendWebsiteRepr[0];
+            let backendWebsiteId = this.props.action.context.params?.website_id;
+            if (!backendWebsiteId) {
+                const [backendWebsiteRepr] = await Promise.all([
+                    this.orm.call("website", "get_current_website"),
+                    this.websiteService.fetchWebsites(),
+                    this.websiteService.fetchUserGroups(),
+                ]);
+                backendWebsiteId = backendWebsiteRepr[0];
+            }
+
             const encodedPath = encodeURIComponent(this.path);
             this.initialUrl = `/website/force/${encodeURIComponent(
-                this.backendWebsiteId
+                backendWebsiteId
             )}?path=${encodedPath}`;
-            this.websiteService.currentWebsiteId = this.backendWebsiteId;
+            this.websiteService.currentWebsiteId = backendWebsiteId;
         });
         onMounted(() => {
             const { enable_editor, edit_translations } = this.props.action.context.params || {};
@@ -90,9 +94,9 @@ export class WebsiteBuilder extends Component {
         this.setIframeLoaded();
         this.addSystrayItems();
         onWillDestroy(() => {
+            registry.category("systray").remove("website.WebsiteSystrayItem");
             this.websiteService.useMysterious = false;
             this.websiteService.currentWebsiteId = null;
-            registry.category("systray").remove("website.WebsiteSystrayItem");
         });
     }
 
