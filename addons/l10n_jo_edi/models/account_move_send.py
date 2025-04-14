@@ -6,7 +6,7 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _l10n_jo_is_edi_applicable(self, move):
-        return move.l10n_jo_edi_is_needed and move.l10n_jo_edi_state != 'sent'
+        return move.l10n_jo_edi_is_needed and move.l10n_jo_edi_state not in ['sent', 'demo']
 
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
@@ -21,6 +21,11 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
+        if self.env.company.l10n_jo_edi_demo_mode:
+            alerts['l10n_jo_edi_demo_mode'] = {
+                'level': 'info',
+                'message': _("Demo mode is enabled."),
+            }
         if non_eligible_jo_moves := moves.filtered(lambda m: 'jo_edi' in moves_data[m]['extra_edis'] and not self._l10n_jo_is_edi_applicable(m)):
             alerts['l10n_jo_edi_non_eligible_moves'] = {
                 'message': _(

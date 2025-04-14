@@ -14,21 +14,6 @@ JO_CURRENCY = SimpleNamespace(name='JO')
 
 JO_MAX_DP = 9
 
-PAYMENT_CODES_MAP = {
-    'income': {
-        'cash': '011',
-        'receivable': '021',
-    },
-    'sales': {
-        'cash': '012',
-        'receivable': '022',
-    },
-    'special': {
-        'cash': '013',
-        'receivable': '023',
-    }
-}
-
 
 class AccountEdiXmlUBL21JO(models.AbstractModel):
     _name = 'account.edi.xml.ubl_21.jo'
@@ -56,14 +41,12 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     @approximate
     def _get_line_amount_before_discount_jod(self, base_line):
         line = base_line['record']
-        amount_after_discount = base_line['tax_details']['raw_total_excluded']
-        return amount_after_discount / (1 - line.discount / 100) \
-            if line.discount < 100 else line.currency_id._convert(
-            from_amount=line.price_unit * line.quantity,
-            to_currency=self.env.ref('base.JOD'),
-            company=line.company_id,
-            date=line.date,
-        )
+        if line.discount < 100:
+            amount_after_discount = base_line['tax_details']['raw_total_excluded_currency']
+            return amount_after_discount / (1 - line.discount / 100)
+        else:
+            # reported numbers won't matter if discount is 100%
+            return line.price_unit * line.quantity
 
     @approximate
     def _get_line_discount_jod(self, base_line):
@@ -91,7 +74,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         if not tax_data:
             return 0
         if tax_type == 'fixed':
-            return tax_data['raw_tax_amount']
+            return tax_data['raw_tax_amount_currency']
         else:
             # general tax amount = (taxable amount + special (fixed) tax mount) * tax percent
             return (self._get_line_taxable_amount(base_line) + self._get_line_tax_amount(base_line, 'fixed')) * tax_data['tax'].amount / 100
@@ -105,7 +88,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return [taxes_vals['base_line']]
 
     def _get_payment_method_code(self, invoice):
-        return PAYMENT_CODES_MAP.get(invoice.company_id.l10n_jo_edi_taxpayer_type, {}).get('receivable', '')
+        return invoice._get_invoice_scope_code() + invoice._get_invoice_payment_method_code() + invoice._get_invoice_tax_payer_type_code()
 
     def _get_line_edi_id(self, line, default_id):
         if not line.is_refund:  # in case it's invoice not credit note
@@ -281,10 +264,10 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                     'currency': JO_CURRENCY,
                     'currency_dp': self._get_currency_decimal_places(),
                     'taxable_amount': taxable_amount,
-                    'tax_amount': tax_details_vals['raw_tax_amount'],
+                    'tax_amount': tax_details_vals['raw_tax_amount_currency'],
                     'tax_category_vals': tax_details_vals['_tax_category_vals_'],
                 }
-                vals['rounding_amount'] += self._round_max_dp(tax_details_vals['raw_tax_amount'])
+                vals['rounding_amount'] += self._round_max_dp(tax_details_vals['raw_tax_amount_currency'])
                 vals['tax_subtotal_vals'].insert(0, special_tax_subtotal)
                 # Because we want the following:
                 # 1. The special tax amount should be accounted for in the taxable amount used to calculate general tax amount.
@@ -388,7 +371,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         return {
             'id': (invoice.reversed_entry_id.name or '').replace('/', '_'),
             'uuid': invoice.reversed_entry_id.l10n_jo_edi_uuid,
-            'document_description': self.format_float(abs(invoice.reversed_entry_id.amount_total_signed), self._get_currency_decimal_places()),
+            'document_description': self.format_float(abs(invoice.reversed_entry_id.amount_total), self._get_currency_decimal_places()),
         }
 
     def _get_additional_document_reference_list(self, invoice):
@@ -427,8 +410,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             'profile_id': 'reporting:1.0',
             'id': invoice.name.replace('/', '_'),
             'uuid': invoice.l10n_jo_edi_uuid,
-            'document_currency_code': 'JOD',
-            'tax_currency_code': 'JOD',
+            'document_currency_code': invoice.currency_id.name,
+            'tax_currency_code': invoice.currency_id.name,
             'document_type_code_attrs': {'name': self._get_payment_method_code(invoice)},
             'document_type_code': "381" if is_refund else "388",
             'accounting_customer_party_vals': {
