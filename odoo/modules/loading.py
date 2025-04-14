@@ -167,15 +167,19 @@ def load_module_graph(
         module_cursor_query_count = env.cr.sql_log_count
         module_extra_query_count = odoo.sql_db.sql_counter
 
-        needs_update = update_module and package.state in ("to install", "to upgrade")
+        update_operation = (
+            'install' if package.state == 'to install' else
+            'upgrade' if package.state == 'to upgrade' else
+            'reinit' if module_name in registry._reinit_modules else
+            None
+        ) if update_module else None
         module_log_level = logging.DEBUG
-        if needs_update:
+        if update_operation:
             module_log_level = logging.INFO
         _logger.log(module_log_level, 'Loading module %s (%d/%d)', module_name, index, module_count)
 
-        new_install = package.state == 'to install'
-        if needs_update:
-            if not new_install or package.name in registry._force_upgrade_scripts:
+        if update_operation:
+            if update_operation == 'upgrade' or module_name in registry._force_upgrade_scripts:
                 if package.name != 'base':
                     registry._setup_models__(env.cr, [])  # incremental setup
                 migrations.migrate_module(package, 'pre')
@@ -184,7 +188,7 @@ def load_module_graph(
 
         load_openerp_module(package.name)
 
-        if new_install:
+        if update_operation == 'install':
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.manifest.get('pre_init_hook')
             if pre_init:
@@ -193,12 +197,12 @@ def load_module_graph(
 
         model_names = registry.load(package)
 
-        if needs_update:
+        if update_operation:
             model_names = registry.descendants(model_names, '_inherit', '_inherits')
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
             registry._setup_models__(env.cr, [])  # incremental setup
-            registry.init_models(env.cr, model_names, {'module': package.name}, new_install)
+            registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
         elif package.state != 'to remove':
             # The current module has simply been loaded. The models extended by this module
             # and for which we updated the schema, must have their schema checked again.
@@ -208,7 +212,7 @@ def load_module_graph(
             model_names = registry.descendants(model_names, '_inherit', '_inherits')
             models_to_check |= set(model_names) & models_updated
 
-        if needs_update:
+        if update_operation:
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_models() above.
             module = env['ir.module.module'].browse(module_id)
@@ -216,16 +220,17 @@ def load_module_graph(
 
             idref: dict = {}
 
-            if new_install:  # 'to install'
+            if update_operation == 'install':
                 load_data(env, idref, 'init', kind='data', package=package)
                 if install_demo and package.demo_installable:
                     package.demo = load_demo(env, package, idref, 'init')
-            else:  # 'to upgrade'
+            else:  # 'upgrade' or 'reinit'
                 # upgrading the module information
                 module.write(module.get_values_from_terp(package.manifest))
-                load_data(env, idref, 'update', kind='data', package=package)
+                mode = 'update' if update_operation == 'upgrade' else 'init'
+                load_data(env, idref, mode, kind='data', package=package)
                 if package.demo:
-                    package.demo = load_demo(env, package, idref, 'update')
+                    package.demo = load_demo(env, package, idref, mode)
             env.cr.execute('UPDATE ir_module_module SET demo = %s WHERE id = %s', (package.demo, module_id))
             module.invalidate_model(['demo'])
 
@@ -238,12 +243,12 @@ def load_module_graph(
         if package.name is not None:
             registry._init_modules.add(package.name)
 
-        if needs_update:
-            if new_install:
+        if update_operation:
+            if update_operation == 'install':
                 post_init = package.manifest.get('post_init_hook')
                 if post_init:
                     getattr(py_module, post_init)(env)
-            else:  # 'to upgrade'
+            elif update_operation == 'upgrade':
                 # validate the views that have not been checked yet
                 env['ir.ui.view']._validate_module_views(module_name)
 
@@ -278,12 +283,12 @@ def load_module_graph(
         test_queries = 0
         test_results = None
 
-        update_from_config = tools.config['update'] or tools.config['init']
-        if tools.config['test_enable'] and (needs_update or not update_from_config):
+        update_from_config = tools.config['update'] or tools.config['init'] or tools.config['reinit']
+        if tools.config['test_enable'] and (update_operation or not update_from_config):
             from odoo.tests import loader  # noqa: PLC0415
             suite = loader.make_suite([module_name], 'at_install')
             if suite.countTestCases():
-                if not needs_update:
+                if not update_operation:
                     registry._setup_models__(env.cr, [])  # incremental setup
                 registry.check_null_constraints(env.cr)
                 # Python tests
@@ -345,6 +350,7 @@ def load_modules(
     update_module: bool = False,
     upgrade_modules: Collection[str] = (),
     install_modules: Collection[str] = (),
+    reinit_modules: Collection[str] = (),
     new_db_demo: bool = False,
 ) -> None:
     """ Load the modules for a registry object that has just been created.  This
@@ -354,6 +360,7 @@ def load_modules(
         :param update_module: Whether to update (install, upgrade, or uninstall) modules. Defaults to ``False``
         :param upgrade_modules: A collection of module names to upgrade.
         :param install_modules: A collection of module names to install.
+        :param reinit_modules: A collection of module names to reinitialize.
         :param new_db_demo: Whether to install demo data for new database. Defaults to ``False``
     """
     initialize_sys_path()
@@ -372,6 +379,8 @@ def load_modules(
                 return
             _logger.info("Initializing database %s", cr.dbname)
             modules_db.initialize(cr)
+        elif 'base' in reinit_modules:
+            registry._reinit_modules.add('base')
 
         if 'base' in upgrade_modules:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -428,6 +437,11 @@ def load_modules(
                 modules = Module.search([('state', 'in', ('installed', 'to upgrade')), ('name', 'in', tuple(upgrade_modules))])
                 if modules:
                     modules.button_upgrade()
+
+            if reinit_modules:
+                modules = Module.search([('state', 'in', ('installed', 'to upgrade')), ('name', 'in', tuple(reinit_modules))])
+                reinit_modules = modules.downstream_dependencies(exclude_states=('uninstalled', 'uninstallable', 'to remove', 'to install')) + modules
+                registry._reinit_modules.update(m for m in reinit_modules.mapped('name') if m not in graph._imported_modules)
 
             env.flush_all()
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
