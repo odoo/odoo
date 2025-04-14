@@ -116,7 +116,7 @@ export class TimeOffCalendarModel extends CalendarModel {
         if (!this.employeeId) {
             context["short_name"] = 1;
         }
-        const fieldNamesToAdd = resModel === "hr.leave" ? ["request_unit_half", "request_date_from_period"] : [];
+        const fieldNamesToAdd = resModel === "hr.leave" ? ["request_unit_half", "request_date_from_period", "request_unit_hours"] : [];
         return this.orm.searchRead(resModel, this.computeDomain(data), [...fieldNames, ...fieldNamesToAdd], { context });
     }
 
