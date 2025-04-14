@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
-
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -401,11 +400,22 @@ class SaleOrder(models.Model):
         :param kwargs: Additional parameters given to deeper method calls.
         :return: values used by the cart service to give feedback to the customer.
         """
-        self.ensure_one()
-        self = self.with_company(self.company_id)
+        if self:
+            self.ensure_one()
+
+        self = self.with_company(self.company_id)  # noqa: PLW0642
 
         if not (order_line := self.order_line.filtered(lambda sol: sol.id == line_id)):
-            raise UserError(_("This line doesn't belong to your order."))
+            # If the line isn't found because of wrong parameters, or because the user updated
+            # the cart in other tabs, a warning will be returned.
+            # Note that if the cart is empty, the zero cart_quantity will trigger a page reload
+            # and this warning won't be shown.
+            return {
+                'warning': _(
+                    "We weren't able to update your cart. Please refresh your page before trying"
+                    " again."
+                )
+            }
 
         if quantity > 0:
             quantity, warning = self._verify_updated_quantity(
@@ -813,7 +823,7 @@ class SaleOrder(models.Model):
 
         :rtype: bool
         """
-        return True
+        return bool(self)
 
     def _check_cart_is_ready_to_be_paid(self):
         """ Whether the cart is valid and the user can proceed to the payment
