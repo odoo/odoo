@@ -611,10 +611,13 @@ class Website(models.Model):
         next_step = current_step._get_next_checkout_step(allowed_steps_domain)
         previous_step = current_step._get_previous_checkout_step(allowed_steps_domain)
 
-        # try_skip_step option required on /shop/checkout next button
         next_href = next_step.step_href
+        # try_skip_step option required on /shop/checkout next button
         if next_step.step_href == '/shop/checkout':
             next_href = '/shop/checkout?try_skip_step=true'
+        # redirect handled by '/shop/address/submit' route when all values are properly filled
+        if request.httprequest.path == '/shop/address':
+            next_href = False
 
         return {
             'current_website_checkout_step_href': href,
