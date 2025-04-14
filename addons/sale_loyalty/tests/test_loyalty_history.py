@@ -64,7 +64,9 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
             lambda x: x.order_id == order
         )
         history_records = len(
-            coupon_applied.history_ids.filtered(lambda history: history.order_id == order.id)
+            coupon_applied.with_context(active_test=False).history_ids.filtered(
+                lambda history: history.order_id == order.id
+            )
         )
         self.assertEqual(
             history_records, 1, "A history line should be created on confirmation of order"
@@ -78,7 +80,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         order.action_confirm()
         order._update_programs_and_rewards()
         self._claim_reward(order, self.loyalty_program)
-        history_records = self.loyalty_card.history_ids.filtered(
+        history_records = self.loyalty_card.with_context(active_test=False).history_ids.filtered(
             lambda history: history.order_id == order.id
         )
         self.assertEqual(
@@ -95,7 +97,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, self.loyalty_program)
         order.action_confirm()
-        lines_before_cancel = len(self.loyalty_card.history_ids)
+        lines_before_cancel = len(self.loyalty_card.with_context(active_test=False).history_ids)
         order._action_cancel()
         self.assertEqual(
             lines_before_cancel - 1,
@@ -117,7 +119,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         self.assertEqual(order.order_line.mapped("points_cost"), [0, 1, 2])
 
         order.action_confirm()
-        loyalty_history = self.loyalty_card.history_ids
+        loyalty_history = self.loyalty_card.with_context(active_test=False).history_ids
         self.assertEqual(loyalty_history.issued, 1, "1 point should be rewarded")
         self.assertEqual(loyalty_history.used, 3, "A total of 3 points should be used")
         self.assertEqual(

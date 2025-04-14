@@ -4,6 +4,7 @@ from . import (
     loyalty_card,
     loyalty_history,
     loyalty_mail,
+    loyalty_point_track,
     loyalty_program,
     loyalty_reward,
     loyalty_rule,

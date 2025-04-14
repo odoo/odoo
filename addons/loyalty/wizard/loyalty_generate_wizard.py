@@ -103,6 +103,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
                 "description": self.description or self.env._("Gift For Customer"),
                 "card_id": coupon.id,
                 "issued": self.points_granted,
+                "available_issued_points": self.points_granted,
             }
             for coupon in coupons
         ])
