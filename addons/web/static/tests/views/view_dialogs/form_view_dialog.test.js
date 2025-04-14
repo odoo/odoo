@@ -386,7 +386,6 @@ test("Save a FormViewDialog when a required field is empty don't close the dialo
     expect(".modal").toHaveCount(0, { message: "modal should be closed" });
 });
 
-test.tags("desktop");
 test("new record has an expand button", async () => {
     Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
     Partner._records = [];
@@ -416,7 +415,6 @@ test("new record has an expand button", async () => {
     expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
 });
 
-test.tags("desktop");
 test("existing record has an expand button", async () => {
     Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
     onRpc("web_save", async () => {
@@ -446,20 +444,6 @@ test("existing record has an expand button", async () => {
     expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
 });
 
-test.tags("mobile");
-test("no expand button on mobile", async () => {
-    Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
-    await mountWithCleanup(WebClient);
-    getService("dialog").add(FormViewDialog, {
-        resModel: "partner",
-        resId: 1,
-    });
-    await animationFrame();
-    expect(".o_dialog .o_form_view").toHaveCount(1);
-    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(0);
-});
-
-test.tags("desktop");
 test("expand button with save and new", async () => {
     Instrument._views["form,false"] = /* xml */ `<form><field name="name"/></form>`;
     Instrument._records = [{ id: 1, name: "Violon" }];
