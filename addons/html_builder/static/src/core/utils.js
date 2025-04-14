@@ -1,4 +1,4 @@
-import { isTextNode } from "@html_editor/utils/dom_info";
+import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     Component,
     onMounted,
@@ -650,8 +650,10 @@ export function useVisibilityObserver(contentName, callback) {
     const contentRef = useRef(contentName);
 
     const applyVisibility = () => {
-        const hasContent = [...contentRef.el.childNodes].some((el) =>
-            isTextNode(el) ? el.textContent !== "" : !el.classList.contains("d-none")
+        const hasContent = [...contentRef.el.childNodes].some(
+            (el) =>
+                (isTextNode(el) && el.textContent !== "") ||
+                (isElement(el) && !el.classList.contains("d-none"))
         );
         callback(hasContent);
     };

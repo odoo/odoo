@@ -57,6 +57,7 @@ class WebsiteBackgroundOptionPlugin extends Plugin {
                     withImages: true,
                     withVideos: true,
                     withShapes: true,
+                    withColorCombinations: false,
                 },
             },
         ],
