@@ -131,22 +131,30 @@ class Registry(Mapping[str, type["BaseModel"]]):
         update_module: bool = False,
         install_modules: Collection[str] = (),
         upgrade_modules: Collection[str] = (),
+        reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
     ) -> Registry:
         """Create and return a new registry for the given database name.
 
         :param db_name: The name of the database to associate with the Registry instance.
+        :param update_module: If ``True``, update modules while loading the registry. Defaults to ``False``.
+        :param install_modules: Names of modules to install.
 
-        :param update_module: If True, update modules while loading the registry. Defaults to ``False``.
+          * If a specified module is **not installed**, it and all of its direct and indirect
+            dependencies will be installed.
 
-        :param install_modules: Names of modules to install. Their direct or indirect dependency
-                                modules will also be installed. Defaults to an empty tuple.
+          Defaults to an empty tuple.
 
         :param upgrade_modules: Names of modules to upgrade. Their direct or indirect dependent
-                                modules will also be upgraded. Defaults to an empty tuple.
+          modules will also be upgraded. Defaults to an empty tuple.
+        :param reinit_modules: Names of modules to reinitialize.
+
+          * If a specified module is **already installed**, it and all of its installed direct and
+            indirect dependents will be re-initialized. Re-initialization means the module will be
+            upgraded without running upgrade scripts, but with data loaded in ``'init'`` mode.
 
         :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
-                            determined by the ``config['with_demo']``. Defaults to ``None``
+          determined by the ``config['with_demo']``. Defaults to ``None``
         """
         t0 = time.time()
         registry: Registry = object.__new__(cls)
@@ -166,7 +174,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             exit_stack = ExitStack()
             try:
-                if upgrade_modules or install_modules:
+                if upgrade_modules or install_modules or reinit_modules:
                     update_module = True
                 if new_db_demo is None:
                     new_db_demo = config['with_demo']
@@ -177,6 +185,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     update_module=update_module,
                     upgrade_modules=upgrade_modules,
                     install_modules=install_modules,
+                    reinit_modules=reinit_modules,
                     new_db_demo=new_db_demo,
                 )
             except Exception:
@@ -188,6 +197,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             _logger.error('Failed to load registry')
             del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
             raise
+
+        del registry._reinit_modules
 
         # load_modules() above can replace the registry by calling
         # indirectly new() again (when modules have to be uninstalled).
@@ -220,10 +231,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.__caches: dict[str, LRU] = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
 
         # update context during loading modules
-        self._force_upgrade_scripts = set()  # force the execution of the upgrade script for these modules
+        self._force_upgrade_scripts: set[str] = set()  # force the execution of the upgrade script for these modules
+        self._reinit_modules: set[str] = set()  # modules to reinitialize
 
         # modules fully loaded (maintained during init phase by `loading` module)
-        self._init_modules: set[str] = set()
+        self._init_modules: set[str] = set()       # modules have been initialized
         self.updated_modules: list[str] = []       # installed/updated modules
         self.loaded_xmlids: set[str] = set()
 
