@@ -14,6 +14,7 @@ export class IntegerField extends Component {
         ...standardFieldProps,
         formatNumber: { type: Boolean, optional: true },
         humanReadable: { type: Boolean, optional: true },
+        skipThousands: { type: Boolean, optional: true },
         decimals: { type: Number, optional: true },
         inputType: { type: String, optional: true },
         step: { type: Number, optional: true },
@@ -21,6 +22,7 @@ export class IntegerField extends Component {
     };
     static defaultProps = {
         formatNumber: true,
+        skipThousands: false,
         humanReadable: false,
         inputType: "text",
         decimals: 0,
@@ -57,9 +59,10 @@ export class IntegerField extends Component {
             return formatInteger(this.value, {
                 humanReadable: true,
                 decimals: this.props.decimals,
+                skipThousands: this.props.skipThousands,
             });
         } else {
-            return formatInteger(this.value, { humanReadable: false });
+            return formatInteger(this.value, { humanReadable: false, skipThousands: this.props.skipThousands });
         }
     }
 
@@ -104,6 +107,13 @@ export const integerField = {
             default: 0,
             help: _t("Use it with the 'User-friendly format' option to customize the formatting."),
         },
+        {
+            label: _t("Skip thousand separator"),
+            name: "skip_thousands_separator",
+            type: "boolean",
+            help: _t("Disable comma (thousands) formatting while keeping other formatting."),
+            default: false,
+        },
     ],
     supportedTypes: ["integer"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
@@ -113,6 +123,7 @@ export const integerField = {
         humanReadable: !!options.human_readable,
         inputType: options.type,
         step: options.step,
+        skipThousands: !!options.skip_thousands_separator,
         placeholder: attrs.placeholder,
         decimals: options.decimals || 0,
     }),

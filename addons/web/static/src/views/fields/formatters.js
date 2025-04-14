@@ -230,6 +230,7 @@ formatFloatTime.extractOptions = ({ options }) => {
  * @param {boolean} [options.humanReadable] if true, large numbers are formatted
  *   to a human readable format.
  * @param {boolean} [options.isPassword=false] if returns true, acts like
+ * @param {boolean} [options.skipThousands] if true, disables thousands separator.
  * @param {string} [options.thousandsSep] thousands separator to insert
  * @param {number[]} [options.grouping] array of relative offsets at which to
  * @param {number} [options.decimals] used for humanNumber formmatter
@@ -246,6 +247,9 @@ export function formatInteger(value, options = {}) {
     if (options.humanReadable) {
         return humanNumber(value, options);
     }
+    if (options.skipThousands) {
+        return value.toString();
+    }
     const grouping = options.grouping || l10n.grouping;
     const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
     return insertThousandsSep(value.toFixed(0), thousandsSep, grouping);
@@ -254,6 +258,7 @@ formatInteger.extractOptions = ({ attrs, options }) => {
     return {
         decimals: options.decimals || 0,
         humanReadable: !!options.human_readable,
+        skipThousands: !!options.skip_thousands_separator,
         isPassword: exprToBoolean(attrs.password),
     };
 };

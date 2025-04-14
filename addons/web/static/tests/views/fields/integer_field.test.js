@@ -170,6 +170,20 @@ test("without input type option", async () => {
     expect(".o_field_widget input").toHaveValue("1,234,567,890");
 });
 
+test("with skip_thousands_separator only", async () => {
+    Product._records = [{ id: 1, price: 1234567 }];
+    await mountView({
+        type: "form",
+        resModel: "product",
+        resId: 1,
+        arch: `<form><field name="price" options="{'skip_thousands_separator': true}"/></form>`,
+    });
+
+    expect(".o_field_widget input").toHaveValue("1234567", {
+        message: "Should not format with comma when skipThousands is true.",
+    });
+});
+
 test("is formatted by default", async () => {
     // `localization > grouping` required for this test is [3, 0], which is the default in mock server
     Product._records = [{ id: 1, price: 8069 }];
