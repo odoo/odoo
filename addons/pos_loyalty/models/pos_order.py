@@ -55,13 +55,18 @@ class PosOrder(models.Model):
 
     def add_loyalty_history_lines(self, coupon_data, coupon_updates):
         id_mapping = {item['old_id']: int(item['id']) for item in coupon_updates}
+        compensation_records = []
         history_lines_create_vals = []
+        reward_redemptions = []
         for coupon in coupon_data:
             card_id = id_mapping.get(int(coupon['card_id'], False)) or int(coupon['card_id'])
-            if not self.env['loyalty.card'].browse(card_id).exists():
+            loyalty_card = self.env['loyalty.card'].browse(card_id)
+            if not loyalty_card.exists():
                 continue
             issued = coupon['won']
             cost = coupon['spent']
+            points_to_redeem = coupon['points_to_redeem'] or 0
+            available = (issued + points_to_redeem) if issued else (points_to_redeem - cost)
             if (issued or cost) and card_id > 0:
                 history_lines_create_vals.append({
                     'card_id': card_id,
@@ -70,8 +75,29 @@ class PosOrder(models.Model):
                     'description': _('Onsite %s', self.display_name),
                     'used': cost,
                     'issued': issued,
+                    'available_issued_points': available,
                 })
-        self.env['loyalty.history'].create(history_lines_create_vals)
+                if points_to_redeem:
+                    # for redemption of loyalty points used as reward
+                    reward_redemptions.append({
+                        'card_id': card_id,
+                        'points_to_redeem': points_to_redeem,
+                    })
+                old_card_points = loyalty_card.points - issued + cost
+                if available and old_card_points < 0:
+                    # for compensating the negative card balance to cover debt
+                    compensation_records.append({
+                        'card_id': card_id,
+                        'points_to_redeem': abs(old_card_points),
+                    })
+
+        loyalty_history = self.env['loyalty.history']
+        loyalty_history.create(history_lines_create_vals)
+
+        # Merge reward and compensation records to process redemptions for current order
+        redemption_records = reward_redemptions + compensation_records
+        if redemption_records:
+            loyalty_history.redeem_loyalty_points(redemption_records)
 
     def confirm_coupon_programs(self, coupon_data):
         """

@@ -59,7 +59,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
 
         order.action_confirm()
         coupon_applied = self.immediate_promotion_program.coupon_ids.filtered(lambda x: x.order_id == order)
-        history_records = len(coupon_applied.history_ids.filtered(lambda history: history.order_id == order.id))
+        history_records = len(coupon_applied.with_context(active_test=False).history_ids.filtered(lambda history: history.order_id == order.id))
         self.assertEqual(history_records, 1, "A history line should be created on confirmation of order")
 
     def test_add_loyalty_history_line_without_reward(self):
@@ -76,7 +76,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         order.action_confirm()
         order._update_programs_and_rewards()
         self._claim_reward(order, self.loyalty_program)
-        history_records = self.loyalty_card.history_ids.filtered(lambda history: history.order_id == order.id)
+        history_records = self.loyalty_card.with_context(active_test=False).history_ids.filtered(lambda history: history.order_id == order.id)
         self.assertEqual(history_records.used, 1.0,
                         "The history line should be updated on change of order lines in a confirmed order")
 
@@ -94,7 +94,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, self.loyalty_program)
         order.action_confirm()
-        lines_before_cancel = len(self.loyalty_card.history_ids)
+        lines_before_cancel = len(self.loyalty_card.with_context(active_test=False).history_ids)
         order._action_cancel()
         self.assertEqual(lines_before_cancel - 1, len(self.loyalty_card.history_ids),
                          "History line should be deleted after order cancel")
@@ -119,7 +119,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         self.assertEqual(order.order_line.mapped('points_cost'), [0, 1, 2])
 
         order.action_confirm()
-        loyalty_history = self.loyalty_card.history_ids
+        loyalty_history = self.loyalty_card.with_context(active_test=False).history_ids
         self.assertEqual(loyalty_history.issued, 1, "1 point should be rewarded")
         self.assertEqual(loyalty_history.used, 3, "A total of 3 points should be used")
         self.assertEqual(
