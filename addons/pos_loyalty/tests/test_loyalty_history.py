@@ -85,7 +85,7 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
         def check_coupon(points, history_count):
             created_card = self.env['loyalty.card'].search([('program_id', '=', ewallet_program.id), ('partner_id', '=', test_partner.id)])
             self.assertEqual(created_card.points, points, "The coupon should have 50 points after the first confirmation.")
-            self.assertEqual(len(created_card.history_ids), history_count, "The history should have one entry after the first confirmation.")
+            self.assertEqual(len(created_card.with_context(active_test=False).history_ids), history_count, "The history should have one entry after the first confirmation.")
 
         check_coupon(50, 1)
         # Confirm the coupon again

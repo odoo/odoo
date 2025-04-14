@@ -1898,7 +1898,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         order._apply_program_reward(loyalty_program.reward_ids[0], coupon)
         order.action_confirm()
         self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
-        used_points = coupon.history_ids[0].used
+        used_points = coupon.with_context(active_test=False).history_ids[0].used
         self.assertEqual(used_points, coupon.currency_id.round(used_points))
 
     def test_apply_order_and_specific_discounts(self):
