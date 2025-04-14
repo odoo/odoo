@@ -601,19 +601,15 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     api_payload_success = fields.Boolean(string="Payload Sent Successfully", default=False, store=True)
     api_payload_attempted = fields.Boolean(string="Payload Attempted", default=False, store=True)
 
-
     @api.onchange('product_id', 'package_box_type_id', 'serial_number', 'weight', 'product_package_number')
     def _onchange_trigger_payload(self):
         for line in self:
-            if not line or not line.product_id:
+            if not line.product_id or line.api_payload_success:
                 return
 
             wizard = line.wizard_id
             multiple_picks = len(wizard.picking_ids) > 1
-            serial_check = (
-                    (line.product_id.is_serial_number and line.serial_number)
-                    or not line.product_id.is_serial_number
-            )
+            serial_ok = not line.product_id.is_serial_number or bool(line.serial_number)
 
             all_ready = (
                     line.product_id and
@@ -621,61 +617,92 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                     line.weight > 0 and
                     line.product_package_number and
                     multiple_picks and
-                    serial_check
+                    serial_ok
             )
 
-            if all_ready:
-                if not line.api_payload_attempted and not line.api_payload_success:
-                    # Mark as attempted (so it's not retried on future changes)
-                    line.api_payload_attempted = True
+            if not all_ready:
+                if line.product_id.is_serial_number and not line.serial_number:
+                    return {
+                        'warning': {
+                            'title': _("Packing Information"),
+                            'message': _("Serial number is required for product '%s'.") % line.product_id.display_name
+                        }
+                    }
+                if not line.package_box_type_id and not line.api_payload_attempted:
+                    return {
+                        'warning': {
+                            'title': _("Packing Information"),
+                            'message': _("Please select a package type before proceeding.")
+                        }
+                    }
+                if line.product_id.is_fragile:
+                    return {
+                        'warning': {
+                            'title': _("Packing Information"),
+                            'message': _("This item is fragile and must be packed with bubble wrap for protection.")
+                        }
+                    }
+                return
 
-                    _logger.info(f"[AUTO PAYLOAD] Triggered for product {line.product_id.name}")
-                    payload = wizard.prepare_payload_for_individual_line(line)
-                    _logger.info(json.dumps(payload, indent=4))
+            if line.api_payload_attempted:
+                _logger.info(f"[SKIP] Payload already attempted for {line.product_id.display_name}")
+                return
 
-                    is_production = line.env['ir.config_parameter'].sudo().get_param('is_production_env')
-                    if line.site_code_id.name == "FC3":
-                        api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
-                    elif line.site_code_id.name == "SHIPEROOALTONA":
-                        api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
-                    elif line.site_code_id.name == "SHIPEROOALTONA6":
-                        api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
-                    else:
-                        raise ValidationError(_("Unknown warehouse. Cannot determine API endpoint."))
+            _logger.info(f"[AUTO PAYLOAD] Sending for {line.product_id.display_name}")
+            payload = wizard.prepare_payload_for_individual_line(line)
+            _logger.info(json.dumps(payload, indent=4))
+            line.api_payload_attempted = True
 
-                    headers = {'Content-Type': 'application/json'}
+            # API URL
+            is_production = line.env['ir.config_parameter'].sudo().get_param('is_production_env')
+            if line.site_code_id.name == "FC3":
+                api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
+            elif line.site_code_id.name == "SHIPEROOALTONA":
+                api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
+            elif line.site_code_id.name == "SHIPEROOALTONA6":
+                api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
+            else:
+                raise ValidationError(_("Unknown warehouse. Cannot determine API endpoint."))
 
+            headers = {'Content-Type': 'application/json'}
+
+            try:
+                #  Commented Payload Handling (kept intact as you asked)
+                response_ot = requests.post(api_url, headers=headers, data=json.dumps(payload))
+                if response_ot.status_code == 200:
+                    line.api_payload_success = True
+                    line.line_added = True
+                    _logger.info(f"[SUCCESS] Payload sent for {line.product_id.display_name}")
+                    return {
+                        'warning': {
+                            'title': _("Success"),
+                            'message': _("Label Printed Successfully."),
+                            'type': 'notification'
+                        }
+                    }
+                else:
                     try:
-                        response_ot = requests.post(api_url, headers=headers, data=json.dumps(payload))
-                        if response_ot.status_code == 200:
-                            line.api_payload_success = True
-                            line.line_added = True
-                            _logger.info(f"[SUCCESS] Payload sent for {line.product_id.name}")
-                            return {
-                                'warning': {
-                                    'title': _("Success"),
-                                    'message': _("Label Printed Successfully."),
-                                    'type': 'notification'
-                                }
-                            }
-                        else:
-                            try:
-                                error_message = response_ot.json().get('message', response_ot.text)
-                            except ValueError:
-                                error_message = response_ot.text
+                        error_message = response_ot.json().get('message', response_ot.text)
+                    except ValueError:
+                        error_message = response_ot.text
 
-                            _logger.error(f"API Error ({response_ot.status_code}): {error_message}")
-                            line.api_payload_success = False
-                            raise UserError(
-                                _("Failed to send data to API. Cannot proceed to next line until this is resolved:\n%s") % error_message
-                            )
+                    _logger.error(f"[FAILURE] API Error ({response_ot.status_code}): {error_message}")
+                    line.api_payload_success = False
+                    raise UserError(
+                        _("Payload failed for product '%s'. Fix it before proceeding:\n%s") %
+                        (line.product_id.display_name, error_message)
+                    )
 
-                    except requests.exceptions.RequestException as e:
-                        _logger.error(f"RequestException during API call: {str(e)}")
-                        line.api_payload_success = False
-                        raise UserError(
-                            _("API request failed. Please fix the issue before adding the next line:\n%s") % str(e)
-                        )
+                # Simulated success for now (while disabled)
+                # line.api_payload_success = True
+                # line.line_added = True
+
+            except requests.exceptions.RequestException as e:
+                _logger.error(f"[EXCEPTION] during payload for {line.product_id.display_name}: {str(e)}")
+                line.api_payload_success = False
+                raise UserError(
+                    _("API request failed for product '%s':\n%s") % (line.product_id.display_name, str(e))
+                )
 
     @api.depends('wizard_id.picking_ids', 'product_id', 'line_added')
     def _compute_picking_id(self):
@@ -710,9 +737,9 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                         assigned = True
                         break
 
-                if not assigned:
-                    line.picking_id = False
-
+                if not assigned and not line.picking_id:
+                    _logger.warning(
+                        f"Could not assign picking for product {line.product_id.display_name}, retaining old picking.")
 
     @api.depends('wizard_id.picking_ids')
     def _compute_available_products(self):
@@ -773,45 +800,61 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        if self.product_id:
-            wizard = self.wizard_id
-            if not wizard.pack_bench_id:
-                raise ValidationError("Please select a Pack Bench first before proceeding with packing.")
-            if len(wizard.picking_ids) > 1:
-                real_lines = [line for line in wizard.line_ids if line.product_id]
-                if len(real_lines) >= 1:
-                    failed_line = next(
-                        (line for line in real_lines if line != self and not line.api_payload_success),
-                        None
-                    )
-                    if failed_line:
-                        product_name = failed_line.product_id.display_name or failed_line.default_code or 'Unknown Product'
-                        _logger.warning(f"Cannot proceed. Failed payload for: {product_name}")
-                        raise ValidationError(
-                            _("You cannot add a new line because the previous product '%s' failed to send payload.")
-                            % product_name
-                        )
+        if not self.product_id:
+            return
 
-            self.weight = self.product_id.weight or 0.0
-            if not self.product_id.weight or self.product_id.weight == 0.0:
-                return {
-                    'warning': {
-                        'title': _("Missing Weight"),
-                        'message': _(
-                            "The selected product '%s' does not have a weight. Please enter it manually.") % self.product_id.name
-                    }
-                }
+        wizard = self.wizard_id
+        if not wizard.pack_bench_id:
+            raise ValidationError("Please select a Pack Bench before proceeding.")
 
-            if wizard.next_package_number:
-                self.product_package_number = wizard.next_package_number
-            if self.product_id.is_fragile:
-                return {
-                    'warning': {
-                        'title': _("Packing Information"),
-                        'message': _("This item is fragile and must be packed with bubble wrap for protection."),
-                    }
+        self.weight = self.product_id.weight or 0.0
+
+        if not self.weight:
+            return {
+                'warning': {
+                    'title': _("Missing Weight"),
+                    'message': _(
+                        "The selected product '%s' does not have a weight. Please enter it manually.") % self.product_id.name
                 }
-            wizard._auto_select_package_box_type()
+            }
+
+        # Auto-set package number
+        if wizard.next_package_number:
+            self.product_package_number = wizard.next_package_number
+
+        # Auto-select package box based on incoterm
+        if self.picking_id and self.picking_id.sale_id:
+            sale = self.picking_id.sale_id
+            incoterm = sale.packaging_source_type
+            tenant = wizard.tenant_code_id
+            site = wizard.site_code_id
+
+            box = self.env['package.box.configuration'].search([
+                ('name', '=', incoterm),
+                ('tenant_code_id', '=', tenant.id),
+                ('site_code_id', '=', site.id)
+            ], limit=1)
+
+            if box:
+                self.package_box_type_id = box.id
+                _logger.info(f"Auto-selected box '{box.name}' for product {self.product_id.name}")
+            else:
+                default_box = self.env['package.box.configuration'].search([
+                    ('is_default_package', '=', True),
+                    ('tenant_code_id', '=', tenant.id),
+                    ('site_code_id', '=', site.id)
+                ], limit=1)
+                if default_box:
+                    self.package_box_type_id = default_box.id
+                    _logger.info(f"Assigned default box '{default_box.name}' for product {self.product_id.name}")
+
+        if self.product_id.is_fragile:
+            return {
+                'warning': {
+                    'title': _("Packing Information"),
+                    'message': _("This item is fragile and must be packed with bubble wrap for protection.")
+                }
+            }
 
     @api.onchange('weight')
     def _onchange_weight(self):
