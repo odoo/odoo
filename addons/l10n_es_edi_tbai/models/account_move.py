@@ -143,7 +143,7 @@ class AccountMove(models.Model):
         # Ensure the move is posted
         if self.state != 'posted':
             return _("Cannot send an entry that is not posted to TicketBAI.")
-        if self.l10n_es_tbai_state in ('sent', 'cancelled'):
+        if self.l10n_es_tbai_state in ('sent', 'cancelled') and not self.env.context.get('batuz_correction'):
             return _("This entry has already been posted.")
         if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.is_purchase_document() and not self.ref:
             return _("You need to fill in the Reference field as the invoice number from your vendor.")
@@ -187,6 +187,14 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # WEB SERVICE CALLS
     # -------------------------------------------------------------------------
+
+    def l10n_es_tbai_resend_bill(self):
+        self.ensure_one()
+        self.l10n_es_tbai_post_document_id = False
+        if error := self.with_context(batuz_correction=True)._l10n_es_tbai_post():
+            error = error + "\n\n" + _("Be careful if you modified this vendor bill, "
+                                       "because the official version is still the previous one sent. ")
+            raise UserError(error)  # This way, we rollback when rejected and the old accepted document is kept
 
     def l10n_es_tbai_send_bill(self):
         for bill in self:
