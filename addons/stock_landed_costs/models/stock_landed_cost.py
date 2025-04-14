@@ -123,19 +123,26 @@ class StockLandedCost(models.Model):
             cost_to_add_byproduct = defaultdict(lambda: 0.0)
             cost_to_add_bylot = defaultdict(lambda: defaultdict(float))
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                remaining_qty = sum(line.move_id._get_stock_valuation_layer_ids().mapped('remaining_qty'))
-                linked_layer = line.move_id._get_stock_valuation_layer_ids()
-
+                move_id = line.move_id
+                product = move_id.product_id
+                linked_layer = move_id._get_stock_valuation_layer_ids()
+                remaining_qty = sum(linked_layer.mapped('remaining_qty'))
                 # Prorate the value at what's still in stock
-                move_qty = line.move_id.product_uom._compute_quantity(line.move_id.quantity, line.move_id.product_id.uom_id)
+                move_qty = move_id.product_uom._compute_quantity(move_id.quantity, product.uom_id)
                 cost_to_add = (remaining_qty / move_qty) * line.additional_landed_cost
                 product = line.move_id.product_id
                 if not cost.company_id.currency_id.is_zero(cost_to_add):
                     vals_list = []
                     if line.move_id.product_id.lot_valuated:
-                        for lot_id, sml in line.move_id.move_line_ids.grouped('lot_id').items():
-                            lot_layer = linked_layer.filtered(lambda l: l.lot_id == lot_id)[:1]
-                            value = cost_to_add * sum(sml.mapped('quantity')) / line.move_id.quantity
+                        lot_layers_by_id = {}
+                        for layer in linked_layer:
+                            lot_id = layer.lot_id.id
+                            if lot_id not in lot_layers_by_id:
+                                lot_layers_by_id[lot_id] = layer
+
+                        for lot_id, sml in move_id.move_line_ids.grouped('lot_id').items():
+                            lot_layer = lot_layers_by_id.get(lot_id.id, self.env['stock.valuation.layer'])
+                            value = cost_to_add * sum(sml.mapped('quantity')) / move_id.quantity
                             if product.cost_method in ['average', 'fifo']:
                                 cost_to_add_bylot[product][lot_id] += value
                             vals_list.append({
@@ -145,8 +152,8 @@ class StockLandedCost(models.Model):
                                 'remaining_qty': 0,
                                 'stock_valuation_layer_id': lot_layer.id,
                                 'description': cost.name,
-                                'stock_move_id': line.move_id.id,
-                                'product_id': line.move_id.product_id.id,
+                                'stock_move_id': move_id.id,
+                                'product_id': product.id,
                                 'stock_landed_cost_id': cost.id,
                                 'company_id': cost.company_id.id,
                                 'lot_id': lot_id.id,
