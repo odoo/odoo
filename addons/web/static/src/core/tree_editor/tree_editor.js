@@ -149,9 +149,21 @@ export class TreeEditor extends Component {
         this.notifyChanges();
     }
 
-    delete(parent, node) {
+    _delete(ancestors, node) {
+        if (ancestors.length === 0) {
+            return;
+        }
+        const parent = ancestors.at(-1);
         const index = parent.children.indexOf(node);
         parent.children.splice(index, 1);
+        ancestors = ancestors.slice(0, ancestors.length - 1);
+        if (parent.children.length === 0) {
+            this._delete(ancestors, parent);
+        }
+    }
+
+    delete(ancestors, node) {
+        this._delete(ancestors, node);
         this.notifyChanges();
     }
 
