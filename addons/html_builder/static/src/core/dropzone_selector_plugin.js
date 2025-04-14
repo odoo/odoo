@@ -48,11 +48,6 @@ export class DropZoneSelectorPlugin extends Plugin {
                 selector: ".s_group",
                 dropNear: "p, h1, h2, h3, blockquote, .card",
             },
-            {
-                // TODO Move to website_massmailing
-                selector: ".js_subscribe",
-                dropNear: "p, h1, h2, h3, blockquote, .card",
-            },
         ],
     };
 }

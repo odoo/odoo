@@ -30,6 +30,12 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
                 selector: ".s_newsletter_subscribe_form",
             },
         ],
+        dropzone_selector: [
+            {
+                selector: ".js_subscribe",
+                dropNear: "p, h1, h2, h3, blockquote, .card",
+            },
+        ],
     };
 
     getProps() {
