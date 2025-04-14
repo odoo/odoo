@@ -623,7 +623,7 @@ export class SeoChecks extends Component {
         });
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
-            this.state.altAttributes = this.getAltAttributes();
+            this.state.altAttributes = await this.getAltAttributes();
             this.state.headingsScan = this.getHeadingsScan();
         });
     }
@@ -704,51 +704,42 @@ export class SeoChecks extends Component {
         link.remove = true;
     }
 
-    getAltAttributes() {
-        const imgEls = this.website.pageDocument.documentElement.querySelectorAll(
-            "#wrapwrap img:not(.o_avatar)"
-        );
-        const ids = {};
-        const altAttributes = Array.from(imgEls)
-            .map((imgEl) => {
-                const recordEl = imgEl.closest("[data-oe-model][data-oe-field][data-oe-id]");
-                if (
-                    !recordEl ||
-                    ((recordEl.dataset.oeModel !== "ir.ui.view" ||
-                        recordEl.dataset.oeField !== "arch") &&
-                        recordEl.dataset.oeType !== "html")
-                ) {
-                    return false;
-                }
-                let decorative = imgEl.getAttribute("role") === "presentation";
-                let alt = imgEl.getAttribute("alt");
-                const resModel = recordEl.dataset.resModel || recordEl.dataset.oeModel;
-                const resId = parseInt(recordEl.dataset.resId || recordEl.dataset.oeId);
-                const strId = `${resModel}-${resId}`;
-                if (strId in ids) {
-                    ids[strId]++;
-                } else {
-                    ids[strId] = 0;
-                }
-                if (!decorative || alt === null) {
-                    if (alt === null) {
-                        decorative = false;
-                        alt = "";
-                    }
-                    return {
-                        src: imgEl.getAttribute("src"),
-                        alt: alt,
-                        decorative: decorative,
-                        updated: false,
-                        res_model: resModel,
-                        res_id: resId,
-                        id: `${strId}-${ids[strId]}`,
-                        field: recordEl.dataset.oeField || null,
-                    };
-                }
-            })
-            .filter(Boolean);
-        return altAttributes;
+    async getAltAttributes() {
+        const uniqueRecords = new Set();
+
+        // Select all relevant <img> elements in the editable page.
+        const imgEls = this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img");
+
+        imgEls.forEach((el) => {
+            // Find the closest ancestor element containing Odoo metadata.
+            const recordEl = el.closest("[data-oe-model][data-oe-field][data-oe-id]");
+            if (!recordEl) {
+                return; // Skip images without a proper metadata wrapper.
+            }
+
+            const model = recordEl.dataset.oeModel;
+            const id = recordEl.dataset.oeId;
+            const field = recordEl.dataset.oeField;
+            const type = recordEl.dataset.oeType;
+
+            // Only include images that belong to static content definitions.
+            if ((model !== "ir.ui.view" || field !== "arch") && type !== "html") {
+                return;
+            }
+
+            // Build a unique signature string to avoid duplicates.
+            uniqueRecords.add(`${model}||${id}||${field}||${type}`);
+        });
+
+        // Transform the Set of unique strings back into structured objects.
+        const models = Array.from(uniqueRecords).map((entry) => {
+            const [model, id, field, type] = entry.split("||");
+            return { model, id: parseInt(id), field, type };
+        });
+
+        const results = await rpc("/website/get_alt_images", { models });
+
+        return JSON.parse(results);
     }
 
     async getBrokenLinks() {
