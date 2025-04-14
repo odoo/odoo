@@ -131,6 +131,8 @@ def push_to_end_point(base_url, device, payload, vapid_private_key, vapid_public
         'Content-Encoding': 'aes128gcm',
         'TTL': '0',
     }
+    if 'wns2-ln2p.notify.windows' in endpoint:
+        headers['TTL'] = '20'
 
     response = session.post(endpoint, headers=headers, data=payload, timeout=5)
     if response.status_code == 201:
