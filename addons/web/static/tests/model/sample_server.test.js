@@ -287,6 +287,19 @@ describe("RPC calls", () => {
         expect(result.groups.every((g) => g.__count === g.__recordIds.length)).toBe(true);
     });
 
+    test("'web_read_group': 'max' aggregator", async () => {
+        const server = new DeterministicSampleServer("res.users", fields["res.users"]);
+        const result = await server.mockRpc({
+            method: "web_read_group",
+            model: "res.users",
+            groupBy: ["name"],
+            aggregates: ["age:max", "height:min"],
+        });
+        // didn't crash, but we can't assert the aggregate values as they are non deterministic,
+        // and we don't really mind actually (max/min aren't even implemented, they behave as sum)
+        expect(result.length).toEqual(5);
+    });
+
     test("'formatted_read_group': groupBy", async () => {
         const server = new DeterministicSampleServer("hobbit", fields.hobbit);
         const result = await server.mockRpc({
