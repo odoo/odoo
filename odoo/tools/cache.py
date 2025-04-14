@@ -173,8 +173,11 @@ def log_ormcache_stats(sig=None, frame=None):   # noqa: ARG001 (arguments are th
             cache_stats.append(f"Database {dbname_display}")
         if dbname:   # mainly for MockPool
             if (dbname, stat.cache_name) not in cache_entries:
-                cache = Registry.registries.d[dbname]._Registry__caches[stat.cache_name]
-                cache_entries[dbname, stat.cache_name] = Counter(k[:2] for k in cache.d)
+                try:
+                    cache = Registry.registries[dbname]._Registry__caches[stat.cache_name]
+                    cache_entries[dbname, stat.cache_name] = Counter(k[:2] for k in cache)
+                except KeyError:
+                    cache_entries[dbname, stat.cache_name] = Counter()
             nb_entries = cache_entries[dbname, stat.cache_name][model, method]
         else:
             nb_entries = 0
