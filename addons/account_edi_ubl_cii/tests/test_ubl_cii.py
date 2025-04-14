@@ -262,3 +262,31 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
         })
         self.assertEqual(actual_delivery_date.text, '20241231')
+
+    def test_get_invoice_legal_documents_fallback(self):
+        company = self.company_data['company']
+        company.phone = '11111111111'
+        company.email = 'test@test.odoo.com'
+        german_partner = self.env['res.partner'].create({
+            'name': 'German partner',
+            'country_id': self.env.ref('base.de').id,
+        })
+        us_partner = self.env['res.partner'].create({
+            'name': 'US partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        belgian_partner = self.env['res.partner'].create({
+            'name': 'Belgian partner',
+            'country_id': self.env.ref('base.be').id,
+        })
+        invoice_de = self.init_invoice('out_invoice', partner=german_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
+        invoice_be = self.init_invoice('out_invoice', partner=belgian_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
+        invoice_us = self.init_invoice('out_invoice', partner=us_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
+        res = [invoice._get_invoice_legal_documents('ubl', allow_fallback=True) for invoice in (invoice_de + invoice_be + invoice_us)]
+        self.assertEqual(len(res), 3)
+        self.assertEqual(res[0].get('filename'), 'INV_2019_00001_ubl_de.xml')
+        self.assertEqual(res[1].get('filename'), 'INV_2019_00002_ubl_bis3.xml')
+        self.assertFalse(res[2])
+        invoice_be_failing = self.init_invoice('out_invoice', partner=belgian_partner, amounts=[100], post=True)
+        res_errors = invoice_be_failing._get_invoice_legal_documents('ubl', allow_fallback=True)
+        self.assertIn("Each invoice line should have at least one tax.", res_errors.get('errors'))

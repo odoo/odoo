@@ -21,13 +21,11 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def action_invoice_download_ubl(self):
-        if invoices_with_ubl := self.filtered('ubl_cii_xml_id'):
-            return {
-                'type': 'ir.actions.act_url',
-                'url': f'/account/download_invoice_documents/{",".join(map(str, invoices_with_ubl.ids))}/ubl',
-                'target': 'download',
-            }
-        return False
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/ubl?allow_fallback=true',
+            'target': 'download',
+        }
 
     # -------------------------------------------------------------------------
     # BUSINESS
@@ -41,6 +39,7 @@ class AccountMove(models.Model):
 
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
         # EXTENDS account
+        self.ensure_one()
         if filetype == 'ubl':
             if ubl_attachment := self.ubl_cii_xml_id:
                 return {
@@ -48,14 +47,30 @@ class AccountMove(models.Model):
                     'filetype': 'xml',
                     'content': ubl_attachment.raw,
                 }
+            elif allow_fallback:
+                if self.partner_id and (suggested_edi_format := self.commercial_partner_id._get_suggested_ubl_cii_edi_format()):
+                    builder = self.env['res.partner']._get_edi_builder(suggested_edi_format)
+                    xml_content, errors = builder._export_invoice(self)
+                    filename = builder._export_invoice_filename(self)
+                    return {
+                        'filename': filename,
+                        'filetype': 'xml',
+                        'content': xml_content,
+                        'errors': errors,
+                    }
         return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
 
     def get_extra_print_items(self):
         print_items = super().get_extra_print_items()
-        if self.ubl_cii_xml_id:
+        suggested_edi_formats = {
+            suggested_format
+            for partner in self.commercial_partner_id
+            if (suggested_format := partner ._get_suggested_ubl_cii_edi_format())
+        }
+        if self.ubl_cii_xml_id or suggested_edi_formats:
             print_items.append({
                 'key': 'download_ubl',
-                'description': _('XML UBL'),
+                'description': _('Export XML'),
                 **self.action_invoice_download_ubl(),
             })
         return print_items
