@@ -553,7 +553,7 @@ export class Thread extends Component {
         if (!msg.thread?.eq(prevMsg.thread)) {
             return false;
         }
-        if (msg.parentMessage) {
+        if (msg.parentMessage || msg.is_note) {
             return false;
         }
         return msg.datetime.ts - prevMsg.datetime.ts < 60 * 1000;
