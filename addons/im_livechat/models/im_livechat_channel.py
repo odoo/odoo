@@ -6,6 +6,7 @@ import re
 
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
+from odoo.exceptions import ValidationError
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 
 
@@ -373,6 +374,17 @@ class ImLivechatChannelRule(models.Model):
         help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")
     sequence = fields.Integer('Matching order', default=10,
         help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
+
+    @api.constrains('regex_url')
+    def _constraint_regex_url(self):
+        for rule in self:
+            pattern = rule.regex_url
+            if not pattern:
+                continue
+            try:
+                re.compile(pattern)
+            except re.error:
+                raise ValidationError(_("Invalid Regex URL pattern"))
 
     def match_rule(self, channel_id, url, country_id=False):
         """ determine if a rule of the given channel matches with the given url
