@@ -6,6 +6,6 @@ import { patch } from "web.utils";
 patch(WebClient.prototype, "customize_title_header.WebClient", {
     setup() {
         this._super();
-        this.title.setParts({ zopenerp: "Innoway" });
+        this.title.setParts({ zopenerp: "Kolxi" });
     },
 });
