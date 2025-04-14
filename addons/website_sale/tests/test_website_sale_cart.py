@@ -195,11 +195,12 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
             self.assertEqual(sale_order.order_line, SaleOrderLine)
 
             # removing the product again doesn't add a line with zero quantity
-            with self.assertRaises(UserError):
-                self.WebsiteSaleCartController.update_cart(
-                    line_id=sale_order.order_line.id,
-                    quantity=0,
-                )
+            self.WebsiteSaleCartController.update_cart(
+                line_id=sale_order.order_line.id,
+                quantity=0,
+            )
+            self.assertEqual(sale_order.cart_quantity, 0.0)
+            self.assertEqual(sale_order.order_line, SaleOrderLine)
 
     def test_unpublished_accessory_product_visibility(self):
         # Check if unpublished product is shown to public user
