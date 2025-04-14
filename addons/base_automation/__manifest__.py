@@ -21,6 +21,7 @@ trigger an automatic reminder email.
         'data/base_automation_data.xml',
         'data/digest_data.xml',
         'views/base_automation_views.xml',
+        'views/ir_actions_server_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

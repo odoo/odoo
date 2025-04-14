@@ -325,6 +325,31 @@
                                 help="Run this action manually."/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button
+                                type="object"
+                                name="action_open_parent_action"
+                                invisible="not parent_id"
+                                class="oe_stat_button"
+                                icon="fa-database"
+                            >
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Parent Action</span>
+                                </div>
+                            </button>
+                            <button
+                                type="object"
+                                name="action_open_scheduled_action"
+                                invisible="not ir_cron_ids or context.key != 'server_action'"
+                                context="{'key': 'ir_cron'}"
+                                class="oe_stat_button"
+                                icon="fa-refresh"
+                            >
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Scheduled Action</span>
+                                </div>
+                            </button>
+                        </div>
                         <h1 class="oe_title">
                             <field name="automated_name" invisible="1"/> <!-- needed for name compute -->
                             <field name="name" placeholder="Set an explicit name"/>
