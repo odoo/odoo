@@ -148,7 +148,13 @@ test("rpc can send additional headers", async () => {
 });
 
 test("Cache: can cache a simple rpc", async () => {
-    rpc.setCache(new PersistentCache("mockRpc", 1));
+    rpc.setCache(
+        new PersistentCache(
+            "mockRpc",
+            1,
+            "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        )
+    );
     mockFetch(() => {
         expect.step("Fetch");
         return { result: { action_id: 123 } };

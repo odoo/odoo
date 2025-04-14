@@ -202,7 +202,8 @@ test("connection lost when coming back to kanban from form", async () => {
     await animationFrame();
     expect(".o_form_view").toHaveCount(0);
     expect(".o_kanban_view").toHaveCount(1);
-    expect(".o_kanban_view .o_kanban_renderer").toHaveCount(0);
+    expect(".o_kanban_view .o_kanban_renderer").toHaveCount(1);
+    expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     expect(".o_notification").toHaveCount(1);
     expect(".o_notification").toHaveText("Connection lost. Trying to reconnect...");
     expect.verifySteps([
