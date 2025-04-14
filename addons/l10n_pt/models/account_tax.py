@@ -1,13 +1,14 @@
-from odoo import models, fields
+from odoo import _, api, models, fields
+from odoo.exceptions import ValidationError
 
-l10n_pt_TAX_REGIONS_SELECTION = [
+L10N_PT_TAX_REGIONS_SELECTION = [
     ('PT-ALL', 'All Regions'),
     ('PT', 'Mainland Portugal'),
     ('PT-MA', 'Madeira'),
     ('PT-AC', 'Azores'),
 ]
 
-l10n_pt_TAX_CATEGORIES_SELECTION = [
+L10N_PT_TAX_CATEGORIES_SELECTION = [
     ('N', 'Normal'),
     ('I', 'Intermediate'),
     ('R', 'Reduced'),
@@ -53,9 +54,19 @@ class AccountTax(models.Model):
 
     l10n_pt_tax_exemption_reason = fields.Selection(string="Tax Exemption Reason", selection=L10N_PT_TAX_EXEMPTION_REASONS_SELECTION)
 
+    @api.constrains('l10n_pt_tax_exemption_reason')
+    def _validate_l10n_pt_tax_exemption_reason(self):
+        """
+        According to Portugal's tax authority: "The proram should ensure the enforceability for the user
+        to present a reason for not assessing tax, if it is the case."
+        """
+        for tax in self:
+            if tax.country_code == 'PT' and tax.amount == 0 and not tax.l10n_pt_tax_exemption_reason:
+                raise ValidationError(_("Exempt taxes require an exemption reason."))
+
 
 class AccountTaxGroup(models.Model):
     _inherit = "account.tax.group"
 
-    l10n_pt_tax_region = fields.Selection(string="Region (PT)", selection=l10n_pt_TAX_REGIONS_SELECTION, default="PT")
-    l10n_pt_tax_category = fields.Selection(string="Tax Category (PT)", selection=l10n_pt_TAX_CATEGORIES_SELECTION, default="N")
+    l10n_pt_tax_region = fields.Selection(string="Region (PT)", selection=L10N_PT_TAX_REGIONS_SELECTION, default="PT")
+    l10n_pt_tax_category = fields.Selection(string="Tax Category (PT)", selection=L10N_PT_TAX_CATEGORIES_SELECTION, default="N")
