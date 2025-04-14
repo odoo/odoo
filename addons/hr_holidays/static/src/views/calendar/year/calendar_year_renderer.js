@@ -78,6 +78,14 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
                 ? classesToAdd.push("o_event_half_left")
                 : classesToAdd.push("o_event_half_right");
         }
+        // handling half pill UX for custom_hours
+        if (record?.rawRecord?.request_unit_hours) {
+            if (record.end.c.hour < 12) {
+                classesToAdd.push("o_event_half_left");
+            } else if (record.end.c.hour >= 12) {
+                classesToAdd.push("o_event_half_right");
+            }
+        }
         return classesToAdd;
     }
 }

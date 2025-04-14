@@ -150,6 +150,7 @@
             <list string="Time Off Type" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
+                <field name="request_unit" optional="hide"/>
                 <field name="leave_validation_type" optional="hide" string="Time Off Approval"/>
                 <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (not requires_allocation or allocation_validation_type != 'hr')" optional="hide"/>
                 <field name="requires_allocation" optional="hide"/>
