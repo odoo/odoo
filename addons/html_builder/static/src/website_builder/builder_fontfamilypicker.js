@@ -15,7 +15,6 @@ export class BuilderFontFamilyPicker extends Component {
     static template = "html_builder.website.BuilderFontFamilyPicker";
     static props = {
         ...basicContainerBuilderComponentProps,
-        id: { type: String, optional: true },
         valueParamName: String,
     };
     static components = {

@@ -26,7 +26,6 @@ export class BuilderSelect extends Component {
     static template = "html_builder.BuilderSelect";
     static props = {
         ...basicContainerBuilderComponentProps,
-        id: { type: String, optional: true },
         className: { type: String, optional: true },
         slots: {
             type: Object,

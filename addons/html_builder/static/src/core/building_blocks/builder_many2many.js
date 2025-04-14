@@ -18,7 +18,6 @@ export class BuilderMany2Many extends Component {
         fields: { type: Array, element: String, optional: true },
         domain: { type: Array, optional: true },
         limit: { type: Number, optional: true },
-        id: { type: String, optional: true },
     };
     static defaultProps = {
         ...BuilderComponent.defaultProps,

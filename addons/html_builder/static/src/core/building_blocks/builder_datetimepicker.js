@@ -17,7 +17,6 @@ export class BuilderDateTimePicker extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         ...textInputBasePassthroughProps,
-        id: { type: String, optional: true },
         default: { type: String, optional: true },
         type: { type: [{ value: "date" }, { value: "datetime" }], optional: true },
         format: { type: String, optional: true },

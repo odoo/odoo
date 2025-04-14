@@ -16,7 +16,6 @@ export class BuilderRange extends Component {
         step: { type: Number, optional: true },
         displayRangeValue: { type: Boolean, optional: true },
         computedOutput: { type: Function, optional: true },
-        id: { type: String, optional: true },
         unit: { type: String, optional: true },
     };
     static defaultProps = {

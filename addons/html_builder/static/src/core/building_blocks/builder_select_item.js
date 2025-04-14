@@ -11,7 +11,6 @@ export class BuilderSelectItem extends Component {
     static template = "html_builder.BuilderSelectItem";
     static props = {
         ...clickableBuilderComponentProps,
-        id: { type: String, optional: true },
         title: { type: String, optional: true },
         label: { type: String, optional: true },
         className: { type: String, optional: true },

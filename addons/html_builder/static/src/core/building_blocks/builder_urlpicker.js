@@ -18,7 +18,6 @@ export class BuilderUrlPicker extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         ...textInputBasePassthroughProps,
-        id: { type: String, optional: true },
         default: { type: String, optional: true },
     };
     static components = {

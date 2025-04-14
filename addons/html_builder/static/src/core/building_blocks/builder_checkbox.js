@@ -14,7 +14,6 @@ export class BuilderCheckbox extends Component {
     static components = { BuilderComponent, CheckBox };
     static props = {
         ...clickableBuilderComponentProps,
-        id: { type: String, optional: true },
     };
 
     setup() {

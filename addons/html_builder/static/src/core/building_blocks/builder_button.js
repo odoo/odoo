@@ -12,7 +12,6 @@ export class BuilderButton extends Component {
     static props = {
         ...clickableBuilderComponentProps,
 
-        id: { type: String, optional: true },
         title: { type: String, optional: true },
         label: { type: String, optional: true },
         iconImg: { type: String, optional: true },

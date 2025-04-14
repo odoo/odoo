@@ -680,6 +680,7 @@ export function useVisibilityObserver(contentName, callback) {
 }
 
 export const basicContainerBuilderComponentProps = {
+    id: { type: String, optional: true },
     applyTo: { type: String, optional: true },
     preview: { type: Boolean, optional: true },
     inheritedActions: { type: Array, element: String, optional: true },

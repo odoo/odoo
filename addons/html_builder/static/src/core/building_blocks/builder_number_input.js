@@ -25,7 +25,6 @@ export class BuilderNumberInput extends Component {
         step: { type: Number, optional: true },
         min: { type: Number, optional: true },
         max: { type: Number, optional: true },
-        id: { type: String, optional: true },
         composable: { type: Boolean, optional: true },
     };
     static components = { BuilderComponent, BuilderTextInputBase };
