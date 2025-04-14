@@ -3,7 +3,6 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from '@web/core/registry';
 import { user } from "@web/core/user";
 import { useService } from '@web/core/utils/hooks';
-import { redirect } from "@web/core/utils/urls";
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -194,8 +193,9 @@ export class NewContentModal extends Component {
             [id],
         );
         if (redirectUrl) {
-            this.website.prepareOutLoader();
-            window.location.replace(redirectUrl);
+            this.website.redirectOutFromLoader({
+                url: redirectUrl,
+            });
         } else {
             const { id, metadata: { path, viewXmlid } } = this.website.currentWebsite;
             const url = new URL(path);
@@ -204,8 +204,11 @@ export class NewContentModal extends Component {
             }
             // A reload is needed after installing a new module, to instantiate
             // a NewContentModal with patches from the installed module.
-            this.website.prepareOutLoader();
-            redirect(`/odoo/action-website.website_preview?website_id=${id}&path=${encodeURIComponent(url.toString())}&display_new_content=true`);
+            this.website.redirectOutFromLoader({
+                url: `/odoo/action-website.website_preview?website_id=${id}&path=${encodeURIComponent(
+                    url.toString()
+                )}&display_new_content=true`,
+            });
         }
     }
 
@@ -228,11 +231,14 @@ export class NewContentModal extends Component {
                     }
                     return el;
                 });
-                this.website.showLoader({ title: _t("Building your %s", name) });
+                this.website.showLoader({
+                    title: _t("Install modules, unlock the potential of your website."),
+                    flag: "generic",
+                });
                 try {
                     await this.installModule(id, element.redirectUrl);
                 } catch (error) {
-                    this.website.hideLoader();
+                    this.website.hideLoader({ completeRemainingProgress: false });
                     // Update the NewContentElement with failure icon and text.
                     this.state.newContentElements = this.state.newContentElements.map(el => {
                         if (el.moduleXmlId === element.moduleXmlId) {
