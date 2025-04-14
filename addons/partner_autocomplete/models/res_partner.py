@@ -101,7 +101,7 @@ class ResPartner(models.Model):
         query_country_id = query_country_id or self.env.company.country_id.id
         query_country_code = self.env['res.country'].browse(query_country_id).code
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
-            'query': vat,
+            'query': vat.upper(),
             'query_country_code': query_country_code,
         }, timeout=timeout)
         if response and not response.get("error"):
@@ -169,7 +169,7 @@ class ResPartner(models.Model):
     @api.model
     def enrich_by_gst(self, gst, timeout=15):
         response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich_by_gst', {
-            'gst': gst,
+            'gst': gst.upper(),
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
