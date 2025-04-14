@@ -25,6 +25,12 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._export_invoice_vals(invoice)
 
+        vals.update({
+            'InvoiceType_template': 'l10n_tr_nilvera_einvoice.ubl_21_InvoiceType_tr',
+            'InvoiceLineType_template': 'l10n_tr_nilvera_einvoice.ubl_21_InvoiceLineType_tr',
+            'TaxTotalType_template': 'l10n_tr_nilvera_einvoice.ubl_20_TaxTotalType_tr',
+        })
+
         # Check the customer status if it hasn't been done before as it's needed for profile_id
         if invoice.partner_id.l10n_tr_nilvera_customer_status == 'not_checked':
             invoice.partner_id.check_nilvera_customer()
@@ -105,7 +111,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         res = []
         for tax in taxes:
             is_withholding = invoice.currency_id.compare_amounts(tax.amount, 0) == -1
-            tax_type_code = '9015' if is_withholding else '0015'
+            tax_type_code = '602' if is_withholding else '0015' #'9015' if is_withholding else '0015'
             tax_scheme_name = 'KDV Tevkifatı' if is_withholding else 'Gerçek Usulde KDV'
             res.append({
                 'id': tax_type_code,
