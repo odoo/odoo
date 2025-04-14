@@ -281,8 +281,14 @@ class AccountMoveLine(models.Model):
         if float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding):
             return self.price_unit
 
-        price_unit = self.price_unit * (1 - self.discount / 100) if self.discount else\
-                     self.price_subtotal / self.quantity
+        if self.discount != 100:
+            if not any(t.price_include for t in self.tax_ids) and self.discount:
+                price_unit = self.price_unit * (1 - self.discount / 100)
+            else:
+                price_unit = self.price_subtotal / self.quantity
+        else:
+            price_unit = self.price_unit
+
         return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
 
     def _get_stock_valuation_layers(self, move):
