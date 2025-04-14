@@ -48,6 +48,7 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id})],
         })
+        test_invoice.action_post()
         test_invoice.name = "INV/01234567890"
         expected_qrr = "000000000000000012345678903"
         self.assertEqual(test_invoice.get_l10n_ch_qrr_number(), expected_qrr)
@@ -61,6 +62,7 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id})],
         })
+        test_invoice.action_post()
         test_invoice.name = "INV/123456789012345678901234567890"
         expected_qrr = "567890123456789012345678901"
         self.assertEqual(test_invoice.get_l10n_ch_qrr_number(), expected_qrr)

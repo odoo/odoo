@@ -108,7 +108,11 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
         self._assign_partner_address(move.partner_id)
         move.qr_code_method = 'ch_qr'
 
+        self.assertFalse(move.l10n_ch_is_qr_valid)
         self.assertIsNone(move._generate_qr_code(), "QR-code should not be generated.")
+
+        move.action_post()
+        self.assertTrue(move.l10n_ch_is_qr_valid)
 
     def test_ch_qr_code_detection(self):
         """ Checks Swiss QR-code auto-detection when no specific QR-method
