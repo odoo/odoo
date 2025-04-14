@@ -19,10 +19,13 @@ export function mockIndexedDB(_name, { fn }) {
                 return Promise.resolve(this.mockIndexedDB[table]?.[key]);
             }
 
-            invalidate(table) {
-                if (table) {
-                    if (table in this.mockIndexedDB) {
-                        this.mockIndexedDB[table] = {};
+            invalidate(tables = null) {
+                if (tables) {
+                    tables = typeof tables === "string" ? [tables] : tables;
+                    for (const table of tables) {
+                        if (table in this.mockIndexedDB) {
+                            this.mockIndexedDB[table] = {};
+                        }
                     }
                 } else {
                     this.mockIndexedDB = {};

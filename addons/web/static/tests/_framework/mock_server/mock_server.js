@@ -491,7 +491,7 @@ export class MockServer {
         registerDebugInfo("mock server", this);
 
         // Add RPC cache
-        rpc.setCache(new PersistentCache("mockRpc", 1));
+        rpc.setCache(new PersistentCache("mockRpc", 1, "23aeb0ff5d46cfa8aa44163720d871ac"));
         after(() => rpc.setCache(null));
 
         // Intercept all server calls
@@ -697,6 +697,7 @@ export class MockServer {
                 action.target ??= "current";
                 action.view_ids ||= [];
                 action.view_mode ??= "list,form";
+                action.cache ??= true;
                 for (const embeddedAction of this.actions) {
                     if (
                         embeddedAction.type === ACTION_TYPES.embedded &&

@@ -749,6 +749,7 @@ export function makeActionManager(env, router = _router) {
             config: {
                 actionId: action.id,
                 actionName: action.name,
+                cache: action.cache,
                 actionType: "ir.actions.act_window",
                 embeddedActions,
                 parentActionId,

@@ -4,9 +4,10 @@ import { EventBus, markRaw, toRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
+import { rpcBus } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
-import { KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { orderByToString } from "@web/search/utils/order_by";
 import { Model } from "../model";
 import { DynamicGroupList } from "./dynamic_group_list";
@@ -38,6 +39,7 @@ import { FetchRecordError } from "./errors";
  *  fieldNames?: string[];
  *  evalContext?: Context;
  *  onError?: (error: unknown) => unknown;
+ *  cached?: Object;
  * }} OnChangeParams
  *
  * @typedef {SearchParams & {
@@ -96,6 +98,12 @@ const DEFAULT_HOOKS = {
     onRecordChanged: () => {},
 };
 
+rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
+    if (ev.detail.data.params?.method === "unlink") {
+        rpcBus.trigger("CLEAR-CACHES", ["web_read", "web_search_read"]);
+    }
+});
+
 export class RelationalModel extends Model {
     static services = ["action", "dialog", "notification", "orm"];
     static Record = RelationalRecord;
@@ -107,6 +115,7 @@ export class RelationalModel extends Model {
     static DEFAULT_COUNT_LIMIT = 10000;
     static DEFAULT_GROUP_LIMIT = 80;
     static DEFAULT_OPEN_GROUP_LIMIT = 10; // TODO: remove ?
+    static withCache = true;
 
     /**
      * @param {RelationalModelParams} params
@@ -142,6 +151,7 @@ export class RelationalModel extends Model {
         this.activeIdsLimit = params.activeIdsLimit || Number.MAX_SAFE_INTEGER;
         this.specialDataCaches = markRaw(params.state?.specialDataCaches || {});
         this.useSendBeaconToSaveUrgently = params.useSendBeaconToSaveUrgently || false;
+        this.withCache = this.constructor.withCache && this.env.config?.cache;
 
         this._urgentSave = false;
     }
@@ -183,8 +193,11 @@ export class RelationalModel extends Model {
             this.config = config;
         }
         this.hooks.onWillLoadRoot(config);
-        const data = await this.keepLast.add(this._loadData(config));
+        const rootLoadDef = new Deferred();
+        const cached = this._getCacheParams(config, rootLoadDef);
+        const data = await this.keepLast.add(this._loadData(config, cached));
         this.root = this._createRoot(config, data);
+        rootLoadDef.resolve(this.root);
         this.config = config;
         await this.hooks.onRootLoaded(this.root);
     }
@@ -257,6 +270,49 @@ export class RelationalModel extends Model {
         return new this.constructor.DynamicRecordList(this, config, data);
     }
 
+    _getCacheParams(config, rootLoadDef) {
+        if (!this.withCache) {
+            return;
+        }
+        if (
+            !this.isReady || // first load of the model
+            // monorecord, loading a different id, or creating a new record (onchange)
+            (config.isMonoRecord && (this.root.config.resId !== config.resId || !config.resId))
+        ) {
+            return {
+                onUpdate: async (result) => {
+                    const root = await rootLoadDef;
+                    if (root.id !== this.root.id) {
+                        // The root that we want to update is not the current one. It may happen
+                        // we displayed sample data from the cache, but the rpc returned records. In
+                        // that case, we want to display those records. In all other usecases, we
+                        // simply ignore the update.
+                        if (this.useSampleModel && result.length > 0) {
+                            this.useSampleModel = false;
+                            this.root._setData(result);
+                        }
+                        return;
+                    }
+                    if (root.config.isMonoRecord) {
+                        if (!root.config.resId) {
+                            // result is the response of the onchange rpc
+                            return root._setData(result.value);
+                        }
+                        // result is the response of a web_read rpc
+                        if (!result.length) {
+                            // we read a record that no longer exists
+                            throw new FetchRecordError([root.config.resId]);
+                        }
+                        return root._setData(result[0]);
+                    }
+
+                    // result is the response of a web_search_read rpc
+                    root._setData(result);
+                },
+            };
+        }
+    }
+
     /**
      * @param {RelationalModelConfig} currentConfig
      * @param {Partial<SearchParams>} params
@@ -267,6 +323,8 @@ export class RelationalModel extends Model {
         const config = Object.assign({}, currentConfig);
 
         config.context = "context" in params ? params.context : config.context;
+        config.context = { ...config.context };
+        delete config.context.params;
         if (currentConfig.isMonoRecord) {
             config.resId = "resId" in params ? params.resId : config.resId;
             config.resIds = "resIds" in params ? params.resIds : config.resIds;
@@ -334,20 +392,15 @@ export class RelationalModel extends Model {
     /**
      *
      * @param {RelationalModelConfig} config
+     * @param {Object} [cached]
      */
-    async _loadData(config) {
+    async _loadData(config, cached) {
         if (config.isMonoRecord) {
             const evalContext = getBasicEvalContext(config);
             if (!config.resId) {
-                return this._loadNewRecord(config, { evalContext });
+                return this._loadNewRecord(config, { evalContext, cached });
             }
-            const records = await this._loadRecords(
-                {
-                    ...config,
-                    resIds: [config.resId],
-                },
-                evalContext
-            );
+            const records = await this._loadRecords(config, evalContext, cached);
             return records[0];
         }
         if (config.resIds) {
@@ -366,10 +419,10 @@ export class RelationalModel extends Model {
         if (config.countLimit !== Number.MAX_SAFE_INTEGER) {
             config.countLimit = Math.max(config.countLimit, config.offset + config.limit);
         }
-        const { records, length } = await this._loadUngroupedList(config);
+        const { records, length } = await this._loadUngroupedList(config, cached);
         if (config.offset && !records.length) {
             config.offset = 0;
-            return this._loadData(config);
+            return this._loadData(config, cached);
         }
         return { records, length };
     }
@@ -543,9 +596,11 @@ export class RelationalModel extends Model {
     /**
      * @param {RelationalModelConfig} config
      * @param {Context} evalContext
+     * @param {Object} [cached]
      */
-    async _loadRecords(config, evalContext = config.context) {
-        const { resModel, resIds, activeFields, fields, context } = config;
+    async _loadRecords(config, evalContext = config.context, cached) {
+        const { resModel, activeFields, fields, context } = config;
+        const resIds = config.resId ? [config.resId] : config.resIds;
         if (!resIds.length) {
             return [];
         }
@@ -555,7 +610,8 @@ export class RelationalModel extends Model {
                 context: { bin_size: true, ...context },
                 specification: fieldSpec,
             };
-            const records = await this.orm.webRead(resModel, resIds, kwargs);
+            const orm = cached ? this.orm.cached(cached) : this.orm;
+            const records = await orm.webRead(resModel, resIds, kwargs);
             if (!records.length) {
                 throw new FetchRecordError(resIds);
             }
@@ -571,8 +627,9 @@ export class RelationalModel extends Model {
      * of unity read RPC.
      *
      * @param {RelationalModelConfig} config
+     * @param {Object} [cached]
      */
-    async _loadUngroupedList(config) {
+    async _loadUngroupedList(config, cached) {
         const orderBy = config.orderBy.filter((o) => o.name !== "__count");
         const kwargs = {
             specification: getFieldsSpec(config.activeFields, config.fields, config.context),
@@ -583,7 +640,8 @@ export class RelationalModel extends Model {
             count_limit:
                 config.countLimit !== Number.MAX_SAFE_INTEGER ? config.countLimit + 1 : undefined,
         };
-        return this.orm.webSearchRead(config.resModel, config.domain, kwargs);
+        const orm = cached ? this.orm.cached(cached) : this.orm;
+        return orm.webSearchRead(config.resModel, config.domain, kwargs);
     }
 
     /**
@@ -593,7 +651,7 @@ export class RelationalModel extends Model {
      */
     async _onchange(
         config,
-        { changes = {}, fieldNames = [], evalContext = config.context, onError }
+        { changes = {}, fieldNames = [], evalContext = config.context, onError, cached }
     ) {
         const { fields, activeFields, resModel, resId } = config;
         let context = config.context;
@@ -605,7 +663,8 @@ export class RelationalModel extends Model {
         const args = [resId ? [resId] : [], changes, fieldNames, spec];
         let response;
         try {
-            response = await this.orm.call(resModel, "onchange", args, { context });
+            const orm = cached ? this.orm.cached(cached) : this.orm;
+            response = await orm.call(resModel, "onchange", args, { context });
         } catch (e) {
             if (onError) {
                 return void onError(e);

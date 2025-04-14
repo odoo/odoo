@@ -1,5 +1,6 @@
 import { after, describe, expect, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
+import { microTick } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { getService, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 
@@ -459,7 +460,13 @@ test("optimize read and unlink if no ids", async () => {
 });
 
 test("Cache: can cache a simple orm call", async () => {
-    rpc.setCache(new PersistentCache("mockRpc", 1));
+    rpc.setCache(
+        new PersistentCache(
+            "mockRpc",
+            1,
+            "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        )
+    );
     onRpc(() => {
         expect.step("Fetch");
         return { name: 123 };
@@ -467,8 +474,50 @@ test("Cache: can cache a simple orm call", async () => {
 
     const { services } = await makeMockEnv();
 
-    expect(await services.orm.cached.read("res.partner", [1], [])).toEqual({ name: 123 });
-    expect(await services.orm.cached.read("res.partner", [1], [])).toEqual({ name: 123 });
-    expect(await services.orm.cached.read("res.partner", [1], [])).toEqual({ name: 123 });
+    expect(await services.orm.cached().read("res.partner", [1], [])).toEqual({ name: 123 });
+    expect(await services.orm.cached().read("res.partner", [1], [])).toEqual({ name: 123 });
+    expect(await services.orm.cached().read("res.partner", [1], [])).toEqual({ name: 123 });
     expect.verifySteps(["Fetch"]);
+});
+
+test("Cache: can cache and update a orm call", async () => {
+    rpc.setCache(
+        new PersistentCache(
+            "mockRpc",
+            1,
+            "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        )
+    );
+    const response = [123, 456];
+    let i = 0;
+    onRpc(() => {
+        expect.step("Fetch");
+        return { name: response[i++] };
+    });
+
+    const { services } = await makeMockEnv();
+
+    expect(
+        await services.orm
+            .cached({
+                onUpdate: (result) => {
+                    expect.step("onUppdate" + JSON.stringify(result));
+                },
+            })
+            .read("res.partner", [1], [])
+    ).toEqual({ name: 123 });
+    await microTick();
+    expect(
+        await services.orm
+            .cached({
+                onUpdate: (result) => {
+                    expect.step("onUppdate" + JSON.stringify(result));
+                },
+            })
+            .read("res.partner", [1], [])
+    ).toEqual({ name: 123 });
+    await microTick();
+    await microTick();
+    await microTick();
+    expect.verifySteps(["Fetch", "Fetch", 'onUppdate{"name":456}']);
 });
