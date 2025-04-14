@@ -48,7 +48,13 @@ class EventManager(object):
         }
         self.events.append(event)
         for session in self.sessions:
-            if device.device_identifier in self.sessions[session]['devices'] and not self.sessions[session]['event'].is_set():
+            session_devices = self.sessions[session]['devices']
+            if (
+                any(d in [device.device_identifier, device.device_type] for d in session_devices)
+                and not self.sessions[session]['event'].is_set()
+            ):
+                if device.device_type in session_devices:
+                    event['device_identifier'] = device.device_type  # allow to use device type as identifier
                 self.sessions[session]['result'] = event
                 self.sessions[session]['event'].set()
 
