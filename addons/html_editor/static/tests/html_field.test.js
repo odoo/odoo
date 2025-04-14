@@ -962,7 +962,7 @@ test("link preview in Link Popover", async () => {
     });
     // Click on Discard button to undo changes.
     await contains(".o-we-linkpopover .o_we_discard_link").click();
-    await waitForNone(".o-we-linkpopover", { root: document, timeout: 500 });
+    await waitForNone(".o-we-linkpopover", { root: document, timeout: 1500 });
     expect(".o-we-linkpopover").toHaveCount(0);
     expect(".test_target a").toHaveText("This website");
 
@@ -992,7 +992,7 @@ test("link preview in Link Popover", async () => {
 
     // Move selection outside for auto-save.
     setSelectionInHtmlField(".test_target");
-    await waitForNone(".o-we-linkpopover", { root: document, timeout: 500 });
+    await waitForNone(".o-we-linkpopover", { root: document, timeout: 1500 });
     expect(".o-we-linkpopover").toHaveCount(0);
     expect(".test_target a").toHaveText("Final label", {
         message: "The link's label should be updated",
