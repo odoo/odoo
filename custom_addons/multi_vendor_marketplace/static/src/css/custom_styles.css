@@ -1,0 +1,33 @@
+#products_grid .oe_product {
+    background-color: #fff; /* Белый фон карточек */
+
+    overflow: hidden; /* Обрезка содержимого, если оно выходит за границы */
+    margin: 0; /* Убираем лишние внешние отступы */
+    box-sizing: border-box; /* Учитываем padding и border в ширине */
+    transition: background-color 0.3s ease; /* Плавный переход для фона */
+}
+
+/* Эффекты при наведении на карточку */
+#products_grid .oe_product:hover {
+    background-color: #f9f9f9; /* Легкое изменение фона при наведении */
+}
+
+/* Стили для изображений внутри карточек */
+#products_grid .oe_product img {
+    border-radius: 8px; /* Скругление углов изображений */
+    object-fit: cover; /* Обрезка изображения по размеру карточки */
+}
+
+/* Эффект затемнения изображения при наведении */
+#products_grid .oe_product img:hover {
+    filter: brightness(0.9); /* Слегка затемняем изображение */
+}
+
+.btn-warning {
+    background-color: #FFA500;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+}

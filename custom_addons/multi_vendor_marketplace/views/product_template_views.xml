@@ -21,8 +21,13 @@
                             name="change_state_reject" class="oe_highlight"
                             attrs="{'invisible': [('state', 'in', ('draft', 'approved', 'rejected'))]}"
                             groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
+                    <button name="unlink" type="object" string="Delete"
+                            class="btn-danger"
+                            confirm="Are you sure you want to delete this product?"/>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,pending,approved"/>
+                        statusbar_visible="draft,pending,approved"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,pending,approved"/>          
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"
@@ -158,7 +163,7 @@
         <field name="name">product.template.view.kanban</field>
         <field name="model">product.template</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state">
+            <kanban default_group_by="state" domain="[('active', '=', True)]">
                 <field name="state"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -212,6 +217,7 @@
     <record id="product_template_action" model="ir.actions.act_window">
         <field name="name">Product</field>
         <field name="res_model">product.template</field>
+        <field name="domain">[('active', '=', True)]</field>
         <field name="view_mode">kanban,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
                     (0, 0, {'view_mode': 'kanban', 'view_id': ref('product_template_view_kanban')}),

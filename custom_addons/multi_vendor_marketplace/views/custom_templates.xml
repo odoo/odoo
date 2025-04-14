@@ -1,0 +1,50 @@
+<odoo>
+    <template id="customize_ecommerce_shop" inherit_id="website_sale.products">
+        <!-- Пример кастомизации магазина -->
+    </template>
+
+    <!-- Новый шаблон для профиля -->
+    <template id="custom_user_profile" name="Custom User Profile">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <h1>CISTECH</h1>
+                        <img src="/path/to/user/photo.png" alt="Фото" class="rounded-circle" style="width: 100px; height: 100px;" />
+                        <h2 t-esc="user.name" class="mt-3">Nickname</h2>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-4 text-center">
+                        <button class="btn btn-warning">Статус заказа</button>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <button class="btn btn-warning">История заказов</button>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <button class="btn btn-warning">Возвраты</button>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4 text-center">
+                        <button class="btn btn-warning">Кошелек</button>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <button class="btn btn-warning">Адрес доставки</button>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <button class="btn btn-warning">Поменять валюту</button>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 text-center">
+                        <button class="btn btn-warning">Открыть магазин</button>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <button class="btn btn-warning">Бухгалтерия и налоги</button>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

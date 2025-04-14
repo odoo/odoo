@@ -59,9 +59,8 @@ class InventoryRequest(models.Model):
         id_in_location = self.env['stock.location'].browse(id_in_location_frm_settings)
         self.location_id = id_in_location.id
 
-    def _group_expand_states(self):
-        """Expands the selection options for the 'state' field in a group-by
-        operation."""
+    def _group_expand_states(self, states, domain, order):
+        """Expands the selection options for the 'state' field in a group-by operation."""
         return [key for key, val in type(self).state.selection]
 
     def approve_request(self):

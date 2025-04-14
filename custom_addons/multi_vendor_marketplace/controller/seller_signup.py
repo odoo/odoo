@@ -38,6 +38,16 @@ LOGIN_SUCCESSFUL_PARAMS.add('account_created')
 class SellerSignup(AuthSignupHome):
     """Class for sellers signup"""
 
+
+    
+    @http.route(['/profile'], type="http", auth="user", website=True)
+    def user_profile(self, **kwargs):
+        """Render the custom user profile page"""
+        user = request.env.user
+        return request.render('multi_vendor_marketplace.custom_user_profile', {
+            'user': user,
+        })
+
     @http.route(['/seller/list'], type="http", auth="public",
                 website="True")
     def seller_list(self):
@@ -264,6 +274,20 @@ class SellerSignup(AuthSignupHome):
                     {'login': user.login, 'redirect': '/web'}))
         response = request.render('multi_vendor_marketplace.mark', qcontext)
         return response
+    
+    @http.route('/', type='http', auth='public', website=True)
+    def redirect_to_seller_shop(self, **kwargs):
+        """Redirect homepage to default seller shop."""
+        # Здесь можно указать конкретного продавца, или редиректить на список
+        default_seller = request.env['res.partner'].sudo().search(
+            [('state', '=', 'Approved'), ('is_published', '=', True)],
+            limit=1
+        )
+        if default_seller:
+            return request.redirect(f'/seller_shop?seller_id={default_seller.id}')
+        else:
+            return request.redirect('/seller/list')  # если нет продавцов, показываем список
+
 
     def _prepare_signup_values(self, qcontext):
         """Super The _prepare_signup_values function to pass values  not to

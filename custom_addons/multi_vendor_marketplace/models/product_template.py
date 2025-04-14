@@ -68,6 +68,12 @@ class ProductTemplate(models.Model):
                                               help='Product variants settings')
     product_uom = fields.Boolean(string='Product uom', help='Product uom')
 
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        # Добавляем условие для исключения архивированных записей
+        args = args + [('active', '=', True)]
+        return super(ProductTemplate, self).search(args, offset, limit, order, count)
+
     def _create(self, data_list):
         """Supering the create function to change category """
         res = super(ProductTemplate, self)._create(data_list)
@@ -178,7 +184,6 @@ class ProductTemplate(models.Model):
         self.is_published = not self.is_published
 
 
-    def _group_expand_states(self):
-        """Expands the selection options for the 'state' field in a group-by
-         operation."""
+    def _group_expand_states(self, states, domain, order):
+        """Expands the selection options for the 'state' field in a group-by operation."""
         return [key for key, val in type(self).state.selection]

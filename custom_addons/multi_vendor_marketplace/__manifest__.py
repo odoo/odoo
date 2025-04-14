@@ -20,22 +20,15 @@
 #
 #############################################################################
 {
-    'name': "Odoo Multi Vendor Marketplace",
+    'name': "Cistech",
     'version': "16.0.1.0.0",
     'category': 'eCommerce,Sales ,Warehouse',
     'summary': 'Odoo Multi Vendor Marketplace, Odoo16, Multi Vendor',
-    'description': 'The Multi-Vendor Marketplace module in Odoo enables '
-                   'businesses to establish an online platform where multiple'
-                   'vendors can offer their products or services to customers.'
-                   'Vendors can manage their own profiles, products, and '
-                   'orders, while the admin can set commission rates, manage '
-                   'payments, maintain quality control. The module provides'
-                   'customization options, and user-friendly interfaces for a '
-                   'seamless marketplace experience. ',
-    'author': 'Cybrosys Techno solutions',
-    'company': 'Cybrosys Techno Solutions',
-    'maintainer': 'Cybrosys Techno Solutions',
-    'website': 'https://www.cybrosys.com',
+    'description': 'Custom Odoo Module for Multi Vendor Marketplace',
+    'author': 'Kutman',
+    'company': 'AIT Solutions',
+    'maintainer': 'AIT Solutions',
+    'website': 'https://www.aitkg.com/',
     'depends': ['base', 'sale_management', 'account', 'website', 'stock',
                 'website_sale'],
     'data': [
@@ -54,6 +47,9 @@
         'data/product_template_data.xml',
         'data/email_template_data.xml',
         'data/website_menu_data.xml',
+
+        'views/custom_templates.xml',
+
         'views/vendor_dashboard_views.xml',
         'views/stock_moves_views.xml',
         'views/sell_page_templates.xml',
@@ -87,14 +83,12 @@
             'multi_vendor_marketplace/static/src/js/seller_dashboard_action.js',
         ],
         'web.assets_frontend': [
+            'multi_vendor_marketplace/static/src/css/custom_styles.css',
             'multi_vendor_marketplace/static/src/js/rating.js',
             'multi_vendor_marketplace/static/src/scss/partner_rating.css',
             'https://unpkg.com/sweetalert/dist/sweetalert.min.js',
         ],
     },
-    'images': [
-        'static/description/banner.png',
-    ],
     'license': 'LGPL-3',
     'installable': True,
     'application': True,
