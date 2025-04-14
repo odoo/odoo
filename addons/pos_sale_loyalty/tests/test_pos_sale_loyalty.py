@@ -1,11 +1,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< 01566655befd795071fdc6a3c4d22605e1c8b262
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+||||||| f041389bc63f5edaa7f6a93e728efb8f1b5ac55a
+from odoo.addons.pos_loyalty.tests.test_frontend import TestUi
+=======
+from odoo.addons.pos_loyalty.tests.test_frontend import TestPoSLoyaltyCommon
+>>>>>>> ba1a8bacba0ceccb855ca7e8fce8468ff5c76f59
 from odoo.tests import tagged
 
 
 @tagged("post_install", "-at_install")
+<<<<<<< 01566655befd795071fdc6a3c4d22605e1c8b262
 class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
+||||||| f041389bc63f5edaa7f6a93e728efb8f1b5ac55a
+class TestPoSSaleLoyalty(TestUi):
+=======
+class TestPoSSaleLoyalty(TestPoSLoyaltyCommon):
+>>>>>>> ba1a8bacba0ceccb855ca7e8fce8468ff5c76f59
     def test_pos_sale_loyalty_1(self):
         """Test that only one loyalty card is created when settling an unconfirmed order."""
         self.env['loyalty.program'].search([]).write({'active': False})

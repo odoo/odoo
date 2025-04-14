@@ -10,7 +10,7 @@ from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo
 
 
 @tagged("post_install", "-at_install")
-class TestUi(TestPointOfSaleHttpCommon):
+class TestPoSLoyaltyCommon(TestPointOfSaleHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -130,6 +130,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             program.write({'name': name})
             programs[name] = program
         return programs
+
+
+@tagged("post_install", "-at_install")
+class TestUi(TestPoSLoyaltyCommon):
 
     def test_pos_loyalty_tour_basic(self):
         """PoS Loyalty Basic Tour"""
