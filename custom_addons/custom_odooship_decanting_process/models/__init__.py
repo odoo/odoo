@@ -15,3 +15,4 @@ from . import sales_order_inherit
 from . import pack_bench_configuration
 from . import package_configuration
 from . import stock_quant_inherit
+from . import product_product_inherit

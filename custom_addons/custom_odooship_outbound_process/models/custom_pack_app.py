@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-
-
+from odoo.exceptions import ValidationError
 
 class PackAPP(models.Model):
     _name = 'custom.pack.app'
@@ -13,7 +12,7 @@ class PackAPP(models.Model):
     pc_container_status = fields.Selection([('release', 'Release'),
                                      ('occupied', 'Occupied'),],
                                     string='PC container Status', default='release')
-    site_code_id = fields.Many2one('site.code.configuration', string='Site Code', store=True)
+    site_code_id = fields.Many2one('site.code.configuration', string='Site Code')
     pack_app_line_ids = fields.One2many(
         comodel_name='custom.pack.app.line',
         inverse_name='pack_app_line_id',
@@ -31,7 +30,8 @@ class PackAPP(models.Model):
         ('manual','Manual'),
     ], string='Automation Bulk Manual')
     pc_container_code_ids = fields.Many2many('pc.container.barcode.configuration', string='PC Totes')
-
+    picking_ids = fields.Many2many('stock.picking', string='Pick Numbers', store=True)
+    user_id = fields.Many2one('res.users', string='Created By', default=lambda self: self.env.user, readonly=True)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -45,15 +45,18 @@ class PackAPP(models.Model):
         Change the state of the Pack App to 'in_progress'
         and open the wizard to Pack an items .
         """
-        self.state = 'in_progress'
-        return {
-            'name': _('Pack Screen'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'custom.pack.app.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'active_id': self.id},
-        }
+        for record in self:
+            if not record.site_code_id:
+                raise ValidationError(_("Please select a Site Code before proceeding to the Pack Screen."))
+            self.state = 'in_progress'
+            return {
+                'name': _('Pack Screen'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'custom.pack.app.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'active_id': self.id},
+            }
 
     def button_action_done(self):
         """
@@ -96,8 +99,7 @@ class PackAPPLine(models.Model):
     sale_order_id = fields.Many2one('sale.order', string='Sale Orders')
     tenant_code_id = fields.Many2one(related='picking_id.tenant_code_id', string='Tenant ID')
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code')
-
-
+    serial_number = fields.Char(string='Serial Number')
 
     @api.model
     def create(self, vals_list):

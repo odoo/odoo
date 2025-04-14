@@ -175,7 +175,7 @@ class StockPicking(models.Model):
             api_url = (
                 "https://shiperooconnect-prod.automation.shiperoo.com/api/discrepency_receiver"
                 if is_production == 'True'
-                else "https://shiperooconnect.automation.shiperoo.com/api/discrepency_receiver"
+                else "https://shiperooconnect-dev.automation.shiperoo.com/api/discrepency_receiver"
             )
             json_data = json.dumps(payload, indent=4)
             _logger.info(f"Sending payload to {api_url}: {json_data}")
