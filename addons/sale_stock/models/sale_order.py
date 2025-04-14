@@ -39,6 +39,12 @@ class SaleOrder(models.Model):
        help="Blue: Not Delivered/Started\n\
             Orange: Partially Delivered\n\
             Green: Fully Delivered")
+    late_availability = fields.Boolean(
+        string="Late Availability",
+        compute='_compute_late_availability',
+        search='_search_late_availability',
+        help="True if any related picking has late availability"
+    )
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
     effective_date = fields.Datetime("Effective Date", compute='_compute_effective_date', store=True, help="Completion date of the first delivery order.")
     expected_date = fields.Datetime( help="Delivery date you can promise to the customer, computed from the minimum lead time of "
@@ -93,6 +99,22 @@ class SaleOrder(models.Model):
     @api.depends('picking_policy')
     def _compute_expected_date(self):
         super(SaleOrder, self)._compute_expected_date()
+
+    @api.depends('picking_ids.products_availability_state')
+    def _compute_late_availability(self):
+        for order in self:
+            order.late_availability = any(
+                picking.products_availability_state == 'late' for picking in order.picking_ids
+            )
+
+    def _search_late_availability(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            return NotImplemented
+
+        sub_query = self.env['stock.picking']._search([
+            ('sale_id', '!=', False), ('products_availability_state', operator, 'late')
+        ])
+        return [('picking_ids', 'in', sub_query)]
 
     def _select_expected_date(self, expected_dates):
         if self.picking_policy == "direct":

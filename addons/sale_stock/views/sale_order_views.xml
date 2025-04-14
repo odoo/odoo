@@ -112,4 +112,15 @@
         </field>
     </record>
 
+    <record id="sale_stock_sale_order_view_search_inherit" model="ir.ui.view">
+        <field name="name">sale_stock.sale.order.search.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <filter name="order_date" position="after">
+                <filter string="Late Availability" name="late_availability" domain="[('late_availability', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
 </odoo>
