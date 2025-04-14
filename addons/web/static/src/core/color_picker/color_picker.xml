@@ -2,32 +2,28 @@
 <t t-name="web.ColorPicker">
     <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root">
         <div class="my-1 d-flex">
-            <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab theme-tab"
+            <button t-attf-class="btn btn-sm ms-1 text-truncate btn-tab theme-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'theme' ? 'active' : ''}"
                 t-if="this.props.enabledTabs.includes('theme')"
-                t-att-class="{active: state.activeTab === 'theme'}"
                 t-on-click="() => this.setTab('theme')">
                 Theme
             </button>
-            <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab solid-tab"
+            <button t-attf-class="btn btn-sm ms-1 text-truncate btn-tab solid-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'solid' ? 'active' : ''}"
                 t-if="this.props.enabledTabs.includes('solid')"
-                t-att-class="{active: state.activeTab === 'solid'}"
                 t-on-click="() => this.setTab('solid')">
                 Solid
             </button>
-            <button class="btn btn-sm btn-light text-truncate btn-tab custom-tab"
+            <button t-attf-class="btn btn-sm text-truncate btn-tab custom-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'custom' ? 'active' : ''}"
                 t-if="this.props.enabledTabs.includes('custom')"
-                t-att-class="{active: state.activeTab === 'custom'}"
                 t-on-click="() => this.setTab('custom')">
                 Custom
             </button>
-            <button class="btn btn-sm btn-light text-truncate btn-tab gradient-tab"
+            <button t-attf-class="btn btn-sm text-truncate btn-tab gradient-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'gradient' ? 'active' : ''}"
                 t-if="this.props.enabledTabs.includes('gradient')"
-                t-att-class="{active: state.activeTab === 'gradient'}"
                 t-on-click="() => this.setTab('gradient')">
                 Gradient
             </button>
             <div class="flex-grow-1" />
-            <button class="btn btn-sm btn-light fa fa-trash me-1"
+            <button t-attf-class="btn btn-sm fa fa-trash me-1 #{ isDarkTheme ? 'btn-secondary' : 'btn-light'}"
                     title="Reset"
                     t-on-click="onColorApply"
                     t-on-mouseover="onColorHover"

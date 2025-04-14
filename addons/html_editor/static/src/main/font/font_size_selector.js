@@ -4,6 +4,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
+import { cookie } from "@web/core/browser/cookie";
 
 const MAX_FONT_SIZE = 144;
 
@@ -37,6 +38,7 @@ export class FontSizeSelector extends Component {
                 }
 
                 this.fontSizeInput = iframeDoc.createElement("input");
+                const isDarkMode = cookie.get("color_scheme") === "dark";
                 Object.assign(iframeDoc.body.style, {
                     padding: "0",
                     margin: "0",
@@ -47,6 +49,8 @@ export class FontSizeSelector extends Component {
                     border: "none",
                     outline: "none",
                     textAlign: "center",
+                    backgroundColor: isDarkMode ? "#262A36" : "#fff",
+                    color: isDarkMode ? "#fff" : "#000",
                 });
                 this.fontSizeInput.type = "text";
                 this.fontSizeInput.name = "font-size-input";
