@@ -1286,7 +1286,7 @@ test("new message in tab title has precedence over action name", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o_breadcrumb:contains(Inbox)"); // wait for action name being Inbox
+    await contains(".o-mail-Discuss-threadName", { value: "Inbox" }); // wait for action name being Inbox
     const titleService = getService("title");
     expect(titleService.current).toBe("Inbox");
     // simulate receiving a new message in chat 1 with odoo out-of-focused
@@ -2370,4 +2370,15 @@ test("Read of unread chat where new message is deleted should mark as read", asy
         text: "Marc Demo",
         contains: [".badge", { count: 0 }],
     });
+});
+
+test("do not show control panel without breadcrumbs", async () => {
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o_control_panel", { count: 0 });
+    await openFormView("res.partner", serverState.partnerId);
+    await openDiscuss();
+    await contains(".o-mail-Discuss");
+    await contains(".o_control_panel .breadcrumb", { text: serverState.partnerName });
 });
