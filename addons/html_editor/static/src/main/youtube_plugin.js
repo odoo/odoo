@@ -50,11 +50,29 @@ export class YoutubePlugin extends Plugin {
      * @param {string} url
      */
     async getYoutubeVideoElement(url) {
-        const { embed_url: src } = await rpc("/html_editor/video_url/data", {
-            video_url: url,
-        });
-        const [savedVideo] = VideoSelector.createElements([{ src }]);
-        savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
-        return savedVideo;
+        if (URL.canParse(url)) {
+            const urlParams = new URLSearchParams(new URL(url).search);
+            const start_from = urlParams.get("start") || urlParams.get("t");
+
+            const autoplay = url.includes("autoplay=1");
+            const loop = url.includes("loop=1");
+            const hide_controls = url.includes("controls=0");
+            const hide_fullscreen = url.includes("fs=0");
+
+            const { embed_url: src } = await rpc(
+                "/html_editor/video_url/data",
+                {
+                    video_url: url,
+                    autoplay,
+                    loop,
+                    hide_controls,
+                    hide_fullscreen,
+                    start_from,
+                },
+            );
+            const [savedVideo] = VideoSelector.createElements([{ src }]);
+            savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
+            return savedVideo;
+        }
     }
 }
