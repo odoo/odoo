@@ -14,7 +14,6 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
     def main_flow_tour(self):
         # Disable all onboarding tours
         self.env.ref('base.user_admin').write({
-            'tour_enabled': False,
             'email': 'mitchell.admin@example.com',
         })
         # Enable Make to Order

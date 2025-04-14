@@ -2351,6 +2351,8 @@ class HttpCase(TransactionCase):
         """Wrapper for `browser_js` to start the given `tour_name` with the
         optional delay between steps `step_delay`. Other arguments from
         `browser_js` can be passed as keyword arguments."""
+        if 'tour_enabled' not in self.env['res.users']._fields:
+            raise unittest.SkipTest('web_tour is not installed')
         options = {
             'stepDelay': step_delay or 0,
             'keepWatchBrowser': kwargs.get('watch', False),
@@ -2365,7 +2367,15 @@ class HttpCase(TransactionCase):
         if options["delayToCheckUndeterminisms"] > 0:
             timeout = timeout + 1000 * options["delayToCheckUndeterminisms"]
             _logger.runbot("Tour %s is launched with mode: check for undeterminisms.", tour_name)
-        return self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
+        Users = self.registry['res.users']
+
+        def setup(_):
+            Users.tour_enabled = False
+
+        with patch.object(Users, 'tour_enabled', False),\
+                patch.object(Users, '_post_model_setup__', setup),\
+                patch.object(Users, '_compute_tour_enabled', lambda _: None):
+            self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
 
     def profile(self, **kwargs):
         """
