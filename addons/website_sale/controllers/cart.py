@@ -271,17 +271,17 @@ class Cart(PaymentPortal):
             line_id = order_sudo.order_line.filtered(
                 lambda sol: sol.product_id.id == product_id
             )[:1].id
-            if not line_id:
-                raise UserError(_("This line doesn't exist anymore."))
 
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
 
         values['cart_quantity'] = order_sudo.cart_quantity
         values['cart_ready'] = order_sudo._is_cart_ready()
         values['amount'] = order_sudo.amount_total
-        values['minor_amount'] = payment_utils.to_minor_currency_units(
-            order_sudo.amount_total, order_sudo.currency_id
-        )
+        values['minor_amount'] = (
+            order_sudo and payment_utils.to_minor_currency_units(
+                order_sudo.amount_total, order_sudo.currency_id
+            )
+        ) or 0.0
         values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
             'website_sale.cart_lines', {
                 'website_sale_order': order_sudo,
