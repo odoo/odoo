@@ -345,6 +345,10 @@ class Cursor(BaseCursor):
         try:
             params = params or None
             res = self._obj.execute(query, params)
+        except psycopg2.errors.ProgramLimitExceeded as e:
+            _logger.error("ProgramLimitExceeded: Index value too large.\nQuery: %s\nParams: %s\nError: %s", query, params, str(e))
+            raise odoo.exceptions.UserError("It looks like you're trying to import too many records at once or the data is too large. \n"
+                                            "Please try importing fewer records at a time or reduce the size of your input.")
         except Exception as e:
             if log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
