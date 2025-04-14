@@ -39,6 +39,7 @@ const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])|@page/;
+const CONVERT_INLINE_BLACKLIST_CLASSES = ["o_mail_redirect"];
 // CSS properties relating to font, which Outlook seem to have trouble inheriting.
 const FONT_PROPERTIES_TO_INHERIT = [
     "color",
@@ -623,6 +624,45 @@ export function classToStyle(element, cssRules) {
                 const computedStyle = getComputedStyle(node);
                 for (const prop of propsToConvert) {
                     node.style.setProperty(prop, computedStyle[prop]);
+                }
+            }
+        });
+
+        const matchedBlacklistRules = nodeRules?.filter((rule) =>
+            CONVERT_INLINE_BLACKLIST_CLASSES.some(
+                (cls) => rule.selector.includes(cls) && node.classList.contains(cls)
+            )
+        );
+
+        const blacklistedStyles = {};
+        for (const rule of matchedBlacklistRules) {
+            for (const [key, value] of Object.entries(rule.style)) {
+                if (
+                    !blacklistedStyles[key] ||
+                    !blacklistedStyles[key].includes("important") ||
+                    value.includes("important")
+                ) {
+                    blacklistedStyles[key] = value;
+                }
+            }
+        }
+
+        for (const [key, value] of Object.entries(blacklistedStyles)) {
+            if (value && value.endsWith("important")) {
+                blacklistedStyles[key] = value.replace(/\s*!important\s*$/, "");
+            }
+        }
+
+        // Find styles to remove if they are from a blacklisted class and match
+        // existing styles.
+        const stylesToRemove = Object.fromEntries(
+            Object.entries(css).filter(([key, value]) => blacklistedStyles[key] === value)
+        );
+        // Remove style from blacklisted classes.
+        writes.push(() => {
+            for (const [key] of Object.entries(stylesToRemove)) {
+                if (node.style[key]) {
+                    node.style.removeProperty(key);
                 }
             }
         });

@@ -1443,3 +1443,66 @@ describe("Properly add MSO conditions", () => {
         });
     });
 });
+
+describe("Should not convert blacklisted class to inline styles", () => {
+    let styleEl, styleSheet;
+
+    beforeEach(() => {
+        editable = document.createElement("div");
+
+        styleEl = document.createElement("style");
+        styleEl.type = "text/css";
+        styleEl.title = "test-stylesheet";
+        document.head.appendChild(styleEl);
+        styleSheet = [...document.styleSheets].find((sheet) => sheet.title === "test-stylesheet");
+    });
+    afterEach(() => {
+        // @todo to adapt when hoot has a better way to remove it
+        document.head.removeChild(styleEl);
+    });
+
+    test("should not convert blacklisted class to inline style", async () => {
+        editable.innerHTML = `
+            <a contenteditable="false" href="#" class="o_mail_redirect">@Marc Demo</a> Testing!`;
+
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+
+        expect(editable).toHaveInnerHTML(
+            `<a contenteditable="false" href="#" class="o_mail_redirect" style="text-decoration: none; border-style: solid; padding: 0rem 0.1875rem; box-sizing: border-box; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
+            {
+                message: "blacklisted class styles should remain unconverted",
+            }
+        );
+    });
+
+    test("should convert styles from class using !important even if blacklisted class is present", async () => {
+        styleSheet.insertRule(`
+            .test-style {
+                background-color: yellow !important;
+            }
+        `);
+        editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect test-style">@Marc Demo</a> Testing!`;
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+        expect(editable).toHaveInnerHTML(
+            `<a contenteditable="false" href="#" class="o_mail_redirect test-style" style="text-decoration: none; border-style: solid; padding: 0rem 0.1875rem; box-sizing: border-box; background-color: yellow; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
+            { message: "styles marked !important should override blacklisted class restrictions" }
+        );
+    });
+
+    test("should not convert style of class having less specificity when overridden by a blacklisted class", async () => {
+        styleSheet.insertRule(`
+            .test-color {
+                color: black;
+            }
+        `);
+        editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect test-color">@Marc Demo</a> Testing!`;
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+        expect(editable).toHaveInnerHTML(
+            `<a contenteditable="false" href="#" class="o_mail_redirect test-color" style="text-decoration: none; border-style: solid; padding: 0rem 0.1875rem; box-sizing: border-box; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
+            {
+                message:
+                    "should ignore styles from lower specificity class in favor of blacklisted class",
+            }
+        );
+    });
+});
