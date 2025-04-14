@@ -46,6 +46,23 @@ class AccountTax(models.Model):
             if tax.is_withholding_tax_on_payment and tax.amount_type in ['group', 'division']:
                 raise UserError(tax.env._("Withholding On Payment taxes cannot use the 'Group of Taxes' or the 'Percentage Tax Included' computations."))
 
+    # --------------------------------
+    # Compute, inverse, search methods
+    # --------------------------------
+
+    @api.depends('name', 'invoice_label')
+    def _compute_tax_label(self):
+        """
+        On withholding taxes, we do not want the label used in reports to fall back to the tax name.
+        This gives the user the flexibility to display or not withholding taxes as they need.
+        """
+        # EXTENDS 'account'
+        withholding_taxes = self.filtered('is_withholding_tax_on_payment')
+        for tax in withholding_taxes:
+            tax.tax_label = tax.invoice_label
+
+        super(AccountTax, self - withholding_taxes)._compute_tax_label()
+
     # -----------------------
     # CRUD, inherited methods
     # -----------------------
