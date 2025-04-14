@@ -12,6 +12,7 @@ import werkzeug
 from odoo import http
 from odoo.addons.hw_drivers.browser import Browser, BrowserState
 from odoo.addons.hw_drivers.driver import Driver
+from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers, route
 from odoo.addons.hw_drivers.tools.helpers import Orientation
@@ -46,6 +47,7 @@ class DisplayDriver(Driver):
             'update_url': self._action_update_url,
             'display_refresh': self._action_display_refresh,
             'open_kiosk': self._action_open_kiosk,
+            'rotate_screen': self._action_rotate_screen,
         })
 
         self.set_orientation(self.orientation)
@@ -107,9 +109,16 @@ class DisplayDriver(Driver):
             self.update_url(f"{origin}/pos-self/{data.get('pos_id')}?access_token={data.get('access_token')}")
             self.set_orientation(Orientation.RIGHT)
 
+    def _action_rotate_screen(self, data):
+        if self.device_identifier == 'distant_display':
+            return
+
+        orientation = data.get('orientation', 'NORMAL').upper()
+        self.set_orientation(Orientation[orientation])
+        event_manager.device_changed(self)
+
     def set_orientation(self, orientation=Orientation.NORMAL):
         if self.device_identifier == 'distant_display':
-            # Avoid calling xrandr if no display is connected
             return
 
         if type(orientation) is not Orientation:
@@ -147,9 +156,6 @@ class DisplayController(http.Controller):
             return {'status': 'updated'}
         if action == 'get':
             return {'status': 'retrieved', 'data': display.customer_display_data}
-        if action == 'rotate_screen':
-            display.set_orientation(Orientation[data.upper()])
-            return {'status': 'rotated'}
 
     def ensure_display(self):
         display: DisplayDriver = DisplayDriver.get_default_display()

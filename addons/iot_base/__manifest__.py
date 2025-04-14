@@ -14,4 +14,10 @@ Base tools required by all IoT related modules.
     'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'iot_base/static/src/network_utils/*',
+            'iot_base/static/src/device_controller.js',
+        ],
+    },
 }
