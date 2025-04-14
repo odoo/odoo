@@ -140,11 +140,17 @@ class ResUsers(models.Model):
         :param to_date: compute karma gained before this date (included) or until
           end of time;
 
-        :return list: [{
-            'user_id': user_id (belonging to current record set),
-            'karma_gain_total': integer, karma gained in the given timeframe,
-            'karma_position': integer, ranking position
-        }, {..}] ordered by karma_position desc
+        :rtype: list[dict]
+        :return:
+          ::
+
+            [{
+                'user_id': user_id (belonging to current record set),
+                'karma_gain_total': integer, karma gained in the given timeframe,
+                'karma_position': integer, ranking position
+            }, {..}]
+
+          ordered by descending karma position
         """
         if not self:
             return []
@@ -189,10 +195,15 @@ WHERE final.user_id IN %s""",
         :param user_domain: general domain (i.e. active, karma > 1, website, ...)
           to compute the absolute position of the current record set
 
-        :return list: [{
-            'user_id': user_id (belonging to current record set),
-            'karma_position': integer, ranking position
-        }, {..}] ordered by karma_position desc
+        :rtype: list[dict]
+        :return:
+
+            ::
+
+                [{
+                    'user_id': user_id (belonging to current record set),
+                    'karma_position': integer, ranking position
+                }, {..}] ordered by karma_position desc
         """
         if not self:
             return {}

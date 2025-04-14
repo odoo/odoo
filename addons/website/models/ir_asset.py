@@ -45,6 +45,7 @@ class IrAsset(models.Model):
     def filter_duplicate(self, website_id=None):
         """ Filter current recordset only keeping the most suitable asset per distinct name.
             Every non-accessible asset will be removed from the set:
+
               * In non website context, every asset with a website will be removed
               * In a website context, every asset from another website
         """

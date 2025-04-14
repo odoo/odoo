@@ -1040,12 +1040,12 @@ class ResPartner(models.Model):
 
     @api.model
     def find_or_create(self, email, assert_valid_email=False):
-        """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
+        """ Find a partner with the given ``email`` or use :meth:`name_create`
         to create a new one.
 
         :param str email: email-like string, which should contain at least one email,
             e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``
-        :param boolean assert_valid_email: raise if no valid email is found
+        :param bool assert_valid_email: raise if no valid email is found
         :return: newly created record
         """
         if not email:

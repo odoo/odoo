@@ -295,10 +295,11 @@ class IrMail_Server(models.Model):
         """Test the connection and if autodetect_max_email_size, set auto-detected max email size.
 
         :param bool autodetect_max_email_size: whether to autodetect the max email size
-        :return (dict): client action to notify the user of the result of the operation (connection test or
-        auto-detection successful depending on the autodetect_max_email_size parameter)
+        :return: client action to notify the user of the result of the operation (connection test or
+            auto-detection successful depending on the ``autodetect_max_email_size`` parameter)
+        :rtype: dict
 
-        :raises UserError: if the connection fails and if autodetect_max_email_size and
+        :raises UserError: if the connection fails and if ``autodetect_max_email_size`` and
             the server doesn't support the auto-detection of email max size
         """
         for server in self:
@@ -405,8 +406,8 @@ class IrMail_Server(models.Model):
                               will be output in logs)
            :param mail_server_id: ID of specific mail server to use (overrides other parameters)
            :param bool allow_archived: by default (False), an exception is raised when calling this method on an
-           archived record (using mail_server_id param). It can be set to True for testing so that the exception is no
-           longer raised.
+               archived record (using mail_server_id param). It can be set to True for testing so that the exception is
+               no longer raised.
         """
         # Do not actually connect while running in test mode
         if self._disable_send():
@@ -858,10 +859,12 @@ class IrMail_Server(models.Model):
     def _find_mail_server(self, email_from, mail_servers=None):
         """Find the appropriate mail server for the given email address.
 
-        Returns: Record<ir.mail_server>, email_from
-        - Mail server to use to send the email (None if we use the odoo-bin arguments)
-        - Email FROM to use to send the email (in some case, it might be impossible
-          to use the given email address directly if no mail server is configured for)
+        :rtype: tuple[IrMail_Server | None, str]
+        :returns: A two-elements tuple: ``(Record<ir.mail_server>, email_from)``
+
+          1. Mail server to use to send the email (``None`` if we use the odoo-bin arguments)
+          2. Email FROM to use to send the email (in some case, it might be impossible
+             to use the given email address directly if no mail server is configured for)
         """
         email_from_normalized = email_normalize(email_from)
         email_from_domain = email_domain_extract(email_from_normalized)

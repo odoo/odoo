@@ -654,8 +654,9 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         """ Start the process 'Merge with Manual Check'. Fill the wizard according to the group_by and exclude
             options, and redirect to the first step (treatment of first wizard line). After, for each subset of
             partner to merge, the wizard will be actualized.
+
                 - Compute the selected groups (with duplication)
-                - If the user has selected the 'exclude_xxx' fields, avoid the partners
+                - If the user has selected the ``exclude_xxx`` fields, avoid the partners
         """
         self.ensure_one()
         groups = self._compute_selected_groupby()

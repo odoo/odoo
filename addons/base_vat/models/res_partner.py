@@ -267,6 +267,7 @@ class ResPartner(models.Model):
     def check_vat_ro(self, vat):
         """
             Check Romanian VAT number that can be for example 'RO1234567897 or 'xyyzzaabbxxxx' or '9000xxxxxxxx'.
+
             - For xyyzzaabbxxxx, 'x' can be any number, 'y' is the two last digit of a year (in the range 00…99),
               'a' is a month, b is a day of the month, the number 8 and 9 are Country or district code
               (For those twos digits, we decided to let some flexibility  to avoid complexifying the regex and also
@@ -298,6 +299,7 @@ class ResPartner(models.Model):
     def check_vat_hu(self, vat):
         """
             Check Hungary VAT number that can be for example 'HU12345676 or 'xxxxxxxx-y-zz' or '8xxxxxxxxy'
+
             - For xxxxxxxx-y-zz, 'x' can be any number, 'y' is a number between 1 and 5 depending on the person and the 'zz'
               is used for region code.
             - 8xxxxxxxxy, Tin number for individual, it has to start with an 8 and finish with the check digit

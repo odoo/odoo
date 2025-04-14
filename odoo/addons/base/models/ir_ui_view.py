@@ -2709,18 +2709,25 @@ class Base(models.AbstractModel):
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
-        """Get the model view combined architecture (the view along all its inheriting views).
+        """
+        Get the model view combined architecture (the view along all its
+        inheriting views).
 
-        :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'list', ...)
-        :param dict options: bool options to return additional features:
-            - bool mobile: true if the web client is currently using the responsive mobile view
-              (to use kanban views instead of list views for x2many fields)
-        :return: architecture of the view as an etree node, and the browse record of the view used
+        :param view_id: id of the view or None
+        :type view_id: int or None
+        :param str view_type: type of the view to return if view_id is None,
+            one of ``'form'``, ``'list'``, ...
+        :param options: options to return additional features
+
+            :param bool mobile: true if the web client is currently using the
+                responsive mobile view (to use kanban views instead of list
+                views for x2many fields)
+
+        :return: architecture of the view as an etree node, and the browse
+            record of the view used
         :rtype: tuple
-        :raise AttributeError:
-            if no view exists for that model, and no method `_get_default_[view_type]_view` exists for the view type
-
+        :raise AttributeError: if no view exists for that model, and no method
+            ``_get_default_<view_type>_view`` exists for the view type
         """
         IrUiView = self.env['ir.ui.view'].sudo()
 
@@ -2769,11 +2776,16 @@ class Base(models.AbstractModel):
 
         This method is meant to be overriden by models needing additional keys.
 
-        :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'list', ...)
-        :param dict options: bool options to return additional features:
-            - bool mobile: true if the web client is currently using the responsive mobile view
-              (to use kanban views instead of list views for x2many fields)
+        :param view_id: id of the view or None
+        :type view_id: int or None
+        :param str view_type: type of the view to return if view_id is None,
+            one of ``'form'``, ``'list'``, ...
+        :param options: options to return additional features
+
+            :param bool mobile: true if the web client is currently using the
+                responsive mobile view (to use kanban views instead of list
+                views for x2many fields)
+
         :return: a cache key
         :rtype: tuple
         """
@@ -2789,20 +2801,28 @@ class Base(models.AbstractModel):
     def _get_view_cache(self, view_id=None, view_type='form', **options):
         """ Get the view information ready to be cached
 
-        The cached view includes the postprocessed view, including inherited views, for all groups.
-        The blocks restricted to groups must therefore be removed after calling this method
-        for users not part of the given groups.
+        The cached view includes the postprocessed view, including inherited
+        views, for all groups. The blocks restricted to groups must therefore
+        be removed after calling this method for users not part of the given
+        groups.
 
-        :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'list', ...)
-        :param dict options: boolean options to return additional features:
-            - bool mobile: true if the web client is currently using the responsive mobile view
-              (to use kanban views instead of list views for x2many fields)
+        :param view_id: id of the view or None
+        :type view_id: int or None
+        :param str view_type: type of the view to return if view_id is None,
+            one of ``'form'``, ``'list'``, ...
+        :param options: options to return additional features
+
+            :param bool mobile: true if the web client is currently using the
+                responsive mobile view (to use kanban views instead of list
+                views for x2many fields)
+
         :return: a dictionnary including
+
             - string arch: the architecture of the view (including inherited views, postprocessed, for all groups)
             - int id: the view id
             - string model: the view model
             - dict models: the fields of the models used in the view (including sub-views)
+
         :rtype: dict
         """
         # Get the view arch and all other attributes describing the composition of the view
@@ -2828,25 +2848,31 @@ class Base(models.AbstractModel):
     def get_view(self, view_id=None, view_type='form', **options):
         """ get_view([view_id | view_type='form'])
 
-        Get the detailed composition of the requested view like model, view architecture.
+        Get the detailed composition of the requested view like model, view
+        architecture.
 
         The return of the method can only depend on the requested view types,
         access rights (views or other records), view access rules, options,
         context lang and TYPE_view_ref (other context values cannot be used).
 
-        :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'list', ...)
-        :param dict options: boolean options to return additional features:
-            - bool mobile: true if the web client is currently using the responsive mobile view
-            (to use kanban views instead of list views for x2many fields)
-        :return: composition of the requested view (including inherited views and extensions)
+        :param view_id: id of the view or None
+        :type view_id: int or None
+        :param str view_type: type of the view to return if view_id is None,
+            one of ``'form'``, ``'list'``, ...
+        :param options: options to return additional features
+
+            :param bool mobile: true if the web client is currently using the
+                responsive mobile view (to use kanban views instead of list
+                views for x2many fields)
+
+        :return: composition of the requested view (including inherited views
+            and extensions)
         :rtype: dict
         :raise AttributeError:
 
-            * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
+            * if the inherited view has unknown position to work with other
+              than 'before', 'after', 'inside', 'replace'
             * if some tag other than 'position' is found in parent view
-
-        :raise Invalid ArchitectureError: if there is view type other than form, list, calendar, search etc... defined on the structure
         """
         self.browse().check_access('read')
 

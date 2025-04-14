@@ -74,6 +74,7 @@ class IrFieldsConverter(models.AbstractModel):
 
         The field_path value is computed based on the last field in the chain.
         for example,
+
             - path_field for 'Private address' at childA_1 is ['partner_id', 'type']
             - path_field for 'childA_1' is ['partner_id']
 
