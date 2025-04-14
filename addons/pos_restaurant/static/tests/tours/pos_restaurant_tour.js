@@ -604,6 +604,7 @@ registry.category("web_tour.tours").add("RestaurantPresetTakeoutTour", {
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.selectPreset("Takeout"),
+            Dialog.discard(),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Deco Addict"),
             ProductScreen.clickPayButton(),

@@ -17,12 +17,8 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { user } from "@web/core/user";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
-import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
-import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
-
-const { DateTime } = luxon;
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -167,20 +163,7 @@ export class Navbar extends Component {
     }
 
     async openPresetTiming() {
-        const order = this.pos.getOrder();
-        const data = await makeAwaitable(this.dialog, PresetSlotsPopup);
-
-        if (data) {
-            if (order.preset_id.id != data.presetId) {
-                await this.pos.selectPreset(this.pos.models["pos.preset"].get(data.presetId));
-            }
-
-            order.preset_time = data.slot.datetime;
-            if (data.slot.datetime > DateTime.now()) {
-                this.pos.addPendingOrder([order.id]);
-                await this.pos.syncAllOrders();
-            }
-        }
+        await this.pos.openPresetTiming();
     }
 
     get mainButton() {
