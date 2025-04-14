@@ -2471,7 +2471,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             moves = self - search_moves
         else:
             raise UserError(_('Operation not supported'))
-        return len(moves) == len(self)
+        return bool(moves)
 
     def _break_mto_link(self, parent_move):
         self.move_orig_ids = [Command.unlink(parent_move.id)]
