@@ -59,3 +59,20 @@ class IrActionsServer(models.Model):
             if payload:
                 eval_context["payload"] = payload
         return eval_context
+
+    def action_open_automation(self):
+        return {
+            "type": "ir.actions.act_window",
+            "target": "current",
+            "views": [[False, "form"]],
+            "res_model": self.base_automation_id._name,
+            "res_id": self.base_automation_id.id,
+        }
+
+
+# Also extend IrCron because of missing methods due to delegation inheritance
+class IrCron(models.Model):
+    _inherit = "ir.cron"
+
+    def action_open_automation(self):
+        return self.ir_actions_server_id.action_open_automation()
