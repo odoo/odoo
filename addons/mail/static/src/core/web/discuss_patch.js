@@ -39,4 +39,8 @@ patch(Discuss.prototype, {
             () => [this.store.inbox.counter]
         );
     },
+
+    get breadcrumbs() {
+        return this.env.config?.breadcrumbs ?? [];
+    },
 });
