@@ -649,7 +649,9 @@ class IrActionsReport(models.Model):
     @api.model
     def _get_report(self, report_ref):
         """Get the report (with sudo) from a reference
-        report_ref: can be one of
+
+        :param report_ref: can be one of
+
             - ir.actions.report id
             - ir.actions.report record
             - ir.model.data reference to ir.actions.report
@@ -738,10 +740,12 @@ class IrActionsReport(models.Model):
     @api.model
     def get_available_barcode_masks(self):
         """ Hook for extension.
+
         This function returns the available QR-code masks, in the form of a
         list of (code, mask_function) elements, where code is a string identifying
         the mask uniquely, and mask_function is a function returning a reportlab
         Drawing object with the result of the mask, and taking as parameters:
+
             - width of the QR-code, in pixels
             - height of the QR-code, in pixels
             - reportlab Drawing object containing the barcode to apply the mask on

@@ -24,10 +24,13 @@ class Base(models.AbstractModel):
         """Get a country likely to match the phone of the record.
 
         By default we get it from:
-        - The country field of the target record (self) based on `_phone_get_country_field`
-        - The country of any mail partner (e.g. self.partner_ids[2].phone), considering we are
-          going to contact the customer(s) of the record. Done using generic
-          `_mail_get_partner_fields` method allowing to find record customers;
+
+        - The country field of the target record (self) based on
+          :meth:`_phone_get_country_field`;
+        - The country of any mail partner (e.g. ``self.partner_ids[2].phone``),
+          considering we are going to contact the customer(s) of the record.
+          Done using generic :meth:`_mail_get_partner_fields` method allowing
+          to find record customers;
         """
         country_by_record = {}
         record_country_fname = self._phone_get_country_field()
@@ -51,18 +54,18 @@ class Base(models.AbstractModel):
         """ Format and return number. This number can be found using a field
         (in which case self should be a singleton recordet), or directly given
         if the formatting itself is what matter. Field name can be found
-        automatically using '_phone_get_number_fields'
+        automatically using :meth:`_phone_get_number_fields`.
 
         :param str fname: if number is not given, fname indicates the field to
-          use to find the number; otherwise use '_phone_get_number_fields';
+          use to find the number; otherwise use :meth:`_phone_get_number_fields`.;
         :param str number: number to format (in which case fields-based computation
           is skipped);
         :param <res.country> country: country used for formatting number; otherwise
-          it is fetched based on record, using '_phone_get_country_field';
+          it is fetched based on record, using :meth:`_phone_get_number_fields`.;
         :param str force_format: stringified version of format globals; should be
-          one of 'E164', 'INTERNATIONAL', 'NATIONAL' or 'RFC3966';
+          one of ``'E164'``, ``'INTERNATIONAL'``, ``'NATIONAL'`` or ``'RFC3966'``;
         :param bool raise_exception: raise if formatting is not possible (notably
-          wrong formatting, invalid country information, ...). Otherwise False
+          wrong formatting, invalid country information, ...). Otherwise ``False``
           is returned;
 
         :return: formatted number. If formatting is not possible ``False`` is
@@ -94,7 +97,7 @@ class Base(models.AbstractModel):
 
     def _phone_format_number(self, number, country, force_format='E164', raise_exception=False):
         """ Format and return number according to the asked format. This is
-        mainly a small helper around 'phone_validation.phone_format'."""
+        mainly a small helper around :func:`phone_validation.phone_format`."""
         if not number:
             return False
 

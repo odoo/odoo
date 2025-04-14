@@ -1052,6 +1052,7 @@ class IrActionsServer(models.Model):
         active_ids (optional)
            ids of the current records (mass mode). If ``active_ids`` and
            ``active_id`` are present, ``active_ids`` is given precedence.
+
         :return: an ``action_id`` to be executed, or ``False`` is finished
                  correctly without return action
         """

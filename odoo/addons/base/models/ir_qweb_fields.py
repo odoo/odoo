@@ -59,19 +59,53 @@ class IrQwebField(models.AbstractModel):
 
     @api.model
     def get_available_options(self):
-        """
-            Get the available option informations.
+        """ Get the available option informations.
 
-            Returns a dict of dict with:
-            * key equal to the option key.
-            * dict: type, params, name, description, default_value
-            * type:
-                'string'
-                'integer'
-                'float'
-                'model' (e.g. 'res.partner')
-                'array'
-                'selection' (e.g. [key1, key2...])
+        :rtype: dict[str, dict[str, Any]]
+        :return: A dictionnary that maps option names' to their settings.
+
+            The settings are dict themselves and have the following keys:
+
+            type
+
+                Guaranteed, one of ``'string'``, ``'integer'``, ``'float'``,
+                ``'model'``, ``'array'``, or ``'selection'``.
+
+            string
+
+                Guaranteed
+
+            description
+
+                Optional
+
+            required
+
+                Optional, is assumed ``False`` when absent, otherwise
+                is either ``True`` or a string.
+
+            params
+
+                Optional
+
+            default_value
+
+                Optional, the default value, as a json-friendly type.
+
+            Example::
+
+                {
+                    <option>: {
+                        # guaranteed
+                        'type': ...,
+                        'string': ...,
+                        # optional
+                        'default_value': ...,
+                        'description': ...,
+                        'params': ...,
+                        'required': ...,
+                    }
+                }
         """
         return {}
 

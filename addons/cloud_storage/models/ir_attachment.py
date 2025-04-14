@@ -44,7 +44,7 @@ class IrAttachment(models.Model):
     def _generate_cloud_storage_blob_name(self):
         """
         Generate a unique blob name for the attachment
-        :param attachment: an ir.attachment record
+
         :return: A unique blob name str
         """
         return f'{self.id}/{uuid.uuid4()}/{self.name}'
@@ -54,7 +54,7 @@ class IrAttachment(models.Model):
         """
         Generate a cloud blob url without signature or token for the attachment.
         This url is only used to identify the cloud blob.
-        :param attachment: an ir.attachment record
+
         :return: A cloud blob url str
         """
         raise NotImplementedError()
@@ -63,10 +63,13 @@ class IrAttachment(models.Model):
         """
         Generate the download info for the public client to directly download
         the attachment's blob from the cloud storage.
-        :param attachment: an ir.attachment record
+
         :return: An download_info dictionary containing:
-            * download_url: cloud storage url with permission to download the file
-            * time_to_expiry: the time in seconds before the download url expires
+
+            download_url
+                cloud storage url with permission to download the file
+            time_to_expiry
+                the time in seconds before the download url expires
         """
         raise NotImplementedError()
 
@@ -74,13 +77,16 @@ class IrAttachment(models.Model):
         """
         Generate the upload info for the public client to directly upload a
         file to the cloud storage.
-        :param attachment: an ir.attachment record
+
         :return: An upload_info dictionary containing:
-            * upload_url: cloud storage url with permission to upload the file
-            * method: the request method used to upload the file
-            * response_status: the status of the response for a successful
-                upload request
-            * [Optionally] headers: a dictionary of headers to be added to the
-                upload request
+
+            upload_url
+                cloud storage url with permission to upload the file
+            method
+                the request method used to upload the file
+            response_status
+                the status of the response for a successful upload request
+            [Optionally] headers
+                a dictionary of headers to be added to the upload request
         """
         raise NotImplementedError()

@@ -96,7 +96,7 @@ class IrActionsReport(models.Model):
                            order lines.
         :param recordset order: the sale order from where to take the values
         :param recordset order_line: the sale order line from where to take the values (optional)
-        return: None
+        :return: None
         """
         document.ensure_one()
         order.ensure_one()
