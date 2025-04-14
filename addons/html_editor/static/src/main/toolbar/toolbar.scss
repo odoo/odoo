@@ -57,5 +57,13 @@
 .o-we-toolbar-dropdown {
     min-width: fit-content;
     padding: 2px;
-}
 
+    .btn:not(.active) {
+        border: none;
+        background-color: transparent;
+
+        &:hover {
+            background-color: $dropdown-link-hover-bg;
+        }
+    }
+}
