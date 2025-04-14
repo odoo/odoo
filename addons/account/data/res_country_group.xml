@@ -18,5 +18,18 @@
                 ref('base.state_nl_bq3'),
             ])]"/>
         </record>
+
+        <record id="intrastat" model="res.country.group">
+            <field name="name">Intrastat</field>
+            <field name="code">INTRASTAT</field>
+            <field name="country_ids" eval="[Command.set([
+                ref('base.at'),ref('base.be'),ref('base.bg'),ref('base.hr'),ref('base.cy'),
+                ref('base.cz'),ref('base.dk'),ref('base.ee'),ref('base.fi'),ref('base.fr'),
+                ref('base.de'),ref('base.gr'),ref('base.hu'),ref('base.ie'),ref('base.it'),
+                ref('base.lv'),ref('base.lt'),ref('base.lu'),ref('base.mt'),ref('base.nl'),
+                ref('base.pl'),ref('base.pt'),ref('base.ro'),ref('base.sk'),ref('base.si'),
+                ref('base.es'),ref('base.se'),ref('base.uk'),ref('base.xi'),
+            ])]"/>
+        </record>
     </data>
 </odoo>
