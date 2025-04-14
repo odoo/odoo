@@ -11,6 +11,7 @@ class ResPartner(models.Model):
         default=lambda self: self.env.ref('l10n_latam_base.it_vat', raise_if_not_found=False),
         inverse="_inverse_vat",  # To trigger the vat checking
         help="The type of identification")
+    is_vat = fields.Boolean(related='l10n_latam_identification_type_id.is_vat')
     vat = fields.Char(string='Identification Number', help="Identification Number for selected type")
 
     @api.model
