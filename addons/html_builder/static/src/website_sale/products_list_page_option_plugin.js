@@ -1,3 +1,4 @@
+import { ProductsListPageOption } from "@html_builder/website_sale/products_list_page_option";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
@@ -9,7 +10,7 @@ class ProductsListPageOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(15, {
-                template: "website_sale.ProductsListPageOption",
+                OptionComponent: ProductsListPageOption,
                 selector: "main:has(.o_wsale_products_page)",
                 applyTo:
                     "#products_grid .o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table",

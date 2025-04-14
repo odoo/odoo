@@ -108,14 +108,11 @@
     </BuilderRow>
 </BuilderContext>
 
-<!-- TODO need to fetch _get_product_sort_mapping to remove duplicate data -->
 <BuilderRow label.translate="Default Sort">
     <BuilderSelect action="'setDefaultSort'">
-        <BuilderSelectItem actionValue="'website_sequence asc'">Featured</BuilderSelectItem>
-        <BuilderSelectItem actionValue="'publish_date desc'">Newest Arrivals</BuilderSelectItem>
-        <BuilderSelectItem actionValue="'name asc'">Name (A-Z)</BuilderSelectItem>
-        <BuilderSelectItem actionValue="'list_price asc'">Price - Low to High</BuilderSelectItem>
-        <BuilderSelectItem actionValue="'list_price desc'">Price - High to Low</BuilderSelectItem>
+        <t t-foreach="products_sort_mapping" t-as="queryAndLabel" t-key="queryAndLabel_index">
+            <BuilderSelectItem actionValue="queryAndLabel.query" t-out="queryAndLabel.label"/>
+        </t>
     </BuilderSelect>
 </BuilderRow>
 
@@ -129,4 +126,3 @@
 </t>
 
 </templates>
-
