@@ -1461,7 +1461,7 @@ describe(`new urls`, () => {
         expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(1);
         expect.verifySteps([
             "get current_action-null",
-            'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"views":[[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form"}',
+            'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"views":[[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             'set current_action-{"id":200,"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"domain":[["id","=",1]]}',
         ]);
 

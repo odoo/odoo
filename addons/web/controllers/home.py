@@ -11,6 +11,7 @@ from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.service import security
+from odoo.tools.misc import hmac
 from odoo.tools.translate import _
 from .utils import (
     ensure_db,
@@ -65,8 +66,18 @@ class Home(http.Controller):
             if request.env.user:
                 request.env.user._on_webclient_bootstrap()
             context = request.env['ir.http'].webclient_rendering_context()
+
+            # Add the browser_cache_secret here and not in session_info() to ensure that it is only in
+            # the webclient page, which is cache-control: "no-store" (see below)
+            # Reuse session security related fields, to change the key when a security event
+            # occurs for the user, like a password or 2FA change.
+            hmac_payload = request.env.user._session_token_get_values()  # already ordered
+            session_info = context.get("session_info")
+            session_info['browser_cache_secret'] = hmac(request.env(su=True), "browser_cache_key", hmac_payload)
+
             response = request.render('web.webclient_bootstrap', qcontext=context)
             response.headers['X-Frame-Options'] = 'DENY'
+            response.headers['Cache-Control'] = 'no-store'
             return response
         except AccessError:
             return request.redirect('/web/login?error=access')

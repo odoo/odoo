@@ -92,10 +92,9 @@ export const fieldService = {
             if (typeof resModel !== "string" || !resModel) {
                 throw new Error(`Invalid model name: ${resModel}`);
             }
-            return orm.cached.call(resModel, "fields_get", [
-                options.fieldNames,
-                options.attributes,
-            ]);
+            return orm
+                .cached()
+                .call(resModel, "fields_get", [options.fieldNames, options.attributes]);
         }
 
         /**

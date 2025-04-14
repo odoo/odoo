@@ -68,7 +68,8 @@ rpc._rpc = function (url, params, settings) {
         return rpcCache.read(
             params?.method || url, // table
             JSON.stringify({ url, params }), // key
-            () => rpc._rpc(url, params, omit(settings, "cached"))
+            () => rpc._rpc(url, params, omit(settings, "cached")),
+            typeof settings.cached === "boolean" ? {} : settings.cached // cached can be boolean or an object with options (or an empty object of course)
         );
     }
     const XHR = browser.XMLHttpRequest;
