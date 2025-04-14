@@ -340,6 +340,7 @@ class AccountMove(models.Model):
 
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
         # EXTENDS 'account'
+        self.ensure_one()
         if filetype == 'fatturapa':
             if fatturapa_attachment := self.l10n_it_edi_attachment_id:
                 return {
