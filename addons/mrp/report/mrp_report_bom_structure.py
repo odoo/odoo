@@ -119,6 +119,7 @@ class ReportBomStructure(models.AbstractModel):
         lines = self._get_bom_data(bom, warehouse, product=product, line_qty=bom_quantity, level=0)
         production_capacities = self._compute_production_capacities(bom_quantity, lines)
         lines.update(production_capacities)
+    
         return {
             'lines': lines,
             'variants': bom_product_variants,
@@ -212,6 +213,7 @@ class ReportBomStructure(models.AbstractModel):
 
         prod_cost = 0
         attachment_ids = []
+
         if not is_minimized:
             if product:
                 prod_cost = product.uom_id._compute_price(product.with_company(company).standard_price, bom.product_uom_id) * current_quantity
@@ -226,6 +228,7 @@ class ReportBomStructure(models.AbstractModel):
         key = product.id
         bom_key = bom.id
         qty_product_uom = bom.product_uom_id._compute_quantity(current_quantity, product.uom_id or bom.product_tmpl_id.uom_id)
+        # delay is wrong here
         self._update_product_info(product, bom_key, product_info, warehouse, qty_product_uom, bom=bom, parent_bom=parent_bom, parent_product=parent_product)
         route_info = product_info[key].get(bom_key, {})
         quantities_info = {}
@@ -293,9 +296,12 @@ class ReportBomStructure(models.AbstractModel):
                 continue
             line_quantity = line_quantities.get(line.id, 0.0)
             if line.child_bom_id:
+                print("line.child_bom_id", line.product_id)
                 component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
                                                parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock)
             else:
+                print("line.child_bom_id", line.product_id)
+                print("component_foreecasted", components_closest_forecasted)   
                 component = self.with_context(
                     components_closest_forecasted=components_closest_forecasted,
                 )._get_component_data(bom, product, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
@@ -326,6 +332,7 @@ class ReportBomStructure(models.AbstractModel):
         if level == 0:
             # Gives a unique key for the first line that indicates if product is ready for production right now.
             bom_report_line['components_available'] = all([c['stock_avail_state'] == 'available' for c in components])
+
         return bom_report_line
 
     @api.model
@@ -388,11 +395,14 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def _get_quantities_info(self, product, bom_uom, product_info, parent_bom=False, parent_product=False):
+        location = self.env.context.get('location')
+        product_ctx = product.with_context(location=location) if location else product
         quantities_info = {
-            'free_qty': max(product.uom_id._compute_quantity(product.free_qty, bom_uom), 0) if product.detailed_type == 'product' else 0,
-            'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if product.detailed_type == 'product' else 0,
+            'free_qty': max(product_ctx.uom_id._compute_quantity(product_ctx.free_qty, bom_uom), 0) if product_ctx.detailed_type == 'product' else 0,
+            'on_hand_qty': product_ctx.uom_id._compute_quantity(product_ctx.qty_available, bom_uom) if product_ctx.detailed_type == 'product' else 0,
             'stock_loc': 'in_stock',
         }
+    
         quantities_info['free_to_manufacture_qty'] = quantities_info['free_qty']
         return quantities_info
 
@@ -407,6 +417,7 @@ class ReportBomStructure(models.AbstractModel):
             # Need more quantity than a single line, might change with additional quantity
             product_info[key][bom_key] = self._get_resupply_route_info(
                 warehouse, product, quantity + product_info[key][bom_key].get('qty_checked'), product_info, bom, parent_bom, parent_product)
+
 
     @api.model
     def _get_byproducts_lines(self, product, bom, bom_quantity, level, total, index):
@@ -589,6 +600,8 @@ class ReportBomStructure(models.AbstractModel):
         if not found_rules:
             return {}
         rules_delay = sum(rule.delay for rule in found_rules)
+
+
         return self.with_context(parent_bom=parent_bom)._format_route_info(found_rules, rules_delay, warehouse, product, bom, quantity)
 
     @api.model

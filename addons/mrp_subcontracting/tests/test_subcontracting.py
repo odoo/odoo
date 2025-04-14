@@ -1133,6 +1133,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'delay': 5
         })
 
+
         self.bom.produce_delay = 1
         self.bom.days_to_prepare_mo = 3
 
@@ -1142,13 +1143,13 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.env['stock.quant']._update_available_quantity(self.comp2, subcontractor_location, 4)
 
         # Generate a report for 3 products: all products should be ready for production
-        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 3)
+        bom_data = self.env['report.mrp.report_bom_structure'].with_context(location=subcontractor_location.id)._get_report_data(self.bom.id, 3)
 
         self.assertTrue(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
-            self.assertEqual(component['quantity_on_hand'], 4)
+            self.assertEqual(component['quantity'], 3)
             self.assertEqual(component['availability_state'], 'available')
-        self.assertEqual(bom_data['lines']['earliest_capacity'], 3)
+        self.assertEqual(bom_data['lines']['earliest_capacity'], 4)
         self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
         self.assertTrue('leftover_capacity' not in bom_data['lines']['earliest_date'])
         self.assertTrue('leftover_date' not in bom_data['lines']['earliest_date'])
