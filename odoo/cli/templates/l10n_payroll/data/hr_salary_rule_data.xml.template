@@ -15,7 +15,6 @@
 result_rate = payslip.rule_parameter('l10n_{{code}}_social_employee_rate')
 result = categories.BASIC
         </field>
-        <field name="appears_on_payroll_report" eval="True"/>
         <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
     </record>
 
@@ -30,7 +29,6 @@ result = categories.BASIC
 result_rate = payslip.rule_parameter('l10n_{{code}}_social_employer_rate')
 result = categories.BASIC
         </field>
-        <field name="appears_on_payroll_report" eval="True"/>
         <field name="appears_on_payslip" eval="False"/>
         <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
     </record>
@@ -45,7 +43,6 @@ result = categories.BASIC
         <field name="amount_python_compute">
 result = categories['SOCIAL.EMPLOYEE']
         </field>
-        <field name="appears_on_payroll_report" eval="True"/>
         <field name="appears_on_payslip" eval="True"/>
         <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
     </record>
@@ -60,7 +57,6 @@ result = categories['SOCIAL.EMPLOYEE']
         <field name="amount_python_compute">
 result = categories['SOCIAL.EMPLOYER']
         </field>
-        <field name="appears_on_payroll_report" eval="True"/>
         <field name="appears_on_payslip" eval="False"/>
         <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
     </record>
@@ -75,7 +71,6 @@ result = categories['SOCIAL.EMPLOYER']
         <field name="amount_python_compute">
 result = categories.GROSS
         </field>
-        <field name="appears_on_payroll_report" eval="True"/>
         <field name="appears_on_payslip" eval="True"/>
         <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
     </record>
@@ -97,7 +92,6 @@ for low, high, prev, rate in brackets:
         if low &lt;= taxable &lt; high:
             result = -(prev + (taxable - low) * rate / 100)
         </field>
-        <field name="appears_on_payroll_report" eval="True"/>
         <field name="appears_on_payslip" eval="True"/>
         <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
     </record>
@@ -123,7 +117,6 @@ elif children == 3:
 elif children &gt;= 4:
     result = amounts[0] + amounts[1] + amounts[2] + (children - 3) * amounts[3]
         </field>
-        <field name="appears_on_payroll_report" eval="True"/>
         <field name="appears_on_payslip" eval="True"/>
         <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
     </record>
