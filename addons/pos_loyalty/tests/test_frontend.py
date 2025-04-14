@@ -9,7 +9,7 @@ from odoo import Command
 
 
 @tagged("post_install", "-at_install")
-class TestUi(TestPointOfSaleHttpCommon):
+class TestPoSLoyaltyCommon(TestPointOfSaleHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -130,6 +130,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             program.write({'name': name})
             programs[name] = program
         return programs
+
+
+@tagged("post_install", "-at_install")
+class TestUi(TestPoSLoyaltyCommon):
 
     def test_pos_loyalty_tour_basic(self):
         """PoS Loyalty Basic Tour"""
