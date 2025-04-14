@@ -5,7 +5,26 @@
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
-        <record id="product.product_attribute_2" model="product.attribute">
+        <record id="product.pa_color" model="product.attribute">
+            <field name="preview_variants">hover</field>
+        </record>
+        <record id="product.pa_legs" model="product.attribute">
+            <field name="preview_variants">visible</field>
+        </record>
+        <record id="product.pa_options" model="product.attribute">
+            <field name="visibility">hidden</field>
+        </record>
+        <record id="product.pa_size" model="product.attribute">
+            <field name="preview_variants">visible</field>
+        </record>
+        <record id="product.pa_fabric" model="product.attribute">
+            <field name="preview_variants">visible</field>
+            <field name="is_thumbnail_visible" eval="True"/>
+        </record>
+        <record id="product.pa_extras_pizza" model="product.attribute">
+            <field name="visibility">hidden</field>
+        </record>
+        <record id="product.pa_shoe_size" model="product.attribute">
             <field name="visibility">hidden</field>
         </record>
 
@@ -842,8 +861,14 @@
 
         <record id="product_1_attribute_3_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="website_sale.product_product_1_product_template"/>
-            <field name="attribute_id" ref="product.product_attribute_3"/>
-            <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_5'), ref('product.product_attribute_value_6')])]"/>
+            <field name="attribute_id" ref="product.pa_duration"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_duration_year_1'),
+                    ref('product.pav_duration_year_2'),
+                    ref('product.pav_duration_year_3'),
+                ])]"/>
         </record>
 
         <!-- Handle automatically created product.template.attribute.value -->
@@ -856,7 +881,13 @@
                 'xml_id': 'website_sale.product_1_attribute_3_value_2',
                 'record': obj().env.ref('website_sale.product_1_attribute_3_product_template_attribute_line').product_template_value_ids[1],
                 'noupdate': True,
-            }]"/>
+            },
+            {
+                'xml_id': 'website_sale.product_1_attribute_3_value_3',
+                'record': obj().env.ref('website_sale.product_1_attribute_3_product_template_attribute_line').product_template_value_ids[2],
+                'noupdate': True,
+            },
+            ]"/>
         </function>
 
         <function model="ir.model.data" name="_update_xmlids">
@@ -868,7 +899,13 @@
                 'xml_id': 'website_sale.product_product_1b',
                 'record': obj().env.ref('website_sale.product_product_1_product_template')._get_variant_for_combination(obj().env.ref('website_sale.product_1_attribute_3_value_2')),
                 'noupdate': True,
-            },]"/>
+            },
+            {
+                'xml_id': 'website_sale.product_product_1c',
+                'record': obj().env.ref('website_sale.product_product_1_product_template')._get_variant_for_combination(obj().env.ref('website_sale.product_1_attribute_3_value_3')),
+                'noupdate': True,
+            },
+            ]"/>
         </function>
 
         <record id="product_product_1" model="product.product">
@@ -924,6 +961,10 @@
 
         <record id="sale.product_product_1_product_template" model="product.template">
             <field name="website_sequence">9985</field>
+            <field name="is_published" eval="True"/>
+        </record>
+
+        <record id="product.desk_organizer_product_template" model="product.template">
             <field name="is_published" eval="True"/>
         </record>
 

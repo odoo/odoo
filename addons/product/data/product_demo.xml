@@ -116,13 +116,25 @@
         <!-- the product template attribute lines have to be defined before creating the variants -->
         <record id="product_4_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="attribute_id" ref="product_attribute_1"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
+            <field name="attribute_id" ref="product.pa_legs"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_legs_steel'),
+                    ref('product.pav_legs_aluminium'),
+                    ref('product.pav_legs_custom'),
+                ])]"
+            />
         </record>
         <record id="product_4_attribute_2_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="attribute_id" ref="product_attribute_2"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"/>
+            <field name="attribute_id" ref="product.pa_color"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_color_white'),
+                    ref('product.pav_color_black'),
+                ])]"/>
         </record>
 
         <!--
@@ -199,6 +211,29 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_5-image.jpg"/>
         </record>
 
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'product.product_template_5',
+                    'record': obj().env.ref('product.product_product_5').product_tmpl_id,
+                    'noupdate': True,
+                }]"
+            />
+        </function>
+        <record id="product_5_options_attribute_line" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="product.product_template_5"/>
+            <field name="attribute_id" ref="product.pa_options"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_options_drawers'),
+                    ref('product.pav_options_file_cabinets'),
+                    ref('product.pav_options_under_desk_pedestals'),
+                    ref('product.pav_options_overhead_shelves'),
+            ])]"/>
+        </record>
+
         <record id="product_product_6" model="product.product">
             <field name="name">Large Cabinet</field>
             <field name="categ_id" ref="product_category_office"/>
@@ -238,6 +273,66 @@
             <field name='weight'>9.54</field>
             <field name="image_1920" type="base64" file="product/static/img/product_product_8-image.jpg"/>
         </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'product.product_template_8',
+                    'record': obj().env.ref('product.product_product_8').product_tmpl_id,
+                    'noupdate': True,
+                }]"
+            />
+        </function>
+        <record id="product_8_fabric_attribute_line" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="product.product_template_8"/>
+            <field name="attribute_id" ref="product.pa_fabric"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_fabric_wood'),
+                    ref('product.pav_fabric_glass'),
+                    ref('product.pav_fabric_metal'),
+            ])]"/>
+        </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[
+                {
+                    'xml_id': 'product.pav_large_desk_wood',
+                    'record': obj().env.ref('product.product_8_fabric_attribute_line').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'product.pav_large_desk_glass',
+                    'record': obj().env.ref('product.product_8_fabric_attribute_line').product_template_value_ids[1],
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'product.pav_large_desk_metal',
+                    'record': obj().env.ref('product.product_8_fabric_attribute_line').product_template_value_ids[2],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[
+                {
+                    'xml_id': 'product.product_product_8',
+                    'record': obj().env.ref('product.product_template_8')._get_variant_for_combination(obj().env.ref('product.pav_large_desk_wood')),
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'product.product_product_8_glass',
+                    'record': obj().env.ref('product.product_template_8')._get_variant_for_combination(obj().env.ref('product.pav_large_desk_glass')),
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'product.product_product_8_metal',
+                    'record': obj().env.ref('product.product_template_8')._get_variant_for_combination(obj().env.ref('product.pav_large_desk_metal')),
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
 
         <record id="product_product_9" model="product.product">
             <field name="name">Pedal Bin</field>
@@ -277,8 +372,14 @@
         <!-- the product template attribute lines have to be defined before creating the variants -->
         <record id="product_11_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
-            <field name="attribute_id" ref="product_attribute_1"/>
-            <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
+            <field name="attribute_id" ref="pa_legs"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_legs_steel'),
+                    ref('product.pav_legs_aluminium'),
+                ])]"
+            />
         </record>
 
         <function model="ir.model.data" name="_update_xmlids">
@@ -379,6 +480,28 @@
             <field name="description_sale">Left-sided workspace with storage</field>
             <field name="image_1920" type="base64" file="product/static/img/product_product_13-image.jpg"/>
         </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'product.product_template_13',
+                    'record': obj().env.ref('product.product_product_13').product_tmpl_id,
+                    'noupdate': True,
+                }]"
+            />
+        </function>
+        <record id="product_13_options_attribute_line" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="product.product_template_13"/>
+            <field name="attribute_id" ref="product.pa_options"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_options_drawers'),
+                    ref('product.pav_options_file_cabinets'),
+                    ref('product.pav_options_under_desk_pedestals'),
+                    ref('product.pav_options_overhead_shelves'),
+            ])]"/>
+        </record>
 
         <record id="product_product_16" model="product.product">
             <field name="name">Drawer Black</field>
@@ -440,15 +563,26 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_25-image.png"/>
             <field name="attribute_line_ids" eval="[
                 Command.create({
-                    'attribute_id': ref('product.product_attribute_2'),
+                    'attribute_id': ref('product.pa_color'),
                     'value_ids': [
                         Command.set([
-                            ref('product.product_attribute_value_3'),
-                            ref('product.product_attribute_value_color_wood')
+                            ref('product.pav_color_white'),
+                            ref('product.pav_color_black')
                         ])
                     ]
                 })
             ]"/>
+        </record>
+        <record
+            id="product_acoustic_bloc_screens_customization_attribute_line"
+            model="product.template.attribute.line"
+        >
+            <field name="product_tmpl_id" ref="product_template_acoustic_bloc_screens"/>
+            <field name="attribute_id" ref="product.pa_customization"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([ref('product.pav_custom')])]"
+            />
         </record>
 
         <record id="product_product_27" model="product.product">
@@ -490,16 +624,89 @@
         </record>
 
         <record id="consu_delivery_01" model="product.product">
-            <field name="name">Three-Seat Sofa</field>
+            <field name="name">Two-Seat Sofa</field>
             <field name="categ_id" ref="product_category_office"/>
             <field name="standard_price">1000</field>
             <field name="list_price">1500</field>
             <field name="type">consu</field>
             <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
-            <field name="description_sale">Three Seater Sofa with Lounger in Steel Grey Colour</field>
+            <field name="description_sale">Two-Seater Sofa with Oak Wood Frame</field>
             <field name="default_code">FURN_8999</field>
             <field name="image_1920" type="base64" file="product/static/img/product_product_d01-image.jpg"/>
+        </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'product.sofa_product_template',
+                    'record': obj().env.ref('product.consu_delivery_01').product_tmpl_id,
+                    'noupdate': True,
+                }]"
+            />
+        </function>
+        <record id="sofa_fabric_attribute_line" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="product.sofa_product_template"/>
+            <field name="attribute_id" ref="product.pa_fabric"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_fabric_linen'),
+                    ref('product.pav_fabric_velvet'),
+                    ref('product.pav_fabric_leather'),
+            ])]"/>
+        </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[
+                {
+                    'xml_id': 'product.pav_sofa_linen',
+                    'record': obj().env.ref('product.sofa_fabric_attribute_line').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'product.pav_sofa_velvet',
+                    'record': obj().env.ref('product.sofa_fabric_attribute_line').product_template_value_ids[1],
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'product.pav_sofa_leather',
+                    'record': obj().env.ref('product.sofa_fabric_attribute_line').product_template_value_ids[2],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[
+                {
+                    'xml_id': 'product.consu_delivery_01',
+                    'record': obj().env.ref('product.sofa_product_template')._get_variant_for_combination(obj().env.ref('product.pav_sofa_linen')),
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'product.consu_delivery_01_velvet',
+                    'record': obj().env.ref('product.sofa_product_template')._get_variant_for_combination(obj().env.ref('product.pav_sofa_velvet')),
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'product.consu_delivery_01_leather',
+                    'record': obj().env.ref('product.sofa_product_template')._get_variant_for_combination(obj().env.ref('product.pav_sofa_leather')),
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <record id="consu_delivery_01_velvet" model="product.product">
+            <field
+                name="image_1920"
+                type="base64"
+                file="product/static/img/product_product_d01b-image.jpg"
+            />
+        </record>
+        <record id="consu_delivery_01_leather" model="product.product">
+            <field
+                name="image_1920"
+                type="base64"
+                file="product/static/img/product_product_d01c-image.jpg"
+            />
         </record>
 
         <record id="product_product_local_delivery" model="product.product">
@@ -526,12 +733,6 @@
             <field name="categ_id" ref="product_category_outdoor_furniture"/>
             <field name="list_price">589</field>
             <field name="image_1920" type="base64" file="product/static/img/dining_table.png"/>
-            <field name="attribute_line_ids" eval="[
-                Command.create({
-                    'attribute_id': ref('pa_extra_options'),
-                    'value_ids': [Command.set([ref('pav_warranty'), ref('pav_cleaning_kit'), ref('pav_protection_kit')])],
-                }),
-            ]"/>
         </record>
 
         <record id="desk_organizer" model="product.product">
@@ -555,30 +756,6 @@
                 }]"
             />
         </function>
-        <record id="desk_organizer_size" model="product.template.attribute.line">
-            <field name="product_tmpl_id" ref="product.desk_organizer_product_template"/>
-            <field name="attribute_id" ref="size_attribute"/>
-            <field
-                name="value_ids"
-                eval="[(6, 0, [
-                    ref('size_attribute_s'),
-                    ref('size_attribute_m'),
-                    ref('size_attribute_l'),
-                ])]"
-            />
-        </record>
-        <record id="desk_organizer_fabric" model="product.template.attribute.line">
-            <field name="product_tmpl_id" ref="product.desk_organizer_product_template"/>
-            <field name="attribute_id" ref="fabric_attribute"/>
-            <field
-                name="value_ids"
-                eval="[(6, 0, [
-                    ref('fabric_attribute_plastic'),
-                    ref('fabric_attribute_leather'),
-                    ref('fabric_attribute_custom'),
-                ])]"
-            />
-        </record>
 
         <record id="desk_pad" model="product.product">
             <field name="list_price">1.98</field>

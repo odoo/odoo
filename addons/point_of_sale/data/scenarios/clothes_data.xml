@@ -28,73 +28,60 @@
                     }]" />
         </function>
 
-        <record model="product.attribute" id="product_attribute_color">
-            <field name="name">Color</field>
-            <field name="create_variant">no_variant</field>
-            <field name="display_type">color</field>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_black">
-            <field name="name">Black</field>
-            <field name="attribute_id" ref="product_attribute_color"/>
-            <field name="html_color">#FFFFFF</field>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_white">
-            <field name="name">White</field>
-            <field name="attribute_id" ref="product_attribute_color"/>
-            <field name="html_color">#000000</field>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_purple">
-            <field name="name">Purple</field>
-            <field name="attribute_id" ref="product_attribute_color"/>
-            <field name="html_color">#9370DB</field>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_green">
-            <field name="name">Green</field>
-            <field name="attribute_id" ref="product_attribute_color"/>
-            <field name="html_color">#6C926D</field>
-        </record>
-
         <record model="product.template.attribute.line" id="product_attribute_line_color">
             <field name="product_tmpl_id" ref="point_of_sale.casual_t_shirt_product_template"/>
-            <field name="attribute_id" ref="product_attribute_color"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_black'), ref('product_attribute_value_white'), ref('product_attribute_value_purple'), ref('product_attribute_value_green')])]" />
-        </record>
-
-        <record model="product.attribute" id="product_attribute_size">
-            <field name="name">Size</field>
-            <field name="create_variant">no_variant</field>
-            <field name="display_type">pills</field>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_s">
-            <field name="name">S</field>
-            <field name="attribute_id" ref="product_attribute_size"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_m">
-            <field name="name">M</field>
-            <field name="attribute_id" ref="product_attribute_size"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_l">
-            <field name="name">L</field>
-            <field name="attribute_id" ref="product_attribute_size"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_xl">
-            <field name="name">XL</field>
-            <field name="attribute_id" ref="product_attribute_size"/>
+            <field name="attribute_id" ref="product.pa_color"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_color_black'),
+                    ref('product.pav_color_white'),
+                    ref('product.pav_color_purple'),
+                    ref('product.pav_color_green'),
+            ])]" />
         </record>
 
         <record model="product.template.attribute.line" id="product_attribute_line_size">
             <field name="product_tmpl_id" ref="point_of_sale.casual_t_shirt_product_template"/>
-            <field name="attribute_id" ref="product_attribute_size"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_s'), ref('product_attribute_value_m'), ref('product_attribute_value_l'), ref('product_attribute_value_xl')])]" />
+            <field name="attribute_id" ref="product.pa_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_size_s'),
+                    ref('product.pav_size_m'),
+                    ref('product.pav_size_l'),
+                    ref('product.pav_size_xl'),
+                    ref('product.pav_size_2xl'),
+                    ref('product.pav_size_3xl'),
+                    ref('product.pav_size_4xl'),
+                    ref('product.pav_size_5xl'),
+                ])]" />
         </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'point_of_sale.casual_t_shirt_black',
+                    'record': obj().env.ref('point_of_sale.product_attribute_line_color').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'point_of_sale.casual_t_shirt_s',
+                    'record': obj().env.ref('point_of_sale.product_attribute_line_size').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_casual_t_shirt',
+                    'record': obj().env.ref('point_of_sale.casual_t_shirt_product_template')._get_variant_for_combination(obj().env.ref('point_of_sale.casual_t_shirt_s') + obj().env.ref('point_of_sale.casual_t_shirt_black')),
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
 
         <record model="product.product" id="t_shirt_slim">
             <field name="name">T shirt slim</field>
@@ -120,9 +107,41 @@
 
         <record model="product.template.attribute.line" id="product_attribute_line_size_slim_shirt">
             <field name="product_tmpl_id" ref="point_of_sale.t_shirt_slim_template"/>
-            <field name="attribute_id" ref="product_attribute_size"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_s'), ref('product_attribute_value_m'), ref('product_attribute_value_l'), ref('product_attribute_value_xl')])]" />
+            <field name="attribute_id" ref="product.pa_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_size_s'),
+                    ref('product.pav_size_m'),
+                    ref('product.pav_size_l'),
+                    ref('product.pav_size_xl'),
+                    ref('product.pav_size_2xl'),
+                    ref('product.pav_size_3xl'),
+                    ref('product.pav_size_4xl'),
+                    ref('product.pav_size_5xl'),
+                ])]" />
         </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'point_of_sale.t_shirt_slim_s',
+                    'record': obj().env.ref('point_of_sale.product_attribute_line_size_slim_shirt').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_t_shirt_slim',
+                    'record': obj().env.ref('point_of_sale.t_shirt_slim_template')._get_variant_for_combination(obj().env.ref('point_of_sale.t_shirt_slim_s')),
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
 
         <record model="product.product" id="t_shirt_black_embroidered">
             <field name="name">Black embroidered t-shirt</field>
@@ -148,11 +167,42 @@
 
         <record model="product.template.attribute.line" id="product_attribute_line_size_black_shirt">
             <field name="product_tmpl_id" ref="point_of_sale.t_shirt_black_embroidered_template"/>
-            <field name="attribute_id" ref="product_attribute_size"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_s'), ref('product_attribute_value_m'), ref('product_attribute_value_l'), ref('product_attribute_value_xl')])]" />
+            <field name="attribute_id" ref="product.pa_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_size_s'),
+                    ref('product.pav_size_m'),
+                    ref('product.pav_size_l'),
+                    ref('product.pav_size_xl'),
+                    ref('product.pav_size_2xl'),
+                    ref('product.pav_size_3xl'),
+                    ref('product.pav_size_4xl'),
+                    ref('product.pav_size_5xl'),
+                ])]" />
         </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'point_of_sale.t_shirt_black_embroidered_s',
+                    'record': obj().env.ref('point_of_sale.product_attribute_line_size_black_shirt').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_t_shirt_black_embroidered',
+                    'record': obj().env.ref('point_of_sale.t_shirt_black_embroidered_template')._get_variant_for_combination(obj().env.ref('point_of_sale.t_shirt_black_embroidered_s')),
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
 
-        <record model="product.product" id="product_blue_denim_jeans">
+        <record model="product.template" id="product_template_blue_denim_jeans">
             <field name="name">Blue Denim Jeans</field>
             <field name="list_price">80.00</field>
             <field name="standard_price">72.0</field>
@@ -164,23 +214,37 @@
             <field name="available_in_pos" eval="True"/>
             <field name="categ_id" ref="product_category_clothes"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_lower')])]" />
+            <field name="attribute_line_ids" eval="[
+                Command.create({
+                    'attribute_id': ref('product.pa_size'),
+                    'value_ids': [
+                        Command.set([
+                            ref('product.pav_size_s'),
+                            ref('product.pav_size_m'),
+                            ref('product.pav_size_l'),
+                            ref('product.pav_size_xl'),
+                            ref('product.pav_size_2xl'),
+                            ref('product.pav_size_3xl'),
+                            ref('product.pav_size_4xl'),
+                            ref('product.pav_size_5xl'),
+                        ])
+                    ]
+                })
+            ]"/>
         </record>
 
         <function model="ir.model.data" name="_update_xmlids">
-            <value model="base" eval="[{
-                        'xml_id': 'point_of_sale.blue_denim_jeans_template',
-                        'record': obj().env.ref('point_of_sale.product_blue_denim_jeans').product_tmpl_id,
-                        'noupdate': True,
-                    }]" />
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_blue_denim_jeans',
+                    'record': obj().env.ref('point_of_sale.product_template_blue_denim_jeans').product_variant_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
         </function>
 
-        <record model="product.template.attribute.line" id="product_attribute_line_size_jeans">
-            <field name="product_tmpl_id" ref="point_of_sale.blue_denim_jeans_template"/>
-            <field name="attribute_id" ref="product_attribute_size"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_s'), ref('product_attribute_value_m'), ref('product_attribute_value_l'), ref('product_attribute_value_xl')])]" />
-        </record>
-
-        <record model="product.product" id="product_blue_denim_jeans_slim">
+        <record model="product.template" id="product_template_blue_denim_jeans_slim">
             <field name="name">Light Blue Jeans Slim</field>
             <field name="list_price">70.00</field>
             <field name="standard_price">62.0</field>
@@ -192,21 +256,35 @@
             <field name="available_in_pos" eval="True"/>
             <field name="categ_id" ref="product_category_clothes"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_lower')])]" />
+            <field name="attribute_line_ids" eval="[
+                Command.create({
+                    'attribute_id': ref('product.pa_size'),
+                    'value_ids': [
+                        Command.set([
+                            ref('product.pav_size_s'),
+                            ref('product.pav_size_m'),
+                            ref('product.pav_size_l'),
+                            ref('product.pav_size_xl'),
+                            ref('product.pav_size_2xl'),
+                            ref('product.pav_size_3xl'),
+                            ref('product.pav_size_4xl'),
+                            ref('product.pav_size_5xl'),
+                        ])
+                    ]
+                })
+            ]"/>
         </record>
 
         <function model="ir.model.data" name="_update_xmlids">
-            <value model="base" eval="[{
-                        'xml_id': 'point_of_sale.blue_denim_jeans_slim_template',
-                        'record': obj().env.ref('point_of_sale.product_blue_denim_jeans_slim').product_tmpl_id,
-                        'noupdate': True,
-                    }]" />
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_blue_denim_jeans_slim',
+                    'record': obj().env.ref('point_of_sale.product_template_blue_denim_jeans_slim').product_variant_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
         </function>
-
-        <record model="product.template.attribute.line" id="product_attribute_line_size_jeans_slim">
-            <field name="product_tmpl_id" ref="point_of_sale.blue_denim_jeans_slim_template"/>
-            <field name="attribute_id" ref="product_attribute_size"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_s'), ref('product_attribute_value_m'), ref('product_attribute_value_l'), ref('product_attribute_value_xl')])]" />
-        </record>
 
         <record model="product.product" id="product_green_hood">
             <field name="name">Green Hood</field>
@@ -269,41 +347,18 @@
                     }]" />
         </function>
 
-        <record model="product.attribute" id="product_attribute_size_number">
-            <field name="name">Shoes size</field>
-            <field name="create_variant">no_variant</field>
-            <field name="display_type">pills</field>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_39">
-            <field name="name">39</field>
-            <field name="attribute_id" ref="product_attribute_size_number"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_40">
-            <field name="name">40</field>
-            <field name="attribute_id" ref="product_attribute_size_number"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_41">
-            <field name="name">41</field>
-            <field name="attribute_id" ref="product_attribute_size_number"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_42">
-            <field name="name">42</field>
-            <field name="attribute_id" ref="product_attribute_size_number"/>
-        </record>
-
-        <record model="product.attribute.value" id="product_attribute_value_43">
-            <field name="name">43</field>
-            <field name="attribute_id" ref="product_attribute_size_number"/>
-        </record>
-
         <record model="product.template.attribute.line" id="product_attribute_line_size_number">
             <field name="product_tmpl_id" ref="point_of_sale.product_odoo_sneakers_template"/>
-            <field name="attribute_id" ref="product_attribute_size_number"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_39'), ref('product_attribute_value_40'), ref('product_attribute_value_41'), ref('product_attribute_value_42'), ref('product_attribute_value_43')])]" />
+            <field name="attribute_id" ref="product.pa_shoe_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_shoe_size_39'),
+                    ref('product.pav_shoe_size_40'),
+                    ref('product.pav_shoe_size_41'),
+                    ref('product.pav_shoe_size_42'),
+                    ref('product.pav_shoe_size_43'),
+            ])]" />
         </record>
 
         <record id="jeans_combo" model="product.combo">
@@ -313,11 +368,11 @@
                 eval="[
                     Command.clear(),
                     Command.create({
-                        'product_id': ref('product_blue_denim_jeans_slim'),
+                        'product_id': ref('point_of_sale.product_blue_denim_jeans_slim'),
                         'extra_price': 0,
                     }),
                     Command.create({
-                        'product_id': ref('product_blue_denim_jeans'),
+                        'product_id': ref('point_of_sale.product_blue_denim_jeans'),
                         'extra_price': 0,
                     }),
                 ]"
@@ -331,15 +386,15 @@
                 eval="[
                     Command.clear(),
                     Command.create({
-                        'product_id': ref('casual_t_shirt'),
+                        'product_id': ref('point_of_sale.product_casual_t_shirt'),
                         'extra_price': 0,
                     }),
                     Command.create({
-                        'product_id': ref('t_shirt_slim'),
+                        'product_id': ref('point_of_sale.product_t_shirt_slim'),
                         'extra_price': 0,
                     }),
                     Command.create({
-                        'product_id': ref('t_shirt_black_embroidered'),
+                        'product_id': ref('point_of_sale.product_t_shirt_black_embroidered'),
                         'extra_price': 0,
                     }),
                 ]"
@@ -471,8 +526,16 @@
 
         <record model="product.template.attribute.line" id="product_attribute_line_sport_shoes">
             <field name="product_tmpl_id" ref="point_of_sale.sport_shoes_template"/>
-            <field name="attribute_id" ref="product_attribute_size_number"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_39'), ref('product_attribute_value_40'), ref('product_attribute_value_41'), ref('product_attribute_value_42'), ref('product_attribute_value_43')])]" />
+            <field name="attribute_id" ref="product.pa_shoe_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_shoe_size_39'),
+                    ref('product.pav_shoe_size_40'),
+                    ref('product.pav_shoe_size_41'),
+                    ref('product.pav_shoe_size_42'),
+                    ref('product.pav_shoe_size_43'),
+            ])]" />
         </record>
     </data>
 </odoo>
