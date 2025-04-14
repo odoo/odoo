@@ -129,3 +129,9 @@ class TestTranslationController(HttpCaseWithUserDemo):
         self.authenticate("user_test_portal", "user_test_portal")
         with self.assertRaises(JsonRpcException, msg="odoo.exceptions.AccessError"), mute_logger("odoo.http"):
             self._mock_translation_request({"message_id": self.message.id})
+
+    def test_unknown_language(self):
+        self.authenticate("admin", "admin")
+        with patch.dict(SAMPLE, {"src": "unknown_by_babel_but_known_by_google_api"}):
+            result = self._mock_translation_request({"message_id": self.message.id})
+        self.assertEqual(result["body"], "<p>Au mauvais temps, bonne tête.</p>")
