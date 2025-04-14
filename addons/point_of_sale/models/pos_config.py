@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -29,8 +28,7 @@ class PosConfig(models.Model):
         return self.env['stock.warehouse'].with_context(active_test=False).search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
-        journal = self.env['account.journal']._ensure_company_account_journal()
-        return journal
+        return self.env['account.journal']._ensure_company_pos_journal()
 
     def _default_invoice_journal(self):
         return self.env['account.journal'].search([
@@ -84,20 +82,24 @@ class PosConfig(models.Model):
         'account.journal', string='Point of Sale Journal',
         domain=[('type', 'in', ('general', 'sale'))],
         check_company=True,
-        help="Accounting journal used to post POS session journal entries and POS invoice payments.",
         default=_default_sale_journal,
-        ondelete='restrict')
+        ondelete='restrict',
+        help='Accounting journal used to post POS session journal entries and POS invoice payments.')
     invoice_journal_id = fields.Many2one(
         'account.journal', string='Invoice Journal',
         check_company=True,
         domain=[('type', '=', 'sale')],
-        help="Accounting journal used to create invoices.",
-        default=_default_invoice_journal)
+        default=_default_invoice_journal,
+        help='Accounting journal used to create invoices.')
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True, compute_sudo=True, string="Currency")
-    iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
-    iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
-    iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy.")
-    iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner and card swiping with a Vantiv card reader.")
+    printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
+    is_order_printer = fields.Boolean('Order Printer')
+    # is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
+    #                                                  compute="_compute_is_installed_account_accountant")
+    iface_cashdrawer = fields.Boolean(string='Cash Drawer', help='Automatically open the cash drawer.')
+    iface_electronic_scale = fields.Boolean(string='Electronic Scale', help='Enables Electronic Scale integration.')
+    iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help='Bypass browser printing and prints via the hardware proxy.')
+    iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help='Enable barcode scanning with a remotely connected barcode scanner and card swiping with a Vantiv card reader.')
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens.')
     iface_print_auto = fields.Boolean(string='Automatic Receipt Printing', default=False,
         help='The receipt will automatically be printed at the end of each order.')
@@ -178,7 +180,6 @@ class PosConfig(models.Model):
     has_active_session = fields.Boolean(compute='_compute_current_session')
     manual_discount = fields.Boolean(string="Line Discounts", default=True)
     ship_later = fields.Boolean(string="Ship Later")
-    warehouse_id = fields.Many2one('stock.warehouse', default=_default_warehouse_id, ondelete='restrict')
     route_id = fields.Many2one('stock.route', string="Spefic route for products delivered later.")
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),
@@ -268,10 +269,10 @@ class PosConfig(models.Model):
         for config in self:
             config.company_has_template = config.company_id.root_id.sudo()._existing_accounting() or config.company_id.chart_template
 
-    def _compute_is_installed_account_accountant(self):
-        account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
-        for pos_config in self:
-            pos_config.is_installed_account_accountant = account_accountant and account_accountant.id
+    # def _compute_is_installed_account_accountant(self):
+    #     account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
+    #     for pos_config in self:
+    #         pos_config.is_installed_account_accountant = True if account_accountant else False
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id', 'company_id', 'company_id.currency_id')
     def _compute_currency(self):
@@ -844,7 +845,7 @@ class PosConfig(models.Model):
     def _create_journal_and_payment_methods(self, cash_ref=None, cash_journal_vals=None):
         """This should only be called at creation of a new pos.config."""
 
-        journal = self.env['account.journal']._ensure_company_account_journal()
+        journal = self.env['account.journal']._ensure_company_pos_journal()
         payment_methods = self.env['pos.payment.method']
 
         # create cash payment method per config

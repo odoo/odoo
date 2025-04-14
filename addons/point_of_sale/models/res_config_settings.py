@@ -68,7 +68,7 @@ class ResConfigSettings(models.TransientModel):
     pos_has_active_session = fields.Boolean(related='pos_config_id.has_active_session')
     pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True)
     pos_iface_big_scrollbars = fields.Boolean(related='pos_config_id.iface_big_scrollbars', readonly=False)
-    pos_iface_cashdrawer = fields.Boolean(string='Cashdrawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True)
+    pos_iface_cashdrawer = fields.Boolean(string='Cash Drawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True)
     pos_iface_electronic_scale = fields.Boolean(string='Electronic Scale', compute='_compute_pos_iface_electronic_scale', readonly=False, store=True)
     pos_iface_print_auto = fields.Boolean(related='pos_config_id.iface_print_auto', readonly=False)
     pos_iface_print_skip_screen = fields.Boolean(related='pos_config_id.iface_print_skip_screen', readonly=False)
@@ -315,26 +315,30 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('pos_is_posbox', 'pos_config_id')
     def _compute_pos_iface_print_via_proxy(self):
         for res_config in self:
-            if not res_config.pos_is_posbox:
-                res_config.pos_iface_print_via_proxy = False
-            else:
-                res_config.pos_iface_print_via_proxy = res_config.pos_config_id.iface_print_via_proxy
+            res_config.pos_iface_print_via_proxy = res_config.pos_is_posbox and res_config.pos_config_id.iface_print_via_proxy or False
+            # if not res_config.pos_is_posbox:
+            #     res_config.pos_iface_print_via_proxy = False
+            # else:
+            #     res_config.pos_iface_print_via_proxy = res_config.pos_config_id.iface_print_via_proxy
+
 
     @api.depends('pos_is_posbox', 'pos_config_id')
     def _compute_pos_iface_scan_via_proxy(self):
         for res_config in self:
-            if not res_config.pos_is_posbox:
-                res_config.pos_iface_scan_via_proxy = False
-            else:
-                res_config.pos_iface_scan_via_proxy = res_config.pos_config_id.iface_scan_via_proxy
+            res_config.pos_iface_scan_via_proxy = res_config.pos_is_posbox and res_config.pos_config_id.iface_scan_via_proxy or False
+            # if not res_config.pos_is_posbox:
+            #     res_config.pos_iface_scan_via_proxy = False
+            # else:
+            #     res_config.pos_iface_scan_via_proxy = res_config.pos_config_id.iface_scan_via_proxy
 
     @api.depends('pos_is_posbox', 'pos_config_id')
     def _compute_pos_iface_electronic_scale(self):
         for res_config in self:
-            if not res_config.pos_is_posbox:
-                res_config.pos_iface_electronic_scale = False
-            else:
-                res_config.pos_iface_electronic_scale = res_config.pos_config_id.iface_electronic_scale
+            res_config.pos_iface_electronic_scale = res_config.pos_is_posbox and res_config.pos_config_id.iface_electronic_scale or False
+            # if not res_config.pos_is_posbox:
+            #     res_config.pos_iface_electronic_scale = False
+            # else:
+            #     res_config.pos_iface_electronic_scale = res_config.pos_config_id.iface_electronic_scale
 
     @api.onchange('pos_trusted_config_ids')
     def _onchange_trusted_config_ids(self):
