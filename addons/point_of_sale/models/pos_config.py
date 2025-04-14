@@ -101,35 +101,35 @@ class PosConfig(models.Model):
     iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help='Bypass browser printing and prints via the hardware proxy.')
     iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help='Enable barcode scanning with a remotely connected barcode scanner and card swiping with a Vantiv card reader.')
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens.')
-    iface_print_auto = fields.Boolean(string='Automatic Receipt Printing', default=False,
+    iface_print_auto = fields.Boolean(string='Automatic Receipt Printing',
         help='The receipt will automatically be printed at the end of each order.')
     iface_print_skip_screen = fields.Boolean(string='Skip Preview Screen', default=True,
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
-    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='total', required=True)
+    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string='Tax Display', default='total', required=True)
     iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
         help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
     customer_display_bg_img = fields.Image(string='Background Image', max_width=1920, max_height=1920)
     customer_display_bg_img_name = fields.Char(string='Background Image Name')
-    restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
-        help="Only users with Manager access rights for PoS app can modify the product prices on orders.")
-    is_margins_costs_accessible_to_every_user = fields.Boolean(string='Margins & Costs', default=False,
+    restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Users',
+        help='Only users with Manager access rights for PoS app can modify the product prices on orders.')
+    is_margins_costs_accessible_to_every_user = fields.Boolean(string='Margins & Costs',
         help='When disabled, only PoS manager can view the margin and cost of product among the Product info.')
-    cash_control = fields.Boolean(string='Advanced Cash Control', compute='_compute_cash_control', help="Check the amount of the cashbox at opening and closing.")
-    set_maximum_difference = fields.Boolean('Set Maximum Difference', help="Set a maximum difference allowed between the expected and counted money during the closing of the session.")
-    receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
-    receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
-    basic_receipt = fields.Boolean(string='Basic Receipt', help="Print basic ticket without prices. Can be used for gifts.")
+    cash_control = fields.Boolean(string='Advanced Cash Control', compute='_compute_cash_control', help='Check the amount of the cashbox at opening and closing.')
+    set_maximum_difference = fields.Boolean('Set Maximum Difference', help='Set a maximum difference allowed between the expected and counted money during the closing of the session.')
+    receipt_header = fields.Text(string='Receipt Header', help='A short text that will be inserted as a header in the printed receipt.')
+    receipt_footer = fields.Text(string='Receipt Footer', help='A short text that will be inserted as a footer in the printed receipt.')
+    basic_receipt = fields.Boolean(string='Basic Receipt', help='Print basic ticket without prices. Can be used for gifts.')
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
     active = fields.Boolean(default=True)
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False,
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
-        help="This sequence is automatically created by Odoo but you can change it "
-        "to customize the reference numbers of your orders.", copy=False, ondelete='restrict')
+        help='This sequence is automatically created by Odoo but you can change it '
+        'to customize the reference numbers of your orders.', copy=False, ondelete='restrict')
     sequence_line_id = fields.Many2one('ir.sequence', string='Order Line IDs Sequence', readonly=True,
-        help="This sequence is automatically created by Odoo but you can change it "
-        "to customize the reference numbers of your orders lines.", copy=False)
+        help='This sequence is automatically created by Odoo but you can change it '
+        'to customize the reference numbers of your orders lines.', copy=False)
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
     current_session_state = fields.Char(compute='_compute_current_session')
@@ -284,18 +284,20 @@ class PosConfig(models.Model):
 
     @api.depends('session_ids', 'session_ids.state')
     def _compute_current_session(self):
-        """If there is an open session, store it to current_session_id / current_session_State.
+        """
+        If there is an open session, store it to current_session_id / current_session_State.
         """
         self.session_ids.fetch(["state"])
         for pos_config in self:
             opened_sessions = pos_config.session_ids.filtered(lambda s: s.state != 'closed')
-            rescue_sessions = opened_sessions.filtered('rescue')
-            session = pos_config.session_ids.filtered(lambda s: s.state != 'closed' and not s.rescue)
+            # rescue_sessions = opened_sessions.filtered('rescue')
+            # session = pos_config.session_ids.filtered(lambda s: s.state != 'closed' and not s.rescue)
+            sessions = opened_sessions.filtered(lambda s: not s.rescue)
             # sessions ordered by id desc
             pos_config.has_active_session = opened_sessions and True or False
-            pos_config.current_session_id = session and session[0].id or False
-            pos_config.current_session_state = session and session[0].state or False
-            pos_config.number_of_rescue_session = len(rescue_sessions)
+            pos_config.current_session_id = sessions and sessions[0].id or False
+            pos_config.current_session_state = sessions and sessions[0].state or False
+            pos_config.number_of_rescue_session = len(opened_sessions.filtered('rescue'))
 
     @api.depends('session_ids')
     def _compute_last_session(self):
