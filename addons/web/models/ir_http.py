@@ -133,6 +133,7 @@ class IrHttp(models.AbstractModel):
             'view_info': self.env['ir.ui.view'].get_view_info(),
             'groups': {
                 'base.group_allow_export': user.has_group('base.group_allow_export') if session_uid else False,
+                'base.group_multi_company': user.has_group('base.group_multi_company') if session_uid else False,
             },
         }
         if request.session.debug:

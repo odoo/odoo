@@ -73,7 +73,8 @@ class TestSessionInfo(common.HttpCase):
             'disallowed_ancestor_companies': expected_disallowed_ancestor_companies,
         }
         self.assertEqual(result["groups"], {
-            'base.group_allow_export': self.user.has_group('base.group_allow_export')
+            'base.group_allow_export': self.user.has_group('base.group_allow_export'),
+            'base.group_multi_company': self.user.has_group('base.group_multi_company')
         })
         self.assertEqual(
             result['user_companies'],
