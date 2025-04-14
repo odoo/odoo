@@ -88,7 +88,7 @@ class AccountMove(models.Model):
                 timesheets = self.env['account.analytic.line'].sudo().search(domain)
                 timesheets.write({'timesheet_invoice_id': line.move_id.id})
 
-    def _get_range_dates(self):
-        # A method that will be overridden in sale_subscription_timesheet
-        # to set the start and end dates for the subscription period
+    def _get_range_dates(self, order):
+        # A method that can be overridden
+        # to set the start and end dates according to order values
         return None, None
