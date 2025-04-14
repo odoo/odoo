@@ -332,6 +332,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
+    fiscal_country_group_codes = fields.Json(compute='_compute_fiscal_country_group_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
     partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
     duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
@@ -342,6 +343,17 @@ class ResPartner(models.Model):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
             record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
+
+    @api.depends('company_id')
+    @api.depends_context('allowed_company_ids')
+    def _compute_fiscal_country_group_codes(self):
+        for partner in self:
+            allowed_companies = partner.company_id or self.env.companies
+            partner.fiscal_country_group_codes = list({
+                code
+                for company in allowed_companies
+                for code in company.account_fiscal_country_group_codes
+            })
 
     @property
     def _order(self):
