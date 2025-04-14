@@ -16,6 +16,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "makeSCSSCusto",
         "toggleTemplate",
         "withHistoryFromLoad",
+        "populateCache",
     ];
 
     resources = {
@@ -545,6 +546,17 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
     getTemplateKey(key) {
         return this.activeTemplateViews[key];
+    }
+    populateCache(record, value) {
+        if (record.startsWith("!")) {
+            record = record.substring(1);
+        }
+        if (!(record in this.cache)) {
+            this.cache[record] = value;
+        }
+        value.then((resolvedValue) => {
+            this.activeRecords[record] = resolvedValue;
+        });
     }
 }
 
