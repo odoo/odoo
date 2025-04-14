@@ -186,6 +186,72 @@ class PropertiesCase(TestPropertiesMixin):
             # missing 'type'
             self.message_1.attributes = [{'name': 'name', 'definition_changed': True}]
 
+    def test_properties_web_read(self):
+        """Test the web_read method when reading properties field."""
+        self.message_1.write({
+            'attributes': [{
+                'name': 'discussion_color_code',
+                'string': 'Test color code',
+                'type': 'char',
+                'default': 'blue',
+                'value': 'purple',
+                'definition_changed': True,
+            }, {
+                'name': 'selection',
+                'string': 'Selection',
+                'type': 'selection',
+                'selection': [['a', 'A'], ['b', 'B']],
+                'value': 'b',
+                'definition_changed': True,
+            }, {
+                'name': 'moderator_partner_id',
+                'string': 'Partner',
+                'type': 'many2one',
+                'comodel': 'test_new_api.partner',
+                'value': [self.partner.id, 'Bob'],
+                'definition_changed': True,
+            }, {
+                'name': 'moderator_partner_ids',
+                'string': 'Partners',
+                'type': 'many2many',
+                'comodel': 'test_new_api.partner',
+                'value': [[self.partner.id, 'Bob'], [self.partner_2.id, "Alice"]],
+                'definition_changed': True,
+            }],
+        })
+
+        result = self.message_1.web_read({
+            'attributes': {
+                'fields': {
+                    'moderator_partner_id': {'fields': {'name': {}}},
+                    'moderator_partner_ids': {'fields': {'name': {}}},
+                    'selection': {},
+                },
+            },
+        })
+        self.assertEqual(result[0]['attributes'], [{
+            'name': 'moderator_partner_id',
+            'string': 'Partner',
+            'type': 'many2one',
+            'comodel': 'test_new_api.partner',
+            'value': [{'id': self.partner.id, 'name': 'Test Partner Properties'}],
+        }, {
+            'name': 'moderator_partner_ids',
+            'string': 'Partners',
+            'type': 'many2many',
+            'comodel': 'test_new_api.partner',
+            'value': [
+                {'id': self.partner.id, 'name': 'Test Partner Properties'},
+                {'id': self.partner_2.id, 'name': 'Test Partner Properties 2'},
+            ],
+        }, {
+            'name': 'selection',
+            'string': 'Selection',
+            'type': 'selection',
+            'selection': [['a', 'A'], ['b', 'B']],
+            'value': 'b',
+        }])
+
     def test_properties_field_parameters_raised(self):
         # check that the keys not valid for the given type are raised
         with self.assertRaises(ValueError):
