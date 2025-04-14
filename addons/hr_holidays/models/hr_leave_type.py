@@ -105,7 +105,7 @@ class HrLeaveType(models.Model):
     request_unit = fields.Selection([
         ('day', 'Day'),
         ('half_day', 'Half-Day'),
-        ('hour', 'Hours')], default='day', string='Take Time Off in', required=True)
+        ('hour', 'Hours')], default='day', string='Duration Type', required=True)
     unpaid = fields.Boolean('Is Unpaid', default=False)
     include_public_holidays_in_duration = fields.Boolean('Ignore Public Holidays', default=False, help="Public holidays should be counted in the leave duration when applying for leaves")
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
