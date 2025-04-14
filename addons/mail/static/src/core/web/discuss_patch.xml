@@ -6,7 +6,7 @@
         </xpath>
         <xpath expr="//*[@t-ref='root']" position="replace">
             <div class="h-100 d-flex flex-column">
-                <ControlPanel t-if="!ui.isSmall"/>
+                <ControlPanel t-if="!ui.isSmall and env.config?.breadcrumbs?.length > 1"/>
                 <t>$0</t>
             </div>
         </xpath>
