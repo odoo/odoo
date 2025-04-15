@@ -2,7 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class LoyaltyGenerateWizard(models.TransientModel):
@@ -39,7 +39,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
             domains.append([('id', 'in', self.customer_ids.ids)])
         if self.customer_tag_ids:
             domains.append([('category_id', 'in', self.customer_tag_ids.ids)])
-        return self.env['res.partner'].search(expression.OR(domains) if domains else [])
+        return self.env['res.partner'].search(Domain.OR(domains) if domains else Domain.TRUE)
 
     @api.depends('program_type', 'points_granted', 'coupon_qty')
     def _compute_confirmation_message(self):

@@ -4,7 +4,7 @@ import ast
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class LoyaltyRule(models.Model):
@@ -139,9 +139,9 @@ class LoyaltyRule(models.Model):
             constrains.append([('categ_id', 'child_of', self.product_category_id.id)])
         if self.product_tag_id:
             constrains.append([('all_product_tag_ids', 'in', self.product_tag_id.id)])
-        domain = expression.OR(constrains) if constrains else []
+        domain = Domain.OR(constrains) if constrains else Domain.TRUE
         if self.product_domain and self.product_domain != '[]':
-            domain = expression.AND([domain, ast.literal_eval(self.product_domain)])
+            domain &= Domain(ast.literal_eval(self.product_domain))
         return domain
 
     def _get_valid_products(self):

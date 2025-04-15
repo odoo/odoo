@@ -7,8 +7,7 @@ from functools import partial
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Command
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 from odoo.tools import float_round, lazy, str2bool
 
 
@@ -685,7 +684,7 @@ class SaleOrder(models.Model):
         if not domain:
             domain = [('trigger', '=', 'auto')]
         # Make sure domain always complies with the order's domain rules
-        domain = expression.AND([self._get_program_domain(), domain])
+        domain = Domain.AND([self._get_program_domain(), domain])
         # No other way than to test all programs to the order
         programs = self.env['loyalty.program'].search(domain)
         all_status = self._program_check_compute_points(programs)
@@ -1019,7 +1018,7 @@ class SaleOrder(models.Model):
         coupon_programs = self.applied_coupon_ids.program_id
         # Programs that are automatic and not yet applied
         program_domain = self._get_program_domain()
-        domain = expression.AND([program_domain, [('id', 'not in', points_programs.ids), ('trigger', '=', 'auto'), ('rule_ids.mode', '=', 'auto')]])
+        domain = Domain.AND([program_domain, [('id', 'not in', points_programs.ids), ('trigger', '=', 'auto'), ('rule_ids.mode', '=', 'auto')]])
         automatic_programs = self.env['loyalty.program'].search(domain).filtered(lambda p:
             not p.limit_usage or p.total_order_count < p.max_usage)
 
@@ -1406,7 +1405,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         base_domain = self._get_trigger_domain()
-        domain = expression.AND([base_domain, [('mode', '=', 'with_code'), ('code', '=', code)]])
+        domain = Domain.AND([base_domain, [('mode', '=', 'with_code'), ('code', '=', code)]])
         rule = self.env['loyalty.rule'].search(domain)
         program = rule.program_id
         coupon = False
