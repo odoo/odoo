@@ -176,11 +176,6 @@ rm /etc/nginx/sites-enabled/default
 
 pip3 install -r /home/pi/odoo/addons/iot_box_image/configuration/requirements.txt --break-system-package
 
-# Dowload MPD server and library for Six terminals
-wget 'https://nightly.odoo.com/master/iotbox/eftdvs' -P /usr/local/bin/
-chmod +x /usr/local/bin/eftdvs
-wget 'https://nightly.odoo.com/master/iotbox/eftapi.so' -P /usr/lib/
-
 # Create Odoo user for odoo service and disable password login
 adduser --disabled-password --gecos "" --shell /usr/sbin/nologin odoo
 
