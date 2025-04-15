@@ -314,7 +314,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
     );
     await contains(".o-mail-Message");
     await waitForSteps(["rpc:channel_fetch"]);
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
     await focus(".o-mail-Composer-input");
     await waitForSteps(["rpc:mark_as_read"]);
 });
@@ -653,7 +653,7 @@ test("first unseen message should be directly preceded by the new message separa
         })
     );
     await contains(".o-mail-Message", { count: 3 });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
     await contains(".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage");
 });
 

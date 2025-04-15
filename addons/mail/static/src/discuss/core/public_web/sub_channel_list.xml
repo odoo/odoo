@@ -34,7 +34,7 @@
                                 <span class="flex-grow-1"/>
                                 <span t-if="message" class="text-muted smaller" t-esc="dateText(message)"/>
                             </div>
-                            <div class="o-mail-SubChannelList-threadLastMessage text-start text-muted fw-normal smaller overflow-hidden ms-2">
+                            <div class="o-mail-SubChannelList-threadLastMessage text-start text-muted opacity-75 fw-normal smaller overflow-hidden ms-2">
                                 <t t-if="message" t-call="mail.message_preview_prefix">
                                     <t t-set="message" t-value="message"/>
                                 </t>
