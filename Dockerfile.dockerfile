@@ -9,5 +9,5 @@ COPY ./addons /mnt/extra-addons
 ENV DB_HOST=postgres
 ENV DB_PORT=5432
 
-# Set the entrypoint and command to start Odoo
+# Set the entrypoint and command to start Odoo 
 CMD ["odoo", "--config", "/etc/odoo/odoo.conf"]
