@@ -1,6 +1,8 @@
 import { MegaMenuOption } from "@html_builder/website_builder/plugins/options/mega_menu_option";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { withSequence } from "@html_editor/utils/resource";
+import { SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
 
 export class MegaMenuOptionPlugin extends Plugin {
     static id = "megaMenuOptionPlugin";
@@ -9,13 +11,13 @@ export class MegaMenuOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
-            {
+            withSequence(SNIPPET_SPECIFIC_NEXT, {
                 OptionComponent: MegaMenuOption,
                 selector: ".o_mega_menu",
                 props: {
                     getTemplatePrefix: this.getTemplatePrefix.bind(this),
                 },
-            },
+            }),
         ],
         save_handlers: this.saveMegaMenuClasses.bind(this),
     };

@@ -2,12 +2,14 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { classAction } from "../core/core_builder_action_plugin";
 import { VerticalAlignmentOption } from "./vertical_alignment_option";
+import { withSequence } from "@html_editor/utils/resource";
+import { VERTICAL_ALIGNMENT } from "@html_builder/website_builder/option_sequence";
 
 class VerticalAlignmentOptionPlugin extends Plugin {
     static id = "verticalAlignmentOption";
     resources = {
         builder_options: [
-            {
+            withSequence(VERTICAL_ALIGNMENT, {
                 OptionComponent: VerticalAlignmentOption,
                 selector:
                     ".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image",
@@ -15,7 +17,7 @@ class VerticalAlignmentOptionPlugin extends Plugin {
                 props: {
                     level: 1,
                 },
-            },
+            }),
         ],
         builder_actions: this.getActions(),
     };

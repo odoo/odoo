@@ -1,6 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { getElementsWithOption } from "@html_builder/utils/utils";
+import { withSequence } from "@html_editor/utils/resource";
+import { SNIPPET_SPECIFIC_END } from "@html_builder/website_builder/option_sequence";
+
+export const COOKIES_BAR = SNIPPET_SPECIFIC_END;
 
 class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
@@ -14,11 +18,11 @@ class PopupOptionPlugin extends Plugin {
                 exclude: "#website_cookies_bar",
                 applyTo: ".modal",
             },
-            {
+            withSequence(COOKIES_BAR, {
                 template: "html_builder.PopupCookiesOption",
                 selector: ".s_popup#website_cookies_bar",
                 applyTo: ".modal",
-            },
+            }),
         ],
         dropzone_selector: {
             selector: ".s_popup",

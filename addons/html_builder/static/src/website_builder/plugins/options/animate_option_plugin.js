@@ -3,12 +3,13 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 import { AnimateOption } from "./animate_option";
+import { ANIMATE } from "@html_builder/website_builder/option_sequence";
 
 class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     resources = {
         builder_options: [
-            withSequence(20, {
+            withSequence(ANIMATE, {
                 OptionComponent: AnimateOption,
                 selector: ".o_animable, section .row > div, img, .fa, .btn, .o_animated_text",
                 exclude:

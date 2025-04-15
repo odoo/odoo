@@ -3,16 +3,18 @@ import { Plugin } from "@html_editor/plugin";
 import { DynamicSvgOption } from "./dynamic_svg_option";
 import { normalizeCSSColor } from "@web/core/utils/colors";
 import { loadImage } from "@html_editor/utils/image_processing";
+import { withSequence } from "@html_editor/utils/resource";
+import { DYNAMIC_SVG } from "@html_builder/utils/option_sequence";
 
 class DynamicSvgOptionPlugin extends Plugin {
     static id = "DynamicSvgOption";
     resources = {
         builder_options: [
-            {
+            withSequence(DYNAMIC_SVG, {
                 OptionComponent: DynamicSvgOption,
                 props: {},
                 selector: "img[src^='/html_editor/shape/'], img[src^='/web_editor/shape/']",
-            },
+            }),
         ],
         builder_actions: this.getActions(),
     };

@@ -2,6 +2,12 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { after, before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
+import { WEBSITE_BACKGROUND_OPTIONS } from "@html_builder/website_builder/option_sequence";
+
+export const TIMELINE = before(WEBSITE_BACKGROUND_OPTIONS);
+export const DOT_LINES_COLOR = SNIPPET_SPECIFIC_END;
+export const DOT_COLOR = after(DOT_LINES_COLOR);
 
 function isTimelineCard(el) {
     return el.matches(".s_timeline_card");
@@ -12,15 +18,15 @@ class TimelineOptionPlugin extends Plugin {
     static dependencies = ["history"];
     resources = {
         builder_options: [
-            withSequence(5, {
+            withSequence(TIMELINE, {
                 template: "html_builder.TimelineOption",
                 selector: ".s_timeline",
             }),
-            withSequence(10, {
+            withSequence(DOT_LINES_COLOR, {
                 template: "html_builder.DotLinesColorOption",
                 selector: ".s_timeline",
             }),
-            withSequence(5, {
+            withSequence(DOT_COLOR, {
                 template: "html_builder.DotColorOption",
                 selector: ".s_timeline .s_timeline_row",
             }),

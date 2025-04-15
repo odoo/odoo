@@ -3,17 +3,19 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ScrollButtonOption } from "./scroll_button_option";
 import { classAction } from "@html_builder/core/core_builder_action_plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { SCROLL_BUTTON } from "@html_builder/website_builder/option_sequence";
 
 class ScrollButtonOptionPlugin extends Plugin {
     static id = "scrollButtonOption";
     resources = {
         builder_options: [
-            {
+            withSequence(SCROLL_BUTTON, {
                 OptionComponent: ScrollButtonOption,
                 selector: "section",
                 exclude:
                     "[data-snippet] :not(.oe_structure) > [data-snippet],.s_instagram_page,.o_mega_menu > section,.s_appointments .s_dynamic_snippet_content",
-            },
+            }),
         ],
         builder_actions: {
             addScrollButton: {

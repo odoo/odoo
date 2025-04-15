@@ -5,21 +5,23 @@ import { normalizeColor } from "@html_builder/utils/utils_css";
 import { ImageToolOption } from "./image_tool_option";
 import { defaultImageFilterOptions } from "@html_editor/main/media/image_post_process_plugin";
 import { isImageCorsProtected, getMimetype } from "@html_editor/utils/image";
+import { withSequence } from "@html_editor/utils/resource";
+import { IMAGE_TOOL, ALIGNMENT_STYLE_PADDING } from "@html_builder/utils/option_sequence";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
     static dependencies = ["history", "userCommand", "imagePostProcess", "imageCrop"];
     resources = {
         builder_options: [
-            {
+            withSequence(IMAGE_TOOL, {
                 OptionComponent: ImageToolOption,
                 selector: "img",
-            },
-            {
+            }),
+            withSequence(ALIGNMENT_STYLE_PADDING, {
                 template: "html_builder.ImageAndFaOption",
                 selector: "span.fa, i.fa, img",
                 exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
-            },
+            }),
         ],
         builder_actions: this.getActions(),
         is_hoverable_predicates: (el) => {

@@ -1,19 +1,21 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { withSequence } from "@html_editor/utils/resource";
+import { SNIPPET_SPECIFIC } from "@html_builder/utils/option_sequence";
 
 class accordionOptionPlugin extends Plugin {
     static id = "accordionOptionPlugin";
     static dependencies = ["clone", "media"];
     resources = {
         builder_options: [
-            {
+            withSequence(SNIPPET_SPECIFIC, {
                 template: "html_builder.AccordionOption",
                 selector: ".s_accordion",
-            },
-            {
+            }),
+            withSequence(SNIPPET_SPECIFIC, {
                 template: "html_builder.AccordionItemOption",
                 selector: ".s_accordion .accordion-item",
-            },
+            }),
         ],
         builder_actions: this.getActions(),
     };

@@ -8,31 +8,33 @@ import { isMobileView } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { LayoutColumnOption, LayoutGridOption, LayoutOption } from "./layout_option";
+import { withSequence } from "@html_editor/utils/resource";
+import { LAYOUT, LAYOUT_COLUMN, LAYOUT_GRID } from "@html_builder/website_builder/option_sequence";
 
 class LayoutOptionPlugin extends Plugin {
     static id = "LayoutOption";
     static dependencies = ["clone"];
     resources = {
         builder_options: [
-            {
+            withSequence(LAYOUT, {
                 OptionComponent: LayoutOption,
                 selector:
                     "section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item",
                 exclude:
                     ".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs",
                 applyTo: ":scope > *:has(> .row), :scope > .s_allow_columns",
-            },
-            {
+            }),
+            withSequence(LAYOUT_COLUMN, {
                 OptionComponent: LayoutColumnOption,
                 selector: "section.s_features_grid, section.s_process_steps",
                 applyTo: ":scope > *:has(> .row), :scope > .s_allow_columns",
-            },
-            {
+            }),
+            withSequence(LAYOUT_GRID, {
                 OptionComponent: LayoutGridOption,
                 selector:
                     "section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info",
                 applyTo: ":scope > *:has(> .row)",
-            },
+            }),
         ],
 
         builder_actions: this.getActions(),

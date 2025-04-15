@@ -4,17 +4,19 @@ import { CoverPropertiesOption } from "./cover_properties_option";
 import { classAction } from "@html_builder/core/core_builder_action_plugin";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
 import { rpc } from "@web/core/network/rpc";
+import { withSequence } from "@html_editor/utils/resource";
+import { COVER_PROPERTIES } from "@html_builder/website_builder/option_sequence";
 
 class CoverPropertiesOptionPlugin extends Plugin {
     static id = "coverPropertiesOption";
     static dependencies = ["builderActions", "media", "imagePostProcess"];
     resources = {
         builder_options: [
-            {
+            withSequence(COVER_PROPERTIES, {
                 OptionComponent: CoverPropertiesOption,
                 selector: ".o_record_cover_container",
                 editableOnly: false,
-            },
+            }),
         ],
         builder_actions: {
             setCoverBackground: {

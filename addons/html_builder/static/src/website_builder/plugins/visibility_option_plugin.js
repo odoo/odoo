@@ -4,6 +4,11 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { pyToJsLocale } from "@web/core/l10n/utils";
 import { getElementsWithOption, isMobileView } from "@html_builder/utils/utils";
 import { VisibilityOption } from "./visibility_option";
+import { withSequence } from "@html_editor/utils/resource";
+import {
+    CONDITIONAL_VISIBILITY,
+    DEVICE_VISIBILITY,
+} from "@html_builder/website_builder/option_sequence";
 
 const visibilityOptionSelector = "section, .s_hr";
 const deviceVisibilityOptionSelector = "section .row > div";
@@ -13,20 +18,20 @@ class VisibilityOptionPlugin extends Plugin {
     static dependencies = ["visibility", "websiteSession"];
     resources = {
         builder_options: [
-            {
+            withSequence(CONDITIONAL_VISIBILITY, {
                 OptionComponent: VisibilityOption,
                 props: {
                     websiteSession: this.dependencies.websiteSession.getSession(),
                 },
                 selector: visibilityOptionSelector,
                 cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
-            },
-            {
+            }),
+            withSequence(DEVICE_VISIBILITY, {
                 template: "html_builder.DeviceVisibilityOption",
                 selector: deviceVisibilityOptionSelector,
                 exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
                 cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
-            },
+            }),
         ],
         builder_actions: this.getActions(),
         target_show: this.onTargetShow.bind(this),

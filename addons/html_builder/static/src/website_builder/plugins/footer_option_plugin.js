@@ -2,6 +2,11 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
+import { after, SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
+
+export const FOOTER_TEMPLATE = SNIPPET_SPECIFIC_NEXT;
+export const FOOTER_WIDTH = after(FOOTER_TEMPLATE);
+export const FOOTER_SCROLL_TO = after(FOOTER_WIDTH);
 
 class FooterOptionPlugin extends Plugin {
     static id = "footerOption";
@@ -9,13 +14,13 @@ class FooterOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
-            withSequence(1, {
+            withSequence(FOOTER_TEMPLATE, {
                 template: "html_builder.FooterTemplateOption",
                 selector: "#wrapwrap > footer",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
             }),
-            withSequence(10, {
+            withSequence(FOOTER_WIDTH, {
                 template: "html_builder.FooterWidthOption",
                 selector: "#wrapwrap > footer",
                 applyTo:
@@ -23,12 +28,12 @@ class FooterOptionPlugin extends Plugin {
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
             }),
-            {
+            withSequence(FOOTER_SCROLL_TO, {
                 template: "html_builder.FooterScrollToTopOption",
                 selector: "#wrapwrap > footer",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
-            },
+            }),
         ],
         builder_actions: {
             websiteConfigFooter: {

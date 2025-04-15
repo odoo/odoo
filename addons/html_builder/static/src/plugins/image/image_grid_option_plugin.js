@@ -2,13 +2,14 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { ImageGridOption } from "./image_grid_option";
 import { withSequence } from "@html_editor/utils/resource";
+import { GRID_IMAGE } from "@html_builder/website_builder/option_sequence";
 
 class ImageGridOptionPlugin extends Plugin {
     static id = "imageGridOption";
 
     resources = {
         builder_options: [
-            withSequence(20, {
+            withSequence(GRID_IMAGE, {
                 OptionComponent: ImageGridOption,
                 selector: "img",
             }),

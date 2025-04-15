@@ -1,6 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rgbToHex } from "@web/core/utils/colors";
+import { withSequence } from "@html_editor/utils/resource";
+import { after, SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
+import { FOOTER_SCROLL_TO } from "./footer_option_plugin";
+
+export const TOP_MENU_VISIBILITY = SNIPPET_SPECIFIC_NEXT;
+export const HIDE_FOOTER = after(FOOTER_SCROLL_TO);
 
 class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
@@ -8,20 +14,20 @@ class WebsitePageConfigOptionPlugin extends Plugin {
     resources = {
         builder_actions: this.getActions(),
         builder_options: [
-            {
+            withSequence(TOP_MENU_VISIBILITY, {
                 template: "html_builder.TopMenuVisibilityOption",
                 selector:
                     "[data-main-object]:has(input.o_page_option_data[name='header_visible']) #wrapwrap > header",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
-            },
-            {
+            }),
+            withSequence(HIDE_FOOTER, {
                 template: "html_builder.HideFooterOption",
                 selector:
                     "[data-main-object]:has(input.o_page_option_data[name='footer_visible']) #wrapwrap > footer",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
-            },
+            }),
         ],
         save_handlers: this.onSave.bind(this),
     };

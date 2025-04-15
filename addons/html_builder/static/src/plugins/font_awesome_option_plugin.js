@@ -1,16 +1,18 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { classAction } from "../core/core_builder_action_plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { FONT_AWESOME } from "@html_builder/utils/option_sequence";
 
 class FontAwesomeOptionPlugin extends Plugin {
     static id = "fontAwesomeOptionPlugin";
     resources = {
         builder_options: [
-            {
+            withSequence(FONT_AWESOME, {
                 template: "html_builder.FontAwesomeOption",
                 selector: "span.fa, i.fa",
                 exclude: "[data-oe-xpath]",
-            },
+            }),
         ],
         builder_actions: this.getActions(),
     };

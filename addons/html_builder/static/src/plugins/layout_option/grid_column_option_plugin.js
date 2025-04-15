@@ -1,16 +1,18 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { GridColumnsOption } from "./grid_column_option";
+import { withSequence } from "@html_editor/utils/resource";
+import { GRID_COLUMNS } from "@html_builder/website_builder/option_sequence";
 
 export class GridColumnsOptionPlugin extends Plugin {
     static id = "GridColumnsOption";
     static dependencies = ["builderActions"];
     resources = {
         builder_options: [
-            {
+            withSequence(GRID_COLUMNS, {
                 OptionComponent: GridColumnsOption,
                 selector: ".row:not(.s_col_no_resize) > div",
-            },
+            }),
         ],
         builder_actions: this.getActions(),
         system_classes: ["o_we_padding_highlight"],
