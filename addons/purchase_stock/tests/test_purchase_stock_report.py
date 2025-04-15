@@ -286,11 +286,11 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt.move_ids.picked = True
         receipt.button_validate()
 
-        data = self.env['vendor.delay.report'].web_read_group(
+        data = self.env['vendor.delay.report'].formatted_read_group(
             [('partner_id', '=', self.partner.id)],
             ['product_id'],
             ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
-        )['groups'][0]
+        )[0]
         self.assertEqual(data['qty_on_time:sum'], 10)
         self.assertEqual(data['qty_total:sum'], 10)
         self.assertEqual(data['on_time_rate:sum'], 100)
@@ -316,11 +316,11 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt01_move.quantity = 6
         Form.from_action(self.env, receipt01.button_validate()).save().process()
 
-        data = self.env['vendor.delay.report'].web_read_group(
+        data = self.env['vendor.delay.report'].formatted_read_group(
             [('partner_id', '=', self.partner.id)],
             ['product_id'],
             ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
-        )['groups'][0]
+        )[0]
         self.assertEqual(data['qty_on_time:sum'], 6)
         self.assertEqual(data['qty_total:sum'], 10)
         self.assertEqual(data['on_time_rate:sum'], 60)
@@ -331,11 +331,11 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt02.button_validate()
 
         (receipt01 | receipt02).move_ids.invalidate_recordset()
-        data = self.env['vendor.delay.report'].web_read_group(
+        data = self.env['vendor.delay.report'].formatted_read_group(
             [('partner_id', '=', self.partner.id)],
             ['product_id'],
             ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
-        )['groups'][0]
+        )[0]
         self.assertEqual(data['qty_on_time:sum'], 10)
         self.assertEqual(data['qty_total:sum'], 10)
         self.assertEqual(data['on_time_rate:sum'], 100)
@@ -360,11 +360,11 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt01_move.picked = True
         Form.from_action(self.env, receipt01.button_validate()).save().process_cancel_backorder()
 
-        data = self.env['vendor.delay.report'].web_read_group(
+        data = self.env['vendor.delay.report'].formatted_read_group(
             [('partner_id', '=', self.partner.id)],
             ['product_id'],
             ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
-        )['groups'][0]
+        )[0]
         self.assertEqual(data['qty_on_time:sum'], 6)
         self.assertEqual(data['qty_total:sum'], 10)
         self.assertEqual(data['on_time_rate:sum'], 60)

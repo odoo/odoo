@@ -376,7 +376,7 @@ export class GraphModel extends Model {
         // for instance [1, "ABC"] [3, "ABC"] should be distinguished.
 
         const proms = domains.map(async (domain, originIndex) => {
-            const data = await this.orm.webReadGroup(
+            const groups = await this.orm.formattedReadGroup(
                 resModel,
                 domain.arrayRepr,
                 groupBy.map((gb) => gb.spec),
@@ -385,14 +385,14 @@ export class GraphModel extends Model {
                     context: { fill_temporal: true, ...this.searchParams.context },
                 }
             );
-            let start = false;
+            let start_groups = false;
             if (
                 cumulatedStart &&
                 sequential_field &&
-                data.groups.length &&
+                groups.length &&
                 domain.arrayRepr.some((leaf) => leaf.length === 3 && leaf[0] == sequential_field)
             ) {
-                const first_date = data.groups[0][sequential_spec][0];
+                const first_date = groups[0][sequential_spec][0];
                 const new_domain = Domain.combine(
                     [
                         new Domain([[sequential_field, "<", first_date]]),
@@ -400,7 +400,7 @@ export class GraphModel extends Model {
                     ],
                     "AND"
                 ).toList();
-                start = await this.orm.webReadGroup(
+                start_groups = await this.orm.formattedReadGroup(
                     resModel,
                     new_domain,
                     groupBy.filter((gb) => gb.fieldName != sequential_field).map((gb) => gb.spec),
@@ -412,8 +412,8 @@ export class GraphModel extends Model {
             }
             const dataPoints = [];
             const cumulatedStartValue = {};
-            if (start) {
-                for (const group of start.groups) {
+            if (start_groups) {
+                for (const group of start_groups) {
                     const rawValues = [];
                     for (const gb of groupBy.filter((gb) => gb.fieldName != sequential_field)) {
                         rawValues.push({ [gb.spec]: group[gb.spec] });
@@ -421,7 +421,7 @@ export class GraphModel extends Model {
                     cumulatedStartValue[JSON.stringify(rawValues)] = group[measures.slice(-1)];
                 }
             }
-            for (const group of data.groups) {
+            for (const group of groups) {
                 const { __domain, __count } = group;
                 const labels = [];
                 const rawValues = [];

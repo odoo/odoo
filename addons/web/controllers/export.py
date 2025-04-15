@@ -59,7 +59,7 @@ OPERATOR_MAPPING = {
 
 class GroupsTreeNode:
     """
-    This class builds an ordered tree of groups from the result of a `web_read_group`.
+    This class builds an ordered tree of groups from the result of a `formatted_read_group`.
     The `formatted_read_group` returns a list of dictionnaries and each dictionnary is used to
     build a leaf. The entire tree is built by inserting all leaves.
     """
