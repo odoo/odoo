@@ -4,7 +4,7 @@ import ast
 import json
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.translate import _
@@ -109,7 +109,7 @@ class ProjectProject(models.Model):
             domains.append([('sale_line_employee_ids', '!=', False), ('allow_billable', '=', True)])
         if False in value:
             domains.append([('allow_billable', '=', False)])
-        return expression.OR(domains)
+        return Domain.OR(domains)
 
     @api.depends('allow_timesheets', 'allow_billable')
     def _compute_timesheet_product_id(self):
@@ -154,7 +154,7 @@ class ProjectProject(models.Model):
         for project in self.filtered(lambda p: not p.sale_line_id and p.partner_id and p.pricing_type == 'employee_rate'):
             # Give a SOL by default either the last SOL with service product and remaining_hours > 0
             SaleOrderLine = self.env['sale.order.line']
-            sol = SaleOrderLine.search(expression.AND([
+            sol = SaleOrderLine.search(Domain.AND([
                 SaleOrderLine._domain_sale_line_service(),
                 [('order_partner_id', 'child_of', project.partner_id.commercial_partner_id.id), ('remaining_hours', '>', 0)],
             ]), limit=1)
@@ -239,7 +239,7 @@ class ProjectProject(models.Model):
         if section_name in ['billable_fixed', 'billable_time', 'billable_milestones', 'billable_manual', 'non_billable']:
             action = self.action_billable_time_button()
             if domain:
-                action['domain'] = expression.AND([[('project_id', '=', self.id)], domain])
+                action['domain'] = Domain.AND([[('project_id', '=', self.id)], domain])
             action['context'].update(search_default_groupby_timesheet_invoice_type=False, **self.env.context)
             graph_view = False
             if section_name == 'billable_time':
@@ -294,7 +294,7 @@ class ProjectProject(models.Model):
         if domain_per_model is None:
             domain_per_model = {'project.task': [('allow_billable', '=', True)]}
         else:
-            domain_per_model['project.task'] = expression.AND([
+            domain_per_model['project.task'] = Domain.AND([
                 domain_per_model.get('project.task', []),
                 [('allow_billable', '=', True)],
             ])
@@ -303,7 +303,7 @@ class ProjectProject(models.Model):
         Timesheet = self.env['account.analytic.line']
         timesheet_domain = [('project_id', 'in', self.ids), ('so_line', '!=', False), ('project_id.allow_billable', '=', True)]
         if Timesheet._name in domain_per_model:
-            timesheet_domain = expression.AND([
+            timesheet_domain = Domain.AND([
                 domain_per_model.get(Timesheet._name, []),
                 timesheet_domain,
             ])
@@ -317,7 +317,7 @@ class ProjectProject(models.Model):
         EmployeeMapping = self.env['project.sale.line.employee.map']
         employee_mapping_domain = [('project_id', 'in', self.ids), ('project_id.allow_billable', '=', True), ('sale_line_id', '!=', False)]
         if EmployeeMapping._name in domain_per_model:
-            employee_mapping_domain = expression.AND([
+            employee_mapping_domain = Domain.AND([
                 domain_per_model[EmployeeMapping._name],
                 employee_mapping_domain,
             ])
@@ -389,7 +389,7 @@ class ProjectProject(models.Model):
 
     def _get_profitability_aal_domain(self):
         domain = ['|', ('project_id', 'in', self.ids), ('so_line', 'in', self._fetch_sale_order_item_ids())]
-        return expression.AND([
+        return Domain.AND([
             super()._get_profitability_aal_domain(),
             domain,
         ])
@@ -500,7 +500,7 @@ class ProjectProject(models.Model):
 
     def _get_domain_aal_with_no_move_line(self):
         # we add the tuple 'project_id = False' in the domain to remove the timesheets from the search.
-        return expression.AND([
+        return Domain.AND([
             super()._get_domain_aal_with_no_move_line(),
             [('project_id', '=', False)]
         ])

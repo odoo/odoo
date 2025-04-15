@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import float_compare
 
 
@@ -83,7 +83,7 @@ class SaleOrder(models.Model):
 
     def _get_order_with_valid_service_product(self):
         SaleOrderLine = self.env['sale.order.line']
-        return SaleOrderLine._read_group(expression.AND([
+        return SaleOrderLine._read_group(Domain.AND([
             SaleOrderLine._domain_sale_line_service(),
             [
                 ('order_id', 'in', self.ids),

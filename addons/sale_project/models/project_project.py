@@ -5,7 +5,7 @@ import json
 from collections import defaultdict
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import Query, SQL
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
@@ -15,7 +15,7 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     def _domain_sale_line_id(self):
-        domain = expression.AND([
+        domain = Domain.AND([
             self.env['sale.order.line']._sellable_lines_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [
@@ -392,7 +392,7 @@ class ProjectProject(models.Model):
         billable_project_domain = [('allow_billable', '=', True)]
         project_domain = [('id', 'in', self.ids), ('sale_line_id', '!=', False)]
         if 'project.project' in domain_per_model:
-            project_domain = expression.AND([
+            project_domain = Domain.AND([
                 domain_per_model['project.project'],
                 project_domain,
                 billable_project_domain,
@@ -404,7 +404,7 @@ class ProjectProject(models.Model):
         Task = self.env['project.task']
         task_domain = [('project_id', 'in', self.ids), ('sale_line_id', '!=', False)]
         if Task._name in domain_per_model:
-            task_domain = expression.AND([
+            task_domain = Domain.AND([
                 domain_per_model[Task._name],
                 task_domain,
             ])
@@ -415,7 +415,7 @@ class ProjectProject(models.Model):
         ProjectMilestone = self.env['project.milestone']
         milestone_domain = [('project_id', 'in', self.ids), ('allow_billable', '=', True), ('sale_line_id', '!=', False)]
         if ProjectMilestone._name in domain_per_model:
-            milestone_domain = expression.AND([
+            milestone_domain = Domain.AND([
                 domain_per_model[ProjectMilestone._name],
                 milestone_domain,
                 billable_project_domain,
@@ -503,7 +503,7 @@ class ProjectProject(models.Model):
                 ('id', 'in', sale_items.ids),
         ]
         if additional_domain:
-            domain = expression.AND([domain, additional_domain])
+            domain = Domain.AND([domain, additional_domain])
         return domain
 
     def _get_domain_from_section_id(self, section_id):
@@ -545,17 +545,13 @@ class ProjectProject(models.Model):
         }
 
     def _get_profitability_sale_order_items_domain(self, domain=None):
-        if domain is None:
-            domain = []
-        return expression.AND([
-            [
-                '|', ('product_id', '!=', False), ('is_downpayment', '=', True),
-                ('is_expense', '=', False),
-                ('state', '=', 'sale'),
-                '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
-            ],
-            domain,
-        ])
+        domain = Domain(domain or Domain.TRUE)
+        return Domain([
+            '|', ('product_id', '!=', False), ('is_downpayment', '=', True),
+            ('is_expense', '=', False),
+            ('state', '=', 'sale'),
+            '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
+        ]) & domain
 
     def _get_revenues_items_from_sol(self, domain=None, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
@@ -661,16 +657,14 @@ class ProjectProject(models.Model):
         }
 
     def _get_items_from_invoices_domain(self, domain=None):
-        if domain is None:
-            domain = []
+        domain = Domain(domain or Domain.TRUE)
         included_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
-        return expression.AND([
-            domain,
-            [('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
+        return domain & Domain([
+            ('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
             ('parent_state', 'in', ['draft', 'posted']),
             ('price_subtotal', '!=', 0),
             ('is_downpayment', '=', False),
-            ('id', 'not in', included_invoice_line_ids)],
+            ('id', 'not in', included_invoice_line_ids),
         ])
 
     def _get_items_from_invoices(self, excluded_move_line_ids=None, with_action=True):
@@ -691,7 +685,7 @@ class ProjectProject(models.Model):
             'move_id', 'display_type',
         ]
         invoices_move_lines = self.env['account.move.line'].sudo().search_fetch(
-            expression.AND([
+            Domain.AND([
                 self._get_items_from_invoices_domain([('id', 'not in', excluded_move_line_ids)]),
                 [('analytic_distribution', 'in', self.account_id.ids)]
             ]),
@@ -852,7 +846,7 @@ class ProjectProject(models.Model):
         return not self.allow_billable
 
     def _get_projects_to_make_billable_domain(self):
-        return expression.AND([
+        return Domain.AND([
             super()._get_projects_to_make_billable_domain(),
             [('allow_billable', '=', False)],
         ])
