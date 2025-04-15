@@ -493,6 +493,12 @@ class ResUsers(models.Model):
                     groups=", ".join(repr(g.display_name) for g in disjoint_groups),
                 ))
 
+    @api.constrains('group_ids')
+    def _check_at_least_one_administrator(self):
+        system = self.env.ref('base.group_system', raise_if_not_found=False)
+        if system and not system.user_ids:
+            raise ValidationError(_("You must have at least an administrator user."))
+
     def onchange(self, values, field_names, fields_spec):
         # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
         # Put field values in the cache.
