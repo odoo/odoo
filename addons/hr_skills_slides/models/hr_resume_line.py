@@ -33,3 +33,9 @@ class HrResumeLine(models.Model):
         for resume_line in self:
             if resume_line.course_type != 'elearning':
                 resume_line.channel_id = False
+
+    def _compute_color(self):
+        super()._compute_color()
+        for resume_line in self:
+            if resume_line.course_type == 'elearning':
+                resume_line.color = '#00a5b7'
