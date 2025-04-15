@@ -30,6 +30,7 @@ class Page {
     get path() {
         const previousPath = this.previousPage?.path || "";
         const name = this.selectedName;
+
         if (this.readProperty && this.selectedField && this.selectedField.is_property) {
             if (this.selectedField.relation) {
                 return `${previousPath}.get('${name}', env['${this.selectedField.relation}'])`;
@@ -38,13 +39,9 @@ class Page {
         }
         if (name) {
             if (previousPath) {
-                // If one property in the path, fallback to `[name]` instead of `.name`
-                return this.propertyInPath
-                    ? `${previousPath}['${name}']`
-                    : `${previousPath}.${name}`;
-            } else {
-                return name;
+                return `${previousPath}.${name}`;
             }
+            return name;
         }
         return previousPath;
     }
@@ -60,17 +57,6 @@ class Page {
             return `${prefix}${title}`;
         }
         return _t("Select a field");
-    }
-
-    get propertyInPath() {
-        let page = this.previousPage;
-        while (page) {
-            if (page.selectedField.is_property) {
-                return true;
-            }
-            page = page.previousPage;
-        }
-        return false;
     }
 
     focus(direction) {

@@ -137,5 +137,5 @@ test("dynamic placeholder properties", async () => {
     await contains(".o_model_field_selector_popover button:contains('Insert')").click();
 
     const value = document.querySelector(".o_field_placeholder").value.trim();
-    expect(value).toBe("{{object.properties.get('f424643eee1f3655', env['product'])['name']}}");
+    expect(value).toBe("{{object.properties.get('f424643eee1f3655', env['product']).name}}");
 });
