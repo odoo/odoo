@@ -148,7 +148,10 @@ test("geo charts are replaced with an image", async function () {
     const sheetId = model.getters.getActiveSheetId();
     model.dispatch("CREATE_CHART", {
         sheetId,
-        id: "1",
+        figureId: "1",
+        col: 0,
+        row: 0,
+        offset: { x: 0, y: 0 },
         definition: {
             type: "geo",
             dataSets: [],

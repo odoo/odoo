@@ -165,8 +165,13 @@ export function deleteColumns(model, columns, sheetId = model.getters.getActiveS
 /** Create a test chart in the active sheet*/
 export function createBasicChart(model, chartId, sheetId = model.getters.getActiveSheetId()) {
     model.dispatch("CREATE_CHART", {
-        id: chartId,
-        position: { x: 0, y: 0 },
+        figureId: chartId,
+        col: 0,
+        row: 0,
+        offset: {
+            x: 0,
+            y: 0,
+        },
         sheetId: sheetId,
         definition: {
             title: { text: "test" },
@@ -183,8 +188,10 @@ export function createBasicChart(model, chartId, sheetId = model.getters.getActi
 /** Create a test scorecard chart in the active sheet*/
 export function createScorecardChart(model, chartId, sheetId = model.getters.getActiveSheetId()) {
     model.dispatch("CREATE_CHART", {
-        id: chartId,
-        position: { x: 0, y: 0 },
+        figureId: chartId,
+        col: 0,
+        row: 0,
+        offset: { x: 0, y: 0 },
         sheetId: sheetId,
         definition: {
             title: { text: "test" },
@@ -201,8 +208,10 @@ export function createScorecardChart(model, chartId, sheetId = model.getters.get
 /** Create a test scorecard chart in the active sheet*/
 export function createGaugeChart(model, chartId, sheetId = model.getters.getActiveSheetId()) {
     model.dispatch("CREATE_CHART", {
-        id: chartId,
-        position: { x: 0, y: 0 },
+        figureId: chartId,
+        col: 0,
+        row: 0,
+        offset: { x: 0, y: 0 },
         sheetId: sheetId,
         definition: {
             title: { text: "test" },

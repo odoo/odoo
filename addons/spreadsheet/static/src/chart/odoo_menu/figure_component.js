@@ -11,7 +11,7 @@ patch(spreadsheet.components.FigureComponent.prototype, {
         this.notificationService = useService("notification");
     },
     async navigateToOdooMenu(newWindow) {
-        const menu = this.env.model.getters.getChartOdooMenu(this.props.figure.id);
+        const menu = this.env.model.getters.getChartOdooMenu(this.props.figureUI.id);
         if (!menu) {
             throw new Error(`Cannot find any menu associated with the chart`);
         }
@@ -27,7 +27,7 @@ patch(spreadsheet.components.FigureComponent.prototype, {
         await this.actionService.doAction(menu.actionID, { newWindow });
     },
     get hasOdooMenu() {
-        return this.env.model.getters.getChartOdooMenu(this.props.figure.id) !== undefined;
+        return this.env.model.getters.getChartOdooMenu(this.props.figureUI.id) !== undefined;
     },
     async onClick(isMiddleClick) {
         if (this.env.isDashboard() && this.hasOdooMenu) {

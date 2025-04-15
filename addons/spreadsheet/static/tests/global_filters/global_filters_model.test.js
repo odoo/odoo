@@ -2292,7 +2292,7 @@ test("field matching is removed when an Odoo chart is deleted", async function (
         type: "date",
     };
     expect(model.getters.getOdooChartFieldMatching(chartId, filter.id)).toEqual(matching);
-    model.dispatch("DELETE_FIGURE", { id: chartId, sheetId });
+    model.dispatch("DELETE_FIGURE", { figureId: chartId, sheetId });
     expect(() => model.getters.getOdooChartFieldMatching(chartId, filter.id)).toThrow(undefined, {
         message: "Chart does not exist",
     });
