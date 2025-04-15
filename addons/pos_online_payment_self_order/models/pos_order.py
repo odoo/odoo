@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, tools
-from odoo.osv import expression
 
 
 class PosOrder(models.Model):
@@ -44,7 +42,7 @@ class PosOrder(models.Model):
 
         can_change_self_order_domain = [('state', '=', 'draft')]
         if vals['use_self_order_online_payment']:
-            can_change_self_order_domain = expression.AND([can_change_self_order_domain, [('config_id.self_order_online_payment_method_id', '!=', False)]])
+            can_change_self_order_domain += [('config_id.self_order_online_payment_method_id', '!=', False)]
 
         can_change_self_order_orders = self.filtered_domain(can_change_self_order_domain)
         cannot_change_self_order_orders = self - can_change_self_order_orders
