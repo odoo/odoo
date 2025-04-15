@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.addons.rating.models import rating_data
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare, float_round
 
 
@@ -50,7 +49,7 @@ class RatingMixin(models.AbstractModel):
     @api.depends('rating_ids.res_id', 'rating_ids.rating')
     def _compute_rating_stats(self):
         """ Compute avg and count in one query, as thoses fields will be used together most of the time. """
-        domain = expression.AND([self._rating_domain(), [('rating', '>=', rating_data.RATING_LIMIT_MIN)]])
+        domain = self._rating_domain() & Domain('rating', '>=', rating_data.RATING_LIMIT_MIN)
         read_group_res = self.env['rating.rating']._read_group(domain, ['res_id'], aggregates=['__count', 'rating:avg'])  # force average on rating column
         mapping = {res_id: {'rating_count': count, 'rating_avg': rating_avg} for res_id, count, rating_avg in read_group_res}
         for record in self:
@@ -80,7 +79,7 @@ class RatingMixin(models.AbstractModel):
     def _compute_rating_satisfaction(self):
         """ Compute the rating satisfaction percentage, this is done separately from rating_count and rating_avg
             since the query is different, to avoid computing if it is not necessary"""
-        domain = expression.AND([self._rating_domain(), [('rating', '>=', rating_data.RATING_LIMIT_MIN)]])
+        domain = self._rating_domain() & Domain('rating', '>=', rating_data.RATING_LIMIT_MIN)
         # See `_compute_rating_percentage_satisfaction` above
         read_group_res = self.env['rating.rating']._read_group(domain, ['res_id', 'rating'], aggregates=['__count'])
         default_grades = {'great': 0, 'okay': 0, 'bad': 0}
@@ -116,7 +115,7 @@ class RatingMixin(models.AbstractModel):
         """ Returns a normalized domain on rating.rating to select the records to
             include in count, avg, ... computation of current model.
         """
-        return ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)]
+        return Domain([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)])
 
     def _rating_get_repartition(self, add_stats=False, domain=None):
         """ get the repatition of rating grade for the given res_ids.
@@ -130,9 +129,9 @@ class RatingMixin(models.AbstractModel):
                 otherwise, key is the value of the information (string) : either stat name (avg, total, ...) or 'repartition'
                 containing the same dict if add_stats was False.
         """
-        base_domain = expression.AND([self._rating_domain(), [('rating', '>=', 1)]])
+        base_domain = self._rating_domain() & Domain('rating', '>=', 1)
         if domain:
-            base_domain += domain
+            base_domain &= Domain(domain)
         rg_data = self.env['rating.rating']._read_group(base_domain, ['rating'], ['__count'])
         # init dict with all possible rate value, except 0 (no value for the rating)
         values = dict.fromkeys(range(1, 6), 0)

@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 
@@ -120,13 +121,13 @@ class CalendarEvent(models.Model):
         day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
         lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
-        return [
+        return Domain([
             ('partner_ids.user_ids', 'in', self.env.user.id),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
             # Do not sync events that follow the recurrence, they are already synced at recurrence creation
             '!', '&', '&', ('recurrency', '=', True), ('recurrence_id', '!=', False), ('follow_recurrence', '=', True)
-        ]
+        ])
 
     @api.model
     def _odoo_values(self, google_event, default_reminders=()):

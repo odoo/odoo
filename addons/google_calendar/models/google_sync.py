@@ -9,9 +9,9 @@ from dateutil.parser import parse
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
+from odoo.fields import Domain
 from odoo.modules.registry import Registry
 from odoo.tools import ormcache_context, email_normalize
-from odoo.osv import expression
 from odoo.sql_db import BaseCursor
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
@@ -326,12 +326,8 @@ class GoogleCalendarSync(models.AbstractModel):
         """
         domain = self._get_sync_domain()
         if not full_sync:
-            is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
-            domain = expression.AND([domain, [
-                '|',
-                    '&', ('google_id', '=', False), is_active_clause,
-                    ('need_sync', '=', True),
-            ]])
+            is_active_clause = Domain(self._active_name, '=', True) if self._active_name else Domain.TRUE
+            domain &= (Domain('google_id', '=', False) & is_active_clause) | Domain('need_sync', '=', True)
         # We want to limit to 200 event sync per transaction, it shouldn't be a problem for the day to day
         # but it allows to run the first synchro within an acceptable time without timeout.
         # If there is a lot of event to synchronize to google the first time,
@@ -340,12 +336,9 @@ class GoogleCalendarSync(models.AbstractModel):
 
     def _check_any_records_to_sync(self):
         """ Returns True if there are pending records to be synchronized from Odoo to Google, False otherwise. """
-        is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
-        domain = expression.AND([self._get_sync_domain(), [
-            '|',
-                '&', ('google_id', '=', False), is_active_clause,
-                ('need_sync', '=', True),
-        ]])
+        is_active_clause = Domain(self._active_name, '=', True) if self._active_name else Domain.TRUE
+        domain = self._get_sync_domain()
+        domain &= (Domain('google_id', '=', False) & is_active_clause) | Domain('need_sync', '=', True)
         return self.search_count(domain, limit=1) > 0
 
     def _write_from_google(self, gevent, vals):

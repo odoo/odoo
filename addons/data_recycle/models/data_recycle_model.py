@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -8,8 +7,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, modules
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import _, split_every
-from odoo.osv import expression
 
 # When recycle_mode = automatic, _recycle_records calls action_validate.
 # This is quite slow so requires smaller batch size.
@@ -117,14 +116,14 @@ class Data_RecycleModel(models.Model):
             mapped_existing_records[recycle_record.recycle_model_id].append(recycle_record.res_id)
 
         for recycle_model in self:
-            rule_domain = ast.literal_eval(recycle_model.domain) if recycle_model.domain and recycle_model.domain != '[]' else []
+            rule_domain = Domain(ast.literal_eval(recycle_model.domain)) if recycle_model.domain and recycle_model.domain != '[]' else Domain.TRUE
             if recycle_model.time_field_id and recycle_model.time_field_delta and recycle_model.time_field_delta_unit:
                 if recycle_model.time_field_id.ttype == 'date':
                     now = fields.Date.today()
                 else:
                     now = fields.Datetime.now()
                 delta = relativedelta(**{recycle_model.time_field_delta_unit: recycle_model.time_field_delta})
-                rule_domain = expression.AND([rule_domain, [(recycle_model.time_field_id.name, '<=', now - delta)]])
+                rule_domain &= Domain(recycle_model.time_field_id.name, '<=', now - delta)
             model = self.env[recycle_model.res_model_name]
             if recycle_model.include_archived:
                 model = model.with_context(active_test=False)

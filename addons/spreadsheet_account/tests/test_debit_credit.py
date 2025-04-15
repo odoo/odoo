@@ -2,7 +2,7 @@
 
 from datetime import date
 
-from odoo import Command
+from odoo.fields import Command, Domain
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -969,7 +969,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "view_mode": "list",
                 "views": [[False, "list"]],
                 "target": "current",
-                "domain": [
+                "domain": Domain([
                     "&",
                     "&",
                     "&",
@@ -985,7 +985,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     ("date", "<=", date(2022, 12, 31)),
                     ("company_id", "=", self.account_revenue_c1.company_ids.id),
                     ("move_id.state", "!=", "cancel"),
-                ],
+                ]),
                 "name": "Cell Audit",
             },
         )
@@ -1014,7 +1014,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "view_mode": "list",
                 "views": [[False, "list"]],
                 "target": "current",
-                "domain": [
+                "domain": Domain([
                     "&",
                     "&",
                     "&",
@@ -1030,7 +1030,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     ("date", "<=", date(2022, 12, 31)),
                     ("company_id", "=", company.id),
                     ("move_id.state", "!=", "cancel")
-                ],
+                ]),
                 "name": "Cell Audit",
             },
         )

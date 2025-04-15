@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models, fields
 from odoo.exceptions import ValidationError
-from odoo.fields import Command
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 from odoo.tools import html2plaintext, is_html_empty, email_normalize, plaintext2html
 from odoo.addons.mail.tools.discuss import Store
 
@@ -246,12 +244,9 @@ class ChatbotScriptStep(models.Model):
             -> NOK
         """
         self.ensure_one()
-        domain = [('chatbot_script_id', '=', self.chatbot_script_id.id), ('sequence', '>', self.sequence)]
+        domain = Domain('chatbot_script_id', '=', self.chatbot_script_id.id) & Domain('sequence', '>', self.sequence)
         if selected_answer_ids:
-            domain = expression.AND([domain, [
-                '|',
-                ('triggering_answer_ids', '=', False),
-                ('triggering_answer_ids', 'in', selected_answer_ids.ids)]])
+            domain &= Domain('triggering_answer_ids', 'in', selected_answer_ids.ids + [False])
         steps = self.env['chatbot.script.step'].search(domain)
         for step in steps:
             if not step.triggering_answer_ids:

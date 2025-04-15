@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -6,7 +5,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.addons.rating.models import rating_data
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare
 
 
@@ -59,10 +58,10 @@ class RatingParentMixin(models.AbstractModel):
         op = rating_data.OPERATOR_MAPPING.get(operator)
         if not op:
             return NotImplemented
-        domain = [('parent_res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', rating_data.RATING_LIMIT_MIN)]
+        domain = Domain([('parent_res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', rating_data.RATING_LIMIT_MIN)])
         if self._rating_satisfaction_days:
             min_date = fields.Datetime.now() - timedelta(days=self._rating_satisfaction_days)
-            domain = expression.AND([domain, [('write_date', '>=', fields.Datetime.to_string(min_date))]])
+            domain &= Domain('write_date', '>=', fields.Datetime.to_string(min_date))
         rating_read_group = self.env['rating.rating'].sudo()._read_group(domain, ['parent_res_id'], ['rating:avg'])
         parent_res_ids = [
             parent_res_id
