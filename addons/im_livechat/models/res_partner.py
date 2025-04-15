@@ -12,6 +12,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
+    chatbot_script_ids = fields.One2many("chatbot.script", "operator_partner_id")
 
     def _search_for_channel_invite_to_store(self, store: Store, channel):
         super()._search_for_channel_invite_to_store(store, channel)
