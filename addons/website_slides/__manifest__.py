@@ -192,6 +192,9 @@ Featuring
         'html_builder.assets': [
             'website_slides/static/src/website_builder/**/*',
         ],
+        'portal.assets_chatter': [
+            'website_slides/static/src/chatter/frontend/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
