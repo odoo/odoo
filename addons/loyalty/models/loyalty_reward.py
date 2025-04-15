@@ -5,7 +5,7 @@ import json
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class LoyaltyReward(models.Model):
@@ -168,9 +168,9 @@ class LoyaltyReward(models.Model):
             constrains.append([('categ_id', 'in', product_category_ids)])
         if self.discount_product_tag_id:
             constrains.append([('all_product_tag_ids', 'in', self.discount_product_tag_id.id)])
-        domain = expression.OR(constrains) if constrains else []
+        domain = Domain.OR(constrains) if constrains else Domain.TRUE
         if self.discount_product_domain and self.discount_product_domain != '[]':
-            domain = expression.AND([domain, ast.literal_eval(self.discount_product_domain)])
+            domain &= Domain(ast.literal_eval(self.discount_product_domain))
         return domain
 
     @api.model
@@ -196,7 +196,7 @@ class LoyaltyReward(models.Model):
             if compute_all_discount_product == 'enabled':
                 reward.reward_product_domain = "null"
             else:
-                reward.reward_product_domain = json.dumps(reward._get_discount_product_domain())
+                reward.reward_product_domain = json.dumps(list(reward._get_discount_product_domain()))
 
     @api.depends('discount_product_ids', 'discount_product_category_id', 'discount_product_tag_id', 'discount_product_domain')
     def _compute_all_discount_product_ids(self):
