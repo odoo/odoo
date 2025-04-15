@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -11,6 +10,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 
@@ -1153,8 +1153,7 @@ class SlideChannel(models.Model):
 
     def _rating_domain(self):
         """ Only take the published rating into account to compute avg and count """
-        domain = super()._rating_domain()
-        return expression.AND([domain, [('is_internal', '=', False)]])
+        return super()._rating_domain() & Domain('is_internal', '=', False)
 
     def _action_request_access(self, partner):
         activities = self.env['mail.activity']

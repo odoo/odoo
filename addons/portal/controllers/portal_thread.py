@@ -84,8 +84,8 @@ class PortalChatter(http.Controller):
             "messages": messages.ids,
         }
 
-    def _setup_portal_message_fetch_extra_domain(self, data):
-        return []
+    def _setup_portal_message_fetch_extra_domain(self, data) -> Domain:
+        return Domain.TRUE
 
     @http.route(['/mail/update_is_internal'], type='jsonrpc', auth="user", website=True)
     def portal_message_update_is_internal(self, message_id, is_internal):

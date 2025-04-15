@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class ResPartner(models.Model):
@@ -11,7 +11,4 @@ class ResPartner(models.Model):
     is_pickup_location = fields.Boolean()  # Whether it is a pickup point address.
 
     def _get_delivery_address_domain(self):
-        return expression.AND([
-            super()._get_delivery_address_domain(),
-            [('is_pickup_location', '=', False)],
-        ])
+        return super()._get_delivery_address_domain() & Domain('is_pickup_location', '=', False)

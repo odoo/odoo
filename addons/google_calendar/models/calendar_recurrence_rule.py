@@ -3,7 +3,8 @@
 import re
 import logging
 
-from odoo import api, models, Command
+from odoo import api, models
+from odoo.fields import Command, Domain
 from odoo.tools import email_normalize
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
@@ -197,7 +198,7 @@ class CalendarRecurrence(models.Model):
         # older versions of the module. When synced, these recurrency may come back from Google after database cleaning
         # and trigger errors as the records are not properly populated.
         # We also prevent sync of other user recurrent events.
-        return [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
+        return Domain('calendar_event_ids.user_id', '=', self.env.user.id) & Domain('rrule', '!=', False)
 
     @api.model
     def _odoo_values(self, google_recurrence, default_reminders=()):

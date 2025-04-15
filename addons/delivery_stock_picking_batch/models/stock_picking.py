@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class StockPickingType(models.Model):
@@ -32,14 +31,14 @@ class StockPicking(models.Model):
     def _get_possible_pickings_domain(self):
         domain = super()._get_possible_pickings_domain()
         if self.picking_type_id.batch_group_by_carrier:
-            domain = expression.AND([domain, [('carrier_id', '=', self.carrier_id.id if self.carrier_id else False)]])
+            domain &= Domain('carrier_id', '=', self.carrier_id.id if self.carrier_id else False)
 
         return domain
 
     def _get_possible_batches_domain(self):
         domain = super()._get_possible_batches_domain()
         if self.picking_type_id.batch_group_by_carrier:
-            domain = expression.AND([domain, [('picking_ids.carrier_id', '=', self.carrier_id.id if self.carrier_id else False)]])
+            domain &= Domain('picking_ids.carrier_id', '=', self.carrier_id.id if self.carrier_id else False)
 
         return domain
 

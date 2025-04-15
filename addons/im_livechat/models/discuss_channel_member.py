@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 
 from odoo import api, models, fields
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -161,12 +161,7 @@ class DiscussChannelMember(models.Model):
         domain = super()._get_rtc_invite_members_domain(*a, **kw)
         chatbot = self.channel_id.chatbot_current_step_id.chatbot_script_id
         if self.channel_id.channel_type == "livechat" and chatbot:
-            domain = expression.AND(
-                [
-                    domain,
-                    [("partner_id", "!=", chatbot.operator_partner_id.id)],
-                ]
-            )
+            domain &= Domain("partner_id", "!=", chatbot.operator_partner_id.id)
         return domain
 
     def _get_html_link_title(self):

@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
-from odoo.osv import expression
-from odoo.addons.mail.tools.discuss import Store
+from odoo.fields import Domain
 
 import textwrap
 
@@ -44,14 +42,14 @@ class ChatbotScriptAnswer(models.Model):
         ('chatbot_triggering_answers_widget') This allows to only see the question_answer
         from the same chatbot you're configuring.
         """
-        domain = []
+        domain = Domain.TRUE
         if value and operator == 'ilike':
             # search on both name OR step's message (combined with passed args)
-            domain = ['|', ('name', operator, value), ('script_step_id.message', operator, value)]
+            domain = Domain('name', operator, value) | Domain('script_step_id.message', operator, value)
 
         force_domain_chatbot_script_id = self.env.context.get('force_domain_chatbot_script_id')
         if force_domain_chatbot_script_id:
-            domain = expression.AND([domain, [('chatbot_script_id', '=', force_domain_chatbot_script_id)]])
+            domain &= Domain('chatbot_script_id', '=', force_domain_chatbot_script_id)
 
         return domain
 
