@@ -46,7 +46,6 @@ class MailScheduledMessage(models.Model):
         string='Comment Options')  # mainly used for view in specific comment modes
     notified_bcc = fields.Many2many(
         string='Bcc', comodel_name='res.partner', compute='_compute_notified_bcc', readonly=True, store=False)
-    show_notified_bcc = fields.Boolean('Show BCC', store=False)  # TODO: remove field in master
 
     # related document
     model = fields.Char('Related Document Model', required=True)

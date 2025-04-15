@@ -170,7 +170,6 @@ class MailComposeMessage(models.TransientModel):
     notified_bcc = fields.Many2many(
         string='Bcc', comodel_name='res.partner', compute='_compute_notified_bcc', readonly=True, store=False)
     notified_bcc_contains_share = fields.Boolean('Is an external partner follower of the document?', compute="_compute_notified_bcc")
-    show_notified_bcc = fields.Boolean('Show BCC', store=False)  # TODO: remove field in master
 
     # sending
     auto_delete = fields.Boolean(
