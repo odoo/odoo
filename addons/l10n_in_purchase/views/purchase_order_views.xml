@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="country_code" invisible="1"/>
+                <field name="country_code" invisible="1"/> <!-- TODO: to be removed in master -->
                 <field name="l10n_in_gst_treatment" invisible="country_code != 'IN'" required="country_code == 'IN'"/>
             </xpath>
         </field>

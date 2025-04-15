@@ -20,11 +20,11 @@
                     <field name="warning_message"/>
                 </div>
                 <sheet>
-                    <field name="related_move_id" invisible="1"/>
-                    <field name="related_payment_id" invisible="1"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="type_name" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
+                    <field name="related_move_id" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="related_payment_id" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="currency_id" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="type_name" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="company_id" invisible="1"/> <!-- TODO: to be removed in master -->
                     <group>
                         <group id="header_left_group">
                             <field name="date"/>
@@ -38,8 +38,8 @@
                         <page string="TDS Tax Details">
                             <field name="withhold_line_ids">
                                 <tree editable="bottom">
-                                    <field name="currency_id" column_invisible="True"/>
-                                    <field name="l10n_in_tds_tax_type" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/> <!-- TODO: to be removed in master -->
+                                    <field name="l10n_in_tds_tax_type" column_invisible="True"/> <!-- TODO: to be removed in master -->
                                     <field name="tax_id" domain="[('l10n_in_tds_tax_type', '=', l10n_in_tds_tax_type)]"/>
                                     <field name="base" sum="Total Base" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
