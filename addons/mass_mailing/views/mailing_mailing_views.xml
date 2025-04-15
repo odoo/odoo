@@ -232,7 +232,8 @@
                                         <div class="d-inline-flex flex-row align-items-center">
                                             <field name="contact_list_ids" widget="many2many_tags"
                                                 placeholder="Select recipients..." class="oe_inline mb-0"
-                                                context="{'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}"
+                                                context="{'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified', 'active_test': True}"
+                                                domain="[('active', '=', True)]"
                                                 readonly="state in ('sending', 'done')"/>
                                             <button icon="fa-user-plus" type="object" class="btn btn-secondary py-0 px-1 ms-1"
                                                 invisible="not contact_list_ids or not contact_list_ids or state in ('sending', 'done')"
