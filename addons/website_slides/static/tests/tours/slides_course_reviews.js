@@ -37,6 +37,19 @@ registry.category("web_tour.tours").add("course_reviews", {
             trigger: "body:not(:has(.modal.show))",
         },
         {
+            trigger: ".o_wslides_course_header_nav_review",
+            run() {
+                const a = document.querySelector("a[id=review-tab]");
+                if (a.textContent !== "Reviews (1)") {
+                    throw Error("Text should be 'Reviews (1)'.")
+                }
+                a.click();
+            },
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-textContent:contains(Great course!)",
+        },
+        {
             // If it fails here, it means the system is allowing you to add another review.
             trigger: "span:contains(Edit Review)",
             run: "click",
