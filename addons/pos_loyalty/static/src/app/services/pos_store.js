@@ -227,6 +227,8 @@ patch(PosStore.prototype, {
                         couponPointChange.expiration_date = serializeDate(
                             luxon.DateTime.now().plus({ year: 1 })
                         );
+                        couponPointChange.code = order.getSelectedOrderline()?.gift_code;
+                        couponPointChange.partner_id = order.getPartner()?.id;
                     }
 
                     order.uiState.couponPointChanges[coupon.id] = couponPointChange;
