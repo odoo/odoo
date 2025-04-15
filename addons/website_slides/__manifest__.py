@@ -189,6 +189,9 @@ Featuring
             'website_slides/static/src/interactions/**/*',
             'website_slides/static/src/js/public/**/*',
         ],
+        'portal.assets_chatter': [
+            'website_slides/static/src/chatter/frontend/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }
