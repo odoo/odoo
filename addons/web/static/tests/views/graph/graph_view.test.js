@@ -1514,7 +1514,7 @@ test("the active measure description is the arch string attribute in priority", 
 test("reload graph with correct fields", async () => {
     expect.assertions(2);
 
-    onRpc("web_read_group", ({ kwargs }) => {
+    onRpc("formatted_read_group", ({ kwargs }) => {
         expect(kwargs.aggregates).toEqual(["__count", "foo:sum"]);
     });
 
@@ -1540,7 +1540,7 @@ test("reload graph with correct fields", async () => {
 test("initial groupby is kept when reloading", async () => {
     expect.assertions(7);
 
-    onRpc("web_read_group", ({ kwargs }) => {
+    onRpc("formatted_read_group", ({ kwargs }) => {
         expect(kwargs.groupby).toEqual(["product_id"]);
     });
     const view = await mountView({
@@ -2312,7 +2312,7 @@ test("fallback on initial groupby when the groupby from control panel has 0 leng
 });
 
 test("change mode, stacked, or order via the graph buttons does not reload datapoints, change measure does", async () => {
-    onRpc("web_read_group", ({ kwargs }) => {
+    onRpc("formatted_read_group", ({ kwargs }) => {
         expect.step(kwargs.aggregates);
     });
     const view = await mountView({
@@ -2352,7 +2352,7 @@ test("change mode, stacked, or order via the graph buttons does not reload datap
 
 test("concurrent reloads: add a filter, and directly toggle a measure", async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("formatted_read_group", () => def);
     const view = await mountView({
         type: "graph",
         resModel: "foo",
@@ -2403,7 +2403,7 @@ test("concurrent reloads: add a filter, and directly toggle a measure", async ()
 
 test("change graph mode while loading a filter", async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("formatted_read_group", () => def);
     const view = await mountView({
         type: "graph",
         resModel: "foo",
@@ -2498,7 +2498,7 @@ test("only process most recent data for concurrent groupby", async () => {
 test("fill_temporal is true by default", async () => {
     expect.assertions(1);
 
-    onRpc("web_read_group", ({ kwargs }) => {
+    onRpc("formatted_read_group", ({ kwargs }) => {
         expect(kwargs.context.fill_temporal).toBe(true, {
             message: "The observable state of fill_temporal should be true",
         });
@@ -2510,7 +2510,7 @@ test("fill_temporal is true by default", async () => {
 test("fill_temporal can be changed throught the context", async () => {
     expect.assertions(1);
 
-    onRpc("web_read_group", ({ kwargs }) => {
+    onRpc("formatted_read_group", ({ kwargs }) => {
         expect(kwargs.context.fill_temporal).toBe(false, {
             message: "The observable state of fill_temporal should be false",
         });
@@ -2684,23 +2684,20 @@ test("missing property field definition is fetched", async function () {
         definition_record_field: "properties_definition",
     });
     onRpc(({ method, kwargs }) => {
-        if (method === "web_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+        if (method === "formatted_read_group" && kwargs.groupby?.includes("properties.my_char")) {
             expect.step(JSON.stringify(kwargs.groupby));
-            return {
-                groups: [
-                    {
-                        "properties.my_char": false,
-                        __extra_domain: [["properties.my_char", "=", false]],
-                        __count: 2,
-                    },
-                    {
-                        "properties.my_char": "aaa",
-                        __extra_domain: [["properties.my_char", "=", "aaa"]],
-                        __count: 1,
-                    },
-                ],
-                length: 2,
-            };
+            return [
+                {
+                    "properties.my_char": false,
+                    __extra_domain: [["properties.my_char", "=", false]],
+                    __count: 2,
+                },
+                {
+                    "properties.my_char": "aaa",
+                    __extra_domain: [["properties.my_char", "=", "aaa"]],
+                    __count: 1,
+                },
+            ];
         } else if (method === "get_property_definition") {
             return {
                 name: "my_char",
@@ -2748,23 +2745,20 @@ test("missing deleted property field definition is created", async function () {
         definition_record_field: "properties_definition",
     });
     onRpc(({ method, kwargs }) => {
-        if (method === "web_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+        if (method === "formatted_read_group" && kwargs.groupby?.includes("properties.my_char")) {
             expect.step(JSON.stringify(kwargs.groupby));
-            return {
-                groups: [
-                    {
-                        "properties.my_char": false,
-                        __extra_domain: [["properties.my_char", "=", false]],
-                        __count: 2,
-                    },
-                    {
-                        "properties.my_char": "aaa",
-                        __extra_domain: [["properties.my_char", "=", "aaa"]],
-                        __count: 1,
-                    },
-                ],
-                length: 2,
-            };
+            return [
+                {
+                    "properties.my_char": false,
+                    __extra_domain: [["properties.my_char", "=", false]],
+                    __count: 2,
+                },
+                {
+                    "properties.my_char": "aaa",
+                    __extra_domain: [["properties.my_char", "=", "aaa"]],
+                    __count: 1,
+                },
+            ];
         } else if (method === "get_property_definition") {
             return {};
         }

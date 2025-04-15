@@ -41,7 +41,7 @@ test("Can add a chart global filter", async function () {
 test("Chart is loaded with computed domain", async function () {
     const { model } = await createSpreadsheetWithChart({
         mockRPC: function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "web_read_group") {
+            if (model === "partner" && method === "formatted_read_group") {
                 expect(kwargs.domain.length).toBe(3);
                 expect(kwargs.domain[0]).toBe("&");
                 expect(kwargs.domain[1][0]).toBe("date");

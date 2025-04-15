@@ -74,8 +74,8 @@ test("Odoo bar chart runtime loads the data", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_bar",
         mockRPC: async function (route, args) {
-            if (args.method === "web_read_group") {
-                expect.step("web_read_group");
+            if (args.method === "formatted_read_group") {
+                expect.step("formatted_read_group");
             }
         },
     });
@@ -104,15 +104,15 @@ test("Odoo bar chart runtime loads the data", async () => {
         labels: ["false", "true"],
     });
     // it should have loaded the data
-    expect.verifySteps(["web_read_group"]);
+    expect.verifySteps(["formatted_read_group"]);
 });
 
 test("Odoo pie chart runtime loads the data", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_pie",
         mockRPC: async function (route, args) {
-            if (args.method === "web_read_group") {
-                expect.step("web_read_group");
+            if (args.method === "formatted_read_group") {
+                expect.step("formatted_read_group");
             }
         },
     });
@@ -138,15 +138,15 @@ test("Odoo pie chart runtime loads the data", async () => {
         labels: ["false", "true"],
     });
     // it should have loaded the data
-    expect.verifySteps(["web_read_group"]);
+    expect.verifySteps(["formatted_read_group"]);
 });
 
 test("Odoo line chart runtime loads the data", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_line",
         mockRPC: async function (route, args) {
-            if (args.method === "web_read_group") {
-                expect.step("web_read_group");
+            if (args.method === "formatted_read_group") {
+                expect.step("formatted_read_group");
             }
         },
     });
@@ -176,7 +176,7 @@ test("Odoo line chart runtime loads the data", async () => {
         labels: ["false", "true"],
     });
     // it should have loaded the data
-    expect.verifySteps(["web_read_group"]);
+    expect.verifySteps(["formatted_read_group"]);
 });
 
 test("Area charts are supported", async () => {
@@ -209,8 +209,8 @@ test("Data reloaded strictly upon domain update", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_line",
         mockRPC: async function (route, args) {
-            if (args.method === "web_read_group") {
-                expect.step("web_read_group");
+            if (args.method === "formatted_read_group") {
+                expect.step("formatted_read_group");
             }
         },
     });
@@ -222,7 +222,7 @@ test("Data reloaded strictly upon domain update", async () => {
     model.getters.getChartRuntime(chartId);
     await animationFrame();
     // it should have loaded the data
-    expect.verifySteps(["web_read_group"]);
+    expect.verifySteps(["formatted_read_group"]);
 
     model.dispatch("UPDATE_CHART", {
         definition: {
@@ -236,7 +236,7 @@ test("Data reloaded strictly upon domain update", async () => {
     model.getters.getChartRuntime(chartId);
     await animationFrame();
     // it should have loaded the data with a new domain
-    expect.verifySteps(["web_read_group"]);
+    expect.verifySteps(["formatted_read_group"]);
 
     const newDefinition = model.getters.getChartDefinition(chartId);
     model.dispatch("UPDATE_CHART", {
@@ -308,9 +308,9 @@ test("can import (export) contextual domain", async function () {
     const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
-            if (args.method === "web_read_group") {
+            if (args.method === "formatted_read_group") {
                 expect(args.kwargs.domain).toEqual([["foo", "=", uid]]);
-                expect.step("web_read_group");
+                expect.step("formatted_read_group");
             }
         },
     });
@@ -320,7 +320,7 @@ test("can import (export) contextual domain", async function () {
         '[("foo", "=", uid)]',
         { message: "the domain is exported with the dynamic parts" }
     );
-    expect.verifySteps(["web_read_group"]);
+    expect.verifySteps(["formatted_read_group"]);
 });
 
 test("Can undo/redo an Odoo chart creation", async () => {
@@ -519,7 +519,7 @@ test("Load odoo chart spreadsheet with models that cannot be accessed", async fu
     let hasAccessRights = true;
     const { model } = await createSpreadsheetWithChart({
         mockRPC: async function (route, args) {
-            if (args.model === "partner" && args.method === "web_read_group" && !hasAccessRights) {
+            if (args.model === "partner" && args.method === "formatted_read_group" && !hasAccessRights) {
                 throw makeServerError({ description: "ya done!" });
             }
         },

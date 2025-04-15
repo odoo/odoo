@@ -6395,7 +6395,7 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
         "onchange",
         "web_read",
         "read_progress_bar",
-        "web_read_group",
+        "formatted_read_group",
     ]);
 });
 
@@ -8696,11 +8696,11 @@ test('column progressbars: "false" bar with sum_field', async () => {
         "has_group",
         "web_search_read",
         "web_search_read",
-        "web_read_group",
+        "formatted_read_group",
         "web_search_read",
         "read_progress_bar",
-        "web_read_group",
-        "web_read_group",
+        "formatted_read_group",
+        "formatted_read_group",
     ]);
 });
 
@@ -9058,6 +9058,9 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
     onRpc("web_read_group", ({ kwargs }) => {
         expect.step(`web_read_group domain ${JSON.stringify(kwargs.domain)}`);
     });
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        expect.step(`formatted_read_group domain ${JSON.stringify(kwargs.domain)}`);
+    });
 
     await mountView({
         type: "kanban",
@@ -9092,23 +9095,23 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
         "web_read_group domain []",
         "web_search_read",
         "web_search_read",
-        "web_read_group", // recomputes aggregates
+        "formatted_read_group", // recomputes aggregates
         "web_search_read",
-        'web_read_group domain ["&",["bar","=",true],["foo","=","yop"]]', // perform web_read_group only on second column (bar=true)
+        'formatted_read_group domain ["&",["bar","=",true],["foo","=","yop"]]', // perform web_read_group only on second column (bar=true)
         "read_progress_bar",
-        "web_read_group",
-        "web_read_group",
-        "web_read_group domain []",
-        'web_read_group domain ["&",["bar","=",true],["foo","=","yop"]]',
+        "formatted_read_group",
+        "formatted_read_group",
+        "formatted_read_group domain []",
+        'formatted_read_group domain ["&",["bar","=",true],["foo","=","yop"]]',
         // activate filter
-        "web_read_group", // recomputes aggregates
+        "formatted_read_group", // recomputes aggregates
         "web_search_read",
-        'web_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]', // perform web_read_group only on second column (bar=true)
+        'formatted_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]', // perform web_read_group only on second column (bar=true)
         "read_progress_bar",
-        "web_read_group",
-        "web_read_group",
-        "web_read_group domain []",
-        'web_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]',
+        "formatted_read_group",
+        "formatted_read_group",
+        "formatted_read_group domain []",
+        'formatted_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]',
         // activate another filter (switching)
         "web_search_read",
     ]);
@@ -9231,7 +9234,7 @@ test("d&d records grouped by date with progressbar with aggregates", async () =>
         "web_search_read",
         "web_save",
         "read_progress_bar",
-        "web_read_group",
+        "formatted_read_group",
         "web_resequence",
     ]);
 });
@@ -9415,11 +9418,11 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
     expect(getKanbanColumnTooltips()).toEqual(["1 blip", "4 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["-4", "610"]);
     expect.verifySteps([
-        "web_read_group", // recomputes aggregates
+        "formatted_read_group", // recomputes aggregates
         "web_search_read",
         "read_progress_bar",
-        "web_read_group",
-        "web_read_group",
+        "formatted_read_group",
+        "formatted_read_group",
     ]);
 
     // Add searchdomain to something restricting progressbars' values (records still in filtered group)
@@ -9668,7 +9671,7 @@ test("column progressbars on quick create with quick_create_view", async () => {
         "onchange",
         "web_read",
         "read_progress_bar",
-        "web_read_group",
+        "formatted_read_group",
     ]);
 });
 
@@ -9733,25 +9736,25 @@ test("progressbars and active filter with quick_create_view", async () => {
         "has_group",
         "web_search_read",
         "web_search_read",
-        "web_read_group",
+        "formatted_read_group",
         "web_search_read",
         "read_progress_bar",
-        "web_read_group",
-        "web_read_group",
+        "formatted_read_group",
+        "formatted_read_group",
         "get_views",
         "onchange",
         "web_save",
         "onchange",
         "web_read",
         "read_progress_bar",
-        "web_read_group",
-        "web_read_group",
+        "formatted_read_group",
+        "formatted_read_group",
         "web_save",
         "onchange",
         "web_read",
         "read_progress_bar",
-        "web_read_group",
-        "web_read_group",
+        "formatted_read_group",
+        "formatted_read_group",
     ]);
 });
 
@@ -12239,7 +12242,7 @@ test("drag record to folded column, with progressbars", async () => {
         "web_search_read",
         "web_save",
         "read_progress_bar",
-        "web_read_group",
+        "formatted_read_group",
     ]);
 });
 
@@ -12733,11 +12736,11 @@ test("scroll on group unfold and progressbar click", async () => {
 
     expect.verifySteps([
         "scrolled",
-        "web_read_group",
+        "formatted_read_group",
         "web_search_read",
         "read_progress_bar",
-        "web_read_group",
-        "web_read_group",
+        "formatted_read_group",
+        "formatted_read_group",
     ]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 

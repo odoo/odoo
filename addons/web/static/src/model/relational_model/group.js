@@ -119,7 +119,7 @@ export class Group extends DataPoint {
 
     /**
      * The count returned by web_search_read is limited (see DEFAULT_COUNT_LIMIT). However, the one
-     * returned by web_read_group, for each group, isn't. So in the grouped case, it might happen
+     * returned by formatted_read_group, for each group, isn't. So in the grouped case, it might happen
      * that the group count is more accurate than the list one. It that case, we use it on the list.
      */
     _useGroupCountForList() {
