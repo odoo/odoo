@@ -109,7 +109,7 @@ test("keep new message separator until user goes back to the thread", async () =
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
     await contains(".o-mail-Message", { text: "hello" });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
     await hootClick(document.body); // Force "focusin" back on the textarea
     await hootClick(".o-mail-Composer-input");
     await waitNotifications([
@@ -121,7 +121,7 @@ test("keep new message separator until user goes back to the thread", async () =
     await hootClick(".o-mail-DiscussSidebar-item:contains(test)");
     await contains(".o-mail-Discuss-threadName", { value: "test" });
     await contains(".o-mail-Message", { text: "hello" });
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')", { count: 0 });
 });
 
 test("show new message separator on receiving new message when out of odoo focus", async () => {
@@ -142,7 +142,7 @@ test("show new message separator on receiving new message when out of odoo focus
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')", { count: 0 });
     // simulate receiving a message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -152,7 +152,7 @@ test("show new message separator on receiving new message when out of odoo focus
         })
     );
     await contains(".o-mail-Message", { text: "hu" });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "hu" });
 });
 
@@ -166,11 +166,11 @@ test("keep new message separator until current user sends a message", async () =
     await contains(".o-mail-Message", { text: "hello" });
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 1, text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
     await insertText(".o-mail-Composer-input", "hey!");
     await press("Enter");
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')", { count: 0 });
 });
 
 test("keep new message separator when switching between chat window and discuss of same thread", async () => {
@@ -233,7 +233,7 @@ test("show new message separator when message is received in chat window", async
     );
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New'):contains('New')");
     await contains(".o-mail-Thread-newMessage + .o-mail-Message", { text: "hu" });
 });
 
@@ -283,7 +283,7 @@ test("show new message separator when message is received while chat window is c
     await contains(".o-mail-ChatBubble");
     await contains(".o-mail-ChatBubble-counter", { text: "1" });
     await click(".o-mail-ChatBubble");
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
 });
 
 test("only show new message separator in its thread", async () => {

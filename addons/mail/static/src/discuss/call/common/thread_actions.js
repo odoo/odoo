@@ -13,7 +13,12 @@ threadActionsRegistry
         },
         icon: "fa fa-fw fa-phone",
         iconLarge: "fa fa-fw fa-lg fa-phone",
-        name: _t("Start a Call"),
+        name(component) {
+            if (component.thread.rtcSessions.length > 0) {
+                return _t("Join the Call");
+            }
+            return _t("Start a Call");
+        },
         open(component) {
             component.rtc.toggleCall(component.thread);
         },
@@ -30,7 +35,12 @@ threadActionsRegistry
         },
         icon: "fa fa-fw fa-video-camera",
         iconLarge: "fa fa-fw fa-lg fa-video-camera",
-        name: _t("Start a Video Call"),
+        name(component) {
+            if (component.thread.rtcSessions.length > 0) {
+                return _t("Join the Call with Camera");
+            }
+            return _t("Start a Video Call");
+        },
         open(component) {
             component.rtc.toggleCall(component.thread, { camera: true });
         },

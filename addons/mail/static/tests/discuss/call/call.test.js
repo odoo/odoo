@@ -552,7 +552,7 @@ test("Use saved volume settings", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Join the Call']");
     await contains(".o-discuss-Call");
     await triggerEvents(`.o-discuss-CallParticipantCard[title='${partnerName}']`, ["mouseenter"]);
     await click("button[title='Participant options']");
