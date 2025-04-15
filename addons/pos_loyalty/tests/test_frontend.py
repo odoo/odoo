@@ -2669,3 +2669,25 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Create gift card program
         self.create_programs([('name', 'gift_card')])
         self.start_pos_tour("test_gift_card_no_date")
+
+    def test_physical_gift_card_invoiced(self):
+        """
+        Test that the manual gift card sold has been generated with correct code and partner id"""
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference and activate the gift_card_product_50
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+
+        # Run the tour
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_physical_gift_card_invoiced",
+            login="pos_user"
+        )
+
+        self.assertEqual(len(gift_card_program.coupon_ids), 1, "Gift card not generated")
+        self.assertEqual(gift_card_program.coupon_ids[0].code, "test-card-1234", "Gift card code not correct")
+        self.assertEqual(gift_card_program.coupon_ids[0].partner_id, partner, "Gift card partner id not correct")
