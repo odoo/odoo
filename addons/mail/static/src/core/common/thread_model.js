@@ -87,6 +87,9 @@ export class Thread extends Record {
     }
     /** @type {boolean} */
     can_react = true;
+    chat_window = fields.One("ChatWindow", {
+        inverse: "thread",
+    });
     close_chat_window = fields.Attr(undefined, {
         /** @this {import("models").Thread} */
         onUpdate() {

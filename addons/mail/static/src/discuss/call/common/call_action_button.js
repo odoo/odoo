@@ -13,8 +13,8 @@ export class CallActionButton extends Component {
     static props = ["action", "isSmall", "isActive?"];
 
     get title() {
-        return this.props.action.hotkey ?
-            `${this.props.action.name} (${this.props.action.hotkey})` :
-            this.props.action.name;
+        return this.props.action.hotkey
+            ? `${this.props.action.name} (${this.props.action.hotkey})`
+            : this.props.action.name;
     }
 }

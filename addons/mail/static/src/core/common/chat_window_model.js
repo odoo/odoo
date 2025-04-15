@@ -8,7 +8,7 @@ export class ChatWindow extends Record {
 
     actionsDisabled = false;
     bypassCompact = false;
-    thread = fields.One("Thread");
+    thread = fields.One("Thread", { inverse: "chat_window" });
     autofocus = 0;
     jumpToNewMessage = 0;
     hidden = false;

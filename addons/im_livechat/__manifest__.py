@@ -127,6 +127,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/scss/ui.scss',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/src/scss/animation.scss',
             'web/static/lib/odoo_ui_icons/style.css',
             'web/static/src/webclient/webclient.scss',
             ('include', 'web._assets_core'),

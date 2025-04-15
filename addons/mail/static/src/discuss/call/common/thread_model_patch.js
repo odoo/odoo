@@ -4,6 +4,12 @@ import { browser } from "@web/core/browser/browser";
 
 import { patch } from "@web/core/utils/patch";
 
+export const CALL_PROMOTE_FULLSCREEN = Object.freeze({
+    INACTIVE: "INACTIVE",
+    ACTIVE: "ACTIVE",
+    DISCARDED: "DISCARDED",
+});
+
 /** @type {import("models").Thread} */
 const ThreadPatch = {
     setup() {
@@ -18,6 +24,7 @@ const ThreadPatch = {
                 this.store.allActiveRtcSessions.delete(r);
             },
         });
+        this.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISABLED;
         this.hadSelfSession = false;
         /** @type {Set<number>} */
         this.lastSessionIds = new Set();
@@ -65,11 +72,27 @@ const ThreadPatch = {
                 }
             },
         });
-    },
-    get videoCount() {
-        return Object.values(this.store["discuss.channel.rtc.session"].records).filter(
-            (session) => session.hasVideo
-        ).length;
+        this.videoCountNotSelf = fields.Attr(0, {
+            compute() {
+                return this.rtc_session_ids.filter(
+                    (s) => s.hasVideo && s.notEq(this.store.rtc.selfSession)
+                ).length;
+            },
+            onUpdate() {
+                if (this.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.DISCARDED) {
+                    return;
+                }
+                this.promoteFullscreen =
+                    this.videoCountNotSelf > 0 && this.chat_window?.isOpen
+                        ? CALL_PROMOTE_FULLSCREEN.ACTIVE
+                        : CALL_PROMOTE_FULLSCREEN.INACTIVE;
+            },
+        });
+        this.videoCount = fields.Attr(0, {
+            compute() {
+                return this.rtc_session_ids.filter((s) => s.hasVideo).length;
+            },
+        });
     },
 };
 patch(Thread.prototype, ThreadPatch);
