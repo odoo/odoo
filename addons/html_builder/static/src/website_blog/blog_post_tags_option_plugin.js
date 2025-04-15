@@ -14,6 +14,7 @@ class BlogPostTagsOptionPlugin extends Plugin {
                 // keep track of temporary edited value
                 // clean up temporary edited value
             },
+            editableOnly: false,
         },
     };
 }
