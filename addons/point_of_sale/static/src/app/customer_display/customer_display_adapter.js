@@ -40,7 +40,7 @@ export class CustomerDisplayPosAdapter {
                 .call("pos.config", "update_customer_display", [
                     [pos.config.id],
                     this.data,
-                    pos.config.access_token,
+                    localStorage.getItem("device_uuid"),
                 ])
                 .catch((error) => {
                     console.info("Failed to update customer display:", error);

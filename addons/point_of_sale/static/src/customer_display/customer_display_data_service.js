@@ -47,7 +47,7 @@ export const CustomerDisplayDataService = {
                 Object.assign(data, event.data);
             };
             getOnNotified(bus_service, session.access_token)(
-                "UPDATE_CUSTOMER_DISPLAY",
+                `UPDATE_CUSTOMER_DISPLAY-${session.device_uuid}`,
                 (payload) => {
                     Object.assign(data, payload);
                 }
