@@ -504,7 +504,7 @@ class Ewaybill(models.Model):
             "hsnCode": AccountEDI._l10n_in_edi_extract_digits(product.l10n_in_hsn_code),
             "productDesc": product.name,
             "quantity": line.quantity,
-            "qtyUnit": product.uom_id.l10n_in_code and product.uom_id.l10n_in_code.split("-")[
+            "qtyUnit": line.product_uom.l10n_in_code and line.product_uom.l10n_in_code.split("-")[
                 0] or "OTH",
             "taxableAmount": AccountEDI._l10n_in_round_value(tax_details['total_excluded']),
         }
