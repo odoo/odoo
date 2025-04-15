@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime
-from odoo.tests.common import tagged, TransactionCase, HttpCase, freeze_time
+
+from odoo.tests.common import HttpCase, TransactionCase, freeze_time, tagged
 
 
 @freeze_time('2021-01-01')

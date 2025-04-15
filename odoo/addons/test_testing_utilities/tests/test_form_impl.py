@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Test for the pseudo-form implementation (odoo.tests.Form), which should
 basically be a server-side implementation of form views (though probably not
@@ -6,11 +5,12 @@ complete) intended for properly validating business "view" flows (onchanges,
 readonly, required, ...) and make it easier to generate sensible & coherent
 business objects.
 """
-from lxml import etree
 from operator import itemgetter
 
-from odoo.tests import TransactionCase, Form
+from lxml import etree
+
 from odoo import Command
+from odoo.tests import Form, TransactionCase
 
 
 class TestBasic(TransactionCase):
@@ -57,7 +57,7 @@ class TestBasic(TransactionCase):
         r = f.save()
         self.assertEqual(
             (r.f1, r.f2, r.f3, r.f4),
-            ('1', 0, 0, 0)
+            ('1', 0, 0, 0),
         )
 
     def test_required_bool(self):
@@ -108,6 +108,7 @@ class TestBasic(TransactionCase):
         with self.assertRaises(AssertionError):
             f.f2 = 6
 
+
 class TestM2O(TransactionCase):
     def test_default_and_onchange(self):
         """ Checks defaults & onchanges impacting m2o fields
@@ -120,12 +121,12 @@ class TestM2O(TransactionCase):
 
         self.assertFalse(
             f.f,
-            "The default value gets overridden by the onchange"
+            "The default value gets overridden by the onchange",
         )
         f.f2 = "B"
         self.assertEqual(
             f.f, b,
-            "The new m2o value should match the second field by name"
+            "The new m2o value should match the second field by name",
         )
 
         f.save()
@@ -163,6 +164,7 @@ class TestM2O(TransactionCase):
         r = f.save()
         self.assertEqual(r.f2, r2)
 
+
 class TestM2M(TransactionCase):
     def test_add(self):
         Sub = self.env['test_testing_utilities.sub2']
@@ -175,7 +177,7 @@ class TestM2M(TransactionCase):
 
         self.assertEqual(
             f.record.m2m,
-            r1 | r2
+            r1 | r2,
         )
 
     def test_remove_by_index(self):
@@ -190,7 +192,7 @@ class TestM2M(TransactionCase):
 
         self.assertEqual(
             f.record.m2m,
-            r2
+            r2,
         )
 
     def test_remove_by_id(self):
@@ -205,7 +207,7 @@ class TestM2M(TransactionCase):
 
         self.assertEqual(
             f.record.m2m,
-            r2
+            r2,
         )
 
     def test_set(self):
@@ -265,7 +267,7 @@ class TestM2M(TransactionCase):
         a = Sub.create({'name': 'a'})
         b = Sub.create({'name': 'b'})
         r = self.env['test_testing_utilities.g'].create({
-            'm2m': [Command.set(a.ids)]
+            'm2m': [Command.set(a.ids)],
         })
 
         f = Form(r)
@@ -287,10 +289,13 @@ class TestM2M(TransactionCase):
         r = f.save()
         self.assertEqual(
             r.m2m.mapped('name'),
-            ['ok', '1', '2', '3', '4']
+            ['ok', '1', '2', '3', '4'],
         )
 
+
 get = itemgetter('name', 'value', 'v')
+
+
 class TestO2M(TransactionCase):
     def test_basic_alterations(self):
         """ Tests that the o2m proxy allows adding, removing and editing o2m
@@ -306,7 +311,7 @@ class TestO2M(TransactionCase):
 
         self.assertEqual(
             [get(s) for s in r.subs],
-            [("2", 2, 2), ("2", 2, 2)]
+            [("2", 2, 2), ("2", 2, 2)],
         )
         self.assertEqual(r.v, 5)
 
@@ -322,7 +327,7 @@ class TestO2M(TransactionCase):
 
         self.assertEqual(
             [get(s) for s in r.subs],
-            [("2", 2, 2), ("5", 5, 5), ("2", 2, 2)]
+            [("2", 2, 2), ("5", 5, 5), ("2", 2, 2)],
         )
         self.assertEqual(r.v, 10)
 
@@ -341,7 +346,7 @@ class TestO2M(TransactionCase):
         self.assertEqual(
             [el.get('name') for el in f._view['tree'].xpath('//field[@name="subs"]/list//field')],
             [el.get('name') for el in etree.fromstring(custom_tree['arch']).xpath('//field')],
-            'check that the list view is the one referenced by list_view_ref'
+            'check that the list view is the one referenced by list_view_ref',
         )
         subs_field = f._view['fields']['subs']
         self.assertIs(subs_field['edition_view']['tree'], f._view['tree'].xpath('//field[@name="subs"]/list')[0], "check that the edition view is the list view")
@@ -362,7 +367,7 @@ class TestO2M(TransactionCase):
         self.assertEqual(r.v, 12)
         self.assertEqual(
             [get(s) for s in r.subs],
-            [('1', 1, 1), ('3', 3, 3), ('7', 7, 7)]
+            [('1', 1, 1), ('3', 3, 3), ('7', 7, 7)],
         )
 
     def test_o2m_inline(self):
@@ -378,7 +383,7 @@ class TestO2M(TransactionCase):
         self.assertEqual(
             [get(s) for s in r.subs],
             [("0", 42, 0)],
-            "should not have set v (and thus not name)"
+            "should not have set v (and thus not name)",
         )
 
     def test_o2m_parent_context(self):
@@ -400,7 +405,7 @@ class TestO2M(TransactionCase):
 
         self.assertEqual(
             [get(s) for s in r.subs],
-            [("5", 2, 5)]
+            [("5", 2, 5)],
         )
 
     def test_o2m_inner_default(self):
@@ -460,7 +465,7 @@ class TestO2M(TransactionCase):
         view) can't be written to
         """
         r = self.env['test_testing_utilities.parent'].create({
-            'subs': [Command.create({})]
+            'subs': [Command.create({})],
         })
         f = Form(r, view='test_testing_utilities.o2m_parent_readonly')
 
@@ -482,7 +487,7 @@ class TestO2M(TransactionCase):
         r = f.record
         self.assertEqual(
             (r.line_ids.name, r.line_ids.f),
-            ('ok', 2)
+            ('ok', 2),
         )
 
     def test_o2m_dyn_onchange(self):
@@ -586,7 +591,7 @@ class TestO2M(TransactionCase):
 
         self.assertEqual(
             r.subs,
-            a | b | c
+            a | b | c,
         )
 
     def test_o2m_onchange_change_saved(self):
@@ -627,6 +632,7 @@ class TestO2M(TransactionCase):
         self.assertEqual(r.mapped('line_ids.vv'), [1, 2])
         self.assertEqual(r.mapped('line_ids.v'), [7, 7])
 
+
 class TestNestedO2M(TransactionCase):
     def test_id_cannot_be_assigned(self):
         # MO with:
@@ -651,8 +657,8 @@ class TestNestedO2M(TransactionCase):
                     'move_line_ids': [Command.create({
                         'product_id': product2,
                         'product_uom_qty': 1.0,
-                        'qty_done': 0.0 # -> 1.0
-                    })] # -> new line with qty=0, qty_done=2
+                        'qty_done': 0.0,  # -> 1.0
+                    })],  # -> new line with qty=0, qty_done=2
                 }),
                 Command.create({
                     'product_id': product1,
@@ -660,11 +666,11 @@ class TestNestedO2M(TransactionCase):
                     'move_line_ids': [Command.create({
                         'product_id': product1,
                         'product_uom_qty': 4.0,
-                        'qty_done': 0.0 # -> 4.0
-                    })] # -> new line with qty=0, qty_done=8
-                })
+                        'qty_done': 0.0,  # -> 4.0
+                    })],  # -> new line with qty=0, qty_done=8
+                }),
             ],
-            'move_finished_ids': [Command.create({'product_id': product0})]
+            'move_finished_ids': [Command.create({'product_id': product0})],
             # -> new line with qty=0, qty_done=3
         })
         form = Form(obj)
@@ -696,8 +702,8 @@ class TestNestedO2M(TransactionCase):
                     'move_line_ids': [Command.create({
                         'product_id': product2,
                         'product_uom_qty': 1.0,
-                        'qty_done': 0.0 # -> 1.0
-                    })] # -> new line with qty=0, qty_done=2
+                        'qty_done': 0.0,  # -> 1.0
+                    })],  # -> new line with qty=0, qty_done=2
                 }),
                 Command.create({
                     'product_id': product1,
@@ -705,11 +711,11 @@ class TestNestedO2M(TransactionCase):
                     'move_line_ids': [Command.create({
                         'product_id': product1,
                         'product_uom_qty': 4.0,
-                        'qty_done': 0.0 # -> 4.0
-                    })] # -> new line with qty=0, qty_done=8
-                })
+                        'qty_done': 0.0,  # -> 4.0
+                    })],  # -> new line with qty=0, qty_done=8
+                }),
             ],
-            'move_finished_ids': [Command.create({'product_id': product0})]
+            'move_finished_ids': [Command.create({'product_id': product0})],
             # -> new line with qty=0, qty_done=3
         })
         form = Form(obj)
@@ -736,8 +742,8 @@ class TestNestedO2M(TransactionCase):
                     'name': 'line 1',
                     'v': 42,
                     'line_ids': [Command.create({'v': 1, 'vv': 1})],
-                })
-            ]
+                }),
+            ],
         })
 
         with Form(r) as f:
@@ -747,6 +753,7 @@ class TestNestedO2M(TransactionCase):
         self.assertEqual(len(r.line_ids.line_ids), 1)
         self.assertEqual(r.line_ids.line_ids.v, 0)
         self.assertEqual(r.line_ids.line_ids.vv, 0)
+
 
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
@@ -802,7 +809,7 @@ class TestEdition(TransactionCase):
         sub = self.env['test_testing_utilities.sub2'].create({'name': 'a'})
 
         r = self.env['test_testing_utilities.f'].create({
-            'm2m': []
+            'm2m': [],
         })
 
         with Form(r) as f:
@@ -818,7 +825,7 @@ class TestEdition(TransactionCase):
         c = Sub.create({'name': 'c'})
 
         r = self.env['test_testing_utilities.f'].create({
-            'm2m': [Command.set((a | b | c).ids)]
+            'm2m': [Command.set((a | b | c).ids)],
         })
 
         with Form(r) as f:

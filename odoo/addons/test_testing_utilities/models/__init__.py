@@ -1,2 +1,4 @@
-from . import models
-from . import nested_o2m
+from . import (
+    models,
+    nested_o2m,
+)

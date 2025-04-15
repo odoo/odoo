@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-from __future__ import division
+from itertools import zip_longest
 
-from itertools import count, zip_longest
-
-from odoo import api, fields, models, Command
+from odoo import Command, api, fields, models
 
 
 class Test_Testing_UtilitiesA(models.Model):

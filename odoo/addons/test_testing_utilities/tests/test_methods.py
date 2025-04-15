@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
-from unittest import mock, TestCase
+from unittest import TestCase, mock
 
 import psycopg2
 
@@ -13,6 +12,7 @@ from odoo.tools import mute_logger
 
 class CustomError(Exception):
     ...
+
 
 class TestBasic(common.TransactionCase):
     def test_assertRecordValues(self):

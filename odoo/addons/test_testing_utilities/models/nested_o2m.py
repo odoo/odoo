@@ -1,6 +1,6 @@
 from lxml.builder import E
 
-from odoo import fields, models, api, Command
+from odoo import Command, api, fields, models
 
 
 class TtuProduct(models.Model):
