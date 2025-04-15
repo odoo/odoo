@@ -37,3 +37,9 @@
         opacity: 0;
     }
 }
+
+// pulse effect
+@keyframes pulse {
+    from { box-shadow: 0 0 0 0 var(--pulse-color-from, #{$primary}); }
+    to { box-shadow: 0 0 0 2em var(--pulse-color-to, #{rgba(#FFF, 0)}); }
+}

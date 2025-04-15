@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallActionList.button">
-        <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-75-hover align-items-center p-0"
+        <button class="btn smaller d-flex m-1 border rounded-circle shadow opacity-75-hover align-items-center p-0"
             t-att-class="{ 'bg-600 opacity-75': !props.action.available, 'opacity-100': props.action.available }"
             t-att-data-hotkey="props.action.hotkey"
             t-att-aria-label="props.action.name"
