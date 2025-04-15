@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.account_move_send_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='advanced_options']" position="inside">
-                <field name="l10n_rs_edi_send_enable" invisible="1"/>
+                <field name="l10n_rs_edi_send_enable" invisible="1"/> <!-- TODO: to be removed in master -->
                 <div name="l10n_rs_edi_send" invisible="not l10n_rs_edi_send_enable">
                     <field name="l10n_rs_edi_send_checkbox"/>
                     <b><label for="l10n_rs_edi_send_checkbox"/></b>

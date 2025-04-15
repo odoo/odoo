@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <block name="integration" position="inside">
-                <field name="country_code" invisible="True"/>
+                <field name="country_code" invisible="True"/> <!-- TODO: to be removed in master -->
                 <setting id="nilvera_settings" string="Nilvera Electronic Document Invoicing" help="Configure Nilvera settings" invisible="country_code != 'TR'">
                     <div class="content-group">
                         <div class="row mt16">

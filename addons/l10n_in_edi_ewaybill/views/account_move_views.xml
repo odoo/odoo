@@ -6,13 +6,13 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='button_set_checked']" position="after">
-                <field name="l10n_in_edi_ewaybill_show_send_button" invisible="1"/>
+                <field name="l10n_in_edi_ewaybill_show_send_button" invisible="1"/> <!-- TODO: to be removed in master -->
                 <button name="l10n_in_edi_ewaybill_send" string="Send E-waybill" class="oe_highlight" type="object" groups="account.group_account_invoice" invisible="not l10n_in_edi_ewaybill_show_send_button"/>
             </xpath>
             <xpath expr="//notebook/page[@name='other_info']" position="before">
                 <page string="eWayBill" name="l10n_in_edi_ewaybill_page"
                     invisible="move_type in ('entry', 'out_refund') or country_code != 'IN'">
-                    <field name="l10n_in_edi_ewaybill_direct_api" invisible="1"/>
+                    <field name="l10n_in_edi_ewaybill_direct_api" invisible="1"/> <!-- TODO: to be removed in master -->
                     <group name="ewaybill_group">
                         <group string="Transaction Details" name="Transaction_group" 
                             invisible="not l10n_in_edi_ewaybill_direct_api">
