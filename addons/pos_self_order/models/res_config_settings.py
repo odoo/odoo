@@ -5,8 +5,8 @@ from io import BytesIO
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.tools.misc import split_every
-from odoo.osv.expression import AND
 from werkzeug.urls import url_unquote
 
 
@@ -223,5 +223,5 @@ class ResConfigSettings(models.TransientModel):
         for res_config in self:
             if res_config.pos_self_ordering_mode == 'kiosk':
                 currency_id = res_config.pos_journal_id.currency_id.id if res_config.pos_journal_id.currency_id else res_config.pos_config_id.company_id.currency_id.id
-                domain = AND([self.env['product.pricelist']._check_company_domain(res_config.pos_config_id.company_id), [('currency_id', '=', currency_id)]])
+                domain = Domain.AND([self.env['product.pricelist']._check_company_domain(res_config.pos_config_id.company_id), [('currency_id', '=', currency_id)]])
                 res_config.pos_available_pricelist_ids = self.env['product.pricelist'].search(domain)
