@@ -1275,12 +1275,21 @@ class MrpProduction(models.Model):
         # waiting for a preproduction move before assignement
         is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
 
+<<<<<<< da97daf41b7efebcd23e9fd2c2bdceada9c50e56
         for move in (self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none') | self.move_byproduct_ids):
             is_byproduct = move in self.move_byproduct_ids
             # Never update already produced by-product moves.
             if move.picked and is_byproduct:
                 continue
 
+||||||| 23d9b5b67c232a53dbff2b4e5545ab0cc5931f5e
+        for move in (self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none') | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
+=======
+        for move in (
+            self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none')
+            | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
+        ):
+>>>>>>> 00b110aa5616c4147a9b5a0d1bebcf181149a3a3
             # picked + manual means the user set the quantity manually
             if move.manual_consumption and move.picked:
                 continue
@@ -1291,7 +1300,15 @@ class MrpProduction(models.Model):
 
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
             move._set_quantity_done(new_qty)
+<<<<<<< da97daf41b7efebcd23e9fd2c2bdceada9c50e56
             if (not move.manual_consumption or pick_manual_consumption_moves) and move.quantity and not is_byproduct:
+||||||| 23d9b5b67c232a53dbff2b4e5545ab0cc5931f5e
+            if (not move.manual_consumption or pick_manual_consumption_moves) and move.quantity:
+=======
+            if (not move.manual_consumption or pick_manual_consumption_moves) \
+                    and move.quantity \
+                    and (move.product_id != self.product_id or not move.production_id or move.product_id.tracking != 'serial'):
+>>>>>>> 00b110aa5616c4147a9b5a0d1bebcf181149a3a3
                 move.picked = True
 
     def _should_postpone_date_finished(self, date_finished):
