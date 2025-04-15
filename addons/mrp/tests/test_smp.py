@@ -31,6 +31,11 @@ class TestMrpSerialMassProduce(TestMrpCommon):
                 'location_id': mo.location_src_id.id,
             })._apply_inventory()
         mo.action_assign()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        self.assertEqual(len(mo.move_finished_ids.move_line_ids), 1)
+        mo.qty_producing = 0
         # Open the wizard
         action = mo.action_mass_produce()
         wizard_form = Form(self.env['mrp.batch.produce'].with_context(**action['context']))
@@ -40,9 +45,9 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         wizard = wizard_form.save()
         wizard.action_generate_production_text()
         wizard.action_prepare()
-        # Initial MO should have a backorder-sequenced name and be in confirmed state
+        # Initial MO should have a backorder-sequenced name and be in progress state
         self.assertTrue("-001" in mo.name)
-        self.assertEqual(mo.state, "confirmed")
+        self.assertEqual(mo.state, "progress")
         # Each generated serial number should have its own mo
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), count)
         # Check generated serial numbers
