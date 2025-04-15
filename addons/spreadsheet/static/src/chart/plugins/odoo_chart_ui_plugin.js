@@ -32,8 +32,8 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                     case "odoo_pie":
                     case "odoo_bar":
                     case "odoo_line": {
-                        const dataSource = this.getChartDataSource(cmd.id);
-                        const chart = this.getters.getChart(cmd.id);
+                        const dataSource = this.getChartDataSource(cmd.figureId);
+                        const chart = this.getters.getChart(cmd.figureId);
                         if (
                             cmd.definition.type !== chart.type ||
                             chart.cumulative !== cmd.definition.cumulative ||
@@ -59,17 +59,17 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
         switch (cmd.type) {
             case "CREATE_CHART": {
                 if (cmd.definition.type.startsWith("odoo_")) {
-                    this._setupChartDataSource(cmd.id);
+                    this._setupChartDataSource(cmd.figureId);
                 }
                 break;
             }
             case "UPDATE_CHART": {
                 if (cmd.definition.type.startsWith("odoo_")) {
                     if (this.shouldChartUpdateReloadDataSource) {
-                        this._resetChartDataSource(cmd.id);
+                        this._resetChartDataSource(cmd.figureId);
                         this.shouldChartUpdateReloadDataSource = false;
                     }
-                    this._setChartDataSource(cmd.id);
+                    this._setChartDataSource(cmd.figureId);
                 }
                 break;
             }
@@ -97,15 +97,15 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                     (cmd) => cmd.type === "UPDATE_CHART" || cmd.type === "CREATE_CHART"
                 );
                 for (const cmd of domainEditionCommands) {
-                    if (!this.getters.getOdooChartIds().includes(cmd.id)) {
+                    if (!this.getters.getOdooChartIds().includes(cmd.figureId)) {
                         continue;
                     }
-                    const dataSource = this.getChartDataSource(cmd.id);
+                    const dataSource = this.getChartDataSource(cmd.figureId);
                     if (
                         dataSource.getInitialDomainString() !==
                         new Domain(cmd.definition.searchParams.domain).toString()
                     ) {
-                        this._resetChartDataSource(cmd.id);
+                        this._resetChartDataSource(cmd.figureId);
                     }
                 }
                 break;
