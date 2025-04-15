@@ -1,0 +1,17 @@
+.o_loading_screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 2000; // TODO $o-we-zindex
+
+    &:not(.o_we_ui_loading) > img {
+        display: none;
+    }
+
+    &.o_we_ui_loading {
+        background-color: $o-we-sidebar-content-backdrop-bg;
+        color: $o-we-fg-lighter;
+    }
+}

@@ -50,44 +50,48 @@ export class BlockTab extends Component {
     }
 
     onSnippetGroupClick(snippet) {
-        this.shared.operation.next(async () => {
-            let snippetEl;
-            this.state.ongoingInsertion = true;
-            await new Promise((resolve) => {
-                this.snippetModel.openSnippetDialog(snippet, {
-                    onSelect: (snippet) => {
-                        snippetEl = snippet.content.cloneNode(true);
-                        const selectors = this.shared.dropzone.getSelectors(snippetEl, snippet);
-                        // Add the dropzones corresponding to the selected
-                        // snippet and make them invisible.
-                        const dropzoneEls = this.shared.dropzone.activateDropzones(selectors);
-                        this.editable
-                            .querySelectorAll(".oe_drop_zone")
-                            .forEach((dropzoneEl) => dropzoneEl.classList.add("invisible"));
+        this.shared.operation.next(
+            async () => {
+                let snippetEl;
+                this.state.ongoingInsertion = true;
+                await new Promise((resolve) => {
+                    this.snippetModel.openSnippetDialog(snippet, {
+                        onSelect: (snippet) => {
+                            snippetEl = snippet.content.cloneNode(true);
+                            const selectors = this.shared.dropzone.getSelectors(snippetEl, snippet);
+                            // Add the dropzones corresponding to the selected
+                            // snippet and make them invisible.
+                            const dropzoneEls = this.shared.dropzone.activateDropzones(selectors);
+                            this.editable
+                                .querySelectorAll(".oe_drop_zone")
+                                .forEach((dropzoneEl) => dropzoneEl.classList.add("invisible"));
 
-                        // Find the dropzone closest to the center of the viewport.
-                        const iframeWindow = this.document.defaultView;
-                        const viewPortCenterPoint = {
-                            x: iframeWindow.innerWidth / 2,
-                            y: iframeWindow.innerHeight / 2,
-                        };
-                        const closestDropzoneEl = closest(dropzoneEls, viewPortCenterPoint);
-                        // Insert the selected snippet.
-                        closestDropzoneEl.after(snippetEl);
-                        this.shared.dropzone.removeDropzones();
-                        return snippetEl;
-                    },
-                    onClose: () => {
-                        resolve();
-                    },
+                            // Find the dropzone closest to the center of the
+                            // viewport.
+                            const iframeWindow = this.document.defaultView;
+                            const viewPortCenterPoint = {
+                                x: iframeWindow.innerWidth / 2,
+                                y: iframeWindow.innerHeight / 2,
+                            };
+                            const closestDropzoneEl = closest(dropzoneEls, viewPortCenterPoint);
+                            // Insert the selected snippet.
+                            closestDropzoneEl.after(snippetEl);
+                            this.shared.dropzone.removeDropzones();
+                            return snippetEl;
+                        },
+                        onClose: () => {
+                            resolve();
+                        },
+                    });
                 });
-            });
 
-            if (snippetEl) {
-                this.processDroppedSnippet(snippetEl);
-            }
-            this.state.ongoingInsertion = false;
-        });
+                if (snippetEl) {
+                    this.processDroppedSnippet(snippetEl);
+                }
+                this.state.ongoingInsertion = false;
+            },
+            { withLoadingEffect: false }
+        );
     }
 
     /**
@@ -198,9 +202,12 @@ export class BlockTab extends Component {
                 this.cancelDragAndDrop = this.shared.history.makeSavePoint();
                 this.hideSnippetToolTip?.();
 
-                this.shared.operation.next(async () => {
-                    await new Promise((resolve) => (dragAndDropResolve = () => resolve()));
-                });
+                this.shared.operation.next(
+                    async () => {
+                        await new Promise((resolve) => (dragAndDropResolve = () => resolve()));
+                    },
+                    { withLoadingEffect: false }
+                );
 
                 this.document.body.classList.add("oe_dropzone_active");
                 this.state.ongoingInsertion = true;
@@ -308,9 +315,12 @@ export class BlockTab extends Component {
                     if (!isSnippetGroup) {
                         this.processDroppedSnippet(snippetEl);
                     } else {
-                        this.shared.operation.next(async () => {
-                            await this.onSnippetGroupDrop(snippet, snippetEl);
-                        });
+                        this.shared.operation.next(
+                            async () => {
+                                await this.onSnippetGroupDrop(snippet, snippetEl);
+                            },
+                            { withLoadingEffect: false }
+                        );
                     }
                 }
 
