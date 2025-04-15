@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Nurlan Farajov, 2024
-# erpgo translator <jumshud@erpgo.az>, 2024
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # Nurlan Farajov <coolinuxoid@gmail.com>, 2025
+# erpgo translator <jumshud@erpgo.az>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
+"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -334,6 +334,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Hörmətli <t t-out=\"object.partner_id.name or 'müştəri'\">Brandon Freeman</t>,<br/>\n"
+"    Sizi məmnuniyyətlə məlumatlandırırıq ki, \"<strong t-out=\"object.name or ''\">Renovations</strong>\" layihəsi uğurla tamamlanmışdır.\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Bu e-poçtu alırsınız, çünki layihəniz <b t-out=\"object.stage_id.name or ''\">Tamamlandı</b> mərhələsinə keçirildi</span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -352,6 +362,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Hörmətli <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"    Bizimlə əlaqə saxladığınız üçün təşəkkür edirik. Məhsul və xidmətlərimizə göstərdiyiniz marağa görə minnətdarıq.<br/>\n"
+"    Komandamız sorğunuzu nəzərdən keçirir və sizə mümkün qədər tez cavab verəcək.<br/>\n"
+"    Bu müddət ərzində əlavə sual və ya narahatlığınız olarsa, bizimlə əlaqə saxlamaqdan çəkinməyin. Sizə kömək etməyə hər zaman hazırıq.<br/><br/>\n"
+"    Səbirli olduğunuz üçün təşəkkür edirik.<br/>\n"
+"    Hörmətlə,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1012,7 +1035,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "Avatar"
-msgstr "avatar"
+msgstr "Avatar"
 
 #. module: project
 #. odoo-python
@@ -1585,7 +1608,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__day
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr "günlər"
+msgstr "Gün"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -2152,12 +2175,12 @@ msgstr "Tarixçə"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__html_field_history
 msgid "History data"
-msgstr ""
+msgstr "Tarixçə məlumatları"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__html_field_history_metadata
 msgid "History metadata"
-msgstr ""
+msgstr "Tarixçə metadatası"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_13
@@ -2720,13 +2743,13 @@ msgstr "Aylar"
 #: model:ir.model.fields,field_description:project.field_project_task__my_activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mənim Fəaliyyətlərimin Son Tarixi "
+msgstr "Mənim Fəaliyyətlərimin Son Tarixi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "My Deadline"
-msgstr "Mənim Son Tarixim "
+msgstr "Mənim Son Tarixim"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3036,7 +3059,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_hold
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Hold"
-msgstr "Saxlanılma Haqqında "
+msgstr "Saxlanılma Haqqında"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
@@ -3118,7 +3141,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Others"
-msgstr "Digər "
+msgstr "Digər"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -3238,7 +3261,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "Planned Date"
-msgstr "Planalşdırılmış Tarix "
+msgstr "Planalşdırılmış Tarix"
 
 #. module: project
 #. odoo-python
@@ -3342,7 +3365,7 @@ msgstr "Səmərəlilik"
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_tree
 msgid "Progress"
-msgstr "İrəliləyiş vaxtı "
+msgstr "İrəliləyiş vaxtı"
 
 #. module: project
 #. odoo-python
@@ -3949,7 +3972,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
 #: model:ir.model.fields,field_description:project.field_project_task__access_token
 msgid "Security Token"
-msgstr " Təhlükəsizlik Tokeni"
+msgstr "Təhlükəsizlik Tokeni"
 
 #. module: project
 #. odoo-javascript
@@ -5112,7 +5135,7 @@ msgstr "Görünüş"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 msgid "Visible"
-msgstr "Görünən "
+msgstr "Görünən"
 
 #. module: project
 #. odoo-javascript

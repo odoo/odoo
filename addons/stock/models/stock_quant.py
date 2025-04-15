@@ -1031,8 +1031,7 @@ class StockQuant(models.Model):
         date_by_location = {loc: loc._get_next_inventory_date() for loc in self.mapped('location_id')}
         for quant in self:
             quant.inventory_date = date_by_location[quant.location_id]
-        self.write({'inventory_quantity': 0, 'user_id': False})
-        self.write({'inventory_diff_quantity': 0})
+        self.action_clear_inventory_quantity()
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity=False, reserved_quantity=False, lot_id=None, package_id=None, owner_id=None, in_date=None):

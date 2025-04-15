@@ -4,13 +4,13 @@
 from contextlib import contextmanager
 from unittest.mock import patch
 
-from odoo import Command
+from odoo import Command, models
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.addons.base.models.res_partner import Partner
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.tests import Form
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import new_test_user, tagged, TransactionCase, users
 
 # samples use effective TLDs from the Mozilla public suffix
 # list at http://publicsuffix.org
@@ -336,68 +336,261 @@ class TestPartner(TransactionCaseWithUserDemo):
 @tagged('res_partner')
 class TestPartnerAddressCompany(TransactionCase):
 
-    def test_address(self):
-        res_partner = self.env['res.partner']
-        ghoststep = res_partner.create({
-            'name': 'GhostStep',
-            'is_company': True,
-            'street': 'Main Street, 10',
-            'phone': '123456789',
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # test user
+        cls.test_user = new_test_user(
+            cls.env,
+            email='emp@test.mycompany.com',
+            groups='base.group_user,base.group_partner_manager',
+            login='employee',
+            name='Employee',
+            password='employee',
+        )
+
+        # test addresses
+        cls.base_address_fields = {'street', 'street2', 'zip', 'city', 'state_id', 'country_id'}
+        cls.test_country_state = cls.env['res.country.state'].create([
+            {
+                'code': 'OD',
+                'country_id': cls.env.ref('base.be').id,
+                'name': 'Odoo Province',
+            },
+        ])
+        cls.test_industries = cls.env['res.partner.industry'].create([
+            {'name': 'Balto Impersonators'},
+            {'name': 'Floppy Advisors'},
+            {'name': 'Both of the above'},
+        ])
+        cls.test_address_values_cmp, cls.test_address_values_2_cmp, cls.test_address_values_3_cmp = [
+            {
+                'city': 'Ramillies',
+                'country_id': cls.env.ref('base.be'),
+                'state_id': cls.test_country_state,
+                'street': 'Test Street',
+                'street2': '10 F',
+                'zip': '1367',
+            }, {
+                'city': 'Ramillies 2',
+                'country_id': cls.env.ref('base.us'),
+                'state_id': cls.env['res.country.state'],
+                'street': 'Another Street',
+                'street2': False,
+                'zip': '013670',
+            }, {
+                'city': 'Totally Not Ramillies',
+                'country_id': cls.env.ref('base.be'),
+                'state_id': cls.test_country_state,
+                'street': 'Third Street',
+                'street2': 'Without number',
+                'zip': '1367#Corgi',
+            },
+        ]
+        cls.test_address_values, cls.test_address_values_2, cls.test_address_values_3 = [
+            {fname: value.id if isinstance(value, models.Model) else value for fname, value in values.items()}
+            for values in (cls.test_address_values_cmp, cls.test_address_values_2_cmp, cls.test_address_values_3_cmp)
+        ]
+
+        # pre-existing data
+        cls.test_parent = cls.env['res.partner'].create({
+            'company_registry': '0477472701',
             'email': 'info@ghoststep.com',
+            'industry_id': cls.test_industries[0].id,
+            'is_company': True,
+            'name': 'GhostStep',
+            'phone': '+32455001122',
             'vat': 'BE0477472701',
             'type': 'contact',
+            **cls.test_address_values,
         })
-        p1 = res_partner.browse(res_partner.name_create('Denis Bladesmith <denis.bladesmith@ghoststep.com>')[0])
-        self.assertEqual(p1.type, 'contact', 'Default type must be "contact"')
-        p1phone = '123456789#34'
-        p1.write({'phone': p1phone,
-                  'parent_id': ghoststep.id})
-        self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced')
-        self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
-        self.assertEqual(p1.type, 'contact', 'Type should be preserved after address sync')
-        self.assertEqual(p1.email, 'denis.bladesmith@ghoststep.com', 'Email should be preserved after sync')
+        cls.existing = cls.env['res.partner'].create({
+            'name': 'Existing Contact',
+            'parent_id': cls.test_parent.id,
+        })
 
-        # turn off sync
-        p1street = 'Different street, 42'
-        p1.write({'street': p1street,
-                  'type': 'invoice'})
-        self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
-        self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
+    @users('employee')
+    def test_address(self):
+        # check initial data
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(self.existing[fname], fvalue)
 
-        # turn on sync again
-        p1.write({'type': 'contact'})
-        self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced again')
-        self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
-        self.assertEqual(p1.type, 'contact', 'Type should be preserved after address sync')
-        self.assertEqual(p1.email, 'denis.bladesmith@ghoststep.com', 'Email should be preserved after sync')
+        # future new child
+        ct1 = self.env['res.partner'].browse(
+            self.env['res.partner'].name_create('Denis Bladesmith <denis.bladesmith@ghoststep.com>')[0]
+        )
+        self.assertEqual(ct1.type, 'contact', 'Default type must be "contact"')
 
-        # Modify parent, sync to children
-        ghoststreet = 'South Street, 25'
-        ghoststep.write({'street': ghoststreet})
-        self.assertEqual(p1.street, ghoststreet, 'Address fields must be synced automatically')
-        self.assertEqual(p1.phone, p1phone, 'Phone should not be synced')
-        self.assertEqual(p1.email, 'denis.bladesmith@ghoststep.com', 'Email should be preserved after sync')
+        ct2, inv, deli, other = self.env['res.partner'].create([
+            {
+                'name': 'Address, Future Sibling of P1',
+                **self.test_address_values_3,
+            }, {
+                'name': 'Invoice Child',
+                'street': 'Invoice Child Street',
+                'type': 'invoice',
+            }, {
+                'name': 'Delivery Child',
+                'street': 'Delivery Child Street',
+                'type': 'delivery',
+            }, {
+                'name': 'Other Child',
+                'street': 'Other Child Street',
+                'type': 'other',
+            },
+        ])
+        ct1_1, inv_1 = self.env['res.partner'].create([
+            {
+                'name': 'Address, Child of P1',
+                'parent_id': ct1.id,
+            }, {
+                'name': 'Address, Child of Invoice',
+                'parent_id': inv.id,
+            },
+        ])
+        # check creation values
+        for fname in self.base_address_fields:
+            self.assertFalse(ct1_1[fname])
+        self.assertFalse(ct1_1.vat)
+        self.assertEqual(inv_1.street, 'Invoice Child Street', 'Should take parent address')
+        self.assertFalse(inv_1.vat)
 
-        p1street = 'My Street, 11'
-        p1.write({'street': p1street})
-        self.assertEqual(ghoststep.street, ghoststreet, 'Touching contact should never alter parent')
+        # sync P1 with parent, check address is update + other fields in write kept
+        ct1_phone = '+320455999999'
+        ct1.write({
+            'phone': ct1_phone,
+            'parent_id': self.test_parent.id,
+        })
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(ct1[fname], fvalue)
+            # Note: update is done only for direct children of parent
+            self.assertFalse(ct1_1[fname], 'Descendants are not updated, only direct children')
+        self.assertEqual(ct1.email, 'denis.bladesmith@ghoststep.com', 'Email should be preserved after sync')
+        self.assertEqual(ct1.phone, ct1_phone, 'Phone should be preserved after address sync')
+        self.assertEqual(ct1.type, 'contact', 'Type should be preserved after address sync')
+        self.assertEqual(ct1.vat, 'BE0477472701', 'VAT should come from parent')
+        self.assertEqual(ct1.industry_id, self.test_industries[0], 'Industry should come from parent')
+        self.assertEqual(ct1.company_registry, '0477472701', 'Company registry should come from parent')
 
+        # turn off sync: do what you want
+        ct1_street = 'Different street, 42'
+        ct1.write({
+            'street': ct1_street,
+            'state_id': False,
+            'type': 'invoice',
+        })
+        self.assertEqual(ct1.street, ct1_street, 'Address fields must not be synced after turning sync off')
+        self.assertEqual(ct1.zip, '1367', 'Address fields not changed in write should have kept their value')
+        for fname in self.base_address_fields:
+            # Note: only updated values are sync
+            if fname == 'street':
+                self.assertEqual(ct1_1[fname], ct1_street)
+            else:
+                self.assertFalse(ct1_1[fname])
+        self.assertEqual(ct1.type, 'invoice')
+        self.assertEqual(ct1.parent_id, self.test_parent, 'Changing address should not break hierarchy')
+        self.assertNotEqual(self.test_parent.street, ct1_street, 'Parent address must not be touched')
+
+        # turn on sync again: should reset address to parent
+        ct1.write({'type': 'contact'})
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(ct1[fname], fvalue)
+            # Note: update is done only for direct children of parent
+            if fname == 'street':
+                self.assertEqual(ct1_1[fname], ct1_street)
+            else:
+                self.assertFalse(ct1_1[fname])
+        self.assertEqual(ct1.type, 'contact', 'Type should be preserved after address sync')
+
+        # set P2 as sibling of P1 -> should update address
+        ct2.write({'parent_id': self.test_parent.id})
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(ct2[fname], fvalue)
+
+        # DOWNSTREAM: parent -> children
+        # ------------------------------------------------------------
+        self.test_parent.write(self.test_address_values_2)
+        for fname, fvalue in self.test_address_values_2_cmp.items():
+            self.assertEqual(ct1[fname], fvalue)
+            self.assertEqual(ct2[fname], fvalue)
+            self.assertEqual(self.existing[fname], fvalue)
+        # but child of P3 is not updated, as only 1 level is updated
+        for fname in self.base_address_fields:
+            if fname == 'street':
+                self.assertEqual(ct1_1[fname], ct1_street, 'Updated only through P1 direct update')
+            else:
+                self.assertFalse(ct1_1[fname], 'Still holding base creation values, no descendants update')
+        # and not-contacts are not updated
+        for child in inv, deli, other:
+            self.assertEqual(child.street, f'{child.name} Street', 'Should not be updated')
+
+        # UPSTREAM: child -> parent update: not done currently, consider contact is readonly
+        # ------------------------------------------------------------
+        ct1.write(self.test_address_values_3)
+        for fname, fvalue in self.test_address_values_2_cmp.items():
+            self.assertEqual(self.test_parent[fname], fvalue)
+            self.assertEqual(ct2[fname], fvalue)
+            self.assertEqual(self.existing[fname], fvalue)
+        for fname, fvalue in self.test_address_values_3_cmp.items():
+            self.assertEqual(ct1[fname], fvalue)
+            self.assertEqual(ct1_1[fname], fvalue)
+
+    @users('employee')
     def test_address_first_contact_sync(self):
         """ Test initial creation of company/contact pair where contact address gets copied to
         company """
-        res_partner = self.env['res.partner']
-        ironshield = res_partner.browse(res_partner.name_create('IronShield')[0])
-        self.assertFalse(ironshield.is_company, 'Partners are not companies by default')
-        self.assertEqual(ironshield.type, 'contact', 'Default type must be "contact"')
-        ironshield.write({'type': 'contact'})
-
-        p1 = res_partner.create({
-            'name': 'Isen Hardearth',
-            'street': 'Strongarm Avenue, 12',
-            'parent_id': ironshield.id,
-        })
-        self.assertEqual(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
-        self.assertEqual(ironshield.street, p1.street, 'Address fields should be copied to company')
+        (
+            void_parent_ct, void_parent_comp, full_parent_ct, full_parent_comp,
+            void_parent_withparent, full_parent_withparent,
+        ) = self.env['res.partner'].create([
+            {  # contact parents
+                'name': 'Void Ct',
+                'is_company': False,
+            }, {
+                'name': 'Void Comp',
+                'is_company': True,
+            }, {  # company parents
+                'name': 'Full Ct',
+                'is_company': False,
+                **self.test_address_values_2,
+            }, {
+                'name': 'Full Comp',
+                'is_company': False,
+                **self.test_address_values_2,
+            }, {  # parent being itself a child of another partner
+                'name': 'Void Ct With Parent',
+                'parent_id': self.test_parent.id,
+            }, {
+                'name': 'Full Ct With Parent',
+                'parent_id': self.test_parent.id,
+                **self.test_address_values_2,
+            },
+        ])
+        for parent in (void_parent_ct + void_parent_comp + full_parent_ct + full_parent_comp):
+            with self.subTest(parent_name=parent.name):
+                p1 = self.env['res.partner'].create(dict(
+                    {
+                    'name': 'Micheline Brutijus',
+                    'parent_id': parent.id,
+                    }, **self.test_address_values_3)
+                )
+                self.assertEqual(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
+                if parent in (void_parent_ct, void_parent_comp):
+                    for fname, fvalue in self.test_address_values_3_cmp.items():
+                        self.assertEqual(p1[fname], fvalue, 'Creation value taken')
+                        self.assertEqual(parent[fname], fvalue, 'Should sync void parent to first contact')
+                elif parent in (full_parent_ct, full_parent_comp):
+                    for fname, fvalue in self.test_address_values_2_cmp.items():
+                        self.assertEqual(p1[fname], fvalue, 'Parent wins over creation values')
+                        self.assertEqual(parent[fname], fvalue, 'Should not sync parent with address to first contact')
+                elif parent == full_parent_withparent:
+                    for fname, fvalue in self.test_address_values_cmp.items():
+                        self.assertEqual(p1[fname], fvalue)
+                        self.assertEqual(parent[fname], fvalue, 'Should not sync parent that is not root to first contact')
+                elif parent == void_parent_withparent:
+                    for fname, fvalue in self.test_address_values_cmp.items():
+                        self.assertEqual(p1[fname], fvalue)
+                        self.assertFalse(parent[fname], 'Should not sync parent that is not root to first contact, event when void')
 
     def test_address_get(self):
         """ Test address_get address resolution mechanism: it should first go down through descendants,
@@ -526,76 +719,98 @@ class TestPartnerAddressCompany(TransactionCase):
 
     def test_commercial_field_sync(self):
         """Check if commercial fields are synced properly: testing with VAT field"""
-        Partner = self.env['res.partner']
-        company_1 = Partner.create({'name': 'company 1', 'is_company': True, 'vat': 'BE0123456789'})
-        company_2 = Partner.create({'name': 'company 2', 'is_company': True, 'vat': 'BE9876543210'})
+        company_1, company_2 = self.env['res.partner'].create([
+            {
+                'company_registry': '123456789',
+                'industry_id': self.test_industries[0].id,
+                'is_company': True,
+                'name': 'company 1',
+                'vat': 'BE013456789',
+            }, {
+                'company_registry': '9876543210',
+                'industry_id': self.test_industries[0].id,
+                'is_company': True,
+                'name': 'company 2',
+                'vat': 'BE9876543210',
+            },
+        ])
 
-        partner = Partner.create({'name': 'someone', 'is_company': False, 'parent_id': company_1.id})
-        Partner.flush_recordset()
-        self.assertEqual(partner.vat, company_1.vat, "VAT should be inherited from the company 1")
+        contact = self.env['res.partner'].create({'name': 'someone', 'is_company': False, 'parent_id': company_1.id})
+        self.assertEqual(contact.commercial_partner_id, company_1, "Commercial partner should be recomputed")
+        for fname in ('company_registry', 'industry_id', 'vat'):
+            self.assertEqual(contact[fname], company_1[fname], "Commercial field should be inherited from the company 1")
 
-        # create a delivery address for the partner
-        delivery = Partner.create({'name': 'somewhere', 'type': 'delivery', 'parent_id': partner.id})
-        self.assertEqual(delivery.commercial_partner_id.id, company_1.id, "Commercial partner should be recomputed")
-        self.assertEqual(delivery.vat, company_1.vat, "VAT should be inherited from the company 1")
+        # create a delivery address and a child for the partner
+        contact_dlr = self.env['res.partner'].create({'name': 'somewhere', 'type': 'delivery', 'parent_id': contact.id})
+        self.assertEqual(contact_dlr.commercial_partner_id, company_1, "Commercial partner should be recomputed")
+        for fname in ('company_registry', 'industry_id', 'vat'):
+            self.assertEqual(contact_dlr[fname], company_1[fname], "Commercial field should be inherited from the company 1")
+        contact_ct = self.env['res.partner'].create({'name': 'child someone', 'parent_id': contact.id})
+        self.assertEqual(contact_dlr.commercial_partner_id, company_1, "Commercial partner should be recomputed")
+        for fname in ('company_registry', 'industry_id', 'vat'):
+            self.assertEqual(contact_dlr[fname], company_1[fname], "Commercial field should be inherited from the company 1")
 
         # move the partner to another company
-        partner.write({'parent_id': company_2.id})
-        partner.flush_recordset()
-        self.assertEqual(partner.commercial_partner_id.id, company_2.id, "Commercial partner should be recomputed")
-        self.assertEqual(partner.vat, company_2.vat, "VAT should be inherited from the company 2")
-        self.assertEqual(delivery.commercial_partner_id.id, company_2.id, "Commercial partner should be recomputed on delivery")
-        self.assertEqual(delivery.vat, company_2.vat, "VAT should be inherited from the company 2 to delivery")
+        contact.write({'parent_id': company_2.id})
+        self.assertEqual(contact.commercial_partner_id, company_2, "Commercial partner should be recomputed")
+        for fname in ('company_registry', 'industry_id', 'vat'):
+            self.assertEqual(contact[fname], company_2[fname], "Commercial field should be inherited from the company 2")
+        self.assertEqual(contact_dlr.commercial_partner_id, company_2, "Commercial partner should be recomputed on delivery")
+        for fname in ('company_registry', 'industry_id', 'vat'):
+            self.assertEqual(contact_dlr[fname], company_2[fname], "Commecial field should be inherited from the company 2 to delivery")
+        self.assertEqual(contact_ct.commercial_partner_id, company_2, "Commercial partner should be recomputed on delivery")
+        for fname in ('company_registry', 'industry_id', 'vat'):
+            self.assertEqual(contact_ct[fname], company_2[fname], "Commecial field should be inherited from the company 2 to delivery")
 
-    def test_commercial_sync(self):
-        res_partner = self.env['res.partner']
-        p0 = res_partner.create({'name': 'Sigurd Sunknife',
-                                 'email': 'ssunknife@gmail.com'})
-        sunhelm = res_partner.create({'name': 'Sunhelm',
-                                      'is_company': True,
-                                      'street': 'Rainbow Street, 13',
-                                      'phone': '1122334455',
-                                      'email': 'info@sunhelm.com',
-                                      'vat': 'BE0477472701',
-                                      'child_ids': [Command.link(p0.id),
-                                                    Command.create({'name': 'Alrik Greenthorn',
-                                                            'email': 'agr@sunhelm.com'})]})
-        p1 = res_partner.create({'name': 'Otto Blackwood',
-                                 'email': 'otto.blackwood@sunhelm.com',
-                                 'parent_id': sunhelm.id})
-        p11 = res_partner.create({'name': 'Gini Graywool',
-                                  'email': 'ggr@sunhelm.com',
-                                  'parent_id': p1.id})
-        p2 = res_partner.search([('email', '=', 'agr@sunhelm.com')], limit=1)
-        sunhelm.write({'child_ids': [Command.create({'name': 'Ulrik Greenthorn',
-                                             'email': 'ugr@sunhelm.com'})]})
-        p3 = res_partner.search([('email', '=', 'ugr@sunhelm.com')], limit=1)
+        # check using embedded 2many commands
+        company_2.write({'child_ids': [(0, 0, {'name': 'Alrik Greenthorn', 'email': 'agr@sunhelm.com'})]})
+        contact2 = self.env['res.partner'].search([('email', '=', 'agr@sunhelm.com')])
+        for fname in ('company_registry', 'industry_id', 'vat'):
+            self.assertEqual(contact2[fname], company_2[fname], "Commercial field should be inherited from the company 2")
 
-        for p in (p0, p1, p11, p2, p3):
-            self.assertEqual(p.commercial_partner_id, sunhelm, 'Incorrect commercial entity resolution')
-            self.assertEqual(p.vat, sunhelm.vat, 'Commercial fields must be automatically synced')
-        sunhelmvat = 'BE0123456749'
-        sunhelm.write({'vat': sunhelmvat})
-        for p in (p0, p1, p11, p2, p3):
-            self.assertEqual(p.vat, sunhelmvat, 'Commercial fields must be automatically and recursively synced')
+        # DOWNSTREAM update to descendants
+        company_2.write({'company_registry': 'new', 'industry_id': self.test_industries[1].id, 'vat': 'BEnew'})
+        for partner in contact + contact_dlr + contact_ct + contact2:
+            for fname, fvalue in (('company_registry', 'new'), ('industry_id', self.test_industries[1]), ('vat', 'BEnew')):
+                self.assertEqual(partner[fname], fvalue, "Commercial field should be updated from the company 2")
 
-        p1vat = 'BE0987654394'
-        p1.write({'vat': p1vat})
-        for p in (sunhelm, p0, p11, p2, p3):
-            self.assertEqual(p.vat, sunhelmvat, 'Sync to children should only work downstream and on commercial entities')
+        # UPSTREAM: not supported (but desyncs it)
+        contactvat = 'BE445566'
+        contact.write({'vat': contactvat})
+        for partner in company_2 + contact_dlr + contact_ct + contact2:
+            self.assertEqual(partner.vat, 'BEnew', 'Sync to children should only work downstream and on commercial entities')
+        for partner in contact:
+            self.assertEqual(partner.vat, contactvat, 'Sync to children should only work downstream and on commercial entities')
 
+        # MISC PARENT MANIPULATION
         # promote p1 to commercial entity
-        p1.write({'parent_id': sunhelm.id,
-                  'is_company': True,
-                  'name': 'Sunhelm Subsidiary'})
-        self.assertEqual(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
-        self.assertEqual(p1.commercial_partner_id, p1, 'Incorrect commercial entity resolution after setting is_company')
+        contact.write({
+            'parent_id': company_1.id,
+            'is_company': True,
+            'name': 'Sunhelm Subsidiary',
+        })
+        self.assertEqual(contact.vat, contactvat, 'Setting is_company should stop auto-sync of commercial fields')
+        self.assertEqual(contact.commercial_partner_id, contact, 'Incorrect commercial entity resolution after setting is_company')
+        self.assertEqual(company_1.vat, 'BE013456789', 'Should not impact parent')
+        self.assertEqual(contact_dlr.vat, 'BEnew', 'Promotion not propagated')
+        self.assertEqual(contact_ct.vat, 'BEnew', 'Promotion not propagated')
+
+        # change parent of commercial entity
+        (contact_dlr + contact_ct).write({'vat': contactvat})
+        contact.write({'parent_id': company_2.id})
+        self.assertEqual(contact.vat, contactvat, 'Setting is_company should stop auto-sync of commercial fields')
+        self.assertEqual(contact.commercial_partner_id, contact, 'Incorrect commercial entity resolution after setting is_company')
+        self.assertEqual(company_2.vat, 'BEnew', 'Should not impact parent')
+        self.assertEqual(contact_dlr.vat, contactvat, 'Parent company stop auto sync')
+        self.assertEqual(contact_ct.vat, contactvat, 'Parent company stop auto sync')
 
         # writing on parent should not touch child commercial entities
         sunhelmvat2 = 'BE0112233453'
-        sunhelm.write({'vat': sunhelmvat2})
-        self.assertEqual(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
-        self.assertEqual(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
+        company_2.write({'vat': sunhelmvat2})
+        for partner in contact + contact_ct + contact_dlr:
+            self.assertEqual(contact.vat, contactvat, 'Setting is_company should stop auto-sync of commercial fields')
+        for partner in contact2:
+            self.assertEqual(partner.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
 
     def test_company_dependent_commercial_sync(self):
         ResPartner = self.env['res.partner']

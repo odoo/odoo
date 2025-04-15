@@ -158,3 +158,32 @@ class TestMultistepManufacturing(TestMrpCommon):
 
         self.assertEqual(self.sale_order.action_view_mrp_production()['res_id'], mo.id)
         self.assertEqual(mo.action_view_sale_orders()['res_id'], self.sale_order.id)
+
+    def test_sales_order_with_mto_manufacturing(self):
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm_sam'
+        prod1 = self.env['product.product'].create({
+            'name': 'elct1',
+            'type': 'consu',
+            'route_ids': [(6, 0, [
+                warehouse.manufacture_pull_id.route_id.id,
+                warehouse.mto_pull_id.route_id.id
+            ])],
+        })
+        prod2 = self.env['product.product'].create({
+            'name': 'elct2',
+            'type': 'consu',
+            'route_ids': [(6, 0, [
+                warehouse.manufacture_pull_id.route_id.id,
+                warehouse.mto_pull_id.route_id.id
+            ])],
+        })
+        partner = self.env['res.partner'].create({'name': 'Steve Buscemi'})
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [(0, 0, {'product_id': prod1.id, 'product_uom_qty': 1}),
+                           (0, 0, {'product_id': prod2.id, 'product_uom_qty': 1})],
+            'client_order_ref': 'Test Reference'
+        })
+        so.action_confirm()

@@ -1,5 +1,6 @@
-import json
 import logging
+
+from markupsafe import Markup
 from hashlib import sha256
 from base64 import b64decode, b64encode
 from lxml import etree
@@ -157,22 +158,24 @@ class AccountEdiFormat(models.Model):
                 -   B. Reporting API: Submit a simplified Invoice to ZATCA for validation
         """
         clearance_data = invoice.journal_id._l10n_sa_api_clearance(invoice, signed_xml.decode(), PCSID_data)
-        if clearance_data.get('json_errors'):
-            errors = [json.loads(j).get('validationResults', {}) for j in clearance_data['json_errors']]
+        if error := clearance_data.get('json_errors'):
             error_msg = ''
+            if status_code := error.get('status_code'):
+                error_msg = Markup("<b>[%s] </b>") % status_code
+
             is_warning = True
-            for error in errors:
-                validation_results = error.get('validationResults', {})
-                for err in validation_results.get('warningMessages', []):
-                    error_msg += '\n - %s | %s' % (err['code'], err['message'])
-                for err in validation_results.get('errorMessages', []):
-                    is_warning = False
-                    error_msg += '\n - %s | %s' % (err['code'], err['message'])
+            validation_results = error.get('validationResults', {})
+            for err in validation_results.get('warningMessages', []):
+                error_msg += Markup('<b>%s</b> : %s <br/>') % (err['code'], err['message'])
+            for err in validation_results.get('errorMessages', []):
+                is_warning = False
+                error_msg += Markup('<b>%s</b> : %s <br/>') % (err['code'], err['message'])
             return {
                 'error': error_msg,
                 'rejected': not is_warning,
                 'response': signed_xml.decode(),
-                'blocking_level': 'warning' if is_warning else 'error'
+                'blocking_level': 'warning' if is_warning else 'error',
+                'status_code': status_code,
             }
         if not clearance_data.get('error'):
             return self._l10n_sa_assert_clearance_status(invoice, clearance_data)

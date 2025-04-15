@@ -3,6 +3,7 @@
 
 from . import account_bank_statement
 from . import pos_load_mixin
+from . import account_cash_rounding
 from . import account_payment
 from . import account_journal
 from . import account_tax
