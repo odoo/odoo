@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
+
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -40,12 +41,9 @@ class ResPartner(models.Model):
     @api.readonly
     @api.model
     def _search_for_channel_invite(self, store: Store, search_term, channel_id=None, limit=30):
-        domain = expression.AND(
+        domain = Domain.AND(
             [
-                expression.OR([
-                    [("name", "ilike", search_term)],
-                    [("email", "ilike", search_term)],
-                ]),
+                Domain("name", "ilike", search_term) | Domain("email", "ilike", search_term),
                 [('id', '!=', self.env.user.partner_id.id)],
                 [("active", "=", True)],
                 [("user_ids", "!=", False)],
@@ -56,11 +54,9 @@ class ResPartner(models.Model):
         channel = self.env["discuss.channel"]
         if channel_id:
             channel = self.env["discuss.channel"].search([("id", "=", int(channel_id))])
-            domain = expression.AND([domain, [("channel_ids", "not in", channel.id)]])
+            domain &= Domain("channel_ids", "not in", channel.id)
             if channel.group_public_id:
-                domain = expression.AND(
-                    [domain, [("user_ids.all_group_ids", "in", channel.group_public_id.id)]]
-                )
+                domain &= Domain("user_ids.all_group_ids", "in", channel.group_public_id.id)
         query = self._search(domain, limit=limit)
         # bypass lack of support for case insensitive order in search()
         query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
@@ -81,25 +77,15 @@ class ResPartner(models.Model):
         channel = self.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             return []
-        domain = expression.AND(
-            [
-                self._get_mention_suggestions_domain(search),
-                [("channel_ids", "in", channel.id)],
-            ]
-        )
-        extra_domain = expression.AND([
-            [('user_ids', '!=', False)],
-            [('user_ids.active', '=', True)],
-            [('partner_share', '=', False)]
+        domain = self._get_mention_suggestions_domain(search) & Domain("channel_ids", "in", channel.id)
+        extra_domain = Domain([
+            ('user_ids', '!=', False),
+            ('user_ids.active', '=', True),
+            ('partner_share', '=', False),
         ])
         allowed_group = (channel.parent_channel_id or channel).group_public_id
         if allowed_group:
-            extra_domain = expression.AND(
-                [
-                    extra_domain,
-                    [("user_ids.all_group_ids", "in", allowed_group.id)],
-                ]
-            )
+            extra_domain &= Domain("user_ids.all_group_ids", "in", allowed_group.id)
         partners = self._search_mention_suggestions(domain, limit, extra_domain)
         members_domain = [("channel_id", "=", channel.id), ("partner_id", "in", partners.ids)]
         members = self.env["discuss.channel.member"].search(members_domain)

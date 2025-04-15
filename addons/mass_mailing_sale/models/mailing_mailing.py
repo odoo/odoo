@@ -3,7 +3,7 @@
 
 from markupsafe import Markup
 from odoo import api, fields, models, _, tools
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class MailingMailing(models.Model):
@@ -24,7 +24,7 @@ class MailingMailing(models.Model):
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
-        domain = expression.AND([
+        domain = Domain.AND([
             [('source_id', 'in', self.source_id.ids)],
             [('state', 'not in', ['draft', 'cancel'])]
         ])
@@ -56,7 +56,7 @@ class MailingMailing(models.Model):
         }
 
     def action_redirect_to_invoiced(self):
-        domain = expression.AND([
+        domain = Domain.AND([
             [('source_id', '=', self.source_id.id)],
             [('state', 'not in', ['draft', 'cancel'])]
         ])

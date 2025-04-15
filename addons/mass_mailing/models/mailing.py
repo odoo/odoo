@@ -21,7 +21,7 @@ from PIL import Image, UnidentifiedImageError
 from odoo import api, fields, models, modules, tools, _
 from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_round
 from odoo.tools.image import ImageProcess
 
@@ -448,7 +448,7 @@ class MailingMailing(models.Model):
             elif mailing.mailing_filter_id:
                 mailing.mailing_domain = mailing.mailing_filter_id.mailing_domain
             else:
-                mailing.mailing_domain = repr(mailing._get_default_mailing_domain())
+                mailing.mailing_domain = repr(mailing._get_default_mailing_domain() or [])
 
     @api.depends('mailing_model_name')
     def _compute_mailing_filter_id(self):
@@ -739,41 +739,37 @@ class MailingMailing(models.Model):
 
     def _action_view_documents_filtered(self, view_filter):
         def _fetch_trace_res_ids(trace_domain):
-            trace_domain = expression.AND([
-                trace_domain,
-                [('mass_mailing_id', '=', self.id)],
-            ])
-            result = self.env['mailing.trace'].search_read(domain=trace_domain, fields=['res_id'])
-            return [line['res_id'] for line in result]
+            trace_domain &= Domain('mass_mailing_id', '=', self.id)
+            return self.env['mailing.trace'].search_fetch(domain=trace_domain, field_names=['res_id']).mapped('res_id')
 
         model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
         helper_header = None
         helper_message = None
         if view_filter == 'reply':
-            res_ids = _fetch_trace_res_ids([('trace_status', '=', 'reply')])
+            res_ids = _fetch_trace_res_ids(Domain('trace_status', '=', 'reply'))
             helper_header = _("No %s replied to your mailing yet!", model_name)
             helper_message = _("To track how many replies this mailing gets, make sure "
                                "its reply-to address belongs to this database.")
         elif view_filter == 'bounce':
-            res_ids = _fetch_trace_res_ids([('trace_status', '=', 'bounce')])
+            res_ids = _fetch_trace_res_ids(Domain('trace_status', '=', 'bounce'))
             helper_header = _("No %s address bounced yet!", model_name)
             helper_message = _("Bounce happens when a mailing cannot be delivered (fake address, "
                                "server issues, ...). Check each record to see what went wrong.")
         elif view_filter == 'clicked':
-            res_ids = _fetch_trace_res_ids([('links_click_ids', '!=', False)])
+            res_ids = _fetch_trace_res_ids(Domain('links_click_ids', '!=', False))
             helper_header = _("No %s clicked your mailing yet!", model_name)
             helper_message = _(
                 "Come back once your mailing has been sent to track who clicked on the embedded links.")
         elif view_filter == 'open':
-            res_ids = _fetch_trace_res_ids([('trace_status', 'in', ('open', 'reply'))])
+            res_ids = _fetch_trace_res_ids(Domain('trace_status', 'in', ('open', 'reply')))
             helper_header = _("No %s opened your mailing yet!", model_name)
             helper_message = _("Come back once your mailing has been sent to track who opened your mailing.")
         elif view_filter == 'delivered':
-            res_ids = _fetch_trace_res_ids([('trace_status', 'in', ('sent', 'open', 'reply'))])
+            res_ids = _fetch_trace_res_ids(Domain('trace_status', 'in', ('sent', 'open', 'reply')))
             helper_header = _("No %s received your mailing yet!", model_name)
             helper_message = _("Wait until your mailing has been sent to check how many recipients you managed to reach.")
         elif view_filter == 'sent':
-            res_ids = _fetch_trace_res_ids([('sent_datetime', '!=', False)])
+            res_ids = _fetch_trace_res_ids(Domain('sent_datetime', '!=', False))
         else:
             res_ids = []
 
@@ -811,9 +807,9 @@ class MailingMailing(models.Model):
         while keeping using it, without cluttering the Kanban view if they're a lot of
         templates.
         """
-        domain = [('favorite', '=', True)]
+        domain = Domain('favorite', '=', True)
         if extra_domain:
-            domain = expression.AND([domain, extra_domain])
+            domain &= Domain(extra_domain)
 
         values_list = self.with_context(active_test=False).search_read(
             domain=domain,
@@ -847,7 +843,7 @@ class MailingMailing(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'list,kanban,form,calendar,graph',
             'res_model': 'mailing.mailing',
-            'domain': expression.AND([
+            'domain': Domain.AND([
                 [('campaign_id', '=', self.campaign_id.id)],
                 [('ab_testing_enabled', '=', True)],
                 [('mailing_type', '=', self.mailing_type)]
@@ -1026,18 +1022,15 @@ class MailingMailing(models.Model):
 
     def _get_recipients_domain(self):
         """Overridable getter used to get the domain of the recipients at the time of sending."""
-        return self._parse_mailing_domain()
+        return Domain(self._parse_mailing_domain())
 
     def _get_remaining_recipients(self):
         res_ids = self._get_recipients()
-        trace_domain = [('model', '=', self.mailing_model_real)]
+        trace_domain = Domain('model', '=', self.mailing_model_real)
         if self.ab_testing_enabled and self.ab_testing_is_winner_mailing:
-            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', 'in', self._get_ab_testing_siblings_mailings().ids)]])
+            trace_domain &= Domain('mass_mailing_id', 'in', self._get_ab_testing_siblings_mailings().ids)
         else:
-            trace_domain = expression.AND([trace_domain, [
-                ('res_id', 'in', res_ids),
-                ('mass_mailing_id', '=', self.id),
-            ]])
+            trace_domain &= Domain('res_id', 'in', res_ids) & Domain('mass_mailing_id', '=', self.id)
         already_mailed = self.env['mailing.trace'].search_read(trace_domain, ['res_id'])
         done_res_ids = {record['res_id'] for record in already_mailed}
         return [rid for rid in res_ids if rid not in done_res_ids]
@@ -1461,12 +1454,12 @@ class MailingMailing(models.Model):
         return urls
 
     def _get_default_mailing_domain(self):
-        mailing_domain = []
+        mailing_domain = Domain.TRUE
         if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
-            mailing_domain = self.env[self.mailing_model_name]._mailing_get_default_domain(self)
+            mailing_domain = Domain(self.env[self.mailing_model_name]._mailing_get_default_domain(self))
 
         if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
+            mailing_domain = Domain('is_blacklisted', '=', False) & mailing_domain
 
         return mailing_domain
 

@@ -14,7 +14,7 @@ from werkzeug import urls
 from odoo import _, api, fields, models, tools
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.exceptions import ValidationError, UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import hmac
 from odoo.tools.mail import email_normalize, generate_tracking_message_id, append_content_to_html
 
@@ -742,18 +742,12 @@ class MailGroup(models.Model):
             # empty email should match nobody
             return {}
 
-        domain = [('email_normalized', '=', email_normalize(email))]
+        domain = Domain('email_normalized', '=', email_normalize(email))
         if partner_id:
-            domain = expression.OR([
-                expression.AND([
-                    [('partner_id', '=', False)],
-                    domain,
-                ]),
-                [('partner_id', '=', partner_id)],
-            ])
+            domain = (Domain('partner_id', '=', False) & domain) | Domain('partner_id', '=', partner_id)
             order = 'partner_id DESC'
 
-        domain = expression.AND([domain, [('mail_group_id', 'in', self.ids)]])
+        domain &= Domain('mail_group_id', 'in', self.ids)
         members_data = self.env['mail.group.member'].sudo().search(domain, order=order)
         return {
             member.mail_group_id.id: member

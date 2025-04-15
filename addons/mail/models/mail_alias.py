@@ -8,7 +8,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import is_html_empty, remove_accents
 
 # see rfc5322 section 3.2.3
@@ -317,12 +317,12 @@ class MailAlias(models.Model):
                 domain_to_names[alias_domain].append(alias_name)
 
         # matches existing alias
-        domain = expression.OR([
-            ['&', ('alias_name', 'in', alias_names), ('alias_domain_id', '=', alias_domain.id)]
+        domain = Domain.OR(
+            Domain('alias_name', 'in', alias_names) & Domain('alias_domain_id', '=', alias_domain.id)
             for alias_domain, alias_names in domain_to_names.items()
-        ])
+        )
         if domain and self:
-            domain = expression.AND([domain, [('id', 'not in', self.ids)]])
+            domain &= Domain('id', 'not in', self.ids)
         existing = self.search(domain, limit=1) if domain else self.env['mail.alias']
         if not existing:
             return
