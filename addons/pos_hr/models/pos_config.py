@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models, fields, api
-from odoo.osv.expression import AND
+from odoo.fields import Domain
 
 
 class PosConfig(models.Model):
@@ -54,7 +52,7 @@ class PosConfig(models.Model):
     def _employee_domain(self, user_id):
         domain = self._check_company_domain(self.company_id)
         if len(self.basic_employee_ids) > 0:
-            domain = AND([
+            domain = Domain.AND([
                 domain,
                 ['|', ('user_id', '=', user_id), ('id', 'in', self.basic_employee_ids.ids + self.advanced_employee_ids.ids + self.minimal_employee_ids.ids)]
             ])
