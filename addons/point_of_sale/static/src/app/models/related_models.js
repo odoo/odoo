@@ -1017,6 +1017,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             record[f] = oldRecord[f]?.map((r) => r.id) || [];
                             continue;
                         }
+                        if (p.type === "char") {
+                            record[f] = oldRecord[f] || "";
+                            continue;
+                        }
                         record[f] = oldRecord[f]?.id || false;
                     }
                 }
