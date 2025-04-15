@@ -126,6 +126,9 @@ registry.category("services").add("website_edit", {
                     applyTOut(...args) {
                         historyCallbacks.ignoreDOMMutations(() => super.applyTOut(...args));
                     },
+                    startInteraction(...args) {
+                        historyCallbacks.ignoreDOMMutations(() => super.startInteraction(...args));
+                    },
                 }),
                 patch(Interaction.prototype, {
                     insert(...args) {
