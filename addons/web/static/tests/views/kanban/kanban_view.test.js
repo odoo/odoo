@@ -1431,7 +1431,7 @@ test("pager, update calls onUpdatedPager", async () => {
     expect.step("next page");
     await contains(".o_pager_next").click();
     expect(getPagerValue()).toEqual([4, 4]);
-    expect.verifySteps(["render", "next page", "render", "onUpdatedPager"]);
+    expect.verifySteps(["render", "render", "next page", "render", "onUpdatedPager"]);
 });
 
 test("click on a button type='delete' to delete a record in a column", async () => {
@@ -8180,12 +8180,10 @@ test("update buttons after column creation", async () => {
         groupBy: ["product_id"],
     });
 
-    expect(".o-kanban-button-new").toHaveCount(0);
-
+    expect(".o-kanban-button-new").not.toBeEnabled();
     await editKanbanColumnName("new column");
     await validateKanbanColumn();
-
-    expect(".o_control_panel_main_buttons button.o-kanban-button-new").toHaveCount(1);
+    expect(".o-kanban-button-new").toBeEnabled();
 });
 
 test.tags("desktop");
@@ -13809,4 +13807,112 @@ test("hide pager in the kanban view with sample data", async () => {
 
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_cp_pager").not.toBeVisible();
+});
+
+test.tags("desktop");
+test("kanban views make their control panel available directly", async () => {
+    const def = new Deferred();
+    onRpc("web_search_read", () => def);
+    await mountView({
+        arch: `
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_view .o_control_panel .o_searchview").toHaveCount(1);
+    expect(".o_kanban_view .o_kanban_renderer").toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_view .o_kanban_renderer").toHaveCount(1);
+    expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+});
+
+test.tags("desktop");
+test("interact with search view while kanban is loading", async () => {
+    const defs = [new Deferred()];
+    onRpc("web_search_read", () => defs.pop());
+    await mountView({
+        arch: `
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        searchViewArch: `
+            <search>
+                <filter name="group_by_foo" domain="[]" string="GroupBy Foo" context="{ 'group_by': 'foo' }"/>
+            </search>`,
+        resModel: "partner",
+        type: "kanban",
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_view .o_control_panel .o_searchview").toHaveCount(1);
+    expect(".o_kanban_view .o_kanban_renderer").toHaveCount(0);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("GroupBy Foo");
+    expect(".o_kanban_view .o_kanban_renderer").toHaveCount(1);
+    expect(".o_kanban_view .o_kanban_group").toHaveCount(3);
+    expect(".o_kanban_view .o_kanban_record").toHaveCount(4);
+});
+
+test("click on New while kanban is loading", async () => {
+    onRpc("web_search_read", () => new Deferred());
+    await mountView({
+        arch: `
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        createRecord: () => expect.step("create record"),
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_view .o_control_panel").toHaveCount(1);
+    expect(".o_kanban_view .o_kanban_renderer").toHaveCount(0);
+
+    await createKanbanRecord();
+    expect.verifySteps(["create record"]);
+});
+
+test("click on New while kanban is loading (with quick create)", async () => {
+    onRpc("web_search_read", () => new Deferred());
+    await mountView({
+        arch: `
+            <kanban on_create="quick_create">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        groupBy: ["foo"],
+        createRecord: () => expect.step("create record"),
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_view .o_control_panel").toHaveCount(1);
+    expect(".o_kanban_view .o_kanban_renderer").toHaveCount(0);
+
+    await createKanbanRecord();
+    expect.verifySteps(["create record"]);
 });

@@ -3839,3 +3839,26 @@ test("display the field's falsy_value_label for false group, if defined", async 
 
     expect(queryAllTexts("tbody th")).toEqual(["Total", "xpad", "I'm the false group"]);
 });
+
+test.tags("desktop");
+test("pivot views make their control panel available directly", async () => {
+    const def = new Deferred();
+    onRpc("formatted_read_group", () => def);
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot>
+                <field name="foo" type="row"/>
+            </pivot>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(".o_pivot_view").toHaveCount(1);
+    expect(".o_pivot_view .o_control_panel .o_searchview").toHaveCount(1);
+    expect(".o_pivot_view .o_pivot").toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_pivot_view .o_pivot").toHaveCount(1);
+});

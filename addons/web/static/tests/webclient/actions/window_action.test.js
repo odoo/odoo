@@ -762,26 +762,29 @@ test("there is no flickering when switching between views", async () => {
     // switch to kanban view
     def = new Deferred();
     await switchView("kanban");
-    expect(".o_list_view").toHaveCount(1, { message: "should still display the list view" });
-    expect(".o_kanban_view").toHaveCount(0, { message: "shouldn't display the kanban view yet" });
+    expect(".o_list_view").toHaveCount(0, { message: "shouldn't display the list anymore" });
+    expect(".o_kanban_view").toHaveCount(1, { message: "should display an empty kanban" });
+    expect(".o_kanban_view .o_kanban_record").toHaveCount(0);
 
     def.resolve();
     await animationFrame();
-    expect(".o_list_view").toHaveCount(0, { message: "shouldn't display the list view anymore" });
-    expect(".o_kanban_view").toHaveCount(1, { message: "should now display the kanban view" });
+    expect(".o_kanban_view").toHaveCount(1, { message: "should display the kanban" });
+    expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
 
     // switch back to list view
     def = new Deferred();
     await switchView("list");
-    expect(".o_kanban_view").toHaveCount(1, { message: "should still display the kanban view" });
-    expect(".o_list_view").toHaveCount(0, { message: "shouldn't display the list view yet" });
+    expect(".o_kanban_view").toHaveCount(0, { message: "shouldn't display the kanban anymore" });
+    expect(".o_list_view").toHaveCount(1, { message: "should display an empty list view" });
+    expect(".o_list_view table").toHaveCount(0);
 
     def.resolve();
     await animationFrame();
     expect(".o_kanban_view").toHaveCount(0, {
         message: "shouldn't display the kanban view anymore",
     });
-    expect(".o_list_view").toHaveCount(1, { message: "should now display the list view" });
+    expect(".o_list_view").toHaveCount(1, { message: "should display the list view" });
+    expect(".o_list_view table .o_data_row").toHaveCount(5);
 
     // open a record in form view
     def = new Deferred();
@@ -802,17 +805,15 @@ test("there is no flickering when switching between views", async () => {
     // go back to list view using the breadcrumbs
     def = new Deferred();
     await contains(".o_control_panel .breadcrumb a").click();
-    expect(".o_form_view").toHaveCount(1, { message: "should still display the form view" });
-    expect(".o_list_view").toHaveCount(0, { message: "shouldn't display the list view yet" });
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
-        "First record",
-    ]);
+    expect(".o_form_view").toHaveCount(0, { message: "shouldn't display the form anymore" });
+    expect(".o_list_view").toHaveCount(1, { message: "should display an empty list" });
+    expect(".o_list_view table").toHaveCount(0);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
 
     def.resolve();
     await animationFrame();
-    expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
     expect(".o_list_view").toHaveCount(1, { message: "should display the list view" });
+    expect(".o_list_view table .o_data_row").toHaveCount(5);
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
 });
 
@@ -1142,7 +1143,9 @@ test("execute smart button and back", async () => {
 test.tags("desktop");
 test("execute smart button and fails on desktop", async () => {
     expect.errors(1);
-    onRpc("web_search_read", () => {
+    const def = new Deferred();
+    onRpc("web_search_read", async () => {
+        await def;
         throw makeServerError({ message: "Oups" });
     });
     stepAllNetworkCalls();
@@ -1153,6 +1156,11 @@ test("execute smart button and fails on desktop", async () => {
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
 
     await contains("button.oe_stat_button").click();
+    expect(".o_form_view").toHaveCount(0);
+    expect(".o_kanban_view").toHaveCount(1);
+
+    def.resolve();
+    await animationFrame();
     expect(".o_form_view").toHaveCount(1);
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
     expect.verifySteps([
@@ -1173,7 +1181,9 @@ test("execute smart button and fails on desktop", async () => {
 test.tags("mobile");
 test("execute smart button and fails on mobile", async () => {
     expect.errors(1);
-    onRpc("web_search_read", () => {
+    const def = new Deferred();
+    onRpc("web_search_read", async () => {
+        await def;
         throw makeServerError({ message: "Oups" });
     });
     stepAllNetworkCalls();
@@ -1185,6 +1195,11 @@ test("execute smart button and fails on mobile", async () => {
 
     await contains(".o-form-buttonbox .o_button_more").click();
     await contains("button.oe_stat_button").click();
+    expect(".o_form_view").toHaveCount(0);
+    expect(".o_kanban_view").toHaveCount(1);
+
+    def.resolve();
+    await animationFrame();
     expect(".o_form_view").toHaveCount(1);
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
     expect.verifySteps([

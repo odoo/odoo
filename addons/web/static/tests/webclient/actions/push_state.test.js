@@ -417,7 +417,7 @@ test(`properly push state`, async () => {
 
 test(`push state after action is loaded, not before`, async () => {
     const def = new Deferred();
-    onRpc("web_search_read", () => def);
+    onRpc("get_views", () => def);
 
     await mountWithCleanup(WebClient);
     expect(browser.location.href).toBe("http://example.com/odoo");

@@ -70,7 +70,7 @@ export class GraphModel extends Model {
      * @override
      */
     hasData() {
-        return this.dataPoints.length > 0;
+        return this.dataPoints?.length > 0;
     }
 
     /**

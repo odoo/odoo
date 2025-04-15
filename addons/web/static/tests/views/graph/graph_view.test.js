@@ -2883,3 +2883,22 @@ test("limit dataset amount", async () => {
     expect(model.data.datasets).toHaveLength(600);
     expect(model.data.labels).toHaveLength(600);
 });
+
+test.tags("desktop");
+test("graph views make their control panel available directly", async () => {
+    const def = new Deferred();
+    onRpc("formatted_read_group", () => def);
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: `<graph/>`,
+    });
+
+    expect(".o_graph_view").toHaveCount(1);
+    expect(".o_graph_view .o_control_panel .o_searchview").toHaveCount(1);
+    expect(".o_graph_view .o_graph_renderer").toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_graph_view .o_graph_renderer").toHaveCount(1);
+});

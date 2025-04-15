@@ -13,7 +13,7 @@ class StandaloneRelationalModel extends RelationalModel {
             const config = this._getNextConfig(this.config, params);
             this.root = this._createRoot(config, data);
             this.config = config;
-            return;
+            return Promise.resolve();
         }
         return super.load(params);
     }
@@ -127,10 +127,11 @@ class _Record extends Component {
         onWillStart(async () => {
             if (this.props.values) {
                 const values = await prepareLoadWithValues(this.props.values);
-                return this.model.load({ values });
+                await this.model.load({ values });
             } else {
-                return this.model.load();
+                await this.model.load();
             }
+            this.model.whenReady.resolve();
         });
         onWillUpdateProps(async (nextProps) => {
             const params = {};

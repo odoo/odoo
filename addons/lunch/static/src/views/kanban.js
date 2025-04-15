@@ -3,6 +3,7 @@ import { registry } from '@web/core/registry';
 import { kanbanView } from '@web/views/kanban/kanban_view';
 import { KanbanRecord } from '@web/views/kanban/kanban_record';
 import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
+import { KanbanController } from '@web/views/kanban/kanban_controller';
 
 import { LunchDashboard } from '../components/lunch_dashboard';
 import { LunchRendererMixin } from '../mixins/lunch_renderer_mixin';
@@ -34,8 +35,18 @@ export class LunchKanbanRenderer extends LunchRendererMixin(KanbanRenderer) {
     }
 }
 
+class LunchKanbanController extends KanbanController {
+    get modelOptions() {
+        return {
+            ...super.modelOptions,
+            lazy: false,
+        };
+    }
+}
+
 registry.category('views').add('lunch_kanban', {
     ...kanbanView,
+    Controller: LunchKanbanController,
     Renderer: LunchKanbanRenderer,
     SearchModel: LunchSearchModel,
 });
