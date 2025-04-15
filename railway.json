@@ -1,13 +1,14 @@
 {
-  "build": {
-    "env": {
-      "PYTHONUNBUFFERED": "1"
+    "build": {
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      },
+      "dockerfile": {
+        "path": "Dockerfile"
+      }
     },
-    "dockerfile": {
-      "path": "Dockerfile"
+    "start": {
+      "cmd": "odoo -c /etc/odoo.conf"
     }
-  },
-  "start": {
-    "cmd": "odoo -c /etc/odoo.conf"
   }
-}
+  
