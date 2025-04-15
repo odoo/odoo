@@ -1098,6 +1098,29 @@ test("update the selected input date after removing the existing date", async ()
     expect("input[data-field=date]").toHaveValue("02/12/2017");
 });
 
+test("daterange with inverted start date and end date", async () => {
+    Partner._records[0].datetime_end = "2017-02-01 00:00:00";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_daterange input:eq(0)").toHaveValue("02/08/2017 15:30");
+    expect(".o_field_daterange input:eq(1)").toHaveValue("02/01/2017 05:30");
+
+    await contains("input[data-field=datetime]").click();
+
+    expect(".o_selected").toHaveCount(8, {
+        message: "should correctly display the range even if invalid",
+    });
+});
+
 test("daterange field in kanban with show_time option", async () => {
     mockTimeZone(+2);
     Partner._records[0].datetime_end = "2017-03-13 00:00:00";
