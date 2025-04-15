@@ -8,6 +8,7 @@ export class ResGroups extends ServerModel {
         {
             id: serverState.groupId,
             name: "Internal User",
+            privilege_id: false,
         },
     ];
 }
