@@ -762,11 +762,9 @@ class PosConfig(models.Model):
     def _get_special_products(self):
         return self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
 
-    def update_customer_display(self, order, access_token):
+    def update_customer_display(self, order, device_uuid):
         self.ensure_one()
-        if not access_token or not secrets.compare_digest(self.access_token, access_token):
-            return
-        self._notify("UPDATE_CUSTOMER_DISPLAY", order)
+        self._notify(f"UPDATE_CUSTOMER_DISPLAY-{device_uuid}", order)
 
     def _get_display_device_ip(self):
         self.ensure_one()
