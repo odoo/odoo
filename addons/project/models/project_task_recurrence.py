@@ -70,7 +70,7 @@ class ProjectTaskRecurrence(models.Model):
             self.repeat_type != 'until' or not occurrence_from.date_deadline or
             self.repeat_until and (occurrence_from.date_deadline + self._get_recurrence_delta()).date() <= self.repeat_until
         ):
-            occurrence_from.with_context(copy_project=True).sudo().copy(
+            occurrence_from.with_context(copy_project=True, is_from_recurrence=True).sudo().copy(
                 self._create_next_occurrence_values(occurrence_from)
             )
 
