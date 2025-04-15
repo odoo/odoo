@@ -6,8 +6,8 @@ from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
-from odoo.osv import expression
 
 
 #Some fields don't have the exact same name
@@ -333,14 +333,14 @@ class FleetVehicle(models.Model):
                         to_update_drivers_bikes.add(future_driver)
                     elif vehicle.vehicle_type == 'car':
                         to_update_drivers_cars.add(future_driver)
-        car_domain, bike_domain = [], []
+        car_domain, bike_domain = Domain.TRUE, Domain.TRUE
         if to_update_drivers_cars:
-            car_domain = [('driver_id', 'in', to_update_drivers_cars), ('vehicle_type', '=', 'car')]
+            car_domain = Domain('driver_id', 'in', to_update_drivers_cars) & Domain('vehicle_type', '=', 'car')
         if to_update_drivers_bikes:
-            bike_domain = [('driver_id', 'in', to_update_drivers_bikes), ('vehicle_type', '=', 'bike')]
+            bike_domain = Domain('driver_id', 'in', to_update_drivers_bikes) & Domain('vehicle_type', '=', 'bike')
         if car_domain or bike_domain:
             vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
-                domain=expression.OR([car_domain, bike_domain]),
+                domain=car_domain | bike_domain,
                 groupby=['vehicle_type'],
                 aggregates=['id:recordset']
             ))
