@@ -426,8 +426,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_09_website_edit_link_popover(self):
         self.start_tour('/@/', 'edit_link_popover', login='admin', step_delay=500, timeout=180)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
         self.start_tour('/odoo', 'conditional_visibility_2', login='website_user')
