@@ -901,7 +901,6 @@ class BaseModel(metaclass=MetaModel):
         :returns: {ids: list(int)|False, messages: [Message][, lastrow: int]}
         """
         from .fields_relational import One2many  # noqa: PLC0415
-        self.env.flush_all()
 
         # determine values of mode, current_module and noupdate
         mode = self._context.get('mode', 'init')
@@ -911,7 +910,7 @@ class BaseModel(metaclass=MetaModel):
         self = self.with_context(_import_current_module=current_module)
 
         cr = self._cr
-        sp = cr.savepoint(flush=False)
+        savepoint = cr.savepoint()
 
         fields = [fix_import_export_id_paths(f) for f in fields]
 
@@ -978,49 +977,48 @@ class BaseModel(metaclass=MetaModel):
 
             errors = 0
             # try again, this time record by record
-            with cr.savepoint() as savepoint:
-                for i, rec_data in enumerate(data_list, 1):
-                    try:
-                        rec = self._load_records([rec_data], mode == 'update')
-                        cr.flush()  # make sure flush exceptions are raised here
-                        ids.append(rec.id)
-                    except psycopg2.Warning as e:
-                        savepoint.rollback()
-                        info = rec_data['info']
-                        messages.append(dict(info, type='warning', message=str(e)))
-                    except psycopg2.Error as e:
-                        savepoint.rollback()
-                        info = rec_data['info']
-                        pg_error_info = {'message': self._sql_error_to_message(e)}
-                        if e.diag.table_name == self._table:
-                            e_fields = get_columns_from_sql_diagnostics(self.env.cr, e.diag, check_registry=True)
-                            if len(e_fields) == 1:
-                                pg_error_info['field'] = e_fields[0]
-                        messages.append(dict(info, type='error', **pg_error_info))
-                        # Failed to write, log to messages, rollback savepoint (to
-                        # avoid broken transaction) and keep going
-                        errors += 1
-                    except UserError as e:
-                        savepoint.rollback()
-                        info = rec_data['info']
-                        messages.append(dict(info, type='error', message=str(e)))
-                        errors += 1
-                    except Exception as e:  # noqa: BLE001
-                        savepoint.rollback()
-                        _logger.debug("Error while loading record", exc_info=True)
-                        info = rec_data['info']
-                        message = _('Unknown error during import: %(error_type)s: %(error_message)s', error_type=e.__class__, error_message=e)
-                        moreinfo = _('Resolve other errors first')
-                        messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
-                        # Failed for some reason, perhaps due to invalid data supplied,
-                        # rollback savepoint and keep going
-                        errors += 1
-                    if errors >= 10 and (errors >= i / 10):
-                        messages.append({
-                            'type': 'warning',
-                            'message': _("Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
-                        })
-                        break
+            for i, rec_data in enumerate(data_list, 1):
+                try:
+                    rec = self._load_records([rec_data], mode == 'update')
+                    cr.flush()  # make sure flush exceptions are raised here
+                    ids.append(rec.id)
+                except psycopg2.Warning as e:
+                    savepoint.rollback()
+                    info = rec_data['info']
+                    messages.append(dict(info, type='warning', message=str(e)))
+                except psycopg2.Error as e:
+                    savepoint.rollback()
+                    info = rec_data['info']
+                    pg_error_info = {'message': self._sql_error_to_message(e)}
+                    if e.diag.table_name == self._table:
+                        e_fields = get_columns_from_sql_diagnostics(self.env.cr, e.diag, check_registry=True)
+                        if len(e_fields) == 1:
+                            pg_error_info['field'] = e_fields[0]
+                    messages.append(dict(info, type='error', **pg_error_info))
+                    # Failed to write, log to messages, rollback savepoint (to
+                    # avoid broken transaction) and keep going
+                    errors += 1
+                except UserError as e:
+                    savepoint.rollback()
+                    info = rec_data['info']
+                    messages.append(dict(info, type='error', message=str(e)))
+                    errors += 1
+                except Exception as e:  # noqa: BLE001
+                    savepoint.rollback()
+                    _logger.debug("Error while loading record", exc_info=True)
+                    info = rec_data['info']
+                    message = _('Unknown error during import: %(error_type)s: %(error_message)s', error_type=e.__class__, error_message=e)
+                    moreinfo = _('Resolve other errors first')
+                    messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
+                    # Failed for some reason, perhaps due to invalid data supplied,
+                    # rollback savepoint and keep going
+                    errors += 1
+                if errors >= 10 and (errors >= i / 10):
+                    messages.append({
+                        'type': 'warning',
+                        'message': _("Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
+                    })
+                    break
             if errors > 0 and global_error_message and global_error_message not in messages:
                 # If we cannot create the records 1 by 1, we display the error raised when we created the records simultaneously
                 messages.insert(0, global_error_message)
@@ -1035,7 +1033,7 @@ class BaseModel(metaclass=MetaModel):
             limit = float('inf')
         extracted = flush_recordset._extract_records(fields, data, log=messages.append, limit=limit)
 
-        converted = flush_recordset._convert_records(extracted, log=messages.append)
+        converted = flush_recordset._convert_records(extracted, log=messages.append, savepoint=savepoint)
 
         info = {'rows': {'to': -1}}
         for id, xid, record, info in converted:
@@ -1051,11 +1049,11 @@ class BaseModel(metaclass=MetaModel):
 
         flush()
         if any(message['type'] == 'error' for message in messages):
-            sp.rollback()
+            savepoint.rollback()
             ids = False
             # cancel all changes done to the registry/ormcache
             self.pool.reset_changes()
-        sp.close(rollback=False)
+        savepoint.close(rollback=False)
 
         nextrow = info['rows']['to'] + 1
         if nextrow < limit:
@@ -1189,7 +1187,7 @@ class BaseModel(metaclass=MetaModel):
             index += len(record_span)
 
     @api.model
-    def _convert_records(self, records, log=lambda a: None):
+    def _convert_records(self, records, *, log=lambda a: None, savepoint):
         """ Converts records from the source iterable (recursive dicts of
         strings) into forms which can be written to the database (via
         ``self.create`` or ``(ir.model.data)._update``)
@@ -1201,7 +1199,7 @@ class BaseModel(metaclass=MetaModel):
         if self.env.lang:
             field_names.update(self.env['ir.model.fields'].get_field_string(self._name))
 
-        convert = self.env['ir.fields.converter'].for_model(self)
+        convert = self.env['ir.fields.converter'].for_model(self, savepoint=savepoint)
 
         def _log(base, record, field, exception):
             type = 'warning' if isinstance(exception, Warning) else 'error'

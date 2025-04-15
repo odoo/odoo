@@ -1789,5 +1789,5 @@ class CheckSavepoint(ImporterCase):
             data = [[str(i)] for i in range(100)] + [[str(i)] for i in range(20)]
             self.import_(['value'], data)
             self.assertLess(sp_mock.call_count, 100, "Too many savepoints in the same transaction, load method should not create a savepoint for each record")
-            self.assertEqual(sp_mock.call_count, 3, "Too many savepoints in the same transaction")
+            self.assertEqual(sp_mock.call_count, 2, "Too many savepoints in the same transaction")
             self.assertGreater(sp_flush.call_count, 120, "We should flush after each record to bind errors to the record")
