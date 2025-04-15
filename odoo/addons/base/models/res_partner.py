@@ -810,15 +810,23 @@ class ResPartner(models.Model):
                     raise ValidationError(_('You cannot archive contacts linked to an active user.\n'
                                             'Ask an administrator to archive their associated user first.\n\n'
                                             'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
+        if vals.get('parent_id'):
+            vals['company_name'] = False
+
+        # filter to keep only really updated values -> field synchronize goes through
+        # partner tree and we should avoid infinite loops in case same value is
+        # updated due to cycles. Use case: updating a property field, which updated
+        # a computed field, which has an inverse writing the same value on property
+        # field. Yay.
+        pre_values_list = [{fname: partner[fname] for fname in vals} for partner in self]
+
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
         # (this is to allow the code from res_users to write to the partner!) or
         # if setting the company_id to False (this is compatible with any user
         # company)
-        if vals.get('website'):
-            vals['website'] = self._clean_website(vals['website'])
-        if vals.get('parent_id'):
-            vals['company_name'] = False
         if 'company_id' in vals:
             company_id = vals['company_id']
             for partner in self:
@@ -836,10 +844,12 @@ class ResPartner(models.Model):
             result = super(ResPartner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
         result = result and super().write(vals)
-        for partner in self:
+        for partner, pre_values in zip(self, pre_values_list, strict=True):
             if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access('write')
-            partner._fields_sync(vals)
+            updated = {fname: fvalue for fname, fvalue in vals.items() if partner[fname] != pre_values[fname]}
+            if updated:
+                partner._fields_sync(updated)
         return result
 
     @api.model_create_multi
