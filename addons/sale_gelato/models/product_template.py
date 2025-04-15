@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command, _, api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 
 from odoo.addons.sale_gelato import utils
 
@@ -197,5 +197,4 @@ class ProductTemplate(models.Model):
 
     def _get_product_document_domain(self):
         """ Override of `product` to filter out gelato print images. """
-        domain = super()._get_product_document_domain()
-        return expression.AND([domain, [('is_gelato', '=', False)]])
+        return super()._get_product_document_domain() & Domain('is_gelato', '=', False)

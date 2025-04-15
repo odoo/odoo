@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class ProjectTask(models.Model):
@@ -98,7 +98,7 @@ class ProjectTask(models.Model):
         if not self.partner_id.commercial_partner_id or not self.allow_billable:
             return []
         SaleOrderLine = self.env['sale.order.line']
-        domain = expression.AND([
+        domain = Domain.AND([
             SaleOrderLine._domain_sale_line_service(),
             [
                 ('company_id', '=?', self.company_id.id),
@@ -107,7 +107,7 @@ class ProjectTask(models.Model):
             ],
         ])
         if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.partner_id.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
-            domain = expression.AND([domain, [('order_id', '=', self.project_sale_order_id.id)]])
+            domain &= Domain('order_id', '=', self.project_sale_order_id.id)
         return domain
 
     def _get_timesheet(self):

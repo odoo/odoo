@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.misc import unquote
 
@@ -11,7 +11,7 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     def _domain_sale_line_id(self):
-        domain = expression.AND([
+        domain = Domain.AND([
             self.env['sale.order.line']._sellable_lines_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [
@@ -228,7 +228,7 @@ class ProjectTask(models.Model):
             self.partner_id = self.sale_line_id.order_partner_id
 
     def _get_projects_to_make_billable_domain(self, additional_domain=None):
-        return expression.AND([
+        return Domain.AND([
             super()._get_projects_to_make_billable_domain(additional_domain),
             [
                 ('partner_id', '!=', False),

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.osv.expression import AND, OR
+from odoo.fields import Domain
 
 
 class AccountMoveLine(models.Model):
@@ -19,16 +19,14 @@ class AccountMoveLine(models.Model):
             lines.analytic_distribution = project._get_analytic_distribution()
 
     def _get_so_mapping_domain(self):
-        return OR([
-            OR([
-                AND([
-                    [(self.env['account.analytic.account'].browse(int(account_id)).root_plan_id._column_name(), "=", int(account_id))]
-                    for account_id in key.split(",")
-                ])
-                for key in line.analytic_distribution or []
-            ])
+        return Domain.OR(
+            Domain.AND(
+                Domain(self.env['account.analytic.account'].browse(int(account_id)).root_plan_id._column_name(), "=", int(account_id))
+                for account_id in key.split(",")
+            )
             for line in self
-        ])
+            for key in line.analytic_distribution or []
+        )
 
     def _get_so_mapping_from_project(self):
         """ Get the mapping of move.line with the sale.order record on which its analytic entries should be reinvoiced.
