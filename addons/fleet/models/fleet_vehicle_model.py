@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from odoo import _, api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 FUEL_TYPES = [
@@ -72,7 +72,7 @@ class FleetVehicleModel(models.Model):
 
     @api.model
     def _search_display_name(self, operator, value):
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
+        if Domain.is_negative_operator(operator):
             return NotImplemented
         return ['|', ('name', operator, value), ('brand_id.name', operator, value)]
 
