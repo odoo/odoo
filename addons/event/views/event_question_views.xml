@@ -1,5 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="event_question_view_search" model="ir.ui.view">
+        <field name="name">event.question.view.search</field>
+        <field name="model">event.question</field>
+        <field name="arch" type="xml">
+            <search string="Search Event Question">
+                <field name="title"/>
+                <field name="question_type"/>
+                <field name="answer_ids"/>
+                <filter string="Mandatory"
+                        name="filter_is_mandatory_answer"
+                        domain="[('is_mandatory_answer', '=', True)]"/>
+                <filter string="Not mandatory"
+                        name="filter_is_not mandatory_answer"
+                        domain="[('is_mandatory_answer', '=', False)]"/>
+                <separator/>
+                <filter string="Once per order"
+                        name="filter_once_per_order"
+                        domain="[('once_per_order', '=', True)]"/>
+                <filter string="For each registration"
+                        name="filter_for_each_registration"
+                        domain="[('once_per_order', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_event_question_view">
+        <field name="name">Event Question</field>
+        <field name="res_model">event.question</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="event.event_question_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a question
+            </p>
+        </field>
+    </record>
+
+    <record id="menu_event_questions" model="ir.ui.menu">
+        <field name="action" ref="event.action_event_question_view"/>
+    </record>
+
+    <record id="event_question_view_list" model="ir.ui.view">
+        <field name="name">Event Question</field>
+        <field name="model">event.question</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="title"/>
+                <field name="is_mandatory_answer" string="Mandatory"/>
+                <field name="once_per_order" string="Once per Order"/>
+                <field name="question_type" string="Type" />
+                <field name="answer_ids" widget="many2many_tags"
+                    invisible="question_type != 'simple_choice'" />
+            </list>
+        </field>
+    </record>
+
     <record id="event_question_view_form" model="ir.ui.view">
         <field name="name">event.question.view.form</field>
         <field name="model">event.question</field>
