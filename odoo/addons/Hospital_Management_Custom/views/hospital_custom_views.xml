@@ -1,0 +1,63 @@
+<odoo>
+    <data>
+
+        <!-- Define the root menu item (Hospital Management) -->
+        <menuitem id="hospital_management_root" 
+                  name="Hospital Management" 
+                  sequence="1"/>
+
+        <!-- Define a custom menu under Hospital Management -->
+        <menuitem id="hospital_management_custom_menu" 
+                  name="Hospital Management Custom" 
+                  parent="hospital_management_root" 
+                  sequence="10"/>
+
+        <!-- Action for Hospital Patients (binds the list and form views) -->
+        <record id="action_hospital_patient" model="ir.actions.act_window">
+            <field name="name">Hospital Patients new</field>
+            <field name="res_model">hospital.patient</field>
+            <field name="view_mode">list,form</field> <!-- list allows to view the patient list and form allows to create or edit patient records-->
+        </record>
+
+        <!-- Menu for Patients (provides access to the action and shows the list view with the "New" button.) -->
+        <menuitem id="hospital_patient_menu" 
+                  name="Patients" 
+                  parent="hospital_management_custom_menu" 
+                  action="action_hospital_patient" 
+                  sequence="1"/>
+
+        <!-- Form View for Patient Model -->
+        <record id="view_hospital_patient_form" model="ir.ui.view">
+            <field name="name">hospital.patient.form</field>
+            <field name="model">hospital.patient</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Patient Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="age"/>
+                            <field name="gender"/>
+                            <field name="diagnosis"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- List View for Patient Model (for creation of new records) -->
+       <record id="view_hospital_patient_list" model="ir.ui.view">
+            <field name="name">hospital.patient.list</field>
+            <field name="model">hospital.patient</field>
+            <field name="type">list</field> 
+            <field name="arch" type="xml">
+                <list string="Patients">
+                    <field name="name"/>
+                    <field name="age"/>
+                    <field name="gender"/>
+                </list>
+            </field>
+        </record>
+
+    </data>
+</odoo>
