@@ -403,12 +403,31 @@ def load_certificate():
         _logger.exception("An error occurred while trying to reach odoo.com servers.")
         return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
 
+<<<<<<< 357eee7a6be70a3c78996522c36e4341a06bd12f
     error = data.get('error')
     result = data.get('result')
     if error or not result:
         _logger.warning("An error received from odoo.com while trying to get the certificate: %s", error or 'Empty response')
+||||||| 0d367bc1666242a9da2060f27a9eed1b401ebb52
+    if response.status != 200:
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_STATUS %s\n\n%s" % (response.status, response.reason)
+
+    result = json.loads(response.data.decode('utf8'))['result']
+    if not result:
+=======
+    if response.status != 200:
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_STATUS %s\n\n%s" % (response.status, response.reason)
+
+    response = json.loads(response.data.decode())
+    error = response.get('error')
+    if error or not response.get('result'):
+        _logger.error(
+            "An error received from odoo.com while trying to get the certificate: %s", error or 'Empty response'
+        )
+>>>>>>> 84d76b32ed437015e8a9df2089ac1949cc188427
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
+    result = response['result']
     update_conf({'subject': result['subject_cn']})
 
     if platform.system() == 'Linux':
