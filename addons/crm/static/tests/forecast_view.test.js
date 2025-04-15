@@ -49,7 +49,7 @@ test("Forecast graph view", async () => {
         [],
     ];
 
-    onRpc("web_read_group", ({ kwargs }) => {
+    onRpc("formatted_read_group", ({ kwargs }) => {
         expect(kwargs.domain).toEqual(expectedDomains.shift());
     });
     await mountView({
@@ -84,7 +84,7 @@ test("forecast filter domain is combined with other domains following the same r
     expect.assertions(1);
     mockDate("2021-09-16 16:54:00");
 
-    onRpc("web_read_group", ({ kwargs }) => {
+    onRpc("formatted_read_group", ({ kwargs }) => {
         expect(kwargs.domain).toEqual([
             "&",
             ["number", ">", 2],

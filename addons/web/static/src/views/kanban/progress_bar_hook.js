@@ -10,7 +10,7 @@ const FALSE = Symbol("False");
 
 /**
  *
- * @param {*} groups: returned by web_read_group
+ * @param {*} groups: returned by formatted_read_group
  * @param {*} groupByField
  * @param {*} value
  * @returns
@@ -106,7 +106,7 @@ class ProgressBarState {
 
                 if (this._aggregateFields.length) {
                     //recompute the aggregates is not necessary
-                    //the web_read_group was already done with the correct domain (containing the applied filter)
+                    //the formatted_read_group was already done with the correct domain (containing the applied filter)
                     this.activeBars[group.serverValue].aggregates = _findGroup(
                         this._aggregateValues,
                         group.groupByField,
@@ -200,11 +200,11 @@ class ProgressBarState {
             ? Domain.and([group.groupDomain, filterDomain]).toList()
             : group.groupDomain;
         return this.model.orm
-            .webReadGroup(resModel, domain, groupBy, aggregateSpecs, kwargs)
-            .then((res) => {
-                if (res.length) {
+            .formattedReadGroup(resModel, domain, groupBy, aggregateSpecs, kwargs)
+            .then((groups) => {
+                if (groups.length) {
                     const groupByField = group.groupByField;
-                    const aggrValues = _groupsToAggregateValues(res.groups, groupBy, fields);
+                    const aggrValues = _groupsToAggregateValues(groups, groupBy, fields);
                     activeBar.aggregates = _findGroup(aggrValues, groupByField, group.serverValue);
                 }
             });
@@ -235,14 +235,14 @@ class ProgressBarState {
     async _updateAggregates() {
         const { context, fields, groupBy, domain, resModel } = this.model.root;
         const kwargs = { context };
-        const res = await this.model.orm.webReadGroup(
+        const groups = await this.model.orm.formattedReadGroup(
             resModel,
             domain,
             groupBy,
             getAggregateSpecifications(this._aggregateFields),
             kwargs
         );
-        this._aggregateValues = _groupsToAggregateValues(res.groups, groupBy, fields);
+        this._aggregateValues = _groupsToAggregateValues(groups, groupBy, fields);
     }
 
     async _updateProgressBar() {
@@ -310,7 +310,7 @@ class ProgressBarState {
 
     /**
      * We must be able to match groups returned by the read_progress_bar call with groups previously
-     * returned by web_read_group. When grouped on date(time) fields, the key of each group is the
+     * returned by formatted_read_group. When grouped on date(time) fields, the key of each group is the
      * displayName of the period (e.g. "W8 2024"). When grouped on boolean fields, it's "True" and
      * "False". For falsy values (e.g. unset many2one), it's "False". In all other cases, it's the
      * group's value (e.g. the id for a many2one).

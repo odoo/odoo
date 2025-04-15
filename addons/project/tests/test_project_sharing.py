@@ -545,14 +545,14 @@ class TestProjectSharing(TestProjectSharingCommon):
             expression.AND([expression.TRUE_DOMAIN, domain]),
             aggregates=['id:min', '__count'],
         )
-        self.assertEqual(task_read_group[0]['__count'], 1, 'The task should be found with the web_read_group method containing a truly tuple.')
-        self.assertEqual(task_read_group[0]['id:min'], self.task_portal.id, 'The task should be found with the web_read_group method containing a truly tuple.')
+        self.assertEqual(task_read_group[0]['__count'], 1, 'The task should be found with the formatted_read_group method containing a truly tuple.')
+        self.assertEqual(task_read_group[0]['id:min'], self.task_portal.id, 'The task should be found with the formatted_read_group method containing a truly tuple.')
 
         task_read_group = self.env['project.task'].formatted_read_group(
             expression.AND([expression.FALSE_DOMAIN, domain]),
             aggregates=['__count'],
         )
-        self.assertFalse(task_read_group[0]['__count'], 'No result should found with the web_read_group since the domain is falsy.')
+        self.assertFalse(task_read_group[0]['__count'], 'No result should found with the formatted_read_group since the domain is falsy.')
 
     def test_milestone_read_access_right(self):
         """ This test ensures that a portal user has read access on the milestone of the project that was shared with him """

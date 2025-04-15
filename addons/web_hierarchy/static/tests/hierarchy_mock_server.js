@@ -46,7 +46,7 @@ function _mockHierarchyRead({ model, args, kwargs }) {
             }
         }
         const recordIds = records.map((rec) => rec.id);
-        const data = this.env[model].web_read_group({
+        const groups = this.env[model].formatted_read_group({
             ...kwargs,
             domain: [
                 [
@@ -60,7 +60,7 @@ function _mockHierarchyRead({ model, args, kwargs }) {
             groupby: [parentFieldName],
             aggregates: ["id:array_agg"],
         });
-        for (const group of data.groups) {
+        for (const group of groups) {
             childrenIdsPerRecordId[group[parentFieldName][0]] = group['id:array_agg'];
         }
     }

@@ -209,7 +209,7 @@ class TestIrModel(TransactionCase):
     def test_group_expansion(self):
         """Check that the basic custom group expansion works."""
         model = self.env['x_bananas'].with_context(read_group_expand=True)
-        groups = model.web_read_group([], ['x_ripeness_id'], ['__count'])['groups']
+        groups = model.formatted_read_group([], ['x_ripeness_id'], ['__count'])
         expected = [{
             'x_ripeness_id': self.ripeness_green,
             '__count': 3,

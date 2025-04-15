@@ -568,7 +568,7 @@ describe("board_desktop", () => {
                 views: [[4, "pivot"]],
             };
         });
-        onRpc("web_read_group", (args) => {
+        onRpc("formatted_read_group", (args) => {
             expect(args.kwargs.groupby).toEqual([]);
         });
 
