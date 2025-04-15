@@ -200,13 +200,13 @@ export function isInRange(value, range) {
         return false;
     }
     if (Array.isArray(value)) {
-        const actualValues = value.filter(Boolean);
+        const actualValues = value.filter(Boolean).sort();
         if (actualValues.length < 2) {
             return isInRange(actualValues[0], range);
         }
         return (
-            (value[0] <= range[0] && range[0] <= value[1]) ||
-            (range[0] <= value[0] && value[0] <= range[1])
+            (actualValues[0] <= range[0] && range[0] <= actualValues[1]) ||
+            (range[0] <= actualValues[0] && actualValues[0] <= range[1])
         );
     } else {
         return range[0] <= value && value <= range[1];
