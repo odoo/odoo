@@ -1718,7 +1718,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PhysicalGiftCardProgramSaleTour",
-            login="pos_user"
+            login="pos_user",
+            debug=True
         )
 
         expected_coupons = {

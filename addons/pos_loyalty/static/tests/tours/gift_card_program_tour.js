@@ -7,6 +7,8 @@ import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_sc
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 registry.category("web_tour.tours").add("GiftCardProgramTour1", {
     steps: () =>
@@ -119,6 +121,19 @@ registry.category("web_tour.tours").add("PhysicalGiftCardProgramSaleTour", {
             PosLoyalty.createManualGiftCard("test-card-0001", 100),
             PosLoyalty.clickPhysicalGiftCard("test-card-0001"),
             ProductScreen.selectedOrderlineHas("Gift Card", "1", "100"),
+            inLeftSide([
+                // Cannot modifiy quantity on physical gift card
+                Numpad.click("4"),
+                Dialog.confirm(),
+                // Cannot modifiy discount on physical gift card
+                Numpad.click("%"),
+                Numpad.click("5"),
+                Dialog.confirm(),
+                // Connot modifiy price on physical gift card
+                Numpad.click("Price"),
+                Numpad.click("5"),
+                Dialog.confirm(),
+            ]),
             ProductScreen.addOrderline("Gift Card", "1", "50", "50"),
             PosLoyalty.createManualGiftCard("new-card-0001", 250),
             PosLoyalty.clickPhysicalGiftCard("new-card-0001"),

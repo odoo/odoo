@@ -3,7 +3,7 @@ import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_su
 import { patch } from "@web/core/utils/patch";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ManageGiftCardPopup } from "@pos_loyalty/app/components/popups/manage_giftcard_popup/manage_giftcard_popup";
 
 patch(OrderSummary.prototype, {
@@ -62,7 +62,30 @@ patch(OrderSummary.prototype, {
      */
     _setValue(val) {
         const selectedLine = this.currentOrder.getSelectedOrderline();
+        const { numpadMode } = this.pos;
+        const isPhysicalGiftCard = selectedLine.gift_code?.length > 0;
         if (!selectedLine) {
+            return;
+        }
+        if (isPhysicalGiftCard && numpadMode == "quantity" && !["", "remove"].includes(val)) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Gift Card Error"),
+                body: _t("You cannot change the quantity of a physical gift card."),
+            });
+            return;
+        }
+        if (isPhysicalGiftCard && numpadMode == "discount") {
+            this.dialog.add(AlertDialog, {
+                title: _t("Gift Card Error"),
+                body: _t("You cannot change the discount of a physical gift card."),
+            });
+            return;
+        }
+        if (isPhysicalGiftCard && numpadMode == "price") {
+            this.dialog.add(AlertDialog, {
+                title: _t("Gift Card Error"),
+                body: _t("You cannot change the price of a physical gift card."),
+            });
             return;
         }
         if (selectedLine.is_reward_line && val === "remove") {
