@@ -55,6 +55,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         string='Pack App Reference',
         readonly=True,
     )
+    single_pick_payload_sent = fields.Boolean(string="Single Pick Payload Sent", default=False)
 
     @api.model
     def default_get(self, fields):
@@ -110,7 +111,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         for wizard in self:
             if wizard.line_count == wizard.updated_line_count:
                 _logger.info(f"Conditions met for packing products in wizard {wizard.id}. Executing pack_products.")
-                return wizard.pack_products()
+                # return wizard.pack_products()
             else:
                 _logger.info(
                     f"Conditions not met for packing products in wizard {wizard.id}. Line count: {wizard.line_count}, Updated line count: {wizard.updated_line_count}")
@@ -291,10 +292,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         # Process based on the number of pick numbers
         if not len(self.picking_ids) > 1:
+            # Prevent double sending
+            if self.single_pick_payload_sent:
+                _logger.warning(f"[SKIP] Single-pick payload already sent for wizard {self.id}")
+                return
             payloads = [self.process_single_pick()]
             for payload in payloads:
                 self.send_payload_to_api(api_url, payload)
-
+            self.single_pick_payload_sent = True
             # Only update pickings used in lines
             relevant_picking_ids = self.line_ids.mapped('picking_id').filtered(lambda p: p)
             for picking in relevant_picking_ids:
@@ -689,8 +694,8 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                     _logger.error(f"[FAILURE] API Error ({response_ot.status_code}): {error_message}")
                     line.api_payload_success = False
                     raise UserError(
-                        _("Payload failed for product '%s'. Fix it before proceeding:\n%s") %
-                        (line.product_id.display_name, error_message)
+                        _("Payload failed for order '%s'. Fix it before proceeding:\n%s") %
+                        (line.sale_order_id.name, error_message)
                     )
 
                 # Simulated success for now (while disabled)
