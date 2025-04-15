@@ -7,7 +7,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.mail import email_normalize, append_content_to_html
 
 _logger = logging.getLogger(__name__)
@@ -167,15 +167,13 @@ class MailGroupMessage(models.Model):
     def _get_pending_same_author_same_group(self):
         """Return the pending messages of the same authors in the same groups."""
         return self.search(
-            expression.AND([
-                expression.OR([
-                    [
-                        ('mail_group_id', '=', message.mail_group_id.id),
-                        ('email_from_normalized', '=', message.email_from_normalized),
-                    ] for message in self
-                ]),
-                [('moderation_status', '=', 'pending_moderation')],
+            Domain.OR([
+                [
+                    ('mail_group_id', '=', message.mail_group_id.id),
+                    ('email_from_normalized', '=', message.email_from_normalized),
+                ] for message in self
             ])
+            & Domain('moderation_status', '=', 'pending_moderation')
         )
 
     def _create_moderation_rule(self, status):
@@ -192,7 +190,7 @@ class MailGroupMessage(models.Model):
                 raise UserError(_('The email "%s" is not valid.', message.email_from))
 
         existing_moderation = self.env['mail.group.moderation'].search(
-            expression.OR([
+            Domain.OR([
                 [
                     ('email', '=', email_normalize(message.email_from)),
                     ('mail_group_id', '=', message.mail_group_id.id)

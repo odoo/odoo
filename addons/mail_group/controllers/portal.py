@@ -7,8 +7,8 @@ import werkzeug
 from odoo import http, fields, tools, models
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.http import request, Response
-from odoo.osv import expression
 from odoo.tools import consteq
 from odoo.tools.misc import get_lang
 
@@ -24,7 +24,7 @@ class PortalMailGroup(http.Controller):
 
     def _get_archives(self, group_id):
         """Return the different date range and message count for the group messages."""
-        domain = expression.AND([self._get_website_domain(), [('mail_group_id', '=', group_id)]])
+        domain = Domain.AND([self._get_website_domain(), [('mail_group_id', '=', group_id)]])
         results = request.env['mail.group.message']._read_group(
             domain,
             groupby=['create_date:month'],
@@ -45,7 +45,7 @@ class PortalMailGroup(http.Controller):
                 'messages_count': count,
             })
 
-        thread_domain = expression.AND([domain, [('group_message_parent_id', '=', False)]])
+        thread_domain = Domain.AND([domain, [('group_message_parent_id', '=', False)]])
         threads_count = request.env['mail.group.message'].search_count(thread_domain)
 
         return {
@@ -105,12 +105,12 @@ class PortalMailGroup(http.Controller):
     def group_view_messages(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
         GroupMessage = request.env['mail.group.message']
 
-        domain = expression.AND([self._get_website_domain(), [('mail_group_id', '=', group.id)]])
+        domain = Domain.AND([self._get_website_domain(), [('mail_group_id', '=', group.id)]])
         if mode == 'thread':
-            domain = expression.AND([domain, [('group_message_parent_id', '=', False)]])
+            domain &= Domain('group_message_parent_id', '=', False)
 
         if date_begin and date_end:
-            domain = expression.AND([domain, [('create_date', '>', date_begin), ('create_date', '<=', date_end)]])
+            domain &= Domain('create_date', '>', date_begin) & ('create_date', '<=', date_end)
 
         # SUDO after the search to apply access rules but be able to read attachments
         messages_sudo = GroupMessage.search(
@@ -147,17 +147,17 @@ class PortalMailGroup(http.Controller):
             raise werkzeug.exceptions.NotFound()
 
         GroupMessage = request.env['mail.group.message']
-        base_domain = expression.AND([
+        base_domain = Domain.AND([
             self._get_website_domain(),
             [('mail_group_id', '=', group.id),
              ('group_message_parent_id', '=', message.group_message_parent_id.id)],
         ])
 
         next_message = GroupMessage.search(
-            expression.AND([base_domain, [('id', '>', message.id)]]),
+            base_domain & Domain('id', '>', message.id),
             order='id ASC', limit=1)
         prev_message = GroupMessage.search(
-            expression.AND([base_domain, [('id', '<', message.id)]]),
+            base_domain & Domain('id', '<', message.id),
             order='id DESC', limit=1)
 
         message_sudo = message.sudo()
@@ -183,7 +183,7 @@ class PortalMailGroup(http.Controller):
         if group != message.mail_group_id:
             raise werkzeug.exceptions.NotFound()
 
-        replies_domain = expression.AND([
+        replies_domain = Domain.AND([
             self._get_website_domain(),
             [('id', '>', int(last_displayed_id)), ('group_message_parent_id', '=', message.id)],
         ])

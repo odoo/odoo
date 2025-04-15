@@ -32,7 +32,7 @@ from odoo.addons.mail.tools.web_push import (
     ENCRYPTION_BLOCK_OVERHEAD, ENCRYPTION_HEADER_SIZE, MAX_PAYLOAD_SIZE
 )
 from odoo.exceptions import MissingError, AccessError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext,
     clean_context, split_every, Query, SQL,
@@ -176,7 +176,8 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
+        """Search function for message_follower_ids"""
+        if Domain.is_negative_operator(operator):
             return NotImplemented
         if not (self.env.su or self.env.user._is_internal()):
             user_partner = self.env.user.partner_id
@@ -1035,7 +1036,7 @@ class MailThread(models.AbstractModel):
                 base_domain = model._detect_loop_sender_domain(email_from_normalized)
                 if base_domain:
                     mail_new_count = model.sudo().search_count(
-                        expression.AND([
+                        Domain.AND([
                             [('create_date', '>=', create_date_limit)],
                             base_domain,
                         ]),
@@ -1044,11 +1045,11 @@ class MailThread(models.AbstractModel):
 
             # search messages linked to email -> alias updating records
             if doc_ids and not loop_new:
-                base_msg_domain = [('model', '=', model._name), ('res_id', 'in', doc_ids), ('create_date', '>=', create_date_limit)]
+                base_msg_domain = Domain([('model', '=', model._name), ('res_id', 'in', doc_ids), ('create_date', '>=', create_date_limit)])
                 if author_id:
-                    msg_domain = expression.AND([[('author_id', '=', author_id)], base_msg_domain])
+                    msg_domain = Domain('author_id', '=', author_id) & base_msg_domain
                 else:
-                    msg_domain = expression.AND([[('email_from', 'in', [email_from, email_from_normalized])], base_msg_domain])
+                    msg_domain = Domain('email_from', 'in', [email_from, email_from_normalized]) & base_msg_domain
                 mail_update_groups = self.env['mail.message'].sudo()._read_group(msg_domain, ['res_id'], ['__count'])
                 if mail_update_groups:
                     loop_update = any(
@@ -4591,20 +4592,19 @@ class MailThread(models.AbstractModel):
 
     def _message_followers_to_store(self, store: Store, after=None, limit=100, filter_recipients=False, reset=False):
         self.ensure_one()
-        domain = [
+        domain = Domain([
             ("res_id", "=", self.id),
             ("res_model", "=", self._name),
             ("partner_id", "!=", self.env.user.partner_id.id),
-        ]
+        ])
         if filter_recipients:
             subtype_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
-            subtype_domain = [
+            domain &= Domain([
                 ("subtype_ids", "=", subtype_id),
                 ("partner_id.active", "=", True),
-            ]
-            domain = expression.AND([domain, subtype_domain])
+            ])
         if after:
-            domain = expression.AND([domain, [("id", ">", after)]])
+            domain &= Domain("id", ">", after)
         store.add(
             self,
             {

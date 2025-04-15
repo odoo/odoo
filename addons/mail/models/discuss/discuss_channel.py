@@ -12,7 +12,7 @@ from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import format_list, get_lang, html_escape
 from odoo.tools.misc import OrderedSet
 
@@ -522,13 +522,10 @@ class DiscussChannel(models.Model):
         all_new_members = self.env["discuss.channel.member"]
         for channel in self:
             members_to_create = []
-            existing_members = self.env['discuss.channel.member'].search(expression.AND([
-                [('channel_id', '=', channel.id)],
-                expression.OR([
-                    [('partner_id', 'in', partners.ids)],
-                    [('guest_id', 'in', guests.ids)]
-                ])
-            ]))
+            existing_members = self.env['discuss.channel.member'].search(
+                Domain('channel_id', '=', channel.id)
+                & (Domain('partner_id', 'in', partners.ids) | Domain('guest_id', 'in', guests.ids))
+            )
             members_to_create += [{
                 **(create_member_params or {}),
                 'partner_id': partner.id,
@@ -597,12 +594,12 @@ class DiscussChannel(models.Model):
             :param list member_ids: list of the members ids from which the invitation has to be removed
         """
         self.ensure_one()
-        channel_member_domain = [
+        channel_member_domain = Domain([
             ('channel_id', '=', self.id),
             ('rtc_inviting_session_id', '!=', False),
-        ]
+        ])
         if member_ids:
-            channel_member_domain = expression.AND([channel_member_domain, [('id', 'in', member_ids)]])
+            channel_member_domain &= Domain('id', 'in', member_ids)
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         members.rtc_inviting_session_id = False
         members._bus_send_store(self, {"rtcInvitingSession": False})
@@ -689,27 +686,27 @@ class DiscussChannel(models.Model):
                     'ushare': ushare,
                 })
 
-        domain = expression.AND([
+        domain = Domain.AND([
             [("channel_id", "=", self.id)],
             [("partner_id", "!=", author_id)],
             [("partner_id.active", "=", True)],
             [("mute_until_dt", "=", False)],
             [("partner_id.user_ids.res_users_settings_ids.mute_until_dt", "=", False)],
-            expression.OR([
+            Domain.OR([
                 [("channel_id.channel_type", "!=", "channel")],
-                expression.AND([
+                Domain.AND([
                     [("channel_id.channel_type", "=", "channel")],
-                    expression.OR([
+                    Domain.OR([
                         [("custom_notifications", "=", "all")],
-                        expression.AND([
+                        Domain.AND([
                             [("custom_notifications", "=", False)],
                             [("partner_id.user_ids.res_users_settings_ids.channel_notifications", "=", "all")],
                         ]),
-                        expression.AND([
+                        Domain.AND([
                             [("custom_notifications", "=", "mentions")],
                             [("partner_id", "in", pids)],
                         ]),
-                        expression.AND([
+                        Domain.AND([
                             [("custom_notifications", "=", False)],
                             [("partner_id.user_ids.res_users_settings_ids.channel_notifications", "=", False)],
                             [("partner_id", "in", pids)],

@@ -38,5 +38,5 @@ class TestMassMailEventValues(EventCase):
         mailing_form.mailing_type = 'sms'
         self.assertEqual(
             literal_eval(mailing_form.mailing_domain),
-            [('event_id', 'in', test_event.ids), ('state', 'not in', ['cancel', 'draft'])],
+            ['&', ('event_id', 'in', test_event.ids), ('state', 'not in', ['cancel', 'draft'])],
         )
