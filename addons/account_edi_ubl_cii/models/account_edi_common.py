@@ -1,7 +1,7 @@
 from odoo import _, models, Command
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr, find_xml_value
+from odoo.tools import float_is_zero, float_repr, find_xml_value
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.zeep import Client
@@ -654,7 +654,8 @@ class AccountEdiCommon(models.AbstractModel):
         discount = 0
         amount_fixed_taxes = sum(d['tax_amount'] * billed_qty for d in fixed_taxes_list)
         if billed_qty * price_unit != 0 and price_subtotal is not None:
-            discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / (billed_qty * price_unit))
+            inferred_discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / (billed_qty * price_unit))
+            discount = inferred_discount if not float_is_zero(inferred_discount, 2) else 0.0
 
         # Sometimes, the xml received is very bad; e.g.:
         #   * unit price = 0, qty = 0, but price_subtotal = -200
