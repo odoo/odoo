@@ -1,25 +1,24 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv.expression import OR
 
 
 class PosBill(models.Model):
     _name = 'pos.bill'
-    _order = "value"
-    _description = "Coins/Bills"
-    _inherit = ["pos.load.mixin"]
+    _order = 'value'
+    _description = 'Coins/Bills'
+    _inherit = ['pos.load.mixin']
 
-    name = fields.Char("Name")
-    value = fields.Float("Value", required=True, digits=(16, 4))
-    pos_config_ids = fields.Many2many("pos.config", string="Point of Sales")
+    name = fields.Char('Name')
+    value = fields.Float('Value', required=True, digits=(16, 4))
+    pos_config_ids = fields.Many2many('pos.config', string='Point of Sales')
 
     @api.model
     def name_create(self, name):
         try:
             value = float(name)
         except ValueError:
-            raise UserError(_("The name of the Coins/Bills must be a number."))
-        result = super().create({"name": name, "value": value})
+            raise UserError(_('The name of the Coins/Bills must be a number.'))
+        result = super().create({'name': name, 'value': value})
         return result.id, result.display_name
 
     @api.model

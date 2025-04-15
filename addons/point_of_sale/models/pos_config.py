@@ -37,7 +37,8 @@ class PosConfig(models.Model):
         ], limit=1)
 
     def _default_payment_methods(self):
-        """ Should only default to payment methods that are compatible to this config's company and currency.
+        """
+        Should only default to payment methods that are compatible to this config's company and currency.
         """
         domain = [
             *self.env['pos.payment.method']._check_company_domain(self.env.company),
@@ -54,16 +55,19 @@ class PosConfig(models.Model):
             return self.env['pos.payment.method'].browse(payment_methods)
         return non_cash_pm | available_cash_pm
 
-    def _get_group_pos_manager(self):
-        return self.env.ref('point_of_sale.group_pos_manager')
+    # def _get_group_pos_manager(self):
+    #     return self.env.ref('point_of_sale.group_pos_manager')
 
-    def _get_group_pos_user(self):
-        return self.env.ref('point_of_sale.group_pos_user')
+    # def _get_group_pos_user(self):
+    #     return self.env.ref('point_of_sale.group_pos_user')
 
     def _get_default_tip_product(self):
-        tip_product_id = self.env.ref("point_of_sale.product_product_tip", raise_if_not_found=False)
+        tip_product_id = self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False)
         if not tip_product_id or (tip_product_id.sudo().company_id and tip_product_id.sudo().company_id != self.env.company):
-            tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
+            category_services = self.env.ref('product.product_category_services', False)
+            tip_product_id = self.env['product.product'].search([
+                ('default_code', '=', 'TIPS'),
+                ('categ_id', '=', category_services and category_services.id or False)], limit=1)
         return tip_product_id
 
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
@@ -134,72 +138,73 @@ class PosConfig(models.Model):
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
     current_session_state = fields.Char(compute='_compute_current_session')
     number_of_rescue_session = fields.Integer(string="Number of Rescue Session", compute='_compute_current_session')
+    pos_session_username = fields.Char(compute='_compute_current_session_user')
+    # pos_session_state = fields.Char(compute='_compute_current_session_user')
+    pos_session_duration = fields.Char(compute='_compute_current_session')
+    current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session')
+    has_active_session = fields.Boolean(compute='_compute_current_session')
     last_session_closing_cash = fields.Float(compute='_compute_last_session')
     last_session_closing_date = fields.Date(compute='_compute_last_session')
-    pos_session_username = fields.Char(compute='_compute_current_session_user')
-    pos_session_state = fields.Char(compute='_compute_current_session_user')
-    pos_session_duration = fields.Char(compute='_compute_current_session_user')
+    use_pricelist = fields.Boolean('Is Pricelist?')
     pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist',
-        help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured if any.")
+        help='The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.')
     available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists',
-        help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
+        help='Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.')
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
-    group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
-        help='This field is there to pass the id of the pos manager group to the point of sale client.')
-    group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
-        help='This field is there to pass the id of the pos user group to the point of sale client.')
-    iface_tipproduct = fields.Boolean(string="Product tips")
-    tip_product_id = fields.Many2one('product.product', string='Tip Product', default=_get_default_tip_product, help="This product is used as reference on customer receipts.")
+    # group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
+    #     help='This field is there to pass the id of the pos manager group to the point of sale client.')
+    # group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
+    #     help='This field is there to pass the id of the pos user group to the point of sale client.')
+    iface_tipproduct = fields.Boolean(string='Is Tips?')
+    tip_product_id = fields.Many2one('product.product', string='Tip Product', default=_get_default_tip_product, help='This product is used as reference on customer receipts.')
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
-    default_bill_ids = fields.Many2many('pos.bill', string="Coins/Bills")
-    use_pricelist = fields.Boolean("Use a pricelist.")
-    use_presets = fields.Boolean("Use Presets")
+    default_bill_ids = fields.Many2many('pos.bill', string='Coins/Bills')
+    use_presets = fields.Boolean(string='Is Presets?')
     default_preset_id = fields.Many2one('pos.preset', string='Default Preset')
     available_preset_ids = fields.Many2many('pos.preset', string='Available Presets')
-    tax_regime_selection = fields.Boolean("Tax Regime Selection value")
-    limit_categories = fields.Boolean("Restrict Categories")
-    module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
-    module_pos_avatax = fields.Boolean("AvaTax PoS Integration", help="Use automatic taxes mapping with Avatax in PoS")
-    module_pos_discount = fields.Boolean("Global Discounts")
-    module_pos_appointment = fields.Boolean("Online Booking")
-    is_posbox = fields.Boolean("PosBox")
-    is_header_or_footer = fields.Boolean("Custom Header & Footer")
-    module_pos_hr = fields.Boolean(help="Show employee login screen")
+    tax_regime_selection = fields.Boolean(string='Tax Regime Selection value')
+    limit_categories = fields.Boolean(string='Is Restrict Categories?')
+    module_pos_restaurant = fields.Boolean(string='Is a Bar/Restaurant?')
+    module_pos_avatax = fields.Boolean(string='AvaTax PoS Integration', help='Use automatic taxes mapping with Avatax in PoS')
+    manual_discount = fields.Boolean(string='Is Line Discounts?', default=True)
+    module_pos_discount = fields.Boolean('Is Global Discounts?')
+    module_pos_appointment = fields.Boolean('Is Online Booking?')
+    is_posbox = fields.Boolean('Is PosBox?')
+    is_header_or_footer = fields.Boolean('Is Custom Header & Footer?')
+    module_pos_hr = fields.Boolean(help='Show employee login screen')
     amount_authorized_diff = fields.Float('Amount Authorized Difference',
-        help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
-             "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
-             "the closing of his session saying that he needs to contact his manager.")
+        help='This field depicts the maximum difference allowed between the ending balance and the theoretical cash when '
+             'closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at '
+             'the closing of his session saying that he needs to contact his manager.')
     payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods(), copy=False)
-    company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
-    current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
-    other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
-    rounding_method = fields.Many2one('account.cash.rounding', string="Cash rounding")
-    cash_rounding = fields.Boolean(string="Cash Rounding")
-    only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
-    has_active_session = fields.Boolean(compute='_compute_current_session')
-    manual_discount = fields.Boolean(string="Line Discounts", default=True)
-    ship_later = fields.Boolean(string="Ship Later")
-    route_id = fields.Many2one('stock.route', string="Spefic route for products delivered later.")
+    company_has_template = fields.Boolean(string='Company has chart of accounts', compute='_compute_company_has_template')
+    other_devices = fields.Boolean(string='Other Devices', help='Connect devices to your PoS without an IoT Box.')
+    rounding_method = fields.Many2one('account.cash.rounding', string='Cash rounding')
+    cash_rounding = fields.Boolean(string='Cash Rounding')
+    only_round_cash_method = fields.Boolean(string='Only apply rounding on cash')
+    ship_later = fields.Boolean(string='Is Ship Later?', help='Allow to ship products later.')
+    # TODO: check route_id is not used anywhere?
+    route_id = fields.Many2one('stock.route', string='Specific route for products delivered later.')
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),
         ('one', 'When all products are ready')],
         string='Shipping Policy', required=True, default='direct',
-        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
-        "product lead time. Otherwise, it will be based on the shortest.")
-    auto_validate_terminal_payment = fields.Boolean(default=True, help="Automatically validates orders paid with a payment terminal.")
-    trusted_config_ids = fields.Many2many("pos.config", relation="pos_config_trust_relation", column1="is_trusting",
-                                          column2="is_trusted", string="Trusted Point of Sale Configurations",
+        help='If you deliver all products at once, the delivery order will be scheduled based on the greatest '
+        'product lead time. Otherwise, it will be based on the shortest.')
+    auto_validate_terminal_payment = fields.Boolean(default=True, help='Automatically validates orders paid with a payment terminal.')
+    trusted_config_ids = fields.Many2many('pos.config', relation='pos_config_trust_relation', column1='is_trusting',
+                                          column2='is_trusted', string='Trusted Point of Sale Configurations',
                                           domain="[('company_id', '=', company_id)]")
-    access_token = fields.Char("Access Token", default=lambda self: uuid4().hex[:16])
-    show_product_images = fields.Boolean(string="Show Product Images", help="Show product images in the Point of Sale interface.", default=True)
-    show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
+    access_token = fields.Char('Access Token', default=lambda self: uuid4().hex[:16])
+    show_product_images = fields.Boolean(string='Show Product Images', help='Show product images in the Point of Sale interface.', default=True)
+    show_category_images = fields.Boolean(string='Show Category Images', help='Show category images in the Point of Sale interface.', default=True)
     note_ids = fields.Many2many('pos.note', string='Note Models', help='The predefined notes of this point of sale.')
-    module_pos_sms = fields.Boolean(string="SMS Enabled", help="Activate SMS feature for point_of_sale")
+    module_pos_sms = fields.Boolean(string='SMS Enabled', help='Activate SMS feature for point_of_sale')
     is_closing_entry_by_product = fields.Boolean(
         string='Closing Entry by product',
         help="Display the breakdown of sales lines by product in the automatically generated closing entry.")
-    order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
+    order_edit_tracking = fields.Boolean(string="Track Orders Edits", help="Store edited orders in the backend")
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
 
@@ -298,6 +303,11 @@ class PosConfig(models.Model):
             pos_config.current_session_id = sessions and sessions[0].id or False
             pos_config.current_session_state = sessions and sessions[0].state or False
             pos_config.number_of_rescue_session = len(opened_sessions.filtered('rescue'))
+            pos_config.current_user_id = sessions and sessions[0].user_id or False
+            pos_config.pos_session_username = sessions and sessions[0].user_id.sudo().name or False
+            pos_config.pos_session_duration = (
+                    datetime.now() - sessions[0].start_at
+            ).days if sessions and sessions[0].start_at else 0
 
     @api.depends('session_ids')
     def _compute_last_session(self):
@@ -315,22 +325,22 @@ class PosConfig(models.Model):
                 pos_config.last_session_closing_cash = 0
                 pos_config.last_session_closing_date = False
 
-    @api.depends('session_ids')
-    def _compute_current_session_user(self):
-        for pos_config in self:
-            session = pos_config.session_ids.filtered(lambda s: s.state in ['opening_control', 'opened', 'closing_control'] and not s.rescue)
-            if session:
-                pos_config.pos_session_username = session[0].user_id.sudo().name
-                pos_config.pos_session_state = session[0].state
-                pos_config.pos_session_duration = (
-                    datetime.now() - session[0].start_at
-                ).days if session[0].start_at else 0
-                pos_config.current_user_id = session[0].user_id
-            else:
-                pos_config.pos_session_username = False
-                pos_config.pos_session_state = False
-                pos_config.pos_session_duration = 0
-                pos_config.current_user_id = False
+    # @api.depends('session_ids')
+    # def _compute_current_session_user(self):
+    #     for pos_config in self:
+    #         session = pos_config.session_ids.filtered(lambda s: s.state in ['opening_control', 'opened', 'closing_control'] and not s.rescue)
+    #         if session:
+                # pos_config.pos_session_username = session[0].user_id.sudo().name
+                # pos_config.pos_session_state = session[0].state
+                # pos_config.pos_session_duration = (
+                #     datetime.now() - session[0].start_at
+                # ).days if session[0].start_at else 0
+                # pos_config.current_user_id = session[0].user_id
+            # else:
+                # pos_config.pos_session_username = False
+                # pos_config.pos_session_state = False
+                # pos_config.pos_session_duration = 0
+                # pos_config.current_user_id = False
 
     @api.constrains('rounding_method')
     def _check_rounding_method_strategy(self):
@@ -401,7 +411,7 @@ class PosConfig(models.Model):
     def _check_company_has_template(self):
         self.ensure_one()
         if not self.company_has_template:
-            raise ValidationError(_("No chart of account configured, go to the \"configuration / settings\" menu, and "
+            raise UserError(_("No chart of account configured, go to the \"configuration / settings\" menu, and "
                                     "install one from the Invoicing tab."))
 
     @api.constrains('payment_method_ids')

@@ -60,7 +60,6 @@
                 <field name="current_session_id"/>
                 <field name="current_session_state"/>
                 <field name="access_token"/>
-                <field name="pos_session_state"/>
                 <field name="pos_session_duration"/>
                 <field name="currency_id"/>
                 <templates>
@@ -98,10 +97,10 @@
                     <t t-name="card">
                         <div name="card_title" class="mb-4 ms-2">
                             <field name="name" class="fw-bold fs-4 d-block"/>
-                            <div t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value" class="badge text-bg-info d-inline-block">Opened by <field name="pos_session_username"/></div>
-                            <div t-if="record.pos_session_state.raw_value == 'opening_control'" class="badge text-bg-info d-inline-block">Opening Control</div>
-                            <div t-if="record.pos_session_state.raw_value == 'closing_control'" class="badge text-bg-info d-inline-block">Closing Control</div>
-                            <div t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1" t-attf-class="badge bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} d-inline-block"
+                            <div t-if="record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value" class="badge text-bg-info d-inline-block">Opened by <field name="pos_session_username"/></div>
+                            <div t-if="record.current_session_state.raw_value == 'opening_control'" class="badge text-bg-info d-inline-block">Opening Control</div>
+                            <div t-if="record.current_session_state.raw_value == 'closing_control'" class="badge text-bg-info d-inline-block">Closing Control</div>
+                            <div t-if="record.current_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1" t-attf-class="badge bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} d-inline-block"
                                     title="The session has been opened for an unusually long period. Please consider closing.">
                                     To Close
                             </div>

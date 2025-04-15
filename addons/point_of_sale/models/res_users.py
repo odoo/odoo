@@ -16,6 +16,6 @@ class ResUsers(models.Model):
     def _post_read_pos_data(self, data):
         config_id = self.env['pos.config'].browse(self.env.context.get('config_id'))
         if data:
-            data[0]['role'] = 'manager' if config_id.group_pos_manager_id.id in data[0]['all_group_ids'] else 'cashier'
+            data[0]['role'] = 'manager' if self.env.ref('point_of_sale.group_pos_manager').id in data[0]['all_group_ids'] else 'cashier'
             del data[0]['all_group_ids']
         return super()._post_read_pos_data(data)
