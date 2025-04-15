@@ -7,6 +7,7 @@
             <field name="livechat_operator_id" ref="welcome_bot_operator_partner_demo"/>
             <field name="name">Visitor #235, Odoo</field>
             <field name="anonymous_name">Visitor #235</field>
+            <field name="create_date" eval="DateTime.today() + relativedelta(months=-1)"/>
         </record>
         <record id="livechat_channel_chatbot_session_2_member_bot_demo" model="discuss.channel.member">
             <field name="partner_id" ref="welcome_bot_operator_partner_demo"/>
