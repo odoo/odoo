@@ -12,7 +12,7 @@ class StockMove(models.Model):
             if qty := line_id.product_qty:
                 company_id = line_id.company_id
                 return line_id.currency_id._convert(
-                    line_id.price_subtotal / qty,
+                    line_id.product_uom._compute_price(line_id.price_subtotal / qty, self.product_uom),
                     company_id.currency_id,
                     company_id,
                     self.date,
