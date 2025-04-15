@@ -1,26 +1,14 @@
-cryptocode==0.1
-cryptography==38.0.4; sys_platform == "win32" # installed with apt on Linux
-evdev==1.6.0; sys_platform == "linux"
-freezegun==1.2.1
-gatt
+# The following requirements are needed only on Raspberry Pi IoT:
+gatt; sys_platform == "linux"
+
+# The following requirements are needed only on Windows Virtual IoT:
 ghostscript==0.7; sys_platform == "win32"
-netifaces==0.11.0; sys_platform == "win32"
-num2words==0.5.13
-polib
-pycups; sys_platform == "linux"
+
+# The following requirements are needed on both platforms, but are installed
+# via apt-get on the Raspberry Pi:
+PyKCS11==1.5.16; sys_platform == "win32"
+schedule==1.2.1; sys_platform == "win32"
+
+# The following requirements are needed on both platforms:
 python-escpos==3.1
-PyKCS11==1.5.16
-PyPDF2==1.26.0
-pyOpenssl==23.0.0; sys_platform == "win32" # installed with apt on Linux
-pysmb==1.2.9.1
-pyusb; sys_platform == "linux"
-RPi.GPIO; sys_platform == "linux"
-rjsmin==1.1.0
-schedule==1.2.1
-screeninfo==0.8.1
-urllib3==1.26.5
-v4l2; sys_platform == "linux"
-vcgencmd; sys_platform == "linux"
 websocket-client==1.6.3
-Werkzeug==2.0.2
-zeep==4.2.1
