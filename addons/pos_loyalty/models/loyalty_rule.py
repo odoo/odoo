@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class LoyaltyRule(models.Model):
@@ -40,7 +39,7 @@ class LoyaltyRule(models.Model):
             '' if rule.product_domain in ('[]', "[['sale_ok', '=', True]]") else rule.product_domain,
         )).items():
             if any(key):
-                domain = expression.AND([[('available_in_pos', '=', True)], rules[:1]._get_valid_product_domain()])
+                domain = Domain.AND([[('available_in_pos', '=', True)], rules[:1]._get_valid_product_domain()])
                 rules.valid_product_ids = self.env['product.product'].search(domain, order="id")
                 rules.any_product = False
             else:
