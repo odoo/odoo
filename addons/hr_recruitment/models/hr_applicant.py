@@ -852,7 +852,7 @@ class HrApplicant(models.Model):
 
     def action_talent_pool_add_applicants(self):
         return {
-            "name": _("Add applicants to the pool"),
+            "name": _("Add applicant(s) to the pool"),
             "type": "ir.actions.act_window",
             "res_model": "talent.pool.add.applicants",
             "target": "new",

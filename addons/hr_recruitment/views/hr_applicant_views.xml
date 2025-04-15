@@ -383,6 +383,8 @@
                         <a t-if="record.active.raw_value" role="menuitem" type="archive" class="dropdown-item">Archive</a>
                         <a t-if="!record.active.raw_value" role="menuitem" type="unarchive" class="dropdown-item">Unarchive</a>
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                        <a role="menuitem" name="action_talent_pool_add_applicants" type="object" class="dropdown-item"
+                        invisible="is_pool_applicant or is_applicant_in_pool">Add to Pool</a>
                     </t>
                     <t t-name="card">
                         <widget name="web_ribbon" title="Hired" bg_color="text-bg-success" invisible="not date_closed"/>
