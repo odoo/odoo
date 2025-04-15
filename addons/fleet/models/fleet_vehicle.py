@@ -94,7 +94,7 @@ class FleetVehicle(models.Model):
         ('miles', 'mi')
         ], 'Odometer Unit', default='kilometers', required=True)
     transmission = fields.Selection(
-        [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission',
+        [('manual', 'Manual'), ('semi_automatic', 'Semi-Automatic'), ('automatic', 'Automatic')], 'Transmission',
         compute='_compute_transmission', store=True, readonly=False)
     fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', compute='_compute_fuel_type', store=True, readonly=False)
     power_unit = fields.Selection([
@@ -139,7 +139,9 @@ class FleetVehicle(models.Model):
         ('today', 'Today'),
     ], compute='_compute_service_activity')
     vehicle_properties = fields.Properties('Properties', definition='model_id.vehicle_properties_definition', copy=True)
-    vehicle_range = fields.Integer(string="Range")
+    vehicle_range = fields.Integer(string="Range",
+        help="Range represents the maximum distance a vehicle can travel on a full charge (for EVs) or \
+            a full tank (for fuel-powered vehicles)")
     range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')],
         compute='_compute_range_unit', store=True, readonly=False, default="km", required=True)
 
