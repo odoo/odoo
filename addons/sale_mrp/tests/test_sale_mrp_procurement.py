@@ -133,7 +133,6 @@ class TestSaleMrpProcurement(TransactionCase):
 
         # Create bom for manufactured product
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.finished_product
         bom_product_form.product_tmpl_id = self.finished_product.product_tmpl_id
         bom_product_form.product_qty = 1.0
         bom_product_form.type = 'normal'
@@ -145,7 +144,6 @@ class TestSaleMrpProcurement(TransactionCase):
 
         ## Create bom for manufactured product
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.complex_product
         bom_product_form.product_tmpl_id = self.complex_product.product_tmpl_id
         with bom_product_form.bom_line_ids.new() as line:
             line.product_id = self.finished_product
