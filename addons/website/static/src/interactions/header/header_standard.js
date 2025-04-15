@@ -65,10 +65,10 @@ export class HeaderStandard extends BaseHeader {
                 : this.transformShow()
         void this.el.offsetWidth; // Force a paint refresh
 
-        this.el.classList.remove("o_transformed_not_affixed");
         this.hideEl?.classList.toggle("hidden", reachHeaderBottom);
 
         this.toggleCSSAffixed(reachHeaderBottom);
+        this.el.classList.remove("o_transformed_not_affixed");
         this.isScrolled = reachTransitionPoint;
     }
 
