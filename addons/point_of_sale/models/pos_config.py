@@ -27,7 +27,7 @@ class PosConfig(models.Model):
     def _default_picking_type_id(self):
         return self.env['stock.warehouse'].with_context(active_test=False).search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
 
-    def _default_sale_journal(self):
+    def _default_pos_journal(self):
         return self.env['account.journal']._ensure_company_pos_journal()
 
     def _default_invoice_journal(self):
@@ -86,7 +86,7 @@ class PosConfig(models.Model):
         'account.journal', string='Point of Sale Journal',
         domain=[('type', 'in', ('general', 'sale'))],
         check_company=True,
-        default=_default_sale_journal,
+        default=_default_pos_journal,
         ondelete='restrict',
         help='Accounting journal used to post POS session journal entries and POS invoice payments.')
     invoice_journal_id = fields.Many2one(
@@ -159,7 +159,7 @@ class PosConfig(models.Model):
     tip_product_id = fields.Many2one('product.product', string='Tip Product', default=_get_default_tip_product, help='This product is used as reference on customer receipts.')
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
-    default_bill_ids = fields.Many2many('pos.bill', string='Coins/Bills')
+    # default_bill_ids = fields.Many2many('pos.bill', string='Coins/Bills')
     use_presets = fields.Boolean(string='Is Presets?')
     default_preset_id = fields.Many2one('pos.preset', string='Default Preset')
     available_preset_ids = fields.Many2many('pos.preset', string='Available Presets')
@@ -317,13 +317,9 @@ class PosConfig(models.Model):
                 [('config_id', '=', pos_config.id), ('state', '=', 'closed')],
                 ['cash_register_balance_end_real', 'stop_at'],
                 order="stop_at desc", limit=1)
-            if session:
-                timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
-                pos_config.last_session_closing_date = session[0]['stop_at'].astimezone(timezone).date()
-                pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
-            else:
-                pos_config.last_session_closing_cash = 0
-                pos_config.last_session_closing_date = False
+            timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+            pos_config.last_session_closing_date = session and session[0]['stop_at'].astimezone(timezone).date() or False
+            pos_config.last_session_closing_cash = session and session[0]['cash_register_balance_end_real'] or 0
 
     # @api.depends('session_ids')
     # def _compute_current_session_user(self):
@@ -399,14 +395,14 @@ class PosConfig(models.Model):
         self._check_companies()
         self = self.sudo()
         if self.pricelist_id.company_id and self.pricelist_id.company_id != self.company_id:
-            raise ValidationError(
+            raise UserError(
                 _("The default pricelist must belong to no company or the company of the point of sale."))
 
     @api.constrains('company_id', 'available_pricelist_ids')
     def _check_companies(self):
         for config in self:
             if any(pricelist.company_id.id not in [False, config.company_id.id] for pricelist in config.available_pricelist_ids):
-                raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
+                raise UserError(_("The selected pricelists must belong to no company or the company of the point of sale."))
 
     def _check_company_has_template(self):
         self.ensure_one()

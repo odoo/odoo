@@ -62,7 +62,7 @@ class ResConfigSettings(models.TransientModel):
     pos_cash_control = fields.Boolean(related='pos_config_id.cash_control')
     pos_cash_rounding = fields.Boolean(related='pos_config_id.cash_rounding', readonly=False, string="Cash Rounding (PoS)")
     pos_company_has_template = fields.Boolean(related='pos_config_id.company_has_template')
-    pos_default_bill_ids = fields.Many2many(related='pos_config_id.default_bill_ids', readonly=False)
+    # pos_default_bill_ids = fields.Many2many(related='pos_config_id.default_bill_ids', readonly=False)
     pos_default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position', compute='_compute_pos_fiscal_positions', readonly=False, store=True, check_company=True)
     pos_fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', compute='_compute_pos_fiscal_positions', readonly=False, store=True, check_company=True)
     pos_has_active_session = fields.Boolean(related='pos_config_id.has_active_session')
@@ -280,15 +280,16 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('pos_iface_tipproduct', 'pos_config_id')
     def _compute_pos_tip_product_id(self):
         for res_config in self:
-            if res_config.pos_iface_tipproduct:
-                res_config.pos_tip_product_id = res_config.pos_config_id.tip_product_id
-            else:
-                res_config.pos_tip_product_id = False
+            res_config.pos_tip_product_id = res_config.pos_iface_tipproduct and res_config.pos_config_id.tip_product_id or False
+            # if res_config.pos_iface_tipproduct:
+            #     res_config.pos_tip_product_id = res_config.pos_config_id.tip_product_id
+            # else:
+            #     res_config.pos_tip_product_id = False
 
     @api.depends('pos_use_pricelist', 'pos_config_id', 'pos_journal_id')
     def _compute_pos_pricelist_id(self):
         for res_config in self:
-            currency_id = res_config.pos_journal_id.currency_id.id if res_config.pos_journal_id.currency_id else res_config.pos_config_id.company_id.currency_id.id
+            currency_id = res_config.pos_journal_id.currency_id.id or res_config.pos_config_id.company_id.currency_id.id
             pricelists_in_current_currency = self.env['product.pricelist'].search([
                 *self.env['product.pricelist']._check_company_domain(res_config.pos_config_id.company_id),
                 ('currency_id', '=', currency_id),
