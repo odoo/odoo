@@ -25,7 +25,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
     def test_sale_mrp_kit_bom_cogs(self):
         """Check invoice COGS aml after selling and delivering a product
         with Kit BoM having another product with Kit BoM as component"""
-
         # ----------------------------------------------
         # BoM of Kit A:
         #   - BoM Type: Kit
@@ -55,7 +54,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         # Create BoM for Kit A
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.kit_a
         bom_product_form.product_tmpl_id = self.kit_a.product_tmpl_id
         bom_product_form.product_qty = 3.0
         bom_product_form.type = 'phantom'
@@ -69,7 +67,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         # Create BoM for Kit B
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.kit_b
         bom_product_form.product_tmpl_id = self.kit_b.product_tmpl_id
         bom_product_form.product_qty = 10.0
         bom_product_form.type = 'phantom'

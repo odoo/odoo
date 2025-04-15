@@ -160,7 +160,6 @@ class TestSaleMrpKitBom(BaseCommon):
 
         # Create BoM for Kit
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.kit
         bom_product_form.product_tmpl_id = self.kit.product_tmpl_id
         bom_product_form.product_qty = 1.0
         bom_product_form.type = 'phantom'
@@ -208,7 +207,6 @@ class TestSaleMrpKitBom(BaseCommon):
 
         # Create BoM for KitB
         bom_product_formA = Form(self.env['mrp.bom'])
-        bom_product_formA.product_id = self.kitB
         bom_product_formA.product_tmpl_id = self.kitB.product_tmpl_id
         bom_product_formA.product_qty = 1.0
         bom_product_formA.type = 'phantom'
@@ -222,7 +220,6 @@ class TestSaleMrpKitBom(BaseCommon):
 
         # Create BoM for KitA
         bom_product_formB = Form(self.env['mrp.bom'])
-        bom_product_formB.product_id = self.kitA
         bom_product_formB.product_tmpl_id = self.kitA.product_tmpl_id
         bom_product_formB.product_qty = 1.0
         bom_product_formB.type = 'phantom'
@@ -275,7 +272,6 @@ class TestSaleMrpKitBom(BaseCommon):
 
         # Create BoM for KitB
         bom_product_formA = Form(self.env['mrp.bom'])
-        bom_product_formA.product_id = kitA
         bom_product_formA.product_tmpl_id = kitA.product_tmpl_id
         bom_product_formA.product_qty = 1.0
         bom_product_formA.type = 'phantom'
@@ -332,7 +328,6 @@ class TestSaleMrpKitBom(BaseCommon):
 
         # Create BoM for KitB
         bom_product_formA = Form(self.env['mrp.bom'])
-        bom_product_formA.product_id = kitAB
         bom_product_formA.product_tmpl_id = kitAB.product_tmpl_id
         bom_product_formA.product_qty = 1.0
         bom_product_formA.type = 'phantom'
@@ -346,7 +341,6 @@ class TestSaleMrpKitBom(BaseCommon):
 
         # Create BoM for KitA
         bom_product_formB = Form(self.env['mrp.bom'])
-        bom_product_formB.product_id = kitABC
         bom_product_formB.product_tmpl_id = kitABC.product_tmpl_id
         bom_product_formB.product_qty = 1.0
         bom_product_formB.type = 'phantom'
