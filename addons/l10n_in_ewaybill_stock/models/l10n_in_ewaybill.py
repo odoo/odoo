@@ -202,8 +202,8 @@ class L10nInEwaybill(models.Model):
                 'productDesc': product.name,
                 'quantity': line.quantity,
                 'qtyUnit': (
-                    product.uom_id.l10n_in_code
-                    and product.uom_id.l10n_in_code.split('-')[0]
+                    line.product_uom.l10n_in_code
+                    and line.product_uom.l10n_in_code.split('-')[0]
                     or 'OTH'
                 ),
                 'taxableAmount': AccountMove._l10n_in_round_value(tax_details['total_excluded']),
