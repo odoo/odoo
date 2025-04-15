@@ -41,7 +41,13 @@ registerWebsitePreviewTour(
         {
             content: "Click on button Start Now",
             trigger: ":iframe #wrap .s_banner a:nth-child(1)",
-            run: "click",
+            async run(helpers) {
+                await helpers.click();
+                const el = this.anchor;
+                const sel = el.ownerDocument.getSelection();
+                sel.collapse(el.childNodes[1], 1);
+                el.focus();
+            },
         },
         patchStep,
         {
