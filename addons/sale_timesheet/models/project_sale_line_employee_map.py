@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.misc import unquote
 
 
@@ -10,7 +10,7 @@ class ProjectSaleLineEmployeeMap(models.Model):
     _description = 'Project Sales line, employee mapping'
 
     def _domain_sale_line_id(self):
-        domain = expression.AND([
+        domain = Domain.AND([
             self.env['sale.order.line']._sellable_lines_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [

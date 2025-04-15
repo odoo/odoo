@@ -1167,13 +1167,13 @@ class ProductTemplate(models.Model):
         Use sudo because the same result should be cached for all users.
         """
         self.ensure_one()
-        domain = [('product_tmpl_id', '=', self.id)]
+        domain = Domain('product_tmpl_id', '=', self.id)
         combination_indices_ids = filtered_combination._ids2str()
 
         if combination_indices_ids:
-            domain = expression.AND([domain, [('combination_indices', '=', combination_indices_ids)]])
+            domain &= Domain('combination_indices', '=', combination_indices_ids)
         else:
-            domain = expression.AND([domain, [('combination_indices', 'in', ['', False])]])
+            domain &= Domain('combination_indices', 'in', ['', False])
 
         return self.env['product.product'].sudo().with_context(active_test=False).search(domain, order='active DESC', limit=1).id
 
@@ -1451,13 +1451,8 @@ class ProductTemplate(models.Model):
 
     def _get_product_document_domain(self):
         self.ensure_one()
-        return expression.OR([
-            expression.AND([[('res_model', '=', 'product.template')], [('res_id', 'in', self.ids)]]),
-            expression.AND([
-                [('res_model', '=', 'product.product')],
-                [('res_id', 'in', self.product_variant_ids.ids)],
-            ])
-        ])
+        return (Domain('res_model', '=', 'product.template') & Domain('res_id', 'in', self.ids)) \
+            | (Domain('res_model', '=', 'product.product') & Domain('res_id', 'in', self.product_variant_ids.ids))
 
     def _get_list_price(self, price):
         """ Get the product sales price from a public price based on taxes defined on the product.

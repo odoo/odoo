@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import TestSaleProjectCommon
-from odoo import Command
+from odoo.fields import Command, Domain
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
@@ -134,6 +134,6 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
 
         self.assertEqual(
             domain,
-            [(0, '=', 1)],
-            "Domain should be (0, '=', 1) when analytic_distribution is missing."
+            Domain.FALSE,
+            "Domain should be False when analytic_distribution is missing."
         )

@@ -3,7 +3,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class AccountMove(models.Model):
@@ -80,11 +80,11 @@ class AccountMove(models.Model):
             if not start_date and not end_date:
                 start_date, end_date = self._get_range_dates(sale_line_delivery.order_id)
             if sale_line_delivery:
-                domain = line._timesheet_domain_get_invoiced_lines(sale_line_delivery)
+                domain = Domain(line._timesheet_domain_get_invoiced_lines(sale_line_delivery))
                 if start_date:
-                    domain = expression.AND([domain, [('date', '>=', start_date)]])
+                    domain &= Domain('date', '>=', start_date)
                 if end_date:
-                    domain = expression.AND([domain, [('date', '<=', end_date)]])
+                    domain &= Domain('date', '<=', end_date)
                 timesheets = self.env['account.analytic.line'].sudo().search(domain)
                 timesheets.write({'timesheet_invoice_id': line.move_id.id})
 
