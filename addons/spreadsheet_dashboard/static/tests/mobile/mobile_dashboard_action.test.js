@@ -33,8 +33,12 @@ test("displays figures in first sheet", async () => {
         tag: "chart",
         height: 500,
         width: 500,
-        x: 100,
-        y: 100,
+        col: 0,
+        row: 0,
+        offset: {
+            x: 100,
+            y: 100,
+        },
         data: {
             type: "line",
             dataSetsHaveTitle: false,
@@ -78,7 +82,14 @@ test("displays figures in first sheet", async () => {
 });
 
 test("scorecards are placed two per row", async () => {
-    const figure = { tag: "chart", height: 500, width: 500, x: 100, y: 100 };
+    const figure = {
+        tag: "chart",
+        height: 500,
+        width: 500,
+        offset: { x: 100, y: 100 },
+        col: 0,
+        row: 0,
+    };
     const lineChartData = {
         type: "line",
         dataSetsHaveTitle: false,
@@ -136,8 +147,12 @@ test("double clicking on a figure doesn't open the side panel", async () => {
         tag: "chart",
         height: 500,
         width: 500,
-        x: 100,
-        y: 100,
+        col: 0,
+        row: 0,
+        offset: {
+            x: 100,
+            y: 100,
+        },
         data: {
             type: "line",
             dataSetsHaveTitle: false,
