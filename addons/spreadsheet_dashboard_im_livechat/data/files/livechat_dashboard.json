@@ -201,7 +201,7 @@
               "context": {
                 "im_livechat.hide_partner_company": true
               },
-              "domain": [],
+              "domain": [["partner_id.chatbot_script_ids", "=", false]],
               "groupBy": ["partner_id"],
               "orderBy": []
             },
@@ -474,7 +474,7 @@
       "context": {
         "im_livechat.hide_partner_company": true
       },
-      "domain": [],
+      "domain": [["partner_id.chatbot_script_ids", "=", false]],
       "id": "3",
       "measures": [
         { "id": "nbr_channel", "fieldName": "nbr_channel" },
