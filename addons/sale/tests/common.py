@@ -201,8 +201,18 @@ class TestSaleCommon(AccountTestInvoicingCommon):
 
         return company_data
 
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('sales_team.group_sale_manager')
+
 
 class TestTaxCommonSale(TestTaxCommon):
+
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('sales_team.group_sale_manager')
 
     @classmethod
     def setUpClass(cls):
@@ -218,7 +228,7 @@ class TestTaxCommonSale(TestTaxCommon):
         currency = document['currency']
         self._ensure_rate(currency, order_date, document['rate'])
         self.foreign_currency_pricelist.currency_id = currency
-        order = self.env['sale.order'].create({
+        return self.env['sale.order'].create({
             'date_order': order_date,
             'currency_id': currency.id,
             'partner_id': self.partner_a.id,
@@ -235,7 +245,6 @@ class TestTaxCommonSale(TestTaxCommon):
                 for i, base_line in enumerate(document['lines'])
             ],
         })
-        return order
 
     def assert_sale_order_tax_totals_summary(self, sale_order, expected_values, soft_checking=False):
         self._assert_tax_totals_summary(sale_order.tax_totals, expected_values, soft_checking=soft_checking)

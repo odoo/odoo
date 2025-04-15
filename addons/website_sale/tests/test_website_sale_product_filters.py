@@ -3,14 +3,14 @@
 from odoo import Command
 from odoo.tests import tagged
 
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
-    TestSaleProductAttributeValueCommon,
+from odoo.addons.product.tests.test_product_attribute_value_config import (
+    TestProductAttributeValueCommon,
 )
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValueCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -61,20 +61,19 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestSaleProductAttributeV
         })
 
         # Computer alternatives
-        cls.windows_pc = cls.product_a.with_env(cls.env).product_tmpl_id
-        cls.windows_pc.write({
-            'name': "Windows PC",
-            'company_id': False,
-            'alternative_product_ids': cls.computer.ids,
-            'website_published': True,
-        })
-        cls.mac = cls.product_b.with_env(cls.env).product_tmpl_id
-        cls.mac.write({
-            'name': "Mac",
-            'company_id': False,
-            'alternative_product_ids': (cls.computer + cls.windows_pc).ids,
-            'website_published': True,
-        })
+        cls.windows_pc = cls._create_product(
+            name='Windows PC',
+            lst_price=1000.0,
+            standard_price=800.0,
+            alternative_product_ids=[Command.set(cls.computer.ids)],
+        ).product_tmpl_id
+        cls.mac = cls._create_product(
+            name='Mac',
+            uom_id=cls.uom_dozen.id,
+            lst_price=200.0,
+            standard_price=160.0,
+            alternative_product_ids=[Command.link(cls.computer.id), Command.link(cls.windows_pc.id)]
+        ).product_tmpl_id
 
         # More generic products to get the number of product templates to 17
         generics = cls.env['product.template'].create([{

@@ -1,13 +1,15 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import freeze_time, tagged
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
 @freeze_time('2022-01-01')
 @tagged('post_install', '-at_install')
-class TestAccruedSaleOrders(AccountTestInvoicingCommon):
+class TestAccruedSaleOrders(TestSaleCommon):
 
     @classmethod
     def setUpClass(cls):
