@@ -139,7 +139,7 @@ class WebsiteEventBoothController(WebsiteEventController):
         if request.env.user._is_public():
             contact_email_normalized = tools.email_normalize(kwargs['contact_email'])
             if contact_email_normalized:
-                partner = event._partner_find_from_emails_single(
+                partner = event.sudo()._partner_find_from_emails_single(
                     [contact_email_normalized],
                     additional_values={contact_email_normalized: {
                         'phone': kwargs.get('contact_phone'),
