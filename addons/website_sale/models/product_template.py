@@ -3,6 +3,7 @@
 import logging
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero, is_html_empty
@@ -719,8 +720,7 @@ class ProductTemplate(models.Model):
 
     def _rating_domain(self):
         """ Only take the published rating into account to compute avg and count """
-        domain = super()._rating_domain()
-        return expression.AND([domain, [('is_internal', '=', False)]])
+        return super()._rating_domain() & Domain('is_internal', '=', False)
 
     def _get_images(self):
         """Return a list of records implementing `image.mixin` to

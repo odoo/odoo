@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, models
+from odoo.fields import Domain
 
 
 class ResPartner(models.Model):
@@ -46,7 +47,7 @@ class ResPartner(models.Model):
         return self.env.user.partner_id
 
     def _get_delivery_address_domain(self):
-        return [
+        return Domain([
             ('id', 'child_of', self.ids),
             '|', ('type', 'in', ['delivery', 'other']), ('id', '=', self.id),
-        ]
+        ])

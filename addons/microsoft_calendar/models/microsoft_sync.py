@@ -8,8 +8,8 @@ from dateutil.parser import parse
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.modules.registry import Registry
-from odoo.osv import expression
 from odoo.sql_db import BaseCursor
 
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
@@ -485,23 +485,19 @@ class MicrosoftCalendarSync(models.AbstractModel):
         """
         raise NotImplementedError()
 
-    def _extend_microsoft_domain(self, domain):
+    def _extend_microsoft_domain(self, domain: Domain):
         """ Extends the sync domain based on the full_sync_m context parameter.
         In case of full sync it shouldn't include already synced events.
         """
         if self._context.get('full_sync_m', True):
-            domain = expression.AND([domain, [('ms_universal_event_id', '=', False)]])
+            domain &= Domain('ms_universal_event_id', '=', False)
         else:
-            is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
-            domain = expression.AND([domain, [
-                '|',
-                '&', ('ms_universal_event_id', '=', False), is_active_clause,
-                ('need_sync_m', '=', True),
-            ]])
+            is_active_clause = Domain(self._active_name, '=', True) if self._active_name else Domain.TRUE
+            domain &= (Domain('ms_universal_event_id', '=', False) & is_active_clause) | Domain('need_sync_m', '=', True)
         # Sync only events created/updated after last sync date (with 5 min of time acceptance).
         if self.env.user.microsoft_last_sync_date:
             time_offset = timedelta(minutes=5)
-            domain = expression.AND([domain, [('write_date', '>=', self.env.user.microsoft_last_sync_date - time_offset)]])
+            domain &= Domain('write_date', '>=', self.env.user.microsoft_last_sync_date - time_offset)
         return domain
 
     def _get_event_user_m(self, user_id=None):

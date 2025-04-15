@@ -10,8 +10,8 @@ from itertools import repeat
 import pytz
 from werkzeug.urls import url_parse
 
-from odoo import api, fields, models, Command
-from odoo.osv.expression import AND
+from odoo import api, fields, models
+from odoo.fields import Command, Domain
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.calendar.models.calendar_attendee import CalendarAttendee
 from odoo.addons.calendar.models.calendar_recurrence import (
@@ -821,7 +821,7 @@ class CalendarEvent(models.Model):
         }
         private_fields = fnames - self._get_public_fields()
         if not self.env.su and private_fields:
-            domain = AND([domain, self._get_default_privacy_domain()])
+            domain = Domain.AND([domain, self._get_default_privacy_domain()])
         return super()._read_group(domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order)
 
     def unlink(self):

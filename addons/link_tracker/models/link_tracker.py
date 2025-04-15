@@ -9,7 +9,7 @@ from werkzeug import urls
 from odoo import tools, models, fields, api, _
 from odoo.addons.mail.tools import link_preview
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.mail import validate_url
 
 LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'label')
@@ -137,8 +137,8 @@ class LinkTracker(models.Model):
             return tracker[field_name]
 
         # build a query to fetch all needed link trackers at once
-        search_query = expression.OR([
-            expression.AND([
+        search_query = Domain.OR([
+            Domain.AND([
                 [('url', '=', tracker.url)],
                 [('campaign_id', '=', tracker.campaign_id.id)],
                 [('medium_id', '=', tracker.medium_id.id)],
@@ -213,7 +213,7 @@ class LinkTracker(models.Model):
 
         def _format_key_domain(field_values):
             """Handle "label" being False / '' and be defensive."""
-            return expression.AND([
+            return Domain.AND([
                 [(field_name, '=', value) if value or field_name != 'label' else ('label', 'in', (False, ''))]
                 for field_name, value in field_values
             ])
@@ -233,7 +233,7 @@ class LinkTracker(models.Model):
 
         # Find unique keys of trackers, then fetch existing trackers
         unique_keys = {_format_key(vals) for vals in vals_list}
-        found_trackers = self.search(expression.OR([_format_key_domain(key) for key in unique_keys]))
+        found_trackers = self.search(Domain.OR(_format_key_domain(key) for key in unique_keys))
         key_to_trackers_map = {_format_key(tracker): tracker for tracker in found_trackers}
 
         if len(unique_keys) != len(found_trackers):

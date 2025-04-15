@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -12,7 +11,7 @@ from werkzeug.urls import url_encode, url_join
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.exceptions import AccessError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
@@ -412,14 +411,14 @@ class DigestDigest(models.Model):
         """
         start, end, companies = self._get_kpi_compute_parameters()
 
-        base_domain = [
+        base_domain = Domain([
             ('company_id', 'in', companies.ids),
             (date_field, '>=', start),
             (date_field, '<', end),
-        ]
+        ])
 
         if additional_domain:
-            base_domain = expression.AND([base_domain, additional_domain])
+            base_domain &= Domain(additional_domain)
 
         values = self.env[model]._read_group(
             domain=base_domain,
