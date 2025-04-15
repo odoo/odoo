@@ -6,7 +6,6 @@ from odoo import http, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 
 from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.addons.hr_timesheet.controllers.portal import TimesheetCustomerPortal
@@ -19,7 +18,7 @@ class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
         values = super()._invoice_get_page_view_values(invoice, access_token, **kwargs)
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
-        domain = expression.AND([
+        domain = Domain.AND([
             domain,
             request.env['account.analytic.line']._timesheet_get_sale_domain(
                 invoice.mapped('line_ids.sale_line_ids'),

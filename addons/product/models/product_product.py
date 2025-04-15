@@ -635,7 +635,7 @@ class ProductProduct(models.Model):
                     products |= self.search_fetch(domain & Domain('id', 'not in', products_query) & Domain('name', operator, name), ['display_name'], limit=limit_rest)
             else:
                 domain_neg = Domain('name', operator, name) & (
-                    Domain('default_code', operator, name) | Domain('default_code', '=', False),
+                    Domain('default_code', operator, name) | Domain('default_code', '=', False)
                 )
                 products = self.search_fetch(domain & domain_neg, ['display_name'], limit=limit)
         if not products and operator in positive_operators and (m := re.search(r'(\[(.*?)\])', name)):

@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import float_compare
 from odoo.exceptions import UserError
 
@@ -42,7 +41,7 @@ class SaleOrderLine(models.Model):
                 # prefer rules on the route itself even if they pull from a different warehouse than the SO's
                 rules = sorted(
                     self.env['stock.rule'].search(
-                        domain=expression.AND([[('route_id', 'in', line.route_ids.ids)], domain]),
+                        domain=Domain.AND([[('route_id', 'in', line.route_ids.ids)], domain]),
                         order='route_sequence, sequence'
                     ),
                     # if there are multiple rules on the route, prefer those that pull from the SO's warehouse
