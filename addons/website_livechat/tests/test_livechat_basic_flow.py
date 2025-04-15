@@ -211,7 +211,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "rtc_session_ids": [("ADD", [])],
                         "uuid": channel.uuid,
                         "visitor": {"id": self.visitor.id, "type": "visitor"},
-                        "whatsapp_account_name": False,
+                        "wa_account_id": False,
                         "whatsapp_channel_valid_until": False,
                         "whatsapp_partner_id": False,
                     }
@@ -330,7 +330,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "requested_by_operator": False,
                     "rtc_session_ids": [("ADD", [])],
                     "uuid": channel.uuid,
-                    "whatsapp_account_name": False,
+                    "wa_account_id": False,
                     "whatsapp_channel_valid_until": False,
                     "whatsapp_partner_id": False,
                 }
