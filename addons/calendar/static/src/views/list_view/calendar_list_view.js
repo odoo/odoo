@@ -9,9 +9,9 @@ export class CalendarListModel extends listView.Model {
     }
 
     /**
-    * @override
-    * Add the calendar view's selected attendees to the list view's domain.
-    */
+     * @override
+     * Add the calendar view's selected attendees to the list view's domain.
+     */
     async load(params = {}) {
         const filters = params?.context?.calendar_filters;
         const emptyDomain = Array.isArray(params?.domain) && params.domain.length == 0;
@@ -22,8 +22,9 @@ export class CalendarListModel extends listView.Model {
                 [[user.userId], filters["user"]]
             );
             // Filter attendees to be shown if 'everybody' filter isn't active.
-            if (!filters["all"])
+            if (!filters["all"]) {
                 params.domain.push(["partner_ids", "in", selectedPartnerIds]);
+            }
         }
         return super.load(params);
     }
@@ -41,4 +42,6 @@ function _mockGetCalendarPartnerIds(params) {
 }
 
 registry.category("views").add("calendar_list_view", CalendarListView);
-registry.category("sample_server").add("get_selected_calendars_partner_ids", _mockGetCalendarPartnerIds);
+registry
+    .category("sample_server")
+    .add("get_selected_calendars_partner_ids", _mockGetCalendarPartnerIds);

@@ -170,6 +170,15 @@ export class RelationalModel extends Model {
      */
     async load(params = {}) {
         const config = this._getNextConfig(this.config, params);
+        if (!this.isReady) {
+            // We want the control panel to be displayed directly, without waiting for data to be
+            // loaded, for instance to be able to interact with the search view. For that reason, we
+            // create an empty root, without data, s.t. controllers can make the assumption that the
+            // root is set when they are rendered. The root is replaced later on by the real root,
+            // when data are loaded.
+            this.root = this._createEmptyRoot(config);
+            this.config = config;
+        }
         this.hooks.onWillLoadRoot(config);
         const data = await this.keepLast.add(this._loadData(config));
         this.root = this._createRoot(config, data);
@@ -212,7 +221,22 @@ export class RelationalModel extends Model {
     }
 
     /**
+     * Creates a root datapoint without data. Supported root types are DynamicRecordList and
+     * DynamicGroupList.
      *
+     * @param {Config} config
+     * @returns {DataPoint|undefined}
+     */
+    _createEmptyRoot(config) {
+        if (!config.isMonoRecord) {
+            if (config.groupBy.length) {
+                return this._createRoot(config, { groups: [], length: 0 });
+            }
+            return this._createRoot(config, { records: [], length: 0 });
+        }
+    }
+
+    /**
      * @param {Config} config
      * @param {*} data
      * @returns {DataPoint}
