@@ -1,13 +1,23 @@
-# Use the official Odoo image as a base image
+# Use an official Odoo image as a base
 FROM odoo:16
 
-# Copy your custom configuration file and modules
-COPY ./odoo.conf /etc/odoo/odoo.conf
-COPY ./addons /mnt/extra-addons
+# Set environment variables
+ENV HOME /opt/odoo
 
-# Set environment variables if needed
-ENV DB_HOST=postgres
-ENV DB_PORT=5432
+# Set the working directory to /opt/odoo
+WORKDIR /opt/odoo
 
-# Set the entrypoint and command to start Odoo 
-CMD ["odoo", "--config", "/etc/odoo/odoo.conf"]
+# Copy the configuration file
+COPY ./odoo.conf /etc/odoo.conf
+
+# Copy your custom modules to the addons directory
+COPY ./addons /opt/odoo/addons
+
+# Install dependencies (ensure you have a requirements.txt if necessary)
+RUN pip install -r /opt/odoo/requirements.txt
+
+# Expose port 8069 (the default Odoo port)
+EXPOSE 8069
+
+# Start Odoo
+CMD ["odoo", "-c", "/etc/odoo.conf"]
