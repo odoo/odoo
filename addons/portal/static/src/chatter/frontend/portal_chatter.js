@@ -1,7 +1,7 @@
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
-import { Component, xml, useSubEnv } from "@odoo/owl";
+import { Component, useSubEnv, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class PortalChatter extends Component {
@@ -18,5 +18,17 @@ export class PortalChatter extends Component {
             inFrontendPortalChatter: true,
         });
         this.overlayService = useService("overlay");
+        this.store = useService("mail.store");
+        this.env.bus.addEventListener("reload_chatter_content", (ev) =>
+            this._reloadChatterContent(ev.detail)
+        );
+    }
+
+    async _reloadChatterContent(data) {
+        const thread = this.store.Thread.get({
+            id: this.props.resId,
+            model: this.props.resModel,
+        });
+        thread.messages = await thread.fetchMessages();
     }
 }
