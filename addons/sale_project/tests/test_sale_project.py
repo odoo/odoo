@@ -1437,3 +1437,31 @@ class TestSaleProject(TestSaleProjectCommon):
 
         self.assertEqual(project.reinvoiced_sale_order_id.id, sale_order.id, "The project should be linked to the SO.")
         self.assertFalse(project.sale_line_id, "The project should not be linked to sale order line.")
+
+    def test_so_with_create_on_order_nothing_milestone_products(self):
+        """
+        Check whether a milestone is linked with the sale order.
+        Steps:
+          - Create a sale order
+          - Use a delivered milestone product
+          - Confirm the sale order
+          - Check the milestone is created and linked
+        """
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'project_id': self.project_global.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_service_delivered_milestone.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+
+        sale_order.action_confirm()
+
+        self.assertEqual(
+            sale_order.milestone_count, 1,
+            "There should be a milestone linked to the sale order line."
+        )

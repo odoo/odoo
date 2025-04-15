@@ -23,7 +23,7 @@
                     type="object"
                     class="oe_stat_button"
                     icon="fa-check-square-o"
-                    invisible="not is_product_milestone or not project_ids or state == 'draft'"
+                    invisible="not is_product_milestone or not (project_ids or milestone_count) or state == 'draft'"
                     groups="project.group_project_milestone"
                 >
                     <field name="milestone_count" widget="statinfo" string="Milestones"/>

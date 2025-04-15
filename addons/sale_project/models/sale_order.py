@@ -263,12 +263,22 @@ class SaleOrder(models.Model):
 
     def action_view_milestone(self):
         self.ensure_one()
-        default_project = self.project_ids and self.project_ids[0]
-        sorted_line = self.order_line.sorted('sequence')
-        default_sale_line = next((
-            sol for sol in sorted_line
-                if sol.is_service and sol.product_id.service_policy == 'delivered_milestones'
-        ), self.env['sale.order.line'])
+        context = {}
+        if self.project_ids or self.project_id:
+            default_project = self.project_id or (self.project_ids and self.project_ids[0])
+            sorted_line = self.order_line.sorted('sequence')
+            default_sale_line = next((
+                sol for sol in sorted_line
+                    if sol.is_service and sol.product_id.service_policy == 'delivered_milestones'
+            ), self.env['sale.order.line'])
+
+            context.update({
+                'default_project_id': default_project.id,
+                'default_sale_line_id': default_sale_line.id,
+            })
+
+        else:
+            context['create'] = False
         return {
             'type': 'ir.actions.act_window',
             'name': _('Milestones'),
@@ -284,9 +294,7 @@ class SaleOrder(models.Model):
                 </p>
             """),
             'context': {
-                **self.env.context,
-                'default_project_id': default_project.id,
-                'default_sale_line_id': default_sale_line.id,
+                **(self.env.context | context),
             }
         }
 
