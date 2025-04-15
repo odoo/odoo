@@ -102,6 +102,7 @@ export class PartnerList extends Component {
             search: {
                 fieldName: "PARTNER",
                 searchTerm: partner.name,
+                partnerId: partner.id,
             },
             filter: partnerHasActiveOrders ? "" : "SYNCED",
         };
