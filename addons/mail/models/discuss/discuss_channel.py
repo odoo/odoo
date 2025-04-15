@@ -497,7 +497,9 @@ class DiscussChannel(models.Model):
         create_member_params=None,
         invite_to_rtc_call=False,
         post_joined_message=True,
+        inviting_partner=None,
     ):
+        inviting_partner = inviting_partner or self.env["res.partner"]
         partners = partners or self.env["res.partner"]
         if users:
             partners |= users.partner_id
@@ -545,6 +547,7 @@ class DiscussChannel(models.Model):
                         else _("invited %s to the channel", member._get_html_link(for_persona=True))
                     )
                     member.channel_id.message_post(
+                        author_id=inviting_partner.id or None,
                         body=Markup('<div class="o_mail_notification" data-oe-type="channel-joined">%s</div>') % notification,
                         message_type="notification",
                         subtype_xmlid="mail.mt_comment",
