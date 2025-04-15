@@ -69,7 +69,6 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
-    @unittest.skip
     def test_html_editor_language(self):
         Lang = self.env['res.lang']
         Page = self.env['website.page']
