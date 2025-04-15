@@ -99,7 +99,7 @@
                             </field>
                         </page>
                          <page string="Questions" name="questions">
-                            <field name="question_ids" string="Question" nolabel="1">
+                            <field name="question_ids" string="Question" nolabel="1" context="{'form_view_ref': 'event.event_question_view_add_form'}">
                                 <list>
                                     <field name="sequence" widget="handle" />
                                     <field name="title"/>
@@ -108,38 +108,15 @@
                                     <field name="question_type" string="Type" />
                                     <field name="answer_ids" widget="many2many_tags"
                                         invisible="question_type != 'simple_choice'" />
-                                    <button name="action_view_question_answers" type="object" class="p-0" icon="fa-bar-chart pe-1" string="Stats"
-                                            title="Answer Breakdown" invisible="question_type not in ['simple_choice', 'text_box']"/>
+                                    <button name="action_view_question_answers"
+                                        type="object"
+                                        class="p-0"
+                                        icon="fa-bar-chart pe-1"
+                                        string="Stats"
+                                        title="Answer Breakdown"
+                                        context="{'search_default_event_id': parent.id}"
+                                        invisible="question_type not in ['simple_choice', 'text_box']"/>
                                 </list>
-                                <!-- Need to repeat the whole tree form here to be able to create answers properly
-                                    Without this, the sub-fields of answer_ids are unknown to the web framework.
-                                    We need this because we create questions and answers when the event type changes. -->
-                                <form string="Question">
-                                    <sheet>
-                                        <h1 class="d-flex"><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' class="flex-grow-1"/></h1>
-                                        <group>
-                                            <group>
-                                                <field name="is_mandatory_answer"/>
-                                                <field name="question_type" widget="radio"/>
-                                            </group>
-                                            <group>
-                                                <field name="once_per_order"/>
-                                            </group>
-                                        </group>
-                                        <notebook invisible="question_type != 'simple_choice'">
-                                            <page string="Answers" name="answers">
-                                                <field name="answer_ids">
-                                                    <list editable="bottom">
-                                                        <!-- 'display_name' is necessary for the many2many_tags to work on the event view -->
-                                                        <field name="display_name" column_invisible="True" />
-                                                        <field name="sequence" widget="handle" />
-                                                        <field name="name"/>
-                                                    </list>
-                                                </field>
-                                            </page>
-                                        </notebook>
-                                    </sheet>
-                                </form>
                             </field>
                         </page>
                         <page string="Notes &amp; Documents" name="event_notes">
@@ -306,6 +283,7 @@
                 <field name="user_id"/>
                 <field name="address_search"/>
                 <field name="stage_id"/>
+                <field name="question_ids"/>
                 <filter string="My Events" name="myevents" help="My Events" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Upcoming/Running" name="upcoming"

@@ -47,11 +47,11 @@ class TestEventData(EventCase, MockVisitor):
         [second_phone_question, company_name_question] = self.env['event.question'].create([{
             'title': 'Second Phone',
             'question_type': 'phone',
-            'event_id': event.id,
+            'event_ids': [event.id],
         }, {
             'title': 'Company Name',
             'question_type': 'company_name',
-            'event_id': event.id,
+            'event_ids': [event.id],
         }])
 
         form_details = {

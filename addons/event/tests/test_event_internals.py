@@ -459,6 +459,65 @@ class TestEventData(TestEventInternalsCommon):
         templates = self.env['mail.template'].with_context(filter_template_on_event=True).search([('name', '=', 'test template')])
         self.assertEqual(len(templates), 1, 'Should also return only mail templates related to the event registration model using search')
 
+    @users('user_eventmanager')
+    def test_event_question_defaults(self):
+        """ Test that default questions are linked to the new events and shared by all of them. """
+        event_0, event_1 = self.env['event.event'].create([{
+            'name': 'TestEvent 0',
+            'date_begin': self.reference_beg,
+            'date_end': self.reference_end,
+        }, {
+            'name': 'TestEvent 1',
+            'date_begin': self.reference_beg,
+            'date_end': self.reference_end,
+        }])
+        # Check that event has been linked to the default questions.
+        self.assertCountEqual(event_0.question_ids.mapped('question_type'), ['name', 'email', 'phone'])
+        # Check that default questions are shared by events.
+        self.assertEqual(event_0.question_ids, event_1.question_ids)
+
+    @users('user_eventmanager')
+    def test_event_questions_update_from_type_change(self):
+        """ Test that the questions of an event are updated as the event type changes. """
+        event_type_1_question, event_type_1_removed_question, event_type_2_question = self.env['event.question'].create([{
+            'title': 'Event Type 1 Question'
+        }, {
+            'title': 'Event Type 1 Removed Question'
+        }, {
+            'title': 'Event Type 2 Question'
+        }])
+        event_type_1, event_type_2 = self.env['event.type'].create([{
+            'name': 'Event Type 1',
+            'question_ids': event_type_1_question + event_type_1_removed_question
+        }, {
+            'name': 'Event Type 2',
+            'question_ids': event_type_2_question
+        }])
+        event = self.env['event.event'].create({
+            'name': 'Event',
+            'event_type_id': event_type_1.id,
+            'date_begin': self.reference_beg,
+            'date_end': self.reference_end,
+        })
+        # Check that the questions of the event are updated with those of the event type.
+        self.assertCountEqual(
+            event.question_ids.mapped('title'),
+            ['Event Type 1 Question', 'Event Type 1 Removed Question']
+        )
+
+        self.env['event.registration.answer'].create({
+            'question_id': event_type_1_question.id,
+            'registration_id': self.env['event.registration'].create({'event_id': event.id}).id,
+            'value_text_box': 'Value Registration Answer',
+        })
+        event.write({'event_type_id': event_type_2.id})
+        # Check that the questions of the event are updated with those of the new event type of the event
+        # and that the question with attendee answer is not removed.
+        self.assertCountEqual(
+            event.question_ids.mapped('title'),
+            ['Event Type 1 Question', 'Event Type 2 Question']
+        )
+
     @freeze_time('2020-1-31 10:00:00')
     @users('user_eventmanager')
     def test_event_registrable(self):

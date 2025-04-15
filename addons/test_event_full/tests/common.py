@@ -480,7 +480,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
         self.event_question_1 = self.env['event.question'].create({
             'title': 'Which field are you working in',
             'question_type': 'simple_choice',
-            'event_id': self.event.id,
+            'event_ids': [self.event.id],
             'once_per_order': False,
             'answer_ids': [
                 (0, 0, {'name': 'Consumers'}),
@@ -491,7 +491,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
         self.event_question_2 = self.env['event.question'].create({
             'title': 'How did you hear about us ?',
             'question_type': 'text_box',
-            'event_id': self.event.id,
+            'event_ids': [self.event.id],
             'once_per_order': True,
         })
 
