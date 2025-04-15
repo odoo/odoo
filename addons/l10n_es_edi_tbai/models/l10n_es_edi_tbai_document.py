@@ -425,14 +425,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         return sale_values
 
     def _get_regime_code_value(self, taxes, is_simplified):
-        regime_key = []
-
-        if is_simplified and self.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
-            regime_key.append('52')  # code for simplified invoices
-        else:
-            regime_key.append(taxes._l10n_es_get_regime_code())
-
-        return {'regime_key': regime_key}
+        return {'regime_key': [taxes._l10n_es_get_regime_code()]}
 
     @api.model
     def _add_base_lines_tax_amounts(self, base_lines, company, tax_lines=None):
