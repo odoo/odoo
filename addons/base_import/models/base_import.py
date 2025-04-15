@@ -25,7 +25,7 @@ from PIL import Image
 try:
     import xlrd
 except ImportError:
-    xlrd = None
+    xlrd = xlsx = None
 else:
     try:
         from xlrd import xlsx
