@@ -36,6 +36,12 @@ class ProductTag(models.Model):
         'product.product', string='All Product Variants using this Tag',
         compute='_compute_product_ids', search='_search_product_ids'
     )
+    visible_to_customers = fields.Boolean(
+        string="Visible to customers",
+        help="Whether the tag is displayed to customers.",
+        default=True,
+    )
+    image = fields.Image(string="Image", max_width=200, max_height=200)
 
     _name_uniq = models.Constraint(
         'unique (name)',

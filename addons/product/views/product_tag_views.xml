@@ -9,24 +9,15 @@
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="visible_to_customers"/>
+                        <field name="color"
+                               widget='color'
+                               invisible="not visible_to_customers"/>
+                        <field name="image"
+                               widget="image"
+                               options="{'size': [0, 55]}"
+                               invisible="not visible_to_customers"/>
                     </group>
-                    <notebook>
-                        <page string="Product Templates" name="page_product_templates">
-                            <field name="product_template_ids"
-                                   context="{'list_view_ref':'product.product_template_view_tree_tag'}"
-                            />
-                        </page>
-                        <page string="Product Variants" name="page_product_variants">
-                            <field name="product_product_ids"
-                                   context="{'list_view_ref':'product.product_product_view_tree_tag'}"
-                            />
-                        </page>
-                        <page string="All Products" name="page_all_products" invisible="not product_ids">
-                            <field name="product_ids"
-                                   context="{'list_view_ref':'product.product_product_view_tree_tag'}"
-                            />
-                        </page>
-                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -38,6 +29,17 @@
             <list string="Product Tags" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="visible_to_customers" optional="show"/>
+                <field name="color"
+                       widget="color"
+                       optional="hide"
+                       readonly="1"
+                       invisible="not visible_to_customers"/>
+                <field name="image"
+                       widget="image"
+                       options="{'size': [0, 30]}"
+                       optional="hide"
+                       invisible="not visible_to_customers"/>
                 <field name="product_template_ids" widget="many2many_tags" optional="show"/>
                 <field name="product_product_ids" widget="many2many_tags" string="Product Variant" optional="show"/>
             </list>
