@@ -9,6 +9,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
     _name = 'sale.advance.payment.inv'
     _description = "Sales Advance Payment Invoice"
 
+    def _default_sale_orders(self):
+        return self.env.context.get('active_ids')
+
     advance_payment_method = fields.Selection(
         selection=[
             ('delivered', "Regular invoice"),
@@ -22,7 +25,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             "according to their invoicing policy (based on ordered or delivered quantity).")
     count = fields.Integer(string="Order Count", compute='_compute_count')
     sale_order_ids = fields.Many2many(
-        'sale.order', default=lambda self: self.env.context.get('active_ids'))
+        'sale.order', default=_default_sale_orders)
 
     # Down Payment logic
     has_down_payments = fields.Boolean(
