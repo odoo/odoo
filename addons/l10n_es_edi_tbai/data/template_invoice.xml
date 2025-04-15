@@ -170,7 +170,6 @@
                                 <CuotaImpuesto t-out="format_float(detalle['CuotaRepercutida'])"/>
                                 <TipoRecargoEquivalencia t-if="detalle.get('TipoRecargoEquivalencia')" t-out="format_float(detalle['TipoRecargoEquivalencia'])"/>
                                 <CuotaRecargoEquivalencia t-if="detalle.get('CuotaRecargoEquivalencia')" t-out="format_float(detalle['CuotaRecargoEquivalencia'])"/>
-                                <OperacionEnRecargoDeEquivalenciaORegimenSimplificado t-out="'S' if is_simplified else 'N'"/>
                             </DetalleIVA>
                         </DesgloseIVA>
                     </DetalleNoExenta>
