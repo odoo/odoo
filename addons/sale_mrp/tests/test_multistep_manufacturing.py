@@ -46,7 +46,6 @@ class TestMultistepManufacturing(TestMrpCommon):
 
         # Create bom for manufactured product
         bom_product_form = Form(cls.env['mrp.bom'])
-        bom_product_form.product_id = cls.product_manu
         bom_product_form.product_tmpl_id = cls.product_manu.product_tmpl_id
         bom_product_form.product_qty = 1.0
         bom_product_form.type = 'normal'
@@ -118,7 +117,6 @@ class TestMultistepManufacturing(TestMrpCommon):
 
         # New BoM for raw material product, it will generate another Production order i.e. child Production order
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.product_raw
         bom_product_form.product_tmpl_id = self.product_raw.product_tmpl_id
         bom_product_form.product_qty = 1.0
         with bom_product_form.bom_line_ids.new() as bom_line:
