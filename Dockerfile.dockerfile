@@ -7,17 +7,18 @@ ENV HOME /opt/odoo
 # Set the working directory to /opt/odoo
 WORKDIR /opt/odoo
 
-# Copy the configuration file
+# Copy the Odoo configuration file
 COPY ./odoo.conf /etc/odoo.conf
 
 # Copy your custom modules to the addons directory
 COPY ./addons /opt/odoo/addons
 
-# Install dependencies (ensure you have a requirements.txt if necessary)
-RUN pip install -r /opt/odoo/requirements.txt
+# Install dependencies from requirements.txt (if it exists)
+COPY ./requirements.txt /opt/odoo/requirements.txt
+RUN pip3 install -r /opt/odoo/requirements.txt
 
-# Expose port 8069 (the default Odoo port)
+# Expose the default Odoo port
 EXPOSE 8069
 
-# Start Odoo
+# Start Odoo with the provided configuration
 CMD ["odoo", "-c", "/etc/odoo.conf"]
