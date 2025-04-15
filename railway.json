@@ -2,24 +2,12 @@
   "build": {
     "env": {
       "PYTHONUNBUFFERED": "1"
-    }
-  },
-  "start": "odoo -c odoo.conf"
-}{
-  "build": {
-    "nixpacksPlan": {
-      "phases": {
-        "install": {
-          "cmds": [
-            "pip install -r requirements.txt"
-          ]
-        }
-      }
+    },
+    "dockerfile": {
+      "path": "Dockerfile"
     }
   },
   "start": {
-    "cmd": "python odoo-bin -c odoo.conf"
+    "cmd": "odoo -c /etc/odoo.conf"
   }
 }
-
- 
