@@ -67,21 +67,28 @@ export class WebsiteBuilder extends Component {
         this.websitePreviewRef = useRef("website_preview");
 
         onWillStart(async () => {
-            let backendWebsiteId = this.props.action.context.params?.website_id;
-            if (!backendWebsiteId) {
+            const updateWebsiteId = (websiteId) => {
+                const encodedPath = encodeURIComponent(this.path);
+                this.initialUrl = `/website/force/${encodeURIComponent(
+                    websiteId
+                )}?path=${encodedPath}`;
+                this.websiteService.currentWebsiteId = websiteId;
+            };
+            const backendWebsiteId = this.props.action.context.params?.website_id;
+            const proms = [
+                this.websiteService.fetchWebsites(),
+                this.websiteService.fetchUserGroups(),
+            ];
+            if (backendWebsiteId) {
+                updateWebsiteId(backendWebsiteId);
+                await Promise.all(proms);
+            } else {
                 const [backendWebsiteRepr] = await Promise.all([
                     this.orm.call("website", "get_current_website"),
-                    this.websiteService.fetchWebsites(),
-                    this.websiteService.fetchUserGroups(),
+                    ...proms,
                 ]);
-                backendWebsiteId = backendWebsiteRepr[0];
+                updateWebsiteId(backendWebsiteRepr[0]);
             }
-
-            const encodedPath = encodeURIComponent(this.path);
-            this.initialUrl = `/website/force/${encodeURIComponent(
-                backendWebsiteId
-            )}?path=${encodedPath}`;
-            this.websiteService.currentWebsiteId = backendWebsiteId;
         });
         onMounted(() => {
             const { enable_editor, edit_translations } = this.props.action.context.params || {};
