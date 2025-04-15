@@ -5,5 +5,21 @@
     }
   },
   "start": "odoo -c odoo.conf"
+}{
+  "build": {
+    "nixpacksPlan": {
+      "phases": {
+        "install": {
+          "cmds": [
+            "pip install -r requirements.txt"
+          ]
+        }
+      }
+    }
+  },
+  "start": {
+    "cmd": "python odoo-bin -c odoo.conf"
+  }
 }
+
  
