@@ -548,6 +548,13 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_32_website_background_colorpicker(self):
         self.start_tour(self.env['website'].get_client_action_url("/"), "website_background_colorpicker", login="admin")
 
+    def test_33_website_menus(self):
+        # Create a website to prevent auto-assignment of the default parent menu.
+        self.env['website'].create({
+            'name': 'Test Website',
+        })
+        self.start_tour("/odoo/action-website.action_website_menu", "parent_child_menu", login="admin")
+
     def test_website_media_dialog_image_shape(self):
         self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
 
