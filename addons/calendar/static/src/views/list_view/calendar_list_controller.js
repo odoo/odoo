@@ -11,6 +11,13 @@ export class CaledarListController extends ListController {
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
     }
 
+    get modelOptions() {
+        return {
+            ...super.modelOptions,
+            lazy: false,
+        };
+    }
+
     /**
      * Deletes selected records with handling for recurring events.
      */

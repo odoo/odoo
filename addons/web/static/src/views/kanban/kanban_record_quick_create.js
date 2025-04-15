@@ -77,7 +77,10 @@ export class KanbanQuickCreateController extends Component {
         };
         this.model = useState(new this.props.Model(this.env, { config }, modelServices));
 
-        onWillStart(() => this.model.load());
+        onWillStart(async () => {
+            await this.model.load();
+            this.model.whenReady.resolve();
+        });
 
         onMounted(() => {
             this.uiActiveElement = this.uiService.activeElement;

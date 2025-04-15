@@ -306,7 +306,7 @@ export class KanbanController extends Component {
     }
 
     get modelOptions() {
-        return {};
+        return { lazy: !this.env.inDialog && !!this.props.display.controlPanel };
     }
 
     get progressBarAggregateFields() {
@@ -426,23 +426,27 @@ export class KanbanController extends Component {
     }
 
     get canCreate() {
-        const { create, createGroup } = this.props.archInfo.activeActions;
+        return this.props.archInfo.activeActions.create;
+    }
+
+    get isNewButtonDisabled() {
+        const { createGroup } = this.props.archInfo.activeActions;
         const list = this.model.root;
-        if (!create) {
-            return false;
-        }
-        if (list.isGrouped) {
-            if (list.groupByField.type !== "many2one") {
-                return true;
-            }
-            return list.groups.length || !createGroup;
-        }
-        return true;
+        return (
+            this.model.isReady &&
+            list.isGrouped &&
+            list.groupByField.type === "many2one" &&
+            list.groups.length === 0 &&
+            createGroup
+        );
     }
 
     get canQuickCreate() {
         const { activeActions } = this.props.archInfo;
         if (!activeActions.quickCreate) {
+            return false;
+        }
+        if (!this.model.isReady) {
             return false;
         }
 

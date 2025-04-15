@@ -3668,7 +3668,7 @@ test(`selection changes are triggered correctly on desktop`, async () => {
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected",
     });
-    expect.verifySteps(["onRendered ListController"]);
+    expect.verifySteps(["onRendered ListController", "onRendered ListController"]);
 
     // tbody checkbox click
     await contains(`tbody .o_list_record_selector input`).click();
@@ -3716,7 +3716,7 @@ test(`selection changes are triggered correctly on mobile`, async () => {
     expect(`.o_data_row.o_data_row_selected`).toHaveCount(0, {
         message: "no record should be selected",
     });
-    expect.verifySteps(["onRendered ListController"]);
+    expect.verifySteps(["onRendered ListController", "onRendered ListController"]);
 
     // tbody checkbox click
     await clickRecordSelector();
@@ -17848,4 +17848,90 @@ test(`hide pager in the list view with sample data`, async () => {
 
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_cp_pager").not.toBeVisible();
+});
+
+test.tags("desktop");
+test("list views make their control panel available directly", async () => {
+    const def = new Deferred();
+    onRpc("web_search_read", () => def);
+    await mountView({
+        arch: `<list><field name="foo"/></list>`,
+        resModel: "foo",
+        type: "list",
+    });
+
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_list_view .o_control_panel .o_searchview").toHaveCount(1);
+    expect(".o_list_view .o_list_renderer").toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_list_view .o_list_renderer").toHaveCount(1);
+    expect(".o_list_view .o_data_row").toHaveCount(4);
+});
+
+test.tags("desktop");
+test("interact with search view while list is loading", async () => {
+    onRpc("web_search_read", () => new Deferred());
+    await mountView({
+        arch: `<list><field name="foo"/></list>`,
+        searchViewArch: `
+            <search>
+                <filter name="group_by_foo" domain="[]" string="GroupBy Foo" context="{ 'group_by': 'foo' }"/>
+            </search>`,
+        resModel: "foo",
+        type: "list",
+    });
+
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_list_view .o_control_panel .o_searchview").toHaveCount(1);
+    expect(".o_list_view .o_list_renderer").toHaveCount(0);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("GroupBy Foo");
+    expect(".o_list_view .o_list_renderer").toHaveCount(1);
+    expect(".o_list_view .o_group_header").toHaveCount(3);
+});
+
+test("click on New while list is loading", async () => {
+    onRpc("web_search_read", () => new Deferred());
+    await mountView({
+        arch: `<list><field name="foo"/></list>`,
+        resModel: "foo",
+        type: "list",
+        createRecord: () => expect.step("create record"),
+    });
+
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_list_view .o_control_panel").toHaveCount(1);
+    expect(".o_list_view .o_list_renderer").toHaveCount(0);
+
+    await contains(".o_list_button_add").click();
+    expect.verifySteps(["create record"]);
+});
+
+test("click on New while list is loading (editable)", async () => {
+    const def = new Deferred();
+    onRpc("web_search_read", () => def);
+    await mountView({
+        arch: `<list editable="top"><field name="foo"/></list>`,
+        resModel: "foo",
+        type: "list",
+        createRecord: () => expect.step("create record"),
+    });
+
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_list_view .o_control_panel").toHaveCount(1);
+    expect(".o_list_view .o_list_renderer").toHaveCount(0);
+
+    await contains(".o_list_button_add").click();
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_list_view .o_list_renderer").toHaveCount(0);
+    expect.verifySteps([]);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_list_view .o_list_renderer").toHaveCount(1);
+    expect(".o_list_view .o_data_row").toHaveCount(5);
+    expect(".o_list_view .o_data_row:eq(0)").toHaveClass("o_selected_row");
 });

@@ -20,7 +20,11 @@ export class PivotController extends Component {
     };
 
     setup() {
-        this.model = useModelWithSampleData(this.props.Model, this.props.modelParams);
+        this.model = useModelWithSampleData(
+            this.props.Model,
+            this.props.modelParams,
+            this.modelOptions
+        );
 
         useSetupAction({
             rootRef: useRef("root"),
@@ -32,6 +36,19 @@ export class PivotController extends Component {
         });
         this.searchBarToggler = useSearchBarToggler();
     }
+
+    get displayNoContent() {
+        if (this.props.info.noContentHelp === false) {
+            return false;
+        }
+        const { metaData, useSampleModel } = this.model;
+        return useSampleModel || !this.model.hasData() || !metaData.activeMeasures.length;
+    }
+
+    get modelOptions() {
+        return { lazy: !this.env.inDialog && !!this.props.display.controlPanel };
+    }
+
     /**
      * @returns {Object}
      */
