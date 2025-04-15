@@ -375,7 +375,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if filter_by_tags_enabled and search_product:
             all_tags = ProductTag.search(
                 expression.AND([
-                    [('product_ids.is_published', '=', True), ('visible_on_ecommerce', '=', True)],
+                    [('product_ids.is_published', '=', True), ('visible_to_customers', '=', True)],
                     website_domain
                 ])
             )
