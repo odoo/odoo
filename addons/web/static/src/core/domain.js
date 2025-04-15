@@ -315,6 +315,7 @@ function matchCondition(record, condition) {
         ilikeRegexp = new RegExp(`(.*)${escapeRegExp(value).replaceAll("%", "(.*)")}(.*)`, "gi");
     }
     const fieldValue = typeof field === "number" ? field : record[field];
+    const isNot = operator.startsWith("not ");
     switch (operator) {
         case "=?":
             if ([false, null].includes(value)) {
@@ -329,7 +330,7 @@ function matchCondition(record, condition) {
             return fieldValue === value;
         case "!=":
         case "<>":
-            return !matchCondition(record, [field, "==", value]);
+            return !matchCondition(record, [field, "=", value]);
         case "<":
             return fieldValue < value;
         case "<=":
@@ -338,48 +339,38 @@ function matchCondition(record, condition) {
             return fieldValue > value;
         case ">=":
             return fieldValue >= value;
-        case "in": {
-            const val = Array.isArray(value) ? value : [value];
-            const fieldVal = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
-            return fieldVal.some((fv) => val.includes(fv));
-        }
+        case "in":
         case "not in": {
             const val = Array.isArray(value) ? value : [value];
             const fieldVal = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
-            return !fieldVal.some((fv) => val.includes(fv));
+            return Boolean(fieldVal.some((fv) => val.includes(fv))) != isNot;
         }
         case "like":
-            if (fieldValue === false) {
-                return false;
-            }
-            return Boolean(fieldValue.match(likeRegexp));
         case "not like":
             if (fieldValue === false) {
-                return false;
+                return isNot;
             }
-            return Boolean(!fieldValue.match(likeRegexp));
+            return Boolean(fieldValue.match(likeRegexp)) != isNot;
         case "=like":
+        case "not =like":
             if (fieldValue === false) {
-                return false;
+                return isNot;
             }
-            return new RegExp(escapeRegExp(value).replace(/%/g, ".*")).test(fieldValue);
+            return Boolean(new RegExp(escapeRegExp(value).replace(/%/g, ".*")).test(fieldValue)) != isNot;
         case "ilike":
-            if (fieldValue === false) {
-                return false;
-            }
-            return Boolean(fieldValue.match(ilikeRegexp));
         case "not ilike":
             if (fieldValue === false) {
-                return false;
+                return isNot;
             }
-            return Boolean(!fieldValue.match(ilikeRegexp));
+            return Boolean(fieldValue.match(ilikeRegexp)) != isNot;
         case "=ilike":
+        case "not =ilike":
             if (fieldValue === false) {
-                return false;
+                return isNot;
             }
-            return new RegExp(escapeRegExp(value).replace(/%/g, ".*"), "i").test(fieldValue);
+            return Boolean(new RegExp(escapeRegExp(value).replace(/%/g, ".*"), "i").test(fieldValue)) != isNot;
         case "any":
-        case "not_any":
+        case "not any":
             return true;
     }
     throw new InvalidDomainError("could not match domain");
