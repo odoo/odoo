@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -6,7 +5,6 @@ import functools
 import itertools
 from typing import NamedTuple
 
-import psycopg2
 import pytz
 
 from odoo import api, Command, fields, models
@@ -96,7 +94,7 @@ class IrFieldsConverter(models.AbstractModel):
         return field_path
 
     @api.model
-    def for_model(self, model, fromtype=str):
+    def for_model(self, model, fromtype=str, *, savepoint):
         """ Returns a converter object for the model. A converter is a
         callable taking a record-ish (a dictionary representing an odoo
         record with values of typetag ``fromtype``) and returning a converted
@@ -104,6 +102,7 @@ class IrFieldsConverter(models.AbstractModel):
 
         :param model: :class:`odoo.models.Model` for the conversion base
         :param fromtype:
+        :param savepoint: savepoint to rollback to on error
         :returns: a converter callable
         :rtype: (record: dict, logger: (field, error) -> None) -> dict
         """
@@ -111,7 +110,7 @@ class IrFieldsConverter(models.AbstractModel):
         model = self.env[model._name]
 
         converters = {
-            name: self.to_field(model, field, fromtype)
+            name: self.to_field(model, field, fromtype, savepoint=savepoint)
             for name, field in model._fields.items()
         }
 
@@ -156,7 +155,7 @@ class IrFieldsConverter(models.AbstractModel):
         return fn
 
     @api.model
-    def to_field(self, model, field, fromtype=str):
+    def to_field(self, model, field, fromtype=str, *, savepoint):
         """ Fetches a converter for the provided field object, from the
         specified type.
 
@@ -192,6 +191,7 @@ class IrFieldsConverter(models.AbstractModel):
         :type field: :class:`odoo.fields.Field`
         :param fromtype: type to convert to something fitting for ``field``
         :type fromtype: type | str
+        :param savepoint: savepoint to rollback to on errors
         :return: a function (fromtype -> field.write_type), if a converter is found
         :rtype: Callable | None
         """
@@ -201,16 +201,16 @@ class IrFieldsConverter(models.AbstractModel):
         converter = getattr(self, '_%s_to_%s' % (typename, field.type), None)
         if not converter:
             return None
-        return functools.partial(converter, model, field)
+        return functools.partial(converter, model, field, savepoint=savepoint)
 
-    def _str_to_json(self, model, field, value):
+    def _str_to_json(self, model, field, value, savepoint):
         try:
             return json.loads(value), []
         except ValueError:
             msg = self.env._("'%s' does not seem to be a valid JSON for field '%%(field)s'")
             raise self._format_import_error(ValueError, msg, value)
 
-    def _str_to_properties(self, model, field, value):
+    def _str_to_properties(self, model, field, value, savepoint):
 
         # If we want to import the all properties at once (with the technical value)
         if isinstance(value, str):
@@ -263,7 +263,7 @@ class IrFieldsConverter(models.AbstractModel):
                 property_dict['value'] = new_val
 
             elif property_type == 'boolean':
-                new_val, warnings = self._str_to_boolean(model, field, val)
+                new_val, warnings = self._str_to_boolean(model, field, val, savepoint=savepoint)
                 if not warnings:
                     property_dict['value'] = new_val
                 else:
@@ -283,7 +283,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ids = []
                 fake_field = FakeField(comodel_name=property_dict['comodel'], name=property_dict['string'])
                 for reference in references:
-                    id_, ws = self.db_id_for(model, fake_field, subfield, reference)
+                    id_, ws = self.db_id_for(model, fake_field, subfield, reference, savepoint)
                     ids.append(id_)
                     warnings.extend(ws)
 
@@ -306,7 +306,7 @@ class IrFieldsConverter(models.AbstractModel):
         return value, warnings
 
     @api.model
-    def _str_to_boolean(self, model, field, value):
+    def _str_to_boolean(self, model, field, value, savepoint):
         # all translatables used for booleans
         # potentially broken casefolding? What about locales?
         trues = set(word.lower() for word in itertools.chain(
@@ -337,7 +337,7 @@ class IrFieldsConverter(models.AbstractModel):
         )]
 
     @api.model
-    def _str_to_integer(self, model, field, value):
+    def _str_to_integer(self, model, field, value, savepoint):
         try:
             return int(value), []
         except ValueError:
@@ -348,7 +348,7 @@ class IrFieldsConverter(models.AbstractModel):
             )
 
     @api.model
-    def _str_to_float(self, model, field, value):
+    def _str_to_float(self, model, field, value, savepoint):
         try:
             return float(value), []
         except ValueError:
@@ -361,13 +361,13 @@ class IrFieldsConverter(models.AbstractModel):
     _str_to_monetary = _str_to_float
 
     @api.model
-    def _str_id(self, model, field, value):
+    def _str_id(self, model, field, value, savepoint):
         return value, []
 
     _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_to_html = _str_id
 
     @api.model
-    def _str_to_date(self, model, field, value):
+    def _str_to_date(self, model, field, value, savepoint):
         try:
             parsed_value = fields.Date.from_string(value)
             return fields.Date.to_string(parsed_value), []
@@ -400,7 +400,7 @@ class IrFieldsConverter(models.AbstractModel):
         return pytz.UTC
 
     @api.model
-    def _str_to_datetime(self, model, field, value):
+    def _str_to_datetime(self, model, field, value, savepoint):
         try:
             parsed_value = fields.Datetime.from_string(value)
         except ValueError:
@@ -460,7 +460,7 @@ class IrFieldsConverter(models.AbstractModel):
         return result
 
     @api.model
-    def _str_to_selection(self, model, field, value):
+    def _str_to_selection(self, model, field, value, savepoint):
         # get untranslated values
         env = self.with_context(lang=None).env
         selection = field.get_description(env)['selection']
@@ -491,7 +491,7 @@ class IrFieldsConverter(models.AbstractModel):
         )
 
     @api.model
-    def db_id_for(self, model, field, subfield, value):
+    def db_id_for(self, model, field, subfield, value, savepoint):
         """ Finds a database id for the reference ``value`` in the referencing
         subfield ``subfield`` of the provided field of the provided model.
 
@@ -502,6 +502,7 @@ class IrFieldsConverter(models.AbstractModel):
                          ``id`` for an external id and ``.id`` for a database
                          id
         :param value: value of the reference to match to an actual record
+        :param savepoint: savepoint for rollback on errors
         :return: a pair of the matched database identifier (if any), the
                  translated user-readable name for the field and the list of
                  warnings
@@ -530,7 +531,7 @@ class IrFieldsConverter(models.AbstractModel):
         RelatedModel = self.env[field.comodel_name]
         if subfield == '.id':
             field_type = self.env._("database id")
-            if isinstance(value, str) and not self._str_to_boolean(model, field, value)[0]:
+            if isinstance(value, str) and not self._str_to_boolean(model, field, value, savepoint=savepoint)[0]:
                 return False, warnings
             try:
                 tentative_id = int(value)
@@ -544,7 +545,7 @@ class IrFieldsConverter(models.AbstractModel):
                 id = tentative_id
         elif subfield == 'id':
             field_type = self.env._("external id")
-            if not self._str_to_boolean(model, field, value)[0]:
+            if not self._str_to_boolean(model, field, value, savepoint=savepoint)[0]:
                 return False, warnings
             if '.' in value:
                 xmlid = value
@@ -570,9 +571,10 @@ class IrFieldsConverter(models.AbstractModel):
                 name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
                 if name_create_enabled_fields.get(field.name):
                     try:
-                        with self.env.cr.savepoint():
-                            id, _name = RelatedModel.name_create(name=value)
-                    except (Exception, psycopg2.IntegrityError):
+                        id, _name = RelatedModel.name_create(name=value)
+                        RelatedModel.env.flush_all()
+                    except Exception:  # noqa: BLE001
+                        savepoint.rollback()
                         error_msg = self.env._("Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
         else:
             raise self._format_import_error(
@@ -656,28 +658,28 @@ class IrFieldsConverter(models.AbstractModel):
         return subfield, []
 
     @api.model
-    def _str_to_many2one(self, model, field, values):
+    def _str_to_many2one(self, model, field, values, savepoint):
         # Should only be one record, unpack
         [record] = values
 
         subfield, w1 = self._referencing_subfield(record)
 
-        id, w2 = self.db_id_for(model, field, subfield, record[subfield])
+        id, w2 = self.db_id_for(model, field, subfield, record[subfield], savepoint)
         return id, w1 + w2
 
     @api.model
-    def _str_to_many2one_reference(self, model, field, value):
-        return self._str_to_integer(model, field, value)
+    def _str_to_many2one_reference(self, model, field, value, savepoint):
+        return self._str_to_integer(model, field, value, savepoint)
 
     @api.model
-    def _str_to_many2many(self, model, field, value):
+    def _str_to_many2many(self, model, field, value, savepoint):
         [record] = value
 
         subfield, warnings = self._referencing_subfield(record)
 
         ids = []
         for reference in record[subfield].split(','):
-            id, ws = self.db_id_for(model, field, subfield, reference)
+            id, ws = self.db_id_for(model, field, subfield, reference, savepoint)
             ids.append(id)
             warnings.extend(ws)
 
@@ -692,7 +694,7 @@ class IrFieldsConverter(models.AbstractModel):
             return [Command.set(ids)], warnings
 
     @api.model
-    def _str_to_one2many(self, model, field, records):
+    def _str_to_one2many(self, model, field, records, savepoint):
         name_create_enabled_fields = self._context.get('name_create_enabled_fields') or {}
         prefix = field.name + '/'
         relative_name_create_enabled_fields = {
@@ -728,7 +730,7 @@ class IrFieldsConverter(models.AbstractModel):
         convert = self.with_context(
             name_create_enabled_fields=relative_name_create_enabled_fields,
             parent_fields_hierarchy=parent_fields_hierarchy
-        ).for_model(self.env[field.comodel_name])
+        ).for_model(self.env[field.comodel_name], savepoint=savepoint)
 
         for record in records:
             id = None
@@ -738,7 +740,7 @@ class IrFieldsConverter(models.AbstractModel):
                 subfield, w1 = self._referencing_subfield(refs)
                 warnings.extend(w1)
                 try:
-                    id, w2 = self.db_id_for(model, field, subfield, record[subfield])
+                    id, w2 = self.db_id_for(model, field, subfield, record[subfield], savepoint)
                     warnings.extend(w2)
                 except ValueError:
                     if subfield != 'id':
