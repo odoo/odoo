@@ -383,16 +383,23 @@ class TestUsers2(UsersCommonCase):
         user_form['group_ids'] = group_portal
         self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
 
-        user_form['group_ids'] = group_user
-        self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
+        user = user_form.save()
 
-        user_form['group_ids'] = group_public
-        self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
+        # in debug mode, show the group widget for external user
 
-        user_form['group_ids'] = group_user
-        user_form['group_ids'] = group_user + group_contain_user
+        with self.debug_mode():
+            user_form = Form(user, view='base.view_users_form')
 
-        user_form.save()
+            user_form['group_ids'] = group_user
+            self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
+
+            user_form['group_ids'] = group_public
+            self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
+
+            user_form['group_ids'] = group_user
+            user_form['group_ids'] = group_user + group_contain_user
+
+            user_form.save()
 
         # in debug mode, allow extra groups
 
