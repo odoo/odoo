@@ -419,6 +419,9 @@ export class TicketScreen extends Component {
             const repr = this._getSearchFields()[this.state.search.fieldName].repr;
             orders = fuzzyLookup(this.state.search.searchTerm, orders, repr);
         }
+        if (this.state.search.partnerId && this.state.search.fieldName === "PARTNER") {
+            orders = orders.filter((order) => order.partner_id?.id === this.state.search.partnerId);
+        }
 
         if (this.state.selectedPreset) {
             orders = orders.filter((order) => order.preset_id?.id === this.state.selectedPreset.id);
@@ -766,6 +769,9 @@ export class TicketScreen extends Component {
                 if (domain.length > 1) {
                     domain.unshift("|");
                 }
+            }
+            if (this.state.search.partnerId && this.state.search.fieldName === "PARTNER") {
+                domain.unshift(["partner_id.id", "in", [this.state.search.partnerId]]);
             }
             return domain;
         } else {
