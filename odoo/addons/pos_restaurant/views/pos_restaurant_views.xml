@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<odoo>
+        <!--     RESTAURANTS FLOORS  -->
+
+        <record id="view_restaurant_floor_form" model="ir.ui.view">
+            <field name="name">Restaurant Floors</field>
+            <field name="model">restaurant.floor</field>
+            <field name="arch" type="xml">
+                <form string="Restaurant Floor">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <field name="active" invisible="1"/>
+                        <group col="4">
+                            <field name="name" />
+                            <field name="pos_config_ids" widget="many2many_tags"/>
+                            <field name="background_color" groups="base.group_no_one" />
+                        </group>
+                        <field name="table_ids">
+                            <tree string='Tables'>
+                                <field name="name" />
+                                <field name="seats" />
+                                <field name="shape" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_restaurant_floor_tree" model="ir.ui.view">
+            <field name="name">Restaurant Floors</field>
+            <field name="model">restaurant.floor</field>
+            <field name="arch" type="xml">
+                <tree string="Restaurant Floors">
+                    <field name="sequence" widget="handle" />
+                    <field name="name" />
+                    <field name="pos_config_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_restaurant_floor_search" model="ir.ui.view">
+            <field name="name">restaurant.floor.search</field>
+            <field name="model">restaurant.floor</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <filter string="Archived" name="active" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_restaurant_floor_kanban" model="ir.ui.view">
+            <field name="name">restaurant.floor.kanban</field>
+            <field name="model">restaurant.floor</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="pos_config_ids" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div><strong>Floor Name: </strong><t t-esc="record.name.value"/></div>
+                                <div><strong>Point of Sales: </strong><t t-esc="record.pos_config_ids.value"/></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_restaurant_floor_form" model="ir.actions.act_window">
+            <field name="name">Floor Plans</field>
+            <field name="res_model">restaurant.floor</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new restaurant floor
+              </p><p>
+                A restaurant floor represents the place where customers are served, this is where you can
+                define and position the tables.
+              </p>
+            </field>
+        </record>
+
+        <record id="view_restaurant_table_form" model="ir.ui.view">
+            <field name="name">Restaurant Table</field>
+            <field name="model">restaurant.table</field>
+            <field name="arch" type="xml">
+                <form string="Restaurant Table">
+                    <sheet>
+                        <group col="2">
+                            <field name="name" />
+                            <field name="seats" />
+                        </group>
+                        <group col="4" string="Appearance" groups="base.group_no_one">
+                            <field name="shape" />
+                            <field name="color" />
+                            <field name="position_h" />
+                            <field name="position_v" />
+                            <field name="width" />
+                            <field name="height" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_restaurant_floor_all"
+             parent="point_of_sale.menu_point_config_product"
+             action="action_restaurant_floor_form"
+             sequence="10"
+             groups="point_of_sale.group_pos_user"/>
+</odoo>

@@ -1,0 +1,34 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website.slides.fullscreen.content">
+        <t t-if="widget.get('slide').category === 'document'">
+            <div class="ratio h-100">
+                <iframe t-att-src="widget.get('slide').embedUrl" class="o_wslides_iframe_viewer" allowFullScreen="true" frameborder="0" aria-label="Slides"/>
+            </div>
+        </t>
+        <t t-if="widget.get('slide').category === 'infographic'">
+            <div class="o_wslides_fs_player w-100 h-100 overflow-auto d-flex align-items-start justify-content-center">
+                <img t-att-src="'/web/image/slide.slide/'+ widget.get('slide').id +'/image_1024'" class="img-fluid position-relative m-auto" alt="Slide image"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="website.slides.fullscreen.video.google_drive">
+        <div class="player ratio ratio-16x9 embed-responsive-item h-100">
+            <iframe t-att-src="widget.get('slide').embedUrl" allowFullScreen="true" frameborder="0" autoplay="1" allow="autoplay"></iframe>
+        </div>
+    </t>
+
+    <t t-name="website.slides.fullscreen.video.youtube">
+        <div class="player ratio ratio-16x9 embed-responsive-item h-100">
+            <iframe t-att-id="'youtube-player' + widget.slide.id" t-att-src="widget.slide.embedUrl" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
+        </div>
+    </t>
+
+    <t t-name="website.slides.fullscreen.video.vimeo">
+        <div class="player ratio ratio-16x9 embed-responsive-item h-100">
+            <t t-out="widget.slide.embedCode"/>
+        </div>
+    </t>
+
+</templates>

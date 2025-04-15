@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="mass_mailing.theme_selector" class="o_mail_theme_selector">
+        <t t-foreach="themes" t-as="theme" t-key="theme_index">
+            <a t-att-id="theme.name" href="#" class="dropdown-item">
+                <div class="o_thumb logo" t-attf-style="background-image: url(#{theme.img}_logo.png)"/>
+            </a>
+        </t>
+    </div>
+    <div t-name="mass_mailing.theme_selector_new" class="o_mail_theme_selector_new">
+        <div t-attf-class="o_mailing_template_message text-white text-start mx-4 pt-2 px-1 #{templates.length ? 'd-none': ''}">
+            Click on the ⭐ next to the subject to save this mailing as a <span t-esc="modelName"/> template
+        </div>
+        <div class="o_mailing_template_preview_wrapper d-inline-block w-100">
+            <div t-foreach="templates" t-as="template" t-key="template_index"
+                class="o_mail_template_preview d-inline-block dropdown-item"
+                t-att-id="template.name" t-att-model-id="template.modelId">
+                <div class="d-inline-flex flex-row align-items-center text-white border px-2 py-2 w-100">
+                    <i class="fa fa-star text-warning me-2"/>
+                    <span class="text-truncate" t-esc="template.subject"/>
+                    <div class="ms-auto">
+                        <i class="o_mail_template_remove_favorite fa fa-trash ps-2 me-1" t-att-data-id="template.id" title="Remove from Templates"/>
+                        <img t-if="template.userId" t-attf-src="/web/image/res.users/#{template.userId}/avatar_128" t-att-title="template.userName"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-inline-block w-100">
+            <a t-foreach="themes" t-as="theme" t-key="theme_index"
+                t-att-id="theme.name" role="menuitem" href="#" class="dropdown-item px-4">
+                <div class="o_thumb small mb-2"  t-attf-style="background-image: url(#{theme.img}_small.png)"/>
+                <div class="o_thumb large mb-2" t-attf-style="background-image: url(#{theme.img}_large.png)"/>
+                <h5 class="text-white text-capitalize text-truncate" t-esc="theme.title"/>
+            </a>
+        </div>
+    </div>
+</templates>

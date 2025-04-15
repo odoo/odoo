@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-inherit="hr_skills.hr_resume_data_row" t-inherit-mode="extension">
+    <xpath expr="//tr[hasclass('o_data_row')]" position="inside">
+        <t t-if="data.display_type === 'course'">
+            <td class="o_data_cell container" colspan="2">
+                <div class="o_resume_line row" t-att-data-id="id">
+                    <div class="o_resume_line_dates col-lg-3">
+                        <span><t t-esc="data.date_end"/></span>
+                    </div>
+                    <div class="o_resume_line_desc col-lg-8">
+                        <h3>
+                            <t t-esc="data.name"/>
+                            <a t-attf-href="#{data.course_url}" t-if="data.course_url"
+                                style="font-size: 1rem;"
+                                class="ms-2 fa fa-external-link btn-secondary"/>
+                        </h3>
+                        <t t-if="data.description" t-esc="data.description"/>
+                    </div>
+                </div>
+            </td>
+        </t>
+    </xpath>
+</t>
+</templates>

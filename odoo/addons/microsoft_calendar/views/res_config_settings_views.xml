@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.microsoft.calendar</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="calendar.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <div id="msg_module_microsoft_calendar" position="replace">
+                    <div class="content-group" invisible="not module_microsoft_calendar">
+                        <div class="mt16 row">
+                            <label for="cal_microsoft_client_id" string="Client ID" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="cal_microsoft_client_id" nolabel="1"/>
+                        </div>
+                        <div class="mt16 row">
+                            <label for="cal_microsoft_client_secret" string="Client Secret" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="cal_microsoft_client_secret" password="True" nolabel="1"/>
+                        </div>
+                        <div class="mt16 d-flex">
+                            <label for="cal_microsoft_sync_paused" string="Pause Synchronization" class="o_light_label"/>
+                            <field name="cal_microsoft_sync_paused" class="ml16"/>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+</odoo>

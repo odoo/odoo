@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Task-related subtypes for messaging / Chatter -->
+    <record id="mt_task_new" model="mail.message.subtype">
+        <field name="name">Task Created</field>
+        <field name="res_model">project.task</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+        <field name="description">Task Created</field>
+    </record>
+    <record id="mt_task_stage" model="mail.message.subtype">
+        <field name="name">Stage Changed</field>
+        <field name="res_model">project.task</field>
+        <field name="default" eval="False"/>
+        <field name="description">Stage changed</field>
+    </record>
+    <!-- new state subtypes-->
+    <record id="mt_task_in_progress" model="mail.message.subtype">
+        <field name="name">Task In Progress</field>
+        <field name="res_model">project.task</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="101"/>
+        <field name="description">Task In Progress</field>
+    </record>
+    <record id="mt_task_changes_requested" model="mail.message.subtype">
+        <field name="name">Changes Requested</field>
+        <field name="res_model">project.task</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="102"/>
+        <field name="description">Changes Requested</field>
+    </record>
+    <record id="mt_task_approved" model="mail.message.subtype">
+        <field name="name">Task Approved</field>
+        <field name="res_model">project.task</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="103"/>
+        <field name="description">Task approved</field>
+    </record>
+    <record id="mt_task_canceled" model="mail.message.subtype">
+        <field name="name">Task Canceled</field>
+        <field name="res_model">project.task</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="104"/>
+        <field name="description">Task canceled</field>
+    </record>
+    <record id="mt_task_done" model="mail.message.subtype">
+        <field name="name">Task Done</field>
+        <field name="res_model">project.task</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="105"/>
+        <field name="description">Task done</field>
+    </record>
+    <record id="mt_task_waiting" model="mail.message.subtype">
+        <field name="name">Task Waiting</field>
+        <field name="res_model">project.task</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="106"/>
+        <field name="description">Task Waiting</field>
+        <field name="hidden" eval="True"/>
+    </record>
+    <record id="mt_task_rating" model="mail.message.subtype">
+        <field name="name">Task Rating</field>
+        <field name="res_model">project.task</field>
+        <field name="sequence" eval="108"/>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+    </record>
+    <!-- Update-related subtypes for messaging / Chatter -->
+    <record id="mt_update_create" model="mail.message.subtype">
+        <field name="name">Update Created</field>
+        <field name="res_model">project.update</field>
+        <field name="default" eval="False"/>
+        <field name="description">Update Created</field>
+        <field name="hidden" eval="True"/>
+    </record>
+    <!-- Project-related subtypes for messaging / Chatter -->
+    <record id="mt_project_stage_change" model="mail.message.subtype">
+        <field name="name">Project Stage Changed</field>
+        <field name="sequence">9</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+    </record>
+    <record id="mt_project_task_new" model="mail.message.subtype">
+        <field name="name">Task Created</field>
+        <field name="sequence">10</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_new"/>
+        <field name="relation_field">project_id</field>
+    </record>
+    <record id="mt_project_task_stage" model="mail.message.subtype">
+        <field name="name">Task Stage Changed</field>
+        <field name="sequence">16</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_stage"/>
+        <field name="relation_field">project_id</field>
+    </record>
+    <record id="mt_project_task_rating" model="mail.message.subtype">
+        <field name="name">Task Rating</field>
+        <field name="sequence">27</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_rating"/>
+        <field name="relation_field">project_id</field>
+        <field name="hidden" eval="True"/>
+    </record>
+    <record id="mt_project_update_create" model="mail.message.subtype">
+        <field name="name">Update Created</field>
+        <field name="sequence">19</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_update_create"/>
+        <field name="relation_field">project_id</field>
+        <field name="hidden" eval="True"/>
+    </record>
+    <record id="mt_project_task_in_progress" model="mail.message.subtype">
+        <field name="name">Task In Progress</field>
+        <field name="sequence">20</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_in_progress"/>
+        <field name="relation_field">project_id</field>
+    </record>
+    <record id="mt_project_task_changes_requested" model="mail.message.subtype">
+        <field name="name">Changes Requested</field>
+        <field name="sequence">21</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_changes_requested"/>
+        <field name="relation_field">project_id</field>
+    </record>
+    <record id="mt_project_task_approved" model="mail.message.subtype">
+        <field name="name">Task Approved</field>
+        <field name="sequence">22</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_approved"/>
+        <field name="relation_field">project_id</field>
+    </record>
+    <record id="mt_project_task_canceled" model="mail.message.subtype">
+        <field name="name">Task Canceled</field>
+        <field name="sequence">23</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_canceled"/>
+        <field name="relation_field">project_id</field>
+    </record>
+    <record id="mt_project_task_done" model="mail.message.subtype">
+        <field name="name">Task Done</field>
+        <field name="sequence">24</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_done"/>
+        <field name="relation_field">project_id</field>
+    </record>
+    <record id="mt_project_task_waiting" model="mail.message.subtype">
+        <field name="name">Task Waiting</field>
+        <field name="sequence">25</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_waiting"/>
+        <field name="relation_field">project_id</field>
+        <field name="hidden" eval="True"/>
+    </record>
+</odoo>

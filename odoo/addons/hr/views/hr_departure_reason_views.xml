@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_departure_reason_view_list" model="ir.ui.view">
+            <field name="model">hr.departure.reason</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="sequence" widget="handle" />
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_departure_reason_view_form" model="ir.ui.view">
+            <field name="model">hr.departure.reason</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="sequence" />
+                            <field name="name" />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_departure_reason_action" model="ir.actions.act_window">
+            <field name="name">Departure Reasons</field>
+            <field name="res_model">hr.departure.reason</field>
+            <field name="view_mode">tree</field>
+        </record>
+    </data>
+</odoo>

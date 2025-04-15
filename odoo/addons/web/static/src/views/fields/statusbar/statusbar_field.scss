@@ -1,0 +1,81 @@
+.o_field_statusbar {
+    $-btn-secondary-design: map-get($o-btns-bs-override, "secondary");
+
+    > .o_statusbar_status {
+        display: flex;
+        align-content: space-around;
+        margin-left: auto;
+        flex-flow: row-reverse wrap-reverse;
+        align-self: stretch;
+        align-items: stretch;
+
+        > .o_arrow_button:not(.d-none) {
+            position: relative;
+            padding-left: $o-statusbar-arrow-width * 1.5;
+            border-radius: 0;
+
+            &.o_first {
+                @include border-end-radius($border-radius);
+                padding-right: $o-horizontal-padding; // Compensate container padding
+                overflow: hidden; // to prevent scroll due to last arrow
+            }
+
+            &.o_last {
+                @include border-start-radius($border-radius);
+                padding-left: $o-horizontal-padding;
+            }
+
+            &:not(.o_first),
+            &:not(.o_last) {
+                &:before, &:after {
+                    @include o-position-absolute(-$border-width, -$o-statusbar-arrow-width);
+                    display: block;
+
+                    border-top: floor($o-statusbar-height/2) solid transparent;
+                    border-bottom: ceil($o-statusbar-height/2) solid transparent;
+                    border-right: none;
+                    border-left: $o-statusbar-arrow-width solid map-get($-btn-secondary-design, background);
+                    -moz-transform: scale(0.9999); // Smooth the triangle on firefox
+                    content: " ";
+                    @include transition($btn-transition);
+                }
+
+                &:before {
+                    right: calc(-#{$o-statusbar-arrow-width} - #{$border-width});
+                    border-left-color: $o-view-background-color;
+                }
+
+                &:hover:after {
+                    border-left-color: map-get($-btn-secondary-design, hover-background);
+                }
+            }
+
+            &:disabled {
+                opacity: 1;
+                cursor: default;
+
+                &:not(.o_arrow_button_current) {
+                    &, &:hover, &:focus {
+                        color: $text-muted;
+                    }
+                }
+            }
+
+            &.o_arrow_button_current:disabled, &:active:not(.o_first) {
+                background-color: map-get($-btn-secondary-design, active-background);
+                border-color: map-get($-btn-secondary-design, active-border);
+                color: map-get($-btn-secondary-design, active-color);
+
+                &:after {
+                    border-left-color: map-get($-btn-secondary-design, active-background);
+                }
+
+                &, & + .btn {
+                    &:before {
+                        border-left-color: map-get($-btn-secondary-design, active-border);
+                    }
+                }
+            }
+        }
+    }
+}

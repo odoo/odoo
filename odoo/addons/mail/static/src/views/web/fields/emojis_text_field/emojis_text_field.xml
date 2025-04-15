@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.EmojisTextField" t-inherit="web.TextField" t-inherit-mode="primary">
+        <xpath expr="//span[1]" position="attributes">
+            <attribute name="t-ref">targetReadonlyElement</attribute>
+        </xpath>
+        <xpath expr="//textarea" position="after">
+            <t t-call="mail.EmojisFieldButton"/>
+        </xpath>
+    </t>
+</templates>

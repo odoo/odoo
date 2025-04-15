@@ -1,0 +1,71 @@
+.o_status_bubble {
+    @extend .o_status;
+
+    @for $size from 2 through length($o-colors) {
+        // Note: the first color is supposed to be invisible so it's ignored
+        &.o_color_bubble_#{$size - 1} {
+            background-color: nth($o-colors, $size);
+        }
+    }
+
+    &.o_color_bubble_20 {
+        background-color: $o-success;
+    }
+    &.o_color_bubble_21 {
+        background-color: $o-info;
+    }
+    &.o_color_bubble_22 {
+        background-color: $o-warning;
+    }
+    &.o_color_bubble_23 {
+        background-color: $o-danger;
+    }
+    &.o_color_bubble_24 {
+        background-color: $primary;
+    }
+}
+
+.o_status_with_color {
+    span {
+        vertical-align: middle;
+    }
+    &.o_field_widget {
+        span {
+            display: inline-block;
+        }
+    }
+}
+
+.o_project_update_description a[type="object"] {
+    cursor: pointer;
+}
+
+.o_project_m2m_avatar {
+    width: 20px;
+    height: 20px;
+    margin-right: -1px;
+    display: inline-block;
+
+    img {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        object-fit: cover;
+        margin-right: 4px;
+    }
+}
+
+.o_state_container {
+    width: 20%;
+    @media only screen and (max-width: 650px) {
+        width: 5%;
+    }
+}
+
+.o_field_project_state_selection {
+    .dropdown-toggle .o_status {
+        width: 19px;
+        height: 19px;
+        text-align: center;
+    }
+}

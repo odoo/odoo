@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallInvitations">
+        <div t-if="store.discuss.ringingThreads.length > 0" class="o-discuss-CallInvitations position-absolute top-0 end-0 d-flex flex-column p-2">
+            <t t-foreach="store.discuss.ringingThreads" t-as="thread" t-key="thread.localId">
+                <CallInvitation thread="thread"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

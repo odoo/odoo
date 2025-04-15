@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="ir_cron_update_status" model="ir.cron">
+            <field name="name">NAV 3.0: Update status of pending invoices</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">
+    env['account.move.send']._l10n_hu_edi_cron_update_status()
+            </field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="nextcall" eval="DateTime.now().strftime('%Y-%m-%d 22:00:00')"/>
+        </record>
+     </data>
+</odoo>

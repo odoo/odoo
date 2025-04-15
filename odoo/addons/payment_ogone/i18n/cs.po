@@ -1,0 +1,182 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_ogone
+# 
+# Translators:
+# Ivana Bartonkova, 2023
+# Jiří Podhorecký, 2023
+# Wil Odoo, 2023
+# Jakub Smolka, 2024
+# Katerina Horylova, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Katerina Horylova, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
+msgid "API User ID"
+msgstr "API User ID"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
+msgid "API User Password"
+msgstr "Uživatelské heslo API"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__code
+msgid "Code"
+msgstr "Kód"
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "Nepodařilo se navázat spojení s rozhraním API."
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
+msgid "Hash function"
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Nebyla nalezena žádná transakce odpovídající odkazu %s."
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__code__ogone
+#: model:payment.provider,name:payment_ogone.payment_provider_ogone
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_pspid
+msgid "PSPID"
+msgstr "PSPID"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_provider
+msgid "Payment Provider"
+msgstr "Poskytovatel platby"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Platební transakce"
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr "Přijatá data s neplatným stavem platby: %s"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
+msgid "SHA Key IN"
+msgstr "SHA Klíč IN"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_out
+msgid "SHA Key OUT"
+msgstr "SHA Klíč OUT"
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha1
+msgid "SHA1"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha256
+msgid "SHA256"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha512
+msgid "SHA512"
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Storing your payment details is necessary for future use."
+msgstr "Uložení platebních údajů je nezbytné pro budoucí použití."
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
+msgid "The ID solely used to identify the API user with Ogone"
+msgstr "ID slouží výhradně k identifikaci uživatele API s Ogone"
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
+msgid "The ID solely used to identify the account with Ogone"
+msgstr "ID slouží výhradně k identifikaci účtu u společnosti Ogone."
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
+#, python-format
+msgid "The communication with the API failed."
+msgstr "Komunikace s rozhraním API se nezdařila."
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The payment has been declined: %s"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Technický kód tohoto poskytovatele plateb."
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "Transakce není spojena s tokenem."
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Stripe</strong>."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been authorized."
+msgstr "Vaše platba byla autorizována"
+
+#. module: payment_ogone
+#: model_terms:payment.provider,cancel_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been cancelled."
+msgstr "Vaše platba byla zrušena."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,pending_msg:payment_ogone.payment_provider_ogone
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "Vaše platba proběhla úspěšně, ale čeká na schválení."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been successfully processed."
+msgstr "Vaše platba proběhla úspěšně."

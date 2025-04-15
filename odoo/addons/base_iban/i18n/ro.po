@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_iban
+# 
+# Translators:
+# Martin Trigaux, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Alin Miclea, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Alin Miclea, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: base_iban
+#. odoo-javascript
+#: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml:0
+#, python-format
+msgid "Account isn't a valid IBAN"
+msgstr "Contul nu este un IBAN valid"
+
+#. module: base_iban
+#: model:ir.model,name:base_iban.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Conturi Bancare"
+
+#. module: base_iban
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "Cannot compute the BBAN because the account number is not an IBAN."
+msgstr "Nu se poate calcula BBAN pentru că numărul de cont nu este IBAN."
+
+#. module: base_iban
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: base_iban
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid ""
+"The IBAN does not seem to be correct. You should have entered something like this %s\n"
+"Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
+msgstr ""
+"IBAN-ul nu pare să fi corect. Trebuie să introduceți ceva de genul %s Unde B"
+" = Codul de banca, S = Cod domeniu, C= Număr cont, k = sumă control"
+
+#. module: base_iban
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "The IBAN is invalid, it should begin with the country code"
+msgstr "Codul IBAN este nevalid, ar trebui să înceapă cu codul țării"
+
+#. module: base_iban
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "There is no IBAN code."
+msgstr "Nu există cod IBAN."
+
+#. module: base_iban
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it."
+msgstr "Acest cod IBAN nu a trecut de validare, vă rugăm să îl verificați"

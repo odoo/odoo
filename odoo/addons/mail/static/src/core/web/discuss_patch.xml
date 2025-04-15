@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='mobileTopbar']" position="before">
+            <DiscussSidebar t-if="!ui.isSmall"/>
+        </xpath>
+        <xpath expr="//*[@t-ref='root']" position="inside">
+            <MessagingMenu t-if="ui.isSmall"/>
+        </xpath>
+    </t>
+</templates>

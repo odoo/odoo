@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="product_course_channel_1_option_0" model="product.product">
+        <field name="name">Water can</field>
+        <field name="standard_price">12.0</field>
+        <field name="list_price">12.0</field>
+        <field name="detailed_type">consu</field>
+        <field name="is_published" eval="True"/>
+        <field name="image_1920" type="base64" file="website_sale_slides/static/img/water_can.jpg"/>
+    </record>
+
+    <record id="product_course_channel_1_option_1" model="product.product">
+        <field name="name">Flower pot</field>
+        <field name="standard_price">4.5</field>
+        <field name="list_price">4.5</field>
+        <field name="detailed_type">consu</field>
+        <field name="is_published" eval="True"/>
+        <field name="image_1920" type="base64" file="website_sale_slides/static/img/flower_pot.jpg"/>
+    </record>
+
+    <record id="website_sale_slides.product_course_channel_1_product_template" model="product.template">
+        <field name="optional_product_ids" eval="[
+            (6, 0, [ref('test_website_slides_full.product_course_channel_1_option_0_product_template'),
+                    ref('test_website_slides_full.product_course_channel_1_option_1_product_template')]
+        )]"/>
+    </record>
+</data></odoo>

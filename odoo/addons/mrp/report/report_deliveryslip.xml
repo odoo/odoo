@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="stock_report_delivery_document_inherit_mrp" inherit_id="stock.report_delivery_document">
+        <!-- needs to be set before so elif directly follows if later on -->
+        <xpath expr="//t[@name='has_packages']" position="before">
+            <!-- get only the top level kits' (i.e. no subkit) move lines for easier mapping later on + we ignore subkit groupings-->
+            <!-- note that move.name uses top level kit's product.template.display_name value instead of product.template.name -->
+            <t t-set="has_kits" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id and l.move_id.bom_line_id.bom_id.type == 'phantom')"/>
+        </xpath>
+        <xpath expr="//t[@name='no_package_section']" position="before">
+            <t t-set="has_kits" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id and l.move_id.bom_line_id.bom_id.type == 'phantom')"/>
+            <t t-if="has_kits">
+                <!-- print the products not in a package or kit first -->
+                <t t-set="move_lines" t-value="move_lines.filtered(lambda m: not m.move_id.bom_line_id)"/>
+            </t>
+        </xpath>
+        <xpath expr="//t[@name='no_package_move_lines']" position="inside">
+            <t t-call="mrp.stock_report_delivery_kit_sections"/>
+        </xpath>
+        <xpath expr="//t[@name='has_packages']" position="after">
+            <!-- Additional use case: group by kits when no packages exist and then apply use case 1. (serial/lot numbers used/printed) -->
+            <t t-elif="has_kits and not has_packages">
+                <t t-call="mrp.stock_report_delivery_kit_sections"/>
+                <t t-call="mrp.stock_report_delivery_no_kit_section"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="stock_report_delivery_kit_sections">
+        <!-- get all kits-related SML, including subkits -->
+        <t t-set="all_kits_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id.bom_id.type == 'phantom')"/>
+        <!-- do another map to get unique top level kits -->
+        <t t-set="boms" t-value="has_kits.mapped('move_id.bom_line_id.bom_id')"/>
+        <t t-foreach="boms" t-as="bom">
+            <!-- Separate product.product from template for variants-->
+            <t t-if="bom.product_id">
+                <t t-set="kit_product" t-value="bom.product_id"/>
+            </t>
+            <t t-else="">
+                <t t-set="kit_product" t-value="bom.product_tmpl_id"/>
+            </t>
+            <tr t-att-class="'bg-200 fw-bold o_line_section'">
+                <td colspan="99">
+                    <span t-esc="kit_product.display_name"/>
+                </td>
+            </tr>
+            <t t-set="kit_move_lines" t-value="all_kits_move_lines.filtered(lambda l: l.move_id.bom_line_id.bom_id == bom)"/>
+            <t t-if="has_serial_number">
+                <tr t-foreach="kit_move_lines" t-as="move_line">
+                    <t t-set="description" t-value="move_line.move_id.description_picking"/>
+                    <t t-if="description == kit_product.display_name">
+                        <t t-set="description" t-value=""/>
+                    </t>
+                    <t t-call="stock.stock_report_delivery_has_serial_move_line"/>
+                </tr>
+            </t>
+            <t t-else="">
+                <t t-set="aggregated_lines" t-value="kit_move_lines._get_aggregated_product_quantities(kit_name=kit_product.display_name)"/>
+                <t t-if="aggregated_lines">
+                    <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- No kit section is expected to only be called in no packages case -->
+    <template id="stock_report_delivery_no_kit_section">
+        <!-- Do another section for kit-less products if they exist -->
+        <t t-set="no_kit_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id.bom_id.type != 'phantom')"/>
+        <t t-if="no_kit_move_lines">
+            <tr t-att-class="'bg-200 fw-bold o_line_section'">
+                <td colspan="99">
+                    <span>Products not associated with a kit</span>
+                </td>
+            </tr>
+            <t t-if="has_serial_number">
+                <tr t-foreach="no_kit_move_lines" t-as="move_line">
+                    <t t-call="stock.stock_report_delivery_has_serial_move_line"/>
+                </tr>
+            </t>
+            <t t-else="">
+                <t t-set="aggregated_lines" t-value="no_kit_move_lines._get_aggregated_product_quantities()"/>
+                <t t-if="aggregated_lines">
+                    <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

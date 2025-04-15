@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="attribute_tree_view" model="ir.ui.view">
+        <field name="name">product.attribute.tree</field>
+        <field name="model">product.attribute</field>
+        <field name="arch" type="xml">
+            <tree string="Variant Values">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="display_type"/>
+                <field name="create_variant"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_attribute_view_form" model="ir.ui.view">
+        <field name="name">product.attribute.form</field>
+        <field name="model">product.attribute</field>
+        <field name="arch" type="xml">
+            <form string="Product Attribute">
+            <field name="number_related_products" invisible="1"/>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" name="action_open_related_products"
+                            type="object" icon="fa-bars"
+                            invisible="not number_related_products">
+                        <div class="o_stat_info">
+                            <span class="o_stat_value"><field name="number_related_products"/></span>
+                            <span class="o_stat_text">Related Products</span>
+                        </div>
+                    </button>
+                </div>
+                <group name="main_fields">
+                    <group name="sale_main_fields">
+                        <label for="name" string="Attribute Name"/>
+                        <field name="name" nolabel="1"/>
+                        <field name="display_type" widget="radio"/>
+                        <field name="create_variant" widget="radio" readonly="number_related_products != 0"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Attribute Values" name="attribute_values">
+                        <field name="value_ids" widget="one2many" nolabel="1">
+                            <tree string="Values" editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="display_type" column_invisible="True"/>
+                                <field name="is_custom" groups="product.group_product_variant" column_invisible="parent.display_type == 'multi'"/>
+                                <field name="html_color" column_invisible="parent.display_type != 'color'" invisible="image" widget="color"/>
+                                <field name="image"
+                                       class="oe_avatar text-start float-none"
+                                       column_invisible="parent.display_type != 'color'"
+                                       options="{'size': [70, 70]}"
+                                       widget="image"/>
+                                <field name="default_extra_price"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="attribute_action" model="ir.actions.act_window">
+        <field name="name">Attributes</field>
+        <field name="res_model">product.attribute</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="product_template_attribute_line_form" model="ir.ui.view">
+        <field name="name">product.template.attribute.line.form</field>
+        <field name="model">product.template.attribute.line</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <form string="Product Attribute and Values">
+                <group name="main_field">
+                    <label for="attribute_id" string="Attribute Name"/>
+                    <field name="attribute_id" nolabel="1"/>
+                    <field name="value_ids" widget="one2many">
+                        <tree string="Values">
+                            <field name="name"/>
+                            <field name="html_color"/>
+                        </tree>
+                        <form string="Values">
+                            <field name="name"/>
+                        </form>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_value_view_tree" model="ir.ui.view">
+        <field name="name">product.template.attribute.value.view.tree</field>
+        <field name="model">product.template.attribute.value</field>
+        <field name="arch" type="xml">
+            <tree string="Attributes" create="0" delete="0">
+                <field name="attribute_id" optional="hide"/>
+                <field name="name"/>
+                <field name="display_type" optional="hide"/>
+                <field name="html_color" invisible="display_type != 'color' or image" widget="color"/>
+                <field name="image" invisible="display_type != 'color'" widget="image" options="{'size': [70, 70]}"/>
+                <field name="ptav_active" optional="hide"/>
+                <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
+                <field name="currency_id" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_value_view_form" model="ir.ui.view">
+        <field name="name">product.template.attribute.value.view.form.</field>
+        <field name="model">product.template.attribute.value</field>
+        <field name="arch" type="xml">
+            <form string="Product Attribute" create="0" delete="0">
+                <sheet>
+                    <group>
+                        <field name="ptav_active" readonly="1" invisible="ptav_active"/>
+                        <field name="name"/>
+                        <field name="display_type" invisible="1"/>
+                        <field name="html_color" invisible="display_type != 'color' or image"/>
+                        <field name="image" invisible="display_type != 'color' or not image" widget="image" options="{'size': [70, 70]}"/>
+                        <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="exclude_for" widget="one2many" mode="tree">
+                            <tree editable="bottom">
+                                <field name="product_tmpl_id" />
+                                <field name="value_ids" widget="many2many_tags" options="{'no_create': True}" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_value_view_search" model="ir.ui.view">
+        <field name="model">product.template.attribute.value</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Active" name="active" domain="[('ptav_active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('ptav_active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

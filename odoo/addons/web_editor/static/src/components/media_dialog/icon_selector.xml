@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_editor.IconSelector">
+    <div>
+        <div class="o_we_file_selector_control_panel sticky-top d-flex gap-2 align-items-center mb-1 py-4 px-3">
+            <SearchMedia searchPlaceholder="searchPlaceholder"
+                search.bind="this.search"
+                needle="state.needle"/>
+        </div>
+        <div class="font-icons-icons">
+            <t t-foreach="state.fonts" t-as="font" t-key="font.base">
+                <div t-if="!font.icons.length" class="o_nocontent_help">
+                    <p class="o_empty_folder_image">No pictograms found.</p>
+                    <p class="o_empty_folder_subtitle">Try searching with other keywords.</p>
+                </div>
+                <span t-foreach="font.icons" t-as="icon" t-key="icon.id"
+                    t-att-title="icon.names[0]"
+                    t-att-aria-label="icon.names[0]" role="img"
+                    class="font-icons-icon m-2 fs-2 p-3 cursor-pointer text-center"
+                    t-att-class="{ o_we_attachment_selected: this.selectedMediaIds.includes(icon.id) }"
+                    t-attf-class="{{ font.base }} {{ icon.names[0] }}"
+                    t-on-click="() => this.onClickIcon(font, icon)"/>
+            </t>
+        </div>
+    </div>
+</t>
+</templates>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+    <record id="lunch_order_mail_supplier" model="mail.template">
+        <field name="name">Lunch: Supplier Order</field>
+        <field name="model_id" ref="lunch.model_lunch_supplier"/>
+        <field name="email_from">{{ ctx['order']['email_from'] }}</field>
+        <field name="partner_to">{{ ctx['order']['supplier_id'] }}</field>
+        <field name="subject">Orders for {{ ctx['order']['company_name'] }}</field>
+        <field name="lang">{{ ctx.get('default_lang') }}</field>
+        <field name="description">Sent to vendor with the order of the day</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Lunch Order</span><br/>
+                </td><td valign="middle" align="right" t-if="not user.company_id.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ user.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr>
+                    <td valign="top" style="font-size: 13px;">
+    <div>
+        <t t-set="lines" t-value="ctx.get('lines', [])"/>
+        <t t-set="order" t-value="ctx.get('order')"/>
+        <t t-set="currency" t-value="user.env['res.currency'].browse(order.get('currency_id'))"/>
+        <p>
+        Dear <t t-out="order.get('supplier_name', '')">Laurie Poiret</t>,
+        </p><p>
+        Here is, today orders for <t t-out="order.get('company_name', '')">LunchCompany</t>:
+        </p>
+
+        <t t-if="sites">
+            <br/>
+            <p>Location</p>
+            <t t-foreach="site" t-as="site">
+                <p><t t-out="site['name'] or ''"></t> : <t t-out="site['address'] or ''"></t></p>
+            </t>
+            <br/>
+        </t>
+
+        <table>
+            <thead>
+                <tr style="background-color:rgb(233,232,233);">
+                    <th style="width: 100%; min-width: 96px; font-size: 13px;"><strong>Product</strong></th>
+                    <th style="width: 100%; min-width: 96px; font-size: 13px;"><strong>Comments</strong></th>
+                    <th style="width: 100%; min-width: 96px; font-size: 13px;"><strong>Person</strong></th>
+                    <th style="width: 100%; min-width: 96px; font-size: 13px;"><strong>Site</strong></th>
+                    <th style="width: 100%; min-width: 96px; font-size: 13px;" align="center"><strong>Qty</strong></th>
+                    <th style="width: 100%; min-width: 96px; font-size: 13px;" align="center"><strong>Price</strong></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="lines" t-as="line">
+                    <td style="width: 100%; font-size: 13px;" valign="top" t-out="line['product'] or ''">Sushi salmon</td>
+                    <td style="width: 100%; font-size: 13px;" valign="top">
+                    <t t-if="line['toppings']">
+                        <t t-out="line['toppings'] or ''">Soy sauce</t>
+                    </t>
+                    <t t-if="line['note']">
+                        <div style="color: rgb(173,181,189);" t-out="line['note'] or ''">With wasabi.</div>
+                    </t>
+                    </td>
+                    <td style="width: 100%; font-size: 13px;" valign="top" t-out="line['username'] or ''">lap</td>
+                    <td style="width: 100%; font-size: 13px;" valign="top" t-out="line['site'] or ''">Office 1</td>
+                    <td style="width: 100%; font-size: 13px;" valign="top" align="right" t-out="line['quantity'] or ''">10</td>
+                    <td style="width: 100%; font-size: 13px;" valign="top" align="right" t-out="format_amount(line['price'], currency) or ''">$ 1.00</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="width: 100%; font-size: 13px; border-top: 1px solid black;"><strong>Total</strong></td>
+                    <td style="width: 100%; font-size: 13px; border-top: 1px solid black;" align="right"><strong t-out="format_amount(order['amount_total'], currency) or ''">$ 10.00</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>Do not hesitate to contact us if you have any questions.</p>
+    </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="user.company_id.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-out="user.company_id.phone or ''">+1 650-123-4567</t>
+                    <t t-if="user.company_id.phone and (user.company_id.email or user.company_id.website)">|</t>
+                    <t t-if="user.company_id.email">
+                        <a t-attf-href="'mailto:%s' % {{ user.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="user.company_id.email or ''">info@yourcompany.com</a>
+                    </t>
+                    <t t-if="user.company_id.email and user.company_id.website">|</t>
+                    <t t-if="user.company_id.website">
+                        <a t-attf-href="'%s' % {{ user.company_id.website }}" style="text-decoration:none; color: #454748;" t-out="user.company_id.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+        </field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="grid_report_saleorder_inherit" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//table[hasclass('o_main_table')]" position="before">
+            <t t-call="product_matrix.matrix">
+                <t t-set="order" t-value="doc"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

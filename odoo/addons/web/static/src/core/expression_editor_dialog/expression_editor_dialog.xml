@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ExpressionEditorDialog">
+        <Dialog title="'Edit Condition'">
+            <ExpressionEditor t-props="expressionEditorProps" />
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onConfirm" t-ref="confirm">Confirm</button>
+                <button class="btn btn-secondary" t-on-click="onDiscard">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

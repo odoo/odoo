@@ -1,0 +1,14 @@
+.o_field_widget.o_field_color_picker > div {
+    // to compensate on the 2px margin used to space the elements relative to each other
+    // we keep the top one cause the widget is a bit to high anyway
+    margin-left: -2px;
+    margin-right: -2px;
+    margin-bottom: -2px;
+
+    > div {
+        display: inline-block;
+        border: 1px solid white;
+        box-shadow: 0 0 0 1px map-get($grays, '300');
+        margin: 2px;
+    }
+}

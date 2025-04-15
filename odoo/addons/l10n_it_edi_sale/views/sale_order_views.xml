@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_l10n_it_edi_sale" model="ir.ui.view">
+        <field name="name">order.form.inherit.l10n.it.edi.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_reporting']" position="after">
+                <field name="l10n_it_partner_pa" invisible="1"/>
+                <group name="it_edi_sale_order"
+                       string="Italian Electronic Invoicing"
+                       invisible="country_code != 'IT' or not l10n_it_partner_pa">
+                    <field name="l10n_it_origin_document_type"/>
+                    <field name="l10n_it_origin_document_name"/>
+                    <field name="l10n_it_origin_document_date"/>
+                    <field name="l10n_it_cig"/>
+                    <field name="l10n_it_cup"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

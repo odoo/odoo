@@ -1,0 +1,338 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<fac:Facturae xmlns:fac="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
+  <FileHeader>
+    <SchemaVersion>3.2.2</SchemaVersion>
+    <Modality>I</Modality>
+    <InvoiceIssuerType>EM</InvoiceIssuerType>
+    <Batch>
+      <BatchIdentifier>INV/2023/00005</BatchIdentifier>
+      <InvoicesCount>1</InvoicesCount>
+      <TotalInvoicesAmount>
+        <TotalAmount>2186.20</TotalAmount>
+      </TotalInvoicesAmount>
+      <TotalOutstandingAmount>
+        <TotalAmount>2186.20</TotalAmount>
+      </TotalOutstandingAmount>
+      <TotalExecutableAmount>
+        <TotalAmount>2186.20</TotalAmount>
+      </TotalExecutableAmount>
+      <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+    </Batch>
+  </FileHeader>
+  <Parties>
+    <SellerParty>
+      <TaxIdentification>
+        <PersonTypeCode>F</PersonTypeCode>
+        <ResidenceTypeCode>R</ResidenceTypeCode>
+        <TaxIdentificationNumber>ES59962470K</TaxIdentificationNumber>
+      </TaxIdentification>
+      <Individual>
+        <AddressInSpain>
+          <Address>A</Address>
+          <PostCode>22591</PostCode>
+          <Town>Candasnos</Town>
+          <Province>Zaragoza</Province>
+          <CountryCode>ESP</CountryCode>
+        </AddressInSpain>
+        <ContactDetails>
+          <WebAddress>http://www.esexample.com</WebAddress>
+          <ElectronicMail>info@company.esexample.com</ElectronicMail>
+        </ContactDetails>
+      </Individual>
+    </SellerParty>
+    <BuyerParty>
+      <TaxIdentification>
+        <PersonTypeCode>J</PersonTypeCode>
+        <ResidenceTypeCode>E</ResidenceTypeCode>
+        <TaxIdentificationNumber>US77654321</TaxIdentificationNumber>
+      </TaxIdentification>
+      <LegalEntity>
+        <CorporateName>Indigo Exterior</CorporateName>
+        <TradeName>Indigo Exterior</TradeName>
+        <OverseasAddress>
+          <Address>4558 De Silva St</Address>
+          <PostCodeAndTown>94538 Fremont</PostCodeAndTown>
+          <Province>California</Province>
+          <CountryCode>USA</CountryCode>
+        </OverseasAddress>
+        <ContactDetails>
+          <Telephone>8709310506</Telephone>
+          <WebAddress>http://www.indigo-exterior.com</WebAddress>
+          <ElectronicMail>indigo.exterior@example.com</ElectronicMail>
+        </ContactDetails>
+      </LegalEntity>
+    </BuyerParty>
+  </Parties>
+  <Invoices>
+    <Invoice>
+      <InvoiceHeader>
+        <InvoiceNumber>INV/2023/00005</InvoiceNumber>
+        <InvoiceDocumentType>FC</InvoiceDocumentType>
+        <InvoiceClass>OO</InvoiceClass>
+      </InvoiceHeader>
+      <InvoiceIssueData>
+        <IssueDate>2023-08-01</IssueDate>
+        <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+        <TaxCurrencyCode>EUR</TaxCurrencyCode>
+        <LanguageName>en</LanguageName>
+      </InvoiceIssueData>
+      <TaxesOutputs>
+        <Tax>
+          <TaxTypeCode>01</TaxTypeCode>
+          <TaxRate>21.000</TaxRate>
+          <TaxableBase>
+            <TotalAmount>320.00</TotalAmount>
+          </TaxableBase>
+          <TaxAmount>
+            <TotalAmount>67.20</TotalAmount>
+          </TaxAmount>
+        </Tax>
+        <Tax>
+          <TaxTypeCode>01</TaxTypeCode>
+          <TaxRate>0.000</TaxRate>
+          <TaxableBase>
+            <TotalAmount>1799.00</TotalAmount>
+          </TaxableBase>
+          <TaxAmount>
+            <TotalAmount>0.00</TotalAmount>
+          </TaxAmount>
+        </Tax>
+      </TaxesOutputs>
+      <InvoiceTotals>
+        <TotalGrossAmount>2119.00</TotalGrossAmount>
+        <TotalGrossAmountBeforeTaxes>2119.00</TotalGrossAmountBeforeTaxes>
+        <TotalTaxOutputs>67.20</TotalTaxOutputs>
+        <TotalTaxesWithheld>0.00</TotalTaxesWithheld>
+        <InvoiceTotal>2186.20</InvoiceTotal>
+        <TotalOutstandingAmount>2186.20</TotalOutstandingAmount>
+        <TotalExecutableAmount>2186.20</TotalExecutableAmount>
+      </InvoiceTotals>
+      <Items>
+        <InvoiceLine>
+          <ItemDescription>[E-COM07] Large Cabinet</ItemDescription>
+          <Quantity>1.0</Quantity>
+          <UnitOfMeasure>01</UnitOfMeasure>
+          <UnitPriceWithoutTax>320.00</UnitPriceWithoutTax>
+          <TotalCost>320.00</TotalCost>
+          <GrossAmount>320.00</GrossAmount>
+          <TaxesOutputs>
+            <Tax>
+              <TaxTypeCode>01</TaxTypeCode>
+              <TaxRate>21.000</TaxRate>
+              <TaxableBase>
+                <TotalAmount>320.00</TotalAmount>
+              </TaxableBase>
+              <TaxAmount>
+                <TotalAmount>67.20</TotalAmount>
+              </TaxAmount>
+            </Tax>
+          </TaxesOutputs>
+        </InvoiceLine>
+        <InvoiceLine>
+          <ItemDescription>[E-COM09] Large Desk</ItemDescription>
+          <Quantity>1.0</Quantity>
+          <UnitOfMeasure>01</UnitOfMeasure>
+          <UnitPriceWithoutTax>1799.00</UnitPriceWithoutTax>
+          <TotalCost>1799.00</TotalCost>
+          <GrossAmount>1799.00</GrossAmount>
+          <TaxesOutputs>
+            <Tax>
+              <TaxTypeCode>01</TaxTypeCode>
+              <TaxRate>0.000</TaxRate>
+              <TaxableBase>
+                <TotalAmount>1799.00</TotalAmount>
+              </TaxableBase>
+              <TaxAmount>
+                <TotalAmount>0.00</TotalAmount>
+              </TaxAmount>
+            </Tax>
+          </TaxesOutputs>
+        </InvoiceLine>
+      </Items>
+      <LegalLiterals>
+        <LegalReference>Terms and conditions.</LegalReference>
+      </LegalLiterals>
+      <PaymentDetails>
+        <Installment>
+          <InstallmentDueDate>2023-08-31</InstallmentDueDate>
+        </Installment>
+      </PaymentDetails>
+    </Invoice>
+    <Invoice>
+      <InvoiceHeader>
+        <InvoiceNumber>INV/2023/00006</InvoiceNumber>
+        <InvoiceDocumentType>FC</InvoiceDocumentType>
+        <InvoiceClass>OO</InvoiceClass>
+      </InvoiceHeader>
+      <InvoiceIssueData>
+        <IssueDate>2023-07-01</IssueDate>
+        <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+        <TaxCurrencyCode>EUR</TaxCurrencyCode>
+        <LanguageName>en</LanguageName>
+      </InvoiceIssueData>
+      <TaxesOutputs>
+        <Tax>
+          <TaxTypeCode>01</TaxTypeCode>
+          <TaxRate>21.000</TaxRate>
+          <TaxableBase>
+            <TotalAmount>960.00</TotalAmount>
+          </TaxableBase>
+          <TaxAmount>
+            <TotalAmount>201.60</TotalAmount>
+          </TaxAmount>
+        </Tax>
+      </TaxesOutputs>
+      <InvoiceTotals>
+        <TotalGrossAmount>960.00</TotalGrossAmount>
+        <TotalGrossAmountBeforeTaxes>960.00</TotalGrossAmountBeforeTaxes>
+        <TotalTaxOutputs>201.60</TotalTaxOutputs>
+        <TotalTaxesWithheld>0.00</TotalTaxesWithheld>
+        <InvoiceTotal>1161.60</InvoiceTotal>
+        <TotalOutstandingAmount>1161.60</TotalOutstandingAmount>
+        <TotalExecutableAmount>1161.60</TotalExecutableAmount>
+      </InvoiceTotals>
+      <Items>
+        <InvoiceLine>
+          <ItemDescription>[E-COM07] Large Cabinet</ItemDescription>
+          <Quantity>3.0</Quantity>
+          <UnitOfMeasure>01</UnitOfMeasure>
+          <UnitPriceWithoutTax>320.00</UnitPriceWithoutTax>
+          <TotalCost>960.00</TotalCost>
+          <GrossAmount>960.00</GrossAmount>
+          <TaxesOutputs>
+            <Tax>
+              <TaxTypeCode>01</TaxTypeCode>
+              <TaxRate>21.000</TaxRate>
+              <TaxableBase>
+                <TotalAmount>960.00</TotalAmount>
+              </TaxableBase>
+              <TaxAmount>
+                <TotalAmount>201.60</TotalAmount>
+              </TaxAmount>
+            </Tax>
+          </TaxesOutputs>
+        </InvoiceLine>
+      </Items>
+      <LegalLiterals>
+        <LegalReference>Legal References.</LegalReference>
+      </LegalLiterals>
+      <PaymentDetails>
+        <Installment>
+          <InstallmentDueDate>2023-07-31</InstallmentDueDate>
+        </Installment>
+      </PaymentDetails>
+    </Invoice>
+  </Invoices>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-Document-1796c070f59109773ed3d7e92a20952003e69560">
+  <ds:SignedInfo>
+    <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+    <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+    <ds:Reference Type="http://www.w3.org/2000/09/xmldsig#Object" URI="" Id="Reference-Document-1796c070f59109773ed3d7e92a20952003e69560">
+      <ds:Transforms>
+        <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+      </ds:Transforms>
+      <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+      <ds:DigestValue>cElLMko1b3H9dDrcO0nLhBA0DM7NWpAVuFDk7r+HMxM=</ds:DigestValue>
+    </ds:Reference>
+    <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignatureProperties-Document-1796c070f59109773ed3d7e92a20952003e69560">
+      <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+      <ds:DigestValue>1fyEQGjgpXKz9ie50e2WwFRk5kXklJNr10YHVMWBHeo=</ds:DigestValue>
+    </ds:Reference>
+    <ds:Reference URI="#KeyInfo-Document-1796c070f59109773ed3d7e92a20952003e69560">
+      <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+      <ds:DigestValue>rUjANojsduwjEzBt8hX6sFsG9F1mwQ1X/rJhxY1MOGI=</ds:DigestValue>
+    </ds:Reference>
+  </ds:SignedInfo>
+  <ds:SignatureValue>ecCZUOChRyxRpMRo8PaqBDKsuiWf8IOavpwLDSaD1+ZjEKF20D7GUfMoDbMTmotpw+qybmuQQZVQ
+CRpl+7efRdcIGNjKwI1hxdbwFd41SCU3HXZKJ5B6mOdJjW4uBnXce157lI4U/liyHmdRyW1K3WZc
+RCh4GrJ5M7N662JfhVOLhZaKSXFI7+s517HD5mJ4tw84UG7j3OgAfVqH3BZe+oM8boTJAUtFyNlO
+o8YWWWgvV6LNkqbKkP5J2dcrwQmaUuISeQ7+/BU0T7OfdbpFGtvz1PrI2d9YTFHrH+aWU5gZ96kX
+cmr2Ab2uGYRNXqIpHEA9DcY0pkapd6CNgPv5sg==
+</ds:SignatureValue>
+  <ds:KeyInfo Id="KeyInfo-Document-1796c070f59109773ed3d7e92a20952003e69560">
+    <ds:X509Data>
+      <ds:X509Certificate>MIIEMTCCAxmgAwIBAgIUXMxVyBDULPbIaeKVK9bJwftsQdswDQYJKoZIhvcNAQELBQAwgacxCzAJ
+BgNVBAYTAkJFMREwDwYDVQQIDAhXYWxsb25pYTEgMB4GA1UEBwwXR3JhbmQtUm9zaWVyZS1Ib3R0
+b21vbnQxFTATBgNVBAoMDFRlc3QgT2RvbyBTQTEXMBUGA1UECwwOUiZEIEFjY291bnRpbmcxFzAV
+BgNVBAMMDlImRCBBY2NvdW50aW5nMRowGAYJKoZIhvcNAQkBFgtyZEBvZG9vLmNvbTAeFw0yMzAy
+MDkwODU1NDhaFw0zMzAyMDYwODU1NDhaMIGnMQswCQYDVQQGEwJCRTERMA8GA1UECAwIV2FsbG9u
+aWExIDAeBgNVBAcMF0dyYW5kLVJvc2llcmUtSG90dG9tb250MRUwEwYDVQQKDAxUZXN0IE9kb28g
+U0ExFzAVBgNVBAsMDlImRCBBY2NvdW50aW5nMRcwFQYDVQQDDA5SJkQgQWNjb3VudGluZzEaMBgG
+CSqGSIb3DQEJARYLcmRAb2Rvby5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCx
+eId7+OTIUl/GWhSo+y+E+8yclmgdgWope+fyq4jYACSID2rrxcScAgmGcGfvcNJ7e4aUoqrGg7Ob
+FIuDbGjVg5RFUjDljzvV97em7KuPf/qHVWAVXrKkD6JgV7KRp38RLyBLdgbwZqgP0QRBM6HLl1nC
+H6TMrVtTOskjeJ9jd1VACBlMWFpaTQl4dcnM6W8o7e5OYSru6u9xuqyQQim06YyjwAuxfQEMO1OV
+n3cQlrqpbOI5SNu3vi6eb0z4n1KEw8t2zeF+QrMSNzykb3CJVOaLI8uyYcZXow7RcSy0HZNu4TZS
+nQRgODbxrFlcfSHz2hSqxWAXW4/He594Gbw9AgMBAAGjUzBRMB0GA1UdDgQWBBSjLlcJeL3Yg2aL
+L7aElSBMhQqLXjAfBgNVHSMEGDAWgBSjLlcJeL3Yg2aLL7aElSBMhQqLXjAPBgNVHRMBAf8EBTAD
+AQH/MA0GCSqGSIb3DQEBCwUAA4IBAQCf9DCON7ehvD+x/EXLIDhJUzsWxyICj0T+cMw7BBrJVQ94
+6RJlR9m3sNwIy0VoYQKNJ1JGda15YVpppyJTVSj11Ig8rG6/l06ysNnzJ6+aA2ba1Z0ycFFkX+Cl
+By7sIqAn+HbAJ6M4sAzQKvoWoaFA4uSbZGLLf2NKMNGIsTBO3rtSEt8zqJBTVuX03Sxp9mJIjIXi
+HfrCCDyBtXxnnBpTnMFy74mHg2Xbu5si85nxnNzYC0RTbd7qxEO0OEBQGz5AMH/kyzNnyu9WvLlg
+lfRpb8ioiJ9ZFLNIsZtRA60R5NWDpACwADa9WnfqzH8lHnEaIXwsziU+SSAIz8kSdCwQ
+</ds:X509Certificate>
+    </ds:X509Data>
+    <ds:KeyValue>
+      <ds:RSAKeyValue>
+        <ds:Modulus>sXiHe/jkyFJfxloUqPsvhPvMnJZoHYFqKXvn8quI2AAkiA9q68XEnAIJhnBn73DSe3uGlKKqxoOz
+mxSLg2xo1YOURVIw5Y871fe3puyrj3/6h1VgFV6ypA+iYFeykad/ES8gS3YG8GaoD9EEQTOhy5dZ
+wh+kzK1bUzrJI3ifY3dVQAgZTFhaWk0JeHXJzOlvKO3uTmEq7urvcbqskEIptOmMo8ALsX0BDDtT
+lZ93EJa6qWziOUjbt74unm9M+J9ShMPLds3hfkKzEjc8pG9wiVTmiyPLsmHGV6MO0XEstB2TbuE2
+Up0EYDg28axZXH0h89oUqsVgF1uPx3ufeBm8PQ==
+</ds:Modulus>
+        <ds:Exponent>AQAB
+</ds:Exponent>
+      </ds:RSAKeyValue>
+    </ds:KeyValue>
+  </ds:KeyInfo>
+  <ds:Object>
+    <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature-Document-1796c070f59109773ed3d7e92a20952003e69560">
+      <xades:SignedProperties Id="SignatureProperties-Document-1796c070f59109773ed3d7e92a20952003e69560">
+        <xades:SignedSignatureProperties>
+          <xades:SigningTime>2023-08-31T09:51:34.576445</xades:SigningTime>
+          <xades:SigningCertificate>
+            <xades:Cert>
+              <xades:CertDigest>
+                <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <ds:DigestValue>cP4cRSOphs7/CsqPwdGujvo7xkSkh8CfvFPAsQf/zRE=</ds:DigestValue>
+              </xades:CertDigest>
+              <xades:IssuerSerial>
+                <ds:X509IssuerName>C=BE, CN=R&amp;D Accounting, L=Grand-Rosiere-Hottomont, O=Test Odoo SA, OU=R&amp;D Accounting, ST=Wallonia</ds:X509IssuerName>
+                <ds:X509SerialNumber>529783975559440394003723764779526236797615751643</ds:X509SerialNumber>
+              </xades:IssuerSerial>
+            </xades:Cert>
+          </xades:SigningCertificate>
+          <xades:SignaturePolicyIdentifier>
+            <xades:SignaturePolicyId>
+              <xades:SigPolicyId>
+                <xades:Identifier>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:Identifier>
+                <xades:Description>Política de firma electrónica para facturación electrónica con formato Facturae</xades:Description>
+              </xades:SigPolicyId>
+              <xades:SigPolicyHash>
+                <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                <ds:DigestValue>Ohixl6upD6av8N7pEvDABhEL6hM=</ds:DigestValue>
+              </xades:SigPolicyHash>
+              <xades:SigPolicyQualifiers>
+                <xades:SigPolicyQualifier>
+                  <xades:SPURI>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:SPURI>
+                </xades:SigPolicyQualifier>
+              </xades:SigPolicyQualifiers>
+            </xades:SignaturePolicyId>
+          </xades:SignaturePolicyIdentifier>
+        </xades:SignedSignatureProperties>
+        <xades:SignedDataObjectProperties>
+          <xades:DataObjectFormat ObjectReference="#Reference-Document-1796c070f59109773ed3d7e92a20952003e69560">
+            <xades:Description/>
+            <xades:ObjectIdentifier>
+              <xades:Identifier Qualifier="OIDAsURN">urn:oid:1.2.840.10003.5.109.10</xades:Identifier>
+              <xades:Description/>
+            </xades:ObjectIdentifier>
+            <xades:MimeType>text/xml</xades:MimeType>
+            <xades:Encoding/>
+          </xades:DataObjectFormat>
+        </xades:SignedDataObjectProperties>
+      </xades:SignedProperties>
+    </xades:QualifyingProperties>
+  </ds:Object>
+</ds:Signature>
+</fac:Facturae>

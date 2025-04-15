@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <record id="account_voucher_cn" model="ir.actions.report">
+            <field name="name">Voucher</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_cn.report_voucher</field>
+            <field name="report_file">l10n_cn.report_voucher</field>
+            <field name="print_report_name">'Voucher_%s' % (object.name)</field>
+            <field name="binding_view_types">form</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+        </record>
+    </data>
+</odoo>

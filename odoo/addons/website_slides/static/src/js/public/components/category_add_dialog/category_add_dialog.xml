@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="website_slides.CategoryAddDialog" t-inherit="web.ConfirmationDialog">
+    <xpath expr="//p[hasclass('text-prewrap')]" position="replace">
+        <div>
+            <form t-on-submit.prevent="_confirm" action="/slides/category/add" method="POST" id="slide_category_add_form">
+                <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                <input type="hidden" name="channel_id" t-att-value="props.channelId"/>
+                <div class="mb-3 row">
+                    <label for="section_name" class="col-sm-3 col-form-label">Section name</label>
+                    <div class="col-sm-9">
+                        <input t-ref="autofocus" type="text" autocomplete="off" class="form-control" name="name" id="section_name" required="required" placeholder='e.g. "Introduction"'/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </xpath>
+  </t>
+
+</templates>

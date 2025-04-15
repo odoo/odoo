@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="stock.StockOrderpoint.Buttons" t-inherit="web.ListView.Buttons">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <button t-if="nbSelected" type="button" t-on-click="() => this.onClickOrder(false)"
+                    class="o_button_order btn btn-primary me-1">
+                Order
+            </button>
+            <button t-if="nbSelected" type="button" t-on-click="onClickSnooze"
+                    class="o_button_snooze btn btn-primary me-1">
+                Snooze
+            </button>
+            <button t-if="nbSelected" type="button" t-on-click="() => this.onClickOrder(true)"
+                    class="o_button_order_max btn btn-primary me-1">
+                Order To Max
+            </button>
+        </xpath>
+    </t>
+
+</templates>

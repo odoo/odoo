@@ -1,0 +1,77 @@
+/** @odoo-module **/
+
+import { patch } from "@web/core/utils/patch";
+import { VideoSelector } from '@web_editor/components/media_dialog/video_selector';
+import wTourUtils from '@website/js/tours/tour_utils';
+
+wTourUtils.registerWebsitePreviewTour(
+    "snippet_background_video",
+    {
+        test: true,
+        url: "/",
+        edition: true,
+    }, () => [
+        {
+            trigger: "body",
+            run: function () {
+                // Patch the VideoDialog so that it does not do external calls
+                // during the test (note that we don't unpatch but as the patch
+                // is only done after the execution of a test_website test, it
+                // is acceptable).
+                // TODO we should investigate to rather mock the external calls,
+                // maybe not using a tour. Probably easier to discuss when the
+                // new OWL editor will have been implemented.
+                patch(VideoSelector.prototype, {
+                    async prepareVimeoPreviews() {
+                        // Ignore the super call and directly push a fake video
+                        this.state.vimeoPreviews.push({
+                            id: 1,
+                            // Those lead to 404 but it's fine for the test
+                            thumbnailSrc: "/hello/world.jpg",
+                            src: "/hello/world.mp4",
+                        });
+                    },
+                    async _getVideoURLData(src, options) {
+                        if (src === '/hello/world.mp4') {
+                            return {
+                                'platform': 'vimeo',
+                                'embed_url': 'about:blank',
+                            };
+                        }
+                        return super._getVideoURLData(...arguments);
+                    },
+                });
+            },
+        },
+        wTourUtils.dragNDrop({
+            id: "s_text_block",
+            name: "Text",
+        }),
+        {
+            content: "Click on the text block.",
+            trigger: "iframe #wrap section.s_text_block",
+        },
+        {
+            content: "Click on the 'Background Video' button option.",
+            trigger: "we-button[data-name='bg_video_toggler_opt']",
+        },
+        {
+            content: "Click on the first sample video in the modal.",
+            trigger: "#video-suggestion .o_sample_video",
+        },
+        {
+            content: "Check the video is select.",
+            trigger: "textarea.is-valid",
+            isCheck: true,
+        },
+        {
+            content: "Click on the 'Add' button to apply the selected video as the background.",
+            trigger: ".modal-footer button.btn-primary",
+        },
+        {
+            content: "Verify that the video is set as the background of the snippet.",
+            trigger: "iframe #wrap section.o_background_video",
+            isCheck: true,
+        },
+    ]
+);

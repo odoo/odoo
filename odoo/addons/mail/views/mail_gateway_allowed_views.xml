@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mail_gateway_allowed_view_tree" model="ir.ui.view">
+        <field name="name">mail.gateway.allowed.view.tree</field>
+        <field name="model">mail.gateway.allowed</field>
+        <field name="arch" type="xml">
+            <tree string="Mail Gateway Allowed" editable="top">
+                <field name="email"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mail_gateway_allowed_view_search" model="ir.ui.view">
+        <field name="name">mail.gateway.allowed.view.search</field>
+        <field name="model">mail.gateway.allowed</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="email"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="mail_gateway_allowed_action" model="ir.actions.act_window">
+        <field name="name">Mail Gateway Allowed</field>
+        <field name="res_model">mail.gateway.allowed</field>
+        <field name="view_mode">tree</field>
+    </record>
+</odoo>

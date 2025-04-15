@@ -1,0 +1,18 @@
+.self_order_language_selector {
+    z-index: 100;
+
+    img {
+        height: 2em;
+        aspect-ratio: 3/2;
+    }
+}
+
+.o_pos_landing_footer {
+    @include o-so-portrait() {
+        flex-direction: column;
+    }
+
+    .gap-3 {
+        flex-direction: inherit;
+    }
+}

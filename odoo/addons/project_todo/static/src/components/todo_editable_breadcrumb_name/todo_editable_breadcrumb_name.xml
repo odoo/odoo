@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project_todo.TodoEditableBreadcrumbName" t-inherit="web.CharField" t-inherit-mode="primary">
+        <xpath expr="//input[hasclass('o_input')]" position="attributes">
+            <attribute name="class">o_input o_todo_breadcrumb_name_input</attribute>
+            <attribute name="t-on-focus">_onFocus</attribute>
+            <attribute name="t-att-placeholder">placeholder</attribute>
+            <attribute name="t-on-input">_onInput</attribute>
+            <attribute name="t-att-class">stateTodo.isUntitled ? 'o-todo-untitled' : ''</attribute>
+        </xpath>
+    </t>
+
+</templates>

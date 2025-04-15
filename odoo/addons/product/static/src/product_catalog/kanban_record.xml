@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ProductCatalogKanbanRecord">
+        <div role="article"
+             t-att-class="getRecordClasses()"
+             t-att-data-id="props.record.id"
+             t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
+             t-on-click="onGlobalClick"
+             t-ref="root">
+            <div class="d-flex flex-column h-100"
+                 t-att-class="{'o_product_added': productCatalogData.quantity}">
+                <t t-call="{{ templates[this.constructor.KANBAN_BOX_ATTRIBUTE] }}"
+                   t-call-context="this.renderingContext"/>
+                <t t-component="orderLineComponent" productId="props.record.resId" t-props="productCatalogData"/>
+            </div>
+            <t t-call="{{ this.constructor.menuTemplate }}"/>
+        </div>
+    </t>
+</templates>

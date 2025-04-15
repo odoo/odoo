@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_attendance_overtime_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.tree</field>
+        <field name="model">hr.attendance.overtime</field>
+        <field name="arch" type="xml">
+            <tree edit="0" create="0">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="duration" widget="float_time"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_attendance_overtime_search" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.search</field>
+        <field name="model">hr.attendance.overtime</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="duration" filter_domain="[('duration', '>=', self)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_action" model="ir.actions.act_window">
+        <field name="name">Extra Hours</field>
+        <field name="res_model">hr.attendance.overtime</field>
+        <field name="view_mode">tree</field>
+    </record>
+</odoo>

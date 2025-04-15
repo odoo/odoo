@@ -1,0 +1,65 @@
+/* Fix header height */
+div .header > div[class$="_header"] {
+    overflow: hidden !important;
+    max-height: 150px;
+}
+
+/*Modifications for the Standard and Boxed document layouts */
+.article.o_report_layout_standard, .article.o_report_layout_boxed {
+    > .pt-5 {
+        padding-top: 0 !important;
+    }
+}
+
+/* Modifications for all layouts */
+div .address.row {
+    height: 56mm;
+    max-height: 56mm;
+    > div[name="address"] {
+        font-size: 95%;
+        background-color: #fff;
+        padding-top: 25mm;
+        padding-left: 4mm;
+        margin-bottom: 2mm;
+        margin-left: 56% !important;
+        width: 45.5%;
+        height: 56mm;
+        max-height: 56mm;
+        // Hide VAT number line
+        > span:not(:first-child) {
+            display: none;
+        }
+
+        > address {
+            // Moving anything under the address (eg Tax ID) further down to
+            // avoid breaking Pingen validation.
+            margin-bottom: 12mm !important;
+        }
+    }
+}
+
+/* Follow-up Letters */
+div .row.fallback_header {
+    height: 56mm;
+    max-height: 56mm;
+    > div.col-5.offset-7 {
+        font-size: 95%;
+        background-color: #fff;
+        padding-top: 25mm;
+        padding-left: 4mm;
+        margin-bottom: 2mm;
+        margin-left: 56%;
+        width: 45.5%;
+        height: 56mm;
+        max-height: 56mm;
+        // Hide VAT number line
+        > span:not(:first-child) {
+            display: none;
+        }
+
+        div[itemscope="itemscope"] > div:first-child {
+            // Same as above move anything under the address further down
+            margin-bottom: 12mm;
+        }
+    }
+}

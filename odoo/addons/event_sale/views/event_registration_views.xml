@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="view_event_registration_ticket_tree" model="ir.ui.view">
+        <field name="name">event.registration.tree.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree" />
+        <field name="arch" type="xml">
+            <field name="event_id" position="after">
+                <field name="sale_order_id" optional="hide"/>
+            </field>
+            <field name="state" position="after">
+                <field name="sale_status" optional="show" widget="badge"
+                    decoration-success="sale_status == 'sold'"
+                    decoration-danger="sale_status == 'to_pay'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_registration_view_kanban" model="ir.ui.view">
+        <field name="name">event.registration.kanban.inherit.event.sale</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.event_registration_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='event_attendees_kanban_icons_desktop']" position="inside">
+                <div class="mt-auto pt-2">
+                    <field name="sale_status"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='event_ticket_id']" position="before">
+                <div class="d-md-none" >
+                    <field name="sale_status"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_registration_view_graph" model="ir.ui.view">
+        <field name="name">event.registration.graph.inherit.event.sale</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_graph"/>
+        <field name="arch" type="xml">
+            <field name="event_id" position="after">
+                <field name="sale_status"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_registration_ticket_view_form" model="ir.ui.view">
+        <field name="name">event.registration.form.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_sale_order" type="object"
+                        class="oe_stat_button" icon="fa-usd"
+                        groups="sales_team.group_sale_salesman"
+                        invisible="not sale_order_id">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Sale Order</span>
+                        </div>
+                </button>
+                <field name="sale_order_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//group" position="before">
+                <field name="sale_status" invisible="1"/>
+                <widget name="web_ribbon" title="Sold" bg_color="text-bg-success"
+                    invisible="sale_status != 'sold'"/>
+                <widget name="web_ribbon" title="Not Sold" bg_color="text-bg-danger"
+                    invisible="sale_status in ('sold', 'free') or not id"/>
+            </xpath>
+            <group name="utm_link" position="before">
+                <group string="Transaction" groups="base.group_no_one">
+                    <field name="sale_order_id"/>
+                    <field name="sale_order_line_id" readonly="1" invisible="not sale_order_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</data></odoo>

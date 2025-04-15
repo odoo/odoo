@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="discuss.ChannelSelector">
+    <div class="o-discuss-ChannelSelector d-flex flex-wrap form-control rounded p-1" t-att-class="props.class" t-ref="root">
+        <TagsList t-if="props.multiple" tags="tagsList"/>
+        <input
+            class="text-truncate form-control flex-grow-1 border-0 px-2 py-0"
+            t-att-placeholder="inputPlaceholder"
+            t-model="state.value"
+            t-ref="input"
+            t-on-click="(ev) => markEventHandled(ev, 'channelSelector.onClickInput')"
+            t-on-keydown="onKeydownInput"
+            type="text"
+            maxlength="100"
+        />
+    </div>
+    <NavigableList class="'o-discuss-ChannelSelector-list z-index-1'" t-props="state.navigableListProps"/>
+</t>
+
+<t t-name="discuss.ChannelSelector.channel">
+    <strong class="px-2 py-1 align-self-center flex-shrink-1 text-break">
+        <t t-if="option.channelId === '__create__'">
+            Create: #
+        </t>
+        <t t-esc="option.label"/>
+    </strong>
+</t>
+
+<t t-name="discuss.ChannelSelector.chat">
+    <ImStatus t-if="option.partner" persona="option.partner"/>
+    <strong class="px-2 py-1 align-self-center text-truncate">
+        <t t-esc="option.label"/>
+    </strong>
+</t>
+
+</templates>

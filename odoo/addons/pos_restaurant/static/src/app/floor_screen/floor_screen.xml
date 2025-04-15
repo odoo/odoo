@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.FloorScreen">
+        <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-100 text-start overflow-hidden">
+            <EditBar t-if="pos.isEditMode" selectedTables="selectedTables" nbrFloors="nbrFloors"
+                        floorMapScrollTop="state.floorMapScrollTop" isColorPicker="state.isColorPicker" toggleColorPicker.bind="toggleColorPicker"
+                        createTable.bind="createTable" duplicateTableOrFloor.bind="duplicateTableOrFloor" renameTable.bind="renameTable"
+                        changeSeatsNum.bind="changeSeatsNum" changeToCircle.bind="changeToCircle" changeToSquare.bind="changeToSquare"
+                        setTableColor.bind="setTableColor" setFloorColor.bind="setFloorColor" deleteFloorOrTable.bind="deleteFloorOrTable"
+                        toggleEditMode.bind="toggleEditMode"
+            />
+            <div class="floor-selector d-flex text-center bg-100 fs-3 w-100 h-54">
+                <t t-foreach="pos.floors" t-as="floor" t-key="floor.id">
+                    <button class="button button-floor btn p-3 rounded-0 flex-fill border-start shadow-none d-flex align-items-center justify-content-center" t-attf-class="{{ floor.id === state.selectedFloorId ? 'btn-primary border-start-0' : 'btn-light' }}" t-on-click="() => this.selectFloor(floor)">
+                        <t t-esc="floor.name" />
+                        <span t-if="activeFloor.id !== floor.id and floor.changes_count > 0" class="mx-1 badge bg-danger text-white rounded-pill py-1 px-2 fs-5" t-esc="floor.changes_count"/>
+                    </button>
+                </t>
+                <button class="button button-add btn btn-secondary p-3 ms-auto rounded-0" t-ref="add-floor-ref" t-on-click="addFloor">
+                    <i class="fa fa-plus icon-button me-2" role="img" aria-label="Add" title="Add"></i>
+                    Add Floor
+                </button>
+            </div>
+
+            <div
+                t-on-click="_onDeselectTable"
+                t-on-touchstart="_onPinchStart"
+                t-on-touchmove="_onPinchMove"
+                t-on-touchend="_onPinchEnd"
+                class="floor-map position-relative flex-grow-1 flex-shrink-1 flex-basis-0 w-auto h-100 overflow-auto"
+                t-ref="floor-map-ref"
+            >
+                <t t-if="pos.floors.length > 0">
+                    <div t-if="isFloorEmpty" class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">
+                        <span>Oops! No tables available.<br/>Add a new table to get started.</span>
+                    </div>
+                    <div t-else="" t-ref="map">
+                        <t t-foreach="activeTables" t-as="table" t-key="table.id">
+                            <Table t-if="!state.selectedTableIds.includes(table.id)" onClick.bind="onSelectTable" table="table" />
+                            <EditableTable t-else="" table="table" selectedTables="selectedTables" onSaveTable.bind="onSaveTable" limit="floorMapRef" />
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">
+                        <span>Oops! No floors available.<br/>Add a new floor to get started.</span>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
