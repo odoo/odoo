@@ -10,7 +10,7 @@ from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_ACTION, PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from ...tools import jwt, discuss
 
 _logger = logging.getLogger(__name__)
@@ -60,13 +60,13 @@ class DiscussChannelMember(models.Model):
     @api.autovacuum
     def _gc_unpin_outdated_sub_channels(self):
         outdated_dt = fields.Datetime.now() - timedelta(days=2)
-        domain = expression.AND(
+        domain = Domain.AND(
             [
                 [
                     ("channel_id.parent_channel_id", "!=", False),
                     ("last_interest_dt", "<", outdated_dt),
                 ],
-                expression.OR(
+                Domain.OR(
                     [
                         [("channel_id.last_interest_dt", "=", False)],
                         [("channel_id.last_interest_dt", "<", outdated_dt)],
@@ -103,16 +103,14 @@ class DiscussChannelMember(models.Model):
         if operator != 'in':
             return NotImplemented
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        return [
-            '|',
-            ("partner_id", "=", current_partner.id) if current_partner else expression.FALSE_LEAF,
-            ("guest_id", "=", current_guest.id) if current_guest else expression.FALSE_LEAF,
-        ]
+        domain_partner = Domain("partner_id", "=", current_partner.id) if current_partner else Domain.FALSE
+        domain_guest = Domain("guest_id", "=", current_guest.id) if current_guest else Domain.FALSE
+        return domain_partner | domain_guest
 
     def _search_is_pinned(self, operator, operand):
         if operator != 'in':
             return NotImplemented
-        return expression.OR([
+        return Domain.OR([
             [("unpin_dt", "=", False)],
             [("last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
             [("channel_id.last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
@@ -219,7 +217,7 @@ class DiscussChannelMember(models.Model):
             ]
             for member in self
         ]
-        for member in self.env["discuss.channel.member"].search(expression.OR(domains)):
+        for member in self.env["discuss.channel.member"].search(Domain.OR(domains)):
             member.channel_id._action_unfollow(partner=member.partner_id, guest=member.guest_id)
         return super().unlink()
 
@@ -414,13 +412,13 @@ class DiscussChannelMember(models.Model):
         :param list member_ids: List of the partner ids to invite.
         """
         self.ensure_one()
-        domain = [
+        domain = Domain([
             ('channel_id', '=', self.channel_id.id),
             ('rtc_inviting_session_id', '=', False),
             ('rtc_session_ids', '=', False),
-        ]
+        ])
         if member_ids:
-            domain = expression.AND([domain, [('id', 'in', member_ids)]])
+            domain &= Domain('id', 'in', member_ids)
         return domain
 
     def _rtc_invite_members(self, member_ids=None):

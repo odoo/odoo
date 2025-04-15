@@ -3,7 +3,7 @@
 import re
 
 from odoo import _, api, fields, models, tools
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
@@ -172,7 +172,7 @@ class ResPartner(models.Model):
                 domains.append([('email_normalized', 'in', list(emails_normalized))])
             if names:
                 domains.append([('email', 'in', list(names))])
-            partners += self.search(expression.OR(domains), order='id ASC')
+            partners += self.search(Domain.OR(domains), order='id ASC')
             if filter_found:
                 partners = partners.filtered(filter_found)
 
@@ -296,24 +296,19 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_mention_suggestions_domain(self, search):
-        return expression.AND([
-            expression.OR([
-                [('name', 'ilike', search)],
-                [('email', 'ilike', search)],
-            ]),
-            [('active', '=', True)],
-        ])
+        return (Domain('name', 'ilike', search) | Domain('email', 'ilike', search)) & Domain('active', '=', True)
 
     @api.model
     def _search_mention_suggestions(self, domain, limit, extra_domain=None):
-        domain_is_user = expression.AND([[('user_ids', '!=', False)], [('user_ids.active', '=', True)], domain])
+        domain = Domain(domain)
+        domain_is_user = Domain('user_ids', '!=', False) & Domain('user_ids.active', '=', True) & domain
         priority_conditions = [
-            expression.AND([domain_is_user, [('partner_share', '=', False)]]),  # Search partners that are internal users
+            domain_is_user & Domain('partner_share', '=', False),  # Search partners that are internal users
             domain_is_user,  # Search partners that are users
             domain,  # Search partners that are not users
         ]
         if extra_domain:
-            priority_conditions.append(extra_domain)
+            priority_conditions.append(Domain(extra_domain))
         partners = self.env['res.partner']
         for domain in priority_conditions:
             remaining_limit = limit - len(partners)
@@ -322,7 +317,7 @@ class ResPartner(models.Model):
             # We are using _search to avoid the default order that is
             # automatically added by the search method. "Order by" makes the query
             # really slow.
-            query = self._search(expression.AND([[('id', 'not in', partners.ids)], domain]), limit=remaining_limit)
+            query = self._search(Domain('id', 'not in', partners.ids) & domain, limit=remaining_limit)
             partners |= self.browse(query)
         return partners
 

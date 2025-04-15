@@ -9,7 +9,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools.discuss import Store
@@ -288,7 +288,7 @@ class MailMessage(models.Model):
 
         # Non-employee see only messages with a subtype and not internal
         if not self.env.user._is_internal():
-            domain = self._get_search_domain_share() + domain
+            domain = self._get_search_domain_share() & Domain(domain)
 
         # make the search query with the default rules
         query = super()._search(domain, offset, limit, order)
@@ -344,7 +344,7 @@ class MailMessage(models.Model):
         return allowed._as_query(order)
 
     def _get_search_domain_share(self):
-        return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
+        return Domain(['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)])
 
     @api.model
     def _find_allowed_model_wise(self, doc_model, doc_dict):
@@ -848,26 +848,27 @@ class MailMessage(models.Model):
     @api.model
     def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
         res = {}
+        domain = Domain(domain)
         if search_term:
             # we replace every space by a % to avoid hard spacing matching
             search_term = search_term.replace(" ", "%")
-            domain = expression.AND([domain, expression.OR([
+            domain &= Domain.OR([
                 # sudo: access to attachment is allowed if you have access to the parent model
                 [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
                 [("body", "ilike", search_term)],
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
-            ])])
-            domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
+            ])
+            domain &= Domain("message_type", "not in", ["user_notification", "notification"])
             res["count"] = self.search_count(domain)
         if around is not None:
-            messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
-            messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
+            messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
+            messages_after = self.search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')
             return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
         if before:
-            domain = expression.AND([domain, [('id', '<', before)]])
+            domain &= Domain('id', '<', before)
         if after:
-            domain = expression.AND([domain, [('id', '>', after)]])
+            domain &= Domain('id', '>', after)
         res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
         if after:
             res["messages"] = res["messages"].sorted('id', reverse=True)
@@ -1023,11 +1024,11 @@ class MailMessage(models.Model):
         current_partner = self.env.user.partner_id
         if for_current_user and add_followers and non_channel_records:
             if followers is None:
-                domain = expression.OR(
+                domain = Domain.OR(
                     [("res_model", "=", model), ("res_id", "in", [r.id for r in records])]
                     for model, records in groupby(non_channel_records, key=lambda r: r._name)
                 )
-                domain = expression.AND([domain, [("partner_id", "=", current_partner.id)]])
+                domain &= Domain("partner_id", "=", current_partner.id)
                 # sudo: mail.followers - reading followers of current partner
                 followers = self.env["mail.followers"].sudo().search(domain)
             follower_by_record_and_partner = {

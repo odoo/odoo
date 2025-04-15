@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -7,9 +6,9 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.tools import html2plaintext
 from odoo.tools.misc import format_date
-from odoo.osv import expression
 _logger = logging.getLogger(__name__)
 
 
@@ -431,7 +430,7 @@ class MailActivitySchedule(models.TransientModel):
 
     def _get_plan_available_base_domain(self):
         self.ensure_one()
-        return expression.AND([
+        return Domain.AND([
             ['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)],
             ['|', ('res_model', '=', False), ('res_model', '=', self.res_model)],
             [('template_ids', '!=', False)],  # exclude plan without activities

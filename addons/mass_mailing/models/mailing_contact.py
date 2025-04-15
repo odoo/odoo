@@ -3,7 +3,7 @@
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class MailingContact(models.Model):
@@ -70,7 +70,7 @@ class MailingContact(models.Model):
                 ('opt_out', '=', True),
             ])
             return [('id', 'in', subscriptions.subselect('contact_id'))]
-        return expression.FALSE_DOMAIN
+        return Domain.FALSE
 
     @api.depends('first_name', 'last_name')
     def _compute_name(self):

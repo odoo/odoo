@@ -2,13 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import itertools
 import logging
 from ast import literal_eval
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError, UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import is_html_empty
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -146,17 +145,18 @@ class MailTemplate(models.Model):
             ('module', '!=', '__export__')
         ]).subselect('res_id')
 
-        domain = []
+        domain = Domain.FALSE
+
         if 'hidden_template' in value:
-            domain.append(['|', ('active', '=', False), '&', ('description', '=', False), ('id', 'in', templates_with_xmlid)])
+            domain |= Domain(['|', ('active', '=', False), '&', ('description', '=', False), ('id', 'in', templates_with_xmlid)])
 
         if 'base_template' in value:
-            domain.append(['&', ('description', '!=', False), ('id', 'in', templates_with_xmlid)])
+            domain |= Domain([('active', '=', True), ('description', '!=', False), ('id', 'in', templates_with_xmlid)])
 
         if 'custom_template' in value:
-            domain.append([('template_category', 'not in', ['base_template', 'hidden_template'])])
+            domain |= Domain([('active', '=', True), ('template_category', 'not in', ['base_template', 'hidden_template'])])
 
-        return expression.OR(domain)
+        return domain
 
     @api.onchange("model")
     def _onchange_model(self):
