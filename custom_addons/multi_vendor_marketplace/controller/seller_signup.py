@@ -47,6 +47,25 @@ class SellerSignup(AuthSignupHome):
         return request.render('multi_vendor_marketplace.custom_user_profile', {
             'user': user,
         })
+    
+    @http.route('/profile/edit', type='http', auth='user', website=True)
+    def edit_user_profile(self, **kwargs):
+        """Render the Edit User Profile page"""
+        user = request.env.user
+        return request.render('multi_vendor_marketplace.edit_user_profile', {
+            'user': user,
+        })
+    
+    @http.route('/profile/save', type='http', auth='user', methods=['POST'], csrf=True)
+    def save_profile(self, **post):
+        """Save the updated user profile"""
+        user = request.env.user
+        user.sudo().write({
+            'name': post.get('name'),
+            'email': post.get('email'),
+            'phone': post.get('phone'),
+        })
+        return request.redirect('/profile')
 
     @http.route(['/seller/list'], type="http", auth="public",
                 website="True")

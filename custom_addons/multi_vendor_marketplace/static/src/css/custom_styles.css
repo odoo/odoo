@@ -24,10 +24,27 @@
 }
 
 .btn-warning {
-    background-color: #FFA500;
-    color: white;
-    font-weight: bold;
-    border-radius: 5px;
-    padding: 10px 20px;
-    text-transform: uppercase;
+    background-color: #f08106; /* Оранжевый фон */
+    color: white; /* Белый текст */
+    font-weight: bold; /* Жирный текст */
+    border-radius: 15px; /* Скругленные углы */
+    padding: 15px 30px; /* Внутренние отступы */
+    text-transform: uppercase; /* Заглавные буквы */
+    width: 100%; /* Кнопка занимает всю ширину колонки */
+    margin-bottom: 15px; /* Отступ между кнопками */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    transition: transform 0.2s ease, background-color 0.3s ease; /* Анимация */
+}
+
+.btn-warning:hover {
+    background-color: #e6740c; /* Более темный оранжевый при наведении */
+    transform: scale(1.05); /* Легкое увеличение */
+    color: white; /* Белый текст */
+}
+
+.btn-warning:active,
+.btn-warning:focus {
+    background-color: #e6740c; /* Возвращаем цвет при нажатии или фокусе */
+    outline: none; /* Убираем обводку фокуса */
+    color: white; /* Белый текст */
 }

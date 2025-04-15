@@ -21,3 +21,4 @@
 #############################################################################
 from . import seller_dashboard
 from . import seller_signup
+from . import main
