@@ -7,7 +7,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.image import is_image_size_above
 
 _logger = logging.getLogger(__name__)
@@ -578,8 +578,11 @@ class ProductTemplate(models.Model):
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
         if self.env.context.get('search_product_product', bool(value)):
-            combine = expression.OR if operator not in expression.NEGATIVE_TERM_OPERATORS else expression.AND
-            domain = combine([domain, [('product_variant_ids', operator, value)]])
+            variant_domain = Domain('product_variant_ids', operator, value)
+            if Domain.is_negative_operator(operator):
+                domain &= variant_domain
+            else:
+                domain |= variant_domain
         return domain
 
     @api.model

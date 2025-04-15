@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class ProductTag(models.Model):
@@ -58,6 +57,6 @@ class ProductTag(models.Model):
         return [dict(vals, name=self.env._("%s (copy)", tag.name)) for tag, vals in zip(self, vals_list)]
 
     def _search_product_ids(self, operator, operand):
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
+        if Domain.is_negative_operator(operator):
             return NotImplemented
         return ['|', ('product_template_ids.product_variant_ids', operator, operand), ('product_product_ids', operator, operand)]
