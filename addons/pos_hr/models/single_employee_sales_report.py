@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
-from odoo.osv.expression import AND
+from odoo.fields import Domain
 
 
 class ReportPos_HrSingle_Employee_Sales_Report(models.AbstractModel):
@@ -12,7 +12,7 @@ class ReportPos_HrSingle_Employee_Sales_Report(models.AbstractModel):
         domain = super()._get_domain(config_ids=config_ids, session_ids=session_ids)
 
         if (employee_id):
-            domain = AND([domain, [('employee_id', '=', employee_id)]])
+            domain = Domain.AND([domain, [('employee_id', '=', employee_id)]])
 
         return domain
 

@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
-from typing import List, Dict
-from odoo import api, models, fields
-from odoo.osv.expression import AND
+
+from odoo import api, fields, models
+from odoo.fields import Domain
 
 
 class ProductTemplate(models.Model):
@@ -64,7 +64,7 @@ class ProductTemplate(models.Model):
     @api.model
     def _load_pos_self_data_domain(self, data):
         domain = super()._load_pos_self_data_domain(data)
-        return AND([domain, [('self_order_available', '=', True)]])
+        return Domain.AND([domain, [('self_order_available', '=', True)]])
 
     @api.onchange('available_in_pos')
     def _on_change_available_in_pos(self):
@@ -101,7 +101,7 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    def _filter_applicable_attributes(self, attributes_by_ptal_id: Dict) -> List[Dict]:
+    def _filter_applicable_attributes(self, attributes_by_ptal_id: dict) -> list[dict]:
         """
         The attributes_by_ptal_id is a dictionary that contains all the attributes that have
         [('create_variant', '=', 'no_variant')]

@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 
 from odoo import models, api, fields
-from odoo.fields import Datetime as FieldDateTime
+from odoo.fields import Datetime as FieldDateTime, Domain
 from dateutil.relativedelta import relativedelta
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
-from odoo.osv.expression import AND
 
 
 class AccountSaleClosing(models.Model):
@@ -88,12 +86,12 @@ class AccountSaleClosing(models.Model):
             date_start = previous_closing.create_date
             cumulative_total += previous_closing.cumulative_total
 
-        domain = [('company_id', '=', company.id), ('state', 'in', ('paid', 'done'))]
+        domain = Domain('company_id', '=', company.id) | Domain('state', 'in', ('paid', 'done'))
         if first_order.l10n_fr_secure_sequence_number is not False and first_order.l10n_fr_secure_sequence_number is not None:
-            domain = AND([domain, [('l10n_fr_secure_sequence_number', '>', first_order.l10n_fr_secure_sequence_number)]])
+            domain &= Domain('l10n_fr_secure_sequence_number', '>', first_order.l10n_fr_secure_sequence_number)
         elif date_start:
-            #the first time we compute the closing, we consider only from the installation of the module
-            domain = AND([domain, [('date_order', '>=', date_start)]])
+            # the first time we compute the closing, we consider only from the installation of the module
+            domain &= Domain('date_order', '>=', date_start)
 
         orders = self.env['pos.order'].search(domain, order='date_order desc')
 
