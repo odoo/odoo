@@ -44,27 +44,28 @@ class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
 
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
-                'product_id': self.product_a.id,
-                'product_uom_qty': 10,
-                'price_unit': 10,
-                'tax_ids': intracom_tax,
-            })],
-        })
+        sale_orders = self.env['sale.order'].sudo().create([
+            {
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10,
+                    'price_unit': 10,
+                    'tax_ids': intracom_tax,
+                })],
+            },
+            {
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 20,
+                    'price_unit': 20,
+                    'tax_ids': False,
+                })],
+            }
+        ])
 
-        sale_order.action_confirm()
-        sale_order2 = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
-                'product_id': self.product_a.id,
-                'product_uom_qty': 20,
-                'price_unit': 20,
-                'tax_ids': False,
-            })],
-        })
-        sale_order2.action_confirm()
+        sale_orders.action_confirm()
         self.main_pos_config.open_ui()
         self.start_pos_tour('PosSettleOrderIsInvoice', login="accountman")
 
@@ -108,7 +109,7 @@ class TestPoSSaleL10NBeNormalCompany(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
 
-        self.env['sale.order'].create({
+        self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
                 'product_id': self.product_a.id,

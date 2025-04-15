@@ -153,7 +153,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'advance_payment_method': 'percentage',
             'amount': 5.0,
         })
-        act = adv_wiz.with_context(open_invoices=True).create_invoices()
+        act = adv_wiz.create_invoices()
         inv = self.env['account.move'].browse(act['res_id'])
         self.assertEqual(inv.amount_untaxed, self.so.amount_untaxed * 5.0 / 100.0, 'Sale Stock: deposit invoice is wrong')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so should be to invoice after invoicing deposit')
@@ -236,7 +236,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'delivered',
         })
-        adv_wiz.with_context(open_invoices=True).create_invoices()
+        adv_wiz.create_invoices()
         self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
         self.assertAlmostEqual(self.inv_2.invoice_line_ids.sorted()[0].quantity, 2.0, msg='Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids.sorted()[0].quantity)
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" instead of "%s" after invoicing the return' % self.so.invoice_status)
@@ -1388,7 +1388,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'amount': 5.0,
         })
 
-        act = adv_wiz.with_context(open_invoices=True).create_invoices()
+        act = adv_wiz.create_invoices()
         invoice = self.env['account.move'].browse(act['res_id'])
 
         self.assertEqual(invoice.invoice_incoterm_id.id, incoterm.id)

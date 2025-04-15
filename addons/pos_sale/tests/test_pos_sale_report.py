@@ -95,7 +95,7 @@ class TestPoSSaleReport(TestPoSCommon):
 
     def test_different_shipping_address(self):
         product_0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.customer.id,
             'partner_shipping_id': self.other_customer.id,
             'order_line': [(0, 0, {

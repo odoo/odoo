@@ -45,7 +45,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         })
 
         # Create a receipt picking from the subcontractor
-        so_form = Form(self.env['sale.order'])
+        so_form = Form(self.env['sale.order'].sudo())
         so_form.partner_id = partner
         so_form.warehouse_id = warehouse
         with so_form.order_line.new() as line:
