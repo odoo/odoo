@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode, url_join
-
 from odoo import fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class SaleOrder(models.Model):
@@ -64,4 +62,4 @@ class SaleOrder(models.Model):
         :rtype: list
         """
         domain = super()._get_product_catalog_domain()
-        return expression.AND([domain, [('service_tracking', '!=', 'event')]])
+        return Domain.AND([domain, [('service_tracking', '!=', 'event')]])

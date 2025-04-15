@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class SmsTemplate(models.Model):
@@ -18,7 +17,7 @@ class SmsTemplate(models.Model):
         method to filtrate the SMS templates.
         """
         if self.env.context.get('filter_template_on_event'):
-            domain = expression.AND([[('model', '=', 'event.registration')], domain])
+            domain = Domain('model', '=', 'event.registration') & Domain(domain)
         return super()._search(domain, *args, **kwargs)
 
     def unlink(self):
