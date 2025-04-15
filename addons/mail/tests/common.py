@@ -1922,7 +1922,7 @@ class MailCommon(MailCase):
                 data.pop("livechat_channel_id", None)
                 data.pop("operator", None)
             if "whatsapp.message" not in self.env:
-                data.pop("whatsapp_account_name", None)
+                data.pop("wa_account_id", None)
                 data.pop("whatsapp_channel_valid_until", None)
                 data.pop("whatsapp_partner_id", None)
         return list(channels_data)
