@@ -28,6 +28,7 @@ class HrResumeLine(models.Model):
         default='external',
         required=True
     )
+    color = fields.Char(compute='_compute_color', default='#000000')
     external_url = fields.Char(string="External URL", compute='_compute_external_url', store=True, readonly=False)
     certificate_filename = fields.Char()
     certificate_file = fields.Binary(string="Certificate")
@@ -53,3 +54,9 @@ class HrResumeLine(models.Model):
         for resume_line in self:
             if resume_line.course_type != 'external':
                 resume_line.external_url = ''
+
+    @api.depends('course_type')
+    def _compute_color(self):
+        for resume_line in self:
+            if resume_line.course_type == 'external':
+                resume_line.color = '#a2a2a2'
