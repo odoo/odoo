@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class SaleOrder(models.Model):
@@ -24,12 +24,12 @@ class SaleOrder(models.Model):
             and self.env.user.has_group('sales_team.group_sale_salesman')
             and not self.env.user.has_group('sales_team.group_sale_salesman_all_leads')
         ):
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
+            if Domain.is_negative_operator(operator):
                 return NotImplemented
             domain = super()._search_display_name(operator, value)
-            company_domain = ['&', ('state', '=', 'sale'), ('company_id', 'in', self.env.companies.ids)]
-            query = self.sudo()._search(expression.AND([domain, company_domain]))
-            return [('id', 'in', query)]
+            company_domain = Domain('state', '=', 'sale') & ('company_id', 'in', self.env.companies.ids)
+            query = self.sudo()._search(domain & company_domain)
+            return Domain('id', 'in', query)
         return super()._search_display_name(operator, value)
 
     @api.depends('expense_ids')

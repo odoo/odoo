@@ -3,7 +3,7 @@
 from odoo.exceptions import UserError, ValidationError
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.misc import unquote
 
 TIMESHEET_INVOICE_TYPES = [
@@ -23,7 +23,7 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     def _domain_so_line(self):
-        domain = expression.AND([
+        domain = Domain.AND([
             self.env['sale.order.line']._sellable_lines_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [
@@ -141,7 +141,7 @@ class AccountAnalyticLine(models.Model):
             thus there is no meaning of showing invoice with ordered quantity.
         """
         domain = super()._timesheet_get_portal_domain()
-        return expression.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable', 'billable_fixed', 'billable_manual', 'billable_milestones'])]])
+        return Domain.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable', 'billable_fixed', 'billable_manual', 'billable_milestones'])]])
 
     @api.model
     def _timesheet_get_sale_domain(self, order_lines_ids, invoice_ids):
