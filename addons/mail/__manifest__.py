@@ -224,6 +224,7 @@ For more specific needs, you may also assign custom-defined actions
             ('include', 'web._assets_bootstrap_backend'),
             'web/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/src/scss/animation.scss',
             'web/static/src/webclient/webclient.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
