@@ -12,7 +12,7 @@
                         <img class="rounded-3 o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
                         <FileUploader t-if="!thread.parent_channel_id and thread.is_editable and thread.channel_type !== 'chat'" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                             <t t-set-slot="toggler">
-                                <a href="#" class="position-absolute z-1 h-100 w-100 rounded start-0 bottom-0" title="Upload Avatar">
+                                <a href="#" class="position-absolute z-1 h-100 w-100 rounded-3 start-0 bottom-0" title="Upload Avatar">
                                     <i class="position-absolute top-50 start-50 fa fa-sm fa-pencil text-white"/>
                                 </a>
                             </t>
