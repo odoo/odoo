@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add("hr_skills_tour", {
         },
         {
             content: "Add a new Resume experience",
-            trigger: ".o_field_resume_one2many tr.o_resume_group_header button.btn-secondary",
+            trigger: ".o_field_resume_one2many button.btn-secondary",
             run: "click",
         },
         {
@@ -66,12 +66,7 @@ registry.category("web_tour.tours").add("hr_skills_tour", {
         },
         {
             content: "Change type",
-            trigger: ".modal:contains(new resume line) .o_field_widget[name='line_type_id'] input",
-            run: "edit Experience",
-        },
-        {
-            content: "Choose experience",
-            trigger: '.ui-autocomplete .ui-menu-item a:contains("Experience")',
+            trigger: ".modal:contains(new resume line) .o_field_widget[name='line_type_id'] .o_selection_badge:contains(Other Experience)",
             run: "click",
         },
         {
