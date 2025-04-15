@@ -331,6 +331,9 @@ class SaleOrderLine(models.Model):
         task.message_post(body=task_msg)
         return task
 
+    def _get_so_lines_create_on_order_nothing(self):
+        return self.filtered(lambda sol: sol.is_service and sol.service_tracking == 'no')
+
     def _get_so_lines_task_global_project(self):
         return self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking == 'task_global_project')
 
@@ -352,6 +355,7 @@ class SaleOrderLine(models.Model):
         )
         so_line_task_global_project = sale_order_lines._get_so_lines_task_global_project()
         so_line_new_project = sale_order_lines._get_so_lines_new_project()
+        so_line_no_project = self._get_so_lines_create_on_order_nothing()
         task_templates = self.env['project.task']
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can
@@ -440,6 +444,9 @@ class SaleOrderLine(models.Model):
                         order=so_line.order_id.name,
                         product_name=so_line.product_id.name,
                     ))
+        for so_line in so_line_no_project.sorted(lambda sol: (sol.sequence, sol.id)):
+            if so_line.order_id.project_id:
+                so_line._handle_milestones(so_line.order_id.project_id)
 
     def _handle_milestones(self, project):
         self.ensure_one()
