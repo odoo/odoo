@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import uuid
 from unittest.mock import patch
 
-from odoo import Command, fields
+from odoo import fields
+from odoo.fields import Command
 from odoo.tools import mute_logger
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePaymentCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
-from odoo.osv.expression import AND
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.exceptions import UserError
 

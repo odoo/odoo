@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
-from odoo import http, fields, _
+from odoo import http, fields
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import float_round
-from odoo.osv import expression
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
 from odoo.tools import consteq
+
 
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
@@ -157,10 +157,10 @@ class PosSelfOrderController(http.Controller):
         pos_order = pos_config.env['pos.order'].browse(order_id)
 
         if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
-            raise MissingError(_("Your order does not exist or has been removed"))
+            raise MissingError(self.env._("Your order does not exist or has been removed"))
 
         if pos_order.state != 'draft':
-            raise Unauthorized(_("You are not authorized to remove this order"))
+            raise Unauthorized(self.env._("You are not authorized to remove this order"))
 
         pos_order.remove_from_ui([pos_order.id])
 
@@ -169,22 +169,19 @@ class PosSelfOrderController(http.Controller):
         pos_config = self._verify_pos_config(access_token)
         session = pos_config.current_session_id
         table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
-        domain = False
 
         if not table_identifier:
-            domain = [(False, '=', True)]
+            domain = Domain.FALSE
         else:
-            domain = ['&', '&',
+            domain = Domain([
                 ('table_id', '=', table.id),
                 ('state', '=', 'draft'),
                 ('access_token', 'not in', [data.get('access_token') for data in order_access_tokens])
-            ]
+            ])
 
         for data in order_access_tokens:
-            domain = expression.OR([domain, ['&',
-                ('access_token', '=', data.get('access_token')),
-                ('write_date', '>', data.get('write_date'))
-            ]])
+            domain |= Domain('access_token', '=', data.get('access_token')) \
+                & Domain('write_date', '>', data.get('write_date'))
 
         orders = session.order_ids.filtered_domain(domain)
         if not orders:
