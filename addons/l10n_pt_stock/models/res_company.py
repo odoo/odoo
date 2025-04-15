@@ -1,4 +1,4 @@
-from odoo import fields, models, _, api
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 from odoo.tools.misc import format_date
@@ -23,30 +23,32 @@ class ResCompany(models.Model):
 
         results = []
 
-        picking_types = self.env['stock.picking.type'].search([
+        at_series_lines = self.env['l10n_pt.at.series.line'].search([
             ('company_id', '=', self.id),
-            ('code', '=', 'outgoing'),
-            ('l10n_pt_stock_at_series_id', '!=', False),
+            ('type', 'in', ('outgoing', 'internal', 'incoming')),
         ])
 
-        for picking_type in picking_types:
+        for at_series_line in at_series_lines:
             query = self.env['stock.picking'].sudo()._search(
                 domain=[
-                    ('picking_type_id', '=', picking_type.id),
+                    ('l10n_pt_at_series_id', '=', at_series_line.at_series_id.id),
+                    ('picking_type_code', '=', at_series_line.type),
                     ('l10n_pt_stock_inalterable_hash', '!=', False),
                 ],
                 order="name",
             )
+
             first_picking = self.env['stock.picking']
             last_picking = self.env['stock.picking']
             corrupted_picking = self.env['stock.picking']
+
             self.env.execute_query(SQL("DECLARE hashed_pickings CURSOR FOR %s", query.select()))
             while picking_ids := self.env.execute_query(SQL("FETCH %s FROM hashed_pickings", INTEGRITY_HASH_BATCH_SIZE)):
                 self.env.invalidate_all()
-                pickings = self.env['stock.picking'].browse(picking_id[0] for picking_id in picking_ids)
+                pickings = self.env['stock.picking'].browse([picking_id[0] for picking_id in picking_ids])
                 if not pickings and not last_picking:
                     results.append({
-                        'config_at_code': picking_type.l10n_pt_stock_at_series_id.code,
+                        'series_at_code': at_series_line.at_code,
                         'status': 'no_data',
                         'msg_cover': _('No delivery orders found for this configuration.'),
                     })
@@ -66,28 +68,30 @@ class ResCompany(models.Model):
             self.env.execute_query(SQL("CLOSE hashed_pickings"))
             if corrupted_picking:
                 results.append({
-                    'picking_type_prefix': picking_type.l10n_pt_stock_at_series_id.prefix,
-                    'picking_type_at_code': picking_type.l10n_pt_stock_at_series_id._get_at_code(),
+                    'series_document_identifier': at_series_line.document_identifier,
+                    'series_at_code': at_series_line._get_at_code(),
                     'status': 'corrupted',
                     'msg_cover': _(
                         "Corrupted data on delivery order with id %(id)s (%(name)s).",
                         id=corrupted_picking.id,
-                        name=corrupted_picking.name,
+                        name=corrupted_picking.l10n_pt_document_number,
                     ),
                 })
             else:
                 results.append({
-                    'picking_type_prefix': picking_type.l10n_pt_stock_at_series_id.prefix,
-                    'picking_type_at_code': picking_type.l10n_pt_stock_at_series_id._get_at_code(),
+                    'series_document_identifier': at_series_line.document_identifier,
+                    'series_at_code': at_series_line._get_at_code(),
                     'status': 'verified',
                     'msg_cover': _("Delivery orders are correctly hashed"),
                     'first_picking': first_picking,
                     'last_picking': last_picking,
                     'first_hash': first_picking.l10n_pt_stock_inalterable_hash,
                     'first_name': first_picking.name,
+                    'first_document_number': first_picking.l10n_pt_document_number,
                     'first_date': first_picking.date_done,
                     'last_hash': last_picking.l10n_pt_stock_inalterable_hash,
                     'last_name': last_picking.name,
+                    'last_document_number': last_picking.l10n_pt_document_number,
                     'last_date': last_picking.date_done,
                 })
 
@@ -98,5 +102,7 @@ class ResCompany(models.Model):
 
     def _verify_hashed_picking(self, picking, previous_hash, versioning_list, current_versioning_index):
         previous_hash = previous_hash.split("$")[2] if previous_hash else ""
-        message = pt_hash_utils.get_message_to_hash(picking.date_done, picking.l10n_pt_hashed_on, 0, picking._get_l10n_pt_stock_document_number(), previous_hash)
-        return pt_hash_utils.verify_integrity(message, picking.l10n_pt_stock_inalterable_hash, versioning_list[current_versioning_index])
+        message = pt_hash_utils.get_message_to_hash(picking.date_done, picking.l10n_pt_hashed_on,
+                                                    picking._get_l10n_pt_stock_document_number(), 0, previous_hash)
+        return pt_hash_utils.verify_integrity(message, picking.l10n_pt_stock_inalterable_hash,
+                                              versioning_list[current_versioning_index])
