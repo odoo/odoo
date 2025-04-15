@@ -1076,7 +1076,7 @@ class AccountPayment(models.Model):
     def action_cancel(self):
         self.state = 'canceled'
         draft_moves = self.move_id.filtered(lambda m: m.state == 'draft')
-        draft_moves.unlink()
+        draft_moves.with_context(force_delete=True).unlink()
         (self.move_id - draft_moves).button_cancel()
 
     def button_request_cancel(self):
