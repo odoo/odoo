@@ -14,11 +14,11 @@
                 t-call="l10n_es_edi_tbai.template_LROE_240_inner"/>
             <lrpjfecsgap:LROEPJ240FacturasEmitidasConSGAnulacionPeticion
                 xmlns:lrpjfecsgap="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AnulacionPeticion_V1_0_0.xsd"
-                t-elif="not is_emission and not is_freelancer"
+                t-elif="not is_emission and not freelancer"
                 t-call="l10n_es_edi_tbai.template_LROE_240_inner"/>
             <lrpficfcsgap:LROEPF140IngresosConFacturaConSGAnulacionPeticion
                 xmlns:lrpficfcsgap="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AnulacionPeticion_V1_0_0.xsd"
-                t-elif="not is_emission and is_freelancer"
+                t-elif="not is_emission and freelancer"
                 t-call="l10n_es_edi_tbai.template_LROE_240_inner"/>
         </template>
 
