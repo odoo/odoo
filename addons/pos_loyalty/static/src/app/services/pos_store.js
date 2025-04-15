@@ -6,8 +6,6 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { Mutex } from "@web/core/utils/concurrency";
-import { effect } from "@web/core/utils/reactive";
-import { batched } from "@web/core/utils/timing";
 import { serializeDate } from "@web/core/l10n/dates";
 
 let nextId = -1;
@@ -29,19 +27,6 @@ patch(PosStore.prototype, {
         this.couponByLineUuidCache = {};
         this.rewardProductByLineUuidCache = {};
         await super.setup(...arguments);
-
-        effect(
-            batched((orders) => {
-                const order = Array.from(orders.values()).find(
-                    (order) => order.uuid === this.selectedOrderUuid
-                );
-
-                if (order) {
-                    this.updateOrder(order);
-                }
-            }),
-            [this.data.models["pos.order"].records]
-        );
     },
     async updateOrder(order) {
         // Read value to trigger effect
@@ -227,6 +212,8 @@ patch(PosStore.prototype, {
                         couponPointChange.expiration_date = serializeDate(
                             luxon.DateTime.now().plus({ year: 1 })
                         );
+                        couponPointChange.code = order.getSelectedOrderline()?.gift_code;
+                        couponPointChange.partner_id = order.getPartner()?.id;
                     }
 
                     order.uiState.couponPointChanges[coupon.id] = couponPointChange;
