@@ -36,7 +36,9 @@ class FleetVehicleModel(models.Model):
     image_128 = fields.Image(related='brand_id.image_128', readonly=True)
     active = fields.Boolean(default=True)
     vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], default='car', required=True, tracking=True)
-    transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', tracking=True)
+    transmission = fields.Selection(
+        selection=[('manual', 'Manual'), ('semi_automatic', 'Semi-Automatic'), ('automatic', 'Automatic')],
+        string='Transmission', tracking=True)
     vehicle_count = fields.Integer(compute='_compute_vehicle_count', search='_search_vehicle_count')
     model_year = fields.Selection(selection='_get_year_selection', tracking=True)
     color = fields.Char(tracking=True)
@@ -61,7 +63,9 @@ class FleetVehicleModel(models.Model):
         ('horsepower', 'Horsepower (hp)')
         ], 'Power Unit', default='power', required=True)
     vehicle_properties_definition = fields.PropertiesDefinition('Vehicle Properties')
-    vehicle_range = fields.Integer(string="Range")
+    vehicle_range = fields.Integer(string="Range",
+        help="Range represents the maximum distance a vehicle can travel on a full charge (for EVs) or \
+            a full tank (for fuel-powered vehicles)")
     range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')], default="km", required=True)
     drive_type = fields.Selection([
         ('fwd', 'Front-Wheel Drive (FWD)'),
