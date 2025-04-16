@@ -542,7 +542,7 @@ class L10nInEwaybill(models.Model):
         line_details = {
             'productName': line.product_id.name,
             'hsnCode': extract_digits(line.l10n_in_hsn_code),
-            'productDesc': line.product_id.name,
+            'productDesc': line.name,
             'quantity': line.quantity,
             'qtyUnit': line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split('-')[0] or 'OTH',
             'taxableAmount': round_value(line.balance * sign),
