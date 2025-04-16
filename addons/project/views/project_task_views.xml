@@ -687,7 +687,8 @@
                     <field name="date_deadline" optional="hide" widget="remaining_days" invisible="state in ['1_done', '1_canceled']"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
                     <field name="date_last_stage_update" optional="hide"/>
-                    <field name="stage_id" column_invisible="context.get('set_visible', False)" optional="show"/>
+                    <field name="stage_id" column_invisible="context.get('set_visible', False)" context="{'default_project_id': project_id}" groups="project.group_project_manager" optional="show"/>
+                    <field name="stage_id" column_invisible="context.get('set_visible', False)" groups="!project.group_project_manager" options="{'no_create': True}" optional="show"/>
                 </tree>
             </field>
         </record>
