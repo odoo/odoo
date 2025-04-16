@@ -55,7 +55,26 @@
                 <field name="question_type" string="Type" />
                 <field name="answer_ids" widget="many2many_tags"
                     invisible="question_type != 'simple_choice'" />
+                <button name="action_view_question_answers"
+                        type="object"
+                        class="p-0"
+                        icon="fa-bar-chart pe-1"
+                        string="Stats"
+                        title="Answer Breakdown"
+                        invisible="question_type not in ['simple_choice', 'text_box']"/>
             </list>
+        </field>
+    </record>
+
+    <!-- Do not display reporting button on add list view because those data are not necessary to -->
+    <!-- link a question to an event or a template. -->
+    <record id="event_question_view_add_list" model="ir.ui.view">
+        <field name="name">event.question.view.add.list</field>
+        <field name="model">event.question</field>
+        <field name="inherit_id" ref="event.event_question_view_list"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_question_answers']" position="replace"/>
         </field>
     </record>
 
@@ -75,6 +94,19 @@
                             <field name="once_per_order"/>
                         </group>
                     </group>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_question_answers"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-line-chart"
+                                invisible="question_type != 'simple_choice'">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Registration answers
+                                </span>
+                            </div>
+                        </button>
+                    </div>
                     <notebook invisible="question_type != 'simple_choice'">
                         <page string="Answers" name="answers">
                             <field name="answer_ids">

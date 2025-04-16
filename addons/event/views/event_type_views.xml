@@ -50,7 +50,8 @@
                            </field>
                        </page>
                         <page string="Questions" name="page_questions">
-                            <field name="question_ids" class="w-100">
+                            <field name="question_ids" class="w-100"
+                                   context="{'list_view_ref': 'event.event_question_view_add_list'}">
                                 <list sample="1">
                                     <field name="title"/>
                                     <field name="is_mandatory_answer" string="Mandatory"/>
