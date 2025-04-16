@@ -329,7 +329,11 @@ class DiscussChannelMember(models.Model):
                 },
             )
         if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type != "channel":
-            self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
+            self.channel_id.message_post(
+                body=Markup("<div class='o_mail_notification'>%s</div>")
+                % self.env._("started a live conference"),
+                message_type="notification",
+            )
             self._rtc_invite_members()
 
     def _join_sfu(self, ice_servers=None, force=False):
