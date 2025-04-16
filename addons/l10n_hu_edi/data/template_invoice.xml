@@ -120,15 +120,17 @@
     </template>
 
     <template id="nav_online_invoice_xml_3_0_tax_number" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
-        <t t-if="'-' in vat">
-            <base:taxpayerId t-out="vat[:8]"/>
-            <base:vatCode t-out="vat[9:10]"/>
-            <base:countyCode t-out="vat[11:13]"/>
-        </t>
-        <t t-else="else">
-            <base:taxpayerId t-out="vat[:8]"/>
-            <base:vatCode t-out="vat[8:9]"/>
-            <base:countyCode t-out="vat[9:11]"/>
+        <t t-if="vat">
+            <t t-if="'-' in vat">
+                <base:taxpayerId t-out="vat[:8]"/>
+                <base:vatCode t-out="vat[9:10]"/>
+                <base:countyCode t-out="vat[11:13]"/>
+            </t>
+            <t t-else="else">
+                <base:taxpayerId t-out="vat[:8]"/>
+                <base:vatCode t-out="vat[8:9]"/>
+                <base:countyCode t-out="vat[9:11]"/>
+            </t>
         </t>
     </template>
 
