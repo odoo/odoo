@@ -49,7 +49,7 @@ export class SnippetViewer extends Component {
 
     onClick(snippet) {
         if (snippet.moduleId) {
-            this.props.snippetModel.installModule(snippet);
+            this.props.snippetModel.installSnippetModule(snippet);
         } else {
             this.props.selectSnippet(snippet);
         }

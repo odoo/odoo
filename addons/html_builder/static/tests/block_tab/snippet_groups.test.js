@@ -14,7 +14,7 @@ import {
 
 defineWebsiteModels();
 
-function getBasicSection(content, { name, withColoredLevelClass = false }) {
+function getBasicSection(content, { name, withColoredLevelClass = false } = {}) {
     const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
     return unformat(`<section class="${className}" data-snippet="s_test" ${
         name ? `data-name="${name}"` : ""
@@ -70,6 +70,65 @@ test("install an app from snippet group", async () => {
     expect(".modal-body").toHaveText("Do you want to install A App?\nMore info about this app.");
 
     await contains(".modal .btn-primary:contains('Save and Install')").click();
+    expect.verifySteps([`button_immediate_install`]);
+});
+test("install an app from snippet structure", async () => {
+    onRpc("ir.module.module", "button_immediate_install", ({ args }) => {
+        expect(args[0]).toEqual([111]);
+        expect.step(`button_immediate_install`);
+        return true;
+    });
+    const snippetsDescription = () => [
+        {
+            name: "Test 1",
+            groupName: "a",
+            content: getBasicSection("Yop"),
+            moduleId: 111,
+        },
+        {
+            name: "Test 2",
+            groupName: "a",
+            content: getBasicSection("Hello"),
+        },
+    ];
+
+    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
+            ),
+        },
+    });
+    await click(
+        queryFirst(
+            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+        )
+    );
+    await waitForSnippetDialog();
+    expect(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap"
+    ).toHaveCount(2);
+    expect(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap .o_snippet_preview_install_btn"
+    ).toHaveCount(1);
+    expect(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap:has(.o_snippet_preview_install_btn) .s_test"
+    ).toHaveText("Yop");
+
+    await click(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap .o_snippet_preview_install_btn"
+    );
+    await animationFrame();
+    expect(".o_dialog:not(:has(.o_inactive_modal)) .modal-body").toHaveText(
+        "Do you want to install Test 1 App?\nMore info about this app."
+    );
+
+    await contains(
+        ".o_dialog:not(:has(.o_inactive_modal)) .btn-primary:contains('Save and Install')"
+    ).click();
     expect.verifySteps([`button_immediate_install`]);
 });
 
