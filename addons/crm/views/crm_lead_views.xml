@@ -89,6 +89,7 @@
                                 <field name="is_partner_visible" invisible='1'/>
                                 <field name="partner_id" widget="res_partner_many2one"
                                     context="{
+                                        'default_parent_id': commercial_partner_id,
                                         'default_name': contact_name,
                                         'default_street': street,
                                         'default_street2': street2,
@@ -409,33 +410,72 @@
             <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <form>
-                    <group>
-                        <field name="partner_id" widget="res_partner_many2one"
-                            class="o_field_highlight"
-                            string='Contact'
-                            context="{
-                            'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
-                            'default_name': contact_name or partner_name,
-                            'default_is_company': type == 'opportunity' and contact_name == False,
-                            'default_company_name': type == 'opportunity' and partner_name,
-                            'default_type': 'contact',
-                            'default_phone': phone,
-                            'default_email': email_from,
-                            'default_user_id': user_id,
-                            'default_team_id': team_id,
-                            'show_vat': True}"/>
-                        <field name="name" placeholder="e.g. Product Pricing" />
-                        <field name="email_from" string="Email" placeholder='e.g. "email@address.com"' />
-                        <field name="phone" string="Phone" placeholder='e.g. "0123456789"' />
-                        <label for="expected_revenue"/>
-                        <div>
-                            <div class="o_row">
-                                <field name="expected_revenue" class="oe_inline me-5 o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
+                    <group class="crm_quick_create_opportunity_form_group">
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-building" title="Company"/>
+                            <field name="commercial_partner_id" widget="res_partner_many2one"
+                                placeholder="Company"
+                                string="Company"
+                                nolabel="1"
+                                class="o_field_highlight w-100 mb-0"
+                                context="{
+                                'default_is_company': True,
+                                'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
+                                'default_type': 'contact',
+                                'default_user_id': user_id,
+                                'default_team_id': team_id,
+                                'default_child_ids': partner_id and [(4, partner_id)] or False,
+                        }"/>
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-user" title="Contact"/>
+                            <field name="partner_id"
+                                nolabel="1"
+                                class="o_field_highlight w-100 mb-0"
+                                placeholder='Contact'
+                                string='Contact'
+                                context="{
+                                'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
+                                'partner_display_name_hide_company': commercial_partner_id,
+                                'default_company_name': not commercial_partner_id and type == 'opportunity' and partner_name,
+                                'default_name': contact_name or partner_name,
+                                'default_is_company': False,
+                                'default_type': 'contact',
+                                'default_phone': phone,
+                                'default_email': email_from,
+                                'default_parent_id': commercial_partner_id,
+                                'default_user_id': user_id,
+                                'default_team_id': team_id,
+                                'show_vat': True}"
+                                domain="[('is_company', '!=', True)] + (
+                                    [('id', 'child_of', commercial_partner_id)] if commercial_partner_id else []
+                                )"
+                            />
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-briefcase" title="Opportunity Name"/>
+                            <field name="name" nolabel="1" placeholder="Opportunity's Name" class="o_field_highlight w-100 mb-0"/>
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-envelope" title="Contact Email"/>
+                            <field name="email_from" string="Contact Email" placeholder='Contact Email' nolabel="1" class="o_field_highlight w-100 mb-0"/>
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-mobile fa-lg" title="Contact Phone"/>
+                            <field name="phone" string="Contact Phone" placeholder='Contact Phone' nolabel="1" class="o_field_highlight w-100 mb-0"/>
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-money" title="Expected Revenue"/>
+                            <div class="mb-0">
+                                <field name="expected_revenue" class="oe_inline me-5 o_field_highlight mb-0" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="priority" class="oe_inline mb-0" nolabel="1" widget="priority"/>
                             </div>
-                            <div class="o_row" groups="crm.group_use_recurring_revenues">
-                                <field name="recurring_revenue" class="oe_inline o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                <field name="recurring_plan" class="oe_inline" placeholder='e.g. "Monthly"'
+                        </div>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-refresh" title="Recurring Revenue"/>
+                            <div class="o_row">
+                                <field name="recurring_revenue" class="oe_inline mb-0 o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="recurring_plan" class="oe_inline mb-0" placeholder='e.g. "Monthly"'
                                     required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
                             </div>
                         </div>
