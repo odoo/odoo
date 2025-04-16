@@ -383,6 +383,12 @@ export class Message extends Record {
             if (this.notificationType === "call") {
                 return _t("%(caller)s started a call", { caller: this.authorName });
             }
+            if (this.notificationType === "thread_deletion") {
+                return _t('%(user)s deleted the thread "%(thread_name)s"', {
+                    user: this.authorName,
+                    thread_name: decorateEmojis(htmlToTextContentInline(this.body)),
+                });
+            }
             if (this.notificationType === "channel_rename") {
                 const name = htmlToTextContentInline(this.body);
                 const params = { user: this.authorName, name: markup`<b>${name}</b>` };
