@@ -73,7 +73,7 @@ class TestUi(TestPosHrHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
 
         self.start_tour(
-            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "CashierStayLogged",
             login="pos_admin",
         )
@@ -84,7 +84,7 @@ class TestUi(TestPosHrHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
 
         self.start_tour(
-            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "CashierCanSeeProductInfo",
             login="pos_admin",
         )
@@ -99,7 +99,7 @@ class TestUi(TestPosHrHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
 
         self.start_tour(
-            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "CashierCannotClose",
             login="pos_user",
         )

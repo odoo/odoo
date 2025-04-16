@@ -14,4 +14,10 @@ export class ActionScreen extends Component {
         </div>
     `;
 }
-registry.category("pos_screens").add("ActionScreen", ActionScreen);
+
+registry.category("pos_pages").add("ActionScreen", {
+    name: "ActionScreen",
+    component: ActionScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/action/{string:actionName}`,
+    params: {},
+});

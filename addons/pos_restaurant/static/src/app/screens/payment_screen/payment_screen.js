@@ -2,17 +2,22 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { patch } from "@web/core/utils/patch";
 
 patch(PaymentScreen.prototype, {
-    get nextScreen() {
+    get nextPage() {
         const order = this.currentOrder;
         if (!this.pos.config.set_tip_after_payment || order.is_tipped) {
-            return super.nextScreen;
+            return super.nextPage;
         }
         // Take the first payment method as the main payment.
         const mainPayment = order.payment_ids[0];
         if (mainPayment && mainPayment.canBeAdjusted()) {
-            return "TipScreen";
+            return {
+                page: "TipScreen",
+                params: {
+                    orderUuid: order.uuid,
+                },
+            };
         }
-        return super.nextScreen;
+        return super.nextPage;
     },
     async afterOrderValidation(suggestToSync = true) {
         const changedTables = this.currentOrder?.table_id?.children?.map((table) => table.id);

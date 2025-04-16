@@ -205,7 +205,7 @@ export class PaymentPineLabs extends PaymentInterface {
             clearTimeout(this.pollingTimeout);
 
             // If the user navigates to another screen, stop the polling
-            if (this.pos.mainScreen.component.name !== "PaymentScreen") {
+            if (this.pos.router.state.current !== "PaymentScreen") {
                 this._removePaymentHandler();
                 return;
             }

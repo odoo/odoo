@@ -31,6 +31,11 @@ patch(ControlButtons.prototype, {
         }
         return order.getSelectedCourse() || order.getSelectedOrderline();
     },
+    openSplitPage() {
+        this.pos.navigate("SplitBillScreen", {
+            orderUuid: this.currentOrder.uuid,
+        });
+    },
     async clickTransferCourse() {
         this.dialog.closeAll();
         await this.pos.transferLinesToCourse();

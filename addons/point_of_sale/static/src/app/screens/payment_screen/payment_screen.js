@@ -18,6 +18,7 @@ import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dial
 import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -43,6 +44,7 @@ export class PaymentScreen extends Component {
             .sort((a, b) => a.sequence - b.sequence);
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);
+        useRouterParamsChecker();
         useErrorHandlers();
         this.payment_interface = null;
         this.error = false;
@@ -364,7 +366,7 @@ export class PaymentScreen extends Component {
     }
     handleValidationError(error) {
         if (error instanceof ConnectionLostError) {
-            this.pos.showScreen(this.nextScreen);
+            this.pos.navigate(this.nextPage.page, this.nextPage.params);
             Promise.reject(error);
         } else if (error instanceof RPCError) {
             this.currentOrder.state = "draft";
@@ -386,11 +388,11 @@ export class PaymentScreen extends Component {
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
-        let nextScreen = this.nextScreen;
+        let nextPage = this.nextPage;
         let switchScreen = true;
 
         if (
-            nextScreen === "ReceiptScreen" &&
+            nextPage.page === "ReceiptScreen" &&
             this.currentOrder.nb_print === 0 &&
             this.pos.config.iface_print_auto
         ) {
@@ -405,7 +407,7 @@ export class PaymentScreen extends Component {
                     this.currentOrder.setScreenData({ name: "" });
                     this.currentOrder.uiState.locked = true;
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
-                    nextScreen = this.pos.defaultScreen;
+                    nextPage = this.pos.defaultPage;
                     if (switchScreen) {
                         this.selectNextOrder();
                     }
@@ -414,7 +416,7 @@ export class PaymentScreen extends Component {
         }
 
         if (switchScreen) {
-            this.pos.showScreen(nextScreen);
+            this.pos.navigate(nextPage.page, nextPage.params);
         }
     }
     selectNextOrder() {
@@ -432,8 +434,15 @@ export class PaymentScreen extends Component {
     shouldDownloadInvoice() {
         return true;
     }
-    get nextScreen() {
-        return !this.error ? "ReceiptScreen" : this.pos.defaultScreen;
+    get nextPage() {
+        return !this.error
+            ? {
+                  page: "ReceiptScreen",
+                  params: {
+                      orderUuid: this.currentOrder.uuid,
+                  },
+              }
+            : this.pos.defaultPage;
     }
     paymentMethodImage(id) {
         if (this.paymentMethod.image) {
@@ -681,4 +690,12 @@ export class PaymentScreen extends Component {
     }
 }
 
-registry.category("pos_screens").add("PaymentScreen", PaymentScreen);
+registry.category("pos_pages").add("PaymentScreen", {
+    name: "PaymentScreen",
+    component: PaymentScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/payment/{string:orderUuid}`,
+    params: {
+        orderUuid: true,
+        orderFinalized: false,
+    },
+});

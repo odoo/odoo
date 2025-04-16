@@ -593,7 +593,7 @@ class PosConfig(models.Model):
     def _action_to_open_ui(self):
         if not self.current_session_id:
             self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
-        pos_url = '/pos/ui?config_id=%d&from_backend=True' % self.id
+        pos_url = '/pos/ui/%d?from_backend=True' % self.id
         debug = request and request.session.debug
         if debug:
             pos_url += '&debug=%s' % debug
@@ -604,17 +604,10 @@ class PosConfig(models.Model):
         }
 
     def _get_url_to_cache(self, debug):
-        url_to_cache = []
-        base_urls = [
-            f"/pos/ui?config_id={self.id}&from_backend=True",
-            f"/pos/ui?config_id={self.id}",
+        url_to_cache = [
+            f"/pos/ui/{self.id}?from_backend=True",
+            f"/pos/ui/{self.id}",
         ]
-
-        if not debug:
-            url_to_cache.extend(base_urls)
-        else:
-            url_to_cache.extend([f"{url}&debug={debug}" for url in base_urls])
-
         return self.env["ir.qweb"]._get_asset_links("point_of_sale.assets_prod", debug=debug) + url_to_cache
 
     def _check_before_creating_new_session(self):
