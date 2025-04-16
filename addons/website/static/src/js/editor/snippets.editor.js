@@ -555,6 +555,19 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             selectedTextEl.classList.add(...optionClassList);
             let $snippet = null;
             try {
+                const commonAncestor = range.commonAncestorContainer;
+                const ancestorElement =
+                    commonAncestor.nodeType === 1 ? commonAncestor : commonAncestor.parentElement;
+                const backgroundColorParentEl = ancestorElement.closest(
+                    'font[style*="background-color"], font[style*="background-image"], font[class^="bg-"]'
+                );
+                if (backgroundColorParentEl?.textContent === commonAncestor.textContent) {
+                    // As long as we handle the same text content, we extend the
+                    // existing range to the `<font/>` boundaries to keep the
+                    // background color applied correctly.
+                    range.setStartBefore(backgroundColorParentEl);
+                    range.setEndAfter(backgroundColorParentEl);
+                }
                 range.surroundContents(selectedTextEl);
                 $snippet = $(selectedTextEl);
             } catch {
