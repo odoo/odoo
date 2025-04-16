@@ -80,6 +80,7 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
         'cancel_peppol_registration': lambda _user, _args, _kwargs: {},
         'migrate_peppol_registration': lambda _user, _args, _kwargs: {'migration_key': 'demo_migration_key'},
         'participant_status': lambda _user, _args, _kwargs: {'peppol_state': 'receiver'},
+        'set_webhook': lambda _user, _args, _kwargs: {},
         # document routes
         'get_all_documents': _mock_get_all_documents,
         'get_document': _mock_get_document,
