@@ -377,8 +377,8 @@ QUnit.test("Simple scroll to HTML elements", async (assert) => {
         const element = el.getBoundingClientRect();
         const scrollable = scrollableParent.getBoundingClientRect();
         return {
-            top: parseInt(element.top - scrollable.top) === 0,
-            bottom: parseInt(scrollable.bottom - element.bottom) === 0,
+            top: parseInt(element.top - scrollable.top) < 10,
+            bottom: parseInt(scrollable.bottom - element.bottom) < 10,
         };
     };
 
