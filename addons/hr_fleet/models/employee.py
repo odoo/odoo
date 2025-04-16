@@ -64,6 +64,7 @@ class HrEmployee(models.Model):
             raise ValidationError(_('Cannot remove address from employees with linked cars.'))
 
     def write(self, vals):
+        print(f'VALS: {vals}')
         if 'user_id' in vals:
             self._sync_employee_cars(self.env['res.users'].browse(vals['user_id']))
         res = super().write(vals)
