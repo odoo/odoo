@@ -722,7 +722,8 @@ class ProductTemplate(models.Model):
         default=lambda self: self.env['stock.route'].search_count([('product_selectable', '=', True)]))
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
-        domain=[('product_selectable', '=', True)], depends_context=['company', 'allowed_companies'],
+        domain="(company_id and ['|', ('company_id', '=', False), ('company_id', 'in', [company_id])] or [] )+ [('product_selectable', '=', True)]",
+        depends_context=['company', 'allowed_companies'],
         help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc.")
     nbr_moves_in = fields.Integer(compute='_compute_nbr_moves', compute_sudo=False, help="Number of incoming stock moves in the past 12 months")
     nbr_moves_out = fields.Integer(compute='_compute_nbr_moves', compute_sudo=False, help="Number of outgoing stock moves in the past 12 months")
@@ -1063,7 +1064,7 @@ class ProductCategory(models.Model):
     filter_for_stock_putaway_rule = fields.Boolean('stock.putaway.rule', store=False, search='_search_filter_for_stock_putaway_rule')
 
     def _search_total_route_ids(self, operator, value):
-        categories = self.env['product.category'].sudo().search([])
+        categories = self.env['product.category'].search([])
         categ_ids = categories.filtered_domain([('total_route_ids', operator, value)]).ids
         return [('id', 'in', categ_ids)]
 

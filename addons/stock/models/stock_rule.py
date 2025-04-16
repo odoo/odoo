@@ -541,7 +541,7 @@ class ProcurementGroup(models.Model):
         if packaging_id:
             packaging_routes = packaging_id.route_ids
             valid_route_ids |= set(packaging_routes.ids)
-        valid_route_ids |= set((product_id.route_ids | product_id.categ_id.total_route_ids).ids)
+        valid_route_ids |= set(self._get_valid_routes(product_id).ids)
         if warehouse_ids:
             valid_route_ids |= set(warehouse_ids.route_ids.ids)
         if valid_route_ids:
@@ -556,6 +556,15 @@ class ProcurementGroup(models.Model):
         for group in res:
             rule_dict[group[0].id, group[2].id][group[1].id] = group[3].sorted(lambda rule: (rule.route_sequence, rule.sequence))[0]
         return rule_dict
+
+    def _get_valid_routes(self, product):
+        categ_routes = product.categ_id.total_route_ids
+        product_routes = product.route_ids
+        all_routes = (product_routes | categ_routes)
+        valid_routes = all_routes.filtered(
+            lambda r: not r.company_id or not product.company_id or r.company_id == product.company_id
+            )
+        return valid_routes
 
     def _search_rule(self, route_ids, packaging_id, product_id, warehouse_id, domain):
         """ First find a rule among the ones defined on the procurement
@@ -573,7 +582,7 @@ class ProcurementGroup(models.Model):
             if packaging_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', packaging_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         if not res:
-            product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
+            product_routes = set(self._get_valid_routes(product_id).ids)
             if product_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         if not res and warehouse_id:

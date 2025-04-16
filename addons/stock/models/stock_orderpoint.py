@@ -76,7 +76,9 @@ class StockWarehouseOrderpoint(models.Model):
     rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules')
     lead_days_date = fields.Date(compute='_compute_lead_days')
     route_id = fields.Many2one(
-        'stock.route', string='Route', domain="[('product_selectable', '=', True)]")
+        'stock.route', string='Route',
+        domain="(company_id and ['|', ('company_id', '=', False), ('company_id', 'in', [company_id])] or [] )+ [('product_selectable', '=', True)]",
+    )
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', inverse='_inverse_qty_to_order', search='_search_qty_to_order', digits='Product Unit of Measure')

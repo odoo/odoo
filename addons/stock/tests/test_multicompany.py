@@ -712,3 +712,37 @@ class TestMultiCompany(TransactionCase):
                     'picking_type_id': self.warehouse_b.in_type_id.id,
                 })
             ]})
+
+    def test_multiple_routes_different_company_product_categories(self):
+        route_1 = self.env['stock.route'].create({
+            'name': 'Test Route',
+            'company_id': self.company_a.id,
+            'product_categ_selectable': True,
+            'product_selectable': True,
+        })
+        route_2 = self.env['stock.route'].create({
+            'name': 'Test Route',
+            'company_id': self.company_b.id,
+            'product_categ_selectable': True,
+            'product_selectable': True,
+        })
+        product_category = self.env['product.category'].create({
+            'name': 'Test Category',
+            'route_ids': [(6, 0, [route_1.id, route_2.id])],
+        })
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'categ_id': product_category.id,
+            'company_id': self.company_a.id,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'location_id': self.stock_location_a.id,
+            'company_id': self.company_a.id,
+        })
+        # product_category.invalidate_recordset(['total_route_ids'])
+        # self.assertEqual(product_category.total_route_ids, (route_1 | route_2))
+        self.env.invalidate_all()
+        # orderpoint.with_context(allowed_company_ids=self.company_b.ids)._compute_rules()
+        # self.assertEqual(orderpoint.with_user(self.user_a).with_company(self.company_a).rule_ids)
+        self.assertEqual(product_category.with_user(self.user_a).with_company(self.company_a).total_route_ids, route_1)
