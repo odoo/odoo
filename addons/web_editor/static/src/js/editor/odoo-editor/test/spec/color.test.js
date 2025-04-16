@@ -267,6 +267,20 @@ describe('applyColor', () => {
                         '<font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><span class="a">bc</span></font></p>',
         });
     });
+    it("should apply gradient color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<div style="background-image:none"><p>[ab<strong>cd</strong>ef]</p></div>',
+            stepFunction: setColor("linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)", "backgroundColor"),
+            contentAfter: '<div style="background-image:none"><p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>'
+        });
+    });
+    it("should apply gradient text color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<div style="background-image:none"><p>[ab<strong>cd</strong>ef]</p></div>',
+            stepFunction: setColor("linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)", "color"),
+            contentAfter: '<div style="background-image:none"><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>'
+        });
+    });
 });
 describe('rgbToHex', () => {
     it('should convert an rgb color to hexadecimal', async () => {
