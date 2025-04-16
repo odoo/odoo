@@ -3,6 +3,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 import { useHover } from "@mail/utils/common/hooks";
+import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 
 import { Component, useSubEnv } from "@odoo/owl";
 
@@ -141,7 +142,14 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get subChannels() {
-        return this.env.filteredThreads?.(this.thread.sub_channel_ids) ?? [];
+        const sortedThreads = (this.env.filteredThreads?.(this.thread.sub_channel_ids) ?? []).sort(
+            threadCompareRegistry.get("mail.last-interest")
+        );
+        const currentThread = this.store.discuss.thread;
+        if (sortedThreads.findIndex((t) => t.eq(currentThread)) > 4) {
+            return [currentThread, ...sortedThreads.slice(0, 4)];
+        }
+        return sortedThreads.slice(0, 5);
     }
 
     showThread(sub) {
