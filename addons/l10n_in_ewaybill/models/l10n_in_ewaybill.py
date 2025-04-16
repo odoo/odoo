@@ -539,7 +539,7 @@ class L10nInEwaybill(models.Model):
             'hsnCode': extract_digits(line.l10n_in_hsn_code),
             'productDesc': line.product_id.display_name,
             'quantity': line.quantity,
-            'qtyUnit': line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split('-')[0] or 'OTH',
+            'qtyUnit': line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split('-')[0] or 'OTH',
             'taxableAmount': round_value(line.balance * sign),
         }
         gst_types = {'cgst', 'sgst', 'igst'}
