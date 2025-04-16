@@ -1131,11 +1131,11 @@ class MailThread(models.AbstractModel):
         :param str model: the fallback model to use if the message does not match
             any of the currently configured mail aliases (may be None if a matching
             alias is supposed to be present)
-        :param custom_values: optional dictionary of default field values
-            to pass to ``message_new`` if a new record needs to be created.
-            Ignored if the thread record already exists, and also if a matching
-            mail.alias was found (aliases define their own defaults)
-        :type custom_values: dict or None
+        :param custom_values: dictionary mapping field names
+            to default values to be passed to ``message_new`` if a new record needs
+            to be created. Ignored if the thread record already exists, and also
+            if a matching mail.alias was found (aliases define their own defaults)
+        :type custom_values: dict[str, Any] | None
         :param int thread_id: optional ID of the record/thread from ``model`` to
             which this mail should be attached. Only used if the message does not
             reply to an existing thread and does not match any mail alias.
@@ -1418,12 +1418,12 @@ class MailThread(models.AbstractModel):
                does not match any of the currently configured mail aliases
                (may be None if a matching alias is supposed to be present)
            :param message: source of the RFC2822 message
-           :type message: str or xmlrpclib.Binary
+           :type message: str | xmlrpclib.Binary
            :param custom_values: optional dictionary of field values
                 to pass to ``message_new`` if a new record needs to be created.
                 Ignored if the thread record already exists, and also if a
                 matching mail.alias was found (aliases define their own defaults)
-           :type custom_values: dict or None 
+           :type custom_values: dict | None
            :param bool save_original: whether to keep a copy of the original
                 email source attached to the message after it is imported.
            :param bool strip_attachments: whether to strip all attachments
