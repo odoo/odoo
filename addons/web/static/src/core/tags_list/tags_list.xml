@@ -16,7 +16,7 @@
                 t-att-aria-label="tag.title || tag.text"
                 t-att-data-tooltip="tag.title || tag.text"
                 t-on-click="(ev) => tag.onClick and tag.onClick(ev)"
-                t-on-keydown="tag.onKeydown">
+            >
 
                 <!-- Avatar's :hover backdrop -->
                 <span
@@ -60,7 +60,7 @@
     </t>
 
     <t t-name="web.TagsList.Tooltip">
-        <t t-foreach="tags" t-as="tag" t-key="tag.id">
+        <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
             <div t-esc="tag.text"/>
         </t>
     </t>

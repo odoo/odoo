@@ -73,10 +73,10 @@ export class Many2ManyTagsField extends Component {
         this.popover = usePopover(this.constructor.components.Popover);
         this.dialog = useService("dialog");
         this.dialogClose = [];
-        this.onTagKeydown = useTagNavigation(
-            "many2ManyTagsField",
-            this.deleteTagByIndex.bind(this)
-        );
+        useTagNavigation("many2ManyTagsField", {
+            isEnabled: () => !this.props.readonly,
+            delete: (index) => this.deleteTagByIndex(index),
+        });
         this.autoCompleteRef = useRef("autoComplete");
         this.mutex = new Mutex();
 
@@ -152,12 +152,6 @@ export class Many2ManyTagsField extends Component {
             colorIndex: record.data[this.props.colorField],
             canEdit: this.props.canEditTags,
             onDelete: !this.props.readonly ? () => this.deleteTag(record.id) : undefined,
-            onKeydown: (ev) => {
-                if (this.props.readonly) {
-                    return;
-                }
-                this.onTagKeydown(ev);
-            },
         };
     }
 
