@@ -58,6 +58,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hola:<br><br>\n"
+"                Vostè ha sol·licitat que es cancel·li la subscripció a la llista de correu <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Per confirmar aquesta acció, si us plau, visiti l'enllaç que hi ha a continuació: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                Si ha estat un error o no ha sol·licitat aquesta acció, si us plau, ignori aquest missatge.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -72,6 +81,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hola:<br><br>\n"
+"                Vostè ha sol·licitat que es cancel·li la subscripció a la llista de correu <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Per confirmar aquesta acció, si us plau, visiti l'enllaç que hi ha a continuació: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                Si ha estat un error o no ha sol·licitat aquesta acció, si us plau, ignori aquest missatge.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -83,6 +101,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Hola<t t-out=\"object.partner_id.name or ''\"></t>:</p>\n"
+"                <p>Si us plau, trobi a sota les directrius de la <t t-out=\"object.mail_group_id.name\"></t> llista de correu.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer

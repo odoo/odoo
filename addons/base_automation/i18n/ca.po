@@ -18,6 +18,7 @@
 # Martin Trigaux, 2023
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024
 # Adrià Navarro PYMING, 2025
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Adrià Navarro PYMING, 2025\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,14 +66,14 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "%s actions"
-msgstr ""
+msgstr "%s accions"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "1 action"
-msgstr ""
+msgstr "1 acció"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -85,6 +86,8 @@ msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is"
 " a void recordset"
 msgstr ""
+"<code>model</code>: model del registre en el qual s'activa l'acció; és un "
+"conjunt de registres buit"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -105,7 +108,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -143,26 +146,29 @@ msgid ""
 "                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
 "                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
+"<span invisible=\"trigger != 'on_time_created'\">després de la creació</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">després de la darrera actualització</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">després</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by adding</span>"
-msgstr ""
+msgstr "<span>en afegir</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by clearing it</span>"
-msgstr ""
+msgstr "<span>en eliminar-lo</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by removing</span>"
-msgstr ""
+msgstr "<span>en eliminar</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by setting it to</span>"
-msgstr ""
+msgstr "<span>en establir-lo a</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -185,7 +191,7 @@ msgstr "Accions"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Actions To Do"
-msgstr ""
+msgstr "Accions pendents"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -195,7 +201,7 @@ msgstr "Actiu"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Add an action"
-msgstr ""
+msgstr "Afegir-ne una acció"
 
 #. module: base_automation
 #. odoo-javascript
@@ -203,24 +209,24 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Add followers"
-msgstr ""
+msgstr "Afegir seguidors"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Add followers: %(partner_names)s"
-msgstr ""
+msgstr "Affegir seguidors: %(partner_names)s"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr ""
+msgstr "Després de la creació"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
 msgid "After last update"
-msgstr ""
+msgstr "Després de la darrera actualització"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -237,7 +243,7 @@ msgstr "Arxivat"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr ""
+msgstr "Automatitza-ho <em>tot</em> amb regles d'automatització"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -264,7 +270,7 @@ msgstr "Regles d'automatització"
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr ""
+msgstr "Regles d'automatització: verificar i executar"
 
 #. module: base_automation
 #. odoo-javascript
@@ -276,7 +282,7 @@ msgstr "Automatitzacions"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "Basat en el camp de data"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
@@ -317,7 +323,7 @@ msgstr "Crear un nou registre"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Create activity: %(activity_name)s"
-msgstr ""
+msgstr "Crear activitat: %(activity_name)s"
 
 #. module: base_automation
 #. odoo-javascript
@@ -386,14 +392,14 @@ msgstr "Tipus de retard"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delete Action"
-msgstr ""
+msgstr "Eliminar acció"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Deprecated (do not use)"
-msgstr ""
+msgstr "Depreciat (no utilitzar)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__description
@@ -728,12 +734,12 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "Seleccionar un camp de data..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a value..."
-msgstr ""
+msgstr "Seleccionar un valor..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -753,7 +759,7 @@ msgstr "Envia un missatge de text SMS"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Send SMS: %(template_name)s"
-msgstr ""
+msgstr "Enviar SMS: %(template_name)s"
 
 #. module: base_automation
 #. odoo-python
