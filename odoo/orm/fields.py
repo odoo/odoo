@@ -3,6 +3,7 @@
 """ High-level objects for fields. """
 from __future__ import annotations
 
+import functools
 import itertools
 import logging
 import typing
@@ -12,7 +13,7 @@ from operator import attrgetter
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.tools import Query, SQL, lazy_property, sql
+from odoo.tools import Query, SQL, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, OrderedSet, Sentinel, unique
 
@@ -779,7 +780,7 @@ class Field(typing.Generic[T]):
     _related_groups = property(attrgetter('groups'))
     _related_aggregator = property(attrgetter('aggregator'))
 
-    @lazy_property
+    @functools.cached_property
     def column_type(self) -> tuple[str, str] | None:
         """ Return the actual column type for this field, if stored as a column. """
         return ('jsonb', 'jsonb') if self.company_dependent or self.translate else self._column_type

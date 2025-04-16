@@ -1,7 +1,4 @@
-from contextlib import closing
-from collections import OrderedDict
-from lxml import etree
-from subprocess import Popen, PIPE
+import functools
 import hashlib
 import io
 import logging
@@ -9,8 +6,13 @@ import os
 import re
 import textwrap
 import uuid
+from collections import OrderedDict
+from contextlib import closing
+from subprocess import Popen, PIPE
 
+from lxml import etree
 from rjsmin import jsmin as rjsmin
+
 try:
     import sass as libsass
 except ImportError:
@@ -21,7 +23,7 @@ except ImportError:
 from odoo import release
 from odoo.api import SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import (func, misc, transpile_javascript,
+from odoo.tools import (misc, transpile_javascript,
     is_odoo_module, SourceMapGenerator, profiler, OrderedSet)
 from odoo.tools.json import scriptsafe as json
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
@@ -732,16 +734,16 @@ class WebAsset(object):
         _logger.error(msg)  # log it in the python console in all cases.
         return msg
 
-    @func.lazy_property
+    @functools.cached_property
     def id(self):
         if self._id is None: self._id = str(uuid.uuid4())
         return self._id
 
-    @func.lazy_property
+    @functools.cached_property
     def unique_descriptor(self):
         return f'{self.url or self.inline},{self.last_modified}'
 
-    @func.lazy_property
+    @functools.cached_property
     def name(self):
         return '<inline asset>' if self.inline else self.url
 
@@ -928,7 +930,7 @@ class StylesheetAsset(WebAsset):
     def bundle_version(self):
         return self.bundle.get_version('css')
 
-    @func.lazy_property
+    @functools.cached_property
     def unique_descriptor(self):
         direction = (self.rtl and 'rtl') or 'ltr'
         autoprefixed = (self.autoprefix and 'autoprefixed') or ''
