@@ -23,9 +23,14 @@
                     isToMany="true"
                     nameCreateField="props.nameCreateField"
                     noSearchMore="props.noSearchMore"
-                    getOptionClassnames.bind="getOptionClassnames"
                     searchThreshold="props.searchThreshold"
-                />
+                >
+                    <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                        <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }">
+                            <t t-out="autoCompleteItemScope.label"/>
+                        </span>
+                    </t>
+                </Many2XAutocomplete>
             </div>
         </div>
     </t>

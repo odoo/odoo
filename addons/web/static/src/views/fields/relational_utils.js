@@ -193,7 +193,6 @@ export class Many2XAutocomplete extends Component {
         dropdown: { type: Boolean, optional: true },
         fieldString: String,
         getDomain: Function,
-        getOptionClassnames: { type: Function, optional: true },
         id: { type: String, optional: true },
         isToMany: { type: Boolean, optional: true },
         nameCreateField: { type: String, optional: true },
@@ -215,7 +214,6 @@ export class Many2XAutocomplete extends Component {
     static defaultProps = {
         context: {},
         dropdown: true,
-        getOptionClassnames: () => "",
         nameCreateField: "name",
         otherSources: [],
         quickCreate: null,
@@ -358,7 +356,6 @@ export class Many2XAutocomplete extends Component {
         return {
             value: record.id,
             label: record.display_name ? record.display_name.split("\n")[0] : _t("Unnamed"),
-            classList: this.props.getOptionClassnames(record),
         };
     }
     async loadOptionsSource(request) {
