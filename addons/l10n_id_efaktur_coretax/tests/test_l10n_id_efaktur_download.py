@@ -4,11 +4,11 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
-from .test_l10n_id_efaktur import TestIndonesianEfaktur
+from .test_l10n_id_efaktur_coretax import TestEfakturCoretax
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
-class TestIndonesianEfakturDownload(TestIndonesianEfaktur, AccountTestInvoicingHttpCommon):
+class TestIndonesianEfakturDownload(TestEfakturCoretax, AccountTestInvoicingHttpCommon):
 
     # ==========================================
     # Test outcome of downloading files
@@ -21,11 +21,11 @@ class TestIndonesianEfakturDownload(TestIndonesianEfaktur, AccountTestInvoicingH
         # Create invoice and post
         invoice = self.env["account.move"].create({
             "move_type": "out_invoice",
-            "partner_id": self.partner_id.id,
+            "partner_id": self.partner_a.id,
             "invoice_date": "2019-05-01",
             "date": "2019-05-01",
             "invoice_line_ids": [
-                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_sale_a.ids}),
             ],
             "l10n_id_kode_transaksi": "01",
         })
@@ -37,7 +37,7 @@ class TestIndonesianEfakturDownload(TestIndonesianEfaktur, AccountTestInvoicingH
         # Verify the result of download
         self.authenticate(self.env.user.login, self.env.user.login)
         result = self.url_open(url=action['url'])
-        self.assertRegex(result.headers.get('Content-Disposition', ''), r"efaktur_2019-05-01.*.csv")
+        self.assertRegex(result.headers.get('Content-Disposition', ''), r"efaktur_2019-05-01.*.xml")
 
         # If later on we try to download document for invoice 1 again, it should generate the same file
         document_name = result.headers.get('Content-Disposition')
@@ -53,11 +53,11 @@ class TestIndonesianEfakturDownload(TestIndonesianEfaktur, AccountTestInvoicingH
         # which results to 2 files having the same name
         invoice_1 = self.env["account.move"].create({
             "move_type": "out_invoice",
-            "partner_id": self.partner_id.id,
+            "partner_id": self.partner_a.id,
             "invoice_date": "2019-05-01",
             "date": "2019-05-01",
             "invoice_line_ids": [
-                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_sale_a.ids}),
             ],
             "l10n_id_kode_transaksi": "01",
         })
@@ -68,11 +68,11 @@ class TestIndonesianEfakturDownload(TestIndonesianEfaktur, AccountTestInvoicingH
 
         invoice_2 = self.env["account.move"].create({
             "move_type": "out_invoice",
-            "partner_id": self.partner_id.id,
+            "partner_id": self.partner_a.id,
             "invoice_date": "2019-05-01",
             "date": "2019-05-01",
             "invoice_line_ids": [
-                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_sale_a.ids}),
             ],
             "l10n_id_kode_transaksi": "01",
         })
@@ -83,10 +83,10 @@ class TestIndonesianEfakturDownload(TestIndonesianEfaktur, AccountTestInvoicingH
 
         # There should be total of 2 documents combined among the 2 invoices
         invoices = invoice_1 + invoice_2
-        self.assertEqual(len(invoices.l10n_id_efaktur_document), 2)
+        self.assertEqual(len(invoices.l10n_id_coretax_document), 2)
 
         # When downloading just the document, should generate zip file
-        action = invoices.l10n_id_efaktur_document.action_download()
+        action = invoices.l10n_id_coretax_document.action_download()
         self.authenticate(self.env.user.login, self.env.user.login)
         result = self.url_open(url=action['url'])
         self.assertRegex(result.headers.get('Content-Disposition'), r"efaktur.zip")

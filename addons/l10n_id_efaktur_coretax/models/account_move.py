@@ -34,6 +34,19 @@ COUNTRY_CODE_MAP = {
     "AX": "ALA", "AZ": "AZE", "IE": "IRL", "ID": "IDN", "UA": "UKR", "QA": "QAT", "MZ": "MOZ"
 }
 
+TAX_TRANSACTION_CODE = [
+    ('01', '01 To the Parties that is not VAT Collector (Regular Customers)'),
+    ('02', '02 To the Treasurer'),
+    ('03', '03 To other VAT Collectors other than the Treasurer'),
+    ('04', '04 Other Value of VAT Imposition Base'),
+    ('05', '05 Specified Amount (Article 9A Paragraph (1) VAT Law)'),
+    ('06', '06 to individuals holding foreign passports'),
+    ('07', '07 Deliveries that the VAT is not Collected'),
+    ('08', '08 Deliveries that the VAT is Exempted'),
+    ('09', '09 Deliveries of Assets (Article 16D of VAT Law)'),
+    ('10', '10 Other deliveries'),
+]
+
 class AccountMove(models.Model):
     _inherit = "account.move"
 
@@ -132,18 +145,38 @@ class AccountMove(models.Model):
         store=True,
     )
 
-    l10n_id_kode_transaksi = fields.Selection(selection_add=[('10', '10 Other deliveries')])
     l10n_id_coretax_efaktur_available = fields.Boolean(compute="_compute_l10n_id_coretax_efaktur_available")
     l10n_id_coretax_document = fields.Many2one('l10n_id_efaktur_coretax.document', readonly=True, copy=False, string="e-Faktur Document (Coretax)")
     l10n_id_coretax_custom_doc = fields.Char(help="Additional documentation when choosing kode 07 or 08")
+    l10n_id_coretax_custom_doc_month_year = fields.Date(string="Custom Document Month and Year")
+    l10n_id_kode_transaksi = fields.Selection(
+        selection=TAX_TRANSACTION_CODE,
+        string='Kode Transaksi',
+        help="The first 2 digits of tax code",
+        readonly=False,
+        copy=False,
+        compute="_compute_kode_transaksi",
+        store=True,
+    )
 
-    def _compute_need_kode_transaksi(self):
-        """ OVERRIDE: l10n_id_efaktur
+    @api.depends('partner_id')
+    def _compute_kode_transaksi(self):
+        for move in self:
+            move.l10n_id_kode_transaksi = move.commercial_partner_id.l10n_id_kode_transaksi
 
-        By setting this l10n_id_need_kode_transaksi, we can prevent the old E-Faktur flow to be
-        triggered(i.e. efaktur range consumption).
-        """
-        self.l10n_id_need_kode_transaksi = False
+    @api.constrains('l10n_id_kode_transaksi', 'line_ids', 'partner_id')
+    def _constraint_kode_ppn(self):
+        ppn_tag = self.env.ref('l10n_id.ppn_tag')
+        coretax_moves = self.filtered('l10n_id_coretax_efaktur_available')
+        vat_exempt_moves = coretax_moves.filtered(lambda m: m.l10n_id_kode_transaksi != '08')
+        non_vat_exempt_moves = coretax_moves - vat_exempt_moves
+        for move in vat_exempt_moves:
+            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product') \
+                    and any(ppn_tag.id not in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
+                raise UserError(_('Cannot mix VAT subject and Non-VAT subject items in the same invoice with this kode transaksi.'))
+        for move in non_vat_exempt_moves:
+            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
+                raise UserError(self.env._('Kode transaksi 08 is only for non VAT subject items.'))
 
     @api.depends('partner_id', 'line_ids.tax_ids')
     def _compute_l10n_id_coretax_efaktur_available(self):
@@ -279,7 +312,7 @@ class AccountMove(models.Model):
             "TrxCode": trx_code,
             "AddInfo": "",
             "CustomDoc": self.l10n_id_coretax_custom_doc or "",
-            "CustomDocMonthYear": "",
+            "CustomDocMonthYear": self.l10n_id_coretax_custom_doc_month_year and self.l10n_id_coretax_custom_doc_month_year.strftime("%m%Y") or "",
             "FacilityStamp": "",
             "RefDesc": self.name,
             "SellerIDTKU": self.company_id.vat + self.company_id.partner_id.l10n_id_tku,
