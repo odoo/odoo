@@ -1,0 +1,53 @@
+name: Auto Deploy on Branch Push
+
+on:
+  push:
+    branches:
+      - staging      # Trigger on pushes to the staging branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
+        HOST=${{ secrets.SERVER_HOST }}
+        PORT=${{ secrets.SERVER_PORT }}
+        ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts
+        echo "SSH key and known_hosts set up."
+
+    - name: Deploy via SSH
+      run: |
+          BRANCH=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+          echo "Current branch is $BRANCH"
+          
+          if [ "$BRANCH" = "staging" ]; then
+            echo "🚀 Deploying to staging..."
+            ssh -v -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
+              cd /opt/odoo/hibarr-crm/odoo-staging/
+
+              # 1. Clean up any Python cache files
+              sudo -u deploy find . -name '*.pyc' -delete
+              # 2. Mark the directory as safe
+              sudo -u deploy git config --global --add safe.directory /opt/odoo/hibarr-crm/odoo-staging
+              # 3. Reset to latest GitHub version
+              sudo -u deploy git fetch origin
+              sudo -u deploy git reset --hard origin/staging
+              
+              # 4. Restart the service
+              sudo systemctl restart odoo-staging.service
+              
+              echo '✅ Staging deployment complete!'
+
+            "
+          else
+            echo "⚠️ No deployment configured for branch: $BRANCH"
+          fi
