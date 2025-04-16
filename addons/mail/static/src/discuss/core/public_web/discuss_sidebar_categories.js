@@ -44,7 +44,7 @@ export class DiscussSidebarSubchannel extends Component {
     }
 
     get actionsTitle() {
-        return _t("Threads Actions");
+        return _t("Thread Actions");
     }
 
     get thread() {
