@@ -297,7 +297,8 @@ describe("system classes and attributes", () => {
                 undo(editor);
                 redo(editor);
             },
-            contentAfter: `<p class="x">b[]</p>`,
+            contentAfterEdit: `<p class="x">b[]</p>`,
+            contentAfter: `<p>b[]</p>`,
             config: { Plugins: Plugins },
         });
     });

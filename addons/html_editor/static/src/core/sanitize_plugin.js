@@ -10,7 +10,10 @@ export class SanitizePlugin extends Plugin {
     static id = "sanitize";
     static shared = ["sanitize"];
     resources = {
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_handlers: [
+            this.cleanForSave.bind(this),
+            this.cleanSystemAttributes.bind(this),
+        ],
         normalize_handlers: this.normalize.bind(this),
     };
 
@@ -72,6 +75,23 @@ export class SanitizePlugin extends Plugin {
         }
         for (const el of selectElements(root, "[data-oe-aria-label]")) {
             el.removeAttribute("aria-label");
+        }
+    }
+    cleanSystemAttributes({ root }) {
+        const classes = this.getResource("system_classes");
+        const selector = classes.map((c) => `.${c}`).join(",");
+        const elements = root.querySelectorAll(selector);
+        for (const el of elements) {
+            el.classList.remove(...classes);
+        }
+        const attributes = this.getResource("system_attributes");
+        const elementsWithAttributes = root.querySelectorAll(
+            attributes.map((x) => `[${x}]`).join(",")
+        );
+        for (const el of elementsWithAttributes) {
+            for (const attr of attributes) {
+                el.removeAttribute(attr);
+            }
         }
     }
 }

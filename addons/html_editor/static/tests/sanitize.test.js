@@ -1,5 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
+import { Plugin } from "@html_editor/plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 test("sanitize should remove nasty elements", async () => {
     const { editor } = await setupEditor("");
@@ -33,5 +35,25 @@ test("sanitize plugin should handle aria-label attribute with data-oe-aria-label
         contentBefore: `<p data-oe-aria-label="status">a[]</p>`,
         contentAfterEdit: `<p data-oe-aria-label="status" aria-label="status">a[]</p>`,
         contentAfter: `<p data-oe-aria-label="status">a[]</p>`,
+    });
+});
+
+test("should save without system_classes and system_attributes", async () => {
+    await testEditor({
+        contentBefore: `<p class="a foo" data-foo="test">hello[]</p>`,
+        contentAfterEdit: `<p class="a foo" data-foo="test">hello[]</p>`,
+        contentAfter: `<p class="a">hello[]</p>`,
+        config: {
+            Plugins: [
+                ...MAIN_PLUGINS,
+                class extends Plugin {
+                    static id = "testPlugin";
+                    resources = {
+                        system_classes: "foo",
+                        system_attributes: "data-foo",
+                    };
+                },
+            ],
+        },
     });
 });
