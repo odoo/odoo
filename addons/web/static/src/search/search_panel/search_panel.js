@@ -11,6 +11,8 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { exprToBoolean } from "@web/core/utils/strings";
 import { useSetupAction } from "@web/search/action_hook";
 
 //-------------------------------------------------------------------------
@@ -56,11 +58,12 @@ export class SearchPanel extends Component {
     };
 
     setup() {
+        this.keyExpandSidebar = `search_panel_expanded,${this.env.config.viewId},${this.env.config.actionId}`;
         this.state = useState({
             active: {},
             expanded: {},
             showMobileSearch: false,
-            sidebarExpanded: !this.env.searchModel.searchPanelInfo.fold,
+            sidebarExpanded: true,
         });
         this.hasImportedState = false;
         this.root = useRef("root");
@@ -69,6 +72,10 @@ export class SearchPanel extends Component {
         this.width = "10px";
 
         this.importState(this.env.searchPanelState);
+        const sidebarExpandedPreference = browser.localStorage.getItem(this.keyExpandSidebar);
+        if (sidebarExpandedPreference !== null) {
+            this.state.sidebarExpanded = exprToBoolean(sidebarExpandedPreference);
+        }
 
         useBus(this.env.searchModel, "update", async () => {
             await this.env.searchModel.sectionsPromise;
@@ -312,6 +319,7 @@ export class SearchPanel extends Component {
 
     toggleSidebar() {
         this.state.sidebarExpanded = !this.state.sidebarExpanded;
+        browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidebarExpanded);
     }
 
     /**
