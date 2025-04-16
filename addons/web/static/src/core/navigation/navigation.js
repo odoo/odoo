@@ -198,7 +198,7 @@ export class Navigator {
             this._hotkeyRemoves.push(
                 this._hotkeyService.add(hotkey, () => callback(this), {
                     allowRepeat,
-                    isAvailable: () => isAvailable(this),
+                    isAvailable: (target) => isAvailable(this, target),
                     bypassEditableProtection,
                 })
             );
@@ -289,7 +289,14 @@ export class Navigator {
             this.activeItemIndex < this.items.length &&
             oldActiveItem !== this.items[this.activeItemIndex]
         ) {
-            this.items[this.activeItemIndex]?.setActive();
+            const index = elements.indexOf(oldActiveItem?.el);
+            if (index < 0) {
+                this.items[this.activeItemIndex]?.setActive();
+            } else {
+                // set the new active item's index
+                this.activeItemIndex = index;
+                this.activeItem = this.items[this.activeItemIndex];
+            }
         }
     }
 

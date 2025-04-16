@@ -25,7 +25,9 @@ export class RecipientsInput extends Component {
         this.action = useService("action");
         this.store = useService("mail.store");
         this.popover = usePopover(RecipientsPopover, { position: "bottom-middle" });
-        this.onKeydown = useTagNavigation("recipientsInputRef", this.deleteTagByIndex.bind(this));
+        useTagNavigation("recipientsInputRef", {
+            delete: this.deleteTagByIndex.bind(this),
+        });
 
         this.openListViewToSelectResPartner = useSelectCreate({
             resModel: "res.partner",
@@ -207,7 +209,6 @@ export class RecipientsInput extends Component {
                             additionalOrSuggestedRecipient.email !== recipient.email
                     );
                 },
-                onKeydown: this.onKeydown.bind(this),
             });
         };
         for (const recipient of this.props.thread.suggestedRecipients) {

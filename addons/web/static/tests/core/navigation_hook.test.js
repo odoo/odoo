@@ -1,8 +1,8 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
 import { Navigator, useNavigation } from "@web/core/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { describe, destroy, expect, test } from "@odoo/hoot";
-import { hover, press } from "@odoo/hoot-dom";
+import { hover, press, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -210,4 +210,39 @@ test("navigation disabled when component is destroyed", async () => {
     await waitForSteps(["enable"]);
     destroy(component);
     await waitForSteps(["disable"]);
+});
+
+test("insert item before current", async () => {
+    class TestComp extends Component {
+        static props = [];
+        static template = xml`
+            <div class="container" t-ref="containerRef">
+                <t t-foreach="state.items" t-as="item" t-key="item">
+                    <div class="o-navigable" t-attf-class="item-{{item}}" tabindex="0" t-esc="item"/>
+                </t>
+            </div>
+        `;
+
+        setup() {
+            this.navigation = useNavigation("containerRef");
+            this.state = useState({ items: [1, 2, 3] });
+        }
+    }
+
+    const component = await mountWithCleanup(TestComp);
+    await press("arrowup");
+    expect(queryAllTexts(".o-navigable")).toEqual(["1", "2", "3"]);
+    expect(".item-3").toBeFocused();
+    expect(".item-3").toHaveClass("focus");
+
+    component.state.items.splice(2, 0, 10);
+    await animationFrame();
+
+    expect(queryAllTexts(".o-navigable")).toEqual(["1", "2", "10", "3"]);
+    expect(".item-3").toBeFocused();
+    expect(".item-3").toHaveClass("focus");
+
+    await press("arrowup");
+    expect(".item-10").toBeFocused();
+    expect(".item-10").toHaveClass("focus");
 });
