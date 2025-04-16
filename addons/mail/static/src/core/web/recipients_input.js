@@ -8,6 +8,7 @@ import { useSelectCreate } from "@web/views/fields/relational_utils";
 import { rpc } from "@web/core/network/rpc";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
+import { uniqueId } from "@web/core/utils/functions";
 import { RecipientsPopover } from "./recipients_popover";
 import { RecipientsInputTagsList } from "./recipients_input_tags_list";
 
@@ -181,7 +182,8 @@ export class RecipientsInput extends Component {
                 }
             );
             tags.push({
-                id: recipient.partner_id,
+                id: uniqueId("tag_"),
+                resId: recipient.partner_id,
                 canEdit: true,
                 text: recipient.name || recipient.email,
                 name: recipient.name,

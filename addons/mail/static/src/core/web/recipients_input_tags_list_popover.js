@@ -28,8 +28,11 @@ export class RecipientsInputTagsListPopover extends Component {
         });
     }
 
+    /**
+     * @deprecated
+     */
     get id() {
-        return this.props.tagToUpdate.id;
+        return this.props.tagToUpdate.resId;
     }
 
     onKeydown(ev) {
