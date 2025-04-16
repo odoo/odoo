@@ -1,5 +1,5 @@
 import { AttachmentView } from "@mail/core/common/attachment_view";
-import { Chatter } from "@mail/chatter/web_portal/chatter";
+import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { onMounted, onWillUnmount, useState } from "@odoo/owl";
 

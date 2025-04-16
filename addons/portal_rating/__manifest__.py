@@ -30,7 +30,7 @@ inclusion of rating directly within the customer portal discuss widget.
             'portal_rating/static/src/xml/**/*',
         ],
         'portal.assets_chatter': [
-            'portal_rating/static/src/chatter/frontend/**/*',
+            'portal_rating/static/src/chatter/portal/**/*',
         ],
         'portal.assets_chatter_style': [
             'portal_rating/static/src/scss/portal_rating.scss',

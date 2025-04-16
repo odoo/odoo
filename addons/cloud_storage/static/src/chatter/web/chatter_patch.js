@@ -1,4 +1,4 @@
-import { Chatter } from "@mail/chatter/web_portal/chatter";
+import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";

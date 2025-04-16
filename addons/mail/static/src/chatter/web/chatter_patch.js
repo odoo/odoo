@@ -2,7 +2,7 @@ import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { MessageCardList } from "@mail/core/common/message_card_list";
-import { Chatter } from "@mail/chatter/web_portal/chatter";
+import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
@@ -70,7 +70,7 @@ Object.assign(Chatter.defaultProps, {
 });
 
 /**
- * @type {import("@mail/chatter/web_portal/chatter").Chatter }
+ * @type {import("@mail/chatter/web_portal_project/chatter").Chatter }
  * @typedef {Object} Props
  * @property {function} [close]
  */

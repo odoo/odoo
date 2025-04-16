@@ -150,11 +150,11 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',
-            'mail/static/src/core/web_portal/**/*',
+            'mail/static/src/core/web_portal_project/**/*',
             'mail/static/src/core/web/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/public_web/**/*',
-            'mail/static/src/**/web_portal/**/*',
+            'mail/static/src/**/web_portal_project/**/*',
             'mail/static/src/**/web/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
             # discuss (loaded last to fix dependencies)
