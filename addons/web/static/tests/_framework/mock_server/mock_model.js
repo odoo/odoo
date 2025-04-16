@@ -2448,7 +2448,11 @@ export class Model extends Array {
 
         const idNamePairs = this.name_search(name, domain, operator, limit, kwargs);
         if (Object.keys(specification).length === 1 && "display_name" in specification) {
-            return idNamePairs.map(([id, name]) => ({ id, display_name: name }));
+            return idNamePairs.map(([id, name]) => ({
+                id,
+                display_name: name,
+                __formatted_display_name: name,
+            }));
         }
 
         return this.web_read(

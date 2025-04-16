@@ -47,6 +47,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { odoomark } from "@web/core/utils/strings";
 
 //
 // Commons
@@ -358,11 +359,13 @@ export class Many2XAutocomplete extends Component {
         });
     }
     mapRecordToOption(record) {
+        const label = record.__formatted_display_name || record.display_name;
         return {
             value: record.id,
-            label: record.display_name ? record.display_name.split("\n")[0] : _t("Unnamed"),
+            label: label ? odoomark(label.split("\n")[0]) : _t("Unnamed"),
         };
     }
+
     async loadOptionsSource(request) {
         if (this.lastProm) {
             this.lastProm.abort(false);
@@ -379,7 +382,10 @@ export class Many2XAutocomplete extends Component {
         if (request.length < this.props.searchThreshold) {
             if (!this.props.value) {
                 options.push({
-                    label: this.props.searchThreshold > 1 ? _t("Start typing %s characters", this.props.searchThreshold) : _t("Start typing..."),
+                    label:
+                        this.props.searchThreshold > 1
+                            ? _t("Start typing %s characters", this.props.searchThreshold)
+                            : _t("Start typing..."),
                     classList: "o_m2o_start_typing",
                     unselectable: true,
                 });
@@ -405,12 +411,11 @@ export class Many2XAutocomplete extends Component {
         }
 
         if (request.length) {
-            const slowCreate = () => {
-                return this.openMany2X({
+            const slowCreate = () =>
+                this.openMany2X({
                     context: this.getCreationContext(request),
                     nextRecordsContext: this.props.context,
                 });
-            };
 
             if (this.props.quickCreate) {
                 options.push({
@@ -631,11 +636,11 @@ export class X2ManyFieldDialog extends Component {
                             elementToFocus = this.modalRef.el.querySelector(`#${id}`);
                             if (elementToFocus) {
                                 break;
-                            };
-                        };
-                        elementToFocus = elementToFocus || this.modalRef.el.querySelector(
-                            ".o_field_widget input"
-                        );
+                            }
+                        }
+                        elementToFocus =
+                            elementToFocus ||
+                            this.modalRef.el.querySelector(".o_field_widget input");
                     } else {
                         elementToFocus = this.modalRef.el.querySelector("button.btn-primary");
                     }

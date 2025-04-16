@@ -148,8 +148,7 @@ test("Many2ManyTagsField with and without color on desktop", async () => {
     expect("[name=timmy] .o_tag").toHaveCount(0);
     await clickFieldDropdown("timmy");
     expect("[name='timmy'] .o-autocomplete.dropdown li").toHaveCount(3, {
-        message:
-            "autocomplete dropdown should have 3 entries (2 values + 'Search more...')",
+        message: "autocomplete dropdown should have 3 entries (2 values + 'Search more...')",
     });
     await clickFieldDropdownItem("timmy", "gold");
     expect("[name=timmy] .o_tag").toHaveCount(1);
@@ -1632,6 +1631,7 @@ test("Many2ManyTagsField with arch context in form view on desktop", async () =>
             expect.step("name search with context given");
             for (const res of result) {
                 res.display_name += " coucou";
+                res.__formatted_display_name += " coucou";
             }
         }
         return result;
@@ -1696,6 +1696,7 @@ test("Many2ManyTagsField with arch context in list view on desktop", async () =>
             expect.step("name search with context given");
             for (const res of result) {
                 res.display_name += " coucou";
+                res.__formatted_display_name += " coucou";
             }
         }
         return result;
