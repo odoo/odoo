@@ -81,8 +81,9 @@ export const fieldService = {
          * @param {string|null} resModel valid model name or null (case virtual)
          * @param {Object|null} fieldDefs
          * @param {string[]} names
+         * @param {boolean} followRelationalProperties
          */
-        async function _loadPath(resModel, fieldDefs, names) {
+        async function _loadPath(resModel, fieldDefs, names, followRelationalProperties) {
             if (!fieldDefs) {
                 return { isInvalid: "path", names, modelsInfo: [] };
             }
@@ -103,15 +104,16 @@ export const fieldService = {
             }
 
             let subResult;
-            if (fieldDef.relation) {
+            if (fieldDef.relation || (fieldDef.comodel && followRelationalProperties)) {
+                // Properties use `comodel`
                 subResult = await _loadPath(
-                    fieldDef.relation,
-                    await loadFields(fieldDef.relation),
+                    fieldDef.relation || fieldDef.comodel,
+                    await loadFields(fieldDef.relation || fieldDef.comodel),
                     remainingNames
                 );
             } else if (fieldDef.type === "properties") {
                 subResult = await _loadPath(
-                    "*",
+                    followRelationalProperties ? resModel : "*",
                     await _loadPropertyDefinitions(fieldDefs, name),
                     remainingNames
                 );
@@ -138,12 +140,12 @@ export const fieldService = {
          * @param {string} path
          * @returns {Promise<Object>}
          */
-        async function loadPath(resModel, path = "*") {
+        async function loadPath(resModel, path = "*", followRelationalProperties = false) {
             const fieldDefs = await loadFields(resModel);
             if (typeof path !== "string" || !path) {
                 throw new Error(`Invalid path: ${path}`);
             }
-            return _loadPath(resModel, fieldDefs, path.split("."));
+            return _loadPath(resModel, fieldDefs, path.split("."), followRelationalProperties);
         }
 
         return { loadFields, loadPath, loadPropertyDefinitions };
