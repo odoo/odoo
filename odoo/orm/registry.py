@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import functools
 import inspect
 import logging
 import os
@@ -395,7 +396,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 model._register_hook()
             env.flush_all()
 
-    @lazy_property
+    @functools.cached_property
     def field_computed(self) -> dict[Field, list[Field]]:
         """ Return a dict mapping each field to the fields computed by the same method. """
         computed: dict[Field, list[Field]] = {}
@@ -522,7 +523,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         return tree
 
-    @lazy_property
+    @functools.cached_property
     def _field_triggers(self) -> defaultdict[Field, defaultdict[tuple[str, ...], OrderedSet[Field]]]:
         """ Return the field triggers, i.e., the inverse of field dependencies,
         as a dictionary like ``{field: {path: fields}}``, where ``field`` is a

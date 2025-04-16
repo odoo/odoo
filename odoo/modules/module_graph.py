@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import functools
 import logging
 import typing
 
@@ -158,7 +159,7 @@ class ModuleNode:
         self.depends: OrderedSet[ModuleNode] = OrderedSet()
         self.module_graph: ModuleGraph = module_graph
 
-    @lazy_property
+    @functools.cached_property
     def order_name(self) -> str:
         if self.name.startswith('test_'):
             # The 'space' was chosen because it's smaller than any character that can be used by the module name.
@@ -167,7 +168,7 @@ class ModuleNode:
 
         return self.name
 
-    @lazy_property
+    @functools.cached_property
     def depth(self) -> int:
         """ Return the longest distance from self to module 'base' along dependencies. """
         if self.name.startswith('test_'):
@@ -176,7 +177,7 @@ class ModuleNode:
 
         return max(module.depth for module in self.depends) + 1 if self.depends else 0
 
-    @lazy_property
+    @functools.cached_property
     def phase(self) -> int:
         if self.name == 'base':
             return 0
@@ -242,7 +243,7 @@ class ModuleGraph:
         self._update_depth(names)
         self._update_from_database(names)
 
-    @lazy_property
+    @functools.cached_property
     def _imported_modules(self) -> OrderedSet[str]:
         result = ['studio_customization']
         if column_exists(self._cr, 'ir_module_module', 'imported'):

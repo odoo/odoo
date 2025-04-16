@@ -8,7 +8,6 @@ import logging
 import pprint
 import re
 import uuid
-import warnings
 
 from lxml import etree
 from lxml.etree import LxmlError
@@ -22,7 +21,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path
 from odoo.service.model import get_public_method
-from odoo.tools import _, config, lazy_property, frozendict, SQL
+from odoo.tools import _, config, frozendict, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
@@ -3027,7 +3026,7 @@ class NameManager:
         # this maps field names to the group of users that have access to the field
         self.field_groups = {}
 
-    @lazy_property
+    @functools.cached_property
     def field_info(self):
         field_info = self.model.fields_get(attributes=['readonly', 'required'])
         if not (self.model.has_access('write') or self.model.has_access('create')):

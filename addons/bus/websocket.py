@@ -33,7 +33,7 @@ from odoo.modules.registry import Registry
 from odoo.service import model as service_model
 from odoo.service.server import CommonServer
 from odoo.service.security import check_session
-from odoo.tools import config, lazy_property
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -938,7 +938,7 @@ class WebsocketRequest:
         """
         self.update_env(context=dict(self.env.context, **overrides))
 
-    @lazy_property
+    @functools.cached_property
     def cookies(self):
         cookies = MultiDict(self.httprequest.cookies)
         if self.registry:

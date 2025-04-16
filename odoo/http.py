@@ -131,14 +131,12 @@ endpoint
 import odoo.init  # import first for core setup
 
 import base64
-import collections
 import collections.abc
 import contextlib
 import functools
 import glob
 import hashlib
 import hmac
-import importlib
 import importlib.metadata
 import inspect
 import json
@@ -206,7 +204,7 @@ from .service import security, model as service_model
 from .service.server import thread_local
 from .tools import (config, consteq, file_path, get_lang, json_default,
                     parse_version, profiler, unique, exception_to_unicode)
-from .tools.func import filter_kwargs, lazy_property
+from .tools.func import filter_kwargs
 from .tools.misc import submap, real_time
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
@@ -1225,7 +1223,7 @@ class GeoIP(collections.abc.Mapping):
     def __init__(self, ip):
         self.ip = ip
 
-    @lazy_property
+    @functools.cached_property
     def _city_record(self):
         try:
             return root.geoip_city_db.city(self.ip)
@@ -1234,7 +1232,7 @@ class GeoIP(collections.abc.Mapping):
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_CITY
 
-    @lazy_property
+    @functools.cached_property
     def _country_record(self):
         if '_city_record' in vars(self):
             # the City class inherits from the Country class and the
@@ -1597,7 +1595,7 @@ class Request:
 
     _cr = cr
 
-    @lazy_property
+    @functools.cached_property
     def best_lang(self):
         lang = self.httprequest.accept_languages.best
         if not lang:
@@ -1613,7 +1611,7 @@ class Request:
         except (ValueError, KeyError):
             return None
 
-    @lazy_property
+    @functools.cached_property
     def cookies(self):
         cookies = werkzeug.datastructures.MultiDict(self.httprequest.cookies)
         if self.registry:
@@ -2307,7 +2305,7 @@ class Application:
         from odoo.service.server import load_server_wide_modules  # noqa: PLC0415
         load_server_wide_modules()
 
-    @lazy_property
+    @functools.cached_property
     def statics(self):
         """
         Map module names to their absolute ``static`` path on the file
@@ -2354,7 +2352,7 @@ class Application:
         except FileNotFoundError:
             return None
 
-    @lazy_property
+    @functools.cached_property
     def nodb_routing_map(self):
         nodb_routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
         for url, endpoint in _generate_routing_rules([''] + config['server_wide_modules'], nodb_only=True):
@@ -2367,7 +2365,7 @@ class Application:
 
         return nodb_routing_map
 
-    @lazy_property
+    @functools.cached_property
     def session_store(self):
         path = odoo.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
@@ -2378,7 +2376,7 @@ class Application:
             return self.nodb_routing_map
         return request.env['ir.http'].routing_map()
 
-    @lazy_property
+    @functools.cached_property
     def geoip_city_db(self):
         try:
             return geoip2.database.Reader(config['geoip_city_db'])
@@ -2389,7 +2387,7 @@ class Application:
             )
             raise
 
-    @lazy_property
+    @functools.cached_property
     def geoip_country_db(self):
         try:
             return geoip2.database.Reader(config['geoip_country_db'])

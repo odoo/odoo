@@ -1,6 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
+
+import functools
 import typing
+import warnings
+from collections.abc import Callable  # noqa: TC003
 from inspect import Parameter, getsourcefile, signature
 
 from decorator import decorator
@@ -11,51 +15,32 @@ __all__ = [
     'lazy',
     'lazy_classproperty',
     'lazy_property',
+    'reset_cached_properties',
     'synchronized',
 ]
 
 T = typing.TypeVar("T")
 P = typing.ParamSpec("P")
 
-if typing.TYPE_CHECKING:
-    from collections.abc import Callable
+
+def reset_cached_properties(obj) -> None:
+    """ Reset all cached properties on the instance `obj`. """
+    cls = type(obj)
+    obj_dict = vars(obj)
+    for name in list(obj_dict):
+        if isinstance(getattr(cls, name, None), functools.cached_property):
+            del obj_dict[name]
 
 
-class lazy_property(typing.Generic[T]):
-    """ Decorator for a lazy property of an object, i.e., an object attribute
-        that is determined by the result of a method call evaluated once. To
-        reevaluate the property, simply delete the attribute on the object, and
-        get it again.
-    """
-    def __init__(self, fget: Callable[[typing.Any], T]):
-        assert not fget.__name__.startswith('__'),\
-            "lazy_property does not support mangled names"
-        self.fget = fget
-
-    @typing.overload
-    def __get__(self, obj: None, cls: typing.Any, /) -> typing.Any: ...
-    @typing.overload
-    def __get__(self, obj: object, cls: typing.Any, /) -> T: ...
-
-    def __get__(self, obj, cls, /):
-        if obj is None:
-            return self
-        value = self.fget(obj)
-        setattr(obj, self.fget.__name__, value)
-        return value
-
-    @property
-    def __doc__(self):
-        return self.fget.__doc__
-
-    @staticmethod
-    def reset_all(obj) -> None:
-        """ Reset all lazy properties on the instance `obj`. """
-        cls = type(obj)
-        obj_dict = vars(obj)
-        for name in list(obj_dict):
-            if isinstance(getattr(cls, name, None), lazy_property):
-                obj_dict.pop(name)
+class lazy_property(functools.cached_property):
+    def __init__(self, func):
+        super().__init__(func)
+        warnings.warn(
+            "lazy_property is deprecated since Odoo 19, use `functools.cached_property`",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+    reset_all = staticmethod(reset_cached_properties)
 
 
 def conditional(condition: typing.Any, decorator: Callable[[T], T]) -> Callable[[T], T]:
