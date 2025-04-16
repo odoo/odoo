@@ -3218,7 +3218,7 @@ class BaseModel(metaclass=MetaModel):
                 {lang: {old_source_lang_term: new_term}}
 
             or (when ``digest`` is callable)::
-            
+
                 {lang: {digest(old_source_lang_term): new_term}}.
 
             where ``new_term`` can either be:
