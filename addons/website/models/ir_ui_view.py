@@ -290,7 +290,7 @@ class IrUiView(models.Model):
     def filter_duplicate(self):
         """ Filter current recordset only keeping the most suitable view per distinct key.
             Every non-accessible view will be removed from the set:
-            
+
               * In non website context, every view with a website will be removed
               * In a website context, every view from another website
         """
