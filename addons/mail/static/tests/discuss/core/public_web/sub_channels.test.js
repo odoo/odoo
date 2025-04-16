@@ -293,3 +293,54 @@ test("show notification when clicking on deleted thread", async () => {
         text: "This thread is no longer available.",
     });
 });
+
+test("only show 5 sub-threads in the sidebar", async () => {
+    const pyEnv = await startServer();
+    const demoPartnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const demoUserId = pyEnv["res.users"].create({ partner_id: demoPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannelIds = Array.from({ length: 6 }).map((_, i) =>
+        pyEnv["discuss.channel"].create({
+            name: `sub_${i + 1}`,
+            parent_channel_id: channelId,
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: demoPartnerId }),
+            ],
+        })
+    );
+    await start();
+    await openDiscuss(channelId);
+    let subThreads = [6, 5, 4, 3, 2];
+    await contains(".o-mail-DiscussSidebarSubchannel", { count: 5 });
+    for (const subThread of subThreads) {
+        await contains(".o-mail-DiscussSidebarSubchannel", { text: `sub_${subThread}` });
+    }
+    await click("button[title='Threads']");
+    await click(".o-mail-SubChannelList-thread", { text: "sub_1" });
+    subThreads = [6, 5, 4, 3, 1];
+    await contains(".o-mail-DiscussSidebarSubchannel", { count: 5 });
+    for (const subThread of subThreads) {
+        await contains(".o-mail-DiscussSidebarSubchannel", { text: `sub_${subThread}` });
+    }
+    await click(".o-mail-DiscussSidebarChannel-subChannel", { text: "sub_6" });
+    subThreads = [6, 5, 4, 3, 2];
+    await contains(".o-mail-DiscussSidebarSubchannel", { count: 5 });
+    for (const subThread of subThreads) {
+        await contains(".o-mail-DiscussSidebarSubchannel", { text: `sub_${subThread}` });
+    }
+    await withUser(demoUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "Some message",
+                message_type: "comment",
+            },
+            thread_id: subChannelIds[0],
+            thread_model: "discuss.channel",
+        })
+    );
+    subThreads = [1, 6, 5, 4, 3];
+    for (const subThread of subThreads) {
+        await contains(".o-mail-DiscussSidebarSubchannel", { text: `sub_${subThread}` });
+    }
+});
