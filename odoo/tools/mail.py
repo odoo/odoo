@@ -88,6 +88,8 @@ class _Cleaner(clean.Cleaner):
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         'white-space',
+        # appearance
+        'background-image', 'background-position', 'background-size', 'background-repeat', 'background-origin',
         # box model
         'border', 'border-color', 'border-radius', 'border-style', 'border-width', 'border-top', 'border-bottom',
         'height', 'width', 'max-width', 'min-width', 'min-height',

@@ -6,8 +6,8 @@
 # Nancy Momoland <thanh.np2502@gmail.com>, 2024
 # Vo Thanh Thuy, 2024
 # Tiffany Chang, 2024
-# Thi Huong Nguyen, 2025
 # Wil Odoo, 2025
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,6 +102,12 @@ msgid "%(refunded_order)s REFUND"
 msgstr "ĐƠN HOÀN TIỀN %(refunded_order)s "
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%(title)s %(product_name)s with %(taxes)s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 msgid "%(vatLabel)s: %(vatId)s"
@@ -125,6 +131,12 @@ msgstr "%s có tổng số tiền là %s, bạn có chắc chắn muốn xoá đ
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s đơn hàng đã được nhập"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%s untaxed"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1229,7 +1241,7 @@ msgstr "Bar"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Nomenclature"
-msgstr "Phép đặt tên mã vạch"
+msgstr "Danh pháp mã vạch"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_barcode_rule
@@ -1321,7 +1333,7 @@ msgstr "Bánh mì"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 msgid "Buffer:"
-msgstr "Đệm:"
+msgstr "Thời gian đệm:"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
@@ -4383,8 +4395,8 @@ msgid ""
 "No barcode nomenclature has been configured. This can be changed in the "
 "configuration settings."
 msgstr ""
-"Không có phép đặt tên mã vạch nào được cấu hình. Bạn có thể thay đổi trong "
-"cài đặt cấu hình."
+"Không có danh pháp mã vạch nào được cấu hình. Bạn có thể thay đổi trong cài "
+"đặt cấu hình."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4477,7 +4489,7 @@ msgstr "Không tìm thấy phiên nào"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
-msgstr "Phép đặt tên"
+msgstr "Danh pháp"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -6353,6 +6365,8 @@ msgstr "Làm mới màn hình"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Refund"
@@ -6648,6 +6662,8 @@ msgid "Sale line"
 msgstr "Dòng bán hàng"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sales"
 msgstr "Bán hàng"
@@ -9010,6 +9026,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
@@ -9351,7 +9376,7 @@ msgstr "sử dụng"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr "{{ !barcodeReader ? 'Không có phép đặt tên' : '' }}"
+msgstr "{{ !barcodeReader ? 'Không có danh pháp' : '' }}"
 
 #. module: point_of_sale
 #. odoo-javascript

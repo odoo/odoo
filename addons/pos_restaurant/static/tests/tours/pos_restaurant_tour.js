@@ -439,7 +439,6 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
 });
 
 registry.category("web_tour.tours").add("ComboSortedPreparationReceiptTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -488,7 +487,6 @@ registry.category("web_tour.tours").add("ComboSortedPreparationReceiptTour", {
 });
 
 registry.category("web_tour.tours").add("TableTransferPreparationChange1", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -517,7 +515,6 @@ registry.category("web_tour.tours").add("TableTransferPreparationChange1", {
 });
 
 registry.category("web_tour.tours").add("TableTransferPreparationChange2", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -543,7 +540,6 @@ registry.category("web_tour.tours").add("TableTransferPreparationChange2", {
 });
 
 registry.category("web_tour.tours").add("TableTransferPreparationChange3", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -564,7 +560,6 @@ registry.category("web_tour.tours").add("TableTransferPreparationChange3", {
 });
 
 registry.category("web_tour.tours").add("TableTransferPreparationChange4", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -591,7 +586,6 @@ registry.category("web_tour.tours").add("TableTransferPreparationChange4", {
 });
 
 registry.category("web_tour.tours").add("TableTransferPreparationChange5", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -620,7 +614,6 @@ registry.category("web_tour.tours").add("TableTransferPreparationChange5", {
 });
 
 registry.category("web_tour.tours").add("TableTransferPreparationChange6", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -635,7 +628,6 @@ registry.category("web_tour.tours").add("TableTransferPreparationChange6", {
 });
 
 registry.category("web_tour.tours").add("MultiPreparationPrinter", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -649,7 +641,6 @@ registry.category("web_tour.tours").add("MultiPreparationPrinter", {
 });
 
 registry.category("web_tour.tours").add("LeaveResidualOrder", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -668,7 +659,6 @@ registry.category("web_tour.tours").add("LeaveResidualOrder", {
 });
 
 registry.category("web_tour.tours").add("FinishResidualOrder", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
