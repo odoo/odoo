@@ -207,3 +207,10 @@ class ChannelController(http.Controller):
             domain.append(("name", "ilike", search_term))
         sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
         return Store(sub_channels).add(sub_channels._get_last_messages()).get_result()
+
+    @http.route("/discuss/channel/sub_channel/delete", methods=["POST"], type="jsonrpc", auth="user")
+    def discuss_delete_sub_channel(self, sub_channel_id, **kwargs):
+        channel = request.env["discuss.channel"].search([("id", "=", sub_channel_id)])
+        if not channel and not channel.parent_channel_id:
+            raise NotFound()
+        channel._delete_sub_channel()

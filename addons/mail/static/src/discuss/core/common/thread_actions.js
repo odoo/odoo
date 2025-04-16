@@ -2,6 +2,7 @@ import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
+import { DeleteThreadDialog } from "@mail/discuss/core/common/delete_thread_dialog";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 
 import { useComponent } from "@odoo/owl";
@@ -142,4 +143,38 @@ threadActionsRegistry
         sequence: 30,
         sequenceGroup: 10,
         toggle: true,
+    })
+    .add("delete-thread", {
+        component: DeleteThreadDialog,
+        componentProps(action) {
+            return { close: () => action.close() };
+        },
+        condition(component) {
+            return (
+                component.thread?.parent_channel_id &&
+                component.thread?.create_uid == component.store.self.userId
+            );
+        },
+        panelOuterClass: "bg-100",
+        icon: "fa fa-fw fa-trash",
+        iconLarge: "fa fa-fw fa-lg fa-trash",
+        name: _t("Delete Thread"),
+        close: (component, action) => action.popover?.close(),
+        setup(action) {
+            const component = useComponent();
+            if (!component.props.chatWindow) {
+                action.popover = usePopover(DeleteThreadDialog, {
+                    onClose: () => action.close(),
+                    popoverClass: action.panelOuterClass,
+                });
+            }
+        },
+        toggle: true,
+        open(component, action) {
+            action.popover?.open(component.root.el.querySelector(`[name="${action.id}"]`), {
+                thread: component.thread,
+            });
+        },
+        sequence: (comp) => (comp.props.chatWindow ? 50 : 40),
+        sequenceGroup: 10,
     });

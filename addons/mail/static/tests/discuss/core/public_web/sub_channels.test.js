@@ -271,3 +271,21 @@ test("muted channel hides sub-thread unless channel is selected or thread has un
     );
     await contains(".o-mail-DiscussSidebar-item:contains('New Thread')");
 });
+
+test("should allow thread deletion only if the current user is the author", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    const subChannelID = pyEnv["discuss.channel"].create({
+        name: "test thead",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(subChannelID);
+    await contains(".o-mail-Discuss-threadName[title='test thead']");
+    await click("[title='Delete Thread']");
+    await insertText(".o-mail-ActionPanel  .o-mail-DeleteThreadDialog-input", "delete");
+    await click("button:contains('Delete Thread')");
+    await contains(".o-mail-Discuss-threadName[title='Inbox']");
+});
