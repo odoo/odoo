@@ -651,7 +651,7 @@ export class PropertiesField extends Component {
                     parentFieldLabel: this.props.record.fields[this.definitionRecordField].string,
                 }
             ),
-            confirmLabel: _t("Delete"),
+            confirmLabel: _t("Delete Field"),
             confirm: () => {
                 const propertiesDefinitions = this.propertiesList;
                 propertiesDefinitions.find(

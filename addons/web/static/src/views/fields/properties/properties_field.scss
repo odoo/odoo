@@ -55,6 +55,10 @@
 .o_field_property_label {
     width: 180px;
 
+    .fa-caret-down,
+    .fa-caret-right {
+        width: 8px;
+    }
     .o_field_property_open_popover,
     .oi-draggable {
         cursor: pointer;
@@ -96,7 +100,9 @@
     cursor: pointer;
     user-select: none;
     height: 20px;
-    box-shadow: 0 $border-width 0 $o-form-separator-color;
+    &:not(.folded) {
+        box-shadow: 0 $border-width 0 $o-form-separator-color;
+    }
 }
 
 .o_field_properties {
