@@ -26,7 +26,7 @@ export class BuilderNumberInput extends Component {
         min: { type: Number, optional: true },
         max: { type: Number, optional: true },
         composable: { type: Boolean, optional: true },
-        applyapplyWithUnit: { type: Boolean, optional: true },
+        applyWithUnit: { type: Boolean, optional: true },
     };
     static components = { BuilderComponent, BuilderTextInputBase };
     static defaultProps = {
