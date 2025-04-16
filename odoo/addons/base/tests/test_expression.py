@@ -1,14 +1,11 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-import collections
-import textwrap
 import unittest
-from ast import literal_eval
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.fields import Command, Domain
-from odoo.tests.common import BaseCase, TransactionCase
+from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
+from odoo.tests import tagged
 
 _FALSE_LEAF, _TRUE_LEAF = (0, '=', 1), (1, '=', 1)
 
@@ -48,6 +45,7 @@ class TransactionExpressionCase(TransactionCase):
         return sql
 
 
+@tagged('res_partner')
 class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
 
     @classmethod
@@ -553,48 +551,54 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
 
     def test_15_o2m_subselect(self):
         Partner = self.env['res.partner']
-        state_us_1 = self.env.ref('base.state_us_1')
-        state_us_2 = self.env.ref('base.state_us_2')
-        state_us_3 = self.env.ref('base.state_us_3')
-        partners = Partner.create(
-            [
-                {
-                    "name": "Partner A",
-                    "child_ids": [
-                        (0, 0, {"name": "Child A1", "state_id": state_us_1.id}),
-                        (0, 0, {"name": "Child A2", "state_id": state_us_2.id}),
-                        (0, 0, {"name": "Child A2", "state_id": state_us_3.id}),
-                    ]
-                },
-                {
-                    "name": "Partner B",
-                    "child_ids": [
-                        (0, 0, {"name": "Child B1", "state_id": state_us_1.id}),
-                    ]
-                },
-                {
-                    "name": "Partner C",
-                    "child_ids": [
-                        (0, 0, {"name": "Child C2", "state_id": state_us_2.id}),
-                        (0, 0, {"name": "Child C3", "state_id": state_us_3.id}),
-                    ]
-                },
-                {
-                    "name": "Partner D",
-                    "state_id": state_us_1.id,
-                }
-            ]
-        )
+        industry_1, industry_2, industry_3 = self.env['res.partner.industry'].create([
+            {'name': 'Ind1'}, {'name': 'Ind2'}, {'name': 'Ind3'},
+        ])
+
+        commercial_fields = Partner._commercial_fields()
+        with patch.object(
+            Partner.__class__, '_commercial_fields',
+            lambda self: [c for c in commercial_fields if c != 'industry_id']
+        ), patch.object(Partner.__class__, '_validate_fields'):  # skip industry_id synchronize
+            partners = Partner.create(
+                [
+                    {
+                        "name": "Partner A",
+                        "child_ids": [
+                            (0, 0, {"name": "Child A1", "industry_id": industry_1.id}),
+                            (0, 0, {"name": "Child A2", "industry_id": industry_2.id}),
+                            (0, 0, {"name": "Child A2", "industry_id": industry_3.id}),
+                        ]
+                    },
+                    {
+                        "name": "Partner B",
+                        "child_ids": [
+                            (0, 0, {"name": "Child B1", "industry_id": industry_1.id}),
+                        ]
+                    },
+                    {
+                        "name": "Partner C",
+                        "child_ids": [
+                            (0, 0, {"name": "Child C2", "industry_id": industry_2.id}),
+                            (0, 0, {"name": "Child C3", "industry_id": industry_3.id}),
+                        ]
+                    },
+                    {
+                        "name": "Partner D",
+                        "industry_id": industry_1.id,
+                    }
+                ]
+            )
         partner_a, partner_b, partner_c, __ = partners
         init_domain = [("id", "in", partners.ids)]
 
-        # find partners with children in state_us_1
-        domain = init_domain + [("child_ids.state_id", "=", state_us_1.id)]
+        # find partners with children in industry_1
+        domain = init_domain + [("child_ids.industry_id", "=", industry_1.id)]
         result = self._search(Partner, domain, init_domain)
         self.assertEqual(result, partner_a + partner_b)
 
-        # find partners with children in other states than state_us_1
-        domain = init_domain + [("child_ids.state_id", "!=", state_us_1.id)]
+        # find partners with children in other industries than industry_1
+        domain = init_domain + [("child_ids.industry_id", "!=", industry_1.id)]
         result = self._search(Partner, domain, init_domain)
         self.assertEqual(result, partner_a + partner_c)
 
@@ -1396,6 +1400,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(other_partners, all_partner - partner)
 
 
+@tagged('res_partner')
 class TestExpression2(TransactionExpressionCase):
 
     def test_long_table_alias(self):
@@ -1405,6 +1410,7 @@ class TestExpression2(TransactionExpressionCase):
         self.env['res.users'].search([('name', '=', 'test')])
 
 
+@tagged('res_partner')
 class TestAutoJoin(TransactionExpressionCase):
 
     def test_auto_join(self):
@@ -1427,14 +1433,16 @@ class TestAutoJoin(TransactionExpressionCase):
         country_us = Country.search([('code', 'like', 'US')], limit=1)
         State = self.env['res.country.state']
         states = State.search([('country_id', '=', country_us.id)], limit=2)
+        Industry = self.env['res.partner.industry']
+        industries = Industry.create([{'name': 'Ind1'}, {'name': 'Ind2'}])
 
         # Create demo data: partners and bank object
-        p_a = partner_obj.create({'name': 'test__A', 'state_id': states[0].id})
-        p_b = partner_obj.create({'name': 'test__B', 'state_id': states[1].id})
-        p_c = partner_obj.create({'name': 'test__C', 'state_id': False})
-        p_aa = partner_obj.create({'name': 'test__AA', 'parent_id': p_a.id, 'state_id': states[0].id})
-        p_ab = partner_obj.create({'name': 'test__AB', 'parent_id': p_a.id, 'state_id': states[1].id})
-        p_ba = partner_obj.create({'name': 'test__BA', 'parent_id': p_b.id, 'state_id': states[0].id})
+        p_a = partner_obj.create({'name': 'test__A', 'industry_id': industries[0].id, 'state_id': states[0].id})
+        p_b = partner_obj.create({'name': 'test__B', 'industry_id': industries[1].id, 'state_id': states[1].id})
+        p_c = partner_obj.create({'name': 'test__C', 'industry_id': False, 'state_id': False})
+        p_aa = partner_obj.create({'name': 'test__AA', 'parent_id': p_a.id, 'industry_id': industries[0].id, 'state_id': states[0].id})
+        p_ab = partner_obj.create({'name': 'test__AB', 'parent_id': p_a.id, 'industry_id': industries[1].id, 'state_id': states[1].id})
+        p_ba = partner_obj.create({'name': 'test__BA', 'parent_id': p_b.id, 'industry_id': industries[0].id, 'state_id': states[0].id})
         b_aa = bank_obj.create({'acc_number': '123', 'acc_type': 'bank', 'partner_id': p_aa.id})
         b_ab = bank_obj.create({'acc_number': '456', 'acc_type': 'bank', 'partner_id': p_ab.id})
         b_ba = bank_obj.create({'acc_number': '789', 'acc_type': 'bank', 'partner_id': p_ba.id})
@@ -1504,7 +1512,7 @@ class TestAutoJoin(TransactionExpressionCase):
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join off: ('state_id.country_id.code', 'like', '..') incorrect result")
 
-        partners = self._search(partner_obj, ['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
+        partners = self._search(partner_obj, ['|', ('industry_id.name', '=', industries[0].name), ('name', 'like', 'C')])
         self.assertIn(p_a, partners, '_auto_join off: disjunction incorrect result')
         self.assertIn(p_c, partners, '_auto_join off: disjunction incorrect result')
 
@@ -1514,7 +1522,7 @@ class TestAutoJoin(TransactionExpressionCase):
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') incorrect result")
 
-        partners = self._search(partner_obj, ['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
+        partners = self._search(partner_obj, ['|', ('industry_id.name', '=', industries[0].name), ('name', 'like', 'C')])
         self.assertIn(p_a, partners, '_auto_join: disjunction incorrect result')
         self.assertIn(p_c, partners, '_auto_join: disjunction incorrect result')
 
@@ -1603,6 +1611,7 @@ class TestAutoJoin(TransactionExpressionCase):
         )
 
 
+@tagged('res_partner')
 class TestQueries(TransactionCase):
 
     def test_logic(self):
@@ -1770,6 +1779,7 @@ class TestQueries(TransactionCase):
             Model.name_search('foo', operator='not ilike')
 
 
+@tagged('res_partner')
 class TestMany2one(TransactionCase):
     def setUp(self):
         super().setUp()
@@ -2098,6 +2108,7 @@ class TestMany2one(TransactionCase):
             self.assertGreater(len(self.Partner.name_search('test')), 0)
 
 
+@tagged('res_partner')
 class TestOne2many(TransactionCase):
     def setUp(self):
         super().setUp()
@@ -2328,6 +2339,7 @@ class TestOne2many(TransactionCase):
             self.Partner.search([('bank_ids', '=', False)], order='id')
 
 
+@tagged('res_partner')
 class TestMany2many(TransactionCase):
     def setUp(self):
         super().setUp()
