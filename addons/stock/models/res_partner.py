@@ -22,8 +22,5 @@ class ResPartner(models.Model):
         action = self.env["ir.actions.act_window"]._for_xml_id("stock.action_production_lot_form")
         action.update({
             'domain': [('partner_ids', '=', self.id)],
-            'context': {
-                'default_partner_ids': self.id,
-            }
         })
         return action
