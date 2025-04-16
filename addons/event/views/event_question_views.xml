@@ -40,6 +40,19 @@
         <field name="arch" type="xml">
             <form string="Question">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_question_answers"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-line-chart"
+                                invisible="question_type not in ['simple_choice', 'text_box']">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Attendee answers
+                                </span>
+                            </div>
+                        </button>
+                    </div>
                     <div class="alert alert-warning" role="alert"
                         invisible="event_count == 0">
                         This question is used by
@@ -92,6 +105,13 @@
                     invisible="question_type != 'simple_choice'"/>
                 <field name="is_default"/>
                 <field name="is_reusable" optional="hide"/>
+                <button name="action_view_question_answers"
+                        type="object"
+                        class="p-0"
+                        icon="fa-bar-chart pe-1"
+                        string="Stats"
+                        title="Answer Breakdown"
+                        invisible="question_type not in ['simple_choice', 'text_box']"/>
             </list>
         </field>
     </record>
@@ -104,6 +124,7 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='is_reusable']" position="replace"/>
+            <xpath expr="//button[@name='action_view_question_answers']" position="replace"/>
         </field>
     </record>
 

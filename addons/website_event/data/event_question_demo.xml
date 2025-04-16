@@ -86,8 +86,8 @@
         <field name="title">Meal Type</field>
         <field name="question_type">simple_choice</field>
         <field name="once_per_order" eval="False"/>
-        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_0'))]"/>
-        <field name="is_reusable">False</field>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_0')), (4, ref('event.event_7'))]"/>
+        <field name="is_reusable">True</field>
     </record>
     <record id="event_question_meal_type_answer_0" model="event.question.answer">
         <field name="name">Mixed</field>
