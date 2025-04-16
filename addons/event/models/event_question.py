@@ -27,6 +27,7 @@ class EventQuestion(models.Model):
                                     help="If True, this question will be asked only once and its value will be propagated to every attendees."
                                          "If not it will be asked for every attendee of a reservation.")
     is_mandatory_answer = fields.Boolean('Mandatory Answer')
+    active = fields.Boolean('Active', default=True)
 
     def write(self, vals):
         """ We add a check to prevent changing the question_type of a question that already has answers.
