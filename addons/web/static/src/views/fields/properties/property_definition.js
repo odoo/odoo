@@ -29,6 +29,7 @@ export class PropertyDefinition extends Component {
         PropertyTags,
     };
     static props = {
+        fieldName: { type: String },
         readonly: { type: Boolean, optional: true },
         canChangeDefinition: { type: Boolean, optional: true },
         checkDefinitionWriteAccess: { type: Function, optional: true },
