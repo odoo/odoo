@@ -56,10 +56,7 @@ export class RecipientsInputTagsList extends TagsList {
         this.popover.open(this.tagToUpdateRef.el, {
             tagToUpdate: this.state.tagToUpdate,
             onUpdateTag: (newEmail) =>
-                this.props.updateRecipient(
-                    newEmail,
-                    this.state.tagToUpdate.resId ?? this.state.tagToUpdate.id
-                ),
+                this.props.updateRecipient(newEmail, this.state.tagToUpdate.resId),
         });
     }
 }
