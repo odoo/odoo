@@ -107,7 +107,7 @@
                             </div>
                         </div>
                         <div class="row g-0 pb-4 ms-2 mt-auto">
-                            <div name="card_left" class="col-6">
+                            <div name="card_left" class="col-6 d-flex flex-wrap align-items-center gap-2">
                                 <button t-if="record.current_session_state.raw_value != 'closing_control'" class="btn btn-primary" name="open_ui" type="object">
                                     <t t-if="record.current_session_state.raw_value === 'opened'">Continue Selling</t>
                                     <t t-else="">Open Register</t>
