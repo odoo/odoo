@@ -13,100 +13,122 @@ from odoo import Command
 from odoo.tests import Form, TransactionCase
 
 
-class TestBasic(TransactionCase):
-    def test_defaults(self):
-        """
-        Checks that we can load a default form view and perform trivial
-        default_get & onchanges & computations
-        """
-        f = Form(self.env['test_testing_utilities.a'])
-        self.assertEqual(f.id, False, "check that our record is not in db (yet)")
+class TestFormFields(TransactionCase):
+    def test_form_load(self):
+        pass
 
-        self.assertEqual(f.f2, 42)
-        self.assertEqual(f.f3, 21)
-        self.assertEqual(f.f4, 42)
+    def test_form_field_with_default(self):
+        form = Form(self.env['test_testing_utilities.form_default'])
 
-        f.f1 = '4'
-        self.assertEqual(f.f2, 42)
-        self.assertEqual(f.f3, 21)
-        self.assertEqual(f.f4, 10)
+        self.assertEqual(form.field_default, 42)
 
-        f.f2 = 8
-        self.assertEqual(f.f3, 4)
-        self.assertEqual(f.f4, 2)
+        record = form.save()
 
-        # f.record cannot be accessed yet
-        with self.assertRaises(AssertionError):
-            f.record
+        self.assertEqual(record.field_default, 42)
 
-        r = f.save()
-        self.assertEqual(
-            (r.f1, r.f2, r.f3, r.f4),
-            ('4', 8, 4, 2),
-        )
-        self.assertEqual(f.record, r)
+    def test_form_field_with_onchange(self):
+        form = Form(self.env['test_testing_utilities.form_onchange'])
 
-    def test_required(self):
-        f = Form(self.env['test_testing_utilities.a'])
-        # f1 no default & no value => should fail
-        with self.assertRaisesRegex(AssertionError, 'f1 is a required field'):
-            f.save()
-        # set f1 and unset f2 => should work
-        f.f1 = '1'
-        f.f2 = False
-        r = f.save()
-        self.assertEqual(
-            (r.f1, r.f2, r.f3, r.f4),
-            ('1', 0, 0, 0),
-        )
+        self.assertEqual(form.field_onchange, 0)
 
-    def test_required_bool(self):
-        f = Form(self.env['test_testing_utilities.req_bool'])
-        f.f_bool = False
-        r = f.save()
-        self.assertEqual(r.f_bool, 0)
+        form.field_trigger_onchange = 84
 
-        f2 = Form(self.env['test_testing_utilities.req_bool'])
-        r2 = f2.save()
-        self.assertEqual(r2.f_bool, 0)
+        self.assertEqual(form.field_onchange, 42)
 
-    def test_readonly(self):
-        """
-        Checks that fields with readonly modifiers (marked as readonly or
-        computed w/o set) raise an error when set.
-        """
-        f = Form(self.env['test_testing_utilities.readonly'])
+        record = form.save()
+
+        self.assertEqual(record.field_onchange, 42)
+
+    def test_form_field_with_compute(self):
+        form = Form(self.env['test_testing_utilities.form_compute'])
+
+        self.assertEqual(form.field_compute, 0)
+
+        form.field_trigger_compute_01 = 84
+        form.field_trigger_compute_02 = 2
+
+        self.assertEqual(form.field_compute, 42)
+
+        record = form.save()
+
+        self.assertEqual(record.field_compute, 42)
+
+    def test_form_field_with_required(self):
+        form = Form(self.env['test_testing_utilities.form_required'])
+
+        self.assertEqual(form.field_required, False)
+        self.assertEqual(form.field_not_required, False)
 
         with self.assertRaises(AssertionError):
-            f.f1 = '5'
+            # Can not save with the empty required field.
+            form.save()
+
+        form.field_required = '42'
+
+        self.assertEqual(form.field_required, '42')
+        self.assertEqual(form.field_not_required, False)
+
+        # Can save with the empty non-required field.
+        record = form.save()
+
+        self.assertEqual((record.field_required, record.field_not_required), ('42', False))
+
+    def test_form_field_with_required_from_xml(self):
+        pass
+
+    def test_form_boolean_with_required(self):
+        form = Form(self.env['test_testing_utilities.form_required_boolean'])
+
+        form.field_required_boolean = False
+
+        record = form.save()
+
+        self.assertEqual(record.field_required_boolean, False)
+
+    def test_form_empty_boolean_with_required(self):
+        form = Form(self.env['test_testing_utilities.form_required_boolean'])
+
+        record = form.save()
+
+        self.assertEqual(record.field_required_boolean, False)
+
+    def test_form_field_with_readonly(self):
+        form = Form(self.env['test_testing_utilities.form_readonly'])
+
         with self.assertRaises(AssertionError):
-            f.f2 = 42
+            form.field_readonly = '42'
 
-    def test_readonly_save(self):
-        """ Should not save readonly fields unless they're force_save
-        """
-        f = Form(self.env['test_testing_utilities.a'], view='test_testing_utilities.non_normalized_attrs')
+    def test_form_field_with_readonly_from_xml_and_force_save(self):
+        form = Form(self.env['test_testing_utilities.form_readonly_xml'], view='test_testing_utilities.readonly')
 
-        f.f1 = '1'
-        f.f2 = 987
-        self.assertEqual(f.f5, 987)
-        self.assertEqual(f.f6, 987)
-        r = f.save()
-        self.assertEqual(r.f5, 0)
-        self.assertEqual(r.f6, 987)
+        form.field_trigger_without_force_save = 42
+        form.field_trigger_with_force_save = 42
 
-    def test_attrs(self):
-        """ Checks that attrs/modifiers with non-normalized domains work
-        """
-        f = Form(self.env['test_testing_utilities.a'], view='test_testing_utilities.non_normalized_attrs')
+        self.assertEqual(form.field_without_force_save, 42)
+        self.assertEqual(form.field_with_force_save, 42)
 
-        # not readonly yet, should work
-        f.f2 = 5
-        # make f2 readonly
-        f.f1 = '63'
-        f.f3 = 5
+        record = form.save()
+
+        self.assertEqual(record.field_without_force_save, 0)
+        self.assertEqual(record.field_with_force_save, 42)
+
+    def test_form_field_with_conditional_readonly_from_xml(self):
+        form = Form(self.env['test_testing_utilities.form_readonly_xml'], view='test_testing_utilities.readonly')
+
+        # field_with_condition is not readonly yet.
+        form.field_with_condition = 42
+
+        # Make field_with_condition readonly.
+        form.field_trigger_condition = 42
+
         with self.assertRaises(AssertionError):
-            f.f2 = 6
+            form.field_with_condition = 43
+
+    def test_form_field_with_compute_and_without_inverse(self):
+        form = Form(self.env['test_testing_utilities.form_readonly'])
+
+        with self.assertRaises(AssertionError):
+            form.field_compute_readonly = 42
 
 
 class TestM2O(TransactionCase):

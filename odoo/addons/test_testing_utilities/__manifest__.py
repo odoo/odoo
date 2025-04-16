@@ -10,6 +10,7 @@ supposed to do
     'data': [
         'security/ir.model.access.csv',
         'views/menu.xml',
+        'views/readonly.xml'
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

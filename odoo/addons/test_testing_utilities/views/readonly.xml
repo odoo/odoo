@@ -1,0 +1,16 @@
+<odoo>
+    <record id="readonly" model="ir.ui.view">
+        <field name="name">Non Normalised Domains</field>
+        <field name="model">test_testing_utilities.form_readonly_xml</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="field_with_condition" readonly="field_trigger_condition == 42"/>
+                <field name="field_trigger_condition"/>
+                <field name="field_without_force_save" readonly="1"/>
+                <field name="field_trigger_without_force_save"/>
+                <field name="field_with_force_save" readonly="1" force_save="1"/>
+                <field name="field_trigger_with_force_save"/>
+            </form>
+        </field>
+    </record>
+</odoo>

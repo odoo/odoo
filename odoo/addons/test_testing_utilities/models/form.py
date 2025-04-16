@@ -3,6 +3,88 @@ from itertools import zip_longest
 from odoo import Command, api, fields, models
 
 
+class TestTestingUtilitiesFormDefault(models.Model):
+    _name = 'test_testing_utilities.form_default'
+    _description = 'Testing Utilities Form Default'
+
+    field_default = fields.Integer(default=42)
+
+
+class TestTestingUtilitiesFormRequired(models.Model):
+    _name = 'test_testing_utilities.form_required'
+    _description = 'Testing Utilities Form Required'
+
+    field_required = fields.Char(required=True)
+    field_required_boolean = fields.Boolean(required=True)
+    field_not_required = fields.Char()
+
+
+class TestTestingUtilitiesFormRequiredBoolean(models.Model):
+    _name = 'test_testing_utilities.form_required_boolean'
+    _description = 'Testing Utilities Form Required Boolean'
+
+    field_required_boolean = fields.Boolean(required=True)
+
+
+class TestTestingUtilitiesFormOnchange(models.Model):
+    _name = 'test_testing_utilities.form_onchange'
+    _description = 'Testing Utilities Form Onchange'
+
+    field_onchange = fields.Integer()
+    field_trigger_onchange = fields.Integer()
+
+    @api.onchange('field_trigger_onchange')
+    def _onchange_field_onchange(self):
+        self.field_onchange = self.field_trigger_onchange / 2
+
+
+class TestTestingUtilitiesFormCompute(models.Model):
+    _name = 'test_testing_utilities.form_compute'
+    _description = 'Testing Utilities Form Compute'
+
+    field_compute = fields.Integer(compute='_compute_field_compute')
+    field_trigger_compute_01 = fields.Integer()
+    field_trigger_compute_02 = fields.Integer()
+
+    @api.depends('field_trigger_compute_01', 'field_trigger_compute_02')
+    def _compute_field_compute(self):
+        for record in self:
+            record.field_compute = record.field_trigger_compute_01 / (int(record.field_trigger_compute_02) or 1)
+
+
+class TestTestingUtilitiesFormReadonly(models.Model):
+    _name = 'test_testing_utilities.form_readonly'
+    _description = 'Testing Utilities Form Readonly'
+
+    field_readonly = fields.Integer(default=42, readonly=True)
+    field_compute_readonly = fields.Integer(compute='_compute_field_compute_readonly')
+
+    @api.depends('field_readonly')
+    def _compute_field_compute_readonly(self):
+        for record in self:
+            record.field_compute_readonly = 2 * record.field_readonly
+
+
+class TestTestingUtilitiesFormReadonlyXml(models.Model):
+    _name = 'test_testing_utilities.form_readonly_xml'
+    _description = 'Testing Utilities Form Readonly XML'
+
+    field_with_condition = fields.Integer()
+    field_trigger_condition = fields.Integer()
+    field_without_force_save = fields.Integer()
+    field_trigger_without_force_save = fields.Integer()
+    field_with_force_save = fields.Integer()
+    field_trigger_with_force_save = fields.Integer()
+
+    @api.onchange('field_trigger_without_force_save')
+    def _onchange_field_without_force_save(self):
+        self.field_without_force_save = self.field_trigger_without_force_save
+
+    @api.onchange('field_trigger_with_force_save')
+    def _onchange_field_with_force_save(self):
+        self.field_with_force_save = self.field_trigger_with_force_save
+
+
 class Test_Testing_UtilitiesA(models.Model):
     _name = 'test_testing_utilities.a'
     _description = 'Testing Utilities A'
@@ -319,13 +401,6 @@ class O2m_Readonly_Subfield_Child(models.Model):
 
     def _inverse_f(self):
         raise AssertionError("Inverse of f should not be called")
-
-
-class Test_Testing_UtilitiesReq_Bool(models.Model):
-    _name = 'test_testing_utilities.req_bool'
-    _description = 'test_testing_utilities.req_bool'
-
-    f_bool = fields.Boolean(required=True)
 
 
 class O2m_Changes_Parent(models.Model):

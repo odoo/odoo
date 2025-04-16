@@ -1,6 +1,6 @@
 from . import (
     test_env,
-    test_form_impl,
+    test_form,
     test_freeze_time,
     test_lxml,
     test_methods,
