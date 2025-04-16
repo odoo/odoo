@@ -99,7 +99,10 @@
                             </field>
                         </page>
                          <page string="Questions" name="questions">
-                            <field name="question_ids" string="Question" nolabel="1" context="{'form_view_ref': 'event.event_question_view_add_form'}">
+                            <field name="question_ids" string="Question" nolabel="1"
+                                   context="{
+                                   'list_view_ref': 'event.event_question_view_add_list',
+                                   'form_view_ref': 'event.event_question_view_add_form'}">
                                 <list>
                                     <field name="sequence" widget="handle" />
                                     <field name="title"/>
