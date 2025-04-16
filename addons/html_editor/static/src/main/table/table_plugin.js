@@ -794,9 +794,10 @@ export class TablePlugin extends Plugin {
         this._currentMouseState = ev.type;
         this._lastMousedownPosition = [ev.x, ev.y];
         this.deselectTable();
+        const isPointerInsideCell = this.isPointerInsideCell(ev);
         const td = closestElement(ev.target, "td");
         if (
-            td &&
+            isPointerInsideCell &&
             !isProtected(td) &&
             !isProtecting(td) &&
             ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
@@ -816,7 +817,7 @@ export class TablePlugin extends Plugin {
                 this._isTripleClickInTable = true;
             }
         }
-        if (this.isPointerInsideCell(ev)) {
+        if (isPointerInsideCell) {
             this.editable.addEventListener("mousemove", this.onMousemove);
             const currentSelection = this.dependencies.selection.getEditableSelection();
             // disable dragging on table
