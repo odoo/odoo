@@ -21,7 +21,6 @@
                     context="props.context"
                     getDomain.bind="getDomain"
                     isToMany="true"
-                    getOptionClassnames.bind="getOptionClassnames"
                 >
                     <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                         <t t-call="{{ constructor.optionTemplate }}"/>
@@ -35,7 +34,9 @@
         <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
             <img t-if="autoCompleteItemScope.value" class="rounded me-1"
                 t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.value}}/avatar_128"/>
-            <t t-esc="autoCompleteItemScope.label"/>
+            <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }" t-esc="autoCompleteItemScope.label">
+                <t t-out="autoCompleteItemScope.label"/>
+            </span>
         </span>
     </t>
 

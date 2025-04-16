@@ -257,8 +257,8 @@ test("Many2ManyTagsField with color: rendering and edition on desktop", async ()
 
     // add an other existing tag
     await contains("div[name='timmy'] .o-autocomplete.dropdown input").click();
-    expect(`.dropdown-item-selected`).toHaveCount(2);
-    expect(queryAllTexts`.dropdown-item-selected`).toEqual(["gold", "silver"]);
+    expect(`.dropdown-item .fw-bold`).toHaveCount(2);
+    expect(queryAllTexts`.dropdown-item .fw-bold`).toEqual(["gold", "silver"]);
     expect(".o-autocomplete--dropdown-menu li").toHaveCount(4);
     expect(".o-autocomplete--dropdown-menu li a:eq(2)").toHaveText("red");
 

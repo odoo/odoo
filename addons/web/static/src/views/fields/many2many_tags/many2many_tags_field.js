@@ -192,10 +192,9 @@ export class Many2ManyTagsField extends Component {
         ]).toList(this.props.context);
     }
 
-    getOptionClassnames(record) {
+    isSelected(record) {
         const records = this.props.record.data[this.props.name].records;
-        const isSelected = records.some((r) => r.resId === record.id);
-        return isSelected ? "dropdown-item-selected" : "";
+        return records.some((r) => r.resId === record.id);
     }
 }
 
