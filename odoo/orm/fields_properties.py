@@ -724,10 +724,13 @@ class Properties(Field):
         if isinstance(value, str):
             sql_left = SQL("(%s ->> %s)", raw_sql_field, property_name)  # JSONified value
             sql_right = SQL("%s", value)
-            return SQL(
+            sql = SQL(
                 "%s%s%s",
                 unaccent(sql_left), sql_operator, unaccent(sql_right),
             )
+            if Domain.is_negative_operator(operator):
+                sql = SQL("(%s OR %s IS NULL)", sql, sql_left)
+            return sql
 
         sql_right = SQL("%s", json.dumps(value))
         return SQL(
