@@ -367,8 +367,8 @@ class TestMailMessageAccess(MessageAccessCommon):
             ('mail_message_id', '=', new_msg.id),
         ])
         self.assertEqual(
-            new_mail.references, new_msg.message_id,
-            'References should not include message parent message_id, as it is a note hence internal')
+            new_mail.references, f'{message.message_id} {new_msg.message_id}',
+            'References should not include message parent message_id, even if internal note, to help thread formation')
         self.assertTrue(new_mail)
         self.assertEqual(new_msg.parent_id, message)
 
