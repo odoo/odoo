@@ -2199,6 +2199,10 @@ export class PosStore extends Reactive {
         const { start_category, iface_start_categ_id } = this.config;
         this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
     }
+
+    getPhoneSearchFields() {
+        return ["phone", "mobile"];
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
