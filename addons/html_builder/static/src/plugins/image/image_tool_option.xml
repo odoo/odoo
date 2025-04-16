@@ -2,6 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageToolOption">
+    <BuilderRow label.translate="Media">
+        <BuilderButton
+            action="'replaceMedia'"
+            title.translate="Replace image"
+            className="'o_we_bg_success'"
+            preview="false"
+            label.translate="Replace" />
+    </BuilderRow>
     <ImageShapeOption />
     <BuilderRow label.translate="Description"
         tooltip.translate="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">

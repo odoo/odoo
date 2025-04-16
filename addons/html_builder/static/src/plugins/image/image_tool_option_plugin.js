@@ -10,7 +10,7 @@ import { IMAGE_TOOL, ALIGNMENT_STYLE_PADDING } from "@html_builder/utils/option_
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
-    static dependencies = ["history", "userCommand", "imagePostProcess", "imageCrop"];
+    static dependencies = ["history", "userCommand", "imagePostProcess", "imageCrop", "media"];
     resources = {
         builder_options: [
             withSequence(IMAGE_TOOL, {
@@ -127,6 +127,23 @@ class ImageToolOptionPlugin extends Plugin {
                 },
                 apply: ({ loadResult: updateImageAttributes }) => {
                     updateImageAttributes();
+                },
+            },
+            replaceMedia: {
+                load: async () => {
+                    let icon;
+                    await this.dependencies.media.openMediaDialog({
+                        save: (newIcon) => {
+                            icon = newIcon;
+                        },
+                    });
+                    return icon;
+                },
+                apply: ({ editingElement, loadResult: newImage }) => {
+                    if (!newImage) {
+                        return;
+                    }
+                    editingElement.replaceWith(newImage);
                 },
             },
         };
