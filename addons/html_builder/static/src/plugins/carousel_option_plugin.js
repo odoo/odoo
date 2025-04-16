@@ -19,6 +19,7 @@ export class CarouselOptionPlugin extends Plugin {
         on_cloned_handlers: this.onCloned.bind(this),
         on_will_clone_handlers: this.onWillClone.bind(this),
         on_add_element_handlers: this.onAddElement.bind(this),
+        normalize_handlers: this.normalize.bind(this),
     };
 
     getActions() {
@@ -153,6 +154,37 @@ export class CarouselOptionPlugin extends Plugin {
                 el.setAttribute("href", "#" + id);
             }
         });
+    }
+    normalize(root) {
+        const carousel = root.closest(".s_carousel");
+        const allCarousels = root.querySelectorAll(".s_carousel");
+        if (carousel) {
+            allCarousels.push(carousel);
+        }
+        this.fixWrongHistoryOnCarousels(allCarousels);
+    }
+    /**
+     * This fix is exists to workaround a bug:
+     * - add slide
+     * - undo
+     * - redo
+     * => the active class of the carousel item and therefore it looks like the carrousel is empty.
+     *
+     * Todo: find the root cause and remove this fix.
+     */
+    fixWrongHistoryOnCarousels(carousels) {
+        for (const carousel of carousels) {
+            const carouselItems = carousel.querySelectorAll(".carousel-item");
+            const activeCarouselItems = carousel.querySelectorAll(".carousel-item.active");
+            if (!activeCarouselItems.length) {
+                carouselItems[0].classList.add("active");
+                // carouselItems[0].setAttribute("aria-current", "true");
+                const indicatorsEl = carousel.querySelector(".carousel-indicators");
+                const activeIndicatorEl = [...indicatorsEl.children][0];
+                activeIndicatorEl.classList.add("active");
+                activeIndicatorEl.setAttribute("aria-current", "true");
+            }
+        }
     }
 }
 
