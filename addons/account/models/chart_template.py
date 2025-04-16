@@ -1233,8 +1233,8 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_untranslatable_fields_to_translate(self):
         """Return information about the untranslatable fields we want to translate anyway.
 
-        :return: Dictionary (model -> list of fields) where the list of fields contains
-                 all the untranslatable fields of the model we want to translate anyway
+        :return: Dictionary mapping the model name to the list of all its untranslatable fields
+                 that we want to translate anyway
         :rtype: dict[str, list[str]]
         """
         return {
