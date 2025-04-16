@@ -623,17 +623,11 @@ class IrActionsServer(models.Model):
                 elif action.state == 'object_write':
                     if action.update_path:
                         # we need to traverse relations to find the target model and field
-                        try:
-                            model, field, _ = action._traverse_path()
-                            action.crud_model_id = model
-                            action.update_field_id = field
-                            need_update_model = action.evaluation_type == 'value' and action.update_field_id and action.update_field_id.relation
-                            action.update_related_model_id = action.env["ir.model"]._get_id(field.relation) if need_update_model else False
-                        # given field does not exist in new model
-                        except KeyError:
-                            action.crud_model_id = action.model_id
-                            action.update_field_id = False
-                            action.update_path = False
+                        model, field, _ = action._traverse_path()
+                        action.crud_model_id = model
+                        action.update_field_id = field
+                        need_update_model = action.evaluation_type == 'value' and action.update_field_id and action.update_field_id.relation
+                        action.update_related_model_id = action.env["ir.model"]._get_id(field.relation) if need_update_model else False
                     else:
                         action.crud_model_id = action.model_id
                         action.update_field_id = False
@@ -657,7 +651,10 @@ class IrActionsServer(models.Model):
         # sanity check: we're starting from a record that belongs to the model
         if record and record._name != Model._name:
             raise ValidationError(_("I have no idea how you *did that*, but you're trying to use a gibberish configuration: the model of the record on which the action is triggered is not the same as the model of the action."))
+        model_id = self.env['ir.model']._get(Model._name)
         for field_name in path:
+            if field_name not in Model._fields:
+                return model_id, None, None
             is_last_field = field_name == path[-1]
             field = Model._fields[field_name]
             if field.relational and not is_last_field:
@@ -671,7 +668,6 @@ class IrActionsServer(models.Model):
         target_records = None
         if record is not None:
             target_records = reduce(getitem, path[:-1], record)
-        model_id = self.env['ir.model']._get(Model._name)
         field_id = self.env['ir.model.fields']._get(Model._name, field_name)
         return model_id, field_id, target_records
 
