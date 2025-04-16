@@ -643,7 +643,9 @@ class PosConfig(models.Model):
             raise UserError(_("You do not have permission to open a POS session. Please try opening a session with a different user"))
 
         if not self.current_session_id:
-            self._check_before_creating_new_session()
+            res = self._check_before_creating_new_session()
+            if res:
+                return res
         self._validate_fields(self._fields)
 
         return self._action_to_open_ui()
