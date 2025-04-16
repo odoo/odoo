@@ -10,6 +10,11 @@ export class HoverableDropdown extends Interaction {
             "t-on-mouseenter.withTarget": this.onMouseEnter,
             "t-on-mouseleave.withTarget": this.onMouseLeave,
         },
+        ".o_mega_menu": {
+            "t-att-style": () => ({
+                "top": this.isSmall() ? "" : "unset",
+            }),
+        },
         _window: {
             "t-on-resize": this.onResize,
         },
