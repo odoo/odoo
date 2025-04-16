@@ -143,4 +143,7 @@ patch(PosStore.prototype, {
         }
         return await super.allowProductCreation();
     },
+    getPhoneSearchFields() {
+        return ["phone_mobile_search"];
+    },
 });

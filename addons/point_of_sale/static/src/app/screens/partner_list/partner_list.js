@@ -128,7 +128,14 @@ export class PartnerList extends Component {
             const search_fields = [
                 "name",
                 "parent_name",
+<<<<<<< d46b3ec8e6d52a0f243ba9dd7f4debc62fe6af27
                 ...this.getPhoneSearchTerms(),
+||||||| 0377be06f5714264d6dd46af1b37f2045475b978
+                "phone",
+                "mobile",
+=======
+                ...this.pos.getPhoneSearchFields(),
+>>>>>>> 96c46b7a3d921ba5b464b1edf98fa025730c2d3c
                 "email",
                 "barcode",
                 "street",

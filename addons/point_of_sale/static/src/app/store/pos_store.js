@@ -2185,6 +2185,10 @@ export class PosStore extends Reactive {
     get showSaveOrderButton() {
         return this.isOpenOrderShareable();
     }
+
+    getPhoneSearchFields() {
+        return ["phone", "mobile"];
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
