@@ -1,12 +1,13 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { fillEmpty } from "@html_editor/utils/dom";
+import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
-import { isEmptyBlock, isVisibleTextNode, isZWS } from "@html_editor/utils/dom_info";
+import { isEmptyBlock, isRedundantElement, isVisibleTextNode, isZWS } from "@html_editor/utils/dom_info";
 import {
     closestElement,
     createDOMPathGenerator,
     descendants,
+    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import {
     convertNumericToUnit,
@@ -261,6 +262,7 @@ export class FontPlugin extends Plugin {
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
+        normalize_handlers: this.normalize.bind(this),
 
         /** Overrides */
         split_element_block_overrides: [
@@ -275,6 +277,14 @@ export class FontPlugin extends Plugin {
     setup() {
         this.fontSize = reactive({ displayName: "" });
         this.font = reactive({ displayName: "" });
+    }
+
+    normalize(root) {
+        for (const el of selectElements(root, "strong, b, span[style*='font-weight: bolder']")) {
+            if (isRedundantElement(el)) {
+                unwrapContents(el);
+            }
+        }
     }
 
     get fontName() {
