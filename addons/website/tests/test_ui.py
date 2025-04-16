@@ -150,7 +150,6 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         self.assertTrue(specific_page.arch != oe_structure_layout, "Specific homepage view should have been changed")
         self.assertEqual(len(specific_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
-    @unittest.skip
     def test_html_editor_scss(self):
         self.user_demo.write({
             'group_ids': [(6, 0, [
