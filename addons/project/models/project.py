@@ -576,6 +576,7 @@ class Project(models.Model):
             'stage_id': task.stage_id.id,
             'name': task.name,
             'company_id': project.company_id.id,
+            'active': project.active,
         }
 
     def map_tasks(self, new_project_id):
