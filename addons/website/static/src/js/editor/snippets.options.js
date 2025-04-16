@@ -2906,7 +2906,9 @@ options.registry.DeviceVisibility = options.Class.extend({
      * @override
      */
     async onTargetHide() {
+        this.options.wysiwyg.odooEditor.observerUnactive("onTargetHide");
         this.$target[0].classList.remove('o_snippet_override_invisible');
+        this.options.wysiwyg.odooEditor.observerActive("onTargetHide");
     },
     /**
      * @override
@@ -2917,7 +2919,9 @@ options.registry.DeviceVisibility = options.Class.extend({
         if ((this.$target[0].classList.contains('o_snippet_mobile_invisible')
                 || this.$target[0].classList.contains('o_snippet_desktop_invisible')
             ) && isMobilePreview === isMobileHidden) {
+            this.options.wysiwyg.odooEditor.observerUnactive("onTargetShow");
             this.$target[0].classList.add('o_snippet_override_invisible');
+            this.options.wysiwyg.odooEditor.observerActive("onTargetShow");
         }
     },
     /**
