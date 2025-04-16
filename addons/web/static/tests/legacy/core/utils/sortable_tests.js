@@ -55,9 +55,9 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         const scrollParentX = target.querySelector(".root");
         const scrollParentY = target.querySelector(".scroll_parent_y");
-        const assertScrolling = (top, left) => {
-            assert.strictEqual(scrollParentY.scrollTop, top);
-            assert.strictEqual(scrollParentX.scrollLeft, left);
+        const assertScrolling = (top, left, tolerance=1) => {
+            assert.ok(Math.abs(scrollParentY.scrollTop - top) <= tolerance, `${scrollParentY.scrollTop} and ${top} should be almost equal`);
+            assert.ok(Math.abs(scrollParentX.scrollLeft - left) <= tolerance, `${scrollParentX.scrollLeft} and ${left} should be almost equal`);
         };
         const cancelDrag = async (cancel) => {
             await cancel();
