@@ -212,3 +212,35 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         payment_2.action_post()
         action_window = payment_2.print_checks()
         self.assertEqual(action_window['context']['default_next_check_number'], '2147483649', "Check number should have been incremented without error.")
+
+    def test_print_check_with_branch(self):
+        """
+        Test that we don't get access error when printing a check with a branch
+        """
+        company = self.env.company
+        branch = self.env['res.company'].create({
+            'name': 'Branch',
+            'parent_id': company.id,
+        })
+        self.cr.precommit.run()  # load the CoA
+        self.env.user.write({'company_id': company.id, 'company_ids': [Command.set(company.ids)]})
+
+        vals = {
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'amount': 100.0,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'payment_method_line_id': self.payment_method_line_check.id,
+        }
+        payment = self.env['account.payment'].create(vals)
+        payment.action_post()
+        self.assertTrue(payment.write({'check_number': '00001'}))
+        payment.invalidate_recordset(['check_number'])
+
+        self.env.user.write({'company_id': branch.id, 'company_ids': [Command.set(branch.ids)]})
+
+        payment_2 = self.env['account.payment'].create(vals)
+        payment_2.action_post()
+
+        action_window = payment_2.print_checks()
+        self.assertTrue(action_window)
