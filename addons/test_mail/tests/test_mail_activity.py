@@ -773,6 +773,14 @@ class TestActivityMixin(TestActivityCommon):
             record = self.env['mail.test.activity'].search([('my_activity_date_deadline', '=', date_today)])
             self.assertEqual(test_record_1, record)
 
+    @users('employee')
+    def test_record_unlink(self):
+        test_record = self.test_record.with_user(self.env.user)
+        act1 = test_record.activity_schedule(summary='Active')
+        act2 = test_record.activity_schedule(summary='Archived', active=False)
+        test_record.unlink()
+        self.assertFalse((act1 + act2).exists(), 'Removing records should remove activities, even archived')
+
 
 @tests.tagged("mail_activity")
 class TestActivitySystray(TestActivityCommon, HttpCase):
