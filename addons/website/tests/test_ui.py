@@ -185,7 +185,6 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
         self.start_tour("/", 'website_media_dialog_undraw', login='admin')
 
-    @unittest.skip
     def test_code_editor_usable(self):
         # TODO: enable debug mode when failing tests have been fixed (props validation)
         url = '/odoo/action-website.website_preview'
