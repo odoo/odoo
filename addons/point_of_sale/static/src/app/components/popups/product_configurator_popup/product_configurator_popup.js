@@ -102,11 +102,11 @@ export class ProductConfiguratorPopup extends Component {
 
     get product() {
         let product = null;
-        const alwaysVariants = this.attributes.every(
-            (line) => line.attribute_id.create_variant === "always"
+        const hasVariants = this.attributes.some(
+            (line) => line.attribute_id.create_variant !== "no_variant"
         );
 
-        if (alwaysVariants) {
+        if (hasVariants) {
             const selectedAttributeValuesIds = this.selectedValues.map(({ id }) => id);
             product = this.pos.models["product.product"].find(
                 (product) =>
