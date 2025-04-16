@@ -128,22 +128,16 @@ class ProjectCustomerPortal(CustomerPortal):
     def _prepare_project_sharing_session_info(self, project):
         session_info = request.env['ir.http'].session_info()
         user_context = dict(request.env.context) if request.session.uid else {}
-        mods = config['server_wide_modules']
         if request.env.lang:
             lang = request.env.lang
             session_info['user_context']['lang'] = lang
             # Update Cache
             user_context['lang'] = lang
         lang = user_context.get("lang")
-        translation_hash = request.env['ir.http'].get_web_translations_hash(mods, lang)
-        cache_hashes = {
-            "translations": translation_hash,
-        }
 
         project_company = self._get_project_sharing_company(project)
 
         session_info.update(
-            cache_hashes=cache_hashes,
             action_name="project.project_sharing_project_task_action",
             project_id=project.id,
             project_name=project.name,

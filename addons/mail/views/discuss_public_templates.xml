@@ -16,8 +16,8 @@
                         discuss_data: <t t-out="json.dumps(data)"/>
                     };
                     {
-                        const { user_context,  cache_hashes } = odoo.__session_info__;
-                        fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);
+                        const { user_context } = odoo.__session_info__;
+                        odoo.translationsPromise = fetch(`/web/webclient/translations?unique=${new Date().getTime().toString()}&amp;lang=${user_context.lang}`).then(res => res.json());
                     }
                 </script>
                 <t t-call-assets="mail.assets_public"/>

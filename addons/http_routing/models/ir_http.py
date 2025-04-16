@@ -264,18 +264,8 @@ class IrHttp(models.AbstractModel):
     @api.model
     def get_frontend_session_info(self) -> dict:
         session_info = super(IrHttp, self).get_frontend_session_info()
-
-        IrHttpModel = request.env['ir.http'].sudo()
-        modules = IrHttpModel.get_translation_frontend_modules()
-        user_context = request.session.context if request.session.uid else {}
-        lang = user_context.get('lang')
-        translation_hash = request.env['ir.http'].get_web_translations_hash(modules, lang)
-
         session_info.update({
             'translationURL': '/website/translations',
-            'cache_hashes': {
-                'translations': translation_hash,
-            },
         })
         return session_info
 

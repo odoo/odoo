@@ -420,7 +420,7 @@ export class MockServer {
         this._onRoute(["/web/webclient/load_menus"], this.loadMenus, {
             pure: true,
         });
-        this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations, {
+        this._onRoute(["/web/webclient/translations"], this.loadTranslations, {
             pure: true,
         });
 

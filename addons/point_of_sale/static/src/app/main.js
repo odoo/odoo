@@ -60,10 +60,9 @@ whenReady(() => {
 function registerServiceWorker() {
     // Register the service worker for the POS
     const urlsToCache = JSON.parse(odoo.urls_to_cache);
-    const translationsHash = session.cache_hashes?.translations;
     const lang = jsToPyLocale(user.lang || document.documentElement.getAttribute("lang"));
     const translationURL = session.translationURL || "/web/webclient/translations";
-    const url = `${translationURL}/${translationsHash}?lang=${lang}`;
+    const url = `${translationURL}?${new Date().getTime().toString()}&lang=${lang}`;
     urlsToCache.push(...[url, "/web/static/lib/zxing-library/zxing-library.js"]);
 
     navigator.serviceWorker?.register("/pos/service-worker.js").then((registration) => {

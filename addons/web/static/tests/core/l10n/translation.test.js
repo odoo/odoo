@@ -32,7 +32,7 @@ async function mockLang(lang) {
 }
 
 test("lang is given by the user context", async () => {
-    onRpc("/web/webclient/translations/*", (request) => {
+    onRpc("/web/webclient/translations", (request) => {
         const urlParams = new URLSearchParams(new URL(request.url).search);
         expect.step(urlParams.get("lang"));
     });
@@ -42,7 +42,7 @@ test("lang is given by the user context", async () => {
 
 test("lang is given by an attribute on the DOM root node", async () => {
     serverState.lang = null;
-    onRpc("/web/webclient/translations/*", (request) => {
+    onRpc("/web/webclient/translations", (request) => {
         const urlParams = new URLSearchParams(new URL(request.url).search);
         expect.step(urlParams.get("lang"));
     });
@@ -158,7 +158,10 @@ test("_t fills the format specifiers in translated terms with formatted lists", 
     });
     await mockLang("fr_FR");
     const translatedStr1 = _t("Due in %s days", ["30", "60", "90"]);
-    const translatedStr2 = _t("Due in %(due_dates)s days for %(user)s", {due_dates: ["30", "60", "90"], user: "Mitchell"});
+    const translatedStr2 = _t("Due in %(due_dates)s days for %(user)s", {
+        due_dates: ["30", "60", "90"],
+        user: "Mitchell",
+    });
     expect(translatedStr1).toBe("Échéance dans 30, 60 et 90 jours");
     expect(translatedStr2).toBe("Échéance dans 30, 60 et 90 jours pour Mitchell");
 });

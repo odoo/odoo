@@ -52,12 +52,12 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations/<string:unique>', type='http', auth='public', cors='*', readonly=True)
+    @http.route('/web/webclient/translations', type='http', auth='public', cors='*', readonly=True)
     def translations(self, unique, mods=None, lang=None):
         """
         Load the translations for the specified language and modules
 
-        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :param unique: this parameters is not used: it is used by the HTTP stack to make a unique request
         :param mods: the modules, a comma separated list
         :param lang: the language of the user
         :return:

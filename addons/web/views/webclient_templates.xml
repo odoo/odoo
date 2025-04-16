@@ -278,7 +278,7 @@
                     // Block to avoid leaking variables in the script scope
                     {
                         odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
-                        const { user_context,  cache_hashes } = odoo.__session_info__;
+                        const { user_context } = odoo.__session_info__;
                         const lang = new URLSearchParams(document.location.search).get("lang");
                         let menuURL = `/web/webclient/load_menus?unique=${new Date().getTime().toString()}`;
                         if (lang) {
@@ -289,7 +289,7 @@
                         odoo.loadMenusPromise = odoo.reloadMenus();
                         // Prefetch translations to speedup webclient. This is done in JS because link rel="prefetch"
                         // is not yet supported on safari.
-                        fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);
+                        odoo.translationsPromise = fetch(`/web/webclient/translations?unique=${new Date().getTime().toString()}&amp;lang=${user_context.lang}`).then(res => res.json());
                     }
                 </script>
                 <t t-call-assets="web.assets_web_print" media="print" t-js="false"/>

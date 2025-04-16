@@ -2,8 +2,6 @@
 #----------------------------------------------------------
 # ir_http modular http routing
 #----------------------------------------------------------
-import hashlib
-import json
 import logging
 import os
 import re
@@ -431,18 +429,6 @@ class IrHttp(models.AbstractModel):
             translations_per_module[module] = code_translations.get_web_translations(module, lang)
 
         return translations_per_module, lang_params
-
-    @api.model
-    @tools.ormcache('frozenset(modules)', 'lang')
-    def get_web_translations_hash(self, modules, lang):
-        translations, lang_params = self.get_translations_for_webclient(modules, lang)
-        translation_cache = {
-            'lang_parameters': lang_params,
-            'modules': translations,
-            'lang': lang,
-            'multi_lang': len(self.env['res.lang'].sudo().get_installed()) > 1,
-        }
-        return hashlib.sha1(json.dumps(translation_cache, sort_keys=True, default=json_default).encode()).hexdigest()
 
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):

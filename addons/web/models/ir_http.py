@@ -119,11 +119,6 @@ class IrHttp(models.AbstractModel):
             'profile_params': request.session.get('profile_params'),
             "max_file_upload_size": max_file_upload_size,
             "home_action_id": user.action_id.id,
-            "cache_hashes": {
-                "translations": self.env['ir.http'].sudo().get_web_translations_hash(
-                    mods, request.session.context['lang']
-                ) if session_uid else None,
-            },
             "currencies": self.env['res.currency'].get_all_currencies(),
             'bundle_params': {
                 'lang': request.session.context['lang'],
