@@ -321,6 +321,30 @@ async function discuss_channel_sub_channel_create(request) {
     );
 }
 
+registerRoute("/discuss/channel/sub_channel/delete", discuss_channel_sub_channel_delete);
+async function discuss_channel_sub_channel_delete(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").ResPartner} */
+    const ResPartner = this.env["res.partner"];
+    const { sub_channel_id } = await parseRequestParams(request);
+    const [partner] = ResPartner.read(this.env.user.partner_id);
+    const [subChannel] = DiscussChannel.read(sub_channel_id);
+    if (subChannel.author_id[0] !== partner.id) {
+        return;
+    }
+    const [sub_channel] = DiscussChannel.browse(sub_channel_id);
+    DiscussChannel.message_post(
+        sub_channel.parent_channel_id,
+        makeKwArgs({
+            body: `<div data-oe-type="thread_deletion" class="o_mail_notification">${sub_channel.name}</div>`,
+            message_type: "notification",
+            subtype_xmlid: "mail.mt_comment",
+        })
+    );
+    DiscussChannel.unlink([sub_channel_id]);
+}
+
 registerRoute("/discuss/channel/sub_channel/fetch", discuss_channel_sub_channel_fetch);
 async function discuss_channel_sub_channel_fetch(request) {
     /** @type {import("mock_models").DiscussChannel} */

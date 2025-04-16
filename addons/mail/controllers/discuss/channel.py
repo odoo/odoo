@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
 from odoo import http
@@ -209,3 +210,13 @@ class ChannelController(http.Controller):
             "store_data": Store().add(sub_channels).add(sub_channels._get_last_messages()).get_result(),
             "sub_channel_ids": sub_channels.ids,
         }
+
+    @http.route("/discuss/channel/sub_channel/delete", methods=["POST"], type="jsonrpc", auth="user")
+    def discuss_delete_sub_channel(self, sub_channel_id):
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", sub_channel_id)])
+        if not channel or not channel.parent_channel_id or channel.create_uid != request.env.user:
+            raise NotFound()
+        body = Markup('<div class="o_mail_notification" data-oe-type="thread_deletion">%s</div>') % channel.name
+        channel.parent_channel_id.message_post(body=body, subtype_xmlid="mail.mt_comment")
+        # sudo: discuss.channel - skipping ACL for users who created the thread
+        channel.sudo().unlink()

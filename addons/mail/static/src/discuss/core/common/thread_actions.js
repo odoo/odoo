@@ -1,7 +1,9 @@
+import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
+import { DeleteThreadDialog } from "@mail/discuss/core/common/delete_thread_dialog";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 
 import { Component, xml } from "@odoo/owl";
@@ -157,4 +159,38 @@ registerThreadAction("mark-read", {
     name: _t("Mark Read"),
     sequence: 10,
     sequenceGroup: 20,
+});
+registerThreadAction("delete-thread", {
+    actionPanelComponent: DeleteThreadDialog,
+    actionPanelComponentProps({ action }) {
+        return { close: () => action.close() };
+    },
+    condition({ owner, store, thread }) {
+        return (
+            thread?.parent_channel_id &&
+            store.self.main_user_id?.eq(thread.create_uid) &&
+            !owner.isDiscussContent
+        );
+    },
+    panelOuterClass: "bg-100",
+    icon: "fa fa-fw fa-trash",
+    iconLarge: "fa fa-fw fa-lg fa-trash",
+    name: _t("Delete Thread"),
+    close: ({ action }) => action.popover?.close(),
+    toggle: true,
+    open: ({ action, owner, store, thread }) => {
+        if (owner.isDiscussSidebarChannelActions) {
+            store.env.services.dialog?.add(ChannelActionDialog, {
+                title: thread.name,
+                contentComponent: DeleteThreadDialog,
+                contentProps: {
+                    close: () => store.env.services.dialog.closeAll(),
+                    thread,
+                },
+            });
+        }
+    },
+    sequence: ({ owner }) => (owner.props.chatWindow ? 50 : 40),
+    sequenceGroup: 40,
+    tags: [ACTION_TAGS.DANGER],
 });
