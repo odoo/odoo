@@ -151,6 +151,7 @@ export class Popup extends Interaction {
         }
         if (tabableEls.length) {
             tabableEls[0].focus();
+            this.el.querySelector(".modal").scrollTop = 0;
         } else {
             this.el.focus();
         }
