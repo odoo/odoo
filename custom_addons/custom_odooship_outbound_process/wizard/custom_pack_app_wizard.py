@@ -56,6 +56,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         readonly=True,
     )
     single_pick_payload_sent = fields.Boolean(string="Single Pick Payload Sent", default=False)
+    single_pick_payload_attempted = fields.Boolean(string="Payload Attempted for Single Pick", default=False)
 
     @api.model
     def default_get(self, fields):
@@ -295,11 +296,19 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             # Prevent double sending
             if self.single_pick_payload_sent:
                 _logger.warning(f"[SKIP] Single-pick payload already sent for wizard {self.id}")
-                return
+                raise UserError(_("Payload already sent for this pick. Please refresh."))
+
+            # Mark as sent BEFORE sending payload to protect from retries
+            self.write({'single_pick_payload_sent': True})
+            self.env.cr.flush()
+            _logger.info(f"[PRE-FLAG] Wizard {self.id} marked as payload sent before API call.")
+
             payloads = [self.process_single_pick()]
             for payload in payloads:
                 self.send_payload_to_api(api_url, payload)
-            self.single_pick_payload_sent = True
+
+            self.single_pick_payload_sent = True  # For view update purposes (non-critical)
+
             # Only update pickings used in lines
             relevant_picking_ids = self.line_ids.mapped('picking_id').filtered(lambda p: p)
             for picking in relevant_picking_ids:
@@ -325,23 +334,23 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 #     else:
                 #         for move_line in move.move_line_ids:
                 #             move_line.qty_done = move.product_uom_qty
-
+                sale_order_state = 'packed'
                 confirm_pick = picking.button_validate()
 
                 # Update status in DB
                 self.env.cr.execute("""
                     UPDATE stock_picking SET current_state = %s WHERE id = %s
                 """, (new_state, picking.id))
-
                 self.env.cr.execute("""
-                    UPDATE sale_order SET pick_status = 'packed' WHERE id = %s
-                """, (picking.sale_id.id,))
-
+                    UPDATE sale_order SET pick_status = %s WHERE id = %s
+                """, (sale_order_state,picking.sale_id.id))
                 picking._invalidate_cache(['current_state'])
                 _logger.info(f"Picking {picking.name} forced update to '{new_state}' in database.")
+                _logger.info(f"Picking {picking.sale_id.name} forced update to '{sale_order_state}' in database.")
 
                 # Container Release payload
-                    # self.release_container()
+                # self.release_container()
+
         else:
             for line in self.line_ids:
                 # payload = self.prepare_payload_for_individual_line(line)
@@ -542,7 +551,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         }
         try:
             # Send the data to the Automation Putaway URL
-            reponse_ot = requests.post(api_url, headers=headers, data=json_payload)
+            reponse_ot = requests.post(api_url, headers=headers, data=json_payload, timeout=20)
             if reponse_ot.status_code != 200:
                 try:
                     response_data = reponse_ot.json()
