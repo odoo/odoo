@@ -29,6 +29,7 @@ class EventQuestion(models.Model):
                                          "If not it will be asked for every attendee of a reservation.")
     is_mandatory_answer = fields.Boolean('Mandatory Answer')
     event_count = fields.Integer('# Events', compute='_compute_event_count')
+    active = fields.Boolean('Active', default=True)
 
     @api.depends('event_ids')
     def _compute_event_count(self):
