@@ -3652,6 +3652,7 @@ class MailThread(models.AbstractModel):
                 ('model', '=', message_sudo.model), ('res_id', '=', message_sudo.res_id),
                 ('id', '!=', message_sudo.id),
                 ('subtype_id', '!=', False),  # filters out logs
+                ('message_id', '!=', False),  # ignore records that somehow don't have a message_id (non ORM created)
             ], limit=32, order='id DESC',  # take 32 last, hoping to find public discussions in it
         )
 
