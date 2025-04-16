@@ -36,6 +36,7 @@ from contextlib import contextmanager, ExitStack
 from datetime import datetime
 from functools import lru_cache, partial
 from itertools import zip_longest as izip_longest
+from operator import setitem
 from passlib.context import CryptContext
 from typing import Optional, Iterable
 from unittest.mock import patch, _patch, Mock
@@ -1177,13 +1178,13 @@ class ChromeBrowser:
             self._result.cancel()
 
             self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
-            self._websocket_send('Browser.close')
+            self._websocket_request('Browser.close')
             self._logger.info("Closing websocket connection")
             self.ws.close()
         if self.chrome:
             self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
             self.chrome.terminate()
-            self.chrome.wait(5)
+            self.chrome.wait(15)
 
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
@@ -2092,16 +2093,17 @@ class HttpCase(TransactionCase):
             self._logger.warning('watch mode is only suitable for local testing')
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
-        sendone_patch = None
-        websocket_allowed_patch = None
-        kick_all_websockets = None
-        try:
+        with contextlib.ExitStack() as atexit:
+            # lambda because this must re-resolve `self.opener`, because it's re-set by authenticate
+            atexit.callback(lambda: setitem(self.opener.cookies, TEST_CURSOR_COOKIE_NAME, self.canonical_tag))
+            atexit.callback(setattr, self, 'http_request_key', self.canonical_tag)
             self.http_request_key = self.canonical_tag + '_browser_js'
+            atexit.callback(self._wait_remaining_requests)
             if "bus.bus" in self.env.registry:
                 from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler
                 from odoo.addons.bus.models.bus import BusBus
 
-                kick_all_websockets = partial(_kick_all, CloseCode.KILL_NOW)
+                atexit.callback(_kick_all, CloseCode.KILL_NOW)
                 original_send_one = BusBus._sendone
 
                 def sendone_wrapper(self, target, notification_type, message):
@@ -2109,12 +2111,10 @@ class HttpCase(TransactionCase):
                     self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
                     self.env.cr.postcommit.run()  # Trigger notification dispatching
 
-                sendone_patch = patch.object(BusBus, "_sendone", sendone_wrapper)
-                websocket_allowed_patch = patch.object(
+                atexit.enter_context(patch.object(BusBus, "_sendone", sendone_wrapper))
+                atexit.enter_context(patch.object(
                     WebsocketConnectionHandler, "websocket_allowed", return_value=True
-                )
-                sendone_patch.start()
-                websocket_allowed_patch.start()
+                ))
 
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
@@ -2152,6 +2152,7 @@ class HttpCase(TransactionCase):
                 browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
 
             browser.navigate_to(url, wait_stop=not bool(ready))
+            atexit.callback(browser.stop)
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
@@ -2168,18 +2169,6 @@ class HttpCase(TransactionCase):
                 else:
                     message = "Some js test failed"
                 self.fail('%s\n\n%s' % (message, error))
-
-        finally:
-            browser.stop()
-            if sendone_patch:
-                sendone_patch.stop()
-            if websocket_allowed_patch:
-                websocket_allowed_patch.stop()
-            if kick_all_websockets:
-                kick_all_websockets()
-            self._wait_remaining_requests()
-            self.http_request_key = self.canonical_tag
-            self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = self.http_request_key
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
