@@ -38,6 +38,10 @@ export class PosCategory extends Base {
         // Remove duplicates since owl doesn't like them.
         return Array.from(new Set(products));
     }
+
+    get hasProductsToShow() {
+        return this.associatedProducts.length > 0;
+    }
 }
 
 registry.category("pos_available_models").add(PosCategory.pythonModel, PosCategory);

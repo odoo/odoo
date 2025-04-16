@@ -32,6 +32,7 @@ export class CategorySelector extends Component {
         const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
         return this.getCategoriesList(rootCategories, allParents, 0)
             .flat(Infinity)
+            .filter((c) => c.hasProductsToShow)
             .map(this.getChildCategoriesInfo, this);
     }
 
