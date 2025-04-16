@@ -92,11 +92,8 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +101 compared to local
-        with (
-            self.mock_mail_gateway(mail_unlink_sent=True),
-            self.assertQueryCount(__system__=1317, marketing=1319),  # 1167, 1168
-        ):
+        # runbot needs +102 compared to local
+        with self.assertQueryCount(__system__=1308, marketing=1310):  # 1206, 1208
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
