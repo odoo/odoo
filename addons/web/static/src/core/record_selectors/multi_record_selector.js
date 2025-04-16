@@ -22,7 +22,9 @@ export class MultiRecordSelector extends Component {
 
     setup() {
         this.nameService = useService("name");
-        this.onTagKeydown = useTagNavigation("multiRecordSelector", this.deleteTag.bind(this));
+        useTagNavigation("multiRecordSelector", {
+            delete: (index) => this.deleteTag(index),
+        });
         onWillStart(() => this.computeDerivedParams());
         onWillUpdateProps((nextProps) => this.computeDerivedParams(nextProps));
     }
@@ -68,7 +70,6 @@ export class MultiRecordSelector extends Component {
                 onDelete: () => {
                     this.deleteTag(index);
                 },
-                onKeydown: this.onTagKeydown,
                 img:
                     this.isAvatarModel &&
                     isId(id) &&
