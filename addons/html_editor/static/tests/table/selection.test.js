@@ -1651,11 +1651,22 @@ describe("single cell selection", () => {
             )
         );
 
+        const BORDER_SENSITIVITY = 5;
         const firstTd = el.querySelector("td");
-        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", { detail: 2 });
+        const offset = BORDER_SENSITIVITY + 1;
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+            detail: 2,
+            clientX: offset,
+            clientY: offset,
+        });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", { detail: 2 });
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
+            detail: 2,
+            clientX: offset,
+            clientY: offset,
+        });
         await animationFrame();
 
         expectContentToBe(
@@ -1681,18 +1692,29 @@ describe("single cell selection", () => {
             )
         );
 
+        const BORDER_SENSITIVITY = 5;
         const firstTd = el.querySelector("td");
-        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", { detail: 3 });
+        const offset = BORDER_SENSITIVITY + 1;
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+            detail: 3,
+            clientX: offset,
+            clientY: offset,
+        });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", { detail: 3 });
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
+            detail: 3,
+            clientX: offset,
+            clientY: offset,
+        });
         await animationFrame();
 
         expectContentToBe(
             el,
             `<table class="table table-bordered o_table o_selected_table">
                 <tbody>
-                    <tr><td class="o_selected_td">ab[]c<br></td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td">[]abc<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
             </table>`
@@ -1723,6 +1745,37 @@ describe("single cell selection", () => {
             `<table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+    });
+
+    test("should not select cell when double-click occurs on table border", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const firstTd = el.querySelector("td");
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", { detail: 2 });
+        await animationFrame();
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", { detail: 2 });
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table">
+                <tbody>
+                    <tr><td>[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
             </table>`
