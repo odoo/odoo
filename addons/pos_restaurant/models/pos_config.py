@@ -91,13 +91,13 @@ class PosConfig(models.Model):
         if (floor_patio := self.env.ref('pos_restaurant.floor_patio', raise_if_not_found=False)):
             config_floors += [(4, floor_patio.id)]
         config.update({'floor_ids': config_floors})
-        if with_demo_data:
-            config._load_bar_demo_data()
+        config._load_bar_demo_data(with_demo_data)
         return {'config_id': config.id}
 
-    def _load_bar_demo_data(self):
+    def _load_bar_demo_data(self, with_demo_data=True):
         self.ensure_one()
-        if not self.env.ref('pos_restaurant.product_category_drinks', raise_if_not_found=False):
+        convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/bar_category_data.xml', idref=None, mode='init', noupdate=True)
+        if with_demo_data:
             convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/bar_demo_data.xml', idref=None, mode='init', noupdate=True)
         bar_categories = self.get_record_by_ref([
             'pos_restaurant.pos_category_cocktails',
@@ -139,21 +139,20 @@ class PosConfig(models.Model):
         if (floor_patio := self.env.ref('pos_restaurant.floor_patio', raise_if_not_found=False)):
             config_floors += [(4, floor_patio.id)]
         config.update({'floor_ids': config_floors})
-        if with_demo_data:
-            config._load_restaurant_demo_data()
-            if self.env.company.id == self.env.ref('base.main_company').id:
-                existing_session = self.env.ref('pos_restaurant.pos_closed_session_3', raise_if_not_found=False)
-                if not existing_session:
-                    convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_demo_session.xml', idref=None, mode='init', noupdate=True)
+        config._load_restaurant_demo_data(with_demo_data)
+        existing_session = self.env.ref('pos_restaurant.pos_closed_session_3', raise_if_not_found=False)
+        if with_demo_data and self.env.company.id == self.env.ref('base.main_company').id and not existing_session:
+            convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_demo_session.xml', idref=None, mode='init', noupdate=True)
         return {'config_id': config.id}
 
     @api.depends('set_tip_after_payment')
     def _compute_local_data_integrity(self):
        super()._compute_local_data_integrity()
 
-    def _load_restaurant_demo_data(self):
+    def _load_restaurant_demo_data(self, with_demo_data=True):
         self.ensure_one()
-        if not self.env.ref('pos_restaurant.food', raise_if_not_found=False):
+        convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_category_data.xml', idref=None, mode='init', noupdate=True)
+        if with_demo_data:
             convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_demo_data.xml', idref=None, mode='init', noupdate=True)
         restaurant_categories = self.get_record_by_ref([
             'pos_restaurant.food',

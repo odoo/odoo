@@ -45,8 +45,6 @@ export class PosKanbanRenderer extends KanbanRenderer {
             async ({ functionName, isRestaurant }) =>
                 await this.callWithViewUpdate(async () => {
                     let isInstalledWithDemo = false;
-                    // The demo data is not loaded for the first config
-                    const withDemoData = this.posState.has_pos_config;
                     if (isRestaurant && !this.posState.is_restaurant_installed) {
                         const result = await this.orm.call("pos.config", "install_pos_restaurant");
                         isInstalledWithDemo = result.installed_with_demo;
@@ -55,12 +53,9 @@ export class PosKanbanRenderer extends KanbanRenderer {
                         !isInstalledWithDemo ||
                         (isInstalledWithDemo && !this.posState.is_main_company)
                     ) {
-                        const result = await this.orm.call("pos.config", functionName, [
-                            withDemoData,
-                        ]);
-                        if (!this.posState.has_pos_config) {
-                            return result;
-                        }
+                        // load onboarding scenario without demo data
+                        const result = await this.orm.call("pos.config", functionName, [false]);
+                        return result;
                     }
                 })
         );
@@ -72,12 +67,6 @@ export class PosKanbanRenderer extends KanbanRenderer {
         await this.loadScenario.call(item);
         if (this.loadScenario.status == "error") {
             throw this.loadScenario.result;
-        }
-        if (this.loadScenario.result?.config_id) {
-            // Open the POS
-            const { config_id } = this.loadScenario.result;
-            const action = await this.orm.call("pos.config", "open_ui", [[config_id]]);
-            await this.action.doAction(action);
         }
     }
 
@@ -151,8 +140,14 @@ export class PosKanbanRenderer extends KanbanRenderer {
         ];
     }
 
-    createNewProducts() {
-        window.open("/odoo/action-point_of_sale.action_client_product_menu", "_self");
+    get retailScenario() {
+        return {
+            name: _t("Retail"),
+            isRestaurant: false,
+            description: _t("Any shop"),
+            functionName: "load_onboarding_retail_scenario",
+            iconFile: this.isDarkTheme ? "retail-icon-dark.png" : "retail-icon.png",
+        };
     }
 
     showTopBorder() {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Furniture scenario pos categories -->
+        <record id="pos_category_miscellaneous" model="pos.category">
+            <field name="name">Misc</field>
+            <field name="image_128" type="base64" file="point_of_sale/static/img/misc_category.png" />
+            <field name="sequence">1</field>
+        </record>
+        <record id="pos_category_desks" model="pos.category">
+            <field name="name">Desks</field>
+            <field name="image_128" type="base64" file="point_of_sale/static/img/desk_category.png" />
+            <field name="sequence">2</field>
+        </record>
+        <record id="pos_category_chairs" model="pos.category">
+            <field name="name">Chairs</field>
+            <field name="image_128" type="base64" file="point_of_sale/static/img/chair_category.png" />
+            <field name="sequence">3</field>
+        </record>
+
+    </data>
+</odoo>

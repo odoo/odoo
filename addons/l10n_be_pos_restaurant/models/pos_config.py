@@ -27,8 +27,8 @@ class PosConfig(models.Model):
             if takeaway_preset:
                 takeaway_preset.write({'fiscal_position_id': fp.id})
 
-    def _load_bar_demo_data(self):
-        super()._load_bar_demo_data()
+    def _load_bar_demo_data(self, with_demo_data=True):
+        super()._load_bar_demo_data(with_demo_data)
         if (self.env.company.chart_template or '').startswith('be'):
             ChartTemplate = self.env['account.chart.template'].with_company(self.env.company)
             tax_alcohol = ChartTemplate.ref('tax_alcohol_luxury')

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Product Category -->
+        <record id="product_category_drinks" model="product.category">
+            <field name="name">Drinks</field>
+        </record>
+
+        <!-- Bar scenario pos categories -->
+        <record id="pos_category_cocktails" model="pos.category">
+            <field name="name">Cocktails</field>
+            <field name="image_128" type="base64" file="point_of_sale/static/img/cocktail-icon.png" />
+            <field name="sequence">11</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="pos_category_soft_drinks" model="pos.category">
+            <field name="name">Soft drinks</field>
+            <field name="image_128" type="base64" file="pos_restaurant/static/img/soft-drink-icon.png" />
+            <field name="sequence">12</field>
+            <field name="color">6</field>
+        </record>
+    </data>
+</odoo>

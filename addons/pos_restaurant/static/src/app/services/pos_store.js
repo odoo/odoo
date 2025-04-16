@@ -40,7 +40,12 @@ patch(PosStore.prototype, {
             return screen;
         }
 
-        return screen === "LoginScreen" ? "LoginScreen" : this.defaultScreen;
+        if (screen === "LoginScreen") {
+            return screen;
+        }
+        const isFirstSession = this.config.raw.session_ids.length === 1;
+        const hasNoProducts = this.productsToDisplay.length === 0;
+        return isFirstSession && hasNoProducts ? "ProductScreen" : this.defaultScreen;
     },
     get defaultScreen() {
         if (this.config.module_pos_restaurant) {
