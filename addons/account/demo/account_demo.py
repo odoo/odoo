@@ -598,7 +598,7 @@ class AccountChartTemplate(models.AbstractModel):
         :param str xml_id: the xml_id of the account template in the generic coa
         :param str account_type: the full xml_id of the account type wanted
         :param company: the company for which we search the account
-        :return: the most appropriate account.account record found
+        :return: the most appropriate ``account.account`` record found
         """
         return (
             self.env['account.account'].browse(self.env['ir.model.data'].sudo().search([
