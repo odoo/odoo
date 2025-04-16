@@ -119,7 +119,7 @@ export class ControlButtons extends Component {
         const order = this.pos.getOrder();
         const partner = order.getPartner();
         const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
-        this.pos.showScreen("TicketScreen", {
+        this.pos.navigate("TicketScreen", {
             stateOverride: {
                 filter: "SYNCED",
                 search: searchDetails,

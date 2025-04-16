@@ -1114,7 +1114,9 @@ export class FloorScreen extends Component {
     }
     clickNewOrder() {
         this.pos.addNewOrder();
-        this.pos.showScreen("ProductScreen");
+        this.pos.navigate("ProductScreen", {
+            orderUuid: this.pos.selectedOrderUuid,
+        });
     }
     saveCurrentFloorScrollPosition() {
         if (!this.state.selectedFloorId) {
@@ -1133,4 +1135,9 @@ export class FloorScreen extends Component {
     }
 }
 
-registry.category("pos_screens").add("FloorScreen", FloorScreen);
+registry.category("pos_pages").add("FloorScreen", {
+    name: "FloorScreen",
+    component: FloorScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/floor`,
+    params: {},
+});

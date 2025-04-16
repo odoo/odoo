@@ -5,7 +5,10 @@ export class DataServiceOptions {
         return {
             "pos.order": {
                 key: "uuid",
-                condition: (record) => record.finalized && typeof record.id === "number",
+                condition: (record) =>
+                    record.finalized &&
+                    typeof record.id === "number" &&
+                    record.pos_session_id !== parseInt(odoo.pos_session_id),
             },
             "pos.order.line": {
                 key: "uuid",
@@ -65,7 +68,6 @@ export class DataServiceOptions {
             "pos.session",
             "pos.config",
             "res.users",
-            "pos.order",
             "account.tax", // Cannot be auto-loaded because the record needs adaptions
         ];
     }

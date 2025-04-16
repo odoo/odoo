@@ -97,14 +97,26 @@ export class Navbar extends Component {
         this.bufferedInput = "";
     }
 
+    onClickRegister() {
+        let order = this.pos.getOrder();
+
+        if (!order) {
+            order = this.pos.addNewOrder();
+        }
+
+        this.pos.navigateToOrderScreen(order);
+    }
+
     noOpenDialogs() {
         return document.querySelectorAll(".modal-dialog, .debug-widget").length === 0;
     }
     onClickScan() {
         if (!this.pos.scanning) {
-            const screenName = this.pos.mainScreen.component.name;
+            const screenName = this.pos.router.state.current;
             if (["ProductScreen", "TicketScreen"].includes(screenName)) {
-                this.pos.showScreen(screenName);
+                const params =
+                    screenName === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
+                this.pos.navigate(screenName, params);
             }
         }
         this.pos.mobile_pane = "right";
@@ -120,7 +132,7 @@ export class Navbar extends Component {
     get appUrl() {
         return `/scoped_app?app_id=point_of_sale&app_name=${encodeURIComponent(
             this.pos.config.display_name
-        )}&path=${encodeURIComponent(`pos/ui?config_id=${this.pos.config.id}`)}`;
+        )}&path=${encodeURIComponent(`pos/ui/${this.pos.config.id}`)}`;
     }
 
     async reloadProducts() {
@@ -192,6 +204,6 @@ export class Navbar extends Component {
 
     get mainButton() {
         const screens = ["ProductScreen", "PaymentScreen", "ReceiptScreen", "TipScreen"];
-        return screens.includes(this.pos.mainScreen.component.name) ? "register" : "order";
+        return screens.includes(this.pos.router.state.current) ? "register" : "order";
     }
 }

@@ -1135,6 +1135,13 @@ class PosOrder(models.Model):
         _logger.info("PoS synchronisation #%d finished", sync_token)
         return pos_order_ids.read_pos_data(orders, config_id)
 
+    @api.model
+    def read_pos_data_uuid(self, uuid):
+        order = self.search([('uuid', '=', uuid)], limit=1)
+        if not order:
+            return {}
+        return order.read_pos_data([], order.config_id.id)
+
     def read_pos_data(self, data, config_id):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
 

@@ -259,7 +259,7 @@ export class ClosePosPopup extends Component {
                 return this.handleClosingError(response);
             }
             this.pos.session.state = "closed";
-            location.reload();
+            this.pos.router.close();
         } catch (error) {
             if (error instanceof ConnectionLostError) {
                 throw error;
@@ -294,7 +294,7 @@ export class ClosePosPopup extends Component {
                                     this.pos.session.id,
                                 ]);
                                 if (session[0] && session[0].state === "closed") {
-                                    location.reload();
+                                    this.pos.router.close();
                                 } else {
                                     this.pos.redirectToBackend();
                                 }
@@ -314,7 +314,7 @@ export class ClosePosPopup extends Component {
             confirm: () => {
                 if (!response.redirect) {
                     this.props.close();
-                    this.pos.showScreen("TicketScreen");
+                    this.pos.navigate("TicketScreen");
                 }
             },
             cancel: async () => {
@@ -328,7 +328,7 @@ export class ClosePosPopup extends Component {
         });
 
         if (response.redirect) {
-            window.location.reload();
+            this.pos.router.close();
         }
     }
     getMovesTotalAmount() {

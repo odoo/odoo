@@ -105,7 +105,7 @@ export class PartnerList extends Component {
             },
             filter: partnerHasActiveOrders ? "" : "SYNCED",
         };
-        this.pos.showScreen("TicketScreen", { stateOverride });
+        this.pos.navigate("TicketScreen", { stateOverride });
     }
 
     confirm() {
