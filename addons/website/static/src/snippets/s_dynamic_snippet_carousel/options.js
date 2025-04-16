@@ -37,7 +37,18 @@ const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
             delete this.$target[0].dataset.arrowPosition;
         }
     },
-
+    /**
+     * @override
+     * @private
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        switch (widgetName) {
+            case "speed_opt":
+            case "scrolling_mode_opt":
+                return parseInt(this.$target[0].dataset.numberOfRecords) > 1;
+        }
+        return this._super(...arguments);
+    },
 });
 
 options.registry.dynamic_snippet_carousel = dynamicSnippetCarouselOptions;

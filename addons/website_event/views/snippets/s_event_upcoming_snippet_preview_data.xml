@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="s_event_upcoming_snippet_preview_data" name="Events Preview Data">
-        <div class="s_dialog_preview row my-4">
+    <!-- Multi record preview -->
+    <template id="s_event_upcoming_snippet_preview_data" name="Events Picture Preview Data">
+        <div class="s_dialog_preview row">
             <div class="col-12 col-sm-6 col-lg-4">
                 <div class="s_events_event w-100">
                     <a class="s_events_event_cover position-relative d-flex align-items-center rounded overflow-hidden text-decoration-none ratio ratio-1x1" href="#">
@@ -62,6 +63,121 @@
                     </a>
                 </div>
             </div>
+        </div>
+    </template>
+    <template id="s_event_upcoming_snippet_card_preview_data" name="Events Card Preview Data">
+        <div class="s_dialog_preview row">
+            <div class="col-3">
+                <div class="card h-100">
+                    <div class="card-img-top position-relative">
+                        <div class="ratio ratio-16x9">
+                            <img class="img img-fluid object-fit-cover" src="/website_event/static/src/img/event_previews/event_1.jpg"/>
+                        </div>
+                        <div class="position-absolute top-0 end-0 me-3 mt-3 p-3 rounded-circle bg-white shadow-sm text-center text-dark" style="width: 5rem; height: 5rem;">
+                            <span class="fw-bold text-uppercase">AUG</span>
+                            <span class="fw-light lh-1">23</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <strong>8:15 PM</strong>
+                        <h5 class="mb-2 mt-0">Innovations in Technology and Society</h5>
+                        <p class="text-muted">Shaping tomorrow through ideas that transform how we live today.</p>
+                    </div>
+                    <div class="card-footer mt-auto border-0 p-3 pt-0 bg-transparent">
+                        <strong>Los Angeles, CA, United States</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card h-100">
+                    <div class="card-img-top position-relative">
+                        <div class="ratio ratio-16x9">
+                            <img class="img img-fluid object-fit-cover" src="/website_event/static/src/img/event_previews/event_2.jpg"/>
+                        </div>
+                        <div class="position-absolute top-0 end-0 me-3 mt-3 p-3 rounded-circle bg-white shadow-sm text-center text-dark" style="width: 5rem; height: 5rem;">
+                            <span class="fw-bold text-uppercase">AUG</span>
+                            <span class="fw-light lh-1">23</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <strong>8:15 PM</strong>
+                        <h5 class="mb-2 mt-0">Harmony Under the Stars</h5>
+                        <p class="text-muted">Melancholic melodies and textured soundscapes exploring memory and quiet distance.</p>
+                    </div>
+                    <div class="card-footer mt-auto border-0 p-3 pt-0 bg-transparent">
+                        <strong>Los Angeles, CA, United States</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card h-100">
+                    <div class="card-img-top position-relative">
+                        <div class="ratio ratio-16x9">
+                            <img class="img img-fluid object-fit-cover" src="/website_event/static/src/img/event_previews/event_3.jpg"/>
+                        </div>
+                        <div class="position-absolute top-0 end-0 me-3 mt-3 p-3 rounded-circle bg-white shadow-sm text-center text-dark" style="width: 5rem; height: 5rem;">
+                            <span class="fw-bold text-uppercase">AUG</span>
+                            <span class="fw-light lh-1">23</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <strong>8:15 PM</strong>
+                        <h5 class="mb-2 mt-0">Excellence in Achievement Awards</h5>
+                        <p class="text-muted">Honoring outstanding accomplishments, dedication, and impact across all fields.</p>
+                    </div>
+                    <div class="card-footer mt-auto border-0 p-3 pt-0 bg-transparent">
+                        <strong>Los Angeles, CA, United States</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card h-100">
+                    <div class="card-img-top position-relative">
+                        <div class="ratio ratio-16x9">
+                            <img class="img img-fluid object-fit-cover" src="/website_event/static/src/img/event_cover_2.jpg"/>
+                        </div>
+                        <div class="position-absolute top-0 end-0 me-3 mt-3 p-3 rounded-circle bg-white shadow-sm text-center text-dark" style="width: 5rem; height: 5rem;">
+                            <span class="fw-bold text-uppercase">AUG</span>
+                            <span class="fw-light lh-1">23</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <strong>8:15 PM</strong>
+                        <h5 class="mb-2 mt-0">Conference for Architects</h5>
+                        <p class="text-muted">Enhance your architectural business and improve professional skills.</p>
+                    </div>
+                    <div class="card-footer mt-auto border-0 p-3 pt-0 bg-transparent">
+                        <strong>Los Angeles, CA, United States</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Single record preview -->
+    <!-- TODO: This template is a placeholder. It will be updated later to match the final single record design. -->
+    <template id="s_dynamic_snippet_events_single_offset_preview_data" name="Single Event Offset Preview Data">
+        <div class="s_dialog_preview row my-4">
+        </div>
+    </template>
+    <!-- TODO: This template is a placeholder. It will be updated later to match the final single record design. -->
+    <template id="s_dynamic_snippet_events_single_entry_preview_data" name="Single Event Entry Preview Data">
+        <div class="s_dialog_preview row my-4">
+        </div>
+    </template>
+    <!-- TODO: This template is a placeholder. It will be updated later to match the final single record design. -->
+    <template id="s_dynamic_snippet_events_single_card_preview_data" name="Single Event Card Preview Data">
+        <div class="s_dialog_preview row my-4">
+        </div>
+    </template>
+    <!-- TODO: This template is a placeholder. It will be updated later to match the final single record design. -->
+    <template id="s_dynamic_snippet_events_single_badge_preview_data" name="Single Event Badge Preview Data">
+        <div class="s_dialog_preview row my-4">
+        </div>
+    </template>
+    <!-- TODO: This template is a placeholder. It will be updated later to match the final single record design. -->
+    <template id="s_dynamic_snippet_events_single_aside_preview_data" name="Single Event Aside Preview Data">
+        <div class="s_dialog_preview row my-4">
         </div>
     </template>
 </odoo>

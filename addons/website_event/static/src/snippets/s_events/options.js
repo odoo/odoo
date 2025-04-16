@@ -14,7 +14,6 @@ const dynamicSnippetEventOptions = dynamicSnippetOptions.extend({
         this._setOptionValue('numberOfRecords', 3);
         this._super.apply(this, arguments);
     },
-
 });
 
 options.registry.event_upcoming_snippet = dynamicSnippetEventOptions;

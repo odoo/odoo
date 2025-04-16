@@ -39,6 +39,11 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
      _computeWidgetVisibility(widgetName, params) {
         if (this.isAlternativeProductSnippet && alternativeSnippetRemovedOptions.includes(widgetName)) {
             return false;
+        } else if (widgetName === "template_opt") {
+            // TODO: The product snippets design will be refactored soon...
+            // Hide the template option once the final layouts and previews
+            // of the snippets are available.
+            return true;
         }
         return this._super(...arguments);
     },

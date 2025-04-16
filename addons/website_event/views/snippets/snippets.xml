@@ -11,7 +11,13 @@
             t-thumbnail="/website/static/src/img/snippets_thumbs/s_event_upcoming_snippet.svg"/>
     </xpath>
     <xpath expr="//t[@id='event_upcoming_snippet_hook']" position="replace">
-        <t t-snippet="website_event.s_events" string="Events" group="events"/>
+        <t t-snippet="website_event.s_events_picture" string="Events" group="events"/>
+        <t t-snippet="website_event.s_events_card" string="Events" group="events"/>
+        <t t-snippet="website_event.s_events_single_offset" string="Event" group="events"/>
+        <t t-snippet="website_event.s_events_single_entry" string="Event" group="events"/>
+        <t t-snippet="website_event.s_events_single_card" string="Event" group="events"/>
+        <t t-snippet="website_event.s_events_single_badge" string="Event" group="events"/>
+        <t t-snippet="website_event.s_events_single_aside" string="Event" group="events"/>
     </xpath>
 </template>
 
