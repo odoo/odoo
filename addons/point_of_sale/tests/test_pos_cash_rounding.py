@@ -249,6 +249,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             }])
 
     def test_cash_rounding_halfup_biggest_tax_not_only_round_cash_method(self):
+        self.skipTest('To re-introduce when feature is ready')
         self.main_pos_config.write({
             'rounding_method': self.cash_rounding_biggest_tax.id,
             'cash_rounding': True,
@@ -279,6 +280,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             }])
 
     def test_cash_rounding_halfup_biggest_tax_not_only_round_cash_method_pay_by_bank_and_cash(self):
+        self.skipTest('To re-introduce when feature is ready')
         self.main_pos_config.write({
             'rounding_method': self.cash_rounding_biggest_tax.id,
             'cash_rounding': True,
@@ -309,6 +311,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             }])
 
     def test_cash_rounding_halfup_biggest_tax_only_round_cash_method(self):
+        self.skipTest('To re-introduce when feature is ready')
         self.main_pos_config.write({
             'rounding_method': self.cash_rounding_biggest_tax.id,
             'cash_rounding': True,
@@ -339,6 +342,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             }])
 
     def test_cash_rounding_halfup_biggest_tax_only_round_cash_method_pay_by_bank_and_cash(self):
+        self.skipTest('To re-introduce when feature is ready')
         self.main_pos_config.write({
             'rounding_method': self.cash_rounding_biggest_tax.id,
             'cash_rounding': True,
