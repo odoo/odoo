@@ -6,7 +6,10 @@ import { after, SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequenc
 
 export const FOOTER_TEMPLATE = SNIPPET_SPECIFIC_NEXT;
 export const FOOTER_WIDTH = after(FOOTER_TEMPLATE);
-export const FOOTER_BORDER = after(FOOTER_WIDTH);
+export const FOOTER_COLORS = after(FOOTER_WIDTH);
+export const FOOTER_SLIDEOUT = after(FOOTER_COLORS);
+export const FOOTER_COPYRIGHT = after(FOOTER_SLIDEOUT);
+export const FOOTER_BORDER = after(FOOTER_COPYRIGHT);
 export const FOOTER_SCROLL_TO = after(FOOTER_BORDER);
 
 class FooterOptionPlugin extends Plugin {
@@ -26,6 +29,24 @@ class FooterOptionPlugin extends Plugin {
                 selector: "#wrapwrap > footer",
                 applyTo:
                     ":is(:scope > #footer > section, .o_footer_copyright) > :is(.container, .container-fluid, .o_container_small)",
+                editableOnly: false,
+                groups: ["website.group_website_designer"],
+            }),
+            withSequence(FOOTER_COLORS, {
+                template: "website.FooterColorsOption",
+                selector: "#wrapwrap > footer",
+                editableOnly: false,
+                groups: ["website.group_website_designer"],
+            }),
+            withSequence(FOOTER_SLIDEOUT, {
+                template: "website.FooterSlideoutOption",
+                selector: "#wrapwrap > footer",
+                editableOnly: false,
+                groups: ["website.group_website_designer"],
+            }),
+            withSequence(FOOTER_COPYRIGHT, {
+                template: "website.ToggleFooterCopyrightOption",
+                selector: "#wrapwrap > footer",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
             }),

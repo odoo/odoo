@@ -10,7 +10,8 @@ import { registry } from "@web/core/registry";
 import { HeaderBorderOption } from "./header_border_option";
 
 export const HEADER_TEMPLATE = SNIPPET_SPECIFIC_NEXT;
-export const HEADER_SCROLL_EFFECT = after(SNIPPET_SPECIFIC_NEXT);
+export const HEADER_TEMPLATE_SECONDARY_OPTIONS = after(HEADER_TEMPLATE);
+export const HEADER_SCROLL_EFFECT = after(HEADER_TEMPLATE_SECONDARY_OPTIONS);
 export const HEADER_ELEMENT = after(HEADER_SCROLL_EFFECT);
 export const HEADER_BORDER = after(HEADER_ELEMENT);
 
@@ -24,6 +25,24 @@ class HeaderOptionPlugin extends Plugin {
                 editableOnly: false,
                 template: "website.headerTemplateOption",
                 selector: "header",
+                groups: ["website.group_website_designer"],
+            }),
+            withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, {
+                editableOnly: false,
+                template: "website.headerContentWidthOption",
+                selector: "#wrapwrap > header",
+                groups: ["website.group_website_designer"],
+            }),
+            withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, {
+                editableOnly: false,
+                template: "website.headerSidebarWidthOption",
+                selector: "#wrapwrap > header",
+                groups: ["website.group_website_designer"],
+            }),
+            withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, {
+                editableOnly: false,
+                template: "website.headerBackgroundOption",
+                selector: "#wrapwrap > header",
                 groups: ["website.group_website_designer"],
             }),
             // TODO Header box (border & shadow) ?

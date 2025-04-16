@@ -285,7 +285,12 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
                 isApplied: ({ params }) => {
                     const records = [...(params.views || []), ...(params.assets || [])];
-                    return records.every((v) => this.getConfigKey(v));
+                    return (
+                        records.every((v) => this.getConfigKey(v)) &&
+                        Object.entries(params.vars || {}).every(
+                            ([variable, value]) => value === this.getWebsiteVariableValue(variable)
+                        )
+                    );
                 },
                 apply: async (action) => this.toggleConfig(action, true),
                 clean: (action) => this.toggleConfig(action, false),
@@ -317,6 +322,10 @@ export class CustomizeWebsitePlugin extends Plugin {
         while (tempValue) {
             finalValue = tempValue;
             tempValue = getCSSVariableValue(tempValue.replaceAll("'", ""), style);
+            if (tempValue === finalValue) {
+                // the CSS variable value is identical to its name.
+                break;
+            }
         }
         // Unquote value
         if (finalValue.startsWith(`'`)) {

@@ -225,3 +225,52 @@ test("use isActiveItem base on BuilderSelectItem with websiteConfig", async () =
     await contains("[data-action-param*='test_template_1']").click();
     expect.verifySteps(["theme_customize_data_get", "theme_customize_data"]);
 });
+
+test("isApplied with action “websiteConfig” depends on views, assets and vars", async () => {
+    onRpc("/website/theme_customize_data_get", async (request) => {
+        const { params } = await request.json();
+        if (params.is_view_data) {
+            expect.step("theme_customize_data_get view");
+            expect(params.keys).toEqual(["test_template_1", "test_template_2"]);
+        } else {
+            expect.step("theme_customize_data_get asset");
+            expect(params.keys).toEqual(["test_asset_1", "test_asset_2"]);
+        }
+        return params.is_view_data ? ["test_template_1"] : ["test_asset_1"];
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderCheckbox action="'websiteConfig'"
+                actionParam="{
+                    views: ['test_template_1'], assets: ['test_asset_1'], vars: { foo: 'bar', cat: 'cat' }
+                }"/>
+            <BuilderCheckbox action="'websiteConfig'"
+                actionParam="{
+                    views: ['test_template_1'], assets: ['test_asset_1'], vars: { bar: 'foo' }
+                }"/>
+            <BuilderCheckbox action="'websiteConfig'"
+                actionParam="{
+                    views: ['test_template_2'], assets: ['test_asset_1'], vars: { foo: 'bar' }
+                }"/>
+            <BuilderCheckbox action="'websiteConfig'"
+                actionParam="{
+                    views: ['test_template_1'], assets: ['test_asset_2'], vars: { foo: 'bar' }
+                }"/>
+        `,
+    });
+    const { getEditableContent } = await setupWebsiteBuilder(
+        `<div class="test-options-target">b</div>`
+    );
+    // fake initial values
+    const iframeDocument = getEditableContent().ownerDocument.documentElement;
+    iframeDocument.style.setProperty("--foo", "bar");
+    iframeDocument.style.setProperty("--cat", "cat");
+    await contains(":iframe .test-options-target").click();
+    await animationFrame();
+    expect.verifySteps(["theme_customize_data_get view", "theme_customize_data_get asset"]);
+    expect(".options-container input[type='checkbox']:eq(0)").toBeChecked();
+    expect(".options-container input[type='checkbox']:eq(1)").not.toBeChecked();
+    expect(".options-container input[type='checkbox']:eq(2)").not.toBeChecked();
+    expect(".options-container input[type='checkbox']:eq(3)").not.toBeChecked();
+});
