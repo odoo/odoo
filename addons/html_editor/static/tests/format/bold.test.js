@@ -142,7 +142,7 @@ test("should get ready to type in not bold", async () => {
 test("should remove a bold tag that was redondant while performing the command", async () => {
     for (const tag of BOLD_TAGS) {
         await testEditor({
-            contentBefore: `<p>a${tag(`b${tag(`[c]`)}d`)}e</p>`,
+            contentBefore: `<p>a${tag(`b[c]d`)}e</p>`,
             stepFunction: bold,
             contentAfter: `<p>a${tag("b")}[c]${tag("d")}e</p>`,
         });

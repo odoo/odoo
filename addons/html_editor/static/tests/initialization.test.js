@@ -1,5 +1,7 @@
 import { describe, test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
+import { unformat } from "./_helpers/format";
+import { BOLD_TAGS } from "./_helpers/tags";
 
 /**
  * content of the "init" sub suite in editor.test.js
@@ -187,6 +189,142 @@ describe("link normalization", () => {
                 '<p><a href="#" style="color: #008f8c"><font style="color: rgb(255, 0, 0);">test</font></a></p><p><a href="#" style="color: #008f8c">test</a></p>',
             contentAfter:
                 '<p><a href="#"><font style="color: rgb(255, 0, 0);">test</font></a></p><p><a href="#"><font style="color: rgb(0, 143, 140);">test</font></a></p>',
+        });
+    });
+});
+
+describe("color normalization", () => {
+    test("should unwrap nested identical <font> tags with gradient (class and style same)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    parent
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">parentchild</font></p>
+            `),
+        });
+    });
+
+    test("should unwrap nested identical <font> tags with color (class and style same)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                    parent
+                    <font class="bg-color-1" style="color:red">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">parentchild</font></p>
+            `),
+        });
+    });
+
+    test("should unwrap nested <font> with same style but no class", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                    parent
+                    <font style="color:red">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">parentchild</font></p>
+            `),
+        });
+    });
+
+    test("should unwrap nested <font> with same class only", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                    parent
+                    <font class="bg-color-1">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">parentchild</font></p>
+            `),
+        });
+    });
+
+    test("should unwrap nested <font> with no class or style", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                    parent
+                    <font>child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">parentchild</font></p>
+            `),
+        });
+    });
+
+    test("should unwrap nested <font> with same style and class as closest <font>", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                        parent
+                        <strong>
+                            text1
+                            <font class="bg-color-1" style="color:red">child</font>
+                            text2
+                        </strong>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                        parent<strong>text1childtext2</strong>
+                </font></p>
+            `),
+        });
+    });
+});
+
+describe("formatting normalization", () => {
+    test("should unwrap nested identical bold tags", async () => {
+        for (const tag of BOLD_TAGS) {
+            await testEditor({
+                contentBefore: `<p>a${tag(`b${tag(`c${tag(`d`)}`)}e`)}f</p>`,
+                contentAfter: `<p>a${tag("bcde")}f</p>`,
+            });
+        }
+    });
+
+    test("should merge nested strong inside formatting tags", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p>
+                    <strong>
+                        <em>
+                            <u>
+                                <s>
+                                    text1
+                                    <strong>text2</strong>
+                                    text3
+                                </s>
+                            </u>
+                        </em>
+                    </strong>
+                </p>
+            `),
+            contentAfter: unformat(`
+                <p>
+                    <strong>
+                        <em>
+                            <u>
+                                <s>
+                                    text1text2text3
+                                </s>
+                            </u>
+                        </em>
+                    </strong>
+                </p>
+            `),
         });
     });
 });

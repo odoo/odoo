@@ -9,11 +9,12 @@ import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
     isContentEditable,
     isEmptyBlock,
+    isRedundantElement,
     isTextNode,
     isWhitespace,
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
-import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
+import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -93,6 +94,7 @@ export class ColorPlugin extends Plugin {
             (node) => hasColor(closestElement(node), "color"),
             (node) => hasColor(closestElement(node), "backgroundColor"),
         ],
+        normalize_handlers: this.normalize.bind(this),
     };
 
     setup() {
@@ -100,6 +102,14 @@ export class ColorPlugin extends Plugin {
         this.previewableApplyColor = this.dependencies.history.makePreviewableOperation(
             (color, mode, previewMode) => this._applyColor(color, mode, previewMode)
         );
+    }
+
+    normalize(root) {
+        for (const el of selectElements(root, "font")) {
+            if (isRedundantElement(el)) {
+                unwrapContents(el);
+            }
+        }
     }
 
     /**
