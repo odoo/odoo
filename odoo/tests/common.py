@@ -1321,7 +1321,7 @@ class ChromeBrowser:
             self._result.cancel()
 
             self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
-            self._websocket_send('Browser.close')
+            self._websocket_request('Browser.close')
             self._logger.info("Closing websocket connection")
             self.ws.close()
 
@@ -2275,90 +2275,76 @@ class HttpCase(TransactionCase):
             self._logger.warning('watch mode is only suitable for local testing')
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
-        sendone_patch = None
-        websocket_allowed_patch = None
-        kick_all_websockets = None
-        with self.allow_requests(browser=browser):
+        with self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
+            atexit.callback(self._wait_remaining_requests)
+            if "bus.bus" in self.env.registry:
+                from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler  # noqa: PLC0415
+                from odoo.addons.bus.models.bus import BusBus  # noqa: PLC0415
+
+                atexit.callback(_kick_all, CloseCode.KILL_NOW)
+                original_send_one = BusBus._sendone
+
+                def sendone_wrapper(self, target, notification_type, message):
+                    original_send_one(self, target, notification_type, message)
+                    self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+                    self.env.cr.postcommit.run()  # Trigger notification dispatching
+
+                atexit.enter_context(patch.object(BusBus, "_sendone", sendone_wrapper))
+                atexit.enter_context(patch.object(
+                    WebsocketConnectionHandler, "websocket_allowed", return_value=True
+                ))
+
+            self.authenticate(login, login, browser=browser)
+            # Flush and clear the current transaction.  This is useful in case
+            # we make requests to the server, as these requests are made with
+            # test cursors, which uses different caches than this transaction.
+            self.cr.flush()
+            self.cr.clear()
+            url = urljoin(self.base_url(), url_path)
+            if watch:
+                parsed = urlsplit(url)
+                qs = dict(parse_qsl(parsed.query))
+                qs['watch'] = '1'
+                if debug is not False:
+                    qs['debug'] = "assets"
+                url = urlunsplit(parsed._replace(query=urlencode(qs)))
+            self._logger.info('Open "%s" in browser', url)
+
+            browser.screencaster.start()
+            if cookies:
+                for name, value in cookies.items():
+                    browser.set_cookie(name, value, '/', HOST)
+
+            cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING')  # used by dedicated runbot builds
+            cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
+
+            if cpu_throttling:
+                assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
+                timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
+                _logger.log(
+                    logging.INFO if cpu_throttling_os else logging.WARNING,
+                    'CPU throttling mode is only suitable for local testing - '
+                    'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
+                browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
+
+            browser.navigate_to(url, wait_stop=not bool(ready))
+            atexit.callback(browser.stop)
+
+            # Needed because tests like test01.js (qunit tests) are passing a ready
+            # code = ""
+            self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
+
+            error = False
             try:
-                if "bus.bus" in self.env.registry:
-                    from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler  # noqa: PLC0415
-                    from odoo.addons.bus.models.bus import BusBus  # noqa: PLC0415
-
-                    kick_all_websockets = partial(_kick_all, CloseCode.KILL_NOW)
-                    original_send_one = BusBus._sendone
-
-                    def sendone_wrapper(self, target, notification_type, message):
-                        original_send_one(self, target, notification_type, message)
-                        self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
-                        self.env.cr.postcommit.run()  # Trigger notification dispatching
-
-                    sendone_patch = patch.object(BusBus, "_sendone", sendone_wrapper)
-                    websocket_allowed_patch = patch.object(
-                        WebsocketConnectionHandler, "websocket_allowed", return_value=True
-                    )
-                    sendone_patch.start()
-                    websocket_allowed_patch.start()
-
-                self.authenticate(login, login, browser=browser)
-                # Flush and clear the current transaction.  This is useful in case
-                # we make requests to the server, as these requests are made with
-                # test cursors, which uses different caches than this transaction.
-                self.cr.flush()
-                self.cr.clear()
-                url = urljoin(self.base_url(), url_path)
-                if watch:
-                    parsed = urlsplit(url)
-                    qs = dict(parse_qsl(parsed.query))
-                    qs['watch'] = '1'
-                    if debug is not False:
-                        qs['debug'] = "assets"
-                    url = urlunsplit(parsed._replace(query=urlencode(qs)))
-                self._logger.info('Open "%s" in browser', url)
-
-                browser.screencaster.start()
-                if cookies:
-                    for name, value in cookies.items():
-                        browser.set_cookie(name, value, '/', HOST)
-
-                cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING')  # used by dedicated runbot builds
-                cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
-
-                if cpu_throttling:
-                    assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
-                    timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
-                    _logger.log(
-                        logging.INFO if cpu_throttling_os else logging.WARNING,
-                        'CPU throttling mode is only suitable for local testing - '
-                        'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
-                    browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
-
-                browser.navigate_to(url, wait_stop=not bool(ready))
-
-                # Needed because tests like test01.js (qunit tests) are passing a ready
-                # code = ""
-                self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
-
-                error = False
-                try:
-                    browser._wait_code_ok(code, timeout, error_checker=error_checker)
-                except ChromeBrowserException as chrome_browser_exception:
-                    error = chrome_browser_exception
-                if error:  # dont keep initial traceback, keep that outside of except
-                    if code:
-                        message = 'The test code "%s" failed' % code
-                    else:
-                        message = "Some js test failed"
-                    self.fail('%s\n\n%s' % (message, error))
-
-            finally:
-                browser.stop()
-                if sendone_patch:
-                    sendone_patch.stop()
-                if websocket_allowed_patch:
-                    websocket_allowed_patch.stop()
-                if kick_all_websockets:
-                    kick_all_websockets()
-                self._wait_remaining_requests()
+                browser._wait_code_ok(code, timeout, error_checker=error_checker)
+            except ChromeBrowserException as chrome_browser_exception:
+                error = chrome_browser_exception
+            if error:  # dont keep initial traceback, keep that outside of except
+                if code:
+                    message = 'The test code "%s" failed' % code
+                else:
+                    message = "Some js test failed"
+                self.fail('%s\n\n%s' % (message, error))
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
