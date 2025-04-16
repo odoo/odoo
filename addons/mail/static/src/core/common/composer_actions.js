@@ -101,15 +101,7 @@ composerActionsRegistry
         sequenceQuick: 20,
     })
     .add("upload-files", {
-        condition: (component) => {
-            const thread = component.thread ?? component.message?.thread;
-            return (
-                !(
-                    thread?.channel_type === "whatsapp" &&
-                    component.props.composer.attachments.length > 0
-                ) && !component.props.composer.portalComment
-            );
-        },
+        condition: (component) => component.allowUpload,
         icon: "fa fa-paperclip",
         name: _t("Attach Files"),
         onClick: (component, action, ev) => {
