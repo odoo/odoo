@@ -1,4 +1,4 @@
-import { Chatter } from "@mail/chatter/web_portal/chatter";
+import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { patch } from "@web/core/utils/patch";
 import { useRef, onWillPatch, useEffect } from "@odoo/owl";
@@ -8,7 +8,7 @@ patch(Chatter.prototype, {
         super.setup(...arguments);
         this.topRef = useRef("top");
         onWillPatch(() => {
-            // Keep the composer position under the page header on scrolling 
+            // Keep the composer position under the page header on scrolling
             // unless the header is on the side.
             const headerEl = document.querySelector("#wrapwrap header");
             if (!this.props.twoColumns && headerEl && !headerEl.matches(".o_header_sidebar")) {

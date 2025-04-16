@@ -11,7 +11,7 @@
     'assets': {
         'web.assets_backend': [
             'cloud_storage/static/src/core/common/**/*',
-            'cloud_storage/static/src/**/web_portal/**/*',
+            'cloud_storage/static/src/**/web/**/*',
         ],
         'mail.assets_public': [
             'cloud_storage/static/src/core/common/**/*',

@@ -184,7 +184,7 @@ Featuring
             'website_slides/static/src/website_builder/**/*',
         ],
         'portal.assets_chatter': [
-            'website_slides/static/src/chatter/frontend/**/*',
+            'website_slides/static/src/chatter/portal/**/*',
         ],
     },
     'author': 'Odoo S.A.',

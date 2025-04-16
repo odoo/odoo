@@ -235,7 +235,7 @@
             'project/static/src/views/project_relational_model.js',
 
             ('include', 'portal.assets_chatter_helpers'),
-            'portal/static/src/chatter/core/**/*',
+            'portal/static/src/chatter/portal_project/**/*',
             'project/static/src/project_sharing/**/*',
             'web/static/src/start.js',
         ],
