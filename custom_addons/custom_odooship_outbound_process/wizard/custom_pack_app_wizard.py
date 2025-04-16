@@ -341,9 +341,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 self.env.cr.execute("""
                     UPDATE stock_picking SET current_state = %s WHERE id = %s
                 """, (new_state, picking.id))
-                self.env.cr.execute("""
-                    UPDATE sale_order SET pick_status = %s WHERE id = %s
-                """, (sale_order_state,picking.sale_id.id))
+                # self.env.cr.execute("""
+                #     UPDATE sale_order SET pick_status = %s WHERE id = %s
+                # """, (sale_order_state,picking.sale_id.id))
                 picking._invalidate_cache(['current_state'])
                 _logger.info(f"Picking {picking.name} forced update to '{new_state}' in database.")
                 _logger.info(f"Picking {picking.sale_id.name} forced update to '{sale_order_state}' in database.")
