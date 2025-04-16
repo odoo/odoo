@@ -102,6 +102,9 @@ export const websiteService = {
                 }
                 return currentWebsite;
             },
+            get currentWebsiteId(){
+                return currentWebsiteId;
+            },
             get websites() {
                 return websites;
             },
