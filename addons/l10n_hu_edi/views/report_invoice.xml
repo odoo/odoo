@@ -25,7 +25,7 @@
                             <span t-else="else" t-out="o.company_id.vat"/>
                         </li>
                         <li t-if="not o.fiscal_position_id.foreign_vat and o.company_id.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.company_id.partner_id.l10n_hu_group_vat"/></li>
-                        <li t-if="o.partner_id.commercial_partner_id.country_id and o.partner_id.commercial_partner_id.country_id.code!='HU'">
+                        <li t-if="o.partner_id.commercial_partner_id.country_id and o.partner_id.commercial_partner_id.country_id.code!='HU' and o.company_id.vat">
                             EU Tax ID: <span t-out="'HU%s' % o.company_id.vat[:8]"/>
                         </li>
                         <li t-if="o.move_type in ['out_invoice', 'out_receipt'] and o.partner_bank_id">Bank Account: <span t-field="o.partner_bank_id.acc_number"/></li>
