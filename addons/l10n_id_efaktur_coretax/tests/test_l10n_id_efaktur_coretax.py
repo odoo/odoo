@@ -3,7 +3,7 @@
 from lxml import etree
 
 from odoo import Command, tools
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -22,6 +22,8 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         cls.company_data['company'].street = "test"
         cls.company_data['company'].phone = "12345"
         cls.company_data['company'].vat = "1234567890123456"
+
+        cls.company_data_2 = cls.setup_other_company()
 
         cls.partner_a.write({"l10n_id_pkp": True, "l10n_id_kode_transaksi": "04", "vat": "1234567890123457", "country_id": cls.env.ref('base.id').id})
         cls.tax_sale_a.amount = 11.0
@@ -327,6 +329,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'l10n_id_kode_transaksi': '07',
             'l10n_id_coretax_add_info_07': 'TD.00505',
             'l10n_id_coretax_custom_doc': 'custom doc',
+            'l10n_id_coretax_custom_doc_month_year': '2019-05-01',
         })
 
         out_invoice.action_post()
@@ -356,6 +359,9 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             </xpath>
             <xpath expr="//CustomDoc" position="replace">
                 <CustomDoc>custom doc</CustomDoc>
+            </xpath>
+            <xpath expr="//CustomDocMonthYear" position="replace">
+                <CustomDocMonthYear>052019</CustomDocMonthYear>
             </xpath>
             '''
         )
@@ -651,3 +657,153 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         )
 
         self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_download_multi_company(self):
+        """ Ensure that generating efaktur document for invoices across multi company is not allowed """
+        # Setup company
+        company_2 = self.company_data_2['company']
+        tax_id = self.env['account.tax'].create({"name": "test tax", "type_tax_use": "sale", "amount": 10.0, "price_include": True, "company_id": company_2.id})
+
+        # Setup company across 2 companies
+        invoices = self.env["account.move"].create([{
+            "move_type": "out_invoice",
+            "partner_id": self.partner_a.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_sale_a.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+            "company_id": self.company.id,
+        }, {
+            "move_type": "out_invoice",
+            "partner_id": self.partner_a.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": tax_id.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+            "company_id": company_2.id
+        }])
+
+        invoices.action_post()
+
+        # Should raise error because the 2 invoices are from 2 different companies
+        with self.assertRaises(UserError):
+            (invoices).download_efaktur()
+
+    def test_efaktur_download_separate(self):
+        """ Test that when we download separately on 2 invoices, each will link to different document.
+        If we try to download the 2 together, a RedirectWarning should be raised """
+
+        # Create 2 invoices
+        invoices = self.env["account.move"].create([{
+            "move_type": "out_invoice",
+            "partner_id": self.partner_a.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_sale_a.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        } for i in range(2)])
+
+        invoices.action_post()
+
+        # Download efaktur separately
+        invoices[0].download_efaktur()
+        invoices[1].download_efaktur()
+
+        # l10n_id_efaktur_document should be filled in both documents AND different from each other
+        self.assertTrue(invoices[0].l10n_id_coretax_document)
+        self.assertTrue(invoices[1].l10n_id_coretax_document)
+        self.assertNotEqual(invoices[0].l10n_id_coretax_document, invoices[1].l10n_id_coretax_document)
+
+        # If we try to download together, a RedirectWarning should be raised
+        with self.assertRaises(RedirectWarning):
+            invoices.download_efaktur()
+
+    def test_efaktur_download_together(self):
+        """ Test that when we download efaktur for 2 invoices together, they will refer to the same document
+        If we try to download separately on both invoices, RedirectWarning should be raised. """
+
+        # Create 2 invoices
+        invoices = self.env["account.move"].create([{
+            "move_type": "out_invoice",
+            "partner_id": self.partner_a.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_sale_a.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        } for i in range(2)])
+
+        invoices.action_post()
+
+        # Download efaktur together
+        invoices.download_efaktur()
+
+        # document should be filled in and both invoice should refer to the same document
+        self.assertTrue(invoices[0].l10n_id_coretax_document)
+        self.assertTrue(invoices[1].l10n_id_coretax_document)
+        self.assertEqual(invoices[0].l10n_id_coretax_document, invoices[1].l10n_id_coretax_document)
+
+        # If we try to download separately, RedirectWarning should be raised
+        with self.assertRaises(RedirectWarning):
+            invoices[0].download_efaktur()
+        with self.assertRaises(RedirectWarning):
+            invoices[1].download_efaktur()
+
+    def test_efaktur_download_mismatch_flow(self):
+        """ Test the flow when you generate 3 invoices (inv1, inv2, ine) generate document(1) and
+        document(2,3). When we try to download inv(1,2) redirect warning would be raised, and it should
+        provide the view of 2 documents concerned. Then, we edit such that document(1) adds invoice 2.
+        Afterwards, regenerate both documents. We are expected to be able to download invoice(1,2) without error now,
+        while also still using the same efaktur document record as before """
+
+        # Generate 3 invoices
+        invoices = self.env["account.move"].create([{
+            "move_type": "out_invoice",
+            "partner_id": self.partner_a.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_sale_a.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        } for i in range(3)])
+        invoices.action_post()
+
+        # Generate document in group (1), and (2, 3)
+        invoices[0].download_efaktur()
+        invoices[1:].download_efaktur()
+
+        # Suppose now we want to generate for (1, 2, 3) instead, it should trigger a redirect warning
+        # that includes information on the efaktur document involved
+
+        with self.assertRaises(RedirectWarning) as error:
+            invoices[:2].download_efaktur()
+
+        action = error.exception.args[1]
+        document_ids = action['domain'][0][2]
+
+        # Make sure the documents involved are only the between the document of 1, 2, and 3
+        self.assertEqual(document_ids, invoices.l10n_id_coretax_document.ids)
+
+        # Store old document id and attachment for before-after comparison in the end
+        old_document = invoices[0].l10n_id_coretax_document
+
+        # Unlink invoice 3 from 2nd document, link to first document and regenerate both the document attachments
+        document_to_edit = self.env['l10n_id_efaktur_coretax.document'].browse(document_ids)
+        document_to_edit[1].invoice_ids = [Command.unlink(invoices[1].id)]
+        document_to_edit[1].action_regenerate()
+
+        document_to_edit[0].invoice_ids = [Command.link(invoices[1].id)]
+        document_to_edit[0].action_regenerate()
+
+        # Should allow download of invoice(1,2,3) together where the efaktur document is the same as
+        # the old invoice 1's document
+        invoices[:2].download_efaktur()
+        self.assertEqual(invoices[1].l10n_id_coretax_document, old_document)
