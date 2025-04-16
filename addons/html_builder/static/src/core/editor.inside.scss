@@ -1,5 +1,3 @@
-// This style block is about the "editor message" which highlights the areas
-// where the user can drag & drop snippets.
 $-editor-messages-margin-x: 2%;
 
 %o-editor-messages {
@@ -15,27 +13,58 @@ $-editor-messages-margin-x: 2%;
         font-size: 20px;
     }
 
+    // Show the default editor message only for "empty" elements
+    &:not(:empty) {
+        &[data-editor-message-default]:before {
+            content: none;
+        }
+    }
+
     &:after {
         content: attr(data-editor-sub-message);
         display: block;
     }
 }
 
+// This style block is about the "editor message" which highlights the areas
+// where the user can drag & drop snippets.
 .o_editable {
     &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
-        &:empty {
+
+        // Base case (website.page (#wrap), t-field (product description), ...)
+        > .oe_drop_zone.oe_insert:not(.oe_vertical) {
+            @extend %o-editor-messages;
+            height: auto;
+
+            // Empty editable element during drag & drop
+            &:only-child {
+                width: 100% - 2 * $-editor-messages-margin-x;
+                padding: 12px 0;
+                margin: 20px $-editor-messages-margin-x;
+            }
+
+            &:not(:only-child) {
+                &::before {
+                    font-size: 16px;
+                }
+
+                &[data-editor-message-default]::before {
+                    content: none;
+                }
+            }
+        }
+
+        // Exception 1: empty wrap NOT during drag & drop
+        &#wrap:empty {
             @extend %o-editor-messages;
             padding: 112px 0px;
             margin: 20px $-editor-messages-margin-x;
             border-radius: $border-radius-lg;
         }
 
-        .oe_drop_zone.oe_insert:only-child {
-            @extend %o-editor-messages;
-            height: auto;
-            width: 100% - 2 * $-editor-messages-margin-x;
-            padding: 112px 0;
-            margin: 20px $-editor-messages-margin-x;
+        // Exception 2: empty wrap during drag & drop (override of base case)
+        &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
+            padding: 112px 0px;
             text-shadow: none;
         }
 
@@ -43,6 +72,18 @@ $-editor-messages-margin-x: 2%;
             color: #aaa;
         }
     }
+
+    &[data-oe-type=html].oe_empty:empty {
+        @extend %o-editor-messages;
+    }
+}
+
+.oe_structure_solo > .oe_drop_zone {
+    // TODO implement something more robust. This is currently for our only
+    // use case of oe_structure_solo: the footer. The dropzone in there need to
+    // be 1px lower that the end-of-page dropzone to distinguish them. The
+    // usability has to be reviewed anyway.
+    transform: translateY(10px); // For some reason "1px" is not enough...
 }
 
 .o-we-hint {

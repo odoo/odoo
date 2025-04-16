@@ -212,15 +212,27 @@ export class DropZonePlugin extends Plugin {
      * This allows to add data on the dropzone depending on the hook
      * environment.
      * TODO
-     *
+     * @param {HTMLElement} hookEl the dropzone parent
      * @param {boolean} [vertical=false]
      * @param {Object} [style]
      * @returns {HTMLElement}
      */
-    createDropzone(isVertical, style) {
+    createDropzone(hookEl, isVertical, style) {
         const dropzoneEl = this.document.createElement("div");
         dropzoneEl.classList.add("oe_drop_zone", "oe_insert");
-        dropzoneEl.dataset.editorMessage = _t("DRAG BUILDING BLOCKS HERE");
+
+        // Set the messages to display in the dropzone.
+        const editorMessagesAttributes = [
+            "data-editor-message-default",
+            "data-editor-message",
+            "data-editor-sub-message",
+        ];
+        for (const messageAttribute of editorMessagesAttributes) {
+            const message = hookEl.getAttribute(messageAttribute);
+            if (message) {
+                dropzoneEl.setAttribute(messageAttribute, message);
+            }
+        }
 
         if (isVertical) {
             dropzoneEl.classList.add("oe_vertical");
@@ -305,17 +317,17 @@ export class DropZonePlugin extends Plugin {
         const targets = [];
         for (const el of selectorChildren) {
             targets.push(...el.children);
-            el.prepend(this.createDropzone());
+            el.prepend(this.createDropzone(el));
         }
         targets.push(...selectorSiblings);
 
         for (const target of targets) {
             if (!target.nextElementSibling?.classList.contains("oe_drop_zone")) {
-                target.after(this.createDropzone());
+                target.after(this.createDropzone(target.parentElement));
             }
 
             if (!target.previousElementSibling?.classList.contains("oe_drop_zone")) {
-                target.before(this.createDropzone());
+                target.before(this.createDropzone(target.parentElement));
             }
         }
 
