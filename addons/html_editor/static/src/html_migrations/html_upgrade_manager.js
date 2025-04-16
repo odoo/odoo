@@ -22,8 +22,9 @@ import { fixInvalidHTML } from "@html_editor/utils/sanitize";
  * !!!  ALWAYS assume that the `env` may not have the resource used in your
  *      migrate function and adjust accordingly.
  * - Refer to that file in the `html_editor_upgrade` registry, in the version
- *   category related to your change: `major.minor` (bump major for an IMP,
- *   minor for a FIX), in a sub-category related to your module.
+ *   category related to your change: `major.minor` (bump major for a change in
+ *   master, and minor for a change in stable), in a sub-category related to
+ *   your module.
  *   Example for the version 1.1 in `html_editor`:
  *   `registry
  *        .category("html_editor_upgrade")
