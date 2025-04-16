@@ -27,11 +27,13 @@ class PosOrder(models.Model):
         lines_with_event = paid_orders.mapped('lines').filtered(lambda line: line.event_ticket_id)
         event_event_fields = self.env['event.event']._load_pos_data_fields(paid_orders[0].config_id.id)
         event_ticket_fields = self.env['event.event.ticket']._load_pos_data_fields(paid_orders[0].config_id.id)
+        event_slot_fields = self.env['event.slot']._load_pos_data_fields(paid_orders[0].config_id.id)
         event_registrations_fields = self.env['event.registration']._load_pos_data_fields(paid_orders[0].config_id.id)
         event_registrations_answer_fields = self.env['event.registration.answer']._load_pos_data_fields(paid_orders[0].config_id.id)
         results['event.registration'] = lines_with_event.event_registration_ids.read(event_registrations_fields, load=False)
         results['event.event'] = lines_with_event.event_registration_ids.mapped('event_id').read(event_event_fields, load=False)
         results['event.event.ticket'] = lines_with_event.event_registration_ids.mapped('event_ticket_id').read(event_ticket_fields, load=False)
+        results['event.slot'] = lines_with_event.event_registration_ids.mapped('event_slot_id').read(event_slot_fields, load=False)
         results['event.registration.answer'] = lines_with_event.event_registration_ids.mapped('registration_answer_ids').read(event_registrations_answer_fields, load=False)
 
         for registration in lines_with_event.event_registration_ids:

@@ -30,7 +30,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'My Awesome Event',
             'user_id': cls.pos_admin.id,
             'date_begin': datetime.datetime.now() + datetime.timedelta(days=1),
-            'date_end': datetime.datetime.now() + datetime.timedelta(days=2),
+            'date_end': datetime.datetime.now() + datetime.timedelta(days=4),
             'seats_limited': True,
             'seats_max': 2,
             'event_ticket_ids': [(0, 0, {
@@ -84,3 +84,60 @@ class TestUi(TestPointOfSaleHttpCommon):
         event_answer_name = event_registration.registration_answer_ids.value_answer_id.mapped('name')
         self.assertEqual(len(event_registration.registration_answer_ids), 2)
         self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1'])
+
+    def test_selling_multislot_event_in_pos(self):
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('event.group_event_user').id),
+            ]
+        })
+        self.main_pos_config.write({
+            "limit_categories": True,
+            "iface_available_categ_ids": [(6, 0, [self.event_category.id])],
+        })
+
+        slots_day = self.test_event.date_begin.date() + datetime.timedelta(days=2)
+        slot_1, slot_2 = self.env['event.slot'].create([
+            {
+                'date': slots_day,
+                'start_hour': 8,
+                'end_hour': 9,
+                'event_id': self.test_event.id,
+            },
+            {
+                'date': slots_day,
+                'start_hour': 10,
+                'end_hour': 11,
+                'event_id': self.test_event.id,
+            }
+        ])
+        self.test_event.write({
+            'is_multi_slots': True,
+            'event_slot_ids': [(6, 0, (slot_1 + slot_2).ids)],
+        })
+        # Reduce first slot availability by one
+        registration_1_basic = self.env['event.registration'].create([{
+            'event_id': self.test_event.id,
+            'event_slot_id': slot_1.id,
+            'state': 'open',
+            'event_ticket_id': self.test_event.event_ticket_ids[0].id,
+        }])
+        self.assertEqual(registration_1_basic.event_ticket_id.name, 'Ticket Basic')
+        self.assertEqual(slot_1.seats_available, 1)
+        self.assertEqual(slot_2.seats_available, 2)
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SellingMultiSlotEventInPos', login="pos_user")
+
+        order = self.env['pos.order'].search([], order='id desc', limit=1)
+        self.assertEqual(len(order.lines), 1)
+
+        registrations = order.lines.event_registration_ids
+        self.assertEqual(len(registrations), 1)
+        self.assertEqual(registrations.event_slot_id.id, slot_1.id)
+
+        self.assertEqual(slot_1.seats_available, 0)
+
+        self.assertEqual(len(registrations.registration_answer_ids), 2)
+        event_answer_names = registrations.registration_answer_ids.value_answer_id.mapped('name')
+        self.assertEqual(event_answer_names, ['Q1-Answer1', 'Q2-Answer1'])
