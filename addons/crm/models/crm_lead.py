@@ -161,6 +161,10 @@ class CrmLead(models.Model):
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     # Customer / contact
+    partner_parent_company_id = fields.Many2one(
+        'res.partner', string='Customer Company', domain="[('is_company', '=', True)]",
+        compute="_compute_partner_parent_company_id", inverse='_inverse_partner_parent_company_id',
+        readonly=False, store=False)
     partner_id = fields.Many2one(
         'res.partner', string='Customer', check_company=True, index=True, tracking=10,
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
@@ -386,6 +390,17 @@ class CrmLead(models.Model):
         for lead in self:
             if not lead.name and lead.partner_id and lead.partner_id.name:
                 lead.name = _("%s's opportunity") % lead.partner_id.name
+
+    @api.depends('partner_id')
+    def _compute_partner_parent_company_id(self):
+        for lead in self.filtered('partner_id'):
+            if not lead.partner_id.parent_id and not lead.partner_id.is_company:
+                lead.partner_parent_company_id = False
+            else:
+                lead.partner_parent_company_id = lead.partner_id.commercial_partner_id
+
+    def _inverse_partner_parent_company_id(self):
+        pass
 
     @api.depends('partner_id')
     def _compute_contact_name(self):
@@ -654,6 +669,11 @@ class CrmLead(models.Model):
     def _onchange_phone_validation(self):
         if self.phone:
             self.phone = self._phone_format(fname='phone', force_format='INTERNATIONAL') or self.phone
+
+    # @api.onchange('partner_parent_company_id')
+    # def _onchange_partner_parent_company_id(self):
+    #     if self.partner_parent_company_id:
+    #         self.partner_id = self.partner_id if self.partner_id in self.partner_parent_company_id.child_ids else False
 
     def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from partner information to

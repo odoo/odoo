@@ -405,24 +405,64 @@
         <record id="quick_create_opportunity_form" model="ir.ui.view">
             <field name="name">crm.lead.form.quick_create</field>
             <field name="model">crm.lead</field>
-            <field name="priority">1000</field>
+            <field name="priority">1001</field>
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="partner_id" widget="res_partner_many2one"
-                            class="o_field_highlight"
-                            string='Contact'
-                            context="{
-                            'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
-                            'default_name': contact_name or partner_name,
-                            'default_is_company': type == 'opportunity' and contact_name == False,
-                            'default_company_name': type == 'opportunity' and partner_name,
-                            'default_type': 'contact',
-                            'default_phone': phone,
-                            'default_email': email_from,
-                            'default_user_id': user_id,
-                            'default_team_id': team_id,
-                            'show_vat': True}"/>
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-building mr-2" title="Company"/>
+                            <field name="partner_parent_company_id" widget="res_partner_many2one"
+                                placeholder="Company"
+                                readonly="False"
+                                string="Company"
+                                class="o_field_highlight w-100 mb-0"
+                                context="{
+                                'default_is_company': True,
+                                'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
+                                'default_type': 'contact',
+                                'default_user_id': user_id,
+                                'default_team_id': team_id,
+                                }"/>
+                        </div>
+
+                        <div class="d-flex align-items-center" colspan="2">
+                            <i class="fa fa-user mr-2" title="Contact"/>
+                            <!-- no parent: free candies -->
+                            <field name="partner_id" widget="res_partner_many2one"
+                                invisible="partner_parent_company_id"
+                                class="o_field_highlight"
+                                string='Contact'
+                                context="{
+                                'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
+                                'default_name': contact_name or partner_name,
+                                'default_is_company': False,
+                                'default_parent_id': partner_parent_company_id,
+                                'default_company_name': type == 'opportunity' and partner_name,
+                                'default_type': 'contact',
+                                'default_phone': phone,
+                                'default_email': email_from,
+                                'default_user_id': user_id,
+                                'default_team_id': team_id,
+                                'show_vat': True}"/>
+                            <!-- parent set: limit to children -->
+                            <field name="partner_id" widget="res_partner_many2one"
+                                invisible="not partner_parent_company_id"
+                                class="o_field_highlight"
+                                string='Contact'
+                                domain="[('is_company', '!=', True), ('id', 'child_of', partner_parent_company_id)]"
+                                context="{
+                                'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
+                                'default_name': contact_name or partner_name,
+                                'default_is_company': False,
+                                'default_parent_id': partner_parent_company_id,
+                                'default_type': 'contact',
+                                'default_phone': phone,
+                                'default_email': email_from,
+                                'default_user_id': user_id,
+                                'default_team_id': team_id,
+                                'show_vat': True}"/>
+                        </div>
+
                         <field name="name" placeholder="e.g. Product Pricing" />
                         <field name="email_from" string="Email" placeholder='e.g. "email@address.com"' />
                         <field name="phone" string="Phone" placeholder='e.g. "0123456789"' />
@@ -445,7 +485,6 @@
                         <field name="team_id" invisible="1"/>
                         <field name="type" invisible="1"/>
                         <field name="partner_name" invisible="1"/>
-                        <field name="contact_name" invisible="1"/>
                         <field name="country_id" invisible="1"/>
                         <field name="state_id" invisible="1"/>
                         <field name="city" invisible="1"/>
@@ -454,6 +493,7 @@
                         <field name="zip" invisible="1"/>
                         <field name="website" invisible="1"/>
                         <field name="function" invisible="1"/>
+                        <field name="contact_name" invisible="1"/>
                         <field name="activity_ids" invisible="1"/>
                     </group>
                 </form>
