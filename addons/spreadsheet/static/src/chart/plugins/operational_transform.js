@@ -9,7 +9,7 @@ otRegistry.addTransformation(
     "DELETE_FIGURE",
     ["LINK_ODOO_MENU_TO_CHART"],
     (toTransform, executed) => {
-        if (executed.id === toTransform.chartId) {
+        if (executed.figureId === toTransform.chartId) {
             return undefined;
         }
         return toTransform;

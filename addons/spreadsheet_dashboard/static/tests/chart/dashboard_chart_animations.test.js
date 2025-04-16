@@ -17,7 +17,7 @@ function spyCharts() {
     patchWithCleanup(components.ChartJsComponent.prototype, {
         createChart(chartData) {
             super.createChart(chartData);
-            charts[this.props.figure.id] = this.chart;
+            charts[this.props.figureUI.id] = this.chart;
         },
     });
     return charts;
