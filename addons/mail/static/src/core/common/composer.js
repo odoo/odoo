@@ -164,7 +164,7 @@ export class Composer extends Component {
                     extraClass: "o-mail-Composer-dropzone",
                     onDrop: this.onDropFile,
                 },
-                () => this.allowUpload
+                () => this.props.allowUpload
             );
         }
         if (this.props.messageEdition) {
