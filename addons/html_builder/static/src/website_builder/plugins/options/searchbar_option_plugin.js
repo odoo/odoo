@@ -57,6 +57,7 @@ class SearchbarOptionPlugin extends Plugin {
         return editingElement.closest("form");
     }
     getSearchButtonEl(editingElement) {
+        // /!\ this could return undefined if the button was deleted.
         return editingElement.closest(".s_searchbar_input").querySelector(".oe_search_button");
     }
     getSearchOrderByInputEl(editingElement) {
@@ -111,7 +112,7 @@ class SearchbarOptionPlugin extends Plugin {
                 isApplied: ({ editingElement, param: { mainParam: style } }) => {
                     const searchInputIsLight = editingElement.matches(".border-0.bg-light");
                     const searchButtonIsLight =
-                        this.getSearchButtonEl(editingElement).matches(".btn-light");
+                        this.getSearchButtonEl(editingElement)?.matches(".btn-light");
 
                     if (style === "light") {
                         return searchInputIsLight && searchButtonIsLight;
@@ -125,8 +126,8 @@ class SearchbarOptionPlugin extends Plugin {
                     const searchButtonEl = this.getSearchButtonEl(editingElement);
                     editingElement.classList.toggle("border-0", isLight);
                     editingElement.classList.toggle("bg-light", isLight);
-                    searchButtonEl.classList.toggle("btn-light", isLight);
-                    searchButtonEl.classList.toggle("btn-primary", !isLight);
+                    searchButtonEl?.classList.toggle("btn-light", isLight);
+                    searchButtonEl?.classList.toggle("btn-primary", !isLight);
                 },
             },
             // This resets the data attribute to an empty string on clean.
