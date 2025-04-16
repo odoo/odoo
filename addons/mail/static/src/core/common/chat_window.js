@@ -18,6 +18,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { assignGetter } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} Props
@@ -42,7 +43,6 @@ export class ChatWindow extends Component {
 
     setup() {
         super.setup();
-        useSubEnv({ inChatWindow: true });
         this.store = useService("mail.store");
         this.messageHighlight = useMessageScrolling();
         this.state = useState({
@@ -50,6 +50,9 @@ export class ChatWindow extends Component {
             jumpThreadPresent: 0,
             editingGuestName: false,
             editingName: false,
+        });
+        useSubEnv({
+            inChatWindow: assignGetter(this.state, { thread: () => this.props.chatWindow.thread }),
         });
         this.ui = useService("ui");
         this.contentRef = useRef("content");

@@ -321,6 +321,14 @@ async function discuss_channel_sub_channel_create(request) {
     );
 }
 
+registerRoute("/discuss/channel/sub_channel/delete", discuss_channel_sub_channel_delete);
+async function discuss_channel_sub_channel_delete(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    const { sub_channel_id } = await parseRequestParams(request);
+    return DiscussChannel._delete_sub_channel(sub_channel_id);
+}
+
 registerRoute("/discuss/channel/sub_channel/fetch", discuss_channel_sub_channel_fetch);
 async function discuss_channel_sub_channel_fetch(request) {
     /** @type {import("mock_models").DiscussChannel} */

@@ -22,6 +22,7 @@ export function assignGetter(obj, data) {
         ])
     );
     Object.defineProperties(obj, properties);
+    return obj;
 }
 
 export function assignIn(obj, data, keys = Object.keys(data)) {

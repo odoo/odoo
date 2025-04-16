@@ -1474,6 +1474,23 @@ class DiscussChannel(models.Model):
         """
         self._add_members(users=self.env.user)
 
+    def _delete_sub_channel(self):
+        self.ensure_one()
+        if self.create_uid == self.env.user:
+            notification = (
+            Markup('<div class="o_mail_notification">%s</div>')
+                % _(
+                    '%(user)s deleted the thread "%(thread_name)s".'
+                )
+            ) % {
+                "user": self.env.user.display_name,
+                "thread_name": self.name,
+            }
+            # sudo: discuss.channel - skipping ACL for users who created the thread
+            self.parent_channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
+            self._bus_send("discuss.channel/delete", {"id": self.id})
+            self.sudo().unlink()
+
     @api.model
     def _create_channel(self, name, group_id):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
