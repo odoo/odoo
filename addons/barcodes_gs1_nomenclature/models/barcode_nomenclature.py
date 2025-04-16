@@ -168,6 +168,8 @@ class BarcodeNomenclature(models.Model):
                     return condition
 
                 # Parse the value
+                if not value:
+                    return condition
                 try:
                     parsed_data = nomenclature.parse_barcode(value) or []
                 except (ValidationError, ValueError):
