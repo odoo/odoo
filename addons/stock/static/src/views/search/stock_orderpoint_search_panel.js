@@ -9,7 +9,6 @@ export class StockOrderpointSearchPanel extends SearchPanel {
     setup() {
         this.orm = useService("orm");
         super.setup(...arguments);
-        this.state.sidebarExpanded = false;
         this.globalVisibilityDays = useState({value: 0});
         onWillStart(this.getVisibilityParameter);
     }

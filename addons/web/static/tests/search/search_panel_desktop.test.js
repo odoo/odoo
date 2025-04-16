@@ -12,6 +12,7 @@ import {
     mountWithCleanup,
     mountWithSearch,
     onRpc,
+    patchWithCleanup,
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
@@ -2861,43 +2862,42 @@ test("Don't display empty state message when some filters are available", async 
 });
 
 test("search panel can be collapsed/expanded", async () => {
-    await mountWithSearch(TestComponent, {
-        resModel: "partner",
-        searchViewId: false,
+    patchWithCleanup(localStorage, {
+        setItem(key, value) {
+            if (key.startsWith("search_panel_expanded")) {
+                expect.step(["setItem", key, value]);
+            }
+            super.setItem(...arguments);
+        },
     });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(2);
 
     await contains(`.o_search_panel button`).click();
+    expect.verifySteps([["setItem", "search_panel_expanded,false,1", false]]);
     expect(`.o_search_panel`).toHaveCount(0);
     expect(`.o_search_panel_sidebar`).toHaveCount(1);
     expect(`.o_search_panel_sidebar`).toHaveText("All");
 
     await contains(`.o_search_panel_sidebar button`).click();
+    expect.verifySteps([["setItem", "search_panel_expanded,false,1", true]]);
     expect(`.o_search_panel`).toHaveCount(1);
 
     await contains(queryAll`.o_search_panel_category_value header`[1]).click();
     await contains(queryAll`.o_search_panel_filter_value input`[1]).click();
     await contains(`.o_search_panel button`).click();
+    expect.verifySteps([["setItem", "search_panel_expanded,false,1", false]]);
     expect(`.o_search_panel`).toHaveCount(0);
     expect(`.o_search_panel_sidebar`).toHaveCount(1);
     expect(`.o_search_panel_sidebar`).toHaveText("asusteksilver");
 });
 
-test("search panel can be collapsed by default", async () => {
-    Partner._views = {
-        search: /* xml */ `
-            <search>
-                <searchpanel fold="true">
-                    <field name="company_id" enable_counters="1"/>
-                </searchpanel>
-            </search>
-        `,
-    };
-    await mountWithSearch(TestComponent, {
-        resModel: "partner",
-        searchViewId: false,
-    });
+test("search panel can be collapsed by default if it was set in local storage beforehand", async () => {
+    localStorage.setItem("search_panel_expanded,false,1", false);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
     expect(`.o_search_panel`).toHaveCount(0);
     expect(`.o_search_panel_sidebar`).toHaveCount(1);
     expect(`.o_search_panel_sidebar`).toHaveText("All");
