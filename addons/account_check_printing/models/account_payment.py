@@ -164,7 +164,7 @@ class AccountPayment(models.Model):
             # The wizard asks for the number printed on the first pre-printed check
             # so payments are attributed the number of the check the'll be printed on.
             self.env.cr.execute("""
-                  SELECT payment.id
+                  SELECT payment.check_number
                     FROM account_payment payment
                    WHERE payment.journal_id = %(journal_id)s
                      AND payment.check_number IS NOT NULL
@@ -173,9 +173,9 @@ class AccountPayment(models.Model):
             """, {
                 'journal_id': self.journal_id.id,
             })
-            last_printed_check = self.browse(self.env.cr.fetchone())
-            number_len = len(last_printed_check.check_number or "")
-            next_check_number = '%0{}d'.format(number_len) % (int(last_printed_check.check_number) + 1)
+            last_check_number = (self.env.cr.fetchone() or (False,))[0]
+            number_len = len(last_check_number or "")
+            next_check_number = f'{int(last_check_number) + 1:0{number_len}}'
 
             return {
                 'name': _('Print Pre-numbered Checks'),
