@@ -28,10 +28,6 @@ export class RecipientsInputTagsListPopover extends Component {
         });
     }
 
-    get id() {
-        return this.props.tagToUpdate.id;
-    }
-
     onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
         this.state.error = false;
