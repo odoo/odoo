@@ -57,7 +57,6 @@ class TestBuyGiftCard(TestSaleCouponCommon):
             'order_line': [Command.create({'product_id': self.product_gift_card.id})],
         })
         order._update_programs_and_rewards()
-        order._auto_apply_rewards()
 
         # Create an order without salesman to test company-based fallback
         orders = order + order.copy({'user_id': None})
