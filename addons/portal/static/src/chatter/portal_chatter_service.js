@@ -1,4 +1,4 @@
-import { PortalChatter } from "@portal/chatter/frontend/portal_chatter";
+import { PortalChatter } from "@portal/chatter/portal/portal_chatter";
 import { App } from "@odoo/owl";
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";

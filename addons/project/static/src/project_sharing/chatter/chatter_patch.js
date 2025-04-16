@@ -13,7 +13,6 @@ patch(Chatter.prototype, {
         this.orm = useService("orm");
         useSubEnv({
             projectSharingId: this.props.projectSharingId,
-            inFrontendPortalChatter: true,
         });
     },
 
