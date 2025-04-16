@@ -383,16 +383,22 @@ class CrmTeam(models.Model):
 
         :param int creation_delta_days: see ``CrmTeam._action_assign_leads()``;
 
-        :return: teams_data dict() with each team assignment result:
-          team: {
-            'assigned': set of lead IDs directly assigned to the team (no
-              duplicate or merged found);
-            'merged': set of lead IDs merged and assigned to the team (main
-              leads being results of merge process);
-            'duplicates': set of lead IDs found as duplicates and merged into
-              other leads. Those leads are unlinked during assign process and
-              are already removed at return of this method;
-          }, ...
+        :rtype: dict[str, Any]
+        :return: dictionary mapping each team with assignment result:
+
+            ``assigned`` (``set[int]``)
+                Lead IDs directly assigned to the team
+                (no duplicate or merged found)
+
+            ``merged`` (``set[int]``)
+                Lead IDs merged and assigned to the team
+                (main leads being results of merge process)
+
+            ``duplicates`` (``set[int]``)
+                Lead IDs found as duplicates and merged into other leads.
+                Those leads are unlinked during assign process and are already
+                removed at return of this method
+
         """
 
         BUNDLE_HOURS_DELAY = float(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.delay', default=0))
