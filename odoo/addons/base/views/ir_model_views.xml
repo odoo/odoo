@@ -4,7 +4,7 @@
         <record id="view_model_form" model="ir.ui.view">
             <field name="model">ir.model</field>
             <field name="arch" type="xml">
-                <form string="Model Description">
+                <form string="Model Description" duplicate="0">
                   <header><!-- used for override --></header>
                   <sheet>
                     <group>
@@ -187,7 +187,7 @@
         <record id="view_model_tree" model="ir.ui.view">
             <field name="model">ir.model</field>
             <field name="arch" type="xml">
-                <list string="Model Description">
+                <list string="Model Description" duplicate="0">
                     <field name="model"/>
                     <field name="name"/>
                     <field name="state"/>
