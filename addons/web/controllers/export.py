@@ -18,7 +18,7 @@ except ImportError:
 from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
-from odoo.tools import lazy_property, osutil
+from odoo.tools import osutil
 
 
 _logger = logging.getLogger(__name__)
@@ -115,7 +115,7 @@ class GroupsTreeNode:
         return aggregated_field_names
 
     # Lazy property to memoize aggregated values of children nodes to avoid useless recomputations
-    @lazy_property
+    @functools.cached_property
     def aggregated_values(self):
 
         aggregated_values = {}

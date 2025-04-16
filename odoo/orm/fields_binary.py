@@ -3,8 +3,8 @@ from __future__ import annotations
 import base64
 import binascii
 import contextlib
+import functools
 import itertools
-import reprlib
 import typing
 import warnings
 from operator import attrgetter
@@ -12,10 +12,10 @@ from operator import attrgetter
 import psycopg2
 
 from odoo.exceptions import CacheMiss, UserError
-from odoo.tools import SQL, human_size, image_process, lazy_property
+from odoo.tools import SQL, human_size, image_process
 from odoo.tools.mimetypes import guess_mimetype
 
-from .fields import Field, _logger
+from .fields import Field
 from .utils import SQL_OPERATORS
 
 if typing.TYPE_CHECKING:
@@ -40,7 +40,7 @@ class Binary(Field):
     _depends_context = ('bin_size',)    # depends on context (content or size)
     attachment = True                   # whether value is stored in attachment
 
-    @lazy_property
+    @functools.cached_property
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
 
