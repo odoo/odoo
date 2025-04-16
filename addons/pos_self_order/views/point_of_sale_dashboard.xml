@@ -24,18 +24,12 @@
         <field name="model">pos.config</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban" />
         <field name="arch" type="xml">
-            <xpath
-                expr="//div[hasclass('dropdown-pos-config')]/div/div[hasclass('o_kanban_manage_view')]"
-                position="inside">
+            <xpath expr="//div[@name='card_left']" position="inside">
                 <field name="self_ordering_mode" invisible="1" />
-                <div role="menuitem">
-                    <a name="preview_self_order_app"
-                        type="object"
-                        style="white-space: nowrap;"
-                        invisible="not self_ordering_mode == 'mobile'">
+                 <button invisible="not self_ordering_mode == 'mobile' and not self_ordering_mode == 'consultation'"
+                         class="btn btn-secondary" name="preview_self_order_app" type="object">
                         Mobile Menu
-                    </a>
-                </div>
+                 </button>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="self_ordering_mode" invisible="1" />
@@ -47,14 +41,14 @@
             <xpath expr="//div[@name='card_left']" position="after">
                 <field name="self_ordering_mode" invisible="1" />
                 <field name="current_session_id" invisible="1" />
-                <div class="col-6 d-flex flex-column align-items-start" invisible="not self_ordering_mode == 'kiosk'">
+                <div class="col-6 d-flex flex-wrap align-items-center gap-2" invisible="not self_ordering_mode == 'kiosk'">
                     <button t-if="!record.current_session_id.raw_value" class="btn btn-primary pos_open_session_btn" name="action_open_wizard" type="object">
                         Start Kiosk
                     </button>
                     <button t-else="" name="action_close_kiosk_session" class="btn btn-secondary" type="object">
                         Close Session
                     </button>
-                    <button t-if="record.current_session_id.raw_value" class="btn-link mt-2" name="action_open_wizard" type="object">
+                    <button t-if="record.current_session_id.raw_value" class="btn btn-secondary" name="action_open_wizard" type="object">
                         Open Kiosk
                     </button>
                 </div>
