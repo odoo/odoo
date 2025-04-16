@@ -11,7 +11,6 @@ from odoo.fields import Command
 from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.tests import Form
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -2101,7 +2100,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(session_id.state, 'closed')
 
     def test_product_combo_creation(self):
-        setup_product_combo_items(self)
         """We check that combo products are created without taxes."""
         # Test product combo creation
         product_form = Form(self.env['product.product'])

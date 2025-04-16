@@ -2,14 +2,12 @@
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.fields import Command
 
 
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderCombo(SelfOrderCommonTest):
     def test_self_order_combo(self):
-        setup_product_combo_items(self)
         self.env["product.combo.item"].create(
             {
                 "product_id": self.desk_organizer.id,
@@ -40,7 +38,6 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self.assertEqual(parent_line_id.qty, combo_line_ids[0].qty, "The quantities should match with the parent")
 
     def test_self_order_combo_categories(self):
-        setup_product_combo_items(self)
         category = self.env['pos.category'].create({'name': 'Test Category'})
         self.env["product.product"].create(
             {

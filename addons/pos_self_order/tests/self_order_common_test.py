@@ -5,7 +5,7 @@ import odoo.tests
 
 from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.point_of_sale.tests.common import archive_products
+from odoo.addons.point_of_sale.tests.common_data_setup import archive_products
 
 
 @odoo.tests.tagged("post_install", "-at_install")

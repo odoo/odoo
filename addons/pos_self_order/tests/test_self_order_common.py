@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 from odoo.exceptions import UserError
@@ -40,7 +39,6 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         Verify than when the pos is closed and self ordering is set to mobile, consultation or kiosk,
         we can see the attributes of a product or the choices of a combo
         """
-        setup_product_combo_items(self)
         self.env["product.combo.item"].create({
             "product_id": self.desk_organizer.id,
             "extra_price": 0,

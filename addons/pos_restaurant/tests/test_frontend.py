@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
-from odoo.addons.point_of_sale.tests.common import archive_products
+from odoo.addons.point_of_sale.tests.common_data_setup import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo import Command
 
@@ -275,7 +274,6 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('RefundStayCurrentTableTour')
 
     def test_09_combo_split_bill(self):
-        setup_product_combo_items(self)
         self.office_combo.product_variant_id.write({'lst_price': 40})
         # disable kitchen printer to avoid printing errors
         self.pos_config.is_order_printer = False
@@ -397,7 +395,6 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_create_floor_tour', login="pos_admin")
 
     def test_combo_preparation_receipt(self):
-        setup_product_combo_items(self)
         pos_printer = self.env['pos.printer'].create({
             'name': 'Printer',
             'printer_type': 'epson_epos',

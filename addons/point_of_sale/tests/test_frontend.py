@@ -8,7 +8,6 @@ from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_data_setup import setup_test_pos
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.exceptions import UserError
 
 
@@ -487,7 +486,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="pos_user")
 
     def test_07_product_combo(self):
-        setup_product_combo_items(self)
         self.office_combo.write({
             'lst_price': 50,
             'barcode': 'SuperCombo',
@@ -506,7 +504,6 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_07_product_combo_max_free_qty(self):
         """ Test the max free quantity of a product combo."""
-        setup_product_combo_items(self)
         self.office_combo.combo_ids[0].write({
             'qty_free': 2,
             'qty_max': 2,
@@ -972,7 +969,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'type_tax_use': 'sale',
         })
 
-        setup_product_combo_items(self)
         self.office_combo.write({'list_price': 50, 'taxes_id': [(6, 0, [tax_1.id])]})
         for combo in self.office_combo.combo_ids:  # Set the tax to all the products of the combo
             for item in combo.combo_item_ids:

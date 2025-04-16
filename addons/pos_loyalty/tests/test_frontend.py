@@ -6,7 +6,6 @@ from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 
 
 @tagged("post_install", "-at_install")
@@ -2348,7 +2347,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             "lst_price": 1,
             "available_in_pos": True,
         })
-        setup_product_combo_items(self)
         self.office_combo.write({'lst_price': 50})
         self.env['loyalty.program'].search([]).write({'active': False})
         self.env['loyalty.program'].create({
@@ -2370,7 +2368,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboCheapestRewardProgram', login="pos_user")
 
     def test_specific_product_reward_pos_combo(self):
-        setup_product_combo_items(self)
         self.office_combo.write({'lst_price': 200})
         self.env['loyalty.program'].search([]).write({'active': False})
         self.env['loyalty.program'].create({
