@@ -35,3 +35,8 @@ class TestWebSearchRead(common.TransactionCase):
         self.assert_web_search_read(2, 2, limit=2, count_limit=2, expected_search_count_called=False)
         self.assert_web_search_read(20, 2, limit=2, offset=10, count_limit=20)
         self.assert_web_search_read(12, 2, limit=2, offset=10, count_limit=12, expected_search_count_called=False)
+
+    def test_web_name_search(self):
+        result = self.env["res.partner"].web_name_search("", {"display_name": {}})[0]
+        self.assertTrue("display_name" in result)
+        self.assertTrue("__formatted_display_name" in result)

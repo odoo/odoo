@@ -1934,7 +1934,7 @@ export class MockServer {
             Object.keys(kwargs.specification).length === 1 &&
             "display_name" in kwargs.specification
         ) {
-            return idNamePairs.map(([id, name]) => ({ id, display_name: name }));
+            return idNamePairs.map(([id, name]) => ({ id, display_name: name, __formatted_display_name: name }));
         }
         const ids = idNamePairs.map(([id]) => id);
         return this.mockWebRead(modelName, [ids], kwargs);

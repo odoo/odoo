@@ -433,7 +433,11 @@ test("many2one show_address in edit", async () => {
     });
     onRpc("web_name_search", async ({ parent }) => {
         const result = await parent();
-        return result.map(({ id }) => ({ id, display_name: namegets[id] }));
+        return result.map(({ id }) => ({
+            id,
+            display_name: namegets[id],
+            __formatted_display_name: namegets[id],
+        }));
     });
 
     await mountView({
@@ -1212,6 +1216,7 @@ test("many2one search with server returning multiple lines", async () => {
         return Object.keys(namegets).map((id) => ({
             id: parseInt(id),
             display_name: namegets[id],
+            __formatted_display_name: namegets[id],
         }));
     });
     onRpc("web_save", ({ args }) => {
@@ -3890,7 +3895,7 @@ test("many2one field with false as name", async () => {
 });
 
 test("many2one search with false as name", async () => {
-    onRpc("web_name_search", () => [{ id: 1, display_name: false }]);
+    onRpc("web_name_search", () => [{ id: 1, display_name: false, __formatted_display_name: false }]);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -3904,6 +3909,35 @@ test("many2one search with false as name", async () => {
     expect(".o_field_many2one[name='trululu'] .dropdown-menu a.dropdown-item:eq(0)").toHaveText(
         "Unnamed"
     );
+});
+
+test("many2one search with formatted name", async () => {
+    onRpc("web_name_search", async (params) => [
+        {
+            id: 1,
+            display_name: "Paul Eric",
+            __formatted_display_name: "Test: **Paul** --Eric-- `good guy`<br><tab>More text",
+        },
+    ]);
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="trululu" />
+            </form>`,
+    });
+
+    await contains(".o_field_many2one input").click();
+    expect(
+        ".o_field_many2one[name='trululu'] .dropdown-menu a.dropdown-item:eq(0)"
+    ).toHaveInnerHTML(
+        `Test: <b>Paul</b> <span class="text-muted">Eric</span> <span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 text-white bg-primary">good guy</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;More text`
+    );
+    await contains(
+        ".o_field_many2one[name='trululu'] .dropdown-menu a.dropdown-item:eq(0)"
+    ).click();
+    expect(".o_field_many2one input").toHaveValue("Paul Eric");
 });
 
 test.tags("desktop");

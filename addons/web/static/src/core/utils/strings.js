@@ -1,4 +1,5 @@
 import { isObject } from "./objects";
+import { markup } from "@odoo/owl";
 
 export const nbsp = "\u00a0";
 
@@ -115,6 +116,37 @@ export function sprintf(s, ...values) {
  */
 export function capitalize(s) {
     return s ? s[0].toUpperCase() + s.slice(1) : "";
+}
+
+/**
+ * Format the text as follow:
+ *      \*\*text\*\* => Put the text in bold.
+ *      --text-- => Put the text in muted.
+ *      \`text\` => Put the text in a rounded badge (bg-primary).
+ *      \<br> => Insert a breakline.
+ *      \<tab> => Insert 4 spaces.
+ *
+ * @param {string} text **will be escaped**
+ * @returns {ReturnType<markup>} the formatted text
+ */
+export function odoomark(text) {
+    const boldEx = /\*\*(.+?)\*\*/g;
+    const textMutedEx = /--(.+?)--/g;
+    const tagEx = /&#x60;(.+?)&#x60;/g;
+    const brEx = /&lt;br&gt;/g;
+    const tabEx = /&lt;tab&gt;/g;
+
+    return markup(
+        escape(text)
+            .replaceAll(boldEx, `<b>$1</b>`)
+            .replaceAll(textMutedEx, `<span class='text-muted'>$1</span>`)
+            .replaceAll(
+                tagEx,
+                `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 text-white bg-primary">$1</span>`
+            )
+            .replaceAll(brEx, `<br/>`)
+            .replaceAll(tabEx, `&nbsp;&nbsp;&nbsp;&nbsp;`)
+        );
 }
 
 /* eslint-disable */
