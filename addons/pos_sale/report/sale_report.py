@@ -101,8 +101,8 @@ class SaleReport(models.Model):
     def _fill_pos_fields(self, additional_fields):
         """Hook to fill additional fields for the pos_sale.
 
-        :param additional_fields: dictionary of values to fill
-        :type additional_fields: dict
+        :param additional_fields: Dictionary mapping fields with their values
+        :type additional_fields: dict[str, Any]
         """
         filled_fields = {x: 'NULL' for x in additional_fields}
         for fname, value in self._available_additional_pos_fields().items():
