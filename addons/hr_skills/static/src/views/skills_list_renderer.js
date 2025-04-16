@@ -12,20 +12,23 @@ export class CommonSkillsListRenderer extends ListRenderer {
     }
 
     get groupBy() {
-        return '';
+        return "";
     }
 
     get groupedList() {
         const grouped = {};
+        console.log("records", this.list.records);
 
         for (const record of this.list.records) {
             const data = record.data;
+            console.log("data", data);
             const group = data[this.groupBy];
+            console.log("group", group);
 
             if (grouped[group[1]] === undefined) {
                 grouped[group[1]] = {
                     id: parseInt(group[0]),
-                    name: group[1] || _t('Other'),
+                    name: group[1] || _t("Other"),
                     list: {
                         records: [],
                     },

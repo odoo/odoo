@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_skill_composite_form_view" model="ir.ui.view">
+        <field name="name">hr.skill.composite.form.view</field>
+        <field name="model">hr.skill.composite</field>
+        <field name="arch" type="xml">
+            <form string="Skill Types">
+                <group>
+                    <field name="skill_type_id"/>
+                    <field name="skill_id" />
+                    <field name="skill_level_id" />
+                    <field name="date_from" />
+                    <field name="date_to" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_skill_composite_list_view" model="ir.ui.view">
+        <field name="name">hr.skill.composite.list.view</field>
+        <field name="model">hr.skill.composite</field>
+        <field name="arch" type="xml">
+            <list string="Skill Types">
+                <field name="skill_type_id"/>
+                <field name="skill_id" />
+                <field name="skill_level_id" />
+            </list>
+        </field>
+    </record>
+</odoo>

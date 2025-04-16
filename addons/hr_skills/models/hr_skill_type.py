@@ -19,6 +19,7 @@ class HrSkillType(models.Model):
     skill_ids = fields.One2many('hr.skill', 'skill_type_id', string="Skills")
     skill_level_ids = fields.One2many('hr.skill.level', 'skill_type_id', string="Levels", copy=True)
     color = fields.Integer('Color', default=_get_default_color)
+    is_certification = fields.Boolean(default=False)
 
     @api.constrains('skill_ids', 'skill_level_ids')
     def _check_no_null_skill_or_skill_level(self):
