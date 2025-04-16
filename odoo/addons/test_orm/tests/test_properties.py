@@ -2003,8 +2003,8 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
         self.assertFalse(messages)
         messages = self._search(self.env['test_orm.message'], [('attributes.mychar', 'ilike', 'test')])
         self.assertEqual(messages, self.message_1 | self.message_2)
-        messages = self.env['test_orm.message'].search([('attributes.mychar', 'not ilike', 'test')])  # FIXME return message_3
-        self.assertFalse(messages)
+        messages = self.env['test_orm.message'].search([('attributes.mychar', 'not ilike', 'test')])
+        self.assertEqual(messages, self.message_3)
         messages = self._search(self.env['test_orm.message'], [('attributes.mychar', 'ilike', '"test"')])
         self.assertFalse(messages)
 
@@ -2230,13 +2230,16 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
         result = self._search(Model, [('attributes.mychar', 'ilike', 'hélène')])
         self.assertEqual(self.message_1 | self.message_2, result)
 
-        result = Model.search([('attributes.mychar', 'not ilike', 'Helene')])  # FIXME use _search
+        result = self._search(Model, [('attributes.mychar', 'not ilike', 'Helene')])
         self.assertNotIn(self.message_1, result)
         self.assertNotIn(self.message_2, result)
 
-        result = Model.search([('attributes.mychar', 'not ilike', 'hélène')])  # FIXME use _serach
+        result = self._search(Model, [('attributes.mychar', 'not ilike', 'hélène')])
         self.assertNotIn(self.message_1, result)
         self.assertNotIn(self.message_2, result)
+
+        result = self._search(Model, [('attributes.mychar', 'not ilike', '')])
+        self.assertFalse(result)
 
     def test_properties_field_search_orderby_string(self):
         """Test that we can order record by properties string values."""
