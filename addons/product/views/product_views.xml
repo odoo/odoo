@@ -305,7 +305,7 @@
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <list string="Product Variants" multi_edit="1" duplicate="false" sample="1" default_order="is_favorite desc, default_code, name, id">
+                <list string="Product Variants" create="0" multi_edit="1" duplicate="false" sample="1" default_order="is_favorite desc, default_code, name, id">
                     <field name="is_favorite" widget="boolean_favorite" nolabel="1" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
@@ -364,6 +364,7 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                     <attribute name="duplicate">false</attribute>
+                    <attribute name="create">false</attribute>
                 </form>
                 <xpath expr="//div[@name='standard_price_uom']" position="after">
                     <field name="default_code"/>
@@ -404,7 +405,7 @@
         <record id="product_variant_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
             <field name="res_model">product.product</field>
-            <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id, 'create': False}</field>
+            <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="view_ids"
                    eval="[(5, 0, 0),
@@ -453,7 +454,7 @@
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <kanban sample="1" default_order="is_favorite desc, default_code, name, id">
+                <kanban create="0" sample="1" default_order="is_favorite desc, default_code, name, id">
                     <field name="activity_state"/>
                     <field name="color"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
