@@ -1757,6 +1757,10 @@ export class PosStore extends Reactive {
             ).length > 1
         );
     }
+
+    getPhoneSearchFields() {
+        return ["phone", "mobile"];
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};

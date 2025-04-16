@@ -130,4 +130,7 @@ patch(PosStore.prototype, {
         }
         return super.closePos(...arguments);
     },
+    getPhoneSearchFields() {
+        return ["phone_mobile_search"];
+    },
 });
