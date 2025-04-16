@@ -53,13 +53,13 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
         switch (cmd.type) {
             case "CREATE_CHART": {
                 if (cmd.definition.type.startsWith("odoo_")) {
-                    this._addOdooChart(cmd.id);
+                    this._addOdooChart(cmd.figureId);
                 }
                 break;
             }
             case "DELETE_FIGURE": {
                 const charts = { ...this.charts };
-                delete charts[cmd.id];
+                delete charts[cmd.figureId];
                 this.history.update("charts", charts);
                 break;
             }
@@ -183,7 +183,7 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
     _addOdooChart(chartId, fieldMatching = undefined) {
         const model = this.getters.getChartDefinition(chartId).metaData.resModel;
         this.history.update("charts", chartId, {
-            id: chartId,
+            figureId: chartId,
             fieldMatching: fieldMatching || this.getters.getFieldMatchingForModel(model),
         });
     }

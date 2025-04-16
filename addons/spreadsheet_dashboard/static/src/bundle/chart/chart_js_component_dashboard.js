@@ -21,9 +21,9 @@ patch(components.ChartJsComponent.prototype, {
     },
     createChart(chartData) {
         if (this.env.model.getters.isDashboard()) {
-            if (!this.animationStore.animationPlayed[this.props.figure.id]) {
+            if (!this.animationStore.animationPlayed[this.props.figureUI.id]) {
                 chartData = this.enableAnimationInChartData(chartData);
-                this.animationStore.disableAnimationForChart(this.props.figure.id);
+                this.animationStore.disableAnimationForChart(this.props.figureUI.id);
             }
         }
         super.createChart(chartData);
@@ -32,7 +32,7 @@ patch(components.ChartJsComponent.prototype, {
         if (this.env.model.getters.isDashboard()) {
             if (this.hasChartDataChanged()) {
                 chartData = this.enableAnimationInChartData(chartData);
-                this.animationStore.disableAnimationForChart(this.props.figure.id);
+                this.animationStore.disableAnimationForChart(this.props.figureUI.id);
             }
         }
         super.updateChartJs(chartData);

@@ -90,7 +90,7 @@ test("field matching is removed when chart is deleted", async function () {
     expect(model.getters.getChartFieldMatch(chartId)[filter.id]).toEqual(matching);
     model.dispatch("DELETE_FIGURE", {
         sheetId: model.getters.getActiveSheetId(),
-        id: chartId,
+        figureId: chartId,
     });
     expect(globalFieldMatchingRegistry.get("chart").getIds(model.getters)).toEqual([], {
         message: "it should have removed the chart and its fieldMatching and datasource altogether",
