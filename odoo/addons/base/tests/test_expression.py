@@ -1711,7 +1711,7 @@ class TestQueries(TransactionCase):
             SELECT "res_country"."id"
             FROM "res_country"
             WHERE COALESCE("res_country"."name"->>%s, "res_country"."name"->>%s) LIKE %s
-            ORDER BY COALESCE("res_country"."name"->>%s, "res_country"."name"->>%s)
+            ORDER BY COALESCE("res_country"."name"->>%s, "res_country"."name"->>%s), "res_country"."id"
         ''']):
             Model.search([('name', 'like', 'foo')])
 

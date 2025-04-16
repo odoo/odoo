@@ -71,7 +71,7 @@ def assert_log_admin_access(method):
 class IrModuleCategory(models.Model):
     _name = 'ir.module.category'
     _description = "Application"
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     name = fields.Char(string='Name', required=True, translate=True, index=True)

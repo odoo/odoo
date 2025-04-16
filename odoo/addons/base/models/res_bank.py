@@ -15,7 +15,7 @@ def sanitize_account_number(acc_number):
 class ResBank(models.Model):
     _name = 'res.bank'
     _description = 'Bank'
-    _order = 'name'
+    _order = 'name, id'
     _rec_names_search = ['name', 'bic']
 
     name = fields.Char(required=True)

@@ -4,7 +4,7 @@ from odoo import api, fields, models, tools
 
 class ResGroups(models.Model):
     _inherit = 'res.groups'
-    _order = 'category_id,sequence,name'
+    _order = 'category_id, sequence, name, id'
 
     sequence = fields.Integer(string='Sequence')
     visible = fields.Boolean(related='category_id.visible', readonly=True)

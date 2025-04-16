@@ -67,7 +67,7 @@ def att_names(name):
 class IrUiViewCustom(models.Model):
     _name = 'ir.ui.view.custom'
     _description = 'Custom View'
-    _order = 'create_date desc'  # search(limit=1) should return the last customization
+    _order = 'create_date desc, id desc'  # search(limit=1) should return the last customization
     _rec_name = 'user_id'
     _allow_sudo_commands = False
 

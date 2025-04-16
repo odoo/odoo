@@ -344,7 +344,7 @@ class ResCurrencyRate(models.Model):
     _name = 'res.currency.rate'
     _description = "Currency Rate"
     _rec_names_search = ['name', 'rate']
-    _order = "name desc"
+    _order = "name desc, id"
     _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Date(string='Date', required=True, index=True,

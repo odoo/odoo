@@ -53,7 +53,7 @@ class IrActionsActions(models.Model):
     _name = 'ir.actions.actions'
     _description = 'Actions'
     _table = 'ir_actions'
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     _path_unique = models.Constraint(
@@ -260,7 +260,7 @@ class IrActionsAct_Window(models.Model):
     _description = 'Action Window'
     _table = 'ir_act_window'
     _inherit = ['ir.actions.actions']
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     @api.constrains('res_model', 'binding_model_id')
@@ -444,7 +444,7 @@ class IrActionsAct_Url(models.Model):
     _description = 'Action URL'
     _table = 'ir_act_url'
     _inherit = ['ir.actions.actions']
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.act_url')
@@ -1271,7 +1271,7 @@ class IrActionsClient(models.Model):
     _description = 'Client Action'
     _inherit = ['ir.actions.actions']
     _table = 'ir_act_client'
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.client')
