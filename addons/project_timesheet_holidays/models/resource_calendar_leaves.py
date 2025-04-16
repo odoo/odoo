@@ -152,7 +152,8 @@ class ResourceCalendarLeaves(models.Model):
         vals_list = []
 
         def get_timesheets_data(employees, work_hours_list, vals_list):
-            for employee in employees:
+            filtered_employees = self._get_timesheet_employees(employees, leave)
+            for employee in filtered_employees:
                 holidays = holidays_by_employee.get(employee.id)
                 for index, (day_date, work_hours_count) in enumerate(work_hours_list):
                     if not holidays or all(not (date_from <= day_date and date_to >= day_date) for date_from, date_to in holidays):
@@ -178,6 +179,10 @@ class ResourceCalendarLeaves(models.Model):
                 vals_list = get_timesheets_data(employees, work_hours_list, vals_list)
 
         return self.env['account.analytic.line'].sudo().create(vals_list)
+
+    def _get_timesheet_employees(self, employees, leave):
+        """ We will use this method to filter employees for timesheets. By default, returns all employees """
+        return employees
 
     def _timesheet_prepare_line_values(self, index, employee_id, work_hours_data, day_date, work_hours_count):
         self.ensure_one()
