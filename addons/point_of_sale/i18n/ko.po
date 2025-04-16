@@ -121,6 +121,12 @@ msgid "%(refunded_order)s REFUND"
 msgstr "%(refunded_order)s환불"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%(title)s %(product_name)s with %(taxes)s"
+msgstr "%(title)s %(product_name)s %(taxes)s"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 msgid "%(vatLabel)s: %(vatId)s"
@@ -144,6 +150,12 @@ msgstr "%s의 총액은 %s입니다. 이 주문을 삭제하시겠습니까?"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s 주문 가져옴"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%s untaxed"
+msgstr "%s 비과세"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6455,6 +6467,8 @@ msgstr "화면 새로 고침"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
@@ -6789,6 +6803,8 @@ msgid "Sale line"
 msgstr "판매 명세"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sales"
 msgstr "판매"
@@ -9104,6 +9120,15 @@ msgstr "게시가 완료된 주문서는 결제를 수정할 수 없습니다."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "다른 회사의 주문에 대해서는 청구서를 발행할 수 없습니다."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr "POS 환경설정에서 사용 중인 반올림 방식은 삭제할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-python

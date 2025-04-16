@@ -123,6 +123,12 @@ msgid "%(refunded_order)s REFUND"
 msgstr "%(refunded_order)s REFUND"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%(title)s %(product_name)s with %(taxes)s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 msgid "%(vatLabel)s: %(vatId)s"
@@ -147,6 +153,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s order diimpor."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%s untaxed"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6575,6 +6587,8 @@ msgstr "Perbarui Tampilan"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
@@ -6914,6 +6928,8 @@ msgid "Sale line"
 msgstr "Baris penjualan"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sales"
 msgstr "Penjualan"
@@ -9354,6 +9370,17 @@ msgid "You cannot invoice orders belonging to different companies."
 msgstr ""
 "Anda tidak dapat memfaktur pesanan yang berasal dari perusahaan yang "
 "berbeda."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr ""
+"Anda tidak dapat menghapus metode pembulatan yang digunakan di konfigurasi "
+"POS."
 
 #. module: point_of_sale
 #. odoo-python

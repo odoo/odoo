@@ -121,6 +121,12 @@ msgid "%(refunded_order)s REFUND"
 msgstr "%(refunded_order)s 返金"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%(title)s %(product_name)s with %(taxes)s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 msgid "%(vatLabel)s: %(vatId)s"
@@ -144,6 +150,12 @@ msgstr "%sは合計%sの金額があります。本当にこのオーダを削�
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s オーダがインポートされました"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%s untaxed"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -471,7 +483,7 @@ msgstr "お客様のチップを受け入れるか、おつりをチップに変
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Mercado Pago on a terminal"
-msgstr "端末でのMercado Pagoでの支払を承認"
+msgstr "端末でのMercado Pagoでの支払を受け付ける"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -481,12 +493,12 @@ msgstr "端末でViva Walletを使用するか、電話でタップして支払�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Razorpay payment terminal"
-msgstr "Razorpay決済端末で支払いを受ける"
+msgstr "Razorpay決済端末で支払いを受け付ける"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Six payment terminal"
-msgstr "シックス決済端末での支払いを受け入れる"
+msgstr "シックス決済端末での支払いを受け付ける"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3253,7 +3265,7 @@ msgstr "プロダクトカテゴリのリストを表示する時に並び順を
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_discount
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_discount
 msgid "Global Discounts"
-msgstr "グローバル値引"
+msgstr "全体割引"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6440,6 +6452,8 @@ msgstr "表示の更新"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
@@ -6774,6 +6788,8 @@ msgid "Sale line"
 msgstr "販売行"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sales"
 msgstr "販売"
@@ -9080,6 +9096,15 @@ msgstr "記帳済オーダの支払を編集することはできません。"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "異なる会社に属しているオーダを請求することはできません。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr "POSの設定で使用されている丸め方法は削除できません。"
 
 #. module: point_of_sale
 #. odoo-python
