@@ -50,7 +50,8 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="background_image" widget="image" class="oe_avatar"/>
                     <field name="allowed_survey_types" invisible="True"/>
-                    <field name="survey_type" widget="radio_selection_with_filter" context="{'allowed_selection': allowed_survey_types}" options="{'horizontal': True}"
+                    <field name="survey_type" widget="radio_selection_with_filter"
+                        options="{'horizontal': True, 'allowed_selection_field': 'allowed_survey_types'}"
                         class="o_field_radio" invisible="not allowed_survey_types"/>
                     <div class="oe_title" style="width: 100%;">
                         <h1>
