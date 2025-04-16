@@ -33,6 +33,7 @@ class TestFreezeTimeClassDecorator(TransactionCase):
         self.assertEqual(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '2021-01-01 00:00:00')
 
 
+# TODO (rugo) Why a special test for HttpCase ?
 @freeze_time(datetime(2024, 4, 4, 4, 4))
 @tagged('post_install', '-at_install')
 class TestHttpCaseFreezeTimeClassDecorator(HttpCase):
