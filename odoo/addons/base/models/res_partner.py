@@ -131,7 +131,7 @@ class FormatAddressMixin(models.AbstractModel):
 class ResPartnerCategory(models.Model):
     _name = 'res.partner.category'
     _description = 'Partner Tags'
-    _order = 'name'
+    _order = 'name, id'
     _parent_store = True
 
     def _get_default_color(self):
@@ -1102,7 +1102,7 @@ class ResPartner(models.Model):
 class ResPartnerIndustry(models.Model):
     _name = 'res.partner.industry'
     _description = 'Industry'
-    _order = "name"
+    _order = "name, id"
 
     name = fields.Char('Name', translate=True)
     full_name = fields.Char('Full Name', translate=True)

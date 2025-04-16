@@ -500,7 +500,7 @@ FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
 class IrModelFields(models.Model):
     _name = 'ir.model.fields'
     _description = "Fields"
-    _order = "name"
+    _order = "name, id"
     _rec_name = 'field_description'
     _allow_sudo_commands = False
 
