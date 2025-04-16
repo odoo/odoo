@@ -68,7 +68,7 @@ class IrCron(models.Model):
     # loaded yet or was already unloaded (e.g. 'force_db_wakeup' or something)
     # See also odoo.cron
     _name = 'ir.cron'
-    _order = 'cron_name'
+    _order = 'cron_name, id'
     _description = 'Scheduled Actions'
     _allow_sudo_commands = False
 

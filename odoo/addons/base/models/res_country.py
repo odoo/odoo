@@ -31,7 +31,7 @@ NO_FLAG_COUNTRIES = [
 class ResCountry(models.Model):
     _name = 'res.country'
     _description = 'Country'
-    _order = 'name'
+    _order = 'name, id'
     _rec_names_search = ['name', 'code']
 
     name = fields.Char(
@@ -190,7 +190,7 @@ class ResCountryGroup(models.Model):
 class ResCountryState(models.Model):
     _name = 'res.country.state'
     _description = "Country state"
-    _order = 'code'
+    _order = 'code, id'
     _rec_names_search = ['name', 'code']
 
     country_id = fields.Many2one('res.country', string='Country', required=True, index=True)
