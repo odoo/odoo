@@ -19,6 +19,7 @@ class EventQuestion(models.Model):
         ('phone', 'Phone'),
         ('company_name', 'Company'),
     ], default='simple_choice', string="Question Type", required=True)
+    active = fields.Boolean('Active', default=True)
     event_type_ids = fields.Many2many('event.type', string='Event Types', copy=False)
     event_ids = fields.Many2many('event.event', string='Events', copy=False)
     event_count = fields.Integer('# Events', compute='_compute_event_count')
@@ -66,7 +67,7 @@ class EventQuestion(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_answered_question(self):
         if self.env['event.registration.answer'].search_count([('question_id', 'in', self.ids)]):
-            raise UserError(_('You cannot delete a question that has already been answered by attendees.'))
+            raise UserError(_('You cannot delete a question that has already been answered by attendees. You can archive it instead.'))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_question(self):

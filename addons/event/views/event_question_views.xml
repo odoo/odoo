@@ -26,6 +26,7 @@
                 <filter name="filter_is_not_reusable" string="Not Reusable" domain="[('is_reusable', '=', False)]"/>
                 <separator/>
                 <filter name="filter_is_default" string="Default Questions" domain="[('is_default', '=', True)]"/>
+                <filter name="filter_archive" string="Archived" domain="[('active', '=', False)]"/>
                 <group>
                     <filter string="Event" name="group_by_event" context="{'group_by': 'event_ids'}"/>
                 </group>
