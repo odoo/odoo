@@ -74,7 +74,6 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         );
         tags.forEach((tag) => {
             tag.email = emailByResId[tag.resId];
-            tag.id = tag.resId;
             tag.name = tag.text;
             tag.title = tag.text;
         });
