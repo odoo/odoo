@@ -2542,18 +2542,20 @@ class freeze_time:
         if isinstance(func, type) and issubclass(func, case.TestCase):
             func.freeze_time = self.time_to_freeze
             return func
-        else:
-            if freezegun:
-                return freezegun.freeze_time(self.time_to_freeze)(func)
-            else:
-                _logger.warning("freezegun package missing")
+
+        if freezegun:
+            return freezegun.freeze_time(self.time_to_freeze)(func)
+
+        _logger.warning("freezegun package missing")
+        return None
 
     def __enter__(self):
         if freezegun:
             self.freezer = freezegun.freeze_time(self.time_to_freeze)
             return self.freezer.start()
-        else:
-            _logger.warning("freezegun package missing")
+
+        _logger.warning("freezegun package missing")
+        return None
 
     def __exit__(self, *args):
         if self.freezer:
