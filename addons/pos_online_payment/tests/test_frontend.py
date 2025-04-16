@@ -20,7 +20,7 @@ import odoo.tests
 class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
     def _get_url(self):
-        return f"/pos/ui?config_id={self.pos_config.id}"
+        return f"/pos/ui/{self.pos_config.id}"
 
     def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
         self.start_tour(self._get_url(), tour_name, login=login, **kwargs)

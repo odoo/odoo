@@ -34,15 +34,13 @@ patch(TicketScreen.prototype, {
         }
         return res;
     },
-    async _setOrder(order) {
+    async setOrder(order) {
         const shouldBeOverridden = this.pos.config.module_pos_restaurant && order.table_id;
-        if (!shouldBeOverridden) {
-            return super._setOrder(...arguments);
+        if (shouldBeOverridden) {
+            const orderTable = order.getTable();
+            await this.pos.setTable(orderTable, order.uuid);
         }
-        // we came from the FloorScreen
-        const orderTable = order.getTable();
-        await this.pos.setTable(orderTable, order.uuid);
-        this.closeTicketScreen();
+        return await super.setOrder(order);
     },
     async settleTips() {
         const promises = [];

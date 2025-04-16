@@ -13,4 +13,9 @@ export class SaverScreen extends Component {
     }
 }
 
-registry.category("pos_screens").add("SaverScreen", SaverScreen);
+registry.category("pos_pages").add("SaverScreen", {
+    name: "SaverScreen",
+    component: SaverScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/saver`,
+    params: {},
+});

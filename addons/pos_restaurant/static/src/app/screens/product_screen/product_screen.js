@@ -50,7 +50,8 @@ patch(ProductScreen.prototype, {
     async submitOrder() {
         await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
         this.pos.addPendingOrder([this.currentOrder.id]);
-        this.pos.showScreen(this.pos.defaultScreen, {}, this.pos.defaultScreen == "ProductScreen");
+        const page = this.pos.defaultPage;
+        this.pos.navigate(page.page, page.params);
     },
     get primaryReviewButton() {
         return (

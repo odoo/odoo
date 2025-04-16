@@ -39,4 +39,4 @@ class TestSelfOrderSequence(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, 'SelfOrderOrderNumberTour', login="pos_admin")
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'OrderNumberConflictTour', login="pos_admin")
+        self.start_tour("/pos/ui/%d" % self.pos_config.id, 'OrderNumberConflictTour', login="pos_admin")

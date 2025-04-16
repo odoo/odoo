@@ -67,7 +67,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         customer.name = "AAAA Super Customer"
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        url = "/pos/ui?config_id=%d" % self.main_pos_config.id
+        url = "/pos/ui/%d" % self.main_pos_config.id
         self.start_tour(url, 'test_ship_later_kit_and_mto_manufactured_product', login="pos_user")
 
         picking = self.env['stock.picking'].search([('partner_id', '=', self.partner_full.id)], limit=1)

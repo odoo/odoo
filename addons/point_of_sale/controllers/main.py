@@ -31,8 +31,13 @@ class PosController(PortalAccount):
             body = f.read()
             return body
 
+    # Support old routes for backward compatibility
     @http.route(['/pos/web', '/pos/ui'], type='http', auth='user')
-    def pos_web(self, config_id=False, from_backend=False, **k):
+    def old_pos_web(self, config_id=False, from_backend=False, **k):
+        return self.pos_web(config_id, from_backend, **k)
+
+    @http.route(["/pos/ui/<config_id>", "/pos/ui/<config_id>/<path:subpath>"], auth="user", type='http')
+    def pos_web(self, config_id=False, from_backend=False, subpath=None, **k):
         """Open a pos session for the given config.
 
         The right pos session will be selected to open, if non is open yet a new session will be created.

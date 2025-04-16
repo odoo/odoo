@@ -223,7 +223,7 @@ export class TicketScreen extends Component {
         // Open the refund order.
         const refundOrder = this.pos.models["pos.order"].find((order) => order.uuid == orderUuid);
         if (refundOrder) {
-            this._setOrder(refundOrder);
+            this.setOrder(refundOrder);
         }
     }
     _onUpdateSelectedOrderline({ key, buffer }) {
@@ -356,12 +356,15 @@ export class TicketScreen extends Component {
         }
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);
+        destinationOrder.refunded_order_id = order;
         this.pos.setOrder(destinationOrder);
         await this.addAdditionalRefundInfo(order, destinationOrder);
 
         this.postRefund(destinationOrder);
-
-        this.closeTicketScreen();
+        this.pos.ticket_screen_mobile_pane = "left";
+        this.pos.navigate("ProductScreen", {
+            orderUuid: destinationOrder.uuid,
+        });
     }
 
     async onDeleteOrder(order) {
@@ -550,7 +553,8 @@ export class TicketScreen extends Component {
     }
     closeTicketScreen() {
         this.pos.ticket_screen_mobile_pane = "left";
-        this.pos.closeScreen();
+        const next = this.pos.defaultPage;
+        this.pos.navigate(next.page, next.params);
     }
     /**
      * Find the empty order with the following priority:
@@ -644,12 +648,12 @@ export class TicketScreen extends Component {
         );
     }
 
-    async _setOrder(order) {
+    async setOrder(order) {
         if (this.pos.config.isShareable) {
             await this.pos.syncAllOrders();
         }
         this.pos.setOrder(order);
-        this.closeTicketScreen();
+        this.pos.navigateToOrderScreen(order);
     }
     _getOrderList() {
         return this.pos.models["pos.order"].getAll();
@@ -833,4 +837,9 @@ export class TicketScreen extends Component {
     }
 }
 
-registry.category("pos_screens").add("TicketScreen", TicketScreen);
+registry.category("pos_pages").add("TicketScreen", {
+    name: "TicketScreen",
+    component: TicketScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/ticket`,
+    params: {},
+});

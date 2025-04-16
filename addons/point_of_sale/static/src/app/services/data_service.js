@@ -85,7 +85,7 @@ export class PosData extends Reactive {
     }
 
     get databaseName() {
-        return `config-id_${odoo.pos_config_id}_${odoo.access_token}`;
+        return `point-of-sale-${odoo.pos_config_id}-${odoo.info?.db}`;
     }
 
     get serverDateKey() {

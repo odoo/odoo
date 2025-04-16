@@ -7,15 +7,19 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { isValidEmail } from "@point_of_sale/utils";
+import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
 export class ReceiptScreen extends Component {
     static template = "point_of_sale.ReceiptScreen";
     static components = { OrderReceipt };
-    static props = {};
+    static props = {
+        orderUuid: { type: String },
+    };
 
     setup() {
         super.setup();
         this.pos = usePos();
+        useRouterParamsChecker();
         useErrorHandlers();
         this.ui = useService("ui");
         this.renderer = useService("renderer");
@@ -64,9 +68,6 @@ export class ReceiptScreen extends Component {
         const tipAmountStr = this.env.utils.formatCurrency(tipAmount);
         return `${orderAmountStr} + ${tipAmountStr} tip`;
     }
-    get nextScreen() {
-        return this.pos.defaultScreen;
-    }
     get ticketScreen() {
         return { name: "TicketScreen" };
     }
@@ -86,7 +87,8 @@ export class ReceiptScreen extends Component {
             this.pos.addNewOrder();
         }
         this.pos.searchProductWord = "";
-        this.pos.showScreen(this.nextScreen);
+        const nextPage = this.pos.defaultPage;
+        this.pos.navigate(nextPage.page, nextPage.params);
     }
 
     generateTicketImage = async () =>
@@ -119,4 +121,12 @@ export class ReceiptScreen extends Component {
     }
 }
 
-registry.category("pos_screens").add("ReceiptScreen", ReceiptScreen);
+registry.category("pos_pages").add("ReceiptScreen", {
+    name: "ReceiptScreen",
+    component: ReceiptScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/receipt/{string:orderUuid}`,
+    params: {
+        orderUuid: true,
+        orderFinalized: true,
+    },
+});

@@ -10,6 +10,7 @@ import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/c
 import { useIdleTimer } from "./utils/use_idle_timer";
 import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
+
 /**
  * Chrome is the root component of the PoS App.
  */
@@ -24,10 +25,11 @@ export class Chrome extends Component {
             if (stopEventPropagation.includes(ev.type)) {
                 ev.stopPropagation();
             }
-            this.pos.showScreen(this.pos.firstScreen);
+            const page = this.pos.firstPage;
+            this.pos.navigate(page.page, page.params);
         });
+
         const reactivePos = reactive(this.pos);
-        // TODO: Should we continue on exposing posmodel as global variable?
         window.posmodel = reactivePos;
         useOwnDebugContext();
         if (this.env.debug) {

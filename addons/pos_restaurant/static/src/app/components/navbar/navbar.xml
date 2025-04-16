@@ -2,12 +2,12 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
         <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="before">
-            <t t-if="pos.mainScreen.component.name == 'FloorScreen'">
+            <t t-if="pos.router.state.current == 'FloorScreen'">
                 <DropdownItem t-if="showEditPlanButton and this.pos.config.floor_ids.length" onSelected="() => this.pos.toggleEditMode()">
                     Edit Plan
                 </DropdownItem>
             </t>
-            <DropdownItem t-if="pos.mainScreen.component.name == 'FloorScreen'" onSelected="() => this.onSwitchButtonClick()">
+            <DropdownItem t-if="pos.router.state.current == 'FloorScreen'" onSelected="() => this.onSwitchButtonClick()">
                 Switch Floor View
             </DropdownItem>
         </xpath>

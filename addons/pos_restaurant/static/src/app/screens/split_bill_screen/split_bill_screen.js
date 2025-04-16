@@ -4,12 +4,14 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillDestroy, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
+import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
     static components = { Orderline, OrderDisplay };
     static props = {
         disallow: { type: Boolean, optional: true },
+        orderUuid: { type: String },
     };
 
     setup() {
@@ -17,6 +19,7 @@ export class SplitBillScreen extends Component {
         this.ui = useService("ui");
         this.qtyTracker = useState({});
         this.priceTracker = useState({});
+        useRouterParamsChecker();
 
         onWillDestroy(() => {
             // Removing on all lines because the current order change during the split
@@ -204,8 +207,18 @@ export class SplitBillScreen extends Component {
     }
 
     back() {
-        this.pos.showScreen("ProductScreen");
+        this.pos.navigate("ProductScreen", {
+            orderUuid: this.pos.selectedOrderUuid,
+        });
     }
 }
 
-registry.category("pos_screens").add("SplitBillScreen", SplitBillScreen);
+registry.category("pos_pages").add("SplitBillScreen", {
+    name: "SplitBillScreen",
+    component: SplitBillScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/splitting/{string:orderUuid}`,
+    params: {
+        orderUuid: true,
+        orderFinalized: false,
+    },
+});

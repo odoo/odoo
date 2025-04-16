@@ -6,10 +6,13 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, useRef, onMounted } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { TipReceipt } from "@pos_restaurant/app/components/tip_receipt/tip_receipt";
+import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
 export class TipScreen extends Component {
     static template = "pos_restaurant.TipScreen";
-    static props = {};
+    static props = {
+        orderUuid: { type: String },
+    };
     setup() {
         this.pos = usePos();
         this.posReceiptContainer = useRef("pos-receipt-container");
@@ -17,6 +20,7 @@ export class TipScreen extends Component {
         this.printer = useService("printer");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.getTotalWithTax();
+        useRouterParamsChecker();
 
         onMounted(async () => {
             await this.printTipReceipt();
@@ -100,11 +104,9 @@ export class TipScreen extends Component {
         if (!this.pos.config.module_pos_restaurant) {
             this.pos.addNewOrder();
         }
-        const { name, props } = this.nextScreen;
-        this.pos.showScreen(name, props);
-    }
-    get nextScreen() {
-        return { name: "ReceiptScreen" };
+        this.pos.navigate("ReceiptScreen", {
+            orderUuid: this.pos.getOrder().uuid,
+        });
     }
     async printTipReceipt() {
         const order = this.currentOrder;
@@ -126,4 +128,12 @@ export class TipScreen extends Component {
     }
 }
 
-registry.category("pos_screens").add("TipScreen", TipScreen);
+registry.category("pos_pages").add("TipScreen", {
+    name: "TipScreen",
+    component: TipScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/tipping/{string:orderUuid}`,
+    params: {
+        orderUuid: true,
+        orderFinalized: true,
+    },
+});

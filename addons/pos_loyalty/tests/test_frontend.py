@@ -360,7 +360,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyChangeRewardQty",
             login="pos_user",
         )
@@ -716,7 +716,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config2.with_user(self.pos_user).open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config2.id,
+            "/pos/ui/%d" % self.main_pos_config2.id,
             "PosLoyaltyTour4",
             login="pos_user",
         )
@@ -1665,7 +1665,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyTour12",
             login="pos_user",
         )
@@ -1710,7 +1710,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            '/pos/web?config_id=%d' % self.main_pos_config.id,
+            '/pos/ui/%d' % self.main_pos_config.id,
             'PosLoyaltyMinAmountAndSpecificProductTour',
             login='pos_user',
         )
@@ -1744,7 +1744,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         # Run the tour. It will use the gift card.
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "GiftCardProgramPriceNoTaxTour",
             login="pos_user"
         )
@@ -1763,7 +1763,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         # Run the tour
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PhysicalGiftCardProgramSaleTour",
             login="pos_user"
         )
@@ -1829,7 +1829,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyDontGrantPointsForRewardOrderLines",
             login="pos_user",
         )
@@ -1870,7 +1870,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyPointsGlobalDiscountProgramNoDomain",
             login="pos_user",
         )
@@ -1917,7 +1917,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyPointsDiscountNoDomainProgramNoDomain",
             login="pos_user",
         )
@@ -1974,7 +1974,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyPointsDiscountNoDomainProgramDomain",
             login="pos_user",
         )
@@ -2036,7 +2036,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyPointsDiscountWithDomainProgramDomain",
             login="pos_user",
         )
@@ -2093,7 +2093,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyPointsEwallet",
             login="pos_user",
         )
@@ -2130,7 +2130,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyPointsGiftcard",
             login="pos_user",
         )
@@ -2191,14 +2191,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         product_c.active = False
 
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyArchivedRewardProductsInactive",
             login="pos_user",
         )
 
         product_c.active = True
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyArchivedRewardProductsActive",
             login="pos_user"
         )
@@ -2241,7 +2241,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "ChangeRewardValueWithLanguage",
             login="pos_user",
         )
@@ -2278,7 +2278,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyRewardProductTag",
             login="pos_user",
         )
@@ -2306,7 +2306,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyGiftCardTaxes",
             login="accountman",
         )
@@ -2335,7 +2335,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "CustomerLoyaltyPointsDisplayed", login="pos_user")
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, "CustomerLoyaltyPointsDisplayed", login="pos_user")
 
     def test_cheapest_product_reward_pos_combo(self):
         self.env['product.product'].create({
@@ -2367,7 +2367,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboCheapestRewardProgram', login="pos_user")
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosComboCheapestRewardProgram', login="pos_user")
 
     def test_specific_product_reward_pos_combo(self):
         setup_product_combo_items(self)
@@ -2391,7 +2391,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboSpecificProductProgram', login="pos_user")
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosComboSpecificProductProgram', login="pos_user")
 
     def test_apply_reward_on_product_scan(self):
         """
@@ -2423,14 +2423,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosRewardProductScan",
             login="pos_admin",
         )
         # check the same flow with gs1 nomenclature
         self.env.company.nomenclature_id = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosRewardProductScanGS1",
             login="pos_admin",
         )
@@ -2484,7 +2484,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         alt_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % alt_pos_config.id,
+            "/pos/ui/%d" % alt_pos_config.id,
             "PosLoyaltyPromocodePricelist",
             login="pos_user",
         )
@@ -2507,7 +2507,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "GiftCardProgramInvoice",
             login="pos_user",
         )
@@ -2537,7 +2537,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "RefundRulesProduct",
             login="pos_user",
         )
@@ -2573,7 +2573,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCheapestProductTaxInclude', login="pos_user")
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosCheapestProductTaxInclude', login="pos_user")
 
     def test_next_order_coupon_program_expiration_date(self):
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -2599,7 +2599,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui/%d" % self.main_pos_config.id,
             "PosLoyaltyNextOrderCouponExpirationDate",
             login="pos_user",
         )
@@ -2652,7 +2652,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_loyalty_on_order_with_fixed_tax', login="pos_user")
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_loyalty_on_order_with_fixed_tax', login="pos_user")
 
     def test_gift_card_no_date(self):
         """
