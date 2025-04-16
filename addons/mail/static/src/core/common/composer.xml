@@ -90,7 +90,7 @@
             </div>
             <div class="o-mail-Composer-footer overflow-auto">
                 <AttachmentList
-                    t-if="allowUpload and props.composer.attachments.length > 0"
+                    t-if="props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"
                     imagesHeight="75"/>
