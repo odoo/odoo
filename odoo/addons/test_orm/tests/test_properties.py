@@ -2137,11 +2137,11 @@ class PropertiesSearchCase(TestPropertiesMixin):
 
     @mute_logger('odoo.fields')
     def test_properties_field_search_many2one(self):
-        # many2one are just like integer
         self.messages.discussion = self.discussion_1
         self.message_1.attributes = [{
             'name': 'mypartner',
-            'type': 'integer',
+            'type': 'many2one',
+            'comodel': 'res.partner',
             'value': self.partner.id,
             'definition_changed': True,
         }]
