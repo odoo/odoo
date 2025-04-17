@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import Command
 
 from odoo.addons.payment.tests.common import PaymentCommon
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
-class AsiaPayCommon(AccountTestInvoicingCommon, PaymentCommon):
+class AsiaPayCommon(PaymentCommon):
 
     @classmethod
     def setUpClass(cls):

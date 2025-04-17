@@ -34,6 +34,7 @@ patch(Message.prototype, {
     },
 
     exitEditCommentMode() {
+        this.props.message.composer.clear();
         this.message.composer = null;
         this.state.editRating = false;
     },

@@ -518,6 +518,38 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             payment.journal_id = default_journal
             self.assertEqual(payment.payment_method_line_id.journal_id.id, default_journal.id)
 
+    def test_journal_change_and_change_names(self):
+        """Test that changing the journal on a payment updates the journal entry name correctly."""
+
+        initial_journal = self.company_data['default_journal_bank']
+        new_journal = self.company_data['default_journal_cash']
+
+        # Use the existing payment method line from the initial journal
+        payment_method_line = initial_journal.inbound_payment_method_line_ids[0]
+
+        # Ensure the new journal has the correct payment method line
+        new_journal.inbound_payment_method_line_ids[0].payment_account_id = self.payment_debit_account_id
+
+        # Create the payment with the initial journal and post it
+        payment = self.env['account.payment'].create({
+            'amount': 50.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'journal_id': initial_journal.id,
+            'payment_method_line_id': payment_method_line.id,
+        })
+        payment.action_post()
+
+        # Change the journal, reset the payment to draft, and post again
+        payment.action_draft()
+        payment.journal_id = new_journal
+        payment.payment_method_line_id = new_journal.inbound_payment_method_line_ids[0]
+        payment.action_post()
+
+        # Verify the journal entry's name were updated correctly
+        self.assertRegex(payment.move_id.name, rf"^P{new_journal.code}/")
+
     def test_payments_copy_data(self):
         payment_1, payment_2 = self.env['account.payment'].create([
             {

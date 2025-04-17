@@ -253,6 +253,12 @@ class ResPartnerBank(models.Model):
                 # force the allow_out_payment field to False in order to prevent scam payments on newly created bank accounts
                 vals['allow_out_payment'] = False
 
+        for vals in vals_list:
+            if (partner_id := vals.get('partner_id')) and (acc_number := vals.get('acc_number')):
+                archived_res_partner_bank = self.env['res.partner.bank'].search([('active', '=', False), ('partner_id', '=', partner_id), ('acc_number', '=', acc_number)])
+                if archived_res_partner_bank:
+                    raise UserError(_("A bank account with Account Number %(number)s already exists for Partner %(partner)s, but is archived. Please unarchive it instead.", number=acc_number, partner=archived_res_partner_bank.partner_id.name))
+
         res = super().create(vals_list)
         for account in res:
             msg = _("Bank Account %s created", account._get_html_link(title=f"#{account.id}"))
@@ -309,7 +315,7 @@ class ResPartnerBank(models.Model):
     def unlink(self):
         # EXTENDS base res.partner.bank
         for account in self:
-            msg = _("Bank Account %(link)s with number %(number)s deleted", link=account._get_html_link(title=f"#{account.id}"), number=account.acc_number)
+            msg = _("Bank Account %(link)s with number %(number)s archived", link=account._get_html_link(title=f"#{account.id}"), number=account.acc_number)
             account.partner_id._message_log(body=msg)
         return super().unlink()
 

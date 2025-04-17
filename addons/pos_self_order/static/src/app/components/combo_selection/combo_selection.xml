@@ -14,6 +14,9 @@
                             class="self_order_product_card d-flex flex-row-reverse flex-md-column align-items-start gap-2 user-select-none"
                             role="button"
                             >
+                            <div t-if="line.product_id.public_description" class="product-information-tag" t-on-click.prevent.stop="() => this.showProductInfo(line)">
+                                <i class="product-information-tag-logo fa fa-info fs-4" role="img" aria-label="Product Information" title="Product Information" />
+                            </div>
                             <div class="ratio ratio-1x1 w-25 w-sm-50 w-md-100" t-att-class="{'d-none d-md-block': !product.image_128}">
                                 <div class="placeholder-glow">
                                     <div class="placeholder w-100 h-100 bg-300 rounded"/>

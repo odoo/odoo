@@ -99,11 +99,14 @@ def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
 
 
 def _mock_get_peppol_verification_state(func, self, *args, **kwargs):
-    (endpoint, eas, format) = args
-    if endpoint and eas:
-        return 'valid' if format in self._get_peppol_formats() else 'not_valid_format'
-    else:
+    (endpoint, eas, xml_format) = args
+    if not (eas and endpoint):
+        return 'not_verified'
+    if not xml_format:
         return 'not_valid'
+    if xml_format not in self._get_peppol_formats():
+        return 'not_valid_format'
+    return 'valid'
 
 
 def _mock_user_creation(func, self, *args, **kwargs):

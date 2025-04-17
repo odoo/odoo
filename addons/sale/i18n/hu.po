@@ -16,10 +16,9 @@
 # Ákos Nagy <akos.nagy@oregional.hu>, 2024
 # 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2025
 # Attila Eiler, 2025
-# Pammer József, 2025
 # Valics Lehel, 2025
-# gezza <geza.nagy@oregional.hu>, 2025
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2025
+# gezza <geza.nagy@oregional.hu>, 2025
 # 
 msgid ""
 msgstr ""
@@ -27,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-07 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2025\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +64,7 @@ msgstr "%(attribute)s: %(values)s"
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "%s has been created"
-msgstr ""
+msgstr "%s létrehozásra került"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -75,7 +74,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'PROFORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -83,6 +82,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Ajánlat - %s' % (object.name)) or "
+"'Rendelés - %s' % (object.name)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -105,8 +106,8 @@ msgstr "31.05"
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
 msgstr ""
-"<b>Küldje el az ajánlatot</b> saját magának, hogy ellenőrízze az ügyfél "
-"által látottakat."
+"<b>Küldje el az ajánlatot</b> saját magának, hogy ellenőrizze a vevő által "
+"látottakat."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_payment_executed
@@ -704,8 +705,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
-"Egy visszaigazolt rendeléshez a visszaigazolás dátumát is meg kell adni."
+msgstr "Egy megerősített rendeléshez a megerősítés dátumát is meg kell adni."
 
 #. module: sale
 #. odoo-python
@@ -717,8 +717,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
-"Megjegyzés, amelynek tartalma általában a fenti szakaszra vagy termékre "
-"vonatkozik."
+"Megjegyzés, amelynek tartalma általában a felette lévő szakaszra vagy "
+"termékre vonatkozik."
 
 #. module: sale
 #. odoo-python
@@ -750,8 +750,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
-"Figyelmeztetés beállítása egy termékre vagy egy ügyfélre (Értékesítés)"
+msgstr "Figyelmeztetés beállítása egy termékre vagy egy vevőre (Értékesítés)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -897,7 +896,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add product"
-msgstr "Új termék"
+msgstr "Termék hozzáadása"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -912,7 +911,7 @@ msgstr "Adjon a rendeléshez termékvariációkat egy táblázat segítségével
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Lehetővé teszi díjbekérő küldését az ügyfeleknek"
+msgstr "Lehetővé teszi díjbekérő küldését a vevőknek"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
@@ -934,13 +933,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
 msgid "Already Paid"
-msgstr ""
+msgstr "Fizetve"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_invoiced
 msgid "Already invoiced"
-msgstr ""
+msgstr "Számlázva"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -967,7 +966,7 @@ msgstr "Számlázható ajánlatok összege"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_to_invoice
 msgid "Amount to invoice"
-msgstr ""
+msgstr "Számlázandó összeg"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1101,7 +1100,7 @@ msgstr "Bank neve"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr "Az ügyfél azonosítója alapján"
+msgstr "Vevő azonosítója alapján"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
@@ -1264,7 +1263,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Check a sample. It's clean!"
-msgstr ""
+msgstr "Ellenőrizzen egy mintát. Tiszta!"
 
 #. module: sale
 #. odoo-javascript
@@ -1287,17 +1286,17 @@ msgstr "Bezárás"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
 msgid "Combo Choices"
-msgstr ""
+msgstr "Kombó választások"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
 msgid "Combo Item"
-msgstr ""
+msgstr "Kombó tétel"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
 msgid "Commissions"
-msgstr ""
+msgstr "Jutalékok"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_provider__so_reference_type
@@ -1338,7 +1337,7 @@ msgstr "DHL kiszállítás és szállítási költség számítás"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Szállítási költség számítása és szállítás Easypost szolgáltatóval"
+msgstr "Easypost kiszállítás és szállítási költség számítás"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1348,17 +1347,17 @@ msgstr "FedEx kiszállítás és szállítási költség számítás"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Szállítási költség számítása és szállítás Sendcloud szolgáltatóval"
+msgstr "Sendcloud kiszállítás és szállítási költség számítás"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr ""
+msgstr "Shiprocket kiszállítás és szállítási költség számítás"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "Starshipit kiszállítás és szállítási költség számítás"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1394,7 +1393,7 @@ msgstr "Konfiguráció"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 msgid "Configure your product"
-msgstr ""
+msgstr "Termék konfigurálása"
 
 #. module: sale
 #. odoo-javascript
@@ -1407,7 +1406,7 @@ msgstr "Megerősítés"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
 msgid "Confirmation Message"
-msgstr ""
+msgstr "Megerősítési üzenet"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1417,7 +1416,7 @@ msgstr "Összekötők"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid "Consolidated Billing"
-msgstr ""
+msgstr "Konszolidált számlázás"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -1456,7 +1455,7 @@ msgstr "Létrehozva"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft"
-msgstr ""
+msgstr "Piszkozat létrehozása"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1495,7 +1494,7 @@ msgstr "Hozzon létre egy új ajánlatot, ami egy új értékesítés első lép
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoice(s)"
-msgstr ""
+msgstr "Vevői rendelés tevékenység terv létrehozása"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1509,7 +1508,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Létrehozás rendeléskor"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -1598,7 +1597,7 @@ msgstr "Egyéni fizetési utasítások"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Customer"
-msgstr "Ügyfél"
+msgstr "Vevő"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__country_id
@@ -1615,7 +1614,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr ""
+msgstr "Vevő iparág"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1635,12 +1634,12 @@ msgstr "Vevői aláírás"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
-msgstr ""
+msgstr "Vevő állam/megye"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
 msgid "Customer ZIP"
-msgstr ""
+msgstr "Vevő irányító szám"
 
 #. module: sale
 #. odoo-python
@@ -1687,7 +1686,7 @@ msgstr "Előlegek levonása"
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr "Ajánlat alapértelmezett érvényessége"
+msgstr "Alapértelmezett ajánlat érvényesség"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_price_include
@@ -1702,8 +1701,8 @@ msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
 msgstr ""
-"Alapértelmezett, hogy a terméken és a számlákon használt értékesítési ár "
-"tartalmazza-e a cég adóit."
+"Alapértelmezésben a terméken és a számlákon használt értékesítési ár "
+"tartalmazza a vállalat adóit."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1715,12 +1714,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "Kedvezményekhez használt alapértelmezett termék"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr "Tartalom kézbesítése e-mailben"
+msgstr "Tartalom kézbesítése emailben"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1810,7 +1809,7 @@ msgstr "Kedvezmény %"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%"
-msgstr ""
+msgstr "Kedvezmény %(percent)s%%"
 
 #. module: sale
 #. odoo-python
@@ -1836,12 +1835,12 @@ msgstr "Termék kedvezmény"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "Kedvezmény típus"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
 msgid "Discount Wizard"
-msgstr ""
+msgstr "Kedvezmény varázsló"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -1918,7 +1917,7 @@ msgstr "Előleg"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (Cancelled)"
-msgstr ""
+msgstr "Előleg (visszavont)"
 
 #. module: sale
 #. odoo-python
@@ -1995,12 +1994,12 @@ msgstr "Piszkozat számlák"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Duplicated Documents"
-msgstr "Megkettőzött dokumentumok"
+msgstr "Duplikált dokumentumok"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Duplikált rendelés"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2099,9 +2098,9 @@ msgid ""
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
 msgstr ""
-"A pénzügyi pozíció az adók és a könyvelési mód meghatározására szolgálnak az"
-" ügyfelekkel, a rendelésekkel, vagy a számlákkal kapcsolatban. Az "
-"alapértelmezett érték az ügyféltől származik."
+"A pénzügyi pozíció az adók és a könyvelési mód meghatározására szolgálnak "
+"vevőkkel, rendelésekkel, vagy számlákkal kapcsolatban. Az alapértelmezett "
+"érték a vevői adatokból származik."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2195,13 +2194,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
 msgid "Global Discount"
-msgstr ""
+msgstr "Globális kedvezmény"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Go ahead and send the quotation."
-msgstr ""
+msgstr "Küldje el az ajánlatot"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -2235,7 +2234,7 @@ msgstr "Aktív árlista"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_archived_products
 msgid "Has Archived Products"
-msgstr ""
+msgstr "Vannak archivált termékek"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
@@ -2245,7 +2244,7 @@ msgstr "Megerősített rendelés"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr "Megváltozott a pénzügyi pozíció"
+msgstr "Megváltozott pénzügyi pozíció"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2332,7 +2331,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr ""
+msgstr "Azonnali"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2679,7 +2678,7 @@ msgstr "Kapcsolt rendelési sor"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_ids
 msgid "Linked Order Lines"
-msgstr ""
+msgstr "Kapcsolt rendelési sorok"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
@@ -2732,7 +2731,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
 msgid "Manual"
-msgstr "Manuális"
+msgstr "Kézi"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
@@ -2942,7 +2941,7 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
-"A rendelés megerősítése és a termékek ügyfélhez történő kiszállítása között "
+"A rendelés megerősítése és a termékek vevőhöz történő kiszállítása között "
 "eltelt napok száma"
 
 #. module: sale
@@ -3006,8 +3005,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Ha az árajánlatot az ügyfél elfogadja, az megrendeléssé válik.<br> Önnek "
-"lehetősége lesz számlát kibocsátani és fizetést elfogadni."
+"Ha az ajánlatot a vevő elfogadja, akkor rendeléssé válik.<br> Lehetséges "
+"lesz számlát kibocsátani és fizetést elfogadni."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -3015,8 +3014,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
-"Ha az árajánlatot az ügyfél elfogadja, az megrendeléssé válik.<br> Önnek "
-"lehetősége lesz számlát kibocsátani és fizetést elfogadni."
+"Ha az ajánlat megerősítésre kerül, akkor rendeléssé válik.<br> Lehetőség "
+"lesz számlát kibocsátani és fizetést elfogadni."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -3054,7 +3053,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Only draft orders can be marked as sent directly."
-msgstr "Csak a megrendelés tervezetek jelölhetők közvetlenül elküldöttnek."
+msgstr "Csak a piszkozat rendelések jelölhetők közvetlenül elküldöttnek."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
@@ -3078,7 +3077,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Option: %s"
-msgstr ""
+msgstr "Opció: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
@@ -3093,9 +3092,9 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
-"A választható termékek felkínálásra kerülnek amikor a vásárló leüti a "
-"*Kosárhoz adás* gombot (kereszt-értékesítés stratégia, pl. számítógépekhez: "
-"garancia, szoftver, stb.)."
+"A választható termékek felkínálásra kerülnek amikor a vevő leüti a *Kosárhoz"
+" adás* gombot (kereszt-értékesítés stratégia, pl. számítógépekhez: garancia,"
+" szoftver, stb.)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
@@ -3105,7 +3104,7 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
-"Opcionális fordítási nyelv (ISO kód), mely e-mail küldése során választható "
+"Opcionális fordítási nyelv (ISO kód), mely email küldése során választható "
 "ki. Ha nincs beállítva, akkor az angol nyelv kerül felhasználásra. Ez "
 "általában csak egy kitöltő kifejezés, mely megadja a megfelelő nyelvet, pld:"
 " {{ object.partner_id.lang }}."
@@ -3141,17 +3140,17 @@ msgstr "Rendelések száma"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Order Date"
-msgstr "Megrendelés dátuma"
+msgstr "Rendelés dátuma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Order Date:"
-msgstr "Megrendelés dátuma:"
+msgstr "Rendelés dátuma:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Order Date: Last 365 Days"
-msgstr "Megrendelés dátuma: elmúlt 365 nap"
+msgstr "Rendelés dátuma: elmúlt 365 nap"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__invoice_status
@@ -3206,7 +3205,7 @@ msgid ""
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
 "Rendelt mennyiség: számlázás a vevő által rendelt mennyiség alapján.\n"
-"Kiszállított mennyiség: számlázás vevő részére kiszállított mennyiség alapján."
+"Kiszállított mennyiség: számlázás a vevő részére kiszállított mennyiség alapján."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -3493,7 +3492,7 @@ msgstr "Termék képe"
 #. module: sale
 #: model:ir.model,name:sale.model_product_packaging
 msgid "Product Packaging"
-msgstr "Termékcsomagolás"
+msgstr "Termék csomagolás"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_tags
@@ -3508,7 +3507,7 @@ msgstr "Terméksablon"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_type
 msgid "Product Type"
-msgstr "Terméktípus"
+msgstr "Termék típus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
@@ -3532,7 +3531,7 @@ msgstr "Termékváltozatok"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr "A termékárak újra lettek számolva a(z) %s árlista alapján."
+msgstr "A termékárak újra lettek számítva a(z) %s árlista alapján."
 
 #. module: sale
 #. odoo-python
@@ -3545,7 +3544,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product taxes have been recomputed according to fiscal position %s."
 msgstr ""
-"A kalkulált adó újra lett számolva a %s pénzügyi pozíciónak megfelelően."
+"A kalkulált adó újra lett számítva a(z) %s pénzügyi pozíciónak megfelelően."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3742,17 +3741,17 @@ msgstr "Címzettek"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_view_form
 msgid "Recommend when 'Adding to Cart' or quotation"
-msgstr "Ajánlás a „Kosárba helyezés” vagy ajánlatadáshoz"
+msgstr "Ajánlás „Kosárba helyezés” vagy ajánlat esetén"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr "Árak újraszámolása az árlistának megfelelően"
+msgstr "Árak újraszámítása az árlista alapján"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr "Adók újraszámolása a fiskális pozíciónak megfelelően"
+msgstr "Adók újraszámítása a pénzügyi pozíció alapján"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -3997,7 +3996,7 @@ msgstr "Vevői rendelés"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Vevői rendelés visszavonása"
+msgstr "Vevői rendelés visszavonás"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -4103,12 +4102,12 @@ msgstr "Értékesítési ár"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr "Értékesítés: rendelés visszavonása"
+msgstr "Értékesítés: Rendelés visszavonása"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr "Értékesítés: rendelés megerősítése"
+msgstr "Értékesítés: Rendelés megerősítése"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
@@ -4223,7 +4222,7 @@ msgstr "Küldjön termékspecifikus email üzenetet a számla jóváhagyásakor"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_send_mail
 msgid "Send an email"
-msgstr "E-mail küldése"
+msgstr "Email küldése"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -4410,7 +4409,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_report__state
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Status"
-msgstr "Státusz"
+msgstr "Állapot"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_state
@@ -4975,7 +4974,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
-msgstr "Szolgáltatás nyomkövetése"
+msgstr "Szolgáltatás nyomon követése"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4996,7 +4995,7 @@ msgstr "Típus neve"
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
-msgstr "Írj egy üzenetet..."
+msgstr "Írjon egy üzenetet..."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
@@ -5211,7 +5210,7 @@ msgstr "Figyelmeztetés"
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Warning for %s"
-msgstr "Figyelmeztetés erre %s"
+msgstr "Figyelmeztetés erre: %s"
 
 #. module: sale
 #. odoo-python
@@ -5222,7 +5221,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
-msgstr "Figyelmeztetés az értékesítési rendelésen"
+msgstr "Figyelmeztetés a vevői rendelésen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
@@ -5253,7 +5252,7 @@ msgid ""
 "first cancel it."
 msgstr ""
 "Nem törölhet egy elküldött ajánlatot, vagy egy megerősített rendelést. "
-"Ezeket először vissza kell vonja."
+"Ezeket először vissza kell vonni."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -5344,24 +5343,23 @@ msgstr "Visszajelzés szövege..."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr "A megrendelés megerősítésre került"
+msgstr "A rendelés megerősítésre került"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
-"A megrendelés aláírásra került, de csak kiegyenlítés után kerül "
-"megerősítésre."
+"A rendelés aláírásra került, de csak kiegyenlítés után kerül megerősítésre."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr "A megrendelés aláírásra került."
+msgstr "A rendelés aláírásra került."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
-msgstr "A megrendelés nincs olyan állapotban, hogy elutasításra kerülhetne."
+msgstr "A rendelés nincs olyan állapotban, hogy elutasításra kerülhetne."
 
 #. module: sale
 #. odoo-python
@@ -5423,7 +5421,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "sale order"
-msgstr "értékesítési rendelés"
+msgstr "vevői rendelés"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -5435,7 +5433,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
-msgstr "egységek"
+msgstr "egység"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

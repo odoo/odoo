@@ -583,6 +583,9 @@ export class Thread extends Component {
         if (!msg.thread?.eq(prevMsg.thread)) {
             return false;
         }
+        if (msg.is_note) {
+            return false;
+        }
         return msg.datetime.ts - prevMsg.datetime.ts < 5 * 60 * 1000;
     }
 

@@ -72,7 +72,7 @@ class Browser:
         browser_args = list(CHROMIUM_ARGS) if self.browser == 'chromium-browser' else []
 
         if state == BrowserState.KIOSK:
-            browser_args.append("--kiosk")
+            browser_args.extend(["--kiosk", "--touch-events"])
         elif state == BrowserState.FULLSCREEN:
             browser_args.append("--start-fullscreen")
 

@@ -42,7 +42,6 @@ class TestSaleMrpProcurement(TransactionCase):
         product.name = 'Slider Mobile'
         product.is_storable = True
         product.uom_id = uom_unit
-        product.uom_po_id = uom_unit
         product.route_ids.clear()
         product.route_ids.add(warehouse0.manufacture_pull_id.route_id)
         product.route_ids.add(warehouse0.mto_pull_id.route_id)
@@ -104,14 +103,12 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form.name = 'Raw Stick'
         product_form.is_storable = True
         product_form.uom_id = self.uom_unit
-        product_form.uom_po_id = self.uom_unit
         self.raw_product = product_form.save()
 
         # Create manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Stick'
         product_form.uom_id = self.uom_unit
-        product_form.uom_po_id = self.uom_unit
         product_form.is_storable = True
         product_form.route_ids.clear()
         product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
@@ -132,12 +129,10 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form.name = 'Raw Iron'
         product_form.is_storable = True
         product_form.uom_id = self.uom_unit
-        product_form.uom_po_id = self.uom_unit
         self.raw_product_2 = product_form.save()
 
         # Create bom for manufactured product
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.finished_product
         bom_product_form.product_tmpl_id = self.finished_product.product_tmpl_id
         bom_product_form.product_qty = 1.0
         bom_product_form.type = 'normal'
@@ -149,7 +144,6 @@ class TestSaleMrpProcurement(TransactionCase):
 
         ## Create bom for manufactured product
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.complex_product
         bom_product_form.product_tmpl_id = self.complex_product.product_tmpl_id
         with bom_product_form.bom_line_ids.new() as line:
             line.product_id = self.finished_product
