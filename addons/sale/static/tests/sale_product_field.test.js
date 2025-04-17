@@ -92,7 +92,7 @@ class Product extends models.Model {
 defineModels([SaleOrder, SaleOrderLine, ProductTemplate, ProductTemplateAttributeValue, Product]);
 defineMailModels();
 
-test.tags`desktop`;
+test.tags("desktop");
 test("pressing tab with incomplete text will create a product", async () => {
     onRpc(({ method }) => {
         expect.step(method);
