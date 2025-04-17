@@ -157,16 +157,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 amount_type = 'fixed'
                 amount = self.fixed_amount
 
-            def grouping_function(base_line):
-                return {'account_id': self._get_down_payment_account(base_line['product_id'])}
-
             down_payment_base_lines = AccountTax._prepare_down_payment_lines(
                 base_lines=base_lines,
                 company=self.company_id,
                 amount_type=amount_type,
                 amount=amount,
                 computation_key=f'down_payment,{self.id}',
-                grouping_function=grouping_function,
             )
 
             # Update the sale order.
@@ -177,7 +173,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             invoice_values = self._prepare_down_payment_invoice_values(
                 order=order,
                 so_lines=so_lines,
-                accounts=[base_line['account_id'] for base_line in down_payment_base_lines],
             )
             invoice_sudo = self.env['account.move'].sudo().create(invoice_values)
 
@@ -197,20 +192,19 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             return invoice
 
-    def _prepare_down_payment_invoice_values(self, order, so_lines, accounts):
+    def _prepare_down_payment_invoice_values(self, order, so_lines):
         """ Prepare the values to create a down payment invoice.
 
         :param order:       The current sale order.
         :param so_lines:    The "fake" down payment SO lines created on the sale order.
-        :param accounts:    The down payment accounts to consider, one per so line.
         :return:            The values to create a new invoice.
         """
         self.ensure_one()
         return {
             **order._prepare_invoice(),
             'invoice_line_ids': [
-                Command.create(self._prepare_down_payment_invoice_line_values(order, so_line, account))
-                for so_line, account in zip(so_lines, accounts)
+                Command.create(self._prepare_down_payment_invoice_line_values(order, so_line, self.company_id.downpayment_account_id))
+                for so_line in so_lines
             ],
         }
 
@@ -235,14 +229,3 @@ class SaleAdvancePaymentInv(models.TransientModel):
             quantity=1.0,
             **({'account_id': account.id} if account else {}),
         )
-
-    def _get_down_payment_account(self, product):
-        """ Retrieve the down payment account to use.
-
-        :param product: A product.
-        :return: An accounting account or None if not found.
-        """
-        product_account = product.product_tmpl_id.get_product_accounts(
-            fiscal_pos=self.sale_order_ids.fiscal_position_id
-        )
-        return product_account.get('downpayment') or product_account.get('income')

@@ -12,7 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': 6,
             'property_account_receivable_id': 'fr_pcg_recv',
             'property_account_payable_id': 'fr_pcg_pay',
-            'property_account_downpayment_categ_id': 'pcg_4191',
+            'downpayment_account_id': 'pcg_4191',
         }
 
     @template('fr', 'res.company')
