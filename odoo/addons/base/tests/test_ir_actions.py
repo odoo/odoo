@@ -3,6 +3,7 @@
 
 from datetime import date
 import json
+from markupsafe import Markup
 from psycopg2 import IntegrityError, ProgrammingError
 import requests
 from unittest.mock import patch
@@ -255,6 +256,20 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         partner = self.test_partner.search([('name', 'ilike', 'TestNew')])
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
+
+    def test_31_crud_write_html(self):
+        self.assertEqual(self.action.value, False)
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'comment',
+            'html_value': '<p>MyComment</p>',
+        })
+        self.assertEqual(self.action.html_value, Markup('<p>MyComment</p>'))
+        # Test run
+        self.assertEqual(self.test_partner.comment, False)
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
+        self.assertEqual(self.test_partner.comment, Markup('<p>MyComment</p>'))
 
     def test_35_crud_write_selection(self):
         # Don't want to use res.partner because no 'normal selection field' exists there
