@@ -59,4 +59,4 @@ class SaleOrderLine(models.Model):
 
     def _is_reorder_allowed(self):
         self.ensure_one()
-        return self.product_id._is_add_to_cart_allowed()
+        return bool(self.product_id) and self.product_id._is_add_to_cart_allowed()
