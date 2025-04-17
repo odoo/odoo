@@ -1,5 +1,10 @@
 import uuid
-from psycopg2.extras import Json
+
+
+from odoo.upgrade import util
+
+BUCKET_SIZE = 100000
+
 
 def migrate(cr, version):
     """
@@ -24,15 +29,28 @@ def migrate(cr, version):
          GROUP BY uuid
         HAVING COUNT(*) > 1
         """
-        while True:
-            cr.execute(query)
-            if not cr.rowcount:
-                break
-            ids = [r[0] for r in cr.fetchmany(100000)]
-            cr.execute(
-                f"UPDATE {table} SET uuid = (%s::json)->>(id::text) WHERE id IN %s",
-                [Json({id_: str(uuid.uuid4()) for id_ in ids}), tuple(ids)]
+
+        cr.execute(query)
+        ids_to_uuids_as_str = ', '.join([
+            f"({r[0]}, '{uuid.uuid4()!s}')"
+            for r in cr.fetchall()
+        ])
+        util.explode_execute(
+            cr,
+            f"""
+            WITH vals AS (
+              VALUES {ids_to_uuids_as_str}
             )
+            UPDATE {table} line
+              SET uuid = v.uuid
+              FROM vals
+                AS v(id, uuid)
+            WHERE line.id = v.id
+            """,
+            table,
+            alias="line",
+            bucket_size=BUCKET_SIZE
+        )
 
     deduplicate_uuids("pos_order")
     deduplicate_uuids("pos_order_line")
