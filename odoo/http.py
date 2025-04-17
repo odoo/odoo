@@ -2211,7 +2211,7 @@ class JsonRPCDispatcher(Dispatcher):
         response = {'jsonrpc': '2.0', 'id': self.request_id}
         if error is not None:
             response['error'] = error
-        else:
+        if result is not None:
             response['result'] = result
 
         return self.request.make_json_response(response)
