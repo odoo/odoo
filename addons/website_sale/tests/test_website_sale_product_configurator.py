@@ -440,14 +440,15 @@ class TestWebsiteSaleProductConfigurator(
             'optional_product_ids': [Command.set(optional_product.ids)],
             'taxes_id': tax,
         })
-        # Make sure the custom pricelist from the product configurator common doesn't fail the test
-        self.custom_pricelist.action_archive()
-        self.pricelist.item_ids = [
-            Command.create({
+        # Archive all pricelists to avoid interferences.
+        self.env['product.pricelist'].search([]).action_archive()
+        self.env['product.pricelist'].create({
+            'name': "50_percent",
+            'item_ids': [Command.create({
                 'applied_on': '1_product',
                 'percent_price': 50,
                 'compute_price': 'percentage',
                 'product_tmpl_id': main_product.id,
-            }),
-        ]
+            })],
+        })
         self.start_tour('/shop', 'website_sale_product_configurator_strikethrough_price')
