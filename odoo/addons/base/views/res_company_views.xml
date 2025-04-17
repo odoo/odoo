@@ -67,7 +67,7 @@
             <field name="arch" type="xml">
                 <list string="Companies" decoration-muted="not active">
                     <field name="sequence" widget="handle"/>
-                    <field name="logo" invisible="not logo" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
+                    <field name="logo" invisible="not logo" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
                     <field name="name"/>
                     <field name="partner_id" required="0"/>
                     <field name="child_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
