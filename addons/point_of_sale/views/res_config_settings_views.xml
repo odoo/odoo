@@ -9,9 +9,9 @@
             <xpath expr="//form" position="inside">
                 <t groups="point_of_sale.group_pos_manager">
                     <field name="is_kiosk_mode" invisible="1"/>
-                    <field name="pos_selectable_categ_ids" invisible="1"/>
+<!--                    <field name="pos_selectable_categ_ids" invisible="1"/>-->
                     <field name="pos_has_active_session" invisible="1"/>
-                    <field name="pos_allowed_pricelist_ids" invisible="1"/>
+<!--                    <field name="pos_allowed_pricelist_ids" invisible="1"/>-->
                     <field name="pos_cash_control" invisible="1"/>
                     <field name="pos_iface_print_via_proxy" invisible="1"/>
                     <field name="pos_company_has_template" invisible="1"/>
@@ -259,7 +259,8 @@
                                         </div>
                                         <div class="row mt16">
                                             <label string="Default" for="pos_pricelist_id" class="col-lg-3 o_light_label"/>
-                                            <field name="pos_pricelist_id" domain="[('id', 'in', pos_allowed_pricelist_ids)]" options="{'no_create': True}"/>
+                                            <field name="pos_pricelist_id" domain="[('id', 'in', pos_available_pricelist_ids)]" options="{'no_create': True}"/>
+<!--                                            <field name="pos_pricelist_id" domain="[('id', 'in', pos_allowed_pricelist_ids)]" options="{'no_create': True}"/>-->
                                         </div>
                                         <div class="mt8">
                                             <button name="%(product.product_pricelist_action2)d" icon="oi-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
@@ -386,25 +387,44 @@
                                     <field name="pos_is_posbox"/>
                                     <div class="content-group pos_iot_config" invisible="not pos_is_posbox">
                                         <div class="row">
-                                            <label string="IoT Box IP Address" for="pos_proxy_ip" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_proxy_ip"/>
+                                            <div class="col-lg-5 o_light_label">
+                                                <label string="IoT Box IP Address" for="pos_proxy_ip"/>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <field name="pos_proxy_ip"/>
+                                            </div>
                                         </div>
                                         <div class="row iot_barcode_scanner">
-                                            <label string="Barcode Scanner/Card Reader" for="pos_iface_scan_via_proxy" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_iface_scan_via_proxy"/>
+                                            <div class="col-lg-5 o_light_label">
+                                                <label string="Barcode Scanner/Card Reader" for="pos_iface_scan_via_proxy"/>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <field name="pos_iface_scan_via_proxy"/>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                            <label string="Electronic Scale" for="pos_iface_electronic_scale" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_iface_electronic_scale"/>
+                                            <div class="col-lg-5 o_light_label">
+                                                <label string="Electronic Scale" for="pos_iface_electronic_scale"/>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <field name="pos_iface_electronic_scale"/>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                            <label string="Receipt Printer" for="pos_iface_print_via_proxy" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_iface_print_via_proxy"/>
+                                            <div class="col-lg-5 o_light_label">
+                                                <label string="Receipt Printer" for="pos_iface_print_via_proxy"/>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <field name="pos_iface_print_via_proxy"/>
+                                            </div>
                                         </div>
                                         <div class="row" invisible="not pos_iface_print_via_proxy">
-                                            <label string="Cash D
-                                            rawer" for="pos_iface_cashdrawer" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_iface_cashdrawer"/>
+                                            <div class="col-lg-5 o_light_label">
+                                                <label string="Cash Drawer" for="pos_iface_cashdrawer"/>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <field name="pos_iface_cashdrawer"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </setting>

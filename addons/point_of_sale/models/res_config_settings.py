@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 import logging
 
@@ -40,7 +40,7 @@ class ResConfigSettings(models.TransientModel):
     update_stock_quantities = fields.Selection(related="company_id.point_of_sale_update_stock_quantities", readonly=False)
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False, check_company=True)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
-    is_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
+    is_kiosk_mode = fields.Boolean(string="Is Kiosk Mode")
     pos_customer_display_bg_img = fields.Image(related='pos_config_id.customer_display_bg_img', readonly=False)
     pos_customer_display_bg_img_name = fields.Char(related='pos_config_id.customer_display_bg_img_name', readonly=False)
 
@@ -53,27 +53,34 @@ class ResConfigSettings(models.TransientModel):
     pos_module_pos_restaurant = fields.Boolean(related='pos_config_id.module_pos_restaurant', readonly=False)
     pos_module_pos_appointment = fields.Boolean(related="pos_config_id.module_pos_appointment", readonly=False)
     pos_module_pos_avatax = fields.Boolean(related='pos_config_id.module_pos_avatax', readonly=False)
-    pos_is_order_printer = fields.Boolean(compute='_compute_pos_printer', store=True, readonly=False)
+    # pos_is_order_printer = fields.Boolean(compute='_compute_pos_printer', store=True, readonly=False)
+    pos_is_order_printer = fields.Boolean(related='pos_config_id.is_order_printer', readonly=False)
     pos_printer_ids = fields.Many2many(related='pos_config_id.printer_ids', readonly=False)
-
-    pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
+    #TODO: remove the field pos_allowed_pricelist_ids
+    # pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
     pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
     pos_available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', compute='_compute_pos_pricelist_id', readonly=False, store=True)
     pos_cash_control = fields.Boolean(related='pos_config_id.cash_control')
     pos_cash_rounding = fields.Boolean(related='pos_config_id.cash_rounding', readonly=False, string="Cash Rounding (PoS)")
     pos_company_has_template = fields.Boolean(related='pos_config_id.company_has_template')
-    # pos_default_bill_ids = fields.Many2many(related='pos_config_id.default_bill_ids', readonly=False)
-    pos_default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position', compute='_compute_pos_fiscal_positions', readonly=False, store=True, check_company=True)
-    pos_fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', compute='_compute_pos_fiscal_positions', readonly=False, store=True, check_company=True)
+    pos_default_fiscal_position_id = fields.Many2one(related='pos_config_id.default_fiscal_position_id', readonly=False, check_company=True)
+    pos_fiscal_position_ids = fields.Many2many(related='pos_config_id.fiscal_position_ids', readonly=False, check_company=True)
+    # pos_default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position', compute='_compute_pos_fiscal_positions', readonly=False, store=True, check_company=True)
+    # pos_fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', compute='_compute_pos_fiscal_positions', readonly=False, store=True, check_company=True)
     pos_has_active_session = fields.Boolean(related='pos_config_id.has_active_session')
-    pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True)
+    #TODO
+    # pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True)
+    pos_iface_available_categ_ids = fields.Many2many(related='pos_config_id.iface_available_categ_ids', readonly=False)
     pos_iface_big_scrollbars = fields.Boolean(related='pos_config_id.iface_big_scrollbars', readonly=False)
     pos_iface_cashdrawer = fields.Boolean(string='Cash Drawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True)
-    pos_iface_electronic_scale = fields.Boolean(string='Electronic Scale', compute='_compute_pos_iface_electronic_scale', readonly=False, store=True)
+    # pos_iface_electronic_scale = fields.Boolean(string='Electronic Scale', compute='_compute_pos_iface_electronic_scale', readonly=False, store=True)
+    pos_iface_electronic_scale = fields.Boolean(related='pos_config_id.iface_electronic_scale', readonly=False)
     pos_iface_print_auto = fields.Boolean(related='pos_config_id.iface_print_auto', readonly=False)
     pos_iface_print_skip_screen = fields.Boolean(related='pos_config_id.iface_print_skip_screen', readonly=False)
-    pos_iface_print_via_proxy = fields.Boolean(string='Print via Proxy', compute='_compute_pos_iface_print_via_proxy', readonly=False, store=True)
-    pos_iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', compute='_compute_pos_iface_scan_via_proxy', readonly=False, store=True)
+    # pos_iface_print_via_proxy = fields.Boolean(string='Print via Proxy', compute='_compute_pos_iface_print_via_proxy', readonly=False, store=True)
+    pos_iface_print_via_proxy = fields.Boolean(related='pos_config_id.iface_print_via_proxy', readonly=False)
+    # pos_iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', compute='_compute_pos_iface_scan_via_proxy', readonly=False, store=True)
+    pos_iface_scan_via_proxy = fields.Boolean(related='pos_config_id.iface_scan_via_proxy', readonly=False)
     pos_iface_tax_included = fields.Selection(related='pos_config_id.iface_tax_included', readonly=False)
     pos_iface_tipproduct = fields.Boolean(related='pos_config_id.iface_tipproduct', readonly=False)
     pos_invoice_journal_id = fields.Many2one(related='pos_config_id.invoice_journal_id', readonly=False)
@@ -90,17 +97,21 @@ class ResConfigSettings(models.TransientModel):
     pos_picking_type_id = fields.Many2one(related='pos_config_id.picking_type_id', readonly=False)
     pos_pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', compute='_compute_pos_pricelist_id', readonly=False, store=True)
     pos_proxy_ip = fields.Char(string='IP Address', related="pos_config_id.proxy_ip", readonly=False)
-    pos_receipt_footer = fields.Text(string='Receipt Footer', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
-    pos_receipt_header = fields.Text(string='Receipt Header', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
+    # pos_receipt_footer = fields.Text(string='Receipt Footer', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
+    pos_receipt_footer = fields.Text(related='pos_config_id.receipt_footer', readonly=False)
+    # pos_receipt_header = fields.Text(string='Receipt Header', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
+    pos_receipt_header = fields.Text(related='pos_config_id.receipt_header', readonly=False)
     pos_restrict_price_control = fields.Boolean(related='pos_config_id.restrict_price_control', readonly=False)
     pos_rounding_method = fields.Many2one(related='pos_config_id.rounding_method', readonly=False)
     pos_route_id = fields.Many2one(related='pos_config_id.route_id', readonly=False)
-    pos_selectable_categ_ids = fields.Many2many('pos.category', compute='_compute_pos_selectable_categ_ids')
+    # TODO remove unused field pos_selectable_categ_ids
+    # pos_selectable_categ_ids = fields.Many2many('pos.category', compute='_compute_pos_selectable_categ_ids')
     pos_sequence_id = fields.Many2one(related='pos_config_id.sequence_id')
     pos_set_maximum_difference = fields.Boolean(related='pos_config_id.set_maximum_difference', readonly=False)
     pos_ship_later = fields.Boolean(related='pos_config_id.ship_later', readonly=False)
     pos_tax_regime_selection = fields.Boolean(related='pos_config_id.tax_regime_selection', readonly=False)
-    pos_tip_product_id = fields.Many2one('product.product', string='Tip Product', compute='_compute_pos_tip_product_id', readonly=False, store=True)
+    # pos_tip_product_id = fields.Many2one('product.product', string='Tip Product', compute='_compute_pos_tip_product_id', readonly=False, store=True)
+    pos_tip_product_id = fields.Many2one(related='pos_config_id.tip_product_id', readonly=False)
     pos_use_pricelist = fields.Boolean(related='pos_config_id.use_pricelist', readonly=False)
     pos_warehouse_id = fields.Many2one(related='pos_config_id.warehouse_id', readonly=False, string="Warehouse (PoS)")
     point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
@@ -199,6 +210,7 @@ class ResConfigSettings(models.TransientModel):
 
     def action_pos_config_create_new(self):
         return {
+            'name': _('Create Point of Sale'),
             'view_mode': 'form',
             'res_model': 'pos.config',
             'type': 'ir.actions.act_window',
@@ -226,28 +238,28 @@ class ResConfigSettings(models.TransientModel):
     def _is_cashdrawer_displayed(self, res_config):
         return res_config.pos_iface_print_via_proxy
 
-    @api.depends('pos_module_pos_restaurant', 'pos_config_id')
-    def _compute_pos_printer(self):
-        for res_config in self:
-            res_config.update({
-                'pos_is_order_printer': res_config.pos_config_id.is_order_printer,
-            })
+    # @api.depends('pos_module_pos_restaurant', 'pos_config_id')
+    # def _compute_pos_printer(self):
+    #     for res_config in self:
+    #         res_config.update({
+    #             'pos_is_order_printer': res_config.pos_config_id.is_order_printer,
+    #         })
 
-    @api.depends('pos_limit_categories', 'pos_config_id')
-    def _compute_pos_iface_available_categ_ids(self):
-        for res_config in self:
-            if not res_config.pos_limit_categories:
-                res_config.pos_iface_available_categ_ids = False
-            else:
-                res_config.pos_iface_available_categ_ids = res_config.pos_config_id.iface_available_categ_ids
+    # @api.depends('pos_limit_categories', 'pos_config_id')
+    # def _compute_pos_iface_available_categ_ids(self):
+    #     for res_config in self:
+    #         if not res_config.pos_limit_categories:
+    #             res_config.pos_iface_available_categ_ids = False
+    #         else:
+    #             res_config.pos_iface_available_categ_ids = res_config.pos_config_id.iface_available_categ_ids
 
-    @api.depends('pos_iface_available_categ_ids')
-    def _compute_pos_selectable_categ_ids(self):
-        for res_config in self:
-            if res_config.pos_iface_available_categ_ids:
-                res_config.pos_selectable_categ_ids = res_config.pos_iface_available_categ_ids
-            else:
-                res_config.pos_selectable_categ_ids = self.env['pos.category'].search([])
+    # @api.depends('pos_iface_available_categ_ids')
+    # def _compute_pos_selectable_categ_ids(self):
+    #     for res_config in self:
+    #         if res_config.pos_iface_available_categ_ids:
+    #             res_config.pos_selectable_categ_ids = res_config.pos_iface_available_categ_ids
+    #         else:
+    #             res_config.pos_selectable_categ_ids = self.env['pos.category'].search([])
 
     @api.depends('pos_iface_print_via_proxy', 'pos_config_id')
     def _compute_pos_iface_cashdrawer(self):
@@ -257,34 +269,30 @@ class ResConfigSettings(models.TransientModel):
             else:
                 res_config.pos_iface_cashdrawer = False
 
-    @api.depends('pos_is_header_or_footer', 'pos_config_id')
-    def _compute_pos_receipt_header_footer(self):
-        for res_config in self:
-            if res_config.pos_is_header_or_footer:
-                res_config.pos_receipt_header = res_config.pos_config_id.receipt_header
-                res_config.pos_receipt_footer = res_config.pos_config_id.receipt_footer
-            else:
-                res_config.pos_receipt_header = False
-                res_config.pos_receipt_footer = False
+    # @api.depends('pos_is_header_or_footer', 'pos_config_id')
+    # def _compute_pos_receipt_header_footer(self):
+    #     for res_config in self:
+    #         if res_config.pos_is_header_or_footer:
+    #             res_config.pos_receipt_header = res_config.pos_config_id.receipt_header
+    #             res_config.pos_receipt_footer = res_config.pos_config_id.receipt_footer
+    #         else:
+    #             res_config.pos_receipt_header = False
+    #             res_config.pos_receipt_footer = False
 
-    @api.depends('pos_tax_regime_selection', 'pos_config_id')
-    def _compute_pos_fiscal_positions(self):
-        for res_config in self:
-            if res_config.pos_tax_regime_selection:
-                res_config.pos_default_fiscal_position_id = res_config.pos_config_id.default_fiscal_position_id
-                res_config.pos_fiscal_position_ids = res_config.pos_config_id.fiscal_position_ids
-            else:
-                res_config.pos_default_fiscal_position_id = False
-                res_config.pos_fiscal_position_ids = [(5, 0, 0)]
+    # @api.depends('pos_tax_regime_selection', 'pos_config_id')
+    # def _compute_pos_fiscal_positions(self):
+    #     for res_config in self:
+    #         if res_config.pos_tax_regime_selection:
+    #             res_config.pos_default_fiscal_position_id = res_config.pos_config_id.default_fiscal_position_id
+    #             res_config.pos_fiscal_position_ids = res_config.pos_config_id.fiscal_position_ids
+    #         else:
+    #             res_config.pos_default_fiscal_position_id = False
+    #             res_config.pos_fiscal_position_ids = [(5, 0, 0)]
 
-    @api.depends('pos_iface_tipproduct', 'pos_config_id')
-    def _compute_pos_tip_product_id(self):
-        for res_config in self:
-            res_config.pos_tip_product_id = res_config.pos_iface_tipproduct and res_config.pos_config_id.tip_product_id or False
-            # if res_config.pos_iface_tipproduct:
-            #     res_config.pos_tip_product_id = res_config.pos_config_id.tip_product_id
-            # else:
-            #     res_config.pos_tip_product_id = False
+    # @api.depends('pos_iface_tipproduct', 'pos_config_id')
+    # def _compute_pos_tip_product_id(self):
+    #     for res_config in self:
+    #         res_config.pos_tip_product_id = res_config.pos_iface_tipproduct and res_config.pos_config_id.tip_product_id or False
 
     @api.depends('pos_use_pricelist', 'pos_config_id', 'pos_journal_id')
     def _compute_pos_pricelist_id(self):
@@ -305,41 +313,29 @@ class ResConfigSettings(models.TransientModel):
                     res_config.pos_available_pricelist_ids = res_config.pos_config_id.available_pricelist_ids
                     res_config.pos_pricelist_id = res_config.pos_config_id.pricelist_id
 
-    @api.depends('pos_available_pricelist_ids', 'pos_use_pricelist')
-    def _compute_pos_allowed_pricelist_ids(self):
-        for res_config in self:
-            if res_config.pos_use_pricelist:
-                res_config.pos_allowed_pricelist_ids = res_config.pos_available_pricelist_ids.ids
-            else:
-                res_config.pos_allowed_pricelist_ids = self.env['product.pricelist'].search([]).ids
-
-    @api.depends('pos_is_posbox', 'pos_config_id')
-    def _compute_pos_iface_print_via_proxy(self):
-        for res_config in self:
-            res_config.pos_iface_print_via_proxy = res_config.pos_is_posbox and res_config.pos_config_id.iface_print_via_proxy or False
-            # if not res_config.pos_is_posbox:
-            #     res_config.pos_iface_print_via_proxy = False
+    # @api.depends('pos_available_pricelist_ids', 'pos_use_pricelist')
+    # def _compute_pos_allowed_pricelist_ids(self):
+    #     for res_config in self:
+    #         res_config.pos_allowed_pricelist_ids = res_config.pos_use_pricelist and res_config.pos_available_pricelist_ids or self.env['product.pricelist'].search([]).ids
+            # if res_config.pos_use_pricelist:
+            #     res_config.pos_allowed_pricelist_ids = res_config.pos_available_pricelist_ids.ids
             # else:
-            #     res_config.pos_iface_print_via_proxy = res_config.pos_config_id.iface_print_via_proxy
+            #     res_config.pos_allowed_pricelist_ids = self.env['product.pricelist'].search([]).ids
 
+    # @api.depends('pos_is_posbox', 'pos_config_id')
+    # def _compute_pos_iface_print_via_proxy(self):
+    #     for res_config in self:
+    #         res_config.pos_iface_print_via_proxy = res_config.pos_is_posbox and res_config.pos_config_id.iface_print_via_proxy or False
 
-    @api.depends('pos_is_posbox', 'pos_config_id')
-    def _compute_pos_iface_scan_via_proxy(self):
-        for res_config in self:
-            res_config.pos_iface_scan_via_proxy = res_config.pos_is_posbox and res_config.pos_config_id.iface_scan_via_proxy or False
-            # if not res_config.pos_is_posbox:
-            #     res_config.pos_iface_scan_via_proxy = False
-            # else:
-            #     res_config.pos_iface_scan_via_proxy = res_config.pos_config_id.iface_scan_via_proxy
+    # @api.depends('pos_is_posbox', 'pos_config_id')
+    # def _compute_pos_iface_scan_via_proxy(self):
+    #     for res_config in self:
+    #         res_config.pos_iface_scan_via_proxy = res_config.pos_is_posbox and res_config.pos_config_id.iface_scan_via_proxy or False
 
-    @api.depends('pos_is_posbox', 'pos_config_id')
-    def _compute_pos_iface_electronic_scale(self):
-        for res_config in self:
-            res_config.pos_iface_electronic_scale = res_config.pos_is_posbox and res_config.pos_config_id.iface_electronic_scale or False
-            # if not res_config.pos_is_posbox:
-            #     res_config.pos_iface_electronic_scale = False
-            # else:
-            #     res_config.pos_iface_electronic_scale = res_config.pos_config_id.iface_electronic_scale
+    # @api.depends('pos_is_posbox', 'pos_config_id')
+    # def _compute_pos_iface_electronic_scale(self):
+    #     for res_config in self:
+    #         res_config.pos_iface_electronic_scale = res_config.pos_is_posbox and res_config.pos_config_id.iface_electronic_scale or False
 
     @api.onchange('pos_trusted_config_ids')
     def _onchange_trusted_config_ids(self):
