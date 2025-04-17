@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--  Account Move Line Tree View  -->
+    <record id="account_move_line_view_tree"
+            model="ir.ui.view">
+        <field name="name">account.move.line.view.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <list edit="false"
+                  create="false"
+                  limit="40"
+                  count_limit="40"
+                  js_class="account_move_line_list_controller">
+                <field name="company_id" column_invisible="1"/>
+                <field name="payment_id" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="account_id"/>
+                <field name="journal_id" optional="hidden"/>
+                <field name="partner_id" optional="show"/>
+                <field name="date"/>
+                <field name="move_id"/>
+                <field name="name"/>
+                <field name="date_maturity" optional="hidden"/>
+                <field name="ref" optional="hidden"/>
+                <field name="analytic_distribution"
+                       widget="analytic_distribution"
+                       optional="hidden"/>
+                <field name="amount_residual_currency"
+                       decoration-danger="amount_residual_currency &lt; 0"
+                       string="Open Amount In Currency"/>
+                <field name="amount_residual"
+                       decoration-danger="amount_residual &lt; 0"
+                       string="Open Amount"/>
+                <button name="action_open_business_doc"
+                        type="object"
+                        string="View"
+                        class="btn btn-sm btn-secondary"/>
+            </list>
+        </field>
+    </record>
+</odoo>

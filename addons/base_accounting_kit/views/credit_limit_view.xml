@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--  Partner View Form Inherited -->
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.base.accounting.kit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="inside">
+                <group string="Credit Limit" invisible="not enable_credit_limit">
+                    <group>
+                        <field name="active_limit"/>
+                        <field name="enable_credit_limit" invisible="1"/>
+                        <field name="warning_stage" invisible="not active_limit"/>
+                        <field name="blocking_stage" invisible="not active_limit"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+<!--  Sale Order Form View Inherited  -->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.base.accounting.kit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="has_due" invisible="1"/>
+                <field name="is_warning" invisible="1"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-info" role="alert" style="height: 40px; margin-bottom:10px;"
+                     invisible="not has_due">
+                    This Customer's due amount is <strong><field name="due_amount"/></strong>.
+                </div>
+            </xpath>
+            <xpath expr="//sheet/div[@name='button_box']" position="after">
+                <div role="alert" class="alert alert-danger" style="height: 40px; margin-bottom:10px;"
+                     invisible="not is_warning">
+                    This customer's <strong>warning limit</strong> has been crossed.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

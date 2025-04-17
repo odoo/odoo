@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--Kit Account Tax Report Form View-->
+    <record id="accounting_tax_report_view" model="ir.ui.view">
+        <field name="name">kit.account.tax.report.view.form.inherit.base.accounting.kit</field>
+        <field name="model">kit.account.tax.report</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_report_view_form"/>
+        <field name="arch" type="xml">
+                <field name="journal_ids" position="replace"/>
+                <field name="target_move" position="replace"/>
+        </field>
+    </record>
+<!--Action Kit Account Tax Report-->
+    <record id="action_account_tax_report" model="ir.actions.act_window">
+        <field name="name">Tax Reports</field>
+        <field name="res_model">kit.account.tax.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="accounting_tax_report_view"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+<!--Menu Tax Report-->
+    <menuitem id="menu_tax_report"
+              name="Tax Report"
+              sequence="8"
+              action="action_account_tax_report"
+              parent="base_accounting_kit.account_reports_audit"
+              groups="account.group_account_manager,account.group_account_user"/>
+</odoo>
