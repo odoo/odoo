@@ -336,7 +336,9 @@ export class KanbanController extends Component {
     }
 
     getExportableFields() {
-        return Object.keys(this.model.root.config.activeFields).map((e) => this.props.fields[e]);
+        return Object.keys(this.model.root.config.activeFields)
+            .map((e) => this.props.fields[e])
+            .filter((field) => field.type !== "properties");
     }
 
     async onSelectionChanged() {
