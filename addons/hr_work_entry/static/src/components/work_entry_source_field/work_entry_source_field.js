@@ -5,8 +5,8 @@ import { _t } from "@web/core/l10n/translation";
 export class WorkEntrySourceField extends RadioField {
     static template = "hr_work_entry.WorkEntrySourceField";
 
-    get isFullyFlexible() {
-        return !this.props.record.data.resource_calendar_id;
+    get isFlexible() {
+        return !this.props.record.data.resource_calendar_id || this.props.record.data.resource_calendar_id.flexible_hours;
     }
 
     get tooltipWarning() {
