@@ -910,3 +910,21 @@ class TestRepair(common.TransactionCase):
             'quantity': 1.0,
         })]
         self.assertEqual(repair_order.lot_id, sn_1)
+
+    def test_missing_production_location_raises_user_error(self):
+        """
+        Test that a missing production location raises a UserError when creating a warehouse.
+        """
+        company = Form(self.env['res.company'])
+        company.name = "ELCT Co."
+        company = company.save()
+        # mimic missing production location with intentional misconfiguration
+        prod_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', company.id)], limit=1)
+        if prod_location:
+            prod_location.usage = "internal"
+        with self.assertRaises(UserError):
+            self.env['stock.warehouse'].create({
+                'name': 'ELCT',
+                'code': 'ET',
+                'company_id': company.id,
+            })
