@@ -13,7 +13,9 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         category_a = self.env['product.public.category'].create({'name': "Category A"})
         category_b = self.env['product.public.category'].create({'name': "Category B"})
         test_product = self.env['product.template'].create({
-            'name': "Test product", 'public_categ_ids': [Command.link(category_a.id)]
+            'name': "Test product",
+            'public_categ_ids': [Command.link(category_a.id)],
+            'website_published': True,
         })
         slug = self.env['ir.http']._slug
 
