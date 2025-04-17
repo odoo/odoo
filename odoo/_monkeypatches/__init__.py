@@ -15,14 +15,6 @@ import sys
 import time
 from types import ModuleType, SimpleNamespace
 
-from .evented import patch_module as patch_evented
-
-
-def set_timezone_utc():
-    os.environ['TZ'] = 'UTC'  # Set the timezone
-    if hasattr(time, 'tzset'):
-        time.tzset()
-
 
 class PatchImportHook:
     """Register hooks that are run on import."""
@@ -62,15 +54,11 @@ sys.meta_path.insert(0, HOOK_IMPORT)
 
 
 def patch_init() -> None:
-    patch_evented()
-    set_timezone_utc()
+    os.environ['TZ'] = 'UTC'  # Set the timezone
+    if hasattr(time, 'tzset'):
+        time.tzset()
 
-    patch_module('codecs')
-    patch_module('win32')
     for submodule in pkgutil.iter_modules(__path__):
-        if submodule.name in ('codecs', 'evented', 'win32'):
-            continue
-
         HOOK_IMPORT.add_hook(submodule.name)
 
 
