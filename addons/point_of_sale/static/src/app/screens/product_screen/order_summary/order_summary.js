@@ -153,9 +153,6 @@ export class OrderSummary extends Component {
                         val,
                         Boolean(selectedLine.combo_line_ids?.length)
                     );
-                    for (const line of selectedLine.combo_line_ids) {
-                        line.setQuantity(val, true);
-                    }
                     if (result !== true) {
                         this.dialog.add(AlertDialog, result);
                         this.numberBuffer.reset();

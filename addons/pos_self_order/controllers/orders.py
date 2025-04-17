@@ -90,7 +90,7 @@ class PosSelfOrderController(http.Controller):
 
             fiscal_pos = preset_id.fiscal_position_id or pos_config.default_fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
             if len(line.combo_line_ids) > 0:
-                original_total = sum(line.combo_line_ids.mapped("combo_item_id").combo_id.mapped("base_price"))
+                original_total = sum(line.combo_line_ids.combo_item_id.combo_id.mapped("base_price"))
                 remaining_total = lst_price
                 factor = lst_price / original_total if original_total > 0 else 1
 

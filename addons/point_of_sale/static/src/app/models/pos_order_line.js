@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { getTaxesAfterFiscalPosition } from "@point_of_sale/app/models/utils/tax_utils";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { computeComboItemsPrice } from "./utils/compute_combo_items";
 
 export class PosOrderline extends Base {
     static pythonModel = "pos.order.line";
@@ -59,7 +60,9 @@ export class PosOrderline extends Base {
             }
         }
 
-        this.setUnitPrice(this.price_unit);
+        if (!this.product_id.isCombo()) {
+            this.setUnitPrice(this.price_unit);
+        }
     }
 
     get preparationKey() {
@@ -185,6 +188,10 @@ export class PosOrderline extends Base {
     }
 
     setDiscount(discount) {
+        if (this.product_id.isCombo()) {
+            this.combo_line_ids.forEach((line) => line.setDiscount(discount));
+            return;
+        }
         const parsed_discount =
             typeof discount === "number"
                 ? discount
@@ -214,6 +221,8 @@ export class PosOrderline extends Base {
         if (this.order_id.preset_id?.is_return) {
             quantity = -Math.abs(quantity);
         }
+
+        const old_quantity = this.qty;
 
         this.order_id.assertEditable();
         const quant =
@@ -267,6 +276,18 @@ export class PosOrderline extends Base {
                 )
             );
         }
+        if (this.combo_line_ids.length > 0) {
+            if (old_quantity) {
+                const val = quantity / old_quantity;
+                this.combo_line_ids.forEach((line) => {
+                    line.setQuantity(val * line.qty, true);
+                });
+            } else {
+                this.combo_line_ids.forEach((line) => {
+                    line.setQuantity(quantity, true);
+                });
+            }
+        }
         return true;
     }
 
@@ -289,38 +310,69 @@ export class PosOrderline extends Base {
     }
 
     canBeMergedWith(orderline) {
-        const ProductPrice = this.models["decimal.precision"].find(
+        if (orderline.product_id.isCombo()) {
+            return this.canBeMergedWithCombo(orderline);
+        }
+        return !orderline.isPartOfCombo() && this.checkEquivalentLine(this, orderline);
+    }
+
+    canBeMergedWithCombo(orderline) {
+        if (!this.product_id.isCombo()) {
+            return false;
+        }
+        for (const line of this.combo_line_ids) {
+            let line_ok = false;
+            for (const cline of orderline.combo_line_ids) {
+                if (line.product_id.id === cline.product_id.id) {
+                    if (this.checkEquivalentLine(line, cline)) {
+                        line_ok = true;
+                        break;
+                    }
+                }
+            }
+            if (!line_ok) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    checkEquivalentLine(lineA, lineB) {
+        const productPricePrecision = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"
         );
-        const price = ProductPrice.round(this.price_unit || 0);
-        const product = orderline.getProduct();
-        let order_line_price = product.getPrice(
-            orderline.order_id.pricelist_id,
-            this.getQuantity(),
-            0,
-            false,
-            product
-        );
-        order_line_price = this.currency.round(order_line_price);
+        const lineAPrice = productPricePrecision.round(lineA.price_unit || 0);
+        let lineBPrice = lineB.combo_parent_id
+            ? lineB.price_unit
+            : lineB
+                  .getProduct()
+                  .getPrice(
+                      lineA.order_id.pricelist_id,
+                      this.getQuantity(),
+                      0,
+                      false,
+                      lineB.getProduct()
+                  );
+        lineBPrice = this.currency.round(lineBPrice);
+        const isPriceEqual = this.currency.isZero(lineAPrice - lineBPrice - lineB.getPriceExtra());
 
         const isSameCustomerNote =
-            (Boolean(orderline.getCustomerNote()) === false &&
-                Boolean(this.getCustomerNote()) === false) ||
-            orderline.getCustomerNote() === this.getCustomerNote();
+            (Boolean(lineB.getCustomerNote()) === false &&
+                Boolean(lineA.getCustomerNote()) === false) ||
+            lineB.getCustomerNote() === lineA.getCustomerNote();
 
         // only orderlines of the same product can be merged
         return (
-            orderline.getNote() === this.getNote() &&
-            this.getProduct().id === orderline.getProduct().id &&
-            this.isPosGroupable() &&
+            lineB.getNote() === lineA.getNote() &&
+            lineA.getProduct().id === lineB.getProduct().id &&
+            lineA.isPosGroupable() &&
             // don't merge discounted orderlines
-            this.getDiscount() === 0 &&
-            this.currency.isZero(price - order_line_price - orderline.getPriceExtra()) &&
+            lineA.getDiscount() === 0 &&
+            isPriceEqual &&
             !this.isLotTracked() &&
-            this.full_product_name === orderline.full_product_name &&
+            lineA.full_product_name === lineB.full_product_name &&
             isSameCustomerNote &&
-            !this.refunded_orderline_id &&
-            !orderline.isPartOfCombo()
+            !lineA.refunded_orderline_id
         );
     }
 
@@ -335,7 +387,7 @@ export class PosOrderline extends Base {
         const unit_groupable = this.product_id.uom_id
             ? this.product_id.uom_id.is_pos_groupable
             : false;
-        return unit_groupable && !this.isPartOfCombo();
+        return unit_groupable;
     }
 
     merge(orderline) {
@@ -344,6 +396,18 @@ export class PosOrderline extends Base {
         this.update({
             pack_lot_ids: [["link", ...orderline.pack_lot_ids]],
         });
+        if (this.combo_line_ids?.length) {
+            for (const line of this.combo_line_ids) {
+                for (const otherLine of orderline.combo_line_ids) {
+                    if (otherLine.product_id.id === line.product_id.id) {
+                        this.update({
+                            pack_lot_ids: [["link", ...otherLine.pack_lot_ids]],
+                        });
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     prepareBaseLineForTaxesComputationExtraValues(customValues = {}) {
@@ -377,6 +441,9 @@ export class PosOrderline extends Base {
     }
 
     setUnitPrice(price) {
+        if (this.combo_parent_id) {
+            return;
+        }
         const ProductPrice = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"
         );
@@ -386,6 +453,43 @@ export class PosOrderline extends Base {
             ? 0
             : parseFloat("" + price);
         this.price_unit = ProductPrice.round(parsed_price || 0);
+        this.recomputePrice();
+    }
+
+    recomputePrice() {
+        if (this.combo_parent_id) {
+            return;
+        }
+        if (this.product_id.isCombo()) {
+            this.recomputeComboPrice();
+            this.price_unit = 0;
+            this.combo_line_ids.forEach((line) => {
+                line.price_subtotal = line.getPriceWithoutTax();
+                line.price_subtotal_incl = line.getPriceWithTax();
+            });
+            return;
+        }
+        this.price_subtotal = this.getPriceWithoutTax();
+        this.price_subtotal_incl = this.getPriceWithTax();
+    }
+
+    recomputeComboPrice() {
+        const decimalPrecision = this.models["decimal.precision"].getAll();
+        const parentProduct = this.product_id;
+        const parentComboLineIds = this.combo_line_ids.filter((cl) => !cl.is_extra_combo_line);
+        const parentComboExtraLineIds = this.combo_line_ids.filter((cl) => cl.is_extra_combo_line);
+        const productTemplateAttributeValueById =
+            this.models["product.template.attribute.value"].getAllBy("id");
+
+        computeComboItemsPrice(
+            parentProduct,
+            parentComboLineIds,
+            this.order_id.pricelist_id,
+            decimalPrecision,
+            productTemplateAttributeValueById,
+            parentComboExtraLineIds,
+            this.price_unit
+        );
     }
 
     getUnitPrice() {
@@ -666,7 +770,7 @@ export class PosOrderline extends Base {
         this.uiState.savedQuantity = this.qty;
     }
     getPriceExtra() {
-        return this.price_extra;
+        return this.price_extra || 0;
     }
     setPriceExtra(price_extra) {
         this.price_extra = parseFloat(price_extra) || 0.0;

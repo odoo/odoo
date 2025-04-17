@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { random5Chars } from "@point_of_sale/utils";
-import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
 
@@ -378,11 +377,7 @@ export class PosOrder extends Base {
     setPricelist(pricelist) {
         this.pricelist_id = pricelist ? pricelist : false;
 
-        const lines_to_recompute = this.lines.filter(
-            (line) =>
-                line.price_type === "original" &&
-                !(line.combo_line_ids?.length || line.combo_parent_id)
-        );
+        const lines_to_recompute = this.lines.filter((line) => line.price_type === "original");
 
         for (const line of lines_to_recompute) {
             const newPrice = line.product_id.getPrice(
@@ -394,41 +389,6 @@ export class PosOrder extends Base {
             );
             line.setUnitPrice(newPrice);
         }
-
-        const attributes_prices = {};
-        const combo_parent_lines = this.lines.filter(
-            (line) => line.price_type === "original" && line.combo_line_ids?.length
-        );
-        for (const pLine of combo_parent_lines) {
-            attributes_prices[pLine.id] = computeComboItems(
-                pLine.product_id,
-                pLine.combo_line_ids.map((cLine) => {
-                    if (cLine.attribute_value_ids) {
-                        return {
-                            combo_item_id: cLine.combo_item_id,
-                            configuration: {
-                                attribute_value_ids: cLine.attribute_value_ids,
-                            },
-                        };
-                    } else {
-                        return { combo_item_id: cLine.combo_item_id };
-                    }
-                }),
-                pricelist,
-                this.models["decimal.precision"].getAll(),
-                this.models["product.template.attribute.value"].getAllBy("id")
-            );
-        }
-        const combo_children_lines = this.lines.filter(
-            (line) => line.price_type === "original" && line.combo_parent_id
-        );
-        combo_children_lines.forEach((line) => {
-            line.setUnitPrice(
-                attributes_prices[line.combo_parent_id.id].find(
-                    (item) => item.combo_item_id.id === line.combo_item_id.id
-                ).price_unit
-            );
-        });
     }
 
     /**
