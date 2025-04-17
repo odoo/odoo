@@ -119,9 +119,6 @@ export function useModel(ModelClass, params, options = {}) {
  * @param {T} ModelClass
  * @param {Object} params
  * @param {Object} [options]
- * @param {Function} [options.onUpdate]
- * @param {Function} [options.onWillStart]
- * @param {Function} [options.onWillStartAfterLoad]
  * @param {Function} [options.lazy=false]
  * @returns {InstanceType<T>}
  */
@@ -142,7 +139,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
 
     const model = new ModelClass(component.env, params, services);
 
-    const onUpdate = options.onUpdate || (() => component.render(true));
+    const onUpdate = () => component.render(true);
     model.bus.addEventListener("update", onUpdate);
     onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
 
@@ -177,17 +174,8 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     }
     const race = new Race();
     const load = (props) => race.add(_load(props));
-    async function initialLoad() {
-        if (options.onWillStart) {
-            await options.onWillStart();
-        }
-        await load(component.props);
-        if (options.onWillStartAfterLoad) {
-            await options.onWillStartAfterLoad();
-        }
-    }
     onWillStart(() => {
-        const prom = initialLoad();
+        const prom = load(component.props);
         if (options.lazy) {
             // in-house error handling as we're out of willStart
             prom.catch((e) => {
