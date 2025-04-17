@@ -289,7 +289,7 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('pos_use_pricelist', 'pos_config_id', 'pos_journal_id')
     def _compute_pos_pricelist_id(self):
         for res_config in self:
-            currency_id = res_config.pos_journal_id.currency_id.id or res_config.pos_config_id.company_id.currency_id.id
+            currency_id = res_config.pos_config_id.currency_id.id
             pricelists_in_current_currency = self.env['product.pricelist'].search([
                 *self.env['product.pricelist']._check_company_domain(res_config.pos_config_id.company_id),
                 ('currency_id', '=', currency_id),
@@ -347,6 +347,6 @@ class ResConfigSettings(models.TransientModel):
             removed_trusted_configs = set(config.pos_config_id.trusted_config_ids.ids) - set(config.pos_trusted_config_ids.ids)
             for old in config.pos_config_id.trusted_config_ids:
                 if config.pos_config_id.id not in old.trusted_config_ids.ids:
-                    old._add_trusted_config_id(config.pos_config_id)
+                    old._handle_trusted_config_id(config.pos_config_id, add=True)
                 if old.id in removed_trusted_configs:
-                    old._remove_trusted_config_id(config.pos_config_id)
+                    old._handle_trusted_config_id(config.pos_config_id, add=False)

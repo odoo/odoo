@@ -321,6 +321,12 @@ class PosConfig(models.Model):
             pos_config.last_session_closing_date = session and session[0]['stop_at'].astimezone(timezone).date() or False
             pos_config.last_session_closing_cash = session and session[0]['cash_register_balance_end_real'] or 0
 
+    @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
+                 'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct',
+                 'default_preset_id', 'module_pos_appointment')
+    def _compute_local_data_integrity(self):
+        self.last_data_change = self.env.cr.now()
+
     # @api.depends('session_ids')
     # def _compute_current_session_user(self):
     #     for pos_config in self:
@@ -368,12 +374,9 @@ class PosConfig(models.Model):
     @api.constrains('pricelist_id', 'use_pricelist', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'payment_method_ids')
     def _check_currencies(self):
         for config in self:
-            if config.use_pricelist and config.pricelist_id and config.pricelist_id not in config.available_pricelist_ids:
-                raise ValidationError(_("The default pricelist must be included in the available pricelists."))
-
             # Check if the config's payment methods are compatible with its currency
             for pm in config.payment_method_ids:
-                if pm.journal_id and pm.journal_id.currency_id and pm.journal_id.currency_id != config.currency_id:
+                if pm.journal_id.currency_id and pm.journal_id.currency_id != config.currency_id:
                     raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
             if config.use_pricelist and any(config.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != config.currency_id)):
@@ -394,8 +397,10 @@ class PosConfig(models.Model):
     def _check_pricelists(self):
         self._check_companies()
         self = self.sudo()
+        if self.use_pricelist and self.pricelist_id and self.pricelist_id not in self.available_pricelist_ids:
+            raise ValidationError(_("The default pricelist must be included in the available pricelists."))
         if self.pricelist_id.company_id and self.pricelist_id.company_id != self.company_id:
-            raise UserError(
+            raise ValidationError(
                 _("The default pricelist must belong to no company or the company of the point of sale."))
 
     @api.constrains('company_id', 'available_pricelist_ids')
@@ -422,9 +427,10 @@ class PosConfig(models.Model):
     @api.constrains('trusted_config_ids')
     def _check_trusted_config_ids_currency(self):
         for config in self:
-            for trusted_config in config.trusted_config_ids:
-                if trusted_config.currency_id != config.currency_id:
-                    raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
+            if any(trusted_config.currency_id != config.currency_id for trusted_config in config.trusted_config_ids):
+                raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
+            # for trusted_config in config.trusted_config_ids:
+            #     if trusted_config.currency_id != config.currency_id:
 
     def _check_header_footer(self, values):
         if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
@@ -446,8 +452,8 @@ class PosConfig(models.Model):
             val = {
                 'name': _('POS Order %s', vals['name']),
                 'padding': 4,
-                'prefix': "%s/" % vals['name'],
-                'code': "pos.order",
+                'prefix': '%s/' % vals['name'],
+                'code': 'pos.order',
                 'company_id': vals.get('company_id', False),
                 'implementation': self._config_sequence_implementation(),
             }
@@ -463,31 +469,13 @@ class PosConfig(models.Model):
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_configs
 
-    def _reset_default_on_vals(self, vals):
-        if 'tip_product_id' in vals and not vals['tip_product_id'] and 'iface_tipproduct' in vals and vals['iface_tipproduct']:
-            default_product = self.env.ref('point_of_sale.product_product_tip', False)
-            if default_product:
-                vals['tip_product_id'] = default_product.id
-            else:
-                raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
-
-    def _update_preparation_printers_menuitem_visibility(self):
-        prepa_printers_menuitem = self.sudo().env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
-        if prepa_printers_menuitem:
-            prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
-
-    @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
-        'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment')
-    def _compute_local_data_integrity(self):
-        self.last_data_change = self.env.cr.now()
-
     def write(self, vals):
         self._check_header_footer(vals)
         self._reset_default_on_vals(vals)
         if ('is_order_printer' in vals and not vals['is_order_printer']):
             vals['printer_ids'] = [fields.Command.clear()]
 
-        bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
+        # bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
 
         self._preprocess_x2many_vals_from_settings_view(vals)
         vals = self._keep_new_vals(vals)
@@ -496,8 +484,8 @@ class PosConfig(models.Model):
             forbidden_fields = []
             for key in self._get_forbidden_change_fields():
                 if key in vals.keys():
-                    if bypass_payment_method_ids_forbidden_change and key == 'payment_method_ids':
-                        continue
+                    # if bypass_payment_method_ids_forbidden_change and key == 'payment_method_ids':
+                    #     continue
                     field_name = self._fields[key].get_description(self.env)["string"]
                     forbidden_fields.append(field_name)
 
@@ -519,6 +507,26 @@ class PosConfig(models.Model):
         if 'is_order_printer' in vals:
             self._update_preparation_printers_menuitem_visibility()
         return result
+
+    def unlink(self):
+        # Delete the pos.config records first then delete the sequences linked to them
+        sequences_to_delete = self.sequence_id | self.sequence_line_id
+        res = super(PosConfig, self).unlink()
+        sequences_to_delete.unlink()
+        return res
+
+    def _reset_default_on_vals(self, vals):
+        if vals.get('iface_tipproduct') and 'tip_product_id' in vals and not vals['tip_product_id']:
+            default_product = self.env.ref('point_of_sale.product_product_tip', False)
+            if default_product:
+                vals['tip_product_id'] = default_product.id
+            else:
+                raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
+
+    def _update_preparation_printers_menuitem_visibility(self):
+        prepa_printers_menuitem = self.env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
+        if prepa_printers_menuitem:
+            prepa_printers_menuitem.active = self.env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
 
     def _preprocess_x2many_vals_from_settings_view(self, vals):
         """ From the res.config.settings view, changes in the x2many fields always result to an array of link commands or a single set command.
@@ -575,20 +583,12 @@ class PosConfig(models.Model):
     def _get_forbidden_change_fields(self):
         return ['module_pos_restaurant', 'payment_method_ids']
 
-    def unlink(self):
-        # Delete the pos.config records first then delete the sequences linked to them
-        sequences_to_delete = self.sequence_id | self.sequence_line_id
-        res = super(PosConfig, self).unlink()
-        sequences_to_delete.unlink()
-        return res
-
-    # TODO-JCB: Maybe we can move this logic in `_reset_default_on_vals`
     def _set_fiscal_position(self):
         for config in self:
             if config.tax_regime_selection and config.default_fiscal_position_id and (config.default_fiscal_position_id.id not in config.fiscal_position_ids.ids):
-                config.fiscal_position_ids = [(4, config.default_fiscal_position_id.id)]
+                config.fiscal_position_ids = [Command.link(config.default_fiscal_position_id.id)]
             elif not config.tax_regime_selection and config.fiscal_position_ids.ids:
-                config.fiscal_position_ids = [(5, 0, 0)]
+                config.fiscal_position_ids = [Command.clear()]
 
     def _check_modules_to_install(self):
         # determine modules to install
@@ -615,19 +615,18 @@ class PosConfig(models.Model):
                 if field.type in ('boolean', 'selection') and hasattr(field, 'implied_group'):
                     field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
                     field_groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in field_group_xmlids))
-                    field_groups.write({'implied_ids': [(4, self.env.ref(field.implied_group).id)]})
-
+                    field_groups.write({'implied_ids': [Command.link(self.env.ref(field.implied_group).id)]})
 
     def execute(self):
+        # TODO: need to test
         return {
              'type': 'ir.actions.client',
              'tag': 'reload',
          }
 
-    # Methods to open the POS
     def _action_to_open_ui(self):
         if not self.current_session_id:
-            self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
+            self.env['pos.session'].create({'config_id': self.id})
         pos_url = '/pos/ui/%d?from_backend=True' % self.id
         debug = request and request.session.debug
         if debug:
@@ -676,7 +675,6 @@ class PosConfig(models.Model):
 
     def open_existing_session_cb(self):
         """ close session button
-
         access session form to validate entries
         """
         self.ensure_one()
@@ -686,7 +684,7 @@ class PosConfig(models.Model):
         self._check_pricelists()  # The pricelist company might have changed after the first opening of the session
         return {
             'name': _('Session'),
-            'view_mode': 'form,list',
+            'view_mode': 'form, list',
             'res_model': 'pos.session',
             'res_id': session_id,
             'view_id': False,
@@ -694,57 +692,57 @@ class PosConfig(models.Model):
         }
 
     def open_opened_rescue_session_form(self):
+        # TODO: Need to check rescue session flow
         rescue_session_ids = self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue)
-
+        action = {
+            'name': _('Rescue Sessions'),
+            'res_model': 'pos.session',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+        }
         if len(rescue_session_ids) == 1:
-            return {
-                'res_model': 'pos.session',
-                'view_mode': 'form',
-                'res_id': rescue_session_ids.id,
-                'type': 'ir.actions.act_window',
-            }
+            action['res_id'] = rescue_session_ids.id
         else:
-            return {
-                'name': _('Rescue Sessions'),
-                'res_model': 'pos.session',
-                'view_mode': 'list,form',
-                'domain': [('id', 'in', rescue_session_ids.ids)],
-                'type': 'ir.actions.act_window',
-            }
+            action['view_mode'] = 'list,form'
+            action['domain'] = [('id', 'in', rescue_session_ids.ids)]
+        return action
 
-    def _link_same_non_cash_payment_methods(self, source_config):
-        pms = source_config.payment_method_ids.filtered(lambda pm: not pm.is_cash_count)
-        if pms:
-            self.payment_method_ids = [Command.link(pm.id) for pm in pms]
+    # def _link_same_non_cash_payment_methods(self, source_config):
+    #     # TODO: not used anymore
+    #     pms = source_config.payment_method_ids.filtered(lambda pm: not pm.is_cash_count)
+    #     if pms:
+    #         self.payment_method_ids = [Command.link(pm.id) for pm in pms]
 
-    def _is_journal_exist(self, journal_code, name, company_id):
-        account_journal = self.env['account.journal']
-        existing_journal = account_journal.search([
-            ('name', '=', name),
-            ('code', '=', journal_code),
-            ('company_id', '=', company_id),
-        ], limit=1)
+    # def _is_journal_exist(self, journal_code, name, company_id):
+    #     # TODO: not used anymore
+    #     account_journal = self.env['account.journal']
+    #     existing_journal = account_journal.search([
+    #         ('name', '=', name),
+    #         ('code', '=', journal_code),
+    #         ('company_id', '=', company_id),
+    #     ], limit=1)
+    #
+    #     return existing_journal.id or account_journal.create({
+    #         'name': name,
+    #         'code': journal_code,
+    #         'type': 'cash',
+    #         'company_id': company_id,
+    #     }).id
 
-        return existing_journal.id or account_journal.create({
-            'name': name,
-            'code': journal_code,
-            'type': 'cash',
-            'company_id': company_id,
-        }).id
-
-    def _is_pos_pm_exist(self, name, journal_id, company_id):
-        pos_payment = self.env['pos.payment.method']
-        existing_pos_cash_pm = pos_payment.search([
-            ('name', '=', name),
-            ('journal_id', '=', journal_id),
-            ('company_id', '=', company_id),
-        ], limit=1)
-
-        return existing_pos_cash_pm.id or pos_payment.create({
-            'name': name,
-            'journal_id': journal_id,
-            'company_id': company_id,
-        }).id
+    # def _is_pos_pm_exist(self, name, journal_id, company_id):
+    #     # TODO: not used anymore
+    #     pos_payment = self.env['pos.payment.method']
+    #     existing_pos_cash_pm = pos_payment.search([
+    #         ('name', '=', name),
+    #         ('journal_id', '=', journal_id),
+    #         ('company_id', '=', company_id),
+    #     ], limit=1)
+    #
+    #     return existing_pos_cash_pm.id or pos_payment.create({
+    #         'name': name,
+    #         'journal_id': journal_id,
+    #         'company_id': company_id,
+    #     }).id
 
     def get_limited_product_count(self):
         config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', DEFAULT_LIMIT_LOAD_PRODUCT)
@@ -782,19 +780,23 @@ class PosConfig(models.Model):
 
     def action_pos_config_modal_edit(self):
         return {
-            'view_mode': 'form',
+            'name': _('Edit Point of Sale'),
             'res_model': 'pos.config',
+            'view_mode': 'form',
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_id': self.id,
             'context': {'pos_config_open_modal': True},
         }
 
-    def _add_trusted_config_id(self, config_id):
-        self.trusted_config_ids += config_id
+    def _handle_trusted_config_id(self, config_id, add=True):
+        if add:
+            self.trusted_config_ids += config_id
+        else:
+            self.trusted_config_ids -= config_id
 
-    def _remove_trusted_config_id(self, config_id):
-        self.trusted_config_ids -= config_id
+    # def _remove_trusted_config_id(self, config_id):
+    #     self.trusted_config_ids -= config_id
 
     def _get_payment_method(self, payment_type):
         for pm in self.payment_method_ids:
@@ -803,7 +805,7 @@ class PosConfig(models.Model):
         return False
 
     def _get_special_products(self):
-        return self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
+        return self.env.ref('point_of_sale.product_product_tip', False) or self.env['product.product']
 
     def update_customer_display(self, order, device_uuid):
         self.ensure_one()
@@ -909,6 +911,7 @@ class PosConfig(models.Model):
         return [self.env.ref(record).id for record in recordRefs if self.env.ref(record, raise_if_not_found=False)]
 
     def load_demo_data(self):
+        # TODO: need to check context is not used anywhere else
         self = self.with_context(bypass_categories_forbidden_change=True)
         xml_id = self.get_external_id().get(self.id) or self._get_default_demo_data_xml_id()
         loaders = self._get_demo_data_loader_methods()
