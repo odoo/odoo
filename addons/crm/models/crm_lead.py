@@ -429,13 +429,17 @@ class CrmLead(models.Model):
     @api.depends('partner_id')
     def _compute_contact_name(self):
         """ compute the new values when partner_id has changed """
-        for lead in self:
+        to_reset = self.filtered(lambda l: not l.partner_id)
+        to_reset.contact_name = False
+        for lead in (self - to_reset):
             lead.update(lead._prepare_contact_name_from_partner(lead.partner_id))
 
     @api.depends('partner_id')
     def _compute_partner_name(self):
         """ compute the new values when partner_id has changed """
-        for lead in self:
+        to_reset = self.filtered(lambda l: not l.partner_id)
+        to_reset.partner_name = False
+        for lead in (self - to_reset):
             lead.update(lead._prepare_partner_name_from_partner(lead.partner_id))
 
     @api.depends('partner_id')
