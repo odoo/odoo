@@ -1185,47 +1185,55 @@ export class Runner {
      * @template {false | () => Job} C
      * @param {T} fn
      * @param {C} getCurrent
-     * @returns {typeof taggedFn}
+     * @returns {typeof configurableFn}
      */
     _addConfigurators(fn, getCurrent) {
         /**
-         * @typedef {((...args: DropFirst<Parameters<T>>) => ConfigurableFunction) & {
-         *  readonly config: typeof configure;
-         *  readonly current: C extends false ? never : CurrentConfigurators;
-         *  readonly debug: typeof taggedFn;
-         *  readonly multi: (count: number) => typeof taggedFn;
-         *  readonly only: typeof taggedFn;
-         *  readonly skip: typeof taggedFn;
-         *  readonly tags: typeof addTags;
-         *  readonly todo: typeof taggedFn;
-         *  readonly timeout: (ms: number) => typeof taggedFn;
-         * }} ConfigurableFunction
+         * @typedef {((...args: DropFirst<Parameters<T>>) => Configurators) & Configurators} ConfigurableFunction
+         *
+         * @typedef {{
+         *  readonly debug: ConfigurableFunction;
+         *  readonly only: ConfigurableFunction;
+         *  readonly skip: ConfigurableFunction;
+         *  readonly todo: ConfigurableFunction;
+         *  readonly config: (...configs: JobConfig[]) => Configurators;
+         *  readonly current: C extends false ? never : Configurators;
+         *  readonly multi: (count: number) => Configurators;
+         *  readonly tags: (...tagNames: string[]) => Configurators;
+         *  readonly timeout: (ms: number) => Configurators;
+         * }} Configurators
          */
 
-        /**
-         * Adds tags to the current test/suite.
-         *
-         * Tags can be a string, a list of strings, or a spread of strings.
-         *
-         * @param  {...(string | Iterable<string>)} tags
-         * @returns {ConfigurableFunction}
-         * @example
-         *  // Will be tagged with "desktop" and "ui"
-         *  test.tags("desktop", "ui")("my test", () => { ... });
-         *  test.tags(["desktop", "ui"])("my test", () => { ... });
-         * @example
-         *  test.tags`mobile,ui`("my mobile test", () => { ... });
-         */
-        const addTags = (...rawTags) => {
-            if (rawTags[0]?.raw) {
-                rawTags = String.raw(...rawTags).split(/\s*,\s*/g);
-            }
+        // GETTER MODIFIERS
 
-            const tagNames = rawTags.flatMap(ensureArray);
-            currentConfig.tags.push(...getTags(tagNames));
+        /** @type {Configurators["current"]} */
+        const current = getCurrent && (() => this._createCurrentConfigurators(getCurrent));
 
-            return taggedFn;
+        /** @type {Configurators["debug"]} */
+        const debug = () => {
+            tags("debug");
+            return configurableFn;
         };
+
+        /** @type {Configurators["only"]} */
+        const only = () => {
+            tags("only");
+            return configurableFn;
+        };
+
+        /** @type {Configurators["skip"]} */
+        const skip = () => {
+            tags("skip");
+            return configurableFn;
+        };
+
+        /** @type {Configurators["todo"]} */
+        const todo = () => {
+            tags("todo");
+            return configurableFn;
+        };
+
+        // FUNCTION MODIFIERS
 
         /**
          * Modifies the current test/suite configuration.
@@ -1233,48 +1241,78 @@ export class Runner {
          * - `timeout`: sets the timeout for the current test/suite;
          * - `multi`: sets the number of times the current test/suite will be run.
          *
-         * @param  {...JobConfig} configs
-         * @returns {ConfigurableFunction}
+         * @type {Configurators["config"]}
          * @example
          *  // Will timeout each of its tests after 10 seconds
-         *  describe.config({ timeout: 10_000 })("Expensive tests", () => { ... });
+         *  describe.config({ timeout: 10_000 });
+         *  describe("Expensive tests", () => { ... });
          * @example
          *  // Will be run 100 times
-         *  test.config({ multi: 100 })("non-deterministic test", async () => { ... });
+         *  test.config({ multi: 100 });
+         *  test("non-deterministic test", async () => { ... });
          */
-        const configure = (...configs) => {
+        const config = (...configs) => {
             $assign(currentConfig, ...configs);
-
-            return taggedFn;
+            return configurators;
         };
 
+        /** @type {Configurators["multi"]} */
+        const multi = (count) => {
+            currentConfig.multi = count;
+            return configurators;
+        };
+
+        /**
+         * Adds tags to the current test/suite.
+         *
+         * Tags can be a string, a list of strings, or a spread of strings.
+         *
+         * @type {Configurators["tags"]}
+         * @example
+         *  // Will be tagged with "desktop" and "ui"
+         *  test.tags("desktop", "ui");
+         *  test("my test", () => { ... });
+         * @example
+         *  test.tags("mobile");
+         *  test("my mobile test", () => { ... });
+         */
+        const tags = (...tagNames) => {
+            currentConfig.tags.push(...getTags(tagNames));
+            return configurators;
+        };
+
+        /** @type {Configurators["timeout"]} */
+        const timeout = (ms) => {
+            currentConfig.timeout = ms;
+            return configurators;
+        };
+
+        const configuratorGetters = { debug, only, skip, todo };
+        const configuratorMethods = { config, multi, tags, timeout };
+        if (current) {
+            configuratorGetters.current = current;
+        }
+        /** @type {Configurators} */
+        const configurators = { ...configuratorGetters, ...configuratorMethods };
+
         /** @type {ConfigurableFunction} */
-        const taggedFn = (...args) => {
+        const configurableFn = (...args) => {
             const jobConfig = { ...currentConfig };
             currentConfig = { tags: [] };
             return fn.call(this, jobConfig, ...args);
         };
 
-        /** @type {{ tags: Tag[], [key: string]: any }} */
-        let currentConfig = { tags: [] };
-        $defineProperties(taggedFn, {
-            config: { get: configure },
-            debug: { get: () => addTags("debug") },
-            multi: { get: () => (count) => configure({ multi: count }) },
-            only: { get: () => addTags("only") },
-            skip: { get: () => addTags("skip") },
-            tags: { get: () => addTags },
-            timeout: { get: () => (ms) => configure({ timeout: ms }) },
-            todo: { get: () => addTags("todo") },
-        });
-
-        if (getCurrent) {
-            $defineProperties(taggedFn, {
-                current: { get: () => this._createCurrentConfigurators(getCurrent) },
-            });
+        const properties = {};
+        for (const [key, getter] of $entries(configuratorGetters)) {
+            properties[key] = { get: getter };
+        }
+        for (const [key, getter] of $entries(configuratorMethods)) {
+            properties[key] = { value: getter };
         }
 
-        return taggedFn;
+        /** @type {{ tags: Tag[], [key: string]: any }} */
+        let currentConfig = { tags: [] };
+        return $defineProperties(configurableFn, properties);
     }
 
     /**

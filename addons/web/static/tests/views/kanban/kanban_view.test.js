@@ -13519,7 +13519,8 @@ test("group by numeric field (with aggregator)", async () => {
     expect.verifySteps(["web_read_group"]);
 });
 
-test.tags("desktop")("drag and drop records and quickly open a record", async () => {
+test.tags("desktop");
+test("drag and drop records and quickly open a record", async () => {
     Partner._views["kanban,false"] = `
         <kanban>
             <templates>
