@@ -57,6 +57,7 @@ class ResConfigSettings(models.TransientModel):
     prepayment_percent = fields.Float(
         related='company_id.prepayment_percent',
         readonly=False)
+    downpayment_account_id = fields.Many2one(related='company_id.downpayment_account_id', readonly=False)
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")

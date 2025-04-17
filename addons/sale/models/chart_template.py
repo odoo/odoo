@@ -6,5 +6,5 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _get_property_accounts(self, additional_properties):
         property_accounts = super()._get_property_accounts(additional_properties)
-        property_accounts['property_account_downpayment_categ_id'] = 'product.category'
+        property_accounts['downpayment_account_id'] = 'res.company'
         return property_accounts

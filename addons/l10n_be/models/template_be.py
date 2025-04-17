@@ -15,6 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'a400',
             'property_account_payable_id': 'a440',
+            'downpayment_account_id': 'a46',
         }
 
     @template('be', 'res.company')

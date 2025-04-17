@@ -14,6 +14,12 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
     def setUpClass(cls):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency('EUR')
+        cls.company_data['company'].downpayment_account_id = cls.env['account.account'].create({
+            'name': 'Downpayment account',
+            'account_type': 'liability_current',
+            'code': 'TestDownpayment',
+            'reconcile': True,
+        })
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -213,7 +219,6 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             {'name': "Down Payments",       'tax_ids': [],                          'price_subtotal': 0.0},
             {'name': down_payment_label,    'tax_ids': [],                          'price_subtotal': 0.0},
             {'name': down_payment_label,    'tax_ids': tax_15.ids,                  'price_subtotal': 0.0},
-            {'name': down_payment_label,    'tax_ids': tax_15.ids,                  'price_subtotal': 0.0},
             {'name': down_payment_label,    'tax_ids': (tax_10 + tax_15).ids,       'price_subtotal': 0.0},
         ])
 
@@ -224,12 +229,12 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_tax': 735.0,
             'amount_total': 4935.0,
         }])
+        account_id = dp_invoice.company_id.downpayment_account_id.id
         self.assertRecordValues(dp_invoice.line_ids, [
             # Down payment product lines:
-            {'account_id': revenue_account_1.id,    'tax_ids': [],                      'balance': -300.0},
-            {'account_id': revenue_account_1.id,    'tax_ids': tax_15.ids,              'balance': -1500.0},
-            {'account_id': revenue_account_2.id,    'tax_ids': tax_15.ids,              'balance': -900.0},
-            {'account_id': revenue_account_1.id,    'tax_ids': (tax_10 + tax_15).ids,   'balance': -1500.0},
+            {'account_id': account_id,    'tax_ids': [],                      'balance': -300.0},
+            {'account_id': account_id,    'tax_ids': tax_15.ids,              'balance': -2400.0},
+            {'account_id': account_id,    'tax_ids': (tax_10 + tax_15).ids,   'balance': -1500.0},
             # Tax 15%:
             {'account_id': tax_account.id,          'tax_ids': [],                      'balance': -585.0},
             # Tax 10%:
@@ -262,10 +267,9 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             # Down payment section line:
             {'account_id': False,                   'tax_ids': [],                      'balance': 0.0},
             # Down payment product lines:
-            {'account_id': revenue_account_1.id,    'tax_ids': [],                      'balance': 300.0},
-            {'account_id': revenue_account_1.id,    'tax_ids': tax_15.ids,              'balance': 1500.0},
-            {'account_id': revenue_account_2.id,    'tax_ids': tax_15.ids,              'balance': 900.0},
-            {'account_id': revenue_account_1.id,    'tax_ids': (tax_10 + tax_15).ids,   'balance': 1500.0},
+            {'account_id': account_id,              'tax_ids': [],                      'balance': 300.0},
+            {'account_id': account_id,              'tax_ids': tax_15.ids,              'balance': 2400.0},
+            {'account_id': account_id,              'tax_ids': (tax_10 + tax_15).ids,   'balance': 1500.0},
             # Tax 15%:
             {'account_id': tax_account.id,          'tax_ids': [],                      'balance': -1365.0},
             # Tax 10%:
@@ -358,8 +362,10 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             {'tax_ids': [],                     'balance': 300.0},
             # Down payment 2:
             {'tax_ids': tax_15.ids,             'balance': 200.0},
-            # Tax 15%:
-            {'tax_ids': [],                     'balance': -120.0},
+            # Tax 15% - on account income account:
+            {'tax_ids': [],                     'balance': -150.0},
+            # Tax 15% - on downpayment account, we need to add the 30 we removed on dp_invoice_2:
+            {'tax_ids': [],                     'balance': 30.0},
             # Receivable line:
             {'tax_ids': [],                     'balance': 620.0},
         ])
@@ -441,7 +447,9 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
                 # Down payment:
                 {'tax_ids': tax_15.ids,             'amount_currency': 360.0,       'balance': 180.0},
                 # Tax 15%:
-                {'tax_ids': [],                     'amount_currency': -126.0,      'balance': -63.0},
+                {'tax_ids': [],                     'amount_currency': -180.0,      'balance': -90.0},
+                # Tax 15%:
+                {'tax_ids': [],                     'amount_currency': 54.0,        'balance': 27.0},
                 # Receivable line:
                 {'tax_ids': [],                     'amount_currency': 966.0,       'balance': 483.0},
             ])
@@ -823,3 +831,38 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             # Receivable line:
             {'tax_ids': [],                     'analytic_distribution': False,                                 'balance': 3375.0},
         ])
+
+    def test_downpayment_invoice_lines_with_down_payment_account(self):
+        # Make a sale order with multiple lines. Total amount of sale order is equal to 1680$
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'product_id': self.company_data['product_order_sales_price'].id,
+                    'product_uom_qty': 2,
+                }),
+                Command.create({
+                    'product_id': self.company_data['product_order_cost'].id,
+                    'product_uom_qty': 3,
+                }),
+            ]
+        })
+        sale_order.action_confirm()
+        # Make a down payment of 50%
+        payment_params = {
+            'advance_payment_method': 'percentage',
+            'amount': 50,
+            'sale_order_ids': [Command.set(sale_order.ids)],
+        }
+        downpayment = self.env['sale.advance.payment.inv'].create(payment_params)
+        downpayment.create_invoices()
+        invoice = sale_order.invoice_ids
+        # Make sure we only have one line and we don't split into multiple lines
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+        self.assertEqual(invoice.invoice_line_ids.account_id.id, self.company_data['company'].downpayment_account_id.id)
+        # We should have half the amount of the Sale Order -> 840$
+        self.assertEqual(invoice.amount_total, 840)
