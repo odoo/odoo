@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_membership.MembersPageOption">
+        <BuilderContext action="'websiteConfig'">
+            <BuilderRow label.translate="Location">
+                <BuilderCheckbox actionParam="{views: ['website_membership.opt_index_country']}" />
+            </BuilderRow>
+            <BuilderRow tooltip.translate="Ensure you add your Google API Key in your settings to enable the feature" label.translate="World Map">
+                <BuilderCheckbox actionParam="{views: ['website_membership.opt_index_google_map']}" />
+            </BuilderRow>
+        </BuilderContext>
+    </t>
+
+</templates>
