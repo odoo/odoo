@@ -237,7 +237,7 @@ class HrEmployeePrivate(models.Model):
         self._check_private_fields(field_names)
         self.flush_recordset(field_names)
         public = self.env['hr.employee.public'].browse(self._ids)
-        public.fetch(field_names)
+        public.sudo().fetch(field_names)
         self._copy_cache_from(public, field_names)
 
     def _check_private_fields(self, field_names):
