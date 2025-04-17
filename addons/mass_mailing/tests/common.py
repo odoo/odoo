@@ -110,8 +110,13 @@ class MassMailCase(MailCase, MockLinkTracker):
             # check input
             invalid = set(recipient_info.keys()) - {
                 'content',
+                # email_to
                 'email', 'email_to_mail', 'email_to_recipients',
+                # mail.mail
                 'mail_values',
+                # email
+                'email_values',
+                # trace
                 'partner', 'record', 'trace_status',
                 'failure_type', 'failure_reason',
             }
@@ -164,6 +169,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                     author = self.env.user.partner_id
 
                 # mail.mail specific values to check
+                email_values = recipient_info.get('email_values', {})
                 fields_values = {'mailing_id': mailing}
                 if recipient_info.get('mail_values'):
                     fields_values.update(recipient_info['mail_values'])
@@ -187,6 +193,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                             content=content,
                             email_to_recipients=email_to_recipients,
                             fields_values=fields_values,
+                            email_values=email_values,
                         )
                 # specific if email is False -> could have troubles finding it if several falsy traces
                 elif not email and status in ('cancel', 'bounce'):
@@ -196,6 +203,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                         content=content,
                         email_to_recipients=email_to_recipients,
                         fields_values=fields_values,
+                        email_values=email_values,
                     )
                 else:
                     self.assertMailMailWEmails(
@@ -204,6 +212,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                         content=content,
                         email_to_recipients=email_to_recipients,
                         fields_values=fields_values,
+                        email_values=email_values,
                     )
 
             if link_info and not mail_not_created:
