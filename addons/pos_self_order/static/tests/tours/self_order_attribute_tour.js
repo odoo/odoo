@@ -56,6 +56,7 @@ registry.category("web_tour.tours").add("self_multi_attribute_selector", {
 registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
     steps: () => [
         Utils.clickBtn("Order Now"),
+        ProductPage.waitProduct("Chair"),
         ProductPage.clickProduct("Chair"),
         ...ProductPage.setupAttribute([{ name: "Color", value: "White" }]),
         Utils.clickBtn("Checkout"),

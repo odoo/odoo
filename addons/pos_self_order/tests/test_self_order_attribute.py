@@ -85,6 +85,10 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         pos_categ_chairs = self.env['pos.category'].create({
             'name': 'Chairs',
         })
+        self.pos_config.write({
+            'iface_available_categ_ids': [(4, pos_categ_chairs.id)]
+        })
+
         color_attribute = self.env['product.attribute'].create({
             'name': 'Color',
             'create_variant': 'always',
