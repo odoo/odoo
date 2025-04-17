@@ -115,6 +115,7 @@ class TestConfigManager(TransactionCase):
             'dev_mode': [],
             'shell_interface': None,
             'stop_after_init': False,
+            'graceful_reload': False,
             'osv_memory_count_limit': 0,
             'transient_age_limit': 1.0,
             'max_cron_threads': 2,
@@ -236,6 +237,7 @@ class TestConfigManager(TransactionCase):
             'dev_mode': [],  # blacklist for save, ignored from the config file
             'shell_interface': 'ipython',  # blacklist for save, read from the config file
             'stop_after_init': True,  # blacklist for save, read from the config file
+            'graceful_reload': True,
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,
@@ -356,6 +358,7 @@ class TestConfigManager(TransactionCase):
             'save': None,
             'shell_interface': None,
             'stop_after_init': False,
+            'graceful_reload': False,
             'root_path': f'{ROOT_PATH}/odoo',
             'translate_in': '',
             'translate_out': '',
@@ -507,6 +510,7 @@ class TestConfigManager(TransactionCase):
             'dev_mode': ['xml', 'reload'],
             'shell_interface': 'ipython',
             'stop_after_init': True,
+            'graceful_reload': True,
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,

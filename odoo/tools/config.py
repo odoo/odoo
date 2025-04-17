@@ -367,6 +367,9 @@ class configmanager(object):
             group.add_option("--limit-request", dest="limit_request", my_default=2**16,
                              help="Maximum number of request to be processed per worker (default 65536).",
                              type="int")
+            group.add_option("--graceful-reload", dest="graceful_reload", action="store_true", my_default=False,
+                             help="Posix and Prefork mode only, enables a graceful reload option by sending SIGHUP "
+                                  "to the main server PID.")
             parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
@@ -485,7 +488,7 @@ class configmanager(object):
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_city_db', 'geoip_country_db', 'dev_mode',
-                'shell_interface', 'limit_time_worker_cron',
+                'shell_interface', 'limit_time_worker_cron', 'graceful_reload',
         ]
 
         for arg in keys:
