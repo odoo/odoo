@@ -225,8 +225,8 @@ class TestIrCron(TransactionCase, CronMixinCase):
             def f(self):
                 frozen_datetime.tick(delta=timedelta(seconds=1))
                 state['call_count'] += 1
-                self.env['ir.cron']._notify_progress(
-                    done=1,
+                self.env['ir.cron']._commit_progress(
+                    processed=1,
                     remaining=CALL_TARGET - state['call_count']
                 )
             return f, state
@@ -236,8 +236,8 @@ class TestIrCron(TransactionCase, CronMixinCase):
             CALL_TARGET = 5
             def f(self):
                 state['call_count'] += 1
-                self.env['ir.cron']._notify_progress(
-                    done=1,
+                self.env['ir.cron']._commit_progress(
+                    processed=1,
                     remaining=CALL_TARGET - state['call_count']
                 )
             return f, state
@@ -254,8 +254,8 @@ class TestIrCron(TransactionCase, CronMixinCase):
             CALL_TARGET = 5
             def f(self):
                 state['call_count'] += 1
-                self.env['ir.cron']._notify_progress(
-                    done=1,
+                self.env['ir.cron']._commit_progress(
+                    processed=1,
                     remaining=CALL_TARGET - state['call_count']
                 )
                 self.env.cr.commit()
@@ -266,7 +266,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
             state = {'call_count': 0}
             def f(self):
                 state['call_count'] += 1
-                self.env['ir.cron']._notify_progress(done=1, remaining=0)
+                self.env['ir.cron']._commit_progress(1, remaining=0)
                 self.env.cr.commit()
                 raise ValueError
             return f, state
@@ -330,8 +330,8 @@ class TestIrCron(TransactionCase, CronMixinCase):
         def mocked_run(self):
             frozen_datetime.tick(delta=timedelta(seconds=mocked_run_state['duration']))
             mocked_run_state['call_count'] += 1
-            self.env['ir.cron']._notify_progress(
-                done=1,
+            self.env['ir.cron']._commit_progress(
+                processed=1,
                 remaining=CALL_TARGET - mocked_run_state['call_count'],
             )
 

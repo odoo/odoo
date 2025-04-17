@@ -7,6 +7,7 @@ import os
 import psycopg2
 import psycopg2.errors
 import typing
+import warnings
 from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
@@ -757,7 +758,7 @@ class IrCron(models.Model):
         :param int remaining: the number of tasks left to process
         :param bool deactivate: whether the cron will be deactivated
         """
-        # TODO deprecate in favor of the other method
+        warnings.warn("Since 19.0, use _commit_progress", DeprecationWarning)
         if not (progress_id := self.env.context.get('ir_cron_progress_id')):
             return
         if done < 0 or remaining < 0:
