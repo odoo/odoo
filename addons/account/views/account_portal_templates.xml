@@ -1,7 +1,7 @@
 <odoo>
     <template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_breadcrumbs" priority="30">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'invoice'" t-attf-class="breadcrumb-item #{'active ' if not invoice else ''}">
+            <li name="invoices_breadcrumb" t-if="page_name == 'invoice'" t-attf-class="breadcrumb-item #{'active ' if not invoice else ''}">
                 <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices &amp; Bills</a>
                 <t t-else="">Invoices &amp; Bills</t>
             </li>
@@ -72,7 +72,7 @@
                             t-att-class="'text-danger' if invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else ''">
                             <span t-field="invoice.invoice_date_due"/>
                         </td>
-                        <td class="text-end pe-3"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
+                        <td name="invoice_amount" class="text-end pe-3"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                         <td name="invoice_status">
                             <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
                                 <span t-if="invoice.currency_id.is_zero(invoice.amount_residual)"
