@@ -468,21 +468,12 @@ export class FormController extends Component {
     getStaticActionMenuItems() {
         const { activeActions } = this.archInfo;
         return {
-            archive: {
-                isAvailable: () => this.archiveEnabled && this.model.root.isActive,
+            addPropertyFieldValue: {
+                isAvailable: () => activeActions.addPropertyFieldValue,
                 sequence: 10,
-                description: _t("Archive"),
-                icon: "oi oi-archive",
-                callback: () => {
-                    this.dialogService.add(ConfirmationDialog, this.archiveDialogProps);
-                },
-            },
-            unarchive: {
-                isAvailable: () => this.archiveEnabled && !this.model.root.isActive,
-                sequence: 20,
-                icon: "oi oi-unarchive",
-                description: _t("Unarchive"),
-                callback: () => this.model.root.unarchive(),
+                icon: "fa fa-cogs",
+                description: _t("Edit Properties"),
+                callback: () => this.model.bus.trigger("PROPERTY_FIELD:EDIT"),
             },
             duplicate: {
                 isAvailable: () => activeActions.create && activeActions.duplicate,
@@ -491,20 +482,30 @@ export class FormController extends Component {
                 description: _t("Duplicate"),
                 callback: () => this.duplicateRecord(),
             },
+            archive: {
+                isAvailable: () => this.archiveEnabled && this.model.root.isActive,
+                sequence: 40,
+                description: _t("Archive"),
+                icon: "oi oi-archive",
+                callback: () => {
+                    this.dialogService.add(ConfirmationDialog, this.archiveDialogProps);
+                },
+            },
+            unarchive: {
+                isAvailable: () => this.archiveEnabled && !this.model.root.isActive,
+                sequence: 45,
+                icon: "oi oi-unarchive",
+                description: _t("Unarchive"),
+                callback: () => this.model.root.unarchive(),
+            },
             delete: {
                 isAvailable: () => activeActions.delete && !this.model.root.isNew,
-                sequence: 40,
+                sequence: 50,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),
+                class: "text-danger",
                 callback: () => this.deleteRecord(),
                 skipSave: true,
-            },
-            addPropertyFieldValue: {
-                isAvailable: () => activeActions.addPropertyFieldValue,
-                sequence: 50,
-                icon: "fa fa-cogs",
-                description: _t("Edit Properties"),
-                callback: () => this.model.bus.trigger("PROPERTY_FIELD:EDIT"),
             },
         };
     }
