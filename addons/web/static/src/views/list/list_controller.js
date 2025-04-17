@@ -256,6 +256,7 @@ export class ListController extends Component {
                 .filter((col) => !evaluateBooleanExpr(col.column_invisible, this.props.context))
                 .map((col) => this.props.fields[col.name])
                 .filter((field) => field.exportable !== false)
+                .filter((field) => field.type !== "properties")
         );
     }
 
