@@ -37,7 +37,7 @@ from contextlib import contextmanager, ExitStack
 from datetime import datetime
 from functools import lru_cache
 from itertools import zip_longest as izip_longest
-from unittest.mock import patch, _patch
+from unittest.mock import patch, _patch, Mock
 from xmlrpc import client as xmlrpclib
 
 import requests
@@ -272,6 +272,10 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         # allow localhost requests
         # TODO: also check port?
         url = werkzeug.urls.url_parse(r.url)
+        timeout = kw.get('timeout')
+        if timeout and timeout < 10:
+            _logger.getChild('requests').info('request %s with timeout %s increased to 10s during tests', url, timeout)
+            kw['timeout'] = 10
         if url.host in (HOST, 'localhost'):
             return _super_send(s, r, **kw)
         if url.scheme == 'file':
@@ -716,18 +720,23 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
     def setUp(self):
         super().setUp()
         self.http_request_key = self.canonical_tag
+        self.http_request_strict_check = False  # by default, don't be to strict
 
         def reset_http_key():
             self.http_request_key = None
+            self.http_request_strict_check = True
         self.addCleanup(reset_http_key)  # this should avoid to have a request executing during teardown
+
+    def mandatory_request_route(self, route):
+        return route == "/websocket"
 
     def check_test_cursor(self, operation):
         if odoo.modules.module.current_test != self:
             message = f"Trying to open a test cursor for {self.canonical_tag} while already in a test {odoo.modules.module.current_test.canonical_tag}"
-            _logger.error(message)
+            _logger.runbot(message)
             raise BadRequest(message)
         request = odoo.http.request
-        if not request:
+        if not request or isinstance(request, Mock):
             return
         if not hasattr(self, 'http_request_key') or not self.http_request_key:
             message = f'Using a test cursor without http_request_key, most likely between two tests on request {request.httprequest.path} in {module.current_test.canonical_tag}'
@@ -735,6 +744,13 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             raise BadRequest(message)
         http_request_key = request.httprequest.cookies.get(TEST_CURSOR_COOKIE_NAME)
         if not http_request_key:
+            if self.http_request_strict_check or self.mandatory_request_route(request.httprequest.path):
+                reason = 'for this path'
+                if self.http_request_strict_check:
+                    reason = 'after a browser_js call'
+                message = f'Using a test cursor without specified test on request {request.httprequest.path} in {module.current_test.canonical_tag} as been ignored since cookie is mandatory {reason}'
+                _logger.info(message)
+                raise BadRequest(message)
             if operation == '__init__':  # main difference with master, don't fail if no cookie is defined_check
                 message = f'Opening a test cursor without specified test on request {request.httprequest.path} in {module.current_test.canonical_tag}'
                 _logger.info(message)
@@ -742,7 +758,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         http_request_required_key = self.http_request_key
         if http_request_key != http_request_required_key:
             expected = http_request_required_key
-            _logger.error(
+            _logger.runbot(
                 'Request with path %s has been ignored during test as it '
                 'it does not contain the test_cursor cookie or it is expired.'
                 ' (required "%s", got "%s")',
@@ -1031,12 +1047,13 @@ class ChromeBrowser:
             self._result.cancel()
 
             self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
-            self._websocket_send('Browser.close')
+            self._websocket_request('Browser.close')
             self._logger.info("Closing websocket connection")
             self.ws.close()
         if self.chrome:
             self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
             self.chrome.terminate()
+            self.chrome.wait(15)
 
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
@@ -1720,7 +1737,14 @@ class Transport(xmlrpclib.Transport):
     def request(self, *args, **kwargs):
         self.cr.flush()
         self.cr.clear()
-        return super().request(*args, **kwargs)
+        test = module.current_test
+        if test:
+            check = test.http_request_strict_check
+            test.http_request_strict_check = False
+        res = super().request(*args, **kwargs)
+        if test:
+            test.http_request_strict_check = check
+        return res
 
 
 class JsonRpcException(Exception):
@@ -1762,6 +1786,9 @@ class HttpCase(TransactionCase):
         # setup an url opener helper
         self.opener = Opener(self.cr)
         self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = self.canonical_tag
+        # some test like test_webhook_send_and_receive may have a request that timeout, is not waited and causes errors in following tests.
+        # this shouldn't be possible in master thanks to the global lock but lets wait for remaining requests in all cases in stable.
+        self.addCleanup(self._wait_remaining_requests)
 
     def parse_http_location(self, location):
         """ Parse a Location http header typically found in 201/3xx
@@ -1907,6 +1934,7 @@ class HttpCase(TransactionCase):
         try:
             self.http_request_key = self.canonical_tag + '_browser_js'
             self.authenticate(login, login, browser=browser)
+            self.http_request_strict_check = True
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
             # test cursors, which uses different caches than this transaction.

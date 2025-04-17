@@ -120,6 +120,11 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
 
 
 class RequestHandler(werkzeug.serving.WSGIRequestHandler):
+    def __init__(self, *args, **kwargs):
+        self._sent_date_header = None
+        self._sent_server_header = None
+        super().__init__(*args, **kwargs)
+
     def setup(self):
         # timeout to avoid chrome headless preconnect during tests
         if config['test_enable'] or config['test_file']:
@@ -148,6 +153,27 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             # Do not keep processing requests.
             self.close_connection = True
             return
+
+        if keyword.casefold() == 'date':
+            if self._sent_date_header is None:
+                self._sent_date_header = value
+            elif self._sent_date_header == value:
+                return  # don't send the same header twice
+            else:
+                _logger.warning(
+                    "sending two different Date response headers: %r vs %r",
+                    self._sent_date_header, value)
+
+        if keyword.casefold() == 'server':
+            if self._sent_server_header is None:
+                self._sent_server_header = value
+            elif self._sent_server_header == value:
+                return  # don't send the same header twice
+            else:
+                _logger.warning(
+                    "sending two different Server response headers: %r vs %r",
+                    self._sent_server_header, value)
+
         super().send_header(keyword, value)
 
     def end_headers(self, *a, **kw):

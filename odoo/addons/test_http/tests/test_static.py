@@ -407,6 +407,14 @@ class TestHttpStatic(TestHttpStaticCommon):
                     raise AssertionError(e) from exc
                 self.assertEqual(res.content, self.gizeh_data)
 
+    def test_static24_only_one_date_header(self):
+        res = self.assertDownloadPlaceholder('/web/image')
+        # requests merge multiple headers with a same key together, it
+        # concatenates the values, hence .count(' GMT')
+        self.assertEqual(res.headers['Date'].count(' GMT'), 1,
+            "There must be only 1 Date header, not 2")
+
+
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
     @staticmethod
