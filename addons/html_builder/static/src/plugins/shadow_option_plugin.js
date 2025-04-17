@@ -5,6 +5,7 @@ const shadowClass = "shadow";
 
 class ShadowOptionPlugin extends Plugin {
     static id = "shadowOption";
+    static shared = ["getActions"];
     resources = {
         builder_actions: this.getActions(),
     };
@@ -12,19 +13,10 @@ class ShadowOptionPlugin extends Plugin {
     getActions() {
         return {
             setShadowMode: {
-                isApplied: ({ editingElement, param: { mainParam: shadowMode } }) => {
-                    const currentBoxShadow = editingElement.style["box-shadow"];
-                    if (shadowMode === "none") {
-                        return currentBoxShadow === "";
-                    }
-                    if (shadowMode === "inset") {
-                        return currentBoxShadow.includes("inset");
-                    }
-                    if (shadowMode === "outset") {
-                        return !currentBoxShadow.includes("inset") && currentBoxShadow !== "";
-                    }
-                },
-                apply: ({ editingElement, param: { mainParam: shadowMode } }) => {
+                isApplied: ({ editingElement, value: shadowMode }) =>
+                    shadowMode === getShadowMode(editingElement),
+                getValue: ({ editingElement }) => getShadowMode(editingElement, "mode"),
+                apply: ({ editingElement, value: shadowMode }) => {
                     if (shadowMode === "none") {
                         editingElement.classList.remove(shadowClass);
                         setBoxShadow(editingElement, "");
@@ -60,7 +52,7 @@ class ShadowOptionPlugin extends Plugin {
     }
 }
 
-function getDefaultShadow(mode) {
+export function getDefaultShadow(mode) {
     const el = document.createElement("div");
     el.classList.add(shadowClass);
     document.body.appendChild(el);
@@ -69,12 +61,25 @@ function getDefaultShadow(mode) {
     return shadow;
 }
 
-function getCurrentShadow(editingElement) {
-    return parseShadow(editingElement.style["box-shadow"]);
+function getShadowMode(editingElement) {
+    const currentBoxShadow = getComputedStyle(editingElement)["box-shadow"];
+    if (currentBoxShadow === "none") {
+        return "none";
+    }
+    if (currentBoxShadow.includes("inset")) {
+        return "inset";
+    }
+    if (!currentBoxShadow.includes("inset") && currentBoxShadow !== "none") {
+        return "outset";
+    }
+}
+
+export function getCurrentShadow(editingElement) {
+    return parseShadow(getComputedStyle(editingElement)["box-shadow"]);
 }
 
 function parseShadow(value) {
-    if (!value) {
+    if (!value || value === "none") {
         return {};
     }
     const regex =
@@ -82,7 +87,7 @@ function parseShadow(value) {
     return value.match(regex).groups;
 }
 
-function shadowToString(shadow) {
+export function shadowToString(shadow) {
     if (!shadow) {
         return "";
     }

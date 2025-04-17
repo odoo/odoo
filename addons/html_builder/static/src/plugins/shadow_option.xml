@@ -3,28 +3,28 @@
 
 <t t-name="html_builder.ShadowOption">
     <BuilderRow label.translate="Shadow">
-       <BuilderButtonGroup action="'setShadowMode'">
-         <BuilderButton actionParam="'none'" id="'no_shadow'">None</BuilderButton>
-         <BuilderButton actionParam="'outset'" title.translate="Outset" iconImg="'/html_builder/static/img/options/shadow_out.svg'"/>
-         <BuilderButton actionParam="'inset'" title.translate="Inset" iconImg="'/html_builder/static/img/options/shadow_in.svg'"/>
+       <BuilderButtonGroup action="props.setShadowModeAction">
+         <BuilderButton actionValue="'none'" id="'no_shadow'">None</BuilderButton>
+         <BuilderButton actionValue="'outset'" title.translate="Outset" iconImg="'/html_builder/static/img/options/shadow_out.svg'"/>
+         <BuilderButton actionValue="'inset'" title.translate="Inset" iconImg="'/html_builder/static/img/options/shadow_in.svg'"/>
        </BuilderButtonGroup>
     </BuilderRow>
-    <BuilderContext t-if="!this.isActiveItem('no_shadow')">
+    <BuilderContext t-if="!this.isActiveItem('no_shadow')" action="props.setShadowAction">
         <BuilderRow label.translate="Color" level="1">
-            <BuilderColorPicker action="'setShadow'" actionParam="'color'"/>
+            <BuilderColorPicker actionParam="'color'"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Offset (X, Y)" level="1">
-            <BuilderNumberInput action="'setShadow'" actionParam="'offsetX'" unit="'px'"/>
-            <BuilderNumberInput action="'setShadow'" actionParam="'offsetY'" unit="'px'"/>
+            <BuilderNumberInput actionParam="'offsetX'" unit="'px'"/>
+            <BuilderNumberInput actionParam="'offsetY'" unit="'px'"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Blur" level="1">
-            <BuilderNumberInput action="'setShadow'" actionParam="'blur'" unit="'px'"/>
+            <BuilderNumberInput actionParam="'blur'" unit="'px'"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Spread" level="1">
-            <BuilderNumberInput action="'setShadow'" actionParam="'spread'" unit="'px'"/>
+            <BuilderNumberInput actionParam="'spread'" unit="'px'"/>
         </BuilderRow>
     </BuilderContext>
 </t>

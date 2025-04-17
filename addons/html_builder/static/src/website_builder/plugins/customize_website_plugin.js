@@ -12,6 +12,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     static dependencies = ["builderActions", "history", "savePlugin"];
     static shared = [
         "customizeWebsiteColors",
+        "customizeWebsiteVariables",
         "loadTemplateKey",
         "makeSCSSCusto",
         "toggleTemplate",
@@ -82,7 +83,6 @@ export class CustomizeWebsitePlugin extends Plugin {
                         }); // reloads bundles
                     } else {
                         await this.customizeWebsiteColors({ [color]: value }, { colorType });
-                        await this.reloadBundles();
                     }
                 },
             }),
@@ -320,16 +320,14 @@ export class CustomizeWebsitePlugin extends Plugin {
                 }
             }
         }
-        return this.makeSCSSCusto(url, finalColors, nullValue);
+        await this.makeSCSSCusto(url, finalColors, nullValue);
+        await this.reloadBundles();
     }
     async makeSCSSCusto(url, values, defaultValue = "null") {
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        return this.services.orm.call("web_editor.assets", "make_scss_customization", [
-            url,
-            values,
-        ]);
+        await this.services.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
     }
     async reloadBundles() {
         const bundles = await rpc("/website/theme_customize_bundle_reload");

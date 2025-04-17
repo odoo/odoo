@@ -7,10 +7,12 @@ export class BorderConfigurator extends BaseOptionComponent {
         direction: { type: String, optional: true },
         withRoundCorner: { type: Boolean, optional: true },
         withBSClass: { type: Boolean, optional: true },
+        action: { type: String, optional: true },
     };
     static defaultProps = {
         withRoundCorner: true,
         withBSClass: true, // TODO remove, and actually configure propertly in caller
+        action: "styleAction",
     };
 
     setup() {

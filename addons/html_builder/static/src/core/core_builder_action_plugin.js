@@ -16,7 +16,7 @@ export function withoutTransition(editingElement, callback) {
 
 export class CoreBuilderActionPlugin extends Plugin {
     static id = "coreBuilderAction";
-    static shared = ["setStyle"];
+    static shared = ["setStyle", "getStyleAction"];
     resources = {
         builder_actions: this.getActions(),
         builder_style_actions: this.getStyleActions(),
