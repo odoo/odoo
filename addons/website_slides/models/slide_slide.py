@@ -1391,3 +1391,6 @@ class SlideSlide(models.Model):
     def get_base_url(self):
         """As website_id is not defined on this record, we rely on channel website_id for base URL."""
         return self.channel_id.get_base_url()
+
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return []
