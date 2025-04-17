@@ -6,7 +6,6 @@ export class OdooDataProvider extends EventBus {
         super();
         this.orm = env.services.orm.silent;
         this.fieldService = env.services.field;
-        this.modelDisplayNameService = env.services.modelDisplayName;
         this.serverData = new ServerData(this.orm, {
             whenDataStartLoading: (promise) => this.notifyWhenPromiseResolves(promise),
         });

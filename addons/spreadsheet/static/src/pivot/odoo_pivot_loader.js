@@ -103,10 +103,10 @@ export class OdooPivotLoader {
      * @returns {Promise<string>} Display name of the model
      */
     async getModelLabel(model) {
-        const displayName = await this.odooDataProvider.modelDisplayNameService.getModelDisplayName(
-            model
-        );
-        return displayName || "";
+        const result = await this.odooDataProvider.orm.cached.call("ir.model", "display_name_for", [
+            [model],
+        ]);
+        return result[0]?.display_name || "";
     }
 
     isModelValid() {
