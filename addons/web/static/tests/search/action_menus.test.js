@@ -202,15 +202,13 @@ test("render ActionMenus in list view with extraPrintItems", async () => {
         get actionMenuProps() {
             return {
                 ...super.actionMenuProps,
-                loadExtraPrintItems: () => {
-                    return [
-                        {
-                            key: "extra_print_key",
-                            description: "Extra Print Item",
-                            class: "o_menu_item",
-                        },
-                    ];
-                },
+                loadExtraPrintItems: () => [
+                    {
+                        key: "extra_print_key",
+                        description: "Extra Print Item",
+                        class: "o_menu_item",
+                    },
+                ],
             };
         }
     }
@@ -268,4 +266,28 @@ test("render ActionMenus in list view with extraPrintItems", async () => {
     ]);
 
     expect.verifySteps(["get_valid_action_reports"]);
+});
+
+test("static action items are properly ordered and styled", async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        actionMenus: {
+            action: [],
+            print: [],
+        },
+        loadActionMenus: true,
+        arch: /* xml */ `
+              <list>
+                  <field name="value"/>
+              </list>
+         `,
+    });
+    // select all records
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).toHaveCount(1);
+    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click();
+
+    expect(queryAllTexts(`.o_menu_item`)).toEqual(["Export", "Duplicate", "Delete"]);
+    expect(`.o_menu_item:last`).toHaveClass("text-danger");
 });

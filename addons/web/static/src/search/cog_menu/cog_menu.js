@@ -66,13 +66,9 @@ export class CogMenu extends ActionMenus {
     }
 
     get cogItems() {
-        return [...this.actionItems, ...this.registryItems].sort((item1, item2) => {
-            const grp = (item1.groupNumber || 0) - (item2.groupNumber || 0);
-            if (grp !== 0) {
-                return grp;
-            }
-            return (item1.sequence || 0) - (item2.sequence || 0);
-        });
+        return [...this.registryItems, ...this.actionItems].sort(
+            (item1, item2) => (item1.groupNumber || 0) - (item2.groupNumber || 0)
+        );
     }
 
     getPrintItemAriaLabel(item) {
