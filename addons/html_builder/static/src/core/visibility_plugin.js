@@ -9,12 +9,30 @@ export class VisibilityPlugin extends Plugin {
         "cleanForSaveVisibility",
         "onOptionVisibilityUpdate",
     ];
-
     resources = {
         on_mobile_preview_clicked: this.onMobilePreviewClicked.bind(this),
         system_attributes: ["data-invisible"],
         system_classes: ["o_snippet_override_invisible"],
     };
+
+    setup() {
+        // Add the `data-invisible="1"` attribute on the elements that are
+        // really hidden, and remove it from the ones that are in fact visible,
+        // depending on if we are in mobile preview or not, so the DOM is
+        // consistent.
+        const isMobilePreview = isMobileView(this.editable);
+        this.editable
+            .querySelectorAll(".o_snippet_mobile_invisible, .o_snippet_desktop_invisible")
+            .forEach((invisibleEl) => {
+                const isMobileHidden = invisibleEl.matches(".o_snippet_mobile_invisible");
+                const isDesktopHidden = invisibleEl.matches(".o_snippet_desktop_invisible");
+                if ((isMobileHidden && isMobilePreview) || (isDesktopHidden && !isMobilePreview)) {
+                    invisibleEl.setAttribute("data-invisible", "1");
+                } else {
+                    invisibleEl.removeAttribute("data-invisible");
+                }
+            });
+    }
 
     cleanForSaveVisibility(editingEl) {
         const show =
@@ -29,6 +47,16 @@ export class VisibilityPlugin extends Plugin {
         for (const overrideInvisibleEl of overrideInvisibleEls) {
             overrideInvisibleEl.classList.remove("o_snippet_override_invisible");
         }
+
+        // Remove data-invisible attribute from condtionally hidden elements.
+        // TODO do it for all invisible elements in general ?
+        const conditionalHiddenEls = [
+            ...editingEl.querySelectorAll("[data-visibility='conditional']"),
+        ];
+        if (editingEl.matches("[data-visibility='conditional']")) {
+            conditionalHiddenEls.unshift(editingEl);
+        }
+        conditionalHiddenEls.forEach((el) => el.removeAttribute("data-invisible"));
     }
 
     onMobilePreviewClicked() {

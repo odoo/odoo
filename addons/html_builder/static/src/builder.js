@@ -162,6 +162,7 @@ export class Builder extends Component {
         });
 
         onMounted(() => {
+            this.editor.document.body.classList.add("editor_enable");
             this.setCSSVariables();
             // TODO: onload editor
             this.updateInvisibleEls();

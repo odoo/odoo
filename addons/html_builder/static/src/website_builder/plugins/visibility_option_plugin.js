@@ -151,8 +151,12 @@ class VisibilityOptionPlugin extends Plugin {
             editingEl.matches(visibilityOptionSelector)
         ) {
             editingEl.classList.remove("o_snippet_override_invisible");
+
+            const isConditionalHidden = editingEl.matches("[data-visibility='conditional']");
+            if (isConditionalHidden) {
+                editingEl.classList.add("o_conditional_hidden");
+            }
         }
-        // TODO o_conditional_hidden class for conditionalVisibility ?
     }
 
     onTargetShow(editingEl) {
@@ -166,6 +170,8 @@ class VisibilityOptionPlugin extends Plugin {
             if ((isMobileHidden && isMobilePreview) || (isDesktopHidden && !isMobilePreview)) {
                 editingEl.classList.add("o_snippet_override_invisible");
             }
+
+            editingEl.classList.remove("o_conditional_hidden");
         }
     }
 

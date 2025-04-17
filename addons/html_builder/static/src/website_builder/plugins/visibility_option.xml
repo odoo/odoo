@@ -39,7 +39,7 @@
         <t t-call="html_builder.DeviceVisibility"></t>
         <BuilderSelect dataAttributeAction="'visibility'" action="'forceVisible'">
             <BuilderSelectItem dataAttributeActionValue="null">No condition</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'conditional'" id="'visibility_conditional'">Conditionally</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'conditional'" classAction="'o_snippet_invisible'" id="'visibility_conditional'">Conditionally</BuilderSelectItem>
         </BuilderSelect>
 	    <t t-set-slot="collapse">
 		    <t t-if="geoip_country_code">
