@@ -20,6 +20,12 @@ registry.category("web_tour.tours").add("BarcodeScanningTour", {
             scan_barcode("0123456789"),
             ProductScreen.selectedOrderlineHas("Monitor Stand", 2),
 
+            // Add the product packaging with its barcode
+            scan_barcode("12345610"),
+            ProductScreen.selectedOrderlineHas("Monitor Stand", 12),
+            scan_barcode("12345610"),
+            ProductScreen.selectedOrderlineHas("Monitor Stand", 22),
+
             // Test "Prices product" EAN-13 `23.....{NNNDD}` barcode pattern
             scan_barcode("2305000000004"),
             ProductScreen.selectedOrderlineHas("Magnetic Board", 1, "0.00"),
@@ -31,27 +37,6 @@ registry.category("web_tour.tours").add("BarcodeScanningTour", {
             ProductScreen.selectedOrderlineHas("Wall Shelf Unit", 0, "0.00"),
             scan_barcode("2100005080002"),
             ProductScreen.selectedOrderlineHas("Wall Shelf Unit", 8),
-            Chrome.endTour(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-
-            // Add the product with its barcode
-            scan_barcode("12345601"),
-            ProductScreen.selectedOrderlineHas("Packaging Product", 1),
-            scan_barcode("12345601"),
-            ProductScreen.selectedOrderlineHas("Packaging Product", 2),
-
-            // Add the product packaging with its barcode
-            scan_barcode("12345610"),
-            ProductScreen.selectedOrderlineHas("Packaging Product", 12),
-            scan_barcode("12345610"),
-            ProductScreen.selectedOrderlineHas("Packaging Product", 22),
             Chrome.endTour(),
         ].flat(),
 });
@@ -91,7 +76,7 @@ registry.category("web_tour.tours").add("BarcodeScanPartnerTour", {
 
             // scan the customer barcode
             scan_barcode("0421234567890"),
-            ProductScreen.customerIsSelected("John Doe"),
+            ProductScreen.customerIsSelected("Partner Test 1"),
             Chrome.endTour(),
         ].flat(),
 });

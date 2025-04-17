@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair",
                 "1",
-                "11.0",
+                "31.0",
                 "Red, Metal, Fabrics: Other: Custom Fabric"
             ),
 
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair",
                 "2",
-                "22.0",
+                "62.0",
                 "Red, Metal, Fabrics: Other: Custom Fabric"
             ),
 
@@ -61,20 +61,17 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
             ProductConfigurator.pickColor("Blue"),
             ProductConfigurator.pickSelect("Metal"),
+            // Inactive variant attributes should not be displayed
+            // Active: Other and Leather, Inactive: Wool
+            ProductConfigurator.numberRadioOptions(2),
             ProductConfigurator.pickRadio("Leather"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair",
                 "1",
-                "10.0",
+                "30.0",
                 "Blue, Metal, Leather"
             ),
-
-            // Inactive variant attributes should not be displayed
-            ProductScreen.clickDisplayedProduct("Configurable Chair"),
-            // Active: Other and Leather, Inactive: Wool
-            ProductConfigurator.numberRadioOptions(2),
-            Dialog.confirm(),
             Chrome.endTour(),
         ].flat(),
 });
@@ -84,13 +81,13 @@ registry.category("web_tour.tours").add("PosProductWithDynamicAttributes", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Dynamic Product"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductConfigurator.pickRadio("Test 1"),
             Dialog.confirm(),
-            ProductScreen.selectedOrderlineHas("Dynamic Product", "1", "1.15", "Test 1"),
-            ProductScreen.clickDisplayedProduct("Dynamic Product"),
+            ProductScreen.selectedOrderlineHas("Desk Organizer", "1", "5.10", "Test 1"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductConfigurator.pickRadio("Test 2"),
             Dialog.confirm(),
-            ProductScreen.selectedOrderlineHas("Dynamic Product", "1", "12.65", "Test 2"),
+            ProductScreen.selectedOrderlineHas("Desk Organizer", "1", "15.10", "Test 2"),
         ].flat(),
 });

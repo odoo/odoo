@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.96"),
@@ -100,7 +100,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
             TicketScreen.selectFilter("Paid"),
             TicketScreen.selectOrder("001"),
             inLeftSide([
-                ...Order.hasLine({ productName: "Product Test", withClass: ".selected" }),
+                ...Order.hasLine({ productName: "Desk Organizer", withClass: ".selected" }),
                 Numpad.click("1"),
             ]),
             TicketScreen.confirmRefund(),
@@ -117,7 +117,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.98"),
@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
             TicketScreen.selectFilter("Paid"),
             TicketScreen.selectOrder("001"),
             inLeftSide([
-                ...Order.hasLine({ productName: "Product Test", withClass: ".selected" }),
+                ...Order.hasLine({ productName: "Desk Organizer", withClass: ".selected" }),
                 Numpad.click("1"),
             ]),
             TicketScreen.confirmRefund(),
@@ -188,7 +188,7 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
     steps: () =>
         [
             Chrome.startPoS(),
-            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.98"),
@@ -238,7 +238,7 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.addOrderline("Test Product 3", "1"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickPayButton(),

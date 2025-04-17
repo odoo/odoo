@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             scan_barcode("SuperCombo"),
             combo.select("Combo Product 3"),
             combo.isConfirmationButtonDisabled(),
-            combo.select("Combo Product 9"),
+            combo.select("Configurable Chair"),
             // Check Product Configurator is open
             Dialog.is("Attribute selection"),
             Dialog.discard(),
@@ -32,12 +32,9 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             Dialog.confirm(),
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "62.1"),
-                ...ProductScreen.clickLine("Combo Product 3"),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 3", "1"),
-                ...ProductScreen.clickLine("Combo Product 5"),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 5", "1"),
-                ...ProductScreen.clickLine("Combo Product 8"),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 8", "1"),
+                ...ProductScreen.clickLine("Combo Product 3", "1"),
+                ...ProductScreen.clickLine("Combo Product 5", "1"),
+                ...ProductScreen.clickLine("Combo Product 8", "1"),
             ]),
             // check that you can select a customer which triggers a recomputation of the price
             ...ProductScreen.clickPartnerButton(),
@@ -53,23 +50,7 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
                 ...ProductScreen.orderLineHas("Office Combo", "2", "124.2"),
             ]),
 
-            // check that removing a combo product removes all the combo products
-            inLeftSide([
-                {
-                    ...ProductScreen.clickLine("Combo Product 3", "2")[0],
-                    isActive: ["mobile"],
-                },
-                Numpad.click("⌫"),
-                Numpad.click("⌫"),
-                ...Order.doesNotHaveLine(),
-            ]),
-
-            ...ProductScreen.clickDisplayedProduct("Office Combo"),
-            combo.select("Combo Product 3"),
-            combo.select("Combo Product 5"),
-            combo.select("Combo Product 8"),
-            Dialog.confirm(),
-            ...ProductScreen.totalAmountIs("62.10"),
+            ...ProductScreen.totalAmountIs("124.2"),
             ...ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
@@ -84,6 +65,17 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             Dialog.confirm(),
             ...ProductScreen.totalAmountIs("59.17"),
             ...inLeftSide(Order.hasTax("10.56")),
+
+            // check that removing a combo product removes all the combo products
+            inLeftSide([
+                {
+                    ...ProductScreen.clickLine("Combo Product 2", "1")[0],
+                    isActive: ["mobile"],
+                },
+                Numpad.click("⌫"),
+                Numpad.click("⌫"),
+                ...Order.doesNotHaveLine(),
+            ]),
             // the split screen is tested in `pos_restaurant`
         ].flat(),
 });
@@ -93,12 +85,12 @@ registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Desk Combo"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
             inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Combo", "1", "7.00"),
-                ...ProductScreen.orderLineHas("Desk Organizer", "1"),
-                ...ProductScreen.orderLineHas("Desk Pad", "1"),
-                ...ProductScreen.orderLineHas("Whiteboard Pen", "1"),
+                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "7.00"),
+                ...ProductScreen.orderLineHas("Combo Product 1", "1"),
+                ...ProductScreen.orderLineHas("Combo Product 4", "1"),
+                ...ProductScreen.orderLineHas("Combo Product 6", "1"),
             ]),
             ProductScreen.totalAmountIs("7.00"),
             ProductScreen.clickPayButton(),
@@ -123,13 +115,13 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
 
             inLeftSide([...ProductScreen.orderLineHas("Office Combo", "1", "50.00")]),
             ProductScreen.totalAmountIs("50.00"),
-            inLeftSide(Order.hasTax("4.55")),
+            inLeftSide(Order.hasTax("8.34")),
 
             // Test than changing the fp, doesn't change the price of the combo
             ProductScreen.clickFiscalPosition("test fp"),
             inLeftSide([...ProductScreen.orderLineHas("Office Combo", "1", "50.00")]),
             ProductScreen.totalAmountIs("50.00"),
-            inLeftSide(Order.hasTax("2.38")),
+            inLeftSide(Order.hasTax("4.55")),
             ProductScreen.isShown(),
         ].flat(),
 });

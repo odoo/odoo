@@ -12,15 +12,17 @@ registry.category("web_tour.tours").add("FixedTaxNegativeQty", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Zero Amount Product", true, "1", "1.0"),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "1", "1.0"),
             inLeftSide([
                 {
-                    ...ProductScreen.clickLine("Zero Amount Product", "1")[0],
+                    ...ProductScreen.clickLine("Letter Tray", "1")[0],
                     isActive: ["mobile"],
                 },
                 ...["+/-"].map(Numpad.click),
-                ...ProductScreen.selectedOrderlineHasDirect("Zero Amount Product", "-1", "-1.0"),
+                ...ProductScreen.selectedOrderlineHasDirect("Letter Tray", "-1", "-1.0"),
             ]),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),

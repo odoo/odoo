@@ -28,6 +28,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'company_id': self._get_main_company().id,
             'code': 'SIMP',
         })
+
         def get_number_of_regular_invoices():
             return self.env['account.move'].search_count([('journal_id', '=', self.main_pos_config.invoice_journal_id.id), ('l10n_es_is_simplified', '=', False), ('pos_order_ids', '!=', False)])
         initial_number_of_regular_invoices = get_number_of_regular_invoices()
@@ -45,17 +46,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
             self.skipTest("pos_settle_due module is required for this test")
 
-        # create customer account payment method
-        self.customer_account_payment_method = self.env['pos.payment.method'].create({
-            'name': 'Customer Account',
-            'split_transactions': True,
-        })
-        # add customer account payment method to pos config
-        self.main_pos_config.write({
-            'payment_method_ids': [Command.link(self.customer_account_payment_method.id)],
-        })
-
-        self.assertEqual(self.partner_test_1.total_due, 0)
+        self.assertEqual(self.partner1.total_due, 0)
 
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         current_session = self.main_pos_config.current_session_id
@@ -63,9 +54,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         order = self.env['pos.order'].create({
             'company_id': self.env.company.id,
             'session_id': current_session.id,
-            'partner_id': self.partner_test_1.id,
+            'partner_id': self.partner1.id,
             'lines': [Command.create({
-                'product_id': self.product_a.id,
+                'product_id': self.test_product3.id,
                 'price_unit': 10,
                 'discount': 0,
                 'qty': 1,
@@ -87,7 +78,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         order_payment.with_context(**payment_context).check()
 
-        self.assertEqual(self.partner_test_1.total_due, 10)
+        self.assertEqual(self.partner1.total_due, 10)
         current_session.action_pos_session_closing_control()
 
         self.main_pos_config.with_user(self.pos_admin).open_ui()
@@ -98,7 +89,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         # Make sure there is no certificate
         self.assertEqual(self.env['certificate.certificate'].search_count([]), 0)
-        self.partner_a.write({
+        self.partner_full.write({
             'vat': "ESA12345674",
             'country_id': self.env.ref("base.es").id,
             'email': "email@gmail.com",
@@ -109,14 +100,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.pos_order_pos0 = self.env['pos.order'].create({
             'company_id': self._get_main_company().id,
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner_full.id,
             'session_id': self.main_pos_config.current_session_id.id,
             'pricelist_id': self.main_pos_config.pricelist_id.id,
             'lines': [Command.create({
-                'product_id': self.product_a.id,
+                'product_id': self.test_product3.id,
                 'price_unit': 100,
                 'qty': 1.0,
-                'tax_ids': self.product_a.taxes_id,
+                'tax_ids': self.test_product3.taxes_id,
                 'price_subtotal': 85,
                 'price_subtotal_incl': 100,
                 'discount': 0,

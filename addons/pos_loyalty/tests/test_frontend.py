@@ -1172,15 +1172,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_coupon_program_without_rules(self):
         self.env['loyalty.program'].search([]).write({'active': False})
 
-        self.env["product.product"].create(
-            {
-                "name": "Test Product",
-                "is_storable": True,
-                "list_price": 100,
-                "available_in_pos": True,
-                "taxes_id": False,
-            }
-        )
+        self.test_product3.write({"list_price": 100})
 
         # creating a coupon program without any rule
         loyalty_program = self.env['loyalty.program'].create({
@@ -2540,18 +2532,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
     def test_cheapest_product_tax_included(self):
-        tax_01 = self.env['account.tax'].create({
-                "name": "Tax 1",
-                "amount": 10,
-                "price_include_override": "tax_included",
-        })
-
-        self.env['product.product'].create({
-            "name": "Product",
-            "lst_price": 1,
-            "available_in_pos": True,
-            "taxes_id": [(6, 0, [tax_01.id])]
-        })
+        self.test_product3.write({"lst_price": 1})
 
         self.env['loyalty.program'].search([]).write({'active': False})
         self.env['loyalty.program'].create({

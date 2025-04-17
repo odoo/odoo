@@ -46,6 +46,12 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Dialog.confirm(),
             ProductScreen.isShown(),
 
+            // basic-user cannot close session
+            Chrome.clickMenuButton(),
+            {
+                trigger: negate(`span.dropdown-item:contains("Close Register")`),
+            },
+
             // Create orders and check if the ticket list has the right employee for each order
             // order for employee 2
             ProductScreen.addOrderline("Desk Pad", "1"),
@@ -111,29 +117,8 @@ registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
             PosHr.clickLoginButton(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickInfoProduct("product_a"),
+            ProductScreen.clickInfoProduct("Test product 3"),
             Dialog.confirm("Close"),
             Dialog.isNot(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("CashierCannotClose", {
-    steps: () =>
-        [
-            Chrome.clickBtn("Open Register"),
-            PosHr.loginScreenIsShown(),
-            PosHr.clickLoginButton(),
-            SelectionPopup.has("Test Employee 3", { run: "click" }),
-            Dialog.confirm("Open Register"),
-            Chrome.clickMenuButton(),
-            {
-                trigger: negate(`span.dropdown-item:contains("Close Register")`),
-            },
-            PosHr.clickCashierName(),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
-            Chrome.clickMenuButton(),
-            {
-                trigger: negate(`span.dropdown-item:contains("Close Register")`),
-            },
         ].flat(),
 });

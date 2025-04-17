@@ -33,15 +33,15 @@ registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
             Dialog.confirm("Open Register"),
             // The second item in the list is the first sale.order.
             PosSale.settleNthOrder(2),
-            ProductScreen.selectedOrderlineHas("product1", 1),
-            ProductScreen.totalAmountIs("10.00"),
+            ProductScreen.selectedOrderlineHas("Monitor Stand", 1),
+            ProductScreen.totalAmountIs("3.19"),
 
             // The first item in the list is the second sale.order.
             // Selecting the 2nd sale.order should use a new order,
             // therefore, the total amount will change.
             PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("product2", 1),
-            ProductScreen.totalAmountIs("11.00"),
+            ProductScreen.selectedOrderlineHas("Desk Pad", 1),
+            ProductScreen.totalAmountIs("1.98"),
         ].flat(),
 });
 
@@ -51,11 +51,11 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            ProductScreen.clickOrderline("Product A", "1"),
-            ProductScreen.selectedOrderlineHas("Product A", "1"),
-            ProductScreen.clickOrderline("Product B", "1"),
+            ProductScreen.clickOrderline("Desk Pad", "1"),
+            ProductScreen.selectedOrderlineHas("Desk Pad", "1"),
+            ProductScreen.clickOrderline("Monitor Stand", "1"),
             ProductScreen.clickNumpad("Qty", "0"),
-            ProductScreen.selectedOrderlineHas("Product B", "0"),
+            ProductScreen.selectedOrderlineHas("Monitor Stand", "0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.clickValidate(),
@@ -196,10 +196,10 @@ registry.category("web_tour.tours").add("PosSettleCustomPrice", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
+            ProductScreen.selectedOrderlineHas("Test Product 3", "1", "100"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("A Test Partner AAA"),
-            ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
+            ProductScreen.clickCustomer("Partner Test 2"),
+            ProductScreen.selectedOrderlineHas("Test Product 3", "1", "100"),
         ].flat(),
 });
 
@@ -272,8 +272,8 @@ registry.category("web_tour.tours").add("PosSaleTeam", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Test Product"),
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickDisplayedProduct("Test Product 3"),
+            ProductScreen.totalAmountIs("450.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -348,7 +348,7 @@ registry.category("web_tour.tours").add("PosSettleOrder5", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Product A", 1),
+            ProductScreen.selectedOrderlineHas("Test Product 3", 1),
             Chrome.clickMenuOption("Backend"),
         ].flat(),
 });
@@ -410,9 +410,9 @@ registry.category("web_tour.tours").add("POSSalePaymentScreenInvoiceOrder", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.addOrderline("Test Product 3", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -428,6 +428,6 @@ registry.category("web_tour.tours").add("test_settle_order_with_lot", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1, { loadSN: true }),
-            PosSale.selectedOrderLinesHasLots("Product A", ["1001", "1002"]),
+            PosSale.selectedOrderLinesHasLots("Test Product 3", ["1001", "1002"]),
         ].flat(),
 });

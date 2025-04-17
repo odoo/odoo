@@ -32,26 +32,22 @@ export function addOptionalProduct(productName, quantity, configurable) {
     }
 
     if (quantity > 1) {
-        for (let i = 1; i < quantity; i++) {
-            // Increment the product quantity by clicking the "+" button
-            step.push(
-                {
-                    content: `Verify the quantity of "${productName}" is updated to ${i}.`,
-                    trigger: `.optional-product-line .cart-buttons input:value("${i}")`,
-                },
-                {
-                    content: `Increase the quantity of "${productName}" by clicking the "+" button.`,
-                    trigger: `.optional-product-line .cart-buttons button:eq(1)`,
-                    run: "click",
-                }
-            );
-        }
-        step.push({
-            content: `Click the "Add" button to confirm adding "${productName}" to the order.`,
-            trigger: `.modal-footer button:contains("Add")`,
-            run: "click",
-        });
-
-        return step;
+        step.push(
+            {
+                content: `Chnage the quantity of "${productName}" by to "${quantity}"`,
+                trigger: `.optional-product-line .cart-buttons input:value`,
+                run: `edit ${quantity}`,
+            },
+            {
+                content: `Verify the quantity of "${productName}" is updated to ${quantity}.`,
+                trigger: `.optional-product-line .cart-buttons input:value("${quantity}")`,
+            }
+        );
     }
+    step.push({
+        content: `Click the "Add" button to confirm adding "${productName}" to the order.`,
+        trigger: `.modal-footer button:contains("Add")`,
+        run: "click",
+    });
+    return step;
 }
