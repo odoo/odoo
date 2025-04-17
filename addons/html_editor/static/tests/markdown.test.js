@@ -214,4 +214,12 @@ describe("inline code", () => {
             contentAfter: "<p>a`[]f</p>",
         });
     });
+
+    test("should create an empty inline code when their is no text in between two backtics", async () => {
+        await testEditor({
+            contentBefore: "<p>a`[]b</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>a<code class="o_inline_code">&nbsp;[]</code>\u200bb</p>',
+        });
+    });
 });
