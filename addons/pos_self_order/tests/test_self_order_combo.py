@@ -8,26 +8,17 @@ from odoo.fields import Command
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderCombo(SelfOrderCommonTest):
     def test_self_order_combo(self):
-        self.env["product.combo.item"].create(
-            {
-                "product_id": self.desk_organizer.id,
-                "extra_price": 0,
-                "combo_id": self.desk_accessories_combo.id,
-            }
-        )
-        self.pos_config.write({
-            'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_mode': 'mobile',
-            'self_ordering_pay_after': 'each',
-            'self_ordering_service_mode': 'counter',
-            'available_preset_ids': [(5, 0)],
+        # merged test_self_order_kiosk_combo_sides
+        # Add configurable product to the combo
+        self.desk_accessories_combo.write({
+            'combo_item_ids': [Command.create({'product_id': self.configurable_chair.product_variant_id.id})]
         })
         self.pos_admin.group_ids += self.env.ref('account.group_account_invoice')
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
 
-        self.start_tour(self_route, "self_combo_selector")
+        self.start_pos_self_tour('self_combo_selector')
+
         order = self.env['pos.order'].search([], order='id desc', limit=1)
         self.assertEqual(len(order.lines), 4, "There should be 4 order lines - 1 combo parent and 3 combo lines")
         # check that the combo lines are correctly linked to each other
@@ -38,29 +29,11 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self.assertEqual(parent_line_id.qty, combo_line_ids[0].qty, "The quantities should match with the parent")
 
     def test_self_order_combo_categories(self):
-        category = self.env['pos.category'].create({'name': 'Test Category'})
-        self.env["product.product"].create(
-            {
-                "available_in_pos": True,
-                "list_price": 10,
-                "name": "Test Combo",
-                "type": "combo",
-                'pos_categ_ids': category.ids,
-                "combo_ids": self.desks_combo,
-            }
-        )
-
         self.pos_config.write({
-            'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_mode': 'mobile',
-            'self_ordering_pay_after': 'each',
-            'self_ordering_service_mode': 'counter',
-            'available_preset_ids': [(5, 0)],
-            'iface_available_categ_ids': category.ids,
+            'iface_available_categ_ids': self.pos_cat_chair_test.ids,
         })
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
 
-        self.start_tour(self_route, "self_combo_selector_category")
+        self.start_pos_self_tour('self_combo_selector_category')

@@ -29,6 +29,8 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         Verify that we can make multiple orders with online payment in self ordering mode
         with pay after meal and service mode table.
         """
+        self.setup_test_self_presets()
+        self.setup_self_floor_and_table()
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'meal',

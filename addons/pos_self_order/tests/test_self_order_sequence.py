@@ -29,11 +29,7 @@ class TestSelfOrderSequence(SelfOrderCommonTest):
             'position_h': 100,
             'position_v': 100,
         })
-        self.pos_config.write({
-            'self_ordering_mode': 'mobile',
-            'self_ordering_service_mode': 'table',
-            'available_preset_ids': [(5, 0)],
-        })
+        self.pos_config.self_ordering_service_mode = 'table'
 
         self.pos_config.open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")

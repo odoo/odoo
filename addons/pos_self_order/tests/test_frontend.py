@@ -13,12 +13,7 @@ from odoo import Command
 class TestFrontendMobile(SelfOrderCommonTest):
     def test_order_fiscal_position(self):
         """ Orders made in take away should have the alternative fiscal position. """
-
-        tax30 = self.env['account.tax'].create({
-            'name': '30%',
-            'amount': 30,
-            'amount_type': 'percent',
-        })
+        self.setup_test_self_presets()
 
         alternative_fp = self.env['account.fiscal.position'].create({
             'name': "Test",
@@ -26,7 +21,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
             'tax_ids': [
                 Command.create({
                     'tax_src_id': self.default_tax15.id,
-                    'tax_dest_id': tax30.id,
+                    'tax_dest_id': self.tax10.id,
                 }),
             ]
         })

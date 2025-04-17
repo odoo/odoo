@@ -7,6 +7,7 @@ from unittest.mock import patch
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from odoo.tests import Command
 
+
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderKioskStripe(SelfOrderCommonTest):
 
@@ -58,13 +59,11 @@ class TestSelfOrderKioskStripe(SelfOrderCommonTest):
         self.pos_config.open_ui()
         stripe_connection_token = "odoo.addons.pos_stripe.models.pos_payment_method.PosPaymentMethod.stripe_connection_token"
         connection_token = {'object': 'terminal.connection_token', 'secret': 'pst_test_YWNjdF8xUXR003cnRmp4b'}
-        with patch(
-            stripe_connection_token, return_value=connection_token
-        ):
-                payload = self._build_payload({'access_token': 'access_token', 'payment_method_id': self.stripe.id})
-                response = self.url_open('/pos-self-order/stripe-connection-token', data=json.dumps(payload), headers=self.headers, timeout=60000)
-                json_response = json.loads(response.text)
-                self.assertTrue(json_response.get('result').get('object'), 'terminal.connection_token')
+        with patch(stripe_connection_token, return_value=connection_token):
+            payload = self._build_payload({'access_token': 'access_token', 'payment_method_id': self.stripe.id})
+            response = self.url_open('/pos-self-order/stripe-connection-token', data=json.dumps(payload), headers=self.headers, timeout=60000)
+            json_response = json.loads(response.text)
+            self.assertTrue(json_response.get('result').get('object'), 'terminal.connection_token')
 
     def test_stripe_capture_payment(self):
         """This test make sure the stripe_capture_payment method does not crash because of `_verify_authorization` method"""
@@ -75,7 +74,7 @@ class TestSelfOrderKioskStripe(SelfOrderCommonTest):
             'company_id': self.env.company.id,
             'session_id': self.pos_config.current_session_id.id,
             'lines': [Command.create({
-                'product_id': self.fanta.id,
+                'product_id': self.letter_tray.id,
                 'price_unit': 10,
                 'discount': 0,
                 'qty': 1,
@@ -90,9 +89,7 @@ class TestSelfOrderKioskStripe(SelfOrderCommonTest):
             'last_order_preparation_change': '{}',
             'access_token': 'order_access',
         })
-        with patch(
-                stripe_capture_payment, return_value={'id': '1', 'status': 'succeeded', 'amount': 1000}
-            ):
-                payload = self._build_payload({'access_token': 'access_token', 'order_access_token': 'order_access', 'payment_intent_id': '1', 'payment_method_id': self.stripe.id})
-                self.url_open('/pos-self-order/stripe-capture-payment', data=json.dumps(payload), headers=self.headers, timeout=60000)
-                self.assertTrue(order.state == 'paid', 'The order should be paid')
+        with patch(stripe_capture_payment, return_value={'id': '1', 'status': 'succeeded', 'amount': 1000}):
+            payload = self._build_payload({'access_token': 'access_token', 'order_access_token': 'order_access', 'payment_intent_id': '1', 'payment_method_id': self.stripe.id})
+            self.url_open('/pos-self-order/stripe-capture-payment', data=json.dumps(payload), headers=self.headers, timeout=60000)
+            self.assertTrue(order.state == 'paid', 'The order should be paid')

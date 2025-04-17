@@ -12,7 +12,7 @@ class TestFrontend(TestFrontendCommon):
             'partner_id': self.partner_a.id,
             'lines': [(0, 0, {
                 'name': "Coca-Cola",
-                'product_id': self.coca_cola_test.id,
+                'product_id': self.coca_cola.id,
                 'price_unit': 2.20,
                 'discount': 0,
                 'qty': 1,
