@@ -13,11 +13,19 @@ export function clickKioskProduct(productName) {
         run: "click",
     };
 }
+
 export function clickKioskCategory(categoryName) {
     return {
         content: `Click on category '${categoryName}'`,
         trigger: `.category_btn:contains('${categoryName}')`,
         run: "click",
+    };
+}
+
+export function waitProduct(productName) {
+    return {
+        content: `Wait for product '${productName}'`,
+        trigger: `.self_order_product_card span:contains('${productName}')`,
     };
 }
 
@@ -27,6 +35,7 @@ export function checkReferenceNotInProductName(productName, reference) {
         trigger: `.self_order_product_card span:contains('${productName}'):not(:contains("${reference}"))`,
     };
 }
+
 export function checkKioskReferenceNotInProductName(productName, reference) {
     return {
         content: `Check product label has '${productName}' and not ${reference}`,
