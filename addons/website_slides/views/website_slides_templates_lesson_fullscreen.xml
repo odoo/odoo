@@ -60,8 +60,8 @@
                 <div class="o_wslides_fs_sidebar o_wslides_fs_sidebar_hidden text-white flex-shrink-0 order-1">
                     <div class="o_wslides_fs_sidebar_content d-flex flex-column px-3 pt-3 h-100">
                         <div class="o_wslides_fs_sidebar_header mb-3">
-                            <a class="h5 d-block mb-1" t-attf-href="/slides/#{slug(slide.channel_id)}">
-                                <span t-field="slide.channel_id.name"/>
+                            <a class="d-block mb-1" t-attf-href="/slides/#{slug(slide.channel_id)}">
+                                <h1 class="h5" t-field="slide.channel_id.name"/>
                             </a>
                             <div t-if="not is_public_user">
                                 <span t-attf-class="o_wslides_channel_completion_completed badge text-bg-success #{'d-none' if not slide.channel_id.completed else ''}">
