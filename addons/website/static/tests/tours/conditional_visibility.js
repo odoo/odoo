@@ -164,7 +164,7 @@ registerWebsitePreviewTour("conditional_visibility_4", {
 ...clickOnSnippet(snippets[0]),
 {
     content: "Click on the 'move down' option",
-    trigger: ":iframe we-button.o_we_user_value_widget.fa-angle-down",
+    trigger: ".o_overlay_options button.fa-angle-down",
     run: "click",
 },
 ...checkEyesIconAfterSave(),
@@ -185,7 +185,7 @@ registerWebsitePreviewTour("conditional_visibility_4", {
 ...clickOnSnippet(snippets[1]),
 {
     content: "Drag the 'Banner' snippet to the end of the page",
-    trigger: ":iframe .o_overlay_move_options .o_move_handle",
+    trigger: ".o_overlay_options button.o_move_handle",
     run: "drag_and_drop :iframe #wrapwrap footer",
 },
 ...checkEyesIconAfterSave(false),
