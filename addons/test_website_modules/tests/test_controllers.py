@@ -12,15 +12,29 @@ from odoo.tools.json import scriptsafe as json_safe
 class TestWebEditorController(HttpCaseWithUserDemo):
 
     def test_modify_image(self):
-        gif_base64 = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
         attachment = self.env['ir.attachment'].create({
             'name': 'test.gif',
             'mimetype': 'image/gif',
-            'datas': gif_base64,
+            'type': 'binary',
+            'datas': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
             'public': True,
             'res_model': 'ir.ui.view',
             'res_id': 0,
         })
+        self._test_modify_image(attachment)
+
+    def test_modify_default_image(self):
+        attachment = self.env['ir.attachment'].create({
+            'name': 'test.gif',
+            'mimetype': 'image/gif',
+            'type': 'url',
+            'url': '/website/static/src/img/something.jpg',
+            'public': True,
+        })
+        self._test_modify_image(attachment)
+
+    def _test_modify_image(self, attachment):
+        gif_base64 = attachment.datas or b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
 
         def modify(login, name, expect_fail=False):
             self.authenticate(login, login)
