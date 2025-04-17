@@ -222,7 +222,7 @@
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
                                 <label for="date_deadline">Expected Closing</label>
                                 <div class="d-flex gap-3 align-items-center">
-                                    <field name="date_deadline" nolabel="1" class="oe_inline"/>
+                                    <field name="date_deadline" nolabel="1" class="oe_inline" placeholder="No closing estimate"/>
                                     <field name="priority" widget="priority" nolabel="1" class="oe_inline align-top"/>
                                 </div>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
@@ -331,6 +331,9 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <list string="Leads" sample="1" multi_edit="1">
+                    <header>
+                        <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost"/>
+                    </header>
                     <field name="company_id" column_invisible="True"/>
                     <field name="user_company_ids" column_invisible="True"/>
                     <field name="date_deadline" column_invisible="True"/>
@@ -509,13 +512,14 @@
                         <t t-name="menu">
                             <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit</a></t>
                             <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                            <div role="separator" class="dropdown-divider"></div>
                             <field name="color" widget="kanban_color_picker"/>
                         </t>
                         <t t-name="card">
                             <widget name="web_ribbon" id="lost_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
                             <widget name="web_ribbon" id="archived_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or won_status in ['lost', 'won']"/>
                             <field class="fw-bold fs-5" name="name"/>
-                            <div>
+                            <div class="o_kanban_card_crm_lead_revenue">
                                 <t t-if="record.expected_revenue.raw_value">
                                     <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                     <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
@@ -569,7 +573,7 @@
                 <xpath expr="//widget[@id='lost_ribbon']" position="after">
                     <widget name="web_ribbon" id="won_ribbon" title="Won" bg_color="text-bg-success" invisible="won_status != 'won'"/>
                 </xpath>
-                <xpath expr="//div" position="replace">
+                <xpath expr="//t[@t-name='card']//div[hasclass('o_kanban_card_crm_lead_revenue')]" position="replace">
                     <div>
                         <t t-if="record.prorated_revenue.raw_value">
                             <field name="prorated_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
@@ -684,6 +688,7 @@
             <field name="arch" type="xml">
                 <list string="Opportunities" sample="1" multi_edit="1">
                     <header>
+                        <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost" />
                         <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
                     </header>
                     <field name="company_id" column_invisible="True"/>
