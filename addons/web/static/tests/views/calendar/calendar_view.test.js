@@ -19,7 +19,7 @@ import {
     mockTimeZone,
     runAllTimers,
 } from "@odoo/hoot-mock";
-import { Component, onRendered, onWillRender, onWillStart, xml } from "@odoo/owl";
+import { Component, onRendered, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
     contains,
@@ -4908,33 +4908,6 @@ test(`calendar with custom quick create view`, async () => {
     });
     await clickAllDaySlot("2016-12-01");
     expect.verifySteps(["add dialog 2"]);
-});
-
-test(`check onWillStartModel is exectuted`, async () => {
-    class TestCalendarController extends CalendarController {
-        setup() {
-            super.setup();
-            onWillRender(() => {
-                expect.step("render");
-            });
-        }
-        onWillStartModel() {
-            expect.step("onWillStartModel");
-        }
-    }
-
-    registry.category("views").add("test_calendar_view", {
-        ...calendarView,
-        Controller: TestCalendarController,
-    });
-
-    await mountView({
-        resModel: "event",
-        type: "calendar",
-        arch: `<calendar js_class="test_calendar_view" date_start="start" date_stop="stop" all_day="is_all_day" mode="month"/>`,
-        limit: 3,
-    });
-    expect.verifySteps(["onWillStartModel", "render"]);
 });
 
 test(`check apply default record label`, async () => {

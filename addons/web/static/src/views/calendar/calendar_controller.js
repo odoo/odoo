@@ -70,19 +70,13 @@ export class CalendarController extends Component {
         this.orm = useService("orm");
         this.displayDialog = useUniqueDialog();
 
-        this.model = useModelWithSampleData(
-            this.props.Model,
-            {
-                ...this.props.archInfo,
-                resModel: this.props.resModel,
-                domain: this.props.domain,
-                fields: this.props.fields,
-                date: this.props.state?.date,
-            },
-            {
-                onWillStart: this.onWillStartModel.bind(this),
-            }
-        );
+        this.model = useModelWithSampleData(this.props.Model, {
+            ...this.props.archInfo,
+            resModel: this.props.resModel,
+            domain: this.props.domain,
+            fields: this.props.fields,
+            date: this.props.state?.date,
+        });
 
         useSetupAction({
             getLocalState: () => this.model.exportedState,
@@ -355,8 +349,6 @@ export class CalendarController extends Component {
     deleteRecord(record) {
         this.displayDialog(ConfirmationDialog, this.deleteConfirmationDialogProps(record));
     }
-
-    onWillStartModel() {}
 
     async setDate(move) {
         let date = null;
