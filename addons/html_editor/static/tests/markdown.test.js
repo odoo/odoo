@@ -9,16 +9,16 @@ describe("inline code", () => {
             contentBefore: "<p>`ab[]cd</p>",
             stepFunction: async (editor) => await insertText(editor, "`"),
             contentAfterEdit:
-                '<p>\u200b\ufeff<code class="o_inline_code">\ufeffab\ufeff</code>\ufeff[]cd</p>',
-            contentAfter: '<p>\u200b<code class="o_inline_code">ab</code>[]cd</p>',
+                '<p>\ufeff<code class="o_inline_code">\ufeffab\ufeff</code>\ufeff[]cd</p>',
+            contentAfter: '<p><code class="o_inline_code">ab</code>[]cd</p>',
         });
         // BACKWARDS
         await testEditor({
             contentBefore: "<p>[]ab`cd</p>",
             stepFunction: async (editor) => await insertText(editor, "`"),
             contentAfterEdit:
-                '<p>\u200b\ufeff<code class="o_inline_code">[]\ufeffab\ufeff</code>\ufeffcd</p>',
-            contentAfter: '<p>\u200b<code class="o_inline_code">[]ab</code>cd</p>',
+                '<p>\ufeff<code class="o_inline_code">[]\ufeffab\ufeff</code>\ufeffcd</p>',
+            contentAfter: '<p><code class="o_inline_code">[]ab</code>cd</p>',
         });
     });
 
@@ -269,6 +269,16 @@ describe("inline code", () => {
                 '<p>ab\ufeff<code class="o_inline_code">\ufeffcd\ufeff<a href="#" class="o_link_in_selection">\ufeffte[]\ufeff</a>\ufeff</code>\ufeff<a href="#" class="btn btn-primary">\ufeffst\ufeff</a>\ufeffef</p>',
             contentAfter:
                 '<p>ab<code class="o_inline_code">cd<a href="#">te[]</a></code><a href="#" class="btn btn-primary">st</a>ef</p>',
+        });
+    });
+
+    test("should create an empty inline code when their is no text in between two backtics", async () => {
+        await testEditor({
+            contentBefore: "<p>a`[]b</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfterEdit:
+                '<p>a\ufeff<code class="o_inline_code">\ufeff[]\ufeff</code>\ufeffb</p>',
+            contentAfter: '<p>a<code class="o_inline_code">[]</code>b</p>',
         });
     });
 
