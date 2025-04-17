@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_question_view_form" model="ir.ui.view">
+        <field name="name">event.question.view.form</field>
+        <field name="model">event.question</field>
+        <field name="inherit_id" ref="event.event_question_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='answer_ids']/list/field[last()]" position="after">
+                <button type="object"
+                        name="action_add_rule_button"
+                        string="Add a rule"
+                        class="ms-auto"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
