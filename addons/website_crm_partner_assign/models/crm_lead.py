@@ -12,7 +12,7 @@ class CrmLead(models.Model):
 
     partner_latitude = fields.Float('Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float('Geo Longitude', digits=(10, 7))
-    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Partner this case has been forwarded/assigned to.", index='btree_not_null')
+    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index='btree_not_null')
     partner_declined_ids = fields.Many2many(
         'res.partner',
         'crm_lead_declined_partner',

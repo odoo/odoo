@@ -43,14 +43,6 @@ class CrmTeam(models.Model):
     lead_all_assigned_month_exceeded = fields.Boolean('Exceed monthly lead assignement', compute="_compute_lead_all_assigned_month_count",
         help="True if the monthly lead assignment count is greater than the maximum assignment limit, false otherwise."
     )
-    opportunities_count = fields.Integer(
-        string='# Opportunities', compute='_compute_opportunities_data')
-    opportunities_amount = fields.Monetary(
-        string='Opportunities Revenues', compute='_compute_opportunities_data')
-    opportunities_overdue_count = fields.Integer(
-        string='# Overdue Opportunities', compute='_compute_opportunities_overdue_data')
-    opportunities_overdue_amount = fields.Monetary(
-        string='Overdue Opportunities Revenues', compute='_compute_opportunities_overdue_data',)
     # properties
     lead_properties_definition = fields.PropertiesDefinition('Lead Properties')
 
@@ -71,7 +63,6 @@ class CrmTeam(models.Model):
     def _compute_lead_unassigned_count(self):
         leads_data = self.env['crm.lead']._read_group([
             ('team_id', 'in', self.ids),
-            ('type', '=', 'lead'),
             ('user_id', '=', False),
         ], ['team_id'], ['__count'])
         counts = {team.id: count for team, count in leads_data}
@@ -83,27 +74,6 @@ class CrmTeam(models.Model):
         for team in self:
             team.lead_all_assigned_month_count = sum(member.lead_month_count for member in team.crm_team_member_ids)
             team.lead_all_assigned_month_exceeded = team.lead_all_assigned_month_count > team.assignment_max
-
-    def _compute_opportunities_data(self):
-        opportunity_data = self.env['crm.lead']._read_group([
-            ('team_id', 'in', self.ids),
-            ('probability', '<', 100),
-            ('type', '=', 'opportunity'),
-        ], ['team_id'], ['__count', 'expected_revenue:sum'])
-        counts_amounts = {team.id: (count, expected_revenue_sum) for team, count, expected_revenue_sum in opportunity_data}
-        for team in self:
-            team.opportunities_count, team.opportunities_amount = counts_amounts.get(team.id, (0, 0))
-
-    def _compute_opportunities_overdue_data(self):
-        opportunity_data = self.env['crm.lead']._read_group([
-            ('team_id', 'in', self.ids),
-            ('probability', '<', 100),
-            ('type', '=', 'opportunity'),
-            ('date_deadline', '<', fields.Date.to_string(fields.Datetime.now()))
-        ], ['team_id'], ['__count', 'expected_revenue:sum'])
-        counts_amounts = {team.id: (count, expected_revenue_sum) for team, count, expected_revenue_sum in opportunity_data}
-        for team in self:
-            team.opportunities_overdue_count, team.opportunities_overdue_amount = counts_amounts.get(team.id, (0, 0))
 
     @api.onchange('use_leads', 'use_opportunities')
     def _onchange_use_leads_opportunities(self):
@@ -723,6 +693,27 @@ class CrmTeam(models.Model):
         action = self.env['ir.actions.actions']._for_xml_id('crm.crm_lead_action_forecast')
         return self._action_update_to_pipeline(action)
 
+    def action_open_leads(self):
+        action = self.env['ir.actions.actions']._for_xml_id('crm.crm_case_form_view_salesteams_opportunity')
+        rcontext = {
+            'team': self,
+        }
+        action['help'] = self.env['ir.ui.view']._render_template('crm.crm_action_helper', values=rcontext)
+        return action
+
+    def action_open_unassigned_leads(self):
+        action = self.action_open_leads()
+        context_str = action.get('context', '{}')
+        if context_str:
+            try:
+                context = safe_eval(action['context'], {'active_id': self.id, 'uid': self.env.uid})
+            except (NameError, ValueError):
+                context = {}
+        else:
+            context = {}
+        action['context'] = context | {'search_default_unassigned': True}
+        return action
+
     @api.model
     def _action_update_to_pipeline(self, action):
         self.check_access("read")
@@ -738,7 +729,10 @@ class CrmTeam(models.Model):
                 else:
                     action['help'] += "<p>%s</p>" % _("""As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
                                         To work with the CRM, you should join a team.""")
-        action_context = safe_eval(action['context'], {'uid': self.env.uid})
+        try:
+            action_context = safe_eval(action['context'], {'uid': self.env.uid})
+        except (NameError, ValueError):
+            action_context = {}
         action['context'] = action_context
         return action
 
@@ -750,12 +744,7 @@ class CrmTeam(models.Model):
     def action_primary_channel_button(self):
         self.ensure_one()
         if self.use_opportunities:
-            action = self.env['ir.actions.actions']._for_xml_id('crm.crm_case_form_view_salesteams_opportunity')
-            rcontext = {
-                'team': self,
-            }
-            action['help'] = self.env['ir.ui.view']._render_template('crm.crm_action_helper', values=rcontext)
-            return action
+            return self.action_open_leads()
         return super().action_primary_channel_button()
 
     def _graph_get_model(self):

@@ -34,7 +34,6 @@
 
         # Model views.
         'views/account_move_views.xml',
-        'views/crm_team_views.xml',
         'views/delivery_carrier_views.xml',
         'views/digest_views.xml',
         'views/product_attribute_views.xml',
