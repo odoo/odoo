@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import TransactionCase, tagged
 
 
@@ -61,3 +62,32 @@ class TestProjectProject(TransactionCase):
         }])
         self.assertEqual(project1.account_id, analytic_account, 'Project 1 should have the default analytic account')
         self.assertEqual(project2.account_id, analytic_account, 'Project 2 should have the default analytic account')
+
+    def test_compute_total_timesheet_time(self):
+        employee = self.env['hr.employee'].create({
+             'name': 'Test Employee',
+        })
+
+        project = self.env['project.project'].create({
+            'name': 'Test Project',
+            'allocated_hours': 1.0,
+        })
+
+        self.env['project.task'].create({
+            'name': 'Test Task',
+            'project_id': project.id,
+            'timesheet_ids': [
+                Command.create({
+                    'name': '/',
+                    'employee_id': employee.id,
+                    'unit_amount': 0.5,
+                }),
+                Command.create({
+                    'name': '/',
+                    'employee_id': employee.id,
+                    'unit_amount': 0.25,
+                }),
+            ],
+        })
+
+        self.assertEqual(project.total_timesheet_time, 0.75, 'The total timesheet time should be 0.75 (00:45) hours.')
