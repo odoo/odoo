@@ -39,6 +39,7 @@ import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
 import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
+import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 
 const { DateTime } = luxon;
 
@@ -584,6 +585,10 @@ export class PosStore extends WithLazyGetterTrap {
         } else {
             return "flex-row-reverse justify-content-between m-1";
         }
+    }
+    async onProductInfoClick(productTemplate) {
+        const info = await this.getProductInfo(productTemplate, 1);
+        this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
     }
     getProductPriceFormatted(productTemplate) {
         const formattedUnitPrice = this.env.utils.formatCurrency(
