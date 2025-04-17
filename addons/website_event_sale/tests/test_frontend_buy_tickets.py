@@ -187,10 +187,15 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         # Payment should fail due to exceeding the VIP ticket limit
         with self.assertRaisesRegex(JsonRpcException, r'odoo\.exceptions\.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
-        # Double check that we hit the correct limit
+        # Double check that we hit the correct limit for ticket
         with self.assertRaises(ValidationError):
-            self.ticket_2._check_seats_availability(minimal_availability=1)
-        self.event._check_seats_availability(minimal_availability=1)
+            self.event._verify_seats_availability([
+                (slot, ticket, 1)
+                for slot, ticket in self.env['event.registration']._read_group(
+                    [('id', 'in', self.event.registration_ids.ids)],
+                    ['event_slot_id', 'event_ticket_id']
+                )
+            ])
 
         # Replace VIP ticket with 2 regular tickets
         sale_order.order_line.write({
@@ -214,10 +219,15 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         # Payment should fail due to exceeding the event seat limit
         with self.assertRaisesRegex(JsonRpcException, r'odoo\.exceptions\.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
-        # Double check that we hit the correct limit
+        # Double check that we hit the correct limit for event
         with self.assertRaises(ValidationError):
-            self.event._check_seats_availability(minimal_availability=2)
-        self.ticket._check_seats_availability(minimal_availability=1)
+            self.event._verify_seats_availability([
+                (slot, ticket, 2)
+                for slot, ticket in self.env['event.registration']._read_group(
+                    [('id', 'in', self.event.registration_ids.ids)],
+                    ['event_slot_id', 'event_ticket_id']
+                )
+            ])
 
         # Payment should succeed when buying only one ticket
         sale_order.order_line.product_uom_qty = 1

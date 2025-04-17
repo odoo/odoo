@@ -13,7 +13,8 @@
         </div>
 
         <!-- The registration modal is available in any event page  -->
-        <t t-call="website_event.modal_ticket_registration"/>
+        <t t-if="event.is_multi_slots" t-call="website_event.modal_slot_registration"/>
+        <t t-else="" t-call="website_event.modal_ticket_registration"/>
     </t>
 </template>
 

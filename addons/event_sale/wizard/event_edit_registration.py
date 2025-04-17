@@ -22,6 +22,7 @@ class RegistrationEditor(models.TransientModel):
         sale_order = self.env['sale.order'].browse(res.get('sale_order_id'))
         registrations = self.env['event.registration'].search([
             ('sale_order_id', '=', sale_order.id),
+            ('event_slot_id', 'in', sale_order.mapped('order_line.event_slot_id').ids or [False]),
             ('event_ticket_id', 'in', sale_order.mapped('order_line.event_ticket_id').ids),
             ('state', '!=', 'cancel')])
 
@@ -33,6 +34,7 @@ class RegistrationEditor(models.TransientModel):
             # Add existing registrations
             attendee_list += [[0, 0, {
                 'event_id': reg.event_id.id,
+                'event_slot_id': reg.event_slot_id.id,
                 'event_ticket_id': reg.event_ticket_id.id,
                 'registration_id': reg.id,
                 'name': reg.name,
@@ -43,6 +45,7 @@ class RegistrationEditor(models.TransientModel):
             # Add new registrations
             attendee_list += [[0, 0, {
                 'event_id': so_line.event_id.id,
+                'event_slot_id': so_line.event_slot_id.id,
                 'event_ticket_id': so_line.event_ticket_id.id,
                 'sale_order_line_id': so_line.id,
                 'name': so_line.order_partner_id.name,
@@ -78,6 +81,7 @@ class RegistrationEditorLine(models.TransientModel):
     event_id = fields.Many2one('event.event', string='Event', required=True)
     company_id = fields.Many2one(related="event_id.company_id")
     registration_id = fields.Many2one('event.registration', 'Original Registration')
+    event_slot_id = fields.Many2one('event.slot', string='Event Slot')
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
@@ -94,6 +98,7 @@ class RegistrationEditorLine(models.TransientModel):
         if include_event_values:
             registration_data.update({
                 'event_id': self.event_id.id,
+                'event_slot_id': self.event_slot_id.id,
                 'event_ticket_id': self.event_ticket_id.id,
                 'sale_order_id': self.editor_id.sale_order_id.id,
                 'sale_order_line_id': self.sale_order_line_id.id,

@@ -193,7 +193,13 @@
                                 <div class="col-md-6 col-12 mb-3 o_event_full_page_ticket_column">
                                     <div class="d-flex">
                                         <i class="fa fa-calendar fa-2x fa-fw me-2 mt-1"/>
-                                        <div t-if="event.is_one_day">
+                                        <div t-if="attendee">
+                                            <span t-field="attendee.event_begin_date" class="text-nowrap"
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/><br/>
+                                            <span class="me-1">to</span><span t-field="attendee.event_end_date" class="text-nowrap"
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/>
+                                        </div>
+                                        <div t-elif="event.is_one_day">
                                             <span t-field="event.date_begin" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'/><br/>
                                             <span class="me-1">from</span><span t-field="event.date_begin" class="text-nowrap"
@@ -312,20 +318,37 @@
         <div class="position-relative h-100">
             <h3 class="fw-bold text-center" t-field="event.name"/>
             <div class="text-center o_event_badge_font_small">
-                <span itemprop="startDate" t-field="event.date_begin"
-                    t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
-                    class="fw-bold"/>
-                <span itemprop="startDateTime" t-field="event.date_begin"
-                    class="fw-bold"
-                    t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
-                <span class="fa fa-arrow-right o_event_badge_font_faded"/>
-                <span t-if="not event.is_one_day"
-                    itemprop="endDate" t-field="event.date_end"
-                    t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
-                    class="fw-bold"/>
-                <span itemprop="endDateTime" t-field="event.date_end"
-                    class="fw-bold"
-                    t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                <t t-if="attendee">
+                    <span itemprop="startDate" t-field="attendee.event_begin_date"
+                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                        class="fw-bold"/>
+                    <span itemprop="startDateTime" t-field="attendee.event_begin_date"
+                        class="fw-bold"
+                        t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                    <span class="fa fa-arrow-right o_event_badge_font_faded"/>
+                    <span itemprop="endDate" t-field="attendee.event_end_date"
+                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                        class="fw-bold"/>
+                    <span itemprop="endDateTime" t-field="attendee.event_end_date"
+                        class="fw-bold"
+                        t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                </t>
+                <t t-else="">
+                    <span itemprop="startDate" t-field="event.date_begin"
+                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                        class="fw-bold"/>
+                    <span itemprop="startDateTime" t-field="event.date_begin"
+                        class="fw-bold"
+                        t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                    <span class="fa fa-arrow-right o_event_badge_font_faded"/>
+                    <span t-if="not event.is_one_day"
+                        itemprop="endDate" t-field="event.date_end"
+                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                        class="fw-bold"/>
+                    <span itemprop="endDateTime" t-field="event.date_end"
+                        class="fw-bold"
+                        t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                </t>
             </div>
             <div t-if="event.address_id" class="o_event_badge_font_faded o_event_badge_font_small text-center">
                 <t t-call="event.event_report_template_formatted_event_address">

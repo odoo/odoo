@@ -28,6 +28,7 @@
                             <field name="event_registration_id"/>
                             <field name="event_registration_name"/>
                             <field name="event_registration_create_date"/>
+                            <field name="event_slot_id"/>
                             <field name="event_ticket_id"/>
                             <field name="event_registration_state"/>
                         </group>
@@ -69,6 +70,7 @@
         <field name="arch" type="xml">
             <list string="Revenues" edit="false" create="false">
                 <field name="event_id"/>
+                <field name="event_slot_id"/>
                 <field name="event_ticket_id"/>
                 <field name="product_id" optional="hide"/>
                 <field name="event_ticket_price"/>
@@ -113,6 +115,7 @@
                     <filter string="Event" name="group_by_event_id" context="{'group_by': 'event_id' }"/>
                     <separator/>
                     <filter string="Product" name="group_by_product_id" context="{'group_by': 'product_id'}"/>
+                    <filter string="Slot" name="group_by_slot_id" context="{'group_by': 'event_slot_id'}"/>
                     <filter string="Ticket" name="group_by_ticket_id" context="{'group_by': 'event_ticket_id'}"/>
                     <separator/>
                     <filter string="Registration Status" name="group_by_registration_state"

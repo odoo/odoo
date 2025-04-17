@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from contextlib import contextmanager
+from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -158,6 +159,20 @@ class EventCase(common.TransactionCase):
         return registrations
 
     @classmethod
+    def _create_registrations_for_slot_and_ticket(cls, event, slot, ticket, count, **add_values):
+        return cls.env['event.registration'].create([
+            dict(
+                    {
+                    'email': f'{slot.id if slot else "NoSlot"}.{ticket.id if ticket else "NoTicket"}@test.example.com',
+                    'event_id': event.id,
+                    'event_slot_id': slot.id if slot else False,
+                    'event_ticket_id': ticket.id if ticket else False,
+                    'name': f'{slot.id if slot else "NoSlot"}.{ticket.id if ticket else "NoTicket"}',
+                }, **add_values
+            ) for idx in range(0, count)
+        ])
+
+    @classmethod
     def _setup_test_reports(cls):
         cls.test_report_view = cls.env["ir.ui.view"].create({
             "arch_db": """
@@ -215,3 +230,12 @@ class EventCase(common.TransactionCase):
         for record, call_at in zip(capture.records, call_at_list):
             self.assertEqual(record.call_at, call_at.replace(microsecond=0))
             self.assertEqual(record.cron_id, self.env.ref('event.event_mail_scheduler'))
+
+    @contextmanager
+    def mock_datetime_and_now(self, mock_dt):
+        """ Used when synchronization date (using env.cr.now()) is important
+        in addition to standard datetime mocks. Used mainly to detect sync
+        issues. """
+        with freeze_time(mock_dt), \
+             patch.object(self.env.cr, 'now', lambda: mock_dt):
+            yield
