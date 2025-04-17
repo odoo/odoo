@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, models, _
+from odoo import models, _
 from odoo.exceptions import UserError
 
 class AccountMoveSendWizard(models.TransientModel):
@@ -47,16 +47,6 @@ class AccountMoveSendWizard(models.TransientModel):
                             ),
                         }
                     }
-
-    @api.depends('sending_methods')
-    def _compute_invoice_edi_format(self):
-        # EXTENDS 'account' - add default on bis3 if not set on partner's preferences and "by Peppol" is selected
-        super()._compute_invoice_edi_format()
-        for wizard in self:
-            if not wizard.invoice_edi_format and wizard.sending_methods and 'peppol' in wizard.sending_methods:
-                wizard.invoice_edi_format = wizard.move_id.partner_id._get_peppol_edi_format()
-            elif wizard.invoice_edi_format != self._get_default_invoice_edi_format(wizard.move_id) and wizard.sending_methods and 'peppol' not in wizard.sending_methods:
-                wizard.invoice_edi_format = None  # back to initial state if user unchecked 'by Peppol'
 
     def action_send_and_print(self, allow_fallback_pdf=False):
         # EXTENDS 'account'
