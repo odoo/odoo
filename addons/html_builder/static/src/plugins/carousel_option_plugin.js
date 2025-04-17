@@ -14,6 +14,11 @@ export class CarouselOptionPlugin extends Plugin {
                 exclude: ".s_carousel_intro_wrapper, .s_carousel_cards_wrapper",
                 applyTo: ":scope > .carousel",
             },
+            {
+                template: "html_builder.CarouselBottomControllersOption",
+                selector: "section",
+                applyTo: ".s_carousel_intro",
+            },
         ],
         builder_actions: this.getActions(),
         on_cloned_handlers: this.onCloned.bind(this),
@@ -32,6 +37,19 @@ export class CarouselOptionPlugin extends Plugin {
                 load: async ({ editingElement, direction: direction }) =>
                     this.slide(direction, editingElement),
                 apply: () => {},
+            },
+            toggleControllers: {
+                apply: ({ editingElement }) => {
+                    const carouselEl = editingElement.closest(".carousel");
+                    const indicatorsWrapEl = carouselEl.querySelector(".carousel-indicators");
+                    const areControllersHidden =
+                        carouselEl.classList.contains("s_carousel_arrows_hidden") &&
+                        indicatorsWrapEl.classList.contains("s_carousel_indicators_hidden");
+                    carouselEl.classList.toggle(
+                        "s_carousel_controllers_hidden",
+                        areControllersHidden
+                    );
+                },
             },
         };
     }
