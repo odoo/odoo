@@ -513,15 +513,15 @@ class AccountMove(models.Model):
             ('l10n_my_edi_retry_at', '<=', datetime.datetime.now()),
             ('l10n_my_edi_retry_at', '=', False),
         ]])
+        if self._can_commit():
+            self.env['ir.cron']._commit_progress(remaining=self.search_count(invoice_domain))
         grouped_invoices = self.env["account.move"]._read_group(
             invoice_domain,
             groupby=["company_id", "l10n_my_edi_submission_uid"],
             aggregates=["id:recordset"],
             limit=MAX_SUBMISSION_UPDATE,
         )
-        invoice_count = self.search_count(invoice_domain)  # Count the total amount of invoices to process.
 
-        processed_invoices = 0
         for company, submission_uid, invoices in grouped_invoices:
             if not company.l10n_my_edi_proxy_user_id:
                 continue
@@ -558,14 +558,11 @@ class AccountMove(models.Model):
                 if invoice.l10n_my_edi_state == "valid":
                     invoice._update_validation_fields(invoice_result)
 
-            processed_invoices += len(invoices)
             # Commit if we can, in case an issue arises later.
             if self._can_commit():
-                self.env['ir.cron']._notify_progress(done=processed_invoices, remaining=invoice_count - processed_invoices)
-                self._cr.commit()
+                self.env['ir.cron']._commit_progress(len(invoices))
 
             time.sleep(0.3)  # There is a limit of how many calls we can do, so we pace ourselves
-        self.env['ir.cron']._notify_progress(done=processed_invoices, remaining=invoice_count - processed_invoices)
 
     @api.model
     def _l10n_my_get_submission_status(self, submission_uid, proxy_user):
