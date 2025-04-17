@@ -17,7 +17,7 @@ class TestUnlinkReward(TestPointOfSaleCommon):
             'trigger': 'auto',
             'applies_on': 'both',
             'rule_ids': [Command.create({
-                'product_ids': cls.whiteboard_pen.ids,
+                'product_ids': cls.whiteboard_pen.product_variant_id.ids,
                 'reward_point_mode': 'unit',
                 'minimum_qty': 1,
             })],
@@ -27,7 +27,7 @@ class TestUnlinkReward(TestPointOfSaleCommon):
         cls.reward = cls.env['loyalty.reward'].create({
             'program_id': cls.loyalty_program.id,
             'reward_type': 'product',
-            'reward_product_id': cls.whiteboard_pen.id,
+            'reward_product_id': cls.whiteboard_pen.product_variant_id.id,
             'reward_product_qty': 1,
             'required_points': 4,
         })
@@ -42,7 +42,7 @@ class TestUnlinkReward(TestPointOfSaleCommon):
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'lines': [
                 Command.create({
-                    'product_id': self.whiteboard_pen.id,
+                    'product_id': self.whiteboard_pen.product_variant_id.id,
                     'qty': 5,
                     'price_subtotal': 12.0,
                     'price_subtotal_incl': 12.0,

@@ -7,32 +7,34 @@ from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 from odoo import fields
 from odoo.tests import Form
 
+
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosMrp(TestPointOfSaleCommon):
-    def test_bom_kit_order_total_cost(self):
-        #create a product category that use fifo
-        category = self.env['product.category'].create({
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # product category that use fifo
+        cls.fifo_category = cls.env['product.category'].create({
             'name': 'Category for kit',
             'property_cost_method': 'fifo',
         })
-
-        self.kit = self.env['product.product'].create({
+        # kit product
+        cls.kit = cls.env['product.product'].create({
             'name': 'Kit Product',
             'available_in_pos': True,
             'is_storable': True,
             'lst_price': 10.0,
-            'categ_id': category.id,
+            'categ_id': cls.fifo_category.id,
         })
-
-        self.component_a = self.env['product.product'].create({
+        cls.component_a = cls.env['product.product'].create({
             'name': 'Comp A',
             'is_storable': True,
             'available_in_pos': True,
             'lst_price': 10.0,
             'standard_price': 5.0,
         })
-
-        self.component_b = self.env['product.product'].create({
+        cls.component_b = cls.env['product.product'].create({
             'name': 'Comp B',
             'is_storable': True,
             'available_in_pos': True,
@@ -40,6 +42,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'standard_price': 10.0,
         })
 
+    def test_bom_kit_order_total_cost(self):
         bom_product_form = Form(self.env['mrp.bom'])
         bom_product_form.product_tmpl_id = self.kit.product_tmpl_id
         bom_product_form.product_qty = 1.0
@@ -85,24 +88,12 @@ class TestPosMrp(TestPointOfSaleCommon):
 
     def test_bom_kit_with_kit_invoice_valuation(self):
         # create a product category that use fifo
-        category = self.env['product.category'].create({
-            'name': 'Category for kit',
-            'property_cost_method': 'fifo',
-            'property_valuation': 'real_time',
-        })
-
-        self.kit = self.env['product.product'].create({
-            'name': 'Final Kit',
-            'available_in_pos': True,
-            'categ_id': category.id,
-            'taxes_id': False,
-            'is_storable': True,
-        })
+        self.fifo_category.property_valuation = 'real_time'
 
         self.kit_2 = self.env['product.product'].create({
             'name': 'Final Kit 2',
             'available_in_pos': True,
-            'categ_id': category.id,
+            'categ_id': self.fifo_category.id,
             'taxes_id': False,
             'is_storable': True,
         })
@@ -110,40 +101,26 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.subkit1 = self.env['product.product'].create({
             'name': 'Subkit 1',
             'available_in_pos': True,
-            'categ_id': category.id,
+            'categ_id': self.fifo_category.id,
             'taxes_id': False,
         })
 
         self.subkit2 = self.env['product.product'].create({
             'name': 'Subkit 2',
             'available_in_pos': True,
-            'categ_id': category.id,
+            'categ_id': self.fifo_category.id,
             'taxes_id': False,
         })
 
-        self.component_a = self.env['product.product'].create({
-            'name': 'Comp A',
-            'available_in_pos': True,
-            'standard_price': 5.0,
-            'categ_id': category.id,
-            'taxes_id': False,
-        })
-
-        self.component_b = self.env['product.product'].create({
-            'name': 'Comp B',
-            'available_in_pos': True,
-            'standard_price': 5.0,
-            'categ_id': category.id,
-            'taxes_id': False,
-        })
-
-        self.component_c = self.env['product.product'].create({
+        component_c = self.env['product.product'].create({
             'name': 'Comp C',
             'available_in_pos': True,
             'standard_price': 5.0,
-            'categ_id': category.id,
+            'categ_id': self.fifo_category.id,
             'taxes_id': False,
         })
+
+        self.component_b.write({'standard_price': 5.0})
 
         bom_product_form = Form(self.env['mrp.bom'])
         bom_product_form.product_tmpl_id = self.subkit1.product_tmpl_id
@@ -162,7 +139,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             bom_line.product_id = self.component_b
             bom_line.product_qty = 1.0
         with bom_product_form.bom_line_ids.new() as bom_line:
-            bom_line.product_id = self.component_c
+            bom_line.product_id = component_c
             bom_line.product_qty = 1.0
         self.bom_b = bom_product_form.save()
 
@@ -249,26 +226,9 @@ class TestPosMrp(TestPointOfSaleCommon):
            the price unit is correctly computed on the invoice lines.
         """
         self.env.user.group_ids += self.env.ref('uom.group_uom')
-        category = self.env['product.category'].create({
-            'name': 'Category for kit',
-            'property_cost_method': 'fifo',
-            'property_valuation': 'real_time',
-        })
-
-        self.kit = self.env['product.product'].create({
-            'name': 'Final Kit',
-            'available_in_pos': True,
-            'categ_id': category.id,
-            'taxes_id': False,
-            'is_storable': True,
-        })
-
-        self.component_a = self.env['product.product'].create({
-            'name': 'Comp A',
-            'available_in_pos': True,
+        self.fifo_category.property_valuation = 'real_time'
+        self.component_a.write({
             'standard_price': 12000.0,
-            'categ_id': category.id,
-            'taxes_id': False,
             'uom_id': self.env.ref('uom.product_uom_dozen').id,
         })
 
