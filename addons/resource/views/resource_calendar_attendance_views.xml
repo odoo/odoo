@@ -6,14 +6,15 @@
         <field name="arch" type="xml">
             <list string="Working Time" editable="bottom" default_order="sequence, week_type, dayofweek, hour_from">
                 <field name="sequence" widget="handle"/>
-                <field name="display_type" column_invisible="True"/>
                 <field name="display_name" width="1" string=" " invisible="display_type != 'line_section'"/>
                 <field name="name" invisible="display_type == 'line_section'"/>
                 <field name="dayofweek"/>
-                <field name="day_period"/>
-                <field name="hour_from" widget="float_time"/>
-                <field name="hour_to" widget="float_time"/>
-                <field name="duration_days" optional="show"/>
+                <field name="day_period" column_invisible="parent.schedule_type == 'fixed_time' and not parent.fixed_time_with_hours"/>
+                <field name="hour_from" widget="float_time" column_invisible="parent.schedule_type != 'fully_fixed'"/>
+                <field name="hour_to" widget="float_time" column_invisible="parent.schedule_type != 'fully_fixed'"/>
+                <field name="duration_hours" widget="float_time"
+                    column_invisible="parent.schedule_type != 'fixed_time' or not parent.fixed_time_with_hours"/>
+                <field name="duration_days" optional="hide"/>
                 <field name="date_from" optional="hide"/>
                 <field name="date_to" optional="hide"/>
                 <field name="week_type" readonly="1" force_save="1" optional="hide"/>

@@ -375,8 +375,14 @@ class HrVersion(models.Model):
     @api.depends('resource_calendar_id.flexible_hours')
     def _compute_is_flexible(self):
         for version in self:
-            version.is_fully_flexible = version._is_fully_flexible()
-            version.is_flexible = version.is_fully_flexible or version.resource_calendar_id.flexible_hours
+            version.is_fully_flexible = (
+                not version.resource_calendar_id
+                or version.resource_calendar_id.schedule_type == "fully_flexible"
+            )
+            version.is_flexible = (
+                version.is_fully_flexible
+                or version.resource_calendar_id.schedule_type == "flexible"
+            )
 
     @api.model
     def _get_whitelist_fields_from_template(self):
