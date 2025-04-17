@@ -214,7 +214,12 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         trigger: ":iframe .s_text_image img",
         run: "click",
     },
-    changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_desktop"]'),
+    // changeOption("Column", "Visibility", "[data-action-id='toggleDeviceVisibility']"),
+    {
+        content: "Change visibility of the 'Text - Image' snippet",
+        trigger: "[data-container-title='Column'] [data-label='Visibility'] button[data-action-id='toggleDeviceVisibility']",
+        run: "click",
+    },
     {
         content: "Check that the Column has been added in the 'Invisible Elements' panel",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Column')",
@@ -224,10 +229,15 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         trigger: ":iframe .s_text_image",
         run: "click",
     },
-    changeOption("ConditionalVisibility", 'we-button[data-toggle-device-visibility="no_desktop"]'),
+    // changeOption("Text - Image", "Visibility", "[data-action-id='toggleDeviceVisibility']"),
+    {
+        content: "Change visibility of the 'Text - Image' snippet",
+        trigger: "[data-container-title='Text - Image'] [data-label='Visibility'] button[data-action-id='toggleDeviceVisibility']",
+        run: "click",
+    },
     {
         content: "Check that the 'Text - Image' is the parent of 'Column' in the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel:contains('Column')",
     },
     {
         content: "Click on the 'Text - Image' entry on the 'Invisible Elements' panel",
@@ -238,7 +248,12 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         content: "Check that the snippet is visible on the website",
         trigger: ":iframe .s_text_image.o_snippet_desktop_invisible.o_snippet_override_invisible",
     },
-    changeOption("ConditionalVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
+    {
+        content: "Change visibility of the 'Text - Image' snippet",
+        trigger: "[data-container-title='Text - Image'] [data-label='Visibility'] button[data-action-id='toggleDeviceVisibility']",
+        run: "click",
+    },
+    // changeOption("Text - Image", "Visibility", "[data-action-id='toggleDeviceVisibility']"),
     {
         content: "Check that the 'Text - Image' has been removed from the 'Invisible Elements' panel",
         trigger: ".o_we_invisible_el_panel:not(.o_we_invisible_entry:contains('Text - Image'))",
@@ -252,14 +267,19 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         content: "Check that the column is visible on the website",
         trigger: ":iframe .s_text_image .row > .o_snippet_desktop_invisible.o_snippet_override_invisible",
     },
-    changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
+    // changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
+    {
+        content: "Change visibility of the 'Text - Image' snippet",
+        trigger: "[data-container-title='Column'] [data-label='Visibility'] button[data-action-id='toggleDeviceVisibility']",
+        run: "click",
+    },
     {
         content: "Check that the column has been removed from the 'Invisible Elements' panel",
-        trigger: "#oe_snippets:not(:has(.o_we_invisible_entry:contains('Column')))",
+        trigger: ".o-snippets-menu:not(:has(.o_we_invisible_entry:contains('Column')))",
     },
     {
         content: "Activate mobile preview",
-        trigger: ".o_we_website_top_actions button[data-action='mobile']",
+        trigger: ".o-snippets-top-actions button[data-action='mobile']",
         run: "click",
     },
     {
