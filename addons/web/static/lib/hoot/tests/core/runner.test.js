@@ -71,13 +71,12 @@ describe(parseUrl(import.meta.url), () => {
     test("can register test tags", async () => {
         const runner = makeTestRunner();
         runner.describe("suite", () => {
-            let testFn = runner.test;
             for (let i = 1; i <= 10; i++) {
                 // 10
-                testFn = testFn.tags`Tag-${i}`;
+                runner.test.tags(`Tag-${i}`);
             }
 
-            testFn("tagged test", () => {});
+            runner.test("tagged test", () => {});
         });
 
         expect(runner.tags).toHaveLength(10);

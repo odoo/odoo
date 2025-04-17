@@ -17710,7 +17710,8 @@ test("two pages, go page 2, record deleted meanwhile (grouped case)", async () =
     expect(".o_group_header .o_pager").toHaveCount(0);
 });
 
-test.tags("desktop")("select records range with shift click on several page", async () => {
+test.tags("desktop");
+test("select records range with shift click on several page", async () => {
     await mountView({
         resModel: "foo",
         type: "list",
