@@ -214,8 +214,11 @@ class MailMail(models.Model):
 
             def post_send_callback(ids):
                 """ Track mail ids that have been sent, and notify cron progress accordingly. """
-                ids_done.update(send_ids)
-                self.env['ir.cron']._notify_progress(done=len(ids_done), remaining=total - len(ids_done))
+                processed = set(ids) - ids_done
+                ids_done.update(processed)
+                if self.env.get('ir_cron'):
+                    # commit progress only when running from a cron job
+                    self.env['ir.cron']._commit_progress(len(processed), remaining=total - len(ids_done))
         else:
             send_ids = list(set(send_ids) & set(ids))
             post_send_callback = None
