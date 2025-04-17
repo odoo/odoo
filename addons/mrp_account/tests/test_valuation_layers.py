@@ -151,6 +151,31 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         unbuild_form.save().action_unbuild()
         self.assertEqual(self.component.value_svl, 30)
 
+    def test_fifo_produce_deliver_return_unbuild(self):
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.component.write({
+            'type': 'consu',
+            'standard_price': 10.0,
+        })
+
+        mo = self._make_mo(self.bom, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+
+        out_move = self._make_out_move(self.product1, 1.0, create_picking=True)
+        self._make_return(out_move, 1.0)
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.save().action_unbuild()
+
+        self.assertRecordValues(self.product1.stock_valuation_layer_ids, [
+            {'value': 10.0, 'quantity': 1.0, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+            {'value': -10.0, 'quantity': -1.0, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+            {'value': 10.0, 'quantity': 1.0, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+            {'value': -10.0, 'quantity': -1.0, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+        ])
+
     def test_fifo_avco_1(self):
         self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
