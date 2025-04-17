@@ -612,6 +612,7 @@ class IrActionsServer(models.Model):
         ('value', 'Update'),
         ('equation', 'Compute')
     ], 'Value Type', default='value', change_default=True)
+    html_value = fields.Html(inverse='_set_html_value')
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
     selection_value = fields.Many2one('ir.model.fields.selection', string="Custom Value", ondelete='cascade',
@@ -619,6 +620,7 @@ class IrActionsServer(models.Model):
 
     value_field_to_show = fields.Selection([
         ('value', 'value'),
+        ('html_value', 'html_value'),
         ('resource_ref', 'reference'),
         ('update_boolean_value', 'update_boolean_value'),
         ('selection_value', 'selection_value'),
@@ -1119,6 +1121,8 @@ class IrActionsServer(models.Model):
                 action.value_field_to_show = 'selection_value'
             elif action.update_field_id.ttype == 'boolean':
                 action.value_field_to_show = 'update_boolean_value'
+            elif action.update_field_id.ttype == 'html':
+                action.value_field_to_show = 'html_value'
             else:
                 action.value_field_to_show = 'value'
 
@@ -1134,6 +1138,11 @@ class IrActionsServer(models.Model):
             a.link_field_id.model == a.model_id.model and a.link_field_id.relation == a.crud_model_id.model
         ))
         invalid.link_field_id = False
+
+    @api.onchange('html_value')
+    def _set_html_value(self):
+        for action in self.filtered(lambda action: action.value_field_to_show == 'html_value'):
+            action.value = action.html_value
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
