@@ -3,6 +3,7 @@
     <template id="custom_user_profile" name="Custom User Profile">
         <t t-call="website.layout">
             <div class="container mt-5">
+                <!-- User Info -->
                 <div class="row text-center">
                     <div class="col-md-12">
                         <h2 t-esc="user.name" class="mt-3">Nickname</h2>
@@ -12,39 +13,50 @@
                         <a href="/profile/edit" class="btn btn-primary mt-3">Edit Info</a>
                     </div>
                 </div>
-                <div class="row mt-5">
-                    <div class="col-md-4 text-center">
-                        <button class="btn btn-warning">Order Status</button>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <button class="btn btn-warning">Order History</button>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <button class="btn btn-warning">Returns</button>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-4 text-center">
-                        <button class="btn btn-warning">Wallet</button>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <a href="/shop/address" class="btn btn-warning">Add Shipping Address</a>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <button class="btn btn-warning">Change Currency</button>
+
+                <!-- Navigation Buttons -->
+                <div class="button-group-container mt-5">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <a href="/user/orders/status" class="btn btn-warning w-100">Order Status</a>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <a href="/user/orders/history" class="btn btn-warning w-100">Order History</a>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <a href="/user/orders/returns" class="btn btn-warning w-100">Returns</a>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-md-6 text-center">
-                        <a href="/seller_reg" class="btn btn-warning">Open Store</a>
+
+                <div class="button-group-container mt-4">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <button class="btn btn-warning w-100">Wallet</button>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <a href="/shop/checkout" class="btn btn-warning w-100">Shipping Address</a>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <button class="btn btn-warning w-100">Change Currency</button>
+                        </div>
                     </div>
-                    <div class="col-md-6 text-center">
-                        <button class="btn btn-warning">Accounting and Taxes</button>
+                </div>
+
+                <div class="button-group-container mt-4">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <a href="/seller_reg" class="btn btn-warning w-100">Open Store</a>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <button class="btn btn-warning w-100">Accounting and Taxes</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </t>
     </template>
+
     <template id="edit_user_profile" name="Edit User Profile">
         <t t-call="website.layout">
             <div class="container mt-5">
@@ -70,29 +82,83 @@
             </div>
         </t>
     </template>
-    <template id="edit_user_profile" name="Edit User Profile">
+    <!-- вкладки (страницы) будут иконки вместо текста -->
+    <!-- <template id="customize_shop_icon" inherit_id="website.layout" name="Shop Icon Replace">
+        <xpath expr="//a[contains(@href, '/shop')]" position="replace">
+            <a href="/shop" role="menuitem">
+                <img src="/static/src/img/shop_icon.png" alt="Shop" style="height: 16px;"/>
+            </a>
+        </xpath>
+    </template> -->
+    <template id="user_order_status" name="Order Status">
         <t t-call="website.layout">
             <div class="container mt-5">
-                <h2>Edit Profile</h2>
-                <form method="post" action="/profile/save">
-                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                    
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" class="form-control" t-att-value="user.name" />
+                <h3 class="mb-4">Order Status</h3>
+                <div class="row" t-foreach="orders" t-as="order">
+                    <div class="col-md-12 mb-3">
+                        <div class="card p-3 d-flex flex-row align-items-center">
+                            <img t-att-src="order.image_url" class="img-thumbnail me-3" style="width: 100px; height: 100px;" />
+                            <div class="flex-grow-1">
+                                <h5 t-esc="order.name">Product Name</h5>
+                                <p>Quantity: <t t-esc="order.quantity" /></p>
+                                <p>Status: <span class="badge bg-info" t-esc="order.status">Pending Shipment</span></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" t-att-value="user.email" />
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="text" id="phone" name="phone" class="form-control" t-att-value="user.phone" />
-                    </div>
-                    <button type="submit" class="btn btn-success mt-3">Save</button>
-                    <a href="/profile" class="btn btn-secondary mt-3">Cancel</a>
-                </form>
+                </div>
             </div>
         </t>
     </template>
+    <template id="user_order_history" name="Order History">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h3 class="mb-4">Order History</h3>
+                <div class="row" t-foreach="orders" t-as="order">
+                    <div class="col-md-12 mb-3">
+                        <div class="card p-3 d-flex flex-row align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <img t-att-src="order.image_url" class="img-thumbnail me-3" style="width: 100px; height: 100px;" />
+                                <div>
+                                    <h5 t-esc="order.name">Product Name</h5>
+                                    <p>Quantity: <t t-esc="order.quantity" /></p>
+                                    <p>Status: <span class="badge bg-success" t-esc="order.status">Delivered</span></p>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Date: <t t-esc="order.date_order" /></p>
+                                <p>Time: <t t-esc="order.time_order" /></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="user_order_returns" name="Returns">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h3 class="mb-4">Returns</h3>
+                <div class="row" t-foreach="returns" t-as="ret">
+                    <div class="col-md-12 mb-3">
+                        <div class="card p-3 d-flex flex-row align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <img t-att-src="ret.image_url" class="img-thumbnail me-3" style="width: 100px; height: 100px;" />
+                                <div>
+                                    <h5 t-esc="ret.name">Product Name</h5>
+                                    <p>Quantity: <t t-esc="ret.quantity" /></p>
+                                    <p>Status: <span class="badge bg-warning" t-esc="ret.status">Return Requested</span></p>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Return Date: <t t-esc="ret.date_return" /></p>
+                                <p>Return Time: <t t-esc="ret.time_return" /></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
 </odoo>

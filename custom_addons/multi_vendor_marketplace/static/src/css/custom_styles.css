@@ -1,39 +1,19 @@
-#products_grid .oe_product {
-    background-color: #fff; /* Белый фон карточек */
-
-    overflow: hidden; /* Обрезка содержимого, если оно выходит за границы */
-    margin: 0; /* Убираем лишние внешние отступы */
-    box-sizing: border-box; /* Учитываем padding и border в ширине */
-    transition: background-color 0.3s ease; /* Плавный переход для фона */
-}
-
-/* Эффекты при наведении на карточку */
-#products_grid .oe_product:hover {
-    background-color: #f9f9f9; /* Легкое изменение фона при наведении */
-}
-
-/* Стили для изображений внутри карточек */
-#products_grid .oe_product img {
-    border-radius: 8px; /* Скругление углов изображений */
-    object-fit: cover; /* Обрезка изображения по размеру карточки */
-}
-
-/* Эффект затемнения изображения при наведении */
-#products_grid .oe_product img:hover {
-    filter: brightness(0.9); /* Слегка затемняем изображение */
-}
-
+/* ############################################################################################################################################################## */
+/* ПРОФИЛЬ */
+/* ############################################################################################################################################################## */
 .btn-warning {
     background-color: #f08106; /* Оранжевый фон */
     color: white; /* Белый текст */
     font-weight: bold; /* Жирный текст */
     border-radius: 15px; /* Скругленные углы */
-    padding: 15px 30px; /* Внутренние отступы */
+    padding: 20px 30px; /* Увеличили вертикальные отступы для более толстых кнопок */
     text-transform: uppercase; /* Заглавные буквы */
     width: 100%; /* Кнопка занимает всю ширину колонки */
     margin-bottom: 15px; /* Отступ между кнопками */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень */
     transition: transform 0.2s ease, background-color 0.3s ease; /* Анимация */
+    border: none; /* Убираем стандартную границу */
+    font-size: 16px; /* Чуть увеличенный размер шрифта */
 }
 
 .btn-warning:hover {
@@ -47,4 +27,95 @@
     background-color: #e6740c; /* Возвращаем цвет при нажатии или фокусе */
     outline: none; /* Убираем обводку фокуса */
     color: white; /* Белый текст */
+}
+
+/* Стиль для контейнера с группой кнопок */
+.button-group-container {
+    border: 2px solid #e0e0e0; /* Обводка вокруг группы кнопок */
+    border-radius: 20px; /* Скругленные углы контейнера */
+    padding: 20px; /* Внутренние отступы контейнера */
+    margin-bottom: 25px; /* Отступ между группами кнопок */
+    background-color: #ffffff; /* Белый фон контейнера */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Легкая тень */
+}
+
+/* ############################################################################################################################################################## */
+/* CКРЫТИЯ КНОПОК */
+/* ############################################################################################################################################################## */
+
+li.o_no_autohide_item {
+    display: none !important;
+}
+
+
+/* ############################################################################################################################################################## */
+/* МАГАЗ ОСНОВНОЙ */
+/* ############################################################################################################################################################## */
+
+/* Основные стили карточки */
+.oe_product_cart {
+    border: none !important;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    /* Новые свойства */
+    width: 100%; /* Занимает всю доступную ширину */
+    margin: 0 auto; /* Центрирование */
+}
+
+/* Стиль при наведении - только тень и увеличение изображения */
+.oe_product_cart:hover {
+    box-shadow: 0 0 15px rgba(0,0,0,0.1); /* Тень по периметру */
+    transform: none; /* Убрали подъем карточки */
+}
+
+/* Стили для изображения */
+.oe_product_cart .oe_product_image {
+    transition: transform 0.4s ease;
+    transform-origin: center center;
+    width: 100%; /* Занимает всю ширину карточки */
+    height: auto; /* Сохраняет пропорции */
+}
+
+/* Увеличение изображения при наведении (меньше) */
+.oe_product_cart:hover .oe_product_image {
+    transform: scale(1.03); /* Очень легкое увеличение */
+}
+
+/* Стили для текстовой информации */
+.oe_product_cart .o_wsale_product_information {
+    padding: 15px;
+}
+
+/* Стили для названия товара */
+.oe_product_cart h5,
+.oe_product_cart .product_name {
+    color: #000 !important; /* Черный цвет текста */
+    font-weight: 700 !important; /* Жирный шрифт */
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+/* Стили для цены */
+.oe_product_cart .product_price {
+    color: #05a01f !important; /* Зеленый цвет цены */
+    font-weight: 700 !important; /* Жирный шрифт */
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+/* Дополнительная информация */
+.oe_product_cart .text-muted {
+    color: #999 !important;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Убираем лишние элементы */
+.oe_product_cart .oe_subdescription {
+    display: none !important;
 }

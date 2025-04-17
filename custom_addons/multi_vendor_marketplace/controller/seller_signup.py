@@ -38,7 +38,9 @@ LOGIN_SUCCESSFUL_PARAMS.add('account_created')
 class SellerSignup(AuthSignupHome):
     """Class for sellers signup"""
 
-
+    @http.route('/', type='http', auth='public', website=True)
+    def homepage_redirect(self, **kwargs):
+        return request.redirect('/shop')
     
     @http.route(['/profile'], type="http", auth="user", website=True)
     def user_profile(self, **kwargs):
@@ -327,3 +329,6 @@ class SellerSignup(AuthSignupHome):
             qcontext.get('profile_url')) if qcontext.get(
             'profile_url') else 0
         return values
+
+
+
