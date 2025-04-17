@@ -320,6 +320,7 @@
                                     <field name="lot_ids" widget="many2many_tags"
                                         column_invisible="parent.state == 'draft'"
                                         groups="stock.group_production_lot"
+                                        readonly="1"
                                         invisible="not show_details_visible or has_tracking == 'none'"
                                         optional="hide"
                                         options="{'create': [('parent.use_create_lots', '=', True)]}"
