@@ -19,7 +19,8 @@ class Test extends models.Model {
 defineWebsiteModels();
 defineModels([Test]);
 
-test.tags("focus required")("basic many2many: find tag, select tag, unselect tag", async () => {
+test.tags("focus required");
+test("basic many2many: find tag, select tag, unselect tag", async () => {
     onRpc("/web/dataset/call_kw/test/name_search", async (args) => [
         [1, "First"],
         [2, "Second"],

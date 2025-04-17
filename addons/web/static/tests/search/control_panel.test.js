@@ -37,7 +37,8 @@ test("simple rendering", async () => {
     expect(`.o_breadcrumb`).toHaveCount(1);
 });
 
-test.tags`desktop`("breadcrumbs", async () => {
+test.tags("desktop");
+test("breadcrumbs", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },
@@ -67,7 +68,8 @@ test.tags`desktop`("breadcrumbs", async () => {
     expect.verifySteps(["controller_7"]);
 });
 
-test.tags`desktop`("view switcher", async () => {
+test.tags("desktop");
+test("view switcher", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },
@@ -94,7 +96,8 @@ test.tags`desktop`("view switcher", async () => {
     expect.verifySteps(["kanban"]);
 });
 
-test.tags`desktop`("view switcher (middle click)", async () => {
+test.tags("desktop");
+test("view switcher (middle click)", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },
@@ -115,7 +118,8 @@ test.tags`desktop`("view switcher (middle click)", async () => {
     expect.verifySteps([`kanban -- {} -- {"newWindow":true}`]);
 });
 
-test.tags`desktop`("views aria labels", async () => {
+test.tags("desktop");
+test("views aria labels", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },
@@ -132,7 +136,8 @@ test.tags`desktop`("views aria labels", async () => {
     expect(views[1]).toHaveAttribute("aria-label", "Kanban View");
 });
 
-test.tags`mobile`("view switcher on mobile", async () => {
+test.tags("mobile");
+test("view switcher on mobile", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },
@@ -202,7 +207,8 @@ test("view switcher hotkey cycles through views", async () => {
     expect(`.o_list_view`).toHaveCount(1);
 });
 
-test.tags`desktop`("control panel layout buttons in dialog", async () => {
+test.tags("desktop");
+test("control panel layout buttons in dialog", async () => {
     onRpc("has_group", () => true);
     Foo._fields.char = fields.Char();
     Foo._records = [
