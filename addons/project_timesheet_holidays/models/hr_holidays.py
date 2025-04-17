@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from datetime import datetime, time, timedelta
 
 
 class HolidaysType(models.Model):
@@ -80,10 +81,7 @@ class Holidays(models.Model):
             if not leave.employee_id:
                 continue
 
-            work_hours_data = leave.employee_id._list_work_time_per_day(
-                leave.date_from,
-                leave.date_to)[leave.employee_id.id]
-
+            work_hours_data = self._compute_leave_work_data(leave)
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count, project, task))
 
@@ -96,6 +94,23 @@ class Holidays(models.Model):
         self.env['account.analytic.line'].sudo().create(vals_list)
 
         return super()._validate_leave_request()
+
+    def _compute_leave_work_data(self, leave):
+        calendar = leave.employee_id.resource_calendar_id or leave.employee_id.company_id.resource_calendar_id
+        if calendar and calendar.flexible_hours:
+            standard_hours = calendar.hours_per_day or 8.0
+            data = []
+            current, end = leave.date_from.date(), leave.date_to.date()
+            while current <= end:
+                if calendar.get_work_hours_count(
+                    datetime.combine(current, time.min),
+                    datetime.combine(current, time.max),
+                    compute_leaves=False):
+                    data.append((current, standard_hours))
+                current += timedelta(days=1)
+            return data
+        return leave.employee_id._list_work_time_per_day(
+                leave.date_from, leave.date_to)[leave.employee_id.id]
 
     def _timesheet_prepare_line_values(self, index, work_hours_data, day_date, work_hours_count, project, task):
         self.ensure_one()

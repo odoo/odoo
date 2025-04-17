@@ -264,3 +264,27 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         # timesheet should be unlinked to the timeoff, and be able to delete it
         timesheets.with_user(SUPERUSER_ID).unlink()
         self.assertFalse(timesheets.exists(), 'Timesheet should be deleted')
+
+    def test_validate_with_flexible_hours(self):
+        """Test that time off with flexible hours creates correct timesheet entries."""
+        self.employee_working_calendar.write({
+            'flexible_hours': True,
+            'hours_per_day': 8.0,
+        })
+        leave_start_datetime = datetime(2022, 3, 7)  # Monday
+        leave_end_datetime = datetime(2022, 3, 9)    # Wednesday
+        holiday = self.Requests.with_user(self.user_employee).create({
+            'name': 'Time Off with Flexible Hours',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'request_date_from': leave_start_datetime,
+            'request_date_to': leave_end_datetime,
+        })
+        holiday.with_user(SUPERUSER_ID).action_validate()
+        self.assertEqual(len(holiday.timesheet_ids), 3, 'Should have 3 timesheet entries (one for each workday)')
+        for timesheet in holiday.timesheet_ids:
+            self.assertEqual(timesheet.unit_amount, 8.0, 'Each timesheet should have exactly 8 hours')
+        total_hours = sum(holiday.timesheet_ids.mapped('unit_amount'))
+        self.assertEqual(total_hours, 24.0, 'Total timesheet hours should be 24 (3 days × 8 hours)')
+        days_with_entries = holiday.timesheet_ids.mapped('date')
+        self.assertEqual(len(days_with_entries), 3, 'Should have entries for exactly 3 different days')
