@@ -271,7 +271,7 @@ function falseHandlerDecorator(adapter) {
 
 function extendSpreadsheetAdapter(granularity, adapter) {
     const originalAdapter = pivotTimeAdapterRegistry.get(granularity);
-    pivotTimeAdapterRegistry.add(
+    pivotTimeAdapterRegistry.replace(
         granularity,
         falseHandlerDecorator({
             ...originalAdapter,
