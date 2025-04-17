@@ -84,6 +84,41 @@ class WebClient(http.Controller):
         ])
         return response
 
+    @http.route('/web/webclient/translations/<string:hash>/<string:unique>', type='http', auth='public', cors='*', readonly=True)
+    def translations2(self, hash, unique, mods=None, lang=None):
+        if mods:
+            mods = mods.split(',')
+        elif mods is None:
+            mods = list(request.env.registry._init_modules) + odoo.tools.config['server_wide_modules']
+
+        if lang and lang not in {code for code, _ in request.env['res.lang'].sudo().get_installed()}:
+            lang = None
+
+        current_hash = request.env["ir.http"].with_context(cache_translation_data=True).get_web_translations_hash(mods, lang)
+
+        body = {
+            'lang': lang,
+            'hash': current_hash,
+        }
+        if current_hash == hash:
+            body['no_change'] = True
+        elif 'translation_data' in request.env.cr.cache:
+            # ormcache of get_web_translations_hash was cold and fill the translation_data cache
+            body.update(request.env.cr.cache.pop('translation_data'))
+        else:
+            # ormcache of get_web_translations_hash was hot
+            translations_per_module, lang_params = request.env["ir.http"].get_translations_for_webclient(mods, lang)
+            body.update({
+                'lang_parameters': lang_params,
+                'modules': translations_per_module,
+                'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
+            })
+
+        # The type of the route is set to HTTP, but the rpc is made with a get and expects JSON
+        return request.make_json_response(body, [
+            ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}'),
+        ])
+
     @http.route('/web/webclient/version_info', type='jsonrpc', auth="none")
     def version_info(self):
         return odoo.service.common.exp_version()
