@@ -19,8 +19,10 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         this._recaptcha = new ReCaptcha();
         this.notification = this.bindService("notification");
         if (session.turnstile_site_key) {
-            const { turnStile } = odoo.loader.modules.get('@website_cf_turnstile/js/turnstile');
-            this._turnstile = turnStile;
+            const { TurnStile } = odoo.loader.modules.get(
+                "@website_cf_turnstile/interactions/turnstile"
+            );
+            this._turnstile = new TurnStile("website_mass_mailing_subscribe");
         }
     },
     /**
@@ -97,13 +99,12 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         // When the website is in edit mode, window.top != window. We don't want turnstile to render during edit mode
         // and mess up the DOM and saving it.
         if (!isSubscriber && this._turnstile && window.top === window) {
-            const el = this._turnstile.addTurnstile('website_mass_mailing_subscribe');
-            if (el) {
-                this._turnstile.addSpinner(subscribeBtnEl);
-                el[0].classList.add('mt-3');
-                el.insertAfter(this.el);
-                this._turnstile.renderTurnstile(el);
-            }
+            const turnstileEl = this._turnstile.turnstileEl;
+            this._turnstile.constructor.disableSubmit(subscribeBtnEl);
+            turnstileEl.classList.add('mt-3');
+            this.el.appendChild(turnstileEl);
+            this._turnstile.insertScripts(this.el);
+            this._turnstile.render();
         }
     },
 
