@@ -7,9 +7,8 @@ import { Macro } from "@web/core/macro";
 
 let macro;
 async function waitForMacro() {
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
         await animationFrame();
-        await advanceTime(265);
         if (macro.isComplete) {
             return;
         }
