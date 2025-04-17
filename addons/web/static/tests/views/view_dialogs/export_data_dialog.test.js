@@ -1085,3 +1085,38 @@ test("Export dialog: fields displayed in same Order as list view when export", a
         message: "Field abc should appear second in the export list",
     });
 });
+
+test("Export dialog: no raw properties fields in default export list", async () => {
+    User._fields.properties_definition = fields.PropertiesDefinition();
+    Partner._fields.user_id = fields.Many2one({ relation: "res.users" });
+    Partner._fields.properties = fields.Properties({
+        definition_record: "user_id",
+        definition_record_field: "properties_definition",
+    });
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", async (request) => [
+        ...fetchedFields.root,
+        {
+            field_type: "properties",
+            string: "Properties",
+            required: false,
+            value: "properties",
+            id: "properties",
+        },
+    ]);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="properties"/>
+            </list>`,
+        loadActionMenus: true,
+    });
+
+    await openExportDialog();
+    expect(".modal .o_export_field").toHaveCount(1);
+    expect(".modal .o_export_field").toHaveText("Foo");
+});
