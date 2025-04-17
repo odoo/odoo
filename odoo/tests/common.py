@@ -60,7 +60,7 @@ from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.modules.registry import Registry, DummyRLock
 from odoo.service import security
-from odoo.sql_db import BaseCursor, Cursor, Savepoint
+from odoo.sql_db import Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
@@ -1216,6 +1216,17 @@ def save_test_file(test_name, content, prefix, extension='png', logger=_logger, 
     logger.runbot(f'{document_type} in: {full_path}')
 
 
+if os.name == 'posix' and platform.system() != 'Darwin':
+    # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
+    # the memory reservation algorithm requires more than 8GiB of
+    # virtual mem for alignment this exceeds our default memory limits.
+    def _preexec():
+        import resource  # noqa: PLC0415
+        resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+else:
+    _preexec = None
+
+
 class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
@@ -1329,22 +1340,9 @@ class ChromeBrowser:
     def executable(self):
         return _find_executable()
 
-    def _chrome_without_limit(self, cmd):
-        if os.name == 'posix' and platform.system() != 'Darwin':
-            # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
-            # the memory reservation algorithm requires more than 8GiB of
-            # virtual mem for alignment this exceeds our default memory limits.
-            def preexec():
-                import resource
-                resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
-        else:
-            preexec = None
-
-        # pylint: disable=subprocess-popen-preexec-fn
-        return subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=preexec)
-
     def _spawn_chrome(self, cmd):
-        proc = self._chrome_without_limit(cmd)
+        # pylint: disable=subprocess-popen-preexec-fn
+        proc = subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=_preexec)  # noqa: PLW1509
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
             time.sleep(CHECK_BROWSER_SLEEP)
@@ -1875,10 +1873,12 @@ class NoScreencast:
 
 class Screencaster:
     def __init__(self, browser: ChromeBrowser, directory: str):
+        self.stopped = False
         self.browser: ChromeBrowser = browser
         self._logger: logging.Logger = browser._logger
         self.directory = pathlib.Path(directory, get_db_name(), 'screencasts')
-        self.frames_dir = self.directory / 'frames'
+        ts = datetime.now()
+        self.frames_dir = self.directory / f'frames-{ts:%Y%m%dT%H%M%S.%f}'
         self.frames_dir.mkdir(parents=True, exist_ok=True)
         self.frames = []
 
@@ -1888,8 +1888,14 @@ class Screencaster:
 
     def __call__(self, sessionId, data, metadata):
         self.browser._websocket_send('Page.screencastFrameAck', params={'sessionId': sessionId})
+        if self.stopped:
+            # if already stopped, drop the frames as we might have removed the directory already
+            return
         outfile = self.frames_dir / f'frame_{len(self.frames):05d}.b64'
-        outfile.write_text(data)
+        try:
+            outfile.write_text(data)
+        except FileNotFoundError:
+            return
         self.frames.append({
             'file_path': outfile,
             'timestamp': metadata.get('timestamp')
@@ -1897,22 +1903,23 @@ class Screencaster:
 
     def stop(self):
         self.browser._websocket_send('Page.stopScreencast')
+        self.stopped = True
         if self.frames_dir.is_dir():
             shutil.rmtree(self.frames_dir, ignore_errors=True)
 
     def save(self):
+        self.browser._websocket_send('Page.stopScreencast')
+        # Wait for frames just in case, ideally we'd wait for the Browse.close
+        # event or something but that doesn't exist.
+        time.sleep(5)
+        self.stopped = True
         if not self.frames:
             self._logger.debug('No screencast frames to encode')
             return
 
-        self.browser._websocket_send('Page.stopScreencast')
-
         t = time.time()
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-        outdir = self.directory / f'failed_screencast_{timestamp}'
-
         duration = 1/24
-        concat_script_path = outdir.with_suffix('.txt')
+        concat_script_path = self.frames_dir.with_suffix('.txt')
         with concat_script_path.open("w") as concat_file:
             for f, next_frame in zip_longest(self.frames, islice(self.frames, 1, None)):
                 frame = base64.b64decode(f['file_path'].read_bytes(), validate=True)
@@ -1929,19 +1936,25 @@ class Screencaster:
         try:
             ffmpeg_path = find_in_path('ffmpeg')
         except IOError:
-            shutil.move(self.frames_dir, outdir)
-            self._logger.runbot('Screencast frames in: %s', outdir)
+            self._logger.runbot('Screencast frames in: %s', self.frames_dir)
             return
 
-        outfile = outdir.with_suffix('.mp4')
+        outfile = self.frames_dir.with_suffix('.mp4')
         try:
-            subprocess.run([ffmpeg_path, '-f', 'concat', '-safe', '0', '-i', concat_script_path, '-pix_fmt', 'yuv420p', '-g', '0', outfile], check=True)
+            subprocess.run([
+                ffmpeg_path,
+                '-y', '-loglevel', 'warning',
+                '-f', 'concat', '-safe', '0', '-i', concat_script_path,
+                '-pix_fmt', 'yuv420p', '-g', '0',
+                outfile,
+            ], preexec_fn=_preexec, check=True)
         except subprocess.CalledProcessError:
-            shutil.move(self.frames_dir, outdir)
-            self._logger.error('Failed to encode screencast, screencast frames in %s', outdir)
+            self._logger.error('Failed to encode screencast, screencast frames in %s', self.frames_dir)
         else:
+            concat_script_path.unlink()
             shutil.rmtree(self.frames_dir, ignore_errors=True)
             self._logger.runbot('Screencast in: %s', outfile)
+
 
 @lru_cache(1)
 def _find_executable():
