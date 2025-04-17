@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo import fields
+from odoo import Command, fields
 
 
 @tagged('post_install', '-at_install')
@@ -212,3 +212,73 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             ['price_average:avg'],
         )
         self.assertEqual(round(report[0]['price_average:avg'], 2), 4.71)
+
+    def test_avg_price_group_by_month(self):
+        """
+        Check that the average is correctly calculated based on the total price and quantity
+        with multiple invoices and group by month:
+            Invoice 1:
+                2 lines:
+                    - 10 units * 10$
+                    -  5 units *  5$
+                Total quantity: 15
+                Total price: 125$
+                Average: 125 / 15 = 8.33
+            Invoice 2:
+                1 line:
+                    - 0 units * 5$
+                Total quantity: 0
+                Total price: 0$
+                Average: 0.00
+        """
+        self.env['account.move'].search([]).unlink()
+        invoices = self.env["account.move"].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': fields.Date.from_string('2025-01-01'),
+                'currency_id': self.env.company.currency_id.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'quantity': 10,
+                        'price_unit': 10,
+                    }),
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'quantity': 5,
+                        'price_unit': 5,
+                    }),
+                ]
+            },
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': fields.Date.from_string('2025-02-01'),
+                'currency_id': self.env.company.currency_id.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'quantity': 0,
+                        'price_unit': 5,
+                    }),
+                ]
+            },
+        ])
+        invoices.action_post()
+
+        report = self.env['account.invoice.report'].formatted_read_group(
+            [('product_id', '=', self.product_a.id)],
+            ['invoice_date:month'],
+            ['__count', 'price_subtotal:sum', 'quantity:sum', 'price_average:avg'],
+        )
+
+        self.assertEqual(report[0]['__count'], 2)
+        self.assertEqual(report[0]['quantity:sum'], 15.0)
+        self.assertEqual(report[0]['price_subtotal:sum'], 125.0)
+        self.assertEqual(round(report[0]['price_average:avg'], 2), 8.33)
+
+        self.assertEqual(report[1]['__count'], 1)
+        self.assertEqual(report[1]['quantity:sum'], 0.0)
+        self.assertEqual(report[1]['price_subtotal:sum'], 0.0)
+        self.assertEqual(report[1]['price_average:avg'], 0.00)
