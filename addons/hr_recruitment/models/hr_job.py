@@ -309,7 +309,7 @@ class HrJob(models.Model):
                 )
                 if application_ids:
                     application_ids.message_unsubscribe(to_unsubscribe)
-                    application_ids.user_id = job.user_id
+                    application_ids.with_context(mail_auto_subscribe_no_notify=True).user_id = job.user_id
 
         # Since the alias is created upon record creation, the default values do not reflect the current values unless
         # specifically rewritten
