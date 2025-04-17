@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Component, onRendered, reactive, useRef, xml } from "@odoo/owl";
-import { toCanvas } from "@point_of_sale/app/utils/html-to-image";
+import { toCanvas } from "@base_printer/epson_printer/utils/html-to-image";
 
 export class RenderContainer extends Component {
     static props = ["comp", "onRendered"];

@@ -14,8 +14,9 @@
     'auto_install': True,
     'assets': {
         'pos_self_order.assets': [
-            'pos_epson_printer/static/src/app/utils/payment/epson_printer.js',
-            'pos_epson_printer/static/src/app/components/epos_templates.xml',
+            'base_printer/static/src/epson_printer/utils/utils.js',
+            'base_printer/static/src/epson_printer/components/epos_templates.xml',
+            'base_printer/static/src/epson_printer/printer/epson_printer.js',
             'pos_self_order_epson_printer/static/src/**/*',
         ],
     },
