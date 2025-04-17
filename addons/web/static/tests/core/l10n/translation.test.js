@@ -60,9 +60,9 @@ test("url is given by the session", async () => {
         translationURL: "/get_translations",
     });
     onRpc(
-        "/get_translations/*",
+        "/get_translations",
         function (request) {
-            expect(request.url).toInclude("/get_translations/");
+            expect(request.url).toInclude("/get_translations");
             return this.loadTranslations();
         },
         { pure: true }
