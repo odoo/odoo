@@ -30,7 +30,7 @@ export class SlideUpload extends Interaction {
             channelId: parseInt(data.channelId),
             canPublish: data.canPublish === "True",
             canUpload: data.canUpload === "True",
-            modulesToInstall: data.modulesToInstall || [],
+            modulesToInstall: data.modulesToInstall ? JSON.parse(data.modulesToInstall) : [],
             openModal: data.openModal,
         });
     }
