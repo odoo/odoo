@@ -199,7 +199,8 @@ test("A validation error from saving parent form notifies and prevents dialog fr
     expect(".modal-dialog .o_form_button_save[disabled='1']").toHaveCount(0);
 });
 
-test.tags("desktop")("can create section inline", async () => {
+test.tags("desktop");
+test("can create section inline", async () => {
     await mountView({
         type: "form",
         resModel: "survey",
