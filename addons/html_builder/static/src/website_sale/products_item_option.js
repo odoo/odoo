@@ -1,30 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import {
-  Component,
-  xml,
-  onWillStart,
-  onMounted,
-  useState,
-  useRef,
-} from "@odoo/owl";
+import { onWillStart, onMounted, useState, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { BuilderButton } from "@html_builder/core/building_blocks/builder_button";
-
-export class TableCell extends Component {
-  static template = xml`
-                      <td t-on-mouseover="()=>this.props._onTableCellMouseEnter(this.props.i, this.props.j)"
-                          t-on-click="()=>this.props._onTableCellMouseClick(this.props.i, this.props.j)"
-                        >
-                          <BuilderButton preview="false" actionValue="{'i': this.props.i, 'j': this.props.j}" />
-                      </td>`;
-  static components = { BuilderButton };
-  static props = {
-    i: Number,
-    j: Number,
-    _onTableMouseEnter: Function,
-    _onTableMouseClick: Function,
-  };
-}
 
 export class ProductsItemOption extends BaseOptionComponent {
   static template = "website_sale.ProductsItemOptionPlugin";
@@ -32,9 +8,9 @@ export class ProductsItemOption extends BaseOptionComponent {
     loadRibbons: Function,
     getDefaultSort: Function,
     itemSize: Object,
-    count : Object
+    count: Object,
+    onComponentCreated: Function,
   };
-  static components = { TableCell };
 
   setup() {
     super.setup();
@@ -48,6 +24,7 @@ export class ProductsItemOption extends BaseOptionComponent {
     });
 
     onWillStart(async () => {
+      await this.props.onComponentCreated();
       const [ribbons, defaultSort] = await Promise.all([
         this.props.loadRibbons(),
         this.props.getDefaultSort(),
@@ -91,12 +68,12 @@ export class ProductsItemOption extends BaseOptionComponent {
     ev.currentTarget.classList.remove("oe_hover");
   }
 
-  _onTableCellMouseEnter(i, j) {
+  _onTableCellMouseOver(i, j) {
     const allCells = this.tableRef.el.querySelectorAll("td.select");
 
-    allCells.forEach((cell) => {
+    for (let cell of allCells) {
       cell.classList.remove("select");
-    });
+    }
 
     this.addClassToTableCells(j + 1, i + 1, "select");
   }
@@ -104,9 +81,10 @@ export class ProductsItemOption extends BaseOptionComponent {
   _onTableCellMouseClick(i, j) {
     const allCells = this.tableRef.el.querySelectorAll("td.selected");
 
-    allCells.forEach((cell) => {
+    for (let cell of allCells) {
       cell.classList.remove("selected");
-    });
+    }
+
     this.addClassToTableCells(j + 1, i + 1, "selected");
   }
 }

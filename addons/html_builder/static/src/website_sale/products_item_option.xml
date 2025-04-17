@@ -8,7 +8,9 @@
                         <t t-foreach="[0, 1, 2, 3]" t-as="i" t-key="i">
                             <tr>
                                 <t t-foreach="[0, 1, 2, 3]" t-as="j" t-key="j">
-                                    <TableCell i="i" j="j" _onTableCellMouseEnter="_onTableCellMouseEnter.bind(this)" _onTableCellMouseClick="_onTableCellMouseClick.bind(this)" />
+                                    <td t-on-mouseover="()=>this._onTableCellMouseOver(i, j)" t-on-click="()=>this._onTableCellMouseClick(i, j)">
+                                        <BuilderButton preview="false" actionValue="{'i': i, 'j': j}" />
+                                    </td>
                                 </t>
                             </tr>
                         </t>
