@@ -398,15 +398,14 @@ def load_certificate():
             timeout=5,
         )
         response.raise_for_status()
-        data = response.json()  # decode once
+        result = response.json().get('result', {})
     except requests.exceptions.RequestException as e:
         _logger.exception("An error occurred while trying to reach odoo.com servers.")
         return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
 
-    error = data.get('error')
-    result = data.get('result')
-    if error or not result:
-        _logger.warning("An error received from odoo.com while trying to get the certificate: %s", error or 'Empty response')
+    error = result.get('error')
+    if error:
+        _logger.error("An error received from odoo.com while trying to get the certificate: %s", error)
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
     update_conf({'subject': result['subject_cn']})
