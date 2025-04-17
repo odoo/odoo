@@ -30,7 +30,7 @@ export const cookie = {
         if (value !== undefined) {
             fullCookie.push(`${key}=${value}`);
         }
-        fullCookie = fullCookie.concat(["path=/", `max-age=${ttl}`]);
+        fullCookie = fullCookie.concat(["path=/", `max-age=${Math.floor(ttl)}`]);
         this._cookieMonster = fullCookie.join("; ");
     },
     delete(key) {
