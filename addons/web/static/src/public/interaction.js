@@ -392,6 +392,24 @@ export class Interaction {
     }
 
     /**
+     * Remove the children of an element.
+     * The children will be inserted back when the interaction is destroyed.
+     *
+     * @param { HTMLElement } el
+     * @param { boolean } [insertBackOnClean]
+     */
+    removeChildren(el, insertBackOnClean = true) {
+        for (const child of el.children) {
+            this.services["public.interactions"].stopInteractions(child);
+        }
+        const children = [...el.childNodes];
+        el.replaceChildren();
+        if (insertBackOnClean) {
+            this.registerCleanup(() => el.replaceChildren(...children));
+        }
+    }
+
+    /**
      * Renders, insert and activate an element at a specific location.
      * The inserted element will be removed when the interaction is destroyed.
      *
