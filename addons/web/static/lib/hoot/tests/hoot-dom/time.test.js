@@ -6,7 +6,8 @@ import { Deferred, advanceTime, runAllTimers, tick } from "@odoo/hoot-mock";
 import { parseUrl } from "../local_helpers";
 
 // timeout of 1 second to ensure all timeouts are actually mocked
-describe.timeout(1_000)(parseUrl(import.meta.url), () => {
+describe.timeout(1_000);
+describe(parseUrl(import.meta.url), () => {
     test("advanceTime", async () => {
         expect.assertions(8);
 
