@@ -378,10 +378,15 @@ def load_certificate():
     if response.status != 200:
         return "ERR_IOT_HTTPS_LOAD_REQUEST_STATUS %s\n\n%s" % (response.status, response.reason)
 
-    result = json.loads(response.data.decode('utf8'))['result']
-    if not result:
+    response = json.loads(response.data.decode())
+    error = response.get('error')
+    if error or not response.get('result'):
+        _logger.error(
+            "An error received from odoo.com while trying to get the certificate: %s", error or 'Empty response'
+        )
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
+    result = response['result']
     update_conf({'subject': result['subject_cn']})
     if platform.system() == 'Linux':
         with writable():
