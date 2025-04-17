@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError
-from odoo.tools import SQL
+from odoo.tools import SQL, float_round
 from odoo.tools.translate import _
 
 
@@ -24,7 +24,7 @@ class ProjectProject(models.Model):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets', export_string_translation=False)
     timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id', export_string_translation=False)
-    total_timesheet_time = fields.Integer(
+    total_timesheet_time = fields.Float(
         compute='_compute_total_timesheet_time', groups='hr_timesheet.group_hr_timesheet_user',
         string="Total amount of time (in the proper unit) recorded in the project, rounded to the unit.", export_string_translation=False)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', export_string_translation=False)
@@ -128,7 +128,7 @@ class ProjectProject(models.Model):
                 total_time += unit_amount * (1.0 if project.encode_uom_in_days else factor)
             # Now convert to the proper unit of measure set in the settings
             total_time /= project.timesheet_encode_uom_id.factor
-            project.total_timesheet_time = int(round(total_time))
+            project.total_timesheet_time = float_round(total_time, precision_digits=2)
 
     @api.model_create_multi
     def create(self, vals_list):
