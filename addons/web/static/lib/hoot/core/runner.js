@@ -529,13 +529,18 @@ export class Runner {
 
         this._applyTagModifiers(suite);
 
-        let result;
-        try {
-            result = fn();
-        } finally {
-            this.suiteStack.pop();
+        let error, result;
+        if (!this._prepared || suite.currentJobs.length) {
+            try {
+                result = fn();
+            } catch (err) {
+                error = String(err);
+            }
         }
-        if (result !== undefined) {
+        this.suiteStack.pop();
+        if (error) {
+            throw suiteError({ name: suiteName, parent: parentSuite }, error);
+        } else if (result !== undefined) {
             throw suiteError(
                 { name: suiteName, parent: parentSuite },
                 `the suite function cannot return a value`
