@@ -6,6 +6,13 @@ export function clickProduct(productName) {
     };
 }
 
+export function waitProduct(productName) {
+    return {
+        content: `Wait for product '${productName}'`,
+        trigger: `.self_order_product_card span:contains('${productName}')`,
+    };
+}
+
 export function checkReferenceNotInProductName(productName, reference) {
     return {
         content: `Check product label has '${productName}' and not ${reference}`,
