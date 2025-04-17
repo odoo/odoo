@@ -102,7 +102,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # A registry takes 10MB of memory on average, so we reserve
                 # 10Mb (registry) + 5Mb (working memory) per registry
                 avgsz = 15 * 1024 * 1024
-                size = int(config['limit_memory_soft'] / avgsz)
+                limit_memory_soft = config['limit_memory_soft'] if config['limit_memory_soft'] > 0 else (2048 * 1024 * 1024)
+                size = (limit_memory_soft // avgsz) or 1
         return LRU(size)
 
     def __new__(cls, db_name: str):
