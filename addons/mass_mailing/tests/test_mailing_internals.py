@@ -534,8 +534,8 @@ class TestMassMailValues(MassMailCommon):
                 'schedule_date': datetime(2023, 2, 17, 11, 0),
             })
         mailing.action_put_in_queue()
-        with self.mock_mail_gateway(mail_unlink_sent=False):
-            mailing._process_mass_mailing_queue()
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.enter_registry_test_mode():
+            self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().method_direct_trigger()
 
         self.assertFalse(mailing.body_html)
         self.assertEqual(mailing.mailing_model_name, 'res.partner')
@@ -753,13 +753,17 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
             'body_html': 'This is mass mail marketing demo'
         })
         mailing.action_put_in_queue()
-        with self.mock_mail_gateway(mail_unlink_sent=False):
-            mailing._process_mass_mailing_queue()
+        self.assertEqual(mailing.email_from, self.env.user.email_formatted)
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.enter_registry_test_mode():
+            self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().method_direct_trigger()
 
+        author = self.env.ref('base.user_root').partner_id
+        email_values = {'email_from': mailing.email_from}
         self.assertMailTraces(
-            [{'partner': partner_a},
-             {'partner': partner_b, 'trace_status': 'cancel', 'failure_type': 'mail_bl'}],
-            mailing, partner_a + partner_b, check_mail=True
+            [{'partner': partner_a, 'email_values': email_values},
+             {'partner': partner_b, 'trace_status': 'cancel', 'failure_type': 'mail_bl', 'email_values': email_values}],
+            mailing, partner_a + partner_b,
+            check_mail=True, author=author,
         )
 
     @users('user_marketing')
@@ -787,14 +791,17 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
 
         mailing.action_put_in_queue()
 
-        with self.mock_mail_gateway(mail_unlink_sent=False):
-            mailing._process_mass_mailing_queue()
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.enter_registry_test_mode():
+            self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().method_direct_trigger()
 
+        author = self.env.ref('base.user_root').partner_id
+        email_values = {'email_from': mailing.email_from}
         self.assertMailTraces(
-            [{'email': 'fleurus@example.com'},
-             {'email': 'gorramts@example.com'},
-             {'email': 'ybrant@example.com'}],
-            mailing, self.mailing_list_1.contact_ids, check_mail=True
+            [{'email': 'fleurus@example.com', 'email_values': email_values},
+             {'email': 'gorramts@example.com', 'email_values': email_values},
+             {'email': 'ybrant@example.com', 'email_values': email_values}],
+            mailing, self.mailing_list_1.contact_ids,
+            check_mail=True, author=author,
         )
 
         for contact in self.mailing_list_1.contact_ids:
