@@ -2081,6 +2081,92 @@ describe("insert", () => {
     });
 });
 
+describe("removeChildren", () => {
+    test("can remove text child", async () => {
+        class Test extends Interaction {
+            static selector = ".test span";
+            setup() {
+                this.removeChildren(this.el);
+            }
+        }
+
+        const { core } = await startInteraction(Test, TemplateTest);
+        expect(".test span").toHaveInnerHTML("");
+        core.stopInteractions();
+        expect(".test span").toHaveInnerHTML("coucou");
+    });
+
+    test("can remove element children", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            setup() {
+                this.removeChildren(this.el);
+            }
+        }
+
+        const { core } = await startInteraction(Test, TemplateTestDoubleSpan);
+        expect(queryFirst(".test span")).toBe(null);
+        core.stopInteractions();
+        expect(queryFirst(".test span")).toBeInstanceOf(HTMLElement);
+        expect(queryAll(".test span")).toHaveCount(2);
+    });
+
+    test("can remove element with removed children", async () => {
+        let innerDoneResolve;
+        const innerDonePromise = new Promise((resolve) => (innerDoneResolve = resolve));
+        class InnerTest extends Interaction {
+            static selector = ".test span";
+            setup() {
+                this.removeChildren(this.el);
+                innerDoneResolve();
+            }
+        }
+        class Test extends Interaction {
+            static selector = ".test";
+            async willStart() {
+                await innerDonePromise;
+                this.removeChildren(this.el);
+            }
+        }
+
+        const { core } = await startInteraction([InnerTest, Test], TemplateTest);
+        expect(queryFirst(".test span")).toBe(null);
+        core.stopInteractions();
+        expect(queryOne(".test span")).toHaveInnerHTML("coucou");
+    });
+
+    test("removed children do not come back if insertBackOnClean is false", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            setup() {
+                this.removeChildren(this.el, false);
+            }
+        }
+
+        const { core } = await startInteraction(Test, TemplateTest);
+        expect(queryFirst(".test span")).toBe(null);
+        core.stopInteractions();
+        expect(queryFirst(".test span")).toBe(null);
+    });
+
+    test("re-insert initial children", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            setup() {
+                this.removeChildren(this.el);
+                this.el.innerHTML = TemplateTestDoubleButton;
+                this.removeChildren(this.el);
+            }
+        }
+
+        const { core } = await startInteraction(Test, TemplateTest);
+        expect(queryFirst(".test span")).toBe(null);
+        core.stopInteractions();
+        expect(queryOne(".test span")).toBeInstanceOf(HTMLElement);
+        expect(queryFirst(".test button")).toBe(null);
+    });
+});
+
 describe("renderAt", () => {
     test("can render a template inside an element", async () => {
         class Test extends Interaction {
