@@ -64,7 +64,9 @@
                         </group>
                     </group>
                     <group string="If the Attendees meet these Conditions">
-                        <field name="event_registration_filter" widget="domain" options="{'foldable': True, 'model': 'event.registration'}" nolabel="1"/>
+                        <group class="w-100">
+                            <field name="event_registration_filter" widget="domain" options="{'foldable': True, 'model': 'event.registration'}" nolabel="1"/>
+                        </group>
                     </group>
                     <group string="Lead Default Values">
                         <group class="col">
@@ -97,5 +99,11 @@
         parent="event.menu_event_configuration"
         sequence="10"
         groups="event.group_event_manager"/>
+
+    <record id="event_lead_rule_answer_action" model="ir.actions.act_window">
+        <field name="name">Event lead Rule</field>
+        <field name="res_model">event.lead.rule</field>
+        <field name="view_mode">form</field>
+    </record>
 </data>
 </odoo>
