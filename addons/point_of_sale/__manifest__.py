@@ -106,8 +106,6 @@
             'point_of_sale/static/src/app/services/data_service.js',
             'point_of_sale/static/src/app/utils/numbers.js',
 
-            'point_of_sale/static/src/app/utils/html-to-image.js',
-            'point_of_sale/static/src/app/services/render_service.js',
             'point_of_sale/static/tests/unit/**/*',
 
             'point_of_sale/static/src/app/components/odoo_logo/*',
@@ -182,6 +180,7 @@
             # report download utils
             'web/static/src/webclient/actions/reports/utils.js',
             # PoS files
+            'base_printer/static/src/epson_printer/**/*',
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),

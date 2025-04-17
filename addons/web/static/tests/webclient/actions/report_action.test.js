@@ -329,7 +329,10 @@ test("can use custom handlers for report actions", async () => {
         if (action.id === 7 && !customHandlerCalled) {
             customHandlerCalled = true;
             expect.step("calling custom handler");
-            return true;
+            return {
+                reportHandler: true,
+                close_on_report_handler: true,
+            };
         }
         expect.step("falling through to default handler");
     });

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_print_attachment" model="mail.template">
+            <field name="name">Email Print: Print Attachment</field>
+            <field name="model_id" ref="base_printer.model_report_printer"/>
+            <field name="subject">Print Request for report: {{ object.name or 'n/a' }}</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="email_to">{{ object.name }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html" type="html">
+                <div>
+                    <p>Hello Printer,</p>
+                    <p>Please find the attached document for printing.</p>
+                    <p>Thank you.</p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

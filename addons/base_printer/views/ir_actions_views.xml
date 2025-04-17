@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_report_form_inherit_base_printer" model="ir.ui.view">
+        <field name="name">ir.actions.report.form.inherit.base.printer</field>
+        <field name="model">ir.actions.report</field>
+        <field name="inherit_id" ref="base.act_report_xml_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='attachment']" position="after">
+                <field name="linked_printer_ids" placeholder="printer@example.com or 192.168.1.10" widget="many2many_tags" options="{'no_create_edit': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
