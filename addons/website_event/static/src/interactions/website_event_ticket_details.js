@@ -21,17 +21,12 @@ export class TicketDetails extends Interaction {
         },
     };
 
-    get post() {
-        const post = {};
-        const selectEls = this.el.querySelectorAll("select");
-        selectEls.forEach((selectEl) => {
-            post[selectEl.name] = selectEl.value;
-        });
-        return post;
-    }
-
     get noTicketsOrdered() {
-        return Object.values(this.post).every((value) => parseInt(value) === 0);
+        return Boolean(
+            !Array.from(this.el.querySelectorAll("select").values()).find(
+                (select) => select.value > 0
+            )
+        );
     }
 
     /**
@@ -40,7 +35,10 @@ export class TicketDetails extends Interaction {
     async onSubmitClick(ev) {
         const formEl = ev.currentTarget.closest("form");
         this.buttonDisabled = true;
-        const modal = await this.waitFor(rpc(formEl.action, this.post));
+        const modal = await this.waitFor(rpc(
+            formEl.action,
+            Object.fromEntries(new FormData(formEl)),
+        ));
 
         const modalEl = new DOMParser().parseFromString(modal, "text/html").body.firstChild;
         this.insert(modalEl, document.body);

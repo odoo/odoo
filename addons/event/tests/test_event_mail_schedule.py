@@ -9,6 +9,7 @@ from unittest.mock import patch
 from odoo import exceptions
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
+from odoo.addons.event.models.event_mail import EventMail
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, users, warmup
 from odoo.tools import formataddr, mute_logger
@@ -47,7 +48,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
         cls._setup_test_reports()
         with cls.mock_datetime_and_now(cls, cls.reference_now):
             # create with admin to force create_date
-            cls.test_event = cls.env['event.event'].create({
+            cls.test_event = cls.env['event.event'].with_user(cls.user_eventmanager).create({
                 'name': 'TestEventMail',
                 'user_id': cls.user_eventmanager.id,
                 'date_begin': cls.event_date_begin,
@@ -108,6 +109,9 @@ class TestMailSchedule(EventMailCommon):
 
         # event data
         self.assertEqual(test_event.create_date, self.reference_now)
+        self.assertEqual(test_event.date_begin, self.event_date_begin, 'Expressed in current user TZ')
+        self.assertEqual(test_event.date_end, self.event_date_end, 'Expressed in current user TZ')
+        self.assertEqual(test_event.date_tz, 'Europe/Brussels')
         self.assertEqual(test_event.organizer_id, self.user_eventmanager.company_id.partner_id)
         self.assertEqual(test_event.user_id, self.user_eventmanager)
 
@@ -602,6 +606,117 @@ class TestMailSchedule(EventMailCommon):
         self.assertTrue(after_sub_scheduler)
         self.template_subscription.sudo().unlink()
         self.assertFalse(after_sub_scheduler.exists(), "When removing template, scheduler should be removed")
+
+    @users('user_eventmanager')
+    def test_event_mail_schedule_on_slot(self):
+        """ Test emails sent globally on slots, notably to test iterative job
+
+        Expected behavior
+         - event date_begin: 22 08AM
+         - event date_end:   24 18AM
+         - schedulers: 1 day before start, immediately after end
+         - slots begin:      23 08AM and 24 08AM
+         - Nothing happens before (23 - 1) 08AM, as what matters are the slots, not the event
+         - Two executions: on 22 08 AM and on 23 08 AM
+        """
+        test_event = self.test_event.with_env(self.env)
+
+        # check iterative work, update params to check call count
+        batch_size, render_limit = 2, 4
+        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', batch_size)
+        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', render_limit)
+
+        # find slot-based schedulers, remove other to avoid noise
+        event_prev_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
+        event_after_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'after_event')])
+        (test_event.event_mail_ids - (event_prev_scheduler + event_after_scheduler)).unlink()
+
+        with self.mock_datetime_and_now(self.reference_now):
+            test_event = self.test_event.with_env(self.env)
+            test_event.write({
+                'is_multi_slots': True,
+                # Start and end hours expressed in event tz
+                # The slots datetimes will be saved in utc
+                'event_slot_ids': [
+                    (0, 0, {
+                        'date': self.event_date_end.date() - relativedelta(days=1),
+                        'end_hour': 18,
+                        'start_hour': 8,
+                    }),
+                    (0, 0, {
+                        'date': self.event_date_end.date(),
+                        'end_hour': 18,
+                        'start_hour': 8,
+                    }),
+                ],
+            })
+        # Verify datetimes in UTC
+        self.assertEqual(test_event.date_tz, 'Europe/Brussels')
+        self.assertEqual(
+            test_event.event_slot_ids.mapped('start_datetime'),
+            [datetime(2021, 3, 23, 7, 0, 0), datetime(2021, 3, 24, 7, 0, 0)])
+        self.assertEqual(
+            test_event.event_slot_ids.mapped('end_datetime'),
+            [datetime(2021, 3, 23, 17, 0, 0), datetime(2021, 3, 24, 17, 0, 0)])
+
+        # create some registrations
+        with self.mock_datetime_and_now(self.reference_now):
+            registrations = self.env['event.registration'].with_user(self.user_eventuser).create([
+                {
+                    'email': f'reg.{idx}.{slot.id}@test.example.com',
+                    'event_id': test_event.id,
+                    'name': f'Reg-{idx} in {slot.id}',
+                    'event_slot_id': slot.id,
+                }
+                for slot in [test_event.event_slot_ids[0], test_event.event_slot_ids[1]]
+                for idx in range(5)
+            ])
+        self.assertEqual(len(registrations), 10)
+        registrations_slot_1 = registrations.filtered(lambda r: r.event_slot_id == test_event.event_slot_ids[0])
+
+        # simulate cron: ok for event-begin, but not for slots -> should not send communication
+        current = self.event_date_begin - relativedelta(hours=2)
+        self.execute_event_cron(freeze_date=current)
+        self.assertFalse(event_prev_scheduler.mail_done)
+        self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
+        self.assertEqual(event_prev_scheduler.mail_count_done, 0)
+        self.assertEqual(len(self._new_mails), 0)
+
+        # created missing mail.slot
+        self.assertEqual(len(event_prev_scheduler.mail_slot_ids), 2)
+        self.assertEqual(event_prev_scheduler.mail_slot_ids.event_slot_id, test_event.event_slot_ids)
+        for mail_slot in event_prev_scheduler.mail_slot_ids:
+            self.assertEqual(mail_slot.mail_count_done, 0)
+            self.assertEqual(mail_slot.mail_done, 0)
+        mail_slot_1 = event_prev_scheduler.mail_slot_ids.filtered(lambda s: s.event_slot_id.date == self.event_date_end.date() - relativedelta(days=1))
+        self.assertEqual(mail_slot_1.scheduled_date, datetime(2021, 3, 22, 7, 0, 0))
+        mail_slot_2 = event_prev_scheduler.mail_slot_ids.filtered(lambda s: s.event_slot_id.date == self.event_date_end.date())
+        self.assertEqual(mail_slot_2.scheduled_date, datetime(2021, 3, 23, 7, 0, 0))
+
+        # execute cron to run scheduler on first slot
+        slot1_before_oneday = datetime(2021, 3, 23, 7, 0, 0) - relativedelta(days=1)
+        exec_origin = EventMail._execute_event_based_for_registrations
+        with patch.object(
+            EventMail, '_execute_event_based_for_registrations', autospec=True, wraps=EventMail, side_effect=exec_origin,
+        ) as mock_exec:
+            capture = self.execute_event_cron(freeze_date=slot1_before_oneday)
+        # produced content
+        self.assertEqual(len(self._new_mails), 4, 'Cron limited to size of 2x2')
+        self.assertEqual(mock_exec.call_count, 2, '2 calls: 2x2registrations, limit of 4')
+        self.assertMailMailWEmails(
+            [formataddr((reg.name, reg.email)) for reg in registrations_slot_1[:4]],
+            'outgoing',
+            content=None,
+            fields_values={
+                'email_from': self.user_eventmanager.company_id.email_formatted,
+                'subject': f'Reminder for {test_event.name}: tomorrow',
+            })
+        # updated info
+        self.assertEqual(mail_slot_1.mail_count_done, 4)
+        self.assertFalse(mail_slot_1.mail_done)
+        self.assertEqual(event_prev_scheduler.mail_count_done, 4)
+        self.assertFalse(event_prev_scheduler.mail_done)
+        self.assertSchedulerCronTriggers(capture, [slot1_before_oneday])
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
