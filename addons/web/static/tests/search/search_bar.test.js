@@ -133,7 +133,8 @@ defineActions([
     },
 ]);
 
-test.tags`desktop`("basic rendering", async () => {
+test.tags("desktop");
+test("basic rendering", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: [],
@@ -142,7 +143,8 @@ test.tags`desktop`("basic rendering", async () => {
     expect(queryFirst`.o_searchview input`).toBeFocused();
 });
 
-test.tags`desktop`("navigation with facets", async () => {
+test.tags("desktop");
+test("navigation with facets", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: ["groupBy"],
@@ -162,7 +164,8 @@ test.tags`desktop`("navigation with facets", async () => {
     expect(queryFirst`.o_searchview input`).toBeFocused();
 });
 
-test.tags`desktop`("navigation with facets (2)", async () => {
+test.tags("desktop");
+test("navigation with facets (2)", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: ["groupBy"],
@@ -369,7 +372,8 @@ test("select an autocomplete field with `context` key", async () => {
     expect(searchBar.env.searchModel.context.bar).toEqual([1, 2]);
 });
 
-test.tags`desktop`("no search text triggers a reload", async () => {
+test.tags("desktop");
+test("no search text triggers a reload", async () => {
     let updateCount = 0;
     class TestComponent extends Component {
         static template = xml`<SearchBar/>`;
@@ -1497,7 +1501,8 @@ test("no rpc for getting display_name for facets if known", async () => {
     expect(getFacetTexts()).toEqual(["Bar is in ( First record )"]);
 });
 
-test.tags`desktop`("clicking on search input trigger the search menu", async () => {
+test.tags("desktop");
+test("clicking on search input trigger the search menu", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "partner",
     });
