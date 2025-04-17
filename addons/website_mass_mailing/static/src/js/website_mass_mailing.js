@@ -21,8 +21,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         this.rpc = this.bindService("rpc");
         this.notification = this.bindService("notification");
         if (session.turnstile_site_key) {
-            const { turnStile } = odoo.loader.modules.get('@website_cf_turnstile/js/turnstile');
-            this._turnstile = turnStile;
+            this._turnstile = odoo.loader.modules.get('@website_cf_turnstile/js/turnstile')?.turnStile;
         }
     },
     /**
