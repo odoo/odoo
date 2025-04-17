@@ -1016,17 +1016,115 @@ class PreforkServer(CommonServer):
             family = socket.AF_INET
             if ':' in self.interface:
                 family = socket.AF_INET6
-            self.socket = socket.socket(family, socket.SOCK_STREAM)
-            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.socket.setblocking(0)
-            self.socket.bind((self.interface, self.port))
-            self.socket.listen(8 * self.population)
 
-    def stop(self, graceful=True):
+            # reload
+            if os.environ.get('ODOO_GRACEFUL_RELOAD') and os.environ.get('ODOO_HTTP_SOCKET_FD'):
+                self.socket = socket.fromfd(int(os.environ['ODOO_HTTP_SOCKET_FD']), family, socket.SOCK_STREAM)
+
+            # default
+            else:
+                self.socket = socket.socket(family, socket.SOCK_STREAM)
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                self.socket.setblocking(0)
+                self.socket.bind((self.interface, self.port))
+                self.socket.listen(8 * self.population)
+
+    def stop_long_polling(self):
         if self.long_polling_pid is not None:
             # FIXME make longpolling process handle SIGTERM correctly
             self.worker_kill(self.long_polling_pid, signal.SIGKILL)
             self.long_polling_pid = None
+
+    def reload_gracefully(self):
+        _logger.info('Reloading server')
+        pid = os.fork()
+        if pid != 0:
+            # keep the http listening socket open during _reexec() to ensure uptime
+            http_socket_fileno = self.socket.fileno()
+            flags = fcntl.fcntl(http_socket_fileno, fcntl.F_GETFD)
+            fcntl.fcntl(http_socket_fileno, fcntl.F_SETFD, flags & ~fcntl.FD_CLOEXEC)
+            os.environ['ODOO_HTTP_SOCKET_FD'] = str(http_socket_fileno)
+            os.environ['ODOO_READY_SIGHUP_PID'] = str(pid)
+            _reexec()  # stops execution
+
+        # child process handles old server shutdown
+        _logger.info("Waiting for new server to start ...")
+        self.phoenix_hatched = False
+
+        def sighup_handler(sig, frame):
+            self.phoenix_hatched = True
+
+        signal.signal(signal.SIGHUP, sighup_handler)
+
+        reload_timeout = time.monotonic() + 60
+        while not self.phoenix_hatched and time.monotonic() < reload_timeout:
+            time.sleep(0.1)
+
+        if not self.phoenix_hatched:
+            _logger.error("Server reload timed out (check the updated code), stopping gracefully")
+        else:
+            _logger.info("New server has started, stopping old server gracefully")
+
+        self.stop_long_polling()
+
+        def process_worker_group(workers, timeout_limit, name, now):
+            # Clean up stopped processes
+            for pid, proc in list(workers.items()):
+                if not proc.is_running():
+                    workers.pop(pid)
+
+            # Kill remaining workers if timeout exceeded
+            if now > timeout_limit and workers:
+                _logger.info("Timeout, shutting down remaining %s workers (%s) forcefully.",
+                             name, ') ('.join(str(pid) for pid in workers.keys()))
+                for pid in workers.keys():
+                    os.kill(pid, signal.SIGKILL)
+                workers.clear()
+
+        super().stop()
+
+        # Signal workers to finish their current workload then stop
+        worker_http_processes = {}
+        for pid in self.workers_http:
+            worker_http_processes[pid] = psutil.Process(pid)
+            self.worker_kill(pid, signal.SIGINT)
+        worker_cron_processes = {}
+        for pid in self.workers_cron:
+            worker_cron_processes[pid] = psutil.Process(pid)
+            self.worker_kill(pid, signal.SIGINT)
+
+        self.beat = 0.1
+        start_time = time.monotonic()
+        limit_http = start_time + self.timeout
+        limit_cron = start_time + (self.cron_timeout or self.timeout)
+
+        while worker_http_processes or worker_cron_processes:
+            try:
+                self.process_signals()
+            except KeyboardInterrupt:
+                _logger.info("Forced shutdown.")
+                break
+
+            now = time.monotonic()
+
+            process_worker_group(worker_http_processes, limit_http, 'http', now)
+            process_worker_group(worker_cron_processes, limit_cron, 'cron', now)
+            if now > max(limit_http, limit_cron):
+                break
+
+            self.sleep()
+            self.process_timeout()
+
+        # disable server reload
+        global server_phoenix
+        server_phoenix = False
+        _logger.info("Old server stopped")
+
+    def stop(self, graceful=True):
+        if os.environ.get('ODOO_GRACEFUL_RELOAD') and server_phoenix:
+            return self.reload_gracefully()
+
+        self.stop_long_polling()
         if self.socket:
             self.socket.close()
         if graceful:
@@ -1059,6 +1157,9 @@ class PreforkServer(CommonServer):
 
         # Empty the cursor pool, we dont want them to be shared among forked workers.
         sql_db.close_all()
+
+        if os.environ.get('ODOO_READY_SIGHUP_PID'):
+            os.kill(int(os.environ['ODOO_READY_SIGHUP_PID']), signal.SIGHUP)
 
         _logger.debug("Multiprocess starting")
         while 1:
