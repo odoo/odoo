@@ -308,6 +308,103 @@ def get_version(detailed_version=False):
 
     return version
 
+<<<<<<< 1333c96d488732b07ad3495c630fbf5ac0925d53
+||||||| 1cc3ca4d4ebf1336ed149cfb580cc5de0746f1de
+
+def load_certificate():
+    """
+    Send a request to Odoo with customer db_uuid and enterprise_code to get a true certificate
+    """
+    db_uuid = get_conf('db_uuid')
+    enterprise_code = get_conf('enterprise_code')
+    if not (db_uuid and enterprise_code):
+        return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
+
+    try:
+        response = requests.post(
+            'https://www.odoo.com/odoo-enterprise/iot/x509',
+            json = {'params': {'db_uuid': db_uuid, 'enterprise_code': enterprise_code}},
+            timeout=5,
+        )
+        response.raise_for_status()
+        data = response.json()  # decode once
+    except requests.exceptions.RequestException as e:
+        _logger.exception("An error occurred while trying to reach odoo.com servers.")
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
+
+    error = data.get('error')
+    result = data.get('result')
+    if error or not result:
+        _logger.warning("An error received from odoo.com while trying to get the certificate: %s", error or 'Empty response')
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    update_conf({'subject': result['subject_cn']})
+
+    if platform.system() == 'Linux':
+        with writable():
+            Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+    elif platform.system() == 'Windows':
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
+    time.sleep(3)
+    if platform.system() == 'Windows':
+        odoo_restart(0)
+    elif platform.system() == 'Linux':
+        start_nginx_server()
+    return True
+
+
+=======
+
+def load_certificate():
+    """
+    Send a request to Odoo with customer db_uuid and enterprise_code to get a true certificate
+    """
+    db_uuid = get_conf('db_uuid')
+    enterprise_code = get_conf('enterprise_code')
+    if not (db_uuid and enterprise_code):
+        return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
+
+    try:
+        response = requests.post(
+            'https://www.odoo.com/odoo-enterprise/iot/x509',
+            json = {'params': {'db_uuid': db_uuid, 'enterprise_code': enterprise_code}},
+            timeout=5,
+        )
+        response.raise_for_status()
+        result = response.json().get('result', {})
+    except requests.exceptions.RequestException as e:
+        _logger.exception("An error occurred while trying to reach odoo.com servers.")
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
+
+    error = result.get('error')
+    if error:
+        _logger.error("An error received from odoo.com while trying to get the certificate: %s", error)
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    update_conf({'subject': result['subject_cn']})
+
+    if platform.system() == 'Linux':
+        with writable():
+            Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+    elif platform.system() == 'Windows':
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
+    time.sleep(3)
+    if platform.system() == 'Windows':
+        odoo_restart(0)
+    elif platform.system() == 'Linux':
+        start_nginx_server()
+    return True
+
+
+>>>>>>> 166eb1732a18e647e7e5bd1a212dded3fedca8ce
 def delete_iot_handlers():
     """Delete all drivers, interfaces and libs if any.
     This is needed to avoid conflicts with the newly downloaded drivers.
