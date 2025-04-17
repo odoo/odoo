@@ -147,9 +147,9 @@ export class OdooViewsDataSource extends LoadableDataSource {
      * @returns {Promise<string>} Display name of the model
      */
     async getModelLabel() {
-        const displayName = await this.modelDisplayNameService.getModelDisplayName(
-            this._metaData.resModel
-        );
-        return displayName || "";
+        const result = await this._orm.cached.call("ir.model", "display_name_for", [
+            [this._metaData.resModel],
+        ]);
+        return result[0]?.display_name || "";
     }
 }
