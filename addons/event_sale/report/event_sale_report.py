@@ -17,6 +17,7 @@ class EventSaleReport(models.Model):
     event_id = fields.Many2one('event.event', string='Event', readonly=True)
     event_date_begin = fields.Date(string='Event Start Date', readonly=True)
     event_date_end = fields.Date(string='Event End Date', readonly=True)
+    event_slot_id = fields.Many2one('event.slot', string='Event Slot', readonly=True)
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', readonly=True)
     event_ticket_price = fields.Float(string='Ticket price', readonly=True)
     event_registration_create_date = fields.Date(string='Registration Date', readonly=True)
@@ -73,6 +74,7 @@ SELECT
     event_registration.id AS event_registration_id,
     event_registration.company_id AS company_id,
     event_registration.event_id AS event_id,
+    event_registration.event_slot_id AS event_slot_id,
     event_registration.event_ticket_id AS event_ticket_id,
     event_registration.create_date AS event_registration_create_date,
     event_registration.name AS event_registration_name,
@@ -115,6 +117,7 @@ SELECT
         return """
 FROM event_registration
 LEFT JOIN event_event ON event_event.id = event_registration.event_id
+LEFT JOIN event_slot ON event_slot.id = event_registration.event_slot_id
 LEFT JOIN event_event_ticket ON event_event_ticket.id = event_registration.event_ticket_id
 LEFT JOIN sale_order ON sale_order.id = event_registration.sale_order_id
 LEFT JOIN sale_order_line ON sale_order_line.id = event_registration.sale_order_line_id
