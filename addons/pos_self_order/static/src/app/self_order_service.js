@@ -300,7 +300,7 @@ export class SelfOrder extends Reactive {
 
         if (lineToMerge) {
             lineToMerge.setDirty();
-            lineToMerge.set_quantity(qty + newLine.qty);
+            lineToMerge.set_quantity(lineToMerge.qty + newLine.qty);
             newLine.delete();
         } else {
             newLine.setDirty();
