@@ -16,6 +16,12 @@ export class MailGroup extends Interaction {
         ".o_mg_subscribe_btn": {
             "t-on-click.prevent": this.onToggleSubscribeClick,
         },
+        ".o_mg_email_input_group": {
+            "t-att-class": () => ({ "d-none": this.isMember }),
+        },
+        ".o_mg_unsubscribe_btn": {
+            "t-att-class": () => ({ "d-none": !this.isMember }),
+        },
     };
 
     setup() {
@@ -27,11 +33,6 @@ export class MailGroup extends Interaction {
         const searchParams = (new URL(document.location.href)).searchParams;
         this.token = searchParams.get("token");
         this.forceUnsubscribe = searchParams.has("unsubscribe");
-    }
-
-    _toggleSubscribeButton(isSubscribe) {
-        this.el.querySelector(".o_mg_email_input_group").classList.toggle("d-none", isSubscribe);
-        this.el.querySelector(".o_mg_unsubscribe_btn").classList.toggle("d-none", !isSubscribe);
     }
 
     _displayAlert(textContent, classes){
@@ -67,22 +68,18 @@ export class MailGroup extends Interaction {
 
         if (response === "added") {
             this.isMember = true;
-            this._toggleSubscribeButton(true);
         } else if (response === "removed") {
             this.isMember = false;
-            this._toggleSubscribeButton(false);
         } else if (response === "email_sent") {
             this._displayAlert(_t("An email with instructions has been sent."), "alert-success");
         } else if (response === "is_already_member") {
             this.isMember = true;
-            this._toggleSubscribeButton(true);
             this._displayAlert(_t("This email is already subscribed."), "alert-warning");
         } else if (response === "is_not_member") {
             if (!this.forceUnsubscribe) {
                 this.isMember = false;
-                this._toggleSubscribeButton(false);
             }
-        this._displayAlert(_t("This email is not subscribed."), "alert-warning");
+            this._displayAlert(_t("This email is not subscribed."), "alert-warning");
         }
     }
 }
