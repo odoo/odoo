@@ -9,30 +9,21 @@ import { patchWithCleanup } from "@web/../tests/legacy/helpers/utils";
 import { assertSteps, click, contains, step } from "@web/../tests/legacy/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
-import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 
-const { DateTime } = luxon;
-QUnit.test("disconnect during vacuum should ask for reload", async () => {
-    // vacuum permanently clears notifs, so reload might be required to recover coherent state in apps like Discuss
+QUnit.test("disconnect during bus gc should ask for reload", async () => {
+    // When the bus table is cleared, reload might be required to recover
+    // coherent state in apps like Discuss.
     addBusServicesToRegistry();
     registry.category("services").add("bus.outdated_page_watcher", outdatedPageWatcherService);
     const pyEnv = await startServer();
     const { env } = await createWebClient({
         mockRPC(route) {
-            if (route === "/bus/get_autovacuum_info") {
-                return {
-                    lastcall: serializeDateTime(lastDisconnectDt.plus({ minute: 1 })),
-                    nextcall: serializeDateTime(DateTime.now().plus({ day: 1 })),
-                };
+            if (route === "/bus/has_missed_notifications") {
+                return true;
             }
         },
     });
-    let lastDisconnectDt;
-    env.services.bus_service.addEventListener(
-        "disconnect",
-        () => (lastDisconnectDt = DateTime.now())
-    );
     env.services.bus_service.start();
     await waitForBusEvent(env, "connect");
     pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
