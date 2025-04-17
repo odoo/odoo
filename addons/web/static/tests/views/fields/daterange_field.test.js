@@ -1098,6 +1098,31 @@ test("update the selected input date after removing the existing date", async ()
     expect("input[data-field=date]").toHaveValue("02/12/2017");
 });
 
+test("update the selected input datetime after clearing the existing date", async () => {
+    Partner._fields.date_end = fields.Date({ string: "Date end" });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="datetime" widget="daterange" options="{'start_date_field': 'date_end'}" />
+            </form>`,
+        resId: 1,
+    });
+    await contains("input[data-field=datetime]").click();
+    await contains(".o_datetime_buttons button.btn-secondary:contains('Clear')").click();
+    expect(".o_time_picker_input").toHaveCount(1);
+
+    await contains(getPickerCell("12")).click();
+    await click(".o_time_picker:eq(0) .o_time_picker_input");
+    await animationFrame();
+    await edit("15:35", { confirm: "enter" });
+    await animationFrame();
+
+    expect("input[data-field=datetime]").toHaveValue("03/12/2019 15:35");
+});
+
 test("daterange with inverted start date and end date", async () => {
     Partner._records[0].datetime_end = "2017-02-01 00:00:00";
 
