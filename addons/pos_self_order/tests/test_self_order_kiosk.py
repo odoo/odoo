@@ -96,7 +96,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
                 Command.create({
                     'compute_price': 'fixed',
                     'fixed_price': 1,
-                    'min_quantity': 2,
+                    'min_quantity': 3,
                     'applied_on': '1_product',
                     'product_tmpl_id': self.cola.product_tmpl_id.id,
                 })
