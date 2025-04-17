@@ -41,9 +41,7 @@ export class WebsiteForumSpam extends Interaction {
             ))
         ));
         const postSpamEl = this.el.querySelector("div.post_spam");
-        const postSpamElContent = postSpamEl.children;
-        postSpamEl.replaceChildren();
-        this.registerCleanup(() => postSpamEl.replaceChildren(postSpamElContent));
+        this.removeChildren(postSpamEl);
         if (!posts.length) {
             return;
         }
