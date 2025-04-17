@@ -17,7 +17,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <list string="Contacts" sample="1" multi_edit="1">
-                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
                     <field name="complete_name" string="Name"/>
                     <field name="vat" optional="hide" readonly="1"/>
                     <field name="email" optional="show"/>
@@ -124,7 +124,7 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="mb8">
                         <div class="d-flex">
-                            <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [130,130], 'img_class': 'rounded-4 border'}"/>
+                            <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [130,130], 'img_class': 'rounded border'}"/>
                             <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
                             <div class="d-flex flex-column ms-2 flex-grow-1">
                                 <field name="company_type" widget="radio" options="{'horizontal': true}"/>
@@ -195,7 +195,8 @@
                                     <templates>
                                         <t t-name="card" class="flex-row">
                                             <aside class="o_kanban_aside_full">
-                                                <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-fill'}" alt="Contact image"/>
+                                                <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-cover'}" alt="Contact image" invisible="type != 'contact'"/>
+                                                <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-contain p-2'}" alt="Contact image" invisible="type == 'contact'"/>
                                             </aside>
                                             <main class="ps-2 ps-md-0">
                                                 <field name="name" invisible="not name" class="fw-bold"/>
@@ -226,7 +227,7 @@
                                     <sheet>
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
                                         <div class="d-flex align-items-center gap-3">
-                                            <field name="image_1920" widget="contact_image" nolabel="1" options="{'preview_image': 'avatar_128', 'size': [100,100], 'img_class': 'rounded-4 border'}"/>
+                                            <field name="image_1920" widget="contact_image" nolabel="1" options="{'preview_image': 'avatar_128', 'size': [100,100], 'img_class': 'rounded border'}"/>
                                             <div class="flex-grow-1">
                                                 <h3>
                                                     <field name="name" class="d-block" string="Name" default_focus="1" required="type == 'contact'" placeholder="e.g. Brandon Freeman"/>
@@ -340,17 +341,17 @@
                             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                             <aside class="o_kanban_aside_full">
                                 <t t-if="!record.is_company.raw_value">
-                                    <div class="position-relative w-100">
-                                        <field name="avatar_128" alt="Contact image" class="h-100" widget="image" options="{'img_class': 'object-fit-cover'}"/>
+                                    <div class="position-relative w-100 h-auto m-0">
+                                        <field name="avatar_128" alt="Contact image" class="h-100" widget="image" options="{'img_class': 'object-fit-contain'}"/>
                                         <field t-if="record.parent_id.raw_value and record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain'}"/>
                                         <field t-elif="record.parent_id.raw_value and !record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'avatar_128', 'img_class': 'object-fit-contain'}"/>
                                     </div>
                                 </t>
                                 <t t-else="">
-                                    <field name="avatar_128" class="w-100" widget="image" options="{'img_class': 'object-fit-contain w-100 h-100'}"/>
+                                    <field name="avatar_128" class="w-100 h-auto m-0" widget="image" options="{'img_class': 'object-fit-contain w-100 h-100'}"/>
                                 </t>
                             </aside>
-                            <main class="ps-2 ps-md-0">
+                            <main class="ps-2">
                                 <div class="mb-1">
                                     <field name="complete_name" class="mb-0 fw-bold fs-5"/>
                                 </div>
