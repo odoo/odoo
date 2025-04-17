@@ -14,7 +14,7 @@ ProductScreen.do.clickHomeCategory();
 // Not valid -> date
 ProductScreen.exec.addOrderline('Whiteboard Pen', '5');
 PosLoyalty.check.checkNoClaimableRewards();
-PosLoyalty.exec.finalizeOrder('Cash', '20');
+PosLoyalty.exec.finalizeOrder('Cash');
 
 Tour.register('PosLoyaltyValidity1', { test: true, url: '/pos/web' }, getSteps());
 
@@ -26,11 +26,11 @@ ProductScreen.do.clickHomeCategory();
 // Valid
 ProductScreen.exec.addOrderline('Whiteboard Pen', '5');
 PosLoyalty.check.hasRewardLine('90% on the cheapest product', '-2.88');
-PosLoyalty.exec.finalizeOrder('Cash', '20');
+PosLoyalty.exec.finalizeOrder('Cash');
 
 // Not valid -> usage
 ProductScreen.exec.addOrderline('Whiteboard Pen', '5');
 PosLoyalty.check.checkNoClaimableRewards();
-PosLoyalty.exec.finalizeOrder('Cash', '20');
+PosLoyalty.exec.finalizeOrder('Cash');
 
 Tour.register('PosLoyaltyValidity2', { test: true, url: '/pos/web' }, getSteps());
