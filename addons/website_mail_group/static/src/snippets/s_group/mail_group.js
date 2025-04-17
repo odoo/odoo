@@ -12,6 +12,19 @@ patch(MailGroup.prototype, {
                 "t-att-class": () => ({
                     "d-none": false,
                 }),
+                "t-att-data-is-member": () => `${this.isMember}`,
+            },
+            ".o_mg_email_input_group": {
+                "t-att-class": () => ({
+                    "input-group": !this.hasMemberEmail,
+                    "d-flex": !!this.hasMemberEmail,
+                    "justify-content-end": !!this.hasMemberEmail,
+                }),
+            },
+            ".o_mg_email_input_group .o_mg_subscribe_email": {
+                "t-att-class": () => ({
+                    "d-none": !!this.hasMemberEmail,
+                }),
             },
         });
     },
@@ -31,28 +44,16 @@ patch(MailGroup.prototype, {
 
         if (!response) {
             // We do not access to the mail group, just remove the widget
-            this.el.replaceChildren();
+            this.removeChildren(this.el);
             return;
         }
 
         const userEmail = response.email;
         this.isMember = response.is_member;
 
-        const inputGroup = this.el.querySelector(".o_mg_email_input_group")
-
         if (userEmail && userEmail.length) {
-            inputGroup.classList.remove("input-group")
-            inputGroup.classList.add("d-flex", "justify-content-end");
-            const emailInputEl = inputGroup.querySelector(".o_mg_subscribe_email");
-            emailInputEl.value = userEmail;
-            emailInputEl.classList.add("d-none");
+            this.hasMemberEmail = true;
+            this.el.querySelector(".o_mg_email_input_group .o_mg_subscribe_email").value = userEmail;
         }
-
-        if (this.isMember) {
-            this.el.querySelector(".o_mg_unsubscribe_btn").classList.remove("d-none");
-            inputGroup.classList.add("d-none");
-        }
-
-        this.el.dataset.isMember = this.isMember;
     },
 });
