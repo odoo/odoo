@@ -142,7 +142,7 @@ export class InlineCodePlugin extends Plugin {
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
                 0,
-                insertedBacktickIndex - 1
+                insertedBacktickIndex
             );
             let startOffset, endOffset;
             const isClosingForward = textBeforeInsertedBacktick.includes("`");
@@ -174,13 +174,13 @@ export class InlineCodePlugin extends Plugin {
             codeElement.classList.add("o_inline_code");
             textNode.before(codeElement);
             codeElement.append(textNode);
-            if (
-                !codeElement.previousSibling ||
-                codeElement.previousSibling.nodeType !== Node.TEXT_NODE
-            ) {
-                codeElement.before(document.createTextNode("\u200B"));
-            }
-            if (isClosingForward) {
+            if (!codeElement.textContent.length) {
+                this.dependencies.history.addStep();
+                this.dependencies.selection.setSelection({
+                    anchorNode: codeElement.firstChild,
+                    anchorOffset: 1,
+                });
+            } else if (isClosingForward) {
                 // Move selection out of code element.
                 this.dependencies.history.addStep();
                 this.dependencies.selection.setSelection({
