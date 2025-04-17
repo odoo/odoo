@@ -473,8 +473,10 @@ class StockWarehouseOrderpoint(models.Model):
 
         # recompute virtual_available with lead days
         today = fields.Datetime.now().replace(hour=23, minute=59, second=59)
-        for (days, loc), product_ids in ploc_per_day.items():
-            products = self.env['product.product'].browse(product_ids)
+        product_ids = set()
+        location_ids = set()
+        for (days, loc), prod_ids in ploc_per_day.items():
+            products = self.env['product.product'].browse(prod_ids)
             qties = products.with_context(
                 location=loc.id,
                 to_date=today + relativedelta.relativedelta(days=days)
@@ -482,13 +484,16 @@ class StockWarehouseOrderpoint(models.Model):
             for (product, qty) in zip(products, qties):
                 if product.uom_id.compare(qty['virtual_available'], 0) < 0:
                     to_refill[(qty['id'], loc.id)] = qty['virtual_available']
+                    product_ids.add(qty['id'])
+                    location_ids.add(loc.id)
             products.invalidate_recordset()
         if not to_refill:
             return action
 
         # Remove incoming quantity from other origin than moves (e.g RFQ)
-        product_ids, location_ids = zip(*to_refill)
-        qty_by_product_loc, dummy = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(location_ids=location_ids)
+        product_ids = list(product_ids)
+        location_ids = list(location_ids)
+        qty_by_product_loc = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(location_ids=location_ids)[0]
         rounding = self.env['decimal.precision'].precision_get('Product Unit')
         # Group orderpoint by product-location
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
