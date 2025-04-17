@@ -113,6 +113,10 @@
                          invisible="country_code != 'IN'">
                     <field name="l10n_in_enet_vendor_batch_payment_feature" widget="upgrade_boolean"/>
                 </setting>
+                <setting name="cashfree_payout" invisible="country_code != 'IN'"
+                    help="Use Cashfree to process vendor payments and monitor their status within your Odoo accounting workflows." company_dependent="1">
+                    <field name="module_l10n_in_cashfree_payout" widget="upgrade_boolean"/>
+                </setting>
             </block>
             <block id="default_accounts" position="inside">
                 <setting string="India TDS Control:" invisible="not l10n_in_tds_feature">
