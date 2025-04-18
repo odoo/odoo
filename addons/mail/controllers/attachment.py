@@ -16,7 +16,7 @@ from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 logger = logging.getLogger(__name__)
 
 
-class AttachmentController(http.Controller):
+class AttachmentController(ThreadController):
     def _make_zip(self, name, attachments):
         streams = (request.env['ir.binary']._get_stream_from(record, 'raw') for record in attachments)
         # TODO: zip on-the-fly while streaming instead of loading the
@@ -47,7 +47,9 @@ class AttachmentController(http.Controller):
     @http.route("/mail/attachment/upload", methods=["POST"], type="http", auth="public")
     @add_guest_to_context
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
-        thread = ThreadController._get_thread_with_access(thread_model, thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs)
+        thread = self._get_thread_with_access(
+            thread_model, thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs
+        )
         if not thread:
             raise NotFound()
         vals = {
@@ -86,7 +88,7 @@ class AttachmentController(http.Controller):
             return
         attachment_message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
-        message = ThreadController._get_message_with_access(attachment_message.id, mode="create", **kwargs)
+        message = self._get_message_with_access(attachment_message.id, mode="create", **kwargs)
         if not request.env.user.share:
             # Check through standard access rights/rules for internal users.
             attachment._delete_and_notify(message)
@@ -97,7 +99,7 @@ class AttachmentController(http.Controller):
         # sudo: ir.attachment: access is validated below with membership of message or access token
         attachment_sudo = attachment.sudo()
         if message:
-            if not ThreadController._can_delete_attachment(message, **kwargs):
+            if not self._can_edit_message(message, **kwargs):
                 raise NotFound()
         else:
             if (
