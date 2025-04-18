@@ -203,6 +203,27 @@ class TestActivitySchedule(ActivityScheduleCase):
         self.assertEqual(len(self.test_records[3].activity_ids), 0)
         self.assertEqual(len(self.test_records[4].activity_ids), 0)
 
+    @users('employee')
+    def test_activity_schedule_norecord(self):
+        """ Test scheduling free activities, supported if assigned user. """
+        scheduler = self._instantiate_activity_schedule_wizard(None)
+        self.assertEqual(scheduler.activity_type_id, self.activity_type_todo)
+        with self._mock_activities():
+            scheduler.save().action_schedule_activities()
+        self.assertActivityValues(self._new_activities, {
+            'res_id': False,
+            'res_model': False,
+            'summary': 'TodoSummary',
+            'user_id': self.user_employee,
+        })
+
+        # cannot scheduler unassigned personal activities
+        scheduler = self._instantiate_activity_schedule_wizard(None)
+        scheduler = scheduler.save()
+        scheduler.activity_user_id = False
+        with self.assertRaises(ValueError):
+            scheduler.action_schedule_activities()
+
     def test_plan_copy(self):
         """Test plan copy"""
         copied_plan = self.plan_onboarding.copy()

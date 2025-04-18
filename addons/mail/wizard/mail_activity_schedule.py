@@ -34,14 +34,15 @@ class MailActivitySchedule(models.TransientModel):
     res_model_id = fields.Many2one(
         'ir.model', string="Applies to",
         compute="_compute_res_model_id", compute_sudo=True,
-        ondelete="cascade", precompute=True, readonly=False, required=True, store=True)
-    res_model = fields.Char("Model", readonly=True, required=True)
+        ondelete="cascade", precompute=True, readonly=False, required=False, store=True)
+    res_model = fields.Char("Model", readonly=False, required=False)
     res_ids = fields.Text(
         'Document IDs', compute='_compute_res_ids',
         readonly=True, store=True, precompute=True)
     is_batch_mode = fields.Boolean('Use in batch', compute='_compute_is_batch_mode')
-    company_id = fields.Many2one('res.company', 'Company',
-                                 compute='_compute_company_id', required=True)
+    company_id = fields.Many2one(
+        'res.company', 'Company',
+        compute='_compute_company_id', required=False)
     # usage
     error = fields.Html(compute='_compute_error')
     has_error = fields.Boolean(compute='_compute_error')
@@ -81,7 +82,8 @@ class MailActivitySchedule(models.TransientModel):
 
     @api.depends('res_model')
     def _compute_res_model_id(self):
-        for scheduler in self:
+        self.filtered(lambda a: not a.res_model).res_model_id = False
+        for scheduler in self.filtered('res_model'):
             scheduler.res_model_id = self.env['ir.model']._get_id(scheduler.res_model)
 
     @api.depends_context('active_ids')
@@ -96,7 +98,8 @@ class MailActivitySchedule(models.TransientModel):
 
     @api.depends('res_model_id', 'res_ids')
     def _compute_company_id(self):
-        for scheduler in self:
+        self.filtered(lambda a: not a.res_model).company_id = False
+        for scheduler in self.filtered('res_model'):
             applied_on = scheduler._get_applied_on_records()
             scheduler.company_id = (applied_on and 'company_id' in applied_on[0]._fields and applied_on[0].company_id
                                     ) or self.env.company
@@ -107,10 +110,11 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_error(self):
         for scheduler in self:
             errors = set()
-            applied_on = scheduler._get_applied_on_records()
-            if applied_on and ('company_id' in scheduler.env[applied_on._name]._fields and
-                               len(applied_on.mapped('company_id')) > 1):
-                errors.add(_('The records must belong to the same company.'))
+            if scheduler.res_model:
+                applied_on = scheduler._get_applied_on_records()
+                if applied_on and ('company_id' in scheduler.env[applied_on._name]._fields and
+                                len(applied_on.mapped('company_id')) > 1):
+                    errors.add(_('The records must belong to the same company.'))
             if scheduler.plan_id:
                 errors |= set(scheduler._check_plan_templates_error(applied_on))
             if errors:
@@ -132,7 +136,7 @@ class MailActivitySchedule(models.TransientModel):
         for scheduler in self:
             scheduler.is_batch_mode = len(scheduler._evaluate_res_ids()) > 1
 
-    @api.depends('company_id', 'res_model_id')
+    @api.depends('company_id', 'res_model')
     def _compute_plan_available_ids(self):
         for scheduler in self:
             scheduler.plan_available_ids = self.env['mail.activity.plan'].search(scheduler._get_plan_available_base_domain())
@@ -147,7 +151,7 @@ class MailActivitySchedule(models.TransientModel):
             else:
                 scheduler.plan_id = False
 
-    @api.depends('res_model_id', 'res_ids')
+    @api.depends('res_model', 'res_ids')
     def _compute_plan_date(self):
         self.plan_date = False
 
@@ -190,7 +194,7 @@ class MailActivitySchedule(models.TransientModel):
         for scheduler in self:
             if scheduler.activity_type_id.default_user_id:
                 scheduler.activity_user_id = scheduler.activity_type_id.default_user_id
-            elif not scheduler.activity_user_id:
+            elif not scheduler.res_model or not scheduler.activity_user_id:
                 scheduler.activity_user_id = self.env.user
 
     # Any writable fields that can change error computed field
@@ -212,6 +216,8 @@ class MailActivitySchedule(models.TransientModel):
     # ------------------------------------------------------------
 
     def action_schedule_plan(self):
+        if not self.res_model:
+            raise ValueError(_('Plan-based scheduling are available only on documents.'))
         applied_on = self._get_applied_on_records()
         for record in applied_on:
             body = _('The plan "%(plan_name)s" has been started', plan_name=self.plan_id.name)
@@ -302,6 +308,8 @@ class MailActivitySchedule(models.TransientModel):
         }
 
     def _action_schedule_activities(self):
+        if not self.res_model:
+            return self._action_schedule_activities_personal()
         return self._get_applied_on_records().activity_schedule(
             activity_type_id=self.activity_type_id.id,
             automated=False,
@@ -310,6 +318,20 @@ class MailActivitySchedule(models.TransientModel):
             user_id=self.activity_user_id.id,
             date_deadline=self.date_deadline
         )
+
+    def _action_schedule_activities_personal(self):
+        if not self.activity_user_id:
+            raise ValueError(_('Scheduling personal activities requires an assigned user.'))
+        return self.env['mail.activity'].create({
+            'activity_type_id': self.activity_type_id.id,
+            'automated': False,
+            'date_deadline': self.date_deadline,
+            'note': self.note,
+            'res_id': False,
+            'res_model_id': False,
+            'summary': self.summary,
+            'user_id': self.activity_user_id.id,
+        })
 
     # ------------------------------------------------------------
     # TOOLS
@@ -325,6 +347,8 @@ class MailActivitySchedule(models.TransientModel):
         return parse_res_ids(self.res_ids, self.env) or []
 
     def _get_applied_on_records(self):
+        if not self.res_model:
+            return None
         return self.env[self.res_model].browse(self._evaluate_res_ids())
 
     def _get_plan_available_base_domain(self):

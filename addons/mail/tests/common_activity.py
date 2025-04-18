@@ -53,13 +53,18 @@ class ActivityScheduleCase(MailCommon):
             self.activity_create_mocked = activity_create_mocked
             yield
 
+    def assertActivityValues(self, activity, activity_values):
+        self.assertEqual(len(activity), 1)
+        for fname, fvalue in activity_values.items():
+            with self.subTest(fname=fname):
+                self.assertEqual(activity[fname], fvalue)
+
     def assertActivityCreatedOnRecord(self, record, activity_values):
         activity = self._new_activities.filtered(
             lambda act: act.res_model == record._name and act.res_id == record.id
         )
-        for fname, fvalue in activity_values.items():
-            with self.subTest(fname=fname):
-                self.assertEqual(activity[fname], fvalue)
+        self.assertTrue(activity)
+        self.assertActivityValues(activity, activity_values)
 
     def assertActivityDoneOnRecord(self, record, activity_type):
         last_message = record.message_ids[0]
@@ -132,9 +137,10 @@ class ActivityScheduleCase(MailCommon):
 
     def _instantiate_activity_schedule_wizard(self, records, additional_context_value=None):
         """ Get a new Form with context default values referring to the records. """
-        return Form(self.env['mail.activity.schedule'].with_context({
+        ctx = {
             'active_id': records.ids[0],
             'active_ids': records.ids,
             'active_model': records._name,
-            **(additional_context_value or {}),
-        }))
+        } if records else {}
+        ctx.update(**(additional_context_value or {}))
+        return Form(self.env['mail.activity.schedule'].with_context(ctx))
