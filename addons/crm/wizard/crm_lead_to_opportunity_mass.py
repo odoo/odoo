@@ -39,6 +39,10 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
         for convert in self:
             convert.partner_id = False
 
+    def _compute_commercial_partner_id(self):
+        """Setting a company for each lead in mass mode is not supported."""
+        self.commercial_partner_id = False
+
     @api.depends('user_ids')
     def _compute_team_id(self):
         """ When changing the user, also set a team_id or restrict team id
