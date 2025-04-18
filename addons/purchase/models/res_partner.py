@@ -31,6 +31,11 @@ class ResPartner(models.Model):
     property_purchase_currency_id = fields.Many2one(
         'res.currency', string="Supplier Currency", company_dependent=True,
         help="This currency will be used for purchases from the current partner")
+    supplierinfo_ids = fields.One2many(
+        'product.supplierinfo',
+        'partner_id',
+        string='Vendor Pricelists'
+    )
     purchase_order_count = fields.Integer(
         string="Purchase Order Count",
         groups='purchase.group_purchase_user',
@@ -43,6 +48,10 @@ class ResPartner(models.Model):
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', company_dependent=True,
         help="Number of days to send reminder email before the promised receipt date")
     buyer_id = fields.Many2one('res.users', string='Buyer')
+    show_currency_warning = fields.Boolean(
+        string="Show Purchase Currency Warning",
+        store=False,
+    )
 
     def _compute_application_statistics_hook(self):
         data_list = super()._compute_application_statistics_hook()
@@ -52,3 +61,30 @@ class ResPartner(models.Model):
             stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': _('Purchases')}
             data_list[partner.id].append(stat_info)
         return data_list
+
+    @api.onchange('property_purchase_currency_id')
+    def _onchange_show_warning(self):
+        if self.supplierinfo_ids:
+            self.show_currency_warning = True
+
+    def action_open_supplierinfo_with_currency_change(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Vendor Pricelists (Currency Changed)',
+            'res_model': 'product.supplierinfo',
+            'view_mode': 'list,form',
+            'context': {
+                'search_default_partner_id': self.id,
+            },
+        }
+
+    def write(self, vals):
+        result = super().write(vals)
+        if 'property_purchase_currency_id' in vals:
+            supplierinfo = self.env['product.supplierinfo'].search([
+                ('partner_id', '=', self.id)
+            ])
+            if supplierinfo:
+                supplierinfo.write({'currency_id': self.property_purchase_currency_id})
+        return result
