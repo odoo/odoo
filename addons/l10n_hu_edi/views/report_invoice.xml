@@ -97,8 +97,7 @@
         <xpath expr="//td[@name='account_invoice_line_name']/span" position="after">
             <div t-if="line.product_id.l10n_hu_product_code_type and line.product_id.l10n_hu_product_code">
                 <span t-if="line.product_id.l10n_hu_product_code_type == 'OTHER'">Other Product Code</span>
-                <span t-else="else" t-out="line.product_id.l10n_hu_product_code_type"/>
-                :
+                <span t-else="else" t-out="line.product_id.l10n_hu_product_code_type"/>:
                 <span t-out="line.product_id.l10n_hu_product_code"/>
             </div>
         </xpath>
