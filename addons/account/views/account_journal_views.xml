@@ -215,6 +215,8 @@
             <field name="arch" type="xml">
                 <search string="Search Account Journal">
                     <field name="name" string="Journal" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <field name="activity_user_id" string="Activities of"/>
+                    <field name="activity_type_id" string="Activity type"/> 
                     <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
                     <separator/>
                     <filter name="sales" string="Sales" domain="[('type', '=', 'sale')]"/>
