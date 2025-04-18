@@ -25,7 +25,7 @@ test("base rendering", async () => {
     await contains(".o-mail-Chatter-topbar");
     await contains("button", { text: "Send message" });
     await contains("button", { text: "Log note" });
-    await contains("button", { text: "Activities" });
+    await contains("button", { text: "Activity" });
     await contains("button[aria-label='Attach files']");
     await contains(".o-mail-Followers");
 });
