@@ -43,3 +43,12 @@ class ResPartner(models.Model):
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', company_dependent=True,
         help="Number of days to send reminder email before the promised receipt date")
     buyer_id = fields.Many2one('res.users', string='Buyer')
+
+    def _compute_application_statistics_hook(self):
+        data_list = super()._compute_application_statistics_hook()
+        if not self.env.user.has_group('purchase.group_purchase_user'):
+            return data_list
+        for partner in self.filtered(lambda partner: partner.purchase_order_count):
+            stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': _('Purchases')}
+            data_list[partner.id].append(stat_info)
+        return data_list
