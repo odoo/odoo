@@ -2,14 +2,13 @@
 
 import logging
 import re
-import time
 
 from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError, ValidationError
-from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, SQL, mute_logger, unique
+from odoo.fields import Domain
+from odoo.tools import SQL, unique
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
@@ -656,13 +655,12 @@ class ResPartner(models.Model):
         self.ensure_one()
         if not self.bank_ids:
             return self.env['res.partner.bank']
-        domains = []
+        domain = Domain.FALSE
         for bank in self.bank_ids:
-            domains.append([('acc_number', '=', bank.acc_number), ('bank_id', '=', bank.bank_id.id)])
-        domain = expression.OR(domains)
+            domain |= Domain('acc_number', '=', bank.acc_number) & Domain('bank_id', '=', bank.bank_id.id)
         if self.company_id:
-            domain = expression.AND([domain, [('company_id', 'in', (False, self.company_id.id))]])
-        domain = expression.AND([domain, [('partner_id', '!=', self._origin.id)]])
+            domain &= Domain('company_id', 'in', (False, self.company_id.id))
+        domain &= Domain('partner_id', '!=', self._origin.id)
         return self.env['res.partner.bank'].search(domain)
 
     @api.depends_context('company')
@@ -769,7 +767,7 @@ class ResPartner(models.Model):
     def _has_invoice(self, partner_domain):
         self.ensure_one()
         invoice = self.env['account.move'].sudo().search(
-            expression.AND([
+            Domain.AND([
                 partner_domain,
                 [
                     ('move_type', 'in', ['out_invoice', 'out_refund']),
@@ -945,9 +943,9 @@ class ResPartner(models.Model):
         if not domains:
             return None
 
-        domain = expression.OR(domains)
+        domain = Domain.OR(domains)
         if extra_domain:
-            domain = expression.AND([domain, extra_domain])
+            domain &= Domain(extra_domain)
         return self.env['res.partner'].search(domain, limit=2)
 
     @api.model

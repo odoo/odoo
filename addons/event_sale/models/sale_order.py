@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode, url_join
-
 from odoo import fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class SaleOrder(models.Model):
@@ -62,10 +60,4 @@ class SaleOrder(models.Model):
             sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
 
     def _get_product_catalog_domain(self):
-        """Override of `_get_product_catalog_domain` to extend the domain.
-
-        :returns: A list of tuples that represents a domain.
-        :rtype: list
-        """
-        domain = super()._get_product_catalog_domain()
-        return expression.AND([domain, [('service_tracking', '!=', 'event')]])
+        return super()._get_product_catalog_domain() & Domain('service_tracking', '!=', 'event')

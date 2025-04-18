@@ -6,9 +6,9 @@ import base64
 import json
 import random
 
-from odoo import models, api, _, fields, Command, tools
+from odoo import models, api, _, fields, tools
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, SQL
 from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
@@ -484,7 +484,7 @@ class AccountJournal(models.Model):
             ('statement_line_id', '=', False),
             ('parent_state', '=', 'posted'),
             ('payment_id', '=', False),
-      ] + expression.OR(misc_domain)
+      ] + Domain.OR(misc_domain)
 
         misc_totals = {
             account: (balance, count_lines, currencies)
@@ -1103,7 +1103,7 @@ class AccountJournal(models.Model):
             'res_model': 'account.move',
             'search_view_id': (self.env.ref('account.view_account_move_with_gaps_in_sequence_filter').id, 'search'),
             'view_mode': 'list,form',
-            'domain': domain,
+            'domain': list(domain),
             'context': {
                 'search_default_group_by_sequence_prefix': 1,
                 'search_default_irregular_sequences': 1,
@@ -1113,12 +1113,10 @@ class AccountJournal(models.Model):
 
     def show_sequence_holes(self):
         has_sequence_holes = self._query_has_sequence_holes()
-        domain = expression.OR(
-            [
-                *self.env['account.move']._check_company_domain(self.env.companies),
-                ('journal_id', '=', journal_id),
-                ('sequence_prefix', '=', prefix),
-            ]
+        domain = Domain(self.env['account.move']._check_company_domain(self.env.companies))
+        domain &= Domain.OR(
+            Domain('journal_id', '=', journal_id)
+            & Domain('sequence_prefix', '=', prefix)
             for journal_id, prefix in has_sequence_holes
         )
         action = self._show_sequence_holes(domain)

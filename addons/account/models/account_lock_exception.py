@@ -1,6 +1,5 @@
-from odoo import _, api, fields, models, Command
-from odoo.fields import Domain
-from odoo.osv import expression
+from odoo import _, api, fields, models
+from odoo.fields import Command, Domain
 from odoo.tools.misc import format_datetime
 from odoo.exceptions import UserError, ValidationError
 
@@ -245,11 +244,15 @@ class AccountLock_Exception(models.Model):
 
     @api.model
     def _get_active_exceptions_domain(self, company, soft_lock_date_fields):
-        return [
-            *expression.OR([(field, '<', company[field])] for field in soft_lock_date_fields if company[field]),
-            ('company_id', '=', company.id),
-            ('state', '=', 'active'),  # checks the datetime
-        ]
+        return (
+            Domain.OR(
+                Domain(field, '<', company[field])
+                for field in soft_lock_date_fields
+                if company[field]
+            )
+            & Domain('company_id', '=', company.id)
+            & Domain('state', '=', 'active'),  # checks the datetime
+        )
 
     def _get_audit_trail_during_exception_domain(self):
         self.ensure_one()
@@ -285,11 +288,11 @@ class AccountLock_Exception(models.Model):
                 ('audit_trail_message_ids', 'any', [
                     ('tracking_value_ids.field_id', '=', self.env['ir.model.fields']._get('account.move', 'date').id),
                     '|',
-                        *expression.AND(tracking_old_datetime_domain),
-                        *expression.AND(tracking_new_datetime_domain),
+                        *Domain.AND(tracking_old_datetime_domain),
+                        *Domain.AND(tracking_new_datetime_domain),
                 ]),
                 # The date of the move is inside the excepted period and sth. was changed on the move
-                *expression.AND(move_date_domain),
+                *Domain.AND(move_date_domain),
         ]
 
     def action_show_audit_trail_during_exception(self):

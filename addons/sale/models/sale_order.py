@@ -9,7 +9,7 @@ from itertools import groupby
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import OrderedSet, SQL, float_is_zero, format_amount, is_html_empty
@@ -1336,7 +1336,7 @@ class SaleOrder(models.Model):
         }
 
     def _get_product_catalog_domain(self):
-        return expression.AND([super()._get_product_catalog_domain(), [('sale_ok', '=', True)]])
+        return super()._get_product_catalog_domain() & Domain('sale_ok', '=', True)
 
     @api.readonly
     def action_open_business_doc(self):

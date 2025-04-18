@@ -4,8 +4,8 @@ from collections import OrderedDict
 
 from odoo import _, fields, http
 from odoo.exceptions import AccessError, MissingError
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 
 from odoo.addons.account.controllers.download_docs import _build_zip_from_data, _get_headers
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -52,7 +52,7 @@ class PortalAccount(CustomerPortal):
             move_type = [m_type+move for move in ('_invoice', '_refund', '_receipt')]
         else:
             move_type = ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
-        return [('state', 'not in', ('cancel', 'draft')), ('move_type', 'in', move_type)]
+        return Domain('state', 'not in', ('cancel', 'draft')) & Domain('move_type', 'in', move_type)
 
     def _get_overdue_invoices_domain(self, partner_id=None):
         return [
@@ -100,10 +100,7 @@ class PortalAccount(CustomerPortal):
         values = self._prepare_portal_layout_values()
         AccountInvoice = request.env['account.move']
 
-        domain = expression.AND([
-            domain or [],
-            self._get_invoices_domain(),
-        ])
+        domain = Domain(domain or Domain.TRUE) & self._get_invoices_domain()
 
         searchbar_sortings = self._get_account_searchbar_sortings()
         # default sort by order
