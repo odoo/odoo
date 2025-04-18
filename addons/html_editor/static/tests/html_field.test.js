@@ -928,8 +928,7 @@ test("isDirty should be false when the content is being transformed by the edito
 });
 
 test.tags("desktop");
-// TODO mysterious egg
-test.todo("link preview in Link Popover", async () => {
+test("link preview in Link Popover", async () => {
     Partner._records = [
         {
             id: 1,
