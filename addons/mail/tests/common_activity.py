@@ -16,8 +16,10 @@ class ActivityScheduleCase(MailCommon):
         # prepare activities
         cls.activity_type_todo = cls.env.ref('mail.mail_activity_data_todo')
         cls.activity_type_todo.delay_count = 4
+        cls.activity_type_todo.sequence = 1
         cls.activity_type_call = cls.env.ref('mail.mail_activity_data_call')
         cls.activity_type_call.delay_count = 1
+        cls.activity_type_call.sequence = 2
 
     def reverse_record_set(self, records):
         """ Get an equivalent recordset but with elements in reversed order. """

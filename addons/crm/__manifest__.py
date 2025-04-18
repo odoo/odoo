@@ -65,7 +65,6 @@
         'data/crm_team_demo.xml',
         'data/mail_template_demo.xml',
         'data/crm_team_member_demo.xml',
-        'data/mail_activity_type_demo.xml',
         'data/crm_lead_demo.xml',
     ],
     'installable': True,
