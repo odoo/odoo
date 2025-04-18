@@ -7,8 +7,8 @@ import pytz
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, api, fields, models
-from odoo.osv import expression
+from odoo import api, fields, models
+from odoo.fields import Command, Domain
 from odoo.tools import ormcache
 from odoo.tools.intervals import Intervals
 
@@ -76,16 +76,16 @@ class HrVersion(models.Model):
         return self.env.ref('hr_work_entry.work_entry_type_leave')
 
     def _get_sub_leave_domain(self):
-        return [('calendar_id', 'in', [False] + self.resource_calendar_id.ids)]
+        return Domain('calendar_id', 'in', [False] + self.resource_calendar_id.ids)
 
     def _get_leave_domain(self, start_dt, end_dt):
-        domain = [
+        domain = Domain([
             ('resource_id', 'in', [False] + self.employee_id.resource_id.ids),
             ('date_from', '<=', end_dt.replace(tzinfo=None)),
             ('date_to', '>=', start_dt.replace(tzinfo=None)),
             ('company_id', 'in', [False, self.company_id.id]),
-        ]
-        return expression.AND([domain, self._get_sub_leave_domain()])
+        ])
+        return domain & self._get_sub_leave_domain()
 
     def _get_resource_calendar_leaves(self, start_dt, end_dt):
         return self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
@@ -427,20 +427,21 @@ class HrVersion(models.Model):
     def _cancel_work_entries(self):
         if not self:
             return
-        domain = [('state', '!=', 'validated')]
+        domains = []
         for version in self:
             date_start = fields.Datetime.to_datetime(version.date_start)
-            version_domain = [
+            version_domain = Domain([
                 ('version_id', '=', version.id),
                 ('date_start', '>=', date_start),
-            ]
+            ])
             if version.date_end:
                 date_end = datetime.combine(version.date_end, datetime.max.time())
-                version_domain += [('date_stop', '<=', date_end)]
-            domain = expression.AND([domain, version_domain])
+                version_domain &= Domain('date_stop', '<=', date_end)
+            domains.append(version_domain)
+        domain = Domain.OR(domains) & Domain('state', '!=', 'validated')
         work_entries = self.env['hr.work.entry'].sudo().search(domain)
         if work_entries:
-            work_entries.sudo().unlink()
+            work_entries.unlink()
 
     def write(self, vals):
         result = super().write(vals)
