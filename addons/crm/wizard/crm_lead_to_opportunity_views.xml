@@ -29,12 +29,31 @@
                         </list>
                     </field>
                 </group>
-                <group name="action" invisible="name != 'convert'" string="Customer" col="1">
-                    <field name="action" nolabel="1" widget="radio"/>
-                    <group col="2">
-                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" invisible="action != 'exist'" required="action == 'exist'"/>
-                    </group>
-                </group>
+                <div name="action" invisible="name != 'convert'" class="row">
+                    <div class="col-3">
+                        <field name="action" nolabel="1" widget="radio"/>
+                    </div>
+                    <div class="col-4">
+                        <div class="row h-50">
+                            <t invisible="lead_partner_name or action != 'create'">
+                                <label for="commercial_partner_id" class="col-3 p-0"/>
+                                <field name="commercial_partner_id" class="col p-0" string="Company" placeholder="Don't link to a company"/>
+                            </t>
+                            <t invisible="not lead_partner_name or not lead_contact_name or action != 'create'">
+                                <label for="lead_partner_name" class="col-3 p-0"/>
+                                <field name="lead_partner_name" class="col p-0" string="Company" placeholder="Don't link to a company"/>
+                            </t>
+                        </div>
+                        <div class="row h-50">
+                            <t invisible="action != 'exist'">
+                                <label for="partner_id" class="col-3 p-0"/>
+                                <field name="partner_id" class="col p-0" widget="res_partner_many2one" 
+                                    context="{'res_partner_search_mode': 'customer', 'show_vat': True}"
+                                    required="action == 'exist'"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
                 <footer>
                     <button name="action_apply" string="Create Opportunity" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
