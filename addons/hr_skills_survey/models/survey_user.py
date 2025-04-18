@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import html2plaintext
 
 
@@ -24,12 +23,11 @@ class SurveyUser_Input(models.Model):
         employees = self.env['hr.employee'].search(
             [('user_id.partner_id', 'in', certification_user_inputs.partner_id.ids)])
         resume_lines = self.env['hr.resume.line'].search(
-            expression.OR([
-                expression.AND([
-                    [('employee_id', '=', employee.id)],
-                    [('survey_id', 'in', user_inputs_by_partner[employee.user_id.partner_id].survey_id.ids)]])
+            Domain.OR(
+                Domain('employee_id', '=', employee.id)
+                & Domain('survey_id', 'in', user_inputs_by_partner[employee.user_id.partner_id].survey_id.ids)
                 for employee in employees
-            ]))
+            ))
         resume_survey_by_ids = resume_lines.grouped(
             lambda resume_line: (resume_line.employee_id, resume_line.survey_id))
         line_type = self.env.ref('hr_skills_survey.resume_type_certification', raise_if_not_found=False)
