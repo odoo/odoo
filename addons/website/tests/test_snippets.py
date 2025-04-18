@@ -62,7 +62,6 @@ class TestSnippets(HttpCase):
     def test_04_countdown_preview(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_countdown', login='admin')
 
-    @unittest.skip
     def test_05_social_media(self):
         self.env.ref('website.default_website').write({
             'social_facebook': "https://www.facebook.com/Odoo",
