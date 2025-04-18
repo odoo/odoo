@@ -10,6 +10,7 @@ import * as ChromePos from "@point_of_sale/../tests/pos/tours/utils/chrome_util"
 import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
 const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import { registry } from "@web/core/registry";
+import { delay } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
     steps: () =>
@@ -28,7 +29,13 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.selectedOrderlineHas("Coca-Cola", "1"),
 
             ProductScreen.clickControlButton("Transfer"),
-            FloorScreen.clickTable("2"),
+            {
+                trigger: ".table:contains(2)",
+                async run(helpers) {
+                    await delay(500);
+                    await helpers.click();
+                },
+            },
             Order.hasLine({ productName: "Water", quantity: "5" }),
             Order.hasLine({ productName: "Minute Maid", quantity: "3" }),
             Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),
