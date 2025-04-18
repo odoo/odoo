@@ -609,6 +609,7 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGXCPU, self.signal_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
+            signal.signal(signal.SIGUSR2, log_ormcache_stats)
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
@@ -802,6 +803,7 @@ class GeventServer(CommonServer):
             # Set process memory limit as an extra safeguard
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
+            signal.signal(signal.SIGUSR2, log_ormcache_stats)
             gevent.spawn(self.watchdog)
 
         self.httpd = WSGIServer(
@@ -929,9 +931,9 @@ class PreforkServer(CommonServer):
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
                 dumpstacks()
-            elif sig == signal.SIGUSR1:
-                # log ormcache stats on kill -SIGUSR1
-                log_ormcache_stats()
+            elif sig in [signal.SIGUSR1, signal.SIGUSR2]:
+                # log ormcache stats on kill -SIGUSR1 or kill -SIGUSR2
+                log_ormcache_stats(sig)
             elif sig == signal.SIGTTIN:
                 # increase number of workers
                 self.population += 1
@@ -1006,6 +1008,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGTTOU, self.signal_handler)
         signal.signal(signal.SIGQUIT, dumpstacks)
         signal.signal(signal.SIGUSR1, log_ormcache_stats)
+        signal.signal(signal.SIGUSR2, log_ormcache_stats)
 
         if config['http_enable']:
             # listen to socket
@@ -1192,7 +1195,8 @@ class Worker(object):
     def _runloop(self):
         signal.pthread_sigmask(signal.SIG_BLOCK, {
             signal.SIGXCPU,
-            signal.SIGINT, signal.SIGQUIT, signal.SIGUSR1,
+            signal.SIGINT, signal.SIGQUIT,
+            signal.SIGUSR1, signal.SIGUSR2,
         })
         try:
             while self.alive:
