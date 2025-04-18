@@ -51,7 +51,7 @@ class ResPartner(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
-            'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
+            'id', 'name', 'street', 'street2', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
             'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name',
             'pos_contact_address', 'invoice_emails', 'company_type'
         ]
