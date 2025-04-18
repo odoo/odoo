@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { delay } from '@odoo/hoot-dom';
 import {
     clickOnEditAndWaitEditMode,
     clickOnExtraMenuItem,
@@ -292,7 +293,10 @@ registerWebsitePreviewTour('edit_menus', {
     {
         content: "Open the Home menu after scroll",
         trigger: ':iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
-        run: "click",
+        async run(helpers) {
+            await delay(1000);
+            await helpers.click();
+        },
     },
     {
         content: "Check that the Home menu is opened",
