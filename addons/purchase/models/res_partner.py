@@ -43,6 +43,10 @@ class ResPartner(models.Model):
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', company_dependent=True,
         help="Number of days to send reminder email before the promised receipt date")
     buyer_id = fields.Many2one('res.users', string='Buyer')
+    show_currency_warning = fields.Boolean(
+        string="Show Purchase Currency Warning",
+        store=False,
+    )
 
     def _compute_application_statistics_hook(self):
         data_list = super()._compute_application_statistics_hook()
@@ -52,3 +56,29 @@ class ResPartner(models.Model):
             stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': _('Purchases')}
             data_list[partner.id].append(stat_info)
         return data_list
+
+    @api.onchange('property_purchase_currency_id')
+    def _onchange_show_currency_warning(self):
+        has_supplierinfo = self.env["product.supplierinfo"].search_count([('partner_id', 'in', self.ids)], limit=1)
+        if has_supplierinfo and self._origin.property_purchase_currency_id != self.property_purchase_currency_id:
+            self.show_currency_warning = True
+        else:
+            self.show_currency_warning = False
+
+    def action_open_supplierinfo_pricelists(self):
+        self.ensure_one()
+        return {
+            'name': self.env._('Vendor Pricelists'),
+            'res_model': 'product.supplierinfo',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list,kanban,form',
+            'context': dict(self._context, search_default_partner_id=self.id),
+        }
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'property_purchase_currency_id' in vals:
+            supplierinfo = self.env['product.supplierinfo'].search([('partner_id', 'in', self.ids)])
+            if supplierinfo:
+                supplierinfo.write({'currency_id': vals.get('property_purchase_currency_id')})
+        return res

@@ -90,4 +90,25 @@
                 </group>
             </field>
         </record>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit.purchase</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='warning_tax']" position="before">
+                    <div class="alert alert-warning text-center" role="alert" invisible="not show_currency_warning">
+                        <p class="my-0">
+                            <span>Existing pricelist rules for this vendor will be updated to use this new currency but their price will not change. 
+                            You will need to update them manually if needed.</span>
+                        </p>
+                        <button type="object"
+                            name="action_open_supplierinfo_pricelists"
+                            string="Go to Vendor Pricelists"
+                            class="btn border-0 text-info bg-transparent text-decoration-underline"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
 </odoo>
