@@ -463,7 +463,7 @@ class Applicant(models.Model):
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):
-        if view_type == 'form' and self.user_has_groups('hr_recruitment.group_hr_recruitment_interviewer'):
+        if view_type == 'form' and self.user_has_groups('hr_recruitment.group_hr_recruitment_interviewer, !hr_recruitment.group_hr_recruitment_manager, !hr_recruitment.group_hr_recruitment_user'):
             view_id = self.env.ref('hr_recruitment.hr_applicant_view_form_interviewer').id
         return super().get_view(view_id, view_type, **options)
 

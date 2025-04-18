@@ -14,11 +14,8 @@ export class InterviewerFormController extends FormController {
     get className() {
         const result = super.className;
         const root = this.model.root;
-        if (!root.data.interviewer_ids || !root.data.user_id) {
-            return result;
-        }
-        result["o_applicant_interviewer_form"] = root.data.interviewer_ids.records.findIndex(
-            interviewer => interviewer.data.id === session.uid) > -1;
+        if (!root.data.user_id || root.data.user_id[0] !== session.uid)
+            result["o_applicant_interviewer_form"] = true;
         return result;
     }
 }
