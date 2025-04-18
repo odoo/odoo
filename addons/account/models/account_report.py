@@ -48,7 +48,9 @@ class AccountReport(models.Model):
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
     only_tax_exigible = fields.Boolean(
         string="Only Tax Exigible Lines",
-        compute=lambda x: x._compute_report_option_filter('only_tax_exigible'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('only_tax_exigible'),
+        precompute=True,
+        readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     availability_condition = fields.Selection(
         string="Availability",
@@ -61,7 +63,8 @@ class AccountReport(models.Model):
     integer_rounding = fields.Selection(string="Integer Rounding", selection=[('HALF-UP', "Nearest"), ('UP', "Up"), ('DOWN', "Down")])
     allow_foreign_vat = fields.Boolean(
         string="Allow Foreign VAT",
-        compute=lambda x: x._compute_report_option_filter('allow_foreign_vat'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('allow_foreign_vat'),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
     default_opening_date_filter = fields.Selection(
@@ -78,6 +81,7 @@ class AccountReport(models.Model):
             ('previous_return_period', "Last Return Period"),
         ],
         compute=lambda x: x._compute_report_option_filter('default_opening_date_filter', 'previous_month'),
+        precompute=True,
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
@@ -88,6 +92,7 @@ class AccountReport(models.Model):
             ('cta', "Use CTA"),
         ],
         compute=lambda x: x._compute_report_option_filter('currency_translation', 'cta'),
+        precompute=True,
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
@@ -97,67 +102,82 @@ class AccountReport(models.Model):
     filter_multi_company = fields.Selection(
         string="Multi-Company",
         selection=[('selector', "Use Company Selector"), ('tax_units', "Use Tax Units")],
-        compute=lambda x: x._compute_report_option_filter('filter_multi_company', 'selector'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_multi_company', 'selector'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_date_range = fields.Boolean(
         string="Date Range",
-        compute=lambda x: x._compute_report_option_filter('filter_date_range', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_date_range', True),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_show_draft = fields.Boolean(
         string="Draft Entries",
-        compute=lambda x: x._compute_report_option_filter('filter_show_draft', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_show_draft', True),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_unreconciled = fields.Boolean(
         string="Unreconciled Entries",
-        compute=lambda x: x._compute_report_option_filter('filter_unreconciled', False), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_unreconciled', False),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_unfold_all = fields.Boolean(
         string="Unfold All",
-        compute=lambda x: x._compute_report_option_filter('filter_unfold_all'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_unfold_all'),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_hide_0_lines = fields.Selection(
         string="Hide lines at 0",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hide_0_lines', 'optional'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_hide_0_lines', 'optional'),
+        precompute=True, readonly=False, store=True, depends=['root_report_id'],
     )
     filter_period_comparison = fields.Boolean(
         string="Period Comparison",
-        compute=lambda x: x._compute_report_option_filter('filter_period_comparison', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_period_comparison', True),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_growth_comparison = fields.Boolean(
         string="Growth Comparison",
-        compute=lambda x: x._compute_report_option_filter('filter_growth_comparison', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_growth_comparison', True),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_journals = fields.Boolean(
         string="Journals",
-        compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_analytic = fields.Boolean(
         string="Analytic Filter",
-        compute=lambda x: x._compute_report_option_filter('filter_analytic'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_analytic'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_hierarchy = fields.Selection(
         string="Account Groups",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_account_type = fields.Selection(
         string="Account Types",
         selection=[('both', "Payable and receivable"), ('payable', "Payable"), ('receivable', "Receivable"), ('disabled', 'Disabled')],
-        compute=lambda x: x._compute_report_option_filter('filter_account_type', 'disabled'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_account_type', 'disabled'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id'],
     )
     filter_partner = fields.Boolean(
         string="Partners",
-        compute=lambda x: x._compute_report_option_filter('filter_partner'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_partner'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_aml_ir_filters = fields.Boolean(
         string="Favorite Filters", help="If activated, user-defined filters on journal items can be selected on this report",
-        compute=lambda x: x._compute_report_option_filter('filter_aml_ir_filters'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_aml_ir_filters'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
     filter_budgets = fields.Boolean(
         string="Budgets",
-        compute=lambda x: x._compute_report_option_filter('filter_budgets'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_budgets'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
     def _compute_report_option_filter(self, field_name, default_value=False):
