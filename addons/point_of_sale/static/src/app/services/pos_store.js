@@ -1042,7 +1042,7 @@ export class PosStore extends WithLazyGetterTrap {
      */
     getCashier() {
         if (!this.user.role) {
-            this.user.role = this.user.raw.role;
+            this.user._role = this.user.raw.role;
         }
         return this.user;
     }
