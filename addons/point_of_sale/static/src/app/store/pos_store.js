@@ -1173,9 +1173,7 @@ export class PosStore extends Reactive {
                 order.recomputeOrderData();
             }
 
-            const serializedOrder = orders.map((order) =>
-                order.serialize({ orm: true, clear: true })
-            );
+            const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
             });
@@ -1212,6 +1210,7 @@ export class PosStore extends Reactive {
 
             // Remove only synced orders from the pending orders
             orders.forEach((o) => this.removePendingOrder(o));
+            orders.map((order) => order.clearCommands());
             return newData["pos.order"];
         } catch (error) {
             if (options.throw) {
