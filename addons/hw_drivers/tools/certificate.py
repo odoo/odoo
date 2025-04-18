@@ -7,13 +7,14 @@ from cryptography.x509.oid import NameOID
 from pathlib import Path
 
 from odoo.addons.hw_drivers.tools.helpers import (
-    require_db,
     get_conf,
-    update_conf,
+    get_mac_address,
     get_path_nginx,
-    writable,
-    start_nginx_server,
     odoo_restart,
+    require_db,
+    start_nginx_server,
+    update_conf,
+    writable,
 )
 
 _logger = logging.getLogger(__name__)
@@ -23,8 +24,10 @@ _logger = logging.getLogger(__name__)
 def ensure_validity():
     """Ensure that the certificate is up to date
     Load a new if the current one is not valid or if there is none.
+
+    This method also sends the certificate end date to the database.
     """
-    get_certificate_end_date() or download_odoo_certificate()
+    inform_database(get_certificate_end_date() or download_odoo_certificate())
 
 
 def get_certificate_end_date():
@@ -67,7 +70,7 @@ def download_odoo_certificate():
     db_uuid = get_conf('db_uuid')
     enterprise_code = get_conf('enterprise_code')
     if not db_uuid:
-        return False
+        return None
 
     try:
         response = requests.post(
@@ -79,25 +82,50 @@ def download_odoo_certificate():
         result = response.json().get('result', {})
     except (requests.exceptions.RequestException, ValueError):
         _logger.exception("An error occurred while trying to reach odoo.com")
-        return False
+        return None
 
     error = result.get('error')
     if error:
         _logger.warning("Error received from odoo.com while trying to get the certificate: %s", error)
-        return False
+        return None
 
     update_conf({'subject': result['subject_cn']})
+
+    certificate = result['x509_pem']
+    private_key = result['private_key_pem']
     if platform.system() == 'Linux':
         with writable():
-            Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'], encoding='utf-8')
-            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'], encoding='utf-8')
-            Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'], encoding='utf-8')
-            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(
-                result['private_key_pem'], encoding='utf-8'
-            )
+            Path('/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
+            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
+            Path('/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
+            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
         start_nginx_server()
+        return str(x509.load_pem_x509_certificate(certificate.encode()).not_valid_after)
     else:
-        Path(get_path_nginx(), 'conf', 'nginx-cert.crt').write_text(result['x509_pem'], encoding='utf-8')
-        Path(get_path_nginx(), 'conf', 'nginx-cert.key').write_text(result['private_key_pem'], encoding='utf-8')
+        Path(get_path_nginx(), 'conf', 'nginx-cert.crt').write_text(certificate, encoding='utf-8')
+        Path(get_path_nginx(), 'conf', 'nginx-cert.key').write_text(private_key, encoding='utf-8')
         odoo_restart(3)
-    return True
+        return None
+
+
+@require_db
+def inform_database(ssl_certificate_end_date, server_url=None):
+    """Inform the database about the certificate end date.
+
+    If end date is ``None``, we avoid sending a useless request.
+
+    :param str ssl_certificate_end_date: End date of the SSL certificate
+    :param str server_url: URL of the Odoo server (provided by decorator).
+    """
+    if not ssl_certificate_end_date:
+        return
+
+    try:
+        response = requests.post(
+            server_url + "/iot/box/update_certificate_status",
+            json={'params': {'iot_mac': get_mac_address(), 'ssl_certificate_end_date': ssl_certificate_end_date}},
+            timeout=5,
+        )
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        _logger.exception("Could not reach configured server to inform about the certificate status")
