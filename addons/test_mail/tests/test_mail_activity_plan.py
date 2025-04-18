@@ -192,7 +192,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                         'automated': False,
                         'date_deadline': self.reference_now.date() + timedelta(days=5),  # both types delays
                         'note': False,
-                        'summary': False,
+                        'summary': 'TodoSumCallSummary',
                         'user_id': self.env.user,
                     })
 
