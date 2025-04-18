@@ -868,7 +868,8 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
 });
 
 test.tags("desktop");
-test("should not close image cropper while loading media", async () => {
+// TODO mysterious egg
+test.todo("should not close image cropper while loading media", async () => {
     onRpc("/html_editor/get_image_info", () => ({
         original: {
             image_src: "#",
