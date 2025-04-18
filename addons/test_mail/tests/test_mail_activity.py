@@ -279,6 +279,25 @@ class TestActivityFlow(TestActivityCommon):
             # activity summary remains unchanged from change of activity type as call activity doesn't have default summary
             self.assertEqual(ActivityForm.summary, email_activity_type.summary)
 
+    def test_activity_type_unlink(self):
+        """ Removing type should allocate activities to Todo """
+        email_activity_type = self.env['mail.activity.type'].create({
+            'name': 'email',
+            'summary': 'Email Summary',
+        })
+        temp_record = self.env['mail.test.activity'].create({'name': 'Test'})
+        activity = temp_record.activity_schedule(
+            activity_type_id=email_activity_type.id,
+            user_id=self.user_employee.id,
+        )
+        self.assertEqual(activity.activity_type_id, email_activity_type)
+        email_activity_type.unlink()
+        self.assertEqual(activity.activity_type_id, self.env.ref('mail.mail_activity_data_todo'))
+
+        # Todo is protected, niark niark
+        with self.assertRaises(exceptions.UserError):
+            self.env.ref('mail.mail_activity_data_todo').unlink()
+
     @mute_logger('odoo.sql_db')
     def test_activity_values(self):
         """ Test activities are created with right model / res_id values linking
