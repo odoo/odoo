@@ -91,7 +91,7 @@ class ResourceCalendar(models.Model):
         compute="_compute_flexible_hours", inverse="_inverse_flexible_hours", store=True,
         help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
     full_time_required_hours = fields.Float(
-        string="Company Full Time",
+        string="Full Time Equivalent",
         compute="_compute_full_time_required_hours", store=True, readonly=False,
         help="Number of hours to work on the company schedule to be considered as fulltime.")
     global_leave_ids = fields.One2many(
