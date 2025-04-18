@@ -39,10 +39,4 @@ class SaleOrder(models.Model):
         return action
 
     def _get_product_catalog_domain(self):
-        """Override of `_get_product_catalog_domain` to extend the domain.
-
-        :returns: A list of tuples that represents a domain.
-        :rtype: list
-        """
-        domain = super()._get_product_catalog_domain()
-        return Domain.AND([domain, [('service_tracking', '!=', 'event_booth')]])
+        return super()._get_product_catalog_domain() & Domain('service_tracking', '!=', 'event_booth')

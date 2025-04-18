@@ -1121,7 +1121,7 @@ class PurchaseOrder(models.Model):
         }
 
     def _get_product_catalog_domain(self):
-        return Domain.AND([super()._get_product_catalog_domain(), [('purchase_ok', '=', True)]])
+        return super()._get_product_catalog_domain() & Domain('purchase_ok', '=', True)
 
     def _get_product_catalog_order_data(self, products, **kwargs):
         res = super()._get_product_catalog_order_data(products, **kwargs)

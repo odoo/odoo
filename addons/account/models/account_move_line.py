@@ -4,9 +4,9 @@ from datetime import date
 import logging
 import re
 
-from odoo import api, fields, models, Command, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 from odoo.tools import frozendict, float_compare, Query, SQL, OrderedSet
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -3139,7 +3139,7 @@ class AccountMoveLine(models.Model):
         """ Returns a domain to be used to identify the move lines that are allowed
         to be taken into account in the tax report.
         """
-        return [
+        return Domain([
             # Lines on moves without any payable or receivable line are always exigible
             '|', ('move_id.always_tax_exigible', '=', True),
 
@@ -3152,7 +3152,7 @@ class AccountMoveLine(models.Model):
             # Lines from non-CABA taxes are always exigible
             '|', ('tax_line_id.tax_exigibility', '!=', 'on_payment'),
             ('tax_ids.tax_exigibility', '!=', 'on_payment'), # So: exigible if at least one tax from tax_ids isn't on_payment
-        ]
+        ])
 
     def _get_invoiced_qty_per_product(self):
         qties = defaultdict(float)
