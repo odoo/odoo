@@ -2133,6 +2133,11 @@ export class PosStore extends WithLazyGetterTrap {
                 return false;
             }
         }
+        payment.qrPaymentData = {
+            name: payment.payment_method_id.name,
+            amount: this.env.utils.formatCurrency(payment.amount),
+            qrCode: qr,
+        };
         return await ask(
             this.env.services.dialog,
             {
@@ -2143,7 +2148,10 @@ export class PosStore extends WithLazyGetterTrap {
             },
             {},
             QRPopup
-        );
+        ).then((result) => {
+            payment.qrPaymentData = null;
+            return result;
+        });
     }
 
     get isTicketScreenShown() {
