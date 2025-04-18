@@ -140,6 +140,18 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_basic_user_can_change_price", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1", "10", "10"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_change_on_rights_reflected_directly", {
     steps: () =>
         [
