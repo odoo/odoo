@@ -20,6 +20,7 @@ class TestReorderingRule(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestReorderingRule, cls).setUpClass()
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
         cls.partner = cls.env['res.partner'].create({
             'name': 'Smith'
         })
