@@ -20,21 +20,5 @@ export class QRPopup extends ConfirmationDialog {
         super.setup();
         this.props.body = _t("Please scan the QR code with %s", this.props.title);
         this.amount = this.env.utils.formatCurrency(this.props.line.amount);
-        this.showCustomerScreen();
-    }
-
-    showCustomerScreen() {
-        this.props.order.uiState["PaymentScreen"] = {
-            qrPaymentData: {
-                name: this.props.title,
-                amount: this.amount,
-                qrCode: this.props.qrCode,
-            },
-        };
-    }
-
-    async execButton(callback) {
-        delete this.props.order.uiState.PaymentScreen.qrPaymentData;
-        return super.execButton(callback);
     }
 }
