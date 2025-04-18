@@ -324,6 +324,7 @@ export const htmlField = {
         }
         if (options.height) {
             editorConfig.height = `${options.height}px`;
+            editorConfig.classList = ["overflow-auto"];
         }
         if ("allowImage" in options) {
             editorConfig.allowImage = Boolean(options.allowImage);
