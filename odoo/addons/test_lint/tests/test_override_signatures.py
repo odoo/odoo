@@ -43,8 +43,6 @@ METHODS_TO_IGNORE = {
     '_mail_get_partner_fields',
     '_notify_by_email_prepare_rendering_context',
     '_notify_thread_by_email',
-    # various
-    '_import_partner',
 }
 MODEL_METHODS_TO_IGNORE = {
     ('account.intrastat.services.be.report.handler', '_be_intrastat_get_xml_file_content'),
