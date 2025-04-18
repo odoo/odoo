@@ -64,7 +64,9 @@ class TestUi(TestPosHrHttpCommon):
                 (4, self.env.ref('account.group_account_invoice').id)
             ]
         })
-        self.main_pos_config.advanced_employee_ids = self.admin.ids
+        self.main_pos_config.update({
+            'advanced_employee_ids': [(6, 0, self.admin.ids)],
+        })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour("PosHrTour", login="pos_admin")
 
@@ -94,7 +96,6 @@ class TestUi(TestPosHrHttpCommon):
         self.main_pos_config.advanced_employee_ids = []
         self.main_pos_config.basic_employee_ids = [
             Command.link(self.emp3.id),
-            Command.link(self.admin.id)
         ]
         self.main_pos_config.with_user(self.pos_admin).open_ui()
 
