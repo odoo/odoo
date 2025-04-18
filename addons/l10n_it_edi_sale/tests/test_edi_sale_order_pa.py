@@ -21,6 +21,7 @@ class TestItEdiSaleOrderPa(TestItEdi):
         })
 
         cls.module = 'l10n_it_edi_sale'
+        cls.env.user.group_ids |= cls.env.ref('sales_team.group_sale_salesman')
 
     def get_sales_order_vals(self, **kwargs):
         return {
