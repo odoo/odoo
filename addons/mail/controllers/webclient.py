@@ -6,7 +6,7 @@ from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
-class WebclientController(http.Controller):
+class WebclientController(ThreadController):
     """Routes for the web client."""
 
     @http.route("/mail/action", methods=["POST"], type="jsonrpc", auth="public")
@@ -56,7 +56,7 @@ class WebclientController(http.Controller):
                 user = request.env.user.sudo(False)
                 user._init_messaging(store)
         if name == "mail.thread":
-            thread = ThreadController._get_thread_with_access(
+            thread = self._get_thread_with_access(
                 params["thread_model"],
                 params["thread_id"],
                 mode="read",
