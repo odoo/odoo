@@ -2,17 +2,22 @@
 # decorator makes wrappers that have the same API as their wrapped function
 from __future__ import annotations
 
-from collections import Counter, defaultdict
+from collections import defaultdict
+from collections.abc import Mapping, Collection
 from decorator import decorator
 from inspect import signature, Parameter
+from itertools import chain
 import logging
+import signal
+import sys
+import threading
 import time
 import typing
 import warnings
 
 if typing.TYPE_CHECKING:
     from .lru import LRU
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterable
     from odoo.models import BaseModel
     C = typing.TypeVar('C', bound=Callable)
 
@@ -161,32 +166,118 @@ class ormcache_context(ormcache):
         self.key = unsafe_eval(code)
 
 
-def log_ormcache_stats(sig=None, frame=None):   # noqa: ARG001 (arguments are there for signals)
-    """ Log statistics of ormcache usage by database, model, and method. """
-    from odoo.modules.registry import Registry
-    cache_entries = {}
-    current_db = None
-    cache_stats = ['Caches stats:']
-    for (dbname, model, method), stat in sorted(STAT.items(), key=lambda k: (k[0][0] or '~', k[0][1], k[0][2].__name__)):
-        dbname_display = dbname or "<no_db>"
-        if current_db != dbname_display:
-            current_db = dbname_display
-            cache_stats.append(f"Database {dbname_display}")
-        if dbname:   # mainly for MockPool
-            if (dbname, stat.cache_name) not in cache_entries:
-                try:
-                    cache = Registry.registries[dbname]._Registry__caches[stat.cache_name]
-                    cache_entries[dbname, stat.cache_name] = Counter(k[:2] for k in cache)
-                except KeyError:
-                    cache_entries[dbname, stat.cache_name] = Counter()
-            nb_entries = cache_entries[dbname, stat.cache_name][model, method]
-        else:
-            nb_entries = 0
-        cache_name = stat.cache_name.rjust(25)
-        cache_stats.append(
-            f"{cache_name}, {nb_entries:6d} entries, {stat.hit:6d} hit, {stat.miss:6d} miss, {stat.err:6d} err, {stat.gen_time:10.3f}s time, {stat.ratio:6.1f}% ratio for {model}.{method.__name__}"
-        )
-    _logger.info('\n'.join(cache_stats))
+class OrmCacheStatsLogger:
+    loggings = set()
+    stop_time = 0.0
+
+    def __init__(self, start_time):
+        self.start_time = start_time
+
+    def check_continue_logging(self):
+        if self.start_time > self.stop_time:
+            return True
+        _logger.info('Stopping logging ORM cache stats')
+        return False
+
+    def log_ormcache_stats(self, size=False):
+        """ Log statistics of ormcache usage by database, model, and method. """
+        from odoo.modules.registry import Registry  # noqa: PLC0415
+        try:
+            self.loggings.add(self)
+            log_msgs = ['Caches stats:']
+            # {dbname: sz_entries_all}
+            db_size = defaultdict(lambda: 0)
+            # {dbname: {(model, method): [sz_entries_sum, sz_entries_max, nb_entries, stat]}}
+            cache_stats = defaultdict(lambda: defaultdict(lambda: [0, 0, 0, None]))
+
+            size_column_info = (
+                f"{'Memory SUM [Bytes]':>20},"
+                f"{'Memory MAX [Bytes]':>20},"
+            ) if size else ''
+            column_info = (
+                f"{'Cache Name':>25},"
+                f"{'Entry':>7},"
+                f"{size_column_info}"
+                f"{'Hit':>6},"
+                f"{'Miss':>6},"
+                f"{'Err':>6},"
+                f"{'Gen Time [s]':>14},"
+                f"{'Hit Ratio':>11},"
+                f"{'Model.Method':>15}"
+            )
+
+            if size:
+                registries = Registry.registries.snapshot
+                for i, (dbname, registry) in enumerate(registries.items(), start=1):
+                    if not self.check_continue_logging():
+                        return
+                    _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
+                    db_cache_stats = cache_stats[dbname]
+                    sz_entries_all = 0
+                    for cache in registry._Registry__caches.values():
+                        for cache_key, cache_value in cache.snapshot.items():
+                            model_name, method = cache_key[:2]
+                            stats = db_cache_stats[model_name, method]
+                            cache_info = f'{model_name}.{method.__name__}'
+                            size = get_cache_size(cache_value, cache_info=cache_info)
+                            sz_entries_all += size
+                            stats[0] += size  # sz_entries_sum
+                            stats[1] = max(stats[1], size)  # sz_entries_max
+                            stats[2] += 1  # nb_entries
+                    db_size[dbname] = sz_entries_all
+
+            for (dbname, model_name, method), stat in STAT.copy().items():  # copy to avoid concurrent modification
+                if not self.check_continue_logging():
+                    return
+                cache_stats[dbname][model_name, method][3] = stat
+
+            for dbname, db_cache_stats in sorted(cache_stats.items(), key=lambda k: k[0] or '~'):
+                if not self.check_continue_logging():
+                    return
+                sz_entries_all = db_size[dbname]
+                log_msgs.append(f'Database {dbname or "<no_db>"}:')
+                log_msgs.append(column_info)
+
+                # sort by -sz_entries_sum, model and method_name
+                db_cache_stat = sorted(db_cache_stats.items(), key=lambda k: (-k[1][0], k[0][0], k[0][1].__name__))
+                for (model_name, method), (sz_entries_sum, sz_entries_max, nb_entries, stat) in db_cache_stat:
+                    size_data = (
+                        f'{sz_entries_sum:11d} ({sz_entries_sum / (sz_entries_all or 1) * 100:5.1f}%),'
+                        f'{sz_entries_max:20d},'
+                    ) if size else ''
+                    log_msgs.append(
+                        f'{stat.cache_name:>25},'
+                        f'{nb_entries:7d},'
+                        f'{size_data}'
+                        f'{stat.hit:6d},'
+                        f'{stat.miss:6d},'
+                        f'{stat.err:6d},'
+                        f'{stat.gen_time:14.3f},'
+                        f'{stat.ratio:10.1f}%,'
+                        f'   {model_name}.{method.__name__}'
+                    )
+            _logger.info('\n'.join(log_msgs))
+        except Exception as e:  # noqa: BLE001
+            _logger.error(e)
+        finally:
+            self.loggings.remove(self)
+
+
+def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are there for signals)
+    # collect and log data in a separate thread to avoid blocking the main thread
+    # and avoid using logging module directly in the signal handler
+    # https://docs.python.org/3/library/logging.html#thread-safety
+    cur_time = time.monotonic()
+    if OrmCacheStatsLogger.loggings:
+        # send the signal again to stop the logging thread
+        OrmCacheStatsLogger.stop_time = cur_time
+        return
+    if sig == signal.SIGUSR1:
+        threading.Thread(target=OrmCacheStatsLogger(cur_time).log_ormcache_stats,
+                         name="odoo.signal.log_ormcache_stats").start()
+    elif sig == signal.SIGUSR2:
+        threading.Thread(target=OrmCacheStatsLogger(cur_time).log_ormcache_stats, args=(True,),
+                         name="odoo.signal.log_ormcache_stats_with_size").start()
 
 
 def get_cache_key_counter(bound_method: Callable, *args, **kwargs):
@@ -196,3 +287,53 @@ def get_cache_key_counter(bound_method: Callable, *args, **kwargs):
     cache, key0, counter = ormcache_instance.lru(model)
     key = key0 + ormcache_instance.key(model, *args, **kwargs)
     return cache, key, counter
+
+
+def get_cache_size(
+        obj,
+        *,
+        cache_info: str = '',
+        seen_ids: set[int] | None = None,
+        class_slots: dict[type, Iterable[str]] | None = None
+    ) -> int:
+    """ A non-thread-safe recursive object size estimator """
+    from odoo.models import BaseModel  # noqa: PLC0415
+    from odoo.api import Environment  # noqa: PLC0415
+
+    if seen_ids is None:
+        seen_ids = set()
+    if class_slots is None:
+        class_slots = {}  # {class_name: combined_slots}
+    total_size = 0
+    objects = [obj]
+
+    while objects:
+        cur_obj = objects.pop()
+        if id(cur_obj) in seen_ids:
+            continue
+
+        if cache_info and isinstance(cur_obj, (BaseModel, Environment)):
+            _logger.error('%s is cached by %s', cur_obj, cache_info)
+            continue
+
+        seen_ids.add(id(cur_obj))
+        total_size += sys.getsizeof(cur_obj)
+
+        if hasattr(cur_obj, '__slots__'):
+            cur_obj_cls = type(cur_obj)
+            if cur_obj_cls not in class_slots:
+                class_slots[cur_obj_cls] = tuple(set(chain.from_iterable(
+                    getattr(cls, '__slots__', ())
+                    for cls in cur_obj_cls.mro()
+                )))
+            objects.extend(getattr(cur_obj, s) for s in class_slots[cur_obj_cls] if hasattr(cur_obj, s))
+        if hasattr(cur_obj, '__dict__'):
+            objects.append(object.__dict__)
+
+        if isinstance(cur_obj, Mapping):
+            objects.extend(cur_obj.values())
+            objects.extend(cur_obj.keys())
+        elif isinstance(cur_obj, Collection) and not isinstance(cur_obj, (str, bytes, bytearray)):
+            objects.extend(cur_obj)
+
+    return total_size
