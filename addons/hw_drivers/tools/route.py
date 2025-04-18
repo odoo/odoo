@@ -1,5 +1,6 @@
 import functools
 import logging
+import platform
 
 from odoo.addons.iot_base.tools.payload_signature import verify_hmac_signature
 from odoo.addons.hw_drivers.tools import helpers
@@ -33,14 +34,16 @@ def protect(endpoint):
     return protect_wrapper
 
 
-def iot_route(route=None, sign=False, **kwargs):
+def iot_route(route=None, sign=False, linux_only=False, **kwargs):
     """A wrapper for the http.route function that sets useful defaults for IoT:
-      - `auth = 'none'`
-      - `save_session = False`
-
-    It also adds the `sign` parameter, which if `True` wraps the route with `@route.protect`.
+      - ``auth = 'none'``
+      - ``save_session = False``
 
     Both auth and sessions are useless on IoT since we have no DB and no users.
+
+    :param route: The route to be decorated.
+    :param sign: If ``True``, the route will be wrapped with ``@route.protect``.
+    :param linux_only: If ``True``, the route will be forbidden for virtual IoT Boxes.
     """
     if 'auth' not in kwargs:
         kwargs['auth'] = 'none'
@@ -50,6 +53,8 @@ def iot_route(route=None, sign=False, **kwargs):
     http_decorator = http.route(route, **kwargs)
 
     def decorator(endpoint):
+        if linux_only and platform.system() != 'Linux':
+            return None  # Remove the route if not Linux (will return 404)
         return protect(http_decorator(endpoint)) if sign else http_decorator(endpoint)
 
     return decorator

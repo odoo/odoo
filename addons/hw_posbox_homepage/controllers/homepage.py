@@ -99,7 +99,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Successfully cleared credentials',
         })
 
-    @route.iot_route('/hw_posbox_homepage/wifi_clear', type='http', cors='*')
+    @route.iot_route('/hw_posbox_homepage/wifi_clear', type='http', cors='*', linux_only=True)
     def clear_wifi_configuration(self):
         helpers.update_conf({'wifi_ssid': '', 'wifi_password': ''})
         wifi.disconnect()
@@ -182,14 +182,14 @@ class IotBoxOwlHomePage(http.Controller):
             'qr_code_url' : network_qr_codes.get('qr_url'),
         })
 
-    @route.iot_route('/hw_posbox_homepage/wifi', type="http", cors='*')
+    @route.iot_route('/hw_posbox_homepage/wifi', type="http", cors='*', linux_only=True)
     def get_available_wifi(self):
         return json.dumps({
             'currentWiFi': wifi.get_current(),
             'availableWiFi': wifi.get_available_ssids(),
         })
 
-    @route.iot_route('/hw_posbox_homepage/version_info', type="http", cors='*')
+    @route.iot_route('/hw_posbox_homepage/version_info', type="http", cors='*', linux_only=True)
     def get_version_info(self):
         git = ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git"]
         # Check branch name and last commit hash on IoT Box
@@ -276,7 +276,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Successfully saved credentials',
         }
 
-    @route.iot_route('/hw_posbox_homepage/update_wifi', type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/update_wifi', type="jsonrpc", methods=['POST'], cors='*', linux_only=True)
     def update_wifi(self, essid, password):
         if wifi.reconnect(essid, password, force_update=True):
             helpers.update_conf({'wifi_ssid': essid, 'wifi_password': password})
@@ -298,13 +298,15 @@ class IotBoxOwlHomePage(http.Controller):
 
         return res_payload
 
-    @route.iot_route('/hw_posbox_homepage/generate_password', type="jsonrpc", methods=["POST"], cors='*', sign=True)
+    @route.iot_route(
+        '/hw_posbox_homepage/generate_password', type="jsonrpc", methods=["POST"], cors='*', sign=True, linux_only=True
+    )
     def generate_password(self):
         return {
             'password': helpers.generate_password(),
         }
 
-    @route.iot_route('/hw_posbox_homepage/enable_ngrok', type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/enable_ngrok', type="jsonrpc", methods=['POST'], cors='*', linux_only=True)
     def enable_remote_connection(self, auth_token):
         if subprocess.call(['pgrep', 'ngrok']) == 1:
             subprocess.Popen(['sudo', 'systemd-run', 'ngrok', 'tcp', '--authtoken', auth_token, '--log', '/tmp/ngrok.log', '22'])
@@ -315,7 +317,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Ngrok tunnel is now enabled',
         }
 
-    @route.iot_route('/hw_posbox_homepage/update_hostname', type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/update_hostname', type="jsonrpc", methods=['POST'], cors='*', linux_only=True)
     def update_hostname(self, hostname):
         """Update the hostname of the IoT Box.
 
@@ -411,7 +413,7 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Logger level updated',
         }
 
-    @route.iot_route('/hw_posbox_homepage/update_git_tree', type="jsonrpc", methods=['POST'], cors='*')
+    @route.iot_route('/hw_posbox_homepage/update_git_tree', type="jsonrpc", methods=['POST'], cors='*', linux_only=True)
     def update_git_tree(self):
         helpers.check_git_branch()
         return {
