@@ -2479,10 +2479,11 @@ class MailThread(models.AbstractModel):
     # MESSAGE POST API / WRAPPERS
     # ------------------------------------------------------------
 
-    def message_mail_with_source(self, source_ref, render_values=None,
-                                 message_type='notification',
-                                 auto_commit=False,
-                                 **kwargs):
+    def message_mail_with_source(
+        self, source_ref, *,
+        render_values=None, message_type='notification', auto_commit=False,
+        **kwargs,
+    ):
         """ Send a mass mail on self, using an external source to render part
         of the content. It can be either a 'mail.template', either a view used
         to render the body using QWeb.
@@ -2558,10 +2559,11 @@ class MailThread(models.AbstractModel):
             mails_su += mails_as_sudo
         return mails_su
 
-    def message_post_with_source(self, source_ref, render_values=None,
-                                 message_type='notification',
-                                 subtype_xmlid=False, subtype_id=False,
-                                 **kwargs):
+    def message_post_with_source(
+        self, source_ref, *,
+        render_values=None, message_type='notification', subtype_xmlid=False, subtype_id=False,
+        **kwargs,
+    ):
         """ Post a message on each record of self, using a view to render the
         body using QWeb.
 
@@ -3292,12 +3294,12 @@ class MailThread(models.AbstractModel):
                     notification_type="mail.message/inbox",
                 )
 
-    def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
+    def _notify_thread_by_email(self, message, recipients_data, *, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
                                 model_description=False, force_email_company=False, force_email_lang=False,  # rendering
                                 subtitles=None,  # rendering
                                 resend_existing=False, force_send=True, send_after_commit=True,  # email send
-                                 **kwargs):
+                                **kwargs):
         """ Method to send emails notifications linked to a message.
 
         :param record message: <mail.message> record being notified. May be
@@ -4756,7 +4758,7 @@ class MailThread(models.AbstractModel):
         return set()
 
     @api.model
-    def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
+    def _get_thread_with_access(self, thread_id, *, mode="read", **kwargs):
         # sanity check on kwargs
         allowed_params = self._get_allowed_access_params()
         if invalid := (set((kwargs or {}).keys()) - allowed_params):

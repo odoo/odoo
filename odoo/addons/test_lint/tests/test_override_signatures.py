@@ -33,16 +33,8 @@ METHODS_TO_IGNORE = {
     'action_timer_stop',
     '_get_eval_context',
     # mail
-    'message_mail_with_source',
-    'message_new',
-    'message_post_with_source',
-    'message_update',
     '_action_done',
     '_get_html_link',
-    '_get_thread_with_access',
-    '_mail_get_partner_fields',
-    '_notify_by_email_prepare_rendering_context',
-    '_notify_thread_by_email',
 }
 MODEL_METHODS_TO_IGNORE = {
     ('account.intrastat.services.be.report.handler', '_be_intrastat_get_xml_file_content'),
