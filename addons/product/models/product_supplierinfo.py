@@ -25,7 +25,7 @@ class ProductSupplierinfo(models.Model):
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit', compute='_compute_product_uom_id', store=True, readonly=False, required=True, precompute=True)
     min_qty = fields.Float(
-        'Quantity', default=0.0, required=True, digits="Product Unit",
+        'Quantity', default=1.0, required=True, digits="Product Unit",
         help="The quantity to purchase from this vendor to benefit from the unit price. If a vendor unit is set, quantity should be specified in this unit, otherwise it should be specified in the default unit of the product.")
     price = fields.Float(
         'Unit Price', digits='Product Price', default=0.0, help="The price to purchase a product")

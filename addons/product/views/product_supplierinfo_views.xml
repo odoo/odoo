@@ -106,10 +106,10 @@
                 <field name="date_end" optional="hide"/>
                 <field name="company_id" readonly="1" groups="base.group_multi_company"/>
                 <field name="min_qty" optional="hide"/>
-                <field name="product_uom_id" groups="uom.group_uom" optional="show" options="{'no_quick_create': True}" context="{'product_id': product_id}" widget="many2one_uom"/>
-                <field name="price"/>
+                <field name="product_uom_id" groups="uom.group_uom" optional="show" options="{'no_quick_create': True, 'no_open': True}" context="{'product_id': product_id}" widget="many2one_uom"/>
+                <field name="price" widget="monetary"/>
                 <field name="discount" optional="hide"/>
-                <field name="currency_id" groups="base.group_multi_currency"/>
+                <field name="currency_id" groups="base.group_multi_currency" optional="hide"/>
                 <field name="delay" optional="show"/>
             </list>
         </field>
