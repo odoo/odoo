@@ -6953,7 +6953,7 @@
         if (executed.type === "ADD_COLUMNS_ROWS") {
             return expandZoneOnInsertion(zone, executed.dimension === "COL" ? "left" : "top", executed.base, executed.position, executed.quantity);
         }
-        return { ...zone };
+        return zone;
     }
 
     /**
@@ -18416,7 +18416,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         return null;
     }
-    const separatorRegexp = /\w|\.|!|\$/;
+    /**
+      - \p{L} is for any letter (from any language)
+      - \p{N} is for any number
+      - the u flag at the end is for unicode, which enables the `\p{...}` syntax
+     */
+    const unicodeSymbolCharRegexp = /\p{L}|\p{N}|_|\.|!|\$/u;
+    const SYMBOL_CHARS = new Set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.!$");
     /**
      * A "Symbol" is just basically any word-like element that can appear in a
      * formula, which is not a string. So:
@@ -18456,7 +18462,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 };
             }
         }
-        while (chars[0] && chars[0].match(separatorRegexp)) {
+        while (chars[0] && (SYMBOL_CHARS.has(chars[0]) || chars[0].match(unicodeSymbolCharRegexp))) {
             result += chars.shift();
         }
         if (result.length) {
@@ -36213,10 +36219,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         const target = [];
         for (const zone1 of cmd.target) {
-            for (const zone2 of executed.target) {
-                if (!overlap(zone1, zone2)) {
-                    target.push({ ...zone1 });
-                }
+            if (executed.target.every((zone2) => !overlap(zone1, zone2))) {
+                target.push(zone1);
             }
         }
         if (target.length) {
@@ -43777,9 +43781,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.66';
-    __info__.date = '2025-03-26T12:54:26.409Z';
-    __info__.hash = 'e2c1da2';
+    __info__.version = '16.0.67';
+    __info__.date = '2025-04-18T17:33:37.073Z';
+    __info__.hash = 'efeeb27';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
