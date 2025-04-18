@@ -480,6 +480,34 @@ export class SelectionPlugin extends Plugin {
     }
 
     /**
+     * Returns true if selection is valid and in the editable.
+     * Otherwise, returns false and logs a warning.
+     */
+    validateSelection({ anchorNode, anchorOffset, focusNode, focusOffset }) {
+        const validateNode = (node) => {
+            if (!this.editable.contains(node)) {
+                console.warn("Invalid selection. Node is not part of the editable:", node);
+                return false;
+            }
+            return true;
+        };
+        const validateOffset = (node, offset) => {
+            if (offset < 0 || offset > nodeSize(node)) {
+                console.warn("Invalid selection. Offset is out of bounds:", offset, node);
+                return false;
+            }
+            return true;
+        };
+        const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
+        return (
+            validateNode(anchorNode) &&
+            (focusNode === anchorNode || validateNode(focusNode)) &&
+            validateOffset(anchorNode, anchorOffset) &&
+            (isCollapsed || validateOffset(focusNode, focusOffset))
+        );
+    }
+
+    /**
      * Set the selection in the editor.
      *
      * @param { Object } selection
@@ -489,14 +517,14 @@ export class SelectionPlugin extends Plugin {
      * @param { number } [selection.focusOffset=selection.anchorOffset]
      * @param { Object } [options]
      * @param { boolean } [options.normalize=true] Normalize deep the selection
-     * @return { EditorSelection }
+     * @return { EditorSelection | null }
      */
     setSelection(
         { anchorNode, anchorOffset, focusNode = anchorNode, focusOffset = anchorOffset },
         { normalize = true } = {}
     ) {
-        if (!this.isSelectionInEditable({ anchorNode, focusNode })) {
-            throw new Error("Selection is not in editor");
+        if (!this.validateSelection({ anchorNode, anchorOffset, focusNode, focusOffset })) {
+            return null;
         }
         const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
         [focusNode, focusOffset] = normalizeSelfClosingElement(focusNode, focusOffset, "right");
