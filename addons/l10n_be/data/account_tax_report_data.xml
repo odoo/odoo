@@ -7,7 +7,7 @@
         <field name="name@de">MwSt.-Erklärung</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.be"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="tax_report_vat_balance" model="account.report.column">
@@ -262,7 +262,7 @@
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">most_recent</field>
-                                        <field name="date_scope">previous_tax_period</field>
+                                        <field name="date_scope">previous_return_period</field>
                                     </record>
                                     <record id="tax_report_line_81_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
@@ -298,7 +298,7 @@
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">most_recent</field>
-                                        <field name="date_scope">previous_tax_period</field>
+                                        <field name="date_scope">previous_return_period</field>
                                     </record>
                                     <record id="tax_report_line_82_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
@@ -334,7 +334,7 @@
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">most_recent</field>
-                                        <field name="date_scope">previous_tax_period</field>
+                                        <field name="date_scope">previous_return_period</field>
                                     </record>
                                     <record id="tax_report_line_83_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
@@ -398,7 +398,7 @@
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">most_recent</field>
-                                        <field name="date_scope">previous_tax_period</field>
+                                        <field name="date_scope">previous_return_period</field>
                                     </record>
                                     <record id="tax_report_line_86_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
@@ -434,7 +434,7 @@
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">most_recent</field>
-                                        <field name="date_scope">previous_tax_period</field>
+                                        <field name="date_scope">previous_return_period</field>
                                     </record>
                                     <record id="tax_report_line_87_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
@@ -470,7 +470,7 @@
                                         <field name="label">_applied_carryover_balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">most_recent</field>
-                                        <field name="date_scope">previous_tax_period</field>
+                                        <field name="date_scope">previous_return_period</field>
                                     </record>
                                     <record id="tax_report_line_88_balance_unbound" model="account.report.expression">
                                         <field name="label">balance_unbound</field>
