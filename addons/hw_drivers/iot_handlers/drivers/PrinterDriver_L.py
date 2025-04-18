@@ -38,31 +38,6 @@ RECEIPT_PRINTER_COMMANDS = {
     }
 }
 
-def cups_notification_handler(message, uri, device_identifier, state, reason, accepting_jobs):
-    if device_identifier in iot_devices:
-        reason = reason if reason != 'none' else None
-        state_value = {
-            IPP_PRINTER_IDLE: 'connected',
-            IPP_PRINTER_PROCESSING: 'processing',
-            IPP_PRINTER_STOPPED: 'stopped'
-        }
-        iot_devices[device_identifier].update_status(state_value[state], message, reason)
-
-
-# Create a Cups subscription if it doesn't exist yet
-try:
-    conn.getSubscriptions('/printers/')
-except IPPError:
-    conn.createSubscription(
-        uri='/printers/',
-        recipient_uri='dbus://',
-        events=['printer-state-changed']
-    )
-
-# Listen for notifications from Cups
-bus = dbus.SystemBus()
-bus.add_signal_receiver(cups_notification_handler, signal_name="PrinterStateChanged", dbus_interface="org.cups.cupsd.Notifier")
-
 
 class PrinterDriver(Driver):
     connection_type = 'printer'
@@ -382,6 +357,7 @@ class PrinterDriver(Driver):
         else:
             title, body = self._printer_status_content()
             self.print_raw(title + b'\r\n' + body.decode().replace('\n', '\r\n').encode())
+        event_manager.device_changed(self)
 
     def print_status_receipt(self):
         """Prints the status ticket of the IoT Box on the current printer."""
@@ -466,6 +442,7 @@ class PrinterDriver(Driver):
     def _action_default(self, data):
         _logger.debug("_action_default called for printer %s", self.device_name)
         self.print_raw(b64decode(data['document']))
+        event_manager.device_changed(self)
         send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
 
 

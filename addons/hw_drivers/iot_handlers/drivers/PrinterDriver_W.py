@@ -187,6 +187,7 @@ class PrinterDriver(Driver):
             self.print_report(document)
         else:
             self.print_raw(document)
+        event_manager.device_changed(self)
         send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
         _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)
 
@@ -203,6 +204,7 @@ class PrinterDriver(Driver):
             self.print_raw("^XA^CI28 ^FT35,40 ^A0N,30 ^FDIoT Box Test Label^FS^XZ".encode())
         else:
             self.print_raw("IoT Box Test Page".encode())
+        event_manager.device_changed(self)
 
 
 proxy_drivers['printer'] = PrinterDriver
