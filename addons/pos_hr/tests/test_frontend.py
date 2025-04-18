@@ -104,6 +104,23 @@ class TestUi(TestPosHrHttpCommon):
             login="pos_user",
         )
 
+    def test_basic_user_can_change_price(self):
+        self.main_pos_config.advanced_employee_ids = []
+        self.main_pos_config.basic_employee_ids = [
+            Command.link(self.emp3.id),
+            Command.link(self.admin.id)
+        ]
+        self.main_pos_config.write({
+            "restrict_price_control": False,
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_basic_user_can_change_price",
+            login="pos_user",
+        )
+
     def test_change_on_rights_reflected_directly(self):
         """When changes in employee rights (advanced/basic/minimal) should
         be reflected directly and not read from the cache."""
