@@ -306,13 +306,13 @@ export function clickOnSave(position = "bottom", timeout = 50000) {
             tooltipPosition: position,
             async run(actions) {
                 await waitForStable(document, 1000);
-                await actions.click();
+                // Somehow the anchor is not the right element at this point.
+                await actions.click("button[data-action=save]:enabled");
             },
             timeout,
         },
         {
-            trigger:
-                "body:not(.editor_has_dummy_snippets):not(.o_website_navbar_hide):not(.editor_has_snippets):not(:has(.o_notification_bar))",
+            trigger: "body:not(.o_builder_open)",
             noPrepend: true,
             timeout,
         },
