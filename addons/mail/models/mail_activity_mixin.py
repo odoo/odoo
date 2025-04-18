@@ -477,7 +477,7 @@ class MailActivityMixin(models.AbstractModel):
 
     def activity_unlink(self, act_type_xmlids, user_id=None, only_automated=True):
         """ Unlink activities, limiting to some activity types and optionally
-        to a given user. """
+       to a given user. """
         if self.env.context.get('mail_activity_automation_skip'):
             return False
 

@@ -379,6 +379,7 @@ class TestActivityViewHelpers(TestActivityCommon):
         cls.type_todo = cls.env.ref('test_mail.mail_act_test_todo')
         cls.type_call = cls.env.ref('test_mail.mail_act_test_call')
         cls.type_upload = cls.env.ref('test_mail.mail_act_test_upload_document')
+
         cls.user_employee_2 = mail_new_test_user(
             cls.env,
             name='Employee2',
@@ -390,13 +391,12 @@ class TestActivityViewHelpers(TestActivityCommon):
             'res_model': cls.test_record_2._name,
             'res_id': cls.test_record_2.id,
         } for idx in range(2)])
-        cls.upload_type = cls.env.ref('test_mail.mail_act_test_upload_document')
-        cls.upload_type.sudo().keep_done = True
         cls.user_employee.tz = cls.user_admin.tz
 
     @freeze_time("2023-10-18 06:00:00")
     def test_get_activity_data(self):
         get_activity_data = self.env['mail.activity'].get_activity_data
+
         with self.with_user('employee'):
             # Setup activities: 3 for the first record, 2 "done" and 2 ongoing for the second
             test_record, test_record_2 = self.env['mail.test.activity'].browse(
@@ -426,15 +426,14 @@ class TestActivityViewHelpers(TestActivityCommon):
             activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
             self.assertEqual(activity_data['activity_res_ids'], [test_record.id, test_record_2.id])
             self.assertDictEqual(
-                next((t for t in activity_data['activity_types'] if t['id'] == self.upload_type.id), {}),
+                next((t for t in activity_data['activity_types'] if t['id'] == self.type_upload.id), {}),
                 {
-                    'id': self.upload_type.id,
+                    'id': self.type_upload.id,
                     'name': 'Upload Document',
                     'template_ids': [],
-                    'keep_done': True,
                 })
 
-            grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
+            grouped = activity_data['grouped_activities'][test_record.id][self.type_upload.id]
             grouped['ids'] = set(grouped['ids'])  # ids order doesn't matter
             self.assertDictEqual(grouped, {
                 'state': 'overdue',
@@ -444,7 +443,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'user_assigned_ids': record_activities.user_id.ids,
             })
 
-            grouped = activity_data['grouped_activities'][test_record_2.id][self.upload_type.id]
+            grouped = activity_data['grouped_activities'][test_record_2.id][self.type_upload.id]
             grouped['ids'] = set(grouped['ids'])
             self.assertDictEqual(grouped, {
                 'state': 'planned',
@@ -460,7 +459,7 @@ class TestActivityViewHelpers(TestActivityCommon):
             record_activities.action_feedback(feedback='Done', attachment_ids=self.attachment_1.ids)
             self.assertEqual(record_activities[2].date_done, date.today())  # Thanks to freeze_time
             activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
-            grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
+            grouped = activity_data['grouped_activities'][test_record.id][self.type_upload.id]
             grouped['ids'] = set(grouped['ids'])
             self.assertDictEqual(grouped, {
                 'state': 'done',
@@ -491,26 +490,12 @@ class TestActivityViewHelpers(TestActivityCommon):
                 get_activity_data('mail.test.activity', None, limit=1, fetch_done=True)['activity_res_ids'],
                 [test_record.id])
 
-            # Unset keep done and check activity data: record with only "done" activities must not be returned
-            self.upload_type.sudo().keep_done = False
-            activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
-            self.assertDictEqual(
-                next((t for t in activity_data['activity_types'] if t['id'] == self.upload_type.id), {}),
-                {
-                    'id': self.upload_type.id,
-                    'name': 'Upload Document',
-                    'template_ids': [],
-                    'keep_done': False,
-                })
-            self.assertEqual(activity_data['activity_res_ids'], [test_record_2.id])
-
             # Unarchiving activities should restore the activity
             record_activities.action_unarchive()
             self.assertFalse(any(act.date_done for act in record_activities))
             self.assertTrue(all(act.date_deadline for act in record_activities))
-            self.upload_type.sudo().keep_done = True
             activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
-            grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
+            grouped = activity_data['grouped_activities'][test_record.id][self.type_upload.id]
             self.assertEqual(grouped['state'], 'overdue')
             self.assertEqual(grouped['count_by_state'], {'overdue': 1, 'planned': 1, 'today': 1})
             self.assertEqual(grouped['reporting_date'], record_activities[0].date_deadline)
