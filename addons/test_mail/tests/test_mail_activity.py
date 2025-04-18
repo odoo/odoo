@@ -418,7 +418,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                     today_user + relativedelta(days=days),
                     user_id=user_id.id)
             for days, user_id in ((-2, self.user_admin), (0, self.user_employee), (2, self.user_employee_2),
-                                  (3, self.user_admin)):
+                                  (3, self.user_admin), (4, self.env['res.users'])):
                 test_record_2.activity_schedule(
                     'test_mail.mail_act_test_upload_document',
                     today_user + relativedelta(days=days),
@@ -453,7 +453,7 @@ class TestActivityViewHelpers(TestActivityCommon):
             grouped['ids'] = set(grouped['ids'])
             self.assertDictEqual(grouped, {
                 'state': 'planned',
-                'count_by_state': {'done': 2, 'planned': 2},
+                'count_by_state': {'done': 2, 'planned': 3},  # free user is planned
                 'ids': set(record_2_activities.ids),
                 'reporting_date': record_2_activities[2].date_deadline,
                 'user_assigned_ids': record_2_activities[2:].user_id.ids,
