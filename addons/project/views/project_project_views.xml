@@ -36,6 +36,15 @@
                     <header>
                         <button name="action_open_share_project_wizard" string="Share Project" type="object" class="oe_highlight" groups="project.group_project_manager"
                         invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'read'}" data-hotkey="r"/>
+                        <button name="action_confirm_project"
+        type="object"
+        class="oe_highlight"
+        string="Confirmer Projet"
+        icon="fa-check"/>
+
+
+
+
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages" domain="[('company_id', 'in', (company_id, False))]"/>
                     </header>
                 <sheet string="Project">
@@ -56,6 +65,23 @@
                                 <field name="last_update_status" readonly="1" widget="status_with_color" status_label="Dashboard" hideStatusName="True"/>
                             </div>
                         </button>
+                        <!-- <button class="oe_stat_button" type="action" name="contract_management.action_contract_model_kanban_full" icon="fa-columns">
+    <div class="o_stat_info">
+        <span class="o_stat_text">Liste Contrats</span>
+    </div>
+</button> -->
+
+<button name="action_open_or_create_contract"
+        type="object"
+        class="oe_stat_button"
+        icon="fa-file">
+    <div class="o_stat_info">
+        <span class="o_stat_text">Voir le contrat</span>
+    </div>
+</button>
+
+
+
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
@@ -69,6 +95,8 @@
                             <field name="label_tasks" string="Name of the Tasks" placeholder="e.g. Tasks"/>
                             <field name="partner_id" widget="res_partner_many2one"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="actual_amount" string="Montant Réel"/>
+
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                         <group>
@@ -126,7 +154,7 @@
                                     </div>
                                 </group>
                                 <group name="group_time_managment" string="Time Management" invisible="1" col="1" class="row mt16 o_settings_container"/>
-                                <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" groups="project.group_project_rating">
+                                <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" invisible="not rating_active">
                                     <div>
                                         <field name="rating_active" invisible="1"/>
                                         <setting class="col-lg-12" name="analytic_div" help="Get customer feedback and evaluate the performance of your employees" groups="project.group_project_rating">
@@ -154,6 +182,8 @@
                                 </group>
                             </group>
                         </page>
+
+
                         <page name="analytic" string="Analytic" groups="analytic.group_analytic_accounting">
                             <group>
                                  <group>
