@@ -1325,7 +1325,7 @@ class SaleOrder(models.Model):
         }
 
     def _get_product_catalog_domain(self):
-        return Domain.AND([super()._get_product_catalog_domain(), [('sale_ok', '=', True)]])
+        return super()._get_product_catalog_domain() & Domain('sale_ok', '=', True)
 
     @api.readonly
     def action_open_business_doc(self):

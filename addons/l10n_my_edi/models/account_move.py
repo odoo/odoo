@@ -11,7 +11,7 @@ import werkzeug
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import split_every
 from odoo.tools.image import image_data_uri
 
@@ -506,15 +506,15 @@ Customs form No. 1, 9, etc for Vendor Bills""",
         # /!\ when an invoice validation is pending, l10n_my_edi_validation_time is still None. These also need to be updated.
         datetime_threshold = datetime.datetime.now() - datetime.timedelta(hours=74)
         # We always want to fetch in_progress invoices, it's very likely that their status is already there.
-        invoice_domain = [("l10n_my_edi_state", "=", "in_progress")]
+        invoice_domain = Domain("l10n_my_edi_state", "=", "in_progress")
         # For valid invoices, we want them if their l10n_my_edi_validation_time is less than 74h ago, and if their l10n_my_edi_retry_at in the past.
-        invoice_domain = expression.OR([invoice_domain, [
+        invoice_domain |= Domain([
             ('l10n_my_edi_state', '=', 'valid'),
             ('l10n_my_edi_validation_time', '>', datetime_threshold),
             '|',
             ('l10n_my_edi_retry_at', '<=', datetime.datetime.now()),
             ('l10n_my_edi_retry_at', '=', False),
-        ]])
+        ])
         if self._can_commit():
             self.env['ir.cron']._commit_progress(remaining=self.search_count(invoice_domain))
         grouped_invoices = self.env["account.move"]._read_group(
