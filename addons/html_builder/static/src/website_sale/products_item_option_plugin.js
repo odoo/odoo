@@ -17,11 +17,9 @@ class ProductsItemOptionPlugin extends Plugin {
       {
         OptionComponent: ProductsItemOption,
         props: {
-          loadRibbons: this.loadRibbons.bind(this),
-          getDefaultSort: this.getDefaultSort.bind(this),
+          loadInfo: this.loadInfo.bind(this),
           itemSize: this.itemSize,
           count: this.count,
-          onComponentCreated: this.onComponentCreated.bind(this),
         },
         selector: "#products_grid .oe_product",
         editableOnly: false,
@@ -194,8 +192,11 @@ class ProductsItemOptionPlugin extends Plugin {
     };
   }
 
-  async onComponentCreated() {
-    this.ribbons = await this.loadRibbons();
+  async loadInfo() {
+    [this.ribbons, this.defaultSort] = await Promise.all([
+      this.loadRibbons(),
+      this.getDefaultSort(),
+    ]);
 
     this.ribbonsObject = {};
     for (let ribbon of this.ribbons) {
@@ -204,7 +205,7 @@ class ProductsItemOptionPlugin extends Plugin {
 
     this.originalRibbons = JSON.parse(JSON.stringify(this.ribbonsObject));
 
-    this.defaultSort = await this.getDefaultSort();
+    return [this.ribbons, this.defaultSort];
   }
 
   async loadRibbons() {
@@ -272,11 +273,11 @@ class ProductsItemOptionPlugin extends Plugin {
    *
    */
   _getRibbonClasses() {
-    return (
-      Object.values(this.ribbons).reduce((classes, ribbon) => {
-        return classes + ` ${this.ribbonPositionClasses[ribbon.position]}`;
-      }, "") + this.deletedRibbonClasses
-    );
+    const ribbonClasses = [];
+    for (const ribbon of Object.values(this.ribbons)) {
+      ribbonClasses.push(this.ribbonPositionClasses[ribbon.position]);
+    }
+    return ribbonClasses.join(" ") + " " + this.deletedRibbonClasses;
   }
 
   async _saveRibbons() {
@@ -398,7 +399,9 @@ class ProductsItemOptionPlugin extends Plugin {
       const ribbonIndex = this.ribbons.indexOf(
         this.ribbons.find((ribbon) => ribbon.id === ribbonId)
       );
-      if (ribbonIndex >= 0) this.ribbons.splice(ribbonIndex, 1);
+      if (ribbonIndex >= 0) {
+        this.ribbons.splice(ribbonIndex, 1);
+      }
       delete this.ribbonsObject[ribbonId];
 
       // update "reactive" count to trigger rerendering the BuilderSelect component (which has the value as a t-key)

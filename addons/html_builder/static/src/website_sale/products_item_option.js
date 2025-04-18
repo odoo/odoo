@@ -5,11 +5,9 @@ import { useService } from "@web/core/utils/hooks";
 export class ProductsItemOption extends BaseOptionComponent {
   static template = "website_sale.ProductsItemOptionPlugin";
   static props = {
-    loadRibbons: Function,
-    getDefaultSort: Function,
+    loadInfo: Function,
     itemSize: Object,
     count: Object,
-    onComponentCreated: Function,
   };
 
   setup() {
@@ -24,11 +22,7 @@ export class ProductsItemOption extends BaseOptionComponent {
     });
 
     onWillStart(async () => {
-      await this.props.onComponentCreated();
-      const [ribbons, defaultSort] = await Promise.all([
-        this.props.loadRibbons(),
-        this.props.getDefaultSort(),
-      ]);
+      const [ribbons, defaultSort] = await this.props.loadInfo();
       this.state.ribbons = ribbons;
       this.defaultSort = defaultSort;
 
@@ -49,13 +43,11 @@ export class ProductsItemOption extends BaseOptionComponent {
   addClassToTableCells(x, y, className) {
     const table = this.tableRef.el;
 
-    if (table) {
-      const rows = table.rows;
-      for (let row = 0; row < y; row++) {
-        const cells = rows[row].cells;
-        for (let col = 0; col < x; col++) {
-          cells[col].classList.add(className);
-        }
+    const rows = table.rows;
+    for (let row = 0; row < y; row++) {
+      const cells = rows[row].cells;
+      for (let col = 0; col < x; col++) {
+        cells[col].classList.add(className);
       }
     }
   }
