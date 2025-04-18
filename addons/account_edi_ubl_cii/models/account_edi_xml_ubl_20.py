@@ -593,6 +593,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             'TaxCategoryType_template': 'account_edi_ubl_cii.ubl_20_TaxCategoryType',
             'TaxTotalType_template': 'account_edi_ubl_cii.ubl_20_TaxTotalType',
             'AllowanceChargeType_template': 'account_edi_ubl_cii.ubl_20_AllowanceChargeType',
+            'DocumentReferenceType_template': 'account_edi_ubl_cii.ubl_20_DocumentReferenceType',
             'SignatureType_template': 'account_edi_ubl_cii.ubl_20_SignatureType',
             'ResponseType_template': 'account_edi_ubl_cii.ubl_20_ResponseType',
             'DeliveryType_template': 'account_edi_ubl_cii.ubl_20_DeliveryType',

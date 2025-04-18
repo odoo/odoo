@@ -39,6 +39,7 @@ export class MailAttachments extends Component {
             mimetype: attachment.mimetype,
             placeholder: false,
             manual: true,
+            can_be_xml_embedded: true,
         };
         this.props.record.update({ [this.props.name]: this.attachments.concat([fileDict]) });
     }

@@ -493,9 +493,9 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
         cls.partner_a.email = "partner_a@tsointsoin"
         cls.partner_b.email = "partner_b@tsointsoin"
 
-    def _assert_mail_attachments_widget(self, wizard, expected_values_list):
-        self.assertEqual(len(wizard.mail_attachments_widget), len(expected_values_list))
-        for values, expected_values in zip(wizard.mail_attachments_widget, expected_values_list):
+    def _assert_attachments_widget(self, wizard, expected_values_list, field_name='mail_attachments_widget'):
+        self.assertEqual(len(wizard[field_name]), len(expected_values_list))
+        for values, expected_values in zip(wizard[field_name], expected_values_list):
             try:
                 int(values['id'])
                 check_id_needed = True
@@ -519,6 +519,17 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
     def _get_mail_message(self, move, limit=1):
         return self.env['mail.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=limit)
+
+    def _create_manual_attachment(self):
+        manual_attachment = self.env['ir.attachment'].create({'name': "manual_attachment", 'raw': b'foo'})
+        return manual_attachment, {
+            'id': manual_attachment.id,
+            'name': manual_attachment.name,
+            'mimetype': manual_attachment.mimetype,
+            'placeholder': False,
+            'manual': True,
+            'can_be_xml_embedded': True,
+        }
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'mail_template')
@@ -554,7 +565,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(wizard.alerts)
         self.assertTrue(wizard.subject)
         self.assertTrue(wizard.body)
-        self._assert_mail_attachments_widget(wizard, [{
+        self._assert_attachments_widget(wizard, [{
             'mimetype': 'application/pdf',
             'name': invoice._get_invoice_report_filename(),
             'placeholder': True,
@@ -751,17 +762,10 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'placeholder': False,
             'template_id': template.id,
         }
-        self._assert_mail_attachments_widget(wizard, [pdf_report_values, extra_attachment_values])
+        self._assert_attachments_widget(wizard, [pdf_report_values, extra_attachment_values])
 
         # Add a new attachment manually.
-        manual_attachment = self.env['ir.attachment'].create({'name': "manual_attachment", 'raw': b'foo'})
-        manual_attachment_values = {
-            'id': manual_attachment.id,
-            'name': manual_attachment.name,
-            'mimetype': manual_attachment.mimetype,
-            'placeholder': False,
-            'manual': True,
-        }
+        manual_attachment, manual_attachment_values = self._create_manual_attachment()
         wizard.mail_attachments_widget = wizard.mail_attachments_widget + [manual_attachment_values]
 
         # Add an attachment to a new mail_template and change it.
@@ -776,7 +780,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         }
 
         wizard.template_id = new_mail_template
-        self._assert_mail_attachments_widget(wizard, [
+        self._assert_attachments_widget(wizard, [
             pdf_report_values,
             extra_attachment2_values,
             manual_attachment_values,
@@ -803,14 +807,14 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # Resend.
         wizard = self.create_send_and_print(invoice, sending_methods=['email'])
         pdf_report_values['id'] = invoice.invoice_pdf_report_id.id
-        self._assert_mail_attachments_widget(wizard, [
+        self._assert_attachments_widget(wizard, [
             pdf_report_values,
             extra_attachment_values,
         ])
 
         # Switch the template.
         wizard.template_id = new_mail_template
-        self._assert_mail_attachments_widget(wizard, [
+        self._assert_attachments_widget(wizard, [
             pdf_report_values,
             extra_attachment2_values,
         ])

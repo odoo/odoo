@@ -412,6 +412,40 @@
         </xpath>
     </template>
 
+    <template id="ubl_20_AttachmentType">
+        <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:EmbeddedDocumentBinaryObject
+                t-att="vals.get('embedded_document_binary_object_attrs', {})"
+                t-out="vals.get('embedded_document_binary_object')"/>
+        </t>
+    </template>
+
+    <template id="ubl_20_DocumentReferenceType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+           xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:ID t-out="vals.get('id')"/>
+            <cbc:UUID t-out="vals.get('uuid')"/>
+            <cbc:IssueDate t-out="vals.get('issue_date')"/>
+            <cbc:DocumentTypeCode t-att="vals.get('document_type_code_attrs')" t-out="vals.get('document_type_code')"/>
+            <cbc:DocumentType t-out="vals.get('document_type')"/>
+            <cac:Attachment>
+                <t t-call="account_edi_ubl_cii.ubl_20_AttachmentType">
+                    <t t-set="vals" t-value="vals.get('attachment_vals', {})"/>
+                </t>
+            </cac:Attachment>
+        </t>
+    </template>
+
+    <template id="ubl_20_AdditionalDocumentReferences">
+        <cac:AdditionalDocumentReference
+            t-foreach="vals" t-as="foreach_vals"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+            <t t-call="{{DocumentReferenceType_template}}">
+                <t t-set="vals" t-value="foreach_vals"/>
+            </t>
+        </cac:AdditionalDocumentReference>
+    </template>
+
     <template id="ubl_20_CommonType">
         <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
@@ -458,14 +492,9 @@
                     <cbc:DocumentTypeCode t-out="billing_reference_vals.get('document_type_code')"/>
                 </cac:InvoiceDocumentReference>
             </cac:BillingReference>
-            <t t-foreach="vals.get('additional_document_reference_list', [])" t-as="foreach_vals">
-                <cac:AdditionalDocumentReference>
-                    <cbc:ID t-out="foreach_vals.get('id')"/>
-                    <cbc:IssueDate t-out="foreach_vals.get('issue_date')"/>
-                    <cbc:DocumentTypeCode t-out="foreach_vals.get('document_type_code')"/>
-                    <cbc:DocumentType t-out="foreach_vals.get('document_type')"/>
-                    <cbc:DocumentDescription t-out="foreach_vals.get('document_description')"/>
-                </cac:AdditionalDocumentReference>
+            <t t-call="account_edi_ubl_cii.ubl_20_AdditionalDocumentReferences">
+                <t t-set="vals"
+                   t-value="vals.get('additional_document_reference_list', [])"/>
             </t>
             <cac:Signature t-foreach="vals.get('signature_vals', [])" t-as="foreach_vals">
                 <t t-call="{{SignatureType_template}}">

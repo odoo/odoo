@@ -31,6 +31,7 @@ class AccountEdiXmlUbl_21(models.AbstractModel):
             'InvoiceLineType_template': 'account_edi_ubl_cii.ubl_21_InvoiceLineType',
             'CreditNoteLineType_template': 'account_edi_ubl_cii.ubl_21_CreditNoteLineType',
             'DebitNoteLineType_template': 'account_edi_ubl_cii.ubl_21_DebitNoteLineType',
+            'DocumentReferenceType_template': 'account_edi_ubl_cii.ubl_21_DocumentReferenceType',
             'InvoiceType_template': 'account_edi_ubl_cii.ubl_21_InvoiceType',
             'CreditNoteType_template': 'account_edi_ubl_cii.ubl_21_CreditNoteType',
             'DebitNoteType_template': 'account_edi_ubl_cii.ubl_21_DebitNoteType',

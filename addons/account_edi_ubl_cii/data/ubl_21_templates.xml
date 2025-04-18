@@ -67,6 +67,14 @@
         </xpath>
     </template>
 
+    <template id="ubl_21_DocumentReferenceType" inherit_id="account_edi_ubl_cii.ubl_20_DocumentReferenceType">
+        <xpath expr="//*[local-name()='Attachment']" position="before">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:DocumentDescription t-out="vals.get('document_description')"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="ubl_21_InvoiceType" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceType" primary="True">
         <xpath expr="//*[local-name()='ProfileID']" position="after">
             <cbc:ProfileExecutionID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"

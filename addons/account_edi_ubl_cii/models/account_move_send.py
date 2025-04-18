@@ -3,7 +3,6 @@ import logging
 import io
 
 from lxml import etree
-from xml.sax.saxutils import escape, quoteattr
 
 from odoo import _, api, fields, models, tools, SUPERUSER_ID
 from odoo.tools import cleanup_xml_node
@@ -165,43 +164,75 @@ class AccountMoveSend(models.AbstractModel):
         writer_buffer.close()
 
     @api.model
+    def _get_attachments_widget(self, invoice, invoice_data):
+        if 'email' in invoice_data['sending_methods']:
+            return invoice_data.get('mail_attachments_widget', [])
+        return []
+
+    @api.model
+    def _get_extra_additional_document_references(self, invoice, invoice_data):
+        doc_refs = []
+        for attachment_data in self._get_attachments_widget(invoice, invoice_data):
+            if attachment_data.get('can_be_xml_embedded'):
+                try:
+                    attachment_id = int(attachment_data.get('id'))
+                except ValueError:
+                    continue
+
+                if attachment := self.env['ir.attachment'].browse(attachment_id).exists():
+                    doc_refs.append({
+                        'id': attachment.name,  # this is not ideal, but we don't have any better option
+                        'document_description': attachment.description or attachment.name,
+                        'attachment_vals': {
+                            'embedded_document_binary_object_attrs': {
+                                'mimeCode': attachment.mimetype,
+                                'filename': attachment.store_fname,
+                            },
+                            'embedded_document_binary_object': attachment.datas,
+                        },
+                    })
+        return doc_refs
+
+    @api.model
     def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
-        # Adding the PDF to the XML
+        # Adding additional document references (and in particular the PDF of the invoice).
         tree = etree.fromstring(invoice_data['ubl_cii_xml_attachment_values']['raw'])
-        anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
+        # <AdditionalDocumentReference> is directly after optional <Signature> node.
+        # <AccountingSupplierParty> is the first required node therefore used as fallback.
+        anchor_elements = tree.xpath("//*[local-name()='Signature'] | //*[local-name()='AccountingSupplierParty']")
         if not anchor_elements:
             return
+        anchor_index = tree.index(anchor_elements[0])
 
-        xmlns_move_type = 'Invoice' if invoice.move_type == 'out_invoice' else 'CreditNote'
         pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
         filename = pdf_values['name']
         content = pdf_values['raw']
 
-        doc_type_node = ""
         edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
         doc_type_code_vals = edi_model._get_document_type_code_vals(invoice, invoice_data)
-        if doc_type_code_vals['value']:
-            doc_type_code_attrs = " ".join(f'{name}="{value}"' for name, value in doc_type_code_vals['attrs'].items())
-            doc_type_node = f"<cbc:DocumentTypeCode {doc_type_code_attrs}>{doc_type_code_vals['value']}</cbc:DocumentTypeCode>"
-        to_inject = f'''
-            <cac:AdditionalDocumentReference
-                xmlns="urn:oasis:names:specification:ubl:schema:xsd:{xmlns_move_type}-2"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:ID>{escape(filename)}</cbc:ID>
-                {doc_type_node}
-                <cac:Attachment>
-                    <cbc:EmbeddedDocumentBinaryObject
-                        mimeCode="application/pdf"
-                        filename={quoteattr(filename)}>
-                        {base64.b64encode(content).decode()}
-                    </cbc:EmbeddedDocumentBinaryObject>
-                </cac:Attachment>
-            </cac:AdditionalDocumentReference>
-        '''
-
-        anchor_index = tree.index(anchor_elements[0])
-        tree.insert(anchor_index, etree.fromstring(to_inject))
+        additional_document_reference_list = [
+            {
+                'id': filename,
+                'document_type_code_attrs': doc_type_code_vals['attrs'],
+                'document_type_code': doc_type_code_vals['value'],
+                'attachment_vals': {
+                    'embedded_document_binary_object_attrs': {
+                        'mimeCode': 'application/pdf',
+                        'filename': filename,
+                    },
+                    'embedded_document_binary_object': base64.b64encode(content).decode(),
+                },
+            },
+        ]
+        additional_document_reference_list += self._get_extra_additional_document_references(invoice, invoice_data)
+        doc_ref_template = 'ubl_20_DocumentReferenceType' if edi_model._name == 'account.edi.xml.oioubl' else 'ubl_21_DocumentReferenceType'
+        to_inject = self.env['ir.qweb']._render('account_edi_ubl_cii.ubl_20_AdditionalDocumentReferences', {
+            'DocumentReferenceType_template': f'account_edi_ubl_cii.{doc_ref_template}',
+            'vals': additional_document_reference_list,
+        })
+        wrapped_to_inject = cleanup_xml_node(f'<wrapper>{to_inject}</wrapper>')
+        for i, element_to_inject in enumerate(wrapped_to_inject):
+            tree.insert(anchor_index + i, element_to_inject)
         invoice_data['ubl_cii_xml_attachment_values']['raw'] = etree.tostring(
             cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8'
         )

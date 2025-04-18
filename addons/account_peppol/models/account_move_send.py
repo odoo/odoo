@@ -212,6 +212,14 @@ class AccountMoveSend(models.AbstractModel):
         if self._can_commit():
             self._cr.commit()
 
+    @api.model
+    def _get_attachments_widget(self, invoice, invoice_data):
+        # EXTENDS 'account_edi_ubl_cii'
+        attachments_widget = super()._get_attachments_widget(invoice, invoice_data)
+        if not attachments_widget and 'peppol' in invoice_data['sending_methods']:
+            attachments_widget += invoice_data.get('peppol_attachments_widget', [])
+        return attachments_widget
+
     def action_what_is_peppol_activate(self, moves):
         companies = moves.company_id
         can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()

@@ -1091,7 +1091,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'invoice_edi_format': 'ubl_bis3',
             'extra_edi_checkboxes': False,
         }])
-        self._assert_mail_attachments_widget(wizard, [
+        self._assert_attachments_widget(wizard, [
             {
                 'mimetype': 'application/pdf',
                 'name': 'INV_2017_00001.pdf',
@@ -1123,7 +1123,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'sending_methods': ['manual'],
             'invoice_edi_format': 'ubl_bis3',
         }])
-        self._assert_mail_attachments_widget(wizard, [
+        self._assert_attachments_widget(wizard, [
             {
                 'id': invoice.invoice_pdf_report_id.id,
                 'mimetype': 'application/pdf',
