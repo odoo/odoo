@@ -74,5 +74,5 @@ class TestMailActivityMixin(MailCommon):
 
             act1._action_done(feedback="Mark activity as done with text")
 
-            self.assertFalse(act1.exists(), "activity marked as done should be deleted")
+            self.assertFalse(act1.active, "activity marked as done should be archived")
             self.assertTrue(ev1.exists(), "event of done activity must not be deleted")
