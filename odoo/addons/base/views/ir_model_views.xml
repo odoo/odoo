@@ -325,7 +325,7 @@
                             <page name="compute" string="Compute" groups="base.group_no_one">
                                 <group>
                                     <field name="related"/>
-                                    <field name="depends" required="compute not in [False, '']"/>
+                                    <field name="depends" required="bool(compute) and store"/>
                                     <field name="compute" widget="code" options="{'mode': 'python'}"/>
                                 </group>
                                 <div>
