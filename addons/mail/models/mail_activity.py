@@ -92,7 +92,7 @@ class MailActivity(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
         default=lambda self: self.env.user,
-        index=True, required=True, ondelete='cascade')
+        index=True, required=False, ondelete='cascade')
     user_tz = fields.Selection(string='Timezone', related="user_id.tz", store=True)
     state = fields.Selection([
         ('overdue', 'Overdue'),
@@ -118,6 +118,13 @@ class MailActivity(models.Model):
             (COALESCE(res_model, '') = '' AND (res_id IS NULL OR res_id = 0))
         )""",
         'Activities have to be linked to records with a not null res_id.',
+    )
+    # if no model: user_id is required (no floating activities noone can see)
+    _check_user_id_is_set_if_model = models.Constraint(
+        """CHECK(
+            (COALESCE(res_model, '') <> '' OR user_id IS NOT NULL)
+        )""",
+        'Activities must be assigned if not attached to a document.',
     )
 
     @api.onchange('previous_activity_type_id')

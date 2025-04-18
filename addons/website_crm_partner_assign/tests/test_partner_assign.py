@@ -179,9 +179,15 @@ class TestPartnerLeadPortal(TestCrmCommon):
 
         (lead_today | lead_yesterday).type = "opportunity"
 
-        lead_today.activity_schedule("crm.lead_test_activity_1", date.today())
+        lead_today.activity_schedule(
+            "crm.lead_test_activity_1",
+            date.today(),
+            user_id=self.env.uid,
+        )
         lead_yesterday.activity_schedule(
-            "crm.lead_test_activity_1", date.today() - timedelta(days=1)
+            "crm.lead_test_activity_1",
+            date.today() - timedelta(days=1),
+            user_id=self.env.uid,
         )
 
         def render_function(_, values, *args, **kwargs):

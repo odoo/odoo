@@ -43,14 +43,20 @@ class TestActivityRights(TestActivityCommon):
 
         act_emp_for_adm = self.test_record.with_user(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo',
-            user_id=self.user_admin.id)
+            user_id=self.user_admin.id,
+        )
         act_emp_for_emp = self.test_record.with_user(self.user_employee).activity_schedule(
-            'test_mail.mail_act_test_todo')
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_employee.id,
+        )
         act_adm_for_adm = self.test_record.with_user(self.user_admin).activity_schedule(
-            'test_mail.mail_act_test_todo')
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_admin.id,
+        )
         act_adm_for_emp = self.test_record.with_user(self.user_admin).activity_schedule(
             'test_mail.mail_act_test_todo',
-            user_id=self.user_employee.id)
+            user_id=self.user_employee.id,
+        )
 
         for activity, can_write in [
             (act_emp_for_adm, True), (act_emp_for_emp, True),
@@ -83,7 +89,7 @@ class TestActivityRights(TestActivityCommon):
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_employee.id)
 
-            activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
+            activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_admin.id)
             activity2.write({'user_id': self.user_employee.id})
 
     def test_activity_security_user_noaccess_manual(self):
@@ -524,6 +530,7 @@ class TestTours(HttpCase):
             'test_mail.mail_act_test_todo',
             summary="Activity 1",
             date_deadline=fields.Date.context_today(MailTestActivityCtx) - timedelta(days=7),
+            user_id=self.env.uid,
         )
         MailTestActivityModel.create({
             'date': '2021-05-16',
@@ -536,6 +543,7 @@ class TestTours(HttpCase):
             'test_mail.mail_act_test_todo',
             summary="Activity 2",
             date_deadline=fields.Date.context_today(MailTestActivityCtx),
+            user_id=self.env.uid,
         )
         MailTestActivityModel.create({
             'date': '2021-05-16',
@@ -544,6 +552,7 @@ class TestTours(HttpCase):
             'test_mail.mail_act_test_todo',
             summary="Activity 3",
             date_deadline=fields.Date.context_today(MailTestActivityCtx) + timedelta(days=7),
+            user_id=self.env.uid,
         )
         MailTestActivityModel.create({
             'date': '2021-05-16',

@@ -92,7 +92,7 @@ class StockPicking(models.Model):
                         'mail.mail_activity_data_warning',
                         date.today(),
                         note=pick._carrier_exception_note(exception_message),
-                        user_id=pick.user_id.id or self.env.user.id or SUPERUSER_ID,
+                        user_id=pick.user_id.id or self.env.uid,
                         )
                 else:
                     raise e

@@ -42,7 +42,7 @@ class TestMailActivityMixin(MailCommon):
             })
 
         def schedule_meeting_activity(record, date_deadline, calendar_event=False):
-            meeting = record.activity_schedule('calendar.calendar_activity_test_default', date_deadline=date_deadline)
+            meeting = record.activity_schedule('calendar.calendar_activity_test_default', date_deadline=date_deadline, user_id=self.env.uid)
             meeting.calendar_event_id = calendar_event
             return meeting
 

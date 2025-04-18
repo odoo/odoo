@@ -307,7 +307,7 @@ class TestHttpWebJson_1(TestHttpBase):
 
     def test_webjson_activity(self):
         env = self.authenticate_demo()
-        env['test_http.stargate'].search([], limit=1).activity_schedule(summary='test')
+        env['test_http.stargate'].search([], limit=1).activity_schedule(summary='test', user_id=self.user_demo.id)
         res = self.url_open_json('/test_http.stargate?view_type=activity')
         # check that we have at least the following fields
         expected_fields = ["activity_ids", "activity_summary", "activity_user_id", "galaxy_id"]
