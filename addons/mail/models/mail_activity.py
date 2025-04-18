@@ -419,8 +419,8 @@ class MailActivity(models.Model):
                     email_layout_xmlid='mail.mail_notification_layout',
                     subject=_('"%(activity_name)s: %(summary)s" assigned to you',
                               activity_name=activity.res_name,
-                              summary=activity.summary or activity.activity_type_id.name),
-                    subtitles=[_('Activity: %s', activity.activity_type_id.name),
+                              summary=activity.summary or activity.activity_type_id.name or ''),
+                    subtitles=[_('Activity: %s', activity.activity_type_id.name or _('Todo')),
                                _('Deadline: %s', activity.date_deadline.strftime(get_lang(activity.env).date_format))]
                 )
 
