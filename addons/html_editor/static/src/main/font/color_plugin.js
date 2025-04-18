@@ -146,10 +146,11 @@ export class ColorPlugin extends Plugin {
             }
         }
 
-        this.selectedColors.color =
-            hasGradient && hasTextGradientClass ? backgroundImage : rgbaToHex(elStyle.color);
-        this.selectedColors.backgroundColor =
-            hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor);
+        return {
+            color: hasGradient && hasTextGradientClass ? backgroundImage : rgbaToHex(elStyle.color),
+            backgroundColor:
+                hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor),
+        };
     }
 
     /**
