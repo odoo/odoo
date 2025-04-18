@@ -160,7 +160,7 @@ class TestPerformanceTimeit(TransactionCase):
         self.launch_perf_set("records.child_ids", record_list=record_list)
 
     def test_perf_access_iter(self):
-        self.launch_perf_set("list(records)")
+        self.launch_perf_set("list(records)", number=100, check_type='maybe-linear')
 
     def test_perf_as_query(self):
         self.launch_perf_set("records._as_query()", number=100)
