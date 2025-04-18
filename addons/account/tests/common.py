@@ -264,25 +264,12 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def get_default_groups(cls):
-        groups = super().get_default_groups()
-        groups |= cls.env['res.groups'].browse(
-            cls.env['ir.model.data'].search([
-                ('model', '=', 'res.groups'),
-                ('name', 'in', (
-                    # TODO: Progressively remove groups from this list, hopefully no groups share the same name.
-                    # This is a consequence of moving groups from data to demo data: https://github.com/odoo/odoo/pull/198078
-                    'group_hr_manager', # hr
-                    'group_mrp_manager', # mrp
-                    'group_purchase_manager', # purchase
-                    'group_stock_manager', # stock
-                    # enterprise groups
-                    'group_hr_payroll_manager', # hr_payroll
-                    'group_plm_manager', # mrp_plm
-                ))
-            ]).mapped('res_id')
-        )
+        no_group = cls.env['res.groups'].browse()
         return (
-            groups
+            super().get_default_groups()
+            | (cls.env.ref('mrp.group_mrp_manager', False) or no_group)
+            | (cls.env.ref('purchase.group_purchase_manager', False) or no_group)
+            | (cls.env.ref('stock.group_stock_manager', False) or no_group)
             | cls.quick_ref('account.group_account_manager')
             | cls.quick_ref('account.group_account_user')
             | cls.quick_ref('base.group_system')  # company creation during setups
