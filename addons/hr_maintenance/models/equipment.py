@@ -113,14 +113,14 @@ class MaintenanceRequest(models.Model):
         return super(MaintenanceRequest, self).write(vals)
 
     @api.model
-    def message_new(self, msg, custom_values=None):
+    def message_new(self, msg_dict, custom_values=None):
         if custom_values is None:
             custom_values = {}
         # TDE FIXME: check author_id, should be set (master-)
-        email = tools.email_normalize(msg.get('from'), strict=False)
+        email = tools.email_normalize(msg_dict.get('from'), strict=False)
         user = self.env['res.users'].search([('login', '=', email)], limit=1) if email else self.env['res.users']
         if user:
             employee = self.env.user.employee_id
             if employee:
                 custom_values['employee_id'] = employee and employee[0].id
-        return super(MaintenanceRequest, self).message_new(msg, custom_values=custom_values)
+        return super().message_new(msg_dict, custom_values=custom_values)

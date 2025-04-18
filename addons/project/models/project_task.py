@@ -1627,7 +1627,7 @@ class ProjectTask(models.Model):
             )
 
     @api.model
-    def message_new(self, msg, custom_values=None):
+    def message_new(self, msg_dict, custom_values=None):
         # remove default author when going through the mail gateway. Indeed we
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
@@ -1637,27 +1637,27 @@ class ProjectTask(models.Model):
         if custom_values is None:
             custom_values = {}
         # Auto create partner if not existent when the task is created from email
-        if not msg.get('author_id') and msg.get('email_from'):
-            author = self.env['mail.thread']._partner_find_from_emails_single([msg['email_from']], no_create=False)
-            msg['author_id'] = author.id
+        if not msg_dict.get('author_id') and msg_dict.get('email_from'):
+            author = self.env['mail.thread']._partner_find_from_emails_single([msg_dict['email_from']], no_create=False)
+            msg_dict['author_id'] = author.id
 
         defaults = {
-            'name': msg.get('subject') or _("No Subject"),
+            'name': msg_dict.get('subject') or _("No Subject"),
             'allocated_hours': 0.0,
-            'partner_id': msg.get('author_id'),
+            'partner_id': msg_dict.get('author_id'),
         }
         defaults.update(custom_values)
 
-        task = super(ProjectTask, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        partners = task._partner_find_from_emails_single(tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or '')), no_create=True)
+        task = super(ProjectTask, self.with_context(create_context)).message_new(msg_dict, custom_values=defaults)
+        partners = task._partner_find_from_emails_single(tools.email_split((msg_dict.get('to') or '') + ',' + (msg_dict.get('cc') or '')), no_create=True)
         task.message_subscribe(partners.ids)
         return task
 
-    def message_update(self, msg, update_vals=None):
+    def message_update(self, msg_dict, update_vals=None):
         for task in self:
-            partners = task._partner_find_from_emails_single(tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or '')), no_create=True)
+            partners = task._partner_find_from_emails_single(tools.email_split((msg_dict.get('to') or '') + ',' + (msg_dict.get('cc') or '')), no_create=True)
             task.message_subscribe(partners.ids)
-        return super().message_update(msg, update_vals=update_vals)
+        return super().message_update(msg_dict, update_vals=update_vals)
 
     def _notify_by_email_get_headers(self, headers=None):
         headers = super()._notify_by_email_get_headers(headers=headers)
@@ -2077,7 +2077,7 @@ class ProjectTask(models.Model):
         return super()._get_allowed_access_params() | {'project_sharing_id'}
 
     @api.model
-    def _get_thread_with_access(self, thread_id, project_sharing_id=None, token=None, **kwargs):
+    def _get_thread_with_access(self, thread_id, *, project_sharing_id=None, token=None, **kwargs):
         if project_sharing_id:
             if token := ProjectSharingChatter._check_project_access_and_get_token(
                 self, project_sharing_id, self._name, thread_id, token

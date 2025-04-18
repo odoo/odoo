@@ -29,7 +29,7 @@ class MailTestAccess(models.Model):
         ],
         name='Access', default='public')
 
-    def _mail_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
 
@@ -49,7 +49,7 @@ class MailTestAccessCusto(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer')
     is_locked = fields.Boolean()
 
-    def _mail_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
     def _get_mail_message_access(self, res_ids, operation, model_name=None):
@@ -75,7 +75,7 @@ class MailTestAccessPublic(models.Model):
     mobile = fields.Char('Mobile')
     is_locked = fields.Boolean()
 
-    def _mail_get_partner_fields(self):
+    def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
     def _get_customer_information(self):
