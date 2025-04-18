@@ -37,7 +37,7 @@ export const deepEqual = (obj1, obj2) => shallowEqual(obj1, obj2, deepEqual);
  * @return {T}
  */
 export function deepCopy(obj) {
-    return JSON.parse(JSON.stringify(obj));
+    return obj && JSON.parse(JSON.stringify(obj));
 }
 
 /**
