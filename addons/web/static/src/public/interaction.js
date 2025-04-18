@@ -2,6 +2,7 @@ import { renderToFragment } from "@web/core/utils/render";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { INITIAL_VALUE, SKIP_IMPLICIT_UPDATE } from "./colibri";
 import { makeAsyncHandler, makeButtonHandler } from "./utils";
+import { loadXML } from "@web/core/assets";
 
 /**
  * This is the base class to describe interactions. The Interaction class
@@ -44,6 +45,12 @@ export class Interaction {
      * Constant to reset dynamicContent t-att-* and t-out.
      */
     static INITIAL_VALUE = INITIAL_VALUE;
+
+    /**
+     * Map to track which template files have been loaded for interactions
+     * Shared across all interaction instances
+     */
+    static loadedTemplates = new Set();
 
     /**
      * Note that a dynamic selector is allowed to return a falsy value, for ex
@@ -97,6 +104,13 @@ export class Interaction {
      * @type {Object}
      */
     dynamicContent = {};
+
+    /**
+     * XML templates to be loaded for this interaction.
+     * Format: { templateName: xmlPath }
+     * @type {Object}
+     */
+    xmlTemplates = null;
 
     /**
      * The constructor is not supposed to be defined in a subclass. Use setup
@@ -460,5 +474,45 @@ export class Interaction {
      */
     mountComponent(el, C, props = null) {
         this.__colibri__.mountComponent([el], C, props);
+    }
+
+    /**
+     * Loads and caches XML templates defined in the `xmlTemplates` property.
+     * Prevents duplicate loads of the same template across multiple interaction
+     * instances.
+     *
+     * If multiple interactions attempt to load the same template, they will
+     * wait for the same Promise instead of triggering redundant network
+     * requests.
+     *
+     * @returns {Promise<void>} Resolves when all templates are loaded or
+     *                          already cached.
+     */
+    async loadXMLTemplates() {
+        if (!this.xmlTemplates || !this.xmlTemplates.length) {
+            return;
+        }
+
+        if (!Interaction._templateLoadPromises) {
+            Interaction._templateLoadPromises = new Map();
+        }
+
+        const templatePromises = this.xmlTemplates.map((path) => {
+            if (!path) {
+                return Promise.resolve();
+            }
+
+            // If already loading, return the same promise
+            if (!Interaction._templateLoadPromises.has(path)) {
+                const promise = loadXML(path).then(() => {
+                    console.log("loaded XML ::", path);
+                });
+                Interaction._templateLoadPromises.set(path, promise);
+            }
+
+            return Interaction._templateLoadPromises.get(path);
+        });
+
+        await Promise.all(templatePromises);
     }
 }
