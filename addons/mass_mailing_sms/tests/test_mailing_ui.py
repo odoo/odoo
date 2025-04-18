@@ -17,7 +17,8 @@ class TestMailingUi(HttpCase):
                 - activities linked to records with mailing_type set to sms are listed
                   in the 'SMS Marketing' category
         """
-        self.env.ref('base.user_admin').write({
+        user_admin = self.env.ref('base.user_admin')
+        user_admin.write({
             'email': 'mitchell.admin@example.com',
         })
         sms_rec, email_rec = self.env['mailing.mailing'].create([
@@ -34,8 +35,8 @@ class TestMailingUi(HttpCase):
             }
         ])
 
-        sms_rec.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
-        email_rec.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
+        sms_rec.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo', user_id=user_admin.id)
+        email_rec.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo', user_id=user_admin.id)
 
         # Ensure that both activities appear in the systray and that clicking on
         # one activity opens a view where the other activity isn't listed

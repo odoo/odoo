@@ -1698,7 +1698,7 @@ class StockPicking(models.Model):
                 'mail.mail_activity_data_warning',
                 date.today(),
                 note=note,
-                user_id=responsible.id or SUPERUSER_ID
+                user_id=responsible.id,
             )
 
     def _log_less_quantities_than_expected(self, moves):

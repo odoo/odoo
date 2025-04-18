@@ -406,8 +406,8 @@ class MailActivityMixin(models.AbstractModel):
                 'res_id': record.id,
             }
             create_vals.update(act_values)
-            if not create_vals.get('user_id'):
-                create_vals['user_id'] = activity_type.default_user_id.id or self.env.uid
+            if not create_vals.get('user_id') and activity_type.default_user_id:
+                create_vals['user_id'] = activity_type.default_user_id.id
             create_vals_list.append(create_vals)
         return self.env['mail.activity'].create(create_vals_list)
 
