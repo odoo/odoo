@@ -28,8 +28,17 @@ class TestSnippets(HttpCase):
     def test_02_default_shape_gets_palette_colors(self):
         self.start_tour('/@/', 'default_shape_gets_palette_colors', login='admin')
 
-    @unittest.skip
     def test_03_snippets_all_drag_and_drop(self):
+        self.env.ref('website.default_website').write({
+            'social_facebook': "https://www.facebook.com/Odoo",
+            'social_twitter': 'https://twitter.com/Odoo',
+            'social_linkedin': 'https://www.linkedin.com/company/odoo',
+            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'social_github': 'https://github.com/odoo',
+            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
+            'social_tiktok': 'https://www.tiktok.com/@odoo',
+            'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
+        })
         with MockRequest(self.env, website=self.env['website'].browse(1)):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
