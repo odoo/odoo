@@ -163,6 +163,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         """
         Verify that after applying a discount code, any `free_over` shipping gets recalculated.
         """
+        self.free_delivery.action_archive()
         self.normal_delivery.write({'free_over': True, 'amount': 75.0})
         self.start_tour("/shop", 'update_shipping_after_discount', login=self.user_admin.login)
 

@@ -92,7 +92,6 @@
             'website_sale/static/src/scss/product_configurator.scss',
 
             'website_sale/static/src/js/cart_service.js',
-            'website_sale/static/src/js/checkout.js',
             'website_sale/static/src/js/payment_button.js',
             'website_sale/static/src/js/payment_form.js',
             'website_sale/static/src/js/sale_variant_mixin.js',
@@ -175,6 +174,7 @@
             'website_sale/static/tests/interactions/**/*',
         ],
         'web.assets_unit_tests_setup': [
+            'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
             'website_sale/static/src/js/website_sale_utils.js',
