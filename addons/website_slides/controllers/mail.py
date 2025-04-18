@@ -30,7 +30,7 @@ class SlidesPortalChatter(PortalChatter):
 
         result = super().portal_chatter_post(thread_model, thread_id, post_data, **kwargs)
         if result and thread_model == 'slide.channel':
-            rating_value = kwargs.get('rating_value', False)
+            rating_value = post_data.get('rating_value', False)
             slide_channel = request.env[thread_model].sudo().browse(int(thread_id))
             if rating_value and slide_channel and request.env.user.partner_id.id == int(kwargs.get('pid')):
                 request.env.user._add_karma(slide_channel.karma_gen_channel_rank, slide_channel, _('Course Ranked'))

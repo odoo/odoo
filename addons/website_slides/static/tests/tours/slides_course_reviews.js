@@ -51,5 +51,16 @@ registry.category("web_tour.tours").add("course_reviews", {
         {
             trigger: "div.o_portal_chatter_composer_body textarea:value(Great course!)",
         },
+        {
+            trigger: ".modal div.o_portal_chatter_composer_body textarea",
+            run: "edit Mid course!",
+        },
+        {
+            trigger: ".modal button.o_portal_chatter_composer_btn",
+            run: "click",
+        },
+        {
+            trigger: ".o_portal_chatter_message:contains(Mid course!)"
+        },
     ],
 });
