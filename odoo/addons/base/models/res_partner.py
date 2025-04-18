@@ -962,7 +962,7 @@ class ResPartner(models.Model):
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
     @api.depends_context(
         'show_address', 'partner_display_name_hide_company', 'partner_show_db_id', 'address_inline',
-        'show_email', 'show_vat', 'lang',
+        'show_email', 'show_vat', 'lang', 'formatted_display_name'
     )
     def _compute_display_name(self):
         for partner in self:
@@ -979,6 +979,8 @@ class ResPartner(models.Model):
                 name = f"{name} <{partner.email}>"
             if partner._context.get('show_vat') and partner.vat:
                 name = f"{name} ‒ {partner.vat}"
+            if partner._context.get("formatted_display_name") and (partner.parent_id or partner.company_name):
+                name = f"{partner.name}<tab>--{partner.company_name or partner.parent_id.name}--"
 
             partner.display_name = name.strip()
 
