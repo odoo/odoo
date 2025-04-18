@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class AccountPaymentMethod(models.Model):
@@ -47,21 +46,20 @@ class AccountPaymentMethod(models.Model):
         :return: The domain specifying which journal can accommodate this payment method.
         """
         if not code:
-            return []
+            return Domain.TRUE
         information = self._get_payment_method_information().get(code)
         journal_types = information.get('type', ('bank', 'cash', 'credit'))
-        domains = [[('type', 'in', journal_types)]]
+        domain = Domain('type', 'in', journal_types)
 
         if with_currency and (currency_ids := information.get('currency_ids')):
-            domains += [expression.OR([
-                [('currency_id', '=', False), ('company_id.currency_id', 'in', currency_ids)],
-                [('currency_id', 'in', currency_ids)],
-            ])]
+            domain &= (
+                Domain('currency_id', '=', False) & Domain('company_id.currency_id', 'in', currency_ids)
+            ) | Domain('currency_id', 'in', currency_ids)
 
         if with_country and (country_id := information.get('country_id')):
-            domains += [[('company_id.account_fiscal_country_id', '=', country_id)]]
+            domain &= Domain('company_id.account_fiscal_country_id', '=', country_id)
 
-        return expression.AND(domains)
+        return domain
 
     @api.model
     def _get_payment_method_information(self):

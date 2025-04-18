@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
+from odoo.fields import Domain
 
 
 class ProductCatalogMixin(models.AbstractModel):
@@ -33,15 +34,16 @@ class ProductCatalogMixin(models.AbstractModel):
             'readOnly': self._is_readonly() if self else False,
         }
 
-    def _get_product_catalog_domain(self):
+    def _get_product_catalog_domain(self) -> Domain:
         """Get the domain to search for products in the catalog.
 
         For a model that uses products that has to be hidden in the catalog, it
         must override this method and extend the appropriate domain.
-        :returns: A list of tuples that represents a domain.
-        :rtype: list
+        :returns: A domain.
         """
-        return ['|', ('company_id', '=', False), ('company_id', 'parent_of', self.company_id.id), ('type', '!=', 'combo')]
+        return (
+            Domain('company_id', '=', False) | Domain('company_id', 'parent_of', self.company_id.id)
+         ) & Domain('type', '!=', 'combo')
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):
         """ Returns the record's lines grouped by product.

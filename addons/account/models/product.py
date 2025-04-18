@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
-from odoo import api, Command, fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import format_amount
 
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
@@ -289,11 +287,11 @@ class ProductProduct(models.Model):
             name = name.split('\n')[0]
         domains = []
         if barcode:
-            domains.append([('barcode', '=', barcode)])
+            domains.append(Domain('barcode', '=', barcode))
         if default_code:
-            domains.append([('default_code', '=', default_code)])
+            domains.append(Domain('default_code', '=', default_code))
         if name:
-            domains += [[('name', '=', name)], [('name', 'ilike', name)]]
+            domains += [Domain('name', '=', name), Domain('name', 'ilike', name)]
 
         company = company or self.env.company
         for company_domain in (
@@ -301,10 +299,10 @@ class ProductProduct(models.Model):
             [('company_id', '=', False)],
         ):
             products = self.env['product.product'].search(
-                expression.AND([
-                    expression.OR(domains),
+                Domain.AND([
+                    Domain.OR(domains),
                     company_domain,
-                    extra_domain or [],
+                    extra_domain or Domain.TRUE,
                 ]),
             )
             for domain in domains:

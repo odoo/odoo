@@ -1,8 +1,8 @@
 from datetime import timedelta
 
-from odoo import Command, api, fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 
 
 class AccountSecureEntriesWizard(models.TransientModel):
@@ -186,7 +186,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                         ('sequence_number', '<=', last_move.sequence_number),
                         ('sequence_number', '>=', first_move.sequence_number),
                     ])
-                domain = expression.OR(OR_domains)
+                domain = Domain.OR(OR_domains)
                 warnings['account_sequence_gap'] = {
                     'message': _("Securing these entries will create at least one gap in the sequence."),
                     'action_text': _("Review"),
@@ -214,14 +214,14 @@ class AccountSecureEntriesWizard(models.TransientModel):
         :return a search domain
         """
         if not (company_id and hash_date):
-            return [(0, '=', 1)]
-        return expression.AND([
+            return Domain.FALSE
+        return Domain.AND([
             [
                 ('date', '<=', fields.Date.to_string(hash_date)),
                 ('company_id', 'child_of', company_id.id),
                 ('inalterable_hash', '=', False),
             ],
-            domain or [],
+            domain or Domain.TRUE,
         ])
 
     def _get_draft_moves_in_hashed_period_domain(self):

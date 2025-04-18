@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=bad-whitespace
 from freezegun import freeze_time
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
-from odoo import fields, Command
-from odoo.osv import expression
+from odoo import fields
+from odoo.fields import Command, Domain
 from odoo.exceptions import ValidationError, UserError
 from datetime import date
 
@@ -2292,7 +2291,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def _assert_payment_move_state(self, move_type, amount, counterpart_values_list, payment_state, post_move=True):
         def assert_partial(line1, line2):
-            partial = self.env['account.partial.reconcile'].search(expression.OR([
+            partial = self.env['account.partial.reconcile'].search(Domain.OR([
                 [('debit_move_id', '=', line1.id), ('credit_move_id', '=', line2.id)],
                 [('debit_move_id', '=', line2.id), ('credit_move_id', '=', line1.id)],
             ]), limit=1)
