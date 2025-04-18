@@ -507,9 +507,6 @@ overridden by modules), because:
 </template>
 
 <template id="new_page_template_landing_s_features" inherit_id="website.new_page_template_s_features" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="class" add="" separator=" "/>
-    </xpath>
     <xpath expr="//div[hasclass('row')]/div[1]/div/h3" position="replace">
         <h3 class="h5-fs">Marketing</h3>
     </xpath>
