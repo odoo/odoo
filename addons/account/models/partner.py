@@ -118,28 +118,14 @@ class AccountFiscalPosition(models.Model):
                     if record.country_id not in record.country_group_id.country_ids:
                         raise ValidationError(_("You cannot create a fiscal position with a country outside of the selected country group."))
 
-                similar_fpos_domain = [
+                similar_fpos_count = self.env['account.fiscal.position'].search_count([
                     *self.env['account.fiscal.position']._check_company_domain(record.company_id),
-                    ('foreign_vat', '!=', False),
+                    ('foreign_vat', 'not in', (False, record.foreign_vat)),
                     ('id', '!=', record.id),
-                ]
-
-                if record.country_group_id:
-                    foreign_vat_country = self.country_group_id.country_ids.filtered(lambda c: c.code == record.foreign_vat[:2].upper())
-                    if not foreign_vat_country:
-                        raise ValidationError(_("The country code of the foreign VAT number does not match any country in the group."))
-                    similar_fpos_domain += [('country_group_id', '=', record.country_group_id.id), ('country_id', '=', foreign_vat_country.id)]
-                elif record.country_id:
-                    similar_fpos_domain += [('country_id', '=', record.country_id.id), ('country_group_id', '=', False)]
-
-                if record.state_ids:
-                    similar_fpos_domain.append(('state_ids', 'in', record.state_ids.ids))
-                else:
-                    similar_fpos_domain.append(('state_ids', '=', False))
-
-                similar_fpos_count = self.env['account.fiscal.position'].search_count(similar_fpos_domain)
+                    ('country_id', '=', record.country_id.id),
+                ])
                 if similar_fpos_count:
-                    raise ValidationError(_("A fiscal position with a foreign VAT already exists in this region."))
+                    raise ValidationError(_("A fiscal position with a foreign VAT already exists in this country."))
 
     def map_tax(self, taxes):
         return self.env['account.tax'].browse(unique(

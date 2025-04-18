@@ -4,7 +4,7 @@
         <field name="name">WH Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ke"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="wh_tax_report_base_column" model="account.report.column">
@@ -26,7 +26,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">WH base</field>
-                                <field name="date_scope">previous_tax_period</field>
+                                <field name="date_scope">previous_return_period</field>
                             </record>
                         </field>
                     </record>
@@ -38,7 +38,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">WH 2%</field>
-                                <field name="date_scope">previous_tax_period</field>
+                                <field name="date_scope">previous_return_period</field>
                             </record>
                         </field>
                     </record>

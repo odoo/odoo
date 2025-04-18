@@ -69,22 +69,6 @@ class AccountTaxGroup(models.Model):
         for group in self:
             group.country_id = group.company_id.account_fiscal_country_id or group.company_id.country_id
 
-    @api.model
-    def _check_misconfigured_tax_groups(self, company, countries):
-        """ Searches the tax groups used on the taxes from company in countries that don't have
-        at least a tax payable account, a tax receivable account or an advance tax payment account.
-
-        :return: A boolean telling whether or not there are misconfigured groups for any
-                 of these countries, in this company
-        """
-        return bool(self.env['account.tax'].search([
-            *self.env['account.tax']._check_company_domain(company),
-            ('country_id', 'in', countries.ids),
-            '|',
-            ('tax_group_id.tax_payable_account_id', '=', False),
-            ('tax_group_id.tax_receivable_account_id', '=', False),
-        ], limit=1))
-
 
 class AccountTax(models.Model):
     _name = 'account.tax'
@@ -2375,7 +2359,7 @@ class AccountTax(models.Model):
                         max_tax_group['tax_amount_currency'] += cash_rounding_base_amount_currency
                         max_tax_group['tax_amount'] += cash_rounding_base_amount
                         max_subtotal['tax_amount_currency'] += cash_rounding_base_amount_currency
-                        max_subtotal['tax_amount'] += cash_rounding_base_amount 
+                        max_subtotal['tax_amount'] += cash_rounding_base_amount
                         tax_totals_summary['tax_amount_currency'] += cash_rounding_base_amount_currency
                         tax_totals_summary['tax_amount'] += cash_rounding_base_amount
                     else:
