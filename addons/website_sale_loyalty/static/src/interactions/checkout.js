@@ -1,11 +1,12 @@
-import WebsiteSaleCheckout from '@website_sale/js/checkout';
+import { patch } from '@web/core/utils/patch';
+import { Checkout } from '@website_sale/interactions/checkout';
 
-WebsiteSaleCheckout.include({
+patch(Checkout.prototype, {
     /**
-     * @override
+     * @override method from `@website_sale/interactions/checkout`
      */
     _updateCartSummary(result, targetEl) {
-        this._super.apply(this, arguments);
+        super._updateCartSummary(...arguments);
         if (result.amount_delivery_discounted) {
             // Update discount of the order
             const cart_summary_shipping_reward = targetEl.querySelector(

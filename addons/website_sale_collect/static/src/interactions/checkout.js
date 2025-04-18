@@ -1,26 +1,28 @@
+import { patch } from '@web/core/utils/patch';
+import { patchDynamicContent } from '@web/public/utils';
 import { rpc } from '@web/core/network/rpc';
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Checkout } from '@website_sale/interactions/checkout';
 
-publicWidget.registry.WebsiteSaleCheckout.include({
-    events: Object.assign({}, publicWidget.registry.WebsiteSaleCheckout.prototype.events, {
-        'click .js_wsc_delete_product': '_onClickDeleteProduct',
-    }),
-
-    // #=== EVENT HANDLERS ===#
+patch(Checkout.prototype, {
+     setup() {
+        super.setup();
+        patchDynamicContent(this.dynamicContent, {
+            '.js_wsc_delete_product': { 't-on-click': this.onClickDeleteProduct.bind(this) },
+        });
+    },
 
     /**
      * Remove a product from the cart.
      *
-     * @private
      * @param {Event} ev
      */
-    async _onClickDeleteProduct(ev) {
-        await rpc('/shop/cart/update', {
+    async onClickDeleteProduct(ev) {
+        await this.waitFor(rpc('/shop/cart/update', {
             line_id: parseInt(ev.target.dataset.lineId, 10),
             product_id: parseInt(ev.target.dataset.productId, 10),
             quantity: 0,
-        });
-        window.location.reload();  // Reload all cart values.
+        }));
+        window.location.reload(); // Reload all cart values.
     },
 
     // #=== DOM MANIPULATION ===#
@@ -28,10 +30,10 @@ publicWidget.registry.WebsiteSaleCheckout.include({
     /**
      * Remove a warning if available pickup location is selected.
      *
-     * @override method from `@website_sale/js/checkout`
+     * @override method from `@website_sale/interactions/checkout`
      */
     _updatePickupLocation(button, location, jsonLocation) {
-        this._super.apply(this, arguments);
+        super._updatePickupLocation(...arguments);
         const dmContainer = this._getDeliveryMethodContainer(button);
         const radio = dmContainer.querySelector('[name="o_delivery_radio"]');
         if (radio.dataset.deliveryType === 'in_store') {
@@ -43,11 +45,11 @@ publicWidget.registry.WebsiteSaleCheckout.include({
      * Return false if there is a warning message, otherwise return the result of the parent method
      * call.
      *
-     * @override method from `@website_sale/js/checkout`
+     * @override method from `@website_sale/interactions/checkout`
      */
     _isDeliveryMethodReady() {
-        if (this.dmRadios.length === 0) {  // If there are no delivery methods.
-            return this._super.apply(this, arguments);  // Skip override.
+        if (this.dmRadios.length === 0) { // If there are no delivery methods.
+            return super._isDeliveryMethodReady(...arguments); // Skip override.
         }
         const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
         let hasWarning = false;
@@ -58,16 +60,16 @@ publicWidget.registry.WebsiteSaleCheckout.include({
                 && deliveryContainer.querySelector('[name="unavailable_products_warning"]')
             );
         }
-        return this._super.apply(this, arguments) && !hasWarning;
+        return super._isDeliveryMethodReady(...arguments) && !hasWarning;
     },
 
     /**
      * Also hide the warning message, if any.
      *
-     * @override method from `@website_sale/js/checkout`
+     * @override method from `@website_sale/interactions/checkout`
      */
     _hidePickupLocation() {
-        this._super.apply(this, arguments);
+        super._hidePickupLocation(...arguments);
         const warning = this.el.querySelector('[name="unavailable_products_warning"]');
         if (warning) {
             warning.classList.add('d-none');
@@ -79,10 +81,10 @@ publicWidget.registry.WebsiteSaleCheckout.include({
     /**
      * Display a warning if any when selecting an in_store delivery method.
      *
-     * @override method from `@website_sale/js/checkout`
+     * @override method from `@website_sale/interactions/checkout`
      */
     async _showPickupLocation(radio) {
-        this._super.apply(this, arguments);
+        super._showPickupLocation(...arguments);
         if (radio.dataset.deliveryType === 'in_store') {
             const dmContainer = this._getDeliveryMethodContainer(radio);
             const warning = dmContainer.querySelector('[name="unavailable_products_warning"]');
@@ -91,5 +93,4 @@ publicWidget.registry.WebsiteSaleCheckout.include({
             }
         }
     },
-
 });

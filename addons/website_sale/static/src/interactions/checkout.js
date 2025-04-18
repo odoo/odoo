@@ -1,45 +1,44 @@
+import { Interaction } from '@web/public/interaction';
+import { registry } from '@web/core/registry';
+import { _t } from '@web/core/l10n/translation';
+import { rpc } from '@web/core/network/rpc';
 import {
     LocationSelectorDialog
 } from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
-import { _t } from '@web/core/l10n/translation';
-import { rpc } from '@web/core/network/rpc';
-import publicWidget from '@web/legacy/js/public/public_widget';
 
-publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
-    selector: '#shop_checkout',
-    events: {
+export class Checkout extends Interaction {
+    static selector = '#shop_checkout';
+    dynamicContent = {
         // Addresses
-        'click .card': '_changeAddress',
-        'click .js_edit_address': '_preventChangingAddress',
-        'change #use_delivery_as_billing': '_toggleBillingAddressRow',
+        '.card': { 't-on-click': this.changeAddress },
+        // Cancel the address change to allow the redirect to the edit page to take place.
+        '.js_edit_address': { 't-on-click.stop': () => {} },
+        '#use_delivery_as_billing': { 't-on-change': this.toggleBillingAddressRow },
         // Delivery methods
-        'click [name="o_delivery_radio"]': '_selectDeliveryMethod',
-        'click [name="o_pickup_location_selector"]': '_selectPickupLocation',
-    },
+        '[name="o_delivery_radio"]': { 't-on-click': this.selectDeliveryMethod },
+        '[name="o_pickup_location_selector"]': { 't-on-click': this.selectPickupLocation },
+    };
 
-    // #=== WIDGET LIFECYCLE ===#
-
-    async start() {
-        // There is two main buttons in the DOM for mobile or desktop.
-        // We need to get the one that is not display: none;.
-        this.mainButton = Array.from(document.getElementsByName("website_sale_main_button")).find(button => {
-            return button.offsetParent !== null;
-        });
-        this.use_delivery_as_billing_toggle = document.querySelector('#use_delivery_as_billing');
+    setup() {
+        // There are two main buttons in the DOM (one for mobile and one for desktop).
+        // We need to get the one that's actually displayed.
+        this.mainButton = Array.from(document.getElementsByName('website_sale_main_button'))
+            .find(button => button.offsetParent !== null);
+        this.useDeliveryAsBillingToggle = document.querySelector('#use_delivery_as_billing');
         this.billingContainer = this.el.querySelector('#billing_container');
-        await this._prepareDeliveryMethods();
-    },
+    }
 
-    // #=== EVENT HANDLERS ===#
+    async willStart() {
+        await this._prepareDeliveryMethods();
+    }
 
     /**
      * Set the billing or delivery address on the order and update the corresponding card.
      *
-     * @private
      * @param {Event} ev
      * @return {void}
      */
-    async _changeAddress(ev) {
+    async changeAddress(ev) {
         const newAddress = ev.currentTarget;
         if (newAddress.classList.contains('bg-primary')) { // If the card is already selected.
             return;
@@ -53,36 +52,38 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         // Highlight the newly selected address card.
         this._highlightAddressCard(newAddress);
         const selectedPartnerId = newAddress.dataset.partnerId;
-        await this.updateAddress(addressType, selectedPartnerId);
+        await this.waitFor(this.updateAddress(addressType, selectedPartnerId));
         // A delivery address is changed.
         if (addressType === 'delivery' || this.billingContainer.dataset.deliveryAddressDisabled) {
             if (this.billingContainer.dataset.deliveryAddressDisabled) {
                 // If a delivery address is disabled in the settings, use a billing address as
                 // a delivery one.
-                await this.updateAddress('delivery', selectedPartnerId);
+                await this.waitFor(this.updateAddress('delivery', selectedPartnerId));
             }
-            if (this.use_delivery_as_billing_toggle?.checked) {
-                await this._selectMatchingBillingAddress(selectedPartnerId);
+            if (this.useDeliveryAsBillingToggle?.checked) {
+                await this.waitFor(this._selectMatchingBillingAddress(selectedPartnerId));
             }
+            const deliveryFormHtml = await this.waitFor(rpc('/shop/delivery_methods'));
+            // The delivery methods are regenerated below, so we need to stop and start interactions
+            // to make sure the regenerated delivery methods are properly handled.
+            this.services['public.interactions'].stopInteractions(this.el);
             // Update the available delivery methods.
-            document.getElementById('o_delivery_form').innerHTML = await rpc(
-                '/shop/delivery_methods'
-            );
-            await this._prepareDeliveryMethods();
+            document.getElementById('o_delivery_form').innerHTML = deliveryFormHtml;
+            this.services['public.interactions'].startInteractions(this.el);
+            await this.waitFor(this._prepareDeliveryMethods());
         }
         this._enableMainButton();  // Try to enable the main button.
-    },
+    }
 
     /**
      * Show/hide the billing address row when the user toggles the 'use delivery as billing' input.
      *
      * The URLs of the "create address" buttons are updated to propagate the value of the input.
      *
-     * @private
      * @param ev
      * @return {void}
      */
-    async _toggleBillingAddressRow(ev) {
+    async toggleBillingAddressRow(ev) {
         const useDeliveryAsBilling = ev.target.checked;
 
         const addDeliveryAddressButton = this.el.querySelector(
@@ -101,34 +102,24 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         if (useDeliveryAsBilling) {
             this.billingContainer.classList.add('d-none');  // Hide the billing address row.
             const selectedDeliveryAddress = this._getSelectedAddress('delivery');
-            await this._selectMatchingBillingAddress(selectedDeliveryAddress.dataset.partnerId);
+            await this.waitFor(
+                this._selectMatchingBillingAddress(selectedDeliveryAddress.dataset.partnerId)
+            );
         } else {
             this._disableMainButton();
-            this.billingContainer.classList.remove('d-none');  // Show the billing address row.
+            this.billingContainer.classList.remove('d-none'); // Show the billing address row.
         }
 
         this._enableMainButton();  // Try to enable the main button.
-    },
-
-    /**
-     * Cancel the address change to allow the redirect to the edit page to take place.
-     *
-     * @private
-     * @param {Event} ev
-     * @return {void}
-     */
-    _preventChangingAddress(ev) {
-        ev.stopPropagation();
-    },
+    }
 
     /**
      * Fetch the delivery rate for the selected delivery method and update the displayed amounts.
      *
-     * @private
      * @param {Event} ev
      * @return {void}
      */
-    async _selectDeliveryMethod(ev) {
+    async selectDeliveryMethod(ev) {
         const checkedRadio = ev.currentTarget;
         if (checkedRadio.disabled) {  // The delivery rate request failed.
             return; // Failing delivery methods cannot be selected.
@@ -141,33 +132,32 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         this._hidePickupLocation();
 
         // Fetch delivery rates and update the cart summary and the price badge accordingly.
-        await this._updateDeliveryMethod(checkedRadio);
+        await this.waitFor(this._updateDeliveryMethod(checkedRadio));
 
         // Re-enable the main button after delivery rates have been fetched.
         this._enableMainButton();
 
         // Show a button to open the location selector if required for the selected delivery method.
         await this._showPickupLocation(checkedRadio);
-    },
+    }
 
     /**
      * Fetch and display the closest pickup locations based on the zip code.
      *
-     * @private
      * @param {Event} ev
      * @return {void}
      */
-    async _selectPickupLocation(ev) {
+    async selectPickupLocation(ev) {
         const { zipCode, locationId } = ev.currentTarget.dataset;
         const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
-        this.call('dialog', 'add', LocationSelectorDialog, {
+        this.services.dialog.add(LocationSelectorDialog, {
             zipCode: zipCode,
             selectedLocationId: locationId,
             isFrontend: true,
             save: async location => {
                 const jsonLocation = JSON.stringify(location);
                 // Assign the selected pickup location to the order.
-                await this._setPickupLocation(jsonLocation);
+                await this.waitFor(this._setPickupLocation(jsonLocation));
 
                 //  Show and set the order location details.
                 this._updatePickupLocation(deliveryMethodContainer, location, jsonLocation);
@@ -175,7 +165,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
                 this._enableMainButton();
             },
         });
-    },
+    }
 
     // #=== DOM MANIPULATION ===#
 
@@ -206,7 +196,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
 
         // Remove the button.
         pickupLocation.querySelector('button[name="o_pickup_location_selector"]')?.remove();
-    },
+    }
 
     /**
      * Remove the highlighting from the address card.
@@ -218,7 +208,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     _tuneDownAddressCard(card) {
         if (!card) return;
         card.classList.remove('bg-primary', 'border', 'border-primary');
-    },
+    }
 
     /**
      * Highlight the address card.
@@ -230,7 +220,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     _highlightAddressCard(card) {
         if (!card) return;
         card.classList.add('bg-primary', 'border', 'border-primary');
-    },
+    }
 
     /**
      * Disable the main button.
@@ -240,7 +230,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     _disableMainButton() {
         this.mainButton?.classList.add('disabled');
-    },
+    }
 
     /**
      * Enable the main button if all conditions are satisfied.
@@ -252,7 +242,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         if (this._canEnableMainButton()) {
             this.mainButton?.classList.remove('disabled');
         }
-    },
+    }
 
     /**
      * Return whether a delivery method and a billing address are selected.
@@ -262,7 +252,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     _canEnableMainButton(){
         return this._isDeliveryMethodReady() && this._isBillingAddressSelected();
-    },
+    }
 
     /**
      * Hide the pickup location.
@@ -274,10 +264,10 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const pickupLocations = document.querySelectorAll(
             '[name="o_pickup_location"]:not(.d-none)'
         );
-        pickupLocations.forEach(pickupLocation => {
-            pickupLocation.classList.add('d-none'); // Hide the whole div.
-        });
-    },
+        pickupLocations.forEach(pickupLocation =>
+            pickupLocation.classList.add('d-none') // Hide the whole div.
+        );
+    }
 
     /**
      * Set the delivery method on the order and update the price badge and cart summary.
@@ -288,10 +278,10 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     async _updateDeliveryMethod(radio) {
         this._showLoadingBadge(radio);
-        const result = await this._setDeliveryMethod(radio.dataset.dmId);
+        const result = await this.waitFor(this._setDeliveryMethod(radio.dataset.dmId));
         this._updateAmountBadge(radio, result);
         this._updateCartSummaries(result);
-    },
+    }
 
     /**
      * Display a loading spinner on the delivery price badge.
@@ -304,7 +294,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const deliveryPriceBadge = this._getDeliveryPriceBadge(radio);
         this._clearElement(deliveryPriceBadge);
         deliveryPriceBadge.appendChild(this._createLoadingElement());
-    },
+    }
 
     /**
      * Update the delivery price badge with the delivery rate.
@@ -333,7 +323,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
             deliveryPriceBadge.textContent = rateData.error_message;
             this._toggleDeliveryMethodRadio(radio, true);
         }
-    },
+    }
 
     /**
      * Update the order summary table with the delivery rate of the selected delivery method.
@@ -344,8 +334,12 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     _updateCartSummary(result, targetEl) {
-        const amountDelivery = targetEl.querySelector('tr[name="o_order_delivery"] .monetary_field')
-        const amountUntaxed = targetEl.querySelector('tr[name="o_order_total_untaxed"] .monetary_field');
+        const amountDelivery = targetEl.querySelector(
+            'tr[name="o_order_delivery"] .monetary_field'
+        );
+        const amountUntaxed = targetEl.querySelector(
+            'tr[name="o_order_total_untaxed"] .monetary_field'
+        );
         const amountTax = targetEl.querySelector('tr[name="o_order_total_taxes"] .monetary_field');
         const amountTotal = targetEl.parentElement.querySelectorAll(
             'tr[name="o_order_total"] .monetary_field, #amount_total_summary.monetary_field'
@@ -361,7 +355,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         amountUntaxed.innerHTML = result.amount_untaxed;
         amountTax.innerHTML = result.amount_tax;
         amountTotal.forEach(total => total.innerHTML = result.amount_total);
-    },
+    }
 
     /**
      * Update the order summary table with the delivery rate of the selected delivery method.
@@ -371,11 +365,11 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     _updateCartSummaries(result) {
-        const parentElements = document.querySelectorAll('#o_cart_summary_offcanvas, div.o_total_card');
-        parentElements.forEach(el => {
-            this._updateCartSummary(result, el);
-        });
-    },
+        const parentElements = document.querySelectorAll(
+            '#o_cart_summary_offcanvas, div.o_total_card'
+        );
+        parentElements.forEach(el => this._updateCartSummary(result, el));
+    }
 
     /**
      * Enable or disable radio selection for a delivery method.
@@ -393,7 +387,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         else {
             deliveryMethodContainer.classList.remove('text-muted');
         }
-    },
+    }
 
     /**
      * Remove all children of the provided element from the DOM.
@@ -406,7 +400,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         while (el.firstChild) {
             el.removeChild(el.lastChild);
         }
-    },
+    }
 
     // #=== ADDRESS FLOW ===#
 
@@ -420,12 +414,12 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     async _selectMatchingBillingAddress(selectedPartnerId) {
         const previousAddress = this._getSelectedAddress('billing');
         this._tuneDownAddressCard(previousAddress);
-        await this.updateAddress('billing', selectedPartnerId);
+        await this.waitFor(this.updateAddress('billing', selectedPartnerId));
         const billingAddress = this.el.querySelector(
             `.card[data-partner-id="${selectedPartnerId}"][data-address-type="billing"]`
         );
         this._highlightAddressCard(billingAddress);
-    },
+    }
 
     /**
      * Set the billing or delivery address on the order.
@@ -435,8 +429,8 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async updateAddress(addressType, partnerId) {
-        await rpc('/shop/update_address', {address_type: addressType, partner_id: partnerId})
-    },
+        await rpc('/shop/update_address', {address_type: addressType, partner_id: partnerId});
+    }
 
     // #=== DELIVERY FLOW ===#
 
@@ -453,17 +447,17 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
             const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
             this._disableMainButton();
             if (checkedRadio) {
-                await this._updateDeliveryMethod(checkedRadio);
+                await this.waitFor(this._updateDeliveryMethod(checkedRadio));
                 this._enableMainButton();
             }
         }
         // Asynchronously fetch delivery rates to mitigate delays from third-party APIs
         await Promise.all(this.dmRadios.filter(radio => !radio.checked).map(async radio => {
             this._showLoadingBadge((radio));
-            const rateData = await this._getDeliveryRate(radio);
+            const rateData = await this.waitFor(this._getDeliveryRate(radio));
             this._updateAmountBadge(radio, rateData);
         }));
-    },
+    }
 
     /**
      * Check if the delivery method is selected and if the pickup point is selected if needed.
@@ -479,7 +473,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         return checkedRadio
             && !checkedRadio.disabled
             && !this._isPickupLocationMissing(checkedRadio);
-    },
+    }
 
     /**
      * Get the delivery rate of the delivery method linked to the provided radio.
@@ -490,7 +484,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     async _getDeliveryRate(radio) {
         return await rpc('/shop/get_delivery_rate', {'dm_id': radio.dataset.dmId});
-    },
+    }
 
     /**
      * Set the delivery method on the order and return the result values.
@@ -501,7 +495,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     async _setDeliveryMethod(dmId) {
         return await rpc('/shop/set_delivery_method', {'dm_id': dmId});
-    },
+    }
 
     /**
      * Show the pickup location information or the button to open the location selector.
@@ -521,11 +515,13 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
             'span[name="o_pickup_location_selector"]'
         );
         if (editPickupLocationButton.dataset.pickupLocationData) {
-            await this._setPickupLocation(editPickupLocationButton.dataset.pickupLocationData);
+            await this.waitFor(
+                this._setPickupLocation(editPickupLocationButton.dataset.pickupLocationData)
+            );
         }
 
         pickupLocation.classList.remove('d-none'); // Show the whole div.
-    },
+    }
 
     /**
      * Set the pickup location on the order.
@@ -536,7 +532,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     async _setPickupLocation(pickupLocationData) {
         await rpc('/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData});
-    },
+    }
 
     // #=== GETTERS & SETTERS ===#
 
@@ -548,7 +544,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     _getSelectedAddress(addressType) {
         return this.el.querySelector(`.card.bg-primary[data-address-type="${addressType}"]`);
-    },
+    }
 
     /**
      * Return whether the "use delivery as billing" toggle is checked or a billing address is
@@ -561,8 +557,8 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const billingAddressSelected = Boolean(
             this.el.querySelector('.card.bg-primary[data-address-type="billing"]')
         );
-        return billingAddressSelected || this.use_delivery_as_billing_toggle?.checked;
-    },
+        return billingAddressSelected || this.useDeliveryAsBillingToggle?.checked;
+    }
 
     /**
      * Create and return an element representing a loading spinner.
@@ -574,7 +570,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const loadingElement = document.createElement('i');
         loadingElement.classList.add('fa', 'fa-circle-o-notch', 'fa-spin', 'center');
         return loadingElement;
-    },
+    }
 
     /**
      * Return the delivery price badge element of the delivery method linked to the provided radio.
@@ -586,7 +582,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     _getDeliveryPriceBadge(radio) {
         const deliveryMethodContainer = this._getDeliveryMethodContainer(radio);
         return deliveryMethodContainer.querySelector('.o_wsale_delivery_price_badge');
-    },
+    }
 
     /**
      * Return the container element of the delivery method linked to the provided element.
@@ -597,7 +593,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     _getDeliveryMethodContainer(el) {
         return el.closest('[name="o_delivery_method"]');
-    },
+    }
 
     /**
      * Return whether a pickup location is required but not selected.
@@ -612,7 +608,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         return !deliveryMethodContainer.querySelector(
             'span[name="o_pickup_location_selector"]'
         ).dataset.locationId;
-    },
+    }
 
     /**
      * Return whether a pickup is required for the delivery method linked to the provided radio.
@@ -623,8 +619,9 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     _isPickupLocationRequired(radio) {
         return Boolean(radio.dataset.isPickupLocationRequired);
-    },
+    }
+}
 
-});
-
-export default publicWidget.registry.WebsiteSaleCheckout;
+registry
+    .category('public.interactions')
+    .add('website_sale.checkout', Checkout);
