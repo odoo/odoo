@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
 import re
 from collections import defaultdict
 
-from odoo import models, fields, api, _, osv, Command
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.fields import Command, Domain
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ('monetary', "Monetary"),
@@ -806,7 +806,7 @@ class AccountReportExpression(models.Model):
                         domains.append(dependency_domain)
 
             if domains:
-                sub_expressions |= self.env['account.report.expression'].search(osv.expression.OR(domains))
+                sub_expressions |= self.env['account.report.expression'].search(Domain.OR(domains))
 
             to_expand = sub_expressions.filtered(lambda x: x.engine == 'aggregation' and x not in result)
             result |= sub_expressions
@@ -850,7 +850,7 @@ class AccountReportExpression(models.Model):
             country = tag_expression.report_line_id.report_id.country_id
             or_domains.append(self.env['account.account.tag']._get_tax_tags_domain(tag_expression.formula, country.id, sign))
 
-        return self.env['account.account.tag'].with_context(active_test=False, lang='en_US').search(osv.expression.OR(or_domains))
+        return self.env['account.account.tag'].with_context(active_test=False, lang='en_US').search(Domain.OR(or_domains))
 
     @api.model
     def _get_tags_create_vals(self, tag_name, country_id, existing_tag=None):

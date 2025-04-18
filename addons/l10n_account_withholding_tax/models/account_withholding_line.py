@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
-from odoo import Command, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 from odoo.tools.misc import frozendict
 
 
@@ -424,7 +424,7 @@ class AccountWithholdingLine(models.AbstractModel):
         """ Construct and return a domain that will filter withholding taxes available for this company and payment type. """
         filter_domain = models.check_company_domain_parent_of(self, company)
         payment_type = 'purchase' if payment_type == 'outbound' else 'sale'
-        return expression.AND([filter_domain, [('type_tax_use', '=', payment_type), ('is_withholding_tax_on_payment', '=', True)]])
+        return Domain.AND([filter_domain, Domain('type_tax_use', '=', payment_type), Domain('is_withholding_tax_on_payment', '=', True)])
 
     def _need_update_withholding_lines_placeholder(self):
         """ Determines if the lines' placeholders needs update or not. """

@@ -1,6 +1,5 @@
 from bisect import bisect_left
 from collections import defaultdict
-from collections.abc import Iterable
 import contextlib
 import itertools
 import re
@@ -8,7 +7,6 @@ import json
 
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
-from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools import SQL, Query
 
@@ -687,10 +685,10 @@ class AccountAccount(models.Model):
     def _search_internal_group(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        return expression.OR([
-            [('account_type', '=like', self._get_internal_group(v) + '%')]
+        return Domain.OR(
+            Domain('account_type', '=like', self._get_internal_group(v) + '%')
             for v in value
-        ])
+        )
 
     @api.depends('account_type')
     def _compute_reconcile(self):
@@ -865,7 +863,7 @@ class AccountAccount(models.Model):
 
     @api.model
     def _search_display_name(self, operator, value):
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
+        if Domain.is_negative_operator(operator):
             return NotImplemented
         if operator == 'in':
             names = value
@@ -1547,7 +1545,7 @@ class AccountGroup(models.Model):
 
     @api.model
     def _search_display_name(self, operator, value):
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
+        if Domain.is_negative_operator(operator):
             return NotImplemented
         if operator == 'in':
             return [

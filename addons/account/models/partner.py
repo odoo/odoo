@@ -7,10 +7,9 @@ from collections import defaultdict
 from psycopg2 import errors as pgerrors
 
 from odoo import _, api, fields, models
-from odoo.exceptions import LockError, UserError, ValidationError
-from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, SQL, mute_logger, unique
-
+from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
+from odoo.tools import SQL, unique
 from odoo.addons.account.models.account_move import BYPASS_LOCK_CHECK
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
@@ -707,7 +706,7 @@ class ResPartner(models.Model):
     def _has_invoice(self, partner_domain):
         self.ensure_one()
         invoice = self.env['account.move'].sudo().search(
-            expression.AND([
+            Domain.AND([
                 partner_domain,
                 [
                     ('move_type', 'in', ['out_invoice', 'out_refund']),
@@ -929,9 +928,9 @@ class ResPartner(models.Model):
         if not domains:
             return None
 
-        domain = expression.OR(domains)
+        domain = Domain.OR(domains)
         if extra_domain:
-            domain = expression.AND([domain, extra_domain])
+            domain &= Domain(extra_domain)
         return self.env['res.partner'].search(domain, limit=2)
 
     @api.model

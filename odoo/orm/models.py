@@ -3656,17 +3656,17 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError("Expected singleton or no record: %s" % self)
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
-    def _check_company_domain(self, companies):
+    def _check_company_domain(self, companies) -> Domain:
         """Domain to be used for company consistency between records regarding this model.
 
         :param companies: the allowed companies for the related record
         :type companies: BaseModel or list or tuple or int or unquote
         """
         if not companies:
-            return [('company_id', '=', False)]
+            return Domain('company_id', '=', False)
         if isinstance(companies, unquote):
-            return [('company_id', 'in', unquote(f'{companies} + [False]'))]
-        return [('company_id', 'in', to_record_ids(companies) + [False])]
+            return Domain('company_id', 'in', unquote(f'{companies} + [False]'))
+        return Domain('company_id', 'in', to_record_ids(companies) + [False])
 
     def _check_company(self, fnames=None):
         """ Check the companies of the values of the given field names.

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
-from odoo.osv import expression
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
+from odoo.fields import Domain
 from odoo.tools.misc import formatLang
 from dateutil.relativedelta import relativedelta
 import logging
@@ -118,13 +118,11 @@ class AccountMove(models.Model):
         domain = super()._get_l10n_latam_documents_domain()
         if self.journal_id.company_id.account_fiscal_country_id.code == "AR":
             letters = self.journal_id._get_journal_letter(counterpart_partner=self.partner_id.commercial_partner_id)
-            domain += ['|', ('l10n_ar_letter', '=', False), ('l10n_ar_letter', 'in', letters)]
-            domain = expression.AND([
-                domain or [],
-                self.journal_id._get_journal_codes_domain(),
-            ])
+            domain = Domain(domain)
+            domain &= Domain('l10n_ar_letter', '=', False) | Domain('l10n_ar_letter', 'in', letters)
+            domain &= Domain(self.journal_id._get_journal_codes_domain())
             if self.move_type in ['out_refund', 'in_refund']:
-                domain = ['|', ('code', 'in', self._get_l10n_ar_codes_used_for_inv_and_ref())] + domain
+                domain = Domain('code', 'in', self._get_l10n_ar_codes_used_for_inv_and_ref()) | domain
         return domain
 
     def _check_argentinean_invoice_taxes(self):

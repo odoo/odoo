@@ -3,10 +3,10 @@
 from collections import defaultdict
 from random import randint
 
-from odoo import api, Command, fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, clean_context
+from odoo.fields import Command, Domain
+from odoo.tools import float_compare
 from odoo.tools.misc import format_date, unique
 
 MAP_REPAIR_TO_PICKING_LOCATIONS = {
@@ -236,9 +236,9 @@ class RepairOrder(models.Model):
     @api.depends('product_id', 'company_id', 'picking_id', 'picking_id.move_ids', 'picking_id.move_ids.lot_ids')
     def _compute_allowed_lot_ids(self):
         for repair in self:
-            domain = [('product_id', '=', repair.product_id.id)]
+            domain = Domain('product_id', '=', repair.product_id.id)
             if repair.picking_id:
-                domain = expression.AND([domain, [('id', 'in', repair.picking_id.move_ids.lot_ids.ids)]])
+                domain &= Domain('id', 'in', repair.picking_id.move_ids.lot_ids.ids)
             repair.allowed_lot_ids = self.env['stock.lot'].search(domain)
 
     @api.depends('product_id', 'product_id.uom_id')
@@ -724,7 +724,7 @@ class RepairOrder(models.Model):
         return {**default_data, **new_default_data}
 
     def _get_product_catalog_domain(self):
-        return expression.AND([super()._get_product_catalog_domain(), [('type', '=', 'consu')]])
+        return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')
 
     def _get_product_catalog_order_data(self, products, **kwargs):
         product_catalog = super()._get_product_catalog_order_data(products, **kwargs)

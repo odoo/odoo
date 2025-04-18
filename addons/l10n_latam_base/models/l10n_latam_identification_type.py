@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
-from odoo.osv import expression
 
 
 class L10n_LatamIdentificationType(models.Model):
