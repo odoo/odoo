@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.base.tests.common import BaseCommon
+from odoo.addons.base_report_engine_wkhtmltox.tests.common import BaseCommonWithPdf
 
 
-class UomCommon(BaseCommon):
+class UomCommon(BaseCommonWithPdf):
 
     @classmethod
     def setUpClass(cls):

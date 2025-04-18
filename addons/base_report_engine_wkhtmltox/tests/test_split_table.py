@@ -1,10 +1,14 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.tests.common import TransactionCase
 from odoo.tools import file_open
-from odoo.addons.base.models.ir_actions_report import _split_table
+from odoo.addons.base_report_engine_wkhtmltox.engine import _split_table
 from lxml import etree
+
 
 def cleanup_string(s):
     return ''.join(s.split())
+
 
 class TestSplitTable(TransactionCase):
     def test_split_table(self):

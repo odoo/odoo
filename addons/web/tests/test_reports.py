@@ -1,15 +1,14 @@
 import os
 from unittest.mock import Mock, patch
 
-import odoo.tests
-
 from odoo.addons.website.tools import MockRequest
+from odoo.addons.base_report_engine_wkhtmltox.tests.common import HttpCaseWithPdf
 from odoo.exceptions import UserError
 from odoo.http import root
 from odoo.tools import mute_logger
 
 
-class TestReports(odoo.tests.HttpCase):
+class TestReports(HttpCaseWithPdf):
     def test_report_session_cookie(self):
         """ Asserts wkhtmltopdf forwards the user session when requesting resources to Odoo, such as images,
         and that the resource is correctly returned as expected.
@@ -90,7 +89,7 @@ class TestReports(odoo.tests.HttpCase):
         self.assertEqual(result.get('record_id'), None, 'wkhtmltopdf must not have been allowed to fetch the image')
         self.assertEqual(result.get('data'), None, 'wkhtmltopdf must not have been allowed to fetch the image')
 
-    @mute_logger('odoo.addons.base.models.ir_actions_report')
+    @mute_logger('odoo.addons.base_report_engine_wkhtmltox.models.ir_actions_report')
     def test_report_error_cleanup(self):
         admin = self.env.ref('base.user_admin')
         self.env['ir.ui.view'].create({
