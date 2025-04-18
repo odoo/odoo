@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-    
+
         <record id="im_livechat_report_channel_view_pivot" model="ir.ui.view">
             <field name="name">im_livechat.report.channel.pivot</field>
             <field name="model">im_livechat.report.channel</field>
@@ -34,6 +34,7 @@
                 <search string="Search report">
                     <field name="channel_name"/>
                     <field name="partner_id"/>
+                    <field name="visitor_partner_id"/>
                     <filter name="last_24h" string="Last 24h" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d') )]"/>
                     <filter name="start_date_filter" string="This Week" domain="[
                         ('start_date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
@@ -49,6 +50,7 @@
                     <group expand="0" string="Group By...">
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
                         <filter name="group_by_operator" string="Operator" domain="[('partner_id','!=', False)]" context="{'group_by':'partner_id'}"/>
+                        <filter name="group_by_customer" domain="[]" context="{'group_by':'visitor_partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter name="group_by_hour" string="Creation date (hour)" domain="[]" context="{'group_by':'start_date_hour'}"/>
                         <filter name="group_by_month" string="Creation date" domain="[]" context="{'group_by':'start_date:month'}" />

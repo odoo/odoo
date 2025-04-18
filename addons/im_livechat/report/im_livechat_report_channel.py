@@ -40,6 +40,7 @@ class Im_LivechatReportChannel(models.Model):
     partner_id = fields.Many2one('res.partner', 'Operator', readonly=True)
     handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
     handled_by_agent = fields.Integer("Handled by Agent", readonly=True, aggregator="sum")
+    visitor_partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
 
     def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
@@ -82,7 +83,8 @@ class Im_LivechatReportChannel(models.Model):
             channel_member_history AS (
                 SELECT channel_id,
                        BOOL_OR(livechat_member_type = 'agent') as has_agent,
-                       BOOL_OR(livechat_member_type = 'bot') as has_bot
+                       BOOL_OR(livechat_member_type = 'bot') as has_bot,
+                       MIN(CASE WHEN livechat_member_type = 'visitor' THEN partner_id END) AS visitor_partner_id
                   FROM im_livechat_channel_member_history
               GROUP BY channel_id
             )
@@ -99,6 +101,7 @@ class Im_LivechatReportChannel(models.Model):
                 COUNT(DISTINCT C.id) AS nbr_channel,
                 C.livechat_channel_id as livechat_channel_id,
                 C.create_date as start_date,
+                channel_member_history.visitor_partner_id AS visitor_partner_id,
                 to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                 to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
                 EXTRACT(dow from  C.create_date) as day_number,
@@ -171,6 +174,7 @@ class Im_LivechatReportChannel(models.Model):
                 C.uuid,
                 Rate.rating,
                 channel_member_history.has_bot,
-                channel_member_history.has_agent
+                channel_member_history.has_agent,
+                channel_member_history.visitor_partner_id
             """,
         )
