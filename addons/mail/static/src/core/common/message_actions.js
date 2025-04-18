@@ -178,7 +178,7 @@ function transformAction(component, id, action) {
         mobileCloseAfterClick: action.mobileCloseAfterClick ?? true,
         /** Condition to display this action. */
         get condition() {
-            return action.condition(component);
+            return messageActionsInternal.condition(component, id, action);
         },
         /** Icon for the button this action. */
         get icon() {
@@ -204,6 +204,12 @@ function transformAction(component, id, action) {
         setup: action.setup,
     };
 }
+
+export const messageActionsInternal = {
+    condition(component, id, action) {
+        return action.condition(component);
+    },
+};
 
 export function useMessageActions() {
     const component = useComponent();
