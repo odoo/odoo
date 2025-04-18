@@ -12,7 +12,7 @@ from random import randint
 
 from odoo.http import request
 from odoo import models, fields, api, exceptions, _
-from odoo.osv.expression import AND, OR
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
 from odoo.tools import convert, format_duration, format_time, format_datetime
@@ -285,9 +285,6 @@ class HrAttendance(models.Model):
                 attendances_emp[attendance.employee_id].add(check_out_day_start)
         return attendances_emp
 
-    def _get_overtime_leave_domain(self):
-        return []
-
     def _update_overtime(self, employee_attendance_dates=None):
         if employee_attendance_dates is None:
             employee_attendance_dates = self._get_attendances_dates()
@@ -298,12 +295,10 @@ class HrAttendance(models.Model):
         for emp, attendance_dates in employee_attendance_dates.items():
             # get_attendances_dates returns the date translated from the local timezone without tzinfo,
             # and contains all the date which we need to check for overtime
-            attendance_domain = []
-            for attendance_date in attendance_dates:
-                attendance_domain = OR([attendance_domain, [
-                    ('check_in', '>=', attendance_date[0]), ('check_in', '<', attendance_date[0] + timedelta(hours=24)),
-                ]])
-            attendance_domain = AND([[('employee_id', '=', emp.id)], attendance_domain])
+            attendance_domain = Domain('employee_id', '=', emp.id) & (Domain.OR(
+                Domain('check_in', '>=', attendance_date[0]) & Domain('check_in', '<', attendance_date[0] + timedelta(hours=24))
+                for attendance_date in attendance_dates
+            ) if attendance_dates else Domain.TRUE)
 
             # Attendances per LOCAL day
             attendances_per_day = defaultdict(lambda: self.env['hr.attendance'])
@@ -320,7 +315,7 @@ class HrAttendance(models.Model):
             expected_attendances = emp._employee_attendance_intervals(start, stop)
 
             # working_times = {date: [(start, stop)]}
-            working_times = defaultdict(lambda: [])
+            working_times = defaultdict(list)
             for expected_attendance in expected_attendances:
                 # Exclude resource.calendar.attendance
                 working_times[expected_attendance[0].date()].append(expected_attendance[:2])
@@ -332,7 +327,6 @@ class HrAttendance(models.Model):
             ])
 
             company_threshold = emp.company_id.overtime_company_threshold / 60.0
-            employee_threshold = emp.company_id.overtime_employee_threshold / 60.0
 
             for day_data in attendance_dates:
                 attendance_date = day_data[1]
@@ -655,18 +649,19 @@ class HrAttendance(models.Model):
         }
 
     def _read_group_employee_id(self, resources, domain):
-        user_domain = self.env.context.get('user_domain')
-        employee_domain = [('company_id', 'in', self.env.context.get('allowed_company_ids', []))]
+        user_domain = Domain(self.env.context.get('user_domain') or Domain.TRUE)
+        employee_domain = Domain('company_id', 'in', self.env.context.get('allowed_company_ids', []))
         if not self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
-            employee_domain.append(('attendance_manager_id', '=', self.env.user.id))
-        if not user_domain:
+            employee_domain &= Domain('attendance_manager_id', '=', self.env.user.id)
+        if user_domain.is_true():
             return self.env['hr.employee'].search(employee_domain)
         else:
-            employee_name_domain = []
-            for leaf in user_domain:
-                if len(leaf) == 3 and leaf[0] == 'employee_id':
-                    employee_name_domain.append([('name', leaf[1], leaf[2])])
-            return resources | self.env['hr.employee'].search(AND([OR(employee_name_domain), employee_domain]))
+            employee_name_domain = Domain.OR(
+                Domain('name', condition.operator, condition.value)
+                for condition in user_domain.iter_conditions()
+                if condition.field_expr == 'employee_id'
+            )
+            return resources | self.env['hr.employee'].search(employee_name_domain & employee_domain)
 
     def action_approve_overtime(self):
         self.write({

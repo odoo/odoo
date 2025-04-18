@@ -395,13 +395,13 @@ class HrWorkEntry(models.Model):
             start = start or min(self.mapped('date_start'), default=False)
             stop = stop or max(self.mapped('date_stop'), default=False)
             if not skip and start and stop:
-                domain = [
-                    ('date_start', '<', stop),
-                    ('date_stop', '>', start),
-                    ('state', 'not in', ('validated', 'cancelled')),
-                ]
+                domain = (
+                    Domain('date_start', '<', stop)
+                    & Domain('date_stop', '>', start)
+                    & Domain('state', 'not in', ('validated', 'cancelled'))
+                )
                 if employee_ids:
-                    domain = expression.AND([domain, [('employee_id', 'in', list(employee_ids))]])
+                    domain &= Domain('employee_id', 'in', list(employee_ids))
                 work_entries = self.sudo().with_context(hr_work_entry_no_check=True).search(domain)
                 work_entries._reset_conflicting_state()
             yield

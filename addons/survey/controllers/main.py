@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -11,8 +10,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, SUPERUSER_ID, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.http import request, content_disposition
-from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, is_html_empty
 from odoo.addons.base.models.ir_qweb import keep_query
 
@@ -33,13 +32,11 @@ class Survey(http.Controller):
         if not survey_token:
             return SurveySudo, UserInputSudo
         if answer_token:
-            answer_sudo = UserInputSudo.search(expression.AND([
-                [('survey_id', 'any', expression.AND([
-                    [('access_token', '=', survey_token)],
-                    [('active', 'in', (True, False))],  # keeping active test for UserInput
-                ]))],
-                [('access_token', '=', answer_token)],
-            ]), limit=1)
+            answer_sudo = UserInputSudo.search(
+                Domain('survey_id', 'any',
+                    Domain('access_token', '=', survey_token)
+                    & Domain('active', 'in', (True, False))  # keeping active test for UserInput
+                ) & Domain('access_token', '=', answer_token), limit=1)
             if answer_sudo:
                 return answer_sudo.survey_id, answer_sudo
 
@@ -775,17 +772,18 @@ class Survey(http.Controller):
         ])
 
     def _get_results_page_user_input_domain(self, survey, **post):
-        user_input_domain = ['&', ('test_entry', '=', False), ('survey_id', '=', survey.id)]
+        user_input_domains = []
         if post.get('finished'):
-            user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
+            user_input_domains.append(Domain('state', '=', 'done'))
         else:
-            user_input_domain = expression.AND([[('state', '!=', 'new')], user_input_domain])
+            user_input_domains.append(Domain('state', '!=', 'new'))
         if post.get('failed'):
-            user_input_domain = expression.AND([[('scoring_success', '=', False)], user_input_domain])
+            user_input_domains.append(Domain('scoring_success', '=', False))
         elif post.get('passed'):
-            user_input_domain = expression.AND([[('scoring_success', '=', True)], user_input_domain])
+            user_input_domains.append(Domain('scoring_success', '=', True))
 
-        return user_input_domain
+        user_input_domains.extend((Domain('test_entry', '=', False), Domain('survey_id', '=', survey.id)))
+        return Domain.AND(user_input_domains)
 
     def _extract_filters_data(self, survey, post):
         """ Extracts the filters from the URL to returns the related user_input_lines and
@@ -843,7 +841,7 @@ class Survey(http.Controller):
                 [('user_input_line_ids', 'in', request.env['survey.user_input.line'].sudo()._search(subdomain))]
                 for subdomain in user_input_line_subdomains
             ]
-            user_input_domain = expression.AND([user_input_domain, *all_required_lines_domains])
+            user_input_domain = Domain.AND([user_input_domain, *all_required_lines_domains])
 
         # Get the matching user input lines
         user_inputs_query = request.env['survey.user_input'].sudo()._search(user_input_domain)

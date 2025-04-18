@@ -12,14 +12,14 @@ from markupsafe import Markup
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
-from odoo import api, Command, fields, models
+from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import float_to_time
+from odoo.fields import Command, Domain
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.misc import format_date
 from odoo.tools.translate import _
-from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -328,13 +328,12 @@ class HrLeave(models.Model):
 
     def _search_description(self, operator, value):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        domain = [('private_name', operator, value)]
+        domain = Domain('private_name', operator, value)
 
         if not is_officer:
-            domain = expression.AND([domain, [('user_id', '=', self.env.user.id)]])
+            domain &= Domain('user_id', '=', self.env.user.id)
         query = self.sudo()._search(domain)
-        return [('id', 'in', query)]
-
+        return Domain('id', 'in', query)
 
     @api.depends('employee_id')
     def _compute_resource_calendar_id(self):

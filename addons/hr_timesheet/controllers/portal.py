@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 from odoo import fields, http, _
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import date_utils, groupby as groupbyelem
-from odoo.osv.expression import AND, FALSE_DOMAIN
 
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
@@ -49,9 +48,9 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     def _get_search_domain(self, search_in, search):
         if search_in in self._get_searchbar_inputs():
-            return [(search_in, 'ilike', search)]
+            return Domain(search_in, 'ilike', search)
         else:
-            return FALSE_DOMAIN
+            return Domain.FALSE
 
     def _get_searchbar_sortings(self):
         return {
@@ -70,11 +69,11 @@ class TimesheetCustomerPortal(CustomerPortal):
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
         Timesheet = request.env['account.analytic.line']
-        domain = Timesheet._timesheet_get_portal_domain()
+        domain = Domain(Timesheet._timesheet_get_portal_domain())
         Timesheet_sudo = Timesheet.sudo()
 
         values = self._prepare_portal_layout_values()
-        _items_per_page = 100
+        items_per_page = 100
 
         searchbar_sortings = self._get_searchbar_sortings()
 
@@ -108,13 +107,13 @@ class TimesheetCustomerPortal(CustomerPortal):
         # default filter by value
         if not filterby:
             filterby = 'all'
-        domain = AND([domain, searchbar_filters[filterby]['domain']])
+        domain &= Domain(searchbar_filters[filterby]['domain'])
 
         if search and search_in:
-            domain = AND([domain, self._get_search_domain(search_in, search)])
+            domain &= self._get_search_domain(search_in, search)
 
         if parent_task_id := kw.get('parent_task_id'):
-            domain = AND([domain, [('parent_task_id', '=', int(parent_task_id))]])
+            domain &= Domain('parent_task_id', '=', int(parent_task_id))
 
         timesheet_count = Timesheet_sudo.search_count(domain)
         # pager
@@ -123,13 +122,13 @@ class TimesheetCustomerPortal(CustomerPortal):
             url_args={'sortby': sortby, 'search_in': search_in, 'search': search, 'filterby': filterby, 'groupby': groupby},
             total=timesheet_count,
             page=page,
-            step=_items_per_page
+            step=items_per_page,
         )
 
         def get_timesheets():
             field = None if groupby == 'none' else groupby
             orderby = '%s, %s' % (field, sortby) if field else sortby
-            timesheets = Timesheet_sudo.search(domain, order=orderby, limit=_items_per_page, offset=pager['offset'])
+            timesheets = Timesheet_sudo.search(domain, order=orderby, limit=items_per_page, offset=pager['offset'])
             if field:
                 if groupby == 'date':
                     raw_timesheets_group = Timesheet_sudo._read_group(
@@ -170,11 +169,12 @@ class TimesheetCustomerPortal(CustomerPortal):
         })
         return request.render("hr_timesheet.portal_my_timesheets", values)
 
+
 class TimesheetProjectCustomerPortal(ProjectCustomerPortal):
 
     def _show_task_report(self, task_sudo, report_type, download):
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
-        task_domain = AND([domain, [('task_id', '=', task_sudo.id)]])
+        task_domain = Domain(domain) & Domain('task_id', '=', task_sudo.id)
         timesheets = request.env['account.analytic.line'].sudo().search(task_domain)
         return self._show_report(model=timesheets,
             report_type=report_type, report_ref='hr_timesheet.timesheet_report_task_timesheets', download=download)
