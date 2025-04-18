@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import test_controller_attachment
 from . import test_controller_binary
 from . import test_controller_thread
 from . import test_invite
