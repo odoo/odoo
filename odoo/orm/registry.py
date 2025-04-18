@@ -38,7 +38,7 @@ from .utils import SUPERUSER_ID
 from . import model_classes
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
+    from collections.abc import Callable, Collection, Iterable, Iterator
     from odoo.fields import Field
     from odoo.models import BaseModel
     from odoo.sql_db import BaseCursor, Connection, Cursor
@@ -89,7 +89,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
     _saved_lock: threading.RLock | DummyRLock | None = None
 
     @lazy_classproperty
-    def registries(cls) -> MutableMapping[str, Registry]:
+    def registries(cls) -> LRU[str, Registry]:
         """ A mapping from database names to registries. """
         size = config.get('registry_lru_size', None)
         if not size:
