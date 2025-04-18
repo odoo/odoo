@@ -3,7 +3,7 @@ from freezegun import freeze_time
 from odoo.tests import tagged, HttpCase
 
 
-@tagged("-at_install", "post_install")
+@tagged("mail_activity", "-at_install", "post_install")
 class TestMailActivityChatter(HttpCase):
 
     def test_mail_activity_schedule_from_chatter(self):
