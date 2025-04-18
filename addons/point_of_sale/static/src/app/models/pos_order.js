@@ -8,6 +8,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboLines } from "./utils/compute_combo_lines";
 import { changesToOrder } from "./utils/order_change";
+import { toRaw } from "@odoo/owl";
 
 const { DateTime } = luxon;
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
@@ -1095,6 +1096,7 @@ export class PosOrder extends Base {
                 amount: formatCurrency(pl.get_amount()),
             })),
             change: this.get_change() && formatCurrency(this.get_change()),
+            qrPaymentData: toRaw(this.get_selected_paymentline()?.qrPaymentData),
         };
     }
     get hasItemsOrPayLater() {
