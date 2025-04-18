@@ -435,10 +435,13 @@ export class PosStore extends Reactive {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change.lines).length > 0
+                    Object.keys(order.last_order_preparation_change.lines).length > 0 &&
+                    !this.doNotSendOrderInPreparation
                 ) {
                     await this.sendOrderInPreparation(order, true);
                 }
+
+                this.doNotSendOrderInPreparation = false;
 
                 const cancelled = this.removeOrder(order, false);
                 this.removePendingOrder(order);
