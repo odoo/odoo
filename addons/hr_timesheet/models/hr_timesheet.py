@@ -9,7 +9,7 @@ import pytz
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.translate import _
 
 
@@ -48,17 +48,15 @@ class AccountAnalyticLine(models.Model):
         return result
 
     def _domain_project_id(self):
-        domain = [('allow_timesheets', '=', True), ('is_template', '=', False)]
+        domain = Domain([('allow_timesheets', '=', True), ('is_template', '=', False)])
         if not self.env.user.has_group('hr_timesheet.group_timesheet_manager'):
-            return expression.AND([domain,
-                ['|', ('privacy_visibility', '!=', 'followers'), ('message_partner_ids', 'in', [self.env.user.partner_id.id])]
-            ])
+            domain &= Domain('privacy_visibility', '!=', 'followers') | Domain('message_partner_ids', 'in', [self.env.user.partner_id.id])
         return domain
 
     def _domain_employee_id(self):
-        domain = [('company_id', 'in', self._context.get('allowed_company_ids'))]
+        domain = Domain('company_id', 'in', self._context.get('allowed_company_ids'))
         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver'):
-            domain = expression.AND([domain, [('user_id', '=', self.env.user.id)]])
+            domain &= Domain('user_id', '=', self.env.user.id)
         return domain
 
     task_id = fields.Many2one(
@@ -88,13 +86,12 @@ class AccountAnalyticLine(models.Model):
             ('res_model', 'in', ('project.project', 'project.task')),
         ], ['res_model'], ['res_id:array_agg']))
         if not followed_ids_by_model:
-            return expression.FALSE_DOMAIN
-        domains = []
+            return Domain.FALSE
+        domain = Domain.FALSE
         if project_ids := followed_ids_by_model.get('project.project'):
-            domains.append([('project_id', 'in', project_ids)])
+            domain |= Domain('project_id', 'in', project_ids)
         if task_ids := followed_ids_by_model.get('project.task'):
-            domains.append([('task_id', 'in', task_ids)])
-        domain = expression.OR(domains)
+            domain |= Domain('task_id', 'in', task_ids)
         return domain
 
     @api.depends('project_id.message_partner_ids', 'task_id.message_partner_ids')
@@ -378,12 +375,13 @@ class AccountAnalyticLine(models.Model):
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             # Then, he is internal user, and we take the domain for this current user
             return self.env['ir.rule']._compute_domain(self._name)
-        return [
-            '|',
-            ('message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-            ('partner_id', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-            ('project_id.privacy_visibility', '=', 'portal'),
-        ]
+        return (
+            (
+                Domain('message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])
+                | Domain('partner_id', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])
+            )
+            & Domain('project_id.privacy_visibility', '=', 'portal')
+        )
 
     def _timesheet_preprocess_get_accounts(self, vals):
         project = self.env['project.project'].sudo().browse(vals.get('project_id'))

@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import NotFound
 
 from odoo import http, _
 from odoo.exceptions import AccessError, MissingError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.osv import expression
 
@@ -73,10 +73,10 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     def _get_search_domain(self, search_in, search):
         if search_in == 'so':
-            return ['|', ('so_line', 'ilike', search), ('so_line.order_id.name', 'ilike', search)]
+            return Domain('so_line', 'ilike', search) | Domain('so_line.order_id.name', 'ilike', search)
         elif search_in == 'invoice':
             invoices = request.env['account.move'].sudo().search(['|', ('name', 'ilike', search), ('id', 'ilike', search)])
-            return request.env['account.analytic.line']._timesheet_get_sale_domain(invoices.mapped('invoice_line_ids.sale_line_ids'), invoices)
+            return Domain(request.env['account.analytic.line']._timesheet_get_sale_domain(invoices.mapped('invoice_line_ids.sale_line_ids'), invoices))
         else:
             return super()._get_search_domain(search_in, search)
 

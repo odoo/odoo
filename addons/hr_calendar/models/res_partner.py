@@ -6,8 +6,7 @@ from collections import defaultdict
 from functools import reduce
 
 from odoo import api, models
-
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.intervals import Intervals
 
 
@@ -15,15 +14,12 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     def _get_employees_from_attendees(self, everybody=False):
-        domain = [
-            ('company_id', 'in', self.env.companies.ids),
-            ('work_contact_id', '!=', False),
-        ]
+        domain = (
+            Domain('company_id', 'in', self.env.companies.ids)
+            & Domain('work_contact_id', '!=', False)
+        )
         if not everybody:
-            domain = expression.AND([
-                domain,
-                [('work_contact_id', 'in', self.ids)]
-            ])
+            domain &= Domain('work_contact_id', 'in', self.ids)
         return dict(self.env['hr.employee'].sudo()._read_group(domain, groupby=['work_contact_id'], aggregates=['id:recordset']))
 
     def _get_schedule(self, start_period, stop_period, everybody=False, merge=True):
