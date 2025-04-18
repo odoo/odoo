@@ -5,7 +5,7 @@
         <field name="name@fr">Rapport de TPS/TVH</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_gsthst_balance" model="account.report.column">
@@ -225,7 +225,7 @@
         <field name="name@fr">Rapport de TVP Colombie-Britannique</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_pst_bc_balance" model="account.report.column">
@@ -382,7 +382,7 @@
         <field name="name@fr">Rapport de TVP Manitoba</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_pst_mb_balance" model="account.report.column">
@@ -483,7 +483,7 @@
         <field name="name@fr">Rapport de Taxes Québec</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_pst_qst_gsthst" model="account.report.column">
@@ -729,7 +729,7 @@
         <field name="name@fr">Rapport de TVP Saskatchewan</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_pst_sk_balance" model="account.report.column">

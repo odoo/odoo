@@ -59,6 +59,10 @@ class AccountReport(models.Model):
     search_bar = fields.Boolean(string="Search Bar")
     prefix_groups_threshold = fields.Integer(string="Prefix Groups Threshold", default=4000)
     integer_rounding = fields.Selection(string="Integer Rounding", selection=[('HALF-UP', "Nearest"), ('UP', "Up"), ('DOWN', "Down")])
+    allow_foreign_vat = fields.Boolean(
+        string="Allow Foreign VAT",
+        compute=lambda x: x._compute_report_option_filter('allow_foreign_vat'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+    )
 
     default_opening_date_filter = fields.Selection(
         string="Default Opening",
@@ -70,8 +74,8 @@ class AccountReport(models.Model):
             ('previous_month', "Last Month"),
             ('previous_quarter', "Last Quarter"),
             ('previous_year', "Last Year"),
-            ('this_tax_period', "This Tax Period"),
-            ('previous_tax_period', "Last Tax Period"),
+            ('this_return_period', "This Return Period"),
+            ('previous_return_period', "Last Return Period"),
         ],
         compute=lambda x: x._compute_report_option_filter('default_opening_date_filter', 'previous_month'),
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
@@ -145,10 +149,6 @@ class AccountReport(models.Model):
     filter_partner = fields.Boolean(
         string="Partners",
         compute=lambda x: x._compute_report_option_filter('filter_partner'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
-    )
-    filter_fiscal_position = fields.Boolean(
-        string="Filter Multivat",
-        compute=lambda x: x._compute_report_option_filter('filter_fiscal_position'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_aml_ir_filters = fields.Boolean(
         string="Favorite Filters", help="If activated, user-defined filters on journal items can be selected on this report",
@@ -562,7 +562,7 @@ class AccountReportExpression(models.Model):
             ('to_beginning_of_fiscalyear', 'At the beginning of the fiscal year'),
             ('to_beginning_of_period', 'At the beginning of the period'),
             ('strict_range', 'Strictly on the given dates'),
-            ('previous_tax_period', "From previous tax period")
+            ('previous_return_period', "From previous return period")
         ],
         required=True,
         default='strict_range',
@@ -901,20 +901,6 @@ class AccountReportExternalValue(models.Model):
 
     company_id = fields.Many2one(string='Company', comodel_name='res.company', required=True, default=lambda self: self.env.company)
 
-    foreign_vat_fiscal_position_id = fields.Many2one(
-        string="Fiscal position",
-        comodel_name='account.fiscal.position',
-        domain="[('country_id', '=', report_country_id), ('foreign_vat', '!=', False)]",
-        check_company=True,
-        help="The foreign fiscal position for which this external value is made.",
-    )
-
     # Carryover fields
     carryover_origin_expression_label = fields.Char(string="Origin Expression Label")
     carryover_origin_report_line_id = fields.Many2one(string="Origin Line", comodel_name='account.report.line')
-
-    @api.constrains('foreign_vat_fiscal_position_id', 'target_report_expression_id')
-    def _check_fiscal_position(self):
-        for record in self:
-            if record.foreign_vat_fiscal_position_id and record.foreign_vat_fiscal_position_id.country_id != record.report_country_id:
-                raise ValidationError(_("The country set on the foreign VAT fiscal position must match the one set on the report."))

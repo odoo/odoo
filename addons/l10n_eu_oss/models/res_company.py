@@ -43,6 +43,12 @@ class ResCompany(models.Model):
                 ('foreign_vat', '!=', False),
             ])
             oss_countries = eu_countries - company.account_fiscal_country_id - multi_tax_reports_countries_fpos.country_id
+            tg = self.env['account.tax.group'].search([
+                *self.env['account.tax.group']._check_company_domain(company),
+                ('tax_payable_account_id', '!=', False)], limit=1)
+            self.env['account.account']._search_new_account_code(tg.tax_payable_account_id.code)
+            default_oss_payable_account = self.env['account.account']
+
             for destination_country in oss_countries:
                 mapping = []
                 fpos = self.env['account.fiscal.position'].search([
@@ -70,6 +76,20 @@ class ResCompany(models.Model):
                                 tg = self.env['account.tax.group'].search([
                                     *self.env['account.tax.group']._check_company_domain(company),
                                     ('tax_payable_account_id', '!=', False)], limit=1)
+                                if not default_oss_payable_account:
+                                    default_oss_payable_account = self.env['account.account'].create([{
+                                        'name': f'{tg.tax_payable_account_id.name} OSS',
+                                        'code': self.env['account.account']._search_new_account_code(tg.tax_payable_account_id.code),
+                                        'account_type': tg.tax_payable_account_id.account_type,
+                                        'company_ids': [Command.link(company.id)],
+                                    }])
+                                    default_oss_receivable_account = self.env['account.account'].create([{
+                                        'name': f'{tg.tax_receivable_account_id.name} OSS',
+                                        'code': self.env['account.account']._search_new_account_code(tg.tax_receivable_account_id.code),
+                                        'account_type': tg.tax_receivable_account_id.account_type,
+                                        'company_ids': [Command.link(company.id)],
+                                    }])
+
                                 self.env['ir.model.data'].create({
                                     'name': oss_tax_group_local_xml_id,
                                     'module': 'account',
@@ -78,8 +98,8 @@ class ResCompany(models.Model):
                                         'name': f'OSS {tax_amount}%',
                                         'country_id': company.account_fiscal_country_id.id,
                                         'company_id': company.id,
-                                        'tax_payable_account_id': tg.tax_payable_account_id.id,
-                                        'tax_receivable_account_id': tg.tax_receivable_account_id.id,
+                                        'tax_payable_account_id': default_oss_payable_account.id,
+                                        'tax_receivable_account_id': default_oss_receivable_account.id,
                                     }).id,
                                     'noupdate': True,
                                 })
