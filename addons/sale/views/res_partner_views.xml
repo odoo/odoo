@@ -17,26 +17,6 @@
         </field>
     </record>
 
-    <record id="crm_lead_partner_kanban_view" model="ir.ui.view">
-        <field name="name">res.partner.kanban.saleorder.inherit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
-        <field name="priority" eval="20"/>
-        <field name="arch" type="xml">
-            <xpath expr="//footer/div" position="inside">
-                <a t-if="record.sale_order_count?.value"
-                    class="btn btn-sm btn-link smaller"
-                    groups="sales_team.group_sale_salesman"
-                    name="sale.act_res_partner_2_sale_order"
-                    role="button"
-                    type="action">
-                    <i class="fa fa-usd me-1" role="img" aria-label="Sale orders" title="Sales orders"/>
-                    <field name="sale_order_count"/>
-                </a>
-            </xpath>
-        </field>
-    </record>
-
     <record id="res_partner_view_buttons" model="ir.ui.view">
         <field name="name">res.partner.view.buttons</field>
         <field name="model">res.partner</field>

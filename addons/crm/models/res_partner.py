@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.osv import expression
 
 
@@ -58,6 +58,16 @@ class ResPartner(models.Model):
                 if partner.id in current_pids:
                     partner.opportunity_count += count
                 partner = partner.parent_id
+
+    def _compute_application_statistics_hook(self):
+        data_list = super()._compute_application_statistics_hook()
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return data_list
+        for partner in self.filtered('opportunity_count'):
+            data_list[partner.id].append(
+                {'iconClass': 'fa-star', 'value': partner.opportunity_count, 'label': _('Opportunities')}
+            )
+        return data_list
 
     def action_view_opportunity(self):
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
