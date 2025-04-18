@@ -962,8 +962,7 @@ test("link preview in Link Popover", async () => {
     });
     // Click on Discard button to undo changes.
     await contains(".o-we-linkpopover .o_we_discard_link").click();
-    await waitForNone(".o-we-linkpopover", { root: document, timeout: 1500 });
-    expect(".o-we-linkpopover").toHaveCount(0);
+    await waitFor("a.o_we_edit_link");
     expect(".test_target a").toHaveText("This website");
 
     // Click on the edit link icon
