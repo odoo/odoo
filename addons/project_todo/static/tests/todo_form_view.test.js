@@ -140,7 +140,6 @@ test("Check if opening form view from activity view does open with chatter visbl
                     id: type.id,
                     name: type.display_name,
                     template_ids: templates,
-                    keep_done: type.keep_done,
                 };
             }),
         }

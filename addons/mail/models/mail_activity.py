@@ -339,7 +339,7 @@ class MailActivity(models.Model):
         todo_activities = self.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
             todo_activities.user_id._bus_send("mail.activity/updated", {"activity_deleted": True})
-        return super(MailActivity, self).unlink()
+        return super().unlink()
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):
@@ -488,7 +488,7 @@ class MailActivity(models.Model):
         }
 
     def _action_done(self, feedback=False, attachment_ids=None):
-        """ Private implementation of marking activity as done: posting a message, deleting activity
+        """ Private implementation of marking activity as done: posting a message, archiving activity
             (since done), and eventually create the automatical next activity (depending on config).
             :param feedback: optional feedback from user when marking activity as done
             :param attachment_ids: list of ir.attachment ids to attach to the posted mail.message
@@ -500,8 +500,8 @@ class MailActivity(models.Model):
         messages = self.env['mail.message']
         next_activities_values = []
 
-        # Search for all attachments linked to the activities we are about to unlink. This way, we
-        # can link them to the message posted and prevent their deletion.
+        # Search for all attachments linked to the activities we are about to archive. This way, we
+        # can link them to the message posted and prevent their disparition.
         attachments = self.env['ir.attachment'].search_read([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
@@ -514,7 +514,7 @@ class MailActivity(models.Model):
 
         for model, activity_data in self.filtered('res_model')._classify_by_model().items():
             # Allow user without access to the record to "mark as done" activities assigned to them. At the end of the
-            # method, the activity is unlinked or archived which ensure the user has enough right on the activities.
+            # method, the activity is archived which ensure the user has enough right on the activities.
             records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])
             for record_sudo, activity in zip(records_sudo, activity_data['activities']):
                 # extract value to generate next activities
@@ -535,10 +535,9 @@ class MailActivity(models.Model):
                     mail_activity_type_id=activity.activity_type_id.id,
                     subtype_xmlid='mail.mt_activities',
                 )
-                if activity.activity_type_id.keep_done:
-                    attachment_ids = (attachment_ids or []) + activity_attachments.get(activity.id, [])
-                    if attachment_ids:
-                        activity.attachment_ids = attachment_ids
+                attachment_ids = (attachment_ids or []) + activity_attachments.get(activity.id, [])
+                if attachment_ids:
+                    activity.attachment_ids = attachment_ids
 
                 # Moving the attachments in the message
                 # TODO: Fix void res_id on attachment when you create an activity with an image
@@ -557,10 +556,8 @@ class MailActivity(models.Model):
         if next_activities_values:
             next_activities = self.env['mail.activity'].create(next_activities_values)
 
-        activity_to_keep = self.filtered('activity_type_id.keep_done')
-        activity_to_keep.action_archive()
-        (self - activity_to_keep).unlink()  # will unlink activity, dont access `self` after that
-
+        # once done, archive to keep history without keeping them alive
+        self.action_archive()
         return messages, next_activities
 
     @api.readonly
@@ -639,8 +636,7 @@ class MailActivity(models.Model):
         :param bool fetch_done: determines if "done" activities are integrated in the
             aggregated data or not.
         :return dict: {'activity_types': dict of activity type info
-                            {id: int, name: str, mail_template: list of {id:int, name:str},
-                            keep_done: bool}
+                            {id: int, name: str, mail_template: list of {id:int, name:str}}
                        'activity_res_ids': list<int> of record id ordered by closest date
                             (deadline for ongoing activities, and done date for done activities)
                        'grouped_activities': dict<dict>
@@ -663,7 +659,6 @@ class MailActivity(models.Model):
 
         # 1. Retrieve all ongoing and completed activities according to the parameters
         activity_types = self.env['mail.activity.type'].search([('res_model', 'in', (res_model, False))])
-        fetch_done = fetch_done and activity_types.filtered('keep_done')
         activity_domain = [('res_model', '=', res_model)]
         is_filtered = domain or limit or offset
         if is_filtered:
@@ -746,7 +741,6 @@ class MailActivity(models.Model):
             'activity_types': [
                 {
                     'id': activity_type.id,
-                    'keep_done': activity_type.keep_done,
                     'name': activity_type.name,
                     'template_ids': [
                         {'id': mail_template_id.id, 'name': mail_template_id.name}

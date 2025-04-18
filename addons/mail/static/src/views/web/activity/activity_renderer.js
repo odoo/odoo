@@ -112,7 +112,7 @@ export class ActivityRenderer extends Component {
         const ongoingAndDoneCount = ongoingActivityCount + types.done.value;
         const labelAggregate = `${types.overdue.label} + ${types.today.label} + ${types.planned.label}`;
         const aggregateOn =
-            ongoingAndDoneCount && this.isTypeDisplayDone(typeId)
+            ongoingAndDoneCount
                 ? {
                       title: `${types.done.label} + ${labelAggregate}`,
                       value: ongoingAndDoneCount,
@@ -135,10 +135,6 @@ export class ActivityRenderer extends Component {
 
     getRecord(resId) {
         return this.props.records.find((r) => r.resId === resId);
-    }
-
-    isTypeDisplayDone(typeId) {
-        return this.props.activityTypes.find((a) => a.id === typeId).keep_done;
     }
 
     onSetProgressBarState(typeId, bar) {

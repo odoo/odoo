@@ -91,7 +91,7 @@ class TestActivityMixin(TestActivityCommon):
                 feedback='Test feedback',
             )
             self.assertEqual(self.test_record.activity_ids, act2 | act3)
-            self.assertFalse(act1.exists())
+            self.assertFalse(act1.active)
 
             # Reschedule all activities, should update the record state
             self.assertEqual(self.test_record.activity_state, 'overdue')
@@ -105,7 +105,7 @@ class TestActivityMixin(TestActivityCommon):
             self.test_record.activity_feedback(
                 ['test_mail.mail_act_test_todo'],
                 feedback='Test feedback')
-            self.assertFalse(act3.exists())
+            self.assertFalse(act3.active)
 
             # Setting activities as done should delete them and post messages
             self.assertEqual(self.test_record.activity_ids, act2)
@@ -113,7 +113,7 @@ class TestActivityMixin(TestActivityCommon):
             act_messages = self.test_record.message_ids[:2]
             self.assertEqual(act_messages.subtype_id, self.env.ref('mail.mt_activities'))
 
-            # Perform meeting activities
+            # Unlink meeting activities
             self.test_record.activity_unlink(['test_mail.mail_act_test_meeting'])
 
             # Canceling activities should simply remove them
@@ -156,8 +156,8 @@ class TestActivityMixin(TestActivityCommon):
             only_automated=False
         )
         self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
-        self.assertFalse(auto_act.exists())
-        self.assertFalse(man_act.exists())
+        self.assertFalse(auto_act.active)
+        self.assertFalse(man_act.active)
 
         # Test activity unlink on not only automated activities
         auto_act = self.test_record.activity_schedule(
@@ -280,7 +280,7 @@ class TestActivityMixin(TestActivityCommon):
 
         with freeze_time(frozen_now):
             first_activity.action_feedback(feedback='Done')
-        self.assertFalse(first_activity.exists())
+        self.assertFalse(first_activity.active)
 
         # check chained activity
         new_activity = test_record.activity_ids
@@ -305,7 +305,7 @@ class TestActivityMixin(TestActivityCommon):
 
         with freeze_time(frozen_now):
             first_activity.action_feedback(feedback='Done')
-        self.assertFalse(first_activity.exists())
+        self.assertFalse(first_activity.active)
 
         # check chained activity
         new_activity = test_record.activity_ids
@@ -398,7 +398,6 @@ class TestActivityMixin(TestActivityCommon):
 
         origin_1, origin_2 = self.env['mail.test.activity'].search([], limit=2)
         activity_type = self.env.ref('test_mail.mail_act_test_todo')
-        activity_type.sudo().keep_done = True
 
         with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime), \
             patch('odoo.addons.mail.models.mail_activity_mixin.datetime', MockedDatetime):
