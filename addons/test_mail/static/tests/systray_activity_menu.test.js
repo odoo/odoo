@@ -5,7 +5,6 @@ import { mockDate } from "@odoo/hoot-mock";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { asyncStep, mockService, waitForSteps } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
-import { user } from "@web/core/user";
 
 describe.current.tags("desktop");
 defineTestMailModels();
@@ -75,10 +74,11 @@ test("activity menu widget: activity menu with 2 models", async () => {
     const actionChecks = {
         context: {
             force_search_count: 1,
+            search_default_filter_activities_my: 1,
             search_default_activities_overdue: 1,
             search_default_activities_today: 1,
         },
-        domain: [["activity_user_id", "=", user.userId]],
+        domain: [],
     };
     mockService("action", {
         doAction(action) {

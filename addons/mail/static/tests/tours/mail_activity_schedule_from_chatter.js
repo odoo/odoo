@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
     steps: () => [
         {
-            trigger: "button:contains('Activities')",
+            trigger: "button:contains('Activity')",
             run: "click",
         },
         {
@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
             run: "click",
         },
         {
-            trigger: "button:contains('Activities')",
+            trigger: "button:contains('Activity')",
             run: "click",
         },
         {
