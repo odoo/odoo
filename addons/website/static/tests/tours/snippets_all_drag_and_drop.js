@@ -1,184 +1,176 @@
 import {
-    clickOnEditAndWaitEditMode,
     insertSnippet,
     goBackToBlocks,
+    registerWebsitePreviewTour,
     clickOnSnippet,
-    changeOption,
+    changeOptionInPopover,
 } from "@website/js/tours/tour_utils";
-import { patch } from "@web/core/utils/patch";
 
-const patchWysiwygAdapter = () => {
-    const { WysiwygAdapterComponent } = odoo.loader.modules.get("@website/components/wysiwyg_adapter/wysiwyg_adapter");
-    return patch(WysiwygAdapterComponent.prototype, {
-        _trigger_up(ev) {
-            super._trigger_up(...arguments);
-            if (ev.name === 'snippet_removed') {
-                document.body.setAttribute("test-dd-snippet-removed", true);
-            }
+const SUB_SNIPPET_TEMPLATES = {
+    s_masonry_block_default_template: "s_masonry_block",
+    s_masonry_block_reversed_template: "s_masonry_block",
+    s_masonry_block_images_template: "s_masonry_block",
+    s_masonry_block_mosaic_template: "s_masonry_block",
+    s_masonry_block_alternation_text_image_template: "s_masonry_block",
+    s_masonry_block_alternation_image_text_template: "s_masonry_block",
+};
+
+const SNIPPET_NAME_NORMALIZATIONS = {
+    "Hr": "Separator",
+    "Cta Badge": "CTA Badge",
+    "Website Form": "Form",
+    "Searchbar Input": "Search",
+};
+
+// Extract snippets names from URL parameters
+function getSnippetsNames() {
+    let snippetsNamesRaw = new URL(document.location.href).searchParams.get("snippets_names") || "";
+    const nestedPath = new URLSearchParams(window.location.search).get("path");
+    if (nestedPath) {
+        const splitPath = nestedPath.split("/");
+        if (splitPath.length > 1) {
+            const nestedSearch = new URLSearchParams(splitPath[1]);
+            snippetsNamesRaw = nestedSearch.get("snippets_names") || snippetsNamesRaw;
         }
-    });
-};
-
-let unpatchWysiwygAdapter = null;
-
-import { registry } from "@web/core/registry";
-
-let snippetsNames = (new URL(document.location.href)).searchParams.get('snippets_names') || '';
-// When this test is loaded in the backend, the search params aren't as easy to
-// read as before. Little trickery to make this test run.
-const searchParams = new URLSearchParams(window.location.search).get('path');
-if (searchParams) {
-    snippetsNames = new URLSearchParams(searchParams.split('/')[1]).get('snippets_names') || '';
-    snippetsNames = snippetsNames.split(',');
+    }
+    return snippetsNamesRaw
+        .split(",")
+        .map((snippet) => snippet.trim())
+        .filter((snippet) => snippet); // Remove empty strings
 }
-const dropInOnlySnippets = {
-    's_button': '.btn',
-    's_video': '.media_iframe_video',
-};
-let steps = [];
-let n = 0;
-const subSnippetTemplates = {
-    "s_masonry_block_default_template": "s_masonry_block",
-    "s_masonry_block_reversed_template": "s_masonry_block",
-    "s_masonry_block_images_template": "s_masonry_block",
-    "s_masonry_block_mosaic_template": "s_masonry_block",
-    "s_masonry_block_alternation_text_image_template": "s_masonry_block",
-    "s_masonry_block_alternation_image_text_template": "s_masonry_block",
-};
-for (let snippet of snippetsNames) {
-    n++;
-    snippet = {
-        name: snippet.split(':')[0],
-        group: snippet.split(':')[1],
-    };
-    const isModal = ['s_popup', 's_newsletter_subscribe_popup'].includes(snippet.name);
-    const isDropInOnlySnippet = Object.keys(dropInOnlySnippets).includes(snippet.name);
 
-    let draggableElSelector = "";
-    if (snippet.group) {
-        draggableElSelector = `#oe_snippets .oe_snippet[data-snippet-group="${snippet.group}"] .oe_snippet_thumbnail`;
-    } else {
-        draggableElSelector = `#oe_snippets .oe_snippet:has( > [data-snippet="${snippet.name}"]) .oe_snippet_thumbnail`;
-    }
+// Generate steps for each snippet
+function generateSnippetSteps(snippetsNames) {
+    let steps = [];
+    let n = 0;
+    for (const snippet of snippetsNames) {
+        n++;
+        const snippetData = {
+            name: snippet.split(":")[0],
+            group: snippet.split(":")[1],
+        };
+        const isModal = ["s_popup", "s_newsletter_subscribe_popup"].includes(snippetData.name);
 
-    const snippetSteps = [{
-        content: `Drop ${snippet.group || snippet.name} ${snippet.group ? "group" : "snippet"} [${n}/${snippetsNames.length}]`,
-        trigger: draggableElSelector,
-        run: "drag_and_drop :iframe #wrap .oe_drop_zone",
-    }, {
-        content: `Edit ${snippet.name} snippet`,
-        trigger: `:iframe #wrap.o_editable [data-snippet='${subSnippetTemplates[snippet.name] || snippet.name}']${isModal ? ' .modal.show' : ''}`,
-        run: "click",
-    }, {
-        content: `check ${snippet.name} setting are loaded, wait panel is visible`,
-        trigger: ".o_we_customize_panel",
-    }, {
-        content: `Remove the ${snippet.name} snippet`, // Avoid bad perf if many snippets
-        trigger: "we-button.oe_snippet_remove:last",
-        run: "click",
-    },
-    {
-        trigger: "body[test-dd-snippet-removed]",
-    },
-    {
-        content: `click on 'BLOCKS' tab (${snippet.name})`,
-        trigger: ".o_we_add_snippet_btn",
-        async run (actions) {
-            document.body.removeAttribute("test-dd-snippet-removed");
-            await actions.click();
-        },
-    }];
+        const searchSnippetName = snippetData.name
+            .split("_")
+            .slice(1)
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+        const snippetKey = SUB_SNIPPET_TEMPLATES[snippetData.name] || snippetData.name;
 
-    if (snippet.group) {
-        snippetSteps.splice(1, 0, {
-            content: "Click on the snippet preview in the dialog",
-            trigger: `:iframe .o_snippet_preview_wrap[data-snippet-id="${snippet.name}"]`,
-            run: "click",
-        });
-    }
+        let draggableElSelector = "";
+        if (snippetData.group) {
+            draggableElSelector = `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[data-snippet-group="${snippetData.group}"] .o_snippet_thumbnail`;
+        } else {
+            const normalizedSnippetName =
+                SNIPPET_NAME_NORMALIZATIONS[searchSnippetName] || searchSnippetName;
+            draggableElSelector = `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) #snippet_content .o_snippet[name="${normalizedSnippetName}"] .o_snippet_thumbnail`;
+        }
 
-    if (snippet === 's_google_map') {
-        snippetSteps.splice(2, 4, {
-            content: 'Close API Key popup',
-            trigger: ":iframe .modal-footer .btn-secondary",
-            run: "click",
-        });
-    } else if (isModal) {
-        snippetSteps.splice(
-            4,
-            3,
+        const snippetSteps = [
             {
-                content: `Make sure ${snippet.name} is shown`,
-                trigger: ":iframe body.modal-open",
+                content: `Drop ${snippetData.group || snippetData.name} ${
+                    snippetData.group ? "group" : "snippet"
+                } [${n}/${snippetsNames.length}]`,
+                trigger: draggableElSelector,
+                run: "drag_and_drop :iframe #wrap .oe_drop_zone",
             },
             {
-                content: `Hide the ${snippet.name} popup`,
-                trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
+                content: `Click on ${snippetData.name} snippet`,
+                trigger: `:iframe #wrapwrap [data-snippet="${snippetKey}"]`,
                 run: "click",
-            }
-        );
-    } else if (isDropInOnlySnippet) {
-        // The 'drop in only' snippets have their 'data-snippet' attribute
-        // removed once they are dropped, so we need to use a different selector.
-        snippetSteps[1].trigger = `:iframe #wrap.o_editable ${dropInOnlySnippets[snippet.name]}`;
+            },
+            {
+                content: `Check ${snippetData.name} settings are loaded, wait panel is visible`,
+                trigger: ".o_customize_tab",
+            },
+            {
+                content: `Remove the ${snippetData.name} snippet`,
+                trigger: ".options-container .oe_snippet_remove:last",
+                run: "click",
+            },
+            goBackToBlocks(),
+        ];
+
+        if (snippetData.group) {
+            snippetSteps.splice(1, 0, {
+                content: "Click on the snippet preview in the dialog",
+                trigger: `:iframe .o_snippet_preview_wrap[data-snippet-id="${snippetData.name}"]`,
+                run: "click",
+            });
+        }
+
+        if (snippetData.name === "s_popup") {
+            snippetSteps.splice(2, 1, {
+                content: "Click on the s_popup snippet",
+                trigger: ":iframe .s_popup .modal",
+                run: "click",
+            });
+        }
+
+        if (snippetData.name === "s_google_map") {
+            snippetSteps.splice(2, 4, {
+                content: "Close API Key popup",
+                trigger: ":iframe .modal-footer .btn-secondary",
+                run: "click",
+            });
+        } else if (isModal) {
+            snippetSteps.splice(
+                4,
+                3,
+                {
+                    content: `Hide the ${snippetData.name} popup`,
+                    trigger: `:iframe [data-snippet="${snippetData.name}"] .s_popup_close`,
+                    run: "click",
+                },
+                {
+                    content: `Make sure ${snippetData.name} is hidden`,
+                    trigger: ":iframe body:not(.modal-open)",
+                }
+            );
+        } else if (["s_button", "s_video"].includes(snippetData.name)) {
+            snippetSteps[1].trigger =
+                snippetData.name === "s_button"
+                    ? `:iframe #wrapwrap .s_text_image .btn`
+                    : `:iframe #wrapwrap .s_text_image .media_iframe_video`;
+        }
+
+        steps = steps.concat(snippetSteps);
     }
-    steps = steps.concat(snippetSteps);
+    return steps;
 }
 
-registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
-    // To run the tour locally, you need to insert the URL sent by the python
-    // tour here. There is currently an issue with tours which don't have an URL
-    // url: '/?enable_editor=1&snippets_names=s_process_steps:columns,s_website_form:,s_...',
-    steps: () => [
-    ...clickOnEditAndWaitEditMode(),
+// Main execution
+const snippetsNames = getSnippetsNames();
+const steps = generateSnippetSteps(snippetsNames);
+
+registerWebsitePreviewTour(
+    "snippets_all_drag_and_drop",
     {
-        content: "Ensure snippets are actually passed at the test.",
-        trigger: "body",
-        run: function () {
-            // safety check, otherwise the test might "break" one day and
-            // receive no steps. The test would then not test anything anymore
-            // without us noticing it.
-            if (steps.length < 500) {
-                console.error(`This test is not behaving as it should, got only ${steps.length} steps.`);
-            }
-            unpatchWysiwygAdapter = patchWysiwygAdapter();
-        },
+        url: `/?enable_editor=1&snippets_names=${snippetsNames.join(",")}`,
+        edition: true,
     },
-    // This first step is needed as it will be used later for inner snippets
-    // Without this, it will dropped inside the footer and will need an extra
-    // selector.
-    ...insertSnippet({
-        id: "s_text_image",
-        name: "Text - Image",
-        groupName: "Content"
-    }),
-    {
-        content: "Edit s_text_image snippet",
-        trigger: ":iframe #wrap.o_editable [data-snippet='s_text_image']",
-        run: "click",
-    },
-    {
-        content: "check setting are loaded, wait panel is visible",
-        trigger: ".o_we_customize_panel",
-        run: "click",
-    },
-    // We hide the header before starting to drop snippets. This prevents
-    // situations where the header's drop zones overlap with those of the #wrap,
-    // ensuring that a snippet is dropped in the #wrap as expected instead of
-    // the header.
-    ...clickOnSnippet({id: "o_header_standard", name: "Header"}),
-    changeOption("TopMenuVisibility", "we-select:has([data-visibility]) we-toggler"),
-    changeOption("TopMenuVisibility", 'we-button[data-visibility="hidden"]'),
-    goBackToBlocks(),
-].concat(steps).concat([
-    {
-        content: "Remove wysiwyg patch",
-        trigger: "body",
-        run: () => unpatchWysiwygAdapter(),
-    }
-            ])
-            .map((step) => {
-                delete step.noPrepend;
-                return step;
-            }),
-});
+    () =>
+        [
+            {
+                content: "Ensure snippets are actually passed at the test.",
+                trigger: "body",
+                run: function () {
+                    if (steps.length < 500) {
+                        console.error(
+                            `This test is not behaving as it should, got only ${steps.length} steps.`
+                        );
+                    }
+                },
+            },
+            ...insertSnippet({ id: "s_text_image", name: "Text - Image", groupName: "Content" }),
+            ...clickOnSnippet({ id: "s_text_image", name: "Text - Image" }),
+            {
+                content: "Check settings are loaded, wait panel is visible",
+                trigger: ".o_customize_tab [data-container-title='Text - Image']",
+            },
+            ...clickOnSnippet({ id: "o_header_standard", name: "Header" }),
+            ...changeOptionInPopover("Header", "Header Position", "Hidden"),
+            goBackToBlocks(),
+        ].concat(steps)
+);
