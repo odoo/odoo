@@ -1,4 +1,5 @@
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
+import { toRaw } from "@odoo/owl";
 
 /**
  * This module provides functions to format order and order line data for customer display.
@@ -44,6 +45,7 @@ export class CustomerDisplayPosAdapter {
             change: order.getChange() && formatCurrency(order.getChange(), order.currency),
             paymentLines: order.payment_ids.map((pl) => this.getPaymentData(pl)),
             lines: order.lines.map((l) => this.getOrderlineData(l)),
+            qrPaymentData: toRaw(order.getSelectedPaymentline()?.qrPaymentData),
         };
     }
 
