@@ -881,3 +881,32 @@ class TestRepair(common.TransactionCase):
         self.assertFalse(move.repair_id)
         self.assertEqual(move.location_id, self.stock_warehouse.lot_stock_id)
         self.assertEqual(move.location_dest_id, self.stock_location_14)
+
+    def test_open_and_create_repair_from_lot(self):
+        """
+        Test that the repair order can be opened from the lot and that it is created correctly.
+        """
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_storable_serial.id})
+        action = sn_1.action_lot_open_repairs()
+        context = action.get('context')
+        tracked_product_repair_line = self.env['product.product'].create({
+            'name': 'Test Product',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        tracked_product_sn = self.env['stock.lot'].create({'name': 'tracked_product_sn1', 'product_id': tracked_product_repair_line.id})
+        repair_order = self.env['repair.order'].with_context(context).create({
+            'product_id': self.product_storable_serial.id,
+            'product_uom': self.product_storable_serial.uom_id.id,
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+            'lot_id': sn_1.id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+        })
+        repair_order.with_context(context).move_ids = [Command.create({
+            'product_id': tracked_product_repair_line.id,
+            'product_uom_qty': 1.0,
+            'repair_line_type': 'add',
+            'lot_ids': [(4, tracked_product_sn.id)],
+            'quantity': 1.0,
+        })]
+        self.assertEqual(repair_order.lot_id, sn_1)

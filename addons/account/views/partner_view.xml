@@ -254,7 +254,9 @@
                                    string="Customer Invoices"
                                    groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="invoice_sending_method"/>
-                                <field name="invoice_edi_format" invisible="not display_invoice_edi_format"/>
+                                <field name="invoice_edi_format"
+                                       placeholder="XML format"
+                                       invisible="not display_invoice_edi_format"/>
                                 <field name="invoice_template_pdf_report_id"
                                        invisible="not display_invoice_template_pdf_report_id"
                                        options="{'no_create': True, 'no_edit': True}"/>
