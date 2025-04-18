@@ -34,6 +34,7 @@ export const deepEqual = (obj1, obj2) => shallowEqual(obj1, obj2, deepEqual);
  * @param {T} object An object that is fully JSON stringifiable
  * @return {T}
  */
+<<<<<<< 3162131b285e6b1693058bbc644b0e103b56b81a
 export function deepCopy(object) {
     return object && JSON.parse(JSON.stringify(object));
 }
@@ -43,6 +44,13 @@ export function deepCopy(object) {
  */
 export function isObject(object) {
     return !!object && (typeof object === "object" || typeof object === "function");
+||||||| b2c83492c0d73244b22dc0fe7a971c9ac8c8915d
+export function deepCopy(obj) {
+    return JSON.parse(JSON.stringify(obj));
+=======
+export function deepCopy(obj) {
+    return obj && JSON.parse(JSON.stringify(obj));
+>>>>>>> 96d81cc2f67f510bbad7079bb82112c4c1869198
 }
 
 /**
