@@ -7,25 +7,14 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
             run: "click",
         },
         {
-            trigger: "input[id*='activity_type_id']",
+            trigger: ".o_selection_badge span:contains('Call')",
             run: "click",
         },
         {
-            trigger: ".dropdown-item:contains('Call')",
-            run: "click",
+            trigger: ".o_selection_badge.active span:contains('Call')",
         },
         {
-            trigger: "input[id*='activity_type_id']:value('Call')",
-        },
-        {
-            trigger: "button:contains('Schedule')",
-        },
-        {
-            trigger: "input[id*='activity_type_id']",
-            run: "click",
-        },
-        {
-            trigger: ".dropdown-item:contains('To-Do')",
+            trigger: ".o_selection_badge span:contains('To-Do')",
             run: "click",
         },
         {
@@ -49,7 +38,7 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
             run: "edit Play Mario Kart",
         },
         {
-            trigger: "button:contains('Mark as Done')",
+            trigger: "button.btn.btn-secondary:contains('Mark Done')",
             run: "click",
         },
         {

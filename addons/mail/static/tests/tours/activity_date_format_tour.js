@@ -7,11 +7,7 @@ registry.category("web_tour.tours").add("mail_activity_date_format", {
             run: "click",
         },
         {
-            trigger: "input[id*='activity_type_id']",
-            run: "click",
-        },
-        {
-            trigger: ".dropdown-item:contains('To-Do')",
+            trigger: ".o_selection_badge span:contains('To-Do')",
             run: "click",
         },
         {

@@ -2,6 +2,7 @@ import { fields } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -93,7 +94,13 @@ const StorePatch = {
                     target: "new",
                     context,
                 },
-                { onClose: resolve }
+                { 
+                    onClose: resolve,
+                    additionalContext: { 
+                        dialog_size: "medium",
+                        default_activity_user_id: user.userId,
+                    },
+                }
             )
         );
     },

@@ -379,7 +379,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                         }
                     )
                 else:
-                    self.assertNotIn(other_activities_model_name, activity_groups_by_model)
+                    self.assertEqual(activity_groups_by_model[other_activities_model_name]['total_count'], 0)
+                    self.assertEqual(activity_groups_by_model[other_activities_model_name]['planned_count'], 0)
                 self.assertIn(test_model_name, activity_groups_by_model)
                 self.assertDictEqual(
                     {

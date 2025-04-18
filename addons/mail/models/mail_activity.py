@@ -45,17 +45,10 @@ class MailActivity(models.Model):
 
     @api.model
     def _default_activity_type_for_model(self, model):
-        todo_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mail_activity_data_todo', raise_if_not_found=False)
-        activity_type_todo = self.env['mail.activity.type'].browse(todo_id) if todo_id else self.env['mail.activity.type']
-        if activity_type_todo and activity_type_todo.active and \
-                (activity_type_todo.res_model == model or not activity_type_todo.res_model):
-            return activity_type_todo
-        default_type = self.env['mail.activity_type']
         if model:
-            default_type = self.env['mail.activity.type'].search([('res_model', '=', model)], limit=1)
-        if not default_type:
-            default_type = self.env['mail.activity.type'].search([('res_model', '=', False)], limit=1)
-        return default_type
+            return self.env['mail.activity.type'].search(['|', ('res_model', '=', model), ('res_model', '=', False)], limit=1)
+        else:
+            return self.env['mail.activity.type'].search([('res_model', '=', False)], limit=1)
 
     # owner
     res_model_id = fields.Many2one(
@@ -91,8 +84,7 @@ class MailActivity(models.Model):
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
-        default=lambda self: self.env.user,
-        index=True, required=True, ondelete='cascade')
+        index=True, required=False, ondelete='cascade')
     user_tz = fields.Selection(string='Timezone', related="user_id.tz", store=True)
     state = fields.Selection([
         ('overdue', 'Overdue'),
@@ -488,7 +480,7 @@ class MailActivity(models.Model):
         }
 
     def _action_done(self, feedback=False, attachment_ids=None):
-        """ Private implementation of marking activity as done: posting a message, deleting activity
+        """ Private implementation of marking activity as done: posting a message, archiving activity
             (since done), and eventually create the automatical next activity (depending on config).
             :param feedback: optional feedback from user when marking activity as done
             :param attachment_ids: list of ir.attachment ids to attach to the posted mail.message
@@ -535,10 +527,9 @@ class MailActivity(models.Model):
                     mail_activity_type_id=activity.activity_type_id.id,
                     subtype_xmlid='mail.mt_activities',
                 )
-                if activity.activity_type_id.keep_done:
-                    attachment_ids = (attachment_ids or []) + activity_attachments.get(activity.id, [])
-                    if attachment_ids:
-                        activity.attachment_ids = attachment_ids
+                attachment_ids = (attachment_ids or []) + activity_attachments.get(activity.id, [])
+                if attachment_ids:
+                    activity.attachment_ids = attachment_ids
 
                 # Moving the attachments in the message
                 # TODO: Fix void res_id on attachment when you create an activity with an image
@@ -557,9 +548,7 @@ class MailActivity(models.Model):
         if next_activities_values:
             next_activities = self.env['mail.activity'].create(next_activities_values)
 
-        activity_to_keep = self.filtered('activity_type_id.keep_done')
-        activity_to_keep.action_archive()
-        (self - activity_to_keep).unlink()  # will unlink activity, dont access `self` after that
+        self.action_archive()
 
         return messages, next_activities
 
@@ -587,6 +576,27 @@ class MailActivity(models.Model):
         for activity in self:
             if activity.active:
                 activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
+
+    def action_reschedule(self, new_date_arg):
+        today = date.today()
+        if new_date_arg == 'today':
+            new_date = today
+        elif new_date_arg == 'tomorrow':
+            new_date = today + timedelta(days=1)
+        else:
+            new_date = today + relativedelta(weeks=1, day=1)
+        for activity in self:
+            if activity.active:
+                activity.date_deadline = new_date
+
+    def action_reschedule_today(self):
+        self.action_reschedule('today')
+
+    def action_reschedule_tomorrow(self):
+        self.action_reschedule('tomorrow')
+
+    def action_reschedule_nextweek(self):
+        self.action_reschedule('nextweek')
 
     def action_cancel(self):
         for activity in self:
@@ -639,8 +649,7 @@ class MailActivity(models.Model):
         :param bool fetch_done: determines if "done" activities are integrated in the
             aggregated data or not.
         :return dict: {'activity_types': dict of activity type info
-                            {id: int, name: str, mail_template: list of {id:int, name:str},
-                            keep_done: bool}
+                            {id: int, name: str, mail_template: list of {id:int, name:str} }
                        'activity_res_ids': list<int> of record id ordered by closest date
                             (deadline for ongoing activities, and done date for done activities)
                        'grouped_activities': dict<dict>
@@ -663,7 +672,6 @@ class MailActivity(models.Model):
 
         # 1. Retrieve all ongoing and completed activities according to the parameters
         activity_types = self.env['mail.activity.type'].search([('res_model', 'in', (res_model, False))])
-        fetch_done = fetch_done and activity_types.filtered('keep_done')
         activity_domain = [('res_model', '=', res_model)]
         is_filtered = domain or limit or offset
         if is_filtered:
@@ -716,6 +724,7 @@ class MailActivity(models.Model):
             # As ongoing is sorted on date_deadline, we get assignees on activity with oldest deadline first
             user_assigned_ids = ongoing.user_id.ids
             attachments = [attachments_by_id[attach.id] for attach in completed.attachment_ids]
+
             grouped_activities[res_id][activity_type_id.id] = {
                 'count_by_state': dict(Counter(
                     self._compute_state_from_date(act.date_deadline, user_tz) if act.active else 'done'
@@ -724,6 +733,7 @@ class MailActivity(models.Model):
                 'reporting_date': ongoing and date_deadline or date_done or None,
                 'state': self._compute_state_from_date(date_deadline, user_tz) if ongoing else 'done',
                 'user_assigned_ids': user_assigned_ids,
+                'summaries': [act.summary if act.summary else '' for act in activities],
             }
             if attachments:
                 most_recent_attachment = max(attachments, key=lambda a: (a['create_date'], a['id']))
@@ -746,7 +756,6 @@ class MailActivity(models.Model):
             'activity_types': [
                 {
                     'id': activity_type.id,
-                    'keep_done': activity_type.keep_done,
                     'name': activity_type.name,
                     'template_ids': [
                         {'id': mail_template_id.id, 'name': mail_template_id.name}

@@ -244,11 +244,12 @@ class TestActivityFlow(TestActivityCommon):
     def test_activity_summary_sync(self):
         """ Test summary from type is copied on activities if set (currently only in form-based onchange) """
         ActivityType = self.env['mail.activity.type']
+        call_activity_type = ActivityType.create({'name': 'call', 'sequence': 1})
         email_activity_type = ActivityType.create({
             'name': 'email',
             'summary': 'Email Summary',
+            'sequence': '30'
         })
-        call_activity_type = ActivityType.create({'name': 'call'})
         with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'), default_res_id=self.test_record.id)) as ActivityForm:
             # `res_model_id` and `res_id` are invisible, see view `mail.mail_activity_view_form_popup`
             # they must be set using defaults, see `action_feedback_schedule_next`
@@ -351,14 +352,14 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             for record in data["Store"]["activityGroups"]
             if record.get("model") == self.test_record._name
         )
-        self.assertEqual(total_activity_count, 3)
+        self.assertEqual(total_activity_count, 2)
         total_lead_count = sum(
             record["total_count"]
             for record in data["Store"]["activityGroups"]
             if record.get("model") == self.test_lead_records._name
         )
-        self.assertEqual(total_lead_count, 4)
-        self.assertEqual(data["Store"]["activityCounter"], 9)
+        self.assertEqual(total_lead_count, 2)
+        self.assertEqual(data["Store"]["activityCounter"], 4)
 
 
 @tests.tagged('mail_activity')
@@ -381,7 +382,6 @@ class TestActivityViewHelpers(TestActivityCommon):
             'res_id': cls.test_record_2.id,
         } for idx in range(2)])
         cls.upload_type = cls.env.ref('test_mail.mail_act_test_upload_document')
-        cls.upload_type.sudo().keep_done = True
         cls.user_employee.tz = cls.user_admin.tz
 
     @freeze_time("2023-10-18 06:00:00")
@@ -421,7 +421,6 @@ class TestActivityViewHelpers(TestActivityCommon):
                     'id': self.upload_type.id,
                     'name': 'Upload Document',
                     'template_ids': [],
-                    'keep_done': True,
                 })
 
             grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
@@ -432,6 +431,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
+                'summaries': [act.summary for act in record_activities],
             })
 
             grouped = activity_data['grouped_activities'][test_record_2.id][self.upload_type.id]
@@ -443,7 +443,8 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'reporting_date': record_2_activities[2].date_deadline,
                 'user_assigned_ids': record_2_activities[2:].user_id.ids,
                 'attachments_info': {
-                    'count': 2, 'most_recent_id': self.attachment_2.id, 'most_recent_name': 'Uploaded doc_2'}
+                    'count': 2, 'most_recent_id': self.attachment_2.id, 'most_recent_name': 'Uploaded doc_2'},
+                'summaries': [act.summary for act in record_2_activities],
             })
 
             # Mark all first record activities as "done" and check activity data
@@ -462,7 +463,8 @@ class TestActivityViewHelpers(TestActivityCommon):
                     'count': 1,  # 1 instead of 3 because all attachments are the same one
                     'most_recent_id': self.attachment_1.id,
                     'most_recent_name': self.attachment_1.name,
-                }
+                },
+                'summaries': [act.summary for act in record_activities],
             })
             self.assertEqual(activity_data['activity_res_ids'], [test_record_2.id, test_record.id])
 
@@ -481,24 +483,10 @@ class TestActivityViewHelpers(TestActivityCommon):
                 get_activity_data('mail.test.activity', None, limit=1, fetch_done=True)['activity_res_ids'],
                 [test_record.id])
 
-            # Unset keep done and check activity data: record with only "done" activities must not be returned
-            self.upload_type.sudo().keep_done = False
-            activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
-            self.assertDictEqual(
-                next((t for t in activity_data['activity_types'] if t['id'] == self.upload_type.id), {}),
-                {
-                    'id': self.upload_type.id,
-                    'name': 'Upload Document',
-                    'template_ids': [],
-                    'keep_done': False,
-                })
-            self.assertEqual(activity_data['activity_res_ids'], [test_record_2.id])
-
             # Unarchiving activities should restore the activity
             record_activities.action_unarchive()
             self.assertFalse(any(act.date_done for act in record_activities))
             self.assertTrue(all(act.date_deadline for act in record_activities))
-            self.upload_type.sudo().keep_done = True
             activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
             grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
             self.assertEqual(grouped['state'], 'overdue')
@@ -512,6 +500,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
+                'summaries': [act.summary for act in record_activities],
             })
 
 

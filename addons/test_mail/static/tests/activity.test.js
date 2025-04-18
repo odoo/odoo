@@ -237,7 +237,6 @@ test("activity view: Activity rendering with done activities", async () => {
     const activityTypeUpload = pyEnv["mail.activity.type"].create({
         category: "upload_file",
         name: "Test Upload document",
-        keep_done: true,
     });
     pyEnv["mail.activity"].create(
         Object.entries(["done", "done", "done", "done", "planned", "planned", "planned"]).map(
@@ -610,9 +609,9 @@ test("activity widget: cancel an activity from the widget", async () => {
     await contains(".planned", { count: 0 });
 });
 
-test("activity view: Mark as done with keep done enabled", async () => {
+test("activity view: Done activities do not get deleted", async () => {
     const emailActType = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
-    pyEnv["mail.activity.type"].write([emailActType], { keep_done: true });
+    pyEnv["mail.activity.type"].write([emailActType], {});
     await start();
     registerArchs(archs);
     await openView({

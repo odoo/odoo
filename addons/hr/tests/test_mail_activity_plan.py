@@ -193,10 +193,16 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             # Happy case
             form = self._instantiate_activity_schedule_wizard(employees)
             form.plan_id = self.plan_onboarding
-            self.assertEqual(form.plan_summary,
-                             "<ul>Manager <ul><li>To-Do: Plan training</li>"
-                             "</ul>Coach <ul><li>To-Do: Training</li>"
-                             "</ul>Employee <ul><li>To-Do: Send feedback to the manager</li></ul></ul>")
+            expected_summary = [
+                'Manager',
+                'Plan training',
+                'Coach',
+                'Training',
+                'Employee',
+                'Send feedback to the manager',
+            ]
+            for line, expected in zip(form.plan_schedule_line_ids._records, expected_summary):
+                self.assertEqual(line['line'], expected)
             self.assertFalse(form.has_error)
             wizard = form.save()
             wizard.action_schedule_plan()

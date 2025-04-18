@@ -84,6 +84,7 @@
                       attachmentsInfo="activityGroup.attachments_info"
                       reportingDate="activityGroup.reporting_date"
                       countByState="activityGroup.count_by_state"
+                      summaries="activityGroup.summaries"
                       reloadFunc="props.onReloadData"
                       resId="record.resId" resModel="record.resModel"
                       userAssignedIds="activityGroup.user_assigned_ids"
@@ -98,7 +99,7 @@
 </t>
 
 <t t-name="mail.ActivityViewFooter">
-    <tfoot>
+    <tfoot class="o_activity_view_table_footer">
         <tr class="o_data_row">
             <td class="p-3" colspan="3">
                 <span class="btn btn-link o_record_selector cursor-pointer"
@@ -112,7 +113,8 @@
 
 <div t-name="mail.ActivityRenderer" class="o_activity_view h-100">
     <t t-if="!props.activityTypes.length" t-call="web.NoContentHelper"/>
-    <table t-else="" class="table table-bordered mb-5 bg-view o_activity_view_table">
+    <table t-else="" class="table table-bordered mb-5 bg-view o_activity_view_table"
+        t-attf-style="max-width: {{activeColumns.length &gt; 4 ? 100 : 20 * (activeColumns.length + 1) }}%; min-width: 600px;">
         <t t-call="mail.ActivityViewHeader"/>
         <t t-call="mail.ActivityViewBody"/>
         <t t-call="mail.ActivityViewFooter"/>

@@ -137,7 +137,7 @@ class TestCrmMailActivity(TestCrmCommon):
 
         # mark as done, check lead and posted message
         activity.action_done()
-        self.assertFalse(self.lead_1.activity_type_id.id)
+        self.assertFalse(self.lead_1.activity_type_id.active)
         self.assertFalse(self.lead_1.activity_ids)
         activity_message = self.lead_1.message_ids[0]
         self.assertEqual(activity_message.notified_partner_ids, self.user_sales_manager.partner_id)
@@ -173,5 +173,5 @@ class TestCrmMailActivity(TestCrmCommon):
 
         activity.action_done()
 
-        # Check the next activity on the lead has been removed
-        self.assertFalse(self.lead_1.activity_type_id)
+        # Check the next activity on the lead has been marked as done
+        self.assertFalse(self.lead_1.activity_type_id.active)

@@ -9,14 +9,15 @@
                 <xpath expr="//field[@name='plan_available_ids']" position="after">
                     <field name="department_id" invisible="1"/>
                 </xpath>
-                <xpath expr="//group[@invisible='not plan_available_ids']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
                 <xpath expr="//group[@invisible='not plan_id']" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </xpath>
-                <xpath expr="//field[@name='plan_date']" position="before">
-                    <field name="plan_id" options='{"no_open": True, "no_create": True}' invisible="not bool(plan_available_ids)"/>
+                <xpath expr="//field[@name='plan_schedule_line_ids'] //list" position="inside">
+                    <field name="responsible" column_invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='plan_schedule_line_ids'] //list" position="attributes">
+                    <attribute name="default_group_by">responsible</attribute>
+                    <attribute name="expand">True</attribute>
                 </xpath>
                 <xpath expr="//field[@name='plan_date']" position="attributes">
                     <attribute name="invisible">not plan_id</attribute>
@@ -27,7 +28,7 @@
                 <xpath expr="//label[hasclass('o_form_label')]" position="attributes">
                     <attribute name="invisible">not plan_id</attribute>
                 </xpath>
-                <xpath expr="//field[@name='plan_summary']" position="attributes">
+                <xpath expr="//field[@name='plan_schedule_line_ids']" position="attributes">
                     <attribute name="invisible">not plan_id</attribute>
                 </xpath>
             </field>

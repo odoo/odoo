@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
@@ -113,6 +114,9 @@ class TestActivitySchedule(ActivityScheduleCase):
     def test_activity_schedule(self):
         """ Test schedule of an activity on a single or multiple records. """
         test_records_all = [self.test_records[0], self.test_records[:3]]
+        # sanity check: new activity created without specifying activiy type 
+        # will have default type of the available activity type with the lowest sequence, then lowest id
+        self.assertTrue(self.activity_type_todo.sequence < self.activity_type_call.sequence)
         for test_idx, test_case in enumerate(['mono', 'multi']):
             test_records = test_records_all[test_idx].with_env(self.env)
             with self.subTest(test_case=test_case, test_records=test_records):
@@ -139,6 +143,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                 with freeze_time(self.reference_now):
                     form = self._instantiate_activity_schedule_wizard(test_records)
                     form.activity_type_id = self.activity_type_call
+                    form.activity_user_id = self.user_admin
                     with self._mock_activities(), freeze_time(self.reference_now):
                         form.save().with_context(
                             mail_activity_quick_update=True
@@ -151,6 +156,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                 with freeze_time(self.reference_now):
                     form = self._instantiate_activity_schedule_wizard(test_records)
                     form.activity_type_id = self.activity_type_todo
+                    form.activity_user_id = self.user_admin
                     with self._mock_activities():
                         wizard_res = form.save().with_context(
                             mail_activity_quick_update=True
@@ -181,6 +187,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                 with freeze_time(self.reference_now):
                     form = Form(self.env['mail.activity.schedule'].with_context(wizard_res['context']))
                     form.activity_type_id = self.activity_type_call
+                    form.activity_user_id = self.user_admin
                     with self._mock_activities():
                         form.save().with_context(
                             mail_activity_quick_update=True
@@ -192,8 +199,8 @@ class TestActivitySchedule(ActivityScheduleCase):
                         'automated': False,
                         'date_deadline': self.reference_now.date() + timedelta(days=5),  # both types delays
                         'note': False,
-                        'summary': False,
-                        'user_id': self.env.user,
+                        'summary': self.activity_type_call.summary,
+                        'user_id': self.user_admin
                     })
 
         # global activity creation from tests
@@ -249,14 +256,17 @@ class TestActivitySchedule(ActivityScheduleCase):
         with self.subTest(test_case='Check plan summary'):
             form = self._instantiate_activity_schedule_wizard(self.test_records[0])
             form.plan_id = test_plan
-            expected_summary = (
-                '<ul>'
-                '<li>TestAct1<ul><li>TestAct2 3 weeks after previous activity deadline</li></ul></li>'
-                '<li>TestAct2<ul><li>TestAct1 2 days after previous activity completion date or TestAct3 0 days after previous activity deadline</li></ul></li>'
-                '<li>TestAct3</li>'
-                '</ul>'
-            )
-            self.assertEqual(form.plan_summary, expected_summary)
+            expected_values = [
+                {'line': 'TestAct1', 'date': datetime.date(2025, 4, 17)},
+                {'line': 'TestAct2', 'date': datetime.date(2025, 5, 8)},
+                {'line': 'TestAct2', 'date': datetime.date(2025, 4, 17)},
+                {'line': 'TestAct1', 'date': datetime.date(2025, 4, 19)},
+                {'line': 'TestAct3', 'date': datetime.date(2025, 4, 17)},
+                {'line': 'TestAct3', 'date': datetime.date(2025, 4, 17)},
+            ]
+            for line, expected in zip(form.plan_schedule_line_ids._records, expected_values):
+                self.assertEqual(line['line'], expected['line'])
+                self.assertEqual(line['summary_date_deadline'], expected['date'])
 
     @users('employee')
     def test_plan_schedule(self):
@@ -268,13 +278,24 @@ class TestActivitySchedule(ActivityScheduleCase):
                  freeze_time(self.reference_now):
                 # No plan_date specified (-> self.reference_now is used), No responsible specified
                 form = self._instantiate_activity_schedule_wizard(test_records)
-                self.assertFalse(form.plan_summary)
+                self.assertFalse(form.plan_schedule_line_ids)
                 form.plan_id = self.plan_onboarding
-                self.assertEqual("<ul><li>To-Do: Plan training</li><li>To-Do: Training</li></ul>", form.plan_summary)
+                expected_values = [
+                    {'line': 'Plan training', 'date': datetime.date(2023,9,27)},
+                    {'line': 'Training', 'date': datetime.date(2023,10,14)},
+                ]
+                for line, expected in zip(form.plan_schedule_line_ids._records, expected_values):
+                    self.assertEqual(line['line'], expected['line'])
+                    self.assertEqual(line['summary_date_deadline'], expected['date'])
                 self.assertTrue(form._get_modifier('plan_on_demand_user_id', 'invisible'))
                 form.plan_id = self.plan_party
-                self.assertEqual("<ul><li>To-Do: Book a place</li><li>To-Do: Invite special guest</li></ul>",
-                                 form.plan_summary)
+                expected_values = [
+                    {'line': 'Book a place', 'date': datetime.date(2023,9,29)},
+                    {'line': 'Invite special guest', 'date': datetime.date(2023,10,7)},
+                ]
+                for line, expected in zip(form.plan_schedule_line_ids._records, expected_values):
+                    self.assertEqual(line['line'], expected['line'])
+                    self.assertEqual(line['summary_date_deadline'], expected['date'])
                 self.assertFalse(form._get_modifier('plan_on_demand_user_id', 'invisible'))
                 with self._mock_activities():
                     form.save().action_schedule_plan()
@@ -296,12 +317,15 @@ class TestActivitySchedule(ActivityScheduleCase):
                               form.error)
                 form.plan_on_demand_user_id = responsible_id
                 self.assertFalse(form.has_error)
-                deadline_1 = format_date(self.env, plan_date + relativedelta(days=-1))
-                deadline_2 = format_date(self.env, plan_date + relativedelta(days=7))
-                self.assertEqual(
-                    form.plan_summary,
-                    f"<ul><li>To-Do: Book a place ({deadline_1})</li>"
-                    f"<li>To-Do: Invite special guest ({deadline_2})</li></ul>")
+                deadline_1 = plan_date + relativedelta(days=-1)
+                deadline_2 = plan_date + relativedelta(days=7)
+                expected_values = [
+                    {'line': 'Book a place', 'date': deadline_1},
+                    {'line': 'Invite special guest', 'date': deadline_2},
+                ]
+                for line, expected in zip(form.plan_schedule_line_ids._records, expected_values):
+                    self.assertEqual(line['line'], expected['line'])
+                    self.assertEqual(line['summary_date_deadline'], expected['date'])
                 with self._mock_activities():
                     form.save().action_schedule_plan()
 

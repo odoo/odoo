@@ -18,7 +18,7 @@ const QUICK_CREATE_CALENDAR_EVENT_FIELDS = {
 
 function getDefaultValuesFromRecord(data) {
     const context = {};
-    for (let fieldName in QUICK_CREATE_CALENDAR_EVENT_FIELDS) {
+    for (const fieldName in QUICK_CREATE_CALENDAR_EVENT_FIELDS) {
         if (fieldName in data) {
             let value = data[fieldName];
             const { type } = QUICK_CREATE_CALENDAR_EVENT_FIELDS[fieldName]
@@ -44,6 +44,22 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
     goToFullEvent() {
         const context = getDefaultValuesFromRecord(this.model.root.data)
         this.props.goToFullEvent(context);
+    }
+
+    async onRecordSaved() {
+        const ret = super.onRecordSaved(arguments);
+        if (this.props.context.return_to_parent_breadcrumb) {
+            const breadcrumb = this.actionService.currentController.config.breadcrumbs.at(-2);
+            if (breadcrumb) {
+                // having a bit of difficulty figuring out how to verify that it's the right breadcrumb.
+                // previous controllers are unattainable from the action stack (check by controller ID)
+                // and the name/url of the breadcrumb seems to be a poor indication, no?
+                // (it's possible to check that path/:id matches with current context.default_res_id but it seems unwieldy
+                // and prone to failure)
+                breadcrumb.onSelected();
+            }
+        }
+        return ret;
     }
 }
 

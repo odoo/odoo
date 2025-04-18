@@ -38,7 +38,7 @@ export class Many2OneAvatarUserField extends Component {
     }
 }
 
-registry.category("fields").add("many2one_avatar_user", {
+export const many2OneAvatarUserField = {
     ...buildM2OFieldDescription(Many2OneAvatarUserField),
     additionalClasses: ["o_field_many2one_avatar"],
     extractProps(staticInfo, dynamicInfo) {
@@ -51,4 +51,6 @@ registry.category("fields").add("many2one_avatar_user", {
         };
     },
     listViewWidth: [110],
-});
+}
+
+registry.category("fields").add("many2one_avatar_user", many2OneAvatarUserField);
