@@ -45,17 +45,10 @@ class MailActivity(models.Model):
 
     @api.model
     def _default_activity_type_for_model(self, model):
-        todo_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mail_activity_data_todo', raise_if_not_found=False)
-        activity_type_todo = self.env['mail.activity.type'].browse(todo_id) if todo_id else self.env['mail.activity.type']
-        if activity_type_todo and activity_type_todo.active and \
-                (activity_type_todo.res_model == model or not activity_type_todo.res_model):
-            return activity_type_todo
-        default_type = self.env['mail.activity_type']
+        """ Take first one found, ordered by sequence. Keep it simple. """
         if model:
-            default_type = self.env['mail.activity.type'].search([('res_model', '=', model)], limit=1)
-        if not default_type:
-            default_type = self.env['mail.activity.type'].search([('res_model', '=', False)], limit=1)
-        return default_type
+            return self.env['mail.activity.type'].search(['|', ('res_model', '=', model), ('res_model', '=', False)], limit=1)
+        return self.env['mail.activity.type'].search([('res_model', '=', False)], limit=1)
 
     # owner
     res_model_id = fields.Many2one(
