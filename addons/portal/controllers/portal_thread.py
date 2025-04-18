@@ -8,14 +8,14 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.portal.utils import get_portal_partner
 
 
-class PortalChatter(http.Controller):
+class PortalChatter(ThreadController):
 
     @http.route('/mail/avatar/mail.message/<int:res_id>/author_avatar/<int:width>x<int:height>', type='http', auth='public')
     def portal_avatar(self, res_id=None, height=50, width=50, access_token=None, _hash=None, pid=None):
         """Get the avatar image in the chatter of the portal"""
         if access_token or (_hash and pid):
             message_su = request.env["mail.message"].browse(int(res_id)).exists().sudo()
-            thread = ThreadController._get_thread_with_access(
+            thread = self._get_thread_with_access(
                 message_su.model, message_su.res_id,
                 token=access_token, hash=_hash, pid=pid and int(pid)
             )
@@ -31,11 +31,11 @@ class PortalChatter(http.Controller):
     @http.route("/portal/chatter_init", type="jsonrpc", auth="public", website=True)
     def portal_chatter_init(self, thread_model, thread_id, **kwargs):
         store = Store()
-        thread = ThreadController._get_thread_with_access(thread_model, thread_id, **kwargs)
+        thread = self._get_thread_with_access(thread_model, thread_id, **kwargs)
         partner = request.env.user.partner_id
         if thread:
             mode = request.env[thread_model]._get_mail_message_access([thread_id], "create")
-            has_react_access = ThreadController._get_thread_with_access(thread_model, thread_id, mode, **kwargs)
+            has_react_access = self._get_thread_with_access(thread_model, thread_id, mode, **kwargs)
             can_react = has_react_access
             if request.env.user._is_public():
                 portal_partner = get_portal_partner(
@@ -67,7 +67,7 @@ class PortalChatter(http.Controller):
         # Check access
         Message = request.env['mail.message']
         if kw.get('token'):
-            access_as_sudo = ThreadController._get_thread_with_access(
+            access_as_sudo = self._get_thread_with_access(
                 thread_model, thread_id, token=kw.get("token"),
             )
             if not access_as_sudo:  # if token is not correct, raise Forbidden
