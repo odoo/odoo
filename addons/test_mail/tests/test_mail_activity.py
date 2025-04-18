@@ -11,13 +11,14 @@ from unittest.mock import DEFAULT
 import pytz
 
 from odoo import fields, exceptions, tests
-from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tests import Form, HttpCase, users
 from odoo.tools import mute_logger
 
 
-class TestActivityCommon(MailCommon):
+class TestActivityCommon(ActivityScheduleCase):
 
     @classmethod
     def setUpClass(cls):
@@ -248,13 +249,21 @@ class TestActivityFlow(TestActivityCommon):
             'name': 'email',
             'summary': 'Email Summary',
         })
-        call_activity_type = ActivityType.create({'name': 'call'})
-        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'), default_res_id=self.test_record.id)) as ActivityForm:
+        call_activity_type = ActivityType.create({'name': 'call', 'summary': False})
+        with Form(
+            self.env['mail.activity'].with_context(
+                default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'),
+                default_res_id=self.test_record.id,
+            )
+        ) as ActivityForm:
+            # coming from default activity type, which is to do
+            self.assertEqual(ActivityForm.activity_type_id, self.env.ref("mail.mail_activity_data_todo"))
+            self.assertEqual(ActivityForm.summary, "TodoSummary")
             # `res_model_id` and `res_id` are invisible, see view `mail.mail_activity_view_form_popup`
             # they must be set using defaults, see `action_feedback_schedule_next`
             ActivityForm.activity_type_id = call_activity_type
             # activity summary should be empty
-            self.assertEqual(ActivityForm.summary, False)
+            self.assertEqual(ActivityForm.summary, "TodoSummary", "Did not erase if void on type")
 
             ActivityForm.activity_type_id = email_activity_type
             # activity summary should be replaced with email's default summary
@@ -363,6 +372,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
 @tests.tagged('mail_activity')
 class TestActivityViewHelpers(TestActivityCommon):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
