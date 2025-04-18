@@ -82,9 +82,9 @@ class AccountAnalyticDistributionModel(models.Model):
 
     def _get_fields_to_check(self):
         return (
-                set(self.env['account.analytic.distribution.model']._fields)
-                - set(self.env['analytic.mixin']._fields)
-                - set(models.MAGIC_COLUMNS) - {'display_name', '__last_update'}
+            {field.name for field in self._fields.values() if not field.manual}
+            - set(self.env['analytic.mixin']._fields)
+            - set(models.MAGIC_COLUMNS) - {'display_name', '__last_update'}
         )
 
     def _check_score(self, key, value):
