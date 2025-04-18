@@ -20,7 +20,7 @@ class IoTboxHomepage(Home):
     def clean_partition(self):
         subprocess.check_call(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/iot_box_image/configuration/upgrade.sh; cleanup'])
 
-    @route.iot_route('/hw_proxy/perform_upgrade', type='http')
+    @route.iot_route('/hw_proxy/perform_upgrade', type='http', linux_only=True)
     def perform_upgrade(self):
         self.updating.acquire()
         os.system('/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh')
@@ -31,7 +31,7 @@ class IoTboxHomepage(Home):
     def check_version(self):
         return helpers.get_version()
 
-    @route.iot_route('/hw_proxy/perform_flashing_create_partition', type='http')
+    @route.iot_route('/hw_proxy/perform_flashing_create_partition', type='http', linux_only=True)
     def perform_flashing_create_partition(self):
         try:
             response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/iot_box_image/configuration/upgrade.sh; create_partition']).decode().split('\n')[-2]
@@ -44,7 +44,7 @@ class IoTboxHomepage(Home):
             _logger.exception("Flashing create partition failed")
             return Response(str(e), status=500)
 
-    @route.iot_route('/hw_proxy/perform_flashing_download_raspios', type='http')
+    @route.iot_route('/hw_proxy/perform_flashing_download_raspios', type='http', linux_only=True)
     def perform_flashing_download_raspios(self):
         try:
             response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/iot_box_image/configuration/upgrade.sh; download_raspios']).decode().split('\n')[-2]
@@ -58,7 +58,7 @@ class IoTboxHomepage(Home):
             _logger.exception("Flashing download raspios failed")
             return Response(str(e), status=500)
 
-    @route.iot_route('/hw_proxy/perform_flashing_copy_raspios', type='http')
+    @route.iot_route('/hw_proxy/perform_flashing_copy_raspios', type='http', linux_only=True)
     def perform_flashing_copy_raspios(self):
         try:
             response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/iot_box_image/configuration/upgrade.sh; copy_raspios']).decode().split('\n')[-2]
