@@ -102,9 +102,12 @@ export class PowerButtonsPlugin extends Plugin {
         }
         const block = closestBlock(editableSelection.anchorNode);
         const element = closestElement(editableSelection.anchorNode);
+        const blockRect = block.getBoundingClientRect();
+        const editableRect = this.editable.getBoundingClientRect();
         if (
             editableSelection.isCollapsed &&
             element?.matches(baseContainerGlobalSelector) &&
+            editableRect.bottom > blockRect.top &&
             isEmptyBlock(block) &&
             !this.services.ui.isSmall &&
             !closestElement(editableSelection.anchorNode, "td") &&
@@ -121,7 +124,7 @@ export class PowerButtonsPlugin extends Plugin {
                 const shouldHide = Boolean(isAvailable && !isAvailable(editableSelection));
                 buttonElement.classList.toggle("d-none", shouldHide); // 2nd arg must be a boolean
             }
-            this.setPowerButtonsPosition(block, direction);
+            this.setPowerButtonsPosition(block, blockRect, direction);
         }
     }
 
@@ -143,12 +146,11 @@ export class PowerButtonsPlugin extends Plugin {
      * @param {HTMLElement} block
      * @param {string} direction
      */
-    setPowerButtonsPosition(block, direction) {
+    setPowerButtonsPosition(block, blockRect, direction) {
         const overlayStyles = this.powerButtonsOverlay.style;
         // Resetting the position of the power buttons.
         overlayStyles.top = "0px";
         overlayStyles.left = "0px";
-        const blockRect = block.getBoundingClientRect();
         const buttonsRect = this.powerButtonsContainer.getBoundingClientRect();
         const placeholderWidth = this.getPlaceholderWidth(block) + 20;
         if (direction === "rtl") {
