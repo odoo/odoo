@@ -60,7 +60,6 @@ li.o_no_autohide_item {
     transition: all 0.3s ease;
     position: relative;
     background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     /* Новые свойства */
     width: 100%; /* Занимает всю доступную ширину */
     margin: 0 auto; /* Центрирование */
@@ -74,15 +73,15 @@ li.o_no_autohide_item {
 
 /* Стили для изображения */
 .oe_product_cart .oe_product_image {
-    transition: transform 0.4s ease;
-    transform-origin: center center;
-    width: 100%; /* Занимает всю ширину карточки */
-    height: auto; /* Сохраняет пропорции */
+    border-radius: 15px;
+    width: 100%;
+    height: auto;
+    transition: filter 0.3s ease;
 }
 
 /* Увеличение изображения при наведении (меньше) */
 .oe_product_cart:hover .oe_product_image {
-    transform: scale(1.03); /* Очень легкое увеличение */
+    filter: brightness(0.85); /* легкое затемнение */
 }
 
 /* Стили для текстовой информации */
@@ -91,13 +90,12 @@ li.o_no_autohide_item {
 }
 
 /* Стили для названия товара */
-.oe_product_cart h5,
 .oe_product_cart .product_name {
-    color: #000 !important; /* Черный цвет текста */
-    font-weight: 700 !important; /* Жирный шрифт */
-    font-size: 16px;
-    margin-bottom: 8px;
+    font-size: 16px !important; /* Размер шрифта */
+    color: black !important;
+    font-weight: bold !important;
 }
+
 
 /* Стили для цены */
 .oe_product_cart .product_price {
