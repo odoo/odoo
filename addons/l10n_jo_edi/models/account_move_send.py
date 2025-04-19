@@ -40,9 +40,9 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         return super()._get_invoice_extra_attachments(move) + move.l10n_jo_edi_xml_attachment_id
 
-    def _get_placeholder_mail_attachments_data(self, move, extra_edis=None):
+    def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edis=None):
         # EXTENDS 'account'
-        res = super()._get_placeholder_mail_attachments_data(move, extra_edis=extra_edis)
+        res = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis)
 
         if not move.l10n_jo_edi_xml_attachment_id and 'jo_edi' in extra_edis:
             attachment_name = move._l10n_jo_edi_get_xml_attachment_name()

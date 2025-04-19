@@ -1079,6 +1079,53 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour("PosLoyalty2DiscountsSpecificGlobal")
 
+    def test_specific_product_discount_with_global_discount(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        self.discount_product = self.env["product.product"].create({
+            "name": "Discount Product",
+            "type": "service",
+            "list_price": 0,
+            "available_in_pos": True,
+        })
+
+        self.main_pos_config2 = self.main_pos_config.copy({
+            'module_pos_discount': True,
+            'discount_product_id': self.discount_product.id,
+            'discount_pc': 50,
+        })
+
+        self.product_a = self.env['product.product'].create({
+            'name': "Product A",
+            'is_storable': True,
+            'list_price': 80,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        self.env['loyalty.program'].create({
+            'name': 'Discount on Specific Products',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'minimum_qty': 0
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 40,
+                'discount_mode': 'per_order',
+                'discount_applicability': 'specific',
+                'discount_product_ids': [Command.set(self.product_a.ids)],
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config2.id)],
+        })
+
+        self.main_pos_config2.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("PosLoyaltySpecificProductDiscountWithGlobalDiscount", pos_config=self.main_pos_config2)
+
     def test_point_per_money_spent(self):
         """Test the point per $ spent feature"""
         LoyaltyProgram = self.env['loyalty.program']
@@ -2622,3 +2669,25 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Create gift card program
         self.create_programs([('name', 'gift_card')])
         self.start_pos_tour("test_gift_card_no_date")
+
+    def test_physical_gift_card_invoiced(self):
+        """
+        Test that the manual gift card sold has been generated with correct code and partner id"""
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference and activate the gift_card_product_50
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+
+        # Run the tour
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_physical_gift_card_invoiced",
+            login="pos_user"
+        )
+
+        self.assertEqual(len(gift_card_program.coupon_ids), 1, "Gift card not generated")
+        self.assertEqual(gift_card_program.coupon_ids[0].code, "test-card-1234", "Gift card code not correct")
+        self.assertEqual(gift_card_program.coupon_ids[0].partner_id, partner, "Gift card partner id not correct")

@@ -13,7 +13,7 @@ class AccountMove(models.Model):
         selection=[
             ('ready', 'Ready to send'),
             ('to_send', 'Queued'),
-            ('skipped', 'Skipped'),
+            ('skipped', 'Skipped'),  # TODO remove this state in master, we now put a regular error.
             ('processing', 'Pending Reception'),
             ('done', 'Done'),
             ('error', 'Error'),
