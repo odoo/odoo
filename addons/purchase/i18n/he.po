@@ -516,6 +516,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"בהתאם להגדרות המוצר, ניתן לחשב את הכמות שהתקבלה באופן אוטומטי באמצעות מנגנון:\n"
+"ידני: הכמות מוזנת באופן ידני בשורה\n"
+"תנועות מלאי: הכמות נלקחת מהשילוחים המאושרים (ליקוטים)\n"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
@@ -634,7 +637,7 @@ msgstr "סכום כולל"
 msgid ""
 "Amount of time between date planned and order by date for each purchase "
 "order line."
-msgstr ""
+msgstr "הפרש זמן בין תאריך מתוכנן לבין תאריך ההזמנה עבור כל שורת רכש."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
@@ -725,6 +728,8 @@ msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
 msgstr ""
+"שלח אוטומטית דוא\"ל אישור לספק X ימים לפני תאריך הקבלה הצפוי, ובקש ממנו לאשר"
+" את התאריך המדויק."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -1644,7 +1649,7 @@ msgstr "אין הודעה"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
 msgid "No Purchase Analysis"
-msgstr ""
+msgstr "אין ניתוח רכש"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1659,7 +1664,7 @@ msgstr "לא נמצאה הזמנת רכש. בואו ניצור אחת!"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_history
 msgid "No purchase order were made for this product yet!"
-msgstr ""
+msgstr "לא בוצעו עדיין הזמנות רכש עבור מוצר זה!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
@@ -2803,6 +2808,8 @@ msgid ""
 "This analysis allows you to easily check and analyse your company purchase history and performance.\n"
 "                You can track your negotiation performance, the delivery performance of your vendors, etc"
 msgstr ""
+"אנליזה זו מאפשרת לך לבדוק ולנתח בקלות את היסטוריית הרכש והביצועים של החברה שלך.\n"
+"אתה יכול לעקוב אחרי ביצועי המשא ומתן שלך, ביצועי האספקה של הספקים שלך ועוד."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
@@ -3193,6 +3200,11 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
+"כאשר יוצרים הזמנת רכש, בדוק את <i>שיעור האספקה בזמן של הספק</i>: אחוז "
+"המוצרים שנשלחו בזמן. אם השיעור נמוך מדי, הפעל את <i>תזכורות האוטומטיות</i>. "
+"מספר ימים לפני מועד השילוח הצפוי, Odoo ישלח לספק דוא\"ל לבקש אישור על תאריכי"
+" השילוח וישמור אותך מעודכן במקרה של עיכובים. כדי לקבל את סטטיסטיקות הביצועים"
+" של הספק, לחץ על שיעור ה-OTD."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3202,6 +3214,9 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
+"כאשר שולחים הזמנת רכש בדוא\"ל, Odoo מבקש מהספק לאשר את קבלת ההזמנה. כאשר "
+"הספק מאשר את ההזמנה על ידי לחיצה על כפתור בדוא\"ל, המידע מתווסף להזמנת הרכש."
+" השתמש במסננים כדי לעקוב אחרי הזמנות שלא זכו להתייחסות."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
@@ -3217,6 +3232,8 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
+"לא ניתן לשנות את סוג שורת הזמנת הרכש. במקום זאת, עליך למחוק את השורה הנוכחית"
+" וליצור שורה חדשה מסוג המתאים."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
