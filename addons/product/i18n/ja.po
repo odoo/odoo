@@ -45,7 +45,7 @@ msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
-"%(base)s の %(discount)s %% 値引および %(surcharge)s の追加料金\n"
+"%(base)s の %(discount)s %% 割引および %(surcharge)s の追加料金\n"
 "例: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
@@ -53,14 +53,14 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr "%(percentage)s %% 値引および %(price)s 追加料金"
+msgstr "%(percentage)s %% 割引および %(price)s 追加料金"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s %% discount"
-msgstr "%s %% 値引"
+msgstr "%s %% 割引"
 
 #. module: product
 #. odoo-python
@@ -535,7 +535,7 @@ msgstr "黒"
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
-msgstr "ドア付きキャビネット"
+msgstr "扉付きキャビネット"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
@@ -935,12 +935,12 @@ msgstr "破棄"
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Discount"
-msgstr "値引"
+msgstr "割引"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__discount_policy
 msgid "Discount Policy"
-msgstr "値引方針"
+msgstr "割引き方針"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__with_discount
@@ -950,7 +950,7 @@ msgstr "割引は料金に含まれています"
 #. module: product
 #: model:res.groups,name:product.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr "明細の値引"
+msgstr "明細の割引"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
@@ -1854,7 +1854,7 @@ msgstr "価格計算"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
 msgid "Price Discount"
-msgstr "価格値引"
+msgstr "価格割引"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
@@ -2423,7 +2423,7 @@ msgid ""
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
 "この値の倍数となる価格を設定します。\n"
-"丸めは値引後で追加料金の前に適用します。\n"
+"丸めは割引後で追加料金の前に適用します。\n"
 "最終価格を9.99にするには、丸めを10に追加料金を-0.01とします。"
 
 #. module: product
@@ -3076,7 +3076,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr "負の割引値を設定することで、値上げを適用することができます。"
+msgstr "マイナスの割引(負の値)を設定することで、上乗せ(マークアップ)を適用できます。"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

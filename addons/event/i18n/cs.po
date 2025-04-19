@@ -3271,12 +3271,12 @@ msgstr "Registrační e-mail"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
 msgid "Registration open"
-msgstr ""
+msgstr "Registrace otevřena"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
 msgid "Registration statistics"
-msgstr ""
+msgstr "Statistiky registrace"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -3291,11 +3291,15 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Registrace jsou otevřené, pokud:\n"
+"- akce nekončí\n"
+"- na akci jsou volná místa\n"
+"- vstupenky jsou prodejné (pokud je použit ticketing)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr ""
+msgstr "Registrace začaly"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -3368,7 +3372,7 @@ msgstr "Plánovaný čas"
 #. module: event
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you !"
-msgstr ""
+msgstr "Ostřílení hokejoví fanoušci a zvědavci, tento turnaj je pro vás!"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_ticket
@@ -3383,7 +3387,7 @@ msgstr "Prodávejte vstupenky na své webstránce"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "Prodávejte tikety s prodejními objednávkami"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__notification_type
@@ -3408,16 +3412,17 @@ msgstr "Odesláno"
 msgid ""
 "Sent automatically to attendees if there is a reminder defined on the event"
 msgstr ""
+"Automaticky odesláno účastníkům, pokud je u události definováno připomenutí"
 
 #. module: event
 #: model:mail.template,description:event.event_registration_mail_template_badge
 msgid "Sent automatically to someone after they registered to an event"
-msgstr ""
+msgstr "Automaticky odesláno někomu poté, co se zaregistroval na událost"
 
 #. module: event
 #: model:mail.template,description:event.event_subscription
 msgid "Sent to attendees after registering to an event"
-msgstr ""
+msgstr "Odesláno účastníkům po registraci na událost"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__sequence
@@ -3491,7 +3496,7 @@ msgstr "Název fáze"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr ""
+msgstr "Popis fáze"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_1
@@ -3515,7 +3520,7 @@ msgstr "Datum zahájení se nachází"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
 msgid "Start sale date"
-msgstr ""
+msgstr "Datum zahájení prodeje"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -3577,7 +3582,7 @@ msgstr "Předloha"
 #: model:ir.model.fields,field_description:event.field_event_mail__template_model_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__template_model_id
 msgid "Template Model"
-msgstr ""
+msgstr "Model šablony"
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -3585,13 +3590,15 @@ msgid ""
 "The Great Reno Balloon Race is the world's largest free hot-air ballooning "
 "event."
 msgstr ""
+"Great Reno Balloon Race je největší světová akce v létání horkovzdušným "
+"balónem zdarma."
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
 msgid ""
 "The best Hockey teams of the country will compete for the national Hockey "
 "trophy."
-msgstr ""
+msgstr "Nejlepší hokejové týmy země se utkají o národní hokejovou trofej."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3599,6 +3606,8 @@ msgid ""
 "The best aeronauts of the world will gather on this event to offer you the "
 "most spectacular show."
 msgstr ""
+"Na této akci se sejdou nejlepší aeronauti světa, aby vám nabídli tu "
+"nejvelkolepější show."
 
 #. module: event
 #. odoo-python
@@ -3610,12 +3619,12 @@ msgstr "Datum uzávěrky nesmí být dřívější než počáteční datum."
 #. module: event
 #: model:event.stage,description:event.event_stage_cancelled
 msgid "The event has been cancelled"
-msgstr ""
+msgstr "Událost byla zrušena"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_announced
 msgid "The event has been publicly announced"
-msgstr ""
+msgstr "Událost byla veřejně oznámena"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
@@ -3633,6 +3642,7 @@ msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
 "collection"
 msgstr ""
+"Nejlepší OpenWood nábytek přichází do vašeho domu ve zcela nové kolekci"
 
 #. module: event
 #. odoo-python
@@ -3642,6 +3652,8 @@ msgid ""
 "The following tickets cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Následující vstupenky nelze smazat, pokud je k nim připojena jedna nebo více registrací:\n"
+"- %s"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
@@ -3651,7 +3663,7 @@ msgstr "Místo bylo rezervováno"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first !"
-msgstr ""
+msgstr "Bezpečnost našich účastníků a našich aeronautů je na prvním místě!"
 
 #. module: event
 #. odoo-python
@@ -3661,6 +3673,8 @@ msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket "
 "%(ticket_name)s"
 msgstr ""
+"Datum ukončení nemůže být dřívější než datum zahájení. Zkontrolujte prosím "
+"tiket %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -3677,7 +3691,7 @@ msgstr ""
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "There are not enough seats available for:"
-msgstr ""
+msgstr "Není k dispozici dostatek míst pro:"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3686,6 +3700,9 @@ msgid ""
 "methodology or developments. Be there and see directly from the source the "
 "features of the version 12!"
 msgstr ""
+"Tato akce je také příležitostí předvést případové studie, metodiku nebo "
+"vývoj našich partnerů. Buďte u toho a podívejte se přímo ze zdroje na funkce"
+" verze 12!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -3693,19 +3710,21 @@ msgid ""
 "This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br>\n"
 "        It will require a good Internet connection to get the best video quality."
 msgstr ""
+"Tato akce je plně online a ZDARMA, pokud jste zaplatili za vstupenky, měli byste dostat refundaci.<br>\n"
+"        K dosažení nejlepší kvality videa bude vyžadováno dobré připojení k internetu."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,help:event.field_event_type__ticket_instructions
 msgid "This information will be printed on your tickets."
-msgstr ""
+msgstr "Tyto informace budou vytištěny na vašich tiketech."
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "This is the <b>name</b> your guests will see when registering."
-msgstr ""
+msgstr "Toto je <b>jméno</b>, které vaši hosté uvidí při registraci."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3713,6 +3732,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories !"
 msgstr ""
+"Toto je ideální místo pro strávení hezkého dne s rodinou, garantujeme, že "
+"budete odcházet s krásnými věčnými vzpomínkami!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3720,6 +3741,8 @@ msgid ""
 "This is the perfect place for spending a nice time with your friends while "
 "listening to some of the most iconic rock songs of all times!"
 msgstr ""
+"Toto je ideální místo, kde můžete strávit příjemný čas se svými přáteli při "
+"poslechu některých z nejznámějších rockových písní všech dob!"
 
 #. module: event
 #. odoo-python
@@ -3745,7 +3768,7 @@ msgstr "Požadavek"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Ticket Instructions"
-msgstr ""
+msgstr "Pokyny pro tikety"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
