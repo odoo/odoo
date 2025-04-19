@@ -140,8 +140,14 @@ export class TicketScreen extends Component {
         this.pos.screenState.ticketSCreen.totalCount = 0;
         this.pos.screenState.ticketSCreen.offsetByDomain = {};
 
-        if (this.state.filter == "SYNCED") {
+        if (this.state.filter === "SYNCED") {
             await this._fetchSyncedOrders();
+        }
+
+        if (this.state.filter === "PICKING") {
+            await this.pos.data.searchRead("pos.order", [
+                ["preset_time", ">", DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss")],
+            ]);
         }
     }
     getNumpadButtons() {
@@ -399,12 +405,14 @@ export class TicketScreen extends Component {
     }
     getFilteredOrderList() {
         const orderModel = this.pos.models["pos.order"];
-        let orders =
-            this.state.filter === "SYNCED"
-                ? orderModel.filter((o) => o.finalized && o.uiState.displayed)
-                : orderModel.filter(this.activeOrderFilter);
+        let orders = ["SYNCED", "PICKING"].includes(this.state.filter)
+            ? orderModel.filter((o) => o.finalized && o.uiState.displayed)
+            : orderModel.filter(this.activeOrderFilter);
 
-        if (this.state.filter && !["ACTIVE_ORDERS", "SYNCED"].includes(this.state.filter)) {
+        if (
+            this.state.filter &&
+            !["ACTIVE_ORDERS", "SYNCED", "PICKING"].includes(this.state.filter)
+        ) {
             orders = orders.filter((order) => {
                 const screen = order.getScreenData();
                 return this._getScreenToStatusMap()[screen.name] === this.state.filter;
@@ -421,30 +429,34 @@ export class TicketScreen extends Component {
         }
 
         const sortOrders = (orders, ascending = false) =>
-            orders.sort((a, b) => {
-                const dateA = a.date_order;
-                const dateB = b.date_order;
+            orders
+                .sort((a, b) => {
+                    const dateA = a.date_order;
+                    const dateB = b.date_order;
 
-                if (a.date_order !== b.date_order) {
-                    return ascending ? dateA - dateB : dateB - dateA;
-                } else {
-                    const nameA = parseInt(a.pos_reference.replace(/\D/g, "")) || 0;
-                    const nameB = parseInt(b.pos_reference.replace(/\D/g, "")) || 0;
-                    return ascending ? nameA - nameB : nameB - nameA;
-                }
-            });
+                    if (a.date_order !== b.date_order) {
+                        return ascending ? dateA - dateB : dateB - dateA;
+                    } else {
+                        const nameA = parseInt(a.pos_reference.replace(/\D/g, "")) || 0;
+                        const nameB = parseInt(b.pos_reference.replace(/\D/g, "")) || 0;
+                        return ascending ? nameA - nameB : nameB - nameA;
+                    }
+                })
+                .slice(
+                    (this.state.page - 1) * this.state.nbrByPage,
+                    this.state.page * this.state.nbrByPage
+                );
 
-        if (this.state.filter === "SYNCED") {
-            return sortOrders(orders).slice(
-                (this.state.page - 1) * this.state.nbrByPage,
-                this.state.page * this.state.nbrByPage
-            );
+        if (this.state.filter === "PICKING") {
+            const dtNow = DateTime.now();
+            orders = orders.filter((order) => order.preset_time > dtNow);
+        }
+
+        if (["SYNCED", "PICKING"].includes(this.state.filter)) {
+            return sortOrders(orders);
         } else {
             this.pos.screenState.ticketSCreen.totalCount = orders.length;
-            return sortOrders(orders, true).slice(
-                (this.state.page - 1) * this.state.nbrByPage,
-                this.state.page * this.state.nbrByPage
-            );
+            return sortOrders(orders, true);
         }
     }
     getTotal(order) {
@@ -656,6 +668,7 @@ export class TicketScreen extends Component {
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
         orderStates.set("SYNCED", { text: _t("Paid") });
+        orderStates.set("PICKING", { text: _t("To pick") });
         return orderStates;
     }
     /**
@@ -829,6 +842,22 @@ export class TicketScreen extends Component {
         } else {
             return "bg-light text-dark";
         }
+    }
+
+    getPresetDatetimeString(order) {
+        const presetTime = order.preset_time;
+        const today = DateTime.now();
+
+        // If the preset time is tomorrow, display date time
+        if (presetTime > today) {
+            const todayDate = today.toFormat("yyyy-MM-dd");
+            const presetDate = presetTime.toFormat("yyyy-MM-dd");
+            if (todayDate !== presetDate) {
+                return presetTime.toFormat("dd/MM/yyyy HH:mm");
+            }
+        }
+
+        return presetTime.toFormat("HH:mm");
     }
 }
 

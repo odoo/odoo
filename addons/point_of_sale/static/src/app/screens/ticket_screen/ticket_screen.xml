@@ -54,7 +54,9 @@
                                                 </div>
                                             </td>
                                             <td class="align-middle">
-                                                <div t-if="order.presetTime" t-attf-class="fs-6 badge rounded {{this.getPresetTimeColor(order)}}"><t t-esc="order.presetTime"/></div>
+                                                <div t-if="order.presetTime" t-attf-class="fs-6 badge rounded {{this.getPresetTimeColor(order)}}">
+                                                    <t t-esc="getPresetDatetimeString(order)"/>
+                                                </div>
                                             </td>
                                             <td t-if="showCardholderName()">
                                                 <div><t t-esc="getCardholderName(order)"></t></div>
