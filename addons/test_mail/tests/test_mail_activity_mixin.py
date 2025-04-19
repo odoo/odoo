@@ -60,7 +60,9 @@ class TestActivityMixin(TestActivityCommon):
 
             act2 = self.test_record.activity_schedule(
                 'test_mail.mail_act_test_meeting',
-                today_user + relativedelta(days=-1))
+                today_user + relativedelta(days=-1),
+                user_id=self.user_employee.id,
+            )
             self.assertEqual(self.test_record.activity_state, 'overdue')
             # `activity_user_id` is defined as `fields.Many2one('res.users', 'Responsible User', related='activity_ids.user_id')`
             # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
@@ -72,7 +74,8 @@ class TestActivityMixin(TestActivityCommon):
             act3 = self.test_record.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 today_user + relativedelta(days=3),
-                user_id=self.user_employee.id)
+                user_id=self.user_employee.id,
+            )
             self.assertEqual(self.test_record.activity_state, 'overdue')
             # `activity_user_id` is defined as `fields.Many2one('res.users', 'Responsible User', related='activity_ids.user_id')`
             # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
@@ -91,7 +94,7 @@ class TestActivityMixin(TestActivityCommon):
                 feedback='Test feedback',
             )
             self.assertEqual(self.test_record.activity_ids, act2 | act3)
-            self.assertFalse(act1.exists())
+            self.assertFalse(act1.active)
 
             # Reschedule all activities, should update the record state
             self.assertEqual(self.test_record.activity_state, 'overdue')
@@ -105,7 +108,7 @@ class TestActivityMixin(TestActivityCommon):
             self.test_record.activity_feedback(
                 ['test_mail.mail_act_test_todo'],
                 feedback='Test feedback')
-            self.assertFalse(act3.exists())
+            self.assertFalse(act3.active)
 
             # Setting activities as done should delete them and post messages
             self.assertEqual(self.test_record.activity_ids, act2)
@@ -113,7 +116,7 @@ class TestActivityMixin(TestActivityCommon):
             act_messages = self.test_record.message_ids[:2]
             self.assertEqual(act_messages.subtype_id, self.env.ref('mail.mt_activities'))
 
-            # Perform meeting activities
+            # Unlink meeting activities
             self.test_record.activity_unlink(['test_mail.mail_act_test_meeting'])
 
             # Canceling activities should simply remove them
@@ -129,7 +132,7 @@ class TestActivityMixin(TestActivityCommon):
         act_type_todo = self.env.ref('test_mail.mail_act_test_todo')
         auto_act = self.test_record.activity_schedule(
             'test_mail.mail_act_test_todo',
-            date_deadline=date.today() + relativedelta(days=1)
+            date_deadline=date.today() + relativedelta(days=1),
         )
         man_act = self.env['mail.activity'].create({
             'activity_type_id': act_type_todo.id,
@@ -156,12 +159,12 @@ class TestActivityMixin(TestActivityCommon):
             only_automated=False
         )
         self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
-        self.assertFalse(auto_act.exists())
-        self.assertFalse(man_act.exists())
+        self.assertFalse(auto_act.active)
+        self.assertFalse(man_act.active)
 
         # Test activity unlink on not only automated activities
         auto_act = self.test_record.activity_schedule(
-            'test_mail.mail_act_test_todo'
+            'test_mail.mail_act_test_todo',
         )
         man_act = self.env['mail.activity'].create({
             'activity_type_id': act_type_todo.id,
@@ -178,7 +181,8 @@ class TestActivityMixin(TestActivityCommon):
         rec = self.test_record.with_user(self.user_employee)
         new_act = rec.activity_schedule(
             'test_mail.mail_act_test_todo',
-            user_id=self.user_admin.id)
+            user_id=self.user_admin.id,
+        )
         self.assertEqual(rec.activity_ids, new_act)
         rec.action_archive()
         self.assertEqual(rec.active, False)
@@ -280,7 +284,7 @@ class TestActivityMixin(TestActivityCommon):
 
         with freeze_time(frozen_now):
             first_activity.action_feedback(feedback='Done')
-        self.assertFalse(first_activity.exists())
+        self.assertFalse(first_activity.active)
 
         # check chained activity
         new_activity = test_record.activity_ids
@@ -305,7 +309,7 @@ class TestActivityMixin(TestActivityCommon):
 
         with freeze_time(frozen_now):
             first_activity.action_feedback(feedback='Done')
-        self.assertFalse(first_activity.exists())
+        self.assertFalse(first_activity.active)
 
         # check chained activity
         new_activity = test_record.activity_ids
@@ -398,7 +402,6 @@ class TestActivityMixin(TestActivityCommon):
 
         origin_1, origin_2 = self.env['mail.test.activity'].search([], limit=2)
         activity_type = self.env.ref('test_mail.mail_act_test_todo')
-        activity_type.sudo().keep_done = True
 
         with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime), \
             patch('odoo.addons.mail.models.mail_activity_mixin.datetime', MockedDatetime):
@@ -562,8 +565,8 @@ class TestActivityMixin(TestActivityCommon):
     @users('employee')
     def test_record_unlink(self):
         test_record = self.test_record.with_user(self.env.user)
-        act1 = test_record.activity_schedule(summary='Active')
-        act2 = test_record.activity_schedule(summary='Archived', active=False)
+        act1 = test_record.activity_schedule(summary='Active', user_id=self.env.uid)
+        act2 = test_record.activity_schedule(summary='Archived', active=False, user_id=self.env.uid)
         test_record.unlink()
         self.assertFalse((act1 + act2).exists(), 'Removing records should remove activities, even archived')
 
@@ -589,6 +592,7 @@ class TestORM(TestActivityCommon):
                 'test_mail.mail_act_test_todo',
                 summary="Make another test super asap (yesterday)",
                 date_deadline=fields.Date.context_today(MailTestActivityCtx) - timedelta(days=7),
+                user_id=self.env.uid,
             )
             self.env['mail.test.activity'].create({
                 'date': '2021-05-09',
@@ -597,6 +601,7 @@ class TestORM(TestActivityCommon):
                 'test_mail.mail_act_test_todo',
                 summary="Make another test asap",
                 date_deadline=fields.Date.context_today(MailTestActivityCtx),
+                user_id=self.env.uid,
             )
             self.env['mail.test.activity'].create({
                 'date': '2021-05-16',
@@ -605,6 +610,7 @@ class TestORM(TestActivityCommon):
                 'test_mail.mail_act_test_todo',
                 summary="Make a test tomorrow",
                 date_deadline=fields.Date.context_today(MailTestActivityCtx) + timedelta(days=7),
+                user_id=self.env.uid,
             )
 
             domain = [('date', "!=", False)]

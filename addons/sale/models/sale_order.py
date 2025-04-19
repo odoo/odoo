@@ -1968,12 +1968,12 @@ class SaleOrder(models.Model):
         if not self:
             return
 
-        self.activity_unlink(['sale.mail_act_sale_upsell'])
+        self.activity_unlink(['mail.mail_activity_data_todo'])
         for order in self:
             order_ref = order._get_html_link()
             customer_ref = order.partner_id._get_html_link()
             order.activity_schedule(
-                'sale.mail_act_sale_upsell',
+                'mail.mail_activity_data_todo',
                 user_id=order.user_id.id or order.partner_id.user_id.id,
                 note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 

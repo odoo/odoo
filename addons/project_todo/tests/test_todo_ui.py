@@ -40,9 +40,9 @@ class TestTodoUi(HttpCaseWithUserDemo):
         }])
 
         subtask = task.child_ids
-        task.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
-        subtask.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
-        private_task.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
+        task.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo', user_id=self.env.uid)
+        subtask.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo', user_id=self.env.uid)
+        private_task.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo', user_id=self.env.uid)
 
         # Ensure that all activities appear in the systray under the good category
         # name and that clicking on this category opens the correct view where only

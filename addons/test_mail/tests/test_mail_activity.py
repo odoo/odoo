@@ -11,13 +11,14 @@ from unittest.mock import DEFAULT
 import pytz
 
 from odoo import fields, exceptions, tests
-from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tests import Form, HttpCase, users
 from odoo.tools import mute_logger
 
 
-class TestActivityCommon(MailCommon):
+class TestActivityCommon(ActivityScheduleCase):
 
     @classmethod
     def setUpClass(cls):
@@ -42,14 +43,20 @@ class TestActivityRights(TestActivityCommon):
 
         act_emp_for_adm = self.test_record.with_user(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo',
-            user_id=self.user_admin.id)
+            user_id=self.user_admin.id,
+        )
         act_emp_for_emp = self.test_record.with_user(self.user_employee).activity_schedule(
-            'test_mail.mail_act_test_todo')
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_employee.id,
+        )
         act_adm_for_adm = self.test_record.with_user(self.user_admin).activity_schedule(
-            'test_mail.mail_act_test_todo')
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_admin.id,
+        )
         act_adm_for_emp = self.test_record.with_user(self.user_admin).activity_schedule(
             'test_mail.mail_act_test_todo',
-            user_id=self.user_employee.id)
+            user_id=self.user_employee.id,
+        )
 
         for activity, can_write in [
             (act_emp_for_adm, True), (act_emp_for_emp, True),
@@ -82,7 +89,7 @@ class TestActivityRights(TestActivityCommon):
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_employee.id)
 
-            activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
+            activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_admin.id)
             activity2.write({'user_id': self.user_employee.id})
 
     def test_activity_security_user_noaccess_manual(self):
@@ -248,13 +255,21 @@ class TestActivityFlow(TestActivityCommon):
             'name': 'email',
             'summary': 'Email Summary',
         })
-        call_activity_type = ActivityType.create({'name': 'call'})
-        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'), default_res_id=self.test_record.id)) as ActivityForm:
+        call_activity_type = ActivityType.create({'name': 'call', 'summary': False})
+        with Form(
+            self.env['mail.activity'].with_context(
+                default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'),
+                default_res_id=self.test_record.id,
+            )
+        ) as ActivityForm:
+            # coming from default activity type, which is to do
+            self.assertEqual(ActivityForm.activity_type_id, self.env.ref("mail.mail_activity_data_todo"))
+            self.assertEqual(ActivityForm.summary, "TodoSummary")
             # `res_model_id` and `res_id` are invisible, see view `mail.mail_activity_view_form_popup`
             # they must be set using defaults, see `action_feedback_schedule_next`
             ActivityForm.activity_type_id = call_activity_type
             # activity summary should be empty
-            self.assertEqual(ActivityForm.summary, False)
+            self.assertEqual(ActivityForm.summary, "TodoSummary", "Did not erase if void on type")
 
             ActivityForm.activity_type_id = email_activity_type
             # activity summary should be replaced with email's default summary
@@ -263,6 +278,25 @@ class TestActivityFlow(TestActivityCommon):
             ActivityForm.activity_type_id = call_activity_type
             # activity summary remains unchanged from change of activity type as call activity doesn't have default summary
             self.assertEqual(ActivityForm.summary, email_activity_type.summary)
+
+    def test_activity_type_unlink(self):
+        """ Removing type should allocate activities to Todo """
+        email_activity_type = self.env['mail.activity.type'].create({
+            'name': 'email',
+            'summary': 'Email Summary',
+        })
+        temp_record = self.env['mail.test.activity'].create({'name': 'Test'})
+        activity = temp_record.activity_schedule(
+            activity_type_id=email_activity_type.id,
+            user_id=self.user_employee.id,
+        )
+        self.assertEqual(activity.activity_type_id, email_activity_type)
+        email_activity_type.unlink()
+        self.assertEqual(activity.activity_type_id, self.env.ref('mail.mail_activity_data_todo'))
+
+        # Todo is protected, niark niark
+        with self.assertRaises(exceptions.UserError):
+            self.env.ref('mail.mail_activity_data_todo').unlink()
 
     @mute_logger('odoo.sql_db')
     def test_activity_values(self):
@@ -363,12 +397,14 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
 @tests.tagged('mail_activity')
 class TestActivityViewHelpers(TestActivityCommon):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.type_todo = cls.env.ref('test_mail.mail_act_test_todo')
         cls.type_call = cls.env.ref('test_mail.mail_act_test_call')
         cls.type_upload = cls.env.ref('test_mail.mail_act_test_upload_document')
+
         cls.user_employee_2 = mail_new_test_user(
             cls.env,
             name='Employee2',
@@ -380,13 +416,12 @@ class TestActivityViewHelpers(TestActivityCommon):
             'res_model': cls.test_record_2._name,
             'res_id': cls.test_record_2.id,
         } for idx in range(2)])
-        cls.upload_type = cls.env.ref('test_mail.mail_act_test_upload_document')
-        cls.upload_type.sudo().keep_done = True
         cls.user_employee.tz = cls.user_admin.tz
 
     @freeze_time("2023-10-18 06:00:00")
     def test_get_activity_data(self):
         get_activity_data = self.env['mail.activity'].get_activity_data
+
         with self.with_user('employee'):
             # Setup activities: 3 for the first record, 2 "done" and 2 ongoing for the second
             test_record, test_record_2 = self.env['mail.test.activity'].browse(
@@ -402,7 +437,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                     today_user + relativedelta(days=days),
                     user_id=user_id.id)
             for days, user_id in ((-2, self.user_admin), (0, self.user_employee), (2, self.user_employee_2),
-                                  (3, self.user_admin)):
+                                  (3, self.user_admin), (4, self.env['res.users'])):
                 test_record_2.activity_schedule(
                     'test_mail.mail_act_test_upload_document',
                     today_user + relativedelta(days=days),
@@ -416,15 +451,14 @@ class TestActivityViewHelpers(TestActivityCommon):
             activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
             self.assertEqual(activity_data['activity_res_ids'], [test_record.id, test_record_2.id])
             self.assertDictEqual(
-                next((t for t in activity_data['activity_types'] if t['id'] == self.upload_type.id), {}),
+                next((t for t in activity_data['activity_types'] if t['id'] == self.type_upload.id), {}),
                 {
-                    'id': self.upload_type.id,
+                    'id': self.type_upload.id,
                     'name': 'Upload Document',
                     'template_ids': [],
-                    'keep_done': True,
                 })
 
-            grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
+            grouped = activity_data['grouped_activities'][test_record.id][self.type_upload.id]
             grouped['ids'] = set(grouped['ids'])  # ids order doesn't matter
             self.assertDictEqual(grouped, {
                 'state': 'overdue',
@@ -434,11 +468,11 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'user_assigned_ids': record_activities.user_id.ids,
             })
 
-            grouped = activity_data['grouped_activities'][test_record_2.id][self.upload_type.id]
+            grouped = activity_data['grouped_activities'][test_record_2.id][self.type_upload.id]
             grouped['ids'] = set(grouped['ids'])
             self.assertDictEqual(grouped, {
                 'state': 'planned',
-                'count_by_state': {'done': 2, 'planned': 2},
+                'count_by_state': {'done': 2, 'planned': 3},  # free user is planned
                 'ids': set(record_2_activities.ids),
                 'reporting_date': record_2_activities[2].date_deadline,
                 'user_assigned_ids': record_2_activities[2:].user_id.ids,
@@ -450,7 +484,7 @@ class TestActivityViewHelpers(TestActivityCommon):
             record_activities.action_feedback(feedback='Done', attachment_ids=self.attachment_1.ids)
             self.assertEqual(record_activities[2].date_done, date.today())  # Thanks to freeze_time
             activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
-            grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
+            grouped = activity_data['grouped_activities'][test_record.id][self.type_upload.id]
             grouped['ids'] = set(grouped['ids'])
             self.assertDictEqual(grouped, {
                 'state': 'done',
@@ -481,26 +515,12 @@ class TestActivityViewHelpers(TestActivityCommon):
                 get_activity_data('mail.test.activity', None, limit=1, fetch_done=True)['activity_res_ids'],
                 [test_record.id])
 
-            # Unset keep done and check activity data: record with only "done" activities must not be returned
-            self.upload_type.sudo().keep_done = False
-            activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
-            self.assertDictEqual(
-                next((t for t in activity_data['activity_types'] if t['id'] == self.upload_type.id), {}),
-                {
-                    'id': self.upload_type.id,
-                    'name': 'Upload Document',
-                    'template_ids': [],
-                    'keep_done': False,
-                })
-            self.assertEqual(activity_data['activity_res_ids'], [test_record_2.id])
-
             # Unarchiving activities should restore the activity
             record_activities.action_unarchive()
             self.assertFalse(any(act.date_done for act in record_activities))
             self.assertTrue(all(act.date_deadline for act in record_activities))
-            self.upload_type.sudo().keep_done = True
             activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
-            grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
+            grouped = activity_data['grouped_activities'][test_record.id][self.type_upload.id]
             self.assertEqual(grouped['state'], 'overdue')
             self.assertEqual(grouped['count_by_state'], {'overdue': 1, 'planned': 1, 'today': 1})
             self.assertEqual(grouped['reporting_date'], record_activities[0].date_deadline)
@@ -529,6 +549,7 @@ class TestTours(HttpCase):
             'test_mail.mail_act_test_todo',
             summary="Activity 1",
             date_deadline=fields.Date.context_today(MailTestActivityCtx) - timedelta(days=7),
+            user_id=self.env.uid,
         )
         MailTestActivityModel.create({
             'date': '2021-05-16',
@@ -541,6 +562,7 @@ class TestTours(HttpCase):
             'test_mail.mail_act_test_todo',
             summary="Activity 2",
             date_deadline=fields.Date.context_today(MailTestActivityCtx),
+            user_id=self.env.uid,
         )
         MailTestActivityModel.create({
             'date': '2021-05-16',
@@ -549,6 +571,7 @@ class TestTours(HttpCase):
             'test_mail.mail_act_test_todo',
             summary="Activity 3",
             date_deadline=fields.Date.context_today(MailTestActivityCtx) + timedelta(days=7),
+            user_id=self.env.uid,
         )
         MailTestActivityModel.create({
             'date': '2021-05-16',

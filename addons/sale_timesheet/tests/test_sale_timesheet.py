@@ -684,7 +684,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
         message_sent = self.env['mail.message'].search([
             ('id', '>', last_message_id),
-            ('subject', 'like', 'Upsell'),
+            ('subject', 'like', 'To-Do'),
             ('model', '=', 'sale.order'),
             ('res_id', '=', sale_order.id),
         ])
@@ -701,7 +701,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         message_sent = self.env['mail.message'].search([
             ('id', '>', last_message_id),
-            ('subject', 'like', 'Upsell'),
+            ('subject', 'like', 'To-Do'),
             ('model', '=', 'sale.order'),
             ('res_id', '=', sale_order.id),
         ])
@@ -748,7 +748,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
         message_sent = self.env['mail.message'].search([
             ('id', '>', last_message_id),
-            ('subject', 'like', 'Upsell'),
+            ('subject', 'like', 'To-Do'),
             ('model', '=', 'sale.order'),
             ('res_id', '=', sale_order.id),
         ])
@@ -765,7 +765,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         message_sent = self.env['mail.message'].search([
             ('id', '>', last_message_id),
-            ('subject', 'like', 'Upsell'),
+            ('subject', 'like', 'To-Do'),
             ('model', '=', 'sale.order'),
             ('res_id', '=', sale_order.id),
         ])
@@ -797,7 +797,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
         message_sent = self.env['mail.message'].search([
             ('id', '>', last_message_id),
-            ('subject', 'like', 'Upsell'),
+            ('subject', 'like', 'To-Do'),
             ('model', '=', 'sale.order'),
             ('res_id', '=', sale_order.id),
         ])
@@ -814,7 +814,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         message_sent = self.env['mail.message'].search([
             ('id', '>', last_message_id),
-            ('subject', 'like', 'Upsell'),
+            ('subject', 'like', 'To-Do'),
             ('model', '=', 'sale.order'),
             ('res_id', '=', sale_order.id),
         ])

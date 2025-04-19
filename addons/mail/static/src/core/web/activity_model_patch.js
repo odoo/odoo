@@ -33,7 +33,10 @@ patch(Activity.prototype, {
                         default_res_id: this.res_id,
                     },
                 },
-                { onClose: resolve }
+                { 
+                    onClose: resolve,
+                    additionalContext: { dialog_size: "medium" },
+                }
             )
         );
     },

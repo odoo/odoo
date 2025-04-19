@@ -449,7 +449,7 @@ class TestLeadMerge(TestLeadMergeCommon):
             } for idx in range(4)
         ])
         lead_1 = self.env['crm.lead'].browse(self.lead_1.ids)
-        activity = lead_1.activity_schedule('crm.lead_test_activity_1')
+        activity = lead_1.activity_schedule('crm.lead_test_activity_1', user_id=self.user_sales_manager.id)
         calendar_event = self.env['calendar.event'].create({
             'name': 'Meeting with partner',
             'activity_ids': [(4, activity.id)],

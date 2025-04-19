@@ -188,7 +188,8 @@ class MailTestActivity(models.Model):
     def action_start(self, action_summary):
         return self.activity_schedule(
             'test_mail.mail_act_test_todo',
-            summary=action_summary
+            summary=action_summary,
+            user_id=self.env.uid,
         )
 
     def action_close(self, action_feedback, attachment_ids=None):

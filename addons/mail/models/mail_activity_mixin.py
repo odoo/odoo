@@ -406,8 +406,8 @@ class MailActivityMixin(models.AbstractModel):
                 'res_id': record.id,
             }
             create_vals.update(act_values)
-            if not create_vals.get('user_id'):
-                create_vals['user_id'] = activity_type.default_user_id.id or self.env.uid
+            if not create_vals.get('user_id') and activity_type.default_user_id:
+                create_vals['user_id'] = activity_type.default_user_id.id
             create_vals_list.append(create_vals)
         return self.env['mail.activity'].create(create_vals_list)
 
@@ -477,7 +477,7 @@ class MailActivityMixin(models.AbstractModel):
 
     def activity_unlink(self, act_type_xmlids, user_id=None, only_automated=True):
         """ Unlink activities, limiting to some activity types and optionally
-        to a given user. """
+       to a given user. """
         if self.env.context.get('mail_activity_automation_skip'):
             return False
 

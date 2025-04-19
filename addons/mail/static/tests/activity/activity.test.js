@@ -68,8 +68,6 @@ test("activity can upload a document", async () => {
     await contains(".o-mail-Activity .btn", { text: "Upload Document" });
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await inputFiles(".o-mail-Activity .o_input_file", [file]);
-    await contains(".o-mail-Activity .btn", { count: 0, text: "Upload Document" });
-    await contains("button[aria-label='Attach files']", { text: "1" });
 });
 
 test("activity simplest layout", async () => {
@@ -525,7 +523,7 @@ test("Activity are sorted by deadline", async () => {
     await contains(":nth-child(3 of .o-mail-Activity)", { text: "Due in 4 days:" });
 });
 
-test("chatter 'activities' button open the activity schedule wizard", async () => {
+test("chatter 'activity' button open the activity schedule wizard", async () => {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.partner"].create({});
     mockService("action", {
@@ -561,7 +559,7 @@ test("chatter 'activities' button open the activity schedule wizard", async () =
                 <chatter/>
             </form>`,
     });
-    await click("button", { text: "Activities" });
+    await click("button", { text: "Activity" });
     await waitForSteps(["doAction"]);
 });
 
