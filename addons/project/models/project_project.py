@@ -33,6 +33,47 @@ class Project(models.Model):
     _systray_view = 'activity'
     _track_duration_field = 'stage_id'
 
+    actual_amount = fields.Float(string="Montant Réel")
+    allocated_amount = fields.Float(string="Montant Alloué")
+
+    def action_confirm_project(self):
+        for project in self:
+            project.actual_amount = project.allocated_amount
+            project.message_post(body="Projet confirmé via le bouton.")
+        return True
+
+    def action_open_or_create_contract(self):
+        self.ensure_one()
+
+        # Rechercher un contrat existant lié à ce projet
+        existing_contract = self.env['contract.model'].search([('project_id', '=', self.id)], limit=1)
+
+        if existing_contract:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Contrat',
+                'res_model': 'contract.model',
+                'view_mode': 'form',
+                'res_id': existing_contract.id,
+                'target': 'current',
+            }
+
+        # Sinon, créer un contrat et le lier
+        contract = self.env['contract.model'].create({
+            'project_id': self.id,
+            'name': f"Contrat de {self.name}",
+        })
+        self.contract_id = contract.id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Contrat',
+            'res_model': 'contract.model',
+            'view_mode': 'form',
+            'res_id': contract.id,
+            'target': 'current',
+        }
+
     def __compute_task_count(self, count_field='task_count', additional_domain=None):
         count_fields = {fname for fname in self._fields if 'count' in fname}
         if count_field not in count_fields:
