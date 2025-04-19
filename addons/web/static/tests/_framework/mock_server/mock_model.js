@@ -2928,7 +2928,7 @@ export class Model extends Array {
                         result[field.name] = container[field.definition_record_field].map(
                             (def) => ({
                                 ...def,
-                                value: record[field.name][def.name] ?? false,
+                                value: record[field.name][def.name],
                             })
                         );
                     } else {
@@ -3180,7 +3180,7 @@ export class Model extends Array {
                     if (property.definition_deleted) {
                         delete record[fieldName][property.name];
                     } else {
-                        let value = property.value ?? property.default ?? false;
+                        let value = property.value ?? property.default;
                         if (value && property.comodel) {
                             // For relational fields: transform to [id, display_name] tuples
                             const coModel = this.env[property.comodel];

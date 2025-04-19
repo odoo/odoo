@@ -4,7 +4,7 @@ import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { user } from "@web/core/user";
 
-const allowedQwebExpressions = memoize(async (model, orm) => {
+export const allowedQwebExpressions = memoize(async (model, orm) => {
     return await orm.call(model, "mail_allowed_qweb_expressions");
 });
 

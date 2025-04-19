@@ -20,7 +20,7 @@ function getModelInfo(resModel) {
     };
 }
 
-function getDefinitions() {
+function getDefinitions(resModel) {
     const records = Species._records;
     const fieldDefs = {};
     for (const record of records) {
@@ -34,7 +34,7 @@ function getDefinitions() {
             };
         }
     }
-    return { resModel: "*", fieldDefs };
+    return { resModel: resModel || "*", fieldDefs };
 }
 
 class Tortoise extends models.Model {
@@ -206,6 +206,133 @@ test("loadPath", async () => {
     for (const { resModel, path } of errorToTest) {
         try {
             await getService("field").loadPath(resModel, path);
+        } catch {
+            expect.step("error");
+        }
+    }
+    expect.verifySteps(errorToTest.map(() => "error"));
+});
+
+test("loadPath follow relational properties", async () => {
+    await makeMockEnv();
+
+    const toTest = [
+        {
+            resModel: "tortoise",
+            path: "*",
+            expectedResult: {
+                names: ["*"],
+                modelsInfo: [getModelInfo(Tortoise)],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "*.a",
+            expectedResult: {
+                isInvalid: "path",
+                names: ["*", "a"],
+                modelsInfo: [getModelInfo(Tortoise)],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "location_id.*",
+            expectedResult: {
+                names: ["location_id", "*"],
+                modelsInfo: [getModelInfo(Tortoise), getModelInfo(Location)],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "age",
+            expectedResult: {
+                names: ["age"],
+                modelsInfo: [getModelInfo(Tortoise)],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "location_id",
+            expectedResult: {
+                names: ["location_id"],
+                modelsInfo: [getModelInfo(Tortoise)],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "location_id.tortoise_ids",
+            expectedResult: {
+                names: ["location_id", "tortoise_ids"],
+                modelsInfo: [getModelInfo(Tortoise), getModelInfo(Location)],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "location_id.tortoise_ids.age",
+            expectedResult: {
+                names: ["location_id", "tortoise_ids", "age"],
+                modelsInfo: [
+                    getModelInfo(Tortoise),
+                    getModelInfo(Location),
+                    getModelInfo(Tortoise),
+                ],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "location_id.tortoise_ids.age",
+            expectedResult: {
+                names: ["location_id", "tortoise_ids", "age"],
+                modelsInfo: [
+                    getModelInfo(Tortoise),
+                    getModelInfo(Location),
+                    getModelInfo(Tortoise),
+                ],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "property_field",
+            expectedResult: {
+                names: ["property_field"],
+                modelsInfo: [getModelInfo(Tortoise)],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "property_field.galapagos_lifespans",
+            expectedResult: {
+                names: ["property_field", "galapagos_lifespans"],
+                modelsInfo: [getModelInfo(Tortoise), getDefinitions("tortoise")],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "property_field.location_ids.tortoise_ids",
+            expectedResult: {
+                names: ["property_field", "location_ids", "tortoise_ids"],
+                modelsInfo: [
+                    getModelInfo(Tortoise),
+                    getDefinitions("tortoise"),
+                    getModelInfo(Location),
+                ],
+            },
+        },
+    ];
+    for (const { resModel, path, expectedResult } of toTest) {
+        const result = await getService("field").loadPath(resModel, path, true);
+        expect(result).toEqual(expectedResult);
+    }
+
+    const errorToTest = [
+        { resModel: "notAModel" },
+        { resModel: "tortoise", path: {} },
+        { resModel: "tortoise", path: "" },
+    ];
+
+    for (const { resModel, path } of errorToTest) {
+        try {
+            await getService("field").loadPath(resModel, path, true);
         } catch {
             expect.step("error");
         }

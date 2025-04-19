@@ -43,15 +43,15 @@ async function closePopover() {
 async function changeType(propertyType) {
     const TYPES_INDEX = {
         char: 1,
-        integer: 3,
-        float: 4,
-        date: 5,
-        datetime: 6,
-        selection: 7,
-        tags: 8,
-        many2one: 9,
-        many2many: 10,
-        separator: 11,
+        integer: 4,
+        float: 5,
+        date: 6,
+        datetime: 7,
+        selection: 8,
+        tags: 9,
+        many2one: 10,
+        many2many: 11,
+        separator: 12,
     };
     const propertyTypeIndex = TYPES_INDEX[propertyType];
     await click(".o_field_property_definition_type input");
@@ -662,6 +662,54 @@ test("properties: float and integer", async () => {
     await editValue("azerty", "0", "Wrong integer value should be interpreted as 0");
     await editValue("1,2,3,4,5,6", "123,456");
     await editValue("1,2,3,4,5,6.1,2,3", "0");
+});
+
+/**
+ * Test the text property.
+ */
+test("properties: text", async () => {
+    onRpc("has_access", () => true);
+
+    Partner._records = [
+        {
+            id: 1337,
+            company_id: 42,
+            properties: {
+                property_1: "text value",
+            },
+        },
+    ];
+
+    ResCompany._records.push({
+        id: 42,
+        name: "Company 2",
+        definitions: [
+            {
+                name: "property_1",
+                string: "My Text",
+                type: "text",
+                view_in_kanban: true,
+            },
+        ],
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1337,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+    });
+
+    expect(".o_field_properties textarea").toHaveCount(1);
+    expect(".o_field_properties textarea").toHaveValue("text value");
 });
 
 /**
@@ -2622,4 +2670,62 @@ test("properties: split, moving property from 1st group to 2nd", async () => {
             ["Property 6", "property_6"],
         ],
     ]);
+});
+
+test("properties: do not write undefined value", async () => {
+    Partner._records.push({
+        id: 5000,
+        display_name: "third partner",
+        properties: {
+            property_1: "test",
+            property_2: undefined,
+        },
+        company_id: 37,
+    });
+    ResCompany._records[0].definitions = [
+        {
+            name: "property_1",
+            string: "Property 1",
+            type: "char",
+        },
+        {
+            name: "property_2",
+            string: "Property 2",
+            type: "char",
+        },
+    ];
+    onRpc(({ method, args }) => {
+        if (method === "has_access") {
+            return true;
+        }
+        if (method === "web_save") {
+            expect.step("web_save");
+            expect(args[1].properties).toEqual([
+                {
+                    name: "property_1",
+                    string: "Property 1",
+                    type: "char",
+                    value: "edited",
+                },
+                {
+                    name: "property_2",
+                    string: "Property 2",
+                    type: "char",
+                    // Value not added here
+                },
+            ]);
+        }
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 5000,
+        arch: /* xml */ `<form><field name="company_id"/><field name="properties"/></form>`,
+    });
+
+    await contains("[property-name=property_1] input").edit("edited");
+
+    expect.verifySteps([]);
+    await clickSave();
+    expect.verifySteps(["web_save"]);
 });
