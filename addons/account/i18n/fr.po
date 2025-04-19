@@ -4543,7 +4543,7 @@ msgid ""
 "associated with this tag in tax report computation."
 msgstr ""
 "Cochez cette case pour inverser la valeur absolue du solde des lignes "
-"associées à cette étiquette dans le calcul du rapport fiscal."
+"associées à cette étiquette dans le calcul de la déclaration fiscale."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -4700,6 +4700,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 msgid "Commercial Entity"
 msgstr "Entité commerciale"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__commercial_partner_country
+msgid "Commercial Partner Country"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
@@ -7900,7 +7905,7 @@ msgstr "Du dernier exercice fiscal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
 msgid "From previous tax period"
-msgstr "De la déclaration TVA précédente "
+msgstr "De la déclaration fiscale précédente"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
@@ -8004,7 +8009,7 @@ msgstr "Écritures générées"
 #. module: account
 #: model:account.report,name:account.generic_tax_report
 msgid "Generic Tax report"
-msgstr "Rapport fiscal générique"
+msgstr "Déclaration fiscale générique"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -15707,7 +15712,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr "Le pays à utiliser pour les rapports fiscaux de cette entreprise."
+msgstr ""
+"Le pays à utiliser pour les déclarations fiscales de cette entreprise."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -18666,8 +18672,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete a tax line as it would impact the tax report"
 msgstr ""
-"Vous ne pouvez pas supprimer une ligne de taxe, car cela affecterait le "
-"rapport fiscal."
+"Vous ne pouvez pas supprimer une ligne de taxe, car cela affecterait la "
+"déclaration fiscale."
 
 #. module: account
 #. odoo-python
