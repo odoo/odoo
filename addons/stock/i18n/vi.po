@@ -701,7 +701,7 @@ msgstr "<strong>Số lượng</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr "<strong>Ngày theo kế hoạch:</strong>"
+msgstr "<strong>Ngày đã lên lịch:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -923,7 +923,7 @@ msgstr "Quản trị viên"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Advanced Scheduling"
-msgstr "Lập lịch trình nâng cao"
+msgstr "Lên lịch nâng cao"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_order
@@ -1272,7 +1272,7 @@ msgstr "Mã vạch"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Quy tắc đặt tên mã vạch"
+msgstr "Danh pháp mã vạch"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
@@ -1297,7 +1297,7 @@ msgstr "Lệnh chuyển hàng theo lô"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__by_date
 msgid "Before scheduled date"
-msgstr "Trước ngày theo kế hoạch"
+msgstr "Trước ngày đã lên lịch"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -2172,7 +2172,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Scheduled"
-msgstr "Ngày theo kế hoạch"
+msgstr "Ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
@@ -4018,7 +4018,7 @@ msgstr "Bị trễ"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr "Bị trễ hoặc sẽ trễ tùy thuộc vào hạn chót và ngày theo kế hoạch"
+msgstr "Bị trễ hoặc sẽ trễ tùy thuộc vào hạn chót và ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -4746,14 +4746,14 @@ msgid ""
 "Maximum number of days before scheduled date that priority picking products "
 "should be reserved."
 msgstr ""
-"Số ngày tối đa trước ngày theo kế hoạch mà sản phẩm ưu tiên cần được dự trữ."
+"Số ngày tối đa trước ngày đã lên lịch mà sản phẩm ưu tiên cần được dự trữ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before
 msgid ""
 "Maximum number of days before scheduled date that products should be "
 "reserved."
-msgstr "Số ngày tối đa trước ngày theo kế hoạch mà sản phẩm cần được dự trữ."
+msgstr "Số ngày tối đa trước ngày đã lên lịch mà sản phẩm cần được dự trữ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__max_weight
@@ -6980,7 +6980,7 @@ msgstr "Dự trữ một phần kiện hàng"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reserve before scheduled date"
-msgstr "Dự trữ trước ngày theo kế hoạch"
+msgstr "Dự trữ trước ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__reserved_uom_qty
@@ -7264,19 +7264,19 @@ msgstr "Lịch sử bán hàng"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
-msgstr "Ngày theo kế hoạch"
+msgstr "Ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
 msgid "Scheduled date until move is done, then date of actual move processing"
 msgstr ""
-"Ngày theo kế hoạch cho đến khi dịch chuyển hoàn tất, sau đó là ngày xử lý "
-"dịch chuyển thực tế"
+"Ngày đã lên lịch cho đến khi dịch chuyển hoàn tất, sau đó là ngày xử lý dịch"
+" chuyển thực tế"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Scheduled or processing date"
-msgstr "Ngày theo kế hoạch hoặc ngày xử lý"
+msgstr "Ngày đã lên lịch hoặc ngày xử lý"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -7285,8 +7285,8 @@ msgid ""
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
 "Thời gian theo kế hoạch để xử lý phần đầu tiên của lô hàng. Việc thiết lập "
-"thủ công một giá trị tại đây sẽ đặt ngày này làm ngày dự kiến cho tất cả "
-"dịch chuyển tồn kho."
+"thủ công một giá trị tại đây sẽ đặt ngày này làm ngày đã lên lịch cho tất cả"
+" dịch chuyển tồn kho."
 
 #. module: stock
 #. odoo-python
@@ -9279,8 +9279,8 @@ msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
 "serial numbers."
 msgstr ""
-"Sử dụng ma trận dữ liệu phép đặt tên GS1 bất cứ khi nào mã vạch được in cho "
-"lô và số sê-ri."
+"Sử dụng ma trận dữ liệu danh pháp GS1 bất cứ khi nào mã vạch được in cho lô "
+"và số sê-ri."
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -9980,8 +9980,8 @@ msgstr ""
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
 msgstr ""
-"Bạn không thể thay đổi Ngày theo kế hoạch trong một lệnh chuyển hàng đã hoàn"
-" tất hoặc bị hủy."
+"Bạn không thể thay đổi Ngày đã lên lịch trong một lệnh chuyển hàng đã hoàn "
+"tất hoặc bị hủy."
 
 #. module: stock
 #. odoo-python
