@@ -75,6 +75,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
      'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
+     'data-ai-field',
      'data-mimetype-before-conversion',
      ])
 SANITIZE_TAGS = {
@@ -516,9 +517,9 @@ def html_to_inner_content(html):
     processed = re.sub(HTML_NEWLINES_REGEX, ' ', html)
     processed = re.sub(HTML_TAGS_REGEX, '', processed)
     processed = re.sub(r' {2,}|\t', ' ', processed)
+    processed = processed.replace("\xa0", " ")
     processed = htmllib.unescape(processed)
-    processed = processed.strip()
-    return processed
+    return processed.strip()
 
 
 def create_link(url, label):

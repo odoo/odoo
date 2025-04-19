@@ -512,10 +512,12 @@ export function parseServerValue(field, value) {
         }
         case "properties": {
             return value
-                ? value.map((property) => ({
-                      ...property,
-                      value: parseServerValue(property, property.value ?? false),
-                  }))
+                ? value.map((property) => {
+                      if (property.value !== undefined) {
+                          property.value = parseServerValue(property, property.value ?? false);
+                      }
+                      return property;
+                  })
                 : [];
         }
     }

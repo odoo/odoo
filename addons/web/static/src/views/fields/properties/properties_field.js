@@ -44,7 +44,7 @@ export class PropertiesField extends Component {
         this.popover = usePopover(PropertyDefinition, {
             closeOnClickAway: this.checkPopoverClose,
             popoverClass: "o_property_field_popover",
-            position: "top",
+            position: "right",
             onClose: () => this.onCloseCurrentPopover?.(),
             fixedPosition: true,
             arrow: false,
@@ -216,6 +216,11 @@ export class PropertiesField extends Component {
     get propertiesList() {
         const propertiesValues = this.props.record.data[this.props.name] || [];
         return propertiesValues.filter((definition) => !definition.definition_deleted);
+    }
+
+    // for overrides
+    get additionalPropertyDefinitionProps() {
+        return {};
     }
 
     /**
@@ -901,6 +906,7 @@ export class PropertiesField extends Component {
         };
 
         this.popover.open(target, {
+            fieldName: this.props.name,
             readonly: this.props.readonly || !this.state.canChangeDefinition,
             canChangeDefinition: this.state.canChangeDefinition,
             checkDefinitionWriteAccess: () => this.checkDefinitionWriteAccess(),
@@ -915,6 +921,7 @@ export class PropertiesField extends Component {
             isNewlyCreated: isNewlyCreated,
             propertyIndex: propertyIndex,
             propertiesSize: propertiesList.length,
+            ...this.additionalPropertyDefinitionProps,
         });
     }
 
@@ -926,7 +933,9 @@ export class PropertiesField extends Component {
     _setDefaultPropertyValue(propertyName) {
         const propertiesValues = this.propertiesList;
         const newProperty = propertiesValues.find((property) => property.name === propertyName);
-        newProperty.value = newProperty.default;
+        if (newProperty.default) {
+            newProperty.value = newProperty.default;
+        }
         // it won't update the props, it's a trick because the onClose event of the popover
         // is called not synchronously, and so if we click on "create a property", it will close
         // the popover, calling this function, but the value will be overwritten because of onPropertyCreate

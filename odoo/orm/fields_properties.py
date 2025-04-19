@@ -69,7 +69,7 @@ class Properties(Field):
 
     ALLOWED_TYPES = (
         # standard types
-        'boolean', 'integer', 'float', 'char', 'date', 'datetime',
+        'boolean', 'integer', 'float', 'text', 'char', 'date', 'datetime',
         # relational like types
         'many2one', 'many2many', 'selection', 'tags',
         # UI types
@@ -78,9 +78,9 @@ class Properties(Field):
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
-        self._setup_definition_attrs()
+        self._setup_definition_attrs(model_class)
 
-    def _setup_definition_attrs(self):
+    def _setup_definition_attrs(self, model_class):
         if self.definition:
             # determine definition_record and definition_record_field
             assert self.definition.count(".") == 1
@@ -90,11 +90,17 @@ class Properties(Field):
             self._depends = (self.definition_record, )
             self.compute = self._compute
 
+    def setup(self, model):
+        if not self._setup_done and self.definition_record and self.definition_record_field:
+            definition_record_field = model.env[model._fields[self.definition_record].comodel_name]._fields[self.definition_record_field]
+            definition_record_field.properties_fields += (self,)
+        return super().setup(model)
+
     def setup_related(self, model):
         super().setup_related(model)
         if self.inherited_field and not self.definition:
             self.definition = self.inherited_field.definition
-            self._setup_definition_attrs()
+            self._setup_definition_attrs(model)
 
     # Database/cache format: a value is either None, or a dict mapping property
     # names to their corresponding value, like
@@ -355,8 +361,9 @@ class Properties(Field):
                 if property_name and context_key in env.context:
                     default = env.context[context_key]
                 else:
-                    default = properties_value.get('default') or False
-                properties_value['value'] = default
+                    default = properties_value.get('default')
+                if default:
+                    properties_value['value'] = default
 
         return properties_list_values
 
@@ -469,11 +476,14 @@ class Properties(Field):
             if property_type not in cls.ALLOWED_TYPES:
                 raise ValueError(f'Wrong property type {property_type!r}')
 
+            if property_value is None:
+                continue
+
             if property_type == 'boolean':
                 # E.G. convert zero to False
                 property_value = bool(property_value)
 
-            elif property_type == 'char' and not isinstance(property_value, str):
+            elif property_type in ('char', 'text') and not isinstance(property_value, str):
                 property_value = False
 
             elif property_value and property_type == 'selection':
@@ -507,9 +517,6 @@ class Properties(Field):
                     id_ for id_ in property_value
                     if id_ in res_ids_per_model[res_model]
                 ] if res_model in env else []
-
-            elif property_value is None:
-                property_value = False
 
             property_definition['value'] = property_value
 
@@ -555,6 +562,9 @@ class Properties(Field):
             property_value = property_definition.get('value')
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
+            if property_value is None:
+                # Do not store None key
+                continue
 
             if property_type == 'separator':
                 # "separator" is used as a visual separator in the form view UI
@@ -588,7 +598,10 @@ class Properties(Field):
 
         values_list = copy.deepcopy(properties_definition)
         for property_definition in values_list:
-            property_definition['value'] = values_dict.get(property_definition['name'])
+            if property_definition['name'] in values_dict:
+                property_definition['value'] = values_dict[property_definition['name']]
+            else:
+                property_definition.pop('value', None)
         return values_list
 
     def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
@@ -759,6 +772,7 @@ class PropertiesDefinition(Field):
     copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
     prefetch = True
+    properties_fields = ()  # List of Properties fields using that definition
 
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
@@ -809,7 +823,7 @@ class PropertiesDefinition(Field):
 
             self._validate_properties_definition(value, record.env)
 
-        return json.dumps(value)
+        return json.dumps(record._convert_to_cache_properties_definition(value))
 
     def convert_to_cache(self, value, record, validate=True):
         # any format -> cache format (list of dicts or None)
@@ -832,7 +846,7 @@ class PropertiesDefinition(Field):
 
             self._validate_properties_definition(value, record.env)
 
-        return value
+        return record._convert_to_column_properties_definition(value)
 
     def convert_to_record(self, value, record):
         # cache format -> record format (list of dicts)
@@ -892,19 +906,22 @@ class PropertiesDefinition(Field):
     def convert_to_write(self, value, record):
         return value
 
-    @classmethod
-    def _validate_properties_definition(cls, properties_definition, env):
+    def _validate_properties_definition(self, properties_definition, env):
         """Raise an error if the property definition is not valid."""
+        allowed_keys = self.ALLOWED_KEYS + env["base"]._additional_allowed_keys_properties_definition()
+
+        env["base"]._validate_properties_definition(properties_definition, self)
+
         properties_names = set()
 
         for property_definition in properties_definition:
-            for property_parameter, allowed_types in cls.PROPERTY_PARAMETERS_MAP.items():
+            for property_parameter, allowed_types in self.PROPERTY_PARAMETERS_MAP.items():
                 if property_definition.get('type') not in allowed_types and property_parameter in property_definition:
                     raise ValueError(f'Invalid property parameter {property_parameter!r}')
 
             property_definition_keys = set(property_definition.keys())
 
-            invalid_keys = property_definition_keys - set(cls.ALLOWED_KEYS)
+            invalid_keys = property_definition_keys - set(allowed_keys)
             if invalid_keys:
                 raise ValueError(
                     'Some key are not allowed for a properties definition [%s].' %
@@ -913,7 +930,7 @@ class PropertiesDefinition(Field):
 
             check_property_field_value_name(property_definition['name'])
 
-            required_keys = set(cls.REQUIRED_KEYS) - property_definition_keys
+            required_keys = set(self.REQUIRED_KEYS) - property_definition_keys
             if required_keys:
                 raise ValueError(
                     'Some key are missing for a properties definition [%s].' %
