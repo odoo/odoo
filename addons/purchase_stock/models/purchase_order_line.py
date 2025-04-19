@@ -169,7 +169,9 @@ class PurchaseOrderLine(models.Model):
                     # inviting the user to create a refund.
                     line.invoice_lines[0].move_id.activity_schedule(
                         'mail.mail_activity_data_warning',
-                        note=_('The quantities on your purchase order indicate less than billed. You should ask for a refund.'))
+                        note=_('The quantities on your purchase order indicate less than billed. You should ask for a refund.'),
+                        user_id=self.env.uid,
+                    )
 
                 # If the user increased quantity of existing line or created a new line
                 # Give priority to the pickings related to the line

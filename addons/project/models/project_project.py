@@ -32,7 +32,6 @@ class ProjectProject(models.Model):
     ]
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
-    _systray_view = 'activity'
     _track_duration_field = 'stage_id'
 
     def __compute_task_count(self, count_field='task_count', additional_domain=None):

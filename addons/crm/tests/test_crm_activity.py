@@ -4,14 +4,15 @@
 from datetime import date, timedelta
 
 from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
+@tagged('mail_activity')
 class TestCrmMailActivity(TestCrmCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestCrmMailActivity, cls).setUpClass()
+        super().setUpClass()
 
         cls.activity_type_1 = cls.env['mail.activity.type'].create({
             'name': 'Initial Contact',
@@ -70,10 +71,10 @@ class TestCrmMailActivity(TestCrmCommon):
                         deadline_in2d, False, False, False, False]
 
         test_leads[0:4].activity_schedule(act_type_xmlid='crm.call_for_demo', user_id=self.user_sales_manager.id, date_deadline=deadline_in1d)
-        test_leads[0:3].activity_schedule(act_type_xmlid='crm.initial_contact', date_deadline=deadline_in2d)
-        test_leads[5].activity_schedule(act_type_xmlid='crm.initial_contact', date_deadline=deadline_in2d)
-        (test_leads[1] | test_leads[3]).activity_schedule(act_type_xmlid='crm.initial_contact', date_deadline=deadline_was1d)
-        (test_leads[2] | test_leads[4]).activity_schedule(act_type_xmlid='crm.call_for_demo', date_deadline=deadline_was2d)
+        test_leads[0:3].activity_schedule(act_type_xmlid='crm.initial_contact', user_id=self.user_sales_leads.id, date_deadline=deadline_in2d)
+        test_leads[5].activity_schedule(act_type_xmlid='crm.initial_contact', user_id=self.user_sales_leads.id, date_deadline=deadline_in2d)
+        (test_leads[1] | test_leads[3]).activity_schedule(act_type_xmlid='crm.initial_contact', user_id=self.user_sales_leads.id, date_deadline=deadline_was1d)
+        (test_leads[2] | test_leads[4]).activity_schedule(act_type_xmlid='crm.call_for_demo', user_id=self.user_sales_leads.id, date_deadline=deadline_was2d)
         test_leads.invalidate_recordset()
 
         expected_ids_asc = [2, 4, 1, 3, 5, 0, 8, 7, 9, 6]
@@ -137,8 +138,9 @@ class TestCrmMailActivity(TestCrmCommon):
 
         # mark as done, check lead and posted message
         activity.action_done()
-        self.assertFalse(self.lead_1.activity_type_id.id)
         self.assertFalse(self.lead_1.activity_ids)
+        self.lead_1.invalidate_recordset(fnames=["activity_type_id"])  # archive does not trigger recompute
+        self.assertFalse(self.lead_1.activity_type_id)
         activity_message = self.lead_1.message_ids[0]
         self.assertEqual(activity_message.notified_partner_ids, self.user_sales_manager.partner_id)
         self.assertEqual(activity_message.subtype_id, self.env.ref('mail.mt_activities'))
@@ -146,18 +148,19 @@ class TestCrmMailActivity(TestCrmCommon):
     def test_crm_activity_next_action(self):
         """ This test case set the next activity on a lead, log another, and schedule a third. """
         # Add the next activity (like we set it from a form view)
+        test_lead = self.lead_1.with_user(self.user_sales_manager)
         lead_model_id = self.env['ir.model']._get('crm.lead').id
         activity = self.env['mail.activity'].with_user(self.user_sales_manager).create({
             'activity_type_id': self.activity_type_1.id,
             'summary': 'My Own Summary',
-            'res_id': self.lead_1.id,
+            'res_id': test_lead.id,
             'res_model_id': lead_model_id,
         })
         activity._onchange_activity_type_id()
 
         # Check the next activity is correct
-        self.assertEqual(self.lead_1.activity_summary, activity.summary)
-        self.assertEqual(self.lead_1.activity_type_id, activity.activity_type_id)
+        self.assertEqual(test_lead.activity_summary, activity.summary)
+        self.assertEqual(test_lead.activity_type_id, activity.activity_type_id)
         # self.assertEqual(fields.Datetime.from_string(self.lead.activity_date_deadline), datetime.now() + timedelta(days=activity.activity_type_id.days))
 
         activity.write({
@@ -167,11 +170,14 @@ class TestCrmMailActivity(TestCrmCommon):
         })
         activity._onchange_activity_type_id()
 
-        self.assertEqual(self.lead_1.activity_summary, activity.activity_type_id.summary)
-        self.assertEqual(self.lead_1.activity_type_id, activity.activity_type_id)
+        self.assertEqual(test_lead.activity_summary, activity.activity_type_id.summary)
+        self.assertEqual(test_lead.activity_type_id, activity.activity_type_id)
         # self.assertEqual(fields.Datetime.from_string(self.lead.activity_date_deadline), datetime.now() + timedelta(days=activity.activity_type_id.days))
 
+        self.assertEqual(test_lead.activity_ids, activity)
         activity.action_done()
 
         # Check the next activity on the lead has been removed
-        self.assertFalse(self.lead_1.activity_type_id)
+        self.assertFalse(test_lead.activity_ids)
+        test_lead.invalidate_recordset(fnames=["activity_type_id"])  # archive does not trigger recompute
+        self.assertFalse(test_lead.activity_type_id)

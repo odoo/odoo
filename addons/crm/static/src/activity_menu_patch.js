@@ -22,11 +22,15 @@ patch(ActivityMenu.prototype, {
         const context = {};
         if (group.model === "crm.lead") {
             this.dropdown.close();
-            if (filter === "my") {
+            if (filter === "my" || filter === "all") {
                 context["search_default_activities_overdue"] = 1;
                 context["search_default_activities_today"] = 1;
+            } else if (filter === "overdue") {
+                context["search_default_activities_overdue"] = 1;
+            } else if (filter === "today") {
+                context["search_default_activities_today"] = 1;
             } else {
-                context["search_default_activities_" + filter] = 1;
+                context["search_default_activities_upcoming_all"] = 1;
             }
             // Necessary because activity_ids of mail.activity.mixin has auto_join
             // So, duplicates are faking the count and "Load more" doesn't show up

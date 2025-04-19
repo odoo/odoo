@@ -650,7 +650,8 @@ Alright, thanks for the clarification. I will confirm the order as soon as I get
     <record id="sale_activity_3" model="mail.activity">
         <field name="res_id" ref="sale.sale_order_4"/>
         <field name="res_model_id" ref="sale.model_sale_order"/>
-        <field name="activity_type_id" ref="sale.mail_act_sale_upsell"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        <field name="summary">Upsell</field>
         <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
         <field name="create_uid" ref="base.user_admin"/>
         <field name="user_id" ref="base.user_admin"/>
@@ -692,7 +693,8 @@ Alright, thanks for the clarification. I will confirm the order as soon as I get
     <record id="sale_activity_9" model="mail.activity">
         <field name="res_id" ref="sale.sale_order_16"/>
         <field name="res_model_id" ref="sale.model_sale_order"/>
-        <field name="activity_type_id" ref="sale.mail_act_sale_upsell"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        <field name="summary">Upsell</field>
         <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
         <field name="create_uid" ref="base.user_demo"/>
         <field name="user_id" ref="base.user_demo"/>

@@ -1114,6 +1114,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 self.assertFalse(employee.filtered_domain([('is_absent', '=', True)]))
                 current_leave.with_user(self.user_hrmanager_id).action_validate()
 
+            employee.invalidate_recordset(fnames=["is_absent", "current_leave_id"])
             self.assertTrue(employee.is_absent)
             self.assertEqual(employee.current_leave_id, current_leave.holiday_status_id)
             self.assertFalse(employee.filtered_domain([('is_absent', '=', False)]))
