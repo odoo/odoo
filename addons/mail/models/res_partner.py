@@ -6,6 +6,7 @@ from odoo import _, api, fields, models, tools
 from odoo.osv import expression
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
+from odoo.exceptions import AccessError
 
 
 class ResPartner(models.Model):
@@ -279,7 +280,13 @@ class ResPartner(models.Model):
         """
         domain = self._get_mention_suggestions_domain(search)
         partners = self._search_mention_suggestions(domain, limit)
-        return Store(partners).get_result()
+        store = Store(partners)
+        try:
+            roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
+            store.add(roles, "name")
+        except AccessError:
+            pass
+        return store.get_result()
 
     @api.model
     def _get_mention_suggestions_domain(self, search):

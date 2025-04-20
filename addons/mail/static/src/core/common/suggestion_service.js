@@ -35,13 +35,9 @@ export class SuggestionService {
     async fetchSuggestions({ delimiter, term }, { thread, abortSignal } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
-            case "@": {
-                await Promise.all([
-                    this.fetchPartners(cleanedSearchTerm, thread, { abortSignal }),
-                    this.store.fetchStoreData("res.role", { term: cleanedSearchTerm }),
-                ]);
+            case "@":
+                await this.fetchPartnersRoles(cleanedSearchTerm, thread, { abortSignal });
                 break;
-            }
             case "#":
                 await this.fetchThreads(cleanedSearchTerm, { abortSignal });
                 break;
@@ -87,7 +83,7 @@ export class SuggestionService {
      * @param {string} term
      * @param {import("models").Thread} [thread]
      */
-    async fetchPartners(term, thread, { abortSignal } = {}) {
+    async fetchPartnersRoles(term, thread, { abortSignal } = {}) {
         const kwargs = { search: term };
         if (thread?.model === "discuss.channel") {
             kwargs.channel_id = thread.id;

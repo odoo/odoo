@@ -3,7 +3,7 @@ import { SuggestionService } from "@mail/core/common/suggestion_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(SuggestionService.prototype, {
-    async fetchPartners(term, thread, { abortSignal } = {}) {
+    async fetchPartnersRoles(term, thread, { abortSignal } = {}) {
         if (thread.model === "project.task") {
             const suggestedPartners = await this.makeOrmCall(
                 "project.task",
@@ -20,7 +20,7 @@ patch(SuggestionService.prototype, {
                 suggestedPartnersIds.includes(persona.id)
             );
         }
-        return super.fetchPartners(...arguments);
+        return super.fetchPartnersRoles(...arguments);
     },
 
     getPartnerSuggestions(thread) {

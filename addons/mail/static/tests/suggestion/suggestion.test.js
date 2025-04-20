@@ -17,7 +17,6 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
-    waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
@@ -137,12 +136,12 @@ test("Do not fetch if search more specific and fetch had no result", async () =>
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 3 }); // Mitchell Admin, Hermit, Public user
     await contains(".o-mail-Composer-suggestion", { text: "Mitchell Admin" });
-    await waitForSteps(["get_mention_suggestions"]);
+    await expect.waitForSteps(["get_mention_suggestions"]);
     await insertText(".o-mail-Composer-input", "x");
     await contains(".o-mail-Composer-suggestion", { count: 0 });
-    await waitForSteps(["get_mention_suggestions"]);
+    await expect.waitForSteps(["get_mention_suggestions"]);
     await insertText(".o-mail-Composer-input", "x");
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
 });
 
 test("show other channel member in @ mention", async () => {
@@ -280,7 +279,7 @@ test("Channel suggestions do not crash after rpc returns", async () => {
     await tick();
     await insertText(".o-mail-Composer-input", "f");
     await deferred;
-    await waitForSteps(["get_mention_suggestions"]);
+    await expect.waitForSteps(["get_mention_suggestions"]);
 });
 
 test("Suggestions are shown after delimiter was used in text (@)", async () => {
@@ -531,5 +530,67 @@ test("Mention with @-role send correct role id", async () => {
     await contains(".o-mail-Message a.o-discuss-mention", {
         text: "@rd-Discuss",
     });
-    await waitForSteps(["message_post"]);
+    await expect.waitForSteps(["message_post"]);
+});
+
+test("Mention with @-role trigger one RPC only", async () => {
+    const pyEnv = await startServer();
+    const [roleId1, roleId2] = pyEnv["res.role"].create([
+        { name: "rd-Discuss" },
+        { name: "rd-JS" },
+    ]);
+    const [userId1, userId2, userId3] = pyEnv["res.users"].create([
+        {
+            role_ids: [roleId1],
+        },
+        {
+            role_ids: [roleId2],
+        },
+        {
+            role_ids: [roleId1, roleId2],
+        },
+    ]);
+    const [partnerId1, partnerId2, partnerId3] = pyEnv["res.partner"].create([
+        { name: "Discuss guru", user_ids: [userId1] },
+        { name: "Person B", user_ids: [userId2] },
+        { name: "Person C", user_ids: [userId3] },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId1 }),
+            Command.create({ partner_id: partnerId2 }),
+            Command.create({ partner_id: partnerId3 }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        body: "message fetched",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    /**
+     * Wait for messages and members to be fetched before listening to network calls to avoid
+     * catching irrelevant calls.
+     */
+    await contains(".o-mail-Message", { text: "message fetched" });
+    await contains(".o-discuss-ChannelMember", { text: "Discuss guru" });
+    await contains(".o-mail-Composer-input", { value: "" });
+    onRpc("/*", (request) => {
+        const route = new URL(request.url).pathname;
+        if (route !== "/discuss/channel/notify_typing") {
+            expect.step(route);
+        }
+    });
+    await insertText(".o-mail-Composer-input", "@discuss");
+    await contains(".o-mail-Composer-suggestion strong", { text: "Discuss guru" });
+    await contains(".o-mail-Composer-suggestion strong", { text: "rd-Discuss" });
+    await expect.waitForSteps([
+        "/web/dataset/call_kw/res.partner/get_mention_suggestions_from_channel",
+    ]);
 });
