@@ -1,24 +1,34 @@
-# Use an official Odoo image as a base
 FROM odoo:16
 
-# Set environment variables
-ENV HOME /opt/odoo
+# Switch to root to install dependencies
+USER root
 
-# Set the working directory to /opt/odoo
-WORKDIR /opt/odoo
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    libpq-dev \
+    python3-dev \
+    libjpeg8-dev \
+    liblcms2-dev \
+    libsasl2-dev \
+    libldap2-dev \
+    zlib1g-dev \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy the Odoo configuration file
-COPY ./odoo.conf /etc/odoo.conf
+# Switch back to odoo user
+USER odoo
 
-# Copy your custom modules to the addons directory
-COPY ./addons /opt/odoo/addons
-
-# Install dependencies from requirements.txt (if it exists)
+COPY ./odoo.conf /etc/odoo/odoo.conf
 COPY ./requirements.txt /opt/odoo/requirements.txt
-RUN pip3 install -r /opt/odoo/requirements.txt
+COPY ./addons /opt/odoo/addons
+WORKDIR /opt/odoo
+RUN pip install -r /opt/odoo/requirements.txt
 
-# Expose the default Odoo port
-EXPOSE 8069
+# Back to root to add entrypoint
+USER root
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Start Odoo with the provided configuration
-CMD ["odoo", "-c", "/etc/odoo.conf"]
+# Entrypoint that will handle user creation and Odoo startup
+ENTRYPOINT ["/entrypoint.sh"]
