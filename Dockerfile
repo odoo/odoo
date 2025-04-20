@@ -1,34 +1,25 @@
-FROM odoo:16
+#!/bin/bash
+set -e
 
-# Switch to root to install dependencies
-USER root
+# Wait until Postgres is accepting connections
+until pg_isready -h "${PGHOST}" -p "${PGPORT}" -U postgres; do
+  echo "Waiting for PostgreSQL at ${PGHOST}:${PGPORT}…"
+  sleep 2
+done
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libssl-dev \
-    libffi-dev \
-    libpq-dev \
-    python3-dev \
-    libjpeg8-dev \
-    liblcms2-dev \
-    libsasl2-dev \
-    libldap2-dev \
-    zlib1g-dev \
- && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Create odoo_user if it doesn't already exist
+psql -v ON_ERROR_STOP=1 -U postgres -h "${PGHOST}" -p "${PGPORT}" -d postgres <<-EOSQL
+DO \$\$
+BEGIN
+  IF NOT EXISTS (
+    SELECT FROM pg_catalog.pg_user WHERE usename = 'odoo_user'
+  ) THEN
+    CREATE USER odoo_user WITH PASSWORD 'shuwafF2016';
+    ALTER USER odoo_user CREATEDB;
+  END IF;
+END
+\$\$;
+EOSQL
 
-# Switch back to odoo user
-USER odoo
-
-COPY ./odoo.conf /etc/odoo/odoo.conf
-COPY ./requirements.txt /opt/odoo/requirements.txt
-COPY ./addons /opt/odoo/addons
-WORKDIR /opt/odoo
-RUN pip install -r /opt/odoo/requirements.txt
-
-# Back to root to add entrypoint
-USER root
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Entrypoint that will handle user creation and Odoo startup
-ENTRYPOINT ["/entrypoint.sh"]
+# Finally, launch Odoo
+exec "$@"
