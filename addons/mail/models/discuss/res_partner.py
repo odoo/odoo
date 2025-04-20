@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import SQL
 from odoo.addons.mail.tools.discuss import Store
-from odoo.fields import Domain
+from odoo.exceptions import AccessError
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -112,4 +112,9 @@ class ResPartner(models.Model):
         if allowed_group:
             for p in partners:
                 store.add(p, {"group_ids": [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)]})
+        try:
+            roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
+            store.add(roles, "name")
+        except AccessError:
+            pass
         return store.get_result()

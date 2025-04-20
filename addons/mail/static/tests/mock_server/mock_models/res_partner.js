@@ -101,9 +101,17 @@ export class ResPartner extends webModels.ResPartner {
             const partners = this._filter([["id", "not in", mainMatchingPartnerIds]]);
             extraMatchingPartnerIds = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
-        return new mailDataHelpers.Store(
+
+        const store = new mailDataHelpers.Store(
             this.browse(mainMatchingPartnerIds.concat(extraMatchingPartnerIds))
-        ).get_result();
+        );
+        const roleIds = this.env["res.role"].search(
+            [["name", "ilike", search || ""]],
+            makeKwArgs({ limit: limit || 8 })
+        );
+        store.add("res.role", this.env["res.role"]._read_format(roleIds, ["name"], false));
+
+        return store.get_result();
     }
 
     /**
@@ -171,6 +179,11 @@ export class ResPartner extends webModels.ResPartner {
             };
             store.add(this.browse(partnerId), data);
         }
+        const roleIds = this.env["res.role"].search(
+            [["name", "ilike", searchLower || ""]],
+            makeKwArgs({ limit: limit || 8 })
+        );
+        store.add("res.role", this.env["res.role"]._read_format(roleIds, ["name"], false));
         return store.get_result();
     }
 

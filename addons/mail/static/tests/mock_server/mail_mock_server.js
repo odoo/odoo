@@ -1074,13 +1074,6 @@ function _process_request_for_internal_user(store, name, params) {
         ];
         store.add(this.env["mail.canned.response"].search(domain));
     }
-    if (name === "res.role") {
-        const roleIds = this.env["res.role"].search(
-            [["name", "ilike", params.term || ""]],
-            makeKwArgs({ limit: params.limit || 8 })
-        );
-        store.add("res.role", this.env["res.role"]._read_format(roleIds, ["name"], false));
-    }
 }
 
 const ids_by_model = {
