@@ -341,11 +341,15 @@ const threadPatch = {
             this.selfMember.syncUnread = sync ?? this.selfMember.syncUnread;
             return;
         }
-        rpc("/discuss/channel/mark_as_read", {
-            channel_id: this.id,
-            last_message_id: newestPersistentMessage.id,
-            sync,
-        }).catch((e) => {
+        rpc(
+            "/discuss/channel/mark_as_read",
+            {
+                channel_id: this.id,
+                last_message_id: newestPersistentMessage.id,
+                sync,
+            },
+            { silent: true }
+        ).catch((e) => {
             if (e.code !== 404) {
                 throw e;
             }
