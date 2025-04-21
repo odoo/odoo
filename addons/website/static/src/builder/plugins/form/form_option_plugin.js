@@ -603,6 +603,7 @@ export class FormOptionPlugin extends Plugin {
                         conditionValueList.push({
                             value: el.value,
                             textContent: el.value,
+                            display_name: el.labels[0].textContent
                         });
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {

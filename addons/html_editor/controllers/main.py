@@ -603,8 +603,10 @@ class HTML_Editor(http.Controller):
                 if link_preview_data and link_preview_data.get('og_description'):
                     result['description'] = link_preview_data['og_description']
                 return result
-
-            record_id = int(words.pop())
+            try:
+                record_id = int(words.pop())
+            except ValueError:
+                return {}
             action_name = words.pop()
             if (action_name.startswith('m-') or '.' in action_name) and action_name in request.env and not request.env[action_name]._abstract:
                 # if path format is `odoo/<model>/<record_id>` so we use `action_name` as model name
