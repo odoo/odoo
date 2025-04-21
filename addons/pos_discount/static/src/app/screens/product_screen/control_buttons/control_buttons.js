@@ -34,8 +34,7 @@ patch(ControlButtons.prototype, {
             });
             return;
         }
-        // Remove existing discounts
-        lines.filter((line) => line.getProduct() === product).forEach((line) => line.delete());
+        const tobeRemoved = order.getDiscountLine(); // remove once we successfully create new line
 
         const discountableLines = lines.filter((line) => line.isGlobalDiscountApplicable());
         const baseLines = discountableLines.map((line) =>
@@ -60,7 +59,7 @@ patch(ControlButtons.prototype, {
             }
         );
         for (const baseLine of globalDiscountBaseLines) {
-            await this.pos.addLineToCurrentOrder(
+            const line = await this.pos.addLineToCurrentOrder(
                 {
                     product_id: baseLine.product_id,
                     price_unit: baseLine.price_unit,
@@ -71,6 +70,9 @@ patch(ControlButtons.prototype, {
                 },
                 { merge: false }
             );
+            if (line) {
+                tobeRemoved?.delete();
+            }
         }
     },
 });

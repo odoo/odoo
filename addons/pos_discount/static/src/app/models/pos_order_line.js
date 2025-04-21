@@ -8,7 +8,13 @@ patch(PosOrderline.prototype, {
      */
     isGlobalDiscountApplicable() {
         return !(
-            this.config.tip_product_id && this.product_id.id === this.config.tip_product_id?.id
+            // Ignore existing discount line as not removing it before adding new discount line successfully
+            (
+                (this.config.tip_product_id &&
+                    this.product_id.id === this.config.tip_product_id?.id) ||
+                (this.config.discount_product_id &&
+                    this.product_id.id === this.config.discount_product_id?.id)
+            )
         );
     },
 });
