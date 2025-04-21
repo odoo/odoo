@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="website_technical_pages_list_view" model="ir.ui.view">
+        <field name="name">website.technical.page.list</field>
+        <field name="model">website.technical.page</field>
+        <field name="arch" type="xml">
+            <list string="Website Technical Pages" type="object" action="open_website_url">
+                <field name="name_technical_page" string="Page Title"/>
+                <field name="website_url_technical_page" string="Page url"/>
+                <field name="website_technical_page_id" string="website"/>
+                <!-- <button name="import_urls_bulk" string="import" type="object" class="oe_highlight"/> -->
+            </list>
+        </field>
+    </record>
+    
+    <record id="action_website_technical_pages" model="ir.actions.act_window">
+        <field name="name">Technical Pages</field>
+        <field name="res_model">website.technical.page</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="website_technical_pages_list_view"/>
+        <field name="context">{'create': False}</field>
+    </record>
+</odoo>    

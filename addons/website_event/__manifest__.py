@@ -15,8 +15,6 @@
         'website_mail',
     ],
     'data': [
-        'data/event_data.xml',
-        'data/website_snippet_data.xml',
         'views/event_snippets.xml',
         'views/snippets/s_events.xml',
         'views/snippets/s_event_upcoming_snippet_preview_data.xml',
@@ -37,6 +35,8 @@
         'views/event_menus.xml',
         'views/website_pages_views.xml',
         'views/event_event_add.xml',
+        'data/event_data.xml',
+        'data/website_snippet_data.xml',
         'security/ir.model.access.csv',
         'security/event_security.xml',
     ],

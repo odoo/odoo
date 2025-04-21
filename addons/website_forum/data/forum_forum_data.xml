@@ -6,5 +6,10 @@
         <field name="image_1920" type="base64" file="website_forum/static/src/img/help.jpg"/>
         <field name="description">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</field>
     </record>
+    <record id="website_forum_page" model="website.technical.page">
+        <field name="name_technical_page">Forum Page</field>
+        <field name="website_url_technical_page">/forum</field>
+        <field name="view_id" ref="website_forum.forum_all"/>
+    </record>
 
 </data></odoo>

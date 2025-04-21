@@ -26,6 +26,8 @@
     'installable': True,
     'data': [
         # security.xml first, data.xml need the group to exist (checking it)
+        'views/website_technical_views.xml',
+        'views/website_templates.xml',
         'security/website_security.xml',
         'security/ir.model.access.csv',
         'data/image_library.xml',
@@ -35,7 +37,6 @@
         'data/website_data.xml',
         'data/website_visitor_cron.xml',
         'data/digest_data.xml',
-        'views/website_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_framed_intro.xml',
         'views/snippets/s_title.xml',
