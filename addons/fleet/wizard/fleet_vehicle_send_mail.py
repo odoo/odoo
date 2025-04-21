@@ -32,14 +32,21 @@ class FleetVehicleSendMail(models.TransientModel):
                 }
             }
 
+        if self.template_id:
+            subjects = self._render_field(field='subject', res_ids=self.vehicle_ids.ids)
+            bodies = self._render_field(field='body', res_ids=self.vehicle_ids.ids)
+        else:
+            subjects = {vehicle.id: self.subject for vehicle in self.vehicle_ids}
+            bodies = {vehicle.id: self.body for vehicle in self.vehicle_ids}
+
         for vehicle in self.vehicle_ids:
             vehicle.message_post(
                 author_id=self.author_id.id,
-                body=self.body,
+                body=bodies[vehicle.id],
                 email_layout_xmlid='mail.mail_notification_light',
                 message_type='comment',
                 partner_ids=vehicle.driver_id.ids,
-                subject=self.subject,
+                subject=subjects[vehicle.id],
             )
 
     def action_save_as_template(self):

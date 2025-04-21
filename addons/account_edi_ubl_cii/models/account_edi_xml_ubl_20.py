@@ -89,6 +89,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'electronic_mail': partner.email,
         }
 
+    def _get_partner_person_vals(self, partner):
+        """
+        This is optional and meant to be overridden when required under the form:
+        {
+            'first_name': str,
+            'family_name': str,
+        }.
+        Should return a dict.
+        """
+        return {}
+
     def _get_partner_party_vals(self, partner, role):
         return {
             'partner': partner,
@@ -98,6 +109,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'party_tax_scheme_vals': self._get_partner_party_tax_scheme_vals_list(partner.commercial_partner_id, role),
             'party_legal_entity_vals': self._get_partner_party_legal_entity_vals_list(partner.commercial_partner_id),
             'contact_vals': self._get_partner_contact_vals(partner),
+            'person_vals': self._get_partner_person_vals(partner),
         }
 
     def _get_invoice_period_vals_list(self, invoice):

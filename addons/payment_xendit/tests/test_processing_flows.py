@@ -3,10 +3,12 @@
 from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
+from werkzeug.urls import url_encode
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_xendit.controllers.main import XenditController
 from odoo.addons.payment_xendit.tests.common import XenditCommon
@@ -73,3 +75,23 @@ class TestProcessingFlow(XenditCommon, PaymentHttpCommon):
         self.assertRaises(
             Forbidden, XenditController._verify_notification_token, XenditController, 'dummy', tx
         )
+
+    def test_set_xendit_transactions_to_pending_on_return(self):
+        def build_return_url(**kwargs):
+            url_params = url_encode(dict(kwargs, tx_ref=self.reference))
+            return self._build_url(f'{XenditController._return_url}?{url_params}')
+
+        self.reference = "xendit_tx1"
+        tx = self._create_transaction('redirect')
+
+        with patch.object(payment_utils, 'generate_access_token', self._generate_test_access_token):
+            token = payment_utils.generate_access_token(tx.reference, tx.amount)
+
+            self._make_http_get_request(build_return_url(success='true', access_token='coincoin'))
+            self.assertEqual(tx.state, 'draft', "Random GET requests shouldn't affect tx state")
+
+            self._make_http_get_request(build_return_url(success='false', access_token=token))
+            self.assertEqual(tx.state, 'draft', "Failure returns shouldn't change tx state")
+
+            self._make_http_get_request(build_return_url(success='true', access_token=token))
+            self.assertEqual(tx.state, 'pending', "Successful returns should set state to pending")

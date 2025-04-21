@@ -3,9 +3,9 @@
 # 	* auth_totp_mail_enforce
 # 
 # Translators:
-# erpgo translator <jumshud@erpgo.az>, 2024
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # Nurlan Farajov <coolinuxoid@gmail.com>, 2025
+# erpgo translator <jumshud@erpgo.az>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
+"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,6 +67,40 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Hörmətli <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"    <p>Kiminsə hesabınıza yeni cihazdan daxil olmağa cəhd etdiyi aşkarlandı.</p>\n"
+"    <ul>\n"
+"        <t t-set=\"not_available\">Məlumat yoxdur</t>\n"
+"        <li>Məkan: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"        <li>Cihaz: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"        <li>Brauzer: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"        <li>IP ünvanı: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"    </ul>\n"
+"    <p>Əgər bu sizsinizsə, giriş prosesini tamamlamaq üçün aşağıdakı kodu daxil edin:</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"/>\n"
+"    </div>\n"
+"    <small>Xahiş edirik nəzərə alın ki, bu kod <t t-out=\"expiration\"/> müddətində etibarlıdır.</small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Əgər bu giriş cəhdini siz etməmisinizsə, hesabınızın təhlükəsizliyini təmin etmək üçün dərhal parolunuzu dəyişməyiniz tövsiyə olunur.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Hesabınızın təhlükəsizliyini artırmaq üçün autentifikasiya tətbiqi vasitəsilə iki faktorlu autentifikasiya aktiv etməyi də mütləq şəkildə tövsiyə edirik.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            İki faktorlu autentifikasiyanı aktiv et\n"
+"        </a>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form

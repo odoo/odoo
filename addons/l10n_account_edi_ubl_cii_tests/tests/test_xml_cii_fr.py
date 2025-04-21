@@ -518,3 +518,19 @@ class TestCIIFR(TestUBLCommon):
             }],
         })
         self._assert_imported_invoice_from_file(filename='facturx_ecotaxes_case2.xml', **kwargs)
+
+    def test_facturx_has_no_negative_lines(self):
+        """
+        Test that the is no negative ChargeAmount in the facturx xml
+        """
+        invoice = self._generate_move(
+            seller=self.partner_1,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {'product_id': self.product_a.id, 'quantity': 1, 'price_unit': 100.0, 'tax_ids': [(6, 0, [self.tax_sale_a.id])]},
+                {'product_id': self.product_b.id, 'quantity': 1, 'price_unit': -50.0, 'tax_ids': [(6, 0, [self.tax_sale_a.id])]}
+            ]
+        )
+
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/facturx_positive_discount_price_unit.xml')

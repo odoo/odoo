@@ -7,7 +7,6 @@ import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_u
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("EWalletProgramTour1", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -33,7 +32,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
 
 const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
 registry.category("web_tour.tours").add("EWalletProgramTour2", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -114,7 +112,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
 });
 
 registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -129,7 +126,6 @@ registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -149,7 +145,6 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
 });
 
 registry.category("web_tour.tours").add("EWalletLoyaltyHistory", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),

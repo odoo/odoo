@@ -694,7 +694,7 @@ class AccountAccount(models.Model):
                 account.reconcile = False
             elif account.account_type in ('asset_receivable', 'liability_payable'):
                 account.reconcile = True
-            elif account.account_type == 'asset_cash':
+            elif account.account_type in ('asset_cash', 'liability_credit_card', 'off_balance'):
                 account.reconcile = False
             # For other asset/liability accounts, don't do any change to account.reconcile.
 

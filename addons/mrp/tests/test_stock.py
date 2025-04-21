@@ -677,8 +677,9 @@ class TestKitPicking(common.TestMrpCommon):
         - Packaging (qty=2 units of kit)
         """
         bom = self.bom_4
+        bom.product_id = False
         bom.type = 'phantom'
-        kit = bom.product_id
+        kit = bom.product_tmpl_id.product_variant_id
         kit.is_storable = True
         # product is in unit and bom in dozen
         kit.uom_id = self.uom_unit

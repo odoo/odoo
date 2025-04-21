@@ -29,7 +29,6 @@ const clickOrderNowAndWaitLocation = (location = "Take Out") => [
 ];
 
 registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         ...clickOrderNowAndWaitLocation("Eat In"),
@@ -48,7 +47,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
 });
 
 registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_out", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         ...clickOrderNowAndWaitLocation("Take Out"),
@@ -64,7 +62,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_out", {
 });
 
 registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_in", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         ...clickOrderNowAndWaitLocation("Eat In"),
@@ -80,7 +77,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_in", {
 });
 
 registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_out", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         ...clickOrderNowAndWaitLocation("Take Out"),
@@ -96,7 +92,6 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_out", 
 });
 
 registry.category("web_tour.tours").add("self_order_kiosk_cancel", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         ...clickOrderNowAndWaitLocation("Take Out"),
@@ -113,7 +108,6 @@ registry.category("web_tour.tours").add("self_order_kiosk_cancel", {
 });
 
 registry.category("web_tour.tours").add("self_simple_order", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -127,7 +121,6 @@ registry.category("web_tour.tours").add("self_simple_order", {
 });
 
 registry.category("web_tour.tours").add("self_order_price_null", {
-    checkDelay: 100,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -141,7 +134,6 @@ registry.category("web_tour.tours").add("self_order_price_null", {
 });
 
 registry.category("web_tour.tours").add("self_order_language_changes", {
-    checkDelay: 100,
     steps: () => [
         LandingPage.checkLanguageSelected("English"),
         LandingPage.checkCountryFlagShown("us"),
@@ -170,5 +162,24 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
             { name: "Fabric", value: "Leather" },
         ]),
         Utils.clickBtn("Add to cart"),
+    ],
+});
+
+registry.category("web_tour.tours").add("self_order_pricelist", {
+    test: true,
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "5.06", "2"),
+        CartPage.clickBack(),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "3.45", "3"),
+        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Close"),
+        Utils.checkIsNoBtn("My Order"),
     ],
 });

@@ -1,4 +1,6 @@
-import json
+import logging
+
+from markupsafe import Markup
 from hashlib import sha256
 from base64 import b64decode, b64encode
 from lxml import etree
@@ -6,6 +8,8 @@ from datetime import datetime
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
 from odoo.tools import format_list
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
@@ -154,22 +158,24 @@ class AccountEdiFormat(models.Model):
                 -   B. Reporting API: Submit a simplified Invoice to ZATCA for validation
         """
         clearance_data = invoice.journal_id._l10n_sa_api_clearance(invoice, signed_xml.decode(), PCSID_data)
-        if clearance_data.get('json_errors'):
-            errors = [json.loads(j).get('validationResults', {}) for j in clearance_data['json_errors']]
+        if error := clearance_data.get('json_errors'):
             error_msg = ''
+            if status_code := error.get('status_code'):
+                error_msg = Markup("<b>[%s] </b>") % status_code
+
             is_warning = True
-            for error in errors:
-                validation_results = error.get('validationResults', {})
-                for err in validation_results.get('warningMessages', []):
-                    error_msg += '\n - %s | %s' % (err['code'], err['message'])
-                for err in validation_results.get('errorMessages', []):
-                    is_warning = False
-                    error_msg += '\n - %s | %s' % (err['code'], err['message'])
+            validation_results = error.get('validationResults', {})
+            for err in validation_results.get('warningMessages', []):
+                error_msg += Markup('<b>%s</b> : %s <br/>') % (err['code'], err['message'])
+            for err in validation_results.get('errorMessages', []):
+                is_warning = False
+                error_msg += Markup('<b>%s</b> : %s <br/>') % (err['code'], err['message'])
             return {
                 'error': error_msg,
                 'rejected': not is_warning,
                 'response': signed_xml.decode(),
-                'blocking_level': 'warning' if is_warning else 'error'
+                'blocking_level': 'warning' if is_warning else 'error',
+                'status_code': status_code,
             }
         if not clearance_data.get('error'):
             return self._l10n_sa_assert_clearance_status(invoice, clearance_data)
@@ -476,3 +482,37 @@ class AccountEdiFormat(models.Model):
             'post': self._l10n_sa_post_zatca_edi,
             'edi_content': self._l10n_sa_get_invoice_content_edi,
         }
+
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
+        """
+        Prepare invoice report to be printed.
+        :param pdf_writer: The pdf writer with the invoice pdf content loaded.
+        :param edi_document: The edi document to be added to the pdf file.
+        """
+        self.ensure_one()
+        super()._prepare_invoice_report(pdf_writer, edi_document)
+        if self.code != 'sa_zatca' or edi_document.move_id.country_code != 'SA':
+            return
+
+        attachment = edi_document.sudo().attachment_id
+        if not attachment or not attachment.datas:
+            _logger.warning("No attachment found for invoice %s", edi_document.move_id.name)
+            return
+
+        xml_content = attachment.raw
+        file_name = attachment.name
+
+        pdf_writer.addAttachment(file_name, xml_content, subtype='text/xml')
+        if not pdf_writer.is_pdfa:
+            try:
+                pdf_writer.convert_to_pdfa()
+            except Exception:
+                _logger.exception("Error while converting to PDF/A")
+            content = self.env['ir.qweb']._render(
+                'account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata',
+                {
+                    'title': edi_document.move_id.name,
+                    'date': fields.Date.context_today(self),
+                },
+            )
+            pdf_writer.add_file_metadata(content.encode())

@@ -27,6 +27,7 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSetupAction } from "@web/search/action_hook";
 import { WebClient } from "@web/webclient/webclient";
+import { browser } from "@web/core/browser/browser";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 const actionRegistry = registry.category("actions");
@@ -749,4 +750,25 @@ test("local state, global state, and race conditions", async () => {
         `{"fromId":1}`, // setup second view instantiated
         `{"fromId":1}`, // setup third view instantiated
     ]);
+});
+
+test.tags("desktop");
+test("doing browser back temporarily disables the UI", async () => {
+    let def;
+    onRpc("partner", "web_search_read", () => def);
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction(4);
+    await contains(".o_kanban_record").click();
+    await getService("action").doAction(8);
+
+    def = new Deferred();
+    browser.history.back();
+    expect(document.body.style.pointerEvents).toBe("none");
+    // await contains(".o_control_panel .breadcrumb-item").click(); todo JUM: click on breadcrumb
+    def.resolve();
+
+    await animationFrame();
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
+    expect(document.body.style.pointerEvents).toBe("auto");
 });

@@ -5,8 +5,8 @@
 # Translators:
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Manon Rondou, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,8 +54,9 @@ msgid ""
 "<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
 "destination."
 msgstr ""
-"<br/><br/>De producten worden verplaatst naar <b>%(destination)s</b>,  <br/>"
-" zoals gespecificeerd in de bestemming van <b>%(operation)s</b>."
+"<br/><br/>De geproduceerde producten worden verplaatst naar "
+"<b>%(destination)s</b>,  <br/> zoals gespecificeerd in de bestemming van "
+"<b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -2418,7 +2419,7 @@ msgstr ""
 "Verwachte aantal (berekend als: Fysiek beschikbare voorraad - Uitgaand + Inkomend). \n"
 "Bij gebruik van een enkele voorraadlocatie, omvat dit de goederen opgeslagen in deze locatie, of één van de onderliggende locaties. \n"
 "Bij gebruik van een enkel magazijn, omvat dit de goederen die in de voorraadlocatie van dit magazijn zijn opgeslagen, of één van de onderliggende locaties. \n"
-"Anders, omvat dit goederen die zijn opgeslagen in eender welke voorraadlocatie van het type 'intern'."
+"Anders omvat dit goederen die zijn opgeslagen in een voorraadlocatie met het type 'intern'."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3326,7 +3327,7 @@ msgstr "Geproduceerd"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "Manufactured Products"
-msgstr "Geproduceerde orders"
+msgstr "Productie producten"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -6413,7 +6414,7 @@ msgstr "Wanneer de onderdelen beschikbaar zijn voor de eerste bewerking"
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
 msgstr ""
-"Wanneer producten worden gefabriceerd kunnen deze altijd in dit magazijn "
+"Wanneer producten worden geproduceerd kunnen deze altijd in dit magazijn "
 "gemaakt worden."
 
 #. module: mrp

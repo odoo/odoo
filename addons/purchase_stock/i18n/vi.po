@@ -3,14 +3,14 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -74,6 +74,11 @@ msgstr "<strong>Incoterm:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
 msgstr "<strong>Địa chỉ giao hàng:</strong>"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
+msgid "A storable product is a product for which you manage stock."
+msgstr "Sản phẩm lưu kho là sản phẩm mà bạn quản lý tồn kho."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
@@ -556,7 +561,7 @@ msgstr "Báo cáo mua hàng"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "Purchase Security Lead Time"
-msgstr "Thời gian hoàn thành an toàn"
+msgstr "Thời gian dự phòng mua hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
@@ -770,9 +775,9 @@ msgid ""
 " %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
 " Go on the product form and complete the list of vendors."
 msgstr ""
-"Không có giá nhà cung cấp phù hợp để tạo đơn mua hàng cho sản phẩm %s (không"
-" xác định nhà cung cấp, không đáp ứng số lượng tối thiểu, ngày không hợp lệ,"
-" ...). Đi đến biểu mẫu sản phẩm và hoàn thiện danh sách nhà cung cấp."
+"Không có giá nhập hàng phù hợp để tạo đơn mua hàng cho sản phẩm %s (không "
+"xác định nhà cung cấp, không đáp ứng số lượng tối thiểu, ngày không hợp lệ, "
+"...). Đi đến biểu mẫu sản phẩm và hoàn thiện danh sách nhà cung cấp."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
@@ -835,6 +840,11 @@ msgstr "Đã cập nhật tương ứng những ngày đó trên phiếu nhập 
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
 msgid "Total Quantity"
 msgstr "Tổng số lượng"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__is_storable
+msgid "Track Inventory"
+msgstr "Theo dõi hàng tồn kho"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking

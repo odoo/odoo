@@ -263,8 +263,6 @@ class WebsiteSnippetFilter(models.Model):
             else:
                 included_products = alternative_products.product_variant_ids
             products = included_products - excluded_products
-            if website.prevent_zero_price_sale:
-                products = products.filtered(lambda p: p._get_contextual_price())
             if products:
                 domain = expression.AND([
                     domain,

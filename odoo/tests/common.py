@@ -33,6 +33,7 @@ import warnings
 from collections import defaultdict, deque
 from concurrent.futures import Future, CancelledError, wait
 from contextlib import contextmanager, ExitStack
+from copy import deepcopy
 from datetime import datetime
 from functools import lru_cache, partial
 from itertools import zip_longest as izip_longest
@@ -57,6 +58,8 @@ import odoo
 from odoo import api
 from odoo.exceptions import AccessError
 from odoo.fields import Command
+from odoo.http import BadRequest
+from odoo.modules import module
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
@@ -127,6 +130,7 @@ CHECK_BROWSER_SLEEP = 0.1 # seconds
 CHECK_BROWSER_ITERATIONS = 100
 BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 DEFAULT_SUCCESS_SIGNAL = 'test successful'
+TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 
 def get_db_name():
     db = odoo.tools.config['db_name']
@@ -749,6 +753,44 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             profile_session=self.profile_session,
             **kwargs)
 
+    def setUp(self):
+        super().setUp()
+        self.http_request_key = self.canonical_tag
+
+        def reset_http_key():
+            self.http_request_key = None
+        self.addCleanup(reset_http_key)  # this should avoid to have a request executing during teardown
+
+    def check_test_cursor(self, operation):
+        if odoo.modules.module.current_test != self:
+            message = f"Trying to open a test cursor for {self.canonical_tag} while already in a test {odoo.modules.module.current_test.canonical_tag}"
+            _logger.error(message)
+            raise BadRequest(message)
+        request = odoo.http.request
+        if not request:
+            return
+        if not hasattr(self, 'http_request_key') or not self.http_request_key:
+            message = f'Using a test cursor without http_request_key, most likely between two tests on request {request.httprequest.path} in {module.current_test.canonical_tag}'
+            _logger.info(message)
+            raise BadRequest(message)
+        http_request_key = request.httprequest.cookies.get(TEST_CURSOR_COOKIE_NAME)
+        if not http_request_key:
+            if operation == '__init__':  # main difference with master, don't fail if no cookie is defined_check
+                message = f'Opening a test cursor without specified test on request {request.httprequest.path} in {module.current_test.canonical_tag}'
+                _logger.info(message)
+            return
+        http_request_required_key = self.http_request_key
+        if http_request_key != http_request_required_key:
+            expected = http_request_required_key
+            _logger.error(
+                'Request with path %s has been ignored during test as it '
+                'it does not contain the test_cursor cookie or it is expired.'
+                ' (required "%s", got "%s")',
+                request.httprequest.path, expected, http_request_key
+            )
+            raise BadRequest(
+                'Request ignored during test as it does not contain the required cookie.'
+            )
 
 class Like:
     """
@@ -942,7 +984,7 @@ class TransactionCase(BaseCase):
             cb._funcs = funcs
             cb.data = data
         for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
-            self.addCleanup(_reset, callback, deque(callback._funcs), dict(callback.data))
+            self.addCleanup(_reset, callback, deque(callback._funcs), deepcopy(callback.data))
 
         # flush everything in setUpClass before introducing a savepoint
         self.env.flush_all()
@@ -1876,6 +1918,7 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr), use_datetime=True)
         # setup an url opener helper
         self.opener = Opener(self.cr)
+        self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = self.canonical_tag
 
     def parse_http_location(self, location):
         """ Parse a Location http header typically found in 201/3xx
@@ -1988,9 +2031,11 @@ class HttpCase(TransactionCase):
         # completely) or clear-ing session.cookies.
         self.opener = Opener(self.cr)
         self.opener.cookies['session_id'] = session.sid
+        self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = self.http_request_key
         if browser:
             self._logger.info('Setting session cookie in browser')
             browser.set_cookie('session_id', session.sid, '/', HOST)
+            browser.set_cookie(TEST_CURSOR_COOKIE_NAME, self.http_request_key, '/', HOST)
 
         return session
 
@@ -2007,12 +2052,12 @@ class HttpCase(TransactionCase):
         :param string login: logged in user which will execute the test. e.g. 'admin', 'demo'
         :param int timeout: maximum time to wait for the test to complete (in seconds). Default is 60 seconds
         :param dict cookies: dictionary of cookies to set before loading the page
-        :param error_checker: function to filter failures out. 
+        :param error_checker: function to filter failures out.
             If provided, the function is called with the error log message, and if it returns `False` the log is ignored and the test continue
             If not provided, every error log triggers a failure
         :param bool watch: open a new browser window to watch the test execution
         :param string success_signal: string signal to wait for to consider the test successful
-        :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour. 
+        :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour.
             The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
         :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
         """
@@ -2031,6 +2076,7 @@ class HttpCase(TransactionCase):
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
         try:
+            self.http_request_key = self.canonical_tag + '_browser_js'
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
@@ -2087,6 +2133,8 @@ class HttpCase(TransactionCase):
         finally:
             browser.stop()
             self._wait_remaining_requests()
+            self.http_request_key = self.canonical_tag
+            self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = self.http_request_key
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the

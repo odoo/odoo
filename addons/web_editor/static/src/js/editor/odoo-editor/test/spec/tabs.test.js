@@ -15,7 +15,7 @@ describe('Tabs', () => {
     const oeTab =  (size, contenteditable = true) => (
         `<span class="oe-tabs"` +
             (contenteditable ? '' : ' contenteditable="false"') +
-            (size ?` style="width: ${size}px;"` : '') +
+            (size ?` style="width: ${size}px; tab-size: ${size}px;"` : '') +
         `>\u0009</span>\u200B`
     );
     describe('insert tabulation', () => {

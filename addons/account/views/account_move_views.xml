@@ -334,7 +334,7 @@
                     <filter string="To check" name="to_check" domain="[('move_id.checked', '=', False), ('parent_state', '!=', 'draft')]"/>
                     <separator/>
                     <filter string="Unreconciled"
-                            domain="[('account_id.reconcile', '=', True), '|', ('matching_number', '=', False), ('matching_number', '=like', 'P%')]"
+                            domain="[('balance', '!=', 0), ('account_id.reconcile', '=', True), '|', ('matching_number', '=', False), ('matching_number', '=like', 'P%')]"
                             name="reconcilable_account"
                             help="Journal items where the account allows reconciliation no matter the residual amount"
                     />
@@ -726,7 +726,7 @@
                         <button name="action_print_pdf"
                                 type="object"
                                 class="oe_highlight"
-                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id"
+                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type == 'entry'"
                                 string="Print"/>
                         <button name="action_print_pdf"
                                 type="object"

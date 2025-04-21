@@ -42,9 +42,10 @@ export class ProductProduct extends Base {
 
     needToConfigure() {
         return (
-            this.isConfigurable() &&
-            this.attribute_line_ids.length > 0 &&
-            !this.attribute_line_ids.every((l) => l.attribute_id.create_variant === "always")
+            this.isCombo() ||
+            (this.isConfigurable() &&
+                this.attribute_line_ids.length > 0 &&
+                !this.attribute_line_ids.every((l) => l.attribute_id.create_variant === "always"))
         );
     }
 

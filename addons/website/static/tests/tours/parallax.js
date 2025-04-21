@@ -14,7 +14,6 @@ const coverSnippet = {id: "s_cover", name: "Cover", groupName: "Intro"};
 registerWebsitePreviewTour("test_parallax", {
     url: "/",
     edition: true,
-    checkDelay: 500,
 }, () => [
     ...insertSnippet(coverSnippet),
     ...clickOnSnippet(coverSnippet),

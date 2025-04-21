@@ -30,6 +30,8 @@ class TestManual(common.TestAr):
         self._post(invoice)
         self.assertEqual(invoice.state, 'posted', 'invoice has not been validate in Odoo')
         self.assertEqual(invoice.name, 'FA-A %05d-00000001' % self.journal.l10n_ar_afip_pos_number, 'Invoice number is wrong')
+        self.assertEqual(invoice.sequence_prefix, 'FA-A %05d-' % self.journal.l10n_ar_afip_pos_number)
+        self.assertEqual(invoice.sequence_number, 1)
 
     def test_02_fiscal_position(self):
         # ADHOC SA > IVA Responsable Inscripto > Without Fiscal Positon
@@ -189,7 +191,7 @@ class TestManual(common.TestAr):
             if len_l10n_ar_price_unit_digits == len_line_price_unit_digits == decimal_price_digits_setting:
                 self.assertEqual(l10n_ar_price_unit_decimal_part, line_price_unit_decimal_part)
 
-    def test_16_invoice_b_tax_breakdown_1(self):
+    def test_18_invoice_b_tax_breakdown_1(self):
         """ Display Both VAT and Other Taxes """
         invoice = self._create_invoice_from_dict({
             'ref': 'test_invoice_20:  Final Consumer Invoice B with multiple vat/perceptions/internal/other/national taxes',
@@ -250,7 +252,7 @@ class TestManual(common.TestAr):
             ],
         })
 
-    def test_17_invoice_b_tax_breakdown_2(self):
+    def test_19_invoice_b_tax_breakdown_2(self):
         """ Display only Other Taxes (VAT taxes are 0) """
         invoice = self._create_invoice_from_dict({
             'ref': 'test_invoice_21:  inal Consumer Invoice B with 0 tax and internal tax',
@@ -279,3 +281,34 @@ class TestManual(common.TestAr):
             'total_amount_currency': 10300.0,
             'subtotals': [],
         })
+
+    def test_l10n_ar_prices_and_taxes(self):
+        invoice = self.env['account.move'].create({
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf.id,
+            "invoice_date": "2020-01-21",
+            "invoice_line_ids": [
+                Command.create({
+                    'product_id': self.product_iva_105_perc.id,
+                    'quantity': 24.0,
+                    'price_unit': 5470.0,
+                    'discount': 5.0,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                }),
+            ],
+        })
+        invoice_line = invoice.invoice_line_ids
+
+        # Included in VAT
+        l10n_ar_values = invoice_line._l10n_ar_prices_and_taxes()
+        self.assertAlmostEqual(l10n_ar_values['price_unit'], 6618.7)
+        self.assertAlmostEqual(l10n_ar_values['price_subtotal'], 150906.36)
+        self.assertAlmostEqual(l10n_ar_values['price_net'], 6287.765)
+
+        # Not include in VAT
+        doc_27_lu_a = self.env.ref('l10n_ar.dc_liq_uci_a')
+        invoice.l10n_latam_document_type_id = doc_27_lu_a
+        l10n_ar_values = invoice_line._l10n_ar_prices_and_taxes()
+        self.assertAlmostEqual(l10n_ar_values['price_unit'], 5470.0)
+        self.assertAlmostEqual(l10n_ar_values['price_subtotal'], 124716.0)
+        self.assertAlmostEqual(l10n_ar_values['price_net'], 5196.5)

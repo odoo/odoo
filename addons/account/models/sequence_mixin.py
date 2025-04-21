@@ -4,11 +4,14 @@ from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict, mute_logger, date_utils, SQL
+from odoo.tools import frozendict, date_utils, SQL
 
+import logging
 import re
 from collections import defaultdict
 from psycopg2 import errors as pgerrors
+
+_logger = logging.getLogger(__name__)
 
 
 class SequenceMixin(models.AbstractModel):
@@ -60,6 +63,56 @@ class SequenceMixin(models.AbstractModel):
                     table=SQL.identifier(self._table),
                     field=SQL.identifier(self._sequence_field),
                 ))
+            unique_index = self.env.execute_query(SQL(
+                """
+                SELECT 1
+                  FROM pg_class t
+                  JOIN pg_index ix ON t.oid = ix.indrelid
+                  JOIN pg_attribute a ON a.attrelid = t.oid
+                                     AND a.attnum = ANY(ix.indkey)
+                 WHERE t.relkind = 'r'
+                   AND t.relname = %(table)s
+                   AND a.attname = %(column)s
+                   AND ix.indisunique
+                """,
+                table=self._table,
+                column=self._sequence_field,
+            ))
+            if not unique_index:
+                _logger.warning(
+                    "A unique index for `sequence.mixin` is missing on %s. "
+                    "This will cause duplicated sequences under heavy load.",
+                    self._table
+                )
+
+    def _get_sequence_cache(self):
+        # To avoid requiring multiple savepoints when generating successive
+        # sequence numbers within a single transaction, we cache the sequence value
+        # for the duration of the in-flight transaction.
+        # The `precommit.data` container is used instead of `cr.cache` to
+        # reduce the need for manual invalidation and ensure that the
+        # cache does not survive a commit or rollback.
+        #
+        # Before adding an entry for a sequence to this `sequence.mixin` cache,
+        # the transaction must have locked the corresponding unique constraint,
+        # typically by successfully updating or inserting a row governed by the
+        # constraint (note: be mindful of partial constraint clauses).
+        #
+        # Entries in the sequence.mixin cache will look like this:
+        # {
+        #   (<seq_format>    , <seq_index>        ) : <seq_number>,
+        #   ('2042/04/000000', account.journal(1,)) : 123,
+        # }
+        #
+        # See also:
+        # - https://postgres.ai/blog/20210831-postgresql-subtransactions-considered-harmful
+        # - the documentation in _locked_increment()
+        return self.env.cr.precommit.data.setdefault('sequence.mixin', {})
+
+    def write(self, vals):
+        if self._sequence_field in vals and self.env.context.get('clear_sequence_mixin_cache', True):
+            self._get_sequence_cache().clear()
+        return super().write(vals)
 
     def _get_sequence_date_range(self, reset):
         ref_date = fields.Date.to_date(self[self._sequence_date_field])
@@ -296,6 +349,76 @@ class SequenceMixin(models.AbstractModel):
         )
         return format, format_values
 
+    def _locked_increment(self, format_string, format_values):
+        """Increment the sequence for the given format, returning the new value.
+
+        This method will lock the sequence in the database through its unique
+        constraint, in order to ensure cross-transactional uniqueness of sequence
+        numbers. If the sequence is already locked by another transaction, it
+        will wait until the other one finishes, then grab the next available
+        number.
+
+        Once the sequence has been locked by the transaction, further increments
+        will rely on a cache, to avoid the need for multiple savepoints
+        (see implementation comments)
+
+        At entry, the sequence record must be governed by the unique constraint,
+        e.g. for an account.move, it must be in state `posted`, otherwise the lock
+        won't be taken, and sequence numbers may not be unique when returned.
+        """
+        cache = self._get_sequence_cache()
+        seq = format_values.pop('seq')
+        # cache key unique to a sequence: its format string + its sequence index
+        cache_key = (format_string.format(**format_values, seq=0), self._sequence_index and self[self._sequence_index])
+        if cache_key in cache:
+            cache[cache_key] += 1
+            return format_string.format(**format_values, seq=cache[cache_key])
+
+        self.flush_recordset()
+        with self.env.cr.savepoint(flush=False) as sp:
+            # By updating a row covered by the sequence's UNIQUE constraint,
+            # the transaction acquires an exclusive lock on the corresponding
+            # B-tree index entry. This prevents other transactions from inserting
+            # the same sequence value. See _bt_doinsert() and _bt_check_unique()
+            # in the PostgreSQL source code.
+            #
+            # This guarantee holds only if the sequence row is currently covered
+            # by a unique index, so any partial index conditions must be satisfied
+            # beforehand.
+            #
+            # This operation requires a savepoint because, after waiting for the lock,
+            # the transaction may discover that the new number is already taken,
+            # resulting in a constraint violation. Such violations cannot be
+            # cleanly recovered from without a savepoint. In that case, we retry
+            # until a free number is found.
+            #
+            # Unfortunately, repeated savepoints can severely impact performance,
+            # so we minimize their use. Once the lock is acquired, we rely on a
+            # transactional cache provided by _get_sequence_cache.
+            # Because the transaction holds the lock on the initially assigned
+            # sequence number, other transactions must wait for its completion
+            # before assigning newer numbers. It is therefore safe to continue
+            # assigning sequential numbers without additional savepoints.
+            #
+            # See also:
+            #  - https://postgres.ai/blog/20210831-postgresql-subtransactions-considered-harmful
+            #  - the documentation of _get_sequence_cache()
+            while True:
+                seq += 1
+                sequence = format_string.format(**format_values, seq=seq)
+                try:
+                    self.env.cr.execute(SQL(
+                        "UPDATE %(table)s SET %(fname)s = %(sequence)s WHERE id = %(id)s",
+                        table=SQL.identifier(self._table),
+                        fname=SQL.identifier(self._sequence_field),
+                        sequence=sequence,
+                        id=self.id,
+                    ), log_exceptions=False)
+                    cache[cache_key] = seq
+                    return sequence
+                except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
+                    sp.rollback()
+
     def _set_next_sequence(self):
         """Set the next sequence.
 
@@ -316,18 +439,11 @@ class SequenceMixin(models.AbstractModel):
                     continue
                 for field in registry.field_inverses[inverse_field[0]] if inverse_field else [None]:
                     self.env.add_to_compute(triggered_field, self[field.name] if field else self)
-        self.flush_recordset()
-        with self.env.cr.savepoint(flush=False) as sp:
-            while True:
-                format_values['seq'] = format_values['seq'] + 1
-                sequence = format_string.format(**format_values)
-                try:
-                    with mute_logger('odoo.sql_db'):
-                        self[self._sequence_field] = sequence
-                        self.flush_recordset([self._sequence_field])
-                        break
-                except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
-                    sp.rollback()
+
+        sequence = self._locked_increment(format_string, format_values)
+        self.with_context(clear_sequence_mixin_cache=False)[self._sequence_field] = sequence
+
+        self._compute_split_sequence()
 
     def _get_next_sequence_format(self):
         """Get the next sequence format and its values.

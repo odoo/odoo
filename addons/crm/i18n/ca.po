@@ -20,11 +20,11 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2024
 # Martin Trigaux, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
+# Ivan Espinola, 2024
 # marcescu, 2024
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # oscaryuu, 2024
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
-# Ivan Espinola, 2024
 # Josep Anton Belchi, 2024
 # Xavier, 2024
 # Wil Odoo, 2024
@@ -364,13 +364,13 @@ msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 24px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
-"    <!-- CAPÇALERA -->\n"
+"    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Les vostres iniciatives/oportunitats</span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interès en els vostres productes</span>\n"
+"                    <span style=\"font-size: 10px;\">Els seus clients potencials/oportunitats</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interès en els seus productes</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
@@ -380,25 +380,25 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- CONTINGUT -->\n"
+"    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hola <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
-"                            Benvingut a <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            És genial conèixer-te! Ara que estàs a bord, descobriràs què<t t-out=\"object.company_id.name or ''\">ha d'oferir</t> My Company (San Francisco). My name is <t t-out=\"object.user_id.name or ''\">Marc de prova</t> i t'ajudaré a treure el màxim profit de Odoo. Podríem planificar una demostració ràpida aviat?<br/>\n"
-"                            Sentin-se lliures d'arribar en qualsevol moment!<br/><br/>\n"
-"                            Millor,<br/>\n"
+"                            Hola, <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>:<br/><br/>\n"
+"                            Benvingut a <t t-out=\"object.company_id.name or ''\">La meva empresa (San Francisco)</t>.\n"
+"                            Estem molt contents de conèixer-lo! Ara que forma part de l'equip, descobrirà el que<t t-out=\"object.company_id.name or ''\">la meva empresa (San Francisco)</t> pot oferir-li. el meu nom és <t t-out=\"object.user_id.name or ''\">Marc Demo</t> i l'ajudaré a treure el màxim profit d'Odoo. Voldria planificar una demostració ràpida aviat?<br/>\n"
+"                            No dubti a contactar amb nosaltres en qualsevol moment!<br/><br/>\n"
+"                            Cordialment,<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
-"                                <b><t t-out=\"object.user_id.name or ''\">Marc de prova</t></b>\n"
+"                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
 "                                <br/>Correu electrònic: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
 "                                <br/>Telèfon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
-"                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
+"                                <t t-out=\"object.company_id.name or ''\">La meva empresa (San Francisco)</t>\n"
 "                            </t>\n"
 "                        </div>\n"
 "                    </td>\n"
@@ -406,11 +406,11 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- PEU -->\n"
+"    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
 "            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
+"            <b t-out=\"object.company_id.name or ''\">La meva empresa (San Francisco)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
 "                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
@@ -425,9 +425,9 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "</td></tr>\n"
-"<!-- IMPULSAT PER -->\n"
+"<!-- DESENVOLUPAT PER -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    Impulsar per <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"    Desenvolupat per <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
 "</td></tr>\n"
 "</table>\n"
 "        "
@@ -1464,7 +1464,7 @@ msgstr "Àlies de correu electrònic"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_domain_criterion
 msgid "Email Domain Criterion"
-msgstr ""
+msgstr "Criteri de domini de correu electrònic"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -1545,7 +1545,7 @@ msgstr "Data estimada en la qual l'oportunitat serà guanyada."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
 msgid "Exceed monthly lead assignement"
-msgstr ""
+msgstr "Excedir assignació mensual de clients potencials"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1688,7 +1688,7 @@ msgstr "De %(source_name)s"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "From %(source_name)s: %(source_subject)s"
-msgstr ""
+msgstr "Des de %(source_name)s: %(source_subject)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1922,7 +1922,7 @@ msgstr "Hi ha probabilitat automatitzada?"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
+msgstr "JSON que associa els ID d'un camp many2one amb els segons utilitzats"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -1967,7 +1967,7 @@ msgstr "Última acció"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Last Automation:"
-msgstr ""
+msgstr "Darrera automatització:"
 
 #. module: crm
 #. odoo-python
@@ -2060,7 +2060,7 @@ msgstr "Mineria principal"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
 msgid "Lead Plans"
-msgstr ""
+msgstr "Plans de clients potencials"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
@@ -2102,6 +2102,8 @@ msgstr "Etiquetes d'iniciativa"
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_day_count
 msgid "Lead assigned to this member this last day (lost one excluded)"
 msgstr ""
+"Client potencial assignat a aquest membre en l'últim dia (els perduts no "
+"s'inclouen)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -2161,7 +2163,7 @@ msgstr "Iniciatives (30 dies)"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_day_count
 msgid "Leads (last 24h)"
-msgstr ""
+msgstr "Clients potencials (darreres 24 h)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2255,7 +2257,7 @@ msgstr "<b>Programa una activitat.</b>"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "Let's get to work!"
-msgstr ""
+msgstr "Posem-nos mans a l'obra!"
 
 #. module: crm
 #. odoo-javascript
@@ -2282,7 +2284,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Detecció d'entrada basada en la part local"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -2301,6 +2303,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep"
 " track of everything you have to do!</i>"
 msgstr ""
+"Sembla que no hi ha res planejat. :(<br><br><i>Consell: programa activitats "
+"per a fer un seguiment de tot el que has de fer!</i>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2325,7 +2329,7 @@ msgstr "Compte perdut"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Lost Lead"
-msgstr ""
+msgstr "Client potencial perdut"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lost_reason_id
@@ -2363,6 +2367,9 @@ msgid ""
 "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
 "messages, and get AI-powered transcripts of your conversations."
 msgstr ""
+"Rep i fes trucades des d'Odoo per mitjà del marcador de Ringover. Fes "
+"seguiment de les trucades, dels missatges SMS i obtingues transcripcions de "
+"les teves converses amb tecnologia impulsada per IA."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2445,13 +2452,13 @@ msgstr "Data de visualització de la sessió"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_label
 msgid "Meeting Display Label"
-msgstr ""
+msgstr "Etiqueta de visualització de la reunió"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Meeting scheduled at %s"
-msgstr ""
+msgstr "Reunió programada a les %s"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2898,7 +2905,7 @@ msgstr "Oportunitat"
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
 #: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
 msgid "Opportunity Count"
-msgstr ""
+msgstr "Nombre d'oportunitats"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -3109,7 +3116,7 @@ msgstr "Recompte de potencials duplicats"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr ""
+msgstr "Qualificació predictiva de clients potencials"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
@@ -3169,7 +3176,7 @@ msgstr "MRR prorratejat"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_prorated
 msgid "Prorated Recurring Revenues"
-msgstr ""
+msgstr "Ingressos recurrents prorratejats"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
@@ -3288,7 +3295,7 @@ msgstr "Restaurar"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Ringover VOIP Phone"
-msgstr ""
+msgstr "Telèfon VoIP de Ringover"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3391,6 +3398,8 @@ msgstr "Cerca d'oportunitats"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Select at least two Leads/Opportunities from the list to merge them."
 msgstr ""
+"Selecciona, com a mínim, dos clients potencials/oportunitats de la llista "
+"per fusionar-les."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3571,7 +3580,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Estat del temps"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3828,7 +3837,7 @@ msgstr "Consell: no perdis temps gravant les dades dels clients"
 #: model:digest.tip,name:crm.digest_tip_crm_6
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_6
 msgid "Tip: Identify Bottlenecks at a glance"
-msgstr ""
+msgstr "Consell: identifica bloqueigs a cop d'ull"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
@@ -3846,7 +3855,7 @@ msgstr "Consell: La taxa de guany de l'oportunitat es prediu amb IA"
 #: model:digest.tip,name:crm.digest_tip_crm_7
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
 msgid "Tip: Turn Sales Forecasting into Child's Play"
-msgstr ""
+msgstr "Consell: fes que la previsió de vendes sigui un joc de nens"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
@@ -3898,6 +3907,8 @@ msgid ""
 "True if the monthly lead assignment count is greater than the maximum "
 "assignment limit, false otherwise."
 msgstr ""
+"True si la quantitat d'assignacions mensuals de clients potencials és major "
+"que el límit màxim d'assignacions. False en cas contrari."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -4028,7 +4039,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the <i>New</i> button, or send an email to"
-msgstr ""
+msgstr "Utilitza el botó <i>Nou</i> o envia un correu electrònic a"
 
 #. module: crm
 #. odoo-python
@@ -4037,6 +4048,8 @@ msgid ""
 "Use the <i>New</i> button, or send an email to %(email_link)s to test the "
 "email gateway."
 msgstr ""
+"Utilitza el botó <i>Nou</i> o envia un correu electrònic a %(email_link)s "
+"per a provar la passarel·la de correu."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
@@ -4044,12 +4057,16 @@ msgid ""
 "Use the CRM Forecast Kanban to easily define when Opportunities are expected"
 " to be won."
 msgstr ""
+"Utilitza la vista de kanban al CRM per als teus pronòstics i defineix "
+"fàcilment quan es preveu que es guanyin les oportunitats."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid ""
 "Use the New button, or configure an email alias to test the email gateway."
 msgstr ""
+"Utilitza el botó «Nou» o configura un àlies de correu per a provar la "
+"passarel·la de correu."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -4135,7 +4152,7 @@ msgstr "Demostració de prova"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
-msgstr ""
+msgstr "Què ha anat malament?"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead4
@@ -4228,18 +4245,18 @@ msgstr "àlies"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"0123456789\""
-msgstr ""
+msgstr "p. ex.: «0123456789»"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"Monthly\""
-msgstr ""
+msgstr "p. ex.: «mensualment»"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"email@address.com\""
-msgstr ""
+msgstr "p. ex.: «email@address.com»"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form

@@ -37,8 +37,8 @@
                 <progressbar field="state" colors='{"1_done": "success", "03_approved": "success", "02_changes_requested": "warning", "1_canceled": "danger", "04_waiting_normal": "200", "01_in_progress": "200"}'/>
                 <templates>
                 <t t-name="menu" t-if="!selection_mode">
-                    <div role="separator" class="dropdown-divider"></div>
-                    <field name="color" widget="kanban_color_picker"/>
+                    <div invisible="1" role="separator" class="dropdown-divider"></div>
+                    <field invisible="1" name="color" widget="kanban_color_picker"/>
                 </t>
                 <t t-name="card">
                     <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">

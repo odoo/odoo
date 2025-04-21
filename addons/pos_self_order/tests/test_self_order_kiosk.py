@@ -123,3 +123,34 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_self_order_kiosk_combo_sides")
+
+    def test_self_order_pricelist(self):
+        # ignore pre-existing pricelists for the purpose of this test
+        self.env['product.pricelist'].search([]).write({'active': False})
+        pricelist = self.env['product.pricelist'].create({
+            'name': "Test pricelist",
+            'company_id': self.env.company.id,
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'fixed',
+                    'fixed_price': 1,
+                    'min_quantity': 3,
+                    'applied_on': '1_product',
+                    'product_tmpl_id': self.cola.product_tmpl_id.id,
+                })
+            ],
+        })
+
+        self.pos_config.write({
+            'takeaway': False,
+            'self_ordering_takeaway': False,
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'available_pricelist_ids': [Command.set(pricelist.ids)],
+            'pricelist_id': pricelist.id,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, 'self_order_pricelist')

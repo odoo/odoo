@@ -6,7 +6,6 @@ import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_p
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -127,7 +126,6 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -145,7 +143,6 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
 });
 
 registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_2", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -160,7 +157,6 @@ registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_2", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -185,7 +181,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProductTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -205,7 +200,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardProductDomainTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -222,7 +216,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -255,7 +248,6 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
 });
 
 registry.category("web_tour.tours").add("test_loyalty_on_order_with_fixed_tax", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
