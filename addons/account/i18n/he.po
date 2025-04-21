@@ -2539,7 +2539,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank statement lines before the selected date."
-msgstr ""
+msgstr "כל שורות דפי הבנק שלא התואמו לפני התאריך שנבחר."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -2901,6 +2901,8 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
+"כל פקודת יומן  עד התאריך הזה וכולל אותו, תדחה לזמן מאוחר יותר, בהתאם לסדר "
+"הרישומים ביומן. תאריך הנעילה הזה הוא בלתי הפיך ואינו מאפשר שום חריגה."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -2918,6 +2920,9 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
+"כל פקודת יומן עם מע\"מ עד התאריך הזה וכולל אותו, תדחה לזמן מאוחר יותר, בהתאם"
+" לסדר הרישומים ביומן. תאריך נעילת המע\"מ מוגדר אוטומטית כאשר פקודת סגירת "
+"המע\"מ נרשמת."
 
 #. module: account
 #. odoo-python
@@ -2940,6 +2945,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"כל פקודת רכש  לפני התאריך הזה וכולל אותו, תדחה לתאריך מאוחר יותר, בהתאם לסדר"
+" הרישומים ביומן."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -2947,6 +2954,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"כל פקודת מכירה לפני התאריך הזה וכולל אותו, תדחה לתאריך מאוחר יותר, בהתאם "
+"לסדר הרישומים ביומן."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -3095,7 +3104,7 @@ msgstr "קבצים מצורפים"
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_activated
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_activated
 msgid "Audit Log Activated"
-msgstr ""
+msgstr "לוג מעקב אחר שינויים פעיל"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -3104,7 +3113,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.account_audit_trail_menu
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Audit Trail"
-msgstr ""
+msgstr "מעקב אחר שינויים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
@@ -3158,7 +3167,7 @@ msgstr "פרסום אוטומטי"
 #: model:ir.model.fields,field_description:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_users__autopost_bills
 msgid "Auto-post bills"
-msgstr ""
+msgstr "רישום אוטומטי של חשבוניות "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
@@ -3173,6 +3182,7 @@ msgid ""
 "Auto-post was disabled on this invoice because a potential duplicate was "
 "detected."
 msgstr ""
+"הרישום האוטומטי הופסק עבור חשבונית זו מאחר שנמצא חשבונית פוטנציאלית כפולה."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -3184,7 +3194,7 @@ msgstr "אישור אוטומטי"
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_config_settings__autopost_bills
 msgid "Auto-validate bills"
-msgstr ""
+msgstr "אישור אוטומטי של חשבוניות"
 
 #. module: account
 #. odoo-python
@@ -3342,7 +3352,7 @@ msgstr "בנק ומזומן"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Bank & Cash accounts cannot be shared between companies."
-msgstr ""
+msgstr "בנק & מזומנים לא יכולים להיות משותפים בין חברות."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -3888,7 +3898,7 @@ msgstr "בוטל"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Credit Note"
-msgstr ""
+msgstr "חשבונית זיכוי לקוח מבוטלת"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4162,7 +4172,7 @@ msgstr "שנה את התווית של המקביל שתשמור על הפרש ה
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date
 msgid "Changed Lock Date"
-msgstr ""
+msgstr "תאריך נעילה שונה"
 
 #. module: account
 #. odoo-python
@@ -4238,7 +4248,7 @@ msgstr "בדיקה"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Check Partner(s) Email(s)"
-msgstr ""
+msgstr "בדוק כתובת דוא\"ל של שותפים"
 
 #. module: account
 #. odoo-python
@@ -5890,7 +5900,7 @@ msgstr ""
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
 msgid "Define your fiscal years & tax returns periodicity."
-msgstr ""
+msgstr "הגדר את שנות הכספים שלך שלך ואת תדירות החזרי המס."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -7448,7 +7458,7 @@ msgstr "חשבון מס זר (%s)"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Foreign tax account advance payment (%s)"
-msgstr ""
+msgstr "תשלום מקדמה לחשבון מס זר (%s)"
 
 #. module: account
 #. odoo-python
@@ -7513,7 +7523,7 @@ msgstr "מאסמכתא"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "From last fiscal year"
-msgstr ""
+msgstr "משנת כספית קודמת "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
@@ -8188,7 +8198,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Ignore future alerts"
-msgstr ""
+msgstr "התעלם מהתראות עתידיות"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -9127,13 +9137,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "It looks like you've successfully validated the last"
-msgstr ""
+msgstr "זה נראה שאישרת בהצלחה את "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "It seems there is some depending closing move to be posted"
-msgstr ""
+msgstr "זה נראה שיש תנועה סוגרת שצריכה להרשם"
 
 #. module: account
 #. odoo-python
@@ -9182,7 +9192,7 @@ msgstr "יומן"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Journal (Sequence Prefix)"
-msgstr ""
+msgstr "יומן(תחילית רצף)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9641,12 +9651,12 @@ msgstr "ספר"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__journal_group_ids
 msgid "Ledger Group"
-msgstr ""
+msgstr "קבוצת ספרים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
 msgid "Ledger group"
-msgstr ""
+msgstr "קבוצת ספרים"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -9773,7 +9783,7 @@ msgstr "העברת נזילות"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
 msgid "Load More Limit"
-msgstr ""
+msgstr "העלה עוד הגבלה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9784,7 +9794,7 @@ msgstr "Lock"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "Lock Date Exception %s"
-msgstr ""
+msgstr "חריגת תאריך נעילה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date_field
@@ -9893,7 +9903,7 @@ msgstr "בצע הזנות צבירה"
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid ""
 "Make sure you first activate the audit trail in the accounting settings"
-msgstr ""
+msgstr "וודא שאתה מפעיל את המעקב אחר שינויים בהגדרות של הנהלת חשבונות."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -10229,6 +10239,8 @@ msgid ""
 "Missing a document for a banking statement? Use the Documents apps to "
 "request it and let the owner upload it at the right place."
 msgstr ""
+"חסר מסמך עבור דפי בנק ? השתמש באפליקציית המסמכים כדי לבקש אותו, ותן לבעל "
+"המסמך להעלות אותו למקום הנכון."
 
 #. module: account
 #. odoo-python
@@ -14341,7 +14353,7 @@ msgstr "זכאות מס"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Tax Grid"
-msgstr ""
+msgstr "סעיף מע\"מ"
 
 #. module: account
 #. odoo-python
