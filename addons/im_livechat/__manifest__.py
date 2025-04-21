@@ -56,6 +56,8 @@ Help your customers with this chat, and analyse their feedback.
         "demo/im_livechat_channel/im_livechat_session_9.xml",
         "demo/im_livechat_channel/im_livechat_session_10.xml",
         "demo/im_livechat_channel/im_livechat_session_11.xml",
+        "demo/im_livechat_channel/im_livechat_session_12.xml",
+        "demo/im_livechat_channel/im_livechat_session_13.xml",
     ],
     'depends': ["mail", "rating", "digest", "utm"],
     'installable': True,

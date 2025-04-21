@@ -255,6 +255,7 @@ class Im_LivechatChannel(models.Model):
             'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
+            "livechat_failure": "no_answer" if user_operator else "no_failure",
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id if chatbot_script else False,
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
