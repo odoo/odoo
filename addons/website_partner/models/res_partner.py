@@ -14,4 +14,5 @@ class ResPartner(models.Model):
     def _compute_website_url(self):
         super()._compute_website_url()
         for partner in self:
-            partner.website_url = "/partners/%s" % self.env['ir.http']._slug(partner)
+            if partner.id:
+                partner.website_url = "/partners/%s" % self.env['ir.http']._slug(partner)
