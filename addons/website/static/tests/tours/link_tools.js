@@ -1,10 +1,11 @@
 import {
-    changeOption,
+    changeOptionInPopover,
     clickOnEditAndWaitEditMode,
     clickOnElement,
     clickOnSave,
     insertSnippet,
     registerWebsitePreviewTour,
+    openLinkPopup,
 } from '@website/js/tours/tour_utils';
 import { boundariesIn, setSelection, nodeSize } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
@@ -13,6 +14,26 @@ const clickOnImgStep = {
     trigger: ':iframe #wrap .s_text_image img',
     run: "click",
 };
+
+const clickEditLink = {
+    content: "Click on Edit Link in Popover",
+    trigger: ".o-we-linkpopover .o_we_edit_link",
+    run: "click",
+};
+
+const clickApplyLink = {
+    content: "Click on apply button in link popover",
+    trigger: ".o-we-linkpopover .o_we_apply_link",
+    run: "click",
+};
+
+function insertTextOnUrlInput(message, url) {
+    return {
+        content: message,
+        trigger: ".o-we-linkpopover .o_we_href_input_link",
+        run: `edit ${url}`,
+    };
+}
 
 registerWebsitePreviewTour('link_tools', {
     url: '/',
@@ -27,36 +48,38 @@ registerWebsitePreviewTour('link_tools', {
     {
         content: "Replace first paragraph, to insert a new link",
         trigger: ':iframe #wrap .s_text_image p',
-        run: 'editor Go to odoo: ',
+        async run(actions) {
+            await actions.editor(`Go to odoo: `);
+            const wrapwrap = this.anchor.closest("#wrapwrap");
+            wrapwrap.dispatchEvent(
+                new InputEvent("input", {
+                    inputType: "insertText",
+                    data: "/",
+                })
+            );
+        },
     },
     {
         content: "Open link tools",
-        trigger: "#toolbar:not(.oe-floating) #create-link",
+        trigger: ".o-we-powerbox .o-we-command-name:contains('Link')",
         run: "click",
     },
-    {
-        content: "Type the link URL odoo.com",
-        trigger: '#toolbar:not(.oe-floating) #o_link_dialog_url_input',
-        run: 'edit odoo.com',
-    },
+    insertTextOnUrlInput("Type the link URL odoo.com", "odoo.com"),
+    clickApplyLink,
     clickOnImgStep,
     {
         content: "Select the newly created link",
-        trigger: ':iframe #wrap .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+        trigger: ":iframe #wrap .s_text_image a[href='https://odoo.com']:contains('odoo.com')",
         run() {
             setSelection(this.anchor, 0, this.anchor, nodeSize(this.anchor));
         }
     },
     // Remove the link.
-    {
-        content: "Click on the newly created link",
-        trigger: ':iframe #wrap .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
-        run: 'click',
-    },
+    ...openLinkPopup(":iframe .s_text_image a[href='https://odoo.com']:contains('odoo.com')", "odoo.com", 1, true),
     {
         content: "Remove the link.",
-        trigger: ':iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
-        run: 'click',
+        trigger: ".o-we-linkpopover a.o_we_remove_link .fa-chain-broken",
+        run: "click",
     },
     {
         content: "Check that the link was removed",
@@ -66,69 +89,52 @@ registerWebsitePreviewTour('link_tools', {
     {
         content: "Select first paragraph, to insert a new link",
         trigger: ':iframe #wrap .s_text_image p',
-        run: 'click',
+        run() {
+            setSelection(this.anchor, 3, this.anchor, nodeSize(this.anchor));
+        }
     },
     {
         content: "Open link tools",
-        trigger: "#toolbar #create-link",
+        trigger: ".o-we-toolbar div[name='link'] button",
         run: 'click',
     },
-    {
-        content: "Type the link URL odoo.com",
-        trigger: '#o_link_dialog_url_input',
-        run: 'edit odoo.com'
-    },
+    insertTextOnUrlInput("Type the link URL odoo.com", "odoo.com"),
+    clickApplyLink,
     clickOnImgStep,
     // 2. Edit the link with the link tools.
-    {
-        content: "Click on the newly created link",
-        trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
-        run: "click",
-    },
+    ...openLinkPopup(":iframe .s_text_image a[href='https://odoo.com']:contains('odoo.com')", "odoo.com", 1, true),
+    clickEditLink,
     {
         content: "Change content (editing the label input) to odoo website_2",
-        trigger: '#o_link_dialog_label_input:value(odoo.com)',
+        trigger: ".o-we-linkpopover  .o_we_label_link:value(odoo.com)",
         run: 'edit odoo website_2',
     },
+    clickApplyLink,
     {
         content: "Change content (editing the DOM) to odoo website",
-        trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
+        trigger: ":iframe .s_text_image a[href='https://odoo.com']:contains('odoo website_2')",
         run: 'editor odoo website',
     },
     clickOnImgStep,
-    {
-        content: "Click again on the link",
-        trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website")',
-        run: "click",
-    },
+    ...openLinkPopup(":iframe .s_text_image a[href='https://odoo.com']:contains('odoo website')", "odoo website", 1, true),
+    clickEditLink,
     {
         content: "Check that the label input contains the new content",
-        trigger: '#o_link_dialog_label_input:value(odoo website)',
+        trigger: ".o-we-linkpopover .o_we_label_link:value(odoo website)",
     },
-    {
-        content: "Link tools, should be open, change the url",
-        trigger: '#o_link_dialog_url_input',
-        run: "edit odoo.be",
-    },
-
+    insertTextOnUrlInput("Change the URL to http://odoo.be", "http://odoo.be"),
+    clickApplyLink,
     ...clickOnSave(),
     // 3. Edit a link after saving the page.
     ...clickOnEditAndWaitEditMode(),
+    ...openLinkPopup(":iframe .s_text_image a[href='http://odoo.be']:contains('odoo website')", "odoo website", 1, true),
+    clickEditLink,
     {
         content: "The new link content should be odoo website and url odoo.be",
-        trigger: ':iframe .s_text_image a[href="http://odoo.be"]:contains("odoo website")',
-        run: "click",
+        trigger: ".o-we-linkpopover select[name='link_type']",
+        run: "select secondary",
     },
-    {
-        content: "The new link content should be odoo website and url odoo.be",
-        trigger: '#toolbar:not(.oe-floating) .dropdown:has([name="link_style_color"]) > button',
-        run: "click",
-    },
-    {
-        content: "Click on the secondary style button.",
-        trigger: '#toolbar:not(.oe-floating) we-button[data-value="secondary"]',
-        run: "click",
-    },
+    clickApplyLink,
     ...clickOnSave(),
     {
         content: "The link should have the secondary button style.",
@@ -148,14 +154,13 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Activate link.",
-        trigger: '.o_we_customize_panel we-row:contains("Media") we-button.fa-link',
+        trigger: ".o_customize_tab button[data-action-id='setLink']",
         run: "click",
     },
     {
         content: "Set URL.",
-        trigger: '.o_we_customize_panel we-input:contains("Your URL") input',
-        // TODO: remove && click
-        run: "edit odoo.com && click(we-title:contains(Your URL))",
+        trigger: ".o_customize_tab div[data-action-id='setUrl'] input",
+        run: "edit odoo.com",
     },
     {
         content: "Deselect image.",
@@ -173,7 +178,7 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that link tools appear.",
-        trigger: ':iframe .popover div a:contains("http://odoo.com")',
+        trigger: '.o-we-linkpopover div a:contains("http://odoo.com")',
     },
     ...clickOnSave(),
     {
@@ -193,11 +198,11 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that link tools appear.",
-        trigger: ':iframe .popover div a:contains("http://odoo.com")',
+        trigger: '.o-we-linkpopover div a:contains("http://odoo.com")',
     },
     {
         content: "Remove link.",
-        trigger: ':iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
+        trigger: ".o-we-linkpopover a.o_we_remove_link .fa-chain-broken",
         run: "click",
     },
     {
@@ -205,8 +210,15 @@ registerWebsitePreviewTour('link_tools', {
         trigger: ':iframe .s_three_columns .row > :nth-child(1) figure > img',
     },
     // 6. Add mega menu with Cards template and edit URL on text-selected card.
-    clickOnElement("menu link", ":iframe header .nav-item a"),
-    clickOnElement("'Edit menu' icon", ":iframe .o_edit_menu_popover .js_edit_menu"),
+    {
+        content: "Scroll to top",
+        trigger: ":iframe header",
+        run() {
+            this.anchor.scrollIntoView();
+        },
+    },
+    clickOnElement("menu link", ":iframe header .nav-item a.nav-link span"),
+    clickOnElement("'Edit menu' icon", ".o-we-linkpopover .js_edit_menu"),
     {
         trigger: ".o_website_dialog:visible",
     },
@@ -247,14 +259,12 @@ registerWebsitePreviewTour('link_tools', {
         run: "click",
     },
     clickOnElement("mega menu", ":iframe header .o_mega_menu_toggle"),
-    changeOption("MegaMenuLayout", "we-toggler"),
-    changeOption("MegaMenuLayout", '[data-select-label="Cards"]'),
-    clickOnElement("card's text", ":iframe header .s_mega_menu_cards span"),
-    {
-        content: "Enter an URL",
-        trigger: "#o_link_dialog_url_input",
-        run: "edit https://www.odoo.com",
-    },
+    clickOnElement("mega menu", ":iframe header .o_mega_menu"),
+    ...changeOptionInPopover("Mega Menu", "Template", "[title='Cards']"),
+    ...openLinkPopup(":iframe header .s_mega_menu_cards span", "Mega", 0, true),
+    clickEditLink,
+    insertTextOnUrlInput("Change the URL to https://www.odoo.com", "https://www.odoo.com"),
+    clickApplyLink,
     {
         content: "Check nothing is lost",
         trigger: ":iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(span)",
@@ -285,7 +295,7 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Open link tools",
-        trigger: "#toolbar #create-link",
+        trigger: ".o-we-toolbar div[name='link'] button",
         run: "click",
     },
     clickOnImgStep,
@@ -293,71 +303,48 @@ registerWebsitePreviewTour('link_tools', {
         // URL transformation into link should persist, without the need for
         // input at input[name=url]
         content: "Check that link was created",
+        trigger: ":iframe .s_text_image p a[href='https://odoo.com']:contains('odoo.com')",
+    },
+    ...openLinkPopup(":iframe .s_text_image p a[href='https://odoo.com']", "odoo.com", 1, true),
+    // 8. Check that http links are not coerced to https and vice-versa.
+    clickEditLink,
+    insertTextOnUrlInput("Change the URL back to http", "http://odoo.com"),
+    {
+        content: "Check that link was updated",
         trigger: ":iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
     },
     {
-        content: "Click on link to open the link tools",
-        trigger: ":iframe .s_text_image p a[href='http://odoo.com']",
-        run: "click",
+        trigger: "div.o-snippets-menu:not(div.o_we_ui_loading)",
     },
-    // 8. Check that http links are not coerced to https and vice-versa.
-    {
-        content: "Change URL to https",
-        trigger: "#o_link_dialog_url_input",
-        run() {
-            // TODO: update the tour to use helpers.edit("https://odoo.com")
-            // To see what happens with edit, add `pause:true` to the previous step
-            // and type yourself https://odoo.com in #o_link_dialog_url_input
-            // The label will be ohttps://
-            this.anchor.value = "https://odoo.com";
-            this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
-        }
-    },
+    insertTextOnUrlInput("Change the URL to https://odoo.com", "https://odoo.com"),
+    clickApplyLink,
     {
         content: "Check that link was updated",
         trigger: ":iframe .s_text_image p a[href='https://odoo.com']:contains('odoo.com')",
     },
-    {
-        trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
-    },
-    {
-        content: "Change it back http",
-        trigger: "#o_link_dialog_url_input",
-        run() {
-            // TODO: update the tour to use helpers.edit("http://odoo.com")
-            this.anchor.value = "http://odoo.com";
-            this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
-        }
-    },
-    {
-        content: "Check that link was updated",
-        trigger: ":iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
-    },
     // 9. Test conversion between http and mailto links.
     {
-        trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
+        trigger: "div.o-snippets-menu:not(div.o_we_ui_loading)",
     },
-    {
-        content: "Change URL into an email address",
-        trigger: "#o_link_dialog_url_input",
-        run: "edit callme@maybe.com",
-    },
-    {
-        content: "Check that link was updated and link content is synced with URL",
-        trigger: ":iframe .s_text_image p a[href='mailto:callme@maybe.com']:contains('callme@maybe.com')",
-    },
-    {
-        trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
-    },
-    {
-        content: "Change URL back into a http one",
-        trigger: "#o_link_dialog_url_input",
-        // TODO: remove && click
-        run: "edit callmemaybe.com && click body",
-    },
+    clickOnImgStep,
+    ...openLinkPopup(":iframe .s_text_image p a[href='https://odoo.com']:contains('odoo.com')", "odoo.com", 1, true),
+    clickEditLink,
+    insertTextOnUrlInput("Change URL into an email address", "mailto:callme@maybe.com"),
+    clickApplyLink,
     {
         content: "Check that link was updated and link content is synced with URL",
-        trigger: ":iframe .s_text_image p a[href='http://callmemaybe.com']:contains('callmemaybe.com')",
+        trigger: ":iframe .s_text_image p a[href='mailto:callme@maybe.com']:contains('odoo.com')",
+    },
+    {
+        trigger: "div.o-snippets-menu:not(div.o_we_ui_loading)",
+    },
+    clickOnImgStep,
+    ...openLinkPopup(":iframe .s_text_image p a[href='mailto:callme@maybe.com']:contains('odoo.com')", "callme@maybe.com", 1, true),
+    clickEditLink,
+    insertTextOnUrlInput("Change URL into a regular URL", "http://callmemaybe.com  && click body"),
+    {
+        content: "Check that link was updated and link content is synced with URL",
+        trigger: ":iframe .s_text_image p a[href='http://callmemaybe.com']:contains('odoo.com')",
     },
     // 10. Test that UI stays up-to-date.
     // TODO this step which was added by https://github.com/odoo/odoo/commit/9fc283b514d420fdfd66123845d9ec3563572692
@@ -370,26 +357,28 @@ registerWebsitePreviewTour('link_tools', {
     /*
     {
         content: "Popover should be shown",
-        trigger: ":iframe .o_edit_menu_popover .o_we_url_link:contains('http://callmemaybe.com')",
+        trigger: ":iframe .o_edit_menu_popover .o_we_url_link:contains('https://callmemaybe.com')",
     },
     */
-    {
-        content: "Edit link label",
-        trigger: ":iframe .s_text_image p a",
-        run: "click",
-            // See SHOPS_STEP_DISABLED. TODO. These steps do not consistently
-            // update the link for some reason... to investigate.
-            /*
-            // Simulating text input.
-            const link = this.anchor;
-            actions.text("callmemaybe.com/shops");
-            // Trick the editor into keyboardType === 'PHYSICAL' and delete the
-            // last character "s" and end with "callmemaybe.com/shop"
-            link.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace", bubbles: true }));
-            // Trigger editor's '_onInput' handler, which leads to a history step.
-            link.dispatchEvent(new InputEvent('input', {inputType: 'insertText', bubbles: true}));
-            */
-    },
+   clickOnImgStep,
+    ...openLinkPopup(":iframe .s_text_image p a", "odoo.com", 1, true),
+    // {
+    //     content: "Edit link label",
+    //     trigger: ":iframe .s_text_image p a",
+    //     run: "click",
+    //         // See SHOPS_STEP_DISABLED. TODO. These steps do not consistently
+    //         // update the link for some reason... to investigate.
+    //         /*
+    //         // Simulating text input.
+    //         const link = this.anchor;
+    //         actions.text("callmemaybe.com/shops");
+    //         // Trick the editor into keyboardType === 'PHYSICAL' and delete the
+    //         // last character "s" and end with "callmemaybe.com/shop"
+    //         link.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace", bubbles: true }));
+    //         // Trigger editor's '_onInput' handler, which leads to a history step.
+    //         link.dispatchEvent(new InputEvent('input', {inputType: 'insertText', bubbles: true}));
+    //         */
+    // },
     // See SHOPS_STEP_DISABLED. TODO.
     /*
     {
@@ -427,21 +416,8 @@ registerWebsitePreviewTour('link_tools', {
     },
     */
     // 11. Pick a URL with auto-complete
-    {
-        trigger: `input#o_link_dialog_url_input`,
-    },
-    {
-        content: "Wait the sidebar is openend",
-        trigger: `we-title:contains(Inline text)`,
-    },
-    {
-        trigger: 'body:not(:has(.o_we_ui_loading))',
-    },
-    {
-        content: "Enter partial URL",
-        trigger: "input#o_link_dialog_url_input",
-        run: "edit /contact",
-    },
+    clickEditLink,
+    insertTextOnUrlInput("Enter partial URL", "/contact"),
     {
         content: "Pick '/contactus",
         trigger: "ul.ui-autocomplete li div:contains('/contactus (Contact Us)')",
@@ -449,14 +425,10 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that links's href and label were updated",
-        trigger: ":iframe .s_text_image p a[href='/contactus']:contains('/contactus')",
+        trigger: ":iframe .s_text_image p a[href='/contactus']",
     },
     // 12. Add a link leading to a 404 page
-    {
-        content: "Enter a non-existent URL",
-        trigger: "#o_link_dialog_url_input",
-        run: "edit /this-address-does-not-exist",
-    },
+    insertTextOnUrlInput("Enter a non-existent URL", "/this-address-does-not-exist"),
     {
         content: "Check that the link's href was updated and click on it",
         trigger: ":iframe .s_text_image p a[href='/this-address-does-not-exist']",
@@ -473,18 +445,11 @@ registerWebsitePreviewTour('link_tools', {
     */
     // 13. Check that ZWS is not added in the link label input.
     clickOnImgStep,
-    {
-        content: "Click on contact us button",
-        trigger: ":iframe a.btn[href='/contactus']",
-        run: "click",
-    },
-    {
-        trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
-    },
+    ...openLinkPopup(":iframe a.btn[href='/contactus']", "Contact Us", 1, true),
+    clickEditLink,
     {
         content: "Verify that the link label input does not contain ZWS",
-        trigger: "#o_link_dialog_label_input:value('Contact Us')",
+        trigger: ".o-we-linkpopover .o_we_label_link:value('Contact Us')",
     },
-    // TODO: understand why tour need big timeout to passed and remove it
-    ...clickOnSave("bottom", 20000),
+    ...clickOnSave(),
 ]);
