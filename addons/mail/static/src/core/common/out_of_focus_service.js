@@ -94,6 +94,9 @@ export class OutOfFocusService {
      */
     sendNotification({ message, sound = true, title, type, icon }) {
         if (!this.canSendNativeNotification || !this.multiTab.isOnMainTab()) {
+            if (sound) {
+                this._playSound();
+            }
             return;
         }
         try {

@@ -35,7 +35,6 @@ import {
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { animationFrame, press, runAllTimers, waitFor } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
-import { EventBus } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
@@ -1455,18 +1454,7 @@ test("receive new message plays sound", async () => {
     await waitForSteps(["sound:new-message"]);
 });
 
-test("message sound on receiving new message (push notif enabled)", async () => {
-    // Simulate push notification allowed
-    patchWithCleanup(window.navigator, {
-        serviceWorker: Object.assign(new EventBus(), {
-            register: () => Promise.resolve(),
-            getRegistration: async () => ({
-                get pushManager() {
-                    return Promise.resolve({ getSubscription: async () => ({}) });
-                },
-            }),
-        }),
-    });
+test("message sound on receiving new message based on user preferences", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
