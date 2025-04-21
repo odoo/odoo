@@ -344,6 +344,38 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'currency_id': usd.id,
         })
 
+    def test_multicurrency_negative_quantity_purchase_order_line(self):
+        """ Tests that the balance of the created account move line for negative quantity order lines is also negative.
+        The currencies must be different so that the balance is not recomputed from `_sync_invoice`.
+        The created account move should be a vendor credit note.
+        """
+        usd = self.env.ref('base.USD')
+        eur = self.env.ref('base.EUR')
+        ResCurrencyRate = self.env['res.currency.rate']
+        ResCurrencyRate.create({'currency_id': usd.id, 'rate': 1})
+        ResCurrencyRate.create({'currency_id': eur.id, 'rate': 2})
+
+        self.env.company.currency_id = usd.id
+
+        po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            'currency_id': eur.id,
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.service_order.name,
+                'product_id': self.service_order.id,
+                'product_qty': -1,
+                'product_uom': self.service_order.uom_id.id,
+                'price_unit': 100,
+                'taxes_id': False,
+            })]
+
+        })
+        po.button_confirm()
+        po.action_create_invoice()
+
+        self.assertEqual(po.invoice_ids.move_type, 'in_refund')
+        self.assertLess(po.order_line.invoice_lines.balance, 0.0)
+
     def test_product_price_decimal_accuracy(self):
         self.env.ref('product.decimal_price').digits = 3
         self.env.company.currency_id.rounding = 0.01
