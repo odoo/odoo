@@ -137,7 +137,13 @@
                                         imagesHeight="message.attachment_ids.length === 1 ? 300 : 75"
                                         messageSearch="props.messageSearch"/>
                                 </div>
+<<<<<<< 54b454f312748fb0d83acd101a788802a9a58d4e
                                 <MessageLinkPreviewList t-if="message.message_link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" messageLinkPreviews="message.message_link_preview_ids"/>
+||||||| e61fb3fe2e4ab2ff5285579d8c5b918346ac2ad9
+                                <LinkPreviewList t-if="message.link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="props.message.editable"/>
+=======
+                                <LinkPreviewList t-if="message.link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="message.isSelfAuthored or store.self.isAdmin"/>
+>>>>>>> d11f5cd5579a201b7758e8f9473997fe0b044d5d
                             </div>
                             <t t-if="message.bubbleColor and (!message.hasTextContent or env.inChatWindow) and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
