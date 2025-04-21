@@ -99,6 +99,40 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         self._populate_currency_and_pricelist(kwargs)
         return super().sale_product_configurator_get_optional_products(*args, **kwargs)
 
+    @route(
+        route='/website_sale/product_configurator/set_prevent_zero_price_sale',
+        type='jsonrpc',
+        auth='public',
+        website=True,
+        readonly=True,
+    )
+    def website_sale_product_configurator_set_prevent_zero_price_sale(self, *args, **kwargs):
+        """ Set prevent_zero_price_sale to True, to prevent selling zero priced products. """
+        website = request.env['website'].get_current_website()
+        if website.prevent_zero_price_sale:
+            return (website.id, website.prevent_zero_price_sale)
+        website.prevent_zero_price_sale = True
+        return (website.id, website.prevent_zero_price_sale)
+
+    @route(
+        route='/website_sale/product_configurator/set_hide_products',
+        type='jsonrpc',
+        auth='public',
+        website=True,
+        readonly=True,
+    )
+    def website_sale_product_configurator_set_products_unpublished(self, limit=None, search_domain=None):
+        """ Unpublish products matching the search domain. """
+        domain = search_domain or []
+        products = request.env['product.template'].search(domain, limit=limit)
+        products.write({'is_published': False})
+
+        return [{
+            'id': p.id,
+            'name': p.name,
+            'is_published': p.is_published,
+        } for p in products]
+
     def _get_basic_product_information(
         self, product_or_template, pricelist, combination, currency=None, date=None, **kwargs
     ):
