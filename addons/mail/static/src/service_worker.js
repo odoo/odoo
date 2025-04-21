@@ -201,7 +201,10 @@ self.addEventListener("push", async (event) => {
                 // action "accept" is disabled on mobile until: https://issues.chromium.org/issues/40286493 is fixed.
                 delete notification.options.actions.accept;
             }
-            break;
+            event.waitUntil(
+                self.registration.showNotification(notification.title, notification.options || {})
+            );
+            return;
         case PUSH_NOTIFICATION_TYPE.CANCEL: {
             const notifications = await self.registration.getNotifications({
                 tag: notification.options?.tag,
@@ -212,10 +215,59 @@ self.addEventListener("push", async (event) => {
             return;
         }
     }
-    event.waitUntil(
-        self.registration.showNotification(notification.title, notification.options || {})
-    );
+    event.waitUntil(handlePushEvent(notification));
 });
+
+/** @type {Map<string, Function>} string is correlationId and Function is handler */
+self.handlePushEventMessageFns = new Map();
+
+self.addEventListener("message", ({ data }) => {
+    const { type, payload } = data;
+    if (type === "notification-display-response") {
+        const fn = self.handlePushEventMessageFns.get(payload.correlationId);
+        if (fn) {
+            self.handlePushEventMessageFns.delete(payload.correlationId);
+            fn({ data });
+        }
+    }
+});
+
+async function handlePushEvent(notification) {
+    const { model, res_id } = notification.options?.data || {};
+    const correlationId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    let timeoutId;
+    let promResolve;
+    const onHandlePushEventMessage = ({ data = {} }) => {
+        const { type, payload } = data;
+        if (type === "notification-display-response" && payload.correlationId === correlationId) {
+            clearTimeout(timeoutId);
+            promResolve?.();
+        }
+    };
+    return new Promise((resolve) => {
+        promResolve = resolve;
+        self.handlePushEventMessageFns.set(correlationId, onHandlePushEventMessage);
+        self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
+            clients.forEach((client) =>
+                client.postMessage({
+                    type: "notification-display-request",
+                    payload: { correlationId, model, res_id },
+                })
+            );
+        });
+        timeoutId = setTimeout(() => {
+            self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
+                clients.forEach((client) =>
+                    client.postMessage({
+                        type: "notification-displayed",
+                        payload: { model, res_id },
+                    })
+                );
+            });
+            resolve(self.registration.showNotification(notification.title, notification.options));
+        }, 500);
+    });
+}
 self.addEventListener("pushsubscriptionchange", async (event) => {
     const subscription = await self.registration.pushManager.subscribe(
         event.oldSubscription.options

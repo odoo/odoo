@@ -342,10 +342,14 @@ const threadPatch = {
         }
         this.markReadSequential(async () => {
             this.markingAsRead = true;
-            return rpc("/discuss/channel/mark_as_read", {
-                channel_id: this.id,
-                last_message_id: newestPersistentMessage.id,
-            }).catch((e) => {
+            return rpc(
+                "/discuss/channel/mark_as_read",
+                {
+                    channel_id: this.id,
+                    last_message_id: newestPersistentMessage.id,
+                },
+                { silent: true }
+            ).catch((e) => {
                 if (e.code !== 404) {
                     throw e;
                 }
