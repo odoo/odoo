@@ -188,7 +188,10 @@ class BarcodeNomenclature(models.Model):
 
                 # The barcode isn't a valid GS1 barcode, checks if it can be unpadded.
                 if not parsed_data:
-                    match = re.match('0+([0-9]+)$', value)
+                    try:
+                        match = re.match('0+([0-9]+)$', value)
+                    except TypeError:
+                        match = None
                     if match:
                         return Domain(field, replacing_operator, match.groups()[0])
                 return condition
