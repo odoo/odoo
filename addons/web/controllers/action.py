@@ -87,7 +87,7 @@ class Action(Controller):
                         else:
                             results.append({'display_name': act['display_name']})
                     else:
-                        if act['res_model'] and act['type'] != 'ir.actions.client':
+                        if act.get('res_model') and act['type'] != 'ir.actions.client':
                             request.env[act['res_model']].check_access('read')
                             # action shouldn't be available on its own if it doesn't have multi-record views
                             name = act['display_name'] if any(view[1] != 'form' and view[1] != 'search' for view in act['views']) else None
