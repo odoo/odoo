@@ -379,3 +379,24 @@ QUnit.test("Delete all link previews at once", async () => {
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
+
+QUnit.test("Delete link preview of a non-editable (email) message", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        og_description: "Description",
+        og_title: "Article title 1",
+        og_type: "article",
+        source_url: "https://www.odoo.com",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        link_preview_ids: [linkPreviewId],
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "email",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await contains(".o-mail-LinkPreviewCard button[aria-label='Remove']");
+});
