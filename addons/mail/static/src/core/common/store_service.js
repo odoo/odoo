@@ -407,7 +407,33 @@ export class Store extends BaseStore {
     }
 
     /** Provides an override point for when the store service has started. */
-    onStarted() {}
+    onStarted() {
+        navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
+            const { type, payload } = data;
+            if (type === "notification-display-request") {
+                const { correlationId, model, res_id } = payload;
+                const thread = this.Thread.get({ model, id: res_id });
+                let isTabFocused;
+                try {
+                    isTabFocused = parent.document.hasFocus();
+                } catch {
+                    // assumes tab not focused: parent.document from iframe triggers CORS error
+                }
+                if (isTabFocused && thread?.isDisplayed) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: "notification-display-response",
+                        payload: { correlationId },
+                    });
+                }
+            }
+            if (
+                type === "notification-displayed" &&
+                ["mail.thread", "discuss.channel"].includes(payload.model)
+            ) {
+                this.env.services["mail.out_of_focus"]._playSound();
+            }
+        });
+    }
 
     /**
      * Search and fetch for a partner with a given user or partner id.
