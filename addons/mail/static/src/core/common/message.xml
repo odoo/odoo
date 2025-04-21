@@ -114,7 +114,7 @@
                                         imagesHeight="message.attachment_ids.length === 1 ? 300 : 75"
                                         messageSearch="props.messageSearch"/>
                                 </div>
-                                <LinkPreviewList t-if="message.link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="props.message.editable"/>
+                                <LinkPreviewList t-if="message.link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="message.isSelfAuthored or store.self.isAdmin"/>
                             </div>
                             <t t-if="!message.is_note and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
                         </div>
