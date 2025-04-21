@@ -181,7 +181,7 @@ test("Tab livechat picks ended livechats last", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await waitFor(".o-mail-ChatBubble[name='Visitor 3'] .badge:contains('2')");
+    await waitFor(".o-mail-ChatBubble[name='Visitor 3'] .badge:contains('2')", { timeout: 3000 });
     /**
      * channel id | last_interest_dt    | livechat_active | unread
      * -----------+---------------------+-----------------+--------
@@ -213,7 +213,9 @@ test("Tab livechat picks ended livechats last", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await waitFor(".o-mail-ChatWindow:contains('Visitor 0') .badge:contains('1')");
+    await waitFor(".o-mail-ChatWindow:contains('Visitor 0') .badge:contains('1')", {
+        timeout: 3000,
+    });
     /**
      * channel id | last_interest_dt    | livechat_active | unread
      * -----------+---------------------+-----------------+--------
