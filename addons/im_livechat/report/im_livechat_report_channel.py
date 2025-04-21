@@ -26,9 +26,6 @@ class Im_LivechatReportChannel(models.Model):
     nbr_speaker = fields.Integer('# of speakers', readonly=True, aggregator="avg", help="Number of different speakers")
     nbr_channel = fields.Integer("# of Sessions", readonly=True, aggregator="sum")
     nbr_message = fields.Integer('Average message', readonly=True, aggregator="avg", help="Number of message in the conversation")
-    is_without_answer = fields.Integer('Session(s) without answer', readonly=True, aggregator="sum",
-                                       help="""A session is without answer if the operator did not answer. 
-                                       If the visitor is also the operator, the session will always be answered.""")
     days_of_activity = fields.Integer('Days of activity', aggregator="max", readonly=True, help="Number of days since the first session of the operator")
     is_anonymous = fields.Integer('Is visitor anonymous', readonly=True)
     country_id = fields.Many2one('res.country', 'Country of the visitor', readonly=True)
@@ -41,6 +38,16 @@ class Im_LivechatReportChannel(models.Model):
     handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
     handled_by_agent = fields.Integer("Handled by Agent", readonly=True, aggregator="sum")
     visitor_partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
+    session_outcome = fields.Selection(
+        selection=[
+            ("no_answer", "Never Answered"),
+            ("no_agent", "No one Available"),
+            ("no_failure", "Success"),
+            ("escalated", "Escalated"),
+        ],
+        string="Session Outcome",
+        readonly=True,
+    )
 
     def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
@@ -117,11 +124,9 @@ class Im_LivechatReportChannel(models.Model):
                 count(distinct C.livechat_operator_id) as nbr_speaker,
                 SUM(message_vals.message_count) as nbr_message,
                 CASE
-                    WHEN channel_member_history.has_agent AND MIN(message_vals.first_agent_message_dt) IS NULL THEN 1
-                    WHEN channel_member_history.has_bot AND MIN(message_vals.last_bot_message_dt) IS NULL THEN 1
-                    WHEN NOT channel_member_history.has_agent AND NOT channel_member_history.has_bot AND MIN(message_vals.first_agent_message_dt_legacy) IS NULL THEN 1
-                    ELSE 0
-                END AS is_without_answer,
+                    WHEN C.livechat_is_escalated THEN 'escalated'
+                    ELSE C.livechat_failure
+                END AS session_outcome,
                 (DATE_PART('day', date_trunc('day', now()) - date_trunc('day', C.create_date)) + 1) as days_of_activity,
                 CASE
                     WHEN C.anonymous_name IS NULL THEN 0
