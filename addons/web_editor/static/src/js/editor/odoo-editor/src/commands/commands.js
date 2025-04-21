@@ -755,7 +755,7 @@ export const editorCommands = {
                 if (
                     font &&
                     (font.nodeName === "FONT" || (font.nodeName === "SPAN" && font.style[mode])) &&
-                    (isColorGradient(color) || !hasInlineGradient)
+                    (isColorGradient(color) || color === "" || !hasInlineGradient)
                 ) {
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter(child => selectedNodes.includes(child));
