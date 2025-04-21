@@ -3,7 +3,6 @@
 # 	* account
 # 
 # Translators:
-# 晨知 吳, 2025
 # Wil Odoo, 2025
 # Tony Ng, 2025
 # 
@@ -110,7 +109,7 @@ msgstr "已對賬結單記項數目"
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr "# 企業帳單"
+msgstr "# 供應商賬單"
 
 #. module: account
 #. odoo-python
@@ -4431,6 +4430,11 @@ msgstr "來自 account.move.line (日記帳項目) 的逗號分隔欄位列表. 
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 msgid "Commercial Entity"
 msgstr "商業實體"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__commercial_partner_country
+msgid "Commercial Partner Country"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
@@ -17189,10 +17193,10 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
-"企業應收帳款對帳單可由系統\n"
-"                根據採購單或收據預先產生，\n"
-"                讓你可根據 Odoo 內的草稿文件，\n"
-"                控制從企業收到的帳單。"
+"供應商賬單可根據採購訂單或收據，\n"
+"                由系統預先產生。\n"
+"                此功能讓你可根據 Odoo 內的草稿文件，\n"
+"                控制從供應商收到的賬單。"
 
 #. module: account
 #. odoo-javascript

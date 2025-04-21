@@ -4180,29 +4180,29 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last preparation change"
-msgstr ""
+msgstr "Posledná zmena prípravy"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "Posledný vytlačený stav objednávky"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Launch fake tours"
-msgstr ""
+msgstr "Spustenie demo prehliadok"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leather_jacket_product_template
 msgid "Leather Jacket"
-msgstr ""
+msgstr "Kožená bunda"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 msgid "Leave a reason here"
-msgstr ""
+msgstr "Tu poznačte dôvod"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -4210,11 +4210,13 @@ msgid ""
 "Leave empty to use the default account from the company setting.\n"
 "Overrides the company's receivable account (for Point of Sale) used in the journal entries."
 msgstr ""
+"Ak chcete použiť predvolený účet z nastavenia spoločnosti, nechajte prázdne.\n"
+"Nahrádza účet pohľadávok spoločnosti (pre predajné miesto), ktorý sa používa v zápisoch do denníka."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the receivable account of customer"
-msgstr ""
+msgstr "Nechajte prázdne, ak chcete použiť účet pohľadávok zákazníka"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
@@ -4225,6 +4227,11 @@ msgid ""
 "For bank journal, we write to the outstanding account specified in this payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+"Ponechajte prázdne, ak chcete použiť účet pohľadávok zákazníka.\n"
+"Definuje denník, do ktorého sa majú zaúčtovať kumulované platby (alebo jednotlivé platby, ak je možnosť Identifikovať zákazníka nastavená) po uzavretí relácie.\n"
+"V prípade peňažného denníka zapisujeme priamo na predvolený účet v denníku prostredníctvom riadkov.\n"
+"Pri bankovom denníku zapisujeme na neuhradený účet uvedený v tomto spôsobe platby.\n"
+"Povolené sú len peňažné a bankové denníky."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -4234,7 +4241,7 @@ msgstr "Zásobník na listy"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.blue_denim_jeans_slim_template
 msgid "Light Blue Jeans Slim"
-msgstr ""
+msgstr "Svetlomodré džínsy slim"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_classic_brown_jacket_product_template
@@ -4242,6 +4249,8 @@ msgid ""
 "Lightweight bomber jacket in linen with a ribbed stand-up collar and zip "
 "down the front."
 msgstr ""
+"Ľahká bunda bomber z ľanového plátna s rebrovaným stojačikom a zipsom "
+"vpredu."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4259,7 +4268,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_manual_discount
 msgid "Line Discounts"
-msgstr ""
+msgstr "Zľavy na riadkoch"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
@@ -4287,12 +4296,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Load Order"
-msgstr ""
+msgstr "Načítať objednávku"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_product_menu
 msgid "Load Product Menu"
-msgstr ""
+msgstr "Načítanie ponuky produktov"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4310,7 +4319,7 @@ msgstr "Nahrávanie..."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Log in with Employees"
-msgstr ""
+msgstr "Prihlásenie so zamestnancami"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number_seq_id
@@ -4350,7 +4359,7 @@ msgstr "Šarža/Sériové číslo"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_lower
 msgid "Lower body"
-msgstr ""
+msgstr "Dolná časť tela"
 
 #. module: point_of_sale
 #. odoo-javascript
