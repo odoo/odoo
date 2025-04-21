@@ -26,6 +26,15 @@ class DiscussChannel(models.Model):
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
+    livechat_failure = fields.Selection(
+        selection=[
+            ("no_answer", "Never Answered"),
+            ("no_agent", "No one Available"),
+            ("no_failure", "No Failure"),
+        ],
+        string="Live Chat Session Failure",
+    )
+    livechat_is_escalated = fields.Boolean("Is session escalated", compute="_compute_livechat_is_escalated", store=True)
 
     _livechat_operator_id = models.Constraint(
         "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
@@ -33,6 +42,12 @@ class DiscussChannel(models.Model):
     )
 
     _livechat_active_idx = models.Index("(livechat_active) WHERE livechat_active IS TRUE")
+    _livechat_failure_idx = models.Index(
+        "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')"
+    )
+    _livechat_is_escalated_idx = models.Index(
+        "(livechat_is_escalated) WHERE livechat_is_escalated IS TRUE"
+    )
 
     @api.depends('message_ids')
     def _compute_duration(self):
@@ -42,6 +57,13 @@ class DiscussChannel(models.Model):
         for record in self:
             end = last.date if (last := last_msg_by_channel_id.get(record.id)) else fields.Datetime.now()
             record.duration = (end - record.create_date).total_seconds() / 3600
+
+    @api.depends("channel_member_history_ids")
+    def _compute_livechat_is_escalated(self):
+        for channel in self:
+            channel.livechat_is_escalated = len(channel.channel_member_history_ids.filtered(
+                lambda h: h.livechat_member_type == "agent")
+            ) > 1
 
     def _sync_field_names(self):
         return super()._sync_field_names() + ["livechat_operator_id"]
@@ -288,6 +310,14 @@ class DiscussChannel(models.Model):
                     "script_step_id": self.chatbot_current_step_id.id,
                 }
             )
+
+        if (
+            # sudo: discuss.channel - visitor can access channel member history
+            self.livechat_active and self.sudo().channel_member_history_ids.filtered(
+                lambda h: h.partner_id == message.author_id and h.livechat_member_type == "agent"
+            )
+        ):
+            self.livechat_failure = "no_failure"
 
         return super()._message_post_after_hook(message, msg_vals)
 

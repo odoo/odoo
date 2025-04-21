@@ -68,7 +68,9 @@
                     <field name="visitor_partner_id"/>
                     <filter name="my_session" domain="[('partner_id.user_id', '=', uid)]" string="My Sessions"/>
                     <separator/>
-                    <filter name="not_answered" string="Not Answered" domain="[('is_without_answer', '=', 1)]"/>
+                    <filter name="escalated" string="Escalated" domain="[('session_outcome', '=', 'escalated')]"/>
+                    <filter name="no_answer" string="Not Answered" domain="[('session_outcome', '=', 'no_answer')]"/>
+                    <filter name="no_agent" string="No one Available" domain="[('session_outcome', '=', 'no_agent')]"/>
                     <separator/>
                     <filter name="rating_happy" string="Happy" domain="[('rating_text','=', 'Happy')]"/>
                     <filter name="rating_neutral" string="Neutral" domain="[('rating_text','=', 'Neutral')]"/>

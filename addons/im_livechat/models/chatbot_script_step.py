@@ -393,6 +393,7 @@ class ChatbotScriptStep(models.Model):
             # finally, rename the channel to include the operator's name
             channel_sudo.write(
                 {
+                    "livechat_failure": "no_answer",
                     "livechat_operator_id": human_operator.partner_id,
                     "name": " ".join(
                         [
@@ -426,6 +427,9 @@ class ChatbotScriptStep(models.Model):
             )
             channel_sudo._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
+        else:
+            # sudo: discuss.channel - visitor tried getting operator, outcome must be updated
+            discuss_channel.sudo().livechat_failure = "no_agent"
 
         return posted_message
 
