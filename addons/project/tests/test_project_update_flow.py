@@ -12,9 +12,8 @@ class TestProjectUpdate(TestProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['res.config.settings'] \
-            .create({'group_project_milestone': True}) \
-            .execute()
+        cls.env.user.group_ids |= cls.env.ref('project.group_project_milestone')
+        cls.project_pigs.allow_milestones = True
 
     def test_project_update_form(self):
         with Form(self.env['project.milestone'].with_context({'default_project_id': self.project_pigs.id})) as milestone_form:
@@ -52,22 +51,11 @@ class TestProjectUpdate(TestProjectCommon):
 
         template_values = self.env['project.update']._get_template_values(self.project_pigs)
 
-        self.assertTrue(template_values['milestones']['show_section'], 'The milestone section should not be visible since the feature is disabled')
+        self.assertTrue(template_values['milestones']['show_section'], 'The milestone section should be visible since the feature is enabled')
         self.assertEqual(len(template_values['milestones']['list']), 2, "Milestone list length should be equal to 2")
         self.assertEqual(len(template_values['milestones']['created']), 3, "Milestone created length tasks should be equal to 3")
 
         self.project_pigs.write({'allow_milestones': False})
-
-        template_values = self.env['project.update']._get_template_values(self.project_pigs)
-
-        self.assertFalse(template_values['milestones']['show_section'], 'The milestone section should not be visible since the feature is disabled')
-        self.assertEqual(len(template_values['milestones']['list']), 0, "Milestone list length should be equal to 0 because the Milestones feature is disabled.")
-        self.assertEqual(len(template_values['milestones']['created']), 0, "Milestone created length tasks should be equal to 0 because the Milestones feature is disabled.")
-
-        self.project_pigs.write({'allow_milestones': True})
-        self.env['res.config.settings'] \
-            .create({'group_project_milestone': False}) \
-            .execute()
 
         template_values = self.env['project.update']._get_template_values(self.project_pigs)
 
@@ -105,10 +93,7 @@ class TestProjectUpdate(TestProjectCommon):
         self.assertNotIn('milestones', panel_data, 'Since the "Milestones" feature is disabled in this project, the "Milestones" section is not loaded.')
 
         # Disable globally the Milestones feature and check the Milestones section is not loaded.
-        self.project_pigs.write({'allow_milestones': True})
-        self.env['res.config.settings'] \
-            .create({'group_project_milestone': False}) \
-            .execute()
+        self.env.user.group_ids -= self.env.ref('project.group_project_milestone')
         panel_data = self.project_pigs.get_panel_data()
         self.assertNotIn('milestones', panel_data, 'Since the "Milestones" feature is globally disabled, the "Milestones" section is not loaded.')
 

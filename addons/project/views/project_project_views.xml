@@ -118,43 +118,20 @@
                                 </group>
                             </group>
                             <group>
-                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_project_task_dependencies,project.group_project_milestone">
+                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container">
                                     <div>
-                                        <setting class="col-lg-12" id="task_dependencies_setting" help="Determine the order in which to perform tasks" groups="project.group_project_task_dependencies">
+                                        <setting class="col-lg-12" id="recurring_tasks_setting" help="Auto-generate tasks for regular activities">
+                                            <field name="allow_recurring_tasks"/>
+                                        </setting>
+                                        <setting class="col-lg-12" id="task_dependencies_setting" help="Determine the order in which to perform tasks">
                                             <field name="allow_task_dependencies"/>
                                         </setting>
-                                        <setting class="col-lg-12" id="project_milestone_setting" help="Track major progress points that must be reached to achieve success" groups="project.group_project_milestone">
+                                        <setting class="col-lg-12" id="project_milestone_setting" help="Track major progress points that must be reached to achieve success">
                                             <field name="allow_milestones"/>
                                         </setting>
                                     </div>
                                 </group>
                                 <group name="group_time_managment" string="Time Management" invisible="1" col="1" class="row mt16 o_settings_container"/>
-                                <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" groups="project.group_project_rating">
-                                    <div>
-                                        <field name="rating_active" invisible="1"/>
-                                        <setting class="col-lg-12" name="analytic_div" help="Get customer feedback and evaluate the performance of your employees" groups="project.group_project_rating">
-                                            <field name="rating_active"/>
-                                            <div class="mt16" invisible="not rating_active">
-                                                <span class="text-muted o_row ps-1 pb-3">Send a rating request:</span>
-                                                <field name="rating_status" widget="radio" class="o_row"/>
-                                                <div  invisible="rating_status != 'periodic'"  required="rating_status == 'periodic'">
-                                                    <label for="rating_status_period" string="Frequency"/>
-                                                    <field class="mx-3 w-auto" name="rating_status_period"/>
-                                                </div>
-                                                <span colspan="2" class="text-muted o_row ps-1">
-                                                    <i class="fa fa-lightbulb-o pe-2"/>
-                                                    <span invisible="rating_status == 'periodic'">A rating request will be sent as soon as the task reaches a stage on which a Rating Email Template is defined.</span>
-                                                    <span invisible="rating_status == 'stage'">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>
-                                                </span>
-                                                <div class="content-group">
-                                                    <div class="mt8">
-                                                        <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="oi-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link" groups="project.group_project_manager"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </setting>
-                                    </div>
-                                </group>
                             </group>
                         </page>
                     </notebook>
@@ -180,7 +157,7 @@
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <filter string="Unassigned" name="unassigned_projects" domain="[('user_id', '=', False)]"/>
                     <separator invisible="context.get('default_is_template')"/>
-                    <filter string="Late Milestones" name="late_milestones" domain="[('is_milestone_exceeded', '=', True)]" groups="project.group_project_milestone" invisible="context.get('default_is_template')"/>
+                    <filter string="Late Milestones" name="late_milestones" domain="[('is_milestone_exceeded', '=', True)]" groups="project.group_project_milestone" invisible="context.get('default_is_template') or not context.get('allow_milestones', True)"/>
                     <separator invisible="context.get('default_is_template')"/>
                     <filter string="Start Date" name="start_date" date="date_start" end_month="1" end_year="1"/>
                     <filter string="End Date" name="end_date" date="date" end_month="1" end_year="1"/>
@@ -332,7 +309,7 @@
                     <field name="user_id" invisible="1"/>
                     <div class="row o_settings_container"/>
                     <div name="alias_def" class="mt-2" colspan="2">
-                        <label for="alias_name" string="Create tasks by sending an email to"/>
+                        <label for="alias_name" string="Create tasks by email:"/>
                         <span>
                             <field name="alias_id" invisible="1"/>
                             <field name="alias_name" placeholder="e.g. office-party"/>@
@@ -383,7 +360,6 @@
                 >
                     <field name="allow_milestones"/>
                     <field name="rating_count" />
-                    <field name="rating_active" />
                     <field name="privacy_visibility"/>
                     <field name="last_update_color"/>
                     <field name="is_milestone_deadline_exceeded"/>
@@ -454,7 +430,7 @@
                                     <div t-if="record.alias_email.value" class="text-muted text-truncate" t-att-title="record.alias_email.value">
                                         <span class="fa fa-envelope-o me-2" aria-label="Domain Alias" title="Domain Alias"></span><field name="alias_email"/>
                                     </div>
-                                    <div t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" class="d-flex text-muted" groups="project.group_project_rating">
+                                    <div t-if="record.rating_count.raw_value &gt; 0" class="d-flex text-muted">
                                         <b class="me-1">
                                             <span class="fa mt4 fa-smile-o fw-bolder text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Happy" role="img" aria-label="Happy face"/>
                                             <span class="fa mt4 fa-meh-o fw-bolder text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Neutral" role="img" aria-label="Neutral face"/>

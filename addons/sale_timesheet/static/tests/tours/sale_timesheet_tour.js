@@ -43,6 +43,26 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Click on Create button to create and enter to this newest project.',
     run: "click",
 }, {
+    trigger: ".breadcrumb-item.o_back_button",
+    run: "click",
+}, {
+    trigger: ".o_kanban_record:contains('Project for Freeman')",
+}, {
+    trigger: ".o_switch_view.o_list",
+    run: "click",
+}, {
+    trigger: "tr.o_data_row td[name='name']:contains('Project for Freeman')",
+    run: "click",
+}, {
+    trigger: ".nav-link:contains('Settings')",
+    run: "click",
+}, {
+    trigger: "div[name='allow_milestones'] input",
+    run: "click",
+}, {
+    trigger: "button[name='action_view_tasks']",
+    run: "click",
+}, {
     trigger: 'div.o_kanban_header > div:first-child input',
     content: 'Select a name of your kanban column (e.g. To Do)',
     run: "edit To Do",
@@ -214,14 +234,11 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select Project main menu',
     run: "click",
 }, {
-    content: 'Open the project dropdown',
-    trigger: ".o_kanban_record:contains(Project for Freeman)",
-    run: "hover && click .o_kanban_record:contains(Project for Freeman) .o_dropdown_kanban .dropdown-toggle",
-}, {
-    trigger: '.dropdown-menu a:contains("Settings")',
-    content: 'Start editing the project',
+    trigger: ".o_switch_view.o_list",
     run: "click",
-    // timer: 300,
+}, {
+    trigger: "tr.o_data_row td[name='name']:contains('Project for Freeman')",
+    run: "click",
 }, {
     trigger: 'div[name="partner_id"] input',
     content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
@@ -247,8 +264,8 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select the first item on the autocomplete dropdown',
     run: "click",
 }, {
-    trigger: '.o_back_button',
-    content: 'Go back to the kanban view the project created',
+    trigger: '[data-menu-xmlid="project.menu_projects"]',
+    content: 'Select Project main menu',
     run: "click",
 }, {
     trigger: '.o_kanban_record:contains("Project for Freeman")',
@@ -260,10 +277,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     run: "click",
 }, {
     trigger: "span.o-dropdown-item:contains('Top Menu')",
-    run: "click",
-}, {
-    trigger: ".o_embedded_actions button i.fa-sliders",
-    content: "Open embedded actions dropdown",
     run: "click",
 }, {
     trigger: ".o-dropdown-item div span:contains('Dashboard')",
