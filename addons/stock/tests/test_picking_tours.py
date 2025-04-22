@@ -6,6 +6,11 @@ from odoo.tests import HttpCase, tagged
 @tagged('-at_install', 'post_install')
 class TestStockPickingTour(HttpCase):
     def setUp(self):
+        config = self.env['res.config.settings'].create({
+            'group_stock_production_lot': True
+        })
+        config.execute()
+
         self.receipt = self.env['stock.picking'].create({
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
