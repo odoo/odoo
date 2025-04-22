@@ -87,7 +87,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "click",
     },
     {
-        trigger: 'h3:contains("Billing address")',
+        trigger: 'h4:contains("New address")',
     },
     {
         content: "Fulfill billing address form",
@@ -137,7 +137,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "click",
     },
     {
-        trigger: 'h3:contains("Billing address")',
+        trigger: 'h4:contains("Edit address")',
     },
     {
         content: "Change billing address form",
@@ -167,7 +167,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         tourUtils.confirmOrder(),
     {
         content: "Check selected billing address is same as typed in previous step",
-        trigger: '#delivery_and_billing :contains(Billing:):contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
+        trigger: '#delivery_and_billing :contains(Billing):contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
     },
     {
         content: "Select `Wire Transfer` payment method",
