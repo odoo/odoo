@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_departure_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.departure.wizard.view.form.extend</field>
+        <field name="model">hr.employee.departure.wizard</field>
+        <field name="inherit_id" ref="hr.hr_employee_departure_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <field name="employee_id" position="after">
+                <field name="first_contract_date"/>
+            </field>
+        </field>
+    </record>
+</odoo>

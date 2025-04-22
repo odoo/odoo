@@ -61,7 +61,7 @@
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <form string="Employee" js_class="hr_employee_form">
+                <form string="Employee">
                     <field name="active" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="user_partner_id" invisible="1"/>
@@ -73,6 +73,8 @@
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
+                        <button name="action_new_departure" string="End of Collaboration" type="object"
+                            groups="hr.group_hr_user" invisible="not id"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
@@ -132,11 +134,6 @@
                                         </group>
                                         <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
                                             <!-- is overridden in other hr related modules -->
-                                        </group>
-                                        <group name="departure" string="Departure" invisible="active">
-                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                                            <field name="departure_description"/>
-                                            <field name="departure_date"/>
                                         </group>
                                         <group name="schedule" string="Schedule">
                                             <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
@@ -239,6 +236,48 @@
                                     <group name="application_group" string="Application Settings" invisible="1"/>
                                 </group>
                             </page>
+                            <page name="departure" string="Departure" groups="hr.group_hr_user" invisible="not departure_reason_id">
+                                <group>
+                                    <group>
+                                        <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"
+                                            readonly="departure_applied"/>
+                                        <label for="departure_date" string="Contract End Date"/>
+                                        <div invisible="not departure_reason_id">
+                                            <field name="departure_date" nolabel="1" class="oe_inline" readonly="departure_applied"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <div id="detailed_reason" colspan="2">
+                                            <span class="o_form_label o_hr_form_label cursor-default">Note</span>
+                                            <field name="departure_description" placeholder="Add more details about the reason to end the collaboration with this employee."/>
+                                        </div>
+                                    </group>
+                                </group>
+                                <group string="Planned Actions" name="planned_actions">
+                                    <group name="planned_actions_left">
+                                        <label for="departure_do_archive" string="Employee"/>
+                                        <div class="o_row">
+                                            <field name="departure_do_archive" nolabel="1"/>
+                                            <span>Archive</span>
+                                        </div>
+                                    </group>
+                                    <group name="planned_actions_right"/>
+                                </group>
+                                <group class="mt-4" invisible="not departure_has_selected_actions">
+                                    <group invisible="departure_applied">
+                                        <field name="departure_action_at"/>
+                                        <field name="departure_action_other_date"
+                                            invisible="departure_action_at == 'departure_date'"
+                                            placeholder="Immediately"/>
+                                    </group>
+                                    <div invisible="not departure_applied">
+                                        <span class="alert alert-warning" role="alert">
+                                            All selected actions have been executed on the
+                                            <field name="departure_apply_date" class="oe_inline"/>
+                                        </span>
+                                    </div>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                     <chatter reload_on_follower="True"/>
@@ -281,7 +320,7 @@
             <field name="name">hr.employee.list</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
+                <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
@@ -314,7 +353,7 @@
             <field name="name">hr.employee.list</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <list string="Employees" multi_edit="1" editable="bottom" sample="1" js_class="hr_employee_list">
+                <list string="Employees" multi_edit="1" editable="bottom" sample="1">
                     <field name="name" readonly="1"/>
                     <field name="company_id" optional="hide"/>
                     <field name="department_id" optional="hide"/>

@@ -20,6 +20,9 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="js_class">hr_employee_list</attribute>
+            </list>
             <field name="work_email" position="after">
                 <field name="hr_presence_state_display" string="Presence" optional="hide"/>
             </field>
