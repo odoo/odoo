@@ -420,14 +420,31 @@ class TestActivityMixin(TestActivityCommon):
         archived_users.action_archive()
         active_users = test_users - archived_users
 
-        activities = self.env['mail.activity'].search([('user_id', 'in', archived_users.ids)])
-        self.assertFalse(activities, "Activities of archived users should be deleted.")
+        # archive user with company disabled
+        user_admin = self.user_admin
+        user_employee_c2 = self.user_employee_c2
+        self.assertIn(self.company_2, user_admin.company_ids)
+        self.test_record.env['ir.rule'].create({
+            'model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'domain_force': "[('company_id', 'in', company_ids)]"
+        })
+        self.test_record.activity_schedule(user_id=user_employee_c2.id)
+        user_employee_c2.with_user(user_admin).with_context(
+            allowed_company_ids=(user_admin.company_ids - self.company_2).ids
+        ).action_archive()
+        archived_users += user_employee_c2
+
+        self.assertFalse(any(archived_users.mapped('active')), "Users should be archived.")
 
         # activities of active users shouldn't be touched, each has exactly 1 activity present
         activities = self.env['mail.activity'].search([('user_id', 'in', active_users.ids)])
         self.assertEqual(len(activities), 3, "We should have only 3 activities in total linked to our active users")
         self.assertEqual(activities.mapped('user_id'), active_users,
                          "We should have 3 different users linked to the activities of the active users")
+
+        # ensure the user's activities are removed
+        activities = self.env['mail.activity'].search([('user_id', 'in', archived_users.ids)])
+        self.assertFalse(activities, "Activities of archived users should be deleted.")
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_reschedule_user(self):
