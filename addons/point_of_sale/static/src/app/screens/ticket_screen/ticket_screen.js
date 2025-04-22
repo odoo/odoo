@@ -451,6 +451,9 @@ export class TicketScreen extends Component {
             );
         }
     }
+    getDate(order) {
+        return this.pos.getDate(order.date_order);
+    }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.getTotalWithTax());
     }
