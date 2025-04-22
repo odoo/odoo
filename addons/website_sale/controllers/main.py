@@ -12,11 +12,10 @@ from werkzeug.urls import url_decode, url_encode, url_parse
 
 from odoo import fields
 from odoo.exceptions import ValidationError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.osv import expression
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
-from odoo.tools.image import image_data_uri
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
 
@@ -163,7 +162,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         Category = env['product.public.category']
         dom = sitemap_qs2dom(qs, f'{SHOP_PATH}/category', Category._rec_name)
-        dom += website.website_domain()
+        dom &= website.website_domain()
         for cat in Category.search(dom):
             loc = f'{SHOP_PATH}/category/{env["ir.http"]._slug(cat)}'
             if not qs or qs.lower() in loc:
@@ -178,7 +177,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         ProductTemplate = env['product.template']
         dom = sitemap_qs2dom(qs, SHOP_PATH, ProductTemplate._rec_name)
-        dom += website.sale_product_domain()
+        dom &= Domain(website.sale_product_domain())
         for product in ProductTemplate.search(dom):
             loc = f'{SHOP_PATH}/{env["ir.http"]._slug(product)}'
             if not qs or qs.lower() in loc:

@@ -443,7 +443,7 @@ class IrUiView(models.Model):
 
         # find available name
         current_website = self.env['website'].browse(self._context.get('website_id'))
-        website_domain = Domain(current_website.website_domain())
+        website_domain = current_website.website_domain()
         used_names = self.search(Domain('name', '=like', '%s%%' % name) & website_domain).mapped('name')
         name = self._find_available_name(name, used_names)
 

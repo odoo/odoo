@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
@@ -8,8 +7,8 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.tools import format_duration
 
 
@@ -21,7 +20,7 @@ class ExhibitorController(WebsiteEventController):
             ('exhibitor_type', 'in', ['exhibitor', 'online']),
         ]
         if not request.env.user.has_group('event.group_event_registration_desk'):
-            search_domain_base = expression.AND([search_domain_base, [('is_published', '=', True)]])
+            search_domain_base = Domain.AND([search_domain_base, [('is_published', '=', True)]])
         return search_domain_base
 
     # ------------------------------------------------------------
@@ -50,7 +49,7 @@ class ExhibitorController(WebsiteEventController):
 
         # search on content
         if searches.get('search'):
-            search_domain = expression.AND([
+            search_domain = Domain.AND([
                 search_domain,
                 ['|', ('name', 'ilike', searches['search']), ('website_description', 'ilike', searches['search'])]
             ])
@@ -58,7 +57,7 @@ class ExhibitorController(WebsiteEventController):
         # search on countries
         search_countries = self._get_search_countries(searches['countries'])
         if search_countries:
-            search_domain = expression.AND([
+            search_domain = Domain.AND([
                 search_domain,
                 [('partner_id.country_id', 'in', search_countries.ids)]
             ])
@@ -66,7 +65,7 @@ class ExhibitorController(WebsiteEventController):
         # search on sponsor types
         search_sponsorships = self._get_search_sponsorships(searches['sponsorships'])
         if search_sponsorships:
-            search_domain = expression.AND([
+            search_domain = Domain.AND([
                 search_domain,
                 [('sponsor_type_id', 'in', search_sponsorships.ids)]
             ])
@@ -140,7 +139,7 @@ class ExhibitorController(WebsiteEventController):
     def _event_exhibitor_get_values(self, event, sponsor, **options):
         # search for exhibitor list
         search_domain_base = self._get_event_sponsors_base_domain(event)
-        search_domain_base = expression.AND([
+        search_domain_base = Domain.AND([
             search_domain_base,
             [('id', '!=', sponsor.id)]
         ])

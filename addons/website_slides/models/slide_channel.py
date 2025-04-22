@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -11,7 +10,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
@@ -156,11 +155,11 @@ class SlideChannelPartner(models.Model):
         """
         if self:
             # find all slide link to the channel and the partner
-            removed_slide_partner_domain = expression.OR([
-                [('partner_id', '=', channel_partner.partner_id.id),
-                 ('slide_id', 'in', channel_partner.channel_id.slide_ids.ids)]
+            removed_slide_partner_domain = Domain.OR(
+                Domain('partner_id', '=', channel_partner.partner_id.id)
+                & Domain('slide_id', 'in', channel_partner.channel_id.slide_ids.ids)
                 for channel_partner in self
-            ])
+            )
             self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
         return super().unlink()
 
@@ -1052,11 +1051,11 @@ class SlideChannel(models.Model):
         if not partner_ids:
             raise ValueError("Do not use this method with an empty partner_id recordset")
 
-        removed_channel_partner_domain = expression.OR([
-            [('partner_id', 'in', partner_ids),
-             ('channel_id', '=', channel.id)]
+        removed_channel_partner_domain = Domain.OR(
+            Domain('partner_id', 'in', partner_ids)
+            & Domain('channel_id', '=', channel.id)
             for channel in self
-        ])
+        )
 
         self.message_unsubscribe(partner_ids=partner_ids)
         if self:
@@ -1097,7 +1096,7 @@ class SlideChannel(models.Model):
     def action_view_ratings(self):
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.rating_rating_action_slide_channel")
         action['name'] = _('Rating of %s', self.name)
-        action['domain'] = expression.AND([ast.literal_eval(action.get('domain', '[]')), [('res_id', 'in', self.ids)]])
+        action['domain'] = list(Domain.AND([ast.literal_eval(action.get('domain', '[]')), Domain('res_id', 'in', self.ids)]))
         return action
 
     def action_request_access(self):
@@ -1140,7 +1139,7 @@ class SlideChannel(models.Model):
     def _rating_domain(self):
         """ Only take the published rating into account to compute avg and count """
         domain = super()._rating_domain()
-        return expression.AND([domain, [('is_internal', '=', False)]])
+        return Domain.AND([domain, [('is_internal', '=', False)]])
 
     def _action_request_access(self, partner):
         activities = self.env['mail.activity']

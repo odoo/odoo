@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class EventTrack(models.Model):
@@ -51,7 +50,7 @@ class EventTrack(models.Model):
                     domain = [('partner_id', '=', self.env.user.partner_id.id)]
 
                 event_track_visitors = self.env['event.track.visitor'].sudo().search_read(
-                    expression.AND([
+                    Domain.AND([
                         domain,
                         [('track_id', 'in', tracks_quiz.ids)]
                     ]), fields=['track_id', 'quiz_completed', 'quiz_points']

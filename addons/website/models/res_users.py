@@ -38,12 +38,12 @@ class ResUsers(models.Model):
     @api.model
     def _get_login_domain(self, login):
         website = self.env['website'].get_current_website()
-        return super(ResUsers, self)._get_login_domain(login) + website.website_domain()
+        return super()._get_login_domain(login) & website.website_domain()
 
     @api.model
     def _get_email_domain(self, email):
         website = self.env['website'].get_current_website()
-        return super()._get_email_domain(email) + website.website_domain()
+        return super()._get_email_domain(email) & website.website_domain()
 
     @api.model
     def _get_login_order(self):

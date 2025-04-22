@@ -8,7 +8,7 @@ from odoo import api, fields, models
 from odoo import tools
 from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -338,8 +338,8 @@ class IrUiView(models.Model):
         # when rendering for the website we have to include inactive views
         # we will prefer inactive website-specific views over active generic ones
         if current_website:
-            domain = [leaf for leaf in domain if 'active' not in leaf]
-        return expression.AND([website_views_domain, domain])
+            domain = domain.map_conditions(lambda cond: cond if cond.field_expr != 'active' else Domain.TRUE)
+        return website_views_domain & domain
 
     @api.model
     def _get_inheriting_views(self):
@@ -392,8 +392,7 @@ class IrUiView(models.Model):
         website_id = self._context.get('website_id')
         if website_id and not isinstance(xml_id, int):
             current_website = self.env['website'].browse(int(website_id))
-            domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()
-
+            domain = Domain('key', '=', xml_id) & current_website.website_domain()
             view = self.sudo().search(domain, order='website_id', limit=1)
             if not view:
                 _logger.warning("Could not find view object with xml_id '%s'", xml_id)

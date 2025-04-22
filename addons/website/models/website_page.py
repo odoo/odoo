@@ -4,7 +4,7 @@ import re
 
 from odoo.addons.website.tools import text_from_html
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import escape_psql, SQL
 from odoo.tools.translate import _
 
@@ -207,7 +207,7 @@ class WebsitePage(models.Model):
         base_domain = search_detail['base_domain']
         domain = self._search_build_domain(base_domain, search, fields, search_detail.get('search_extra'))
         most_specific_pages = self.env['website']._get_website_pages(
-            domain=expression.AND(base_domain), order=order
+            domain=Domain.AND(base_domain), order=order
         )
         results = most_specific_pages.filtered_domain(domain)  # already sudo
         v_arch_db = self.env['ir.ui.view']._field_to_sql('v', 'arch_db')
@@ -236,7 +236,7 @@ class WebsitePage(models.Model):
                 ids.update(results.ids)
                 domains = search_detail['base_domain'].copy()
                 domains.append([('id', 'in', list(ids))])
-                domain = expression.AND(domains)
+                domain = Domain.AND(domains)
                 model = self.sudo() if search_detail.get('requires_sudo') else self
                 results = model.search(
                     domain,

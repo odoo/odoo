@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
@@ -13,8 +12,8 @@ from odoo import _, http, tools
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
@@ -38,15 +37,15 @@ class WebsiteForum(WebsiteProfile):
         forum = values.get('forum')
         if forum and forum is not True and not request.env.user._is_public():
             def _get_my_other_forums():
-                post_domain = expression.OR(
+                post_domain = Domain.OR(
                     [[('create_uid', '=', request.uid)],
                      [('favourite_ids', '=', request.uid)]]
                 )
-                return request.env['forum.forum'].search(expression.AND([
-                    request.website.website_domain(),
-                    [('id', '!=', forum.id)],
-                    [('post_ids', 'any', post_domain)]
-                ]))
+                return request.env['forum.forum'].search(
+                    request.website.website_domain()
+                    & Domain('id', '!=', forum.id)
+                    & Domain('post_ids', 'any', post_domain)
+                )
             values['my_other_forums'] = tools.lazy(_get_my_other_forums)
         else:
             values['my_other_forums'] = request.env['forum.forum']
@@ -82,7 +81,7 @@ class WebsiteForum(WebsiteProfile):
     def sitemap_forum(env, rule, qs):
         Forum = env['forum.forum']
         dom = sitemap_qs2dom(qs, '/forum', Forum._rec_name)
-        dom += env['website'].get_current_website().website_domain()
+        dom &= env['website'].get_current_website().website_domain()
         slug = env['ir.http']._slug
         for f in Forum.search(dom):
             loc = '/forum/%s' % slug(f)
@@ -230,7 +229,7 @@ class WebsiteForum(WebsiteProfile):
 
         domain = [('forum_id', '=', forum.id), ('posts_count', '=' if filters == "unused" else '>', 0)]
         if filters == 'followed' and not request.env.user._is_public():
-            domain = expression.AND([domain, [('message_is_follower', '=', True)]])
+            domain = Domain.AND([domain, [('message_is_follower', '=', True)]])
 
         # Build tags result without using tag_char to build pager, then return tags matching it
         values = self._prepare_user_values(forum=forum, searches={'tags': True}, **post)
@@ -291,10 +290,11 @@ class WebsiteForum(WebsiteProfile):
 
     def sitemap_forum_post(env, rule, qs):
         ForumPost = env['forum.post']
-        dom = expression.AND([
-            env['website'].get_current_website().website_domain(),
-            [('parent_id', '=', False), ('can_view', '=', True)],
-        ])
+        dom = (
+            env['website'].get_current_website().website_domain()
+            & Domain('parent_id', '=', False)
+            & Domain('can_view', '=', True)
+        )
         slug = env['ir.http']._slug
         for forum_post in ForumPost.search(dom):
             loc = '/forum/%s/%s' % (slug(forum_post.forum_id), slug(forum_post))
