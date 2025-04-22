@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug
-import itertools
 import pytz
 import babel.dates
 from collections import defaultdict
 
 from odoo import http, fields, tools, models
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
@@ -74,10 +73,10 @@ class WebsiteBlog(http.Controller):
         domain = request.website.website_domain()
 
         if blog:
-            domain += [('blog_id', '=', blog.id)]
+            domain &= Domain('blog_id', '=', blog.id)
 
         if date_begin and date_end:
-            domain += [("post_date", ">=", date_begin), ("post_date", "<=", date_end)]
+            domain &= Domain("post_date", ">=", date_begin) & Domain("post_date", "<=", date_end)
         active_tag_ids = tags and [request.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')] or []
         active_tags = BlogTag
         if active_tag_ids:
@@ -88,19 +87,19 @@ class WebsiteBlog(http.Controller):
                 new_url = path.replace("/tag/%s" % tags, fixed_tag_slug and "/tag/%s" % fixed_tag_slug or "", 1)
                 if new_url != path:  # check that really replaced and avoid loop
                     return request.redirect(new_url, 301)
-            domain += [('tag_ids', 'in', active_tags.ids)]
+            domain &= Domain('tag_ids', 'in', active_tags.ids)
 
         if request.env.user.has_group('website.group_website_designer'):
-            count_domain = domain + [("website_published", "=", True), ("post_date", "<=", fields.Datetime.now())]
+            count_domain = domain & Domain("website_published", "=", True) & Domain("post_date", "<=", fields.Datetime.now())
             published_count = BlogPost.search_count(count_domain)
             unpublished_count = BlogPost.search_count(domain) - published_count
 
             if state == "published":
-                domain += [("website_published", "=", True), ("post_date", "<=", fields.Datetime.now())]
+                domain &= Domain("website_published", "=", True) & Domain("post_date", "<=", fields.Datetime.now())
             elif state == "unpublished":
-                domain += ['|', ("website_published", "=", False), ("post_date", ">", fields.Datetime.now())]
+                domain &= Domain("website_published", "=", False) | ("post_date", ">", fields.Datetime.now())
         else:
-            domain += [("post_date", "<=", fields.Datetime.now())]
+            domain &= Domain("post_date", "<=", fields.Datetime.now())
 
         offset = (page - 1) * self._blog_post_per_page
 

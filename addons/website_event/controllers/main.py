@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
 import babel.dates
-import re
 import werkzeug
 
 from ast import literal_eval
@@ -11,11 +8,12 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.tools.misc import get_lang
 from odoo.tools import lazy
 from odoo.exceptions import UserError, ValidationError
+
 
 class WebsiteEventController(http.Controller):
 
@@ -79,17 +77,17 @@ class WebsiteEventController(http.Controller):
         events = events[(page - 1) * step:page * step]
 
         # count by domains without self search
-        domain_search = [('name', 'ilike', fuzzy_search_term or searches['search'])] if searches['search'] else []
+        domain_search = Domain('name', 'ilike', fuzzy_search_term or searches['search']) if searches['search'] else Domain.TRUE
 
-        no_date_domain = event_details['no_date_domain']
+        no_date_domain = Domain.AND(event_details['no_date_domain'])
         dates = event_details['dates']
         for date in dates:
             if date[0] not in ['all', 'old']:
-                date[3] = Event.search_count(expression.AND(no_date_domain) + domain_search + date[2])
+                date[3] = Event.search_count(no_date_domain & domain_search & Domain(date[2]))
 
-        no_country_domain = event_details['no_country_domain']
+        no_country_domain = Domain.AND(event_details['no_country_domain'])
         country_groups = Event._read_group(
-            expression.AND(no_country_domain) + domain_search,
+            no_country_domain & domain_search,
             ["country_id"], ["__count"], order="country_id")
         countries = [{
             'country_id_count': sum(count for __, count in country_groups),

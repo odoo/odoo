@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class ResPartner(models.Model):
@@ -74,9 +73,9 @@ class ResPartner(models.Model):
         action['display_name'] = _('Courses')
         action['domain'] = [('member_status', '!=', 'invited')]
         if len(self) == 1 and self.is_company:
-            action['domain'] = expression.AND([action['domain'], [('partner_id', 'in', self.child_ids.ids)]])
+            action['domain'] = Domain.AND([action['domain'], [('partner_id', 'in', self.child_ids.ids)]])
         elif len(self) == 1:
             action['context'] = {'search_default_partner_id': self.id}
         else:
-            action['domain'] = expression.AND([action['domain'], [('partner_id', 'in', self.ids)]])
+            action['domain'] = Domain.AND([action['domain'], [('partner_id', 'in', self.ids)]])
         return action

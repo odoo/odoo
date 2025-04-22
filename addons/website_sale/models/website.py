@@ -12,7 +12,6 @@ from odoo.exceptions import AccessError
 
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.tools import file_open, ormcache
 from odoo.tools.translate import LazyTranslate, _
 
@@ -491,12 +490,14 @@ class Website(models.Model):
 
     def sale_product_domain(self):
         website_domain = self.get_current_website().website_domain()
-        if not self.env.user._is_internal():
-            website_domain = expression.AND([website_domain, [
+        if self.env.user._is_internal():
+            user_domain = Domain.TRUE
+        else:
+            user_domain = [
                 ('is_published', '=', True),
                 ('service_tracking', 'in', self.env['product.template']._get_saleable_tracking_types()),
-            ]])
-        return expression.AND([self._product_domain(), website_domain])
+            ]
+        return Domain.AND([self._product_domain(), website_domain, user_domain])
 
     def _product_domain(self):
         return [('sale_ok', '=', True)]

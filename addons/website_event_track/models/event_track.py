@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
@@ -13,7 +12,7 @@ import werkzeug.urls
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
 from odoo.tools.translate import _, html_translate
 
@@ -348,7 +347,7 @@ class EventTrack(models.Model):
                 domain = [('partner_id', '=', self.env.user.partner_id.id)]
 
             event_track_visitors = self.env['event.track.visitor'].sudo().search_read(
-                expression.AND([
+                Domain.AND([
                     domain,
                     [('track_id', 'in', self.ids)]
                 ]), fields=['track_id', 'is_wishlisted', 'is_blacklisted']
@@ -612,7 +611,7 @@ class EventTrack(models.Model):
             domain = [('partner_id', '=', self.env.user.partner_id.id)]
 
         track_visitors = self.env['event.track.visitor'].sudo().search(
-            expression.AND([domain, [('track_id', 'in', self.ids)]])
+            Domain.AND([domain, [('track_id', 'in', self.ids)]])
         )
         missing = self - track_visitors.track_id
         if missing and force_create:
@@ -672,7 +671,7 @@ class EventTrack(models.Model):
             ('id', '!=', self.id),
         ]
         if restrict_domain:
-            base_domain = expression.AND([
+            base_domain = Domain.AND([
                 base_domain,
                 restrict_domain
             ])

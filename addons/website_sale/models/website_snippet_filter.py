@@ -4,8 +4,8 @@ from collections import Counter
 from functools import partial
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 
 
 class WebsiteSnippetFilter(models.Model):
@@ -123,7 +123,7 @@ class WebsiteSnippetFilter(models.Model):
         search_domain = self.env.context.get('search_domain')
         limit = self.env.context.get('limit')
         hide_variants = self.env.context.get('hide_variants')
-        domain = expression.AND([
+        domain = Domain.AND([
             [('website_published', '=', True)] if self.env.user._is_public() or self.env.user._is_portal() else [],
             website.website_domain(),
             [('company_id', 'in', [False, website.company_id.id])],
@@ -150,10 +150,7 @@ class WebsiteSnippetFilter(models.Model):
             else:
                 sold_products = Counter(sol.product_id for sol in sale_orders.order_line)
             if sold_products:
-                domain = expression.AND([
-                    domain,
-                    [('id', 'in', [p.id for p, _ in sold_products.most_common(limit)])],
-                ])
+                domain = Domain(domain) & Domain('id', 'in', [p.id for p, _ in sold_products.most_common(limit)])
                 products = self.env['product.product'].with_context(
                     display_default_code=False,
                 ).search(domain, limit=limit)
@@ -179,10 +176,7 @@ class WebsiteSnippetFilter(models.Model):
             else:
                 product_ids = [product.id for [product] in tracked_products]
             if product_ids:
-                domain = expression.AND([
-                    domain,
-                    [('id', 'in', product_ids)],
-                ])
+                domain = Domain(domain) & Domain('id', 'in', product_ids)
                 filtered_ids = set(self.env['product.product']._search(domain, limit=limit))
                 # `search` will not keep the order of tracked products; however, we want to keep
                 # that order (latest viewed first).
@@ -214,10 +208,7 @@ class WebsiteSnippetFilter(models.Model):
                 if self.env.context.get('hide_variants'):
                     included_products = included_products.product_tmpl_id.product_variant_id
                 if products := included_products - excluded_products:
-                    domain = expression.AND([
-                        domain,
-                        [('id', 'in', products.ids)],
-                    ])
+                    domain = Domain(domain) & Domain('id', 'in', products.ids)
                     products = self.env['product.product'].with_context(
                         display_default_code=False,
                     ).search(domain, limit=limit)
@@ -236,10 +227,7 @@ class WebsiteSnippetFilter(models.Model):
             if self.env.context.get('hide_variants'):
                 included_products = included_products.product_tmpl_id.product_variant_id
             if products := included_products - excluded_products:
-                domain = expression.AND([
-                    domain,
-                    [('id', 'in', products.ids)],
-                ])
+                domain = Domain(domain) & Domain('id', 'in', products.ids)
                 products = self.env['product.product'].with_context(
                     display_default_code=False,
                 ).search(domain, limit=limit)
@@ -263,10 +251,7 @@ class WebsiteSnippetFilter(models.Model):
                 included_products = alternative_products.product_variant_ids
             products = included_products - excluded_products
             if products:
-                domain = expression.AND([
-                    domain,
-                    [('id', 'in', products.ids)],
-                ])
+                domain = Domain(domain) & Domain('id', 'in', products.ids)
                 products = self.env['product.product'].with_context(
                     display_default_code=False,
                 ).search(domain, limit=limit)

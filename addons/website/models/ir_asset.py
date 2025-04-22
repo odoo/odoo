@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.fields import Domain
 
 
 class IrAsset(models.Model):
@@ -24,7 +25,7 @@ class IrAsset(models.Model):
 
     def _get_related_assets(self, domain, *, website_id=None, **params):
         if website_id:
-            domain += self.env['website'].website_domain(website_id)
+            domain = Domain(domain) & self.env['website'].browse(website_id).website_domain()
         assets = super()._get_related_assets(domain, **params)
         return assets.filter_duplicate(website_id)
 

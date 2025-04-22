@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug
@@ -11,8 +10,8 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 from odoo import _, fields, http, tools
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 
 
 class WebsiteProfile(http.Controller):
@@ -138,9 +137,9 @@ class WebsiteProfile(http.Controller):
         """
         Hook for other modules to restrict the badges showed on profile page, depending of the context
         """
-        domain = [('website_published', '=', True)]
+        domain = Domain('website_published', '=', True)
         if 'badge_category' in kwargs:
-            domain = expression.AND([[('challenge_ids.challenge_category', '=', kwargs.get('badge_category'))], domain])
+            domain = Domain('challenge_ids.challenge_category', '=', kwargs.get('badge_category')) & domain
         return domain
 
     def _prepare_ranks_badges_values(self, **kwargs):
@@ -196,7 +195,7 @@ class WebsiteProfile(http.Controller):
             'group_by': group_by or 'all',
         }
         if search_term:
-            dom = expression.AND([['|', ('name', 'ilike', search_term), ('partner_id.commercial_company_name', 'ilike', search_term)], dom])
+            dom = Domain.AND([['|', ('name', 'ilike', search_term), ('partner_id.commercial_company_name', 'ilike', search_term)], dom])
 
         user_count = User.sudo().search_count(dom)
         my_user = request.env.user
@@ -223,7 +222,7 @@ class WebsiteProfile(http.Controller):
 
             if my_user.website_published and my_user.karma and my_user.id not in users.ids:
                 # Need to keep the dom to search only for users that appear in the ranking page
-                current_user = User.sudo().search(expression.AND([[('id', '=', my_user.id)], dom]))
+                current_user = User.sudo().search(Domain.AND([[('id', '=', my_user.id)], dom]))
                 if current_user:
                     current_user_values = self._prepare_all_users_values(current_user)[0]
 

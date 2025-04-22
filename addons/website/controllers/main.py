@@ -23,8 +23,8 @@ import odoo
 
 from odoo import http, models, fields, _
 from odoo.exceptions import AccessError, UserError
+from odoo.fields import Domain
 from odoo.http import request, SessionExpiredException
-from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape, py_to_js_locale
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.base.models.ir_qweb import QWebException
@@ -416,7 +416,7 @@ class Website(Home):
     @http.route('/website/snippet/filters', type='jsonrpc', auth='public', website=True, readonly=True)
     def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False, **custom_template_data):
         dynamic_filter = request.env['website.snippet.filter'].sudo().search(
-            [('id', '=', filter_id)] + request.website.website_domain()
+            Domain('id', '=', filter_id) & request.website.website_domain()
         )
         return dynamic_filter and dynamic_filter._render(template_key, limit, search_domain, with_sample, **custom_template_data) or []
 
@@ -426,13 +426,14 @@ class Website(Home):
             raise werkzeug.exceptions.NotFound()
         domain = request.website.website_domain()
         if search_domain:
-            assert all(leaf[0] in request.env['website.snippet.filter']._fields for leaf in search_domain)
-            domain = expression.AND([domain, search_domain])
+            search_domain = Domain(search_domain)
+            assert all(condition.field_expr in request.env['website.snippet.filter']._fields for condition in search_domain.iter_conditions())
+            domain &= search_domain
         if model_name:
-            domain = expression.AND([
-                domain,
-                ['|', ('filter_id.model_id', '=', model_name), ('action_server_id.model_id.model', '=', model_name)]
-            ])
+            domain &= (
+                Domain('filter_id.model_id', '=', model_name)
+                | Domain('action_server_id.model_id.model', '=', model_name)
+            )
         dynamic_filter = request.env['website.snippet.filter'].sudo().search_read(
             domain, ['id', 'name', 'limit', 'model_name', 'help'], order='id asc'
         )
@@ -991,7 +992,7 @@ class Website(Home):
     def _get_customize_data(self, keys, is_view_data):
         model = 'ir.ui.view' if is_view_data else 'ir.asset'
         Model = request.env[model].with_context(active_test=False)
-        domain = expression.AND([[("key", "in", keys)], request.website.website_domain()])
+        domain = Domain("key", "in", keys) & request.website.website_domain()
         return Model.search(domain).filter_duplicate()
 
     @http.route(['/website/theme_customize_data_get'], type='jsonrpc', auth='user', website=True, readonly=True)
