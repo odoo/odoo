@@ -730,11 +730,11 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_login_domain(self, login):
-        return [('login', '=', login)]
+        return Domain('login', '=', login)
 
     @api.model
     def _get_email_domain(self, email):
-        return [('email', '=', email)]
+        return Domain('email', '=', email)
 
     @api.model
     def _get_login_order(self):
