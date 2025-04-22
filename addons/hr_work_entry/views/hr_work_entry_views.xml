@@ -222,6 +222,11 @@
                         </group>
                         <group>
                             <field name="country_id" options="{'no_create': True, 'no_open': True}"/>
+                            <label for="amount_rate"/>
+                            <div class="o_row mw-25" name="amount_rate">
+                                <field name="amount_rate" widget="percentage"/>
+                            </div>
+                            <field name="is_extra_hours"/>
                         </group>
                     </group>
                     <group name="other">
