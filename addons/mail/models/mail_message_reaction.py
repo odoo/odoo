@@ -27,8 +27,7 @@ class MailMessageReaction(models.Model):
     def _to_store(self, store: Store):
         for (message_id, content), reactions in groupby(self, lambda r: (r.message_id, r.content)):
             reactions = self.env["mail.message.reaction"].union(*reactions)
-            store.add(reactions.guest_id, fields=["avatar_128", "name"])
-            store.add(reactions.partner_id, fields=["avatar_128", "name"])
+            self._reacting_persona_to_store(store)
             data = {
                 "content": content,
                 "count": len(reactions),
@@ -38,3 +37,14 @@ class MailMessageReaction(models.Model):
                 "message": Store.one_id(message_id),
             }
             store.add("MessageReactions", data)
+
+    def _reacting_persona_to_store(self, store: Store):
+        for reaction in self:
+            store.add(
+                reaction.partner_id,
+                {"partner_id": Store.one(reaction.partner_id, fields=["avatar_128", "name"])},
+            )
+            store.add(
+                reaction.guest_id,
+                {"guest_id": Store.one(reaction.guest_id, fields=["avatar_128", "name"])},
+            )
