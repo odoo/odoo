@@ -256,6 +256,11 @@ class MailActivityMixin(models.AbstractModel):
             return super()._read_group_groupby(groupby_spec, query)
         self._check_field_access(self._fields['activity_state'], 'read')
 
+        # if already grouped by activity_state, do not add the join again
+        alias = query.make_alias(self._table, 'last_activity_state')
+        if alias in query._joins:
+            return SQL.identifier(alias, 'activity_state')
+
         self.env['mail.activity'].flush_model(['res_model', 'res_id', 'user_id', 'date_deadline'])
         self.env['res.users'].flush_model(['partner_id'])
         self.env['res.partner'].flush_model(['tz'])

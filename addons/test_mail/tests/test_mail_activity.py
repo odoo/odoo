@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from psycopg2 import IntegrityError
@@ -1035,6 +1035,48 @@ class TestActivityViewHelpers(TestActivityCommon):
 @tests.tagged('mail_activity')
 class TestORM(TestActivityCommon):
     """Test for read_progress_bar"""
+
+    def test_groupby_activity_state_progress_bar_behavior(self):
+        """Test activity_state groupby logic on mail.test.lead when 'activity_state'
+        is present multiple times in the groupby field list.
+        """
+
+        lead_timedelta_setup = [0, 0, -2, -2, -2, 2]
+
+        leads = self.env["mail.test.lead"].create(
+            [{"name": f"CRM Lead {i}"} for i in range(1, len(lead_timedelta_setup) + 1)]
+        )
+
+        self.env["mail.activity"].create([{
+            "summary": f"Test activity for CRM lead {lead.id}",
+            "res_model_id": self.env["ir.model"]._get_id("mail.test.lead"),
+            "res_id": lead.id,
+            "date_deadline": datetime.now(timezone.utc) + timedelta(days=delta_days),
+            "user_id": self.env.user.id,
+        } for lead, delta_days in zip(leads, lead_timedelta_setup)])
+
+        # grouping by 'activity_state' and 'activity_state' as the progress bar
+        domain = [("name", "!=", "")]
+        groupby = "activity_state"
+        progress_bar = {
+            "field": "activity_state",
+            "colors": {
+                "overdue": "danger",
+                "today": "warning",
+                "planned": "success",
+            },
+        }
+        progressbars = self.env["mail.test.lead"].read_progress_bar(
+            domain=domain, group_by=groupby, progress_bar=progress_bar
+        )
+
+        self.assertEqual(len(progressbars), 3)
+        expected_progressbars = {
+            "overdue": {"overdue": 3, "today": 0, "planned": 0},
+            "today": {"overdue": 0, "today": 2, "planned": 0},
+            "planned": {"overdue": 0, "today": 0, "planned": 1},
+        }
+        self.assertEqual(dict(progressbars), expected_progressbars)
 
     def test_week_grouping(self):
         """The labels associated to each record in read_progress_bar should match
