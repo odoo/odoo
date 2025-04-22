@@ -7,7 +7,7 @@ from werkzeug.urls import url_parse
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.fields import Command
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.translate import html_translate
 
@@ -278,11 +278,10 @@ class WebsiteMenu(models.Model):
                     referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
                     menu['url'] = referer_url + menu['url']
             else:
-                domain = self.env["website"].website_domain(website_id) + [
-                    "|",
-                    ("url", "=", menu["url"]),
-                    ("url", "=", "/" + menu["url"]),
-                ]
+                domain = self.env["website"].browse(website_id).website_domain() & (
+                    Domain("url", "=", menu["url"])
+                    | Domain("url", "=", "/" + menu["url"])
+                )
                 page = self.env["website.page"].search(domain, limit=1)
                 if page:
                     menu['page_id'] = page.id

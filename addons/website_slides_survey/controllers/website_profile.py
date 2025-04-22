@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 
 
@@ -18,22 +17,19 @@ class WebsiteSlidesSurvey(WebsiteProfile):
         if not values['show_certification_tab']:
             return values
 
-        domain = expression.AND([
-            [('survey_id.certification', '=', True)],
-            [('state', '=', 'done')],
-            expression.OR([
-                [('email', '=', values['user'].email)],
-                [('partner_id', '=', values['user'].partner_id.id)]
-            ]) if values['user'].email else \
-                [('partner_id', '=', values['user'].partner_id.id)]
-        ])
+        domain = (
+            Domain('survey_id.certification', '=', True)
+            & Domain('state', '=', 'done')
+            & (
+                (Domain('email', '=', values['user'].email) if values['user'].email else Domain.FALSE)
+                | Domain('partner_id', '=', values['user'].partner_id.id)
+            )
+        )
 
         if 'certification_search' in kwargs:
             values['active_tab'] = 'certification'
             values['certification_search_terms'] = kwargs['certification_search']
-            domain = expression.AND([domain,
-                [('survey_id.title', 'ilike', kwargs['certification_search'])]
-            ])
+            domain &= Domain('survey_id.title', 'ilike', kwargs['certification_search'])
 
         UserInputSudo = request.env['survey.user_input'].sudo()
         values['user_inputs'] = UserInputSudo.search(domain, order='create_date desc')

@@ -5,9 +5,8 @@ import uuid
 import werkzeug
 
 from odoo import api, fields, models
-from odoo.fields import Domain
 from odoo.exceptions import AccessError, MissingError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -324,8 +323,8 @@ class IrUiView(models.Model):
         # when rendering for the website we have to include inactive views
         # we will prefer inactive website-specific views over active generic ones
         if current_website:
-            domain = [leaf for leaf in domain if 'active' not in leaf]
-        return expression.AND([website_views_domain, domain])
+            domain = domain.map_conditions(lambda cond: cond if cond.field_expr != 'active' else Domain.TRUE)
+        return website_views_domain & domain
 
     @api.model
     def _get_inheriting_views(self):

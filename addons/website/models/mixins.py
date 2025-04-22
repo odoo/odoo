@@ -9,7 +9,6 @@ from odoo import api, fields, models, _
 from odoo.fields import Domain
 from odoo.addons.website.tools import text_from_html
 from odoo.http import request
-from odoo.osv import expression
 from odoo.exceptions import AccessError
 from odoo.tools import escape_psql
 from odoo.tools.json import scriptsafe as json_safe
@@ -305,8 +304,8 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
         current_website_id = self.env.context.get('website_id')
         is_published = Domain('is_published', '=', True)
         if current_website_id:
-            on_current_website = self.env['website'].website_domain(current_website_id)
-            return is_published & Domain(on_current_website)
+            on_current_website = self.env['website'].browse(current_website_id).website_domain()
+            return is_published & on_current_website
         else:  # should be in the backend, return things that are published anywhere
             return is_published
 
@@ -343,14 +342,14 @@ class WebsiteSearchableMixin(models.AbstractModel):
 
         :return: domain limited to the matches of the search expression
         """
-        domains = domain_list.copy()
+        domain = Domain.AND(domain_list)
         if search:
             for search_term in search.split():
-                subdomains = [[(field, 'ilike', escape_psql(search_term))] for field in fields]
+                subdomains = [Domain(field, 'ilike', escape_psql(search_term)) for field in fields]
                 if extra:
                     subdomains.append(extra(self.env, search_term))
-                domains.append(expression.OR(subdomains))
-        return expression.AND(domains)
+                domain &= Domain.OR(subdomains)
+        return domain
 
     @api.model
     def _search_get_detail(self, website, order, options):

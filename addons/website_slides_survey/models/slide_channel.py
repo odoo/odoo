@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class SlideChannelPartner(models.Model):
@@ -27,10 +26,10 @@ class SlideChannel(models.Model):
         track of the current pool of attempts allowed since the user (last) joined
         the course, as only those will have a slide_partner_id."""
         if self:
-            removed_channel_partner_domain = expression.OR([
-                [('partner_id', 'in', partner_ids), ('channel_id', '=', channel.id)]
+            removed_channel_partner_domain = Domain.OR(
+                Domain('partner_id', 'in', partner_ids) & Domain('channel_id', '=', channel.id)
                 for channel in self
-            ])
+            )
             slide_partners_sudo = self.env['slide.slide.partner'].sudo().search(
                 removed_channel_partner_domain)
             slide_partners_sudo.user_input_ids.slide_partner_id = False
