@@ -82,7 +82,7 @@ export class PowerButtonsPlugin extends Plugin {
             } else {
                 const span = this.document.createElement("span");
                 span.textContent = text;
-                span.className = "d-flex align-items-center";
+                span.className = "d-flex align-items-center text-nowrap";
                 span.style.height = "1em";
                 btn.append(span);
             }
