@@ -1818,6 +1818,7 @@
                 <ul class="d-none js_add_cart_variants mb-0" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"/>
                 <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id"/>
                 <input type="hidden" t-if="len(filtered_sorted_variants) == 1" class="product_id" name="product_id" t-att-value="filtered_sorted_variants[0].id"/>
+                <input type="hidden" name="product_type" t-att-value="product.type"/>
                 <t t-if="len(filtered_sorted_variants) &gt; 1">
                     <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True)"/>
                     <div class="mb-4">
