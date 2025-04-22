@@ -12,7 +12,6 @@ import werkzeug
 from odoo import http
 from odoo.addons.hw_drivers.browser import Browser, BrowserState
 from odoo.addons.hw_drivers.driver import Driver
-from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers, route
 from odoo.addons.hw_drivers.tools.helpers import Orientation
@@ -118,7 +117,6 @@ class DisplayDriver(Driver):
 
         orientation = data.get('orientation', 'NORMAL').upper()
         self.set_orientation(Orientation[orientation])
-        event_manager.device_changed(self)
 
     def _action_open_customer_display(self, data):
         if self.device_identifier == 'distant_display' or not data.get('pos_id') or not data.get('access_token'):

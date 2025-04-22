@@ -14,7 +14,6 @@ from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.addons.hw_drivers.websocket_client import send_to_controller
 
 _logger = logging.getLogger(__name__)
 
@@ -187,9 +186,8 @@ class PrinterDriver(Driver):
             self.print_report(document)
         else:
             self.print_raw(document)
-        event_manager.device_changed(self)
-        send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
         _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)
+        return {'print_id': data['print_id']}
 
 
     def print_status(self, _data=None):
@@ -204,7 +202,6 @@ class PrinterDriver(Driver):
             self.print_raw("^XA^CI28 ^FT35,40 ^A0N,30 ^FDIoT Box Test Label^FS^XZ".encode())
         else:
             self.print_raw("IoT Box Test Page".encode())
-        event_manager.device_changed(self)
 
 
 proxy_drivers['printer'] = PrinterDriver

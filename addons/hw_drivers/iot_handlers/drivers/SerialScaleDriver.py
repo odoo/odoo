@@ -123,7 +123,6 @@ class ScaleDriver(SerialDriver):
 
         self._read_weight()
         self.last_sent_value = self.data['value']
-        event_manager.device_changed(self)
 
     @staticmethod
     def _get_raw_response(connection):
