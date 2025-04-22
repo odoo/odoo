@@ -64,6 +64,10 @@ class StockValuationLayer(models.Model):
         ]).ids
         return [('id', 'in', layer_ids)]
 
+    def _candidate_sort_key(self):
+        self.ensure_one()
+        return tuple()
+
     def _validate_accounting_entries(self):
         am_vals = []
         aml_to_reconcile = defaultdict(set)
