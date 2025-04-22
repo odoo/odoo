@@ -707,4 +707,14 @@
         <field name="action_id" ref="hr_applicant_action_analysis"/>
         <field name="context">{'group_by': ['create_date:month', 'department_id']}</field>
     </record>
+
+    <record id="mail_followers_edit_action_from_hr_recruitment" model="ir.actions.act_window">
+        <field name="name">Add/Remove Followers</field>
+        <field name="res_model">mail.followers.edit</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_res_model': 'hr.applicant', 'default_res_ids': active_ids}</field>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="binding_view_types">list,kanban</field>
+    </record>
 </odoo>
