@@ -165,6 +165,18 @@ class L10nInEwaybill(models.Model):
             return error_message
         return super()._check_lines()
 
+    def _check_state(self):
+        error_message = super()._check_state()
+        if not self.picking_id:
+            return error_message
+        picking_state = self.picking_id.state
+        if (not self._is_incoming() and picking_state != 'done') or (self._is_incoming() and picking_state not in ('done', 'assigned')):
+            error_message.append(_(
+                "An E-waybill cannot be generated for a %s document.",
+                dict(self.env['stock.picking']._fields['state']._description_selection(self.env))[picking_state]
+            ))
+        return error_message
+
     def _l10n_in_tax_details_for_stock(self):
         tax_details = {
             'line_tax_details': defaultdict(dict),
