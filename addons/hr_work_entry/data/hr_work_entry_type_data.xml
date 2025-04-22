@@ -809,6 +809,16 @@
         <field name="is_leave" eval="True"/>
     </record>
 
+<!-- PL : Poland -->
+    <record id="l10n_pl_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Time Off (Paid at 80%)</field>
+        <field name="color">4</field>
+        <field name="code">PLSICK3166</field>
+        <field name="country_id" ref="base.pl"/>
+        <field name="is_leave" eval="True"/>
+        <field name="amount_rate">0.8</field>
+    </record>
+
 <!-- SK : Slovakia -->
     <record id="l10n_sk_work_entry_type_sick_25" model="hr.work.entry.type">
         <field name="name">Sick Time Off Day 1-3 (Paid at 25%)</field>
@@ -816,6 +826,7 @@
         <field name="color">5</field>
         <field name="country_id" ref="base.sk"/>
         <field name="is_leave" eval="True"/>
+        <field name="amount_rate">0.25</field>
     </record>
 
     <record id="l10n_sk_work_entry_type_sick_55" model="hr.work.entry.type">
@@ -824,6 +835,7 @@
         <field name="color">5</field>
         <field name="country_id" ref="base.sk"/>
         <field name="is_leave" eval="True"/>
+        <field name="amount_rate">0.55</field>
     </record>
 
     <record id="l10n_sk_work_entry_type_sick_0" model="hr.work.entry.type">
@@ -832,6 +844,7 @@
         <field name="color">5</field>
         <field name="country_id" ref="base.sk"/>
         <field name="is_leave" eval="True"/>
+        <field name="amount_rate">0.0</field>
     </record>
 
     <record id="l10n_sk_work_entry_type_maternity" model="hr.work.entry.type">
@@ -840,6 +853,7 @@
         <field name="color">5</field>
         <field name="country_id" ref="base.sk"/>
         <field name="is_leave" eval="True"/>
+        <field name="amount_rate">0.75</field>
     </record>
 
     <record id="l10n_sk_work_entry_type_parental_time_off" model="hr.work.entry.type">
@@ -848,14 +862,24 @@
         <field name="color">8</field>
         <field name="country_id" ref="base.sk"/>
         <field name="is_leave" eval="True"/>
+        <field name="amount_rate">0.0</field>
     </record>
 
 <!-- US : United States -->
+    <record id="l10n_us_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="name">Overtime Hours (Paid at 150%)</field>
+        <field name="color">4</field>
+        <field name="code">USOVERTIME150</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="amount_rate">1.5</field>
+    </record>
+
     <record id="l10n_us_work_entry_type_double" model="hr.work.entry.type">
         <field name="name">Double Time Hours</field>
         <field name="color">4</field>
         <field name="code">USDOUBLE</field>
         <field name="country_id" ref="base.us"/>
+        <field name="amount_rate">2.0</field>
     </record>
 
     <record id="l10n_us_work_entry_type_retro_overtime" model="hr.work.entry.type">
@@ -863,6 +887,7 @@
         <field name="color">4</field>
         <field name="code">USRETROOVERTIME</field>
         <field name="country_id" ref="base.us"/>
+        <field name="amount_rate">1.5</field>
     </record>
 
     <record id="l10n_us_work_entry_type_retro_regular" model="hr.work.entry.type">
@@ -871,4 +896,5 @@
         <field name="code">USRETROREGULAR</field>
         <field name="country_id" ref="base.us"/>
     </record>
+
 </data></odoo>

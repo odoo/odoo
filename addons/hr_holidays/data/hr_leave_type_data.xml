@@ -573,4 +573,16 @@
         <field name="company_id" eval="False"/>
         <field name="country_id" ref="base.sk"/>
     </record>
+
+<!-- PL : Poland -->
+    <record id="l10n_pl_leave_type_sick_leave" model="hr.leave.type">
+        <field name="name">PL Sick Leaves 80% </field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">half_day</field>
+        <field name="support_document">True</field>
+        <field name="icon_id" ref="hr_holidays.icon_21"/>
+        <field name="color">6</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.pl"/>
+    </record>
 </data></odoo>
