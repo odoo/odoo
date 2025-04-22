@@ -25,6 +25,9 @@ class ImLivechatChannelMemberHistory(models.Model):
     partner_id = fields.Many2one(
         "res.partner", compute="_compute_member_fields", index="btree_not_null", store=True
     )
+    chatbot_script_id = fields.Many2one(
+        "chatbot.script", compute="_compute_member_fields", index="btree_not_null", store=True
+    )
 
     _member_id_unique = models.Constraint(
         "UNIQUE(member_id)", "Members can only be linked to one history"
@@ -53,3 +56,4 @@ class ImLivechatChannelMemberHistory(models.Model):
             history.livechat_member_type = (
                 history.livechat_member_type or history.member_id.livechat_member_type
             )
+            history.chatbot_script_id = history.chatbot_script_id or history.member_id.chatbot_script_id

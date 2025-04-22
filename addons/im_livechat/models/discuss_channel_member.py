@@ -13,10 +13,16 @@ class DiscussChannelMember(models.Model):
     livechat_member_history_ids = fields.One2many("im_livechat.channel.member.history", "member_id")
     livechat_member_type = fields.Selection(
         [("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
-        compute="_compute_livechat_member_type",
+        compute="_compute_from_history",
         # sudo - reading the history of a member the user has access to is acceptable.
         compute_sudo=True,
         inverse="_inverse_livechat_member_type",
+    )
+    chatbot_script_id = fields.Many2one(
+        "chatbot.script",
+        compute="_compute_from_history",
+        inverse="_inverse_chatbot_script_id",
+        compute_sudo=True,
     )
 
     @api.model_create_multi
@@ -40,15 +46,35 @@ class DiscussChannelMember(models.Model):
             member.sudo().livechat_member_type = "agent"
         return members
 
-    def _compute_livechat_member_type(self):
+    def _compute_from_history(self):
         for member in self:
             member.livechat_member_type = member.livechat_member_history_ids.livechat_member_type
+            member.chatbot_script_id = member.livechat_member_history_ids.chatbot_script_id
+
+    def _create_or_update_history(self, values_by_member=None):
+        if not values_by_member:
+            values_by_member = {}
+        member_without_history = self.filtered(lambda m: not m.livechat_member_history_ids)
+        self.env["im_livechat.channel.member.history"].create(
+            [
+                {"member_id": member.id, **values_by_member.get(member, {})}
+                for member in member_without_history
+            ]
+        )
+        for member in (self - member_without_history):
+            if member in values_by_member:
+                member.update(values_by_member[member])
 
     def _inverse_livechat_member_type(self):
-        # sudo - im_livechat.channel.member.history: creating history following
+        # sudo - im_livechat.channel.member: creating/updating history following
         # "livechat_member_type" modification is acceptable.
-        self.env["im_livechat.channel.member.history"].sudo().create(
-            [{"member_id": member.id} for member in self]
+        self.sudo()._create_or_update_history()
+
+    def _inverse_chatbot_script_id(self):
+        # sudo - im_livechat.channel.member: creating/updating history following
+        # "chatbot_script_id" modification is acceptable.
+        self.sudo()._create_or_update_history(
+            {member: {"chatbot_script_id": member.chatbot_script_id.id} for member in self}
         )
 
     @api.autovacuum
