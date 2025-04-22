@@ -12,6 +12,9 @@ export class ProjectProject extends models.Model {
     date = fields.Date({ string: "Expiration Date" });
     date_start = fields.Date();
     user_id = fields.Many2one({ relation: "res.users", falsy_value_label: "👤 Unassigned" });
+    allow_task_dependencies = fields.Boolean({ string: "Task Dependencies", default: false });
+    allow_milestones = fields.Boolean({ string: "Milestones", default: false });
+    allow_recurring_tasks = fields.Boolean({ string: "Recurring Tasks", default: false });
 
     _records = [
         {
@@ -41,6 +44,24 @@ export class ProjectProject extends models.Model {
             ],
             ["id", "name"]
         );
+    }
+
+    check_features_enabled() {
+        let allow_task_dependencies = false;
+        let allow_milestones = false;
+        let allow_recurring_tasks = false;
+        for (const record of this) {
+            if (record.allow_task_dependencies) {
+                allow_task_dependencies = true;
+            }
+            if (record.allow_milestones) {
+                allow_milestones = true;
+            }
+            if (record.allow_recurring_tasks) {
+                allow_recurring_tasks = true;
+            }
+        }
+        return { allow_task_dependencies, allow_milestones, allow_recurring_tasks };
     }
 }
 
