@@ -5,7 +5,7 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { loadLanguages } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { setupEditor } from "./_helpers/editor";
-import { getContent, setContent } from "./_helpers/selection";
+import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 
 import { DEFAULT_ALTERNATIVES_MODES } from "@html_editor/main/chatgpt/chatgpt_alternatives_dialog";
@@ -120,37 +120,57 @@ test("ChatGPT dialog opens in translate mode when clicked on translate dropdown 
     loadLanguages.installedLanguages = false;
 });
 
-test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable", async () => {
-    const { el } = await setupEditor("<div>[ab]</div>");
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (1)", async () => {
+    await setupEditor("<div>[ab]</div>");
     await animationFrame();
     await tick();
     await click('button[name="expand_toolbar"]');
     await animationFrame();
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
+});
 
-    setContent(el, "<div>a[b</div><div>c]d</div>");
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (2)", async () => {
+    await setupEditor("<div>a[b</div><div>c]d</div>");
     await animationFrame();
     await tick();
+    await click('button[name="expand_toolbar"]');
+    await animationFrame();
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
+});
 
-    setContent(el, '<div contenteditable="false">a[b</div><div>c]d</div>');
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (3)", async () => {
+    await setupEditor('<div contenteditable="false">a[b</div><div>c]d</div>');
     await animationFrame();
     await tick();
+    await click('button[name="expand_toolbar"]');
+    await animationFrame();
     expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
+});
 
-    setContent(el, '<div class="oe_unbreakable">a[b</div><div>c]d</div>');
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (4)", async () => {
+    await setupEditor('<div class="oe_unbreakable">a[b</div><div>c]d</div>');
     await animationFrame();
     await tick();
+    await click('button[name="expand_toolbar"]');
+    await animationFrame();
     expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
+});
 
-    setContent(el, '<div>a[b</div><div>c]d</div><div class="oe_unbreakable">e</div>');
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (5)", async () => {
+    await setupEditor('<div>a[b</div><div>c]d</div><div class="oe_unbreakable">e</div>');
     await animationFrame();
     await tick();
+    await click('button[name="expand_toolbar"]');
+    await animationFrame();
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
+});
 
-    setContent(el, '<div>a[b</div><div>cd</div><div class="oe_unbreakable">e]</div>');
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (6)", async () => {
+    await setupEditor('<div>a[b</div><div>cd</div><div class="oe_unbreakable">e]</div>');
     await animationFrame();
     await tick();
+    await click('button[name="expand_toolbar"]');
+    await animationFrame();
     expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
 });
 
