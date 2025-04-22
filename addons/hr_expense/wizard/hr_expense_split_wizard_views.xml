@@ -20,7 +20,7 @@
                                 context="{'default_detailed_type': 'service', 'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"
                             />
                             <field name="total_amount_currency" force_save="1" readonly="product_has_cost"/>
-                            <field name="tax_ids" widget="many2many_tags" readonly="not product_has_tax"/>
+                            <field name="tax_ids" widget="many2many_tags"/>
                             <field name="tax_amount_currency"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
                                 optional="show"
