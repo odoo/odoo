@@ -942,6 +942,11 @@ class PreforkServer(CommonServer):
             if self.graceful_reload and os.environ.get('ODOO_HTTP_SOCKET_FD'):
                 self.socket = socket.fromfd(int(os.environ['ODOO_HTTP_SOCKET_FD']), family, socket.SOCK_STREAM)
 
+            # systemd socket activation
+            elif os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
+                SD_LISTEN_FDS_START = 3
+                self.socket = socket.fromfd(SD_LISTEN_FDS_START, family, socket.SOCK_STREAM)
+
             # default
             else:
                 self.socket = socket.socket(family, socket.SOCK_STREAM)
