@@ -9,6 +9,7 @@ from . import calendar_attendee
 from . import calendar_filter
 from . import calendar_event_type
 from . import calendar_recurrence
+from . import discuss_channel
 from . import mail_activity
 from . import mail_activity_mixin
 from . import mail_activity_type

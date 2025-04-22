@@ -560,3 +560,26 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         duration = self.env['calendar.event'].with_company(second_company).get_default_duration()
         self.assertEqual(duration, 8, "Custom duration is 8 hours in the other company")
+
+    def test_discuss_videocall_not_ringing_with_event(self):
+        self.event_tech_presentation._set_discuss_videocall_location()
+        self.event_tech_presentation._create_videocall_channel()
+        self.event_tech_presentation.write(
+            {
+                "start": fields.Datetime.to_string(datetime.now() + timedelta(hours=2)),
+            }
+        )
+
+        partner1, partner2 = self.env["res.partner"].create(
+            [{"name": "Bob", "email": "bob@gm.co"}, {"name": "Jack", "email": "jack@gm.co"}]
+        )
+        new_partners = [partner1.id, partner2.id]
+        # invite partners to meeting
+        self.event_tech_presentation.write(
+            {"partner_ids": [Command.link(new_partner) for new_partner in new_partners]}
+        )
+
+        channel_member = self.event_tech_presentation.videocall_channel_id.channel_member_ids[0]
+        channel_member_2 = self.event_tech_presentation.videocall_channel_id.channel_member_ids[1]
+        channel_member._rtc_join_call()
+        self.assertFalse(channel_member_2.rtc_inviting_session_id)
