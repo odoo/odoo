@@ -44,6 +44,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         self.active = not self.active
 
+    def _get_iap_params(self, company, proxy_type, private_key_sudo):
+        iap_params = super()._get_iap_params(company, proxy_type, private_key_sudo)
+        iap_params['l10n_it_vat'] = company.vat
+        return iap_params
+
     def _register_proxy_user(self, company, proxy_type, edi_mode):
         if proxy_type == 'l10n_it_edi':
             company = company._l10n_it_get_edi_company()
