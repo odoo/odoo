@@ -742,6 +742,16 @@ export function addDiscount(discount) {
     ].flat();
 }
 
+export function setTimeZone(testTimeZone) {
+    return {
+        content: `Set test time zone to ${testTimeZone}`,
+        trigger: "body",
+        run: function () {
+            luxon.Settings.defaultZone = testTimeZone;
+        },
+    };
+}
+
 function productInputSteps(name, barcode, list_price) {
     return [
         {
