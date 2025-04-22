@@ -1,55 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-#
+# 
 # Translators:
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
-# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
-# Farid Hariri <fhari1234@gmail.com>, 2023
-# Hamid Darabi, 2023
-# Hanna Kheradroosta, 2023
-# Martin Trigaux, 2023
-# Hamed Mohammadi <hamed@dehongi.com>, 2023
-# fardin mardani, 2023
-#
+# zakariya moradi, 2025
+# Tiffany Chang, 2025
+# Naser mars, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: fardin mardani, 2023\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
-"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_management
-#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
-msgid "4 Person Desk"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+msgid "1.5"
+msgstr "1.5"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "<span class=\"btn btn-secondary\">Add to order</span>"
+msgstr "<span class=\"btn btn-secondary\">افزودن به سفارش</span>"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "<span invisible=\"not require_payment\">of</span>"
+msgstr "<span invisible=\"not require_payment\">از</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "<span>Payment</span>"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "<span>Signature</span>"
-msgstr ""
+msgstr "<span>گزینه‌ها</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -108,7 +98,7 @@ msgstr "دسته بندی"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_company
 msgid "Companies"
-msgstr "شرکت"
+msgstr "شرکت‌ها"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__company_id
@@ -132,8 +122,12 @@ msgstr "ایمیل تایید"
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "تبدیل بین واحدهای اندازه گیری تنها در صورتی می تواند اتفاق بیفتد که به یک دسته تعلق داشته باشند. تبدیل بر اساس نسبت ها انجام خواهد شد."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"تبدیل بین واحدهای اندازه گیری تنها در صورتی می تواند اتفاق بیفتد که به یک "
+"دسته تعلق داشته باشند. تبدیل بر اساس نسبت ها انجام خواهد شد."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -172,11 +166,6 @@ msgid "Default Template"
 msgstr "قالب پیشفرض"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "Default values will be overwritten by values provided by the quotation template."
-msgstr ""
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__name
@@ -184,11 +173,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Description"
 msgstr "توصیف"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "Design your quotation templates using building blocks"
-msgstr ""
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -213,7 +197,7 @@ msgstr "تخفیف(٪)"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__display_name
 msgid "Display Name"
-msgstr "نام نمایشی"
+msgstr "نام نمایش داده شده"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
@@ -227,9 +211,16 @@ msgid "Do not have access, skip this data for user's digest email"
 msgstr "دسترسی ندارید، از این داده ها برای ایمیل خلاصه کاربر صرفنظر کنید"
 
 #. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+msgid "Extra Chips"
+msgstr "چیپس اضافی"
+
+#. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
+"خط محصول ممنوعه، مقدار و واحد اندازه‌گیری در خطوط پیشنهادی فروش غیرقابل "
+"حسابرسی"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -255,9 +246,27 @@ msgid "ID"
 msgstr "شناسه"
 
 #. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+"اگر تنظیم شود، SO با این قالب در این دفتر کل صورت‌حساب خواهد شد؛ در غیر این "
+"صورت، دفتر کل فروش با کمترین توالی استفاده می‌شود."
+
+#. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
-msgid "If unchecked, it will allow you to hide the quotation template without removing it."
-msgstr "اگر علامت آن را بردارید، به شما امکان می دهد الگوی پیش‌فاکتور را بدون حذف آن پنهان کنید."
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
+msgstr ""
+"اگر علامت آن را بردارید، به شما امکان می دهد الگوی پیش‌فاکتور را بدون حذف آن"
+" پنهان کنید."
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
+msgid "Invoicing Journal"
+msgstr "دفتر روزنامه صورتحساب"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -270,7 +279,7 @@ msgstr "شاخص‌های کلیدی عملکرد (KPI) ارزش کل همه ف�
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_uid
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__write_uid
 msgid "Last Updated by"
-msgstr "آخرین تغییر توسط"
+msgstr "آخرین بروز رسانی توسط"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_date
@@ -308,11 +317,6 @@ msgid "Number of days for the validity date computation of the quotation"
 msgstr "تعداد روز برای محاسبه تاریخ اعتبار پیش‌فاکتور"
 
 #. module: sale_management
-#: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
-msgid "Office Chair"
-msgstr "صندلی اداری"
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr "پرداخت آنلاین"
@@ -321,11 +325,6 @@ msgstr "پرداخت آنلاین"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
 msgid "Online Signature"
 msgstr "امضای آنلاین"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Online confirmation"
-msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
@@ -344,6 +343,17 @@ msgstr "سطرهای محصولات اختیاری"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Options"
 msgstr "گزینه‌ها"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
+msgid "Prepayment percentage"
+msgstr "درصد پیش پرداخت"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Prepayment percentage must be a valid percentage."
+msgstr "درصد پیش پرداخت باید یک درصد معتبر باشد."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
@@ -369,11 +379,6 @@ msgstr "تعداد"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Quantity:"
 msgstr "تعداد:"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
-msgid "Quotation Builder"
-msgstr "سازنده پیش‌فاکتور"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
@@ -421,8 +426,8 @@ msgstr "قالب‌های پیش‌فاکتور"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Quotation expires after"
-msgstr "انقضای پیش‌فاکتور پس از"
+msgid "Quotation Validity"
+msgstr "اعتبار پیشنهاد"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -436,13 +441,18 @@ msgstr "حذف یکی"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
-msgid "Request a online signature to the customer in order to confirm orders automatically."
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
 msgstr "برای تایید سفارشات به صورت خودکار از مشتری درخواست امضای آنلاین کنید."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
-msgid "Request an online payment to the customer in order to confirm orders automatically."
-msgstr "برای تایید سفارشات به صورت خودکار از مشتری درخواست پرداخت آنلاین کنید."
+msgid ""
+"Request an online payment to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"برای تایید سفارشات به صورت خودکار از مشتری درخواست پرداخت آنلاین کنید."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -452,7 +462,7 @@ msgstr "گزینه‌های فروش"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.digest_digest_view_form
 msgid "Sales"
-msgstr "فروش ها"
+msgstr "فروش"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order
@@ -487,19 +497,32 @@ msgstr "بخش"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
-msgid "Selling the same product in different sizes or colors? Try the product grid and populate your orders with multiple quantities of each variant. This feature also exists in the Purchase application."
-msgstr "فروش یک محصول در اندازه ها یا رنگ های مختلف؟ گرید محصول را امتحان کنید و سفارشات خود را با مقادیر متعدد از هر نوع پر کنید. این ویژگی در اپلیکیشن خرید نیز وجود دارد."
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"فروش یک محصول در اندازه ها یا رنگ های مختلف؟ گرید محصول را امتحان کنید و "
+"سفارشات خود را با مقادیر متعدد از هر نوع پر کنید. این ویژگی در اپلیکیشن خرید"
+" نیز وجود دارد."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sequence
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sequence
 msgid "Sequence"
 msgstr "دنباله"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
-msgid "Struggling with a complex product catalog? Try out the Product Configurator to help sales configure a product with different options: colors, size, capacity, etc. Make sale orders encoding easier and error-proof."
-msgstr "آیا با یک کاتالوگ محصول پیچیده مشکل دارید؟ پیکربندی محصول را امتحان کنید تا به فروشندگان کمک کند تا یک محصول را با گزینه های مختلف پیکربندی کنند: رنگ، اندازه، ظرفیت، و غیره. رمزگذاری سفارشات فروش را آسان تر و بدون خطا کنید."
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"آیا با یک کاتالوگ محصول پیچیده مشکل دارید؟ پیکربندی محصول را امتحان کنید تا "
+"به فروشندگان کمک کند تا یک محصول را با گزینه های مختلف پیکربندی کنند: رنگ، "
+"اندازه، ظرفیت، و غیره. رمزگذاری سفارشات فروش را آسان تر و بدون خطا کنید."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -513,18 +536,35 @@ msgstr "شرایط و ضوابط"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "The Administrator can set default Terms & Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
-msgstr "راهبر سیستم می‌تواند شرایط و ضوابط پیشفرض را در تنظیمات فروش تنظیم کند. اگر شما این قالب پیش‌فاکتور را انتخاب کنید، شرایط تنظیم‌شده در اینجا به جای آن نشان‌داده می‌شود."
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"راهبر سیستم می‌تواند شرایط و ضوابط پیشفرض را در تنظیمات فروش تنظیم کند. اگر "
+"شما این قالب پیش‌فاکتور را انتخاب کنید، شرایط تنظیم‌شده در اینجا به جای آن "
+"نشان‌داده می‌شود."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
+msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr "درصدی از مبلغی که باید برای تایید پیش فاکتورها پرداخت شود."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
-msgid "This e-mail template will be sent on confirmation. Leave empty to send nothing."
-msgstr "این قالب ایمیل درصورت تایید ارسال خواهد شد. خالی بگذارید تا چیزی نفرستد."
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"این قالب ایمیل درصورت تایید ارسال خواهد شد. خالی بگذارید تا چیزی نفرستد."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
-msgid "This field will be checked if the option line's product is already present in the quotation."
-msgstr "این فیلد تیک خواهد خورد اگر گزینه سطر محصول در حال حاضر در پیش‌فاکتور وجود دارد."
+msgid ""
+"This field will be checked if the option line's product is already present "
+"in the quotation."
+msgstr ""
+"این فیلد تیک خواهد خورد اگر گزینه سطر محصول در حال حاضر در پیش‌فاکتور وجود "
+"دارد."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
@@ -582,8 +622,12 @@ msgstr "شما نمی‌توانید گزینه‌هایی را به یک سفا
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template_line.py:0
-msgid "You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."
-msgstr "شما نمی‌توانید نوع یک سطر سفارش فروش را تغییر دهید. بجای آن شما باید سطر جاری را حذف و یک سطر جدید از نوع مناسب ایجاد کنید."
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"شما نمی‌توانید نوع یک سطر سفارش فروش را تغییر دهید. بجای آن شما باید سطر "
+"جاری را حذف و یک سطر جدید از نوع مناسب ایجاد کنید."
 
 #. module: sale_management
 #. odoo-python
@@ -619,4 +663,4 @@ msgstr "روز"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
-msgstr ""
+msgstr "مثال: بسته مشاوره استاندارد"
