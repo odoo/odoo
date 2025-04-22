@@ -108,7 +108,7 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">not allow_billable or is_template</attribute>
             </xpath>
-            <xpath expr="//group[@name='group_time_managment']" position="after">
+            <xpath expr="//group[@name='group_time_managment']" position="before">
                  <group name="group_sales_invoicing" string="Sales &amp; Invoicing" col="1" class="row mt16 o_settings_container col-lg-6">
                     <div>
                         <setting class="col-lg-12" help="Invoice your time and material to customers" id="allow_billable_container">

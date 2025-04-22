@@ -35,6 +35,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'user_ids',
     'display_parent_task_button',
     'current_user_same_company_partner',
+    'allow_recurring_tasks',
     'allow_milestones',
     'milestone_id',
     'has_late_and_unreached_milestone',
@@ -231,7 +232,7 @@ class ProjectTask(models.Model):
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index', export_string_translation=False)
-    rating_active = fields.Boolean(string='Project Rating Status', related="project_id.rating_active")
+    rating_active = fields.Boolean(string='Stage Rating Status', related="stage_id.rating_active")
     attachment_ids = fields.One2many(
         'ir.attachment',
         compute='_compute_attachment_ids',
@@ -291,6 +292,7 @@ class ProjectTask(models.Model):
     display_follow_button = fields.Boolean(compute='_compute_display_follow_button', compute_sudo=True, export_string_translation=False)
 
     # recurrence fields
+    allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks', export_string_translation=False)
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False, index='btree_not_null')
@@ -1323,7 +1325,7 @@ class ProjectTask(models.Model):
 
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
-            self.sudo().filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
+            self.sudo().filtered(lambda x: x.stage_id.rating_active and x.stage_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
 
         if 'state' in vals:
             # specific use case: when the blocked task goes from 'forced' done state to a not closed state, we fix the state back to waiting
@@ -1604,7 +1606,7 @@ class ProjectTask(models.Model):
 
     def _mail_get_message_subtypes(self):
         res = super()._mail_get_message_subtypes()
-        if not self.project_id.rating_active:
+        if not self.stage_id.rating_active:
             res -= self.env.ref('project.mt_task_rating')
         if len(self) == 1:
             waiting_subtype = self.env.ref('project.mt_task_waiting')

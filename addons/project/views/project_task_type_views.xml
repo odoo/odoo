@@ -28,29 +28,44 @@
                         <group>
                             <group>
                                 <field name="name" placeholder="e.g. To Do"/>
+                                <field name="fold"/>
                                 <field name="user_id" invisible="True"/>
-                                <field name="mail_template_id" context="{'default_model': 'project.task'}" invisible="user_id"/>
-                                <field name="rating_template_id"
-                                       placeholder="Task: Rating Request"
-                                       groups="project.group_project_rating"
-                                       context="{'default_model': 'project.task'}"
-                                       invisible="user_id"/>
-                                <div class="alert alert-warning" role="alert" colspan='2'
-                                     invisible="not rating_template_id or not disabled_rating_warning or user_id"
-                                     groups="project.group_project_rating">
-                                    <i class="fa fa-warning" title="Customer disabled on projects"/><b> Customer Ratings</b> are disabled on the following project(s) : <br/>
-                                    <field name="disabled_rating_warning" class="mb-0" />
-                                </div>
-                                <field name="auto_validation_state" invisible="not rating_template_id" groups="project.group_project_rating"/>
+                                <field name="auto_validation_state" invisible="not rating_template_id"/>
+                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'edit_tags': True}" invisible="user_id" required="not user_id"/>
+                                <field name="rotting_threshold_days"/>
                                 <field name="color" widget="color_picker"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>
                             <group>
-                                <field name="fold"/>
-                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'edit_tags': True}"
-                                       invisible="user_id"
-                                       required="not user_id"/>
-                                <field name="rotting_threshold_days"/>
+                                <field name="mail_template_id" context="{'default_model': 'project.task'}" invisible="user_id"/>
+                            </group>
+                            <group name="group_customer_rating" string="Customer Rating" class="row o_settings_container" invisible="user_id">
+                                <setting class="col-lg-12">
+                                    <field name="rating_active"/>
+                                    <div invisible="not rating_active">
+                                        <field name="rating_status" widget="radio" class="o_row"/>
+                                        <group class="mt-2">
+                                            <field
+                                                name="rating_status_period"
+                                                invisible="rating_status != 'periodic'"
+                                                required="rating_status == 'periodic'"
+                                            />
+                                            <field
+                                                name="rating_template_id"
+                                                placeholder="Task: Rating Request"
+                                                context="{'default_model': 'project.task'}"
+                                                required="rating_active"
+                                            />
+                                        </group>
+                                        <span colspan="2" class="text-muted o_row ps-1">
+                                            <i class="fa fa-lightbulb-o pe-2"/>
+                                            <span name="rating_status_helper">
+                                                <span invisible="rating_status == 'periodic'">A rating request will be sent as soon as a task reaches this stage.</span>
+                                                <span invisible="rating_status == 'stage'">Rating requests will be sent as long as the task remains in this stage.</span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </setting>
                             </group>
                         </group>
                     </sheet>
@@ -81,7 +96,7 @@
             <field name="inherit_id" ref="task_type_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
-                    <field name="rating_template_id" optional="hide" groups="project.group_project_rating"/>
+                    <field name="rating_template_id" optional="hide"/>
                 </xpath>
             </field>
         </record>

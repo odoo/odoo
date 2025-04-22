@@ -102,15 +102,35 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: ".o_kanban_record",
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, {
+    trigger: ".breadcrumb-item.o_back_button",
+    run: "click",
+}, {
+    trigger: ".o_kanban_record:contains('New Project')",
+}, {
+    trigger: ".o_switch_view.o_list",
+    run: "click",
+}, {
+    trigger: "tr.o_data_row td[name='name']:contains('New Project')",
+    run: "click",
+}, {
+    trigger: ".nav-link:contains('Settings')",
+    run: "click",
+}, {
+    trigger: "div[name='allow_milestones'] input",
+    run: "click",
+}, {
+    trigger: ".o_form_button_save",
+    run: "click",
+    expectUnloadPage: true,
+}, {
+    trigger: "button[name='action_view_tasks']",
+    run: "click",
+}, {
     trigger: ".o_control_panel_navigation button i.fa-sliders",
     content: 'Open embedded actions',
     run: "click",
 }, {
     trigger: "span.o-dropdown-item:contains('Top Menu')",
-    run: "click",
-}, {
-    trigger: ".o_embedded_actions button i.fa-sliders",
-    content: "Open embedded actions dropdown",
     run: "click",
 }, {
     trigger: ".o-dropdown-item div span:contains('Dashboard')",

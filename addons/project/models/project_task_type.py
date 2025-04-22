@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -38,17 +39,50 @@ class ProjectTaskType(models.Model):
         string='Rating Email Template',
         domain=[('model', '=', 'project.task')],
         help="If set, a rating request will automatically be sent by email to the customer when the task reaches this stage. \n"
-             "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
-             "To use this feature make sure that the 'Customer Ratings' option is enabled on your project.")
+             "Alternatively, it will be sent at a regular interval as long as the task remains in this stage.")
     auto_validation_state = fields.Boolean('Automatic Kanban Status', default=False,
         help="Automatically modify the state when the customer replies to the feedback for this stage.\n"
             " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
             " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n")
-    disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning', export_string_translation=False)
     rotting_threshold_days = fields.Integer('Days to rot', default=0, help='Day count before tasks in this stage become stale. Set to 0 to disable \
         Changing this parameter will not affect the rotting status/date of resources last updated before this change.')
 
     user_id = fields.Many2one('res.users', 'Stage Owner', default=_default_user_id, compute='_compute_user_id', store=True, index=True)
+
+    # rating fields
+    rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True, export_string_translation=False)
+    rating_active = fields.Boolean('Send a customer rating request')
+    rating_status = fields.Selection(
+        string='Customer Ratings Status',
+        selection=[
+            ('stage', 'when reaching this stage'),
+            ('periodic', 'on a periodic basis'),
+        ],
+        default='stage',
+        required=True,
+        help="Collect feedback from your customers by sending them a rating request when a task enters a certain stage. To do so, define a rating email template on the stage.\n"
+             "Rating when changing stage: an email will be automatically sent when a task reaches the stage.\n"
+             "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage.",
+    )
+    rating_status_period = fields.Selection(
+        string='Rating Frequency',
+        selection=[
+            ('daily', 'Daily'),
+            ('weekly', 'Weekly'),
+            ('bimonthly', 'Twice a Month'),
+            ('monthly', 'Once a Month'),
+            ('quarterly', 'Quarterly'),
+            ('yearly', 'Yearly'),
+        ],
+        default='monthly',
+        required=True,
+    )
+
+    @api.depends('rating_status', 'rating_status_period')
+    def _compute_rating_request_deadline(self):
+        periods = {'daily': 1, 'weekly': 7, 'bimonthly': 15, 'monthly': 30, 'quarterly': 90, 'yearly': 365}
+        for stage in self:
+            stage.rating_request_deadline = fields.Datetime.now() + timedelta(days=periods.get(stage.rating_status_period, 0))
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -78,6 +112,16 @@ class ProjectTaskType(models.Model):
     def write(self, vals):
         if 'active' in vals and not vals['active']:
             self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
+        # Hide/Show task rating template when customer rating feature is disabled/enabled
+        if 'rating_active' in vals:
+            rating_active = vals['rating_active']
+            task_types = self.env['project.task.type'].search([('rating_active', '=', True)])
+            if (not task_types and rating_active) or (task_types and task_types <= self and not rating_active):
+                mt_project_task_rating = self.env.ref('project.mt_project_task_rating')
+                mt_project_task_rating.hidden = not rating_active
+                mt_project_task_rating.default = rating_active
+                self.env.ref('project.mt_task_rating').hidden = not rating_active
+                self.env.ref('project.rating_project_request_email_template').active = rating_active
         return super().write(vals)
 
     def copy_data(self, default=None):
@@ -164,15 +208,6 @@ class ProjectTaskType(models.Model):
             }
         return res
 
-    @api.depends('project_ids', 'project_ids.rating_active')
-    def _compute_disabled_rating_warning(self):
-        for stage in self:
-            disabled_projects = stage.project_ids.filtered(lambda p: not p.rating_active)
-            if disabled_projects:
-                stage.disabled_rating_warning = '\n'.join('- %s' % p.name for p in disabled_projects)
-            else:
-                stage.disabled_rating_warning = False
-
     @api.depends('project_ids')
     def _compute_user_id(self):
         """ Fields project_ids and user_id cannot be set together for a stage. It can happen that
@@ -185,3 +220,20 @@ class ProjectTaskType(models.Model):
     def _check_personal_stage_not_linked_to_projects(self):
         if any(stage.user_id and stage.project_ids for stage in self):
             raise UserError(_('A personal stage cannot be linked to a project because it is only visible to its corresponding user.'))
+
+    # ---------------------------------------------------
+    # Rating business
+    # ---------------------------------------------------
+
+    # This method should be called once a day by the scheduler
+    @api.model
+    def _send_rating_all(self):
+        stages = self.search([
+            ('rating_active', '=', True),
+            ('rating_status', '=', 'periodic'),
+            ('rating_request_deadline', '<=', fields.Datetime.now())
+        ])
+        for stage in stages:
+            stage.project_ids.task_ids._send_task_rating_mail()
+            stage._compute_rating_request_deadline()
+            self.env.cr.commit()

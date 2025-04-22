@@ -236,11 +236,11 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         self.assertEqual(task.personal_stage_id.stage_id.name, stages[0].get('name'), "tasks assigned to the current user should be in the right default stage")
 
     def test_send_rating_review(self):
-        project_settings = self.env["res.config.settings"].create({'group_project_rating': True})
-        project_settings.execute()
-        self.assertTrue(self.project_goats.rating_active, 'The customer ratings should be enabled in this project.')
-
         won_stage = self.project_goats.type_ids[-1]
+        won_stage.write({
+            'rating_active': True,
+            'rating_status': 'stage',
+        })
         rating_request_mail_template = self.env.ref('project.rating_project_request_email_template')
         won_stage.write({'rating_template_id': rating_request_mail_template.id})
         tasks = self.env['project.task'].with_context(mail_create_nolog=True, default_project_id=self.project_goats.id).create([

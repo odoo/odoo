@@ -17,7 +17,7 @@ class TestSoLineMilestones(TestSaleCommon):
         super().setUpClass()
         cls.env.user.group_ids += cls.quick_ref('project.group_project_manager')
 
-        cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
+        cls.env.user.group_ids += cls.env.ref('project.group_project_milestone')
         uom_hour = cls.env.ref('uom.product_uom_hour')
 
         cls.product_delivery_milestones1 = cls.env['product.product'].create({
@@ -216,6 +216,7 @@ class TestSoLineMilestones(TestSaleCommon):
         """
         project_template = self.env['project.project'].create({
             'name': 'Project Template',
+            'allow_milestones': True,
         })
         self.env['project.milestone'].create([{
             'project_id': project_template.id,
@@ -236,6 +237,7 @@ class TestSoLineMilestones(TestSaleCommon):
         project = sale_order.project_ids
         self.assertEqual(len(project.milestone_ids), 4, "The generated project should have 4 milestones.")
         self.assertEqual({m.quantity_percentage for m in project.milestone_ids}, {0.25}, "All milestones of the generated project should have a quantity percentage of 25%.")
+        self.assertTrue(project.allow_milestones, "The project should allow milestones as it was created from a product configured to create milestones.")
 
     def test_project_template_with_milestones_multiple_products(self):
         """
@@ -244,6 +246,7 @@ class TestSoLineMilestones(TestSaleCommon):
         """
         project_template = self.env['project.project'].create({
             'name': 'Project Template',
+            'allow_milestones': True,
         })
         self.env['project.milestone'].create([{
             'project_id': project_template.id,
@@ -266,6 +269,7 @@ class TestSoLineMilestones(TestSaleCommon):
 
         project = sale_order.project_ids
         self.assertEqual(len(project.milestone_ids), 5, "The project should have 5 milestones")
+        self.assertTrue(project.allow_milestones, "The project should allow milestones as it was created from a product configured to create milestones.")
 
     def test_subtask_milestone_sol(self):
         """ A task should keep its sale line according to its milestone is changed. """
