@@ -308,9 +308,12 @@ class MrpProduction(models.Model):
         picking_type_by_company = {pt['company_id']: pt['id'] for pt in picking_types}
         default_picking_type_id = self._context.get('default_picking_type_id')
         default_picking_type = default_picking_type_id and self.env['stock.picking.type'].browse(default_picking_type_id)
+        if not default_picking_type:
+            default_warehouse_id = self._context.get('force_warehouse_id')
+            default_picking_type = default_warehouse_id and self.env['stock.warehouse'].browse(default_warehouse_id).manu_type_id
         for mo in self:
             if default_picking_type and default_picking_type.company_id == mo.company_id:
-                mo.picking_type_id = default_picking_type_id
+                mo.picking_type_id = default_picking_type
                 continue
             if mo.bom_id and mo.bom_id.picking_type_id:
                 mo.picking_type_id = mo.bom_id.picking_type_id
