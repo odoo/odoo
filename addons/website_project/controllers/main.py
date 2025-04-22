@@ -53,7 +53,7 @@ class WebsiteForm(form.WebsiteForm):
                     data['record']['partner_phone'] = values['partner_phone']
                 if not partner.name:
                     data['record']['partner_name'] = values['partner_name']
-                if not partner.company_name and values.get('partner_company_name'):
+                if not partner.parent_name and values.get('partner_company_name'):
                     data['record']['partner_company_name'] = values['partner_company_name']
             else:
                 data['record']['email_cc'] = values['email_from']

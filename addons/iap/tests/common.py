@@ -78,7 +78,6 @@ class MockIAPEnrich(common.TransactionCase):
             'description': '%s GmbH description' % base_name,
             'founded_year': '1930',
             'logo': 'https://logo.clearbit.com/%slogo.com' % base_name,
-            'company_type': 'private',
 
             # Contacts
             'phone_numbers': ['+4930499193937', '+4930653376208'],

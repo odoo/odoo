@@ -206,7 +206,7 @@
                     </div>
                 </xpath>
                 <page name="sales_purchases" position="after">
-                    <page string="Invoicing" name="accounting" invisible="not is_company and parent_id" groups="account.group_account_invoice,account.group_account_readonly">
+                    <page string="Invoicing" name="accounting" invisible="parent_id" groups="account.group_account_invoice,account.group_account_readonly">
                         <field name="duplicated_bank_account_partners_count" invisible="1"/>
                         <group>
                             <group string="General" name="general" groups="account.group_account_invoice,account.group_account_readonly">
@@ -242,7 +242,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Invoicing" name="accounting_disabled" invisible="is_company or not parent_id" groups="account.group_account_invoice,account.group_account_readonly">
+                    <page string="Invoicing" name="accounting_disabled" invisible="not parent_id" groups="account.group_account_invoice,account.group_account_readonly">
                         <div>
                             <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
                         </div>
@@ -303,7 +303,7 @@
             <field name="res_model">res.partner</field>
             <field name="path">customers</field>
             <field name="view_mode">list,kanban,form</field>
-            <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}</field>
+            <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_customer_rank': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new customer in your address book
@@ -318,7 +318,7 @@
             <field name="res_model">res.partner</field>
             <field name="path">vendors</field>
             <field name="view_mode">list,kanban,form</field>
-            <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company': True, 'default_supplier_rank': 1}</field>
+            <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_supplier_rank': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new supplier in your address book

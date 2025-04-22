@@ -119,7 +119,6 @@ class ResPartner(models.Model):
             'pa_index': pa_index,
             'zip': zipcode,
             'in_eu': in_eu,
-            'is_company': self.is_company,
             'first_name': ' '.join(self.name.split()[:1]),
             'last_name': ' '.join(self.name.split()[1:]),
         }

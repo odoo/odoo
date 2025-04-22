@@ -50,7 +50,6 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'access_token': self.pos_order.access_token,
             'name': self.new_partner.name,
             'email': "test@test.com",
-            'company_name': self.new_partner.company_name,
             'vat': self.new_partner.vat,
             'street': "Test street",
             'city': "Test City",

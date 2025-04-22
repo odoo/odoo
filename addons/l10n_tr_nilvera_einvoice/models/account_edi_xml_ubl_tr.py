@@ -55,7 +55,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         vals = super()._get_partner_party_identification_vals_list(partner)
         vals.append({
             'id_attrs': {
-                'schemeID': 'VKN' if partner.is_company else 'TCKN',
+                # A company has a 10-digit Tax ID & an individual contact has an 11-digit Tax ID
+                'schemeID': 'VKN' if len(partner.vat) < 11 else 'TCKN',
             },
             'id': partner.vat,
         })
@@ -87,7 +88,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         return vals_list
 
     def _get_partner_person_vals(self, partner):
-        if not partner.is_company:
+        if not partner.vat:
             name_parts = partner.name.split(' ', 1)
             return {
                 'first_name': name_parts[0],

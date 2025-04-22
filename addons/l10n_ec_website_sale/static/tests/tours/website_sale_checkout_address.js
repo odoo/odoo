@@ -22,6 +22,7 @@ registry.category("web_tour.tours").add("shop_checkout_address_ec", {
     ],
 });
 
+// TODO: Duplicate: Remove it in Master
 registry.category("web_tour.tours").add("tour_new_billing_ec", {
     url: "/shop",
     steps: () => [

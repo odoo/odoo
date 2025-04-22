@@ -83,8 +83,8 @@ class EventCrmCase(TestCrmCommon, EventCase):
             partner = self.env['res.partner']
         expected_reg_name = partner.name or registrations._find_first_notnull('name') or registrations._find_first_notnull('email')
         if partner:
-            expected_contact_name = partner.name if not partner.is_company else False
-            expected_partner_name = partner.name if partner.is_company else False
+            expected_contact_name = partner.name if not partner.parent_id else False
+            expected_partner_name = partner.name if partner.parent_id else False
         else:
             expected_contact_name = registrations._find_first_notnull('name')
             expected_partner_name = False

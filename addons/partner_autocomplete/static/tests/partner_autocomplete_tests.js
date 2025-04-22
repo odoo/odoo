@@ -2,7 +2,6 @@ import { browser } from "@web/core/browser/browser";
 import {
     click,
     editInput,
-    editSelect,
     getFixture,
     patchWithCleanup,
     triggerEvent,
@@ -79,12 +78,6 @@ QUnit.module('partner_autocomplete', {
             models: {
                 'res.partner': {
                     fields: {
-                        company_type: {
-                            string: "Company Type",
-                            type: "selection",
-                            selection: [["company", "Company"], ["individual", "Individual"]],
-                            searchable: true
-                        },
                         name: {string: "Name", type: "char", searchable: true},
                         parent_id: {string: "Company", type: "many2one", relation: "res.partner", searchable: true},
                         website: {string: "Website", type: "char", searchable: true},
@@ -99,15 +92,9 @@ QUnit.module('partner_autocomplete', {
                         country_id: {string: "Country", type: "many2one", relation: "res.country", searchable: true},
                         comment: {string: "Comment", type: "char", searchable: true},
                         vat: {string: "Vat", type: "char", searchable: true},
-                        is_company: {string: "Is company", type: "bool", searchable: true},
                         leave_date_to: { string: "Out of office", type: "date" },
                     },
                     records: [],
-                    onchanges: {
-                        company_type: (obj) => {
-                            obj.is_company = obj.company_type === 'company';
-                        },
-                    },
                 },
                 'res.country': {
                     fields: {
@@ -133,7 +120,6 @@ QUnit.module('partner_autocomplete', {
         type: "form",
         arch:
             `<form>
-                <field name="company_type"/>
                 <field name="name" widget="field_partner_autocomplete"/>
                 <field name="parent_id" widget="res_partner_many2one"/>
                 <field name="website"/>
@@ -181,69 +167,12 @@ QUnit.module('partner_autocomplete', {
         }
     }
 
-    QUnit.test("Partner autocomplete : Company type = Individual", async function (assert) {
-        assert.expect(12);
-        await makeView(makeViewParams);
 
-        // Set company type to Individual
-        await editSelect(target, "[name='company_type'] > select", '"individual"');
-
-        const nameInput = target.querySelector("[name='name'] input");
-        assert.doesNotHaveClass(nameInput, 'o-autocomplete--input', "The input for field 'name' should be a regular input");
-
-        const companyInput = target.querySelector("[name='parent_id'] input");
-        const autocompleteContainer = companyInput.parentElement;
-
-        await click(companyInput, null);
-        assert.containsNone(
-            autocompleteContainer,
-            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
-            "There should be no option when input is empty"
-        );
-
-        await editInputNoChangeEvent(companyInput, "od");
-        assert.containsNone(
-            autocompleteContainer,
-            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
-            "There should be no option when the length of the query is < 3"
-        );
-
-        await editInputNoChangeEvent(companyInput, "company");
-        assert.containsN(
-            autocompleteContainer,
-            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
-            3,
-            "Odoo autocomplete options should be shown"
-        );
-
-        // Click on the first option - "First company"
-        await click(autocompleteContainer.querySelectorAll('ul li.partner_autocomplete_dropdown_many2one')[0], null);
-
-        const modalContent = target.querySelector('.modal-content');
-        // Check that the fields of the modal have been pre-filled
-        const expectedValues = {
-            "name": "First Company",
-            "vat": "BE0477472701",
-            "street": "Chaussée de Namur 40",
-            "city": "Ramillies",
-            "zip": "1367",
-            "phone": "3281813700",
-            "country_id": "Belgium",
-            "state_id": "Walloon Brabant",
-        };
-        for (const [fieldName, expectedValue] of Object.entries(expectedValues)) {
-            assert.strictEqual(modalContent.querySelector(`[name=${fieldName}] input`).value, expectedValue, `${fieldName} should be pre-filled`);
-        }
-    });
-
-    QUnit.test("Partner autocomplete : Company type = Company / Name search", async function (assert) {
+    QUnit.test("Partner autocomplete: Name search", async function (assert) {
         assert.expect(11);
         await makeView(makeViewParams);
 
-        // Set company type to Company
-        await editSelect(target, "[name='company_type'] > select", '"company"');
-
-        const input = target.querySelector("[name='name'] .dropdown input");
+        const input = target.querySelector("[name='name'] input");
         const autocompleteContainer = input.parentElement;
 
         await click(input, null);
@@ -287,13 +216,10 @@ QUnit.module('partner_autocomplete', {
         }
     });
 
-    QUnit.test("Partner autocomplete : Company type = Company / VAT search", async function (assert) {
+    QUnit.test("Partner autocomplete : VAT search", async function (assert) {
         assert.expect(11);
 
         await makeView(makeViewParams);
-
-        // Set company type to Company
-        await editSelect(target, "[name='company_type'] > select", '"company"');
 
         const input = target.querySelector("[name='vat'] .dropdown input");
         const autocompleteContainer = input.parentElement;
@@ -381,7 +307,6 @@ QUnit.module('partner_autocomplete', {
             ...makeViewParams,
             arch:
                 `<form>
-                    <field name="company_type"/>
                     <field name="parent_id" widget="res_partner_many2one" options="{'no_create': True}"/>
                 </form>`
         }
@@ -402,7 +327,6 @@ QUnit.module('partner_autocomplete', {
             ...makeViewParams,
             arch:
                 `<form>
-                    <field name="company_type"/>
                     <field name="parent_id" widget="res_partner_many2one" options="{'no_create': False}"/>
                 </form>`
         }
@@ -416,53 +340,5 @@ QUnit.module('partner_autocomplete', {
             6,  // create + create & edit + 3 partner suggestions + search worldwide
             "Odoo autocomplete options should be shown"
         );
-    });
-
-    QUnit.test("Partner autocomplete : onChange should not disturb option selection", async function (assert) {
-        await makeView(makeViewParams);
-
-        // Set company type to Company
-        await editSelect(target, "[name='company_type'] > select", '"company"');
-
-        const input = target.querySelector("[name='name'] .dropdown input");
-        const autocompleteContainer = input.parentElement;
-
-        await click(input, null);
-        await editInputNoChangeEvent(input, "company");
-        assert.containsN(
-            autocompleteContainer,
-            ".o-autocomplete--dropdown-item",
-            4,  // 3 options + 1 for the worldwide option
-            "Odoo autocomplete options should be shown"
-        );
-        // Click on the second option (include realistic events) - "Second company"
-        await triggerEvent(
-            target.querySelectorAll(".o-autocomplete--dropdown-item")[1],
-            "",
-            "pointerdown"
-        );
-        await triggerEvent(
-            target.querySelectorAll(".o-autocomplete--dropdown-item")[1],
-            "",
-            "mousedown"
-        );
-        await triggerEvent(input, "", "change");
-        await triggerEvent(input, "", "blur");
-        await click(target.querySelectorAll(".o-autocomplete--dropdown-item")[1], "");
-
-        // Check that the fields have been filled
-        const expectedValues = {
-            "name": "Second Company",
-            "vat": "BE0477472701",
-            "street": "Chaussée de Namur 40",
-            "city": "Ramillies",
-            "zip": "1367",
-            "phone": "3281813700",
-            "country_id": "Belgium",
-            "state_id": "Walloon Brabant",
-        };
-        for (const [fieldName, expectedValue] of Object.entries(expectedValues)) {
-            assert.strictEqual(target.querySelector(`[name=${fieldName}] input`).value, expectedValue, `${fieldName} should be filled`);
-        }
     });
 });

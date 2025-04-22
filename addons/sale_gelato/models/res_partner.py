@@ -11,7 +11,7 @@ class ResPartner(models.Model):
     def _gelato_prepare_address_payload(self):
         first_name, last_name = payment_utils.split_partner_name(self.name)
         return {
-            'companyName': self.commercial_company_name or '',
+            'companyName': self.parent_name or '',
             'firstName': first_name or last_name,  # Gelato require a first name.
             'lastName': last_name,
             'addressLine1': self.street,

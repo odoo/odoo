@@ -105,7 +105,6 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
             'street': 'Jalan Legian',
             'zip': '80361',
             'city': 'Bali',
-            'is_company': True,  # If true of it a commercial partner is set, the name would be in the address unless said not to add it.
         })
 
         out_invoice = self.env['account.move'].create({

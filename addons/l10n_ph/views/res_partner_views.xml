@@ -7,9 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="branch_code" invisible="'PH' not in fiscal_country_codes"/>
-                <field name="first_name" invisible="'PH' not in fiscal_country_codes or is_company"/>
-                <field name="middle_name" invisible="'PH' not in fiscal_country_codes or is_company"/>
-                <field name="last_name" invisible="'PH' not in fiscal_country_codes or is_company"/>
+                <field name="first_name" invisible="'PH' not in fiscal_country_codes"/>
+                <field name="middle_name" invisible="'PH' not in fiscal_country_codes"/>
+                <field name="last_name" invisible="'PH' not in fiscal_country_codes"/>
             </xpath>
         </field>
     </record>

@@ -22,7 +22,6 @@ registry.category("website.form_editor_actions").add('create_task', {
         string: _t('Email Address'),
     }, {
         type: 'char',
-        fillWith: 'commercial_company_name',
         name: 'partner_company_name',
         string: _t('Company Name'),
     }, {

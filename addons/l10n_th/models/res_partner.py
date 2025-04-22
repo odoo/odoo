@@ -10,7 +10,8 @@ class ResPartner(models.Model):
 
     def _compute_l10n_th_branch_name(self):
         for partner in self:
-            if not partner.is_company or partner.country_code != 'TH':
+            # TODO: Check with accounting team
+            if not partner.vat or partner.country_code != 'TH':
                 partner.l10n_th_branch_name = ""
             else:
                 code = partner.company_registry

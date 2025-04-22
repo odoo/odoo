@@ -745,7 +745,6 @@ class HrApplicant(models.Model):
             if not self.partner_name:
                 raise UserError(_('You must define a Contact Name for this applicant.'))
             self.partner_id = self.env['res.partner'].create({
-                'is_company': False,
                 'name': self.partner_name,
                 'email': self.email_from,
             })
@@ -999,7 +998,6 @@ class HrApplicant(models.Model):
             if not self.partner_name:
                 raise UserError(_('Please provide an applicant name.'))
             self.partner_id = self.env['res.partner'].create({
-                'is_company': False,
                 'name': self.partner_name,
                 'email': self.email_from,
             })

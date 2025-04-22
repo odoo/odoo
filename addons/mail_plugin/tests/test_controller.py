@@ -15,7 +15,6 @@ class TestMailPluginController(TestMailPluginControllerCommon):
         partner = self.env["res.partner"].create({
             "name": "Test partner",
             "email": "test@test_domain.xyz",
-            "is_company": False,
         })
 
         result = self.mock_enrich_and_create_company(
@@ -63,7 +62,7 @@ class TestMailPluginController(TestMailPluginControllerCommon):
         company = self.env["res.partner"].create({
             "name": "Test partner",
             "email": "test@test_domain.xyz",
-            "is_company": True,
+            "vat": "IN0123456789"
         })
 
         mock_iap_enrich = Mock()
@@ -79,7 +78,6 @@ class TestMailPluginController(TestMailPluginControllerCommon):
         self.env["res.partner"].create({
             "name": "Test partner",
             "email": "test@test_domain.xyz",
-            "is_company": False,
         })
 
         result = self.mock_plugin_partner_get(

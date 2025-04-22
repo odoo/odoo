@@ -227,7 +227,7 @@ export class MailMessage extends models.ServerModel {
             } else if (message.author_id) {
                 data.author_id = mailDataHelpers.Store.one(
                     ResPartner.browse(message.author_id),
-                    makeKwArgs({ fields: ["avatar_128", "is_company", "name", "user"] })
+                    makeKwArgs({ fields: ["avatar_128", "name", "user"] })
                 );
             }
             store.add(this.browse(message.id), data);
