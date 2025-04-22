@@ -1919,8 +1919,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         return True
 
     def _skip_push(self):
-        return self.is_inventory or self.move_dest_ids and any(m.location_id._child_of(self.location_dest_id) for m in self.move_dest_ids) or\
-            self.location_final_id and self.location_final_id._child_of(self.location_dest_id)
+        return self.is_inventory or (
+            self.move_dest_ids and any(m.location_id._child_of(self.location_dest_id) for m in self.move_dest_ids)
+        )
 
     def _check_quantity(self):
         return self.env['stock.quant'].search([
