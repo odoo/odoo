@@ -7,7 +7,6 @@ import { reposition } from "@web/core/position/utils";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { pick } from "@web/core/utils/objects";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -599,14 +598,20 @@ export class PropertiesField extends Component {
         propertyDefinition["definition_changed"] = true;
         if (propertyDefinition.type === "separator") {
             // remove all other keys
-            propertyDefinition = pick(
-                propertyDefinition,
+            const separatorKeys = new Set([
+                "definition_changed",
+                "fold_by_default",
                 "name",
                 "string",
-                "definition_changed",
                 "type",
-                "fold_by_default"
-            );
+            ]);
+            // remove all other keys in place, since propertyDefinition instance
+            // will be used as a PropertyDefinition component state value.
+            for (const key in propertyDefinition) {
+                if (!separatorKeys.has(key)) {
+                    delete propertyDefinition[key];
+                }
+            }
         }
         const propertiesValues = this.propertiesList;
         const propertyIndex = this._getPropertyIndex(propertyDefinition.name);
