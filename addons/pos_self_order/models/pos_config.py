@@ -99,17 +99,17 @@ class PosConfig(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self._prepare_self_order_splash_screen(vals_list)
+        self._prepare_self_order_splash_screen(vals_list, is_new=True)
         pos_config_ids = super().create(vals_list)
+        pos_config_ids._ensure_public_attachments()
         pos_config_ids._prepare_self_order_custom_btn()
         return pos_config_ids
 
     @api.model
-    def _prepare_self_order_splash_screen(self, vals_list):
+    def _prepare_self_order_splash_screen(self, vals_list, is_new=False):
         def read_image_datas(image_name):
             with file_open(opj("pos_self_order/static/img", image_name), "rb") as f:
                 return base64.b64encode(f.read())
-
         for vals in vals_list:
             if not vals.get('self_ordering_mode'):
                 return True
@@ -122,7 +122,7 @@ class PosConfig(models.Model):
                     'type': 'binary',
                 }) for image_name in ['landing_01.jpg', 'landing_02.jpg', 'landing_03.jpg']]
 
-            if not vals.get('self_ordering_image_background_ids'):
+            if is_new and not vals.get('self_ordering_image_background_ids'):
                 vals['self_ordering_image_background_ids'] = [(0, 0, {
                     'name': "background.jpg",
                     'datas': read_image_datas("kiosk_background.jpg"),
@@ -148,7 +148,6 @@ class PosConfig(models.Model):
 
     def write(self, vals):
         self._prepare_self_order_splash_screen([vals])
-
         for record in self:
             if vals.get('self_ordering_mode') == 'kiosk' or (vals.get('pos_self_ordering_mode') == 'mobile' and vals.get('pos_self_ordering_service_mode') == 'counter'):
                 vals['self_ordering_pay_after'] = 'each'
@@ -163,8 +162,13 @@ class PosConfig(models.Model):
                 vals['self_ordering_service_mode'] = 'table'
 
         res = super().write(vals)
+        self._ensure_public_attachments()
         self._prepare_self_order_custom_btn()
         return res
+
+    def _ensure_public_attachments(self):
+        self.self_ordering_image_background_ids.write({"public": True})
+        self.self_ordering_image_home_ids.write({"public": True})
 
     @api.depends("module_pos_restaurant")
     def _compute_self_order(self):
@@ -287,8 +291,8 @@ class PosConfig(models.Model):
         response = {
             'pos.config': self.env['pos.config'].search_read([('id', '=', self.id)], config_fields, load=False),
         }
-        response['pos.config'][0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
-        response['pos.config'][0]['_self_ordering_image_background_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_background_ids)
+        response['pos.config'][0]['_self_ordering_image_home_ids'] = self.self_ordering_image_home_ids.ids
+        response['pos.config'][0]['_self_ordering_image_background_ids'] = self.self_ordering_image_background_ids.ids
         response['pos.config'][0]['_pos_special_products_ids'] = self._get_special_products().ids
         response["pos.config"][0]["_self_ordering_style"] = {
             "primaryBgColor": self.env.company.email_secondary_color,

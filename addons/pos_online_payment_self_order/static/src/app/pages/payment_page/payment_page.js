@@ -21,13 +21,6 @@ patch(PaymentPage.prototype, {
             this.checkAndOpenPaymentPage(order);
         }
     },
-    get backgroundImage() {
-        const bgImage = this.selfOrder.config._self_ordering_image_background_ids[0];
-        if (bgImage) {
-            return `url(data:image/png;base64,${bgImage.data})`;
-        }
-        return "none";
-    },
     get selectedPaymentIsOnline() {
         const paymentMethods = this.selectedPaymentMethod;
         return paymentMethods && paymentMethods.is_online_payment;
