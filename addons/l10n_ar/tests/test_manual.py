@@ -247,3 +247,71 @@ class TestManual(common.TestAr):
             ],
         })
         self.assertEqual(self._get_simple_detail_ar_tax(invoice3), [("vat", 0.0)])
+
+    def test_19_round_globally_rounding_second_currency(self):
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        currency_usd = self.env.ref('base.USD')
+        currency_usd.active = True
+
+        self.env['res.currency.rate'].create([
+            {
+                'name': '2025-04-01',
+                'inverse_company_rate': 1066.50,
+                'currency_id': currency_usd.id,
+                'company_id': self.env.company.id,
+            },
+        ])
+        tax_02 = self.env['account.tax'].create({
+            'name': "tax_02",
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 0.2,
+        })
+
+        invoice_a = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': '2025-04-02',
+            'currency_id': currency_usd.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'test',
+                    'quantity': 1,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 124,
+                    'tax_ids': [(6, 0, tax_02.ids)],
+                })
+            ]
+        })
+
+        self.assertEqual(invoice_a.amount_total, invoice_a.invoice_line_ids.price_total, 'The invoice total should match the line total since there is only one line.')
+
+        tax_lines_a = invoice_a.line_ids\
+            .filtered(lambda x: x.tax_line_id)\
+            .sorted(lambda x: (x.move_id.id, x.tax_line_id.id, x.tax_ids.ids, x.tax_repartition_line_id.id))
+        
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+
+        invoice_b = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': '2025-04-02',
+            'currency_id': currency_usd.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'test',
+                    'quantity': 1,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 124,
+                    'tax_ids': [(6, 0, tax_02.ids)],
+                })
+            ]
+        })
+
+        self.assertEqual(invoice_b.amount_total, invoice_b.invoice_line_ids.price_total, 'The invoice total should match the line total since there is only one line.')
+        
+        tax_lines_b = invoice_b.line_ids\
+            .filtered(lambda x: x.tax_line_id)\
+            .sorted(lambda x: (x.move_id.id, x.tax_line_id.id, x.tax_ids.ids, x.tax_repartition_line_id.id))
+
+        self.assertEqual(tax_lines_a.balance, tax_lines_b.balance, 'Tax balances should be equal since both invoices have a single line and the total matches the line amount.')
