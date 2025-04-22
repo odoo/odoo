@@ -324,6 +324,39 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                     continue;
                 }
 
+                // Skip "animation-play-state" changes only
+                if (record.type === 'attributes' && record.attributeName === 'style') {
+                    const newValue = record.target.style.cssText;
+                    const oldAnimationState = (record.oldValue || '').match(/animation-play-state:\s*([a-z\-]+)/);
+                    const newAnimationState = newValue.match(/animation-play-state:\s*([a-z\-]+)/);
+                    if (oldAnimationState && newAnimationState && oldAnimationState[1] !== newAnimationState[1])
+                        continue;
+                }
+
+                // Skip mutations where only animation-related classes are added/removed
+                if (record.type === 'attributes' && record.attributeName === 'class') {
+                    const oldClasses = (record.oldValue || '').split(/\s+/);
+                    const newClasses = [...record.target.classList];
+
+                    const isAnimClass = cls =>
+                        /^o_anim/.test(cls) || [
+                            'o_animated_text',
+                            'o_visible',
+                            'o_animate',
+                            'o_animating',
+                        ].includes(cls);
+
+                    const added = newClasses.filter(c => !oldClasses.includes(c));
+                    const removed = oldClasses.filter(c => !newClasses.includes(c));
+
+                    if (
+                        (added.length && added.every(isAnimClass)) ||
+                        (removed.length && removed.every(isAnimClass))
+                    ) {
+                        continue;
+                    }
+                }
+
                 // Mark any savable element dirty if any tracked mutation occurs
                 // inside of it.
                 $savable.not('.o_dirty').each(function () {
