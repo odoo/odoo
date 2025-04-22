@@ -73,7 +73,7 @@ class L10n_Ro_EdiDocument(models.Model):
     key_certificate = fields.Char()  # Received from a successful response: to be saved for government purposes
 
     @api.model
-    def _request_ciusro_send_invoice(self, company, xml_data, move_type='out_invoice'):
+    def _request_ciusro_send_invoice(self, company, xml_data, move_type='out_invoice', is_b2b=True):
         """
         This method makes an 'upload' request to send xml_data to Romanian SPV.Based on the result, it will then process
         the answer and return a dictionary, which may consist of either an 'error' or a 'key_loading' string.
@@ -86,7 +86,7 @@ class L10n_Ro_EdiDocument(models.Model):
         result = make_efactura_request(
             session=requests,
             company=company,
-            endpoint='upload' if self.env.context.get('is_b2b') else 'uploadb2c',  # TODO: change the context value into a method parameter in master
+            endpoint='upload' if is_b2b else 'uploadb2c',
             method='POST',
             params={'standard': 'UBL' if move_type == 'out_invoice' else 'CN',
                     'cif': company.vat.replace('RO', '')},
