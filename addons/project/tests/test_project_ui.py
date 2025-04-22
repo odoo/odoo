@@ -9,7 +9,7 @@ class TestUi(odoo.tests.HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
+        cls.env.ref('base.group_user').sudo().implied_ids |= cls.env.ref('project.group_project_milestone')
 
     def test_01_project_tour(self):
         self.start_tour("/odoo", 'project_tour', login="admin")
