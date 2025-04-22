@@ -7,7 +7,6 @@ import json
 import logging
 from lxml import etree
 import os
-from pathlib import Path
 from queue import Queue, Empty
 import re
 import requests
@@ -215,7 +214,6 @@ class KeyboardUSBDriver(Driver):
 
     def _action_default(self, data):
         self.data['value'] = ''
-        event_manager.device_changed(self)
 
     def _is_scanner(self):
         """Read the device type from the saved filed and set it as current type.

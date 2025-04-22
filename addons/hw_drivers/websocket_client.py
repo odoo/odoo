@@ -17,20 +17,15 @@ websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel
 
 
 @helpers.require_db
-def send_to_controller(device_type, params, server_url=None):
+def send_to_controller(params, server_url=None):
     """Confirm the operation's completion by sending a response back to the Odoo server
 
-    :param device_type: the type of device that the operation was performed on
     :param params: the parameters to send back to the server
     :param server_url: URL of the Odoo server (provided by decorator).
     """
-    routes = {
-        "printer": "/iot/printer/status",
-    }
     params['iot_mac'] = helpers.get_mac_address()
-    server_url += routes[device_type]
     try:
-        response = requests.post(server_url, json={'params': params}, timeout=5)
+        response = requests.post(server_url + "/iot/box/send_websocket", json={'params': params}, timeout=5)
         response.raise_for_status()
     except requests.exceptions.RequestException:
         _logger.exception('Could not reach confirmation status URL: %s', server_url)
@@ -62,7 +57,7 @@ def on_message(ws, messages):
             if iot_mac in payload['iotIdentifiers']:
                 helpers.disconnect_from_server()
                 close_server_log_sender_handler()
-        elif message_type not in ['print_confirmation', 'bundle_changed']:  # intended to be ignored
+        elif message_type not in ['operation_confirmation', 'bundle_changed']:  # intended to be ignored
             _logger.warning("message type not supported: %s", message_type)
 
 
