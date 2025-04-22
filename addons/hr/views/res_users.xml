@@ -225,7 +225,7 @@
                         </button>
                     </div>
                 </xpath>
-                <xpath expr="//field[@name='phone']" position="after">
+                <xpath expr="//group[@name='access_groups']" position="inside">
                     <field name="create_employee_id" force_save="1" invisible="1"/>
                     <field name="create_employee" force_save="1" string="Create Employee" invisible="1" groups="hr.group_hr_user"/>
                     <!-- It is required to stay create_employee field defined here to make it true because store value is false -->

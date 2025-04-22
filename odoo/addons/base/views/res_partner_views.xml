@@ -22,13 +22,13 @@
                     <field name="vat" optional="hide" readonly="1"/>
                     <field name="email" optional="show"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
-                    <field name="user_id" optional="show" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                    <field name="user_id" optional="hide" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                     <field name="street" optional="hide"/>
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide" readonly="1"/>
                     <field name="country_id" optional="show" readonly="1"/>
-                    <field name="application_statistics" widget="contact_statistics" nolabel="1" optional="show"/>
-                    <field name="category_id" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="application_statistics" widget="contact_statistics" nolabel="1" optional="show" width="270"/>
+                    <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                 </list>
             </field>
@@ -123,10 +123,10 @@
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="mb8">
-                        <div class="d-flex">
+                        <div class="d-flex gap-3">
                             <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [130,130], 'img_class': 'rounded border'}"/>
                             <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
-                            <div class="d-flex flex-column ms-2 flex-grow-1">
+                            <div class="d-flex flex-column flex-grow-1">
                                 <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                                 <h1 class="mb-0 w-75">
                                     <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
