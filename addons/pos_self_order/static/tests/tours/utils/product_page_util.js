@@ -9,7 +9,7 @@ export function clickProduct(productName) {
 export function clickKioskProduct(productName) {
     return {
         content: `Click on product '${productName}'`,
-        trigger: `.o_kiosk_product_box h3:contains('${productName}')`,
+        trigger: `.o_kiosk_product_box span:contains('${productName}')`,
         run: "click",
     };
 }
@@ -30,7 +30,7 @@ export function checkReferenceNotInProductName(productName, reference) {
 export function checkKioskReferenceNotInProductName(productName, reference) {
     return {
         content: `Check product label has '${productName}' and not ${reference}`,
-        trigger: `.o_kiosk_product_box h3:contains('${productName}'):not(:contains("${reference}"))`,
+        trigger: `.o_kiosk_product_box span:contains('${productName}'):not(:contains("${reference}"))`,
     };
 }
 
@@ -68,7 +68,7 @@ export function clickDiscard() {
 export function clickKioskComboDiscard() {
     return {
         content: "Click on Discard button",
-        trigger: ".btn.btn-link .oi-chevron-left",
+        trigger: ".btn.btn-link .oi-close",
         run: "click",
     };
 }

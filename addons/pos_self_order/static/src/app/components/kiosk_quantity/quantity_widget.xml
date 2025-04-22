@@ -6,13 +6,13 @@
             <button type="button"
                     t-on-click="() => this.props.onQtyDown()"
                     t-attf-class="{{ props.value &gt; 1 ? '' : 'disabled' }} btn btn-light border">
-                    <i class="fa fa-minus fa-fw"/>
+                    <i class="oi oi-minus fa-fw"/>
             </button>
-            <h2 class="o-so-tabular-nums d-flex align-items-center px-5 h-100 border-top border-bottom text-bg-light fs-1 fw-bolder" t-esc="props.value"/>
+            <h2 class="o-so-tabular-nums d-flex align-items-center py-2 px-4 h-100 border-top border-bottom text-bg-light" t-esc="props.value"/>
             <button type="button"
                     t-on-click="() => this.props.onQtyUp()"
                     class="btn btn-light border">
-                    <i class="fa fa-plus fa-fw"/>
+                    <i class="oi oi-plus fa-fw"/>
             </button>
         </div>
     </t>

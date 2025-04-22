@@ -1,7 +1,7 @@
 export function selectLocation(locationName) {
     return {
         content: `Click on location '${locationName}'`,
-        trigger: `.o_self_eating_location h3:contains('${locationName}')`,
+        trigger: `.o_self_eating_location span:contains('${locationName}')`,
         run: "click",
     };
 }

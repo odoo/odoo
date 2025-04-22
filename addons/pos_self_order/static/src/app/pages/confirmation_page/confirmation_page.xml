@@ -8,7 +8,7 @@
                 </div>
             </div>
         </div>
-        <div t-else="" class="confirmation-page d-flex justify-content-center align-items-center flex-column h-100 p-4 text-center" t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size: cover; background-position: center;">
+        <div t-else="" class="confirmation-page d-flex justify-content-center align-items-center flex-column h-100 p-3 text-center" t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size: cover; background-position: center;">
             <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
                 <div class="mb-4">
                     <h1 t-if="state.payment and selfOrder.config.self_ordering_pay_after !== 'each'" class="fw-bold" style="text-wrap: pretty;">
@@ -23,7 +23,7 @@
                                 <polyline id="check" stroke="#FFFFFF" stroke-width="5.5" points="41 70 56 85 92 49" />
                             </g>
                         </svg>
-                        <h1 class="fw-bolder mb-0">We're preparing your order!</h1>
+                        <h1 class="mb-0">We're preparing your order!</h1>
                     </div>
                 </div>
                 <div t-if="state.payment and confirmedOrder.state !== 'paid'" 
@@ -41,7 +41,7 @@
                 <span role="button" t-if="selfOrder.showDownloadButton(confirmedOrder) and confirmedOrder.uiState.receiptReady" t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)" class="mb-4 text-primary">
                     Download your receipt here
                 </span>
-                <button class="btn btn-primary" t-on-click="backToHome">
+                <button class="btn btn-lg btn-primary" t-on-click="backToHome">
                     <span t-if="!confirmedOrder?.uiState?.receiptReady" class="spinner-border"/>
                     <t t-elif="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
                     <t t-else="">Ok</t>
