@@ -304,6 +304,8 @@ class IrActionsActWindow(models.Model):
                     eval_ctx = dict(self.env.context)
                     try:
                         ctx = safe_eval(values.get('context', '{}'), eval_ctx)
+                        if not isinstance(ctx, dict):
+                            ctx = {}
                     except:
                         ctx = {}
                     values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
