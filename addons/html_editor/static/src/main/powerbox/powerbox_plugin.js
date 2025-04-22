@@ -218,6 +218,7 @@ export class PowerboxPlugin extends Plugin {
         const key = ev.key;
         switch (key) {
             case "Escape":
+                ev.stopImmediatePropagation();
                 this.closePowerbox();
                 break;
             case "Enter":
