@@ -90,3 +90,30 @@ registry.category("web_tour.tours").add("self_order_product_info", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("self_order_archived_attribute", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("One Attribute Removed Product"),
+        ...ProductPage.setupAttribute(
+            [
+                { name: "Attribute 2", value: "Value 2-A" },
+                { name: "Attribute 3", value: "Value 3-A" },
+            ],
+            false
+        ),
+        {
+            trigger: "body:not(:has(.alert-warning))",
+        },
+        ...ProductPage.setupAttribute(
+            [
+                { name: "Attribute 2", value: "Value 2-B" },
+                { name: "Attribute 3", value: "Value 3-B" },
+            ],
+            false
+        ),
+        {
+            trigger: ".alert-warning:contains('This combination does not exist.')",
+        },
+    ],
+});

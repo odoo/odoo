@@ -3,6 +3,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as ProductConfigurator from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import { registry } from "@web/core/registry";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("ProductConfiguratorTour", {
     steps: () =>
@@ -94,6 +95,7 @@ registry.category("web_tour.tours").add("PosProductWithDynamicAttributes", {
             ProductScreen.selectedOrderlineHas("Dynamic Product", "1", "12.65", "Test 2"),
         ].flat(),
 });
+<<<<<<< 1252386a74f8bbb7adf63ae89eb4f7e936e3dcfd
 
 registry.category("web_tour.tours").add("test_attribute_order", {
     steps: () =>
@@ -136,3 +138,28 @@ registry.category("web_tour.tours").add("test_exclusion_attribute_values_after_d
             Chrome.endTour(),
         ].flat(),
 });
+||||||| ac467a60e30d55c06801f5efab6fe9be4b2a64e5
+=======
+
+registry.category("web_tour.tours").add("PosProductWithRemovedAttribute", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("One Attribute Removed Product"),
+            Dialog.is("One Attribute Removed Product"),
+            ProductConfigurator.pickRadio("Value 2-A"),
+            ProductConfigurator.pickRadio("Value 3-A"),
+            {
+                trigger: negate(".o_dialog .alert-warning"),
+                content: "No warning banner should be present in the dialog",
+            },
+            ProductConfigurator.pickRadio("Value 2-B"),
+            ProductConfigurator.pickRadio("Value 3-B"),
+            {
+                trigger: ".o_dialog .alert-warning",
+                content: "A warning banner should be present in the dialog",
+            },
+        ].flat(),
+});
+>>>>>>> fce1f0b018e50147cbfc36c000fbc8b8cbc2f52c
