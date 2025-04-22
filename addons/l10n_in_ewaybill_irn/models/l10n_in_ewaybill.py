@@ -3,7 +3,7 @@
 import base64
 import json
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 
@@ -24,6 +24,17 @@ class L10nInEwaybill(models.Model):
                 and not (account_move_id.move_type == 'out_refund' or account_move_id.debit_origin_id)
                 and account_move_id._l10n_in_check_einvoice_eligible()
             )
+
+    def _check_state(self):
+        error_message = super()._check_state()
+        if self.account_move_id and self.is_process_through_irn:
+            l10n_in_edi_response_irn = self.account_move_id._get_l10n_in_edi_response_json().get('Irn')
+            if not l10n_in_edi_response_irn:
+                error_message.append(_(
+                    "As the related invoice is eligible for e-invoicing, please generate the e-invoice first. "
+                    "Only then can the e-way bill be generated."
+                ))
+        return error_message
 
     def _prepare_ewaybill_transportation_json_payload(self):
         if self.is_process_through_irn:
@@ -95,18 +106,6 @@ class L10nInEwaybill(models.Model):
         })
         self._cr.commit()
 
-    def _get_edi_irn_number(self):
-        self.ensure_one()
-        l10n_in_edi_response_json = self.account_move_id._get_l10n_in_edi_response_json()
-        if not l10n_in_edi_response_json:
-            raise EWayBillError({
-                'error': [{
-                    'code': 'waiting',
-                    'message': self.env._("waiting for IRN generation to create E-waybill")
-                }]
-            })
-        return l10n_in_edi_response_json['Irn']
-
     def _ewaybill_generate_by_irn(self, json_payload):
         self.ensure_one()
         if not self.company_id._l10n_in_edi_get_token():
@@ -135,7 +134,7 @@ class L10nInEwaybill(models.Model):
                 # this happens when timeout from the Government portal but E-waybill is generated
                 response = self.account_move_id._l10n_in_edi_connect_to_server(
                     url_end_point='get_ewaybill_by_irn',
-                    params={"irn": self._get_edi_irn_number()}
+                    params={"irn": self.account_move_id._get_l10n_in_edi_response_json().get('Irn')}
                 )
                 response.update({
                     'odoo_warning': [{
