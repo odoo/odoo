@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_skill_history_report_view_graph" model="ir.ui.view">
+        <field name="model">hr.employee.skill.history.report</field>
+        <field name="arch" type="xml">
+            <graph js_class="skills_graph" type="line" stacked="0">
+                <field name="date" interval="day" type="row"/>
+                <field name="skill_id" type="row"/>
+                <field name="level_progress" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_history_report_view_search" model="ir.ui.view">
+        <field name="model">hr.employee.skill.history.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="skill_id"/>
+                <field name="skill_type_id"/>
+                <separator/>
+                <filter string="Skill" name="group_by_skill_id" domain="[]" context="{'group_by': 'skill_id'}"/>
+                <filter string="Skill Type" name="group_by_skill_type_id" domain="[]"
+                    context="{'group_by': 'skill_type_id'}"/>
+                <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
+            </search>
+        </field>
+    </record>
+</odoo>

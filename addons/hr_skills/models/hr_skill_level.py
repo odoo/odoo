@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 class HrSkillLevel(models.Model):
     _name = 'hr.skill.level'
     _description = "Skill Level"
-    _order = "level_progress desc"
+    _order = "level_progress"
 
     skill_type_id = fields.Many2one('hr.skill.type', index='btree_not_null', ondelete='cascade')
     name = fields.Char(required=True)
@@ -24,14 +24,6 @@ class HrSkillLevel(models.Model):
         'CHECK(level_progress BETWEEN 0 AND 100)',
         'Progress should be a number between 0 and 100.',
     )
-
-    @api.depends('level_progress')
-    @api.depends_context('from_skill_level_dropdown')
-    def _compute_display_name(self):
-        if not self._context.get('from_skill_level_dropdown'):
-            return super()._compute_display_name()
-        for record in self:
-            record.display_name = f"{record.name} ({record.level_progress}%)"
 
     # This compute is never trigger by a depends in purpose. The front-end will change this value when the
     # default_level will become true.

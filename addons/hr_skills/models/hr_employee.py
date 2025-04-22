@@ -10,15 +10,33 @@ class HrEmployee(models.Model):
     resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")
     employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills",
         domain=[('skill_type_id.active', '=', True)])
+    current_employee_skill_ids = fields.One2many('hr.employee.skill',
+        compute='_compute_current_employee_skill_ids', readonly=False)
     skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True, groups="hr.group_hr_user")
+    certification_ids = fields.One2many('hr.employee.skill', compute='_compute_certification_ids', readonly=False)
+
+    @api.depends('employee_skill_ids')
+    def _compute_current_employee_skill_ids(self):
+        current_employee_skill_by_employee = self.employee_skill_ids.get_current_skills_by_employee()
+        for employee in self:
+            employee.current_employee_skill_ids = current_employee_skill_by_employee[employee.id]
 
     @api.depends('employee_skill_ids.skill_id')
     def _compute_skill_ids(self):
         for employee in self:
             employee.skill_ids = employee.employee_skill_ids.skill_id
 
+    @api.depends('employee_skill_ids')
+    def _compute_certification_ids(self):
+        for employee in self:
+            employee.certification_ids = employee.employee_skill_ids.filtered('is_certification')
+
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            vals_emp_skill = vals.pop('current_employee_skill_ids', [])\
+                + vals.pop('certification_ids', []) + vals.get('employee_skill_ids', [])
+            vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(vals_emp_skill, self)
         res = super().create(vals_list)
         if self.env.context.get('salary_simulation'):
             return res
@@ -36,10 +54,11 @@ class HrEmployee(models.Model):
         return res
 
     def write(self, vals):
-        res = super().write(vals)
-        if 'department_id' in vals:
-            self.employee_skill_ids._create_logs()
-        return res
+        if 'current_employee_skill_ids' in vals or 'certification_ids' in vals or 'employee_skill_ids' in vals:
+            vals_emp_skill = vals.pop('current_employee_skill_ids', []) + vals.pop('certification_ids', [])\
+                + vals.get('employee_skill_ids', [])
+            vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(vals_emp_skill, self)
+        return super().write(vals)
 
     def _load_scenario(self):
         super()._load_scenario()
