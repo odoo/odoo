@@ -247,7 +247,7 @@
             </t>
             <t t-if="subtotal_amounts['vat_amount'] != 0.0">
                 <tr>
-                    <td>VAT <t t-esc="subtotal_amounts['vat_percent']"/></td>
+                    <td>VAT <t t-esc="subtotal_amounts['vat_percent']"/>%</td>
                     <td class="text-end" t-out="subtotal_amounts['vat_amount']"
                         t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/></tr>
             </t>
