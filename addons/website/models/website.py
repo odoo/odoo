@@ -22,11 +22,12 @@ from odoo.addons.website.tools import similarity_score, text_from_html, get_base
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import get_manifest
-from odoo.osv.expression import AND, OR, FALSE_DOMAIN
-from odoo.tools import SQL, Query, sql as sqltools
+from odoo.tools import SQL, Query
 from odoo.tools.image import image_process
+from odoo.tools.sql import escape_psql
 from odoo.tools.translate import _, xml_translate
 
 logger = logging.getLogger(__name__)
@@ -98,9 +99,8 @@ class Website(models.Model):
     _description = "Website"
     _order = "sequence, id"
 
-    @api.model
-    def website_domain(self, website_id=False):
-        return [('website_id', 'in', (False, website_id or self.id))]
+    def website_domain(self):
+        return Domain('website_id', 'in', [False, *self.ids])
 
     def _active_languages(self):
         return self.env['res.lang'].search([]).ids
@@ -531,7 +531,7 @@ class Website(models.Model):
     def configurator_recommended_themes(self, industry_id, palette, result_nbr_max=3):
         Module = request.env['ir.module.module']
         domain = Module.get_themes_domain()
-        domain = AND([[('name', '!=', 'theme_default')], domain])
+        domain = Domain.AND([[('name', '!=', 'theme_default')], domain])
         client_themes = Module.search(domain).mapped('name')
         client_themes_img = {t: get_manifest(t).get('images_preview_theme', {}) for t in client_themes if get_manifest(t)}
         themes_suggested = self._website_api_rpc(
@@ -1323,12 +1323,12 @@ class Website(models.Model):
             # Generate the exact domain to search for the URL in this field
             domains = []
             for url, website_domain in search_criteria:
-                domains.append(AND([
+                domains.append(Domain.AND([
                     [(field_name, 'ilike', url)],
                     website_domain if hasattr(Model, 'website_id') else [],
                 ]))
 
-            dependency_records = Model.search(OR(domains))
+            dependency_records = Model.search(Domain.OR(domains))
             if model_name == 'ir.ui.view':
                 dependency_records = _handle_views_and_pages(dependency_records)
             if dependency_records:
@@ -1614,7 +1614,7 @@ class Website(models.Model):
                     if query:
                         r = "".join([x[1] for x in rule._trace[1:] if not x[0]])  # remove model converter from route
                         query = sitemap_qs2dom(query, r, self.env[converter.model]._rec_name)
-                        if query == FALSE_DOMAIN:
+                        if query.is_false():
                             continue
 
                     for rec in converter.generate(self.env, args=val, dom=query):
@@ -1644,9 +1644,9 @@ class Website(models.Model):
             # custos granting them read and/or write access on page.
             raise AccessError(_("Access Denied"))
 
-        domain = [('url', '!=', False)]
+        domain = Domain('url', '!=', False)
         if self:
-            domain = AND([domain, self.website_domain()])
+            domain &= self.website_domain()
         pages = self.env['website.page'].sudo().search(domain)
         if self:
             pages = pages.with_context(website_id=self.id)._get_most_specific_pages()
@@ -1654,9 +1654,7 @@ class Website(models.Model):
 
     def _get_website_pages(self, domain=None, order='name', limit=None):
         website = self.get_current_website()
-        if domain is None:
-            domain = []
-        domain += website.website_domain()
+        domain = Domain(domain or Domain.TRUE) & website.website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         pages = pages.with_context(website_id=website.id)._get_most_specific_pages()
         return pages
@@ -1885,7 +1883,7 @@ class Website(models.Model):
                             old_blockquote_asset.active = True
         self.env['ir.asset'].flush_model()
 
-    def _search_build_domain(self, domain, search, fields, extra=None):
+    def _search_build_domain(self, domain_list, search, fields, extra=None):
         """
         Builds a search domain AND-combining a base domain with partial matches of each term in
         the search expression in any of the fields.
@@ -1897,16 +1895,15 @@ class Website(models.Model):
 
         :return: domain limited to the matches of the search expression
         """
-        domains = domain.copy()
+        # just like website.searchable.mixin
+        domain = Domain.AND(domain_list)
         if search:
             for search_term in search.split(' '):
-                subdomains = []
-                for field in fields:
-                    subdomains.append([(field, 'ilike', sqltools.escape_psql(search_term))])
+                subdomains = [Domain(field, 'ilike', escape_psql(search_term)) for field in fields]
                 if extra:
                     subdomains.append(extra(self.env, search_term))
-                domains.append(OR(subdomains))
-        return AND(domains)
+                domain &= Domain.OR(subdomains)
+        return domain
 
     def _search_text_from_html(self, html_fragment):
         """
@@ -2100,7 +2097,7 @@ class Website(models.Model):
             model = self.env[model_name]
             if search_detail.get('requires_sudo'):
                 model = model.sudo()
-            domain = search_detail['base_domain'].copy()
+            domain = Domain.AND(search_detail['base_domain'])
             direct_fields = set(fields).intersection(model._fields)
             indirect_fields = self._search_get_indirect_fields(fields, model)
 
@@ -2160,13 +2157,15 @@ class Website(models.Model):
 
             query.order = '_best_similarity desc'
             query.limit = 1000
-            self.env.cr.execute(query.select(
-                SQL.identifier(model._table, 'id'),
-                SQL('%s AS _best_similarity', best_similarity),
-            ))
-            ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
-            domain.append([('id', 'in', list(ids))])
-            domain = AND(domain)
+            ids = [
+                id_
+                for id_, similarity in self.env.execute_query(query.select(
+                    SQL.identifier(model._table, 'id'),
+                    SQL('%s AS _best_similarity', best_similarity),
+                ))
+                if (similarity or 0) >= similarity_threshold
+            ]
+            domain &= Domain('id', 'in', ids)
             records = model.search_read(domain, direct_fields, limit=limit)
             for record in records:
                 for value in record.values():
@@ -2192,23 +2191,26 @@ class Website(models.Model):
         :return: yields words
         """
         match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
-        first = sqltools.escape_psql(search[0])
+        first = escape_psql(search[0])
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']
             model = self.env[model_name]
             if search_detail.get('requires_sudo'):
                 model = model.sudo()
-            domain = search_detail['base_domain'].copy()
-            fields_domain = []
+            domain = Domain.AND(search_detail['base_domain'])
             direct_fields = set(fields).intersection(model._fields)
             indirect_fields = self._search_get_indirect_fields(fields, model)
             fields = direct_fields.union(indirect_fields)
-            for field in fields:
-                fields_domain.append([(field, '=ilike', '%s%%' % first)])
-                fields_domain.append([(field, '=ilike', '%% %s%%' % first)])
-                fields_domain.append([(field, '=ilike', '%%>%s%%' % first)])  # HTML
-            domain.append(OR(fields_domain))
-            domain = AND(domain)
+            fields_domain = Domain.OR(
+                Domain(field, '=ilike', pattern)
+                for field in fields
+                for pattern in (
+                    '%s%%' % first,
+                    '%% %s%%' % first,
+                    '%%>%s%%' % first,  # HTML
+                )
+            )
+            domain &= fields_domain
             perf_limit = 1000
             records = model.search_read(domain, direct_fields, limit=perf_limit)
             if len(records) == perf_limit:

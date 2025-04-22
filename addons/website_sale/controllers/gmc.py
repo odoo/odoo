@@ -3,8 +3,8 @@
 from urllib.parse import urljoin
 from werkzeug.exceptions import NotFound
 
+from odoo.fields import Domain
 from odoo.http import Controller, request, route
-from odoo.osv import expression
 
 
 class GoogleMerchantCenter(Controller):
@@ -37,8 +37,8 @@ class GoogleMerchantCenter(Controller):
         # Find the pricelist by name if specified.
         if pricelist_name_ilike is not None:
             pricelist_sudo = request.env['product.pricelist'].sudo().search(
-                expression.AND([
-                    [('name', 'ilike', pricelist_name_ilike)],
+                Domain.AND([
+                    Domain('name', 'ilike', pricelist_name_ilike),
                     request.env['product.pricelist']._get_website_pricelists_domain(website),
                 ]),
                 limit=1,
@@ -52,8 +52,9 @@ class GoogleMerchantCenter(Controller):
         website_homepage = website._get_website_pages(
             [('url', '=', homepage_url), ('website_id', '!=', False)], limit=1,
         )
-        products = request.env['product.product'].search(expression.AND([
-            [('is_published', '=', True), ('type', 'in', ('consu', 'combo'))],
+        products = request.env['product.product'].search(Domain.AND([
+            Domain('is_published', '=', True),
+            Domain('type', 'in', ('consu', 'combo')),
             website.website_domain(),
         ]))
         gmc_data = {

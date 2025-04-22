@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.osv import expression
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class WebsiteVisitor(models.Model):
@@ -77,8 +76,7 @@ class WebsiteVisitor(models.Model):
 
     def _inactive_visitors_domain(self):
         """ Visitors registered to events are considered always active and should not be deleted. """
-        domain = super()._inactive_visitors_domain()
-        return expression.AND([domain, [('event_registration_ids', '=', False)]])
+        return super()._inactive_visitors_domain() & Domain('event_registration_ids', '=', False)
 
     def _merge_visitor(self, target):
         """ Override linking process to link registrations to the final visitor. """

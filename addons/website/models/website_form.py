@@ -3,8 +3,8 @@
 from ast import literal_eval
 
 from odoo import models, fields, api, SUPERUSER_ID
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 
 
 class Website(models.Model):
@@ -110,7 +110,7 @@ class IrModel(models.Model):
                             if 'domain' in property_definition and isinstance(property_definition['domain'], str):
                                 property_definition['domain'] = literal_eval(property_definition['domain'])
                                 try:
-                                    property_definition['domain'] = expression.normalize_domain(property_definition['domain'])
+                                    property_definition['domain'] = list(Domain(property_definition['domain']))
                                 except Exception:
                                     # Ignore non-fully defined properties
                                     continue

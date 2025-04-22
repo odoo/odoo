@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
@@ -15,8 +14,8 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
+from odoo.fields import Domain
 from odoo.http import request, Response
-from odoo.osv import expression
 from odoo.tools import consteq, email_normalize_all
 
 _logger = logging.getLogger(__name__)
@@ -40,7 +39,7 @@ class WebsiteSlides(WebsiteProfile):
     def sitemap_slide(env, rule, qs):
         Channel = env['slide.channel']
         dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
-        dom += env['website'].get_current_website().website_domain()
+        dom &= env['website'].get_current_website().website_domain()
         for channel in Channel.search(dom):
             loc = '/slides/%s' % env['ir.http']._slug(channel)
             if not qs or qs.lower() in loc:
@@ -112,7 +111,7 @@ class WebsiteSlides(WebsiteProfile):
 
         if slide.channel_id.channel_type == 'documentation':
             most_viewed_slides = request.env['slide.slide'].search(base_domain, limit=self._slides_per_aside, order='total_views desc')
-            related_domain = expression.AND([base_domain, [('category_id', '=', slide.category_id.id)]])
+            related_domain = base_domain & Domain('category_id', '=', slide.category_id.id)
             related_slides = request.env['slide.slide'].search(related_domain, limit=self._slides_per_aside)
         else:
             most_viewed_slides, related_slides = request.env['slide.slide'], request.env['slide.slide']
@@ -199,12 +198,12 @@ class WebsiteSlides(WebsiteProfile):
            current user is the one that uploaded it;
          * if not publisher and public: published;
         """
-        base_domain = expression.AND([request.website.website_domain(), ['&', ('channel_id', '=', channel.id), ('is_category', '=', False)]])
+        base_domain = request.website.website_domain() & Domain('channel_id', '=', channel.id) & Domain('is_category', '=', False)
         if not channel.can_publish:
             if request.website.is_public_user():
-                base_domain = expression.AND([base_domain, [('website_published', '=', True)]])
+                base_domain &= Domain('website_published', '=', True)
             else:
-                base_domain = expression.AND([base_domain, ['|', ('website_published', '=', True), ('user_id', '=', request.env.user.id)]])
+                base_domain &= Domain('website_published', '=', True) | Domain('user_id', '=', request.env.user.id)
         return base_domain
 
     def _get_channel_progress(self, channel, include_quiz=False):
@@ -241,7 +240,7 @@ class WebsiteSlides(WebsiteProfile):
 
         slides_domain = [('channel_id', '=', channel.id)]
         if slide:
-            slides_domain = expression.AND([slides_domain, [('id', '=', slide.id)]])
+            slides_domain = Domain.AND([slides_domain, [('id', '=', slide.id)]])
         slides = request.env['slide.slide'].search(slides_domain)
 
         session_slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
@@ -339,7 +338,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides', type='http', auth="public", website=True, sitemap=True, readonly=True)
     def slides_channel_home(self, **post):
         """ Home page for eLearning platform. Is mainly a container page, does not allow search / filter. """
-        channels_all = tools.lazy(lambda: request.env['slide.channel'].search(expression.AND([request.website.website_domain(), [('is_visible', '=', True)]])))
+        channels_all = tools.lazy(lambda: request.env['slide.channel'].search(request.website.website_domain() & Domain('is_visible', '=', True)))
         if not request.env.user._is_public():
             #If a course is completed, we don't want to see it in first position but in last
             channels_my = tools.lazy(lambda: channels_all.filtered(lambda channel: channel.is_member).sorted(lambda channel: 0 if channel.completed else channel.completion, reverse=True)[:3])
@@ -567,24 +566,24 @@ class WebsiteSlides(WebsiteProfile):
         slide_categories = dict(request.env['slide.slide']._fields['slide_category']._description_selection(request.env))
 
         if search:
-            domain += [
-                '|', '|',
-                ('name', 'ilike', search),
-                ('description', 'ilike', search),
-                ('html_content', 'ilike', search)]
+            domain &= (
+                Domain('name', 'ilike', search)
+                | Domain('description', 'ilike', search)
+                | Domain('html_content', 'ilike', search)
+            )
             pager_args['search'] = search
         else:
             if category:
-                domain += [('category_id', '=', category.id)]
+                domain &= Domain('category_id', '=', category.id)
                 pager_url += "/category/%s" % category.id
             elif tag:
-                domain += [('tag_ids', '=', tag.id)]
+                domain &= Domain('tag_ids', '=', tag.id)
                 pager_url += "/tag/%s" % tag.id
             if uncategorized:
-                domain += [('category_id', '=', False)]
+                domain &= Domain('category_id', '=', False)
                 pager_args['uncategorized'] = 1
             elif slide_category:
-                domain += [('slide_category', '=', slide_category)]
+                domain &= Domain('slide_category', '=', slide_category)
                 pager_url += "?slide_category=%s" % slide_category
 
         # sorting criterion
@@ -1312,8 +1311,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/category/search_read'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def slide_category_search_read(self, fields, domain):
-        category_slide_domain = domain if domain else []
-        category_slide_domain = expression.AND([category_slide_domain, [('is_category', '=', True)]])
+        category_slide_domain = Domain(domain or Domain.TRUE) & Domain('is_category', '=', True)
         can_create = request.env['slide.slide'].has_access('create')
         return {
             'read_results': request.env['slide.slide'].search_read(category_slide_domain, fields),

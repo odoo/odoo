@@ -7,7 +7,6 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 
@@ -211,9 +210,9 @@ class ProductTemplate(models.Model):
         return variant_dict
 
     def _get_website_accessory_product(self):
-        domain = self.env['website'].sale_product_domain()
+        domain = Domain(self.env['website'].sale_product_domain())
         if not self.env.user._is_internal():
-            domain = expression.AND([domain, [('is_published', '=', True)]])
+            domain &= Domain('is_published', '=', True)
         return self.accessory_product_ids.filtered_domain(domain)
 
     def _get_website_alternative_product(self):

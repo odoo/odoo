@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
@@ -15,8 +14,8 @@ import operator
 import pytz
 
 from odoo import http, fields, tools, _
+from odoo.fields import Domain
 from odoo.http import content_disposition, request
-from odoo.osv import expression
 from odoo.tools import is_html_empty, plaintext2html
 from odoo.tools.misc import babel_locale_parse
 
@@ -45,7 +44,7 @@ class EventTrackController(http.Controller):
         unpublished tracks from the search results."""
         search_domain_base = self._get_event_tracks_agenda_domain(event)
         if not request.env.user.has_group('event.group_event_registration_desk'):
-            search_domain_base = expression.AND([
+            search_domain_base = Domain.AND([
                 search_domain_base,
                 [('is_published', '=', True)]
             ])
@@ -96,7 +95,7 @@ class EventTrackController(http.Controller):
 
         # search on content
         if searches.get('search'):
-            search_domain = expression.AND([
+            search_domain = Domain.AND([
                 search_domain,
                 ['|', ('name', 'ilike', searches['search']), ('partner_name', 'ilike', searches['search'])]
             ])
@@ -117,7 +116,7 @@ class EventTrackController(http.Controller):
                 [('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])]
                 for group in grouped_tags
             ]
-            search_domain = expression.AND([
+            search_domain = Domain.AND([
                 search_domain,
                 *search_domain_items
             ])
@@ -216,7 +215,7 @@ class EventTrackController(http.Controller):
         local_tz = pytz.timezone(event.date_tz or 'UTC')
         lang_code = request.env.context.get('lang')
 
-        base_track_domain = expression.AND([
+        base_track_domain = Domain.AND([
             self._get_event_tracks_agenda_domain(event),
             [('date', '!=', False)]
         ])

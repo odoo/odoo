@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class WebsiteVisitor(models.Model):
@@ -45,8 +44,7 @@ class WebsiteVisitor(models.Model):
 
     def _inactive_visitors_domain(self):
         """ Visitors tied to leads are considered always active and should not be deleted. """
-        domain = super()._inactive_visitors_domain()
-        return expression.AND([domain, [('lead_ids', '=', False)]])
+        return super()._inactive_visitors_domain() & Domain('lead_ids', '=', False)
 
     def _merge_visitor(self, target):
         """ Link the leads to the main visitor to avoid them being lost. """

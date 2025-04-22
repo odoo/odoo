@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
@@ -11,7 +10,7 @@ from pytz import utc, timezone
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.misc import get_lang, format_date
 
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
@@ -131,20 +130,20 @@ class EventEvent(models.Model):
         if self.env.user._is_public() and not current_visitor:
             return self.env['event.event']
 
-        base_domain = [('state', 'in', ['open', 'done'])]
+        base_domain = Domain('state', 'in', ['open', 'done'])
         if self:
-            base_domain = expression.AND([[('event_id', 'in', self.ids)], base_domain])
+            base_domain = Domain('event_id', 'in', self.ids) & base_domain
 
-        visitor_domain = []
+        visitor_domain = Domain.TRUE
         partner_id = self.env.user.partner_id
         if current_visitor:
-            visitor_domain = [('visitor_id', '=', current_visitor.id)]
+            visitor_domain = Domain('visitor_id', '=', current_visitor.id)
             partner_id = current_visitor.partner_id
         if partner_id:
-            visitor_domain = expression.OR([visitor_domain, [('partner_id', '=', partner_id.id)]])
+            visitor_domain |= Domain('partner_id', '=', partner_id.id)
 
         registrations_events = self.env['event.registration'].sudo()._read_group(
-            expression.AND([visitor_domain, base_domain]),
+            visitor_domain & base_domain,
             ['event_id'], ['__count'])
         return self.env['event.event'].browse([event.id for event, _reg_count in registrations_events])
 

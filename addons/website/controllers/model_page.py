@@ -2,8 +2,8 @@ import ast
 
 import werkzeug
 
+from odoo.fields import Domain
 from odoo.http import Controller, request, route
-from odoo.osv.expression import AND, OR
 
 
 class ModelPageController(Controller):
@@ -20,11 +20,7 @@ class ModelPageController(Controller):
 
         website = request.website
 
-        website_page_domain = AND([
-            [("name_slugified", "=", page_name_slugified)],
-            website.website_domain(),
-        ])
-
+        website_page_domain = Domain("name_slugified", "=", page_name_slugified) & website.website_domain()
         page = request.env["website.controller.page"].search(website_page_domain, limit=1)
         if not page or\
             (not page.website_published and not request.env.user.has_group('website.group_website_designer')):
@@ -51,7 +47,7 @@ class ModelPageController(Controller):
 
         if record_slug:
             _, res_id = request.env['ir.http']._unslug(record_slug)
-            record = Model.browse(res_id).filtered_domain(AND(domains))
+            record = Model.browse(res_id).filtered_domain(Domain.AND(domains))
             # We check for slug matching because we are not entirely sure
             # that we end up seeing record for the right model
             # i.e. in case of a redirect when a "single" page doesn't match the listing
@@ -85,10 +81,10 @@ class ModelPageController(Controller):
             if "seo_name" in Model._fields:
                 search_fnames.add("seo_name")
             if search_fnames:
-                name_domain = OR([[(name_field, "ilike", searches["search"])] for name_field in search_fnames])
+                name_domain = Domain.OR([[(name_field, "ilike", searches["search"])] for name_field in search_fnames])
                 domains.append(name_domain)
 
-        search_count = Model.search_count(AND(domains))
+        search_count = Model.search_count(Domain.AND(domains))
         pager = website.pager(
             url=f"/model/{page.name_slugified}",
             url_args=searches,
@@ -98,7 +94,7 @@ class ModelPageController(Controller):
             scope=5,
         )
 
-        records = Model.search(AND(domains), limit=self.pager_step, offset=self.pager_step * (page_number - 1), order=searches["order"])
+        records = Model.search(Domain.AND(domains), limit=self.pager_step, offset=self.pager_step * (page_number - 1), order=searches["order"])
 
         render_context = {
             "order_by": searches["order"],
