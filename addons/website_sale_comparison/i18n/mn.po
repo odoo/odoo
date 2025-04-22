@@ -1,27 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_comparison
-#
+# 
 # Translators:
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2022
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
-# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
-# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2022
-# baaska sh <sh.baaskash@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2024
+# baaska sh <sh.baaskash@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
-"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_comparison
@@ -53,7 +53,7 @@ msgstr ""
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<i class=\"fa fa-shopping-cart me-2\"/>Add to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart me-2\"/>Сагсанд нэмэх"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
@@ -63,7 +63,7 @@ msgstr "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
 msgid "<span class=\"fa fa-exchange me-2\"/>Compare"
-msgstr ""
+msgstr "<span class=\"fa fa-exchange me-2\"/>Харьцуулах"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
@@ -74,7 +74,7 @@ msgstr ""
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
-msgstr "Үнэ"
+msgstr "<strong>Үнэ:</strong>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -84,18 +84,18 @@ msgstr ""
 #. module: website_sale_comparison
 #: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_1
 msgid "Apple"
-msgstr ""
+msgstr "Алим"
 
 #. module: website_sale_comparison
 #: model:ir.actions.act_window,name:website_sale_comparison.product_attribute_category_action
 #: model:ir.ui.menu,name:website_sale_comparison.menu_attribute_category_action
 msgid "Attribute Categories"
-msgstr ""
+msgstr "Шинж чанарын ангилал"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "Bottom of Page"
-msgstr ""
+msgstr "Хуудасны доод хэсэг"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__name
@@ -126,7 +126,7 @@ msgstr "Бидэнтэй холбогдох"
 #. module: website_sale_comparison
 #: model_terms:ir.actions.act_window,help:website_sale_comparison.product_attribute_category_action
 msgid "Create a new attribute category"
-msgstr ""
+msgstr "Шинж чанарын ангилал үүсгэх"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_uid
@@ -165,11 +165,18 @@ msgid ""
 "Group attributes by category that will appear in the specification\n"
 "                part of a product page."
 msgstr ""
+"Шинж чанарын ангилалаар бүлэглэлт хийх нь барааны тухай онцгой, өвөрмөц "
+"хуудас харуулахад тусална."
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
 msgid "ID"
 msgstr "ID"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "In accordion"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
@@ -187,6 +194,12 @@ msgid "None"
 msgstr "Байхгүй"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr "Бусад"
+
+#. module: website_sale_comparison
 #. odoo-javascript
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 msgid "Product"
@@ -201,7 +214,7 @@ msgstr "Барааны шинж"
 #: model:ir.model,name:website_sale_comparison.model_product_attribute_category
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attribute_category_tree_view
 msgid "Product Attribute Category"
-msgstr ""
+msgstr "Барааны шинж чанарын ангилал"
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
@@ -222,7 +235,7 @@ msgstr "Барааны зураг"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__attribute_ids
 msgid "Related Attributes"
-msgstr ""
+msgstr "Холбоотой шинж чанар"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
@@ -244,20 +257,20 @@ msgstr ""
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Shop Comparator"
-msgstr ""
+msgstr "Онлайн барааны харьцуулалт"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "Specification"
-msgstr ""
+msgstr "Тодорхойлолт"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "Дэлгэрэнгүй тодорхойлолт"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "Ангилагдаагүй"
@@ -277,14 +290,9 @@ msgstr "Жин"
 #. odoo-javascript
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 msgid "You can compare max 4 products."
-msgstr ""
+msgstr "Хамгийн ихдээ 4 хүртэлх барааг харьцуулах боломжтой."
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "eCommerce Category"
 msgstr ""
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "эсвэл"
