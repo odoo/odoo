@@ -87,7 +87,7 @@ class DiscussChannel(models.Model):
             "livechat_operator_id",
         ]
         if self.env.user._is_internal():
-            fields.append(Store.One("livechat_channel_id", ["name"]))
+            fields.append(Store.One("livechat_channel_id", ["name"], sudo=True))
         return super()._to_store_defaults(for_current_user=for_current_user) + fields
 
     def _to_store(self, store: Store, fields):
