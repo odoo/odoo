@@ -349,7 +349,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(f'/website/force/{website_default.id}?{url_params}', "generic_website_editor", login="website_user")
         self.start_tour(f'/website/force/{new_website.id}?{url_params}', "specific_website_editor", login="website_user")
 
-    @unittest.skip
     def test_06_public_user_editor(self):
         website_default = self.env['website'].search([], limit=1)
         self.env['website.page'].search([
