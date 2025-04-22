@@ -766,7 +766,7 @@ export function addDiscount(discount) {
 
 export function setTimeZone(testTimeZone) {
     return {
-        content: "Set test time zone to a non UTC time zone",
+        content: `Set test time zone to ${testTimeZone}`,
         trigger: "body",
         run: function () {
             luxon.Settings.defaultZone = testTimeZone;
