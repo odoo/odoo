@@ -10,10 +10,7 @@ export class BomOverviewLine extends Component {
         showOptions: {
             type: Object,
             shape: {
-                availabilities: Boolean,
-                costs: Boolean,
-                operations: Boolean,
-                leadTimes: Boolean,
+                mode: String,
                 uom: Boolean,
                 attachments: Boolean,
             },
@@ -115,7 +112,7 @@ export class BomOverviewLine extends Component {
     }
 
     get hasQuantity() {
-        return this.data.hasOwnProperty('quantity_available') && this.data.quantity_available !== false;
+        return this.data.is_storable && this.data.hasOwnProperty('quantity_available') && this.data.quantity_available !== false;
     }
 
     get hasLeadTime() {
@@ -130,16 +127,8 @@ export class BomOverviewLine extends Component {
         return this.data.level - (this.hasFoldButton ? 1 : 0);
     }
 
-    get showAvailabilities() {
-        return this.props.showOptions.availabilities;
-    }
-
-    get showCosts() {
-        return this.props.showOptions.costs;
-    }
-
-    get showLeadTimes() {
-        return this.props.showOptions.leadTimes;
+    get forecastMode() {
+        return this.props.showOptions.mode == "forecast";
     }
 
     get showUom() {
@@ -178,5 +167,12 @@ export class BomOverviewLine extends Component {
             case "product.template":
                 return "action_product_tmpl_forecast_report";
         }
+    }
+
+    get statusBackgroundClass() {
+        if(this.data.index == "0") {
+            return "text-bg-info";
+        }
+        return "text-bg-danger";
     }
 }

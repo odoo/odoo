@@ -20,11 +20,6 @@ export class BomOverviewExtraBlock extends Component {
         precision: Number,
         changeFolded: Function,
     };
-    static defaultProps = {
-        showAvailabilities: false,
-        showCosts: false,
-        extraColumnCount: 0,
-    };
 
     setup() {
         this.state = useState({
