@@ -183,7 +183,7 @@ class ResUsers(models.Model):
         return write_res
 
     def action_archive(self):
-        activities_to_delete = self.env['mail.activity'].search([('user_id', 'in', self.ids)])
+        activities_to_delete = self.env['mail.activity'].sudo().search([('user_id', 'in', self.ids)])
         activities_to_delete.unlink()
         return super().action_archive()
 
