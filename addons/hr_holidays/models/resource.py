@@ -173,3 +173,9 @@ class ResourceCalendar(models.Model):
         global_leave_count = result.get('global', 0)
         for calendar in self:
             calendar.associated_leaves_count = result.get(calendar.id, 0) + global_leave_count
+
+
+class ResourceResource(models.Model):
+    _inherit = "resource.resource"
+
+    leave_date_to = fields.Date(related="user_id.leave_date_to")

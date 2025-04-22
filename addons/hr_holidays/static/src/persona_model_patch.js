@@ -5,25 +5,32 @@ import { patch } from "@web/core/utils/patch";
 
 const { DateTime } = luxon;
 
+export function getOutOfOfficeDateEndText(datetime) {
+    const foptions = { ...DateTime.DATE_MED };
+    const dt = deserializeDateTime(datetime);
+    if (dt.year === DateTime.now().year) {
+        foptions.year = undefined;
+    }
+    const fdate = dt.toLocaleString(foptions);
+    return _t("Back on %(date)s", { date: fdate });
+}
+
 patch(Persona.prototype, {
     updateImStatus(newStatus) {
-        if (newStatus == "online" && this.out_of_office_date_end) {
+        if (newStatus == "online" && this.leave_date_to) {
             this.im_status = "leave_online";
-        } else if (newStatus == "offline" && this.out_of_office_date_end) {
+        } else if (newStatus == "offline" && this.leave_date_to) {
             this.im_status = "leave_offline";
-        } else if (newStatus == "away" && this.out_of_office_date_end) {
+        } else if (newStatus == "away" && this.leave_date_to) {
             this.im_status = "leave_away";
         } else {
             return super.updateImStatus(...arguments);
         }
     },
-
-    get outOfOfficeText() {
-        if (!this.out_of_office_date_end) {
+    get outOfOfficeDateEndText() {
+        if (!this.leave_date_to) {
             return "";
         }
-        const date = deserializeDateTime(this.out_of_office_date_end);
-        const fdate = date.toLocaleString(DateTime.DATE_MED);
-        return _t("Back on %s", fdate);
+        return getOutOfOfficeDateEndText(this.leave_date_to);
     },
 });
