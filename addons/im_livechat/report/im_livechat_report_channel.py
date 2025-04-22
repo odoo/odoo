@@ -19,7 +19,19 @@ class Im_LivechatReportChannel(models.Model):
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', readonly=True)
     start_date = fields.Datetime('Start Date of session', readonly=True)
     start_hour = fields.Char('Start Hour of session', readonly=True)
-    day_number = fields.Char('Day Number', readonly=True, help="1 is Monday, 7 is Sunday")
+    day_number = fields.Selection(
+        selection=[
+            ("0", "Sunday"),
+            ("1", "Monday"),
+            ("2", "Tuesday"),
+            ("3", "Wednesday"),
+            ("4", "Thursday"),
+            ("5", "Friday"),
+            ("6", "Saturday"),
+        ],
+        string="Day of the Week",
+        readonly=True,
+    )
     time_to_answer = fields.Float('Time to answer (sec)', digits=(16, 2), readonly=True, aggregator="avg", help="Average time in seconds to give the first answer to the visitor")
     start_date_hour = fields.Char('Hour of start Date of session', readonly=True)
     duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
@@ -104,7 +116,7 @@ class Im_LivechatReportChannel(models.Model):
                 channel_member_history.visitor_partner_id AS visitor_partner_id,
                 to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                 to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
-                EXTRACT(dow from  C.create_date) as day_number,
+                EXTRACT(dow from C.create_date)::text AS day_number,
                 EXTRACT('epoch' FROM MAX(message_vals.last_message_dt) - c.create_date)/60 AS duration,
                 CASE
                     WHEN channel_member_history.has_agent AND channel_member_history.has_bot THEN
