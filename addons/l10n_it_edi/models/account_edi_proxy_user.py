@@ -28,3 +28,13 @@ class AccountEdiProxyClientUser(models.Model):
                 raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
             return company.partner_id._l10n_it_edi_normalized_codice_fiscale()
         return super()._get_proxy_identification(company, proxy_type)
+
+    def _get_proxy_identification_aliases(self, company, proxy_type):
+        # EXTENDS account_edi_proxy_client
+        aliases = super()._get_proxy_identification_aliases(company, proxy_type) or {}
+        if proxy_type == 'l10n_it_edi':
+            if company.l10n_it_codice_fiscale:
+                aliases['l10n_it_codice_fiscale'] = company.l10n_it_codice_fiscale
+            if company.vat:
+                aliases['vat'] = company.vat.replace(' ', '').upper()
+        return aliases or False

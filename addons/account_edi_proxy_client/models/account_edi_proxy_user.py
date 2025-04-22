@@ -101,6 +101,13 @@ class AccountEdiProxyClientUser(models.Model):
         '''
         return False
 
+    def _get_proxy_identification_aliases(self, company, proxy_type):
+        '''Returns the dict that contains alternative IDs key that will identify company uniquely
+        within a specific proxy type and edi operating mode.
+        TO OVERRIDE
+        '''
+        return False
+
     def _make_request(self, url, params=False):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
         '''
@@ -164,6 +171,7 @@ class AccountEdiProxyClientUser(models.Model):
             name=f"{proxy_type}_{edi_mode}_{company.id}.key",
         )
         edi_identification = self._get_proxy_identification(company, proxy_type)
+        edi_identification_aliases = self._get_proxy_identification_aliases(company, proxy_type)
         if edi_mode == 'demo':
             # simulate registration
             response = {'id_client': f'demo{company.id}{proxy_type}', 'refresh_token': 'demo'}
@@ -174,6 +182,7 @@ class AccountEdiProxyClientUser(models.Model):
                     'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
                     'company_id': company.id,
                     'edi_identification': edi_identification,
+                    'edi_identification_aliases': edi_identification_aliases,
                     'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
                     'proxy_type': proxy_type,
                 })
