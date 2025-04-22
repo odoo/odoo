@@ -44,10 +44,6 @@ export class PaymentPage extends Component {
         );
     }
 
-    get backgroundImage() {
-        return this.selfOrder.kioskBackgroundImage;
-    }
-
     // this function will be override by pos_online_payment_self_order module
     // in mobile is the only available payment method
     async startPayment() {
