@@ -45,7 +45,12 @@
             </div>
             <span class="ms-auto">
                 <span t-if="member.in(props.thread.invited_member_ids)" class="p-1 fa fa-user-plus opacity-75"/>
-                <span t-if="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>
+                <span t-if="member.rtcSession?.is_screen_sharing_on" class="user-select-none fw-bolder text-danger d-flex align-items-center">
+                    <small title="live" aria-label="live">
+                        LIVE
+                    </small>
+                </span>
+                <span t-elif="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>
                 <span t-elif="member.rtcSession?.is_deaf" class="p-1 fa fa-deaf opacity-75"/>
                 <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
             </span>

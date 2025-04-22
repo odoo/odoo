@@ -22,6 +22,7 @@ export class CallParticipantCard extends Component {
         "inset?",
         "isSidebarItem?",
         "compact?",
+        "overlay?",
     ];
     static components = { CallParticipantVideo };
     static template = "discuss.CallParticipantCard";

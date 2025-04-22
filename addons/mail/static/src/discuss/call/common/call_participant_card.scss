@@ -3,11 +3,28 @@
     aspect-ratio: 16/9;
 
     &.o-isTalking {
-        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
-        outline-offset: -4px;
 
-        &.o-inset {
-            box-shadow: inset 0 0 0 map-get($spacers, 1)/2 var(--discuss-talkingColor, $o-discuss-talkingColor);
+        &.o-minimized {
+            .o-discuss-CallParticipantCard-avatar img {
+                outline: 3px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+                outline-offset: -3px;
+        
+                &.o-callCollapsed, &.o-compact {
+                    outline: 2px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+                    outline-offset: -2px;
+                }
+            }
+        }
+
+        &:not(.o-minimized) {
+            outline: 3px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+            outline-offset: -3px;
+    
+            &.o-inset, &.o-compact {
+                outline: 2px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+                outline-offset: -2px;
+                box-shadow: inset 0 0 0 map-get($spacers, 1)/2 var(--discuss-talkingColor, $o-discuss-talkingColor);
+            }
         }
     }
 
@@ -61,29 +78,27 @@
     max-height: #{"min(100%, 100px)"}; // interpolated as not supported by Sass
     max-width: #{"min(100%, 100px)"};
     aspect-ratio: 1;
-    border: none;
-
-    &.o-isTalking {
-        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
-        outline-offset: -4px;
-    }
+    border-color: rgba(255, 255, 255, 0.25) !important;
 
     &.o-isInvitation:not(:hover) {
         animation: o-discuss-CallParticipantCard-avatarImag_borderPulse 3s linear infinite;
+        outline: 3px solid;
+        outline-offset: - 3px;
     }
 
     &.o-isInvitation:hover {
-        border: solid map-get($theme-colors, 'danger');
+        outline-color: map-get($theme-colors, 'danger');
     }
 }
 
 @keyframes o-discuss-CallParticipantCard-avatarImag_borderPulse {
-    0% { border: solid white }
-    20% { border: solid $gray-600 }
-    35% { border: solid $gray-100 }
-    50% { border: solid $gray-600 }
-    70% { border: solid $gray-100 }
-    85% { border: solid $gray-700 }
+    0% { outline-color: $white }
+    20% { outline-color: $gray-600 }
+    35% { outline-color: $gray-100 }
+    50% { outline-color: $gray-600 }
+    70% { outline-color: $gray-100 }
+    85% { outline-color: $gray-700 }
+    100% { outline-color: $white }
 }
 
 .o-discuss-CallParticipantCard-iconBlackBg {
@@ -101,14 +116,14 @@
             &.o-video-text {
                 font-size: 5cqw;
             }
-            &.o-discuss-CallParticipantCard-overlayBottomName {
+            &.o-discuss-CallParticipantCard-overlayCardName {
                 font-size: #{"min(0.8rem, 40cqw)"};
             }
         }
     }
 }
 
-.o-discuss-CallParticipantCard-overlayBottomName {
+.o-discuss-CallParticipantCard-overlayCardName {
     background-color: rgba(0, 0, 0, 0.75);
 }
 
