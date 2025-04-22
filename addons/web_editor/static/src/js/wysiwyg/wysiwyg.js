@@ -2449,6 +2449,33 @@ export class Wysiwyg extends Component {
             },
         }
     }
+    /**
+     * Retrieves an array of banner command objects, each representing a specific
+     * type of banner (info, success, warning, danger) that can be inserted.
+     * Each banner command contains detail such as the label, type, icon,
+     * description, and priority.
+     *
+     * @returns {Array}
+     */
+    _getBannerCommands() {
+        return [
+            this._getBannerCommand(_t("Banner Info"), "info", "fa-info-circle", _t("Insert an info banner"), 24),
+            this._getBannerCommand(_t("Banner Success"), "success", "fa-check-circle", _t("Insert a success banner"), 23),
+            this._getBannerCommand(_t("Banner Warning"), "warning", "fa-exclamation-triangle", _t("Insert a warning banner"), 22),
+            this._getBannerCommand(_t("Banner Danger"), "danger", "fa-exclamation-circle", _t("Insert a danger banner"), 21)
+        ];
+    }
+    /**
+     * Returns an array containing a banner category object with a
+     * name and priority value.
+     *
+     * @returns {Array}
+     */
+    _getBannerCategory() {
+        return [
+            { name: _t("Banners"), priority: 65 }
+        ];
+    }
     _insertSnippetMenu() {
         return this.snippetsMenu.insertBefore(this.$el);
     }
@@ -2494,12 +2521,9 @@ export class Wysiwyg extends Component {
     }
     _getPowerboxOptions() {
         const editorOptions = this.options;
-        const categories = [{ name: _t('Banners'), priority: 65 },];
+        const categories = [...this._getBannerCategory()];
         const commands = [
-            this._getBannerCommand(_t('Banner Info'), 'info', 'fa-info-circle', _t('Insert an info banner'), 24),
-            this._getBannerCommand(_t('Banner Success'), 'success', 'fa-check-circle', _t('Insert a success banner'), 23),
-            this._getBannerCommand(_t('Banner Warning'), 'warning', 'fa-exclamation-triangle', _t('Insert a warning banner'), 22),
-            this._getBannerCommand(_t('Banner Danger'), 'danger', 'fa-exclamation-circle', _t('Insert a danger banner'), 21),
+            ...this._getBannerCommands(),
             {
                 category: _t('Structure'),
                 name: _t('Quote'),

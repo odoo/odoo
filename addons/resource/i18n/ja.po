@@ -32,7 +32,7 @@ msgstr "%s (コピー)"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr "<span class=\"o_stat_text\">休暇</span>"
+msgstr "<span class=\"o_stat_text\">休止</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -250,7 +250,7 @@ msgstr "リソースカレンダを表示する際のこの行の付番を示し
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
 msgid "Global Time Off"
-msgstr "全体休暇"
+msgstr "全体休止時間"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -282,7 +282,7 @@ msgstr "ID"
 msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
-msgstr "空の場合、会社の一般的な休暇となります。リソースが設定されている場合、そのリソースのみの休暇となります。"
+msgstr "空欄の場合は、会社全体に適用される汎用的な休止時間となります。リソースが設定されている場合は、そのリソースのみに適用されます。"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -409,17 +409,17 @@ msgstr "リソースMixin"
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Time Off"
-msgstr "休暇"
+msgstr "リソースの休止"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "リソース休暇の詳細"
+msgstr "リソースの休止詳細"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Working Time"
-msgstr "リソース作業時間"
+msgstr "リソース稼働時間"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
@@ -439,7 +439,7 @@ msgstr "リソース"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr "休暇"
+msgstr "リソースの休止"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -464,12 +464,12 @@ msgstr "リソースの検索"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr "勤務期間休暇を検索"
+msgstr "稼働期間中の休止時間を検索"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
-msgstr "作業時間の検索"
+msgstr "稼働時間の検索"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
@@ -522,7 +522,7 @@ msgstr "開始日"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Time Off"
-msgstr "休暇の開始日"
+msgstr "休止の開始日"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -564,7 +564,7 @@ msgstr "休暇の開始日は終了日より前にして下さい。"
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
-msgstr "このフィールドは、その人材が勤務するタイムゾーンを定義するために、用いられます。"
+msgstr "このフィールドは、そのリソースが稼働するタイムゾーンを定義するために、用いられます。"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
@@ -607,13 +607,13 @@ msgstr "木曜 午前"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
 msgid "Time Off"
-msgstr "休暇"
+msgstr "休止"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Time Off Detail"
-msgstr "休暇詳細"
+msgstr "休止詳細"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -712,7 +712,7 @@ msgstr "週番号"
 msgid ""
 "Whether this should be computed as a time off or as work time (eg: "
 "formation)"
-msgstr "これを休日として計算するか、勤務時間として計算するか(例:研修)"
+msgstr "これは「休止時間」として計算すべきか、それとも「勤務時間」として計算すべきか(例：研修など)を指定します。"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -735,7 +735,7 @@ msgstr "作業終了時間"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Working Hours"
-msgstr "労働時間"
+msgstr "勤務時間"
 
 #. module: resource
 #. odoo-python
@@ -760,7 +760,7 @@ msgstr "勤務スケジュール"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Time"
-msgstr "作業時間"
+msgstr "勤務時間"
 
 #. module: resource
 #. odoo-python

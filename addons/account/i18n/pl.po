@@ -16,9 +16,9 @@
 # Interactive AV-IT, 2024
 # Quinten Pluymaekers, 2024
 # Janusz Harkot <jh@trilab.pl>, 2024
-# Marta Wacławek, 2025
 # Wil Odoo, 2025
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5812,6 +5812,7 @@ msgstr "Kwota rabatu w walucie"
 #, python-format
 msgid "Discount of %(amount)s if paid %(when)s"
 msgstr ""
+"Zniżka w wysokości %(amount)s jeśli opłata zostanie uiszczona %(when)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -15228,7 +15229,7 @@ msgstr "Bieżący kwartał"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This specific error occurred during the import:"
-msgstr ""
+msgstr "Ten konkretny błąd wystąpił podczas importu:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
@@ -16516,6 +16517,10 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
+"Rachunki od dostawców mogą być wstępnie generowane na podstawie\n"
+"                zamówień lub paragonów. Pozwala to kontrolować rachunki\n"
+"                otrzymywane od dostawcy zgodnie z wersją roboczą\n"
+"                dokumentu w Odoo."
 
 #. module: account
 #. odoo-javascript
@@ -17220,7 +17225,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot deprecate an account that is used in a tax distribution."
-msgstr ""
+msgstr "Nie możesz wycofać konta, które jest używane w dystrybucji podatku."
 
 #. module: account
 #. odoo-python
@@ -17477,7 +17482,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a document which has been posted once."
-msgstr ""
+msgstr "Nie możesz przełączyć typu dokumentu, który był już raz opublikowany."
 
 #. module: account
 #. odoo-python
@@ -18102,7 +18107,7 @@ msgstr "z pdf-em faktury jako załącznikiem."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "within %(days)s days"
-msgstr ""
+msgstr "w przeciągu %(days)s dni"
 
 #. module: account
 #. odoo-python
@@ -18162,5 +18167,5 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
 "}})"
 msgstr ""
-"{{ object.company_id.name }} Pokwitowanie zapłaty (Ref {{ object.name lub "
+"{{ object.company_id.name }} Pokwitowanie zapłaty (Ref {{ object.name or "
 "'n/a' }})"

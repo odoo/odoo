@@ -487,6 +487,13 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
         this._super(...arguments);
         this.$target.off('.gallery');
     },
+    /**
+     * @override
+     */
+    onRemove() {
+        this.isBeingRemoved = true;
+        this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -589,7 +596,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
      */
     notify(name, data) {
         this._super(...arguments);
-        if (name === 'image_removed') {
+        if (name === 'image_removed' && !this.isBeingRemoved) {
             data.$image.remove(); // Force the removal of the image before reset
             this.trigger_up('snippet_edition_request', {exec: () => {
                 return this._relayout();

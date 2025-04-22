@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 11:26+0000\n"
+"POT-Creation-Date: 2025-03-03 11:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -9485,6 +9485,12 @@ msgid ""
 "- Follow-up Address: Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Contacte: utilitza-ho per organitzar la informació de contacte dels empleats d'una empresa determinada (p. ex.: CEO i CFO.).\n"
+"- Adreça de la factura: adreça preferida per a totes les factures. Se selecciona per defecte quan factures una comanda que pertany a aquesta empresa.\n"
+"- Adreça de lliurament: adreça preferida per a tots els lliuraments. Se selecciona per defecte quan factures una comanda que pertany a aquesta empresa.\n"
+"- Privat: les adreces privades només són visibles pels usuaris autoritzats i contenen dades confidencials (adreces del domicili dels empleats, per exemple).\n"
+"- Adreça de seguiment: adreça preferida per als informes de seguiment. Se selecciona per defecte quan envies recordatoris sobre factures vençudes o pendents.\n"
+"- Altres: altres adreces de l'empresa (p. ex.: filial)"
 
 #. module: base
 #. odoo-python
@@ -9697,6 +9703,8 @@ msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is"
 " a void recordset"
 msgstr ""
+"<code>model</code>: model del registre en el qual s'activa l'acció; és un "
+"conjunt de registres buit"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -33813,6 +33821,13 @@ msgid ""
 "This module allows Accounting Firms to connect to CodaBox\n"
 "and automatically import CODA and SODA statements for their clients in Odoo.\n"
 "The connection must be done by the Accounting Firm.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_online_payment
+msgid ""
+"This module allows customers to pay their invoices online using various "
+"payment methods."
 msgstr ""
 
 #. module: base
