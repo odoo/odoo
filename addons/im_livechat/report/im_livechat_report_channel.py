@@ -38,6 +38,10 @@ class Im_LivechatReportChannel(models.Model):
     handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
     handled_by_agent = fields.Integer("Handled by Agent", readonly=True, aggregator="sum")
     visitor_partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
+    call_duration_hour = fields.Float("Average call duration", digits=(16, 2), readonly=True, aggregator="avg")
+    has_call = fields.Float("Whether the session had a call", readonly=True)
+    number_of_calls = fields.Float("# of Sessions with calls", readonly=True, related="has_call", aggregator="sum")
+    percentage_of_calls = fields.Float("Session with Calls (%)", readonly=True, related="has_call", aggregator="avg")
     session_outcome = fields.Selection(
         selection=[
             ("no_answer", "Never Answered"),
@@ -150,8 +154,16 @@ class Im_LivechatReportChannel(models.Model):
                 END as is_unrated,
                 C.livechat_operator_id as partner_id,
                 CASE WHEN channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_agent,
-                CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot
-            """,
+                CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot,
+                CASE WHEN BOOL_OR(discuss_call_history.channel_id IS NOT NULL) THEN 1 ELSE 0 END AS has_call,
+                SUM(
+                    CASE
+                        WHEN discuss_call_history.end_dt IS NOT NULL
+                        THEN EXTRACT(EPOCH FROM discuss_call_history.end_dt - discuss_call_history.start_dt) / 3600
+                        ELSE NULL
+                    END
+                ) AS call_duration_hour
+                """,
         )
 
     def _from(self) -> SQL:
@@ -160,6 +172,7 @@ class Im_LivechatReportChannel(models.Model):
             FROM discuss_channel C
             JOIN message_vals ON message_vals.channel_id = c.id
        LEFT JOIN channel_member_history ON channel_member_history.channel_id = c.id
+       LEFT JOIN discuss_call_history ON discuss_call_history.channel_id = C.id
        LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
             """,
         )

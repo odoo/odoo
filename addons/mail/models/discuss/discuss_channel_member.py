@@ -3,8 +3,8 @@
 import logging
 import requests
 import uuid
-from markupsafe import Markup
 from datetime import timedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
@@ -319,9 +319,6 @@ class DiscussChannelMember(models.Model):
                 },
             )
         if len(self.channel_id.rtc_session_ids) == 1:
-            body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
-            message = self.channel_id.message_post(body=body, message_type="notification")
-            self.channel_id.last_call_message_id = message
             if self.channel_id.channel_type != "channel":
                 self._rtc_invite_members()
 
@@ -388,13 +385,6 @@ class DiscussChannelMember(models.Model):
             self.rtc_session_ids.unlink()
         else:
             self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
-        if not self.channel_id.rtc_session_ids and self.channel_id.last_call_message_id:
-            # deducing information about the end of call through write_date
-            self.channel_id._message_update_content(
-                self.channel_id.last_call_message_id,
-                self.channel_id.last_call_message_id.body,
-                strict=False
-            )
 
     def _rtc_sync_sessions(self, check_rtc_session_ids=None):
         """Synchronize the RTC sessions for self channel member.

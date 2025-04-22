@@ -7,11 +7,14 @@
             <field name="model">im_livechat.report.channel</field>
             <field name="arch" type="xml">
                 <pivot string="Livechat Support Statistics" sample="1">
+                    <field name="has_call" type="measure" invisible="1"/>
+                    <field name="call_duration_hour" type="measure" widget="float_time"/>
                     <field name="partner_id" type="row"/>
+                    <field name="percentage_of_calls" type="measure" widget="percentage"/>
                     <field name="nbr_channel" type="measure"/>
                     <field name="time_to_answer" type="measure"/>
                     <field name="duration" type="measure"/>
-                    <field name="rating" type="measure"/>
+                    <field name="rating" string="Rating (%)" type="measure" widget="im_livechat.rating_percentage"/>
                 </pivot>
             </field>
         </record>
@@ -50,6 +53,9 @@
             <field name="model">im_livechat.report.channel</field>
             <field name="arch" type="xml">
                 <graph string="Livechat Support Statistics" stacked="1" sample="1">
+                    <field name="call_duration_hour" type="measure" widget="float_time"/>
+                    <field name="has_call" invisible="1"/>
+                    <field name="percentage_of_calls" type="measure" widget="percentage"/>
                     <field name="start_date" interval="day"/>
                     <field name="rating_text"/>
                 </graph>
