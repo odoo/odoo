@@ -28,12 +28,4 @@ export class EatingLocationPage extends Component {
     get presets() {
         return this.selfOrder.models["pos.preset"].getAll();
     }
-
-    get backgroundImage() {
-        const bgImage = this.selfOrder.config._self_ordering_image_background_ids[0];
-        if (bgImage) {
-            return `url(data:image/png;base64,${bgImage.data})`;
-        }
-        return "none";
-    }
 }

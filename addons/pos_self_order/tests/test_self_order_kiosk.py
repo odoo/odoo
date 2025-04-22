@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import random
+
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
@@ -208,3 +211,69 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, 'test_self_order_pricelist')
+
+    def test_self_order_kiosk_ordering_images_public(self):
+        def assert_all_image_public():
+            self.assertTrue(all(img.public for img in self.pos_config.self_ordering_image_home_ids))
+            self.assertTrue(all(img.public for img in self.pos_config.self_ordering_image_background_ids))
+
+        def create_fake_attachment():
+            return self.env["ir.attachment"].create(
+                {
+                    "name": f"test_{random.randint(1000, 9999)}",
+                    "datas": base64.b64encode(b"test"),
+                },
+            )
+
+        assert_all_image_public()
+
+        for field in ["self_ordering_image_home_ids", "self_ordering_image_background_ids"]:
+            # SET
+            new_att = create_fake_attachment()
+            self.pos_config.write({field: [Command.set([new_att.id])]})
+            self.assertEqual(len(self.pos_config[field]), 1)
+            assert_all_image_public()
+
+            # LINK
+            new_att = create_fake_attachment()
+            self.pos_config.write({field: [Command.link(new_att.id)]})
+            self.assertEqual(len(self.pos_config[field]), 2)
+            assert_all_image_public()
+
+            # CREATE
+            self.pos_config.write(
+                {
+                    field: [
+                        Command.create(
+                            {
+                                "name": f"test_{field}",
+                                "datas": base64.b64encode(b"test"),
+                            },
+                        ),
+                    ],
+                },
+            )
+            self.assertEqual(len(self.pos_config[field]), 3)
+            assert_all_image_public()
+
+    def test_self_order_kiosk_ordering_images_clear(self):
+        self.assertEqual(len(self.pos_config.self_ordering_image_home_ids), 3)
+        self.assertEqual(len(self.pos_config.self_ordering_image_background_ids), 1)
+
+        self.pos_config.write(
+            {
+                "self_ordering_image_home_ids": [Command.clear()],
+                "self_ordering_image_background_ids": [Command.clear()],
+            }
+        )
+        self.pos_config.write(
+            {
+                "self_ordering_mode": "kiosk",
+                "self_ordering_image_home_ids": [],
+                "self_ordering_image_background_ids": [],
+            }
+        )
+        # Default home images are automatically assigned when all images are removed
+        self.assertEqual(len(self.pos_config.self_ordering_image_home_ids), 3)
+        # Background images can be fully cleared
+        self.assertEqual(len(self.pos_config.self_ordering_image_background_ids), 0)
