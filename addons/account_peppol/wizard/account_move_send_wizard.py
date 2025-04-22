@@ -1,12 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 class AccountMoveSendWizard(models.TransientModel):
     _inherit = 'account.move.send.wizard'
 
+    peppol_attachments_widget = fields.Json(
+        compute='_compute_peppol_attachments_widget',
+        store=True,
+        readonly=False,
+    )
+    display_peppol_attachments_widget = fields.Boolean(compute='_compute_display_peppol_attachments_widget')
+
     # -------------------------------------------------------------------------
-    # DEFAULTS
+    # COMPUTES
     # -------------------------------------------------------------------------
 
     def _compute_sending_method_checkboxes(self):
@@ -57,6 +64,27 @@ class AccountMoveSendWizard(models.TransientModel):
                 wizard.invoice_edi_format = wizard.move_id.partner_id._get_peppol_edi_format()
             elif wizard.invoice_edi_format != self._get_default_invoice_edi_format(wizard.move_id) and wizard.sending_methods and 'peppol' not in wizard.sending_methods:
                 wizard.invoice_edi_format = None  # back to initial state if user unchecked 'by Peppol'
+
+    @api.depends('move_id', 'extra_edis')
+    def _compute_peppol_attachments_widget(self):
+        for wizard in self:
+            wizard.peppol_attachments_widget = self._get_placeholder_mail_attachments_data(wizard.move_id, extra_edis=wizard.extra_edis or {})
+
+    @api.depends('sending_methods')
+    def _compute_display_peppol_attachments_widget(self):
+        for wizard in self:
+            wizard.display_peppol_attachments_widget = (
+                'peppol' in wizard.sending_methods
+                and 'email' not in wizard.sending_methods
+                and wizard.invoice_edi_format != 'facturx'  # this feature doesn't word for CII, only UBL
+            )
+
+    def _get_sending_settings(self):
+        # EXTENDS 'account' - add peppol attachments
+        settings = super()._get_sending_settings()
+        if self.sending_methods and 'email' not in self.sending_methods and 'peppol' in self.sending_methods:
+            settings['peppol_attachments_widget'] = self.peppol_attachments_widget
+        return settings
 
     def action_send_and_print(self, allow_fallback_pdf=False):
         # EXTENDS 'account'

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="account_move_send_wizard_form_inherit_account_peppol" model="ir.ui.view">
+        <field name="name">account.move.send.wizard.form.inherit.account_peppol</field>
+        <field name="model">account.move.send.wizard</field>
+        <field name="inherit_id" ref="account.account_move_send_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='mail_div']" position="after">
+                <field name="peppol_attachments_widget"
+                       widget="mail_attachments"
+                       invisible="not display_peppol_attachments_widget"/>
+            </xpath>
+            <xpath expr="//field[@name='mail_attachments_widget' and @widget='mail_attachments_selector']" position="after">
+                <field name="peppol_attachments_widget"
+                       widget="mail_attachments_selector"
+                       help="Documents will be attached within the electronic file."
+                       invisible="not display_peppol_attachments_widget"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

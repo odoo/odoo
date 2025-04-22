@@ -196,6 +196,14 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
         return vals_list
 
+    def _get_document_type_code_vals(self, invoice, invoice_data):
+        # EXTENDS 'account_edi_ubl_cii
+        vals = super()._get_document_type_code_vals(invoice, invoice_data)
+        # Code "130" MUST be used to indicate an invoice object reference. Not used for other additional documents
+        # We only use this function on the invoice object.
+        vals['value'] = '130'
+        return vals
+
     def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
         # EXTENDS account.edi.xml.ubl_21
         vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)

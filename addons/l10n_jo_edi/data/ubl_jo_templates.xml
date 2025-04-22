@@ -7,12 +7,6 @@
                 t-out="billing_reference_vals.get('document_description')"/>
         </xpath>
 
-        <xpath expr="//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']" position="after">
-            <cbc:UUID
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                t-out="foreach_vals['uuid']"/>
-        </xpath>
-
         <xpath expr="//*[local-name()='AccountingCustomerParty']" position="inside">
             <cac:AccountingContact
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"

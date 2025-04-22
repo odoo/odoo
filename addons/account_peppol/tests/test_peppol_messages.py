@@ -1,9 +1,11 @@
 import json
 from base64 import b64encode
 from contextlib import contextmanager
+from lxml import etree
 from requests import Session, PreparedRequest, Response
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
@@ -180,6 +182,57 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         response.json = lambda: responses[url]
         return response
 
+    def _assertAdditionalAttachmentsFileNames(self, invoice, filenames: list):
+        nodes = etree.fromstring(invoice.ubl_cii_xml_id.raw).findall('.//{*}AdditionalDocumentReference')
+        self.assertEqual(len(nodes), len(filenames))
+        ids = [node.find('.//{*}ID').text for node in nodes]
+        self.assertEqual(sorted(ids), sorted(filenames))
+
+    def _get_attachments_values(self, move):
+        move_pdf_filename = move._get_invoice_report_filename()
+        # Attachment 1 - the invoice PDF
+        pdf_report_values = {
+            'mimetype': 'application/pdf',
+            'name': move_pdf_filename,
+            'placeholder': True,
+        }
+        # Attachment 2 - the extra attachment in the mail template (static)
+        mail_template = self.env['account.move.send']._get_default_mail_template_id(move)
+        extra_attachment = self.env['ir.attachment'].create({'name': "extra_attachment", 'raw': b'bar'})
+        mail_template.attachment_ids = [Command.set(extra_attachment.ids)]
+        extra_attachment_values = {
+            'mimetype': 'text/plain',
+            'name': 'extra_attachment',
+            'placeholder': False,
+            'mail_template_id': mail_template.id,
+        }
+        # Attachment 3 - another attachment to the mail template (dynamic)
+        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill')
+        mail_template.report_template_ids += extra_dynamic_report
+        extra_dynamic_report_values = {
+            'dynamic_report': 'account.report_original_vendor_bill',
+            'mimetype': 'application/pdf',
+            'name': 'original bills_INV_2023_00001.pdf',
+            'placeholder': True,
+        }
+        # Attachment 4 - a manually added attachment
+        manual_attachment, manual_attachment_values = self._create_manual_attachment()
+        # Attachment 5 - an einvoice format
+        self.valid_partner.invoice_edi_format = 'ubl_bis3'
+        bis_3_attachment_values = {
+            'mimetype': 'application/xml',
+            'name': 'INV_2023_00001_ubl_bis3.xml',
+            'placeholder': True,
+        }
+        return {
+            'pdf_values': pdf_report_values,
+            'extra_values': extra_attachment_values,
+            'dynamic_values': extra_dynamic_report_values,
+            'bis3_values': bis_3_attachment_values,
+            'manual_values': manual_attachment_values,
+            'manual_attachment': manual_attachment,
+        }
+
     def test_attachment_placeholders(self):
         move = self.create_move(self.valid_partner)
         move.action_post()
@@ -188,7 +241,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
 
         # the ubl xml placeholder should be generated
-        self._assert_mail_attachments_widget(wizard, [
+        self._assert_attachments_widget(wizard, [
             {
                 'mimetype': 'application/pdf',
                 'name': 'INV_2023_00001.pdf',
@@ -427,3 +480,68 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertFalse('facturx' in self.valid_partner.available_peppol_edi_formats)
         self.valid_partner.invoice_sending_method = 'email'
         self.assertTrue('facturx' in self.valid_partner.available_peppol_edi_formats)
+
+    def test_send_xml_with_attachments_only_email(self):
+        # Case 1: Only email is selected, the PDF, the manual attachments and mail attachments are added to the XML.
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+        vals = self._get_attachments_values(move)
+
+        wizard_email = self.create_send_and_print(move, sending_methods=['email'])
+        wizard_email.mail_attachments_widget += [vals['manual_values']]
+        self._assert_attachments_widget(wizard_email, [
+            vals['pdf_values'],
+            vals['bis3_values'],
+            vals['dynamic_values'],
+            vals['extra_values'],
+            vals['manual_values'],
+        ], field_name='mail_attachments_widget')
+        wizard_email.action_send_and_print()
+        self._assertAdditionalAttachmentsFileNames(move, [
+            vals['pdf_values']['name'],  # the PDF is attached
+            vals['dynamic_values']['name'],  # the dynamic report from mail template is attached
+            vals['extra_values']['name'],  # the static report from mail template is attached
+            vals['manual_values']['name'],  # the manual file is attached
+        ])
+
+    def test_send_xml_with_attachments_email_and_peppol(self):
+        # Case 2: Email + Peppol are selected, the PDF, the manual attachments and mail attachments are added to the XML.
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+        vals = self._get_attachments_values(move)
+
+        wizard_both = self.create_send_and_print(move, sending_methods=['peppol', 'email'])
+        wizard_both.mail_attachments_widget += [vals['manual_values']]
+        self._assert_attachments_widget(wizard_both, [
+            vals['pdf_values'],
+            vals['bis3_values'],
+            vals['dynamic_values'],
+            vals['extra_values'],
+            vals['manual_values'],
+        ], field_name='mail_attachments_widget')
+        wizard_both.action_send_and_print()
+        self._assertAdditionalAttachmentsFileNames(move, [
+            vals['pdf_values']['name'],
+            vals['dynamic_values']['name'],
+            vals['extra_values']['name'],
+            vals['manual_values']['name'],
+        ])
+
+    def test_send_xml_with_attachments_only_peppol(self):
+        # Case 3: Only Peppol is selected, only the PDF and manual attachments should be embedded (nothing related to mail template !)
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+        vals = self._get_attachments_values(move)
+
+        wizard_peppol = self.create_send_and_print(move, sending_methods=['peppol'])
+        wizard_peppol.peppol_attachments_widget += [vals['manual_values']]
+        self._assert_attachments_widget(wizard_peppol, [
+            vals['pdf_values'],
+            vals['bis3_values'],  # we display the BIS3 that will be generated for Peppol
+            vals['manual_values'],
+        ], field_name='peppol_attachments_widget')
+        wizard_peppol.action_send_and_print()
+        self._assertAdditionalAttachmentsFileNames(move, [
+            vals['pdf_values']['name'],
+            vals['manual_values']['name'],
+        ])
