@@ -10,6 +10,12 @@
                     <field name="group_l10n_in_reseller"/>
                 </setting>
             </block>
+            <xpath expr="//block[@name='fiscal_localization_setting_container']" position="before">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_in_fiscal_country_warning">
+                    <span>The Fiscal Localization does not match the Fiscal Country, so it's recommended to</span>
+                    <button class="oe_link p-0 ms-1" type="object" name="action_l10n_in_update_fiscal_country">update it</button>
+                </div>
+            </xpath>
             <xpath expr="//block[@name='fiscal_localization_setting_container']" position="after">
                 <div id="india_integration_section">
                     <block title="Indian Integration" id="india_localization" invisible="country_code != 'IN'">

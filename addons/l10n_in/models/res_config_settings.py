@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.sql import column_exists, create_column
 from odoo.tools import SQL
@@ -62,6 +62,21 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_in_reports = fields.Boolean("GST E-Filing & Matching")
     module_l10n_in_edi = fields.Boolean("Indian Electronic Invoicing")
     module_l10n_in_ewaybill = fields.Boolean("Indian Electronic Waybill")
+
+    l10n_in_fiscal_country_warning = fields.Boolean(compute='_compute_l10n_in_fiscal_country_warning')
+
+    @api.depends('account_fiscal_country_id')
+    def _compute_l10n_in_fiscal_country_warning(self):
+        for config in self:
+            config.l10n_in_fiscal_country_warning = config.chart_template == 'in' and config.account_fiscal_country_id.code != 'IN'
+
+    def action_l10n_in_update_fiscal_country(self):
+        self.ensure_one()
+        self.account_fiscal_country_id = (
+            # Update country to India
+            self.env.ref('base.in', raise_if_not_found=False)
+            or self.env['res.country'].search([('code', '=', 'IN')], limit=1)
+        )
 
     def set_values(self):
         super().set_values()
