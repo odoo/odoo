@@ -48,6 +48,7 @@ class Im_LivechatReportChannel(models.Model):
         string="Session Outcome",
         readonly=True,
     )
+    chatbot_script_id = fields.Many2one("chatbot.script", "Chatbot", readonly=True)
 
     def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
@@ -91,7 +92,8 @@ class Im_LivechatReportChannel(models.Model):
                 SELECT channel_id,
                        BOOL_OR(livechat_member_type = 'agent') as has_agent,
                        BOOL_OR(livechat_member_type = 'bot') as has_bot,
-                       MIN(CASE WHEN livechat_member_type = 'visitor' THEN partner_id END) AS visitor_partner_id
+                       MIN(CASE WHEN livechat_member_type = 'visitor' THEN partner_id END) AS visitor_partner_id,
+                       MIN(CASE WHEN chatbot_script_id IS NOT NULL THEN chatbot_script_id END) AS chatbot_script_id
                   FROM im_livechat_channel_member_history
               GROUP BY channel_id
             )
@@ -150,7 +152,8 @@ class Im_LivechatReportChannel(models.Model):
                 END as is_unrated,
                 C.livechat_operator_id as partner_id,
                 CASE WHEN channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_agent,
-                CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot
+                CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot,
+                CASE WHEN channel_member_history.chatbot_script_id IS NOT NULL AND NOT channel_member_history.has_agent THEN channel_member_history.chatbot_script_id ELSE NULL END AS chatbot_script_id
             """,
         )
 
@@ -180,6 +183,7 @@ class Im_LivechatReportChannel(models.Model):
                 Rate.rating,
                 channel_member_history.has_bot,
                 channel_member_history.has_agent,
-                channel_member_history.visitor_partner_id
+                channel_member_history.visitor_partner_id,
+                channel_member_history.chatbot_script_id
             """,
         )

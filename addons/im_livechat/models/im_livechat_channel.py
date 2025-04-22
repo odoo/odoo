@@ -231,6 +231,7 @@ class Im_LivechatChannel(models.Model):
             Command.create(
                 {
                     "livechat_member_type": "agent" if user_operator else "bot",
+                    "chatbot_script_id": chatbot_script.id if not user_operator else False,
                     "partner_id": operator_partner_id,
                     "unpin_dt": fields.Datetime.now(),
                 }

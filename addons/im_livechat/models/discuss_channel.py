@@ -334,7 +334,10 @@ class DiscussChannel(models.Model):
         )
 
     def _get_allowed_channel_member_create_params(self):
-        return super()._get_allowed_channel_member_create_params() + ["livechat_member_type"]
+        return super()._get_allowed_channel_member_create_params() + [
+            "chatbot_script_id",
+            "livechat_member_type",
+        ]
 
     def _types_allowing_seen_infos(self):
         return super()._types_allowing_seen_infos() + ["livechat"]
