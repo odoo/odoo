@@ -143,6 +143,7 @@ class ProductTemplate(models.Model):
             for tax in taxes:
                 taxes_by_company[tax.company_id.id].add(tax.id)
 
+        archived_combinations = self._get_archived_combinations_per_product_tmpl_id([p['id'] for p in products])
         different_currency = config_id.currency_id != self.env.company.currency_id
         for product in products:
             if different_currency:
@@ -152,9 +153,14 @@ class ProductTemplate(models.Model):
             if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
                 product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
 
-            product['_archived_combinations'] = []
-            for product_product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', '=', product['id']), ('active', '=', False)]):
-                product['_archived_combinations'].append(product_product.product_template_attribute_value_ids.ids)
+            product['_archived_combinations'] = archived_combinations.get(product['id'], [])
+
+    def _get_archived_combinations_per_product_tmpl_id(self, product_tmpl_ids):
+        archived_combinations = {}
+        for product_tmpl in self.env['product.template'].search([('id', 'in', product_tmpl_ids)]):
+            attribute_exclusions = product_tmpl._get_attribute_exclusions()
+            archived_combinations[product_tmpl.id] = attribute_exclusions['archived_combinations']
+        return archived_combinations
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_session(self):

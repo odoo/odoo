@@ -2065,6 +2065,102 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_quantity_package_of_non_basic_unit', login="pos_user")
 
+    def test_archive_variants_attributes(self):
+        """Test archiving of variants when an attribute is removed, and verify
+        the behavior in the POS UI product configurator.
+
+        The test validates two main scenarios:
+        1. Variants used in orders remain in DB when their attribute is removed
+        2. In the UI configurator (see PosProductWithRemovedAttribute tour):
+           - Selecting active variants shows no warning
+           - Selecting archived variants shows a warning banner
+        """
+
+        # Create 3 attributes with 2 values each
+        attributes = self.env['product.attribute'].create([{
+            'name': f'Attribute {i}',
+            'create_variant': 'always',
+            'value_ids': [
+                (0, 0, {'name': f'Value {i}-A'}),
+                (0, 0, {'name': f'Value {i}-B'})
+            ],
+        } for i in range(1, 4)])
+
+        # Create product template with these attributes
+        # This will create 8 variants (2^3 combinations)
+        template = self.env['product.template'].create({
+            'name': 'One Attribute Removed Product',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)]
+            }) for attribute in attributes],
+            'available_in_pos': True,
+        })
+
+        # Get two variants that differ in the first attribute's value
+        # These will be used to test proper archiving after attribute removal
+        variants = template.product_variant_ids
+        variant1 = variants.filtered(lambda v: any(
+            ptav.attribute_id == attributes[0] and ptav.product_attribute_value_id == attributes[0].value_ids[0]
+            for ptav in v.product_template_attribute_value_ids
+        ))[0]
+        variant2 = variants.filtered(lambda v: any(
+            ptav.attribute_id == attributes[0] and ptav.product_attribute_value_id == attributes[0].value_ids[1]
+            for ptav in v.product_template_attribute_value_ids
+        ))[0]
+
+        # Create a POS order using both variants to ensure they can't be deleted
+        self.main_pos_config.open_ui()
+        self.env['pos.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'amount_tax': 0,
+            'amount_total': 1,
+            'amount_paid': 1,
+            "amount_return": 0,
+            'lines': [
+                (0, 0, {
+                    'product_id': variant1.id,
+                    'price_unit': variant1.lst_price,
+                    'qty': 1,
+                    'discount': 0.0,
+                    'tax_ids': False,
+                    'price_subtotal': variant1.lst_price,
+                    'price_subtotal_incl': variant1.lst_price,
+                }),
+                (0, 0, {
+                    'product_id': variant2.id,
+                    'price_unit': variant2.lst_price,
+                    'qty': 1,
+                    'discount': 0.0,
+                    'tax_ids': False,
+                    'price_subtotal': variant1.lst_price,
+                    'price_subtotal_incl': variant1.lst_price,
+                })
+            ]
+        })
+
+        # Store variant ids for later checking
+        variant_ids = [variant1.id, variant2.id]
+
+        # Remove first attribute - this should archive variants that differ only by this attribute
+        template.attribute_line_ids.filtered(lambda l: l.attribute_id == attributes[0]).unlink()
+
+        # Archive a specific variant to test UI warning in the product configurator
+        # This variant has Value 2-B and Value 3-B (see tour steps)
+        variant_to_archive = template.product_variant_ids.filtered(
+            lambda v: any(ptav.product_attribute_value_id == attributes[1].value_ids[1] for ptav in v.product_template_attribute_value_ids)
+                      and any(ptav.product_attribute_value_id == attributes[2].value_ids[1] for ptav in v.product_template_attribute_value_ids)
+        )
+        variant_to_archive.write({'active': False})
+
+        # Verify variants from order still exist but are archived
+        archived_variants = self.env['product.product'].with_context(active_test=False).browse(variant_ids)
+        self.assertTrue(archived_variants.exists(), "Variants used in sale order should still exist")
+        self.assertTrue(all(not active for active in archived_variants.mapped('active')), "Variants used in sale order should be archived")
+
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosProductWithRemovedAttribute', login="pos_admin")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
