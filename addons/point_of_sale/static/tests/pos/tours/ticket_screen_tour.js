@@ -289,30 +289,44 @@ registry.category("web_tour.tours").add("LotTour", {
 });
 
 registry.category("web_tour.tours").add("OrderTimeTour", {
-    steps: () =>
-        [
-            ProductScreen.setTimeZone("Asia/Tokyo"),
+    steps: () => {
+        const validateDateStep = {
+            content: "Validate order date is Today",
+            trigger: ".orders .order-row:first .fw-bolder",
+            run: function ({ anchor: displayedDateElement }) {
+                if (displayedDateElement.textContent.trim() !== "Today") {
+                    throw new Error("Order date does not match local timezone");
+                }
+            },
+        };
+
+        const validateTimeStep = {
+            content: "Validate order time matches local timezone",
+            trigger: ".orders .order-row:first .small.text-muted",
+            run: function ({ anchor: displayedTimeElement }) {
+                const orderDateUTC = window.posmodel.getOrder().date_order;
+                const orderDateTime = luxon.DateTime.fromSQL(orderDateUTC, {
+                    zone: "UTC",
+                }).toLocal();
+                if (orderDateTime.toFormat("HH:mm") !== displayedTimeElement.textContent.trim()) {
+                    throw new Error("Order time does not match local timezone");
+                }
+            },
+        };
+
+        return [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-
             ProductScreen.clickDisplayedProduct("Desk Pad"),
-
+            ProductScreen.setTimeZone("Pacific/Honolulu"),
             Chrome.clickOrders(),
-            {
-                content: "Validate order time matches local timezone",
-                trigger: ".orders .order-row:first .small.text-muted",
-                run: function ({ anchor: displayedTimeElement }) {
-                    const displayedTimeText = displayedTimeElement.textContent.trim();
-                    const currentOrder = window.posmodel.getOrder();
-                    const orderDateUTC = currentOrder.date_order;
-                    const orderDateTime = luxon.DateTime.fromSQL(orderDateUTC, {
-                        zone: "UTC",
-                    }).toLocal();
-                    const convertedOrderTime = orderDateTime.toFormat("HH:mm");
-                    if (convertedOrderTime !== displayedTimeText) {
-                        throw new Error("Order time does not match local timezone");
-                    }
-                },
-            },
-        ].flat(),
+            validateDateStep,
+            validateTimeStep,
+            ProductScreen.setTimeZone("Europe/Brussels"),
+            Chrome.clickRegister(),
+            Chrome.clickOrders(),
+            validateDateStep,
+            validateTimeStep,
+        ].flat();
+    },
 });
