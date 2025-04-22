@@ -9,6 +9,8 @@ const {
     getComboChartDatasets,
     CHART_COMMON_OPTIONS,
     getChartLayout,
+    getEvaluatedChartTitle,
+    getEvaluatedAxesDesign,
     getBarChartScales,
     getBarChartTooltip,
     getChartTitle,
@@ -67,11 +69,16 @@ function createOdooChartRuntime(chart, getters) {
             : getTrendDatasetForBarChart(trend, dataset.data);
     });
 
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+    const evaluatedAxesDesign = getEvaluatedAxesDesign(getters, definition.axesDesign);
+
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
         locale: getters.getLocale(),
         trendDataSetsValues,
+        evaluatedChartTitle,
+        evaluatedAxesDesign,
     };
 
     const config = {
@@ -85,7 +92,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition, chartData),
             scales: getBarChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition),
+                title: getChartTitle(definition, chartData),
                 legend: getComboChartLegend(definition, chartData),
                 tooltip: getBarChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
