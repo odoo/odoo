@@ -2083,6 +2083,41 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("properties: discard changes", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            }
+        }
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+            <form>
+                <field name="company_id"/>
+                <field name="properties" widget="properties"/>
+            </form>`,
+            mockRPC,
+            actionMenus: {},
+        });
+        assert.strictEqual(
+            target.querySelector(".o_property_field:first-child input").value,
+            "char value",
+        );
+        await editInput(target, ".o_property_field:first-child input", "char updated");
+        assert.strictEqual(
+            target.querySelector(".o_property_field:first-child input").value,
+            "char updated",
+        );
+        await clickDiscard(target);
+        assert.strictEqual(
+            target.querySelector(".o_property_field:first-child input").value,
+            "char value",
+        );
+    });
+
     // ---------------------------------------------------
     // Test the properties groups
     // ---------------------------------------------------
