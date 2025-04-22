@@ -1,10 +1,3 @@
-"""
-Test for the pseudo-form implementation (odoo.tests.Form), which should
-basically be a server-side implementation of form views (though probably not
-complete) intended for properly validating business "view" flows (onchanges,
-readonly, required, ...) and make it easier to generate sensible & coherent
-business objects.
-"""
 from operator import itemgetter
 
 from lxml import etree
@@ -15,7 +8,19 @@ from odoo.tests import Form, TransactionCase
 
 class TestFormFields(TransactionCase):
     def test_form_load(self):
-        pass
+        form = Form(self.env['test_testing_utilities.form_load'])
+
+        self.assertEqual(form.id, False)
+
+        form.field = 42
+
+        with self.assertRaises(AssertionError):
+            form.record
+
+        record = form.save()
+
+        self.assertEqual(record.field, 42)
+        self.assertEqual(form.record, record)
 
     def test_form_field_with_default(self):
         form = Form(self.env['test_testing_utilities.form_default'])
@@ -44,8 +49,7 @@ class TestFormFields(TransactionCase):
 
         self.assertEqual(form.field_compute, 0)
 
-        form.field_trigger_compute_01 = 84
-        form.field_trigger_compute_02 = 2
+        form.field_trigger_compute = 84
 
         self.assertEqual(form.field_compute, 42)
 
@@ -57,24 +61,33 @@ class TestFormFields(TransactionCase):
         form = Form(self.env['test_testing_utilities.form_required'])
 
         self.assertEqual(form.field_required, False)
-        self.assertEqual(form.field_not_required, False)
 
         with self.assertRaises(AssertionError):
-            # Can not save with the empty required field.
             form.save()
 
         form.field_required = '42'
 
         self.assertEqual(form.field_required, '42')
-        self.assertEqual(form.field_not_required, False)
 
-        # Can save with the empty non-required field.
         record = form.save()
 
-        self.assertEqual((record.field_required, record.field_not_required), ('42', False))
+        self.assertEqual(record.field_required, '42')
 
     def test_form_field_with_required_from_xml(self):
-        pass
+        form = Form(self.env['test_testing_utilities.form_required_xml'], view='test_testing_utilities.required')
+
+        self.assertEqual(form.field_required, False)
+
+        with self.assertRaises(AssertionError):
+            form.save()
+
+        form.field_required = '42'
+
+        self.assertEqual(form.field_required, '42')
+
+        record = form.save()
+
+        self.assertEqual(record.field_required, '42')
 
     def test_form_boolean_with_required(self):
         form = Form(self.env['test_testing_utilities.form_required_boolean'])

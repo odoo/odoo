@@ -3,6 +3,13 @@ from itertools import zip_longest
 from odoo import Command, api, fields, models
 
 
+class TestTestingUtilitiesFormLoad(models.Model):
+    _name = 'test_testing_utilities.form_load'
+    _description = 'Testing Utilities Form Load'
+
+    field = fields.Integer()
+
+
 class TestTestingUtilitiesFormDefault(models.Model):
     _name = 'test_testing_utilities.form_default'
     _description = 'Testing Utilities Form Default'
@@ -15,8 +22,13 @@ class TestTestingUtilitiesFormRequired(models.Model):
     _description = 'Testing Utilities Form Required'
 
     field_required = fields.Char(required=True)
-    field_required_boolean = fields.Boolean(required=True)
-    field_not_required = fields.Char()
+
+
+class TestTestingUtilitiesFormRequiredXml(models.Model):
+    _name = 'test_testing_utilities.form_required_xml'
+    _description = 'Testing Utilities Form Required XML'
+
+    field_required = fields.Char()
 
 
 class TestTestingUtilitiesFormRequiredBoolean(models.Model):
@@ -43,13 +55,12 @@ class TestTestingUtilitiesFormCompute(models.Model):
     _description = 'Testing Utilities Form Compute'
 
     field_compute = fields.Integer(compute='_compute_field_compute')
-    field_trigger_compute_01 = fields.Integer()
-    field_trigger_compute_02 = fields.Integer()
+    field_trigger_compute = fields.Integer()
 
-    @api.depends('field_trigger_compute_01', 'field_trigger_compute_02')
+    @api.depends('field_trigger_compute')
     def _compute_field_compute(self):
         for record in self:
-            record.field_compute = record.field_trigger_compute_01 / (int(record.field_trigger_compute_02) or 1)
+            record.field_compute = record.field_trigger_compute / 2
 
 
 class TestTestingUtilitiesFormReadonly(models.Model):
