@@ -512,6 +512,7 @@ export class LinkPlugin extends Plugin {
             onClose: () => {
                 this.linkInDocument = null;
                 this.overlay.close();
+                this.dependencies.selection.focusEditable();
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
