@@ -2,10 +2,13 @@
 
 import logging
 from urllib.parse import urlencode
-from uuid import uuid4
+from hashlib import sha256
+
+import requests
 
 from odoo import _, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.http import request
 from odoo.tools import float_round
 
 from odoo.addons.payment import utils as payment_utils
@@ -71,6 +74,7 @@ class PaymentTransaction(models.Model):
             'email': self.partner_email or '',
             'encoding': 'UTF-8',
             'first_name': first_name,
+            'isRebilling': '0',
             'item_amount_1': rounded_amount,
             'item_name_1': self.reference,
             'item_quantity_1': 1,
@@ -85,7 +89,7 @@ class PaymentTransaction(models.Model):
             ),
             'phone1': phone_number or '',
             'state': self.partner_state_id.code or '',
-            'user_token_id': uuid4(),  # Random string due to some PMs requiring it but not used.
+            'user_token_id': self.partner_id.id,  # Random string due to some PMs requiring it but not used. USE IT
             'time_stamp': self.create_date.strftime('%Y-%m-%d.%H:%M:%S'),
             'total_amount': rounded_amount,
             'version': '4.0.0',
@@ -169,6 +173,10 @@ class PaymentTransaction(models.Model):
             self._set_pending()
         elif status in const.PAYMENT_STATUS_MAPPING['done']:
             self._set_done()
+            token = notification_data.get('tokenId')
+            upi = notification_data.get('userPaymentOptionId')
+            t_id = notification_data.get('TransactionID')
+            self.tokenize(token, upi, t_id)
         elif status in const.PAYMENT_STATUS_MAPPING['error']:
             failure_reason = notification_data.get('Reason') or notification_data.get('message')
             self._set_error(_(
@@ -186,3 +194,91 @@ class PaymentTransaction(models.Model):
                 "Received invalid transaction status %(status)s and reason '%(reason)s'.",
                 status=status, reason=status_description
             ))
+
+    def tokenize(self, token, upi_id, transaction_id):
+        self.ensure_one()
+
+        token = self.env['payment.token'].create({
+            'provider_id': self.provider_id.id,
+            'payment_method_id': self.payment_method_id.id,
+            'payment_details': '1234',
+            'partner_id': self.partner_id.id,
+            'provider_ref': token,
+            'nuvei_upi_id': upi_id,
+            'ITID': transaction_id,
+        })
+        self.write({
+            'token_id': token,
+            'tokenize': False,
+        })
+
+    def _send_payment_request(self):
+        """ Override of payment to send a payment request to Adyen.
+
+        Note: self.ensure_one()
+
+        :return: None
+        :raise: UserError if the transaction is not linked to a token
+        """
+        super()._send_payment_request()
+        if self.provider_code != 'nuvei':
+            return
+
+        if not self.token_id:
+            raise UserError("Nuvei: " + _("The transaction is not linked to a token."))
+
+        time_stamp = self.create_date.strftime('%Y%m%d%H%M%S')
+        checksum = self.provider_id.nuvei_merchant_identifier + self.provider_id.nuvei_site_identifier + time_stamp + self.provider_id.nuvei_secret_key
+        checksum = sha256(checksum.encode('utf-8')).hexdigest()
+        data_token = {
+            'merchantId': self.provider_id.nuvei_merchant_identifier,
+            'merchantSiteId': self.provider_id.nuvei_site_identifier,
+            'timeStamp': time_stamp,
+            'checksum': checksum,
+        }
+
+        url = 'https://ppp-test.nuvei.com/ppp/api/v1/getSessionToken.do'
+
+        response = requests.post(url, json=data_token, timeout=10)
+        sessionToken = response.json()['sessionToken']
+        time_stamp2 = self.create_date.strftime('%Y%m%d%H%M%S')
+        checksum2 = (
+            self.provider_id.nuvei_merchant_identifier
+            + self.provider_id.nuvei_site_identifier
+            + str(self.amount)
+            + self.currency_id.name
+            + time_stamp2 +
+            self.provider_id.nuvei_secret_key
+        )
+        checksum2 = sha256(checksum2.encode('utf-8')).hexdigest()
+        first_name, last_name = payment_utils.split_partner_name(self.partner_name)
+        data_request = {
+            "sessionToken": sessionToken,
+            "merchantId": self.provider_id.nuvei_merchant_identifier,
+            "merchantSiteId": self.provider_id.nuvei_site_identifier,
+            "amount": self.amount,
+            "currency": self.currency_id.name,
+            "userTokenId": self.token_id.partner_id.id,
+            "timeStamp": time_stamp,
+            "checksum": checksum2,
+            'relatedTransactionId': self.token_id.ITID,
+            "paymentOption": {
+                "userPaymentOptionId": self.token_id.nuvei_upi_id,
+                "card": {
+                    "CVV": "123"
+                }
+            },
+            "billingAddress": {
+                "country": "US",
+                "email": "admin@example.com",
+                "firstName": first_name,
+                "lastName": last_name,
+            },
+            "deviceDetails": {
+                         "ipAddress": request.httprequest.remote_addr
+        },
+        }
+
+        url = 'https://ppp-test.nuvei.com/ppp/api/v1/payment.do'
+
+        response = requests.post(url, json=data_request, timeout=10)
