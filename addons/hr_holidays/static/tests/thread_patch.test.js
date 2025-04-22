@@ -11,7 +11,7 @@ test("out of office message on direct chat with out of office partner", async ()
     const partnerId = pyEnv["res.partner"].create({
         name: "Demo",
         im_status: "leave_online",
-        out_of_office_date_end: "2023-01-01",
+        leave_date_to: "2023-01-01",
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [

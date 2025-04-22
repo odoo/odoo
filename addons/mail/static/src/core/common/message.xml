@@ -3,7 +3,7 @@
 
     <t t-name="mail.Message">
         <ActionSwiper onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
-            <div class="o-mail-Message position-relative rounded-0"
+            <div class="o-mail-Message position-relative rounded-0 bg-inherit"
                 t-att-class="attClass"
                 role="group"
                 t-att-aria-label="messageTypeText"
@@ -13,9 +13,9 @@
                 t-ref="root"
                 t-if="message.exists()"
             >
-                <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
-                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0 justify-content-center" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
-                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view rounded-3" t-att-class="getAvatarContainerAttClass()">
+                <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit">
+                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0 justify-content-center bg-inherit" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
+                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="getAvatarContainerAttClass()">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>

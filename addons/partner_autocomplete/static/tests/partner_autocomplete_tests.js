@@ -100,6 +100,7 @@ QUnit.module('partner_autocomplete', {
                         comment: {string: "Comment", type: "char", searchable: true},
                         vat: {string: "Vat", type: "char", searchable: true},
                         is_company: {string: "Is company", type: "bool", searchable: true},
+                        leave_date_to: { string: "Out of office", type: "date" },
                     },
                     records: [],
                     onchanges: {

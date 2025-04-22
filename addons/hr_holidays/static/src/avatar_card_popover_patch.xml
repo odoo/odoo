@@ -4,7 +4,10 @@
         <xpath expr="//span[@name='icon']" position="inside">
             <i t-elif="user.im_status === 'leave_online'" class="fa fa-fw fa-plane text-success" title="Online" role="img" aria-label="User is online"/>
             <i t-elif="user.im_status === 'leave_away'" class="fa fa-fw fa-plane text-warning" title="Idle" role="img" aria-label="User is idle"/>
-            <i t-elif="user.im_status === 'leave_offline'" class="fa fa-fw fa-plane text-700" title="Out of office" role="img" aria-label="User is out of office"/>
+            <i t-elif="user.im_status === 'leave_offline'" class="fa fa-fw fa-plane text-500" title="Out of office" role="img" aria-label="User is out of office"/>
+        </xpath>
+        <xpath expr="//span[@t-esc='user.name']" position="after">
+            <span t-if="outOfOfficeDateEndText" class="text-warning me-1 small fw-bold" t-esc="outOfOfficeDateEndText"/>
         </xpath>
     </t>
 </templates>

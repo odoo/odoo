@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.Many2ManyTagsAvatarField.option" t-inherit-mode="extension">
+        <xpath expr="//span[@t-esc='autoCompleteItemScope.label']" position="after">
+            <span t-if="autoCompleteItemScope.outOfOffice" class="text-warning ms-1 small">
+                <i class="fa fa-plane" role="img"/> <t t-esc="autoCompleteItemScope.outOfOffice"/>
+            </span>
+        </xpath>
+    </t>
+
+    <t t-inherit="mail.Many2OneAvatarUserField" t-inherit-mode="extension">
+        <xpath expr="//t[@t-esc='autoCompleteItemScope.record.display_name']" position="after">
+            <span t-if="autoCompleteItemScope.outOfOffice" class="text-warning ms-1 small">
+                <i class="fa fa-plane" role="img"/> <t t-esc="autoCompleteItemScope.outOfOffice"/>
+            </span>
+        </xpath>
+    </t>
+</templates>
