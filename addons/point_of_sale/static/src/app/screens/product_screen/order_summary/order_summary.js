@@ -162,6 +162,9 @@ export class OrderSummary extends Component {
                     }
                 }
             } else if (numpadMode === "discount" && val !== "remove") {
+                if (selectedLine.combo_parent_id) {
+                    selectedLine = selectedLine.combo_parent_id;
+                }
                 this.pos.setDiscountFromUI(selectedLine, val);
             } else if (numpadMode === "price" && val !== "remove") {
                 this.setLinePrice(selectedLine, val);

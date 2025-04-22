@@ -538,6 +538,19 @@ export class PosOrderline extends Base {
         };
     }
 
+    computePriceWithTaxBeforeDiscount() {
+        return this.combo_line_ids.length > 0
+            ? // total of all combo lines if it is combo parent
+              formatCurrency(
+                  this.combo_line_ids.reduce(
+                      (total, cl) => total + cl.allPrices.priceWithTaxBeforeDiscount,
+                      0
+                  ),
+                  this.currency
+              )
+            : formatCurrency(this.allPrices.priceWithTaxBeforeDiscount, this.currency);
+    }
+
     get allPrices() {
         return this.getAllPrices();
     }
