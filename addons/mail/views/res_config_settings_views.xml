@@ -67,21 +67,24 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting help="Add your twilio credentials for ICE servers">
+                        <setting string="Custom ICE Server with Twilio"
+                                 help="Set up your own server for small group calls using peer-to-peer connections"
+                                 documentation="https://www.odoo.com/documentation/18.0/applications/productivity/discuss/ice_servers.html">
                             <field name="use_twilio_rtc_servers"/>
-                            <div class="content-group"  invisible="not use_twilio_rtc_servers">
+                            <div class="content-group" invisible="not use_twilio_rtc_servers">
                                 <div class="row mt16" id="mail_twilio_sid">
                                     <label for="twilio_account_sid" class="col-lg-3"/>
-                                    <field name="twilio_account_sid" placeholder="e.g. ACd5543a0b450ar4c7t95f1b6e8a39t543"/>
+                                    <field name="twilio_account_sid" string="Account SID" placeholder="e.g. ACd5543a0b450ar4c7t95f1b6e8a39t543"/>
                                 </div>
                                 <div class="row mt16" id="mail_twilio_auth_token">
                                     <label for="twilio_account_token" class="col-lg-3"/>
-                                    <field name="twilio_account_token" placeholder="e.g. 65ea4f9e948b693N5156F350256bd152"/>
+                                    <field name="twilio_account_token" string="Account Auth Token" placeholder="e.g. 65ea4f9e948b693N5156F350256bd152"/>
                                 </div>
                             </div>
                         </setting>
-                        <setting string="SFU server">
-                            <div class="content-group">
+                        <setting string="Custom SFU Server" help="Set up your own server for large group calls by routing connections centrally">
+                            <field name="use_sfu_server"/>
+                            <div class="content-group" invisible="not use_sfu_server">
                                 <div class="row mt16">
                                     <label for="sfu_server_url" string="URL" class="col-lg-3"/>
                                     <field name="sfu_server_url"/>
@@ -92,12 +95,11 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting string="Custom ICE server list" help="Configure your ICE server list for webRTC">
-                            <div class="content-group">
-                                <div class="row col-lg-4">
-                                    <button type="action" name="%(mail.action_ice_servers)d" string="ICE Servers" icon="oi-arrow-right" class="btn-link"/>
-                                </div>
-                            </div>
+                        <setting string="Custom ICE Servers" help="Use your own servers for calls to manage heavy traffic and ensure reliability if Twilio is unavailable"
+                                 documentation="https://www.odoo.com/documentation/18.0/applications/productivity/discuss/ice_servers.html#define-a-list-of-custom-ice-servers">
+                                 <div class="content-group">
+                                        <button type="action" name="%(mail.action_ice_servers)d" string="Configure ICE Servers" icon="oi-arrow-right" class="btn-link"/>
+                                 </div>
                         </setting>
                         <setting id="tenor_api_key" string="Tenor GIF API key" help="Add a Tenor GIF API key to enable GIFs support." documentation="https://developers.google.com/tenor/guides/quickstart#setup">
                             <field name="tenor_api_key" placeholder="Paste your API key"/>
