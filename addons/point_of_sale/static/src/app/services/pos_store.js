@@ -719,6 +719,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async setDiscountFromUI(line, val) {
+        for (const comboLine of line.combo_line_ids) {
+            comboLine.setDiscount(val);
+        }
         line.setDiscount(val);
     }
 

@@ -1512,6 +1512,20 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboChangePricelist', login="pos_user")
 
+    def test_product_combo_discount(self):
+        """
+        Verify that the combo product applies the correct discount and updates prices accordingly
+        """
+        setup_product_combo_items(self)
+        self.office_combo.write({'list_price': 100})
+        self.office_combo.combo_ids.combo_item_ids.product_id.taxes_id = False
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f"/pos/ui?config_id={self.main_pos_config.id}",
+            'ProductComboDiscountTour',
+            login="pos_user",
+        )
+
     def test_cash_rounding_payment(self):
         """Verify than an error popup is shown if the payment value is more precise than the rounding method"""
         rounding_method = self.env['account.cash.rounding'].create({
