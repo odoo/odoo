@@ -7,18 +7,16 @@ import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 
 test("Can replace an image", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [
-            {
-                id: 1,
-                name: "logo",
-                mimetype: "image/png",
-                image_src: "/web/static/img/logo2.png",
-                access_token: false,
-                public: true,
-            },
-        ];
-    });
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
     const env = await makeMockEnv();
     await setupEditor(`<p> <img class="img-fluid" src="/web/static/img/logo.png"> </p>`, { env });
     expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
@@ -36,18 +34,16 @@ test("Can replace an image", async () => {
 
 test.tags("focus required");
 test("Selection is collapsed after the image after replacing it", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [
-            {
-                id: 1,
-                name: "logo",
-                mimetype: "image/png",
-                image_src: "/web/static/img/logo2.png",
-                access_token: false,
-                public: true,
-            },
-        ];
-    });
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
     const env = await makeMockEnv();
     const { el } = await setupEditor(
         `<p>abc<img class="img-fluid" src="/web/static/img/logo.png">def</p>`,
@@ -65,18 +61,16 @@ test("Selection is collapsed after the image after replacing it", async () => {
 
 test.tags("focus required");
 test("Can insert an image, and selection should be collapsed after it", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [
-            {
-                id: 1,
-                name: "logo",
-                mimetype: "image/png",
-                image_src: "/web/static/img/logo2.png",
-                access_token: false,
-                public: true,
-            },
-        ];
-    });
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
     const env = await makeMockEnv();
     const { editor, el } = await setupEditor("<p>a[]bc</p>", { env });
     await insertText(editor, "/image");
@@ -91,9 +85,7 @@ test("Can insert an image, and selection should be collapsed after it", async ()
 });
 
 test("press escape to close media dialog", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [];
-    });
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => []);
     const env = await makeMockEnv();
     const { editor, el } = await setupEditor("<p>a[]bc</p>", { env });
     await insertText(editor, "/image");
