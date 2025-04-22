@@ -429,6 +429,44 @@ class TestActivityMixin(TestActivityCommon):
         self.assertEqual(activities.mapped('user_id'), active_users,
                          "We should have 3 different users linked to the activities of the active users")
 
+    def test_activity_mixin_archive_user_with_disabled_company(self):
+        """
+        Tests archiving a user with a disabled company to ensure that
+        the related activities are properly unlinked
+        """
+        user_admin = self.user_admin
+        user_employee_c2 = self.user_employee_c2
+        self.assertIn(self.company_2, user_admin.company_ids)
+
+        # Add record with multi company rule
+        record = self.env['mail.test.track'].create({
+            'company_id': self.company_3.id  # Ensure record deletion regardless of user's companies
+        })
+        record.env['ir.rule'].create({
+            'model_id': self.env.ref('test_mail.model_mail_test_track').id,
+            'domain_force': "[('company_id', 'in', company_ids)]"
+        })
+
+        # Assign one activity to the user with record
+        self.env['mail.activity'].create({
+            'activity_type_id': 1,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_track').id,
+            'res_id': record.id,
+            'user_id': user_employee_c2.id,
+        })
+        activities = self.env['mail.activity'].search([('user_id', '=', user_employee_c2.id)])
+        self.assertTrue(activities, "Activity should be created for the user.")
+
+        # Someone archives the user while company_2 is disabled in the context
+        user_employee_c2.with_user(user_admin).with_context(
+            allowed_company_ids=(user_admin.company_ids - self.company_2).ids
+        ).action_archive()
+        self.assertFalse(user_employee_c2.active, "User should be archived.")
+
+        # Ensure the user's activities are removed
+        activities = self.env['mail.activity'].search([('user_id', '=', user_employee_c2.id)])
+        self.assertFalse(activities, "Archived user's activities should be deleted.")
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_reschedule_user(self):
         rec = self.test_record.with_user(self.user_employee)
