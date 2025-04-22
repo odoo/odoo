@@ -73,7 +73,7 @@ odoo_dev() {
   sudo git config --global --add safe.directory /home/pi/odoo
   sudo git remote add dev https://github.com/odoo-dev/odoo.git
   sudo git fetch dev \$1 --depth=1 --prune
-  sudo git reset --hard dev/\$1
+  sudo git reset --hard FETCH_HEAD
   sudo chown -R odoo:odoo /home/pi/odoo
   cd \$pwd
 }
@@ -89,7 +89,7 @@ odoo_origin() {
   sudo git config --global --add safe.directory /home/pi/odoo
   sudo git remote set-url origin https://github.com/odoo/odoo.git  # ensure odoo repository
   sudo git fetch origin \$1 --depth=1 --prune
-  sudo git reset --hard origin/\$1
+  sudo git reset --hard FETCH_HEAD
   sudo chown -R odoo:odoo /home/pi/odoo
   cd \$pwd
 }
