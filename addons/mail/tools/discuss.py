@@ -37,19 +37,23 @@ def add_guest_to_context(func):
 
     return wrapper
 
-def get_twilio_credentials(env) -> (str, str):
+
+def get_twilio_credentials(env) -> tuple[str | None, str | None]:
     """
     To be overridable if we need to obtain credentials from another source.
-    :return: tuple(account_sid: str, auth_token: str)
+    :return: tuple(account_sid: str, auth_token: str) or (None, None) if Twilio is disabled
     """
     params = env["ir.config_parameter"].sudo()
+    if not params.get_param("mail.use_twilio_rtc_servers"):
+        return None, None
     account_sid = params.get_param("mail.twilio_account_sid")
     auth_token = params.get_param("mail.twilio_account_token")
     return account_sid, auth_token
 
 
 def get_sfu_url(env) -> str | None:
-    sfu_url = env['ir.config_parameter'].sudo().get_param("mail.sfu_server_url")
+    params = env["ir.config_parameter"].sudo()
+    sfu_url = params.get_param("mail.sfu_server_url") if params.get_param("mail.use_sfu_server") else None
     if not sfu_url:
         sfu_url = os.getenv("ODOO_SFU_URL")
     if sfu_url:

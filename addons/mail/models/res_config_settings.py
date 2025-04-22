@@ -33,12 +33,17 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='mail.use_twilio_rtc_servers',
     )
     twilio_account_sid = fields.Char(
-        'Twilio Account SID',
+        'Account SID',
         config_parameter='mail.twilio_account_sid',
     )
     twilio_account_token = fields.Char(
-        'Twilio Account Auth Token',
+        'Account Auth Token',
         config_parameter='mail.twilio_account_token',
+    )
+    use_sfu_server = fields.Boolean(
+        'Use SFU server',
+        help="If you want to setup SFU server for large group calls.",
+        config_parameter="mail.use_sfu_server",
     )
     sfu_server_url = fields.Char("SFU Server URL", config_parameter="mail.sfu_server_url")
     sfu_server_key = fields.Char("SFU Server key", config_parameter="mail.sfu_server_key", help="Base64 encoded key")
