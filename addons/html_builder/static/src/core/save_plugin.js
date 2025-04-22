@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { rpc } from "@web/core/network/rpc";
 
 const oeStructureSelector = "#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]";
 const oeFieldSelector = "#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])";
@@ -127,11 +128,12 @@ export class SavePlugin extends Plugin {
             translations[this.services.website.currentWebsite.metadata.lang] = {
                 [el.dataset["oeTranslationSourceSha"]]: el.innerHTML,
             };
-            return this.services.orm.call(el.dataset["oeModel"], "web_update_field_translations", [
-                [Number(el.dataset["oeId"])],
-                el.dataset["oeField"],
+            return rpc("/web_editor/field/translation/update", {
+                model: el.dataset["oeModel"],
+                record_id: [Number(el.dataset["oeId"])],
+                field_name: el.dataset["oeField"],
                 translations,
-            ]);
+            });
         }
         // TODO: check what we want to modify in translate mode
         return this.saveView(el);
