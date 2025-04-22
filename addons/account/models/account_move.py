@@ -5307,8 +5307,10 @@ class AccountMove(models.Model):
 
     def _link_bill_origin_to_purchase_orders(self, timeout=10):
         for move in self.filtered(lambda m: m.move_type in self.get_purchase_types()):
-            references = [move.invoice_origin] if move.invoice_origin else []
+            references = move.invoice_origin.split() if move.invoice_origin else []
             move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=timeout)
+            if not any(line.purchase_order_id for line in move.line_ids):
+                move.invoice_origin = False
         return self
 
     def _autopost_bill(self):
