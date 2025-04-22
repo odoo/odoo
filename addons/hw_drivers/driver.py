@@ -6,8 +6,6 @@ from threading import Thread, Event
 from odoo.addons.hw_drivers.main import drivers, iot_devices
 from odoo.addons.hw_drivers.tools.helpers import toggleable
 
-from odoo.tools.lru import LRU
-
 
 class Driver(Thread):
     """Hook to register the driver into the drivers list"""
@@ -25,9 +23,6 @@ class Driver(Thread):
         self.data = {'value': ''}
         self._actions = {}
         self._stopped = Event()
-
-        # Least Recently Used (LRU) Cache that will store the idempotent keys already seen.
-        self._iot_idempotent_ids_cache = LRU(500)
 
     def __init_subclass__(cls):
         super().__init_subclass__()
@@ -56,18 +51,3 @@ class Driver(Thread):
     def disconnect(self):
         self._stopped.set()
         del iot_devices[self.device_identifier]
-
-    def _check_idempotency(self, iot_idempotent_id, session_id):
-        """
-        Some IoT requests for the same action might be received several times.
-        To avoid duplicating the resulting actions, we check if the action was "recently" executed.
-        If this is the case, we will simply ignore the action
-
-        :return: the `session_id` of the same `iot_idempotent_id` if any. False otherwise,
-        which means that it is the first time that the IoT box received the request with this ID
-        """
-        cache = self._iot_idempotent_ids_cache
-        if iot_idempotent_id in cache:
-            return cache[iot_idempotent_id]
-        cache[iot_idempotent_id] = session_id
-        return False
