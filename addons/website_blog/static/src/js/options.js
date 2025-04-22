@@ -108,6 +108,10 @@ options.registry.BlogPostTagSelection = options.Class.extend({
             return;
         }
         this.tagIDs = JSON.parse(widgetValue).map(tag => tag.id);
+
+        // FIXME there should be a better way to indicate the page is dirty
+        // (this is supposed to be automatic).
+        this.$target[0].closest('[data-res-model="blog.post"]')?.classList.add('o_dirty');
     },
     /**
      * @see this.selectClass for params
@@ -139,6 +143,10 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         // after createTag. This would reset the tagIds to the value before
         // adding the newly created tag. It therefore needs to be prevented.
         this._preventNextSetTagsCall = true;
+
+        // FIXME there should be a better way to indicate the page is dirty
+        // (this is supposed to be automatic).
+        this.$target[0].closest('[data-res-model="blog.post"]')?.classList.add('o_dirty');
     },
 
     //--------------------------------------------------------------------------

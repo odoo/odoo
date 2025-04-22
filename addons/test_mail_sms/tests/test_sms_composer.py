@@ -184,8 +184,8 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
                 })
         self.assertFalse(composer.number_field_name)
         self.assertTrue(composer.recipient_single_valid)
-        self.assertEqual(composer.recipient_single_number, self.partner_1.mobile)
-        self.assertEqual(composer.recipient_single_number_itf, self.partner_1.mobile)
+        self.assertEqual(composer.recipient_single_number, self.partner_numbers[0])
+        self.assertEqual(composer.recipient_single_number_itf, self.partner_numbers[0])
 
     def test_composer_internals(self):
         with self.with_user('employee'):
@@ -201,8 +201,8 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         self.assertEqual(composer.number_field_name, 'phone_nbr')
         self.assertTrue(composer.comment_single_recipient)
         self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
-        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
-        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number, self.test_numbers_san[1])
+        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers_san[1])
         self.assertTrue(composer.recipient_single_valid)
         self.assertEqual(composer.recipient_valid_count, 1)
         self.assertEqual(composer.recipient_invalid_count, 0)
@@ -289,6 +289,7 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
 
 
+@tagged('sms_composer')
 class TestSMSComposerBatch(SMSCommon):
     @classmethod
     def setUpClass(cls):
@@ -339,6 +340,7 @@ class TestSMSComposerBatch(SMSCommon):
             )
 
 
+@tagged('sms_composer')
 class TestSMSComposerMass(SMSCommon):
 
     @classmethod

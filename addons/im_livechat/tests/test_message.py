@@ -232,7 +232,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         livechat_channel_vals = {"name": "support", "user_ids": [Command.link(self.users[0].id)]}
         im_livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_vals)
         # make available for livechat (ignore leave)
-        self.env["bus.presence"].create({"user_id": self.users[0].id, "status": "online"})
+        self.env["bus.presence"].sudo().create({"user_id": self.users[0].id, "status": "online"})
         self.authenticate(self.env.user.login, self.env.user.login)
         channel = self.env["discuss.channel"].browse(
             self.make_jsonrpc_request(

@@ -37,7 +37,8 @@ export class TableMenu extends Component {
     get hasCustomSize() {
         return (
             !!this.props.target.closest("tr").style.height ||
-            !!this.props.target.closest("td").style.width
+            !!this.props.target.closest("td")?.style?.width ||
+            !!this.props.target.closest("th")?.style?.width
         );
     }
 

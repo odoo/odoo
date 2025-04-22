@@ -3,7 +3,7 @@
 from collections import defaultdict
 
 from odoo import api, Command, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import format_list
 from odoo.tools.sql import column_exists, create_column
 
@@ -75,12 +75,17 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def name_create(self, name):
+        ensure_is_service_product = False
         # To get the right product when creating a SOL on the fly, we need to get
         # the name that was entered in the field from the `default_get` method.
         # The easiest way of doing that is to store it in the context.
         if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable' and not self.env.context.get('action_view_sols'):
             self = self.with_context(sol_product_name=name)
-        return super().name_create(name)
+            ensure_is_service_product = True
+        result = super().name_create(name)
+        if ensure_is_service_product and result and not self.browse(result[0]).is_service:
+            raise ValidationError(_("The Sale Order Item should contain a service product."))
+        return result
 
     @api.model
     def _add_missing_default_values(self, values):
@@ -260,8 +265,15 @@ class SaleOrderLine(models.Model):
         if self.product_id.service_type not in ['milestones', 'manual']:
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
-        title = sale_line_name_parts[0] or self.product_id.name
-        description = '<br/>'.join(sale_line_name_parts[1:])
+        products_inside_template_line_with_name = self.order_id.sale_order_template_id.sale_order_template_line_ids.filtered(
+            lambda line: line.product_id and line.name).product_id
+        if self.product_id in products_inside_template_line_with_name:
+            title = self.product_id.name
+            description = '<br/>'.join(sale_line_name_parts)
+        else:
+            title = sale_line_name_parts[0]
+            description = '<br/>'.join(sale_line_name_parts[1:])
+
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'allocated_hours': allocated_hours,
@@ -382,7 +394,7 @@ class SaleOrderLine(models.Model):
                 project = map_sol_project.get(so_line.id) or so_line.order_id.project_id
                 if project and so_line.product_uom_qty > 0:
                     so_line._timesheet_create_task(project)
-                else:
+                elif not project:
                     raise UserError(_(
                         "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
                         "The following product need a project in which to put its task: %(product_name)s",

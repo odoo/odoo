@@ -3,15 +3,15 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Wil Odoo, 2025
 # Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -75,6 +75,11 @@ msgid "<strong>Shipping address:</strong>"
 msgstr "<strong>納入場所:</strong>"
 
 #. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
+msgid "A storable product is a product for which you manage stock."
+msgstr "在庫可能プロダクトは、在庫を管理するプロダクトです。"
+
+#. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
 "According to product configuration, the received quantity can be automatically computed by mechanism:\n"
@@ -93,7 +98,7 @@ msgstr "アクション"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
 msgid "Arrival"
-msgstr "到着"
+msgstr "入荷"
 
 #. module: purchase_stock
 #. odoo-python
@@ -170,7 +175,7 @@ msgstr "購買オーダ確定に必要な日数"
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days needed to confirm a PO, define when a PO should be validated"
-msgstr "POを確認するために必要な日数、POを検証するタイミングを定義する"
+msgstr "購買オーダを確定するまでに必要な日数。購買オーダをいつ確定すべきかを定義します。"
 
 #. module: purchase_stock
 #. odoo-python
@@ -238,7 +243,7 @@ msgstr "昨年の有効日"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__days_to_arrival
 msgid "Effective Days To Arrival"
-msgstr "到着までの有効日数"
+msgstr "入荷までの有効日数"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -783,8 +788,8 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"これにより、ベンダーに顧客への配送を要求するために、製品に適用するドロップシッピングルートが追加されます。 "
-"ドロップシッピングする製品は、販売注文が確認されると、見積依頼を生成します。これはオンデマンドフローです。要求された配送先住所は、倉庫ではなく、顧客の配送先住所になります。"
+"これにより、仕入先に顧客への配送を要求するために、プロダクトに適用する直送ルートが追加されます。 "
+"直送するプロダクトは、販売オーダが確定されると、見積依頼を生成します。これはオンデマンドフローです。要求された配送先住所は、倉庫ではなく、顧客の配送先住所になります。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -809,6 +814,11 @@ msgstr "これらの日付は、入荷%sに合わせて更新されています�
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
 msgid "Total Quantity"
 msgstr "合計数量"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__is_storable
+msgid "Track Inventory"
+msgstr "在庫追跡"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking

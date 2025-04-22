@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -536,3 +535,25 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                     self.assertEqual(response.request._cookies.get('cids'), str(test_record.company_id.id))
                 else:
                     self.assertNotIn('cids', response.request._cookies)
+
+
+@tagged("-at_install", "post_install", "multi_company")
+class TestMultiCompanyThreadData(MailCommon, HttpCase):
+    def test_mail_thread_data_follower(self):
+        partner_portal = self.env["res.partner"].create(
+            {"company_id": self.company_3.id, "name": "portal partner"}
+        )
+        record = self.env["mail.test.multi.company"].create({"name": "Multi Company Record"})
+        record.message_subscribe(partner_ids=partner_portal.ids)
+        self.assertFalse(partner_portal.with_user(self.user_employee_c2).has_access("read"))
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        data = self.make_jsonrpc_request(
+            "/mail/thread/data",
+            {
+                "thread_id": record.id,
+                "thread_model": "mail.test.multi.company",
+                "request_list": ["followers"],
+            },
+        )
+        self.assertEqual(len(data["mail.followers"]), 1)
+        self.assertEqual(data["mail.followers"][0]["partner"]["id"], partner_portal.id)

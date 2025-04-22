@@ -37,6 +37,7 @@ export const busService = {
         let workerState;
         let isActive = false;
         let isInitialized = false;
+        let lastNotificationId = null;
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
         let backOnlineTimeout;
         const startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
@@ -74,7 +75,8 @@ export const busService = {
             switch (type) {
                 case "notification": {
                     const notifications = data.map(({ id, message }) => ({ id, ...message }));
-                    multiTab.setSharedValue("last_notification_id", notifications.at(-1).id);
+                    lastNotificationId = notifications.at(-1).id;
+                    multiTab.setSharedValue("last_notification_id", lastNotificationId);
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
                         busService._onMessage(id, type, payload);
@@ -280,6 +282,10 @@ export const busService = {
             startedAt,
             get workerState() {
                 return workerState;
+            },
+            /** The id of the last notification received by this tab. */
+            get lastNotificationId() {
+                return lastNotificationId;
             },
         };
     },

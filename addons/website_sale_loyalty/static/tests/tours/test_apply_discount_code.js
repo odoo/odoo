@@ -5,7 +5,6 @@ import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewards', {
     url: '/shop?search=Super%20Chair',
-    checkDelay: 100,
     steps: () => [
         {
             trigger: ".oe_search_found",

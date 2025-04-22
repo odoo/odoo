@@ -19,7 +19,6 @@ const clickOnImgStep = {
 registerWebsitePreviewTour('link_tools', {
     url: '/',
     edition: true,
-    checkDelay: 50,
 }, () => [
     // 1. Create a new link from scratch.
     ...insertSnippet({

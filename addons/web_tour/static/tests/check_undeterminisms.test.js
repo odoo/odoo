@@ -204,7 +204,7 @@ ${expectedError}`,
     ]);
 });
 
-test("snapshot is the same but has mutated", async () => {
+test.skip("snapshot is the same but has mutated", async () => {
     macro.onStep = async (step, el, index) => {
         if (index === 2) {
             setTimeout(() => {

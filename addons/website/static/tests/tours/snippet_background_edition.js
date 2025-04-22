@@ -102,7 +102,6 @@ function updateAndCheckCustomGradient({updateStep, checkGradient}) {
 registerWebsitePreviewTour('snippet_background_edition', {
     url: '/',
     edition: true,
-    checkDelay: 100,
 },
 () => [
 ...insertSnippet(snippets[0]),

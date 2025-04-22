@@ -250,6 +250,10 @@ class StockQuant(models.Model):
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate stock quants.'))
 
+    @api.model
+    def name_create(self, name):
+        return False
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Override to handle the "inventory mode" and create a quant as
@@ -307,7 +311,7 @@ class StockQuant(models.Model):
                 quant = super().create(vals)
                 _add_to_cache(quant)
                 quants |= quant
-                if self._is_inventory_mode():
+                if self._is_inventory_mode() and quant.company_id:
                     quant._check_company()
         return quants
 
@@ -1027,8 +1031,7 @@ class StockQuant(models.Model):
         date_by_location = {loc: loc._get_next_inventory_date() for loc in self.mapped('location_id')}
         for quant in self:
             quant.inventory_date = date_by_location[quant.location_id]
-        self.write({'inventory_quantity': 0, 'user_id': False})
-        self.write({'inventory_diff_quantity': 0})
+        self.action_clear_inventory_quantity()
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity=False, reserved_quantity=False, lot_id=None, package_id=None, owner_id=None, in_date=None):
@@ -1142,11 +1145,11 @@ class StockQuant(models.Model):
         reserved_move_lines = self.env['stock.move.line']._read_group(
             [
                 ('state', 'in', ['assigned', 'partially_available', 'waiting', 'confirmed']),
-                ('quantity', '!=', 0),
+                ('quantity_product_uom', '!=', 0),
                 ('product_id.is_storable', '=', True),
             ],
             ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
-            ['quantity:sum'],
+            ['quantity_product_uom:sum'],
         )
         reserved_move_lines = {
             (product, location, lot, package, owner): reserved_quantity

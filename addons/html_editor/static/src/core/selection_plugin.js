@@ -23,7 +23,8 @@ import {
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { isElement } from "../utils/dom_info";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 /**
  * @typedef { Object } EditorSelection
@@ -111,6 +112,53 @@ function getUnselectedEdgeNodes(selection) {
 }
 
 /**
+ * Scrolls the view to a specific node's position in the document
+ * @param {Selection} selection - The current document selection
+ * @returns {void}
+ */
+function scrollToSelection(selection) {
+    const range = selection.getRangeAt(0);
+    const container = closestScrollableY(range.startContainer.parentElement);
+    if (!container) {
+        // If the container is not scrollable we don't scroll
+        return;
+    }
+    let rect = range.getBoundingClientRect();
+    // If the range is invisible (0 width & height) and selection is collapsed,
+    // it's likely inside an empty paragraph.
+    // In that case, we try to get the bounding rect from a nearby child element
+    // within the anchorNode to better get position the selection.
+    if (
+        rect.width === 0 &&
+        rect.height === 0 &&
+        selection.isCollapsed &&
+        selection.anchorNode.hasChildNodes()
+    ) {
+        const target =
+            selection.anchorNode.childNodes[selection.anchorOffset] ||
+            selection.anchorNode.childNodes[selection.anchorOffset - 1];
+        if (isElement(target)) {
+            rect = target.getBoundingClientRect();
+        }
+    }
+
+    const containerRect = container.getBoundingClientRect();
+    const offsetTop = rect.top - containerRect.top + container.scrollTop;
+    const offsetBottom = rect.bottom - containerRect.top + container.scrollTop;
+
+    if (rect.height >= containerRect.height) {
+        // Selection is larger than scrollable so we do nothing.
+        return;
+    }
+    // Simulate the "nearest" behavior by scrolling to the closest top/bottom edge
+    if (rect.top < containerRect.top) {
+        container.scrollTo({ top: offsetTop, behavior: "instant" });
+    } else if (rect.bottom > containerRect.bottom) {
+        container.scrollTo({ top: offsetBottom - container.clientHeight, behavior: "instant" });
+    }
+}
+
+/**
  * @typedef { Object } SelectionShared
  * @property { SelectionPlugin['extractContent'] } extractContent
  * @property { SelectionPlugin['focusEditable'] } focusEditable
@@ -161,8 +209,8 @@ export class SelectionPlugin extends Plugin {
         this.addDomListener(this.document, "selectionchange", () => {
             this.updateActiveSelection();
             const selection = this.document.getSelection();
-            if (selection.isCollapsed && this.isSelectionInEditable(selection)) {
-                scrollTo(closestElement(selection.focusNode));
+            if (this.isSelectionInEditable(selection)) {
+                scrollToSelection(selection);
             }
         });
         this.addDomListener(this.editable, "mousedown", (ev) => {
@@ -554,7 +602,8 @@ export class SelectionPlugin extends Plugin {
      * @returns {Cursors}
      */
     preserveSelection() {
-        const hadSelection = this.document.getSelection().anchorNode !== null;
+        const hadSelection =
+            this.document.getSelection() && this.document.getSelection().anchorNode !== null;
         const selectionData = this.getSelectionData();
         const selection = selectionData.editableSelection;
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
@@ -871,7 +920,7 @@ export class SelectionPlugin extends Plugin {
             return;
         }
         // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
-        this.editable.focus();
+        this.editable.focus({ preventScroll: true });
         const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
         const selection = this.document.getSelection();
         if (selection) {

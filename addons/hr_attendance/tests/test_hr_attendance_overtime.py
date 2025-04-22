@@ -581,3 +581,20 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2023, 1, 4, 9, 0)
         })
         self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the fully flexible resource.')
+
+    def test_refuse_timeoff(self):
+        self.company.write({
+            "attendance_overtime_validation": "by_manager"
+        })
+
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 2, 8, 0),
+            'check_out': datetime(2023, 1, 3, 16, 0)
+        })
+
+        self.assertEqual(attendance.validated_overtime_hours, 23)
+        self.assertEqual(attendance.overtime_hours, attendance.validated_overtime_hours)
+
+        attendance.action_refuse_overtime()
+        self.assertEqual(attendance.validated_overtime_hours, 0)

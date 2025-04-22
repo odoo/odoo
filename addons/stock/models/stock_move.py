@@ -78,6 +78,7 @@ class StockMove(models.Model):
         'stock.location', 'Source Location',
         help='The operation takes and suggests products from this location.',
         auto_join=True, index=True, required=True,
+        compute='_compute_location_id', store=True, precompute=True, readonly=False,
         check_company=True)
     location_dest_id = fields.Many2one(
         'stock.location', 'Intermediate Location', required=True,
@@ -203,7 +204,19 @@ class StockMove(models.Model):
         for move in self:
             move.product_uom = move.product_id.uom_id.id
 
-    @api.depends('picking_id', 'picking_id.location_dest_id')
+    @api.depends('picking_id.location_id')
+    def _compute_location_id(self):
+        for move in self:
+            if move.picked:
+                continue
+            if not (location := move.location_id) or move.picking_id != move._origin.picking_id or move.picking_type_id != move._origin.picking_type_id:
+                if move.picking_id:
+                    location = move.picking_id.location_id
+                elif move.picking_type_id:
+                    location = move.picking_type_id.default_location_src_id
+            move.location_id = location
+
+    @api.depends('picking_id.location_dest_id')
     def _compute_location_dest_id(self):
         for move in self:
             location_dest = False
@@ -248,6 +261,8 @@ class StockMove(models.Model):
         for move in self:
             if move.state == 'done' or any(ml.picked for ml in move.move_line_ids):
                 move.picked = True
+            elif move.move_line_ids:
+                move.picked = False
 
     def _inverse_picked(self):
         for move in self:
@@ -598,6 +613,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 if move.priority == '1':
                     days = move.picking_type_id.reservation_days_before_priority
                 move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
+            elif move.picking_type_id.reservation_method == 'manual':
+                move.reservation_date = False
 
     @api.depends(
         'has_tracking',
@@ -689,7 +706,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         # messages according to the state of the stock.move records.
         receipt_moves_to_reassign = self.env['stock.move']
         move_to_recompute_state = self.env['stock.move']
-        move_to_confirm = self.env['stock.move']
         move_to_check_location = self.env['stock.move']
         if 'quantity' in vals:
             if any(move.state == 'cancel' for move in self):
@@ -747,8 +763,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 wh_by_moves[move_warehouse] |= move
             for warehouse, moves in wh_by_moves.items():
                 moves.warehouse_id = warehouse.id
-        if move_to_confirm:
-            move_to_confirm._action_assign()
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
         return res
@@ -1042,7 +1056,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
 
             ProcurementGroup = self.env['procurement.group']
-            if move.location_dest_id.company_id != self.env.company:
+            if move.location_dest_id.company_id not in self.env.companies:
                 ProcurementGroup = self.env['procurement.group'].sudo()
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
                 warehouse_id = False
@@ -2129,6 +2143,12 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
         return new_move_vals
 
+    def _post_process_created_moves(self):
+        # This method is meant to be overriden in order to execute post 
+        # creation actions that would be bypassed since the move was 
+        # and will probably never be confirmed
+        pass
+
     def _recompute_state(self):
         if self._context.get('preserve_state'):
             return
@@ -2462,3 +2482,15 @@ Please change the quantity done or the rounding precision of your unit of measur
             ),
             'readOnly': False,
         }
+
+    def _is_incoming(self):
+        self.ensure_one()
+        return self.location_id.usage in ('customer', 'supplier') or (
+            self.location_id.usage == 'transit' and not self.location_id.company_id
+        )
+
+    def _is_outgoing(self):
+        self.ensure_one()
+        return self.location_dest_id.usage in ('customer', 'supplier') or (
+            self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id
+        )

@@ -2018,7 +2018,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-03-01'):
-            with Form(self.env['hr.leave.allocation']) as f:
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
                 f.date_from = '2024-01-01'
@@ -2233,7 +2233,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time("2024-03-01"):
             # Simulate creating an allocation from frontend interface
-            with Form(self.env['hr.leave.allocation']) as f:
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
                 f.employee_id = self.employee_emp
@@ -2275,7 +2275,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time("2024-03-01"):
             # Simulate creating an allocation from frontend interface
-            with Form(self.env['hr.leave.allocation']) as f:
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
                 f.employee_id = self.employee_emp
@@ -2405,7 +2405,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             self.employee_hrmanager.resource_calendar_id = calendar_emp.id
 
-            with Form(self.env['hr.leave.allocation']) as f:
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
                 f.date_from = '2024-08-07'
@@ -3616,7 +3616,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         with freeze_time('2024-11-25'):
-            with Form(self.env['hr.leave.allocation']) as f:
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
                 f.date_from = '2024-01-01'
@@ -3665,7 +3665,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             f.action_with_unused_accruals = 'lost'
 
         with freeze_time('2024-11-25'):
-            with Form(self.env['hr.leave.allocation']) as f:
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
                 f.date_from = '2024-01-01'

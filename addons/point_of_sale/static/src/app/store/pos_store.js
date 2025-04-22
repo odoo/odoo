@@ -6,7 +6,13 @@ import { floatIsZero } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, lte, random5Chars, uuidv4 } from "@point_of_sale/utils";
+import {
+    deduceUrl,
+    lte,
+    random5Chars,
+    uuidv4,
+    computeProductPricelistCache,
+} from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -24,7 +30,6 @@ import {
     ask,
     makeActionAwaitable,
 } from "@point_of_sale/app/store/make_awaitable_dialog";
-import { deserializeDate } from "@web/core/l10n/dates";
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
@@ -472,102 +477,12 @@ export class PosStore extends Reactive {
     async _onBeforeDeleteOrder(order) {
         return true;
     }
+
     computeProductPricelistCache(data) {
         if (data) {
             data = this.models[data.model].readMany(data.ids);
         }
-        // This function is called via the addEventListener callback initiated in the
-        // processServerData function when new products or pricelists are loaded into the PoS.
-        // It caches the heavy pricelist calculation when there are many products and pricelists.
-        const date = DateTime.now();
-        let pricelistItems = this.models["product.pricelist.item"].getAll();
-        let products = this.models["product.product"].getAll();
-
-        if (data && data.length > 0) {
-            if (data[0].model.modelName === "product.product") {
-                products = data;
-            }
-
-            if (data[0].model.modelName === "product.pricelist.item") {
-                pricelistItems = data;
-                // it needs only to compute for the products that are affected by the pricelist items
-                const productTmplIds = new Set(data.map((item) => item.raw.product_tmpl_id));
-                const productIds = new Set(data.map((item) => item.raw.product_id));
-                products = products.filter(
-                    (product) =>
-                        productTmplIds.has(product.raw.product_tmpl_id) ||
-                        productIds.has(product.id)
-                );
-            }
-        }
-
-        const pushItem = (targetArray, key, item) => {
-            if (!targetArray[key]) {
-                targetArray[key] = [];
-            }
-            targetArray[key].push(item);
-        };
-
-        const pricelistRules = {};
-
-        for (const item of pricelistItems) {
-            if (
-                (item.date_start && deserializeDate(item.date_start, { zone: "utc" }) > date) ||
-                (item.date_end && deserializeDate(item.date_end, { zone: "utc" }) < date)
-            ) {
-                continue;
-            }
-            const pricelistId = item.pricelist_id.id;
-
-            if (!pricelistRules[pricelistId]) {
-                pricelistRules[pricelistId] = {
-                    productItems: {},
-                    productTmlpItems: {},
-                    categoryItems: {},
-                    globalItems: [],
-                };
-            }
-
-            const productId = item.raw.product_id;
-            if (productId) {
-                pushItem(pricelistRules[pricelistId].productItems, productId, item);
-                continue;
-            }
-            const productTmplId = item.raw.product_tmpl_id;
-            if (productTmplId) {
-                pushItem(pricelistRules[pricelistId].productTmlpItems, productTmplId, item);
-                continue;
-            }
-            const categId = item.raw.categ_id;
-            if (categId) {
-                pushItem(pricelistRules[pricelistId].categoryItems, categId, item);
-            } else {
-                pricelistRules[pricelistId].globalItems.push(item);
-            }
-        }
-
-        for (const product of products) {
-            const applicableRules = product.getApplicablePricelistRules(pricelistRules);
-            for (const pricelistId in applicableRules) {
-                if (product.cachedPricelistRules[pricelistId]) {
-                    const existingRuleIds = product.cachedPricelistRules[pricelistId].map(
-                        (rule) => rule.id
-                    );
-                    const newRules = applicableRules[pricelistId].filter(
-                        (rule) => !existingRuleIds.includes(rule.id)
-                    );
-                    product.cachedPricelistRules[pricelistId] = [
-                        ...newRules,
-                        ...product.cachedPricelistRules[pricelistId],
-                    ];
-                } else {
-                    product.cachedPricelistRules[pricelistId] = applicableRules[pricelistId];
-                }
-            }
-        }
-        if (data && data.length > 0 && data[0].model.modelName === "product.product") {
-            this._loadMissingPricelistItems(products);
-        }
+        computeProductPricelistCache(this, data);
     }
 
     async _loadMissingPricelistItems(products) {
@@ -715,7 +630,6 @@ export class PosStore extends Reactive {
         if (!order) {
             order = this.add_new_order();
         }
-        this.addPendingOrder([order.id]);
         return await this.addLineToOrder(vals, order, opts, configure);
     }
 
@@ -872,8 +786,8 @@ export class PosStore extends Reactive {
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         const code = opts.code;
+        let pack_lot_ids = {};
         if (values.product_id.isTracked() && (configure || code)) {
-            let pack_lot_ids = {};
             const packLotLinesToEdit =
                 (!values.product_id.isAllowOnlyOneLot() &&
                     this.get_order()
@@ -965,6 +879,13 @@ export class PosStore extends Reactive {
             this.selectOrderLine(order, order.get_last_orderline());
         }
 
+        if (product.tracking === "serial") {
+            this.selectedOrder.get_selected_orderline().setPackLotLines({
+                modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
+                newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
+                setQuantity: true,
+            });
+        }
         if (configure) {
             this.numberBuffer.reset();
         }
@@ -1269,7 +1190,10 @@ export class PosStore extends Reactive {
                     if (order) {
                         delete order.uiState.lineToRefund[refundedOrderLine.uuid];
                     }
-                    refundedOrderLine.refunded_qty += Math.abs(line.qty);
+                    refundedOrderLine.refunded_qty = refundedOrderLine.refund_orderline_ids.reduce(
+                        (sum, obj) => sum + Math.abs(obj.qty),
+                        0
+                    );
                 }
             }
 
@@ -1588,6 +1512,8 @@ export class PosStore extends Reactive {
         if (component.storeOnOrder ?? true) {
             this.get_order()?.set_screen_data({ name, props });
         }
+
+        return true;
     }
     orderExportForPrinting(order) {
         const headerData = this.getReceiptHeaderData(order);
@@ -1668,7 +1594,7 @@ export class PosStore extends Reactive {
                 printer.config.product_categories_ids,
                 orderChange
             );
-            const anyChangesToPrint = Object.values(changes).some((change) => change.length);
+            const anyChangesToPrint = changes.new.length;
             const diningModeUpdate = orderChange.modeUpdate;
             if (diningModeUpdate || anyChangesToPrint) {
                 const printed = await this.printReceipts(
@@ -1846,6 +1772,9 @@ export class PosStore extends Reactive {
             );
         });
     }
+    editPartnerContext(partner) {
+        return {};
+    }
     /**
      * @param {import("@point_of_sale/app/models/res_partner").ResPartner?} partner leave undefined to create a new partner
      */
@@ -1855,6 +1784,7 @@ export class PosStore extends Reactive {
             "point_of_sale.res_partner_action_edit_pos",
             {
                 props: { resId: partner?.id },
+                additionalContext: this.editPartnerContext(),
             }
         );
         const newPartner = await this.data.read("res.partner", record.config.resIds);
@@ -1884,8 +1814,8 @@ export class PosStore extends Reactive {
     async allowProductCreation() {
         return await user.hasGroup("base.group_system");
     }
-    async orderDetails(order) {
-        this.dialog.add(FormViewDialog, {
+    orderDetailsProps(order) {
+        return {
             resModel: "pos.order",
             resId: order.id,
             onRecordSaved: async (record) => {
@@ -1898,7 +1828,10 @@ export class PosStore extends Reactive {
                     type: "ir.actions.act_window_close",
                 });
             },
-        });
+        };
+    }
+    async orderDetails(order) {
+        this.dialog.add(FormViewDialog, this.orderDetailsProps(order));
     }
     async closePos() {
         this._resetConnectedCashier();
@@ -2031,6 +1964,10 @@ export class PosStore extends Reactive {
         };
 
         const existingLotsName = existingLots.map((l) => l.name);
+        if (!packLotLinesToEdit.length && existingLotsName.length === 1) {
+            // If there's only one existing lot/serial number, automatically assign it to the order line
+            return { newPackLotLines: [{ lot_name: existingLotsName[0] }] };
+        }
         const payload = await makeAwaitable(this.dialog, EditListPopup, {
             title: _t("Lot/Serial Number(s) Required"),
             name: product.display_name,
@@ -2224,6 +2161,28 @@ export class PosStore extends Reactive {
         } else {
             return `${pm.name} (${fmtAmount})`;
         }
+    }
+
+    clickSaveOrder() {
+        this.syncAllOrders({ orders: [this.get_order()] });
+        this.notification.add(_t("Order saved for later"), { type: "success" });
+        this.selectEmptyOrder();
+        this.mobile_pane = "right";
+    }
+
+    selectEmptyOrder() {
+        const emptyOrders = this.models["pos.order"].filter(
+            (order) => order.is_empty() && !order.finalized
+        );
+        if (emptyOrders.length > 0) {
+            this.set_order(emptyOrders[0]);
+            return;
+        }
+        this.add_new_order();
+    }
+
+    get showSaveOrderButton() {
+        return this.isOpenOrderShareable();
     }
 }
 

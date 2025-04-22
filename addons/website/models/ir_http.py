@@ -92,7 +92,11 @@ class Http(models.AbstractModel):
             :param lang_code: Must be the lang `code`. It could also be something
                               else, such as `'[lang]'` (used for url_return).
         '''
-        path, _, qs = (url_from or '').partition('?')
+        path, sep, qs = (url_from or '').partition('?')
+
+        if not qs:
+            path, sep, qs = (url_from or '').partition('#')
+
         if (
             path
             # don't try to match route if we know that no rewrite has been loaded.
@@ -105,7 +109,7 @@ class Http(models.AbstractModel):
             )
         ):
             url_from, _ = request.env['ir.http'].url_rewrite(path)
-            url_from = url_from if not qs else url_from + '?%s' % qs
+            url_from = url_from if not qs else f"{url_from}{sep}{qs}"
 
         return super()._url_for(url_from, lang_code)
 

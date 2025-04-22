@@ -1806,19 +1806,17 @@ class TestExpenses(TestExpenseCommon):
         self.assertTrue(expense.currency_id.is_zero(expense.total_amount_currency))
         self.assertEqual(expense.company_currency_id.compare_amounts(expense.price_unit, self.product_b.standard_price), 0)
 
-    def test_mileage_with_quantity(self):
-        product = self.env['hr.expense'].env.ref('hr_expense.expense_product_mileage')
-        product.standard_price = 1.0
-
+    def test_move_creation_with_quantity(self):
         expense_sheet = self.create_expense_report({
             'name': 'Expense for John Smith',
             'expense_line_ids': [Command.create({
-                'name': 'Mileage product',
+                'name': 'Test expense line',
                 'employee_id': self.expense_employee.id,
-                'product_id': product.id,
+                'product_id': self.product_a.id,
                 'quantity': 5,
                 'payment_mode': 'company_account',
                 'company_id': self.company_data['company'].id,
+                'tax_ids': False,
             })],
         })
 
@@ -1826,7 +1824,6 @@ class TestExpenses(TestExpenseCommon):
         expense_sheet.action_approve_expense_sheets()
         expense_sheet.action_sheet_move_post()
         self.assertRecordValues(expense_sheet.account_move_ids.line_ids, [
-            {'balance': 4.35, 'name': 'expense_employee: Mileage product', 'quantity': 5},
-            {'balance': 0.65, 'name': '15%',                               'quantity': 1},
-            {'balance': -5.0, 'name': 'expense_employee: Mileage product', 'quantity': 1},
+            {'balance': 4000.0, 'name': 'expense_employee: Test expense line', 'quantity': 5},
+            {'balance': -4000.0, 'name': 'expense_employee: Test expense line', 'quantity': 1},
         ])

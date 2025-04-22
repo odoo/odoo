@@ -46,3 +46,16 @@ registry.category("web_tour.tours").add("PosSettleOrderTryInvoice", {
             PaymentScreen.isInvoiceButtonChecked(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_branch_company_access", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});

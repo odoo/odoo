@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test 1.2", "1"),
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.20"),
@@ -155,7 +155,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             Chrome.clickMenuOption("Orders"),
             Chrome.createFloatingOrder(),
 
-            ProductScreen.addOrderline("Product Test 1.2", "1"),
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.20"),
@@ -213,5 +213,21 @@ registry.category("web_tour.tours").add("CashRoundingPayment", {
             PaymentScreen.enterPaymentLineAmount("Cash", "1.98"),
             PaymentScreen.clickValidate(),
             Dialog.is(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });

@@ -1386,3 +1386,26 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(modified_leave.request_date_from, two_days_after)
         self.assertEqual(modified_leave.request_date_to, two_days_after)
+
+    def test_public_holiday_in_the_middle_of_flexible_request(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'hours_per_day': 8,
+            'flexible_hours': True
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        # Create a public holiday for the flexible calendar
+        self.env['resource.calendar.leaves'].create({
+            'date_from': datetime(2022, 3, 11),
+            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+            'calendar_id': calendar.id,
+        })
+
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': date(2022, 3, 10),
+            'request_date_to': date(2022, 3, 12),
+        })
+        self.assertEqual(leave.number_of_days, 2)

@@ -105,6 +105,9 @@ class HrCandidate(models.Model):
             candidate.email_from = candidate.partner_id.email
             if not candidate.partner_phone:
                 candidate.partner_phone = candidate.partner_id.phone
+    
+    def _phone_get_number_fields(self):
+        return ['partner_phone']
 
     def _inverse_partner_email(self):
         for candidate in self:

@@ -100,7 +100,7 @@ class AccountEdiXmlCII(models.AbstractModel):
     def _get_scheduled_delivery_time(self, invoice):
         # don't create a bridge only to get line.sale_line_ids.order_id.picking_ids.date_done
         # line.sale_line_ids.order_id.picking_ids.scheduled_date or line.sale_line_ids.order_id.commitment_date
-        return invoice.invoice_date
+        return invoice.delivery_date or invoice.invoice_date
 
     def _get_invoicing_period(self, invoice):
         # get the Invoicing period (BG-14): a list of dates covered by the invoice
@@ -224,6 +224,15 @@ class AccountEdiXmlCII(models.AbstractModel):
             sum_fixed_taxes = sum(x['amount'] for x in line_vals['allowance_charge_vals_list'])
             line_vals['line_total_amount'] = line_vals['line'].price_subtotal + sum_fixed_taxes
 
+            # The quantity is the line.quantity since we keep the unece_uom_code!
+            line_vals['quantity'] = line_vals['line'].quantity
+
+            # Invert the quantity and the gross_price_total_unit if a line has a negative price total
+            if line_vals['line'].currency_id.compare_amounts(line_vals['gross_price_total_unit'], 0) == -1:
+                line_vals['quantity'] *= -1
+                line_vals['gross_price_total_unit'] *= -1
+                line_vals['price_subtotal_unit'] *= -1
+
         # Fixed taxes: set the total adjusted amounts on the document level
         template_values['tax_basis_total_amount'] = tax_details['base_amount_currency']
         template_values['tax_total_amount'] = tax_details['tax_amount_currency']
@@ -245,7 +254,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             'vat': self._find_value(f".//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID[string-length(text()) > 5]", tree),
             'name': self._find_value(f".//ram:{role}/ram:Name", tree),
             'phone': self._find_value(f".//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber", tree),
-            'email': self._find_value(f".//ram:{role}//ram:URIID[@schemeID='SMTP']", tree),
+            'email': self._find_value(f".//ram:{role}//ram:EmailURIUniversalCommunication/ram:URIID", tree),
             'country_code': self._find_value(f'.//ram:{role}/ram:PostalTradeAddress//ram:CountryID', tree),
         }
 

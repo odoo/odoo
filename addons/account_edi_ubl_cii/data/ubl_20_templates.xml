@@ -91,6 +91,11 @@
                 <cbc:Telephone t-out="contact_vals.get('telephone')"/>
                 <cbc:ElectronicMail t-out="contact_vals.get('electronic_mail')"/>
             </cac:Contact>
+            <cac:Person>
+                <t t-set="person_vals" t-value="vals.get('person_vals', {})"/>
+                <cbc:FirstName t-out="person_vals.get('first_name')"/>
+                <cbc:FamilyName t-out="person_vals.get('family_name')"/>
+            </cac:Person>
         </t>
     </template>
 
@@ -357,14 +362,14 @@
                 </cac:ClassifiedTaxCategory>
             </cac:Item>
             <cac:Price>
-                <t t-set="vals" t-value="vals.get('price_vals', {})"/>
+                <t t-set="price_vals" t-value="vals.get('price_vals', {})"/>
                 <cbc:PriceAmount
-                    t-att-currencyID="vals['currency'].name"
-                    t-out="vals.get('price_amount')"/>
+                    t-att-currencyID="price_vals['currency'].name"
+                    t-out="price_vals.get('price_amount')"/>
                 <!-- nbr of item units to which the price applies), i.e.: 1 Dozen = 12 units, not mandatory -->
                 <cbc:BaseQuantity
-                    t-att="vals.get('base_quantity_attrs', {})"
-                    t-out="vals.get('base_quantity')"/>
+                    t-att="price_vals.get('base_quantity_attrs', {})"
+                    t-out="price_vals.get('base_quantity')"/>
             </cac:Price>
         </t>
     </template>

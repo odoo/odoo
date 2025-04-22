@@ -479,6 +479,25 @@ class TestMassMailValues(MassMailCommon):
         mail_thread_attachments = mailing._get_mail_thread_data_attachments()
         self.assertSetEqual(set(mail_thread_attachments.ids), {png_duplicate_of_svg_attachment.id, original_png_attachment.id})
 
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_process_mailing_queue_without_html_body(self):
+        """ Test mailing with past schedule date and without any html body """
+        mailing = self.env['mailing.mailing'].create({
+                'name': 'mailing',
+                'subject': 'some subject',
+                'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+                'preview': "Check it out before its too late",
+                'body_html': False,
+                'schedule_date': datetime(2023, 2, 17, 11, 0),
+            })
+        mailing.action_put_in_queue()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing._process_mass_mailing_queue()
+
+        self.assertFalse(mailing.body_html)
+        self.assertEqual(mailing.mailing_model_name, 'res.partner')
+
 
 @tagged("mass_mailing", "utm")
 class TestMassMailUTM(MassMailCommon):

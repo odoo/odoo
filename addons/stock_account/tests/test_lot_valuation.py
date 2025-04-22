@@ -692,3 +692,46 @@ class TestLotValuation(TestStockValuationCommon):
         self.product1.tracking = 'lot'
         with self.assertRaises(UserError):
             self.product1.lot_valuated = True
+
+    def test_return_pick_valuation_with_original_not_valuated(self):
+        self.product1.lot_valuated = False
+        lot = self.env['stock.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'test',
+        })
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'lot_id': lot.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 100
+        })
+        quant.action_apply_inventory()
+        out_move = self._make_out_move(self.product1, 3, create_picking=True, lot_ids=[lot])
+        self.product1.lot_valuated = True
+        return_pick_ids = self._make_return(out_move, 1)
+        self.assertTrue(return_pick_ids)
+
+    def test_lot_revaluation_with_remaining_qty(self):
+        """
+            Test manual lot revaluation behavior:
+            - It should proceed if the sum of `remaining_qty` of selected layers is not zero.
+            - It should raise a `UserError` if the sum of `remaining_qty` of selected layers is zero.
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+
+        self._make_in_move(self.product1, 7, lot_ids=[self.lot1])
+        layers = self.product1.stock_valuation_layer_ids
+        self.assertEqual(len(layers), 1)
+        self.assertNotEqual(sum(layers.mapped('remaining_qty')), 0)
+
+        # Revaluation should NOT raise an error when selected layers have remaining_qty > 0.
+        self.lot1.action_revaluation()
+
+        self.product1.lot_valuated = False
+        total_layers = self.product1.stock_valuation_layer_ids
+        self.assertEqual(len(total_layers), 3)
+        layers_with_lot = total_layers.filtered(lambda lot: lot.lot_id)
+        self.assertEqual(sum(layers_with_lot.mapped('remaining_qty')), 0)
+        # Revaluation should now raise a UserError when selected layers' remaining_qty = 0
+        with self.assertRaises(UserError):
+            self.lot1.action_revaluation()

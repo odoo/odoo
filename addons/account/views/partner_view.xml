@@ -193,6 +193,13 @@
                 <field name="vat" position="attributes">
                     <attribute name="options">{'placeholder_field': 'partner_vat_placeholder'}</attribute>
                 </field>
+
+                <field name="company_registry" position="before">
+                    <field name="partner_company_registry_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                </field>
+                <field name="company_registry" position="attributes">
+                    <attribute name="options">{'placeholder_field': 'partner_company_registry_placeholder'}</attribute>
+                </field>
             </field>
         </record>
 
@@ -247,7 +254,9 @@
                                    string="Customer Invoices"
                                    groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="invoice_sending_method"/>
-                                <field name="invoice_edi_format" invisible="not display_invoice_edi_format"/>
+                                <field name="invoice_edi_format"
+                                       placeholder="XML format"
+                                       invisible="not display_invoice_edi_format"/>
                                 <field name="invoice_template_pdf_report_id"
                                        invisible="not display_invoice_template_pdf_report_id"
                                        options="{'no_create': True, 'no_edit': True}"/>

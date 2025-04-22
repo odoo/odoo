@@ -248,6 +248,22 @@ class SaleOrder(models.Model):
             # Recompute taxes on fpos change
             self._recompute_taxes()
 
+        # If the user has explicitly selected a valid pricelist, we don't want to change it
+        if selected_pricelist_id := request.session.get('website_sale_selected_pl_id'):
+            selected_pricelist = (
+                self.env['product.pricelist'].browse(selected_pricelist_id).exists()
+            )
+            if (
+                selected_pricelist
+                and selected_pricelist._is_available_on_website(self.website_id)
+                and selected_pricelist._is_available_in_country(
+                    self.partner_id.country_id.code
+                )
+            ):
+                self.pricelist_id = selected_pricelist
+            else:
+               request.session.pop('website_sale_selected_pl_id', None)
+
         if self.pricelist_id != pricelist_before or fpos_changed:
             # Pricelist may have been recomputed by the `partner_id` field update
             # we need to recompute the prices to match the new pricelist if it changed
@@ -392,17 +408,21 @@ class SaleOrder(models.Model):
                 lambda sol: sol.product_id.id == product_id and sol.id == line_id
             )
 
+        product = self.env['product.product'].browse(product_id)
+        if product.type == 'combo':
+            return self.env['sale.order.line']
+
         domain = [
             ('product_id', '=', product_id),
             ('product_custom_attribute_value_ids', '=', False),
             ('linked_line_id', '=', linked_line_id),
+            ('combo_item_id', '=', False),
         ]
 
         filtered_sol = self.order_line.filtered_domain(domain)
         if not filtered_sol:
             return self.env['sale.order.line']
 
-        product = self.env['product.product'].browse(product_id)
         if product.product_tmpl_id._has_no_variant_attributes():
             filtered_sol = filtered_sol.filtered(
                 lambda sol:

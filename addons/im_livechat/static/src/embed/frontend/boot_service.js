@@ -7,8 +7,6 @@ import { getTemplate } from "@web/core/templates";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
-registry.category("main_components").remove("mail.ChatHub");
-
 export const livechatBootService = {
     dependencies: ["mail.store"],
 

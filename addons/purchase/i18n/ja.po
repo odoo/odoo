@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -33,8 +33,6 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_bill_count
-#: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
-#: model:ir.model.fields,field_description:purchase.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "仕入先請求書数"
 
@@ -459,7 +457,7 @@ msgstr "<strong>割引</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Expected Arrival:</strong>"
-msgstr "<strong>着荷予定日:</strong>"
+msgstr "<strong>入荷予定日:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -580,7 +578,7 @@ msgstr "購買オーダで梱包の種類を選択でき、梱包あたりの個
 #: code:addons/purchase/models/purchase_order.py:0
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Accept"
-msgstr "受理"
+msgstr "承認"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -1201,12 +1199,12 @@ msgstr "日"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
 msgid "Days Before Receipt"
-msgstr "受領前の日数"
+msgstr "入荷前日数"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
 msgid "Days to Confirm"
-msgstr "確認までの日数"
+msgstr "確定までの日数"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
@@ -1252,7 +1250,7 @@ msgstr "ベンダーからの予想納期です。この日付は、それぞれ
 msgid ""
 "Delivery date promised by vendor. This date is used to determine expected "
 "arrival of products."
-msgstr "仕入先が約束した納期。この日付は、プロダクトの予想到着を決定するために使用されます。"
+msgstr "仕入先が約束した納期。この日付は、プロダクトの入荷予定日を決定するために使用されます。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -1431,12 +1429,12 @@ msgstr "今後の活動"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr "2段階の承認をもち購買オーダ確定"
+msgstr "購買オーダを確定するには、2段階の承認が必要です。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr "プロダクトや仕入先設定をもとに注文に警告を表示"
+msgstr "プロダクトや仕入先に対する警告を、オーダ入力時に表示します。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
@@ -1579,7 +1577,7 @@ msgstr "請求"
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__is_downpayment
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__is_downpayment
 msgid "Is Downpayment"
-msgstr "前払金は"
+msgstr "前受金である"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
@@ -1994,7 +1992,7 @@ msgstr "ベンダーから価格を入手したら、適切な価格で注文書
 msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
-msgstr "仕入先にプロダクトをオーダして見積依頼を確認すると、購買オーダになります。"
+msgstr "仕入先にプロダクトをオーダして見積依頼を確定すると、購買オーダに変換されます。"
 
 #. module: purchase
 #. odoo-python
@@ -2028,7 +2026,7 @@ msgstr "オーダ日: 過去365日"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Order Deadline"
-msgstr "オーダ締切"
+msgstr "オーダ期日"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2393,7 +2391,7 @@ msgstr "購買オーダ修正 *"
 msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
-msgstr "購買オーダ修正: 購買オーダを確認後、編集可能にしたい場合に使用します"
+msgstr "購買オーダを確定後に編集可能にしたい場合に使用する購買オーダ修正機能"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_order_name
@@ -2536,7 +2534,7 @@ msgstr "入荷済数量"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
 msgid "Qty to be Billed"
-msgstr "未請求数量"
+msgstr "請求予定数量"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2592,7 +2590,7 @@ msgstr "見積依頼が %(oldest_rfq_name)sと  %(cancelled_rfq)sとマージ済
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %s"
-msgstr "見積依頼マージ済:"
+msgstr "見積依頼マージ済:%s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -2876,7 +2874,7 @@ msgstr "リマインダを送信"
 #. module: purchase
 #: model:res.groups,name:purchase.group_send_reminder
 msgid "Send an automatic reminder email to confirm delivery"
-msgstr "自動リマインダメールを送信して配送を確認します"
+msgstr "納品確認のための自動リマインドメールを送信します"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2903,7 +2901,7 @@ msgstr "仕入先に購買オーダを添付で送信済"
 #: model:mail.template,description:purchase.email_template_edi_purchase_reminder
 msgid ""
 "Sent to vendors before expected arrival, based on the purchase order setting"
-msgstr "購買オーダ設定に基づいて、予定入荷日より前に仕入先に送信済"
+msgstr "購買オーダ設定に基づいて、入荷予定日より前に仕入先に送信済"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -3469,7 +3467,6 @@ msgstr "仕入先請求書明細は、1つの購買オーダにのみ追加で�
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "仕入先請求書"

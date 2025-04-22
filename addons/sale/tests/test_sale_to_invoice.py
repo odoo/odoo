@@ -572,22 +572,16 @@ class TestSaleToInvoice(TestSaleCommon):
                     'price_unit': 0,
                     'tax_id': [],
                 }),
-                Command.create({
-                    'name': 'Horse-meat burger',
-                    'product_id': product_a.id,
-                    'product_uom_qty': 3,
-                    'price_unit': 5.0,
-                    'tax_id': [],
-                }),
-                Command.create({
-                    'name': 'French fries',
-                    'product_id': product_b.id,
-                    'product_uom_qty': 3,
-                    'price_unit': 5.0,
-                    'tax_id': [],
-                }),
             ]
         })
+        sale_order.order_line = [Command.create({
+            'product_id': product.id,
+            'product_uom_qty': 3,
+            'price_unit': 5.0,
+            'tax_id': [],
+            'combo_item_id': combo.combo_item_ids.id,
+            'linked_line_id': sale_order.order_line.id,
+        }) for product, combo in zip(product_a + product_b, combo_a + combo_b)]
 
         # Confirm the SO
         sale_order.action_confirm()
@@ -613,22 +607,42 @@ class TestSaleToInvoice(TestSaleCommon):
                 'name': 'Meal Menu x 3',
                 'display_type': 'line_section',
                 'product_id': False,
-                'quantity': 0,
+                'quantity': 3,
                 'price_unit': 0,
+                'sequence': 0,
             },
             {
                 'name': 'Horse-meat burger',
                 'display_type': 'product',
                 'product_id': product_a.id,
                 'quantity': 3,
-                'price_unit': 5.0
+                'price_unit': 5.0,
+                'sequence': 1,
             },
             {
                 'name': 'French fries',
                 'display_type': 'product',
                 'product_id': product_b.id,
                 'quantity': 3,
-                'price_unit': 5.0
+                'price_unit': 5.0,
+                'sequence': 2,
+            },
+        ])
+        self.assertRecordValues(sale_order.order_line, [
+            {
+                'product_id': product_combo.id,
+                'qty_to_invoice': 0,
+                'qty_invoiced': 3,
+            },
+            {
+                'product_id': product_a.id,
+                'qty_to_invoice': 0,
+                'qty_invoiced': 3,
+            },
+            {
+                'product_id': product_b.id,
+                'qty_to_invoice': 0,
+                'qty_invoiced': 3,
             },
         ])
 
@@ -1159,6 +1173,31 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(sol_prod_deliver.qty_invoiced, 5.0)
         self.assertEqual(sol_prod_deliver.amount_to_invoice, 0.0)
         self.assertEqual(sol_prod_deliver.amount_invoiced, sol_prod_deliver.price_total / 2)
+
+    def test_amount_to_invoice_with_discount(self):
+        """ Test the amount_to_invoice field when a discount is applied on the SO line. """
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 5,
+                    'price_unit': 100,
+                    'discount': 10,
+                }),
+            ],
+        })
+
+        so.action_confirm()
+
+        self.assertEqual(so.amount_to_invoice, 450.0, "The amount to invoice should be 450.0")
+
+        invoice = so._create_invoices()
+        invoice.invoice_line_ids.quantity = 3
+        invoice.action_post()
+
+        self.assertEqual(so.amount_to_invoice, 180.0, "The amount to invoice should be 180.0")
 
     def test_invoice_line_name_has_product_name(self):
         """ Testing that when invoicing a sales order, the invoice line name ALWAYS contains the product name. """
