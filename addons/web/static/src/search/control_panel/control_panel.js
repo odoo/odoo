@@ -163,9 +163,12 @@ export class ControlPanel extends Component {
                 return;
             }
             const scrollingEl = this.getScrollingElement();
+            this.scrollingElementResizeObserver.observe(scrollingEl);
             scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
             this.root.el.style.top = "0px";
+            this.scrollingElementHeight = scrollingEl.scrollHeight;
             return () => {
+                this.scrollingElementResizeObserver.unobserve(scrollingEl);
                 scrollingEl.removeEventListener("scroll", this.onScrollThrottledBound);
             };
         });
@@ -244,6 +247,16 @@ export class ControlPanel extends Component {
             action.id === false && !this.env.isSmall ? "cursor-default text-muted" : "";
         return `${isSelected} ${isClickable}`;
     }
+
+    scrollingElementResizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+            if (this.scrollingElementHeight !== entry.target.scrollingElementHeight) {
+                this.oldScrollTop +=
+                    entry.target.scrollingElementHeight - this.scrollingElementHeight;
+                this.scrollingElementHeight = entry.target.scrollingElementHeight;
+            }
+        }
+    });
 
     getBreadcrumbTooltip({ name }) {
         return _t("Back to “%s”", name);
