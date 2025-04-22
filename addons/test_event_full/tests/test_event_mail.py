@@ -329,6 +329,8 @@ class TestEventSaleMail(TestEventFullCommon):
 
         with self.mock_mail_gateway():
             self.customer_so.action_confirm()
+            # mail send is done when writing state value, hence flushing for the test
+            registration.flush_recordset()
         self.assertEqual(self.customer_so.state, "sale")
         self.assertEqual(registration.state, "open")
 

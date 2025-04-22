@@ -135,6 +135,17 @@ class EventRegistration(models.Model):
                 views_or_xmlid='event_sale.event_ticket_id_change_exception',
                 render_context=render_context)
 
+    def _compute_field_value(self, field):
+        if field.name != 'state':
+            return super()._compute_field_value(field)
+
+        unconfirmed = self.filtered(lambda reg: reg.ids and reg.state in {'draft', 'cancel'})
+        res = super()._compute_field_value(field)
+        confirmed = unconfirmed.filtered(lambda reg: reg.state == 'open')
+        if confirmed:
+            confirmed._update_mail_schedulers()
+        return res
+
     def _get_registration_summary(self):
         res = super(EventRegistration, self)._get_registration_summary()
         res.update({
