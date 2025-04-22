@@ -884,12 +884,7 @@ class AccountMove(models.Model):
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
         for m in self:
-            journal_type = m.invoice_filter_type_domain or 'general'
-            company = m.company_id or self.env.company
-            m.suitable_journal_ids = self.env['account.journal'].search([
-                *self.env['account.journal']._check_company_domain(company),
-                ('type', '=', journal_type),
-            ])
+            m.suitable_journal_ids = self._get_suitable_journal_ids(m.move_type, m.company_id)
 
     @api.depends('posted_before', 'state', 'journal_id', 'date', 'move_type', 'origin_payment_id')
     def _compute_name(self):
@@ -1756,12 +1751,7 @@ class AccountMove(models.Model):
     @api.depends('move_type')
     def _compute_invoice_filter_type_domain(self):
         for move in self:
-            if move.is_sale_document(include_receipts=True):
-                move.invoice_filter_type_domain = 'sale'
-            elif move.is_purchase_document(include_receipts=True):
-                move.invoice_filter_type_domain = 'purchase'
-            else:
-                move.invoice_filter_type_domain = False
+            move.invoice_filter_type_domain = self._get_invoice_filter_type_domain(move.move_type)
 
     @api.depends('commercial_partner_id', 'company_id', 'move_type')
     def _compute_bank_partner_id(self):
@@ -5809,6 +5799,24 @@ class AccountMove(models.Model):
         return False
 
     @api.model
+    def _get_suitable_journal_ids(self, move_type, company=False):
+        """Return the suitable journals for the given move type and company (current company if False)."""
+        journal_type = self._get_invoice_filter_type_domain(move_type) or 'general'
+        return self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(company or self.env.company),
+            ('type', '=', journal_type),
+        ])
+
+    @api.model
+    def _get_invoice_filter_type_domain(self, move_type):
+        if self.is_sale_document(include_receipts=True, move_type=move_type):
+            return 'sale'
+        elif self.is_purchase_document(include_receipts=True, move_type=move_type):
+            return 'purchase'
+        else:
+            return False
+
+    @api.model
     def get_invoice_types(self, include_receipts=False):
         return self.get_sale_types(include_receipts) + self.get_purchase_types(include_receipts)
 
@@ -5822,15 +5830,15 @@ class AccountMove(models.Model):
     def get_sale_types(self, include_receipts=False):
         return ['out_invoice', 'out_refund'] + (include_receipts and ['out_receipt'] or [])
 
-    def is_sale_document(self, include_receipts=False):
-        return self.move_type in self.get_sale_types(include_receipts)
+    def is_sale_document(self, include_receipts=False, move_type=False):
+        return (move_type or self.move_type) in self.get_sale_types(include_receipts)
 
     @api.model
     def get_purchase_types(self, include_receipts=False):
         return ['in_invoice', 'in_refund'] + (include_receipts and ['in_receipt'] or [])
 
-    def is_purchase_document(self, include_receipts=False):
-        return self.move_type in self.get_purchase_types(include_receipts)
+    def is_purchase_document(self, include_receipts=False, move_type=False):
+        return (move_type or self.move_type) in self.get_purchase_types(include_receipts)
 
     @api.model
     def get_inbound_types(self, include_receipts=True):
