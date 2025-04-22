@@ -1,4 +1,12 @@
-import { Component, useState, useSubEnv } from "@odoo/owl";
+import {
+    Component,
+    onWillUnmount,
+    useState,
+    useSubEnv,
+    useRef,
+    onMounted,
+    onPatched,
+} from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { KioskAttributeSelection } from "@pos_self_order/app/components/kiosk_attribute_selection/attribute_selection";
@@ -25,9 +33,49 @@ export class KioskComboPage extends Component {
             qty: 1,
             selectedValues: this.env.selectedValues,
             comboPrice: 0,
+            topShadowOpacity: 0,
+            bottomShadowOpacity: 1,
+        });
+        this.onAttributeSelection = this.onAttributeSelection.bind(this);
+        this.scrollContainerRef = useRef("scrollContainer");
+        this.updateShadows = this.updateShadows.bind(this);
+
+        onMounted(() => {
+            const el = this.scrollContainerRef?.el;
+            if (el) {
+                el.addEventListener("scroll", this.updateShadows);
+                window.addEventListener("resize", this.updateShadows);
+                this.updateShadows();
+            }
+
+            requestAnimationFrame(this.updateShadows);
         });
 
-        this.onAttributeSelection = this.onAttributeSelection.bind(this);
+        onPatched(() => {
+            this.updateShadows();
+        });
+
+        onWillUnmount(() => {
+            const el = this.scrollContainerRef?.el;
+            if (el) {
+                el.removeEventListener("scroll", this.updateShadows);
+            }
+            window.removeEventListener("resize", this.updateShadows);
+        });
+    }
+
+    updateShadows() {
+        if (!this.scrollContainerRef.el) {
+            return;
+        }
+
+        const container = this.scrollContainerRef.el;
+        const { scrollTop, scrollHeight, clientHeight } = container;
+
+        const threshold = 2;
+        this.state.topShadowOpacity = scrollTop > threshold ? 1 : 0;
+        this.state.bottomShadowOpacity =
+            scrollTop + clientHeight < scrollHeight - threshold ? 1 : 0;
     }
 
     get currentCombo() {

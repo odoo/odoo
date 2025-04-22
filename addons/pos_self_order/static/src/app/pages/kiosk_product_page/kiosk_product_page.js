@@ -1,4 +1,12 @@
-import { Component, onWillUnmount, useState, useSubEnv } from "@odoo/owl";
+import {
+    Component,
+    onWillUnmount,
+    useState,
+    useSubEnv,
+    useRef,
+    onMounted,
+    onPatched,
+} from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { KioskAttributeSelection } from "@pos_self_order/app/components/kiosk_attribute_selection/attribute_selection";
@@ -26,11 +34,49 @@ export class KioskProductPage extends Component {
         this.state = useState({
             qty: editedLine ? editedLine.qty : 1,
             selectedValues: this.env.selectedValues,
+            topShadowOpacity: 0,
+            bottomShadowOpacity: 1,
+        });
+
+        this.scrollContainerRef = useRef("scrollContainer");
+
+        onMounted(() => {
+            this.updateShadows();
+            if (this.scrollContainerRef.el) {
+                this.scrollContainerRef.el.addEventListener(
+                    "scroll",
+                    this.updateShadows.bind(this)
+                );
+                window.addEventListener("resize", this.updateShadows.bind(this));
+            }
+            setTimeout(() => this.updateShadows(), 100);
+        });
+
+        onPatched(() => {
+            this.updateShadows();
         });
 
         onWillUnmount(() => {
             this.selfOrder.editedLine = null;
+            if (this.scrollContainerRef.el) {
+                this.scrollContainerRef.el.removeEventListener(
+                    "scroll",
+                    this.updateShadows.bind(this)
+                );
+                window.removeEventListener("resize", this.updateShadows.bind(this));
+            }
         });
+    }
+
+    updateShadows() {
+        const container = this.scrollContainerRef.el;
+        if (!container) {
+            return;
+        }
+
+        const { scrollTop, scrollHeight, clientHeight } = container;
+        this.state.topShadowOpacity = scrollTop > 0 ? 1 : 0;
+        this.state.bottomShadowOpacity = scrollTop + clientHeight < scrollHeight ? 1 : 0;
     }
 
     get productTemplate() {

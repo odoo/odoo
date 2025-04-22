@@ -12,6 +12,12 @@
     @media #{screen and (min-width: 3839px), (min-height: 3839px)} {
         --root-font-size: #{$o-so-font-size-4k};
     }
+
+    @include media-breakpoint-up(lg) {
+        @media (orientation: portrait) {
+            --root-font-size: #{$o-so-font-size-kiosk};
+        }
+    }
 }
 
 @keyframes fadeIn {
@@ -156,57 +162,26 @@ li {
     }
 }
 
+.o_kiosk_shadow_top {
+    height: 3rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
+}
+
+.o_kiosk_shadow_bottom {
+    height: 3rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
+}
+
 @include media-breakpoint-up(lg) {
     @media (orientation: portrait) {
-        body {
-            font-size: 1.2vh;
-        }
         
-        h1 {
-            font-size: 2.1vh;
-        }
-        
-        h2 {
-            font-size: 1.8vh;
-        }
-        
-        h3 {
-            font-size: 1.5vh;
-        }
-        
-        h4 {
-            font-size: 1.3vh;
-        }
-        
-        h5 {
-            font-size: 1.2vh;
-        }
-        
-        h6 {
-            font-size: 1.0vh; 
-        }
-
         .btn {
-            font-size: 1.8vh;
-            padding: 1.4vh 2.8vh;
             border-radius: $border-radius-xl;
-            text-align: center;
-            white-space: normal;
 
             &:active {
                 transform: scale(0.98);
                 transition: transform 100ms ease;
             }
-
-            .btn-sm {
-                font-size: 1.575vh;
-                padding: 1.05vh 2.1vh;
-                border-radius: $border-radius-xl;
-            }
-        }
-
-        .btn-group > .btn {
-            padding: 0.9vh 1.35vh;
         }
 
         .nav-link {
@@ -224,61 +199,6 @@ li {
         .modal-dialog {
             transform: scale(0.8);
             animation: selfOrderModalScale 120ms ease-out forwards;
-        }
-    }
-}
-
-@include media-breakpoint-up(xl) {
-    @media (orientation: portrait) {
-        body {
-            font-size: 1.5vh;
-        }
-
-        h1 {
-            font-size: 2.5vh;
-        }
-
-        h2 {
-            font-size: 2.2vh;
-        }
-        
-        h3 {
-            font-size: 1.9vh;
-        }
-        
-        h4 {
-            font-size: 1.6vh;
-        }
-        
-        h5 {
-            font-size: 1.5vh;
-        }
-        
-        h6 {
-            font-size: 1.3vh;
-        }
-
-        .btn {
-            font-size: 2.2vh;
-            padding: 1.8vh 3.4vh;
-            border-radius: $border-radius-lg;
-            text-align: center;
-            white-space: normal;
-            
-            &:active {
-                transform: scale(0.98);
-                transition: transform 100ms ease;
-            }
-
-            .btn-sm {
-                font-size: 1.925vh;
-                padding: 1.35vh 2.55vh;
-                border-radius: $border-radius-xl;
-            }
-        }
-        
-        .btn-group > .btn {
-            padding: 1vh 1.5vh;
         }
     }
 }
