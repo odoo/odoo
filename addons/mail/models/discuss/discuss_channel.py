@@ -862,6 +862,10 @@ class DiscussChannel(models.Model):
         # Do not allow follower subscription on channels. Only members are considered
         raise UserError(_('Adding followers on channels is not possible. Consider adding members instead.'))
 
+    def _should_invite_members_to_join_call(self):
+        self.ensure_one()
+        return len(self.rtc_session_ids) == 1 and self.channel_type != "channel"
+
     # ------------------------------------------------------------
     # BROADCAST
     # ------------------------------------------------------------

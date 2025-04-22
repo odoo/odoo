@@ -322,8 +322,8 @@ class DiscussChannelMember(models.Model):
             body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
             message = self.channel_id.message_post(body=body, message_type="notification")
             self.channel_id.last_call_message_id = message
-            if self.channel_id.channel_type != "channel":
-                self._rtc_invite_members()
+        if self.channel_id._should_invite_members_to_join_call():
+            self._rtc_invite_members()
 
     def _join_sfu(self, ice_servers=None, force=False):
         if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD and not force:
