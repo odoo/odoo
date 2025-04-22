@@ -24,17 +24,21 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                # update sessions
+                # delete of old sessions
                 (self.cr.dbname, "discuss.channel", channel.id),
-                # end of previous session
+                # end of old sessions
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-
+                # update history with duration of previous session
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # insert new session
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # message unread counter (message post)
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # update members is_pinned (message post)
+                (self.cr.dbname, "discuss.channel", channel.id, "members"),
                 # start call notification message post
                 (self.cr.dbname, "discuss.channel", channel.id),
-                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                (self.cr.dbname, "discuss.channel", channel.id, "members"),
-
-                # update sessions
+                # new call history (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
@@ -190,6 +194,8 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id, "members"),
                 # update of last interest (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
+                # update call history (not asserted below)
+                (self.cr.dbname, "discuss.channel", channel.id),
                 # incoming invitation
                 (self.cr.dbname, "res.partner", test_user.partner_id.id),
                 # update list of invitations
@@ -305,6 +311,8 @@ class TestChannelRTC(MailCommon):
                 # update of pin state (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id, "members"),
                 # update of last interest (not asserted below)
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # update call history (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # incoming invitation
                 (self.cr.dbname, "res.partner", test_user.partner_id.id),
@@ -829,7 +837,7 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # end session
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                # update status call message
+                # update call history (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
@@ -922,25 +930,6 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel.id,
                                 "rtc_session_ids": [("DELETE", [channel_member.rtc_session_ids.id])],
-                            },
-                        ],
-                    },
-                },
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
-                        "mail.message": [
-                            {
-                                "attachment_ids": [],
-                                "body": [
-                                    "markup",
-                                    '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
-                                ],
-                                "id": channel.last_call_message_id.id,
-                                "pinned_at": False,
-                                "recipients": [],
-                                "translationValue": False,
-                                "write_date": channel.last_call_message_id.write_date,
                             },
                         ],
                     },
@@ -1168,7 +1157,7 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # end session
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                # update status call message
+                # update call history (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
@@ -1183,25 +1172,6 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel.id,
                                 "rtc_session_ids": [("DELETE", [channel_member.rtc_session_ids.id])],
-                            },
-                        ],
-                    },
-                },
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
-                        "mail.message": [
-                            {
-                                "attachment_ids": [],
-                                "body": [
-                                    "markup",
-                                    '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
-                                ],
-                                "id": channel.last_call_message_id.id,
-                                "pinned_at": False,
-                                "recipients": [],
-                                "translationValue": False,
-                                "write_date": channel.last_call_message_id.write_date,
                             },
                         ],
                     },
@@ -1228,6 +1198,8 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # session ended
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # update call history duration
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -1263,6 +1235,8 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # session ended
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # update call history duration
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {

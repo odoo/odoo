@@ -34,6 +34,7 @@ export class Message extends Record {
     attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
     author = fields.One("Persona");
     body = fields.Html("");
+    call_history_ids = fields.Many("discuss.call.history");
     richBody = fields.Html("", {
         compute() {
             if (!this.store.emojiLoader.loaded) {

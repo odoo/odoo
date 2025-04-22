@@ -51,14 +51,13 @@ export class NotificationMessage extends Component {
     }
 
     get callInformation() {
-        if (this.message.create_date.equals(this.message.write_date)) {
+        const history = this.message.call_history_ids[0];
+        if (history?.duration_hour === undefined || !history?.end_dt) {
             return _t("%(author)s started a call.", { author: this.message.author.name });
         }
-        let duration = this.message.write_date.diff(this.message.create_date, [
-            "hours",
-            "minutes",
-            "seconds",
-        ]);
+        let duration = luxon.Duration.fromObject({
+            seconds: Math.max(1, Math.round(history.duration_hour * 3600)),
+        }).shiftTo("hours", "minutes", "seconds");
         if (duration.hours || duration.minutes) {
             duration = duration.set({ seconds: 0 });
         }

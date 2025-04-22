@@ -162,6 +162,36 @@
             <field name="perm_unlink" eval="False"/>
         </record>
 
+        <record id="ir_rule_discuss_call_history_read_all" model="ir.rule">
+            <field name="name">discuss.call.history: read call history of accessible channels</field>
+            <field name="model_id" ref="mail.model_discuss_call_history"/>
+            <field name="groups"
+                eval="[
+                    Command.link(ref('base.group_user')),
+                    Command.link(ref('base.group_portal')),
+                    Command.link(ref('base.group_public')),
+                ]"
+            />
+            <field name="domain_force">
+                [
+                    "|",
+                        "&amp;",
+                            ("channel_id.channel_type", "!=", "channel"),
+                            "|",
+                                ("channel_id.is_member", "=", True),
+                                ("channel_id.parent_channel_id.is_member", "=", True),
+                        "&amp;",
+                            ("channel_id.channel_type", "=", "channel"),
+                            "|",
+                                ("channel_id.group_public_id", "=", False),
+                                ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                ]
+            </field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
         <record id="ir_rule_discuss_channel_member_group_system" model="ir.rule">
             <field name="name">discuss.channel.member: admin can manipulate all entries</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
