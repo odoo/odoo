@@ -8,15 +8,28 @@ class SkillsTestUI(HttpCase):
         with Form(self.env['hr.skill.type']) as skill_type:
             skill_type.name = 'Best Music'
             with skill_type.skill_ids.new() as skill:
-                skill.name = f'Fortunate Son'
+                skill.name = 'Fortunate Son'
             with skill_type.skill_ids.new() as skill:
-                skill.name = f'Oh Mary'
+                skill.name = 'Oh Mary'
             for x in range(10):
                 with skill_type.skill_level_ids.new() as level:
                     level.name = f"level {x}"
                     level.level_progress = x * 10
                     level.default_level = x % 2
-        skill_type = skill_type.save()
+        skill_type.save()
+
+        with Form(self.env['hr.skill.type']) as skill_type:
+            skill_type.name = 'Certification'
+            skill_type.is_certification = True
+            with skill_type.skill_ids.new() as skill:
+                skill.name = 'Piano'
+            with skill_type.skill_ids.new() as skill:
+                skill.name = 'Guitar'
+            with skill_type.skill_level_ids.new() as level:
+                level.name = "Certified"
+                level.level_progress = 100
+                level.default_level = True
+        skill_type.save()
 
         self.start_tour("/odoo", 'hr_skills_tour', login='admin')
 
