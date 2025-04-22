@@ -1909,6 +1909,25 @@ test("properties: form view and falsy domain, properties are empty", async () =>
     expect(".o_test_properties_not_empty").toHaveCount(1);
 });
 
+test("properties: discard changes", async () => {
+    onRpc("has_access", () => true);
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="company_id"/>
+                <field name="properties" widget="properties"/>
+            </form>`,
+    });
+    expect(".o_property_field:first-child input").toHaveValue("char value");
+    await contains(".o_property_field:first-child input").edit("char updated");
+    expect(".o_property_field:first-child input").toHaveValue("char updated");
+    await clickCancel();
+    expect(".o_property_field:first-child input").toHaveValue("char value");
+});
+
 // ---------------------------------------------------
 // Test the properties groups
 // ---------------------------------------------------
