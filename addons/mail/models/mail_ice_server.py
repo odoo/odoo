@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, release
 from odoo.addons.mail.tools.discuss import get_twilio_credentials
 import logging
 import requests
@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class MailIceServer(models.Model):
     _name = 'mail.ice.server'
-    _description = 'ICE server'
+    _description = 'ICE Server'
 
     server_type = fields.Selection([('stun', 'stun:'), ('turn', 'turn:')], string='Type', required=True, default='stun')
     uri = fields.Char('URI', required=True)
@@ -40,7 +40,10 @@ class MailIceServer(models.Model):
         :return: List of dict, each of which representing a stun or turn server,
                 formatted as expected by the specifications of RTCConfiguration.iceServers
         """
-        if self.env['ir.config_parameter'].sudo().get_param('mail.use_twilio_rtc_servers'):
+        # sudo: to access system parameters
+        config = self.env['ir.config_parameter'].sudo()
+        is_saas = "saas" in release.version
+        if is_saas or config.get_param('mail.use_twilio_rtc_servers'):
             (account_sid, auth_token) = get_twilio_credentials(self.env)
             if account_sid and auth_token:
                 url = f'https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Tokens.json'
@@ -51,4 +54,5 @@ class MailIceServer(models.Model):
                         return response_content['ice_servers']
                 else:
                     _logger.warning(f"Failed to obtain TURN servers, status code: {response.status_code}, content: {response.content}.")
-        return self._get_local_ice_servers()
+            return self._get_local_ice_servers()
+        return []
