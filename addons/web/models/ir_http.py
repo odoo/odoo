@@ -6,7 +6,7 @@ import odoo
 from odoo import api, models, fields
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
 from odoo.tools import config
-from odoo.tools.misc import str2bool
+from odoo.tools.misc import hmac, str2bool
 
 
 """
@@ -103,6 +103,7 @@ class IrHttp(models.AbstractModel):
             "is_internal_user": is_internal_user,
             "user_context": user_context,
             "db": self.env.cr.dbname,
+            "registry_hash": hmac(self.env(su=True), "webclient-cache", self.env.registry.registry_sequence),
             "user_settings": self.env['res.users.settings']._find_or_create_for_user(user)._res_users_settings_format(),
             "server_version": version_info.get('server_version'),
             "server_version_info": version_info.get('server_version_info'),

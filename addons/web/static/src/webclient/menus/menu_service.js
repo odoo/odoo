@@ -1,3 +1,4 @@
+import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 
@@ -23,7 +24,7 @@ export const menuService = {
         const storedMenus = browser.localStorage.getItem("webclient_menus");
         const storedMenusVersion = browser.localStorage.getItem("webclient_menus_version");
 
-        if (storedMenus && storedMenusVersion === odoo.info.server_version) {
+        if (storedMenus && storedMenusVersion === session.registry_hash) {
             fetchMenus().then((res) => {
                 if (res) {
                     const fetchedMenus = JSON.stringify(res);
@@ -38,7 +39,7 @@ export const menuService = {
         } else {
             menusData = await fetchMenus();
             if (menusData) {
-                browser.localStorage.setItem("webclient_menus_version", odoo.info.server_version);
+                browser.localStorage.setItem("webclient_menus_version", session.registry_hash);
                 browser.localStorage.setItem("webclient_menus", JSON.stringify(menusData));
             }
         }

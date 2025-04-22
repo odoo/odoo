@@ -79,7 +79,8 @@ test(`use stored menus, and don't update on load_menus return (if identical)`, a
     onRpc("/web/webclient/load_menus", () => def);
 
     // Initial Stored values
-    browser.localStorage.webclient_menus_version = "1.0";
+    browser.localStorage.webclient_menus_version =
+        "05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0";
     browser.localStorage.webclient_menus = JSON.stringify({
         1: { appID: 1, children: [2, 3], name: "App1", id: 1, actionID: 666 },
         2: { appID: 1, children: [], name: "Test1", id: 2, actionID: 666 },
@@ -106,7 +107,8 @@ test(`use stored menus, and update on load_menus return`, async () => {
 
     // Initial Stored values
     // There is no menu "Test2" in the initial values
-    browser.localStorage.webclient_menus_version = "1.0";
+    browser.localStorage.webclient_menus_version =
+        "05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0";
     browser.localStorage.webclient_menus = JSON.stringify({
         1: { id: 1, children: [2], name: "App1", appID: 1, actionID: 666 },
         2: { id: 2, children: [], name: "Test1", appID: 1, actionID: 666 },
