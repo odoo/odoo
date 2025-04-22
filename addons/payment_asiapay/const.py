@@ -70,6 +70,7 @@ DEFAULT_PAYMENT_METHODS_CODES = [
 
 # Mapping of payment method codes to AsiaPay codes.
 PAYMENT_METHODS_MAPPING = {
+    'alipay': 'ALIPAY',
     'alipay_hk': 'ALIPAYHKONL',
     'amex': 'AMEX',
     'apple_pay': 'APPLEPAY',
@@ -100,6 +101,7 @@ PAYMENT_METHODS_MAPPING = {
     'masterpass': 'MP',
     'maybank': 'M2U',
     'momo': 'MOMOPAY',
+    'octopus': 'OCTOPUS',
     'ovo': 'OVO',
     'pace': 'Pace',
     'pay_id': 'PAYID',
