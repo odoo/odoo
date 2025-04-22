@@ -325,6 +325,7 @@ class L10nInEwaybill(models.Model):
             self._check_lines,
             self._check_gst_treatment,
             self._check_transporter,
+            self._check_state,
         ]
         for get_error_message in methods_to_check:
             error_message.extend(get_error_message())
@@ -345,6 +346,15 @@ class L10nInEwaybill(models.Model):
         }
         for partner in partners:
             error_message += self._l10n_in_validate_partner(partner)
+        return error_message
+
+    def _check_state(self):
+        error_message = []
+        if self.account_move_id and self.account_move_id.state != 'posted':
+            error_message.append(_(
+                "An E-waybill cannot be generated for a %s move.",
+                dict(self.env['account.move']._fields['state']._description_selection(self.env))[self.account_move_id.state]
+            ))
         return error_message
 
     @api.model
