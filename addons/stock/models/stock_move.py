@@ -1075,7 +1075,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
             # Make sure it is not returning the return
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
-                new_move = rule._run_push(move)
+                new_move = rule._run_push(move) or new_move
                 if new_move:
                     new_moves.append(new_move)
 
