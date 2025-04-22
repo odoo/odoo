@@ -182,6 +182,7 @@ class SaleOrderLine(models.Model):
             'company_id': self.company_id.id,
             'allow_billable': True,
             'user_id': self.product_id.project_template_id.user_id.id,
+            'allow_milestones': self.product_id.service_type == 'milestones',
         }
 
     def _timesheet_create_project(self):

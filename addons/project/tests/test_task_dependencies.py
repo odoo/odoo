@@ -15,7 +15,7 @@ class TestTaskDependencies(TestProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls.env.user.group_ids |= cls.env.ref('project.group_project_task_dependencies')
         cls.project_pigs.write({
             'allow_task_dependencies': True,
         })
@@ -94,34 +94,18 @@ class TestTaskDependencies(TestProjectCommon):
         self.assertEqual(len(self.task_2.depend_on_ids), 1, "The number of dependencies should no change in the task 2 because of a cyclic dependency.")
 
     def test_task_dependencies_settings_change(self):
-
-        def set_task_dependencies_setting(enabled):
-            features_config = self.env["res.config.settings"].create({'group_project_task_dependencies': enabled})
-            features_config.execute()
-
-        self.project_pigs.write({
-            'allow_task_dependencies': False,
-        })
-
-        # As the Project General Setting group_project_task_dependencies needs to be toggled in order
-        # to be applied on the existing projects we need to force it so that it does not depends on anything
-        # (like demo data for instance)
-        set_task_dependencies_setting(False)
-        set_task_dependencies_setting(True)
-        self.assertTrue(self.project_pigs.allow_task_dependencies, "Projects allow_task_dependencies should follow group_project_task_dependencies setting changes")
-
+        # set group_project_task_dependencies(True)
         self.project_chickens = self.env['project.project'].create({
             'name': 'My Chicken Project'
         })
-        self.assertTrue(self.project_chickens.allow_task_dependencies, "New Projects allow_task_dependencies should default to group_project_task_dependencies")
+        self.assertFalse(self.project_chickens.allow_task_dependencies, "New Projects allow_task_dependencies should default to False")
 
-        set_task_dependencies_setting(False)
-        self.assertFalse(self.project_pigs.allow_task_dependencies, "Projects allow_task_dependencies should follow group_project_task_dependencies setting changes")
-
+        # set group_project_task_dependencies(False)
+        self.env.user.group_ids -= self.env.ref('project.group_project_task_dependencies')
         self.project_ducks = self.env['project.project'].create({
             'name': 'My Ducks Project'
         })
-        self.assertFalse(self.project_ducks.allow_task_dependencies, "New Projects allow_task_dependencies should default to group_project_task_dependencies")
+        self.assertFalse(self.project_ducks.allow_task_dependencies, "New Projects allow_task_dependencies should still default to False")
 
     def test_duplicate_project_with_task_dependencies(self):
         self.project_pigs.allow_task_dependencies = True

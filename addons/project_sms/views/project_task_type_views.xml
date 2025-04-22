@@ -5,7 +5,7 @@
         <field name="model">project.task.type</field>
         <field name="inherit_id" ref="project.task_type_edit"/>
         <field name="arch" type="xml">
-            <field name="mail_template_id" position="before">
+            <field name="mail_template_id" position="after">
                 <field name="sms_template_id" context="{'default_model': 'project.task'}" options="{'no_quick_create': True}" invisible="user_id"/>
             </field>
         </field>
@@ -16,7 +16,7 @@
         <field name="model">project.task.type</field>
         <field name="inherit_id" ref="project.task_type_tree"/>
         <field name="arch" type="xml">
-            <field name="mail_template_id" position="before">
+            <field name="mail_template_id" position="after">
                 <field name="sms_template_id" optional="hide"/>
             </field>
         </field>

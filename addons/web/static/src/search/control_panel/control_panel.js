@@ -148,6 +148,23 @@ export class ControlPanel extends Component {
             };
         });
 
+        // The goal is to automatically open the dropdown menu of embedded actions if there is only one visible embedded action
+        // We use a timer to delay the display of that dropdown menu to avoid flicker issues
+        useEffect(
+            (el, showEmbedded) => {
+                const timer = setTimeout(() => {
+                    if (
+                        showEmbedded &&
+                        this.state.embeddedInfos.visibleEmbeddedActions.length === 1
+                    ) {
+                        el.querySelector(".btn[name='openEmbeddedActions']")?.click();
+                    }
+                }, 100);
+                return () => clearTimeout(timer);
+            },
+            () => [this.root.el, this.state.embeddedInfos.showEmbedded]
+        );
+
         onMounted(async () => {
             if (this.state.embeddedInfos.embeddedActions?.length > 0) {
                 const embeddedOrderLocalStorageKey =

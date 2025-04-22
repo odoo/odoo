@@ -144,8 +144,9 @@ class ProjectProject(models.Model):
     date_start = fields.Date(string='Start Date', copy=False)
     date = fields.Date(string='Expiration Date', copy=False, index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
-    allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'), inverse='_inverse_allow_task_dependencies')
-    allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
+    allow_task_dependencies = fields.Boolean('Task Dependencies', inverse='_inverse_allow_task_dependencies')
+    allow_milestones = fields.Boolean('Milestones', inverse='_inverse_allow_milestones')
+    allow_recurring_tasks = fields.Boolean('Recurring Tasks', inverse='_inverse_allow_recurring_tasks')
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
     task_properties_definition = fields.PropertiesDefinition('Task Properties')
     closed_task_count = fields.Integer(compute="_compute_closed_task_count", export_string_translation=False)
@@ -154,24 +155,6 @@ class ProjectProject(models.Model):
     # Project Sharing fields
     collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False, export_string_translation=False)
     collaborator_count = fields.Integer('# Collaborators', compute='_compute_collaborator_count', compute_sudo=True, export_string_translation=False)
-
-    # rating fields
-    rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True, export_string_translation=False)
-    rating_active = fields.Boolean('Customer Ratings', default=lambda self: self.env.user.has_group('project.group_project_rating'))
-    rating_status = fields.Selection(
-        [('stage', 'when reaching a given stage'),
-         ('periodic', 'on a periodic basis')
-        ], 'Customer Ratings Status', default="stage", required=True,
-        help="Collect feedback from your customers by sending them a rating request when a task enters a certain stage. To do so, define a rating email template on the corresponding stages.\n"
-             "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
-             "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set.")
-    rating_status_period = fields.Selection([
-        ('daily', 'Daily'),
-        ('weekly', 'Weekly'),
-        ('bimonthly', 'Twice a Month'),
-        ('monthly', 'Once a Month'),
-        ('quarterly', 'Quarterly'),
-        ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
@@ -300,12 +283,6 @@ class ProjectProject(models.Model):
                 raise UserError(
                     _("The project's company cannot be changed if its analytic account has analytic lines or if more than one project is linked to it."))
             account.company_id = project.company_id or project.partner_id.company_id
-
-    @api.depends('rating_status', 'rating_status_period')
-    def _compute_rating_request_deadline(self):
-        periods = {'daily': 1, 'weekly': 7, 'bimonthly': 15, 'monthly': 30, 'quarterly': 90, 'yearly': 365}
-        for project in self:
-            project.rating_request_deadline = fields.Datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
 
     @api.depends('last_update_id.status')
     def _compute_last_update_status(self):
@@ -445,6 +422,17 @@ class ProjectProject(models.Model):
             )
         ):
             waiting_tasks.state = '01_in_progress'
+        res = self._check_project_group_with_field('allow_task_dependencies', 'project.group_project_task_dependencies')
+        # Hide/Show task waiting subtype when task dependencies feature is disabled/enabled
+        if res or res is False:
+            self.env.ref('project.mt_task_waiting').hidden = not res
+            self.env.ref('project.mt_project_task_waiting').hidden = not res
+
+    def _inverse_allow_milestones(self):
+        self._check_project_group_with_field('allow_milestones', 'project.group_project_milestone')
+
+    def _inverse_allow_recurring_tasks(self):
+        self._check_project_group_with_field('allow_recurring_tasks', 'project.group_project_recurring_tasks')
 
     @api.model
     def _map_tasks_default_values(self, project):
@@ -679,6 +667,9 @@ class ProjectProject(models.Model):
         if 'allow_task_dependencies' in vals and not vals.get('allow_task_dependencies'):
             self.env['project.task'].search([('project_id', 'in', self.ids), ('state', '=', '04_waiting_normal')]).write({'state': '01_in_progress'})
 
+        if 'allow_recurring_tasks' in vals and not vals['allow_recurring_tasks']:
+            self.env['project.task'].search([('project_id', 'in', self.ids), ('recurring_task', '=', True)]).write({'recurring_task': False})
+
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
@@ -708,6 +699,12 @@ class ProjectProject(models.Model):
         result = super().unlink()
         analytic_accounts_to_delete.unlink()
         return result
+
+    @api.ondelete(at_uninstall=False)
+    def _check_project_group_at_removal(self):
+        self._check_project_group_with_field('allow_task_dependencies', 'project.group_project_task_dependencies')
+        self._check_project_group_with_field('allow_milestones', 'project.group_project_milestone')
+        self._check_project_group_with_field('allow_recurring_tasks', 'project.group_project_recurring_tasks')
 
     def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
         if field_name == 'is_favorite':
@@ -773,6 +770,56 @@ class ProjectProject(models.Model):
             ['id', 'name'],
         )
 
+    @api.model
+    def _check_project_group_with_field(self, field_name, group_name):
+        """ Check if the user has the group 'group_name' and if there is a project with the field 'field_name' set to True.
+        If not, remove the group 'group_name' from the user base group.
+        Otherwise, add the group 'group_name' to the user base group.
+        Returns True if the group was added, False if it was removed, None if no change was made.
+        """
+        has_user_group = bool(self.env.user.has_group(group_name))
+        group = self.env.ref(group_name)
+        base_group_user = self.env.ref('base.group_user')
+        has_project_field_set = bool(self.env['project.project'].search_count([(field_name, '=', True)], limit=1))
+        res = None
+
+        if not has_user_group and has_project_field_set:
+            # add the group to the base user group if there is at least one project with field_name=True
+            base_group_user.sudo().write({
+                'implied_ids': [Command.link(group.id)]
+            })
+            res = True
+        elif has_user_group and not has_project_field_set:
+            # remove the group from the base user group if there is no project with field_name=True
+            base_group_user.sudo().write({
+                'implied_ids': [Command.unlink(group.id)]
+            })
+            group.sudo().write({'user_ids': [Command.clear()]})
+            res = False
+        return res
+
+    def _get_project_features_mapping(self):
+        return {
+            'allow_task_dependencies': 'project.group_project_task_dependencies',
+            'allow_milestones': 'project.group_project_milestone',
+            'allow_recurring_tasks': 'project.group_project_recurring_tasks',
+        }
+
+    @api.model
+    def check_features_enabled(self, updated_features=None):
+        if not self.env.user.has_group('project.group_project_user'):
+            return {}
+        if updated_features:
+            return {
+                field_name: self.env.user.has_group(group)
+                for field_name, group in self._get_project_features_mapping().items()
+                if field_name in updated_features
+            }
+        return {
+            field_name: self.env.user.has_group(group)
+            for field_name, group in self._get_project_features_mapping().items()
+        }
+
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
@@ -796,8 +843,6 @@ class ProjectProject(models.Model):
 
     def _mail_get_message_subtypes(self):
         res = super()._mail_get_message_subtypes()
-        if not self.rating_active:
-            res -= self.env.ref('project.mt_project_task_rating')
         if len(self) == 1:
             waiting_subtype = self.env.ref('project.mt_project_task_waiting')
             if not self.allow_task_dependencies and waiting_subtype in res:
@@ -878,6 +923,8 @@ class ProjectProject(models.Model):
             'create': self.active,
             'active_test': self.active,
             'active_id': self.id,
+            'allow_milestones': self.allow_milestones,
+            'allow_task_dependencies': self.allow_task_dependencies,
             })
         action['context'] = context
         if self.is_template:
@@ -1033,7 +1080,7 @@ class ProjectProject(models.Model):
             'show': True,
             'sequence': 1,
         }]
-        if self.rating_count != 0 and self.env.user.has_group('project.group_project_rating'):
+        if self.rating_count != 0:
             if self.rating_avg >= rating_data.RATING_AVG_TOP:
                 icon = 'smile-o text-success'
             elif self.rating_avg >= rating_data.RATING_AVG_OK:
@@ -1046,7 +1093,6 @@ class ProjectProject(models.Model):
                 'number': f'{int(self.rating_avg) if self.rating_avg.is_integer() else round(self.rating_avg, 1)} / 5',
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
-                'show': self.rating_active,
                 'sequence': 15,
             })
         if self.env.user.has_group('project.group_project_user'):
@@ -1149,23 +1195,6 @@ class ProjectProject(models.Model):
             **super()._get_account_node_context(plan),
             'default_company_id': unquote('company_id'),
         }
-
-    # ---------------------------------------------------
-    # Rating business
-    # ---------------------------------------------------
-
-    # This method should be called once a day by the scheduler
-    @api.model
-    def _send_rating_all(self):
-        projects = self.search([
-            ('rating_active', '=', True),
-            ('rating_status', '=', 'periodic'),
-            ('rating_request_deadline', '<=', fields.Datetime.now())
-        ])
-        for project in projects:
-            project.task_ids._send_task_rating_mail()
-            project._compute_rating_request_deadline()
-            self.env.cr.commit()
 
     # ---------------------------------------------------
     # Privacy

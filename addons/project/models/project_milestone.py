@@ -25,6 +25,7 @@ class ProjectMilestone(models.Model):
     is_reached = fields.Boolean(string="Reached", default=False, copy=False)
     reached_date = fields.Date(compute='_compute_reached_date', store=True, export_string_translation=False)
     task_ids = fields.One2many('project.task', 'milestone_id', 'Tasks', export_string_translation=False)
+    project_allow_milestones = fields.Boolean(compute='_compute_project_allow_milestones', search='_search_project_allow_milestones', compute_sudo=True, export_string_translation=False)
 
     # computed non-stored fields
     is_deadline_exceeded = fields.Boolean(compute="_compute_is_deadline_exceeded", export_string_translation=False)
@@ -85,6 +86,17 @@ class ProjectMilestone(models.Model):
         for milestone in unreached_milestones:
             opened_task_count, closed_task_count = task_count_per_milestones[milestone.id]
             milestone.can_be_marked_as_done = closed_task_count > 0 and not opened_task_count
+
+    @api.depends('project_id.allow_milestones')
+    def _compute_project_allow_milestones(self):
+        for milestone in self:
+            milestone.project_allow_milestones = milestone.project_id.allow_milestones
+
+    def _search_project_allow_milestones(self, operator, value):
+        query = self.env['project.project'].sudo()._search([
+            ('allow_milestones', operator, value),
+        ])
+        return [('project_id', 'in', query)]
 
     def toggle_is_reached(self, is_reached):
         self.ensure_one()
