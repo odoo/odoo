@@ -13,6 +13,7 @@ import {
     useExternalListener,
     useRef,
     useState,
+    useSubEnv,
 } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -50,6 +51,7 @@ export class Call extends Component {
         this.ui = useService("ui");
         this.state = useState({
             isFullscreen: false,
+            collapsed: localStorage.getItem("collapsed") || false,
             sidebar: false,
             tileWidth: 0,
             tileHeight: 0,
@@ -59,6 +61,12 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useService("mail.store");
+        useSubEnv({
+            discussCall: {
+                collapsed: this.state.collapsed,
+                resizeCallSpace: this.resizeCallSpace.bind(this),
+            },
+        });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
             this.resizeObserver.observe(this.grid.el);
@@ -72,6 +80,10 @@ export class Call extends Component {
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
         useHotkey("shift+m", () => this.rtc.toggleMicrophone());
+    }
+
+    get collapsCallTitle() {
+        return this.state.collapsed ? "Expand Call" : "Collapse Call";
     }
 
     get isActiveCall() {
@@ -137,7 +149,11 @@ export class Call extends Component {
         invitationCards.sort(
             (c1, c2) => c1.member.persona?.name?.localeCompare(c2.member.persona?.name) ?? 1
         );
-        return raisingHandCards.concat(sessionCards, invitationCards);
+        return this.state.collapsed
+            ? [...raisingHandCards, ...sessionCards, ...invitationCards].filter(
+                  (card) => card.type !== "screen"
+              )
+            : raisingHandCards.concat(sessionCards, invitationCards);
     }
 
     /** @returns {CardData[]} */
@@ -236,7 +252,7 @@ export class Call extends Component {
             return;
         }
         const { width, height } = this.grid.el.getBoundingClientRect();
-        const aspectRatio = this.minimized ? 1 : 16 / 9;
+        const aspectRatio = this.minimized || this.state.collapsed ? 1 : 16 / 9;
         const tileCount = this.grid.el.children.length;
         let optimal = {
             area: 0,
@@ -306,6 +322,16 @@ export class Call extends Component {
             }
         }
         this.state.isFullscreen = false;
+    }
+
+    resizeCallSpace(collapsed) {
+        if (collapsed === undefined) {
+            this.state.collapsed = !this.state.collapsed;
+        } else {
+            this.state.collapsed = collapsed;
+        }
+        this.env.discussCall.collapsed = this.state.collapsed;
+        localStorage.setItem("collapsed", this.state.collapsed);
     }
 
     /**

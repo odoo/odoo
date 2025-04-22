@@ -68,6 +68,11 @@
         outline-offset: -4px;
     }
 
+    &.o-isTalking-collapsed {
+        outline: 2px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -2px;
+    }
+
     &.o-isInvitation:not(:hover) {
         animation: o-discuss-CallParticipantCard-avatarImag_borderPulse 3s linear infinite;
     }

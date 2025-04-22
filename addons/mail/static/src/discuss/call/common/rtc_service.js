@@ -377,6 +377,10 @@ export class Rtc extends Record {
              */
             fallbackMode: false,
             isPipMode: false,
+            /**
+             * Track if user has ever used video features to control auto-expand behavior
+             */
+            hasUsedVideo: false,
         });
         this.blurManager = undefined;
     }
@@ -1716,6 +1720,7 @@ export class Rtc extends Record {
                 break;
             }
         }
+        this.state.hasUsedVideo = true;
     }
 
     updateAndBroadcast(data) {

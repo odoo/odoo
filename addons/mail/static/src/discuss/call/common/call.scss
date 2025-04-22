@@ -12,6 +12,22 @@
         min-height: auto;
     }
 
+    .o-resize-Call-Button {
+        button i {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        button:hover i {
+            transform: scale(1.2);
+            text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.6);
+        }
+    }
+
+    &.o-collapsed {
+        height: fit-content;
+        min-height: fit-content;
+        max-height: max-content;
+    }
+
     &.o-minimized {
         height: 20%; // ensures that the view returns to the right height when resized
         min-height: #{"max(20%, 130px)"};
@@ -55,7 +71,7 @@
     min-width: var(--width);
     min-height: var(--height);
     aspect-ratio: 16/9;
-    
+
     &.o-active {
         width: 100%;
         height: auto;
