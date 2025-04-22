@@ -16,7 +16,7 @@ class TestProjectSharingUi(HttpCase):
             'email': 'georges@project.portal',
             'signature': 'SignGeorges',
             'notification_type': 'email',
-            'group_ids': [Command.set([cls.env.ref('base.group_portal').id])],
+            'group_ids': [Command.set([cls.env.ref('base.group_portal').id, cls.env.ref('project.group_project_milestone').id])],
         })
 
         cls.partner_portal = cls.env['res.partner'].with_context({'mail_create_nolog': True}).create({
@@ -34,8 +34,9 @@ class TestProjectSharingUi(HttpCase):
                 Command.create({'name': 'To Do', 'sequence': 1}),
                 Command.create({'name': 'Done', 'sequence': 10})
             ],
+            'allow_milestones': True,
         })
-        cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
+        cls.env.user.group_ids |= cls.env.ref('project.group_project_milestone')
 
     def test_blocked_task_with_project_sharing_string_portal(self):
         """

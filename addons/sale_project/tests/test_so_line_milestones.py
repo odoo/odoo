@@ -15,7 +15,7 @@ class TestSoLineMilestones(TestSaleCommon):
         super().setUpClass()
         cls.env.user.group_ids += cls.quick_ref('project.group_project_manager')
 
-        cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
+        cls.env.user.group_ids += cls.env.ref('project.group_project_milestone')
         uom_hour = cls.env.ref('uom.product_uom_hour')
 
         cls.product_delivery_milestones1 = cls.env['product.product'].create({
@@ -242,6 +242,7 @@ class TestSoLineMilestones(TestSaleCommon):
         """
         project_template = self.env['project.project'].create({
             'name': 'Project Template',
+            'allow_milestones': True,
         })
         self.env['project.milestone'].create([{
             'project_id': project_template.id,

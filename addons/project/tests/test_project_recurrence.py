@@ -124,19 +124,14 @@ class TestProjectRecurrence(TransactionCase):
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is after repeat_until, next occurrence shouldn't have been created")
 
     def test_recurring_settings_change(self):
-        self.env['res.config.settings'] \
-            .create({'group_project_recurring_tasks': True}) \
-            .execute()
         test_task = self.env['project.task'].create({
             'name': "Recurring Task",
             'project_id': self.project_recurring.id,
             'recurring_task': True,
         })
-        self.assertTrue(test_task.recurring_task, 'The "Recurring" feature should be enabled from settings.')
-        self.env['res.config.settings'] \
-            .create({'group_project_recurring_tasks': False}) \
-            .execute()
-        self.assertFalse(test_task.recurring_task, 'The "Recurring" feature should not be enabled by default.')
+        self.assertTrue(test_task.recurring_task, 'The "Recurring" feature of the task should be enabled.')
+        self.project_recurring.allow_recurring_tasks = False
+        self.assertFalse(test_task.recurring_task, 'The "Recurring" feature of the task should be disabled when the project is not recurring anymore.')
 
     def test_disabling_recurrence(self):
         """

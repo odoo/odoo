@@ -180,9 +180,12 @@ class TestTaskState(TestProjectCommon):
         )
 
     def test_state_dont_reset_when_enabling_task_dependencies(self):
+        self.project_goats.allow_task_dependencies = False
+        self.env.user.group_ids -= self.env.ref('project.group_project_task_dependencies')
         self.task_1.state = "03_approved"
         self.task_2.state = "02_changes_requested"
-        self.env['res.config.settings'].create({'group_project_task_dependencies': True}).execute()
+        self.project_goats.allow_task_dependencies = True
+        self.env.user.group_ids += self.env.ref('project.group_project_task_dependencies')
         self.assertEqual(self.task_1.state, "03_approved")
         self.assertEqual(self.task_2.state, "02_changes_requested")
 
@@ -207,7 +210,8 @@ class TestTaskState(TestProjectCommon):
             13. Enable again the task dependencies on the project.
             14. Check the state of task 1 did not change.
         """
-        self.env['res.config.settings'].create({'group_project_task_dependencies': True}).execute()
+        self.assertTrue(self.project_goats.allow_task_dependencies)
+        self.assertTrue(self.env.user.has_group('project.group_project_task_dependencies'))
         self.task_1.depend_on_ids = self.task_2
         self.assertEqual(self.task_1.state, '04_waiting_normal')
         self.project_goats.allow_task_dependencies = False

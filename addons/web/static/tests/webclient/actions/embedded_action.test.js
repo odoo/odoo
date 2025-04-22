@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
     defineActions,
@@ -196,7 +196,7 @@ test("can toggle visibility of embedded actions", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     expect(".o_popover.dropdown-menu .dropdown-item").toHaveCount(4, {
         message: "Three embedded actions should be displayed in the dropdown + button 'Save View'",
     });
@@ -215,7 +215,7 @@ test("can click on a embedded action and execute the corresponding action (with 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
@@ -242,7 +242,7 @@ test("can click on a embedded action and execute the corresponding action (with 
     }));
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 3')"
     ).click();
@@ -269,7 +269,7 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
     }));
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
@@ -315,7 +315,7 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
@@ -373,7 +373,7 @@ test("a view coming from a embedded with python_method can be saved in the embed
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 3')"
     ).click();
@@ -404,7 +404,7 @@ test("the embedded actions should not be displayed when switching view", async (
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
@@ -421,7 +421,7 @@ test("User can move the main (first) embedded action", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
@@ -437,7 +437,7 @@ test("User can unselect the main (first) embedded action", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     const dropdownItem =
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Partners Action 1')";
     expect(dropdownItem).not.toHaveClass("text-muted", {
@@ -488,7 +488,7 @@ test("execute a regular action from an embedded action", async () => {
     await contains(".o_control_panel_navigation button .fa-sliders").click();
     expect(".o_control_panel .o_embedded_actions button:not(.dropdown-toggle)").toHaveCount(1);
 
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     await contains(".dropdown-menu .dropdown-item span:contains('Embedded Action 2')").click();
     expect(".o_control_panel .o_embedded_actions button:not(.dropdown-toggle)").toHaveCount(2);
 
