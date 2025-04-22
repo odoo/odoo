@@ -143,6 +143,7 @@ export class LinkPopover extends Component {
     onKeydown(ev) {
         if (ev.key === "Escape") {
             ev.preventDefault();
+            ev.stopImmediatePropagation();
             this.props.onClose();
         }
     }
