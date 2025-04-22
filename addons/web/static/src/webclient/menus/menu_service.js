@@ -2,30 +2,17 @@ import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 
-const loadMenusUrl = `/web/webclient/load_menus`;
-
 export const menuService = {
-    dependencies: ["action"],
-    async start(env) {
+    dependencies: ["action", "orm"],
+    async start(env, { orm }) {
         let currentAppId;
         let menusData;
 
-        const fetchMenus = async (reload) => {
-            if (!reload && odoo.loadMenusPromise) {
-                return odoo.loadMenusPromise;
-            }
-            const loadMenusHash = new Date().getTime().toString();
-            const res = await browser.fetch(`${loadMenusUrl}?unique=${loadMenusHash}`);
-            if (!res.ok) {
-                throw new Error("Error while fetching menus");
-            }
-            return res.json();
-        };
         const storedMenus = browser.localStorage.getItem("webclient_menus");
         const storedMenusVersion = browser.localStorage.getItem("webclient_menus_version");
 
         if (storedMenus && storedMenusVersion === session.registry_hash) {
-            fetchMenus().then((res) => {
+            orm.call("ir.ui.menu", "load_web_menus", [!!odoo.debug]).then((res) => {
                 if (res) {
                     const fetchedMenus = JSON.stringify(res);
                     if (fetchedMenus !== storedMenus) {
@@ -37,7 +24,7 @@ export const menuService = {
             });
             menusData = JSON.parse(storedMenus);
         } else {
-            menusData = await fetchMenus();
+            menusData = await orm.call("ir.ui.menu", "load_web_menus", [!!odoo.debug]);
             if (menusData) {
                 browser.localStorage.setItem("webclient_menus_version", session.registry_hash);
                 browser.localStorage.setItem("webclient_menus", JSON.stringify(menusData));
@@ -91,10 +78,8 @@ export const menuService = {
             },
             setCurrentMenu,
             async reload() {
-                if (fetchMenus) {
-                    menusData = await fetchMenus(true);
-                    env.bus.trigger("MENUS:APP-CHANGED");
-                }
+                menusData = await orm.call("ir.ui.menu", "load_web_menus", [!!odoo.debug]);
+                env.bus.trigger("MENUS:APP-CHANGED");
             },
         };
     },

@@ -417,9 +417,7 @@ export class MockServer {
         this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage, {
             pure: true,
         });
-        this._onRoute(["/web/webclient/load_menus"], this.loadMenus, {
-            pure: true,
-        });
+        this._onOrmMethod(["load_web_menus"], this.loadMenus);
         this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations, {
             pure: true,
         });

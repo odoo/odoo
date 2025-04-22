@@ -71,27 +71,6 @@ class Home(http.Controller):
         except AccessError:
             return request.redirect('/web/login?error=access')
 
-    @http.route('/web/webclient/load_menus', type='http', auth='user', methods=['GET'], readonly=True)
-    def web_load_menus(self, unique=None, lang=None):
-        """
-        Loads the menus for the webclient
-        :param unique: this parameters is not used: it is used by the HTTP stack to make a unique request
-        :param lang: language in which the menus should be loaded (only works if language is installed)
-        :return: the menus (including the images in Base64)
-        """
-        if lang:
-            request.update_context(lang=lang)
-
-        menus = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
-        body = json.dumps(menus)
-        response = request.make_response(body, [
-            # this method must specify a content-type application/json instead of using the default text/html set because
-            # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
-            ('Content-Type', 'application/json'),
-            ('Cache-Control', 'public, max-age=' + str(http.STATIC_CACHE_LONG)),
-        ])
-        return response
-
     def _login_redirect(self, uid, redirect=None):
         return _get_login_redirect_url(uid, redirect)
 

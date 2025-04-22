@@ -3,12 +3,13 @@
 
 import re
 
-from odoo import models
+from odoo import api, models
 
 
 class IrUiMenu(models.Model):
     _inherit = "ir.ui.menu"
 
+    @api.model
     def load_web_menus(self, debug):
         """ Loads all menu items (all applications and their sub-menus) and
         processes them to be used by the webclient. Mainly, it associates with
