@@ -38,6 +38,7 @@
             "website_livechat/static/src/**/common/**/*",
             'website_livechat/static/src/**/*',
             ('remove', 'website_livechat/static/src/scss/**/*'),
+            ('remove', 'website_livechat/static/src/embed/shadow.scss'),
         ],
         'web.assets_unit_tests': [
             'website_livechat/static/tests/**/*',
@@ -45,6 +46,9 @@
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
+        ],
+        'im_livechat.assets_embed_core': [
+            'website_livechat/static/src/embed/shadow.scss',
         ],
     },
     'author': 'Odoo S.A.',
