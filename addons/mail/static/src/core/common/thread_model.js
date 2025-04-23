@@ -252,6 +252,15 @@ export class Thread extends Record {
                     ? { type: "partner", id: recipient.partner_id }
                     : false;
             }
+            const suggestedRecipientSet = new Set(
+                this.suggestedRecipients.map((recipient) =>
+                    [recipient.partner_id, recipient.email].join("@@")
+                )
+            );
+            this.additionalRecipients = this.additionalRecipients.filter(
+                (recipient) =>
+                    !suggestedRecipientSet.has([recipient.partner_id, recipient.email].join("@@"))
+            );
         },
     });
     hasLoadingFailed = false;

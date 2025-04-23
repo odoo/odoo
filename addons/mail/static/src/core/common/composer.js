@@ -113,7 +113,6 @@ export class Composer extends Component {
         this.pickerContainerRef = useRef("picker-container");
         this.state = useState({
             active: true,
-            isFullComposerOpen: false,
         });
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
@@ -614,7 +613,7 @@ export class Composer extends Component {
                 }
                 this.props.messageToReplyTo?.cancel();
                 this.onCloseFullComposerCallback(isDiscard);
-                this.state.isFullComposerOpen = false;
+                this.env.chatterState.isFullComposerOpen = false;
                 // Use another event bus so that no message is sent to the
                 // closed composer.
                 this.fullComposerBus = new EventBus();
@@ -624,7 +623,7 @@ export class Composer extends Component {
             },
         };
         await this.env.services.action.doAction(action, options);
-        this.state.isFullComposerOpen = true;
+        this.env.chatterState.isFullComposerOpen = true;
     }
 
     /**
@@ -824,7 +823,7 @@ export class Composer extends Component {
             };
             browser.localStorage.setItem(composer.localId, JSON.stringify(config));
         };
-        if (this.state.isFullComposerOpen) {
+        if (this.env.chatterState.isFullComposerOpen) {
             this.fullComposerBus.trigger("SAVE_CONTENT", {
                 onSaveContent: saveContentToLocalStorage,
             });

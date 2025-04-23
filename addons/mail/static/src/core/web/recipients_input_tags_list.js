@@ -1,8 +1,10 @@
 import { usePopover } from "@web/core/popover/popover_hook";
+import { effect } from "@web/core/utils/reactive";
 import { TagsList } from "@web/core/tags_list/tags_list";
+import { batched } from "@web/core/utils/timing";
 import { RecipientsInputTagsListPopover } from "./recipients_input_tags_list_popover";
 
-import { onWillUpdateProps, toRaw, useEffect, useRef, useState } from "@odoo/owl";
+import { onWillUpdateProps, status, toRaw, useEffect, useRef, useState } from "@odoo/owl";
 
 /**
  * Override of the TagsList so that the email address of each recipients can be checked.
@@ -28,6 +30,24 @@ export class RecipientsInputTagsList extends TagsList {
         onWillUpdateProps((nextProps) => {
             this.state.tagToUpdate = this.getFirstTagToUpdate(nextProps.tags);
         });
+        if (this.env.chatterState) {
+            let isFullComposerOpen = false;
+            effect(
+                batched((chatterState) => {
+                    if (status(this) === "destroyed") {
+                        return;
+                    }
+                    if (
+                        chatterState.isFullComposerOpen !== isFullComposerOpen &&
+                        chatterState.isFullComposerOpen
+                    ) {
+                        this.popover.close();
+                    }
+                    isFullComposerOpen = chatterState.isFullComposerOpen;
+                }),
+                [this.env.chatterState]
+            );
+        }
         useEffect(
             () => {
                 if (this.state.tagToUpdate && this.tagToUpdateRef.el) {
