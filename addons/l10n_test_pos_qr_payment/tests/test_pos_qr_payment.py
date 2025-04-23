@@ -7,9 +7,9 @@ from .common import TestPosQrCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUiSEPA(TestPosQrCommon):
+    country_code = 'BE'
 
     @classmethod
-    @TestPosQrCommon.setup_country('be')
     def setUpClass(cls):
         super().setUpClass()
 
@@ -60,9 +60,9 @@ class TestUiSEPA(TestPosQrCommon):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUiCH(TestPosQrCommon):
+    country_code = 'CH'
 
     @classmethod
-    @TestPosQrCommon.setup_country('ch')
     def setUpClass(cls):
         super().setUpClass()
 
@@ -119,6 +119,7 @@ class TestUiCH(TestPosQrCommon):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUiHK(TestPosQrCommon):
+    country_code = 'HK'
 
     @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data):
@@ -126,7 +127,6 @@ class TestUiHK(TestPosQrCommon):
         return None
 
     @classmethod
-    @TestPosQrCommon.setup_country('hk')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].partner_id.update({
@@ -178,9 +178,9 @@ class TestUiHK(TestPosQrCommon):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUIBR(TestPosQrCommon):
+    country_code = 'BR'
 
     @classmethod
-    @TestPosQrCommon.setup_country('br')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].partner_id.update({

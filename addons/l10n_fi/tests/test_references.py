@@ -10,9 +10,9 @@ class PaymentReferenceTest(AccountTestInvoicingCommon):
     All references validated with the reference calculator by Nordea Bank
     http://www.nordea.fi/en/corporate-customers/payments/invoicing-and-payments/reference-number-calculator.html
     """
+    country_code = 'FI'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('fi')
     def setUpClass(cls):
         super().setUpClass()
 

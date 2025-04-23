@@ -7,9 +7,9 @@ from freezegun import freeze_time
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestKeMoveExport(AccountTestInvoicingCommon):
+    country_code = 'KE'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('ke')
     def setUpClass(cls):
         super().setUpClass()
 

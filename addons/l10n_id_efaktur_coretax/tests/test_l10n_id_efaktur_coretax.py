@@ -9,9 +9,9 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestEfakturCoretax(AccountTestInvoicingCommon):
+    country_code = 'ID'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('id')
     def setUpClass(cls):
         """
         1) contact with l10n_id_pkp with l10n_id_kode_transaksi=04

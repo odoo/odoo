@@ -7,8 +7,8 @@ from odoo.tests import tagged
 
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestL10nBrPix(AccountTestInvoicingCommon):
+    country_code = 'BR'
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('br')
     def setUpClass(cls):
         super().setUpClass()
         cls.partner_bank = cls.env["res.partner.bank"].create(

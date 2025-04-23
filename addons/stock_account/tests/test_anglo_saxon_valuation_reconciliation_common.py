@@ -15,9 +15,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
     """
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         cls.env.user.group_ids += cls.env.ref('stock_account.group_stock_accounting_automatic')
 
         cls.stock_account_product_categ = cls.env['product.category'].create({

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, Command
-from odoo.tests import Form, HttpCase, new_test_user
+from odoo.tests import Form, HttpCase, new_test_user, data_depends
 from odoo.tools.float_utils import float_round
 
 from odoo.addons.product.tests.common import ProductCommon
@@ -21,38 +21,21 @@ class AccountTestInvoicingCommon(ProductCommon):
     # to override by the helper methods setup_country and setup_chart_template to adapt to a localization
     chart_template = False
     country_code = False
+    skip_common_data = False
 
     @classmethod
     def safe_copy(cls, record):
         return record and record.copy()
 
-    @staticmethod
-    def setup_country(country_code):
-
-        def _decorator(function):
-            @wraps(function)
-            def wrapper(self):
-                self.country_code = country_code.upper()
-                function(self)
-            return wrapper
-
-        return _decorator
-
-    @staticmethod
-    def setup_chart_template(chart_template):
-        def _decorator(function):
-            @wraps(function)
-            def wrapper(self):
-                self.chart_template = chart_template
-                function(self)
-            return wrapper
-
-        return _decorator
-
+    @data_depends(
+        'collect_company_accounting_data', 'setup_armageddon_tax',
+        '_create_product', 'copy_account', 'skip_common_data', 'country_code',
+        'chart_template',
+    )
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
+        if cls.skip_common_data:
+            return
         cls.maxDiff = None
         cls.company_data = cls.collect_company_accounting_data(cls.env.company)
         cls.product_category.with_company(cls.env.company).write({

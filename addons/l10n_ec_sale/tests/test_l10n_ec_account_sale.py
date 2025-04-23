@@ -8,9 +8,9 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
 class TestL10nECAccountSale(TestSaleCommon):
+    country_code = 'EC'
 
     @classmethod
-    @TestSaleCommon.setup_country('ec')
     def setUpClass(cls):
         super().setUpClass()
         cls.sri_payment_method = cls.env['l10n_ec.sri.payment'].create({

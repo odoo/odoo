@@ -7,9 +7,9 @@ from odoo import fields, Command
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountCZ(AccountTestInvoicingCommon):
+    country_code = 'CZ'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('cz')
     def setUpClass(cls):
         super().setUpClass()
 

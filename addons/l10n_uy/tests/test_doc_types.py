@@ -6,9 +6,9 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 @tagged("-at_install", "post_install", "post_install_l10n")
 class TestDocTypes(AccountTestInvoicingCommon):
+    country_code = 'UY'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('uy')
     def setUpClass(cls):
         super().setUpClass()
 

@@ -11,9 +11,9 @@ from unittest.mock import patch
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestIndonesianEfaktur(AccountTestInvoicingCommon):
+    country_code = 'ID'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('id')
     def setUpClass(cls):
         super().setUpClass()
 

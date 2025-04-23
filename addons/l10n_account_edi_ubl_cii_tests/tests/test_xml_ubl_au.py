@@ -5,9 +5,9 @@ from odoo.tests import tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLAU(TestUBLCommon):
+    country_code = 'AU'
 
     @classmethod
-    @TestUBLCommon.setup_country('au')
     def setUpClass(cls):
         super().setUpClass()
 

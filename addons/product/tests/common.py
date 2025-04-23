@@ -8,9 +8,7 @@ from odoo.addons.uom.tests.common import UomCommon
 class ProductCommon(UomCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         cls.group_product_pricelist = cls.quick_ref('product.group_product_pricelist')
         cls.product_category = cls.env['product.category'].create({
             'name': 'Test Category',
@@ -66,9 +64,7 @@ class ProductCommon(UomCommon):
 class ProductAttributesCommon(ProductCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         cls.size_attribute = cls.env['product.attribute'].create({
             'name': 'Size',
             'value_ids': [
@@ -123,9 +119,7 @@ class ProductAttributesCommon(ProductCommon):
 class ProductVariantsCommon(ProductAttributesCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         cls.product_template_sofa = cls.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': cls.uom_unit.id,
@@ -155,9 +149,7 @@ class ProductVariantsCommon(ProductAttributesCommon):
 class TestProductCommon(ProductVariantsCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         # Product environment related data
         cls.uom_dunit = cls.env['uom.uom'].create({
             'name': 'DeciUnit',
