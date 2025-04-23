@@ -354,10 +354,13 @@ patch(PosStore.prototype, {
         const productTmpl = vals.product_tmpl_id;
         const productIds = productTmpl.product_variant_ids.map((v) => v.id);
         const order = this.getOrder();
-        const linkedPrograms = productIds.flatMap(
-            (id) => this.models["loyalty.program"].getBy("trigger_product_ids", id) || []
-        );
-
+        const linkedPrograms = [
+            ...new Set(
+                productIds.flatMap(
+                    (id) => this.models["loyalty.program"].getBy("trigger_product_ids", id) || []
+                )
+            ),
+        ];
         let selectedProgram = null;
         if (linkedPrograms.length > 1) {
             selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
