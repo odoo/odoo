@@ -8,6 +8,16 @@ from odoo.addons.hw_drivers.interface import Interface
 
 class USBInterface(Interface):
     connection_type = 'usb'
+    allow_unsupported = True
+
+    @staticmethod
+    def usb_matcher(dev):
+        # Ignore USB hubs
+        if dev.bDeviceClass == 9:
+            return False
+
+        # Ignore serial adapters
+        return dev.product != "USB2.0-Ser!"
 
     def get_devices(self):
         """
@@ -18,7 +28,7 @@ class USBInterface(Interface):
         will get the same identifiers after a reboot or a disconnect/reconnect.
         """
         usb_devices = {}
-        devs = core.find(find_all=True)
+        devs = core.find(find_all=True, custom_match=self.usb_matcher)
         cpt = 2
         for dev in devs:
             identifier = "usb_%04x:%04x" % (dev.idVendor, dev.idProduct)

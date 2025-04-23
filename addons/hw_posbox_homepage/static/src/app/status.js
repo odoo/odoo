@@ -149,7 +149,7 @@ class StatusPage extends Component {
                             <tr t-foreach="Object.keys(state.data.devices)" t-as="deviceType" t-key="deviceType">
                                 <td class="device-type col-3">
                                     <i t-att-class="'me-1 fa fa-fw fa- ' + icons[deviceType]"/>
-                                    <t t-out="deviceType.replaceAll('_', ' ') + 's'" />
+                                    <t t-out="deviceType.replaceAll('_', ' ') + (deviceType === 'unsupported' ? '' : 's')"/>
                                 </td>
                                 <td class="col-3">
                                     <ul>

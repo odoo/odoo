@@ -15,6 +15,7 @@ export const DEVICE_ICONS = {
     printer: "fa-print",
     scale: "fa-balance-scale",
     scanner: "fa-barcode",
+    unsupported: "fa-question",
 };
 
 export const CONNECTION_ICONS = {
@@ -38,7 +39,9 @@ export class DeviceDialog extends Component {
     formatDeviceType(deviceType, numDevices) {
         const formattedDeviceType =
             deviceType[0].toUpperCase() + deviceType.replaceAll("_", " ").slice(1);
-        return numDevices === 1 ? formattedDeviceType : `${formattedDeviceType}s`;
+        return numDevices === 1 || deviceType === "unsupported"
+            ? formattedDeviceType
+            : `${formattedDeviceType}s`;
     }
 
     get devices() {
