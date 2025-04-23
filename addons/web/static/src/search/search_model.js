@@ -25,19 +25,40 @@ import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor
 import { rpcBus } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
-const SPECIAL = Symbol("special");
-
-/** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
-/** @typedef {import("../views/utils").OrderTerm} OrderTerm */
 
 /**
- * @typedef {Object} SearchParams
- * @property {Context} context
- * @property {DomainListRepr} domain
- * @property {string[]} groupBy
- * @property {OrderTerm[]} orderBy
- * @property {boolean} [useSampleModel] to remove?
+ * @typedef {import("@web/core/context").Context} Context
+ * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
+ * @typedef {import("@web/search/utils/order_by").OrderTerm} OrderTerm
+ *
+ * @typedef {{
+ *  name: string;
+ *  type: string;
+ *  selection: [string, string][];
+ * }} Field
+ *
+ * @typedef {{
+ *  context: Context;
+ *  forceSave?: boolean;
+ *  invisible: string;
+ *  isHandle?: boolean;
+ *  onChange: boolean;
+ *  readonly: string;
+ *  required: string;
+ * }} FieldInfo
+ *
+ * @typedef {{
+ *  context: Context;
+ *  domain: DomainListRepr;
+ *  groupBy: string[];
+ *  orderBy: OrderTerm[];
+ *  resModel: string;
+ *  resId?: number | false;
+ *  useSampleModel?: boolean;
+ * }} SearchParams
  */
+
+const SPECIAL = Symbol("special");
 
 /** @todo rework doc */
 // interface SectionCommon { // check optional keys
