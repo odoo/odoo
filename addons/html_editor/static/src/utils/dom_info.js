@@ -260,7 +260,8 @@ export function isVisible(node) {
             // @todo: handle it in resources?
             isMediaElement(node) ||
             hasVisibleContent(node) ||
-            isProtecting(node))
+            isProtecting(node) ||
+            isEmbeddedComponent(node))
     );
 }
 export function hasVisibleContent(node) {
@@ -431,6 +432,10 @@ export function containsAnyNonPhrasingContent(element) {
         child = child.nextSibling;
     }
     return false;
+}
+
+export function isEmbeddedComponent(node) {
+    return node.nodeType === Node.ELEMENT_NODE && node.matches("[data-embedded]");
 }
 
 /**
