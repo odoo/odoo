@@ -496,6 +496,15 @@ export class ProductScreen extends Component {
     }
 
     async addProductToOrder(product) {
+        if (this.searchWord && product.isConfigurable()) {
+            const barcode = this.searchWord;
+            const searchedProduct = product.variants.filter(
+                (p) => p.barcode && p.barcode.includes(barcode)
+            );
+            if (searchedProduct.length === 1) {
+                product = searchedProduct[0];
+            }
+        }
         await reactive(this.pos).addLineToCurrentOrder({ product_id: product }, {});
     }
 
