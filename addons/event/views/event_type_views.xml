@@ -56,7 +56,7 @@
                                     <field name="is_mandatory_answer" string="Mandatory"/>
                                     <field name="once_per_order" string="Once per Order"/>
                                     <field name="question_type" />
-                                    <field name="answer_ids" widget="many2many_tags"/>
+                                    <field name="answer_ids" widget="many2many_tags" invisible="question_type != 'simple_choice'"/>
                                 </list>
                             </field>
                         </page>

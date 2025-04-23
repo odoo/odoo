@@ -12,7 +12,7 @@ class EventRegistrationAnswer(models.Model):
 
     question_id = fields.Many2one(
         'event.question', ondelete='restrict', required=True,
-        domain="[('event_id', '=', event_id)]")
+        domain="[('event_ids', 'in', event_id)]")
     registration_id = fields.Many2one('event.registration', required=True, index=True, ondelete='cascade')
     partner_id = fields.Many2one('res.partner', related='registration_id.partner_id')
     event_id = fields.Many2one('event.event', related='registration_id.event_id')

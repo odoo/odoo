@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 from odoo.addons.test_event_full.tests.common import TestEventFullCommon
 from odoo.exceptions import AccessError
+from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
@@ -141,6 +142,45 @@ class TestEventSecurity(TestEventFullCommon):
             event_config = self.env['res.config.settings'].with_user(self.user_eventmanager).create({
             })
             event_config.execute()
+
+    def test_event_question_access(self):
+        """ Check that some user groups have access to questions and answers only if they are linked to at
+        least one published event. """
+        question = self.env['event.question'].create({
+            "title": "Question",
+            "event_ids": [Command.create({
+                'name': 'Unpublished Event',
+                'is_published': False,
+            })]
+        })
+        answer = self.env['event.question.answer'].create({
+            "name": "Answer",
+            "question_id": question.id,
+        })
+        restricted_users = [self.user_employee, self.user_portal, self.user_public]
+        unrestricted_users = [self.user_eventmanager, self.user_eventuser]
+
+        for user in restricted_users:
+            with self.assertRaises(AccessError, msg=f'{user.name} should not have access to questions of unpublished events'):
+                question.with_user(user).read(['title'])
+            with self.assertRaises(AccessError, msg=f'{user.name} should not have access to answers of unpublished events'):
+                answer.with_user(user).read(['name'])
+
+        for user in unrestricted_users:
+            question.with_user(user).read(['title'])
+            answer.with_user(user).read(['name'])
+
+        # To check the access of user groups to questions and answers linked to at least one published event.
+        self.env['event.event'].create({
+            'name': 'Published Event',
+            'is_published': True,
+            'question_ids': [Command.set(question.ids)],
+        })
+
+        # Check that all user groups have access to questions and answers linked to at least one published event.
+        for user in restricted_users + unrestricted_users:
+            question.with_user(user).read(['title'])
+            answer.with_user(user).read(['name'])
 
     def test_implied_groups(self):
         """Test that the implied groups are correctly set.
