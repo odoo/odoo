@@ -268,6 +268,8 @@ registry.category("web_tour.tours").add("LotTour", {
                     }),
                 ].flat()
             ),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.enterLotNumber("3"),
             ProductScreen.selectedOrderlineHas("Product A", "3"),
@@ -289,6 +291,23 @@ registry.category("web_tour.tours").add("LotTour", {
             inLeftSide({
                 trigger: ".info-list:contains('Lot Number 1001')",
             }),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("002"),
+            inLeftSide(
+                [Numpad.click("1"), ProductScreen.clickLine("Product B"), Numpad.click("1")].flat()
+            ),
+            TicketScreen.confirmRefund(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 
