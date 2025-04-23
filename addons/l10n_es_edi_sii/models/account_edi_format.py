@@ -102,7 +102,11 @@ class AccountEdiFormat(models.Model):
         # Detect for which is the main tax for 'recargo'. Since only a single combination tax + recargo is allowed
         # on the same invoice, this can be deduced globally.
 
-        recargo_tax_details = defaultdict(list)  # Mapping between main tax and recargo tax details
+        # Mapping between main tax and recargo tax details
+        # structure: {("l10n_es_type" of the main tax, amount of the main tax): {'tax_amount': float, 'applied_tax_amount': float}}
+        # dict of keys: tuple ("l10n_es_type" of the main tax, amount of the main tax)
+        #       values: dict of float
+        recargo_tax_details = defaultdict(lambda: defaultdict(float))
         for base_line in tax_details['base_lines']:
             line = base_line['record']
             taxes = line.tax_ids.flatten_taxes_hierarchy()
@@ -110,16 +114,17 @@ class AccountEdiFormat(models.Model):
             if recargo_tax and taxes:
                 recargo_main_tax = taxes.filtered(lambda x: x.l10n_es_type in ('sujeto', 'sujeto_isp'))[:1]
                 aggregated_values = tax_details['tax_details_per_record'][line]
-                if not recargo_tax_details.get(recargo_main_tax):
-                    recargo_tax_details[recargo_main_tax.l10n_es_type, recargo_main_tax.amount] = next(iter(
-                        values
-                        for values in aggregated_values['tax_details'].values()
-                        if (
-                            values['grouping_key']
-                            and values['grouping_key']['l10n_es_type'] == recargo_tax.l10n_es_type
-                            and values['grouping_key']['applied_tax_amount'] == recargo_tax.amount
-                        )
-                    ))
+                recargo_values = next(iter(
+                    values
+                    for values in aggregated_values['tax_details'].values()
+                    if (
+                        values['grouping_key']
+                        and values['grouping_key']['l10n_es_type'] == recargo_tax.l10n_es_type
+                        and values['grouping_key']['applied_tax_amount'] == recargo_tax.amount
+                    )
+                ))
+                recargo_tax_details[recargo_main_tax.l10n_es_type, recargo_main_tax.amount]['tax_amount'] += recargo_values['tax_amount']
+                recargo_tax_details[recargo_main_tax.l10n_es_type, recargo_main_tax.amount]['applied_tax_amount'] = recargo_values['applied_tax_amount']
 
         tax_amount_deductible = 0.0
         tax_amount_retention = 0.0
