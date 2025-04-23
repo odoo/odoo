@@ -91,7 +91,7 @@ class IrAttachment(models.Model):
     @api.model
     def _full_path(self, path):
         # sanitize path
-        path = re.sub('[.]', '', path)
+        path = re.sub('[.:]', '', path)
         path = path.strip('/\\')
         return os.path.join(self._filestore(), path)
 
@@ -144,7 +144,7 @@ class IrAttachment(models.Model):
     def _mark_for_gc(self, fname):
         """ Add ``fname`` in a checklist for the filestore garbage collection. """
         assert isinstance(self, IrAttachment)
-        fname = re.sub('[.]', '', fname).strip('/\\')
+        fname = re.sub('[.:]', '', fname).strip('/\\')
         # we use a spooldir: add an empty file in the subdirectory 'checklist'
         full_path = os.path.join(self._full_path('checklist'), fname)
         if not os.path.exists(full_path):
