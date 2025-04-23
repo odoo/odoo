@@ -20,6 +20,22 @@ export function checkDropDownItemText(text) {
     };
 }
 
+export function clickDropDownItemText(text) {
+    return {
+        content: `click for dropdown item containing text`,
+        trigger: `.o-dropdown-item:contains("${text}")`,
+        run: "click",
+    };
+}
+
+export function clickSettleOrderName(name) {
+    return {
+        content: "Check the settle due account line is present",
+        trigger: `tr.o_data_row td[name='name']:contains("${name}")`,
+        run: "click",
+    };
+}
+
 export function checkContactValues(name, address = "", phone = "", email = "") {
     const steps = [
         {
