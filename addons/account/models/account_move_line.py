@@ -453,8 +453,8 @@ class AccountMoveLine(models.Model):
     _partner_id_ref_idx = models.Index("(partner_id, ref)")
     _date_name_id_idx = models.Index("(date desc, move_name desc, id)")
     # Match exactly how the ORM converts domains to ensure the query planner uses it
-    _unreconciled_index = models.Index("(account_id, partner_id) WHERE reconciled IS NOT TRUE AND parent_state = 'posted'")
-    _journal_id_neg_amnt_residual_idx = models.Index("(journal_id) WHERE amount_residual < 0 AND parent_state = 'posted'")
+    _unreconciled_index = models.Index("(account_id, partner_id) WHERE reconciled IS NOT TRUE")
+    _journal_id_neg_amnt_residual_idx = models.Index("(journal_id) WHERE amount_residual < 0")
     # covers the standard index on account_id
     _account_id_date_idx = models.Index("(account_id, date)")
 
