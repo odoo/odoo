@@ -338,7 +338,7 @@ export class Form extends Interaction {
                 const inputEl = dateEl.querySelector("input");
                 const { value } = inputEl;
                 if (!value) {
-                    return;
+                    continue;
                 }
 
                 formValues[inputEl.getAttribute("name")] = dateEl.matches(".s_website_form_date")
