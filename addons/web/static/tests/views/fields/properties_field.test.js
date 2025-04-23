@@ -881,6 +881,14 @@ test("properties: tags", async () => {
     expect(".o_property_field_value .o_tag").toHaveCount(1, {
         message: "Should have unselected the removed tag B",
     });
+
+    // Remove a tag by pressing backspace
+    await click(".o_property_field_value .o_input_dropdown input");
+    await press("backspace");
+    await animationFrame();
+    expect(".o_property_field_value .o_tag").toHaveCount(0, {
+        message: "Should have unselected the tag",
+    });
 });
 
 /**
