@@ -2955,35 +2955,6 @@ input[value*="data-oe-translation-source-sha"] {
     transition-timing-function: ease-out;
 }
 
-//------------------------------------------------------------------------------
-// Website Text Highlight Effects
-//------------------------------------------------------------------------------
-
-.o_text_highlight {
-    --text-highlight-color: currentColor;
-
-    // Default style for irregular text highlights.
-    &.o_text_highlight_fill {
-        --text-highlight-color: var(--primary);
-        --text-highlight-width: 0px !important;
-    }
-    // Text highlight SVG container.
-    > .o_text_highlight_item {
-        position: relative;
-        display: inline-block;
-        line-height: normal;
-        white-space: pre-wrap;
-        isolation: isolate;
-
-        > * {
-            text-decoration: none;
-        }
-        svg {
-            z-index: -1;
-        }
-    }
-}
-
 // Compatibility <= 13.0
 .o_anim_dur500 {
     animation-duration: 500ms;

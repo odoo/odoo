@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.highlightConfigurator">
+    <div class="p-2">
+        <div class="d-flex align-items-center mb-3">
+            <label for="highlightPicker" class="flex-grow-1">Highlight:</label>
+            <button id="highlightPicker" title="highlightPicker" class="btn btn-secondary" t-on-click="openHighlightPicker">
+                <t t-out="this.highlightIdToName[this.state.highlightId]"/>
+            </button>
+        </div>
+
+        <div class="d-flex align-items-center mb-3">
+            <label for="colorButton" class="flex-grow-1">Color:</label>
+                <button id="colorButton" title="color" class="o_we_color_preview btn btn-outline-secondary" t-attf-style="background-color:{{this.state.color}}" t-on-click="openColorPicker">
+            </button>
+        </div>
+
+        <div class="d-flex align-items-center">
+            <label for="thicknessInput" class="flex-grow-1">Thickness:</label>
+            <input type="number" id="thicknessInput" class="text-end w-25" t-att-value="this.state.thickness" t-on-input="onThicknessChange" />
+            <span class="ml-1">px</span>
+        </div>
+
+        <div class="fs-2 mt-3 p-5 text-center fw-bolder border" style="padding: 20px 5px;">
+            <span t-attf-style="--text-highlight-color: {{this.state.color}}; --text-highlight-width: {{this.state.thickness}};" t-ref="preview" t-att-data-highlight-text="this.state.highlightId">Text</span>
+        </div>
+    </div>
+</t>
+</templates>

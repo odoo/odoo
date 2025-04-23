@@ -1,65 +1,66 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-
-import {
-    applyTextHighlight,
-    removeTextHighlight,
-    switchTextHighlight,
-} from "@website/js/text_processing";
+import { switchTextHighlight } from "@website/js/highlight_utils";
 
 export class TextHighlight extends Interaction {
     static selector = "#wrapwrap";
     dynamicContent = {
         _root: {
-            "t-on-text_highlight_added": this.onTextHighlightAdded,
-            "t-on-text_highlight_remove": this.onTextHighlightRemoved,
+            "t-on-text_highlight_added": ({target}) => this.onTextHighlightAdded(target),
         },
     };
 
     setup() {
         this.observerLock = new Map();
-        this.resizeObserver = new window.ResizeObserver(entries => {
-            window.requestAnimationFrame(() => {
-                if (this.isDestroyed) {
-                    return;
-                }
-                const textHighlightEls = new Set();
-                entries.forEach(entry => {
-                    const target = entry.target;
-                    if (this.observerLock.get(target)) {
-                        return this.observerLock.set(target, false);
-                    }
-                    const topTextEl = target.closest(".o_text_highlight");
-                    for (const el of topTextEl ? [topTextEl] : target.querySelectorAll(".o_text_highlight")) {
-                        textHighlightEls.add(el);
-                    }
-                });
-                textHighlightEls.forEach(textHighlightEl => {
-                    for (const textHighlightItemEl of this.getTextHighlightItems(textHighlightEl)) {
-                        this.resizeObserver.unobserve(textHighlightItemEl);
-                    }
-                    switchTextHighlight(textHighlightEl);
-                });
-            });
-        });
+        this.observed = new WeakSet();
+        this.resizeObserver = new window.ResizeObserver(this.updateEntries.bind(this));
+        this.mutationObserver = new window.MutationObserver(this.updateEntries.bind(this));
     }
 
     start() {
-        for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
-            applyTextHighlight(textEl);
+        for (const textEl of this.el.querySelectorAll("[data-highlight-text]")) {
+            this.handleEl(textEl);
         }
     }
 
     destroy() {
-        for (const textHighlightEl of this.el.querySelectorAll(".o_text_highlight")) {
-            removeTextHighlight(textHighlightEl);
+        for (const svg of this.el.querySelectorAll(".o_text_highlight_svg")) {
+            svg.remove();
         }
+        this.resizeObserver.disconnect();
+        this.mutationObserver.disconnect();
     }
 
+    async updateEntries(entries) {
+        await new Promise( r => requestAnimationFrame(r));
+        if (this.isDestroyed) {
+            return;
+        }
+        const closestToObserves = new Set();
+        for (const { target, addedNodes = [], removedNodes = [] } of entries) {
+            const elements = [target, ...(addedNodes), ...(removedNodes)]
+                .map((el) => el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement)
+                .filter(Boolean);
+            if (!elements.length) {
+                continue;
+            }
+            const hasSvg = elements.some((el) => el.closest(".o_text_highlight_svg"));
+            if (hasSvg) {
+                continue;
+            }
+            closestToObserves.add(this.closestToObserve(target));
+        }
+        for (const closestToObserve of closestToObserves) {
+            for (const el of closestToObserve.querySelectorAll("[data-highlight-text]")) {
+                switchTextHighlight(el);
+            }
+        }
+    }
     /**
      * @param {HTMLElement} el
      */
     closestToObserve(el) {
+        el = el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement;
         if (!el || el === this.el) {
             return null;
         }
@@ -72,58 +73,45 @@ export class TextHighlight extends Interaction {
     /**
      * @param {HTMLElement} el
      */
-    getTextHighlightItems(el = this.el) {
-        return el.querySelectorAll(".o_text_highlight_item");
+    getObservedEls(el) {
+        const closestToObserve = this.closestToObserve(el);
+        return closestToObserve ? [closestToObserve, el] : [el];
     }
 
     /**
-     * @param {HTMLElement} topTextEl
+     * @param {HTMLElement} el
      */
-    getObservedEls(topTextEl) {
-        const closestToObserve = this.closestToObserve(topTextEl);
-        return [
-            ...(closestToObserve ? [closestToObserve] : []),
-            ...this.getTextHighlightItems(topTextEl),
-        ];
-    }
-
-    /**
-     * @param {HTMLElement} topTextEl
-     */
-    observeTextHighlightResize(topTextEl) {
+    handleEl(el) {
+        if (this.observed.has(el)) {
+            return;
+        }
+        this.observed.add(el);
         // The `ResizeObserver` cannot detect the width change on highlight
         // units (`.o_text_highlight_item`) as long as the width of the entire
         // `.o_text_highlight` element remains the same, so we need to observe
         // each one of them and do the adjustment only once for the whole text.
-        for (const highlightItemEl of this.getObservedEls(topTextEl)) {
-            this.resizeObserver.observe(highlightItemEl);
+        for (const elToObserve of this.getObservedEls(el)) {
+            this.resizeObserver.observe(elToObserve);
         }
+        const closestToObserve = this.closestToObserve(el);
+        this.mutationObserver.observe(closestToObserve, {
+            childList: true,
+            characterData: true,
+            subtree: true,
+        });
+        this.mutationObserver.observe(el, {
+            attributes: true,
+        });
+        this.updateEntries([{ target: el }]);
     }
 
     /**
-     * @param {HTMLElement} topTextEl
+     * @param {HTMLElement} el
      */
-    lockTextHighlightObserver(topTextEl) {
-        for (const targetEl of this.getObservedEls(topTextEl)) {
-            this.observerLock.set(targetEl, true);
-        }
-    }
-
-    /**
-     * @param {Event} ev
-     */
-    onTextHighlightAdded(ev) {
-        this.lockTextHighlightObserver(ev.target);
-        this.observeTextHighlightResize(ev.target);
-    }
-
-    /**
-     * @param {Event} ev
-     */
-    onTextHighlightRemoved(ev) {
-        for (const highlightItemEl of this.getTextHighlightItems(ev.target)) {
-            this.observerLock.delete(highlightItemEl);
-        }
+    onTextHighlightAdded(el) {
+        // todo: what was the purpose of this?
+        // this.lockTextHighlightObserver(el);
+        this.handleEl(el);
     }
 }
 
