@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <template id="custom_header" inherit_id="website.layout">
+            <xpath expr="//header" position="replace">
+               <div class="container">
+                <t t-call="website.placeholder_header_brand"/>
+                <t t-call="website.navbar_nav">
+                    <!-- Sign In -->
+                    <t t-call="portal.placeholder_user_sign_in">
+                        <t t-set="_item_class" t-valuef="nav-item"/>
+                        <t t-set="_link_class" t-valuef="nav-link text-900"/>
+                    </t>
+                    <!-- User Dropdown -->
+                    <t t-call="portal.user_dropdown">
+                        <t t-set="_user_name" t-value="true"/>
+                        <t t-set="_item_class" t-valuef="nav-item dropdown ml-auto"/>
+                        <t t-set="_link_class" t-valuef="nav-link text-900"/>
+                    </t>
+                </t>
+            </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

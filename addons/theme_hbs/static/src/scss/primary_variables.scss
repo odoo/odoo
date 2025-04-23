@@ -1,0 +1,105 @@
+//------------------------------------------------------------------------------//
+// Presets
+//------------------------------------------------------------------------------//
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name':              'theme-hbs-1',
+
+        // Header
+        'header-template':                  'vertical',
+        'hamburger-position':               'right',
+        'logo-height':                      3rem,
+        'fixed-logo-height':                2rem,
+        'header-links-style':               'pills',
+
+        // Font
+        'font':                             'IBMPlexSans-Regular',
+
+        // Buttons
+        'btn-padding-y':                    .5rem,
+        'btn-padding-x':                    1.35rem,
+        'input-padding-y':                  .45rem,
+        'input-padding-y-sm':               .3rem,
+        'input-padding-y-lg':               .6rem,
+
+        // Footer
+        'footer-template':                  'centered',
+        'footer-effect':                    'slideout_slide_hover',
+        'footer-scrolltop':                 true,
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-font-configs: (
+    'IBMPlexSans-Regular': (
+        'family': ('IBMPlexSans-Regular', sans-serif),
+        'properties': (
+            'base': (
+                'font-size-base': 1rem,
+            ),
+        ),
+    ),
+);
+
+// Headings
+
+$o-theme-h4-font-size-multiplier:           1.75;
+$o-theme-h5-font-size-multiplier:           1.5;
+$o-theme-h6-font-size-multiplier:           1.25;
+
+$o-theme-headings-font-weight:              400;
+
+// Texts
+
+$o-theme-font-size-lg-multiplier:           1.25;
+$o-theme-font-size-sm-multiplier:           .875;
+
+$o-theme-font-weight-light:                 300;
+$o-theme-font-weight-normal:                400;
+$o-theme-font-weight-bold:                  700;
+
+// Buttons
+
+$o-theme-btn-font-weight:                   400;
+
+//------------------------------------------------------------------------------//
+// Colors
+//------------------------------------------------------------------------------//
+
+$o-color-palettes: map-merge($o-color-palettes,
+    (
+        'theme-hbs-1': (
+            'o-color-5':                        #0071BC,
+            'o-color-4':                        #ffffff,
+            'o-color-3':                        #6496B8,
+            'o-color-2':                        #3AA101,
+            'o-color-1':                        #0071BC,
+        ),
+    )
+    
+);
+
+
+// Add the created palette to the list of palettes offered by the Website Builder.
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'theme-hbs-1');
+
+//------------------------------------------------------------------------------//
+// Button Styles
+//------------------------------------------------------------------------------//
+button,
+.btn {
+    &:hover {
+        background-color: map-get(map-get($o-color-palettes, 'theme-hbs-1'), 'o-color-2'); // Use palette color
+        color: map-get(map-get($o-color-palettes, 'theme-hbs-1'), 'o-color-4'); // Optional: Use palette color
+    }
+}
+
+a {
+    &:hover {
+        color: map-get(map-get($o-color-palettes, 'theme-hbs-1'), 'o-color-2'); // Use palette color
+    }
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_sidegrid" inherit_id="website.s_sidegrid">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        We Make It Happen!
+    </xpath>
+
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/theme_hbs/static/src/img/background/img3.jpg</attribute>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/theme_hbs/static/src/img/background/img1.jpg</attribute>
+    </xpath>
+
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/theme_hbs/static/src/img/background/img2.jpg</attribute>
+    </xpath>
+
+</template>
+
+</odoo>
