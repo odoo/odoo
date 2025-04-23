@@ -588,8 +588,6 @@ export class MockServer {
         }
 
         switch (route) {
-            case "/web/webclient/load_menus":
-                return this.mockLoadMenus();
             case "/web/action/load":
                 return this.mockLoadAction(args);
             case "/web/action/load_breadcrumbs":
@@ -603,6 +601,8 @@ export class MockServer {
         }
 
         switch (args.method) {
+            case "load_web_menus":
+                return this.mockLoadMenus();
             case "render_public_asset": {
                 return true;
             }

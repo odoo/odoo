@@ -36,9 +36,9 @@ class LoadMenusTests(HttpCase):
         self.authenticate("admin", "admin")
 
     def test_load_menus(self):
-        menu_loaded = self.env['ir.ui.menu'].load_menus(False)
+        menu_loaded = self.env['ir.ui.menu'].load_web_menus(False)
         expected = {
-            str(self.menu.id): {
+            self.menu.id: {
                 'actionID': self.action.id,  # Take the first action in children (see load_web_menus)
                 'actionModel': 'ir.actions.act_window',
                 'actionPath': False,
@@ -51,7 +51,7 @@ class LoadMenusTests(HttpCase):
                 'webIconDataMimetype': False,
                 'xmlid': '',
             },
-            str(self.menu_child.id): {
+            self.menu_child.id: {
                 'actionID': self.action.id,
                 'actionModel': 'ir.actions.act_window',
                 'actionPath': False,
@@ -81,7 +81,7 @@ class LoadMenusTests(HttpCase):
         }
 
         self.assertDictEqual(
-            menu_loaded.json(),
+            menu_loaded,
             expected,
             "load_menus didn't return the expected value"
         )
