@@ -9,8 +9,8 @@ class EventQuestion(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['title', 'question_type', 'event_type_id', 'event_id', 'sequence', 'once_per_order', 'is_mandatory_answer', 'answer_ids']
+        return ['title', 'question_type', 'event_type_ids', 'event_ids', 'sequence', 'once_per_order', 'is_mandatory_answer', 'answer_ids']
 
     @api.model
     def _load_pos_data_domain(self, data, config):
-        return [('event_id', 'in', [event['id'] for event in data['event.event']])]
+        return [('event_ids', 'in', [event['id'] for event in data['event.event']])]
