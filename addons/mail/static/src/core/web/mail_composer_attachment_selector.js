@@ -30,7 +30,7 @@ export class MailComposerAttachmentSelector extends Component {
                 : this.props.record.context.active_ids;
         }
         const thread = await this.mailStore["mail.thread"].insert({
-            model: this.props.record.data.model,
+            model: this.props.record.data.model || this.props.record.context.active_model,
             id: resIds[0],
         });
         const file = new File([dataUrlToBlob(data, type)], name, { type });

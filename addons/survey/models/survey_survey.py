@@ -1066,6 +1066,7 @@ class SurveySurvey(models.Model):
             default_survey_id=self.id,
             default_template_id=template and template.id or False,
             default_send_email=(self.access_mode != 'public'),
+            hide_mail_template_management_options=True,
         )
         return {
             'type': 'ir.actions.act_window',

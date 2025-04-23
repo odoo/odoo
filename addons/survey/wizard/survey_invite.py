@@ -6,7 +6,7 @@ import re
 import werkzeug
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.mail import email_split_and_format, email_normalize
 
 _logger = logging.getLogger(__name__)
@@ -61,6 +61,17 @@ class SurveyInvite(models.TransientModel):
     deadline = fields.Datetime(string="Answer deadline")
     send_email = fields.Boolean(compute="_compute_send_email",
                                 inverse="_inverse_send_email")
+    scheduled_date = fields.Datetime('Scheduled Date',
+        help="send emails after that date. This date is considered as being in UTC timezone."
+    )
+
+    @api.constrains('scheduled_date', 'deadline')
+    def _check_deadline_after_schedule(self):
+        for invite in self:
+            if invite.scheduled_date and invite.deadline and invite.scheduled_date > invite.deadline:
+                raise ValidationError(
+                    self.env._("The answer deadline should be after the email schedule date.")
+                )
 
     @api.depends('survey_access_mode')
     def _compute_send_email(self):
@@ -245,6 +256,7 @@ class SurveyInvite(models.TransientModel):
             'model': None,
             'res_id': None,
             'subject': subject,
+            'scheduled_date': self.scheduled_date,
         }
         if answer.partner_id:
             mail_values['recipient_ids'] = [(4, answer.partner_id.id)]
