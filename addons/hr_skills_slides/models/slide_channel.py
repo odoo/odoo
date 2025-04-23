@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -10,8 +9,10 @@ from odoo.tools import html2plaintext
 class SlideChannelPartner(models.Model):
     _inherit = 'slide.channel.partner'
 
-    def _recompute_completion(self):
-        res = super(SlideChannelPartner, self)._recompute_completion()
+    def _post_completion_update_hook(self, completed=True):
+        res = super()._post_completion_update_hook(completed)
+        if not completed:
+            return res
         completed_membership = self.filtered(lambda m: m.member_status == 'completed')
         if not completed_membership:
             return res
