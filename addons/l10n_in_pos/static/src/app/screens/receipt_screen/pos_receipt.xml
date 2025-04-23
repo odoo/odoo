@@ -28,7 +28,7 @@
         </xpath>
         <xpath expr="//div[@class='before-footer']" position="after">
             <t t-set="l10n_in_hsn_summary" t-value="order._prepareL10nInHsnSummary()"/>
-            <table t-if="l10n_in_hsn_summary and header.company.country_id?.code === 'IN' and l10n_in_hsn_summary.items.length > 0" class="pt-3 w-100">
+            <table t-if="l10n_in_hsn_summary and header.company.country_id?.code === 'IN' and l10n_in_hsn_summary.items.length > 0" class="hsn-summary-table pt-3 w-100">
               <tr>
                     <th class="text-center fw-bolder" colspan="6">HSN Summary</th>
                 </tr>
