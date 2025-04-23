@@ -130,7 +130,12 @@ class Department(models.Model):
             self.message_unsubscribe(partner_ids=list(manager_to_unsubscribe))
             # set the employees's parent to the new manager
             self._update_employee_manager(manager_id)
-        return super(Department, self).write(vals)
+        departments = super(Department, self).write(vals)
+        if "parent_id" in vals:
+            self.env["discuss.channel"].sudo().search([
+                ("subscription_department_ids", "parent_of", vals["parent_id"])
+            ])._subscribe_users_automatically()
+        return departments
 
     def _update_employee_manager(self, manager_id):
         employees = self.env['hr.employee']
