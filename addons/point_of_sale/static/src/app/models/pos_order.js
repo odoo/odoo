@@ -133,7 +133,7 @@ export class PosOrder extends Base {
     get presetRequirementsFilled() {
         return (
             (!this.preset_id?.needsPartner ||
-                (this.partner_id?.name && this.partner_id?.pos_contact_address)) &&
+                (this.partner_id?.name && (this.partner_id?.street || this.partner_id?.street2))) &&
             (!this.preset_id?.needsName || this.partner_id?.name || this.floating_order_name) &&
             (!this.preset_id?.needsSlot || this.preset_time)
         );
