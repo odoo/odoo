@@ -471,7 +471,7 @@ class PosSession(models.Model):
                 check_move_validity=False, skip_invoice_sync=True
             )._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
 
-            balance = sum(self.move_id.line_ids.mapped('balance'))
+            balance = sum(record.move_id.line_ids.mapped('balance'))
             try:
                 with self.move_id._check_balanced({'records': self.move_id.sudo()}):
                     pass
@@ -487,12 +487,12 @@ class PosSession(models.Model):
                 return self._close_session_action(balance)
 
             self.sudo()._post_statement_difference(cash_difference_before_statements)
-            if self.move_id.line_ids:
-                self.move_id.sudo().with_company(self.company_id)._post()
+            if record.move_id.line_ids:
+                record.move_id.with_company(self.company_id)._post()
                 # Set the uninvoiced orders' state to 'done'
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
-                self.move_id.sudo().unlink()
+                record.move_id.sudo().unlink()
             self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
         else:
             self.sudo()._post_statement_difference(self.cash_register_difference)
