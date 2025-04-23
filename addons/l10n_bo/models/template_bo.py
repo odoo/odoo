@@ -108,7 +108,7 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
-    def _load(self, template_code, company, install_demo):
-        record = super()._load(template_code, company, install_demo)
+    def _load(self, template_code, company, install_demo, force_create=True):
+        record = super()._load(template_code, company, install_demo, force_create)
         company.write({'anglo_saxon_accounting': True})
         return record
