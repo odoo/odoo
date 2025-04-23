@@ -151,7 +151,7 @@ patch(OrderSummary.prototype, {
                     []
                 );
                 if (res.length > 0) {
-                    this.notification.add(_t("This Gift card is already been sold."), {
+                    this.notification.add(_t("This Gift card has already been sold."), {
                         type: "danger",
                     });
                     return;

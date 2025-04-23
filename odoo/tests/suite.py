@@ -20,9 +20,9 @@ from . import case
 from .common import HttpCase
 from .result import stats_logger
 from unittest import util, BaseTestSuite, TestCase
+from odoo.modules import module
 
 __unittest = True
-
 
 class TestSuite(BaseTestSuite):
     """A test suite is a composite test consisting of a number of TestCases.
@@ -35,7 +35,10 @@ class TestSuite(BaseTestSuite):
 
     def run(self, result, debug=False):
         for test in self:
+            if result.shouldStop:
+                break
             assert isinstance(test, (TestCase))
+            module.current_test = test
             self._tearDownPreviousClass(test, result)
             self._handleClassSetUp(test, result)
             result._previousTestClass = test.__class__

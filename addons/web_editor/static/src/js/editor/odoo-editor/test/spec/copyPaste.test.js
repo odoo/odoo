@@ -167,6 +167,17 @@ describe('Copy', () => {
                 },
             });
         });
+
+        it('should replace NBSP characters with space when copying text', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[content\u00A0]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('content ');
+                },
+            });
+        });
     });
 });
 describe('Cut', () => {

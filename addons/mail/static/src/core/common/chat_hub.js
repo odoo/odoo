@@ -85,4 +85,10 @@ export class ChatHub extends Component {
     }
 }
 
-registry.category("main_components").add("mail.ChatHub", { Component: ChatHub });
+export const chatHubService = {
+    dependencies: ["bus.monitoring_service", "mail.store", "ui"],
+    start() {
+        registry.category("main_components").add("mail.ChatHub", { Component: ChatHub });
+    },
+};
+registry.category("services").add("mail.chat_hub", chatHubService);

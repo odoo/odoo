@@ -856,9 +856,8 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         def open_and_check(pos_data):
             self.config = pos_data['config']
-            self.open_new_session()
+            self.open_new_session(pos_data['amount_paid'])
             session = self.pos_session
-            session.set_opening_control(pos_data['amount_paid'], False)
             self.assertEqual(session.cash_register_balance_start, pos_data['amount_paid'])
 
         pos01_config = self.config
@@ -986,7 +985,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             # Check the credit note
             self.assertTrue(return_to_invoice.account_move, 'Invoice should be created.')
             self.assertEqual(return_to_invoice.account_move.move_type, 'out_refund', 'Invoice should be a credit note.')
-            self.assertEqual(return_to_invoice.account_move.invoice_date, new_session_date, 'Invoice date should be the same as the session it is created in.')
+            self.assertEqual(return_to_invoice.account_move.invoice_date, new_session_date.date(), 'Invoice date should be the same as the session it is created in.')
             self.assertRecordValues(return_to_invoice.account_move, [{
                 'amount_untaxed': 30,
                 'amount_tax': 0,
@@ -1218,3 +1217,24 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertFalse(pm_3.journal_id)
         self.assertTrue(pm_4)
         self.assertEqual(pm_4.journal_id.type, "bank")
+
+    def test_loading_products_with_access_right_issue(self):
+        product = self.env['product.product'].create({
+            'name': 'Product with access right issue',
+            'available_in_pos': True,
+            'type': 'consu',
+        })
+
+        self.env['ir.rule'].create({
+            'name': 'Test',
+            'model_id': self.env['ir.model']._get('product.product').id,
+            'domain_force': '[(\'id\', \'!=\', %s)]' % product.id,
+            'groups': [(4, self.env.ref('base.group_user').id)]
+        })
+
+        session = self.open_new_session()
+
+        data = session.load_data([])
+
+        self.assertNotIn(product.id, [p['id'] for p in data['product.product']['data']])
+        self.assertTrue(data['product.product']['data'])

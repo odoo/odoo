@@ -831,7 +831,7 @@ class Post(models.Model):
         res = {
             "upvoteCount": self.vote_count,
             "datePublished": self.create_date.isoformat() + 'Z',
-            "url": self.website_url,
+            "url": self.env['ir.http']._url_for(self.website_url),
             "author": {
                 "@type": "Person",
                 "name": self.create_uid.sudo().name,
@@ -846,7 +846,7 @@ class Post(models.Model):
             res["text"] = self.plain_content or self.name
             res["answerCount"] = self.child_count
         if self.create_uid.sudo().website_published:
-            res["author"]["url"] = f"/forum/user/{ self.create_uid.sudo().id }"
+            res["author"]["url"] = self.env['ir.http']._url_for(f"/forum/user/{ self.create_uid.sudo().id }")
         return res
 
     def go_to_website(self):

@@ -184,21 +184,24 @@
                 );
             }
 
-            const style = document.createElement("style");
-            style.className = "o_module_error_banner";
-            style.textContent = `
-                body::before {
-                    font-weight: bold;
-                    content: "An error occurred while loading javascript modules, you may find more information in the devtools console";
-                    position: fixed;
-                    left: 0;
-                    bottom: 0;
-                    z-index: 100000000000;
-                    background-color: #C00;
-                    color: #DDD;
-                }
-            `;
-            document.head.appendChild(style);
+            const debug = new URLSearchParams(location.search).get("debug");
+            if (debug && debug !== "0") {
+                const style = document.createElement("style");
+                style.className = "o_module_error_banner";
+                style.textContent = `
+                    body::before {
+                        font-weight: bold;
+                        content: "An error occurred while loading javascript modules, you may find more information in the devtools console";
+                        position: fixed;
+                        left: 0;
+                        bottom: 0;
+                        z-index: 100000000000;
+                        background-color: #C00;
+                        color: #DDD;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
         }
 
         /** @type {OdooModuleLoader["startModules"]} */

@@ -5,7 +5,6 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("website_sale_cart_notification", {
     url: "/shop",
-    checkDelay: 100,
     steps: () => [
         ...tourUtils.addToCart({ productName: "website_sale_cart_notification_product_1" }),
         {

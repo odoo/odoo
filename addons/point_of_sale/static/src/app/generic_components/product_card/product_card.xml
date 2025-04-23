@@ -20,8 +20,13 @@
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
                 <h1 t-if="props.productCartQty"
-                    t-out="props.productCartQty"
+                    t-out="this.productQty"
                     class="product-cart-qty text-muted display-6 fw-bolder m-0 mt-auto" />
+            </div>
+            <div t-if="props.comboExtraPrice" class="d-flex px-2 pb-1">
+                <span class="price-extra px-2 py-0 rounded-pill text-bg-info">
+                    + <t t-esc="props.comboExtraPrice"/>
+                </span>
             </div>
         </article>
     </t>

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { tick } from "@odoo/hoot-dom";
+import { delay, tick } from "@odoo/hoot-dom";
 import {
     mockedCancelAnimationFrame,
     mockedRequestAnimationFrame,
@@ -31,7 +31,7 @@ const {
     document,
     fetch,
     Headers,
-    Math: { max: $max, min: $min },
+    Math: { floor: $floor, max: $max, min: $min, random: $random },
     Object: { assign: $assign, create: $create, entries: $entries },
     ProgressEvent,
     Request,
@@ -108,6 +108,25 @@ const markOpen = (instance) => {
     return instance;
 };
 
+/**
+ * @param {number} min
+ * @param {number} [max]
+ */
+const parseNetworkDelay = (min, max) => {
+    if (min <= 0) {
+        return null;
+    }
+    if (max) {
+        if (max < min) {
+            [min, max] = [max, min];
+        }
+        const diff = max - min;
+        return () => delay($floor($random() * diff + min));
+    } else {
+        return () => delay(min);
+    }
+};
+
 const DEFAULT_URL = "https://www.hoot.test/";
 const ENDLESS_PROMISE = new Promise(() => {});
 const HEADER = {
@@ -120,6 +139,8 @@ const R_SEMICOLON = /\s*;\s*/;
 /** @type {Set<NetworkInstance>} */
 const openNetworkInstances = new Set();
 
+/** @type {ReturnType<parseNetworkDelay>} */
+let getNetworkDelay = null;
 /** @type {(typeof fetch) | null} */
 let mockFetchFn = null;
 /** @type {((websocket: ServerWebSocket) => any) | null} */
@@ -185,6 +206,10 @@ export async function mockedFetch(input, init) {
     init.signal = controller.signal;
 
     logRequest(() => (typeof init.body === "string" ? JSON.parse(init.body) : init));
+
+    if (getNetworkDelay) {
+        await getNetworkDelay();
+    }
 
     let failed = false;
     let result;
@@ -312,6 +337,13 @@ export function mockWebSocket(onWebSocketConnected) {
  */
 export function mockWorker(onWorkerConnected) {
     mockWorkerConnection = onWorkerConnected;
+}
+
+/**
+ * @param {Parameters<parseNetworkDelay>} args
+ */
+export function throttleNetwork(...args) {
+    getNetworkDelay = parseNetworkDelay(...args);
 }
 
 export class MockBroadcastChannel extends BroadcastChannel {

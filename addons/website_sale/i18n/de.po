@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -588,6 +588,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Geschäftsbedingungen</u>"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid "A combo product can't be empty. Please select at least one option."
+msgstr ""
+"Ein Kombi-Produkt kann nicht leer sein. Bitte wählen Sie mindestens eine "
+"Option aus."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -1395,7 +1403,7 @@ msgstr "Spalten"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_combos
 msgid "Combo Choices"
-msgstr "Kombinationsmöglichkeiten"
+msgstr "Kombi-Möglichkeiten"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -1813,12 +1821,6 @@ msgstr "Lieferadresse"
 #: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
 msgid "Delivery and Installation"
 msgstr "Lieferung und Installation"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.total
-msgid "Delivery will be updated after choosing a new delivery method"
-msgstr ""
-"Die Lieferung wird nach Auswahl einer neuen Liefermethode aktualisiert"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -3264,6 +3266,12 @@ msgstr "Zahlungstransaktionen"
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
+msgid "Payment is already being processed."
+msgstr "Die Zahlung wird bereits bearbeitet."
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Pedal-based opening system"
 msgstr "Pedalgestütztes Öffnungssystem"
@@ -3367,6 +3375,12 @@ msgstr "Einzelpreis"
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
 msgstr "Preisliste für diese E-Commerce/Website verfügbar"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Price will be updated after choosing a delivery method"
+msgstr ""
+"Der Preis wird aktualisiert, nachdem eine Liefermethode ausgewählt wurde"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -4380,6 +4394,13 @@ msgstr "Das Zugriffstoken ist ungültig."
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
+"Der Warenkorb wurde bereits bezahlt. Bitte aktualisieren Sie die Seite."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has been updated. Please refresh the page."
 msgstr "Der Warenkorb wurde aktualisiert. Bitte aktualisieren Sie die Seite."
 
@@ -4421,6 +4442,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given product does not have a price therefore it cannot be added to "
@@ -4577,7 +4599,7 @@ msgid ""
 msgstr ""
 "Um Einladungen im B2B-Modus zu versenden, öffnen Sie einen Kontakt oder "
 "wählen Sie in der Listenansicht mehrere aus und klicken Sie im Drop-down-"
-"Menü *Aktion* auf die Option „Portal-Zugriffsverwaltung“."
+"Menü *Aktion* auf die Option „Portalzugriffsverwaltung“."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4628,7 +4650,7 @@ msgid ""
 "True only for product filters that require a product_id because they relate "
 "to cross selling"
 msgstr ""
-"True nur für Produktfilter, die eine product_id erfordern, weil sie sich auf"
+"Wahr nur für Produktfilter, die eine product_id erfordern, weil sie sich auf"
 " Cross-Selling beziehen"
 
 #. module: website_sale

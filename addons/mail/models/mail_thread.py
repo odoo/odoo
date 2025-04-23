@@ -17,6 +17,7 @@ import time
 import threading
 
 from collections import namedtuple
+from collections.abc import Iterable
 from email import message_from_string
 from email.message import EmailMessage
 from xmlrpc import client as xmlrpclib
@@ -141,7 +142,13 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
-        """Search function for message_follower_ids"""
+        if not (self.env.su or self.env.user._is_internal()):
+            user_partner = self.env.user.partner_id
+            allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
+            operand_values = operand if isinstance(operand, Iterable) else [operand]
+            if not allow_partner_ids.issuperset(operand_values):
+                raise AccessError(self.env._("Portal users can only filter threads by themselves as followers."))
+
         neg = ''
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             neg = 'not '
@@ -405,18 +412,6 @@ class MailThread(models.AbstractModel):
             return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
 
         return super().get_empty_list_help(help_message)
-
-    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
-        if self.env.su or self.env.user._is_internal():
-            return super()._condition_to_sql(alias, fname, operator, value, query)
-        if fname != 'message_partner_ids':
-            return super()._condition_to_sql(alias, fname, operator, value, query)
-        user_partner = self.env.user.partner_id
-        allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
-        operand = value if isinstance(value, (list, tuple)) else [value]
-        if not allow_partner_ids.issuperset(operand):
-            raise AccessError("Portal users can only filter threads by themselves as followers.")
-        return super(MailThread, self.sudo())._condition_to_sql(alias, fname, operator, value, query)
 
     # ------------------------------------------------------
     # MODELS / CRUD HELPERS
@@ -1401,17 +1396,10 @@ class MailThread(models.AbstractModel):
         if strip_attachments:
             msg_dict.pop('attachments', None)
 
-        message_ids = [msg_dict['message_id']]
-        if msg_dict.get('x_odoo_message_id'):
-            message_ids.append(msg_dict['x_odoo_message_id'])
-        existing_msg_ids = self.env['mail.message'].search([('message_id', 'in', message_ids)], limit=1)
+        existing_msg_ids = self.env['mail.message'].search([('message_id', '=', msg_dict['message_id'])], limit=1)
         if existing_msg_ids:
-            if msg_dict.get('x_odoo_message_id'):
-                _logger.info('Ignored mail from %s to %s with Message-Id %s / Context Message-Id %s: found duplicated Message-Id during processing',
-                             msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'), msg_dict.get('x_odoo_message_id'))
-            else:
-                _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
-                             msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
+            _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
+                         msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
             return False
 
         if self._detect_loop_headers(msg_dict):
@@ -1736,7 +1724,6 @@ class MailThread(models.AbstractModel):
             # Very unusual situation, be we should be fault-tolerant here
             message_id = "<%s@localhost>" % time.time()
             _logger.debug('Parsing Message without message-id, generating a random one: %s', message_id)
-        msg_dict['x_odoo_message_id'] = (message.get('X-Odoo-Message-Id') or '').strip()
         msg_dict['message_id'] = message_id.strip()
 
         if message.get('Subject'):
@@ -1820,7 +1807,7 @@ class MailThread(models.AbstractModel):
             - The list of references ids used to find the bounced mail message
         """
         reference_ids = []
-        headers = ('Message-Id', 'X-Odoo-Message-Id', 'X-Microsoft-Original-Message-ID')
+        headers = ('Message-Id', 'X-Microsoft-Original-Message-ID')
         for header in headers:
             value = decode_message_header(message, header)
             references = unfold_references(value)
@@ -3669,20 +3656,25 @@ class MailThread(models.AbstractModel):
         # have a fallback in case replies mess with Messsage-Id in the In-Reply-To (e.g. amazon
         # SES SMTP may replace Message-Id and In-Reply-To refers an internal ID not stored in Odoo)
         message_sudo = message.sudo()
-        outgoing_types = ('comment', 'auto_comment', 'email', 'email_outgoing')
-        note_type = self.env.ref('mail.mt_note')
         ancestors = self.env['mail.message'].sudo().search(
             [
                 ('model', '=', message_sudo.model), ('res_id', '=', message_sudo.res_id),
-                ('message_type', 'in', outgoing_types),
                 ('id', '!=', message_sudo.id),
-                ('subtype_id', '!=', note_type.id),  # filters out notes, using subtype which is indexed
-            ], limit=16, order='id DESC',
+                ('subtype_id', '!=', False),  # filters out logs
+                ('message_id', '!=', False),  # ignore records that somehow don't have a message_id (non ORM created)
+            ], limit=32, order='id DESC',  # take 32 last, hoping to find public discussions in it
         )
-        # filter out internal messages that are not notes, manually because of indexes
-        ancestors = ancestors.filtered(lambda m: not m.is_internal and m.subtype_id and not m.subtype_id.internal)[:3]
-        # order frrom oldest to newest
-        references = ' '.join(m.message_id for m in (ancestors[::-1] + message_sudo))
+
+        # filter out internal messages, to fetch 'public discussion' first
+        outgoing_types = ('comment', 'auto_comment', 'email', 'email_outgoing')
+        history_ancestors = ancestors.sorted(lambda m: (
+            not m.is_internal and not m.subtype_id.internal,
+            m.message_type in outgoing_types,
+            m.message_type != 'user_notification',  # user notif -> avoid if possible
+        ), reverse=True)  # False before True unless reverse
+        # order from oldest to newest
+        ancestors = history_ancestors[:3].sorted('id')
+        references = ' '.join(m.message_id for m in (ancestors + message_sudo))
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,

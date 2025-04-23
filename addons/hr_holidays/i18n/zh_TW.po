@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-04-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -1649,6 +1649,12 @@ msgid "Employee accrue"
 msgstr "員工累計"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban_approve_department
+msgid "Employee's image"
+msgstr "員工圖片"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__emp
 msgid "Employee(s)"
 msgstr "員工"
@@ -2676,19 +2682,19 @@ msgstr "只限 %s 的休假審批人、休假管理員工/負責人，或系統�
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
-msgstr "只有休假經理可以重置被退回的休假。"
+msgstr "只限休假經理才可重設已被拒絕的休假。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a started leave."
-msgstr "只有休假經理可以重置已開始的休假。"
+msgstr "只限休假經理才可重設已開始的休假。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset other people leaves."
-msgstr "只有休假經理可以重置其他人的休假。"
+msgstr "只限休假經理才可重設其他人的休假。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2701,7 +2707,7 @@ msgstr "只有休假主管或經理才可批准/拒絕自己的申請。"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a manager can modify a canceled leave."
-msgstr "只限管理員才可修改已取消的休假。"
+msgstr "只限經理才可修改已取消的休假。"
 
 #. module: hr_holidays
 #. odoo-python

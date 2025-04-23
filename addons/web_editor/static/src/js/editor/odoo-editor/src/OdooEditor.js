@@ -4200,7 +4200,7 @@ export class OdooEditor extends EventTarget {
         const dataHtmlElement = document.createElement('data');
         dataHtmlElement.append(rangeContent);
         const odooHtml = dataHtmlElement.innerHTML.replace(/\uFEFF/g, "");
-        const odooText = selection.toString().replace(/\uFEFF/g, "");
+        const odooText = selection.toString().replace(/\uFEFF/g, "").replace(/\u00A0/g, " ");
         clipboardEvent.clipboardData.setData('text/plain', odooText);
         clipboardEvent.clipboardData.setData('text/html', odooHtml);
         clipboardEvent.clipboardData.setData('text/odoo-editor', odooHtml);
@@ -4761,8 +4761,11 @@ export class OdooEditor extends EventTarget {
         const allWhitespaceRegex = /^[\s\u200b]*$/;
         for (const emptyElement of [...element.querySelectorAll('[data-oe-zws-empty-inline]')].reverse()) {
             emptyElement.removeAttribute('data-oe-zws-empty-inline');
-            if (!allWhitespaceRegex.test(emptyElement.textContent)) {
-                // The element has some meaningful text. Remove the ZWS in it.
+            if (
+                !allWhitespaceRegex.test(emptyElement.textContent) ||
+                emptyElement.hasAttribute("data-oe-field")
+            ) {
+                // Remove ZWS if the element is field or has meaningful text.
                 cleanZWS(emptyElement);
             } else if (!emptyElement.classList.length) {
                 // We only remove the empty element if it has no class, to

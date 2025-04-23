@@ -405,7 +405,7 @@ test("invisible is correctly computed with another t-if", () => {
     expect(compileTemplate(arch)).toHaveOuterHTML(expected);
 });
 
-test("keep nosheet style if a sheet is part of a nested form", (assert) => {
+test("keep nosheet style if a sheet is part of a nested form", () => {
     const arch = `
         <form>
             <field name="move_line_ids" field_id="move_line_ids">
@@ -432,4 +432,24 @@ test("keep nosheet style if a sheet is part of a nested form", (assert) => {
         </div>
     </t>`;
     expect(compileTemplate(arch)).toHaveOuterHTML(expected);
+});
+
+test("form with t-translation directive", () => {
+    patchWithCleanup(console, { warn: (message) => expect.step(message) });
+    const arch = `
+        <form>
+            <div t-translation="off">Hello</div>
+        </form>`;
+
+    const expected = `<t t-translation="off">
+        <div
+            class="o_form_renderer o_form_nosheet"
+            t-att-class="__comp__.props.class"
+            t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}"
+            t-ref="compiled_view_root">
+                <div> Hello </div>
+        </div>
+    </t>`;
+    expect(compileTemplate(arch)).toHaveOuterHTML(expected);
+    expect.verifySteps([]); // should no log any warning
 });

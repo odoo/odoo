@@ -1728,6 +1728,27 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             }
             yield 2, self.populate_document(document_params), expected_values
 
+            document_params = self.init_document(
+                lines=[{'price_unit': 50.01}],
+                cash_rounding=cash_rounding,
+            )
+            expected_values = {
+                'same_tax_base': True,
+                'currency_id': self.currency.id,
+                'base_amount_currency': 50.01,
+                'tax_amount_currency': 0.0,
+                'total_amount_currency': 50.01,
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'base_amount_currency': 50.01,
+                        'tax_amount_currency': 0.0,
+                        'tax_groups': [],
+                    },
+                ],
+            }
+            yield 3, self.populate_document(document_params), expected_values
+
     def test_cash_rounding_generic_helpers(self):
         for test_index, document, expected_values in self._test_cash_rounding():
             with self.subTest(test_index=test_index):

@@ -26,7 +26,6 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2024
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2024
 # Denis Knotko <denis_knotko@yahoo.com>, 2024
-# Aurelija Vitkauskiene, 2024
 # Mantas, 2024
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2024
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2024
@@ -36,14 +35,16 @@
 # myacc-pro, 2025
 # Jonas Zinkevicius <jozi@odoo.com>, 2025
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2025
+# Aurelija Vitkauskiene, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-04-07 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -414,7 +415,7 @@ msgid ""
 "            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is available.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
@@ -2619,7 +2620,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Issued Date"
-msgstr ""
+msgstr "Užsakymo data"
 
 #. module: sale
 #. odoo-python
@@ -4488,6 +4489,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Sistemos parametrai"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -4510,9 +4516,19 @@ msgid "Tax Country"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax Excl."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax ID"
 msgstr "PVM mokėtojo kodas"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tax Incl."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -5114,11 +5130,6 @@ msgid "Untaxed Total"
 msgstr "Viso, be mokesčių"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
-msgid "Untaxed discount"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "UoM"
 msgstr "Mat. vnt."
@@ -5324,6 +5335,12 @@ msgid ""
 msgstr ""
 "Negalite pakeisti pardavimo užsakymo eilutės tipo. Vietoje to, turėtumėte "
 "ištrinti esamą eilutę ir sukurti naują tinkamo tipo eilutę."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+msgid "You cannot modify the product of this order line."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days

@@ -24,7 +24,7 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]</p>',
+                '<p>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]</p>',
             contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]</p>',
         });
     });
@@ -40,7 +40,7 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
+                '<p><br></p>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]',
             contentAfter: '<p><br></p><i class="fa fa-pastafarianism"></i>[]',
             config: { allowInlineAtRoot: true },
         });
@@ -56,7 +56,7 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b</p>',
+                '<p>a\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]b</p>',
             contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]b</p>',
         });
     });
@@ -71,7 +71,7 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b</p>',
+                '<p>a\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]b</p>',
             contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]b</p>',
         });
     });
@@ -361,7 +361,7 @@ describe("not collapsed selection", () => {
                 );
             },
             contentAfterEdit:
-                '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]</p>',
+                '<p>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]</p>',
             contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]</p>',
         });
     });
@@ -376,7 +376,7 @@ describe("not collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]c</p>',
+                '<p>a\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]c</p>',
             contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]c</p>',
         });
     });

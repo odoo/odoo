@@ -23,7 +23,7 @@ patch(PosStore.prototype, {
     },
     get employeeIsAdmin() {
         const cashier = this.get_cashier();
-        return cashier._role === "manager" || cashier.user_id?.id === this.user.id;
+        return cashier._role === "manager";
     },
     checkPreviousLoggedCashier() {
         if (this.config.module_pos_hr) {

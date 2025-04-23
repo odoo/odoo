@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -34,8 +34,6 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_bill_count
-#: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
-#: model:ir.model.fields,field_description:purchase.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "# Hóa đơn mua hàng"
 
@@ -605,7 +603,7 @@ msgid ""
 msgstr ""
 "Theo cấu hình sản phẩm, số lượng đã nhận được có thể được tính toán tự động theo cơ chế:\n"
 "  - Thủ công: số lượng được điền thủ công vào dòng\n"
-"  - Dịch chuyển tồn kho: số lượng đến từ các phiếu lấy hàng đã xác nhận\n"
+"  - Dịch chuyển tồn kho: số lượng đến từ các phiếu xuất kho đã xác nhận\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__account_move_id
@@ -855,7 +853,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
 msgid "Average Cost"
-msgstr "Giá vốn trung bình"
+msgstr "Chi phí trung bình"
 
 #. module: purchase
 #. odoo-javascript
@@ -1265,8 +1263,8 @@ msgid ""
 "vendor pricelist lead time then today's date."
 msgstr ""
 "Ngày giao hàng dự kiến từ nhà cung cấp. Ngày này được đặt mặc định tương ứng"
-" theo thời gian hoàn thành đơn hàng trong bảng giá của nhà cung cấp rồi đến "
-"ngày hôm nay."
+" theo thời gian hoàn thành đơn hàng trong bảng giá nhập hàng rồi đến ngày "
+"hôm nay."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
@@ -2770,7 +2768,7 @@ msgid ""
 "on the delivery order sent by your vendor."
 msgstr ""
 "Mã đơn bán hàng hoặc chào thầu gửi bởi nhà cung cấp. Mã số này được sử dụng "
-"để so sánh lúc bạn nhận sản phẩm vì nó thường được viết trên phiếu xuất kho "
+"để so sánh lúc bạn nhận sản phẩm vì nó thường được viết trên lệnh giao hàng "
 "do nhà cung cấp gửi."
 
 #. module: purchase
@@ -2845,7 +2843,7 @@ msgstr "Lỗi gửi SMS"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Scheduled Date"
-msgstr "Ngày theo kế hoạch"
+msgstr "Ngày đã lên lịch"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -2878,7 +2876,7 @@ msgstr "Tên phần (ví dụ: Sản phẩm, Dịch vụ)"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr "Thời gian hoàn thành an toàn"
+msgstr "Thời dự phòng cho mua hàng"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
@@ -3242,8 +3240,8 @@ msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
-"Tiền tệ này sẽ được sử dụng để mua hàng từ nhà cung cấp hiện tại thay vì "
-"tiền tệ mặc định"
+"Tiền tệ này sẽ được sử dụng để mua hàng từ đối tác hiện tại thay vì tiền tệ "
+"mặc định"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
@@ -3357,7 +3355,7 @@ msgstr "Tổng số lượng"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
 msgid "Total Untaxed"
-msgstr "Tổng tiền trước thuế"
+msgstr "Tổng trước thuế"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3481,7 +3479,7 @@ msgstr "Số tiền trước thuế"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
-msgstr "Tổng tiền trước thuế"
+msgstr "Tổng trước thuế"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3548,7 +3546,6 @@ msgstr "Dòng Hóa đơn mua hàng chỉ có thể được thêm vào một Đ�
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Hoá đơn mua hàng"
@@ -3561,7 +3558,7 @@ msgstr "Quốc gia của nhà cung cấp"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
-msgstr "Bảng giá của nhà cung cấp"
+msgstr "Bảng giá nhập hàng"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref

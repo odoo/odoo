@@ -3354,6 +3354,7 @@ class SnippetsMenu extends Component {
 
                 if (snippetEl.dataset.moduleId) {
                     snippet.moduleId = snippetEl.dataset.moduleId;
+                    snippet.moduleDisplayName = snippetEl.dataset.moduleDisplayName;
                     snippet.installable = true;
                 }
 
@@ -4412,8 +4413,8 @@ class SnippetsMenu extends Component {
     _onInstallBtnClick(ev) {
         const snippetEl = ev.currentTarget.closest('[data-module-id]');
         const moduleID = parseInt(snippetEl.dataset.moduleId);
-        const snippetName = snippetEl.getAttribute("name");
-        this._installModule(moduleID, snippetName);
+        const moduleDisplayName = snippetEl.dataset.moduleDisplayName;
+        this._installModule(moduleID, moduleDisplayName);
     }
     /**
      * @private
@@ -5110,38 +5111,42 @@ class SnippetsMenu extends Component {
                 dropZoneEls = [...dropZoneEls].filter(dropzoneEl => {
                     return !dropzoneEl.closest("[data-snippet]:not(.s_popup), #website_cookies_bar");
                 });
-                hookEl = this._getClosestDropzone(dropZoneEls)
-                    || dropZoneEls[dropZoneEls.length - 1];
-                hookEl.classList.add("o_hook_drop_zone");
+                if (dropZoneEls?.length) {
+                    hookEl = this._getClosestDropzone(dropZoneEls)
+                        || dropZoneEls[dropZoneEls.length - 1];
+                    hookEl.classList.add("o_hook_drop_zone");
+                }
             } else {
                 hookEl = initialSnippetEl;
             }
 
-            const hookParentEl = hookEl.parentNode;
-            // Excludes snippets that cannot be placed at the target location.
-            [...this.snippets.values()].forEach((snippet) => {
-                if (snippet.disabled) {
-                    snippet.excluded = true;
-                } else {
-                    const $snippetSelectorChildren =
-                            this._getSelectors($(snippet.baseBody)).$selectorChildren;
-                    const hasSelectorChild = [...$snippetSelectorChildren].some(snippetSelectorChild => {
-                        return snippetSelectorChild === hookParentEl;
-                    });
-                    const forbidSanitize = snippet.data.oeForbidSanitize;
-                    let isForbidden = false;
-                    if (forbidSanitize === "form") {
-                        isForbidden = hookEl.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"])');
-                    } else if (forbidSanitize) {
-                        isForbidden = hookEl.closest("[data-oe-sanitize]");
+            if (hookEl) {
+                const hookParentEl = hookEl.parentNode;
+                // Excludes snippets that cannot be placed at the target location.
+                [...this.snippets.values()].forEach((snippet) => {
+                    if (snippet.disabled) {
+                        snippet.excluded = true;
+                    } else {
+                        const $snippetSelectorChildren =
+                                this._getSelectors($(snippet.baseBody)).$selectorChildren;
+                        const hasSelectorChild = [...$snippetSelectorChildren].some(snippetSelectorChild => {
+                            return snippetSelectorChild === hookParentEl;
+                        });
+                        const forbidSanitize = snippet.data.oeForbidSanitize;
+                        let isForbidden = false;
+                        if (forbidSanitize === "form") {
+                            isForbidden = hookEl.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"])');
+                        } else if (forbidSanitize) {
+                            isForbidden = hookEl.closest("[data-oe-sanitize]");
+                        }
+                        snippet.excluded = !hasSelectorChild || isForbidden;
                     }
-                    snippet.excluded = !hasSelectorChild || isForbidden;
-                }
-            });
+                });
+            }
 
             const hasIncludedSnippet = [...this.snippets.values()].some(snippet => snippet.excluded === false);
-            if (!hasIncludedSnippet) {
-                if (dropZoneEls) {
+            if (!hasIncludedSnippet || !hookEl) {
+                if (dropZoneEls?.length) {
                     dropZoneEls.forEach(dropZoneEl => dropZoneEl.remove());
                 }
                 this.options.wysiwyg.odooEditor.historyUnpauseSteps();
@@ -5157,9 +5162,9 @@ class SnippetsMenu extends Component {
                     groupSelected: groupSelected,
                     optionsSnippets: this.options.snippets,
                     frontendDirection: this.options.direction,
-                    installModule: (moduleID, snippetName) => {
+                    installModule: (moduleID, moduleDisplayName) => {
                         resolve();
-                        this._installModule(moduleID, snippetName);
+                        this._installModule(moduleID, moduleDisplayName);
                     },
                     addSnippet: async (snippetEl) => {
                         isSnippetChosen = true;
@@ -5252,16 +5257,16 @@ class SnippetsMenu extends Component {
      *
      * @private
      * @param {Number} moduleID
-     * @param {String} snippetName
+     * @param {String} moduleDisplayName
      */
-    _installModule(moduleID, snippetName) {
-        // TODO: Should be the app name, not the snippet name ... Maybe both ?
-        const bodyText = _t("Do you want to install %s App?", snippetName);
+    _installModule(moduleID, moduleDisplayName) {
+        moduleDisplayName = `"${moduleDisplayName}"`;
+        const bodyText = _t("Do you want to install %s App?", moduleDisplayName);
         const linkText = _t("More info about this app.");
         const linkUrl = '/odoo/action-base.open_module_tree/' + encodeURIComponent(moduleID);
         this.dialog.add(ConfirmationDialog, {
-            title: _t("Install %s", snippetName),
-            body: markup(`${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`),
+            title: _t("Install %s", moduleDisplayName),
+            body: markup(`${escape(bodyText)}\n<a href="${escape(linkUrl)}" target="_blank"><i class="oi oi-arrow-right me-1"></i>${escape(linkText)}</a>`),
             confirm: async () => {
                 try {
                     await this.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]);
@@ -5273,7 +5278,7 @@ class SnippetsMenu extends Component {
                     });
                 } catch (e) {
                     if (e instanceof RPCError) {
-                        const message = escape(_t("Could not install module %s", snippetName));
+                        const message = escape(_t("Could not install module %s", moduleDisplayName));
                         this.notification.add(message, {
                             type: "danger",
                             sticky: true,

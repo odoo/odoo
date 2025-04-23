@@ -310,3 +310,19 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_id')
     def _inverse_product_id(self):
         super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
+
+    def _get_exchange_journal(self, company):
+        if (
+            self and self.move_id.stock_valuation_layer_ids and
+            self.product_id.categ_id.property_valuation == 'real_time'
+        ):
+            return self.product_id.categ_id.property_stock_journal
+        return super()._get_exchange_journal(company)
+
+    def _get_exchange_account(self, company, amount):
+        if (
+            self and self.move_id.stock_valuation_layer_ids and
+            self.product_id.categ_id.property_valuation == 'real_time'
+        ):
+            return self.product_id.categ_id.property_stock_valuation_account_id
+        return super()._get_exchange_account(company, amount)

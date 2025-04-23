@@ -409,6 +409,7 @@ class PaymentTransaction(models.Model):
         - `amount`: The rounded amount of the transaction.
         - `currency_id`: The currency of the transaction, as a `res.currency` id.
         - `partner_id`: The partner making the transaction, as a `res.partner` id.
+        - `should_tokenize`: Whether this transaction should be tokenized.
         - Additional provider-specific entries.
 
         Note: `self.ensure_one()`
@@ -425,6 +426,7 @@ class PaymentTransaction(models.Model):
             'amount': self.amount,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
+            'should_tokenize': self.tokenize,
         }
 
         # Complete generic processing values with provider-specific values.

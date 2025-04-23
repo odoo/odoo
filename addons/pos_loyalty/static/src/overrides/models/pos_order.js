@@ -922,7 +922,10 @@ patch(PosOrder.prototype, {
             if (!line.get_quantity()) {
                 continue;
             }
-            const taxKey = line.tax_ids.map((t) => t.id);
+
+            const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+                ? line.tax_ids.map((t) => t.id)
+                : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
             discountable += line.get_price_with_tax();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
@@ -1168,7 +1171,7 @@ patch(PosOrder.prototype, {
 
             lst.push({
                 product_id: discountProduct,
-                price_unit: -(entry[1] * discountFactor),
+                price_unit: -(Math.min(this.get_total_with_tax(), entry[1]) * discountFactor),
                 qty: 1,
                 reward_id: reward,
                 is_reward_line: true,

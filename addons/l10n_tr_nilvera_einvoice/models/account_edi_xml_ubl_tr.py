@@ -63,7 +63,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_address_vals(partner)
         vals.update({
-            'city_subdivision_name ': partner.state_id.name,
+            'city_subdivision_name ': partner.city,
+            'city_name': partner.state_id.name,
             'country_subentity': False,
             'country_subentity_code': False,
         })
@@ -82,6 +83,16 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         for vals in vals_list:
             vals.pop('registration_address_vals', None)
         return vals_list
+
+    def _get_partner_person_vals(self, partner):
+        if not partner.is_company:
+            name_parts = partner.name.split(' ', 1)
+            return {
+                'first_name': name_parts[0],
+                # If no family name is present, use a zero-width space (U+200B) to ensure the XML tag is rendered. This is required by Nilvera.
+                'family_name': name_parts[1] if len(name_parts) > 1 else '\u200B',
+            }
+        return super()._get_partner_person_vals(partner)
 
     def _get_delivery_vals_list(self, invoice):
         # EXTENDS account.edi.xml.ubl_21
@@ -149,6 +160,17 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'document_type_code': "SEND_TYPE",
             })
         return additional_document_reference_list
+
+    def _get_invoice_line_price_vals(self, line):
+        # EXTEND 'account.edi.common'
+        invoice_line_price_vals = super()._get_invoice_line_price_vals(line)
+        invoice_line_price_vals['base_quantity_attrs'] = {'unitCode': line.product_uom_id._get_unece_code()}
+        return invoice_line_price_vals
+
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
+        invoice_line_vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
+        invoice_line_vals['line_quantity_attrs'] = {'unitCode': line.product_uom_id._get_unece_code()}
+        return invoice_line_vals
 
     # -------------------------------------------------------------------------
     # IMPORT

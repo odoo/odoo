@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: erpgo translator <jumshud@erpgo.az>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
@@ -540,11 +540,59 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"    <tbody>\n"
+"        <!-- CONTENT -->\n"
+"        <tr>\n"
+"            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <h1 style=\"color:#A9A9A9;\">SƏBƏTİNİZDƏ NƏSƏ VAR.</h1>\n"
+"                        Sifarişi tamamlamaq istərdinizmi?<br/><br/>\n"
+"                        <t t-if=\"object.order_line\">\n"
+"                            <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                                <hr/>\n"
+"                                <table width=\"100%\">\n"
+"                                    <tr>\n"
+"                                        <td style=\"padding: 10px; width:150px;\">\n"
+"                                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Məhsul şəkli\"/>\n"
+"                                        </td>\n"
+"                                        <td>\n"
+"                                            <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Masa Kombinasiyası</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Masa Kombinasiyası Qara-qəhvəyi: masa + stul + siyirmə.</t>\n"
+"                                        </td>\n"
+"                                        <td width=\"100px\" align=\"right\">\n"
+"                                            <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Vahid</t>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
+"                            <hr/>\n"
+"                        </t>\n"
+"                        <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                            <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Sifarişi davam etdir\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
+"                        <div style=\"text-align: center;\"><strong><t t-out=\"company.name or ''\">My Company (San Francisco)</t> ilə alış-veriş etdiyiniz üçün təşəkkür edirik!</strong></div>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Şərtlər və Qaydalar</u>"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid "A combo product can't be empty. Please select at least one option."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -1759,11 +1807,6 @@ msgstr "Çatdırılma ünvanı"
 #: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
 msgid "Delivery and Installation"
 msgstr "Çatdırılma və Quraşdırma"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.total
-msgid "Delivery will be updated after choosing a new delivery method"
-msgstr "Çatdırılma yeni çatdırılma metodu seçildikdən sonra yenilənəcək"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -3194,6 +3237,12 @@ msgstr "Ödəniş Əməliyyatları"
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
+msgid "Payment is already being processed."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Pedal-based opening system"
 msgstr "Pedala əsaslanan açılış sistemi"
@@ -3297,6 +3346,11 @@ msgstr "Vahid üçün Qiymət"
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
 msgstr "Bu E-commerce/Vebsayt üçün Qiymət cədvəli mövcuddur"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Price will be updated after choosing a delivery method"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -4309,6 +4363,12 @@ msgstr "Giriş nişanı etibarsızdır."
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has been updated. Please refresh the page."
 msgstr "Səbət yeniləndi. Səhifəni yeniləyin."
 
@@ -4348,6 +4408,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given product does not have a price therefore it cannot be added to "

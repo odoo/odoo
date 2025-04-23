@@ -96,6 +96,7 @@ class TestItEdiDDT(TestItEdi):
         """ Create a sale order with multiple DDTs, and create an invoice with a later date.
             The export has to have the TipoDocumento TD24 for Deferred Invoice.
         """
+        self.env.user.groups_id |= self.env.ref("sales_team.group_sale_salesman")
         # Create sale order
         with freeze_time('2020-02-02 18:00'):
             self.sale_order = self.env['sale.order'].with_company(self.company).create({

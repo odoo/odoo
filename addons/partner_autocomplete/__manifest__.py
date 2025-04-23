@@ -24,7 +24,6 @@ Auto-complete partner companies' data
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'partner_autocomplete/static/src/scss/*',
             'partner_autocomplete/static/src/js/*',
             'partner_autocomplete/static/src/xml/*',
         ],

@@ -93,6 +93,7 @@ test("shape_circle and shape_rounded are mutually exclusive", async () => {
     expect(img).not.toHaveClass("rounded-circle");
 });
 
+test.tags("mobile");
 test("can undo a shape", async () => {
     const { editor } = await setupEditor(`
         <img src="${base64Img}">
@@ -524,7 +525,8 @@ test("can undo link removing of an image", async () => {
     expect(img.parentElement.tagName).toBe("A");
 });
 
-test.tags("desktop")("Preview an image on dblclick", async () => {
+test.tags("desktop");
+test("Preview an image on dblclick", async () => {
     await setupEditor(`
         <img class="img-fluid test-image" src="${base64Img}">
     `);

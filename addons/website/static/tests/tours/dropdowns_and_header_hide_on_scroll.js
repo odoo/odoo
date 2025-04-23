@@ -36,7 +36,6 @@ const scrollDownToMediaList = function () {
 registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     url: "/",
     edition: true,
-    checkDelay: 100,
 }, () => [
     ...insertSnippet({id: "s_media_list", name: "Media List", groupName: "Content"}),
     selectHeader(),

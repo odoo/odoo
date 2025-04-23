@@ -42,6 +42,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
+"%(number)s - taksit tutarı olan <strong>%(amount)s</strong> vadesine <strong"
+" class=\"text-primary\"> %(date)s</strong> kalmıştır"
 
 #. module: account_payment
 #. odoo-javascript
@@ -246,7 +248,7 @@ msgstr "İsim Göster"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
 msgid "Display Open Installments"
-msgstr ""
+msgstr "Açık taksitleri göster"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -417,6 +419,12 @@ msgstr "Online Ödemeler"
 
 #. module: account_payment
 #. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid "Online payment option is not enabled in Configuration."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same company."
 msgstr "Gecikmiş faturalar aynı firmaya ait olmalı."
@@ -468,7 +476,7 @@ msgstr "Şimdi Öde"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
 msgid "Pay overdue"
-msgstr ""
+msgstr "Gecikmiş Ödeme"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
@@ -536,7 +544,7 @@ msgstr "Ödemeler"
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "Please log in to pay your overdue invoices"
-msgstr ""
+msgstr "Vadesi geçmiş faturaları ödemek için giriş yapın"
 
 #. module: account_payment
 #. odoo-python
@@ -653,6 +661,18 @@ msgid "The source payment of related refund payments"
 msgstr "İlgili iade ödemelerinin kaynak ödemesi"
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "There are pending transactions for this invoice."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "There is no amount to be paid."
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
 msgstr "Ödeme işlemi sırasında bir hata oluştu: geçersiz fatura."
@@ -677,9 +697,28 @@ msgstr ""
 "Ödeme işlemi sırasında bir problem oluştu: Geçersiz kredi kartı ID'si."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This invoice cannot be paid online."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
 msgid "This invoice has already been paid."
 msgstr "Bu fatura zaten ödendi."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This invoice isn't posted."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This is not an outgoing invoice."
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
@@ -743,7 +782,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
 msgid "due in %s day(s)"
-msgstr "Vadesinin dolmasına %s gün varç"
+msgstr "Vadesinin dolmasına %s gün kaldı"
 
 #. module: account_payment
 #. odoo-javascript

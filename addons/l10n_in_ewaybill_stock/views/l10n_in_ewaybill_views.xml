@@ -120,7 +120,7 @@
                         <page string="Item Details">
                             <field name="move_ids" mode="list,kanban" force_save="1" readonly="state != 'pending'">
                                 <list editable="bottom" create="0" delete="0">
-                                    <field name="company_currency_id" column_invisible="1"/>
+                                    <field name="company_currency_id" column_invisible="1"/> <!-- To display the currency symbol  -->
                                     <field name="product_id" readonly="1"/>
                                     <field name="quantity" string="Quantity" readonly="1"/>
                                     <field name="ewaybill_price_unit" string="Unit Price"/>

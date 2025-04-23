@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -3533,7 +3533,7 @@ msgstr ""
 "Verwachte aantal (berekend als: Fysiek beschikbare voorraad - Uitgaand + Inkomend). \n"
 "Bij gebruik van een enkele voorraadlocatie, omvat dit de goederen opgeslagen in deze locatie, of één van de onderliggende locaties. \n"
 "Bij gebruik van een enkel magazijn, omvat dit de goederen die in de voorraadlocatie van dit magazijn zijn opgeslagen, of één van de onderliggende locaties. \n"
-"Anders, omvat dit goederen die zijn opgeslagen in eender welke voorraadlocatie van het type 'intern'."
+"Anders omvat dit goederen die zijn opgeslagen in een andere voorraadlocatie van het type 'intern'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
@@ -4359,7 +4359,7 @@ msgstr "Installeer Barcode"
 #. odoo-python
 #: code:addons/stock/models/res_company.py:0
 msgid "Inter-warehouse transit"
-msgstr "Transit tussen magazijnen"
+msgstr "Transit tussenmagazijn"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
@@ -7470,7 +7470,7 @@ msgstr "Reden"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
 msgid "Reason for relocation"
-msgstr "Reden van verhuizing"
+msgstr "Reden van verplaatsing"
 
 #. module: stock
 #. odoo-javascript
@@ -9146,6 +9146,16 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 msgid "The Lot/Serial number (%s) is linked to another product."
 msgstr "Partij/serienummer (%s) is gekoppeld aan een ander product."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr ""
+"Het rapport 'Pickbewerkingen' is verwijderd. Je kunt op dit moment dus niet "
+"afdrukken, tenzij het rapport wordt hersteld."
 
 #. module: stock
 #. odoo-python

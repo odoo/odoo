@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { formatTime, stringify } from "../hoot_utils";
+import { stringify } from "../hoot_utils";
 import { urlParams } from "./url";
 
 //-----------------------------------------------------------------------------
@@ -26,18 +26,20 @@ const {
 
 /**
  * @param {any[]} args
+ * @param {string} [prefix]
+ * @param {string} [prefixColor]
  */
-const styledArguments = (args) => {
-    const prefix = `%c[HOOT]%c`;
-    const styles = [`color:#ff0080;font-weight:bold`, ""];
+const styledArguments = (args, prefix, prefixColor) => {
+    const fullPrefix = `%c[${prefix || "HOOT"}]%c`;
+    const styles = [`color:${prefixColor || "#ff0080"};font-weight:bold`, ""];
     let firstArg = args.shift() ?? "";
     if (typeof firstArg === "function") {
         firstArg = firstArg();
     }
     if (typeof firstArg === "string") {
-        args.unshift(`${prefix} ${firstArg}`, ...styles);
+        args.unshift(`${fullPrefix} ${firstArg}`, ...styles);
     } else {
-        args.unshift(prefix, ...styles, firstArg);
+        args.unshift(fullPrefix, ...styles, firstArg);
     }
     return args;
 };
@@ -144,7 +146,7 @@ export const logger = {
         if (logger.level < LOG_LEVELS.debug) {
             return;
         }
-        $debug(...styledArguments(args));
+        $debug(...styledArguments(args, "DEBUG", "#ffb000"));
     },
     /**
      * @param {import("./test").Test} test
@@ -156,9 +158,11 @@ export const logger = {
         const { fullName, lastResults } = test;
         $log(
             ...styledArguments([
-                `Test ${stringify(fullName)} passed`,
+                `Test ${stringify(fullName)} passed (assertions:`,
                 lastResults.counts.assertion || 0,
-                `assertions (time: ${formatTime(lastResults.duration)})`,
+                `/ time:`,
+                lastResults.duration,
+                `ms)`,
             ])
         );
     },
@@ -172,16 +176,22 @@ export const logger = {
         const args = [`${stringify(suite.fullName)} ended`];
         const withArgs = [];
         if (suite.reporting.passed) {
-            withArgs.push(suite.reporting.passed, "passed");
+            withArgs.push("passed:", suite.reporting.passed, "/");
         }
         if (suite.reporting.failed) {
-            withArgs.push(suite.reporting.failed, "failed");
+            withArgs.push("failed:", suite.reporting.failed, "/");
         }
         if (suite.reporting.skipped) {
-            withArgs.push(suite.reporting.skipped, "skipped");
+            withArgs.push("skipped:", suite.reporting.skipped, "/");
         }
         if (withArgs.length) {
-            args.push("(", ...withArgs, ")");
+            args.push(
+                `(${withArgs.shift()}`,
+                ...withArgs,
+                "time:",
+                suite.jobs.reduce((acc, job) => acc + (job.duration || 0), 0),
+                "ms)"
+            );
         }
         $log(...styledArguments(args));
     },

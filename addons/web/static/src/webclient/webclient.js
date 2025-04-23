@@ -38,7 +38,14 @@ export class WebClient extends Component {
         this.state = useState({
             fullscreen: false,
         });
-        useBus(routerBus, "ROUTE_CHANGE", this.loadRouterState);
+        useBus(routerBus, "ROUTE_CHANGE", async () => {
+            document.body.style.pointerEvents = "none";
+            try {
+                await this.loadRouterState();
+            } finally {
+                document.body.style.pointerEvents = "auto";
+            }
+        });
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", ({ detail: mode }) => {
             if (mode !== "new") {
                 this.state.fullscreen = mode === "fullscreen";

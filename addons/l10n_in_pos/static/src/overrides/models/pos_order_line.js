@@ -13,6 +13,13 @@ patch(PosOrderline.prototype, {
             l10n_in_hsn_code: this.get_product().l10n_in_hsn_code || "",
         };
     },
+
+    // EXTENDS 'point_of_sale'
+    prepareBaseLineForTaxesComputationExtraValues(customValues = {}) {
+        const extraValues = super.prepareBaseLineForTaxesComputationExtraValues(customValues);
+        extraValues.l10n_in_hsn_code = this.product_id.l10n_in_hsn_code;
+        return extraValues;
+    },
 });
 
 patch(Orderline, {

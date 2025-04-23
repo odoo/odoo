@@ -192,6 +192,9 @@ class HrContract(models.Model):
             if contract.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
                 real_leaves = attendances - real_attendances
+            elif not calendar:
+                # If fully flexible working schedule is defined
+                real_leaves = leaves
             else:
                 # In the case of attendance based contracts use regular attendances to generate leave intervals
                 static_attendances = calendar._attendance_intervals_batch(

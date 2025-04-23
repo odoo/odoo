@@ -204,3 +204,21 @@ class TestViewGroups(ViewCase):
             form.bar = 1  # should make 'name' readonly by onchange modifying sub_bar
             with self.assertRaisesRegex(AssertionError, "can't write on readonly field 'name'"):
                 form.name = 'toto'
+
+    def test_add_properties_definition_field(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'stuff',
+            'model': 'test_new_api.message',
+            'arch': """
+                <form>
+                    <field name="attributes"/>
+                </form>
+            """,
+        })
+        views = self.env['test_new_api.message'].get_views([(view.id, 'form')])
+        arch = views['views']['form']['arch']
+        form = etree.fromstring(arch)
+        discussion_node = form.find("field[@name='discussion']")
+        self.assertIsNotNone(discussion_node, "the properties definition field `discussion` should be added automatically")
+        self.assertEqual(discussion_node.get("invisible"), "True")
+        self.assertEqual(discussion_node.get("data-used-by"), "fieldname='attributes' (field,attributes)")
