@@ -579,8 +579,19 @@ export class PosStore extends Reactive {
         }
         const attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+            let defaultValues = {};
+            const match = product.barcode && product.barcode.includes(this.searchProductWord);
+            if (this.searchProductWord && match) {
+                defaultValues = Object.fromEntries(
+                    product.product_template_variant_value_ids.map((value) => [
+                        value.attribute_line_id.id,
+                        value.id.toString(),
+                    ])
+                );
+            }
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 product: product,
+                defaultValues: defaultValues,
             });
         }
         return {
