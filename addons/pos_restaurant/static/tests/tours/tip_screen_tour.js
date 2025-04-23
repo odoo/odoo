@@ -155,3 +155,47 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             FloorScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_tip_after_payment", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("2"),
+            ProductScreen.addOrderline("Minute Maid", "1", "3"),
+            ProductScreen.clickPayButton(),
+            // case 1: remaining < 0 => increase PaymentLine amount
+            PaymentScreen.enterPaymentLineAmount("Bank", "1"),
+            PaymentScreen.clickTipButton(),
+            {
+                content: "click numpad button: 1",
+                trigger: ".modal div.numpad button:contains(/^1/)",
+                run: "click",
+            },
+            Dialog.confirm(),
+            PaymentScreen.selectedPaymentlineHas("Bank", "2.00"),
+            // case 2: remaining >= 0 and remaining >= tip => don't change PaymentLine amount
+            PaymentScreen.clickPaymentlineDelButton("Bank", "2.00"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "5"),
+            PaymentScreen.clickTipButton(),
+            {
+                content: "click numpad button: 2",
+                trigger: ".modal div.numpad button:contains(/^2/)",
+                run: "click",
+            },
+            Dialog.confirm(),
+            PaymentScreen.selectedPaymentlineHas("Bank", "5.00"),
+            // case 3: remaining >= 0 and remaining < tip => increase by the difference
+            PaymentScreen.clickPaymentlineDelButton("Bank", "5.00"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "5"),
+            PaymentScreen.clickTipButton(),
+            {
+                content: "click numpad button: 3",
+                trigger: ".modal div.numpad button:contains(/^3/)",
+                run: "click",
+            },
+            Dialog.confirm(),
+            PaymentScreen.selectedPaymentlineHas("Bank", "6.00"),
+            Chrome.endTour(),
+        ].flat(),
+});
