@@ -8,7 +8,7 @@ import { user } from "@web/core/user";
 import {
     patchAttendeeCalendarCommonPopover,
     patchAttendeeCalendarCommonPopoverClass
-} from "@hr_homeworking_calendar/calendar/common/popover/calendar_common_popover";
+} from "@hr_calendar/calendar/common/popover/calendar_common_popover";
 import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
 
 const { DateTime, Interval } = luxon;

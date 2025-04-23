@@ -9,6 +9,7 @@ class TestHrCalendarCommon(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.user.tz = 'Europe/Brussels'
+        cls.user_employee = mail_new_test_user(cls.env, login='david', groups='base.group_user')
 
         cls.company_A, cls.company_B = cls.env['res.company'].create([
             {
@@ -19,7 +20,9 @@ class TestHrCalendarCommon(common.TransactionCase):
             },
         ])
         cls.env.user.company_id = cls.company_A
-
+        cls.rd_dept = cls.env['hr.department'].create({
+            'name': 'Research and development',
+        })
         cls.calendar_35h, cls.calendar_28h, cls.calendar_35h_night = cls.env['resource.calendar'].create([
             {
                 'tz': "Europe/Brussels",
@@ -75,6 +78,25 @@ class TestHrCalendarCommon(common.TransactionCase):
             },
         ])
 
+        main_partner_id = cls.env.ref('base.main_partner')
+        cls.work_office_1 = cls.env['hr.work.location'].create({
+            'name': "Bureau 1",
+            'location_type': "office",
+            'address_id': main_partner_id.id,
+        })
+
+        cls.work_office_2 = cls.env['hr.work.location'].create({
+            'name': "Bureau 2",
+            'location_type': "office",
+            'address_id': main_partner_id.id,
+        })
+
+        cls.work_home = cls.env['hr.work.location'].create({
+            'name': "Maison",
+            'location_type': "home",
+            'address_id': main_partner_id.id,
+        })
+
         cls.partnerA, cls.partnerB, cls.partnerC, cls.partnerD = cls.env['res.partner'].create([
             {
                 'name': "Partner A",
@@ -97,6 +119,15 @@ class TestHrCalendarCommon(common.TransactionCase):
                 'resource_calendar_id': cls.calendar_35h.id,
                 'work_contact_id': cls.partnerA.id,
                 'company_id': cls.company_A.id,
+                'user_id': cls.user_employee.id,
+                'department_id': cls.rd_dept.id,
+                'monday_location_id': cls.work_home.id,
+                'tuesday_location_id': cls.work_home.id,
+                'wednesday_location_id': cls.work_office_1.id,
+                'thursday_location_id': cls.work_office_1.id,
+                'friday_location_id': cls.work_office_1.id,
+                'saturday_location_id': cls.work_home.id,
+                'sunday_location_id': cls.work_home.id,
             },
             {
                 'name': "Partner A - Company B - Calendar 28h",

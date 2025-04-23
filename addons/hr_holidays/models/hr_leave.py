@@ -1235,7 +1235,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     @api.model
     def open_pending_requests(self):
         user_employee = self.env.user.employee_id
-        employee = self.env['hr.employee']._get_contextual_employee()
+        employee = self.env['hr.employee']._get_contextual_employees()
         context = {'search_default_approve': True, 'search_default_second_approval': True}
         domain = []
         if employee != user_employee:

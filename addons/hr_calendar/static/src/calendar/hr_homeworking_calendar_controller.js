@@ -13,7 +13,7 @@ patch(AttendeeCalendarController.prototype, {
     },
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {
         if (record.homeworking && 'start' in record) {
-            return this.action.doAction('hr_homeworking_calendar.set_location_wizard_action', {
+            return this.action.doAction('hr_calendar.set_location_wizard_action', {
                 additionalContext: {
                     'default_date': serializeDate(record.start),
                     'default_work_location_id' : record.work_location_id,
@@ -58,7 +58,7 @@ patch(AttendeeCalendarController.prototype, {
         }
     },
     openWorkLocationWizard(startDate) {
-        this.action.doAction('hr_homeworking_calendar.set_location_wizard_action',{
+        this.action.doAction('hr_calendar.set_location_wizard_action',{
             additionalContext: {
                 'default_date': serializeDate(startDate),
                 'dialog_size': 'medium',

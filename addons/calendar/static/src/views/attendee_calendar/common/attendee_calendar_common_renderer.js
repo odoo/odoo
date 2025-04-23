@@ -1,12 +1,27 @@
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
+import { onPatched } from "@odoo/owl";
+
+const { DateTime } = luxon;
+
 
 export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
     static eventTemplate = "calendar.AttendeeCalendarCommonRenderer.event";
+    static headerTemplate = "calendar.AttendeeCalendarCommonRenderer.HeaderTemplate";
     static components = {
         ...CalendarCommonRenderer.components,
         Popover: AttendeeCalendarCommonPopover,
     };
+
+    setup() {
+        super.setup(...arguments);
+        onPatched(() => {
+            // Force to rerender the FC.
+            // As it doesn't redraw the header when the event's data changes
+            this.fc.api.render();
+        });
+    }
+
     /**
      * @override
      *
@@ -23,6 +38,17 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
             editable: editable,
         };
     }
+
+    /**
+     * @override
+     */
+    get options() {
+		return {
+            ...super.options,
+            dayHeaderDidMount: this.onDayHeaderDidMount,
+            dayHeaderWillUnmount: this.onDayHeaderWillUnmount,
+		};
+	}
 
     /**
      * @override
@@ -54,6 +80,20 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
                 this.openPopover(el, record);
             }
         }
+    }
+
+    onDayHeaderEvent(event, date) {
+        return;
+    }
+
+    onDayHeaderDidMount(info) {
+        const date = DateTime.fromJSDate(info.date);
+        info.el.addEventListener("click", (ev) => this.onDayHeaderEvent(ev, date));
+    }
+
+    onDayHeaderWillUnmount(info) {
+        const date = DateTime.fromJSDate(info.date);
+        info.el.removeEventListener("click", (ev) => this.onDayHeaderEvent(ev, date));
     }
 
     /**

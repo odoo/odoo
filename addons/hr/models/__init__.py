@@ -6,6 +6,7 @@ from . import hr_employee_base
 from . import hr_employee
 from . import hr_employee_category
 from . import hr_employee_public
+from . import hr_employee_location
 from . import hr_department
 from . import hr_departure_reason
 from . import hr_job

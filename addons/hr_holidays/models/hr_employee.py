@@ -67,8 +67,12 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_public_holidays_data(self, date_start, date_end):
-        self = self._get_contextual_employee()
-        employee_tz = pytz.timezone(self._get_tz() if self else self.env.user.tz or 'utc')
+        self = self._get_contextual_employees()
+        if len(self.ids) == 1:
+            tz = self._get_tz()
+        else:
+            tz = self.env.user.tz or 'utc'
+        employee_tz = pytz.timezone(tz)
         public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
         return list(map(lambda bh: {
             'id': -bh.id,
@@ -83,9 +87,9 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_allocation_requests_amount(self):
-        employee = self._get_contextual_employee()
+        employee = self._get_contextual_employees()
         return self.env['hr.leave.allocation'].search_count([
-            ('employee_id', '=', employee.id),
+            ('employee_id', 'in', employee.ids),
             ('state', '=', 'confirm'),
         ])
 
@@ -95,22 +99,22 @@ class HrEmployee(models.Model):
             ('company_id', 'in', self.env.companies.ids),
             ('date_from', '<=', date_end),
             ('date_to', '>=', date_start),
-            '|',
-            ('calendar_id', '=', False),
-            ('calendar_id', '=', self.resource_calendar_id.id),
+            ('calendar_id', 'in', self.resource_calendar_id.ids + [False]),
         ]
 
         return self.env['resource.calendar.leaves'].search(domain)
 
     @api.model
     def get_mandatory_days_data(self, date_start, date_end):
-        self = self._get_contextual_employee()
+        self = self._get_contextual_employees()
         mandatory_days = self._get_mandatory_days(date_start, date_end).sorted('start_date')
         return list(map(lambda sd: {
             'id': -sd.id,
             'colorIndex': sd.color,
             'end': datetime.combine(sd.end_date, datetime.max.time()).isoformat(),
             'endType': "datetime",
+            'jobs_name': sd.job_ids.mapped('name'),
+            'departments_name': sd.department_ids.mapped('name'),
             'isAllDay': True,
             'start': datetime.combine(sd.start_date, datetime.min.time()).isoformat(),
             'startType': "datetime",
@@ -122,9 +126,7 @@ class HrEmployee(models.Model):
             ('start_date', '<=', end_date),
             ('end_date', '>=', start_date),
             ('company_id', 'in', self.env.companies.ids),
-            '|',
-            ('resource_calendar_id', '=', False),
-            ('resource_calendar_id', '=', self.resource_calendar_id.id),
+            ('resource_calendar_id', 'in', self.resource_calendar_id.ids + [False]),
         ]
 
         if self.job_id:
@@ -134,8 +136,8 @@ class HrEmployee(models.Model):
         if self.department_id:
             domain += [
                 '|',
-                ('department_ids', '=', False),
-                ('department_ids', 'parent_of', self.department_id.id),
+                    ('department_ids', '=', False),
+                    ('department_ids', 'parent_of', self.department_id.ids),
             ]
         else:
             domain += [('department_ids', '=', False)]
@@ -143,8 +145,10 @@ class HrEmployee(models.Model):
         return self.env['hr.leave.mandatory.day'].search(domain)
 
     @api.model
-    def _get_contextual_employee(self):
+    def _get_contextual_employees(self):
         ctx = self.env.context
+        if self.env.context.get('employee_ids') is not None:
+            return self.browse(ctx.get('employee_ids'))
         if self.env.context.get('employee_id') is not None:
             return self.browse(ctx.get('employee_id'))
         if self.env.context.get('default_employee_id') is not None:
@@ -152,7 +156,7 @@ class HrEmployee(models.Model):
         return self.env.user.employee_id
 
     def _get_consumed_leaves(self, leave_types, target_date=False, ignore_future=False):
-        employees = self or self._get_contextual_employee()
+        employees = self or self._get_contextual_employees()
         leaves_domain = [
             ('holiday_status_id', 'in', leave_types.ids),
             ('employee_id', 'in', employees.ids),

@@ -1,10 +1,5 @@
 .o_worklocation_btn {
-    min-height: o-to-rem(20px);
-    margin-top: 1em;
     color: var(--body-color);
-    .o_worklocation_text, .o_worklocation_line {
-        box-shadow: 0 1px 0 rgba(0,0,0, 0.3)
-    }
 }
 
 .o_worklocation_line {
@@ -20,6 +15,15 @@
 
         &.fa-building:before {
             transform: scale(.8);
+        }
+    }
+    .o_homework_content {
+        flex-wrap: wrap;
+        margin-right: 0;
+        border: 1px solid;
+
+        &.fa-building {
+            display: flex;
         }
     }
 }

@@ -2,7 +2,7 @@
 
 from odoo import fields, models, api
 
-from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
+from odoo.addons.hr.models.hr_employee_location import DAYS
 
 
 class HomeworkLocationWizard(models.TransientModel):
