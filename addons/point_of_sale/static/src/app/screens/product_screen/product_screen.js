@@ -367,7 +367,17 @@ export class ProductScreen extends Component {
     }
 
     async addProductToOrder(product) {
-        await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, {});
+        const options = {};
+        if (this.searchWord && product.isConfigurable()) {
+            const barcode = this.searchWord;
+            const searchedProduct = product.product_variant_ids.filter(
+                (p) => p.barcode && p.barcode.includes(barcode)
+            );
+            if (searchedProduct.length === 1) {
+                options["presetVariant"] = searchedProduct[0];
+            }
+        }
+        await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, options);
     }
 
     async onProductInfoClick(productTemplate) {
