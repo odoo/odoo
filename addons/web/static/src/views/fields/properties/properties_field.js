@@ -48,6 +48,7 @@ export class PropertiesField extends Component {
             onClose: () => this.onCloseCurrentPopover?.(),
             fixedPosition: true,
             arrow: false,
+            setActiveElement: false, // make tag navigation work when adding a tag property
         });
         this.propertiesRef = useRef("properties");
 
