@@ -987,7 +987,7 @@ class ResPartner(models.Model):
             if partner._context.get('show_vat') and partner.vat:
                 name = f"{name} ‒ {partner.vat}"
             if partner._context.get("formatted_display_name") and (partner.parent_id or partner.company_name):
-                name = f"{partner.name}<tab>--{partner.company_name or partner.parent_id.name}--"
+                name = f"{partner.company_name or partner.parent_id.name}<tab>--{partner.name}--"
 
             partner.display_name = name.strip()
 
