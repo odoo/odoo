@@ -1580,6 +1580,43 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         # When user select 2+ branches and parent company allow to create payment on the parent journal
         self.assertEqual(available_journals.company_id, self.env.company)
 
+    def test_epd_and_cash_rounding(self):
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'add_invoice_line',
+            'rounding': 0.05,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': self.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'UP',
+        })
+        payment_term = self.env.ref('account.account_payment_term_30days_early_discount')
+        tax = self.env['account.tax'].create({
+            'name': "21",
+            'amount_type': 'percent',
+            'amount': 21.0,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2024-01-01',
+            'invoice_payment_term_id': payment_term.id,
+            'invoice_cash_rounding_id': cash_rounding.id,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 11,
+                'tax_ids': [Command.set(tax.ids)],
+            })]
+        })
+        invoice.action_post()
+
+        self.assertRecordValues(invoice, [{'amount_total': 13.35}])
+
+        self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2024-01-01'})\
+            ._create_payments()
+        self.assertRecordValues(invoice, [{'amount_residual': 0.0}])
+
     @users('user_branch')
     def test_branch_user_register_payment(self):
         bill = self.env['account.move'].create({
