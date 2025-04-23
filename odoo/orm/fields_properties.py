@@ -777,7 +777,7 @@ class PropertiesDefinition(Field):
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
         'name', 'string', 'type', 'comodel', 'default',
-        'selection', 'tags', 'domain', 'view_in_cards',
+        'selection', 'tags', 'domain', 'view_in_cards', 'fold_by_default'
     )
     # those keys will be removed if the types does not match
     PROPERTY_PARAMETERS_MAP = {
