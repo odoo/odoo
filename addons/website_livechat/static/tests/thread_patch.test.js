@@ -16,7 +16,7 @@ import { describe, test } from "@odoo/hoot";
 describe.current.tags("desktop");
 defineWebsiteLivechatModels();
 
-test("Rendering of visitor banner", async () => {
+test.debug("Rendering of visitor banner", async () => {
     const pyEnv = await startServer();
     const country_id = pyEnv["res.country"].create({ code: "BE" });
     const lang_id = pyEnv["res.lang"].create({ name: "English" });
@@ -31,7 +31,10 @@ test("Rendering of visitor banner", async () => {
     pyEnv["website.visitor"].write([visitorId], {
         display_name: `Visitor #${visitorId}`,
     });
-    const guestId = pyEnv["mail.guest"].create({ name: `Visitor #${visitorId}` });
+    const guestId = pyEnv["mail.guest"].create({
+        name: `Visitor #${visitorId}`,
+        visitor_id: [visitorId],
+    });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: `Visitor #${visitorId}`,
         channel_member_ids: [

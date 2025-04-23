@@ -3,6 +3,7 @@ import { defineModels, defineParams } from "@web/../tests/web_test_helpers";
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { Website } from "./mock_server/mock_models/website";
 import { WebsiteVisitor } from "./mock_server/mock_models/website_visitor";
+import { MailGuest } from "./mock_server/mock_models/mail_guest";
 
 export function defineWebsiteLivechatModels() {
     defineParams({ suite: "website_livechat" }, "replace");
@@ -12,6 +13,7 @@ export function defineWebsiteLivechatModels() {
 export const websiteLivechatModels = {
     ...livechatModels,
     DiscussChannel,
+    MailGuest,
     Website,
     WebsiteVisitor,
 };

@@ -8,6 +8,10 @@ export class MailGuest extends models.ServerModel {
         return guestId ? this.search_read([["id", "=", guestId]])[0] : null;
     }
 
+    get default_fields() {
+        return ["avatar_128", "im_status", "name"];
+    }
+
     /**
      * @param {Number[]} ids
      * @returns {Record<string, ModelRecord>}
@@ -16,7 +20,7 @@ export class MailGuest extends models.ServerModel {
         const kwargs = getKwArgs(arguments, "ids", "store", "fields");
         fields = kwargs.fields;
         if (!fields) {
-            fields = ["avatar_128", "im_status", "name"];
+            fields = this.default_fields;
         }
         for (const guest of this.browse(ids)) {
             const [data] = this._read_format(
