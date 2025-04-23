@@ -792,6 +792,38 @@ registry.category("web_tour.tours").add("test_product_long_press", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_barcode_search_attributes_preset", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.searchProduct("12341357"),
+            ProductScreen.productIsDisplayed("Product with Attributes", 0),
+            ProductScreen.clickDisplayedProduct("Product with Attributes"),
+            ProductScreen.selectedOrderlineHas(
+                "Product with Attributes",
+                "1.0",
+                "10.0",
+                "Value 1, Value 3, Value 5, Value 7"
+            ),
+
+            ProductScreen.searchProduct("123424689"),
+            ProductScreen.productIsDisplayed("Product with Attributes", 0).map(negateStep),
+            ProductScreen.searchProduct("12342468"),
+            ProductScreen.productIsDisplayed("Product with Attributes", 0),
+            ProductScreen.clickDisplayedProduct("Product with Attributes"),
+            ProductScreen.selectedOrderlineHas(
+                "Product with Attributes",
+                "1.0",
+                "10.0",
+                "Value 2, Value 4, Value 6, Value 8"
+            ),
+
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_remove_archived_product_from_cache", {
     steps: () =>
         [

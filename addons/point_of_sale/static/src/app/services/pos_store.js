@@ -667,8 +667,13 @@ export class PosStore extends WithLazyGetterTrap {
             (attr) => attr.attribute_id?.id in attrById
         );
         let attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
-        if (opts.code) {
-            const product = this.models["product.product"].getBy("barcode", opts.code.base_code);
+        if (opts.code || opts.presetVariant) {
+            let product;
+            if (opts.code) {
+                product = this.models["product.product"].getBy("barcode", opts.code.base_code);
+            } else {
+                product = opts.presetVariant;
+            }
             attributeLinesValues = attributeLinesValues.map((values) =>
                 values[0].attribute_id.create_variant === "no_variant"
                     ? values
