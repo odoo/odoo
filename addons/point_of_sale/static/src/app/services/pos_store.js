@@ -1239,6 +1239,9 @@ export class PosStore extends WithLazyGetterTrap {
         );
 
         try {
+            if (this.data.network.offline) {
+                throw new ConnectionLostError();
+            }
             const orderIdsToDelete = this.getOrderIdsToDelete();
             if (orderIdsToDelete.length > 0) {
                 await this.deleteOrders([], orderIdsToDelete);
@@ -1293,7 +1296,7 @@ export class PosStore extends WithLazyGetterTrap {
                     .forEach((order) => (order.session_id = this.session));
             }
 
-            this.clearPendingOrder();
+            orders.forEach((o) => this.removePendingOrder(o));
             return newData["pos.order"];
         } catch (error) {
             if (options.throw) {
