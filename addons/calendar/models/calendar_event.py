@@ -122,7 +122,7 @@ class CalendarEvent(models.Model):
     # description
     name = fields.Char('Meeting Subject', required=True)
     description = fields.Html('Description')
-    user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user, index='btree_not_null')
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
     location = fields.Char('Location', tracking=True)
@@ -157,7 +157,7 @@ class CalendarEvent(models.Model):
         'calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags')
     # timing
     start = fields.Datetime(
-        'Start', required=True, tracking=True, default=_default_start,
+        'Start', required=True, tracking=True, default=_default_start, index=True,
         help="Start date of an event, without time for full days events")
     stop = fields.Datetime(
         'Stop', required=True, tracking=True, default=_default_stop,
@@ -956,11 +956,12 @@ class CalendarEvent(models.Model):
 
     def _get_default_privacy_domain(self):
         # Sub query user settings from calendars that are not private ('public' and 'confidential').
-        public_calendars_settings = self.env['res.users.settings'].sudo()._search([('calendar_default_privacy', '!=', 'private')])
+        public_calendars_settings = self.env['res.users.settings'].sudo()._where_calc([('calendar_default_privacy', '!=', 'private')]).select('user_id')
         # display public, confidential events and events with default privacy when owner's default privacy is not private
         return [
-            '|', '|', '|', ('privacy', '=', 'public'), ('privacy', '=', 'confidential'), ('user_id', '=', self.env.user.id),
-            '&', ('privacy', '=', False), ('user_id.res_users_settings_id', 'in', public_calendars_settings)
+            '|',
+                '|', ('privacy', 'in', ['public', 'confidential']), ('user_id', '=', self.env.user.id),
+                '&', ('privacy', '=', False), ('user_id', 'in', public_calendars_settings)
         ]
 
     # ------------------------------------------------------------
