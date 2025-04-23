@@ -218,6 +218,15 @@ export class LinkPlugin extends Plugin {
             icon: "fa-square",
         }),
 
+        link_popovers: [
+            withSequence(50, {
+                //Default option
+                PopoverClass: LinkPopover,
+                isAvailable: () => true,
+                getProps: (props) => props,
+            }),
+        ],
+
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
         input_handlers: this.onInputDeleteNormalizeLink.bind(this),
@@ -233,14 +242,10 @@ export class LinkPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
     };
+
     setup() {
-        this.overlay = this.dependencies.overlay.createOverlay(
-            LinkPopover,
-            {
-                closeOnPointerdown: false,
-            },
-            { sequence: 50 }
-        );
+        this.initializePopovers();
+        this.currentOverlay = this.getActivePopover().overlay;
         this.addDomListener(this.editable, "click", (ev) => {
             const linkEl = ev.target.closest("a");
             if (linkEl) {
@@ -373,7 +378,7 @@ export class LinkPlugin extends Plugin {
      * @param {HTMLElement} [linkElement]
      */
     openLinkTools(linkElement, type) {
-        this.overlay.close();
+        this.currentOverlay.close();
         if (!this.isLinkAllowedOnSelection()) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
@@ -488,15 +493,15 @@ export class LinkPlugin extends Plugin {
             onRemove: () => {
                 this.removeLinkInDocument();
                 this.linkInDocument = null;
-                this.overlay.close();
+                this.currentOverlay.close();
             },
             onCopy: () => {
                 this.linkInDocument = null;
-                this.overlay.close();
+                this.currentOverlay.close();
             },
             onClose: () => {
                 this.linkInDocument = null;
-                this.overlay.close();
+                this.currentOverlay.close();
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
@@ -508,8 +513,12 @@ export class LinkPlugin extends Plugin {
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
         };
-        this.overlay.open({ props });
+
+        const popover = this.getActivePopover(linkElement);
+        this.currentOverlay = popover.overlay;
+        this.currentOverlay.open({ props: popover.getProps(props) });
     }
+
     /**
      * close the link tool
      *
@@ -520,8 +529,8 @@ export class LinkPlugin extends Plugin {
         // Some unit tests fail when this.overlay.isOpen but the DOM don't contain the linkPopover yet.
         // Because of some kind of race condition between the hoot mock event and the owl renderer.
         // This is why we check for the popover in the DOM.
-        if (this.overlay.isOpen && document.querySelector(".o-we-linkpopover")) {
-            this.overlay.close();
+        if (this.currentOverlay.isOpen && document.querySelector(".o-we-linkpopover")) {
+            this.currentOverlay.close();
             if (link && link.isConnected) {
                 this.dependencies.selection.setSelection({
                     anchorNode: link,
@@ -638,6 +647,13 @@ export class LinkPlugin extends Plugin {
                 if (closestLinkElement !== this.linkInDocument) {
                     this.openLinkTools(closestLinkElement);
                 }
+            } else if (
+                closestLinkElement &&
+                (closestLinkElement.getAttribute("role") === "menuitem" ||
+                    closestLinkElement.classList.contains("nav-link")) &&
+                !closestLinkElement.dataset.bsToggle
+            ) {
+                this.openLinkTools(closestLinkElement);
             } else {
                 this.linkInDocument = null;
                 this.closeLinkTools();
@@ -833,8 +849,8 @@ export class LinkPlugin extends Plugin {
             if (url && this?.isCurrentLinkInSync) {
                 linkEl.setAttribute("href", url);
                 this.isCurrentLinkInSync = false;
-                if (this.overlay.isOpen) {
-                    this.overlay.close();
+                if (this.currentOverlay.isOpen) {
+                    this.currentOverlay.close();
                 }
             }
         }
@@ -934,6 +950,27 @@ export class LinkPlugin extends Plugin {
         blockToSplit = targetNode;
         splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
         return true;
+    }
+
+    initializePopovers() {
+        this.overlays = [];
+        this.getResource("link_popovers").map((link_popover) => {
+            this.overlays.push({
+                overlay: this.dependencies.overlay.createOverlay(
+                    link_popover.PopoverClass,
+                    {
+                        closeOnPointerdown: false,
+                    },
+                    { sequence: 50 }
+                ),
+                isAvailable: link_popover.isAvailable,
+                getProps: link_popover.getProps,
+            });
+        });
+    }
+
+    getActivePopover(linkElement) {
+        return this.overlays.find((overlay) => overlay.isAvailable(linkElement));
     }
 }
 
