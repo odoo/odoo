@@ -98,7 +98,6 @@
                         tags="state.propertyDefinition.tags || []"
                         readonly="props.readonly"
                         canChangeTags="props.canChangeDefinition"
-                        checkDefinitionWriteAccess.bind="props.checkDefinitionWriteAccess ? props.checkDefinitionWriteAccess : () => {}"
                         deleteAction="'tags'"
                         onTagsChange.bind="onTagsChange"/>
                 </div>
@@ -167,6 +166,17 @@
                         value="props.propertyDefinition.view_in_cards"
                         disabled="props.readonly"
                         onChange.bind="onViewInKanbanChange"
+                    />
+                </div>
+                <div t-else="" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
+                    <label t-att-for="getUniqueDomID('fold')" class="o_form_label align-self-center text-900">
+                        Fold by default
+                    </label>
+                    <CheckBox
+                        id="getUniqueDomID('fold')"
+                        value="props.propertyDefinition.fold_by_default"
+                        disabled="props.readonly"
+                        onChange.bind="onFoldByDefaultChange"
                     />
                 </div>
             </div>
