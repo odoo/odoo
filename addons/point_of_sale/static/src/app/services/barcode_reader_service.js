@@ -62,8 +62,13 @@ export class BarcodeReader {
                 throw new GS1BarcodeError("The GS1 barcode must contain a product.");
             }
         } catch (error) {
-            if (this.fallbackParser && error instanceof GS1BarcodeError) {
-                parseBarcode = this.fallbackParser.parse_barcode(code);
+            if (error instanceof GS1BarcodeError) {
+                if (this.fallbackParser) {
+                    parseBarcode = this.fallbackParser.parse_barcode(code);
+                } else {
+                    this.showGS1IncompatibleBarcodeWarning();
+                    return;
+                }
             } else {
                 throw error;
             }
@@ -98,6 +103,18 @@ export class BarcodeReader {
         } else {
             return parsedBarcode.code;
         }
+    }
+
+    showGS1IncompatibleBarcodeWarning() {
+        this.notification.add(
+            _t(
+                "This barcode is not compatible with the GS1 standard. Consider configuring a fallback barcode parser from the PoS settings."
+            ),
+            {
+                type: "warning",
+                title: _t("Unsupported Barcode Format"),
+            }
+        );
     }
 
     // the barcode scanner will listen on the hw_proxy/scanner interface for
