@@ -36,6 +36,7 @@ from contextlib import contextmanager, ExitStack
 from copy import deepcopy
 from datetime import datetime
 from functools import lru_cache, partial
+from hashlib import sha256
 from itertools import zip_longest as izip_longest
 from passlib.context import CryptContext
 from typing import Optional, Iterable
@@ -307,6 +308,8 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         # allow localhost requests
         # TODO: also check port?
+        if os.environ.get('ODOO_AUTO_FILL_CACHE'):
+            return _super_send(s, r, **kw)
         url = werkzeug.urls.url_parse(r.url)
         timeout = kw.get('timeout')
         if timeout and timeout < 10:
@@ -1121,11 +1124,11 @@ class ChromeBrowser:
         # maps frame ids to callbacks
         self._frames = {}
         self._handlers = {
+            'Fetch.requestPaused': self._handle_request_paused,
             'Runtime.consoleAPICalled': self._handle_console,
             'Runtime.exceptionThrown': self._handle_exception,
             'Page.frameStoppedLoading': self._handle_frame_stopped_loading,
             'Page.screencastFrame': self._handle_screencast_frame,
-            'Fetch.requestPaused': self._handle_request_paused,
         }
         self._receiver = threading.Thread(
             target=self._receive,
@@ -1135,6 +1138,7 @@ class ChromeBrowser:
         self._receiver.start()
         self._logger.info('Enable chrome headless console log notification')
         self._websocket_send('Runtime.enable')
+        self._websocket_request('Fetch.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
         self._websocket_send('Page.setDownloadBehavior', params={
@@ -1150,8 +1154,6 @@ class ChromeBrowser:
         }
         emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.split(",")]
         self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
-
-        self._websocket_request('Fetch.enable')
 
     @property
     def screencasts_frames_dir(self):
@@ -1455,13 +1457,10 @@ class ChromeBrowser:
         url = params['request']['url']
         if url.startswith(f'http://{HOST}'):
             self._websocket_send('Fetch.continueRequest', params={'requestId': params['requestId']})
-        elif response := self.test_case.fetch_proxy(url, params=params):
-            if response is True:  # TODO remove, temporary
-                self._websocket_send('Fetch.continueRequest', params={'requestId': params['requestId']})
-            else:
-                self._websocket_send('Fetch.fulfillRequest', params={'requestId': params['requestId'], **response})
+        elif response := self.test_case.fetch_proxy(url):
+            self._websocket_send('Fetch.fulfillRequest', params={'requestId': params['requestId'], **response})
         else:
-            _logger.warning("Request to %s was blocked", url)
+            _logger.warning("Request to %s was blocked", url)  # unsure if we should alway block or only block on runbot
             self._websocket_send('Fetch.failRequest', params={'requestId': params['requestId']})
 
 
@@ -2083,12 +2082,81 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def fetch_proxy(self, url, params=None):
-        # see https://chromedevtools.github.io/devtools-protocol/tot/Fetch/#method-continueRequest
-        if '/fonts.' in url:
-            _logger.info('Allowing request to %s', url)
-            return True
+    def fetch_proxy(self, url):
+        #https://chromedevtools.github.io/devtools-protocol/tot/Fetch/#method-fulfillRequest
+
+        if 'youtube.com' in url or 'youtu.be' in url:
+            _logger.info('Ignoring youtube request for %s', url)
+            return {
+                'body': '',
+                'responseCode': 404,
+                'responseHeaders': [],
+            }
+
+        if 'google-analytics' in url:
+            _logger.info('Ignoring google-analytics request for %s', url)
+            return {
+                'body': '',
+                'responseCode': 500,
+                'responseHeaders': [],
+            }
+
+        def sanitize_url(url):
+            res = re.sub(r'[^a-zA-Z0-9\.\-]', '_', url)
+            if len(res) > 255:
+                res = res[:200] + '_' + sha256(res.encode('utf-8')).hexdigest()[50:]
+            return res
+
+        content = None
+        file_name = sanitize_url(url)
+        if file_name in os.listdir(os.path.join(os.path.dirname(__file__), 'fetch_cache')):
+            _logger.info('Returning cached ressource for %s', url)
+            with open(os.path.join(os.path.dirname(__file__), 'fetch_cache', file_name), 'rb') as f:
+                content = f.read()
+            return self.make_fetch_proxy_response(content)
+
+        if not content and os.environ.get('ODOO_AUTO_FILL_CACHE'):
+            _logger.warning('Storing %s content in %s', url, file_name)
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                content = response.content
+            else:
+                content = str(response.status_code).encode('utf-8')
+            with open(os.path.join(os.path.dirname(__file__), 'fetch_cache', file_name), 'wb') as f:
+                f.write(content)
+            return self.make_fetch_proxy_response(content)
+
+        if content and content.isdigit():
+            return {
+                'body': '',
+                'responseCode': int(content),
+                'responseHeaders': [],
+            }
+
+        if not content:
+            ext = os.path.splitext(url)[1]
+            if ext and len(ext) <= 4:
+                default = os.path.join(os.path.dirname(__file__), 'fetch_cache', f'default{ext}')
+                if os.path.isfile(default):
+                    _logger.info('Returning default ressource for %s', url)
+                    with open(default, 'rb') as f:
+                        content = f.read()
+                    return self.make_fetch_proxy_response(content)
+
         return None
+
+    def make_fetch_proxy_response(self, content, code=200, headers=None):
+        headers = [
+            {'name': 'access-control-allow-origin', 'value': '*'},
+            {'name': 'cache-control', 'value': 'public, max-age=10000'},
+        ]
+        if isinstance(content, str):
+            content = content.encode('utf-8')
+        return {
+                'body': base64.b64encode(content).decode('utf-8'),
+                'responseCode': code,
+                'responseHeaders': headers,
+            }
 
     def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
         """ Test JavaScript code running in the browser.

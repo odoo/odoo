@@ -10,6 +10,15 @@ from odoo.tests import HttpCase, tagged
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleMail(HttpCase):
 
+    def fetch_proxy(self, url):
+        if 'my-test-domain.com' in url:
+            return {
+                'body': '',
+                'responseCode': 404,
+                'responseHeaders': [],
+            }
+        return super().fetch_proxy(url)
+
     def test_01_shop_mail_tour(self):
         """The goal of this test is to make sure sending SO by email works."""
         self.env['product.product'].create({

@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import re
 from contextlib import suppress
 
 import odoo.tests
 from odoo.tools.misc import file_open
 from werkzeug.urls import url_quote_plus
+
+_logger = logging.getLogger(__name__)
 
 RE_FORBIDDEN_STATEMENTS = re.compile(r'test.*\.(only|debug)\(')
 RE_ONLY = re.compile(r'QUnit\.(only|debug)\(')
@@ -141,6 +144,14 @@ class HOOTCommon(odoo.tests.HttpCase):
 
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(QunitCommon, HOOTCommon):
+
+    def fetch_proxy(self, url):
+        _logger.info('blocking external request on %s during js tests', url)
+        return {
+            'body': '',
+            'responseCode': 404,
+            'responseHeaders': [],
+        }
 
     @odoo.tests.no_retry
     def test_unit_desktop(self):
