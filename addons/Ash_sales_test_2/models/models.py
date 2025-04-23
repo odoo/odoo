@@ -171,21 +171,21 @@ class SaleOrder(models.Model):
                 logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 # Send data to external API based on env
-                # release_url = (
-                #     "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
-                #     if is_production == 'True'
-                #     else "https://shiperooconnect-dev.automation.shiperoo.com/api/odoo_release"
-                # )
-                # headers = {
-                #     "Content-Type": "application/json"
-                # }
-                # response = requests.post(release_url, json=data_to_send, headers=headers)
-                # if response.status_code == 200:
-                #     logger.info(f"Order {order.name} data successfully sent to external system.")
-                # else:
-                #     logger.error(
-                #         f"Failed to send order {order.name} data to external system. Response: {response.text}")
-                #     order.is_released = 'unreleased'
+                release_url = (
+                    "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
+                    if is_production == 'True'
+                    else "https://shiperooconnect-dev.automation.shiperoo.com/api/odoo_release"
+                )
+                headers = {
+                    "Content-Type": "application/json"
+                }
+                response = requests.post(release_url, json=data_to_send, headers=headers)
+                if response.status_code == 200:
+                    logger.info(f"Order {order.name} data successfully sent to external system.")
+                else:
+                    logger.error(
+                        f"Failed to send order {order.name} data to external system. Response: {response.text}")
+                    order.is_released = 'unreleased'
             else:
                 order.is_released = 'unreleased'
             logger.info(f"Order {order.name} released: {order.is_released}")
