@@ -71,8 +71,8 @@
                                     invisible="leave_validation_type in ['no_validation', 'manager'] and (not requires_allocation or allocation_validation_type not in ['hr', 'both'])"/>
                         </group>
                         <group>
-                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                            <field name="country_id" groups="base.group_multi_company" readonly="company_id" placeholder="Visible to all"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="is_used" placeholder="Visible to all"/>
+                            <field name="country_id" groups="base.group_multi_company" readonly="company_id or is_used"/>
                             <field name="country_id" invisible="1"/>
                         </group>
                     </group>
@@ -156,8 +156,8 @@
                 <field name="allocation_validation_type" string="Allocation Approval"/>
                 <field name="employee_requests" optional="hide"/>
                 <field name="color" widget="color_picker" optional="hide"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                <field name="country_id" groups="base.group_multi_company" optional="show" readonly="company_id"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show" readonly="is_used"/>
+                <field name="country_id" groups="base.group_multi_company" optional="show" readonly="company_id or is_used"/>
             </list>
         </field>
     </record>
