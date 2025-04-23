@@ -21,12 +21,18 @@
                             <field name="product_has_cost" column_invisible="True"/>
                             <field name="name"/>
                             <field name="product_id"
+<<<<<<< 9723244a29495ca16ea22cd004ba6e8ea1082981
                                 context="{
                                     'default_type': 'service',
                                     'default_can_be_expensed': 1,
                                     'list_view_ref': 'hr_expense.product_product_expense_tree_view',
                                     'form_view_ref': 'hr_expense.product_product_expense_form_view',
                                 }"
+||||||| 3616d92b7abb54bfce7c88fd171dcf0d29554a8d
+                                context="{'default_detailed_type': 'service', 'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"
+=======
+                                context="{'default_detailed_type': 'service', 'default_can_be_expensed': 1, 'list_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"
+>>>>>>> a8fd10f7691606a37dc50f879f743dff9369684d
                             />
                             <field name="employee_id" widget="many2one_avatar_user"/>
                             <field name="tax_ids" widget="many2many_tags"/>
