@@ -14,7 +14,7 @@ from pathlib import Path
 
 from odoo import http
 from odoo.addons.hw_drivers.tools import certificate, helpers, route, wifi
-from odoo.addons.hw_drivers.main import iot_devices
+from odoo.addons.hw_drivers.main import iot_devices, unsupported_devices
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
 from odoo.addons.hw_drivers.server_logger import (
@@ -148,6 +148,8 @@ class IotBoxOwlHomePage(http.Controller):
             'identifier': device.device_identifier,
             'connection': device.device_connection,
         } for device in iot_devices.values()]
+        devices += list(unsupported_devices.values())
+
         device_type_key = lambda device: device['type']
         grouped_devices = {
             device_type: list(devices)

@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 drivers = []
 interfaces = {}
 iot_devices = {}
+unsupported_devices = {}
 
 
 class Manager(Thread):
@@ -53,6 +54,7 @@ class Manager(Thread):
                 'connection': iot_device.device_connection,
                 'subtype': iot_device.device_subtype if iot_device.device_type == 'printer' else '',
             }
+        devices_list.update(unsupported_devices)
         devices_list_to_send = {
             key: value for key, value in devices_list.items() if key != 'distant_display'
         }  # Don't send distant_display to the db
@@ -107,11 +109,12 @@ class Manager(Thread):
 
         # Check every 3 seconds if the list of connected devices has changed and send the updated
         # list to the connected DB.
-        previous_iot_devices = []
+        previous_iot_devices = set()
         while 1:
             try:
-                if iot_devices != previous_iot_devices:
-                    previous_iot_devices = iot_devices.copy()
+                current_devices = set(iot_devices.keys()) | set(unsupported_devices.keys())
+                if current_devices != previous_iot_devices:
+                    previous_iot_devices = current_devices
                     self.send_all_devices()
                 if platform.system() == 'Linux' and helpers.get_ip() != '10.11.12.1':
                     wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))

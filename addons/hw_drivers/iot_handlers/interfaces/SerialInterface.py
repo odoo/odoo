@@ -9,6 +9,7 @@ from odoo.addons.hw_drivers.interface import Interface
 
 class SerialInterface(Interface):
     connection_type = 'serial'
+    allow_unsupported = True
 
     def get_devices(self):
         serial_devices = {
