@@ -71,12 +71,14 @@ export class FormViewDialog extends Component {
                         await this.props.onRecordSaved(record);
                     }
                 }
-                if (saveAndNew) {
-                    this.currentResId = false;
-                    const context = this.props.nextRecordsContext || this.props.context || {};
-                    await record.model.load({ resId: false, context });
-                } else {
-                    this.props.close();
+                if (saved) {
+                    if (saveAndNew) {
+                        this.currentResId = false;
+                        const context = this.props.nextRecordsContext || this.props.context || {};
+                        await record.model.load({ resId: false, context });
+                    } else {
+                        this.props.close();
+                    }
                 }
                 return saved;
             },
