@@ -2691,3 +2691,52 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(gift_card_program.coupon_ids), 1, "Gift card not generated")
         self.assertEqual(gift_card_program.coupon_ids[0].code, "test-card-1234", "Gift card code not correct")
         self.assertEqual(gift_card_program.coupon_ids[0].partner_id, partner, "Gift card partner id not correct")
+
+    def test_two_variant_same_discount(self):
+        # test that if a product has two variants with the same discount, the selector widget does not appear (nor an error window in debug mode)
+        colors = ['red', 'blue']
+        prod_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'dynamic'})
+        prod_attr_values = self.env['product.attribute.value'].create([{'name': color, 'attribute_id': prod_attr.id, 'sequence': 1} for color in colors])
+
+        product_template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'available_in_pos': True,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': prod_attr.id,
+                'value_ids': [(6, 0, prod_attr_values.ids)]
+            })]
+        })
+        prod_tmpl_attrs = self.env['product.template.attribute.value'].search([
+            ('attribute_line_id', '=', product_template.attribute_line_ids.id),
+            ('product_attribute_value_id', 'in', prod_attr_values.ids)
+        ])
+
+        product_1 = product_template._create_product_variant(prod_tmpl_attrs[0])
+        product_2 = product_template._create_product_variant(prod_tmpl_attrs[1])
+
+        self.env['loyalty.program'].create({
+            'name': 'Test Loyalty Program',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [
+                (0, 0, {
+                    'reward_point_mode': 'money',
+                    'minimum_amount': 1,
+                    'reward_point_amount': 1,
+                    'product_ids': [product_1.id, product_2.id]
+                }),
+            ],
+            'reward_ids': [
+                (0, 0, {
+                    'reward_type': 'discount',
+                    'discount': 1,
+                    'required_points': 1000,
+                    'discount_mode': 'percent',
+                    'discount_applicability': 'order',
+                }),
+            ],
+
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_two_variant_same_discount', login="pos_user")
