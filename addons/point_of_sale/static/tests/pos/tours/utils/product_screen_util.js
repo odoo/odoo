@@ -106,8 +106,11 @@ export function clickDisplayedProduct(
 
     return step;
 }
-export function clickInfoProduct(name) {
-    return [...clickDisplayedProduct(name), ...inLeftSide(clickControlButton("Info"))];
+export function clickInfoProduct(name, extraSteps = []) {
+    return [
+        ...clickDisplayedProduct(name),
+        ...inLeftSide([...clickControlButton("Info"), ...extraSteps]),
+    ];
 }
 export function clickOrderline(productName, quantity = "1") {
     return [
