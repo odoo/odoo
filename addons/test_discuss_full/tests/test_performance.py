@@ -84,7 +84,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch channel_ids of current partner (active test filtering, _search_is_member)
     #       - search discuss_channel (member_domain)
     #       - search discuss_channel (pinned_member_domain)
-    #   31: channel _to_store_defaults:
+    #   32: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -93,7 +93,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_channel_member (manual prefetch)
     #       01: member _to_store_defaults (livechat override):
     #           - search im_livechat_channel_rule (is_bot)
-    #       14: member _to_store:
+    #       16: member _to_store:
+    #           - search im_livechat_channel_member_history (livechat member type)
+    #           - fetch im_livechat_channel_member_history (livechat member type)
     #           12: partner _to_store:
     #               - fetch res_partner (partner _to_store)
     #               - fetch res_users (_compute_im_status)
@@ -119,7 +121,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search group_ids (group_based_subscription)
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
-    #       - fetch country (country_id)
     #   - _get_last_messages
     #   19: message _to_store:
     #       - search mail_message_schedule
@@ -141,7 +142,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (_author_to_store)
     #       - fetch user (_author_to_store)
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 56
+    _query_count_discuss_channels = 58
 
     def setUp(self):
         super().setUp()
@@ -1661,6 +1662,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
+                res["offline_since"] = False
                 res["user_livechat_username"] = False
             return res
         if user == self.users[2]:
@@ -1768,9 +1770,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if guest:
             return {
                 "avatar_128_access_token": limited_field_access_token(self.guest, "avatar_128"),
+                "country": self.guest.country_id.id,
                 "id": self.guest.id,
                 "im_status": "offline",
                 "name": "Visitor",
+                "offline_since": False,
                 "write_date": fields.Datetime.to_string(self.guest.write_date),
             }
         return {}
