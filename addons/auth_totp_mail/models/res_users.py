@@ -14,11 +14,6 @@ from odoo.addons.auth_totp.models.totp import hotp, TOTP
 
 _logger = logging.getLogger(__name__)
 
-TOTP_RATE_LIMITS = {
-    'send_email': (10, 3600),
-    'code_check': (10, 3600),
-}
-
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -209,40 +204,3 @@ class ResUsers(models.Model):
             email_values=email_values,
             email_layout_xmlid='mail.mail_notification_light'
         )
-
-    def _totp_rate_limit(self, limit_type):
-        self.ensure_one()
-        assert request, "A request is required to be able to rate limit TOTP related actions"
-        limit, interval = TOTP_RATE_LIMITS.get(limit_type)
-        RateLimitLog = self.env['auth.totp.rate.limit.log'].sudo()
-        ip = request.httprequest.environ['REMOTE_ADDR']
-        domain = [
-            ('user_id', '=', self.id),
-            ('create_date', '>=', datetime.now() - timedelta(seconds=interval)),
-            ('limit_type', '=', limit_type),
-            ('ip', '=', ip),
-        ]
-        count = RateLimitLog.search_count(domain)
-        if count >= limit:
-            descriptions = {
-                'send_email': _('You reached the limit of authentication mails sent for your account'),
-                'code_check': _('You reached the limit of code verifications for your account'),
-            }
-            description = descriptions.get(limit_type)
-            raise AccessDenied(description)
-        RateLimitLog.create({
-            'user_id': self.id,
-            'ip': ip,
-            'limit_type': limit_type,
-        })
-
-    def _totp_rate_limit_purge(self, limit_type):
-        self.ensure_one()
-        assert request, "A request is required to be able to rate limit TOTP related actions"
-        ip = request.httprequest.environ['REMOTE_ADDR']
-        RateLimitLog = self.env['auth.totp.rate.limit.log'].sudo()
-        RateLimitLog.search([
-            ('user_id', '=', self.id),
-            ('limit_type', '=', limit_type),
-            ('ip', '=', ip),
-        ]).unlink()
