@@ -64,7 +64,7 @@
     <t t-name="point_of_sale.OrderChangeReceiptLine">
         <div t-attf-class="orderline #{line.isCombo ? 'ms-5 px-2' : 'mx-1'}" style="font-size: 120%;">
             <div class="d-flex medium">
-                <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.display_name"/>
+                <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.basic_name"/>
             </div>
             <div t-if="line.attribute_value_names?.length" class="ms-5" style="font-size: 91%;">
                 <t t-foreach="line.attribute_value_names" t-as="name" t-key="name_index">
