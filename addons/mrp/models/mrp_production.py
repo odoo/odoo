@@ -2654,6 +2654,9 @@ class MrpProduction(models.Model):
                     workorder.name = operation.name
             elif workorder.operation_id and workorder.operation_id not in operations_by_id:
                 workorders_to_unlink |= workorder
+        # Resequence of workorder as per the BOM operation sequance
+        if self.workorder_ids.operation_id.ids != self.bom_id.operation_ids.ids:
+            self._resequence_workorders()
         # Creates a workorder for each remaining operation.
         workorders_values = []
         for operation in operations_by_id.values():
@@ -3166,8 +3169,13 @@ class MrpProduction(models.Model):
             wo.sequence = index_wo
         offset = len(phantom_workorders)
         non_phantom_workorders = self.workorder_ids - phantom_workorders
+        operation_sequence_map = {op.id: index for index, op in enumerate(self.bom_id.operation_ids)}
         for index_wo, wo in enumerate(non_phantom_workorders):
-            wo.sequence = index_wo + offset
+            if wo.operation_id:
+                wo.sequence = operation_sequence_map.get(wo.operation_id.id, 0) + offset
+                wo.blocked_by_workorder_ids = [Command.clear()]
+            else:
+                wo.sequence = index_wo + offset
         return True
 
     def _track_get_fields(self):
