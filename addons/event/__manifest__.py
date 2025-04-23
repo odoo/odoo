@@ -42,6 +42,7 @@ Key Features
         'views/event_tag_views.xml',
         'views/event_question_views.xml',
         'views/event_registration_answer_views.xml',
+        'data/event_question_data.xml',
     ],
     'demo': [
         'data/res_users_demo.xml',

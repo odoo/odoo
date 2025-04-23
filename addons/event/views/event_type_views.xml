@@ -50,13 +50,13 @@
                            </field>
                        </page>
                         <page string="Questions" name="page_questions">
-                            <field name="question_ids" class="w-100">
+                            <field name="question_ids" class="w-100" context="{'form_view_ref': 'event.event_question_view_add_form'}">
                                 <list sample="1">
                                     <field name="title"/>
                                     <field name="is_mandatory_answer" string="Mandatory"/>
                                     <field name="once_per_order" string="Once per Order"/>
                                     <field name="question_type" />
-                                    <field name="answer_ids" widget="many2many_tags"/>
+                                    <field name="answer_ids" widget="many2many_tags" invisible="question_type != 'simple_choice'"/>
                                 </list>
                             </field>
                         </page>
