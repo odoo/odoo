@@ -613,6 +613,34 @@ test("solid tab color navigation using keys", async () => {
     expect(getContent(el)).toBe(`<p><font style="color: rgb(0, 0, 0);">[test]</font></p>`);
 });
 
+test("custom tab color navigation using keys", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await press("Tab");
+    expect(getActiveElement()).toBe(queryFirst('.o_font_color_selector button:contains("Custom")'));
+    await press("Enter");
+    await animationFrame();
+    expect(".btn:contains('Custom')").toHaveClass("active");
+    await press("Tab");
+    await press("Tab");
+    await press("Tab");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button[data-color="#374151"]')
+    );
+    await press("ArrowDown");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button[data-color="black"]')
+    );
+    await press("ArrowDown");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button[data-color="black"]') // Should do nothing
+    );
+    await press("Enter");
+    expect(getContent(el)).toBe(`<p><font class="text-black">[test]</font></p>`);
+});
+
 describe.tags("desktop");
 describe("color preview", () => {
     test("preview color should work and be reverted", async () => {
