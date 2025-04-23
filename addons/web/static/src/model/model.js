@@ -16,13 +16,18 @@ import {
 } from "@odoo/owl";
 
 /**
+ * @typedef {import("@web/env").OdooEnv} OdooEnv
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
+ * @typedef {import("services").ServiceFactories} Services
  */
 
 export class Model {
+    static services = [];
+
     /**
-     * @param {Object} env
-     * @param {Object} services
+     * @param {OdooEnv} env
+     * @param {SearchParams} params
+     * @param {Services} services
      */
     constructor(env, params, services) {
         this.env = env;
@@ -38,15 +43,15 @@ export class Model {
     }
 
     /**
-     * @param {Object} params
-     * @param {Object} services
+     * @param {SearchParams} params
+     * @param {Services} services
      */
     setup(/* params, services */) {}
 
     /**
-     * @param {SearchParams} searchParams
+     * @param {Partial<SearchParams>} _params
      */
-    async load(/* searchParams */) {}
+    async load(_params) {}
 
     /**
      * This function is meant to be overriden by models that want to implement
@@ -75,10 +80,9 @@ export class Model {
         this.bus.trigger("update");
     }
 }
-Model.services = [];
 
 /**
- * @param {Object} props
+ * @param {Record<string, unknown>} props
  * @returns {SearchParams}
  */
 function getSearchParams(props) {
@@ -152,6 +156,9 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     const orm = model.orm;
     let sampleORM = localState.sampleORM;
 
+    /**
+     * @param {Record<string, unknown>} props
+     */
     async function _load(props) {
         const searchParams = getSearchParams(props);
         await model.load(searchParams);

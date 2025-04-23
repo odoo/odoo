@@ -2,16 +2,23 @@ import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/c
 import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
-import { Record } from "./record";
+import { Record as RelationalRecord } from "./record";
 import { resequence } from "./utils";
+
+/**
+ * @typedef {import("./record").Record} RelationalRecord
+ */
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
+/**
+ * @abstract
+ */
 export class DynamicList extends DataPoint {
     /**
-     * @param {import("./relational_model").Config} config
+     * @type {DataPoint["setup"]}
      */
-    setup(config) {
+    setup() {
         super.setup(...arguments);
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
@@ -359,7 +366,7 @@ export class DynamicList extends DataPoint {
         });
         for (const dpData of resequencedRecords) {
             const dp = originalList.find((d) => getResId(d) === dpData.id);
-            if (dp instanceof Record) {
+            if (dp instanceof RelationalRecord) {
                 dp._applyValues(dpData);
             } else {
                 dp[handleField] = dpData[handleField];
