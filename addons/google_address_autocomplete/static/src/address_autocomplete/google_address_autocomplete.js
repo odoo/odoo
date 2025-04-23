@@ -147,8 +147,9 @@ export const addressAutoComplete = {
             }
         })
     ],
-    extractProps: ({ attrs, options }) => {
-        const props = charField.extractProps({attrs, options});
+    extractProps: (fieldInfo, dynamicInfo) => {
+        const { options } = fieldInfo;
+        const props = charField.extractProps(fieldInfo, dynamicInfo);
         const addressFieldMap = {};
         Object.keys(standardAddressFields).forEach((fname) => {
             const optionValue = options[fname];
