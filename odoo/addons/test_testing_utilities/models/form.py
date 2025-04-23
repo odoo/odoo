@@ -1,9 +1,10 @@
 from itertools import zip_longest
 
 from odoo import Command, api, fields, models
+from odoo.addons.web.controllers.export import none_values_filtered
 
 
-class TestTestingUtilitiesFormLoad(models.Model):
+class TestTestingUtilitiesFormCreate(models.Model):
     _name = 'test_testing_utilities.form_load'
     _description = 'Testing Utilities Form Load'
 
@@ -73,7 +74,7 @@ class TestTestingUtilitiesFormReadonly(models.Model):
     @api.depends('field_readonly')
     def _compute_field_compute_readonly(self):
         for record in self:
-            record.field_compute_readonly = 2 * record.field_readonly
+            record.field_compute_readonly = record.field_readonly * 2
 
 
 class TestTestingUtilitiesFormReadonlyXml(models.Model):
@@ -94,6 +95,54 @@ class TestTestingUtilitiesFormReadonlyXml(models.Model):
     @api.onchange('field_trigger_with_force_save')
     def _onchange_field_with_force_save(self):
         self.field_with_force_save = self.field_trigger_with_force_save
+
+
+class Test_Testing_Utilities_M2o(models.Model):
+    _name = 'test_testing_utilities.m2o'
+    _description = 'Testing Utilities Many To One'
+
+    name = fields.Char(required=True)
+
+
+class Test_Testing_Utilities_M2o_Default(models.Model):
+    _name = 'test_testing_utilities.m2o_default'
+    _description = 'Testing Utilities Many To One Default'
+
+    field_default = fields.Many2one(
+        'test_testing_utilities.m2o',
+        required=True,
+        default=lambda self: self.env['test_testing_utilities.m2o'].search(
+            [], limit=1
+        )
+    )
+
+
+class Test_Testing_Utilities_M2o_Onchange(models.Model):
+    _name = 'test_testing_utilities.m2o_onchange'
+    _description = 'Testing Utilities Many To One Onchange'
+
+    field_onchange = fields.Many2one('test_testing_utilities.m2o')
+    field_trigger_onchange = fields.Char()
+
+    @api.onchange('field_trigger_onchange')
+    def _on_change_field_trigger_onchange(self):
+        self.field_onchange = self.env['test_testing_utilities.m2o'].search([
+            ('name', 'ilike', self.field_trigger_onchange),
+        ], limit=1)
+
+
+class Test_Testing_Utilities_M2o_xxx(models.Model):
+    _name = 'test_testing_utilities.m2o_xxx'
+    _description = 'Testing Utilities Many To One XXX'
+
+    field_m2o = fields.Many2one('test_testing_utilities.m2o')
+
+
+"""
+***************************************************************************************************
+TO REMOVE
+***************************************************************************************************
+"""
 
 
 class Test_Testing_UtilitiesA(models.Model):
@@ -119,80 +168,81 @@ class Test_Testing_UtilitiesA(models.Model):
             r.f4 = r.f2 / (int(r.f1) or 1)
 
 
-class Test_Testing_UtilitiesReadonly(models.Model):
-    _name = 'test_testing_utilities.readonly'
-    _description = 'Testing Utilities Readonly'
-
-    f1 = fields.Integer(default=1, readonly=True)
-    f2 = fields.Integer(compute='_compute_f2')
-
-    @api.depends('f1')
-    def _compute_f2(self):
-        for r in self:
-            r.f2 = 2 * r.f1
-
-
-class Test_Testing_UtilitiesC(models.Model):
-    _name = 'test_testing_utilities.c'
-    _description = 'Testing Utilities C'
-
-    name = fields.Char("name", required=True)
-    f2 = fields.Many2one('test_testing_utilities.m2o')
-
-    @api.onchange('f2')
-    def _on_change_f2(self):
-        self.name = self.f2.name
-
-
-class Test_Testing_UtilitiesM2o(models.Model):
-    _name = 'test_testing_utilities.m2o'
-    _description = 'Testing Utilities Many To One'
-
-    name = fields.Char(required=True)
-
-
 class Test_Testing_UtilitiesD(models.Model):
     _name = 'test_testing_utilities.d'
     _description = 'Testing Utilities D'
 
     # used to check that defaults & onchange to m2o work
-    f = fields.Many2one(
+    field_default = fields.Many2one(
         'test_testing_utilities.m2o',
         required=True,
         default=lambda self: self.env['test_testing_utilities.m2o'].search(
             [], limit=1
         )
     )
-    f2 = fields.Char()
+    field_trigger_onchange = fields.Char()
 
-    @api.onchange('f2')
-    def _on_change_f2(self):
-        self.f = self.env['test_testing_utilities.m2o'].search([
-            ('name', 'ilike', self.f2),
-        ], limit=1) if self.f2 else False
+    @api.onchange('field_trigger_onchange')
+    def _on_change_field_trigger_onchange(self):
+        self.field_default = self.env['test_testing_utilities.m2o'].search([
+            ('name', 'ilike', self.field_trigger_onchange),
+        ], limit=1) if self.field_trigger_onchange else False
 
 
-class Test_Testing_UtilitiesE(models.Model):
-    _name = 'test_testing_utilities.e'
-    _description = 'Testing Utilities E'
+"""
+***************************************************************************************************
+DOING
+***************************************************************************************************
+"""
 
-    m2m = fields.Many2many('test_testing_utilities.sub2')
-    count = fields.Integer(compute='_m2m_count', inverse='_set_count')
 
-    @api.depends('m2m')
-    def _m2m_count(self):
-        for r in self:
-            r.count = len(r.m2m)
+class Test_Testing_Utilities_Form_Dummy(models.Model):
+    _name = 'test.dummy'
+    _description = 'Testing Utilities Dummy'
 
-    def _set_count(self):
-        for r in self:
-            r.write({
-                'm2m': [
-                    Command.create({'name': str(n)})
-                    for n, v in zip_longest(range(r.count), r.m2m or [])
-                    if v is None
-                ]
-            })
+    name = fields.Char()
+
+
+class Test_Testing_Utilities_Form_M2M(models.Model):
+    _name = 'test.m2m'
+    _description = 'Testing Utilities Many To Many'
+
+    field_m2m = fields.Many2many('test.dummy')
+
+
+class Test_Testing_Utilities_Form_M2M_Compute(models.Model):
+    _name = 'test.m2m_compute'
+
+    field_trigger_compute = fields.Many2many('test.dummy')
+    field_compute = fields.Integer(compute='_compute_field_compute')
+
+    @api.depends('field_trigger_compute')
+    def _compute_field_compute(self):
+        for record in self:
+            record.field_compute = len(record.field_trigger_compute)
+
+
+class Test_Testing_Utilities_Form_M2M_Default(models.Model):
+    _name = 'test.m2m_default'
+
+    def _default(self):
+        return self.env['test.dummy'].search([], limit=2)
+
+    field_default = fields.Many2many(
+        'test.dummy',
+        default=_default,
+    )
+
+
+class Test_Testing_Utilities_Form_M2M_Onchange(models.Model):
+    _name = "test.m2m_onchange"
+
+    field_onchange = fields.Many2many('test.dummy')
+    field_trigger_onchange = fields.Many2one('test.dummy')
+
+    @api.onchange('field_trigger_onchange')
+    def _onchange_field_onchange(self):
+        self.field_onchange = self.field_onchange | self.field_trigger_onchange
 
 
 class Test_Testing_UtilitiesSub2(models.Model):
@@ -220,6 +270,36 @@ class Test_Testing_UtilitiesF(models.Model):
     @api.onchange('m2o')
     def _on_change_m2o(self):
         self.m2m = self.m2m | self.m2o
+
+
+class Test_Testing_UtilitiesE(models.Model):
+    _name = 'test_testing_utilities.e'
+    _description = 'Testing Utilities E'
+
+    m2m = fields.Many2many('test_testing_utilities.sub2')
+    count = fields.Integer(compute='_m2m_count', inverse='_set_count')
+
+    @api.depends('m2m')
+    def _m2m_count(self):
+        for r in self:
+            r.count = len(r.m2m)
+
+    def _set_count(self):
+        for r in self:
+            r.write({
+                'm2m': [
+                    Command.create({'name': str(n)})
+                    for n, v in zip_longest(range(r.count), r.m2m or [])
+                    if v is None
+                ]
+            })
+
+
+"""
+***************************************************************************************************
+TODO
+***************************************************************************************************
+"""
 
 
 class Test_Testing_UtilitiesG(models.Model):

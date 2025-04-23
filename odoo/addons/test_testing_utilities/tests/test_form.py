@@ -7,8 +7,8 @@ from odoo.tests import Form, TransactionCase
 
 
 class TestFormFields(TransactionCase):
-    def test_form_load(self):
-        form = Form(self.env['test_testing_utilities.form_load'])
+    def test_form_create(self):
+        form = Form(self.env['test_testing_utilities.form_create'])
 
         self.assertEqual(form.id, False)
 
@@ -74,7 +74,7 @@ class TestFormFields(TransactionCase):
         self.assertEqual(record.field_required, '42')
 
     def test_form_field_with_required_from_xml(self):
-        form = Form(self.env['test_testing_utilities.form_required_xml'], view='test_testing_utilities.required')
+        form = Form(self.env['test_testing_utilities.form_required_xml'], view='test_testing_utilities.form_required')
 
         self.assertEqual(form.field_required, False)
 
@@ -126,7 +126,7 @@ class TestFormFields(TransactionCase):
         self.assertEqual(record.field_with_force_save, 42)
 
     def test_form_field_with_conditional_readonly_from_xml(self):
-        form = Form(self.env['test_testing_utilities.form_readonly_xml'], view='test_testing_utilities.readonly')
+        form = Form(self.env['test_testing_utilities.form_readonly_xml'], view='test_testing_utilities.form_readonly')
 
         # field_with_condition is not readonly yet.
         form.field_with_condition = 42
@@ -145,137 +145,177 @@ class TestFormFields(TransactionCase):
 
 
 class TestM2O(TransactionCase):
-    def test_default_and_onchange(self):
-        """ Checks defaults & onchanges impacting m2o fields
-        """
-        Sub = self.env['test_testing_utilities.m2o']
-        a = Sub.create({'name': "A"})
-        b = Sub.create({'name': "B"})
+    def test_default(self):
+        form_before_record = Form(self.env['test_testing_utilities.m2o_default'])
 
-        f = Form(self.env['test_testing_utilities.d'])
+        self.assertFalse(form_before_record.field_default)
 
-        self.assertFalse(
-            f.f,
-            "The default value gets overridden by the onchange",
-        )
-        f.f2 = "B"
-        self.assertEqual(
-            f.f, b,
-            "The new m2o value should match the second field by name",
-        )
-
-        f.save()
-
-    def test_set(self):
-        """
-        Checks that we get/set recordsets for m2o & that set correctly
-        triggers onchange
-        """
-        r1 = self.env['test_testing_utilities.m2o'].create({'name': "A"})
-        r2 = self.env['test_testing_utilities.m2o'].create({'name': "B"})
-
-        f = Form(self.env['test_testing_utilities.c'])
-
-        # check that basic manipulations work
-        f.f2 = r1
-        self.assertEqual(f.f2, r1)
-        self.assertEqual(f.name, 'A')
-        f.f2 = r2
-        self.assertEqual(f.name, 'B')
-
-        # can't set an int to an m2o field
         with self.assertRaises(AssertionError):
-            f.f2 = r1.id
-        self.assertEqual(f.f2, r2)
-        self.assertEqual(f.name, 'B')
+            form_before_record.save()
 
-        # can't set a record of the wrong model
-        temp = self.env['test_testing_utilities.readonly'].create({})
+        record = self.env['test_testing_utilities.m2o'].create({'name': "trigger_default"})
+        form_after_record = Form(self.env['test_testing_utilities.m2o_default'])
+
+        self.assertEqual(form_after_record.field_default, record)
+
+        form_after_record.save()
+
+    def test_onchange(self):
+        form_before_record = Form(self.env['test_testing_utilities.m2o_onchange'])
+
+        self.assertFalse(form_before_record.field_onchange)
+
+        record = self.env['test_testing_utilities.m2o'].create({'name': "trigger_onchange"})
+
+        form_after_record = Form(self.env['test_testing_utilities.m2o_onchange'])
+
+        form_after_record.field_trigger_onchange = "trigger_onchange"
+        self.assertEqual(form_after_record.field_onchange, record)
+
+        form_after_record.save()
+
+    def test_many_2_one(self):
+        record = self.env['test_testing_utilities.m2o'].create({'name': "A"})
+
+        form = Form(self.env['test_testing_utilities.m2o_xxx'])
+
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
+        record_saved = form.save()
+        self.assertEqual(record_saved.field_m2o, record)
+
+    def test_m2o_set_id(self):
+        record = self.env['test_testing_utilities.m2o'].create({'name': "A"})
+
+        form = Form(self.env['test_testing_utilities.m2o_xxx'])
+
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
         with self.assertRaises(AssertionError):
-            f.f2 = temp
-        self.assertEqual(f.f2, r2)
-        self.assertEqual(f.name, 'B')
+            form.field_m2o = record.id
 
-        r = f.save()
-        self.assertEqual(r.f2, r2)
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
+    def test_m2o_wrong_model(self):
+        record = self.env['test_testing_utilities.m2o'].create({'name': "A"})
+        wrong_record = self.env['test_testing_utilities.m2o_xxx'].create({})
+
+        form = Form(self.env['test_testing_utilities.m2o_xxx'])
+
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
+        with self.assertRaises(AssertionError):
+            form.field_m2o = wrong_record
+
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
+    def test_compute(self):
+        pass
 
 
 class TestM2M(TransactionCase):
-    def test_add(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        r1 = Sub.create({'name': "Item"})
-        r2 = Sub.create({'name': "Item2"})
+    def test_m2m(self):
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': "Item"})
+        record_2 = model.create({'name': "Item"})
 
-        with Form(self.env['test_testing_utilities.e']) as f:
-            f.m2m.add(r1)
-            f.m2m.add(r2)
+        with Form(self.env['test.m2m']) as form:
+            form.field_m2m.add(record_1)
+            form.field_m2m.add(record_2)
 
-        self.assertEqual(
-            f.record.m2m,
-            r1 | r2,
-        )
+        self.assertEqual(form.record.field_m2m, record_1 | record_2)
 
     def test_remove_by_index(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        r1 = Sub.create({'name': "Item"})
-        r2 = Sub.create({'name': "Item2"})
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': "Item"})
+        record_2 = model.create({'name': "Item2"})
 
-        with Form(self.env['test_testing_utilities.e']) as f:
-            f.m2m.add(r1)
-            f.m2m.add(r2)
-            f.m2m.remove(index=0)
+        with Form(self.env['test.m2m']) as form:
+            form.field_m2m.add(record_1)
+            form.field_m2m.add(record_2)
+            form.field_m2m.remove(index=0)
 
         self.assertEqual(
-            f.record.m2m,
-            r2,
+            form.record.field_m2m,
+            record_2,
         )
 
     def test_remove_by_id(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        r1 = Sub.create({'name': "Item"})
-        r2 = Sub.create({'name': "Item2"})
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': "Item"})
+        record_2 = model.create({'name': "Item2"})
 
-        with Form(self.env['test_testing_utilities.e']) as f:
-            f.m2m.add(r1)
-            f.m2m.add(r2)
-            f.m2m.remove(id=r1.id)
+        with Form(self.env['test.m2m']) as form:
+            form.field_m2m.add(record_1)
+            form.field_m2m.add(record_2)
+            form.field_m2m.remove(id=record_1.id)
 
         self.assertEqual(
-            f.record.m2m,
-            r2,
+            form.record.field_m2m,
+            record_2,
         )
 
     def test_set(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        r1 = Sub.create({'name': "Item"})
-        r2 = Sub.create({'name': "Item2"})
-        r3 = Sub.create({'name': "Item3"})
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': "Item"})
+        record_2 = model.create({'name': "Item2"})
+        record_3 = model.create({'name': "Item3"})
 
-        with Form(self.env['test_testing_utilities.e']) as f:
-            f.m2m.set(r1 + r2)
+        with Form(self.env['test.m2m']) as form:
+            form.field_m2m.set(record_1 + record_2)
 
-        self.assertEqual(f.record.m2m, r1 + r2)
+        self.assertEqual(form.record.field_m2m, record_1 + record_2)
 
-        with f:
-            f.m2m = r3
+        with form:
+            form.field_m2m = record_3
 
-        self.assertEqual(f.record.m2m, r3)
+        self.assertEqual(form.record.field_m2m, record_3)
 
-    def test_on_m2m_change(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        f = Form(self.env['test_testing_utilities.e'])
+    def test_compute(self):
+        model = self.env['test.dummy']
+        form = Form(self.env['test.m2m_compute'])
 
-        self.assertEqual(f.count, 0)
-        f.m2m.add(Sub.create({'name': 'a'}))
-        self.assertEqual(f.count, 1)
-        f.m2m.add(Sub.create({'name': 'a'}))
-        f.m2m.add(Sub.create({'name': 'a'}))
-        f.m2m.add(Sub.create({'name': 'a'}))
-        self.assertEqual(f.count, 4)
-        f.m2m.remove(index=0)
-        f.m2m.remove(index=0)
-        f.m2m.remove(index=0)
-        self.assertEqual(f.count, 1)
+        self.assertEqual(form.field_compute, 0)
+
+        form.field_trigger_compute.add(model.create({'name': 'a'}))
+        self.assertEqual(form.field_compute, 1)
+
+        form.field_trigger_compute.add(model.create({'name': 'a'}))
+        form.field_trigger_compute.add(model.create({'name': 'a'}))
+        form.field_trigger_compute.add(model.create({'name': 'a'}))
+        self.assertEqual(form.field_compute, 4)
+
+        form.field_trigger_compute.remove(index=0)
+        form.field_trigger_compute.remove(index=0)
+        form.field_trigger_compute.remove(index=0)
+        self.assertEqual(form.field_compute, 1)
+
+    def test_default(self):
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': 'a'})
+        record_2 = model.create({'name': 'b'})
+
+        form = Form(self.env['test.m2m_default'])
+
+        self.assertEqual(form.field_default[:], record_1 | record_2)
+
+    def test_onchange(self):
+        model = self.env['test.dummy']
+        a = model.create({'name': 'a'})
+        b = model.create({'name': 'b'})
+
+        form = Form(self.env['test.m2m_onchange'])
+
+        form.field_trigger_onchange = a
+        self.assertEqual(form.field_onchange[:], a)
+
+        form.field_trigger_onchange = b
+        self.assertEqual(form.field_onchange[:], a | b)
 
     def test_m2m_changed(self):
         r1 = self.env['test_testing_utilities.m2o'].create({'name': "A"})
@@ -296,6 +336,9 @@ class TestM2M(TransactionCase):
 
         f.m2o = d
         self.assertEqual(f.m2m[:], a | b | c | d)
+
+    def test_readonly(self):
+        pass
 
     def test_m2m_readonly(self):
         Sub = self.env['test_testing_utilities.sub3']
