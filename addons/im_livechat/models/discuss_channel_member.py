@@ -44,7 +44,7 @@ class DiscussChannelMember(models.Model):
             if (
                 guest
                 and member.is_self
-                and guest in member.channel_id.channel_member_history_ids.guest_id
+                and guest in member.channel_id.livechat_customer_guest_ids
             ):
                 # sudo - discuss.channel.member: setting livechat member type
                 # after member creation is allowed.

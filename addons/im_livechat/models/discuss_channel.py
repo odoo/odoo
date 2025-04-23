@@ -22,7 +22,42 @@ class DiscussChannel(models.Model):
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor or operator leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator', index='btree_not_null')
-    channel_member_history_ids = fields.One2many('im_livechat.channel.member.history', 'channel_id')
+    livechat_channel_member_history_ids = fields.One2many("im_livechat.channel.member.history", "channel_id")
+    livechat_agent_history_ids = fields.One2many(
+        "im_livechat.channel.member.history",
+        string="Agents (History)",
+        compute="_compute_livechat_agent_history_ids",
+    )
+    livechat_bot_history_ids = fields.One2many(
+        "im_livechat.channel.member.history",
+        string="Bots (History)",
+        compute="_compute_livechat_bot_history_ids",
+    )
+    livechat_customer_history_ids = fields.One2many(
+        "im_livechat.channel.member.history",
+        string="Customers",
+        compute="_compute_livechat_customer_history_ids",
+    )
+    livechat_agent_partner_ids = fields.Many2many(
+        "res.partner",
+        string="Agents",
+        compute="_compute_livechat_agent_partner_ids",
+    )
+    livechat_bot_partner_ids = fields.Many2many(
+        "res.partner",
+        string="Bots",
+        compute="_compute_livechat_bot_partner_ids",
+    )
+    livechat_customer_partner_ids = fields.Many2many(
+        "res.partner",
+        string="Customers (Partners)",
+        compute="_compute_livechat_customer_partner_ids",
+    )
+    livechat_customer_guest_ids = fields.Many2many(
+        "mail.guest",
+        string="Customers (Guests)",
+        compute="_compute_livechat_customer_guest_ids",
+    )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
@@ -58,12 +93,63 @@ class DiscussChannel(models.Model):
             end = last.date if (last := last_msg_by_channel_id.get(record.id)) else fields.Datetime.now()
             record.duration = (end - record.create_date).total_seconds() / 3600
 
-    @api.depends("channel_member_history_ids")
+    @api.depends("livechat_agent_history_ids")
     def _compute_livechat_is_escalated(self):
         for channel in self:
-            channel.livechat_is_escalated = len(channel.channel_member_history_ids.filtered(
-                lambda h: h.livechat_member_type == "agent")
-            ) > 1
+            channel.livechat_is_escalated = len(channel.livechat_agent_history_ids) > 1
+
+    @api.depends("livechat_channel_member_history_ids.livechat_member_type")
+    def _compute_livechat_agent_history_ids(self):
+        for channel in self:
+            channel.livechat_agent_history_ids = (
+                channel.livechat_channel_member_history_ids.filtered(
+                    lambda h: h.livechat_member_type == "agent",
+                )
+            )
+
+    @api.depends("livechat_channel_member_history_ids.livechat_member_type")
+    def _compute_livechat_bot_history_ids(self):
+        for channel in self:
+            channel.livechat_bot_history_ids = channel.livechat_channel_member_history_ids.filtered(
+                lambda h: h.livechat_member_type == "bot",
+            )
+
+    @api.depends("livechat_channel_member_history_ids.livechat_member_type")
+    def _compute_livechat_customer_history_ids(self):
+        for channel in self:
+            channel.livechat_customer_history_ids = (
+                channel.livechat_channel_member_history_ids.filtered(
+                    lambda h: h.livechat_member_type == "visitor",
+                )
+            )
+
+    # @api.depends("livechat_agent_history_ids.partner_id")
+    def _compute_livechat_agent_partner_ids(self):
+        for channel in self:
+            channel.livechat_agent_partner_ids = (
+                channel.livechat_agent_history_ids.partner_id
+            )
+
+    # @api.depends("livechat_bot_history_ids.partner_id")
+    def _compute_livechat_bot_partner_ids(self):
+        for channel in self:
+            channel.livechat_bot_partner_ids = (
+                channel.livechat_bot_history_ids.partner_id
+            )
+
+    # @api.depends("livechat_customer_history_ids.partner_id")
+    def _compute_livechat_customer_partner_ids(self):
+        for channel in self:
+            channel.livechat_customer_partner_ids = (
+                channel.livechat_customer_history_ids.partner_id
+            )
+
+    # @api.depends("livechat_customer_history_ids.guest_id")
+    def _compute_livechat_customer_guest_ids(self):
+        for channel in self:
+            channel.livechat_customer_guest_ids = (
+                channel.livechat_customer_history_ids.guest_id
+            )
 
     def _sync_field_names(self):
         return super()._sync_field_names() + ["livechat_operator_id"]
@@ -314,7 +400,7 @@ class DiscussChannel(models.Model):
 
         if (
             # sudo: discuss.channel - visitor can access channel member history
-            self.livechat_active and self.sudo().channel_member_history_ids.filtered(
+            self.livechat_active and self.sudo().livechat_channel_member_history_ids.filtered(
                 lambda h: h.partner_id == message.author_id and h.livechat_member_type == "agent"
             )
         ):
