@@ -938,7 +938,8 @@ class TransactionCase(BaseCase):
             if not cls.registry.ready:
                 _logger.info('Skipping signal changes during tests')
                 return
-            _logger.info('Simulating signal changes during tests')
+            if cls.registry.registry_invalidated or cls.registry.cache_invalidated:
+                _logger.info('Simulating signal changes during tests')
             if cls.registry.registry_invalidated:
                 cls.registry.registry_sequence += 1
             for cache_name in cls.registry.cache_invalidated or ():
