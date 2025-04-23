@@ -257,5 +257,8 @@ export class ProductProduct extends Base {
     get canBeDisplayed() {
         return this.active && this.available_in_pos;
     }
+    get variants() {
+        return this.product_tmpl_id?.["<-product.product.product_tmpl_id"];
+    }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);
