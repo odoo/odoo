@@ -146,9 +146,9 @@ export class ColorPicker extends Component {
                 key === "ArrowUp"
                     ? target.parentElement.previousElementSibling
                     : target.parentElement.nextElementSibling;
-            targetBtn =
-                row?.matches(".o_color_section, .o_colorpicker_section") &&
-                row.children[buttonIndex];
+            if (row?.matches(".o_color_section, .o_colorpicker_section")) {
+                targetBtn = row.children[buttonIndex];
+            }
         }
         if (targetBtn?.classList.contains("o_color_button")) {
             targetBtn.focus();
