@@ -59,9 +59,9 @@ export class Navbar extends Component {
     }
 
     handleKeydown(event) {
-        const isEndCharacter = event.key.match(/(Enter|Tab)/);
+        const isEndCharacter = event.key?.match(/(Enter|Tab)/);
         const isSpecialKey =
-            !["Control", "Alt"].includes(event.key) && (event.key.length > 1 || event.metaKey);
+            !["Control", "Alt"].includes(event.key) && (event.key?.length > 1 || event.metaKey);
 
         clearTimeout(this.timeout);
         if (isEndCharacter) {
@@ -87,7 +87,7 @@ export class Navbar extends Component {
             document.activeElement !== this.inputRef.el &&
             !this.pos.getOrder()?.getSelectedOrderline() &&
             this.noOpenDialogs() &&
-            event.key.length == 1 &&
+            event.key?.length == 1 &&
             this.bufferedInput.length < 3
         ) {
             this.inputRef.el.focus();
