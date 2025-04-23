@@ -22,6 +22,7 @@ import { LoadingOverlay } from "@pos_self_order/app/components/loading_overlay/l
 import { mountComponent } from "@web/env";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { init as initDebugFormatters } from "@point_of_sale/app/utils/debug-formatter";
+import { insertKioskStyle } from "./kiosk_style";
 
 export class selfOrderIndex extends Component {
     static template = "pos_self_order.selfOrderIndex";
@@ -57,6 +58,11 @@ export class selfOrderIndex extends Component {
         }
 
         if (this.selfOrder.kioskMode) {
+            const styleConfig = this.selfOrder.config._self_ordering_style;
+            if (styleConfig) {
+                const { primaryBgColor, primaryTextColor } = styleConfig;
+                insertKioskStyle(primaryBgColor, primaryTextColor);
+            }
             document.body.classList.add("kiosk");
         }
 
