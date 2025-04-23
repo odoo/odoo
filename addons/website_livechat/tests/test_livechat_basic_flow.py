@@ -244,9 +244,11 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "mail.guest": [
                     {
                         "avatar_128_access_token": limited_field_access_token(guest, "avatar_128"),
+                        "country": False,
                         "id": guest.id,
                         "im_status": "offline",
                         "name": f"Visitor #{self.visitor.id}",
+                        "offline_since": False,
                         "write_date": fields.Datetime.to_string(guest.write_date),
                     }
                 ],

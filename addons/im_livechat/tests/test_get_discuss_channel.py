@@ -54,9 +54,11 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             [
                 {
                     "avatar_128_access_token": limited_field_access_token(guest, "avatar_128"),
+                    "country": belgium.id,
                     "id": guest.id,
                     "im_status": "offline",
                     "name": "Visitor",
+                    "offline_since": False,
                     "write_date": fields.Datetime.to_string(guest.write_date),
                 },
             ],
@@ -145,6 +147,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_public": False,
                     "name": "Roger",
                     "notification_preference": "email",
+                    "offline_since": False,
                     "signature": ["markup", str(test_user.signature)],
                     "userId": test_user.id,
                     "user_livechat_username": False,

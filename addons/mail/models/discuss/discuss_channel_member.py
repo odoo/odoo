@@ -264,8 +264,10 @@ class DiscussChannelMember(models.Model):
                 predicate=lambda m: m.partner_id,
             ),
             # sudo: mail.guest - reading guest related to a member is considered acceptable
-            Store.One(
-                "guest_id", fields, predicate=lambda m: m.guest_id, rename="persona", sudo=True
+            Store.Attr(
+                "persona",
+                lambda m: Store.One(m.guest_id.sudo(), m._get_store_guest_fields(fields)),
+                predicate=lambda m: m.guest_id,
             ),
         ]
 
@@ -280,6 +282,10 @@ class DiscussChannelMember(models.Model):
         ]
 
     def _get_store_partner_fields(self, fields):
+        self.ensure_one()
+        return fields
+
+    def _get_store_guest_fields(self, fields):
         self.ensure_one()
         return fields
 
