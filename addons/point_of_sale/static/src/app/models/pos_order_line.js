@@ -731,6 +731,12 @@ export class PosOrderline extends Base {
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
     }
+    get canBeRemoved() {
+        const decimals = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Unit"
+        ).digits;
+        return floatIsZero(this.qty, decimals);
+    }
     setDirty(processedLines = new Set()) {
         if (processedLines.has(this)) {
             return;
