@@ -36,6 +36,7 @@ import {
 } from "./_helpers/selection";
 import { strong } from "./_helpers/tags";
 import { delay } from "@web/core/utils/concurrency";
+import { nodeSize } from "@html_editor/utils/position";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -492,6 +493,75 @@ test("toolbar open on single selected cell in table", async () => {
     await animationFrame();
     await tick();
     expect(targetTd).toHaveClass("o_selected_td");
+    expect(".o-we-toolbar").toHaveCount(1);
+});
+
+test("should select table single cell when entire content is selected via mouse movement", async () => {
+    const content = unformat(`
+        <table class="table table-bordered o_table" style="width: 250px;">
+            <tbody>
+                <tr>
+                    <td style="width: 200px;">
+                        <p>abcdefghijklmno</p>
+                        <p>abcdefghijklmnopqrs</p>
+                        <p>abcdefg</p>
+                    </td>
+                    <td style="width: 50px;"><p><br></p></td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+
+    const { el } = await setupEditor(content);
+
+    const firstTd = el.querySelector("td");
+    const firstP = firstTd.firstChild;
+    const lastP = firstTd.lastChild;
+
+    // Simulate mousedown at the top of the first paragraph.
+    const rectStart = firstP.getBoundingClientRect();
+    manuallyDispatchProgrammaticEvent(firstP, "mousedown", {
+        clientX: rectStart.left,
+        clientY: rectStart.top,
+    });
+
+    // Set selection from start of first <p> to end of last <p>.
+    setSelection({
+        anchorNode: firstP.firstChild,
+        anchorOffset: 0,
+        focusNode: lastP.firstChild,
+        focusOffset: nodeSize(lastP.firstChild),
+    });
+    await animationFrame();
+
+    // Get bounding rect of selection range.
+    const range = document.createRange();
+    range.setStart(lastP.firstChild, 0);
+    range.setEnd(lastP.firstChild, nodeSize(lastP.firstChild));
+    const rect = range.getBoundingClientRect();
+
+    // Simulate mousemove and mouseup events to complete the selection.
+    manuallyDispatchProgrammaticEvent(lastP, "mousemove", {
+        clientX: rect.right,
+        clientY: rect.top,
+    });
+    manuallyDispatchProgrammaticEvent(lastP, "mousemove", {
+        clientX: rect.right + 5,
+        clientY: rect.top,
+    });
+    manuallyDispatchProgrammaticEvent(lastP, "mouseup", {
+        clientX: rect.right + 5,
+        clientY: rect.top,
+    });
+
+    await animationFrame();
+    await tick();
+
+    expect(firstTd).toHaveClass("o_selected_td");
     expect(".o-we-toolbar").toHaveCount(1);
 });
 
