@@ -61,7 +61,10 @@ class HrApplicant(models.Model):
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
             default_email_layout_xmlid='mail.mail_notification_light',
-            default_deadline=fields.Datetime.now() + timedelta(days=15)
+            default_deadline=fields.Datetime.now() + timedelta(days=15),
+            default_survey_type='recruitment',
+            hide_mail_template_management_options=True,
+            dialog_size='large'
         )
 
         return {

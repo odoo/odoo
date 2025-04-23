@@ -5,9 +5,11 @@
             <field name="name">survey.invite.view.form</field>
             <field name="model">survey.invite</field>
             <field name="arch" type="xml">
-                <form string="Compose Email" class="o_mail_composer_form">
+                <form string="Compose Email" class="o_mail_composer_form" js_class="survey_invite_form">
                     <group col="1">
                         <group col="2">
+                            <field name="model" invisible="1"/>
+                            <field name="res_ids" invisible="1"/>
                             <field name="author_id" invisible="1"/>
                             <field name="survey_access_mode" invisible="1"/>
                             <field name="survey_users_login_required" invisible="1"/>
@@ -24,6 +26,7 @@
                             <field string="Send by Email" name="send_email" widget="boolean_toggle" options="{'autosave': False}"
                                    invisible="survey_access_mode != 'public'"/>
                             <field name="partner_ids"
+                                string="To"
                                 widget="many2many_tags_email"
                                 placeholder="Add existing contacts..." options="{'no_quick_create': True}"
                                 context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"
@@ -35,40 +38,45 @@
                         </group>
                         <field name="existing_partner_ids" invisible="1"/>
                         <field name="existing_emails" invisible="1"/>
-                        <div col="2" class="alert alert-warning" role="alert"
+                        <div col="2" class="alert alert-warning pb-0" role="alert"
                             invisible="survey_access_mode == 'public' or not existing_text">
                             <field name="existing_text"/>
                             <group col="2">
                                 <label for="existing_mode" string="Handle existing"/>
                                 <div>
                                     <field name="existing_mode" nolabel="1"/>
-                                    <p invisible="existing_mode != 'resend'">Customers will receive the same token.</p>
-                                    <p invisible="existing_mode != 'new'">Customers will receive a new token and be able to completely retake the survey.</p>
+                                    <p class="mb-0" invisible="existing_mode != 'resend'">Customers will receive the same token.</p>
+                                    <p class="mb-0" invisible="existing_mode != 'new'">Customers will receive a new token and be able to completely retake the survey.</p>
                                 </div>
                             </group>
                         </div>
                         <group col="2">
-                            <field name="subject" invisible="not send_email" placeholder="Subject..."/>
+                            <field name="subject" invisible="not send_email" placeholder="Subject..." widget="char_emojis"/>
                         </group>
+                        <hr/>
                         <field name="can_edit_body" invisible="1"/>
-                        <field name="body" class="oe-bordered-editor border border-1 m-3 p-0 flex-fill"
+                        <field name="body" class="oe-bordered-editor"
                             widget="html_mail"
-                            options="{'height': 380}"
+                            options="{'height': 300}"
                             invisible="not send_email"
                             readonly="not can_edit_body" force_save="1"/>
+                        <hr/>
                         <group invisible="not send_email">
-                            <group>
-                                <field name="attachment_ids" widget="many2many_binary"/>
-                            </group>
-                            <group>
-                                <field name="deadline"/>
-                                <field name="template_id" label="Use template"/>
-                            </group>
+                            <field name="deadline" string="Deadline"
+                                placeholder="After Deadline, the sent interview's link will expire."/>
+                        </group>
+                        <hr colspan="2" invisible="not attachment_ids"/>
+                        <group invisible="not send_email">
+                            <field name="attachment_ids" widget="mail_composer_attachment_list"
+                                invisible="not attachment_ids" nolabel="1" colspan="2"/>
                         </group>
                     </group>
                     <footer>
                         <button string="Send" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not send_email" data-hotkey="a"/>
+                        <field name="template_id" widget="mail_composer_template_selector" invisible="not send_email"/>
+                        <field name="scheduled_date" widget="datetime_scheduled_date" invisible="not send_email"/>
                     </footer>
                 </form>
             </field>

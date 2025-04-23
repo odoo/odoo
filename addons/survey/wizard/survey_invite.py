@@ -6,6 +6,7 @@ import re
 import werkzeug
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import UserError
 from odoo.tools.mail import email_split_and_format, email_normalize
 
@@ -61,6 +62,12 @@ class SurveyInvite(models.TransientModel):
     deadline = fields.Datetime(string="Answer deadline")
     send_email = fields.Boolean(compute="_compute_send_email",
                                 inverse="_inverse_send_email")
+    survey_type = fields.Selection(related="survey_id.survey_type")
+    scheduled_date = fields.Datetime('Scheduled Date',
+        help="send emails after that date. This date is considered as being in UTC timezone."
+    )
+    model = fields.Char('Related Document Model', compute='_compute_model', readonly=False, store=True)
+    res_ids = fields.Text('Related Document IDs', compute='_compute_res_ids', readonly=False, store=True)
 
     @api.depends('survey_access_mode')
     def _compute_send_email(self):
@@ -109,6 +116,19 @@ class SurveyInvite(models.TransientModel):
     @api.depends('survey_id')  # fake trigger otherwise not computed in new mode
     def _compute_render_model(self):
         self.render_model = 'survey.user_input'
+
+    def _compute_model(self):
+        for invite in self:
+            invite.model = self.env.context.get('active_model')
+
+    def _compute_res_ids(self):
+        context = self.env.context
+        for invite in self.filtered(lambda invite: not invite.res_ids):
+            active_res_ids = parse_res_ids(context.get('active_ids'), self.env)
+            if active_res_ids:
+                invite.res_ids = f"{context['active_ids']}"
+            elif not active_res_ids and context.get('active_id'):
+                invite.res_ids = f"{[context['active_id']]}"
 
     @api.onchange('emails')
     def _onchange_emails(self):
@@ -245,6 +265,7 @@ class SurveyInvite(models.TransientModel):
             'model': None,
             'res_id': None,
             'subject': subject,
+            'scheduled_date': self.scheduled_date,
         }
         if answer.partner_id:
             mail_values['recipient_ids'] = [(4, answer.partner_id.id)]
@@ -264,6 +285,9 @@ class SurveyInvite(models.TransientModel):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed """
         self.ensure_one()
+        if self.scheduled_date and self.deadline and self.scheduled_date > self.deadline:
+            raise UserError(self.env._('The answer deadline should be greater than the Email Schedule Date.'))
+
         Partner = self.env['res.partner']
 
         # compute partners and emails, try to find partners for given emails
