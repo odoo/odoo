@@ -1062,6 +1062,7 @@ class Website(models.Model):
             fallback_create_missing_industry_image('s_carousel_cards_default_image_1', 's_carousel_default_image_1')
             fallback_create_missing_industry_image('s_carousel_cards_default_image_2', 's_carousel_default_image_2')
             fallback_create_missing_industry_image('s_carousel_cards_default_image_3', 's_carousel_default_image_3')
+            fallback_create_missing_industry_image('s_banner_connected_default_image', 's_cover_default_image')
 
         except Exception:
             pass
