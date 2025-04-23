@@ -1,7 +1,7 @@
 from odoo import models, fields, api
 import requests
 import logging
-
+from odoo.exceptions import UserError, ValidationError
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -45,8 +45,13 @@ class SaleOrder(models.Model):
             ])
             # Filter only "pick" type pickings
             pick_only_picking_records = picking_records.filtered(
-                lambda p: 'Pick' in p.picking_type_id.name  # Adjust logic based on your type naming convention
+                lambda p: 'Pick' in p.picking_type_id.name
             )
+            waiting_pickings = pick_only_picking_records.filtered(lambda p: p.state == 'confirmed')
+            if waiting_pickings:
+                pick_names = ', '.join(waiting_pickings.mapped('name'))
+                raise ValidationError(
+                    f"Cannot release order {order.name}: Picking {pick_names} are in 'waiting' state.")
 
             for line in order.order_line:
                 product_qty = line.product_uom_qty
@@ -116,11 +121,14 @@ class SaleOrder(models.Model):
                         product_available_in_source = True
                         break
 
-                # if not product_available_in_source:
-                #     logger.warning(
-                #         f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}.")
-                #     all_products_available = False
-                #     break
+                if not product_available_in_source:
+                    message = (
+                        f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}."
+                    )
+                    logger.warning(message)
+                    raise ValidationError(message)
+                    all_products_available = False
+                    break
 
                 # Collect pickings that include the product
                 product_pickings = pick_only_picking_records.filtered(
@@ -163,21 +171,21 @@ class SaleOrder(models.Model):
                 logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 # Send data to external API based on env
-                release_url = (
-                    "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
-                    if is_production == 'True'
-                    else "https://shiperooconnect-dev.automation.shiperoo.com/api/odoo_release"
-                )
-                headers = {
-                    "Content-Type": "application/json"
-                }
-                response = requests.post(release_url, json=data_to_send, headers=headers)
-                if response.status_code == 200:
-                    logger.info(f"Order {order.name} data successfully sent to external system.")
-                else:
-                    logger.error(
-                        f"Failed to send order {order.name} data to external system. Response: {response.text}")
-                    order.is_released = 'unreleased'
+                # release_url = (
+                #     "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
+                #     if is_production == 'True'
+                #     else "https://shiperooconnect-dev.automation.shiperoo.com/api/odoo_release"
+                # )
+                # headers = {
+                #     "Content-Type": "application/json"
+                # }
+                # response = requests.post(release_url, json=data_to_send, headers=headers)
+                # if response.status_code == 200:
+                #     logger.info(f"Order {order.name} data successfully sent to external system.")
+                # else:
+                #     logger.error(
+                #         f"Failed to send order {order.name} data to external system. Response: {response.text}")
+                #     order.is_released = 'unreleased'
             else:
                 order.is_released = 'unreleased'
             logger.info(f"Order {order.name} released: {order.is_released}")
