@@ -548,3 +548,8 @@ class TestFrontend(TestFrontendCommon):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.pos_config.id}", 'test_combo_preparation_receipt_layout', login="pos_admin")
+
+    def test_tip_after_payment(self):
+        self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_tip_after_payment')

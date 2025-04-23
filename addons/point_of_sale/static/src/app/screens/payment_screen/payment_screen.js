@@ -226,7 +226,6 @@ export class PaymentScreen extends Component {
         if (newTip === undefined) {
             return;
         }
-
         await this.pos.setTip(parseFloat(newTip ?? ""));
         const pLine =
             this.selectedPaymentLine &&
@@ -243,8 +242,9 @@ export class PaymentScreen extends Component {
             );
             return;
         }
-
-        pLine.setAmount(pLine.getAmount() - (tip || 0) + parseFloat(newTip));
+        const tipDifference = parseFloat(newTip) - (tip || 0);
+        const tipToAdd = change <= 0 ? tipDifference : Math.max(0, tipDifference - change);
+        pLine.setAmount(pLine.getAmount() + tipToAdd);
     }
     async toggleShippingDatePicker() {
         if (!this.currentOrder.getShippingDate()) {
