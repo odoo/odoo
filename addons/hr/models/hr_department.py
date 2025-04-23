@@ -236,3 +236,9 @@ class Department(models.Model):
         }
 
         return hierarchy
+
+    def _get_all_members(self):
+        members = self.member_ids
+        for child in self.child_ids:
+            members |= child._get_all_members()
+        return members

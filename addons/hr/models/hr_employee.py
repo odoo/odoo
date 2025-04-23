@@ -505,7 +505,7 @@ class HrEmployeePrivate(models.Model):
         employee_departments = employees.department_id
         if employee_departments:
             self.env['discuss.channel'].sudo().search([
-                ('subscription_department_ids', 'in', employee_departments.ids)
+                ('subscription_department_ids', 'parent_of', employee_departments.ids)
             ])._subscribe_users_automatically()
         onboarding_notes_bodies = {}
         hr_root_menu = self.env.ref('hr.menu_hr_root')
@@ -543,9 +543,10 @@ class HrEmployeePrivate(models.Model):
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
-            self.env['discuss.channel'].sudo().search([
-                ('subscription_department_ids', 'in', department_id)
-            ])._subscribe_users_automatically()
+            if department_id:
+                self.env['discuss.channel'].sudo().search([
+                    ('subscription_department_ids', 'parent_of', department_id)
+                ])._subscribe_users_automatically()
         if vals.get('departure_description'):
             for employee in self:
                 employee.message_post(body=_(
