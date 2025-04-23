@@ -3,7 +3,13 @@ import { BUILTINS } from "./py_js/py_builtin";
 import { evaluate } from "./py_js/py_interpreter";
 
 /**
- * @typedef {{[key: string]: any}} Context
+ * @typedef {{
+ *  lang?: string;
+ *  uid?: number;
+ *  tz?: string;
+ *  [key: string]: unknown;
+ * }} Context
+ *
  * @typedef {Context | string | undefined} ContextDescription
  */
 
@@ -57,7 +63,7 @@ function getPartialNames(ast) {
  * contains keys whose values are static or can be evaluated with the given evaluation context.
  *
  * @param {string} context
- * @param {Object} [evaluationContext={}]
+ * @param {Context} [evaluationContext={}]
  * @returns {Context}
  */
 export function evalPartialContext(_context, evaluationContext = {}) {

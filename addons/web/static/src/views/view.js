@@ -35,7 +35,7 @@ import { session } from "@web/session";
  * @property {typeof Component} Banner
  *
  * @typedef {import("@web/env").OdooEnv} OdooEnv
- * @typedef {import("./utils").OrderTerm} OrderTerm
+ * @typedef {import("@web/search/utils/order_by").OrderTerm} OrderTerm
  *
  * @typedef ViewProps
  * @property {string} resModel
