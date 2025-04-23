@@ -167,10 +167,11 @@ export class ListRenderer extends Component {
             this.allColumns = this.processAllColumn(this.props.archInfo.columns, this.props.list);
             Object.assign(this.optionalActiveFields, this.computeOptionalActiveFields());
             this.debugOpenView = exprToBoolean(browser.localStorage.getItem(this.keyDebugOpenView));
-            this.columns = this.getActiveColumns(this.props.list);
+            this.columns = this.getActiveColumns();
             this.withHandleColumn = this.columns.some((col) => col.widget === "handle");
         });
         let dataRowId;
+        let dataGroupId;
         this.rootRef = useRef("root");
         this.resequencePromise = Promise.resolve();
         useSortable({
@@ -185,10 +186,11 @@ export class ListRenderer extends Component {
             onDragStart: (params) => {
                 const { element } = params;
                 dataRowId = element.dataset.id;
+                dataGroupId = this.props.list.isGrouped && element.dataset.groupId;
                 return this.sortStart(params);
             },
             onDragEnd: (params) => this.sortStop(params),
-            onDrop: (params) => this.sortDrop(dataRowId, params),
+            onDrop: (params) => this.sortDrop(dataRowId, dataGroupId, params),
         });
 
         if (this.env.searchModel) {
@@ -270,14 +272,8 @@ export class ListRenderer extends Component {
         });
     }
 
-    /**
-     * @param {DynamicList | StaticList} list
-     */
-    getActiveColumns(list) {
+    getActiveColumns() {
         return this.allColumns.filter((col) => {
-            if (list.isGrouped && col.widget === "handle") {
-                return false; // no handle column if the list is grouped
-            }
             if (col.optional && !this.optionalActiveFields[col.name]) {
                 return false;
             }
@@ -693,7 +689,7 @@ export class ListRenderer extends Component {
         const { widget, attrs } = column;
         const field = this.props.list.fields[column.name];
         const aggregateValue = group.aggregates[column.name];
-        if (!(column.name in group.aggregates)) {
+        if (!(column.name in group.aggregates) || widget === "handle") {
             return "";
         }
         const formatter = formatters.get(widget, false) || formatters.get(field.type, false);
@@ -955,7 +951,9 @@ export class ListRenderer extends Component {
     // [ group name ][ aggregate cells  ][ pager]
     // TODO: move this somewhere, compute this only once (same result for each groups actually) ?
     getFirstAggregateIndex(group) {
-        return this.columns.findIndex((col) => col.name in group.aggregates);
+        return this.columns.findIndex(
+            (col) => col.name in group.aggregates && col.widget !== "handle"
+        );
     }
     getLastAggregateIndex(group) {
         const reversedColumns = [...this.columns].reverse(); // reverse is destructive
@@ -2011,14 +2009,23 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} [params.parent]
      * @param {HTMLElement} [params.previous]
      */
-    async sortDrop(dataRowId, { element, previous }) {
+    async sortDrop(dataRowId, dataGroupId, { element, previous }) {
         await this.props.list.leaveEditMode();
         element.classList.remove("o_row_draggable");
         const refId = previous ? previous.dataset.id : null;
         try {
-            this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
-                handleField: this.props.list.handleField,
-            });
+            if (dataGroupId) {
+                this.resequencePromise = this.props.list.moveRecord(
+                    dataRowId,
+                    dataGroupId,
+                    refId,
+                    previous.dataset.groupId
+                );
+            } else {
+                this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
+                    handleField: this.props.list.handleField,
+                });
+            }
             await this.resequencePromise;
         } finally {
             element.classList.add("o_row_draggable");
