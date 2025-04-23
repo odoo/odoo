@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="survey.SurveyAttachmentUploader">
+        <FileInput
+                    acceptedFileExtensions="props.acceptedFileExtensions"
+                    multiUpload="true"
+                    onUpload.bind="onFileUploaded"
+                    resModel="props.record.resModel"
+                    resId="props.record.resId or 0"
+                >
+                    <button class="btn btn-light w-auto" data-tooltip="Add Attachment">
+                        <span class="fa fa-paperclip" aria-label="Attach"/>
+                    </button>
+        </FileInput>
+    </t>
+</templates>

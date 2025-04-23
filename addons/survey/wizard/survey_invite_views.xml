@@ -8,6 +8,8 @@
                 <form string="Compose Email" class="o_mail_composer_form">
                     <group col="1">
                         <group col="2">
+                            <field name="model" invisible="1"/>
+                            <field name="res_ids" invisible="1"/>
                             <field name="author_id" invisible="1"/>
                             <field name="survey_access_mode" invisible="1"/>
                             <field name="survey_users_login_required" invisible="1"/>
@@ -48,7 +50,7 @@
                             </group>
                         </div>
                         <group col="2">
-                            <field name="subject" invisible="not send_email" placeholder="Subject..."/>
+                            <field name="subject" invisible="not send_email" placeholder="Subject..." widget="char_emojis"/>
                         </group>
                         <field name="can_edit_body" invisible="1"/>
                         <field name="body" class="oe-bordered-editor border border-1 m-3 p-0 flex-fill"
@@ -58,17 +60,17 @@
                             readonly="not can_edit_body" force_save="1"/>
                         <group invisible="not send_email">
                             <group>
-                                <field name="attachment_ids" widget="many2many_binary"/>
-                            </group>
-                            <group>
                                 <field name="deadline"/>
-                                <field name="template_id" label="Use template"/>
+                                <field name="attachment_ids" widget="survey_attachment_list" nolabel="1" colspan="2"/>
                             </group>
                         </group>
                     </group>
                     <footer>
                         <button string="Send" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <field name="attachment_ids" widget="survey_attachment_uploader" invisible="not send_email" data-hotkey="a"/>
+                        <field name="template_id" widget="mail_composer_template_selector" invisible="not send_email"/>
+                        <field name="scheduled_date" widget="text_scheduled_date" invisible="not send_email"/>
                     </footer>
                 </form>
             </field>

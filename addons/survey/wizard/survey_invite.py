@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 import logging
 import re
 import werkzeug
@@ -8,6 +9,7 @@ import werkzeug
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.mail import email_split_and_format, email_normalize
+from odoo.addons.mail.wizard.mail_compose_message import _reopen
 
 _logger = logging.getLogger(__name__)
 
@@ -61,6 +63,23 @@ class SurveyInvite(models.TransientModel):
     deadline = fields.Datetime(string="Answer deadline")
     send_email = fields.Boolean(compute="_compute_send_email",
                                 inverse="_inverse_send_email")
+    survey_type = fields.Selection(related="survey_id.survey_type")
+    scheduled_date = fields.Char(
+        'Scheduled Date',
+        compute="_compute_schedule_date", readonly=False, store=True,
+        help="send emails after that date. This date is considered as being in UTC timezone."
+    )
+    model = fields.Char('Related Document Model', compute='_compute_model', readonly=False, store=True)
+    res_ids = fields.Text('Related Document IDs', compute='_compute_res_ids', readonly=False, store=True)
+    template_name = fields.Char('Template Name')  # used when saving a new mail template
+
+    @api.depends('template_id')
+    def _compute_schedule_date(self):
+        for invite in self:
+            if invite.template_id:
+                invite.scheduled_date = invite.template_id.scheduled_date
+            else:
+                invite.scheduled_date = False
 
     @api.depends('survey_access_mode')
     def _compute_send_email(self):
@@ -109,6 +128,16 @@ class SurveyInvite(models.TransientModel):
     @api.depends('survey_id')  # fake trigger otherwise not computed in new mode
     def _compute_render_model(self):
         self.render_model = 'survey.user_input'
+
+    @api.depends('template_id')
+    def _compute_model(self):
+        for invite in self:
+            invite.model = 'survey.user_input'
+
+    @api.depends('template_id')
+    def _compute_res_ids(self):
+        for invite in self:
+            invite.res_ids = invite.survey_id.ids
 
     @api.onchange('emails')
     def _onchange_emails(self):
@@ -245,6 +274,7 @@ class SurveyInvite(models.TransientModel):
             'model': None,
             'res_id': None,
             'subject': subject,
+            'scheduled_date': self.scheduled_date,
         }
         if answer.partner_id:
             mail_values['recipient_ids'] = [(4, answer.partner_id.id)]
@@ -271,6 +301,10 @@ class SurveyInvite(models.TransientModel):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed """
         self.ensure_one()
+        if self.scheduled_date and self.deadline and \
+            datetime.strptime(self.scheduled_date, "%Y-%m-%d %H:%M:%S") > self.deadline:
+            raise UserError(_('The answer deadline should be greater than the Email Schedule Date.'))
+
         Partner = self.env['res.partner']
 
         # compute partners and emails, try to find partners for given emails
@@ -300,3 +334,45 @@ class SurveyInvite(models.TransientModel):
             self._send_mail(answer)
 
         return {'type': 'ir.actions.act_window_close'}
+
+    def open_template_creation_wizard(self):
+        """ hit save as template button: opens a wizard that prompts for the template's subject.
+            `create_mail_template` is called when saving the new wizard. """
+
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': self.env.ref('mail.mail_compose_message_view_form_template_save').id,
+            'name': _('Create a Mail Template'),
+            'res_model': 'survey.invite',
+            'context': {'dialog_size': 'medium'},
+            'target': 'new',
+            'res_id': self.id,
+        }
+
+    def create_mail_template(self):
+        """ Creates a mail template with the current mail composer's fields. """
+        self.ensure_one()
+        if not self.model or not self.model in self.env:
+            raise UserError(_('Template creation from composer requires a valid model.'))
+        model_id = self.env['ir.model']._get_id(self.model)
+        values = {
+            'name': self.template_name or self.subject,
+            'subject': self.subject,
+            'body_html': self.body,
+            'model_id': model_id,
+            'use_default_to': True,
+            'user_id': self.env.uid,
+        }
+        template = self.env['mail.template'].create(values)
+
+        # generate the saved template
+        self.write({'template_id': template.id})
+        return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
+
+    def cancel_save_template(self):
+        """ Restore old subject when canceling the 'save as template' action
+            as it was erased to let user give a more custom input. """
+        self.ensure_one()
+        return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
