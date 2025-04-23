@@ -67,6 +67,10 @@ class MrpProductionSplit(models.TransientModel):
 
     def action_split(self):
         productions = self.production_id._split_productions({self.production_id: [detail.quantity for detail in self.production_detailed_vals_ids]})
+        # Reassign the raw moves to make sure that the lots are assigned based on the removal strategy
+        raw_moves = productions.mapped('move_raw_ids')
+        raw_moves._do_unreserve()
+        raw_moves._action_assign()
         for production, detail in zip(productions, self.production_detailed_vals_ids):
             production.user_id = detail.user_id
             production.date_start = detail.date
