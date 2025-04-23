@@ -380,7 +380,10 @@ class ChatbotScriptStep(models.Model):
             # next, add the human_operator to the channel and post a "Operator invited to the channel" notification
             discuss_channel.sudo()._add_members(
                 users=human_operator,
-                create_member_params={"livechat_member_type": "agent"},
+                create_member_params={
+                    "livechat_member_type": "agent",
+                    "agent_expertise_ids": self.operator_expertise_ids.ids,
+                },
                 inviting_partner=self.chatbot_script_id.operator_partner_id,
             )
             # sudo - discuss.channel: let the chat bot proceed to the forward step (change channel operator, add human operator
