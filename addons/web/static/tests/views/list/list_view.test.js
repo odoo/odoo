@@ -1880,12 +1880,13 @@ test(`basic grouped list rendering with widget="handle" col`, async () => {
     `,
         groupBy: ["bar"],
     });
-    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(2, {
-        message: "should have 1 th for checkbox (desktop only), 1 th for Foo, 1 th for Bar",
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(3, {
+        message:
+            "should have 1 th for checkbox (desktop only), 1 th for handle, 1 th for Foo, 1 th for Bar",
     });
     expect(`thead th[data-name=foo]`).toHaveCount(1);
     expect(`thead th[data-name=bar]`).toHaveCount(1);
-    expect(`thead th[data-name=int_field]`).toHaveCount(0);
+    expect(`thead th[data-name=int_field]`).toHaveCount(1);
     expect(`tr.o_group_header`).toHaveCount(2);
     expect(`th.o_group_name`).toHaveCount(2);
     expect(`.o_group_header:eq(0) th`).toHaveCount(2); // group name + colspan 2
@@ -10067,6 +10068,80 @@ test(`editable list with handle widget`, async () => {
 
     await contains(`tbody tr:eq(1) div[name='amount']`).click();
     expect(`tbody tr:eq(1) td:last input`).toHaveValue("0", {
+        message: "the edited record should be the good one",
+    });
+});
+
+test.tags("desktop");
+test(`editable grouped list with handle widget`, async () => {
+    // resequence makes sense on a sequence field, not on arbitrary fields
+    Foo._records[0].int_field = 0;
+    Foo._records[1].int_field = 1;
+    Foo._records[2].int_field = 2;
+    Foo._records[3].int_field = 3;
+
+    onRpc("web_resequence", async ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+    });
+    onRpc("web_save", async ({ args }) => {
+        expect.step(["web_save", args[0]]);
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="top" default_order="int_field">
+                <field name="int_field" widget="handle"/>
+                <field name="amount" widget="float" digits="[5,0]"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+    });
+    expect(`.o_group_header`).toHaveCount(2);
+    await contains(`.o_group_header:first`).click();
+    await contains(`.o_group_header:last`).click();
+    expect(`.o_group_header:first`).toHaveText("No (1)\n 0");
+    expect(`.o_group_header:last`).toHaveText("Yes (3)\n 2,000");
+    expect(`tbody .o_data_row:eq(0) td:last`).toHaveText("0", {
+        message: "default fourth record should have amount 0",
+    });
+    expect(`tbody .o_data_row:eq(1) td:last`).toHaveText("1,200", {
+        message: "default first record should have amount 1,200",
+    });
+    expect(`tbody .o_data_row:eq(2) td:last`).toHaveText("500", {
+        message: "default second record should have amount 500",
+    });
+    expect(`tbody .o_data_row:eq(3) td:last`).toHaveText("300", {
+        message: "default third record should have amount 300",
+    });
+
+    // Drag and drop the fourth line in second position
+    await contains(`tbody .o_data_row:eq(3) .o_handle_cell`).dragAndDrop(
+        queryFirst(`tbody tr:eq(1)`)
+    );
+    expect.verifySteps([
+        ["web_save", [3]],
+        ["web_resequence", [3], "int_field", 2],
+    ]);
+    // Aggregates are not updated, todo later?
+    expect(`.o_group_header:first`).toHaveText("No (2)\n 0");
+    expect(`.o_group_header:last`).toHaveText("Yes (2)\n 2,000");
+    expect(`tbody .o_data_row:eq(0) td:last`).toHaveText("300", {
+        message: "new first record should have amount 300",
+    });
+    expect(`tbody .o_data_row:eq(1) td:last`).toHaveText("0", {
+        message: "new second record should have amount 0",
+    });
+    expect(`tbody .o_data_row:eq(2) td:last`).toHaveText("1,200", {
+        message: "new third record should have amount 1,200",
+    });
+    expect(`tbody .o_data_row:eq(3) td:last`).toHaveText("500", {
+        message: "new fourth record should have amount 500",
+    });
+
+    await contains(`tbody .o_data_row:eq(0) div[name='amount']`).click();
+    expect(`tbody .o_data_row:eq(0) td:last input`).toHaveValue("300", {
         message: "the edited record should be the good one",
     });
 });
