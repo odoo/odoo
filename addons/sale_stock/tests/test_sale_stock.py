@@ -2167,6 +2167,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[0].location_dest_id, child_location_1)
         self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[1].location_dest_id, child_location_2)
 
+<<<<<<< b65abb84dad07cccffb3b63443f648ecd681ca11
     def test_custom_delivery_route_new_sale_line(self):
         """
         Create a custom delivery route Stock -> Transit -> Customer that uses pull rules.
@@ -2254,3 +2255,47 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             so.order_line.free_qty_today, 1.0,
             "Free quantity today should be 1.0, indicating the quantity is usable for this SO."
         )
+||||||| e54991210ef2b0b5d4ea7498ff6e593915b9b4a9
+=======
+    def test_update_sol_quantity_without_packaging(self):
+        """
+        Test updating a SOL quantity without specifying a packaging (eg through catalog).
+        Ensure both the move's quantity & packaging are correctly updated.
+        """
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        wh.delivery_steps = 'pick_pack_ship'
+
+        pack3, pack6 = self.env['product.packaging'].create([{
+            'name': 'Pack Of %s' % qty,
+            'product_id': self.product_a.id,
+            'qty': qty,
+        } for qty in [3, 6]])
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_a.uom_id.id,
+            })],
+        })
+        so.action_confirm()
+        self.assertFalse(so.order_line.product_packaging_id)
+
+        so.order_line.product_uom_qty = 12
+        self.assertEqual(so.order_line.product_packaging_id, pack6)
+        moves = so.procurement_group_id.stock_move_ids
+        self.assertRecordValues(moves, [
+            {'product_uom_qty': 12, 'product_packaging_qty': 2, 'product_packaging_id': pack6.id},
+            {'product_uom_qty': 12, 'product_packaging_qty': 2, 'product_packaging_id': pack6.id},
+            {'product_uom_qty': 12, 'product_packaging_qty': 2, 'product_packaging_id': pack6.id},
+        ])
+
+        pick_sm = moves.filtered(lambda sm: sm.location_id == wh.lot_stock_id)
+        pick_sm.product_packaging_id = pack3
+        self.assertRecordValues(moves, [
+            {'product_uom_qty': 12, 'product_packaging_qty': 4, 'product_packaging_id': pack3.id},
+            {'product_uom_qty': 12, 'product_packaging_qty': 4, 'product_packaging_id': pack3.id},
+            {'product_uom_qty': 12, 'product_packaging_qty': 4, 'product_packaging_id': pack3.id},
+        ])
+>>>>>>> 9c695d9132299851e24f7f9c9317ca95cf81a78f
