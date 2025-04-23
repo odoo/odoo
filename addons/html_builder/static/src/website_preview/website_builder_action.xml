@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        <ResizablePanel t-if="this.websiteContext.showResourceEditor" handleSide="'start'" class="'o_resource_editor_wrapper position-fixed'" onResize.bind="onResourceEditorResize" initialWidth="aceEditorWidth">
+        <ResizablePanel t-if="this.websiteContext.showResourceEditor" handleSide="'start'" class="'o_resource_editor_wrapper'" onResize.bind="onResourceEditorResize" initialWidth="aceEditorWidth">
             <ResourceEditor close="() => this.websiteContext.showResourceEditor = false"/>
         </ResizablePanel>
         <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
