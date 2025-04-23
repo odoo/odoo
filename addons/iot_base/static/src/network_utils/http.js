@@ -27,6 +27,7 @@ export function formatEndpoint(ip, route) {
     url.search = "";
     url.hostname = ip;
     url.pathname = route;
+    if (url.port) url.port = "8069";
     return url.toString();
 }
 
