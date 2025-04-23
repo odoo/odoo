@@ -581,3 +581,13 @@ registry.category("web_tour.tours").add("RefundRulesProduct", {
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_two_variant_same_discount", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Sofa"),
+            Chrome.clickBtn("Add"),
+        ].flat(),
+});
