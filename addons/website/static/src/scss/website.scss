@@ -1696,6 +1696,63 @@ header {
     }
 }
 
+// Mega menu templates adjusted in order to fit the vertically aligned header template.
+.o_header_sidebar,
+.o_header_navbar_hamburger {
+
+    .s_mega_menu_menu_image_menu,
+    .s_mega_menu_little_icons,
+    .s_mega_menu_big_icons_subtitles,
+    .s_mega_menu_images_subtitles,
+    .s_mega_menu_menus_logos,
+    .s_mega_menu_thumbnails,
+    .s_mega_menu_cards {
+        > .container .row div {
+            width: 100% !important;
+        }
+    }
+
+    .s_mega_menu_odoo_menu,
+    .s_mega_menu_multi_menus {
+        > .container .row div {
+            width: 50% !important;
+        }
+    }
+
+    // removes extra decorative element which is not to be shown in this header template
+    .s_mega_menu_big_icons_subtitles{
+        .o_we_shape{
+            display: none;
+        }
+    }
+
+    .s_mega_menu_menus_logos .s_mega_menu_menus_logos_wrapper {
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            justify-items: center;
+
+            div {
+                width: 100% !important;
+            }
+        }
+    }
+
+    .s_mega_menu_thumbnails .container .container .row div.col-6 {
+        width: 50% !important;
+    }
+    .s_mega_menu_thumbnails .container .container .row div:not(.col-6) {
+        display: none !important;
+    }
+    .s_mega_menu_thumbnails .s_mega_menu_thumbnails_footer .container{
+        flex-direction: column;
+        div{
+            width: 100% !important;
+        }
+    }
+
+}
+
 // Navbar Links Styles
 @if index(('block', 'border-bottom'), o-website-value('header-links-style')) {
     @include media-breakpoint-up(md) {
