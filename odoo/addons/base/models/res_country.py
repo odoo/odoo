@@ -254,9 +254,10 @@ class ResCountryState(models.Model):
         return Domain.FALSE
 
     @api.depends('country_id')
+    @api.depends_context('formatted_display_name')
     def _compute_display_name(self):
-        if self.env.context.get('hide_country_from_state'):
-            return super()._compute_display_name()
-
         for record in self:
-            record.display_name = f"{record.name} ({record.country_id.code})"
+            if self.env.context.get('formatted_display_name'):
+                record.display_name = f"{record.name} <tab> --{record.country_id.code}--"
+            else:
+                record.display_name = f"{record.name} ({record.country_id.code})"
