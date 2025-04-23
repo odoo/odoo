@@ -1125,6 +1125,7 @@ class ChromeBrowser:
             'Runtime.exceptionThrown': self._handle_exception,
             'Page.frameStoppedLoading': self._handle_frame_stopped_loading,
             'Page.screencastFrame': self._handle_screencast_frame,
+            'Fetch.requestPaused': self._handle_request_paused,
         }
         self._receiver = threading.Thread(
             target=self._receive,
@@ -1149,6 +1150,8 @@ class ChromeBrowser:
         }
         emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.split(",")]
         self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
+
+        self._websocket_request('Fetch.enable')
 
     @property
     def screencasts_frames_dir(self):
@@ -1447,6 +1450,20 @@ class ChromeBrowser:
         self._logger.debug('\n-> %s', payload)
         self.ws.send(json.dumps(payload))
         return result
+
+    def _handle_request_paused(self, **params):
+        url = params['request']['url']
+        if url.startswith(f'http://{HOST}'):
+            self._websocket_send('Fetch.continueRequest', params={'requestId': params['requestId']})
+        elif response := self.test_case.fetch_proxy(url, params=params):
+            if response is True:  # TODO remove, temporary
+                self._websocket_send('Fetch.continueRequest', params={'requestId': params['requestId']})
+            else:
+                self._websocket_send('Fetch.fulfillRequest', params={'requestId': params['requestId'], **response})
+        else:
+            _logger.warning("Request to %s was blocked", url)
+            self._websocket_send('Fetch.failRequest', params={'requestId': params['requestId']})
+
 
     def _handle_console(self, type, args=None, stackTrace=None, **kw): # pylint: disable=redefined-builtin
         # console formatting differs somewhat from Python's, if args[0] has
@@ -2065,6 +2082,13 @@ class HttpCase(TransactionCase):
             browser.set_cookie(TEST_CURSOR_COOKIE_NAME, self.http_request_key, '/', HOST)
 
         return session
+
+    def fetch_proxy(self, url, params=None):
+        # see https://chromedevtools.github.io/devtools-protocol/tot/Fetch/#method-continueRequest
+        if '/fonts.' in url:
+            _logger.info('Allowing request to %s', url)
+            return True
+        return None
 
     def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
         """ Test JavaScript code running in the browser.
