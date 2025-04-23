@@ -111,8 +111,7 @@ registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
             PosHr.clickLoginButton(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickInfoProduct("product_a"),
-            Dialog.confirm("Close"),
+            ProductScreen.clickInfoProduct("product_a", [Dialog.confirm("Close")]),
             Dialog.isNot(),
         ].flat(),
 });
