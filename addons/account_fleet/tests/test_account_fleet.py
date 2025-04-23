@@ -12,9 +12,10 @@ class TestAccountFleet(AccountTestInvoicingCommon):
 
     @freeze_time('2021-09-15')
     def test_transfer_wizard_vehicle_info_propagation(self):
-        brand = self.env["fleet.vehicle.model.brand"].sudo().create({
+        self.env.user.group_ids |= self.env.ref("fleet.fleet_group_manager")
+        brand = self.env["fleet.vehicle.model.brand"].create({
             "name": "Audi",
-        }).sudo(False)
+        })
         model = self.env["fleet.vehicle.model"].create({
             "brand_id": brand.id,
             "name": "A3",

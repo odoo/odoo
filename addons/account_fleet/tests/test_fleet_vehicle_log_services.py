@@ -10,6 +10,7 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.group_ids |= cls.env.ref("fleet.fleet_group_manager")
         cls.vendor = cls.env['res.partner'].create({'name': "Vendor"})
         cls.purchaser = cls.env['res.partner'].create({'name': "Purchaser"})
         brand = cls.env["fleet.vehicle.model.brand"].create({
