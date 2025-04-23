@@ -40,6 +40,7 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
         cls.invoice = cls.init_invoice("out_invoice", products=cls.product_a+cls.product_b)
 
     def test_qrr(self):
+        self.env.ref('base.EUR').active = True
         test_invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner.id,
@@ -54,6 +55,7 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
         self.assertEqual(test_invoice.get_l10n_ch_qrr_number(), expected_qrr)
 
     def test_qrr_long_reference(self):
+        self.env.ref('base.EUR').active = True
         test_invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner.id,
