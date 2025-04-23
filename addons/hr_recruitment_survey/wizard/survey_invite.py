@@ -22,7 +22,8 @@ class SurveyInvite(models.TransientModel):
         mail = super()._send_mail(answer)
         if answer.applicant_id:
             answer.applicant_id.message_post(body=Markup(mail.body_html))
-            mail.send()
+            if not self.scheduled_date:
+                mail.send()
         return mail
 
     def action_invite(self):
