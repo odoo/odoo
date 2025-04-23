@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='pos_session_group']" position="before">
                 <div class="alert alert-warning oe_button_box" role="alert" invisible="not pos_session_id or employee_ids">
-                    Can't generate a report per employee! as selected session has no orders associated with any employee.
+                    Cannot generate report per employee: only one employee logged in during this session.
                 </div>
             </xpath>
             <xpath expr="//group[@name='pos_session_group']" position="after">
