@@ -5,11 +5,6 @@
         <field name="model">base.module.install.request</field>
         <field name="arch" type="xml">
             <form>
-                <div class="alert alert-warning oe_button_box" role="alert">
-                    <p class="mt-3">
-                        This app is included in your subscription. It's free to activate, but only an administrator can do it. Fill this form to send an activation request.
-                    </p>
-                </div>
                 <field name="module_id" invisible="1"/>
                 <group string="Send to:">
                     <field colspan="2" name="user_ids" widget="many2many_tags" nolabel="1"/>
@@ -30,11 +25,6 @@
         <field name="model">base.module.install.review</field>
         <field name="arch" type="xml">
             <form>
-                <div class="alert alert-success oe_button_box" role="alert">
-                    <p class="mt-3">
-                        No extra cost, this application is free.
-                    </p>
-                </div>
                 <field name="module_id" invisible="1"/>
                 <field name="module_ids" widget="many2many_tags" invisible="1"/>
                 <field name="modules_description"/>
