@@ -2,7 +2,7 @@
 
 from markupsafe import Markup
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.tools.misc import clean_context
 
 
@@ -22,7 +22,8 @@ class SurveyInvite(models.TransientModel):
         mail = super()._send_mail(answer)
         if answer.applicant_id:
             answer.applicant_id.message_post(body=Markup(mail.body_html))
-            mail.send()
+            if not self.scheduled_date:
+                mail.send()
         return mail
 
     def action_invite(self):
@@ -46,3 +47,14 @@ class SurveyInvite(models.TransientModel):
             body = Markup('<p>%s</p>') % content
             self.applicant_id.message_post(body=body)
         return super().action_invite()
+
+    @api.depends('existing_partner_ids', 'existing_emails', 'survey_type')
+    def _compute_existing_text(self):
+        super()._compute_existing_text()
+        for wizard in self:
+            if wizard.existing_partner_ids and wizard.survey_type == "recruitment":
+                existing_text = '%s: %s.' % (
+                    self.env._('The following applicant(s) have already received an invite'),
+                    ', '.join(wizard.mapped('existing_partner_ids.name'))
+                )
+                wizard.existing_text = existing_text
