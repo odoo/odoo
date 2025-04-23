@@ -219,13 +219,17 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values:
             lines = self.filtered(lambda r: r.state == 'sale' and not r.is_expense)
 
-        if 'product_packaging_id' in values:
-            self.move_ids.filtered(
-                lambda m: m.state not in ['cancel', 'done']
-            ).product_packaging_id = values['product_packaging_id']
+        old_packaging = {sol: sol.product_packaging_id for sol in self}
 
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
+
+        for sol in self:
+            if sol.product_packaging_id != old_packaging[sol]:
+                sol.move_ids.filtered(
+                    lambda m: m.state not in ['cancel', 'done']
+                ).product_packaging_id = sol.product_packaging_id
+
         if lines:
             lines._action_launch_stock_rule(previous_product_uom_qty=previous_product_uom_qty)
         return res

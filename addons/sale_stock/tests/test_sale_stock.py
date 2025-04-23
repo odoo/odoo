@@ -2339,3 +2339,41 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         intercom_location = self.env.ref('stock.stock_location_inter_company')
         self.assertEqual(so.picking_ids.location_dest_id, intercom_location)
         self.assertEqual(so.picking_ids.move_ids.location_dest_id, intercom_location)
+
+    def test_update_sol_quantity_without_packaging(self):
+        """
+        Test updating a SOL quantity without specifying a packaging (eg through catalog).
+        Ensure both the move's quantity & packaging are correctly updated.
+        """
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        wh.delivery_steps = 'pick_pack_ship'
+
+        pack3, pack6 = self.env['product.packaging'].create([{
+            'name': 'Pack Of %s' % qty,
+            'product_id': self.product_a.id,
+            'qty': qty,
+        } for qty in [3, 6]])
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_a.uom_id.id,
+            })],
+        })
+        so.action_confirm()
+        self.assertFalse(so.order_line.product_packaging_id)
+
+        so.order_line.product_uom_qty = 12
+        self.assertEqual(so.order_line.product_packaging_id, pack6)
+        moves = so.procurement_group_id.stock_move_ids
+        self.assertRecordValues(moves, [
+            {'product_uom_qty': 12, 'product_packaging_qty': 2, 'product_packaging_id': pack6.id},
+        ])
+
+        pick_sm = moves.filtered(lambda sm: sm.location_id == wh.lot_stock_id)
+        pick_sm.product_packaging_id = pack3
+        self.assertRecordValues(moves, [
+            {'product_uom_qty': 12, 'product_packaging_qty': 4, 'product_packaging_id': pack3.id},
+        ])
