@@ -73,6 +73,7 @@ class ResUsers(models.Model):
 
     def _check_credentials(self, credentials, env):
         if credentials['type'] == 'totp':
+            self._totp_rate_limit('code_check')
             sudo = self.sudo()
             key = base64.b32decode(sudo.totp_secret)
             match = TOTP(key).match(credentials['token'])
@@ -86,6 +87,7 @@ class ResUsers(models.Model):
 
             sudo.totp_last_counter = match
             _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
+            self._totp_rate_limit_purge('code_check')
             return {
                 'uid': self.env.user.id,
                 'auth_method': 'totp',
@@ -125,13 +127,12 @@ class ResUsers(models.Model):
             ('user_id', '=', self.id),
             ('create_date', '>=', datetime.now() - timedelta(seconds=interval)),
             ('limit_type', '=', limit_type),
-            ('ip', '=', ip),
         ]
         count = RateLimitLog.search_count(domain)
         if count >= limit:
             descriptions = {
-                'send_email': _('You reached the limit of authentication mails sent for your account'),
-                'code_check': _('You reached the limit of code verifications for your account'),
+                'send_email': _('You reached the limit of authentication mails sent for your account, please try again later.'),
+                'code_check': _('You reached the limit of code verifications for your account, please try again later.'),
             }
             description = descriptions.get(limit_type)
             raise AccessDenied(description)
@@ -144,12 +145,10 @@ class ResUsers(models.Model):
     def _totp_rate_limit_purge(self, limit_type):
         self.ensure_one()
         assert request, "A request is required to be able to rate limit TOTP related actions"
-        ip = request.httprequest.environ['REMOTE_ADDR']
         RateLimitLog = self.env['auth.totp.rate.limit.log'].sudo()
         RateLimitLog.search([
             ('user_id', '=', self.id),
             ('limit_type', '=', limit_type),
-            ('ip', '=', ip),
         ]).unlink()
 
     @check_identity
