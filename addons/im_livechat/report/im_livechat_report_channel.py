@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.tools import SQL
 
 
@@ -65,16 +65,10 @@ class Im_LivechatReportChannel(models.Model):
         readonly=True,
     )
     chatbot_script_id = fields.Many2one("chatbot.script", "Chatbot", readonly=True)
+    chatbot_answers_path = fields.Char("Chatbot Answers", readonly=True)
 
-    def init(self):
-        # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
-        tools.drop_view_if_exists(self.env.cr, 'im_livechat_report_channel')
-        self.env.cr.execute(
-            SQL("CREATE OR REPLACE VIEW im_livechat_report_channel AS (%s)",
-            self._query()
-        ))
-
-    def _query(self) -> SQL:
+    @property
+    def _table_query(self):
         return SQL("%s %s %s %s %s", self._cte(), self._select(), self._from(), self._where(), self._group_by())
 
     def _cte(self) -> SQL:
@@ -112,6 +106,13 @@ class Im_LivechatReportChannel(models.Model):
                        MIN(CASE WHEN chatbot_script_id IS NOT NULL THEN chatbot_script_id END) AS chatbot_script_id
                   FROM im_livechat_channel_member_history
               GROUP BY channel_id
+            ),
+            chatbot_answer_history AS (
+                SELECT discuss_channel_id AS channel_id,
+                    STRING_AGG(user_raw_script_answer_id::TEXT, ' - ' ORDER BY chatbot_message.id) AS answers_path
+                  FROM chatbot_message
+                 WHERE user_raw_script_answer_id IS NOT NULL
+              GROUP BY chatbot_message.discuss_channel_id
             )
             """)
 
@@ -177,7 +178,8 @@ class Im_LivechatReportChannel(models.Model):
                         THEN EXTRACT(EPOCH FROM discuss_call_history.end_dt - discuss_call_history.start_dt) / 3600
                         ELSE NULL
                     END
-                ) AS call_duration_hour
+                ) AS call_duration_hour,
+                (ARRAY_AGG(chatbot_answer_history.answers_path))[1] as chatbot_answers_path
             """,
         )
 
@@ -186,6 +188,7 @@ class Im_LivechatReportChannel(models.Model):
             """
             FROM discuss_channel C
             JOIN message_vals ON message_vals.channel_id = c.id
+       LEFT JOIN chatbot_answer_history ON chatbot_answer_history.channel_id = C.id
        LEFT JOIN channel_member_history ON channel_member_history.channel_id = c.id
        LEFT JOIN discuss_call_history ON discuss_call_history.channel_id = C.id
        LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
@@ -212,3 +215,32 @@ class Im_LivechatReportChannel(models.Model):
                 channel_member_history.chatbot_script_id
             """,
         )
+
+    @api.model
+    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
+        # Update chatbot_answers_path label: ids are used for grouping but names
+        # should be displayed.
+        result = super().formatted_read_group(
+            domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order
+        )
+        answer_ids = {
+            int(answer_id.strip())
+            for entry in result
+            if entry.get("chatbot_answers_path")
+            for answer_id in entry["chatbot_answers_path"].split("-")
+        }
+        answer_name_by_id = {
+            answer.id: answer.name
+            for answer in self.env["chatbot.script.answer"].search_fetch(
+                [("id", "in", answer_ids)],
+                ["name"],
+            )
+        }
+        for entry in result:
+            if not (path := entry.get("chatbot_answers_path")):
+                continue
+            id_list = [int(answer_id.strip()) for answer_id in path.split("-")]
+            entry["chatbot_answers_path"] = " - ".join(
+                answer_name_by_id.get(answer_id, self.env._("Unknown")) for answer_id in id_list
+            )
+        return result
