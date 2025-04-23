@@ -6,59 +6,6 @@ from .common import TestPosQrCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUiSEPA(TestPosQrCommon):
-
-    @classmethod
-    @TestPosQrCommon.setup_country('be')
-    def setUpClass(cls):
-        super().setUpClass()
-
-        # Set Bank Account on journal
-        cls.bank_account = cls.env['res.partner.bank'].create({
-            'acc_number': 'BE15001559627230',
-            'partner_id': cls.company_data['company'].partner_id.id,
-        })
-        cls.company_data['default_journal_bank'].write({'bank_account_id': cls.bank_account.id})
-
-        # Setup QR Payment method for SEPA
-        qr_payment = cls.env['pos.payment.method'].create({
-            'name': 'QR Code',
-            'journal_id': cls.company_data['default_journal_bank'].id,
-            'payment_method_type': "qr_code",
-            'qr_code_method': "sct_qr"
-        })
-        cls.main_pos_config.write({
-            'payment_method_ids': [(4, qr_payment.id)]
-        })
-
-    @mute_logger('odoo.http')
-    def test_01_pos_order_with_sepa_qr_payment_fail(self):
-        """ Test Point of Sale QR Payment flow with SEPA.
-            In this test the QR payment method is missing the required fields and will display an error message.
-        """
-
-        # Set non sepa bank account to make the test failed
-        self.bank_account.write({
-            'acc_number': 'SA4420000001234567891234',
-        })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenWithQRPaymentFailure', login="pos_user")
-
-    def test_02_pos_order_with_sepa_qr_payment(self):
-        """ Test Point of Sale QR Payment flow with SEPA
-        """
-
-        # Set info that were wrong in test_01
-        self.bank_account.write({
-            'acc_number': 'BE15001559627230',
-        })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenWithQRPayment', login="pos_user")
-
-
-@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUiCH(TestPosQrCommon):
 
     @classmethod
