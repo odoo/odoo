@@ -524,8 +524,9 @@ class SlideChannel(models.Model):
     @api.model
     def _compute_has_requested_access(self):
         requested_cids = self.sudo().activity_search(
-            ['website_slides.mail_activity_data_access_request'],
-            additional_domain=[('request_partner_id', '=', self.env.user.partner_id.id)]
+            ['mail.mail_activity_type_todo'],
+            additional_domain=[('request_partner_id', '=', self.env.user.partner_id.id)],
+            only_automated=False,
         ).mapped('res_id')
         for channel in self:
             channel.has_requested_access = channel.id in requested_cids
@@ -769,7 +770,10 @@ class SlideChannel(models.Model):
 
         if vals.get('user_id'):
             self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
-            self.activity_reschedule(['website_slides.mail_activity_data_access_request'], new_user_id=vals.get('user_id'))
+            self.activity_reschedule(
+                ['mail_activity_data_todo'],
+                new_user_id=vals.get('user_id'),
+            )
         if 'enroll_group_ids' in vals:
             self._add_groups_members()
 
@@ -1121,16 +1125,18 @@ class SlideChannel(models.Model):
         if partner:
             if self._action_add_members(partner):
                 self.activity_search(
-                    ['website_slides.mail_activity_data_access_request'],
-                    user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)]
+                    ['mail.mail_activity_data_todo'],
+                    user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)],
+                    only_automated=False,
                 ).action_feedback(feedback=_('Access Granted'))
 
     def action_refuse_access(self, partner_id):
         partner = self.env['res.partner'].browse(partner_id).exists()
         if partner:
             self.activity_search(
-                ['website_slides.mail_activity_data_access_request'],
-                user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)]
+                ['mail.mail_activity_data_todo'],
+                user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)],
+                only_automated=False,
             ).action_feedback(feedback=_('Access Refused'))
 
     # ---------------------------------------------------------
@@ -1145,14 +1151,15 @@ class SlideChannel(models.Model):
     def _action_request_access(self, partner):
         activities = self.env['mail.activity']
         requested_cids = self.sudo().activity_search(
-            ['website_slides.mail_activity_data_access_request'],
-            additional_domain=[('request_partner_id', '=', partner.id)]
+            ['mail.mail_activity_data_todo'],
+            additional_domain=[('request_partner_id', '=', partner.id)],
         ).mapped('res_id')
         for channel in self:
             if channel.id not in requested_cids and channel.user_id:
                 activities += channel.activity_schedule(
-                    'website_slides.mail_activity_data_access_request',
+                    'mail.mail_activity_data_todo',
                     note=_('<b>%s</b> is requesting access to this course.', partner.name),
+                    summary=_('Access Request'),
                     user_id=channel.user_id.id,
                     request_partner_id=partner.id
                 )
