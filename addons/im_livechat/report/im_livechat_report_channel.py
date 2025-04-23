@@ -61,6 +61,7 @@ class Im_LivechatReportChannel(models.Model):
         readonly=True,
     )
     chatbot_script_id = fields.Many2one("chatbot.script", "Chatbot", readonly=True)
+    session_expertises = fields.Char("Expertises used in this session", readonly=True)
 
     def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
@@ -108,8 +109,30 @@ class Im_LivechatReportChannel(models.Model):
                        MIN(CASE WHEN chatbot_script_id IS NOT NULL THEN chatbot_script_id END) AS chatbot_script_id
                   FROM im_livechat_channel_member_history
               GROUP BY channel_id
+            ),
+            expertise_history AS (
+                SELECT im_livechat_channel_member_history.channel_id,
+                       STRING_AGG(
+                             COALESCE(
+                                 im_livechat_expertise.name->>%s,
+                                 im_livechat_expertise.name->>'en_US',
+                                 fallback.value
+                             ),
+                             ' - ' ORDER BY im_livechat_expertise.id
+                         ) AS expertises
+                  FROM im_livechat_channel_member_history_im_livechat_expertise_rel REL
+                  JOIN im_livechat_expertise ON im_livechat_expertise.id = REL.im_livechat_expertise_id
+                  JOIN im_livechat_channel_member_history ON im_livechat_channel_member_history.id = REL.im_livechat_channel_member_history_id
+          JOIN LATERAL (
+                            SELECT value
+                              FROM jsonb_each_text(im_livechat_expertise.name)
+                             LIMIT 1
+                        ) AS fallback ON TRUE
+              GROUP BY channel_id
             )
-            """)
+            """,
+            self.env.lang,
+        )
 
     def _select(self) -> SQL:
         return SQL(
@@ -165,7 +188,8 @@ class Im_LivechatReportChannel(models.Model):
                 C.livechat_operator_id as partner_id,
                 CASE WHEN channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_agent,
                 CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot,
-                CASE WHEN channel_member_history.chatbot_script_id IS NOT NULL AND NOT channel_member_history.has_agent THEN channel_member_history.chatbot_script_id ELSE NULL END AS chatbot_script_id
+                CASE WHEN channel_member_history.chatbot_script_id IS NOT NULL AND NOT channel_member_history.has_agent THEN channel_member_history.chatbot_script_id ELSE NULL END AS chatbot_script_id,
+                (ARRAY_AGG(expertise_history.expertises))[1] AS session_expertises
             """,
         )
 
@@ -174,6 +198,7 @@ class Im_LivechatReportChannel(models.Model):
             """
             FROM discuss_channel C
             JOIN message_vals ON message_vals.channel_id = c.id
+       LEFT JOIN expertise_history ON expertise_history.channel_id = C.id
        LEFT JOIN channel_member_history ON channel_member_history.channel_id = c.id
        LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
             """,
