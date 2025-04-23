@@ -2,7 +2,7 @@ from contextlib import contextmanager
 from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
@@ -121,7 +121,7 @@ class EventCase(common.TransactionCase):
         cls.event_question_1 = cls.env['event.question'].create({
             'title': 'Question1',
             'question_type': 'simple_choice',
-            'event_type_id': cls.event_type_questions.id,
+            'event_type_ids': [Command.set(cls.event_type_questions.ids)],
             'once_per_order': False,
             'answer_ids': [
                 (0, 0, {'name': 'Q1-Answer1'}),
@@ -131,7 +131,7 @@ class EventCase(common.TransactionCase):
         cls.event_question_2 = cls.env['event.question'].create({
             'title': 'Question2',
             'question_type': 'simple_choice',
-            'event_type_id': cls.event_type_questions.id,
+            'event_type_ids': [Command.set(cls.event_type_questions.ids)],
             'once_per_order': True,
             'answer_ids': [
                 (0, 0, {'name': 'Q2-Answer1'}),
@@ -141,7 +141,7 @@ class EventCase(common.TransactionCase):
         cls.event_question_3 = cls.env['event.question'].create({
             'title': 'Question3',
             'question_type': 'text_box',
-            'event_type_id': cls.event_type_questions.id,
+            'event_type_ids': [Command.set(cls.event_type_questions.ids)],
             'once_per_order': True,
         })
 
