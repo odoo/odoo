@@ -13,16 +13,23 @@ class DiscussChannelMember(models.Model):
     livechat_member_history_ids = fields.One2many("im_livechat.channel.member.history", "member_id")
     livechat_member_type = fields.Selection(
         [("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
-        compute="_compute_from_history",
+        compute="_compute_livechat_member_type",
         # sudo - reading the history of a member the user has access to is acceptable.
         compute_sudo=True,
         inverse="_inverse_livechat_member_type",
     )
     chatbot_script_id = fields.Many2one(
         "chatbot.script",
-        compute="_compute_from_history",
+        compute="_compute_chatbot_script_id",
         inverse="_inverse_chatbot_script_id",
         compute_sudo=True,
+    )
+    agent_expertise_ids = fields.Many2many(
+        "im_livechat.expertise",
+        compute="_compute_agent_expertise_ids",
+        # sudo - reading the history of a member the user has access to is acceptable.
+        compute_sudo=True,
+        inverse="_inverse_agent_expertise_ids",
     )
 
     @api.model_create_multi
@@ -46,10 +53,20 @@ class DiscussChannelMember(models.Model):
             member.sudo().livechat_member_type = "agent"
         return members
 
-    def _compute_from_history(self):
+    @api.depends("livechat_member_history_ids.livechat_member_type")
+    def _compute_livechat_member_type(self):
         for member in self:
             member.livechat_member_type = member.livechat_member_history_ids.livechat_member_type
+
+    @api.depends("livechat_member_history_ids.chatbot_script_id")
+    def _compute_chatbot_script_id(self):
+        for member in self:
             member.chatbot_script_id = member.livechat_member_history_ids.chatbot_script_id
+
+    @api.depends("livechat_member_history_ids.agent_expertise_ids")
+    def _compute_agent_expertise_ids(self):
+        for member in self:
+            member.agent_expertise_ids = member.livechat_member_history_ids.agent_expertise_ids
 
     def _create_or_update_history(self, values_by_member=None):
         if not values_by_member:
@@ -63,7 +80,7 @@ class DiscussChannelMember(models.Model):
         )
         for member in (self - member_without_history):
             if member in values_by_member:
-                member.update(values_by_member[member])
+                member.livechat_member_history_ids.update(values_by_member[member])
 
     def _inverse_livechat_member_type(self):
         # sudo - im_livechat.channel.member: creating/updating history following
@@ -75,6 +92,13 @@ class DiscussChannelMember(models.Model):
         # "chatbot_script_id" modification is acceptable.
         self.sudo()._create_or_update_history(
             {member: {"chatbot_script_id": member.chatbot_script_id.id} for member in self}
+        )
+
+    def _inverse_agent_expertise_ids(self):
+        # sudo - im_livechat.channel.member.history: creating/udpating history following
+        # "agent_expetise_ids" modification is acceptable.
+        self.sudo()._create_or_update_history(
+            {member: {"agent_expertise_ids": member.agent_expertise_ids.ids} for member in self}
         )
 
     @api.autovacuum

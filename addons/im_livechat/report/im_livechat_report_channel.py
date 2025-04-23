@@ -66,6 +66,7 @@ class Im_LivechatReportChannel(models.Model):
     )
     chatbot_script_id = fields.Many2one("chatbot.script", "Chatbot", readonly=True)
     chatbot_answers_path = fields.Char("Chatbot Answers", readonly=True)
+    session_expertises = fields.Char("Expertises used in this session", readonly=True)
 
     @property
     def _table_query(self):
@@ -113,8 +114,30 @@ class Im_LivechatReportChannel(models.Model):
                   FROM chatbot_message
                  WHERE user_raw_script_answer_id IS NOT NULL
               GROUP BY chatbot_message.discuss_channel_id
+            ),
+            expertise_history AS (
+                SELECT im_livechat_channel_member_history.channel_id,
+                       STRING_AGG(
+                             COALESCE(
+                                 im_livechat_expertise.name->>%s,
+                                 im_livechat_expertise.name->>'en_US',
+                                 fallback.value
+                             ),
+                             ' - ' ORDER BY im_livechat_expertise.id
+                         ) AS expertises
+                  FROM im_livechat_channel_member_history_im_livechat_expertise_rel REL
+                  JOIN im_livechat_expertise ON im_livechat_expertise.id = REL.im_livechat_expertise_id
+                  JOIN im_livechat_channel_member_history ON im_livechat_channel_member_history.id = REL.im_livechat_channel_member_history_id
+          JOIN LATERAL (
+                            SELECT value
+                              FROM jsonb_each_text(im_livechat_expertise.name)
+                             LIMIT 1
+                        ) AS fallback ON TRUE
+              GROUP BY channel_id
             )
-            """)
+            """,
+            self.env.lang,
+        )
 
     def _select(self) -> SQL:
         return SQL(
@@ -179,7 +202,8 @@ class Im_LivechatReportChannel(models.Model):
                         ELSE NULL
                     END
                 ) AS call_duration_hour,
-                (ARRAY_AGG(chatbot_answer_history.answers_path))[1] as chatbot_answers_path
+                (ARRAY_AGG(chatbot_answer_history.answers_path))[1] as chatbot_answers_path,
+                (ARRAY_AGG(expertise_history.expertises))[1] AS session_expertises
             """,
         )
 
@@ -189,6 +213,7 @@ class Im_LivechatReportChannel(models.Model):
             FROM discuss_channel C
             JOIN message_vals ON message_vals.channel_id = c.id
        LEFT JOIN chatbot_answer_history ON chatbot_answer_history.channel_id = C.id
+       LEFT JOIN expertise_history ON expertise_history.channel_id = C.id
        LEFT JOIN channel_member_history ON channel_member_history.channel_id = c.id
        LEFT JOIN discuss_call_history ON discuss_call_history.channel_id = C.id
        LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
