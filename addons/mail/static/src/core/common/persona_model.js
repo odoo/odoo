@@ -84,7 +84,8 @@ export class Persona extends Record {
             }
         },
     });
-    last_poll = fields.Datetime();
+    /** @type {luxon.DateTime} */
+    offline_since = fields.Datetime();
     /** @type {boolean} */
     is_public;
     /** @type {'email' | 'inbox'} */
@@ -141,7 +142,7 @@ export class Persona extends Record {
 
     updateImStatus(newStatus) {
         if (newStatus === "offline") {
-            this.last_poll = DateTime.now();
+            this.offline_since = DateTime.now();
         }
         this.im_status = newStatus;
     }

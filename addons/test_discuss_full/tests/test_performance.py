@@ -105,6 +105,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - search res_users_settings (livechat username)
     #               - fetch res_users_settings (livechat username)
     #               - fetch res_country (livechat override)
+    #               - search im_livechat_channel_member_history (livechat member type)
+    #               - fetch im_livechat_channel_member_history (livechat member type)
     #           2: guest _to_store:
     #               - fetch bus_presence (_compute_im_status)
     #               - fetch mail_guest
@@ -117,7 +119,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search group_ids (group_based_subscription)
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
-    #       - fetch country (country_id)
     #   - _get_last_messages
     #   14: message _to_store:
     #       - search mail_message_schedule
@@ -134,7 +135,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_message_res_partner_starred_rel
     #       - search rating_rating
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 52
+    _query_count_discuss_channels = 53
 
     def setUp(self):
         super().setUp()
@@ -1636,6 +1637,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
+                res["offline_since"] = False
                 res["user_livechat_username"] = False
             return res
         if user == self.users[2]:
@@ -1731,9 +1733,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if guest:
             return {
                 "avatar_128_access_token": limited_field_access_token(self.guest, "avatar_128"),
+                "country": self.guest.country_id.id,
                 "id": self.guest.id,
                 "im_status": "offline",
                 "name": "Visitor",
+                "offline_since": False,
                 "write_date": fields.Datetime.to_string(self.guest.write_date),
             }
         return {}

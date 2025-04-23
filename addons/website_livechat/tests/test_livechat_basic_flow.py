@@ -247,6 +247,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "id": guest.id,
                         "im_status": "offline",
                         "name": f"Visitor #{self.visitor.id}",
+                        "offline_since": False,
                         "write_date": fields.Datetime.to_string(guest.write_date),
                     }
                 ],
