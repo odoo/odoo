@@ -72,10 +72,11 @@ class TestEventData(TestEventInternalsCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
+        event.invalidate_recordset(['specific_question_ids', 'general_question_ids'])
 
         self.assertEqual(
-            event.question_ids.mapped('question_type'),
-            ['name', 'email', 'phone', 'simple_choice', 'simple_choice', 'text_box'])
+            sorted(event.question_ids.mapped('question_type')),
+            ['email', 'name', 'phone', 'simple_choice', 'simple_choice', 'text_box'])
         self.assertEqual(event.specific_question_ids.filtered(
             lambda q: q.question_type in ['simple_choice', 'text_box']).title, 'Question1')
         self.assertEqual(event.specific_question_ids.filtered(
@@ -268,6 +269,53 @@ class TestEventData(TestEventInternalsCommon):
         self.assertEqual(event.note, '<p>Event Type Note</p>')
 
     @users('user_eventmanager')
+    def test_event_configuration_questions_from_type(self):
+        """ Test that the questions of an event are updated as the event type changes. """
+        event_type_1_question, event_type_1_removed_question, event_type_2_question, event_type_common_question = self.env['event.question'].create([{
+            'title': 'Event Type 1 Question'
+        }, {
+            'title': 'Event Type 1 Removed Question'
+        }, {
+            'title': 'Event Type 2 Question'
+        }, {
+            # To check that a question removed from an event can be added again using an event_type.
+            'title': 'Event Type Common Question'
+        }])
+        event_type_1_questions = event_type_1_question + event_type_1_removed_question + event_type_common_question
+        event_type_1, event_type_2 = self.env['event.type'].create([{
+            'name': 'Event Type 1',
+            'question_ids': [Command.set(event_type_1_questions.ids)]
+        }, {
+            'name': 'Event Type 2',
+            'question_ids': [Command.set((event_type_2_question + event_type_common_question).ids)]
+        }])
+        event = self.env['event.event'].create({
+            'name': 'Event',
+            'event_type_id': event_type_1.id,
+            'date_begin': self.reference_beg,
+            'date_end': self.reference_end,
+        })
+        # Check that the questions of the event are updated with those of the event type.
+        self.assertEqual(event.question_ids, event_type_1.question_ids)
+
+        event_type_1.question_ids = [Command.clear()]
+        # Check that the questions of the event are not updated when the questions of the event type are removed.
+        self.assertTrue(event.question_ids, event_type_1_questions)
+
+        self.env['event.registration.answer'].create({
+            'question_id': event_type_1_question.id,
+            'registration_id': self.env['event.registration'].create({'event_id': event.id}).id,
+            'value_text_box': 'Value Registration Answer',
+        })
+        event.write({'event_type_id': event_type_2.id})
+        # Check that the questions of the event are updated with those of the new event type of the event
+        # and that the question with attendee answer is not removed.
+        self.assertEqual(
+            event.question_ids,
+            event_type_1_question + event_type_2_question + event_type_common_question
+        )
+
+    @users('user_eventmanager')
     def test_event_configuration_tickets_from_type(self):
         """ Test data computation (related to tickets) of event coming from its event.type template.
         This test uses pretty low level Form data checks, as manipulations in a non-saved Form are
@@ -458,6 +506,23 @@ class TestEventData(TestEventInternalsCommon):
         self.assertEqual(len(templates), 1, 'Should return only mail templates related to the event registration model')
         templates = self.env['mail.template'].with_context(filter_template_on_event=True).search([('name', '=', 'test template')])
         self.assertEqual(len(templates), 1, 'Should also return only mail templates related to the event registration model using search')
+
+    @users('user_eventmanager')
+    def test_event_question_defaults(self):
+        """ Test that default questions are linked to the new events and shared by all of them. """
+        event_0, event_1 = self.env['event.event'].create([{
+            'name': 'TestEvent 0',
+            'date_begin': self.reference_beg,
+            'date_end': self.reference_end,
+        }, {
+            'name': 'TestEvent 1',
+            'date_begin': self.reference_beg,
+            'date_end': self.reference_end,
+        }])
+        # Check that event has been linked to the default questions.
+        self.assertCountEqual(event_0.question_ids.mapped('question_type'), ['name', 'email', 'phone'])
+        # Check that default questions are shared by events.
+        self.assertEqual(event_0.question_ids, event_1.question_ids)
 
     @freeze_time('2020-01-31 10:00:00')
     @users('user_eventmanager')

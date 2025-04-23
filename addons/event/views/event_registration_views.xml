@@ -93,7 +93,7 @@
                             <field name="registration_answer_ids" widget="one2many">
                                 <list editable="bottom">
                                     <field name="event_id" column_invisible="True" />
-                                    <field name="question_id" domain="[('event_id', '=', event_id)]" options="{'no_create': True}" />
+                                    <field name="question_id" domain="[('event_ids', 'in', event_id)]" options="{'no_create': True}"/>
                                     <field name="question_type" string="Type" />
                                     <field name="value_answer_id"
                                         invisible="question_type != 'simple_choice'"
@@ -105,7 +105,7 @@
                                     <field name="question_type"/>
                                     <templates>
                                         <t t-name="card" class="justify-content-between">
-                                            <field class="fw-bold fs-5" name="question_id" domain="[('event_id', '=', event_id)]"/>
+                                            <field class="fw-bold fs-5" name="question_id" domain="[('event_ids', 'in', event_id)]"/>
                                             <field name="value_answer_id"
                                                 invisible="question_type != 'simple_choice'"
                                                 domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
