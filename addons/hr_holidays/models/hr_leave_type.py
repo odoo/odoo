@@ -158,14 +158,6 @@ class HrLeaveType(models.Model):
 
         return [('id', operator, leave_types.ids)]
 
-    @api.constrains('company_id', 'country_id')
-    def _check_company_country_id(self):
-        for leave_type in self:
-            if leave_type.is_used:
-                raise ValidationError(_("The company/country field cannot be edited for this time off type, as it is "
-                    "currently linked to existing time off or allocation requests.\nTo modify this field, please "
-                    "archive or delete the associated requests, or consider creating a new time off type."))
-
     @api.constrains('include_public_holidays_in_duration')
     def _check_overlapping_public_holidays(self):
         # checking for the current user's company too
