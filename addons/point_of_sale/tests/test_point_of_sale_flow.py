@@ -1696,6 +1696,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'categ_id': self.real_time_categ.id,
             'property_account_expense_id': self.account1.id,
             'property_account_income_id': self.account1.id,
+            'standard_price': 100,
         })
         self.product_b = self.env['product.product'].create({
             'name': 'Product B',
@@ -1703,51 +1704,53 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'categ_id': self.real_time_categ.id,
             'property_account_expense_id': self.account2.id,
             'property_account_income_id': self.account2.id,
+            'standard_price': 100,
         })
 
         #Create an order with the 2 products
         self.pos_config.open_ui()
-        order = self.PosOrder.create({
-            'company_id': self.env.company.id,
-            'session_id': self.pos_config.current_session_id.id,
-            'partner_id': self.partner1.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product_a.id,
-                'price_unit': 100,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [],
-                'price_subtotal': 100,
-                'price_subtotal_incl': 100,
-            }), (0, 0, {
-                'name': "OL/0002",
-                'product_id': self.product_b.id,
-                'price_unit': 100,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [],
-                'price_subtotal': 100,
-                'price_subtotal_incl': 100,
-            })],
-            'pricelist_id': self.pos_config.pricelist_id.id,
-            'amount_paid': 200.0,
-            'amount_total': 200.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-            'last_order_preparation_change': '{}',
-            'shipping_date': fields.Date.today(),
-            })
-        #make payment
-        payment_context = {"active_ids": order.ids, "active_id": order.id}
-        order_payment = self.PosMakePayment.with_context(**payment_context).create({
-            'amount': order.amount_total,
-            'payment_method_id': self.cash_payment_method.id
-        })
-        order_payment.with_context(**payment_context).check()
-        self.pos_config.current_session_id.action_pos_session_closing_control()
+        order_data = {'amount_paid': 200,
+           'amount_return': 0,
+           'amount_tax': 200,
+           'amount_total': 200,
+           'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+           'partner_id': self.partner1.id,
+           'fiscal_position_id': False,
+           'lines': [[0, 0, {'discount': 0,
+              'pack_lot_ids': [],
+              'price_unit': 100,
+              'product_id': self.product_a.id,
+              'price_subtotal': 100,
+              'price_subtotal_incl': 100,
+              'qty': 1,
+              'tax_ids': []
+              }], [0, 0, {'discount': 0,
+              'pack_lot_ids': [],
+              'price_unit': 100,
+              'product_id': self.product_b.id,
+              'price_subtotal': 100,
+              'price_subtotal_incl': 100,
+              'qty': 1,
+              'tax_ids': []
+            }]],
+           'name': 'Order 00044-003-0014',
+           'session_id': self.pos_config.current_session_id.id,
+           'sequence_number': self.pos_config.journal_id.id,
+           'shipping_date': fields.Date.today(),
+           'payment_ids': [[0,
+             0,
+             {'amount': 200,
+              'name': fields.Datetime.now(),
+              'payment_method_id': self.cash_payment_method.id}]],
+           'uuid': '00044-003-0014',
+           'user_id': self.env.uid
+        }
+
+        self.PosOrder.sync_from_ui([order_data])
+        order = self.pos_config.current_session_id.order_ids[0]
+        order.picking_ids.move_ids.write({"quantity": 1, "picked": True})
         order.picking_ids._action_done()
+        self.pos_config.current_session_id.action_pos_session_closing_control()
 
         moves = self.env['account.move'].search([('ref', '=', f'pos_order_{order.id}')])
         self.assertEqual(len(moves), 2)
