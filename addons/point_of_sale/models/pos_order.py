@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import partial
 from itertools import groupby
 from markupsafe import Markup
@@ -673,6 +673,7 @@ class PosOrder(models.Model):
             'currency_id': self.currency_id.id,
             'invoice_user_id': self.user_id.id,
             'invoice_date': invoice_date.astimezone(timezone).date(),
+            'invoice_date_due': invoice_date.astimezone(timezone).date() + timedelta(days=max(self.partner_id.property_payment_term_id.line_ids.mapped('nb_days'), default=0)),
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': self._prepare_invoice_lines(),
             'invoice_payment_term_id': False,

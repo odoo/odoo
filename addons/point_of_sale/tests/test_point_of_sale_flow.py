@@ -3,7 +3,7 @@
 
 import time
 from freezegun import freeze_time
-from datetime import datetime
+from datetime import timedelta
 
 import odoo
 from odoo import fields, tools
@@ -2313,3 +2313,78 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         ])
         account_moves = self.env['account.move'].search([('pos_payment_ids', 'in', pos_order.payment_ids.ids)])
         self.assertEqual(sum(account_moves.mapped('amount_total')), pos_order.amount_total)
+
+    def test_invoice_due_date(self):
+        """"
+        Tests that the invoice due date is set like it should be regarding the payment term of the partner
+        """
+        payment_term = self.env['account.payment.term'].create({
+            'name': "Payment Term",
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 10,
+                'value_amount': 100,
+            })]
+        })
+        self.partner1.property_payment_term_id = payment_term.id
+        partner2 = self.env['res.partner'].create({
+            'name': 'Partner 2',
+        })
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'list_price': 1000,
+        })
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        current_session.update_stock_at_closing = True
+
+        # 2 orders, one with payment term, the other without
+        orders = self.PosOrder.create([
+            {
+                'company_id': self.env.company.id,
+                'session_id': current_session.id,
+                'partner_id': self.partner1.id,
+                'lines': [(0, 0, {
+                    'name': "OL/0001",
+                    'product_id': test_product.id,
+                    'price_unit': 1000.0,
+                    'qty': 1.0,
+                    'price_subtotal': 1000.0,
+                    'price_subtotal_incl': 1000,
+                })],
+                'amount_total': 1000.0,
+                'amount_tax': 0.0,
+                'amount_paid': 0.0,
+                'amount_return': 0.0,
+                'to_invoice': True,
+            }, {
+                'company_id': self.env.company.id,
+                'session_id': current_session.id,
+                'partner_id': partner2.id,
+                'lines': [(0, 0, {
+                    'name': "OL/0001",
+                    'product_id': test_product.id,
+                    'price_unit': 1000.0,
+                    'qty': 1.0,
+                    'price_subtotal': 1000.0,
+                    'price_subtotal_incl': 1000,
+                })],
+                'amount_total': 1000.0,
+                'amount_tax': 0.0,
+                'amount_paid': 0.0,
+                'amount_return': 0.0,
+                'to_invoice': True,
+            }
+        ])
+        for order in orders:
+            payment_context = {"active_ids": order.ids, "active_id": order.id}
+            order_payment = self.PosMakePayment.with_context(**payment_context).create({
+                'amount': order.amount_total,
+                'payment_method_id': self.cash_payment_method.id
+            })
+            order_payment.with_context(**payment_context).check()
+
+        self.assertEqual(orders[0].account_move.invoice_date + timedelta(days=10), orders[0].account_move.invoice_date_due)
+        # If payment term is not set, the due date of the invoice is the date of the invoice
+        self.assertEqual(orders[1].account_move.invoice_date, orders[1].account_move.invoice_date_due)
