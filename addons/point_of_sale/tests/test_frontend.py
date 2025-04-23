@@ -609,7 +609,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         n_invoiced = self.env['pos.order'].search_count([('account_move', '!=', False)])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
-        self.assertEqual(n_paid, 2, 'There should be 3 paid order.')
+        self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
         last_order = self.env['pos.order'].search([], limit=1, order="id desc")
         self.assertEqual(last_order.lines[0].price_subtotal, 30.0)
         self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)
@@ -1647,6 +1647,21 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'LotTour', login="pos_user")
+        two_last_orders = self.env['pos.order'].search([], order='id desc', limit=2)
+        order_lot_id = [lot_id.lot_name for lot_id in two_last_orders[1].lines.pack_lot_ids]
+        refund_lot_id = [lot_id.lot_name for lot_id in two_last_orders[0].lines.pack_lot_ids]
+        self.assertEqual(order_lot_id, refund_lot_id, "In the refund we should find the same lot as in the original order")
+        self.assertEqual(two_last_orders[0].state, 'paid')
+        self.assertEqual(two_last_orders[1].state, 'paid')
+        self.main_pos_config.current_session_id.order_ids.filtered(
+            lambda o: o.state != 'paid').state = 'cancel'
+
+        self.main_pos_config.current_session_id.action_pos_session_closing_control()
+        self.assertEqual(
+            two_last_orders[0].picking_ids.move_line_ids_without_package.owner_id.id,
+            two_last_orders[1].picking_ids.move_line_ids_without_package.owner_id.id,
+            "The owner of the refund is not the same as the owner of the original order")
+
 
 
     def test_product_search(self):
@@ -1722,6 +1737,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_tracking_number_closing_session', login="pos_user")
         for order in self.env['pos.order'].search([]):
             self.assertEqual(int(order.tracking_number) % 100, 1)
+
+        # Change should be given in cash
+        cash_payment_method = self.main_pos_config.payment_method_ids.filtered(lambda p: p.is_cash_count)
+        last_order = self.main_pos_config.current_session_id.order_ids[-1]
+        self.assertRecordValues(last_order.payment_ids.sorted(), [
+            {'amount': -18.02, 'payment_method_id': cash_payment_method.id, 'is_change': True},
+            {'amount': 20.0, 'payment_method_id': self.bank_payment_method.id, 'is_change': False},
+        ])
 
     def test_reload_page_before_payment_with_customer_account(self):
         self.customer_account_payment_method = self.env['pos.payment.method'].create({

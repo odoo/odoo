@@ -165,7 +165,10 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
             ProductScreen.clickDisplayedProduct("Desk Pad", true, "1.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "20"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 

@@ -2,11 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import requests
+
 from pytz import timezone
 from datetime import date, datetime
-import requests
 from unittest.mock import Mock
+from dateutil.relativedelta import relativedelta
 
+from odoo import fields
 from odoo.tools import file_open
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
@@ -71,6 +74,9 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
             'scope': 'tbai',
             'company_id': cls.company_data['company'].id,
         })
+
+        # Prevent certificate expiration in tests
+        cls.certificate.date_end = fields.Datetime.now() + relativedelta(days=2)
         cls.company_data['company'].write({
             'l10n_es_tbai_tax_agency': agency,
             'l10n_es_tbai_certificate_id': cls.certificate.id,
