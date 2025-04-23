@@ -271,7 +271,7 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 
         await mountWithCleanup(WebClient, { env });
         expect(browser.location.href).toBe("http://example.com/odoo/action-1001", {
@@ -293,7 +293,7 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 
         await mountWithCleanup(WebClient, { env });
         user.updateContext({ an_extra_context: 22 });
@@ -314,7 +314,7 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 
         await mountWithCleanup(WebClient, { env });
         expect(browser.location.href).toBe("http://example.com/odoo/__test__client__action__", {
@@ -415,7 +415,7 @@ describe(`new urls`, () => {
 
         await mountWebClient();
         expect(`.o_action_manager`).toHaveText("", { message: "should display nothing" });
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
         expect(browser.location.href).toBe("http://example.com/odoo/m-partner?view_type=list", {
             message: "the url did not change",
         });
@@ -443,7 +443,7 @@ describe(`new urls`, () => {
         });
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
@@ -476,7 +476,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/my-action");
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "pushState http://example.com/odoo/my-action",
         ]);
     });
@@ -511,7 +511,7 @@ describe(`new urls`, () => {
         ]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "resId:12",
             "Update the state without updating URL, nextState: actionStack,resId,action",
         ]);
@@ -549,7 +549,7 @@ describe(`new urls`, () => {
         ]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "pushState http://example.com/odoo/HelloWorldTest/12",
         ]);
     });
@@ -583,7 +583,7 @@ describe(`new urls`, () => {
         ]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "resId:12",
             "pushState http://example.com/odoo/my_client/12",
         ]);
@@ -618,7 +618,7 @@ describe(`new urls`, () => {
         ]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "resId:12",
             "Update the state without updating URL, nextState: actionStack,resId,action",
         ]);
@@ -649,7 +649,7 @@ describe(`new urls`, () => {
         ]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
@@ -667,7 +667,7 @@ describe(`new urls`, () => {
         });
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "web_search_read",
@@ -689,7 +689,7 @@ describe(`new urls`, () => {
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Second record"]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "get_views",
             "web_read",
             "Update the state without updating URL, nextState: actionStack,resId,model",
@@ -712,7 +712,7 @@ describe(`new urls`, () => {
         });
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "get_views",
             "web_read",
             "Update the state without updating URL, nextState: actionStack,resId,model",
@@ -731,7 +731,7 @@ describe(`new urls`, () => {
         });
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "onchange",
@@ -752,7 +752,7 @@ describe(`new urls`, () => {
         });
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "web_search_read",
@@ -780,7 +780,7 @@ describe(`new urls`, () => {
         });
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "web_read",
@@ -931,7 +931,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/action-1");
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "web_search_read",
@@ -962,7 +962,7 @@ describe(`new urls`, () => {
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Partner", "New"]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "onchange",
@@ -1192,7 +1192,7 @@ describe(`new urls`, () => {
         await mountWebClient();
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load_breadcrumbs",
             "get_views",
             "web_read",
@@ -1237,7 +1237,7 @@ describe(`new urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 
         await mountWithCleanup(WebClient, { env });
         await animationFrame();
@@ -1295,7 +1295,7 @@ describe(`new urls`, () => {
         ]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "web_read",
@@ -1344,7 +1344,7 @@ describe(`new urls`, () => {
         expect.verifyErrors([/RPC_ERROR/]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load_breadcrumbs",
             "/web/action/load",
             "get_views",
@@ -1519,7 +1519,7 @@ describe(`legacy urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 
         await mountWebClient({ env });
         expect.verifySteps(["/web/action/load"]);
@@ -1530,7 +1530,7 @@ describe(`legacy urls`, () => {
         stepAllNetworkCalls();
 
         const env = await makeMockEnv();
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 
         await mountWebClient({ env });
         expect.verifySteps([]);
@@ -1594,7 +1594,7 @@ describe(`legacy urls`, () => {
 
         await mountWebClient();
         expect(`.o_action_manager`).toHaveText("", { message: "should display nothing" });
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
     });
 
     test(`properly load client actions`, async () => {
@@ -1611,7 +1611,7 @@ describe(`legacy urls`, () => {
         expect(`.o_client_action_test`).toHaveText("Hello World", {
             message: "should have correctly rendered the client action",
         });
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
     });
 
     test(`properly load act window actions`, async () => {
@@ -1623,7 +1623,7 @@ describe(`legacy urls`, () => {
         expect(`.o_kanban_view`).toHaveCount(1);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "web_search_read",
@@ -1640,7 +1640,7 @@ describe(`legacy urls`, () => {
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Second record"]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "get_views",
             "web_read",
         ]);
@@ -1658,7 +1658,7 @@ describe(`legacy urls`, () => {
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Second record"]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "get_views",
             "web_read",
         ]);
@@ -1672,7 +1672,7 @@ describe(`legacy urls`, () => {
         expect(`.o_form_view`).toHaveCount(1);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "onchange",
@@ -1688,7 +1688,7 @@ describe(`legacy urls`, () => {
         expect(`.o_kanban_view`).toHaveCount(1);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "web_search_read",
@@ -1717,7 +1717,7 @@ describe(`legacy urls`, () => {
         expect(`.o_form_view`).toHaveCount(0);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "web_read",
@@ -1807,7 +1807,7 @@ describe(`legacy urls`, () => {
         ]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "web_search_read",
@@ -1840,7 +1840,7 @@ describe(`legacy urls`, () => {
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Partner", "New"]);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "onchange",

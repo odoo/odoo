@@ -2760,8 +2760,8 @@ test("pivot is reloaded when leaving and coming back", async () => {
     onRpc("partner", "*", ({ method }) => {
         expect.step(method);
     });
-    onRpc("/web/webclient/load_menus", () => {
-        expect.step("/web/webclient/load_menus");
+    onRpc("load_web_menus", () => {
+        expect.step("load_web_menus");
     });
 
     await mountWithCleanup(WebClient);
@@ -2778,7 +2778,7 @@ test("pivot is reloaded when leaving and coming back", async () => {
     expect(getCurrentValues()).toBe(["4", "2", "2"].join(","));
 
     expect.verifySteps([
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "formatted_read_group",
         "formatted_read_group",

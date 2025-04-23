@@ -95,7 +95,7 @@ test("render ActionMenus in list view", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -150,12 +150,7 @@ test("render ActionMenus in form view", async () => {
               </form>
          `,
     });
-    expect.verifySteps([
-        "/web/webclient/translations",
-        "/web/webclient/load_menus",
-        "get_views",
-        "web_read",
-    ]);
+    expect.verifySteps(["/web/webclient/translations", "load_web_menus", "get_views", "web_read"]);
 
     // select CogMenu
     await contains(`div.o_control_panel_breadcrumbs_actions i.fa-cog`).click();
@@ -202,15 +197,13 @@ test("render ActionMenus in list view with extraPrintItems", async () => {
         get actionMenuProps() {
             return {
                 ...super.actionMenuProps,
-                loadExtraPrintItems: () => {
-                    return [
-                        {
-                            key: "extra_print_key",
-                            description: "Extra Print Item",
-                            class: "o_menu_item",
-                        },
-                    ];
-                },
+                loadExtraPrintItems: () => [
+                    {
+                        key: "extra_print_key",
+                        description: "Extra Print Item",
+                        class: "o_menu_item",
+                    },
+                ],
             };
         }
     }
@@ -230,7 +223,7 @@ test("render ActionMenus in list view with extraPrintItems", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",

@@ -111,7 +111,7 @@ describe("new", () => {
         });
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "/web/action/load",
             "get_views",
             "onchange",
@@ -206,7 +206,7 @@ describe("new", () => {
         stepAllNetworkCalls();
 
         await mountWithCleanup(WebClient);
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
         await getService("action").doAction(4);
         expect.verifySteps(["/web/action/load", "get_views", "onchange"]);
         await contains(`button[name="5"]`).click();
@@ -265,7 +265,7 @@ describe("new", () => {
         stepAllNetworkCalls();
 
         await mountWithCleanup(WebClient);
-        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
         await getService("action").doAction(4);
         expect.verifySteps(["/web/action/load", "get_views", "onchange"]);
         await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
@@ -333,16 +333,14 @@ describe("new", () => {
             </form>`;
         Partner._views["form,1000"] = `<form>Another action</form>`;
 
-        onRpc("method", () => {
-            return {
-                id: 1000,
-                name: "Another window action",
-                res_model: "partner",
-                target: "new",
-                type: "ir.actions.act_window",
-                views: [[1000, "form"]],
-            };
-        });
+        onRpc("method", () => ({
+            id: 1000,
+            name: "Another window action",
+            res_model: "partner",
+            target: "new",
+            type: "ir.actions.act_window",
+            views: [[1000, "form"]],
+        }));
 
         await mountWithCleanup(WebClient);
         await getService("action").doAction(999);

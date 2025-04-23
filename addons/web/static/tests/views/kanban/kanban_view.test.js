@@ -1061,7 +1061,7 @@ test("pager, ungrouped, with count limit reached", async () => {
     expect(".o_pager_limit").toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -1096,7 +1096,7 @@ test("pager, ungrouped, with count limit reached, click next", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -1157,7 +1157,7 @@ test("pager, ungrouped, with count limit reached, click next (2)", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -1230,7 +1230,7 @@ test("pager, ungrouped, with count limit reached, click previous", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -1295,7 +1295,7 @@ test("pager, ungrouped, with count limit reached, edit pager", async () => {
     expect(".o_pager_limit").toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -1343,7 +1343,7 @@ test("count_limit attrs set in arch", async () => {
     expect(".o_pager_limit").toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -1555,7 +1555,7 @@ test("kanban with an action id as on_create attrs", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -1795,7 +1795,7 @@ test("quick create record without quick_create_view", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -1863,7 +1863,7 @@ test("quick create record with quick_create_view", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -2104,7 +2104,7 @@ test("quick create record in grouped on m2o (no quick_create_view)", async () =>
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -2171,7 +2171,7 @@ test("quick create record in grouped on m2o (with quick_create_view)", async () 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(3);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -2217,7 +2217,7 @@ test("quick create record in grouped on m2m (no quick_create_view)", async () =>
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -2265,7 +2265,7 @@ test("quick create record in grouped on m2m in the None column", async () => {
     expect(".o_kanban_group:nth-child(1) .o_kanban_record").toHaveCount(3);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -2319,7 +2319,7 @@ test("quick create record in grouped on m2m (field not in template)", async () =
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -2379,7 +2379,7 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -2413,7 +2413,7 @@ test("quick create record validation: stays open when invalid", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -2483,7 +2483,7 @@ test("quick create record with default values and onchanges", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -2563,7 +2563,7 @@ test("quick create record with onchange of field marked readonly", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -4232,7 +4232,7 @@ test("many2many_tags in kanban views", async () => {
     );
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -4397,7 +4397,7 @@ test("o2m loaded in only one batch", async () => {
     await validateSearch();
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -4432,7 +4432,7 @@ test("kanban with many2many, load and reload", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -4471,7 +4471,7 @@ test("kanban with reference field", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -5613,7 +5613,7 @@ test("delete a column in grouped on m2o", async () => {
     ).toHaveCount(0, { message: "should not be able to restore all the records" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -6385,7 +6385,7 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -7080,7 +7080,7 @@ test("empty grouped kanban with sample data and many2many_tags", async () => {
     // should not read the tags
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -7544,7 +7544,7 @@ test("button executes action and reloads", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -8539,7 +8539,7 @@ test("column progressbars properly work", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -8637,7 +8637,7 @@ test('column progressbars: "false" bar is clickable', async () => {
     expect(getKanbanCounters()).toEqual(["1", "1"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -8687,7 +8687,7 @@ test('column progressbars: "false" bar with sum_field', async () => {
     expect(getKanbanCounters()).toEqual(["-4", "15"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -8723,7 +8723,7 @@ test("column progressbars should not crash in non grouped views", async () => {
     // no read on progress bar data is done
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -8760,7 +8760,7 @@ test("column progressbars: creating a new column should create a new progressbar
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -8804,7 +8804,7 @@ test("column progressbars on quick create properly update counter", async () => 
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -8846,7 +8846,7 @@ test("column progressbars are working with load more", async () => {
     expect(getKanbanRecordTexts(0)).toEqual(["1", "2", "3"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -8892,7 +8892,7 @@ test("column progressbars with an active filter are working with load more", asy
     expect(getKanbanRecordTexts()).toEqual(["5", "6", "7"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -8949,7 +8949,7 @@ test("column progressbars on archiving records update counter", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -8999,7 +8999,7 @@ test("kanban with progressbars: correctly update env when archiving records", as
     expect(getKanbanRecordTexts()).toEqual(["1", "2", "3"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -9035,7 +9035,7 @@ test("RPCs when (re)loading kanban view progressbars", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         // initial load
         "get_views",
         "read_progress_bar",
@@ -9084,7 +9084,7 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         // initial load
         "get_views",
         "read_progress_bar",
@@ -9160,7 +9160,7 @@ test("drag & drop records grouped by m2o with progressbar", async () => {
     expect(getKanbanCounters()).toEqual(["0", "1", "3"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -9223,7 +9223,7 @@ test("d&d records grouped by date with progressbar with aggregates", async () =>
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -9262,7 +9262,7 @@ test("progress bar subgroup count recompute", async () => {
     expect(getKanbanCounters()).toEqual(["1", "1"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -9305,7 +9305,7 @@ test("progress bar recompute after d&d to and from other column", async () => {
     expect(getKanbanCounters()).toEqual(["2", "2"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -9348,7 +9348,7 @@ test("progress bar recompute after filter selection", async () => {
     expect(getKanbanCounters()).toEqual(["1", "6"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -9402,7 +9402,7 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
     expect(getKanbanCounters()).toEqual(["-4", "636"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -9656,7 +9656,7 @@ test("column progressbars on quick create with quick_create_view", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -9727,7 +9727,7 @@ test("progressbars and active filter with quick_create_view", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -10681,7 +10681,7 @@ test("progressbar filter state is kept unchanged when domain is updated (records
     expect(getKanbanColumnTooltips(1)).toEqual(["1 yop", "1 blip", "1 Other"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -10767,7 +10767,7 @@ test("progressbar filter state is kept unchanged when domain is updated (emptyin
     expect(getKanbanRecordTexts(1)).toEqual(["1yop", "2blip", "3gnap"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -10842,7 +10842,7 @@ test("filtered column counters when dropping in non-matching record", async () =
     expect(getKanbanRecordTexts(1)).toEqual(["1yop", "4blip"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -10888,7 +10888,7 @@ test("filtered column is reloaded when dragging out its last record", async () =
     expect(getKanbanRecordTexts(1)).toEqual(["1yop", "2blip", "3gnap"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -10979,7 +10979,7 @@ test("action/type attributes on kanban arch, type='object'", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -11013,7 +11013,7 @@ test("action/type attributes on kanban arch, type='action'", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -11333,7 +11333,7 @@ test("basic rendering with 2 groupbys", async () => {
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -11371,7 +11371,7 @@ test("basic rendering with a date groupby with a granularity", async () => {
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(1);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -11635,7 +11635,7 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
     expect(".o_kanban_group:nth-child(2) .o_kanban_load_more").toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -11729,7 +11729,7 @@ test("update field on which progress bars are computed", async () => {
     expect(getKanbanProgressBars(1)[2].style.width).toBe("25%"); // ghi: 1
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -12090,7 +12090,7 @@ test("fieldDependencies support for fields: dependence on a relational field", a
     expect("[name=foo] span:first").toHaveText("hello");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -12231,7 +12231,7 @@ test("drag record to folded column, with progressbars", async () => {
     expect(getKanbanCounters()).toEqual(["-4"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "read_progress_bar",
         "web_read_group",
@@ -12294,7 +12294,7 @@ test("quick create record in grouped kanban in a form view dialog", async () => 
     ]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // initial web_read_group
         "has_group",
@@ -12518,7 +12518,7 @@ test("d&d records grouped by m2o with m2o displayed in records", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -12638,7 +12638,7 @@ test("rerenders only once after resequencing records", async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",

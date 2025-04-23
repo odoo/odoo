@@ -649,32 +649,28 @@ test("resIds should contains only 1 id", async () => {
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
-    onRpc("get_installed", () => {
-        return [
-            ["en_US", "English"],
-            ["fr_BE", "French (Belgium)"],
-        ];
-    });
-    onRpc("get_field_translations", () => {
-        return [
-            [
-                {
-                    lang: "en_US",
-                    source: "My little Foo Value",
-                    value: "My little Foo Value",
-                },
-                {
-                    lang: "fr_BE",
-                    source: "My little Foo Value",
-                    value: "Valeur de mon petit Foo",
-                },
-            ],
+    onRpc("get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+    onRpc("get_field_translations", () => [
+        [
             {
-                translation_type: "char",
-                translation_show_source: true,
+                lang: "en_US",
+                source: "My little Foo Value",
+                value: "My little Foo Value",
             },
-        ];
-    });
+            {
+                lang: "fr_BE",
+                source: "My little Foo Value",
+                value: "Valeur de mon petit Foo",
+            },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: true,
+        },
+    ]);
     onRpc("execute", ({ args }) => {
         expect(args[0].length).toBe(1);
         return true;
@@ -1719,7 +1715,7 @@ test("Discard button clean the settings view", async () => {
     await getService("action").doAction(1);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "onchange",

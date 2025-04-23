@@ -77,7 +77,7 @@ test("can execute server actions from db ID", async () => {
     expect(".o_kanban_view").toHaveCount(1, { message: "should have rendered a kanban view" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "/web/action/run",
         "/web/action/load",
@@ -120,7 +120,7 @@ test("handle server actions returning false", async function (assert) {
     expect(".o_technical_modal").toHaveCount(0, { message: "should have closed the modal" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "onchange",

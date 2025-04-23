@@ -639,7 +639,7 @@ test("add a new record in a many2many non editable list", async () => {
     await contains(".o_dialog .o_form_button_save").click();
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "onchange",
         "get_views",

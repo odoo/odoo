@@ -218,7 +218,7 @@ test("can execute act_window actions from db ID", async () => {
     expect(".o_kanban_view").toHaveCount(1, { message: "should have rendered a kanban view" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -232,7 +232,7 @@ test("click on a list row when there is no form in the action", async () => {
     await getService("action").doAction(9);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -251,7 +251,7 @@ test("click on open form view button when there is no form in the action", async
     await getService("action").doAction(9);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -268,7 +268,7 @@ test("click on new record button in list when there is no form in the action", a
     await getService("action").doAction(9);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -335,7 +335,7 @@ test("can switch between views", async () => {
     expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -383,7 +383,7 @@ test("switching into a view with mode=edit lands in edit mode", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_read_group",
@@ -884,7 +884,7 @@ test("reload previous controller when discarding a new record", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -932,7 +932,7 @@ test("execute_action of type object are handled", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -1103,7 +1103,7 @@ test("execute_action of type action are handled", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -1165,7 +1165,7 @@ test("execute smart button and fails on desktop", async () => {
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_read",
@@ -1204,7 +1204,7 @@ test("execute smart button and fails on mobile", async () => {
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_read",
@@ -1292,7 +1292,7 @@ test("can open different records from a multi record view", async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -1444,7 +1444,7 @@ test("can open a many2one external window", async () => {
     await contains(".o_external_button", { visible: false }).click();
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -1641,7 +1641,7 @@ test("switch request to unknown view type", async () => {
     expect(".o_form_view").toHaveCount(0, { message: "should not display the form view" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -1979,7 +1979,7 @@ test("execute action from dirty, new record, and come back", async () => {
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners", "test"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -2495,7 +2495,7 @@ test("action and get_views rpcs are cached", async () => {
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
-    expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+    expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
@@ -2522,7 +2522,7 @@ test("get_views rpcs are cached (different context.active_id)", async () => {
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
-    expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+    expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 
     await getService("action").doAction({
         name: "Partner",

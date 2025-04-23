@@ -198,7 +198,7 @@ test("can execute client actions from tag name", async () => {
     await getService("action").doAction("HelloWorldTest");
     expect(".o_control_panel").toHaveCount(0);
     expect(".o_client_action_test").toHaveText("Hello World");
-    expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+    expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 });
 
 test("async client action (function) returning another action", async () => {

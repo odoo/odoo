@@ -104,7 +104,7 @@ test("can execute report actions from db ID", async () => {
     await getService("action").doAction(7, { onClose: () => expect.step("on_close") });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "/report/check_wkhtmltopdf",
         "/report/download",
@@ -168,7 +168,7 @@ test("should trigger a notification if wkhtmltopdf is to upgrade", async () => {
     await getService("action").doAction(7);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "/report/check_wkhtmltopdf",
         "/report/download",
@@ -215,7 +215,7 @@ test("should open the report client action if wkhtmltopdf is broken", async () =
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "/report/check_wkhtmltopdf",
         "notify",
@@ -260,7 +260,7 @@ test("send context in case of html report", async () => {
     expect(".o_content iframe").toHaveCount(1, { message: "should have opened the client action" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "/report/html/some_report",
     ]);
@@ -340,7 +340,7 @@ test("can use custom handlers for report actions", async () => {
     await getService("action").doAction(7);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "calling custom handler",
         "first doAction finished",
@@ -394,7 +394,7 @@ test("context is correctly passed to the client action report", async (assert) =
         report_type: "qweb-html",
         type: "ir.actions.report",
     };
-    expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+    expect.verifySteps(["/web/webclient/translations", "load_web_menus"]);
 
     await getService("action").doAction(action);
     expect.verifySteps(["/report/html/ennio.morricone/99"]);

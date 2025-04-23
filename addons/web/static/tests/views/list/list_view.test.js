@@ -1218,7 +1218,7 @@ test(`list view: click on an action button saves the record before executing the
     expect(queryFirst(`.o_data_row [name='foo']`)).toHaveText("plop");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -1557,7 +1557,7 @@ test(`save a record with an invisible required field`, async () => {
     expect(`.o_data_row`).toHaveCount(4);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -1590,7 +1590,7 @@ test.todo(
         expect(`.o_data_row`).toHaveCount(4);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "get_views",
             "web_search_read",
             "has_group",
@@ -1628,7 +1628,7 @@ test.todo(
         expect(`.o_data_row`).toHaveCount(4);
         expect.verifySteps([
             "/web/webclient/translations",
-            "/web/webclient/load_menus",
+            "load_web_menus",
             "get_views",
             "web_search_read",
             "has_group",
@@ -1773,7 +1773,7 @@ test(`do not perform extra RPC to read invisible many2one fields`, async () => {
     // no nameget should be done
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -2962,7 +2962,7 @@ test(`many2one field rendering when display_name is falsy`, async () => {
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["Unnamed", "Value 2", "Unnamed", "Unnamed"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -3142,7 +3142,7 @@ test(`action/type attributes on tree arch, type='object'`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -3168,7 +3168,7 @@ test(`action/type attributes on tree arch, type='action'`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -5386,7 +5386,7 @@ test(`archiving one record`, async () => {
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -5755,7 +5755,7 @@ test(`pager, ungrouped, with count limit reached`, async () => {
     expect(`.o_pager_limit`).toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -5792,7 +5792,7 @@ test(`pager, ungrouped, with count limit reached, click next`, async () => {
     expect(`.o_pager_limit`).toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -5827,7 +5827,7 @@ test(`pager, ungrouped, with count limit reached, click next (2)`, async () => {
     expect(`.o_pager_limit`).toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -5869,7 +5869,7 @@ test(`pager, ungrouped, with count limit reached, click previous`, async () => {
     expect(`.o_pager_limit`).toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -5904,7 +5904,7 @@ test(`pager, ungrouped, with count limit reached, edit pager`, async () => {
     expect(`.o_pager_limit`).toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -5945,7 +5945,7 @@ test(`pager, ungrouped, with count equals count limit`, async () => {
     expect(`.o_pager_limit`).toHaveText("4");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -5970,7 +5970,7 @@ test(`pager, ungrouped, reload while fetching count`, async () => {
     expect(`.o_pager_limit`).toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -6014,7 +6014,7 @@ test(`pager, ungrouped, next and fetch count simultaneously`, async () => {
     expect(`.o_pager_limit`).toHaveText("5+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -6145,7 +6145,7 @@ test(`count_limit attrs set in arch`, async () => {
     expect(`.o_pager_limit`).toHaveText("3+");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -6630,7 +6630,7 @@ test(`can display a list with a many2many field`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -7349,7 +7349,7 @@ test(`groupby node with a button`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -7448,7 +7448,7 @@ test(`groupby node with a button with modifiers`, async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -7493,7 +7493,7 @@ test(`groupby node with a button with modifiers using a many2one`, async () => {
     expect(`.o_group_header:eq(1) button`).toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -7904,7 +7904,7 @@ test(`click on a button in a list view`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -8541,7 +8541,7 @@ test(`pressing enter on last line of editable list view`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -8592,7 +8592,7 @@ test(`pressing tab on last cell of editable list view`, async () => {
     expect(`[name=foo] input`).toBeFocused();
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -8636,7 +8636,7 @@ test(`navigation with tab and read completes after default_get`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -8715,7 +8715,7 @@ test(`execute ActionMenus actions on desktop`, async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -8779,7 +8779,7 @@ test(`execute ActionMenus actions on mobile`, async () => {
 
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -9377,7 +9377,7 @@ test(`edition, then navigation with tab (with a readonly field)`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -10253,7 +10253,7 @@ test(`reference field batched in grouped list`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -10334,7 +10334,7 @@ test(`multi edit reference field batched in grouped list`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -10695,7 +10695,7 @@ test(`editable list view: multi edition`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -10836,7 +10836,7 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -11137,7 +11137,7 @@ test(`editable list view: mousedown on "Discard", mouseup somewhere else (no mul
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["oof", "blip", "gnap", "blip"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -11236,7 +11236,7 @@ test(`editable list view (multi edition): writable fields in readonly (force sav
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -11616,7 +11616,7 @@ test(`non editable list view: multi edition`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -12292,7 +12292,7 @@ test(`grouped list with groups_limit attribute`, async () => {
     expect(`.o_data_row`).toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // web_read_group page 1
         "has_group",
@@ -12398,7 +12398,7 @@ test(`grouped list with expand attribute`, async () => {
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["blip", "yop", "blip", "gnap"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -12448,7 +12448,7 @@ test(`grouped list (two levels) with expand attribute`, async () => {
     expect(`.o_group_header`).toHaveCount(6);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group", // global
         "has_group",
@@ -13076,7 +13076,7 @@ test.todo(`editing then pressing TAB in editable grouped list`, async () => {
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -13112,7 +13112,7 @@ test(`editing then pressing TAB (with a readonly field) in grouped list`, async 
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -13151,7 +13151,7 @@ test(`pressing ENTER in editable="bottom" grouped list view`, async () => {
     expect(`tr.o_data_row:eq(4)`).toHaveClass("o_selected_row");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -13189,7 +13189,7 @@ test(`pressing ENTER in editable="top" grouped list view`, async () => {
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -13212,7 +13212,7 @@ test(`pressing ENTER in editable grouped list view with create=0`, async () => {
     expect(`.o_data_row`).toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -15567,7 +15567,7 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
     expect(`[name=foo] span:eq(0)`).toHaveText("1");
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -15610,7 +15610,7 @@ test(`edit a field with a slow onchange in a new row`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -16922,7 +16922,7 @@ test(`reload properties definitions when domain change`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -16959,7 +16959,7 @@ test(`do not reload properties definitions when page change`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",
@@ -16996,7 +16996,7 @@ test(`load properties definitions only once when grouped`, async () => {
     });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read_group",
         "has_group",
@@ -17033,7 +17033,7 @@ test(`Invisible Properties`, async () => {
     expect(`.o_optional_columns_dropdown_toggle`).toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_search_read",
         "has_group",

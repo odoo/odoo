@@ -140,7 +140,7 @@ test("drop previous actions if possible", async () => {
     expect(".o_list_view").toHaveCount(1);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "/web/action/load",
         "get_views",
@@ -166,7 +166,7 @@ test("handle switching view and switching back on slow network", async () => {
     // here, we want the kanban view to reload itself, regardless of list view
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -243,7 +243,7 @@ test("execute a new action while loading a lazy-loaded controller", async () => 
     expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_read",
@@ -295,7 +295,7 @@ test("execute a new action while handling a call_button", async () => {
     expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -350,7 +350,7 @@ test("execute a new action while switching to another controller", async () => {
     expect(".o_list_view").toHaveCount(0, { message: "should no longer display the list view" });
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -400,7 +400,7 @@ test("execute a new action while loading views", async () => {
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "/web/action/load",
@@ -443,7 +443,7 @@ test("execute a new action while loading data of default view", async () => {
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "get_views",
         "web_read",
         "/web/action/load",
@@ -536,7 +536,7 @@ test("restoring a controller when doing an action -- load_action slow", async ()
     expect(".o_form_view").toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -570,7 +570,7 @@ test("switching when doing an action -- load_action slow", async () => {
     expect(".o_list_view").toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -603,7 +603,7 @@ test("switching when doing an action -- get_views slow", async () => {
     expect(".o_list_view").toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -638,7 +638,7 @@ test("switching when doing an action -- search_read slow", async () => {
     expect(".o_list_view").toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
-        "/web/webclient/load_menus",
+        "load_web_menus",
         "/web/action/load",
         "get_views",
         "web_search_read",
