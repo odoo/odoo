@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 
-from odoo.fields import Datetime as FieldsDatetime
+from odoo.fields import Command, Datetime as FieldsDatetime
 from odoo.tests.common import users
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -47,11 +47,11 @@ class TestEventData(EventCase, MockVisitor):
         [second_phone_question, company_name_question] = self.env['event.question'].create([{
             'title': 'Second Phone',
             'question_type': 'phone',
-            'event_id': event.id,
+            'event_ids': [Command.set(event.ids)],
         }, {
             'title': 'Company Name',
             'question_type': 'company_name',
-            'event_id': event.id,
+            'event_ids': [Command.set(event.ids)],
         }])
 
         form_details = {

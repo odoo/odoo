@@ -31,10 +31,10 @@
     <li>If you don't have this ticket, you will <b>not</b> be allowed entry!</li>
 </ul>
         </field>
-        <field name="question_ids" eval="[(5, 0, 0),
-            (0, 0, {'title': 'Name', 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Email', 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Phone', 'question_type': 'phone'})]"/>
+        <field name="question_ids" eval="[
+            (4, ref('event.event_question_name')),
+            (4, ref('event.event_question_email')),
+            (4, ref('event.event_question_phone'))]"/>
     </record>
     <record id="event_0_ticket_0" model="event.event.ticket">
         <field name="name">Free</field>
@@ -74,10 +74,10 @@
         <field name="stage_id" ref="event_stage_booked"/>
         <field name="kanban_state">blocked</field>
         <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_3'))]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
-            (0, 0, {'title': 'Name', 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Email', 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Phone', 'question_type': 'phone'})]"/>
+        <field name="question_ids" eval="[
+            (4, ref('event.event_question_name')),
+            (4, ref('event.event_question_email')),
+            (4, ref('event.event_question_phone'))]"/>
     </record>
 
     <record id="message_event_1_0" model="mail.message">
@@ -131,10 +131,10 @@
         <field name="seats_max">200</field>
         <field name="stage_id" ref="event_stage_booked"/>
         <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_1'))]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
-            (0, 0, {'title': 'Name', 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Email', 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Phone', 'question_type': 'phone'})]"/>
+        <field name="question_ids" eval="[
+            (4, ref('event.event_question_name')),
+            (4, ref('event.event_question_email')),
+            (4, ref('event.event_question_phone'))]"/>
     </record>
     <record id="event_2_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
@@ -174,10 +174,10 @@
         <field name="address_id" ref="event.res_partner_location_1"/>
         <field name="stage_id" ref="event_stage_announced"/>
         <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_3')), (4, ref('event.event_tag_category_2_tag_2'))]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
-            (0, 0, {'title': 'Name', 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Email', 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Phone', 'question_type': 'phone'})]"/>
+        <field name="question_ids" eval="[
+            (4, ref('event.event_question_name')),
+            (4, ref('event.event_question_email')),
+            (4, ref('event.event_question_phone'))]"/>
     </record>
     <record id="event_3_ticket_0" model="event.event.ticket">
         <field name="name">Standard</field>
@@ -221,10 +221,10 @@
         <field name="stage_id" ref="event_stage_done"/>
         <field name="kanban_state">done</field>
         <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_1'))]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
-            (0, 0, {'title': 'Name', 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Email', 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Phone', 'question_type': 'phone'})]"/>
+        <field name="question_ids" eval="[
+            (4, ref('event.event_question_name')),
+            (4, ref('event.event_question_email')),
+            (4, ref('event.event_question_phone'))]"/>
     </record>
     <record id="event_4_ticket_0" model="event.event.ticket">
         <field name="name">General Admission</field>
@@ -251,10 +251,10 @@
         <field name="event_type_id" ref="event_type_2"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
         <field name="tag_ids" eval="[(6, 0, [ref('event.event_tag_category_1_tag_2'), ref('event.event_tag_category_2_tag_3')])]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
-            (0, 0, {'title': 'Name', 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Email', 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Phone', 'question_type': 'phone'})]"/>
+        <field name="question_ids" eval="[
+            (4, ref('event.event_question_name')),
+            (4, ref('event.event_question_email')),
+            (4, ref('event.event_question_phone'))]"/>
     </record>
 
     <record id="event.event_6" model="event.event">
@@ -264,10 +264,10 @@
         <field eval="(DateTime.today()+ timedelta(days=30)).strftime('%Y-%m-%d 17:30:00')" name="date_end"/>
         <field name="event_type_id" ref="event_type_0"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
-        <field name="question_ids" eval="[(5, 0, 0),
-            (0, 0, {'title': 'Name', 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Email', 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Phone', 'question_type': 'phone'})]"/>
+        <field name="question_ids" eval="[
+            (4, ref('event.event_question_name')),
+            (4, ref('event.event_question_email')),
+            (4, ref('event.event_question_phone'))]"/>
     </record>
 
     <record id="event.event_7" model="event.event">
@@ -292,10 +292,10 @@
     </div>
 </div>
         </field>
-        <field name="question_ids" eval="[(5, 0, 0),
-            (0, 0, {'title': 'Name', 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Email', 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': 'Phone', 'question_type': 'phone'})]"/>
+        <field name="question_ids" eval="[
+            (4, ref('event.event_question_name')),
+            (4, ref('event.event_question_email')),
+            (4, ref('event.event_question_phone'))]"/>
     </record>
     <record id="event_7_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
