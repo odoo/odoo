@@ -19,7 +19,7 @@
             >
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0 justify-content-center" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
-                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view rounded-3" t-att-class="getAvatarContainerAttClass()">
+                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view rounded-3 o-shadow-sm-light" t-att-class="getAvatarContainerAttClass()">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
@@ -67,7 +67,7 @@
                                     <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing or message.edited))">
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="false"/>
                                         <t t-else="">
-                                            <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
+                                            <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block" t-att-class="{ 'w-100': state.isEditing, 'o-mail-Message-bubbleContainer o-shadow-sm-light': message.bubbleColor }">
                                                 <div t-if="message.bubbleColor" class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
                                                     'o-blue': message.bubbleColor === 'blue',
                                                     'o-green': message.bubbleColor === 'green',

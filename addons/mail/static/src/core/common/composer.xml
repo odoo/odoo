@@ -138,7 +138,7 @@
 </t>
 
 <t t-name="mail.Composer.quickActions">
-    <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions" t-att-class="{ 'pe-1': props.composer.message or !extended, 'pe-2': extended }">
+    <div class="o-mail-Composer-quickActions o-mail-Composer-bg o-shadow-sm-light" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions" t-att-class="{ 'pe-1': props.composer.message or !extended, 'pe-2': extended }">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-foreach="partitionedActions.quick" t-as="action" t-key="action.id">
                 <t t-call="mail.Composer.quickAction"/>
