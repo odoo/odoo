@@ -6,9 +6,8 @@
             <field name="name">im_livechat.report.channel.pivot</field>
             <field name="model">im_livechat.report.channel</field>
             <field name="arch" type="xml">
-                <pivot string="Livechat Support Statistics" sample="1">
+                <pivot string="Livechat Support Statistics" display_quantity="1" sample="1">
                     <field name="partner_id" type="row"/>
-                    <field name="nbr_channel" type="measure"/>
                     <field name="time_to_answer" type="measure"/>
                     <field name="duration" type="measure"/>
                     <field name="rating" type="measure"/>
