@@ -300,6 +300,7 @@ class DiscussChannel(models.Model):
                     )
                 )
                 question_msg.user_script_answer_id = selected_answer
+                question_msg.user_raw_script_answer_id = selected_answer.id
                 if store := self.env.context.get("message_post_store"):
                     store.add(message, for_current_user=True).add(question_msg.mail_message_id)
 
