@@ -242,6 +242,8 @@ class StockRule(models.Model):
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         company_id = self.company_id.id
         copied_quantity = move_to_copy.quantity
+        group_id = self._get_group_id(move_to_copy.group_id)
+
         if float_compare(move_to_copy.product_uom_qty, 0, precision_rounding=move_to_copy.product_uom.rounding) < 0:
             copied_quantity = move_to_copy.product_uom_qty
         if not company_id:
@@ -253,6 +255,7 @@ class StockRule(models.Model):
             'location_dest_id': self.location_dest_id.id,
             'location_final_id': move_to_copy.location_final_id.id,
             'rule_id': self.id,
+            'group_id': group_id,
             'date': new_date,
             'date_deadline': move_to_copy.date_deadline,
             'company_id': company_id,
@@ -303,6 +306,13 @@ class StockRule(models.Model):
         """
         return []
 
+    def _get_group_id(self, current_group_id):
+        if self.group_propagation_option == 'propagate':
+            return current_group_id and current_group_id.id or False
+        elif self.group_propagation_option == 'fixed':
+            return self.group_id.id
+        return False
+
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values):
         ''' Returns a dictionary of values that will be used to create a stock move from a procurement.
         This function assumes that the given procurement has a rule (action == 'pull' or 'pull_push') set on it.
@@ -310,11 +320,7 @@ class StockRule(models.Model):
         :param procurement: browse record
         :rtype: dictionary
         '''
-        group_id = False
-        if self.group_propagation_option == 'propagate':
-            group_id = values.get('group_id', False) and values['group_id'].id
-        elif self.group_propagation_option == 'fixed':
-            group_id = self.group_id.id
+        group_id = self._get_group_id(values.get('group_id', False))
 
         date_scheduled = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
