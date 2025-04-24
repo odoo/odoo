@@ -3784,3 +3784,19 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2025-01-05"):
             allocation._update_accrual()
             self.assertEqual(allocation.number_of_days, 8, "The number of days should be updated successfully")
+
+    def test_accrual_allocation_constraint_1(self):
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave.accrual.plan'].create({
+                'name': 'Accrual Plan with no carryover',
+                'accrued_gain_time': 'start',
+                'carryover_date': 'year_start',
+                'level_ids': [Command.create({
+                    'added_value': 8,
+                    'added_value_type': 'day',
+                    'action_with_unused_accruals': 'lost',
+                    'frequency': 'bimonthly',
+                    'first_day': '20',
+                    'second_day': '3',
+                })],
+            })
