@@ -749,7 +749,7 @@ export const accountTaxHelpers = {
                 }
 
                 if (index === 0) {
-                    const base_rounding_key = [currency.id, base_line.is_refund];
+                    const base_rounding_key = [currency.id, base_line.is_refund, computation_key];
                     if (!(base_rounding_key in total_per_base)) {
                         total_per_base[base_rounding_key] = {
                             currency: currency,
@@ -776,7 +776,7 @@ export const accountTaxHelpers = {
 
             // If not, just account the base amounts.
             if (!taxes_data.length) {
-                const tax_rounding_key = [null, currency.id, base_line.is_refund, false, null];
+                const tax_rounding_key = [null, currency.id, base_line.is_refund, false, computation_key];
                 if (!(tax_rounding_key in total_per_tax)) {
                     total_per_tax[tax_rounding_key] = {
                         tax: null,
@@ -801,7 +801,7 @@ export const accountTaxHelpers = {
                     tax_amounts.base_lines.push(base_line);
                 }
 
-                const base_rounding_key = [currency.id, base_line.is_refund];
+                const base_rounding_key = [currency.id, base_line.is_refund, computation_key];
                 if (!(base_rounding_key in total_per_base)) {
                     total_per_base[base_rounding_key] = {
                         currency: currency,
@@ -985,7 +985,7 @@ export const accountTaxHelpers = {
                         tax_details[`delta_total_excluded${delta_currency_indicator}`] +=
                             amount_to_distribute;
 
-                        const base_rounding_key = [currency.id, base_line.is_refund];
+                        const base_rounding_key = [currency.id, base_line.is_refund, base_line.computation_key];
                         const base_amounts = total_per_base[base_rounding_key];
                         base_amounts[`base_amount${delta_currency_indicator}`] +=
                             amount_to_distribute;

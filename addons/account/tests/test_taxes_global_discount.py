@@ -777,16 +777,16 @@ class TestTaxesGlobalDiscount(TestTaxCommon):
                 'currency_id': self.foreign_currency.id,
                 'company_currency_id': self.currency.id,
                 'base_amount_currency': 31.14,
-                'base_amount': 6.23,
+                'base_amount': 6.22,
                 'tax_amount_currency': 4.79,
                 'tax_amount': 0.95,
                 'total_amount_currency': 35.93,
-                'total_amount': 7.18,
+                'total_amount': 7.17,
                 'subtotals': [
                     {
                         'name': "Untaxed Amount",
                         'base_amount_currency': 31.14,
-                        'base_amount': 6.23,
+                        'base_amount': 6.22,
                         'tax_amount_currency': 4.79,
                         'tax_amount': 0.95,
                         'tax_groups': [
@@ -834,16 +834,16 @@ class TestTaxesGlobalDiscount(TestTaxCommon):
                 'currency_id': self.foreign_currency.id,
                 'company_currency_id': self.currency.id,
                 'base_amount_currency': 29.53,
-                'base_amount': 5.91,
+                'base_amount': 5.9,
                 'tax_amount_currency': 4.56,
                 'tax_amount': 0.9,
                 'total_amount_currency': 34.09,
-                'total_amount': 6.81,
+                'total_amount': 6.8,
                 'subtotals': [
                     {
                         'name': "Untaxed Amount",
                         'base_amount_currency': 29.53,
-                        'base_amount': 5.91,
+                        'base_amount': 5.9,
                         'tax_amount_currency': 4.56,
                         'tax_amount': 0.9,
                         'tax_groups': [
@@ -891,16 +891,16 @@ class TestTaxesGlobalDiscount(TestTaxCommon):
                 'currency_id': self.foreign_currency.id,
                 'company_currency_id': self.currency.id,
                 'base_amount_currency': 26.04,
-                'base_amount': 5.21,
+                'base_amount': 5.2,
                 'tax_amount_currency': 4.02,
                 'tax_amount': 0.79,
                 'total_amount_currency': 30.06,
-                'total_amount': 6.0,
+                'total_amount': 5.99,
                 'subtotals': [
                     {
                         'name': "Untaxed Amount",
                         'base_amount_currency': 26.04,
-                        'base_amount': 5.21,
+                        'base_amount': 5.2,
                         'tax_amount_currency': 4.02,
                         'tax_amount': 0.79,
                         'tax_groups': [

@@ -210,11 +210,6 @@ class TestSaleCommon(AccountTestInvoicingCommon):
 class TestTaxCommonSale(TestSaleCommon, TestTaxCommon):
 
     @classmethod
-    def get_default_groups(cls):
-        groups = super().get_default_groups()
-        return groups | cls.quick_ref('sales_team.group_sale_manager')
-
-    @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.foreign_currency_pricelist = cls.env['product.pricelist'].create({
