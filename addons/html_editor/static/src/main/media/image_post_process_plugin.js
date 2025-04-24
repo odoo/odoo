@@ -33,6 +33,7 @@ export class ImagePostProcessPlugin extends Plugin {
         const processContext = {};
         if (!newDataset.originalSrc || !newDataset.mimetypeBeforeConversion) {
             Object.assign(newDataset, await loadImageInfo(img));
+            await loadImage(newDataset.originalSrc, img);
         }
         if (onImageInfoLoaded) {
             if (await onImageInfoLoaded(newDataset)) {
