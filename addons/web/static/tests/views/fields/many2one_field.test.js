@@ -1196,75 +1196,6 @@ test("many2one searches with correct value", async () => {
     expect.verifySteps(["search: ", "search: ", "search: p", "search: p"]);
 });
 
-test("many2one search with server returning multiple lines", async () => {
-    const namegets = {
-        2: "fizz\nbuzz\nfizzbuzz",
-        4: "aaa\nAAA\nRecord",
-    };
-
-    onRpc("web_read", async ({ parent }) => {
-        expect.step("web_read");
-        const result = await parent();
-        result[0].trululu = {
-            id: result[0].trululu.id,
-            display_name: namegets[result[0].trululu.id],
-        };
-        return result;
-    });
-    onRpc("web_name_search", () => {
-        expect.step("web_name_search");
-        return Object.keys(namegets).map((id) => ({
-            id: parseInt(id),
-            display_name: namegets[id],
-            __formatted_display_name: namegets[id],
-        }));
-    });
-    onRpc("web_save", ({ args }) => {
-        expect.step("web_save");
-        expect(args[1]).toEqual({
-            trululu: 2,
-        });
-    });
-
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: `
-            <form>
-                <sheet>
-                    <group>
-                        <field name="trululu" />
-                    </group>
-                </sheet>
-            </form>`,
-    });
-    expect.verifySteps(["web_read"]);
-
-    // Initial value
-    expect(".o_field_widget input").toHaveValue("aaa");
-    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>AAA</div><div>Record</div>", {
-        type: "html",
-    });
-
-    // Change the value
-    await contains(".o_field_widget input").edit("fizz", { confirm: false });
-    await runAllTimers();
-    // should display only the first line of the returned value from the server
-    expect.verifySteps(["web_name_search"]);
-    expect(queryAllTexts(".dropdown-menu li:not(.o_m2o_dropdown_option")).toEqual(["fizz", "aaa"]);
-    await contains(".dropdown-menu li").click();
-
-    expect.verifySteps([]);
-    expect(".o_field_widget input").toHaveValue("fizz");
-    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>buzz</div><div>fizzbuzz</div>", {
-        type: "html",
-    });
-
-    await clickSave();
-    expect.verifySteps(["web_save"]);
-});
-
 test("many2one search with trailing and leading spaces", async () => {
     onRpc("web_name_search", ({ kwargs }) => {
         expect.step("search: " + kwargs.name);
@@ -3916,7 +3847,7 @@ test("many2one search with formatted name", async () => {
         {
             id: 1,
             display_name: "Paul Eric",
-            __formatted_display_name: "Test: **Paul** --Eric-- `good guy`<br><tab>More text",
+            __formatted_display_name: "Test: **Paul** --Eric-- `good guy`\n\tMore text",
         },
     ]);
     await mountView({

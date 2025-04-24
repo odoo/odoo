@@ -352,7 +352,7 @@ export class Many2XAutocomplete extends Component {
         const label = record.__formatted_display_name || record.display_name;
         return {
             data: { record },
-            label: label ? odoomark(label.split("\n")[0]) : _t("Unnamed"),
+            label: label ? odoomark(label) : _t("Unnamed"),
             onSelect: () => this.props.update([record]),
         };
     }
