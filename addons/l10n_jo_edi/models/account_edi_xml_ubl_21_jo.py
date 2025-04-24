@@ -107,6 +107,27 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     def _get_payment_method_code(self, invoice):
         return PAYMENT_CODES_MAP.get(invoice.company_id.l10n_jo_edi_taxpayer_type, {}).get('receivable', '')
 
+    def _get_line_edi_id(self, line, default_id):
+        if not line.is_refund:  # in case it's invoice not credit note
+            return default_id
+
+        refund_move = line.move_id
+        invoice_move = refund_move.reversed_entry_id
+        invoice_lines = invoice_move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
+        n = len(invoice_lines)
+
+        line_id = -1
+        for invoice_line_id, invoice_line in enumerate(invoice_lines, 1):
+            if line.product_id == invoice_line.product_id \
+                    and line.name == invoice_line.name \
+                    and line.price_unit == invoice_line.price_unit:
+                line_id = invoice_line_id
+                break
+        if line_id == -1:
+            line_id = n + default_id
+
+        return line_id
+
     ########################################################
     # overriding vals methods of account_edi_xml_ubl_20 file
     ########################################################
@@ -280,7 +301,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         return {
             'currency': JO_CURRENCY,
             'currency_dp': self._get_currency_decimal_places(),
-            'id': line_id + 1,
+            'id': self._get_line_edi_id(line, default_id=line_id + 1),
             'line_quantity': line.quantity,
             'line_quantity_attrs': {'unitCode': self._get_uom_unece_code()},
             'line_extension_amount': self._get_line_taxable_amount(self._extract_base_lines(taxes_vals)[0]),
