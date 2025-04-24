@@ -675,7 +675,7 @@ class AccountMove(models.Model):
             'partner_bank': self.partner_bank_id,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,
-            'payment_method': 'MP05',
+            'payment_method': self.l10n_it_payment_method,
             'downpayment_moves': downpayment_moves,
             'reconciled_moves': self._get_reconciled_invoices(),
             'rc_refund': reverse_charge_refund,
