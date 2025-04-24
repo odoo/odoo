@@ -271,3 +271,19 @@ class TestRecruitmentTalentPool(TransactionCase):
             expected,
             "new_job_applicants, created through the wizard, should be linked to Job 2 and Job 3",
         )
+
+    def test_update_applicant_after_adding_to_pool(self):
+        """
+        Test that an applicant's fields (e.g., email) can still be updated after adding them to a talent pool.
+        """
+        self.env["talent.pool.add.applicants"].create({
+            "applicant_ids": self.t_applicant_1.ids,
+        }).action_add_applicants_to_pool()
+
+        new_email = "updated@gmail.com"
+        self.t_applicant_1.write({"email_from": new_email})
+        self.assertEqual(
+            self.t_applicant_1.email_from,
+            new_email,
+            "The email_from field should be updated successfully",
+        )
