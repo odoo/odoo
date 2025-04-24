@@ -8,7 +8,7 @@ from pathlib import Path
 
 from odoo.addons.hw_drivers.tools.helpers import (
     get_conf,
-    get_mac_address,
+    get_identifier,
     get_path_nginx,
     odoo_restart,
     require_db,
@@ -123,7 +123,7 @@ def inform_database(ssl_certificate_end_date, server_url=None):
     try:
         response = requests.post(
             server_url + "/iot/box/update_certificate_status",
-            json={'params': {'iot_mac': get_mac_address(), 'ssl_certificate_end_date': ssl_certificate_end_date}},
+            json={'params': {'identifier': get_identifier(), 'ssl_certificate_end_date': ssl_certificate_end_date}},
             timeout=5,
         )
         response.raise_for_status()

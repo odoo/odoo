@@ -56,7 +56,7 @@ class EventManager(object):
             # Notify via websocket
             send_to_controller({
                 'session_id': data.get('action_args', {}).get('session_id', ''),
-                'iot_box_identifier': helpers.get_mac_address(),
+                'iot_box_identifier': helpers.get_identifier(),
                 'device_identifier': device.device_identifier,
                 **data,
             })

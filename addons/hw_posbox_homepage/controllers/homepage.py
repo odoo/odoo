@@ -165,7 +165,7 @@ class IotBoxOwlHomePage(http.Controller):
             'enterprise_code': helpers.get_conf('enterprise_code'),
             'hostname': helpers.get_hostname(),
             'ip': helpers.get_ip(),
-            'mac': helpers.get_mac_address(),
+            'identifier': helpers.get_identifier(),
             'devices': grouped_devices,
             'server_status': odoo_server_url,
             'pairing_code': connection_manager.pairing_code,
