@@ -313,8 +313,21 @@ class SessionExpiredException(Exception):
     pass
 
 
-def content_disposition(filename):
-    return "attachment; filename*=UTF-8''{}".format(
+def content_disposition(filename, disposition_type='attachment'):
+    """
+    Craft a ``Content-Disposition`` header, see :rfc:`6266`.
+
+    :param filename: The name of the file, should that file be saved on
+        disk by the browser.
+    :param disposition_type: Tell the browser what to do with the file,
+        either ``"attachment"`` to save the file on disk,
+        either ``"inline"`` to display the file.
+    """
+    if disposition_type not in ('attachment', 'inline'):
+        e = f"Invalid disposition_type: {disposition_type!r}"
+        raise ValueError(e)
+    return "{}; filename*=UTF-8''{}".format(
+        disposition_type,
         url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%') # RFC6266
     )
 
