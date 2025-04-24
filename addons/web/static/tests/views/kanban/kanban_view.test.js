@@ -5220,7 +5220,7 @@ test("edit a favorite: group by = default_group_by", async () => {
 
     await contains(".o_searchview_facet_label").click();
     await addNewRule();
-    await contains("button:contains('Confirm')").click();
+    await contains("button:contains('Search')").click();
     expect(getFacetTexts()).toEqual(["Id\n1"]);
 });
 
@@ -5263,7 +5263,7 @@ test("edit a favorite: group by != default_group_by", async () => {
 
     await contains(".o_searchview_facet_label").click();
     await addNewRule();
-    await contains("button:contains('Confirm')").click();
+    await contains("button:contains('Search')").click();
     expect(getFacetTexts()).toEqual(["Id\n1", "Product"]);
 });
 

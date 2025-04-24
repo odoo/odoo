@@ -524,7 +524,9 @@ export class SearchBar extends Component {
                 }
             },
             disableConfirmButton: (domain) => domain === `[]`,
-            title: _t("Modify Condition"),
+            title: _t("Custom Filter"),
+            confirmButtonText: _t("Search"),
+            discardButtonText: _t("Discard"),
             isDebugMode: this.env.searchModel.isDebugMode,
         });
     }
