@@ -1,7 +1,7 @@
 from odoo import models, fields, api
 import requests
 import logging
-
+from odoo.exceptions import UserError, ValidationError
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -45,8 +45,13 @@ class SaleOrder(models.Model):
             ])
             # Filter only "pick" type pickings
             pick_only_picking_records = picking_records.filtered(
-                lambda p: 'Pick' in p.picking_type_id.name  # Adjust logic based on your type naming convention
+                lambda p: 'Pick' in p.picking_type_id.name
             )
+            waiting_pickings = pick_only_picking_records.filtered(lambda p: p.state == 'confirmed')
+            if waiting_pickings:
+                pick_names = ', '.join(waiting_pickings.mapped('name'))
+                raise ValidationError(
+                    f"Cannot release order {order.name}: Picking {pick_names} are in 'waiting' state.")
 
             for line in order.order_line:
                 product_qty = line.product_uom_qty
@@ -116,11 +121,14 @@ class SaleOrder(models.Model):
                         product_available_in_source = True
                         break
 
-                # if not product_available_in_source:
-                #     logger.warning(
-                #         f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}.")
-                #     all_products_available = False
-                #     break
+                if not product_available_in_source:
+                    message = (
+                        f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}."
+                    )
+                    logger.warning(message)
+                    raise ValidationError(message)
+                    all_products_available = False
+                    break
 
                 # Collect pickings that include the product
                 product_pickings = pick_only_picking_records.filtered(
