@@ -2965,7 +2965,7 @@ class BaseModel(metaclass=MetaModel):
         Note that the cursor on self has to be in a valid state.
         """
         if (constraint_name := exc.diag.constraint_name) and (cons := self._table_objects.get(constraint_name)):
-            cons_rec = self.env['ir.model.constraint'].search_fetch([
+            cons_rec = self.env['ir.model.constraint'].sudo().search_fetch([
                 ('name', '=', constraint_name),
                 ('model.model', '=', self._name),
             ], ['message'], limit=1)
