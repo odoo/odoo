@@ -133,8 +133,8 @@ export function odoomark(text) {
     const boldEx = /\*\*(.+?)\*\*/g;
     const textMutedEx = /--(.+?)--/g;
     const tagEx = /&#x60;(.+?)&#x60;/g;
-    const brEx = /&lt;br&gt;/g;
-    const tabEx = /&lt;tab&gt;/g;
+    const brEx = /\n/g;
+    const tabEx = /\t/g;
 
     return markup(
         escape(text)
