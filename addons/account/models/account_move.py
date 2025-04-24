@@ -6381,12 +6381,13 @@ class AccountMove(models.Model):
         elif allow_fallback:
             return [self._get_invoice_pdf_proforma()]
 
-    def _get_invoice_report_filename(self, extension='pdf'):
+    def _get_invoice_report_filename(self, extension='pdf', report=None):
         """ Get the filename of the generated invoice report with extension file. """
         self.ensure_one()
-        report_id = self.partner_id.invoice_template_pdf_report_id or self.env.ref('account.account_invoices')
-        if report_id.print_report_name and isinstance(report_id.print_report_name, str):
-            file_name = safe_eval(report_id.print_report_name, {'object': self})
+        if not report:
+            report = self.partner_id.invoice_template_pdf_report_id or self.env.ref('account.account_invoices')
+        if report.print_report_name and isinstance(report.print_report_name, str):
+            file_name = safe_eval(report.print_report_name, {'object': self})
         else:
             file_name = self.name
         return f"{file_name.replace('/', '_')}.{extension}"
