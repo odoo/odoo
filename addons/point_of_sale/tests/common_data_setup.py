@@ -95,7 +95,6 @@ def setup_test_pos_payment_mehods(self):
     self.bank_payment_method = pm_obj.create({
         'name': 'Bank',
         'journal_id': self.bank_journal.id,
-        'receivable_account_id': self.account_receivable.id,
         'is_cash_count': False,
         'split_transactions': False,
         'company_id': self.env.company.id,
@@ -772,7 +771,7 @@ def setup_test_pos(cls):
         'account_type': 'asset_receivable',
         'reconcile': True
     })
-    cls.env.company.account_default_pos_receivable_account_id = cls.company_data['default_account_receivable']
+    cls.env.company.account_default_pos_receivable_account_id = cls.account_receivable
 
     cls.env['ir.default'].set('res.partner', 'property_account_receivable_id', cls.company_data['default_account_receivable'].id, company_id=cls.main_company.id)
     # Pricelists are set below, do not take demo data into account

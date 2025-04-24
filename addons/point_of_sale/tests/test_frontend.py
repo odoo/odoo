@@ -138,7 +138,19 @@ class TestUi(TestPointOfSaleHttpCommon):
         """ Assert the negative amount of a negative-quantity orderline
             with zero-amount product with fixed tax.
         """
-
+        self.main_pos_config = self.env['pos.config'].create({
+            'name': 'Shop 1',
+            'module_pos_restaurant': False,
+            'payment_method_ids': [
+                Command.create({
+                    'name': 'Bank 1',
+                    'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+                    'is_cash_count': False,
+                    'split_transactions': False,
+                    'company_id': self.env.company.id,
+                })
+            ]
+         })
         tax_received_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
@@ -158,6 +170,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'price_include_override': 'tax_excluded',
         })
         # setup the zero-amount product
+        self.letter_tray.taxes_id = False
         self.letter_tray.write({
             'list_price': 0,
             'taxes_id': [(6, 0, [fixed_tax.id])],
@@ -175,7 +188,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         lines = pos_session.move_id.line_ids.sorted('balance')
 
         # order in the tour is paid using the bank payment method.
-        bank_pm = self.bank_payment_method
+        bank_pm = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.name == 'Bank')
 
         self.assertEqual(lines[0].account_id, bank_pm.receivable_account_id or self.env.company.account_default_pos_receivable_account_id)
         self.assertAlmostEqual(lines[0].balance, -1)
@@ -1038,36 +1051,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(frontend_created_product_edited.list_price, 50.0)
 
     def test_fiscal_position_tax_group_labels(self):
-        tax_1 = self.env['account.tax'].create({
-            'name': 'Tax 15%',
-            'amount': 15,
-            'price_include_override': 'tax_included',
-            'amount_type': 'percent',
-            'type_tax_use': 'sale',
-        })
-        tax_1.tax_group_id.pos_receipt_label = 'Tax Group 1'
-
-        tax_2 = self.env['account.tax'].create({
-            'name': 'Tax 5%',
-            'amount': 5,
-            'price_include_override': 'tax_included',
-            'amount_type': 'percent',
-            'type_tax_use': 'sale',
-        })
-        tax_2.tax_group_id.pos_receipt_label = 'Tax Group 2'
-
-        self.product = self.env['product.product'].create({
-            'name': 'Test Product',
-            'taxes_id': [(6, 0, [tax_1.id])],
-            'list_price': 100,
-            'available_in_pos': True,
-        })
+        self.account_tax_10_incl.tax_group_id.pos_receipt_label = 'Tax Group 1'
+        self.tax20in.tax_group_id.pos_receipt_label = 'Tax Group 2'
 
         fiscal_position = self.env['account.fiscal.position'].create({
             'name': 'Fiscal Position Test',
             'tax_ids': [(0, 0, {
-                'tax_src_id': tax_1.id,
-                'tax_dest_id': tax_2.id,
+                'tax_src_id': self.account_tax_10_incl.id,
+                'tax_dest_id': self.tax20in.id,
             })],
         })
 
@@ -1077,6 +1068,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_fiscal_position_tax_group_labels', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

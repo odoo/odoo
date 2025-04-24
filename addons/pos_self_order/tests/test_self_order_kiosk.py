@@ -67,6 +67,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.start_pos_self_tour("kiosk_order_price_null")
 
     def test_self_order_language_changes(self):
+        self.setup_test_self_presets()
         self.env['res.lang']._activate_lang('fr_FR')
         self.desk_organizer.with_context(lang='fr_FR').name = "Organisateur de bureau"
 

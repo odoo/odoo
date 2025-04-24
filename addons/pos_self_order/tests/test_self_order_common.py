@@ -39,8 +39,7 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
 
         # Kiosk test
         self.pos_config.write({"self_ordering_mode": "kiosk"})
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "kiosk_order_pos_closed")
+        self.start_pos_self_tour("kiosk_order_pos_closed")
 
     def test_self_order_config_default_user(self):
         self.pos_config.payment_method_ids = self.pos_config.payment_method_ids.filtered(lambda pm: not pm.is_cash_count)

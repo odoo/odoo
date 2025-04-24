@@ -23,6 +23,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
         cls.company_data_2 = cls.setup_other_company()
         cls.main_company = cls._get_main_company()
+        cls.company = cls.company_data['company']
         cls.PosMakePayment = cls.env['pos.make.payment']
         cls.PosOrder = cls.env['pos.order']
 
