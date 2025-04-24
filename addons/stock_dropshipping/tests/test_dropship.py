@@ -346,3 +346,22 @@ class TestDropship(common.TransactionCase):
             {'product_id': subcontracted_service.id, 'product_uom_qty': 1.0, 'qty_delivered': 0.0},
             {'product_id': self.dropship_product.id, 'product_uom_qty': 0.0, 'qty_delivered': 1.0},
         ])
+
+    def test_search_lot_partner_from_dropship(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.lot_dropship_product.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order.procurement_group_id.purchase_line_ids.order_id
+        purchase_order.button_confirm()
+        dropship_picking = purchase_order.picking_ids
+        dropship_picking.move_line_ids.lot_name = 'dropship lot'
+        dropship_picking.move_ids.picked = True
+        dropship_picking.button_validate()
+        action_view_stock_serial_domain = self.customer.action_view_stock_serial()['domain']
+        customer_lots = self.env['stock.lot'].search(action_view_stock_serial_domain)
+        self.assertEqual(customer_lots, dropship_picking.move_ids.lot_ids)
