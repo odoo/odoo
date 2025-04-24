@@ -139,9 +139,8 @@ export class PivotRenderer extends Component {
             fieldName: item.fieldName || item.name,
             description: item.description || item.string,
             options:
-                item.options || ["date", "datetime"].includes(item.type)
-                    ? getIntervalOptions()
-                    : undefined,
+                item.options ||
+                (["date", "datetime"].includes(item.type) ? getIntervalOptions() : undefined),
         }));
     }
 
