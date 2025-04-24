@@ -22,6 +22,7 @@ class AccountMove(models.Model):
     l10n_jo_edi_state = fields.Selection(
         selection=[('to_send', 'To Send'), ('sent', 'Sent')],
         string="JoFotara State",
+        tracking=True,
         copy=False)
     l10n_jo_edi_error = fields.Text(
         string="JoFotara Error",
