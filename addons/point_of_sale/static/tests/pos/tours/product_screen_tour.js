@@ -685,3 +685,14 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_product_long_press", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.longPressProduct("Test Product"),
+            Dialog.is(),
+            Chrome.endTour(),
+        ].flat(),
+});

@@ -92,6 +92,7 @@
             'point_of_sale/static/tests/pos/tours/**/*',
             'point_of_sale/static/tests/generic_helpers/**/*',
             'point_of_sale/static/tests/customer_display/**/*',
+            'point_of_sale/static/src/utils.js'
         ],
         'web.assets_unit_tests': [
             # for the related_models.test.js
