@@ -5,6 +5,8 @@ import { register_payment_method } from "@point_of_sale/app/services/pos_store";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 const { DateTime } = luxon;
 
+const POLLING_INTERVAL_MS = 5000;
+
 export class PaymentAdyen extends PaymentInterface {
     setup() {
         super.setup(...arguments);
@@ -156,6 +158,22 @@ export class PaymentAdyen extends PaymentInterface {
         });
     }
 
+    _adyenCheckPaymentStatus() {
+        const data = {
+            SaleToPOIRequest: {
+                MessageHeader: Object.assign(this._adyenCommonMessageHeader(), {
+                    MessageCategory: "TransactionStatus",
+                }),
+                TransactionStatusRequest: {
+                    ReceiptReprintFlag: true,
+                    DocumentQualifier: ["CustomerReceipt", "CashierReceipt"],
+                },
+            },
+        };
+
+        return this._callAdyen(data, "payment_status");
+    }
+
     _convertReceiptInfo(output_text) {
         return output_text.reduce((acc, entry) => {
             var params = new URLSearchParams(entry.Text);
@@ -205,10 +223,67 @@ export class PaymentAdyen extends PaymentInterface {
         }
     }
 
+    _adyenHandlePaymentStatus(response, paymentLine, resolve, pollingIntervalId) {
+        const transactionStatus = response.SaleToPOIResponse.TransactionStatusResponse.Response;
+
+        if (transactionStatus.Result === "Success") {
+            clearInterval(pollingIntervalId);
+            const repeatedResponseMessage =
+                response.SaleToPOIResponse.TransactionStatusResponse.RepeatedMessageResponse;
+            const body = repeatedResponseMessage.RepeatedResponseMessageBody;
+            const header = repeatedResponseMessage.MessageHeader;
+            this.processPaymentResponse(paymentLine, header, body);
+        } else if (transactionStatus.ErrorCondition === "NotFound") {
+            clearInterval(pollingIntervalId);
+            resolve(false);
+        }
+    }
+
     waitForPaymentConfirmation() {
         return new Promise((resolve) => {
-            this.paymentLineResolvers[this.pendingAdyenline().uuid] = resolve;
+            const paymentLine = this.pendingAdyenline();
+            const serviceId = paymentLine.terminalServiceId;
+            this.paymentLineResolvers[paymentLine.uuid] = resolve;
+
+            const intervalId = setInterval(async () => {
+                const isPaymentStillValid = () =>
+                    this.paymentLineResolvers[paymentLine.uuid] &&
+                    this.pendingAdyenline()?.terminalServiceId === serviceId &&
+                    paymentLine.payment_status === "waitingCard";
+
+                if (!isPaymentStillValid()) {
+                    clearInterval(intervalId);
+                    return;
+                }
+
+                const response = await this._adyenCheckPaymentStatus();
+                if (response && isPaymentStillValid()) {
+                    this._adyenHandlePaymentStatus(response, paymentLine, resolve, intervalId);
+                }
+            }, POLLING_INTERVAL_MS);
         });
+    }
+
+    processPaymentResponse(line, header, body) {
+        const paymentResponse = body.PaymentResponse;
+        const additionalResponse = new URLSearchParams(paymentResponse.Response.AdditionalResponse);
+        const isPaymentSuccessful = this.isPaymentSuccessful(header, paymentResponse.Response);
+        if (isPaymentSuccessful) {
+            this.handleSuccessResponse(line, paymentResponse, additionalResponse);
+        } else {
+            this._show_error(_t("Message from Adyen: %s", additionalResponse.get("message")));
+        }
+        // when starting to wait for the payment response we create a promise
+        // that will be resolved when the payment response is received.
+        // In case this resolver is lost ( for example on a refresh ) we
+        // we use the handle_payment_response method on the payment line
+        const resolver = this.paymentLineResolvers?.[line.uuid];
+        if (resolver) {
+            this.paymentLineResolvers[line.uuid] = null;
+            resolver(isPaymentSuccessful);
+        } else {
+            line.handlePaymentResponse(isPaymentSuccessful);
+        }
     }
 
     /**
@@ -227,36 +302,19 @@ export class PaymentAdyen extends PaymentInterface {
             return;
         }
         const line = this.pendingAdyenline();
-        const response = notification.SaleToPOIResponse.PaymentResponse.Response;
-        const additional_response = new URLSearchParams(response.AdditionalResponse);
-        const isPaymentSuccessful = this.isPaymentSuccessful(notification, response);
-        if (isPaymentSuccessful) {
-            this.handleSuccessResponse(line, notification, additional_response);
-        } else {
-            this._show_error(_t("Message from Adyen: %s", additional_response.get("message")));
-        }
-        // when starting to wait for the payment response we create a promise
-        // that will be resolved when the payment response is received.
-        // In case this resolver is lost ( for example on a refresh ) we
-        // we use the handlePaymentResponse method on the payment line
-        const resolver = this.paymentLineResolvers?.[line?.uuid];
-        if (resolver) {
-            resolver(isPaymentSuccessful);
-        } else {
-            line?.handlePaymentResponse(isPaymentSuccessful);
-        }
+        const response = notification.SaleToPOIResponse;
+        const header = notification.SaleToPOIResponse.MessageHeader;
+
+        this.processPaymentResponse(line, header, response);
     }
-    isPaymentSuccessful(notification, response) {
+    isPaymentSuccessful(header, response) {
         return (
-            notification &&
-            notification.SaleToPOIResponse.MessageHeader.ServiceID ==
-                this.pendingAdyenline()?.terminalServiceId &&
+            header.ServiceID === this.pendingAdyenline().terminalServiceId &&
             response.Result === "Success"
         );
     }
-    handleSuccessResponse(line, notification, additional_response) {
+    handleSuccessResponse(line, payment_response, additional_response) {
         const config = this.pos.config;
-        const payment_response = notification.SaleToPOIResponse.PaymentResponse;
         const payment_result = payment_response.PaymentResult;
 
         const cashier_receipt = payment_response.PaymentReceipt.find(
