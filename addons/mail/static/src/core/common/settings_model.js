@@ -87,6 +87,7 @@ export class Settings extends Record {
             return this.useBlur && rtc.state?.cameraTrack && !hasHardwareAcceleration();
         },
     });
+    cameraFacingMode = undefined;
 
     logRtc = false;
     /**
@@ -107,7 +108,9 @@ export class Settings extends Record {
         const constraints = {
             width: 1280,
         };
-        if (this.cameraInputDeviceId) {
+        if (this.cameraFacingMode) {
+            constraints.facingMode = this.cameraFacingMode;
+        } else if (this.cameraInputDeviceId) {
             constraints.deviceId = this.cameraInputDeviceId;
         }
         return constraints;
@@ -218,6 +221,7 @@ export class Settings extends Record {
      * @param {String} cameraInputDeviceId
      */
     async setCameraInputDevice(cameraInputDeviceId) {
+        this.cameraFacingMode = undefined;
         this.cameraInputDeviceId = cameraInputDeviceId;
         browser.localStorage.setItem(
             "mail_user_setting_camera_input_device_id",
