@@ -92,7 +92,9 @@ patch(PaymentScreen.prototype, {
             });
             const program = ProgramModel.get(pe.program_id);
             if (
-                (program.is_nominative || program.program_type == "next_order_coupons") &&
+                (program.is_nominative ||
+                    program.program_type == "next_order_coupons" ||
+                    program.program_type == "gift_card") &&
                 partner
             ) {
                 agg[pe.coupon_id].partner_id = partner.id;
