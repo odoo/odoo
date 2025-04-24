@@ -432,7 +432,7 @@ class MrpProduction(models.Model):
     @api.depends('bom_id')
     def _compute_product_qty(self):
         for production in self:
-            if production.state != 'draft':
+            if production.state != 'draft' and production.product_qty != 0:
                 continue
             if production.bom_id and production._origin.bom_id != production.bom_id:
                 production.product_qty = production.bom_id.product_qty
@@ -808,7 +808,7 @@ class MrpProduction(models.Model):
         production_with_move_finished_ids_to_unlink = self.browse(production_with_move_finished_ids_to_unlink_ids)
 
         # delete to remove existing moves from database and clear to remove new records
-        production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.delete(m) for m in production_with_move_finished_ids_to_unlink.move_finished_ids.ids]
+        production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.delete(m.id) for m in production_with_move_finished_ids_to_unlink.move_finished_ids if m.state in ('draft', 'cancel')]
         production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.clear()]
 
         for production in production_with_move_finished_ids_to_unlink:
@@ -2120,7 +2120,7 @@ class MrpProduction(models.Model):
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
         productions_not_to_backorder = productions_not_to_backorder.with_context(no_procurement=True)
-        self.workorder_ids.button_finish()
+        self.workorder_ids.with_context(bypass_qty_producing_update=True).button_finish()
 
         backorders = productions_to_backorder and productions_to_backorder._split_productions()
         backorders = backorders - productions_to_backorder
