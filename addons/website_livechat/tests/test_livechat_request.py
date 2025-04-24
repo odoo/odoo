@@ -39,7 +39,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         # Open Chat Request
         self.visitor.with_user(self.operator_b).sudo().action_send_chat_request()
         chat_request = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
-        self.assertEqual(chat_request.livechat_operator_id, self.operator_b.partner_id, "Operator for active livechat session must be Operator Marc")
+        self.assertEqual(chat_request.livechat_operator_id, self.operator_b, "Operator for active livechat session must be Operator Marc")
 
         # Click on livechatbutton at client side
         res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
@@ -51,13 +51,13 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         chat_request.invalidate_recordset()
         self.assertEqual(chat_request.livechat_active, False, "The livechat request must be inactive as the visitor started himself a livechat session.")
         self.assertEqual(len(channel), 1)
-        self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Operator for active livechat session must be Michel Operator")
+        self.assertEqual(channel.livechat_operator_id, self.operator, "Operator for active livechat session must be Michel Operator")
 
     def _common_chat_request_flow(self):
         self.visitor.with_user(self.operator).sudo().action_send_chat_request()
         channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
         self.assertEqual(len(channel), 1)
-        self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Michel Operator should be the operator of this channel.")
+        self.assertEqual(channel.livechat_operator_id, self.operator, "Michel Operator should be the operator of this channel.")
         self.assertEqual(len(channel.message_ids), 0)
         self.assertEqual(channel.anonymous_name, f"Visitor #{self.visitor.id} ({self.visitor.country_id.name})")
 

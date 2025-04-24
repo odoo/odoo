@@ -16,7 +16,7 @@ test('livechats should be in "chat" filter', async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -38,7 +38,7 @@ test('livechats should be in "livechat" tab in mobile', async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");

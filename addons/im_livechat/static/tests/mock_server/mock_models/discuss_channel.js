@@ -35,7 +35,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         /** @type {import("mock_models").ResCountry} */
         const ResCountry = this.env["res.country"];
         /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
+        const ResUsers = this.env["res.users"];
 
         super._to_store(...arguments);
         const channels = this.browse(ids);
@@ -56,8 +56,8 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 if (channel.livechat_operator_id) {
                     // livechat_username ignored for simplicity
                     channelInfo.livechat_operator_id = mailDataHelpers.Store.one(
-                        ResPartner.browse(channel.livechat_operator_id),
-                        makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
+                        ResUsers.browse(channel.livechat_operator_id),
+                        makeKwArgs({ fields: ["avatar_128", "livechat_username"] })
                     );
                 } else {
                     channelInfo.livechat_operator_id = false;

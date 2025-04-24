@@ -37,7 +37,7 @@ export class WebsiteVisitor extends models.ServerModel {
                 channel_member_ids: membersToAdd,
                 channel_type: "livechat",
                 livechat_active: true,
-                livechat_operator_id: serverState.partnerId,
+                livechat_operator_id: serverState.userId,
             });
             if (!visitor.partner_id) {
                 const guestId = MailGuest.create({ name: `Visitor #${visitor.id}` });

@@ -40,7 +40,7 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
         channel_type: "livechat",
         country_id: countryId,
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await openDiscuss();
@@ -75,7 +75,7 @@ test("invite button should be present on livechat", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         livechat_active: true,
     });
     await start();
@@ -100,7 +100,7 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
         },
         {
             anonymous_name: "Visitor 12",
@@ -113,7 +113,7 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
         },
     ]);
     await start();
@@ -143,7 +143,7 @@ test("sidebar search finds livechats", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await openDiscuss();

@@ -207,9 +207,9 @@ class ChatbotScriptStep(models.Model):
 
     def _find_first_user_free_input(self, discuss_channel):
         """Find the first message from the visitor responding to a free_input step."""
-        chatbot_partner = self.chatbot_script_id.operator_partner_id
+        chatbot_operator = self.chatbot_script_id.operator_id
         user_answers = discuss_channel.chatbot_message_ids.filtered(
-            lambda m: m.mail_message_id.author_id != chatbot_partner
+            lambda m: m.mail_message_id.author_id != chatbot_operator.partner_id
         ).sorted("id")
         for answer in user_answers:
             if answer.script_step_id.step_type in ("free_input_single", "free_input_multi"):
@@ -339,7 +339,7 @@ class ChatbotScriptStep(models.Model):
         'create_lead', 'create_ticket' (in their related bridge modules).
         Those will have a dedicated processing method with specific docstrings.
 
-        Returns the mail.message posted by the chatbot's operator_partner_id. """
+        Returns the mail.message posted by the chatbot's operator partner_id. """
         self.ensure_one()
         if self.step_type == 'forward_operator':
             return self._process_step_forward_operator(discuss_channel)
@@ -381,7 +381,7 @@ class ChatbotScriptStep(models.Model):
             discuss_channel.sudo()._add_members(
                 users=human_operator,
                 create_member_params={"livechat_member_type": "agent"},
-                inviting_partner=self.chatbot_script_id.operator_partner_id,
+                inviting_partner=self.chatbot_script_id.operator_id.partner_id,
             )
             # sudo - discuss.channel: let the chat bot proceed to the forward step (change channel operator, add human operator
             # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
@@ -394,7 +394,7 @@ class ChatbotScriptStep(models.Model):
             channel_sudo.write(
                 {
                     "livechat_failure": "no_answer",
-                    "livechat_operator_id": human_operator.partner_id,
+                    "livechat_operator_id": human_operator,
                     "name": " ".join(
                         [
                             self.env.user.display_name
@@ -411,7 +411,7 @@ class ChatbotScriptStep(models.Model):
                 # sudo - chatbot.message.id: visitor can access chat bot messages.
                 m.mail_message_id for m in discuss_channel.sudo().chatbot_message_ids.sorted("id")
                 if m.script_step_id == self
-                and m.mail_message_id.author_id == self.chatbot_script_id.operator_partner_id
+                and m.mail_message_id.author_id == self.chatbot_script_id.operator_id.partner_id
             ), self.env["mail.message"])
             store = Store()
             discuss_channel._bus_send_store(

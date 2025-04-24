@@ -35,7 +35,7 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 1",
         },
         {
@@ -50,7 +50,7 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 2",
         },
         {
@@ -65,7 +65,7 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 3",
         },
     ]);
@@ -123,7 +123,7 @@ test("Tab livechat picks ended livechats last", async () => {
             ],
             livechat_active: true,
             livechat_channel_id: livechatChannelId,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             create_uid: serverState.publicUserId,
         }))
     );
@@ -217,7 +217,7 @@ test("switching to folded chat window unfolds it", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 1",
         },
         {
@@ -231,7 +231,7 @@ test("switching to folded chat window unfolds it", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 2",
         },
     ]);
@@ -270,7 +270,7 @@ test("switching to hidden chat window unhides it", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 1",
         },
         {
@@ -284,7 +284,7 @@ test("switching to hidden chat window unhides it", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 2",
         },
         { name: "general" },
@@ -325,7 +325,7 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 1",
         },
         {
@@ -340,7 +340,7 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 2",
         },
     ]);
@@ -364,7 +364,7 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 1",
         },
         {
@@ -375,7 +375,7 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
             ],
             channel_type: "livechat",
             livechat_active: true,
-            livechat_operator_id: serverState.partnerId,
+            livechat_operator_id: serverState.userId,
             name: "Livechat 2",
         },
     ]);

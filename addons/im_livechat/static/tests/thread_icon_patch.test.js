@@ -19,7 +19,7 @@ test("Public website visitor is typing", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await openDiscuss(channelId);

@@ -42,7 +42,7 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
         ],
         livechat_active: true,
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         create_uid: serverState.publicUserId,
     });
     setupChatHub({ opened: [channel_id] });

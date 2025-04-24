@@ -11,6 +11,7 @@ class ResUsers(models.Model):
     """
     _inherit = 'res.users'
 
+    chatbot_script_ids = fields.One2many("chatbot.script", "operator_id")
     livechat_username = fields.Char(
         string="Livechat Username",
         groups="im_livechat.im_livechat_group_user,base.group_erp_manager",

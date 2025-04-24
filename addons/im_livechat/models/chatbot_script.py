@@ -18,11 +18,11 @@ class ChatbotScript(models.Model):
     # we keep a separate field for UI since name is manipulated by 'utm.source.mixin'
     title = fields.Char('Title', required=True, translate=True, default="Chatbot")
     active = fields.Boolean(default=True)
-    image_1920 = fields.Image(related='operator_partner_id.image_1920', readonly=False)
+    image_1920 = fields.Image(related='operator_id.image_1920', readonly=False)
 
     script_step_ids = fields.One2many('chatbot.script.step', 'chatbot_script_id',
         copy=True, string='Script Steps')
-    operator_partner_id = fields.Many2one('res.partner', string='Bot Operator',
+    operator_id = fields.Many2one('res.users', string='Bot Operator',
         ondelete='restrict', required=True, copy=False, index=True)
     livechat_channel_count = fields.Integer(string='Livechat Channel Count', compute='_compute_livechat_channel_count')
     first_step_warning = fields.Selection([
@@ -101,19 +101,19 @@ class ChatbotScript(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        operator_partners_values = [{
+        operator_values = [{
             'name': vals['title'],
             'image_1920': vals.get('image_1920', False),
             'active': False,
-        } for vals in vals_list if 'operator_partner_id' not in vals and 'title' in vals]
+        } for vals in vals_list if 'operator_id' not in vals and 'title' in vals]
 
-        operator_partners = self.env['res.partner'].create(operator_partners_values)
+        operators = self.env["res.users"].create(operator_values)
 
-        for vals, partner in zip(
-            [vals for vals in vals_list if 'operator_partner_id' not in vals and 'title' in vals],
-            operator_partners
+        for vals, user in zip(
+            [vals for vals in vals_list if 'operator_id' not in vals and 'title' in vals],
+            operators
         ):
-            vals['operator_partner_id'] = partner.id
+            vals['operator_id'] = user.id
 
         return super().create(vals_list)
 
@@ -121,7 +121,7 @@ class ChatbotScript(models.Model):
         res = super().write(vals)
 
         if 'title' in vals:
-            self.operator_partner_id.write({'name': vals['title']})
+            self.operator_id.write({'name': vals['title']})
 
         return res
 
@@ -173,7 +173,7 @@ class ChatbotScript(models.Model):
 
             if not is_html_empty(welcome_step.message):
                 posted_messages += discuss_channel.with_context(mail_post_autofollow_author_skip=True).message_post(
-                    author_id=self.operator_partner_id.id,
+                    author_id=self.operator_id.partner_id.id,
                     body=plaintext2html(welcome_step.message),
                     message_type='comment',
                     subtype_xmlid='mail.mt_comment',
@@ -192,7 +192,16 @@ class ChatbotScript(models.Model):
     # --------------------------
 
     def _to_store_defaults(self):
-        return [Store.One("operator_partner_id", ["name"]), "title"]
+        return [
+            Store.Attr(
+                "operator_id",
+                lambda chatbot: Store.One(
+                    chatbot.operator_id.partner_id,
+                    ["name"],
+                ),
+            ),
+            "title",
+        ]
 
     def _validate_email(self, email_address, discuss_channel):
         email_address = html2plaintext(email_address)

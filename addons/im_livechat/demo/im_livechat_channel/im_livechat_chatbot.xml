@@ -3,13 +3,14 @@
     <data>
         <record id="welcome_bot_operator_partner_demo" model="res.partner">
             <field name="name">Odoo</field>
+            <field name="user_ids" eval="[(4, ref('base.user_root'))]"/>
             <field name="image_1920" type="base64" file="mail/static/src/img/odoobot.png"/>
             <field name="active">False</field>
         </record>
         <record id="chatbot_script_welcome_bot_demo" model="chatbot.script">
             <field name="title">Odoo</field>
             <field name="image_1920" type="base64" file="mail/static/src/img/odoobot.png"/>
-            <field name="operator_partner_id" ref="welcome_bot_operator_partner_demo"/>
+            <field name="operator_id" ref="base.user_root"/>
         </record>
 
         <record id="chatbot_script_welcome_step_welcome_demo" model="chatbot.script.step">

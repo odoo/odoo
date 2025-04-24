@@ -39,7 +39,7 @@ test("Rendering of visitor banner", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         livechat_visitor_id: visitorId,
     });
     await start();
@@ -82,7 +82,7 @@ test("Livechat with non-logged visitor should show visitor banner", async () => 
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         livechat_visitor_id: visitorId,
     });
     await start();
@@ -111,7 +111,7 @@ test("Livechat with logged visitor should show visitor banner", async () => {
             Command.create({ partner_id }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         livechat_visitor_id: visitorId,
     });
     await start();
@@ -130,7 +130,7 @@ test("Livechat without visitor should not show visitor banner", async () => {
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await openDiscuss(channelId);
@@ -160,7 +160,7 @@ test("Can create a new record as livechat operator with a custom livechat userna
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await openDiscuss(channelId); // so that it loads custom livechat username

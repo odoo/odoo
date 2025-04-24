@@ -127,7 +127,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         discuss_channel = (
             self.env["discuss.channel"].sudo().browse(data["channel_id"])
         )
-        self.assertEqual(discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id)
+        self.assertEqual(discuss_channel.livechat_operator_id.partner_id, self.chatbot_script.operator_partner_id)
         discuss_channel._add_members(users=self.env.user)
         self_member = discuss_channel.channel_member_ids.filtered(lambda m: m.is_self)
         bot_member = discuss_channel.channel_member_ids.filtered(
@@ -154,7 +154,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         )
         self.step_forward_operator._process_step_forward_operator(discuss_channel)
         self.assertEqual(
-            discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id
+            discuss_channel.livechat_operator_id.partner_id, self.chatbot_script.operator_partner_id
         )
         self.assertEqual(discuss_channel.name, "Testing Bot")
 
@@ -384,7 +384,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                 {
                                     "id": discuss_channel.id,
                                     "livechat_operator_id": {
-                                        "id": self.partner_employee.id,
+                                        "id": self.user_employee.id,
                                         "type": "partner",
                                     },
                                     "name": "OdooBot Ernest Employee",
@@ -416,7 +416,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 discuss_channel, users=self.user_employee
             )
         self.assertEqual(discuss_channel.name, "OdooBot Ernest Employee")
-        self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
+        self.assertEqual(discuss_channel.livechat_operator_id, self.user_employee)
         self.assertTrue(
             discuss_channel.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.partner_employee

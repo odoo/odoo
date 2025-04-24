@@ -109,7 +109,7 @@ class Im_LivechatChannel(models.Model):
                 ((partner, livechat_channels), count)
                 for (partner, livechat_channels, count) in self.env["discuss.channel"]._read_group(
                     [
-                        ("livechat_operator_id", "in", limited_users.partner_id.ids),
+                        ("livechat_operator_id", "in", limited_users.ids),
                         ("livechat_active", "=", True),
                         ("last_interest_dt", ">=", fields.Datetime.now() - timedelta(minutes=15)),
                     ],
@@ -226,13 +226,13 @@ class Im_LivechatChannel(models.Model):
                 # no one available
                 return False
         # partner to add to the discuss.channel
-        operator_partner_id = user_operator.partner_id.id if user_operator else chatbot_script.operator_partner_id.id
+        operator = user_operator if user_operator else chatbot_script.operator_id
         members_to_add = [
             Command.create(
                 {
                     "livechat_member_type": "agent" if user_operator else "bot",
                     "chatbot_script_id": chatbot_script.id if not user_operator else False,
-                    "partner_id": operator_partner_id,
+                    "partner_id": operator.partner_id.id,
                     "unpin_dt": fields.Datetime.now(),
                 }
             )
@@ -248,13 +248,13 @@ class Im_LivechatChannel(models.Model):
         else:
             name = ' '.join([
                 visitor_user.display_name if visitor_user else anonymous_name,
-                user_operator.livechat_username or user_operator.name
+                user_operator.livechat_username or user_operator.partner_id.name
             ])
 
         return {
             'channel_member_ids': members_to_add,
             'livechat_active': True,
-            'livechat_operator_id': operator_partner_id,
+            'livechat_operator_id': operator.id,
             'livechat_channel_id': self.id,
             "livechat_failure": "no_answer" if user_operator else "no_failure",
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id if chatbot_script else False,
@@ -285,23 +285,23 @@ class Im_LivechatChannel(models.Model):
 
         # 1) only consider operators in the list to choose from
         operator_statuses = [
-            s for s in operator_statuses if s['livechat_operator_id'] in set(operators.partner_id.ids)
+            s for s in operator_statuses if s['livechat_operator_id'] in set(operators.ids)
         ]
 
         # 2) try to select an inactive op, i.e. one w/ no active status (no recent chat)
         active_op_partner_ids = {s['livechat_operator_id'] for s in operator_statuses}
-        candidates = operators.filtered(lambda o: o.partner_id.id not in active_op_partner_ids)
+        candidates = operators.filtered(lambda o: o.id not in active_op_partner_ids)
         if candidates:
             return random.choice(candidates)
 
         # 3) otherwise select least active ops, based on status ordering (count + in_call)
         best_status = operator_statuses[0]
-        best_status_op_partner_ids = {
+        best_status_operator_ids = {
             s['livechat_operator_id']
             for s in operator_statuses
             if (s['count'], s['in_call']) == (best_status['count'], best_status['in_call'])
         }
-        candidates = operators.filtered(lambda o: o.partner_id.id in best_status_op_partner_ids)
+        candidates = operators.filtered(lambda o: o.id in best_status_operator_ids)
         return random.choice(candidates)
 
     def _get_operator(
@@ -347,8 +347,9 @@ class Im_LivechatChannel(models.Model):
             )
             SELECT COUNT(DISTINCT c.id), COALESCE(rtc.nbr, 0) > 0 as in_call, c.livechat_operator_id
             FROM discuss_channel c
+            LEFT OUTER JOIN res_users u ON u.id = c.livechat_operator_id
             LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'discuss.channel'
-            LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = c.livechat_operator_id
+            LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = u.partner_id
             WHERE c.channel_type = 'livechat' AND c.create_date > ((now() at time zone 'UTC') - interval '24 hours')
             AND (
                 c.livechat_active IS TRUE
@@ -357,11 +358,11 @@ class Im_LivechatChannel(models.Model):
             AND c.livechat_operator_id in %s
             GROUP BY c.livechat_operator_id, rtc.nbr
             ORDER BY COUNT(DISTINCT c.id) < 2 OR rtc.nbr IS NULL DESC, COUNT(DISTINCT c.id) ASC, rtc.nbr IS NULL DESC""",
-            (tuple(users.partner_id.ids),)
+            (tuple(users.ids),)
         )
         operator_statuses = self.env.cr.dictfetchall()
         # Try to match the previous operator
-        if previous_operator_id in users.partner_id.ids:
+        if previous_operator_id in users.ids:
             previous_operator_status = next(
                 (status for status in operator_statuses if status['livechat_operator_id'] == previous_operator_id),
                 None

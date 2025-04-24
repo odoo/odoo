@@ -21,8 +21,6 @@ async function get_session(request) {
     const LivechatChannel = this.env["im_livechat.channel"];
     /** @type {import("mock_models").ResCountry} */
     const ResCountry = this.env["res.country"];
-    /** @type {import("mock_models").ResPartner} */
-    const ResPartner = this.env["res.partner"];
     /** @type {import("mock_models").ResUsers} */
     const ResUsers = this.env["res.users"];
 
@@ -70,8 +68,8 @@ async function get_session(request) {
             isLoaded: true,
             livechat_active: true,
             livechat_operator_id: mailDataHelpers.Store.one(
-                ResPartner.browse(channelVals.livechat_operator_id),
-                makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
+                ResUsers.browse(channelVals.livechat_operator_id),
+                makeKwArgs({ fields: ["avatar_128", "livechat_username"] })
             ),
             name: channelVals["name"],
             scrollUnread: false,

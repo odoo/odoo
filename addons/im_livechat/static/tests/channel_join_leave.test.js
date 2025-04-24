@@ -35,7 +35,7 @@ test("from the discuss app", async () => {
             Command.create({ guest_id: guestId }),
         ],
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         create_uid: serverState.publicUserId,
     });
     await start();
@@ -94,7 +94,7 @@ test("from chat window", async () => {
         ],
         livechat_active: true,
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         create_uid: serverState.publicUserId,
     });
     setupChatHub({ opened: [channelId] });
@@ -125,7 +125,7 @@ test("visitor leaving ends the livechat conversation", async () => {
         ],
         livechat_active: true,
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         create_uid: serverState.publicUserId,
     });
     setupChatHub({ opened: [channel_id] });

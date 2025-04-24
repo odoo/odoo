@@ -14,19 +14,19 @@ class TestLiveChatDigest(TestDigestCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        other_partner = cls.env['res.partner'].create({'name': 'Other Partner'})
+        other_user = cls.env['res.users'].create({'name': 'Other User'})
 
         cls.channels = cls.env['discuss.channel'].create([{
             'name': 'Channel 1',
-            'livechat_operator_id': cls.env.user.partner_id.id,
+            'livechat_operator_id': cls.env.user.id,
             'channel_type': 'livechat',
         }, {
             'name': 'Channel 2',
-            'livechat_operator_id': cls.env.user.partner_id.id,
+            'livechat_operator_id': cls.env.user.id,
             'channel_type': 'livechat',
         }, {
             'name': 'Channel 3',
-            'livechat_operator_id': other_partner.id,
+            'livechat_operator_id': other_user.id,
             'channel_type': 'livechat',
         }])
 

@@ -21,7 +21,7 @@ class DiscussChannel(models.Model):
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor or operator leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null')
-    livechat_operator_id = fields.Many2one('res.partner', string='Operator', index='btree_not_null')
+    livechat_operator_id = fields.Many2one('res.users', string='Operator', index='btree_not_null')
     channel_member_history_ids = fields.One2many('im_livechat.channel.member.history', 'channel_id')
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
@@ -71,9 +71,12 @@ class DiscussChannel(models.Model):
     def _field_store_repr(self, field_name):
         if field_name == "livechat_operator_id":
             return [
-                # sudo - res.partner: accessing livechat operator is allowed
+                # sudo - res.users: accessing livechat operator is allowed
                 Store.One(
-                    "livechat_operator_id", ["avatar_128", "user_livechat_username"], sudo=True
+                    "livechat_operator_id",
+                    ["avatar_128", "user_livechat_username"],
+                    value=lambda c: c.livechat_operator_id.sudo().partner_id,
+                    sudo=True,
                 )
             ]
         return super()._field_store_repr(field_name)
@@ -104,13 +107,13 @@ class DiscussChannel(models.Model):
             if not current_step_sudo.is_forward_operator:
                 step_message = channel.sudo().chatbot_message_ids.filtered(
                     lambda m: m.script_step_id == current_step_sudo
-                    and m.mail_message_id.author_id == chatbot_script.operator_partner_id
+                    and m.mail_message_id.author_id == chatbot_script.operator_id.partner_id
                 )[:1]
             current_step = {
                 "scriptStep": current_step_sudo.id,
                 "message": step_message.mail_message_id.id,
                 "operatorFound": current_step_sudo.is_forward_operator
-                and channel.livechat_operator_id != chatbot_script.operator_partner_id,
+                and channel.livechat_operator_id != chatbot_script.operator_id,
             }
             store.add(current_step_sudo)
             store.add(chatbot_script)
@@ -184,7 +187,7 @@ class DiscussChannel(models.Model):
         mail_body = self.env['ir.qweb']._render('im_livechat.livechat_email_template', render_context, minimal_qcontext=True)
         mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
         mail = self.env['mail.mail'].sudo().create({
-            'subject': _('Conversation with %s', self.livechat_operator_id.user_livechat_username or self.livechat_operator_id.name),
+            'subject': _('Conversation with %s', self.livechat_operator_id.livechat_username or self.livechat_operator_id.partner_id.name),
             'email_from': company.catchall_formatted or company.email_formatted,
             'author_id': self.env.user.partner_id.id,
             'email_to': email,
@@ -198,20 +201,20 @@ class DiscussChannel(models.Model):
         """
         self.ensure_one()
         parts = []
-        # sudo: res.partner: accessing chat bot partner is acceptable to build channel history.
+        # sudo: res.partner: accessing chat bot user is acceptable to build channel history.
         chatbot_op = self.sudo().chatbot_message_ids[
             :1
-        ].script_step_id.chatbot_script_id.operator_partner_id
+        ].script_step_id.chatbot_script_id.operator_id
         last_msg_from_chatbot = False
         # sudo - mail.message: getting empty messages to exclude them is allowed.
         for message in (self.message_ids - self.message_ids.sudo()._filter_empty()).sorted("id"):
-            if message.author_id == chatbot_op and not last_msg_from_chatbot:
+            if message.author_id == chatbot_op.partner_id and not last_msg_from_chatbot:
                 parts.append(Markup("<br/>"))
-            if message.author_id == chatbot_op:
+            if message.author_id == chatbot_op.partner_id:
                 parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
             else:
                 parts.append(Markup("%s<br/>") % html2plaintext(message.body))
-            last_msg_from_chatbot = message.author_id == chatbot_op
+            last_msg_from_chatbot = message.author_id == chatbot_op.partner_id
         return Markup("").join(parts)
 
 
@@ -247,7 +250,7 @@ class DiscussChannel(models.Model):
         # sudo: mail.message - chat bot is allowed to post a message which
         # requires reading its partner among other things.
         return self.with_context(mail_post_autofollow_author_skip=True).sudo().message_post(
-            author_id=chatbot_script.sudo().operator_partner_id.id,
+            author_id=chatbot_script.sudo().operator_id.partner_id.id,
             body=body,
             message_type='comment',
             subtype_xmlid='mail.mt_comment',

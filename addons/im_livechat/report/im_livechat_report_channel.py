@@ -46,7 +46,7 @@ class Im_LivechatReportChannel(models.Model):
     # TODO DBE : Use Selection field - Need : Pie chart must show labels, not keys.
     rating_text = fields.Char('Satisfaction Rate', readonly=True)
     is_unrated = fields.Integer('Session not rated', readonly=True)
-    partner_id = fields.Many2one("res.partner", "Agent", readonly=True)
+    user_id = fields.Many2one("res.users", "Agent", readonly=True)
     handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
     handled_by_agent = fields.Integer("Handled by Agent", readonly=True, aggregator="sum")
     visitor_partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
@@ -80,7 +80,7 @@ class Im_LivechatReportChannel(models.Model):
                 SELECT m.res_id as channel_id,
                        COUNT(DISTINCT m.id) AS message_count,
                        MIN(m.create_date) FILTER (
-                           WHERE m.author_id = c.livechat_operator_id
+                           WHERE m.author_id = u.partner_id
                        ) AS first_agent_message_dt_legacy,
                        MAX(m.create_date) AS last_message_dt,
                        MIN(m.create_date) FILTER (
@@ -98,6 +98,7 @@ class Im_LivechatReportChannel(models.Model):
                     ON h.channel_id = m.res_id
                    AND m.model = 'discuss.channel'
                    AND (h.guest_id = m.author_guest_id or h.partner_id = m.author_id)
+             LEFT JOIN res_users u ON u.id = c.livechat_operator_id
               GROUP BY m.res_id
             ),
             channel_member_history AS (
@@ -162,7 +163,7 @@ class Im_LivechatReportChannel(models.Model):
                     WHEN rate.rating > 0 THEN 0
                     ELSE 1
                 END as is_unrated,
-                C.livechat_operator_id as partner_id,
+                C.livechat_operator_id as user_id,
                 CASE WHEN channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_agent,
                 CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot,
                 CASE WHEN channel_member_history.chatbot_script_id IS NOT NULL AND NOT channel_member_history.has_agent THEN channel_member_history.chatbot_script_id ELSE NULL END AS chatbot_script_id

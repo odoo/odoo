@@ -31,7 +31,7 @@ test("Livechat button is present when there is at least one livechat thread", as
             Command.create({ partner_id: serverState.publicPartnerId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");

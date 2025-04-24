@@ -37,7 +37,7 @@ export class Chatbot extends Record {
                 return {
                     id: -0.1 - this.thread.id,
                     thread: this.thread,
-                    author: this.script.operator_partner_id,
+                    author: this.script.operator_id,
                 };
             }
         },
@@ -121,7 +121,7 @@ export class Chatbot extends Record {
             // create them now on the client side.
             this.currentStep.message = this.store["mail.message"].insert({
                 id: this.store.getNextTemporaryId(),
-                author: this.script.operator_partner_id,
+                author: this.script.operator_id,
                 body: this.currentStep.scriptStep.message,
                 thread: this.thread,
             });

@@ -198,10 +198,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                         "livechat_active": True,
                         "livechat_channel_id": self.livechat_channel.id,
-                        "livechat_operator_id": {
-                            "id": self.operator.partner_id.id,
-                            "type": "partner",
-                        },
+                        "livechat_operator_id": self.operator,
                         "member_count": 2,
                         "message_needaction_counter": 0,
                         "message_needaction_counter_bus_id": 0,
@@ -315,10 +312,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "is_pinned": True,
                     "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                     "livechat_active": False,
-                    "livechat_operator_id": {
-                        "id": self.operator.partner_id.id,
-                        "type": "partner",
-                    },
+                    "livechat_operator_id": self.operator,
                     "member_count": 1,
                     "message_needaction_counter": 0,
                     "message_needaction_counter_bus_id": 0,

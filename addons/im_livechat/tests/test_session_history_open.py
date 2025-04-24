@@ -15,14 +15,14 @@ class TestImLivechatSessionHistoryOpen(TestImLivechatCommon):
                 "name": "test 1",
                 "channel_type": "livechat",
                 "livechat_channel_id": 1,
-                "livechat_operator_id": operator.partner_id.id,
+                "livechat_operator_id": operator.id,
                 "channel_member_ids": [Command.create({"partner_id": user_1.id})],
             },
             {
                 "name": "test 2",
                 "channel_type": "livechat",
                 "livechat_channel_id": 1,
-                "livechat_operator_id": operator.partner_id.id,
+                "livechat_operator_id": operator.id,
                 "channel_member_ids": [Command.create({"partner_id": user_2.id})],
             }]
         )

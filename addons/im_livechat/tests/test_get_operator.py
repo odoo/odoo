@@ -18,7 +18,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "channel_type": "livechat",
                 "livechat_active": True,
                 "livechat_channel_id": livechat.id,
-                "livechat_operator_id": operator.partner_id.id,
+                "livechat_operator_id": operator.id,
                 "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],
                 "last_interest_dt": fields.Datetime.now(),
             }
@@ -358,7 +358,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             "channel_type": "livechat",
             "livechat_active": True,
             "livechat_channel_id": livechat_channel.id,
-            "livechat_operator_id": operator.partner_id.id,
+            "livechat_operator_id": operator.id,
             "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],
             "last_interest_dt": fields.Datetime.now() - timedelta(minutes=4),
         }

@@ -50,12 +50,12 @@ class LivechatChatbotScriptController(http.Controller):
             if (
                 current_step.is_forward_operator
                 and discuss_channel.livechat_operator_id
-                != current_step.chatbot_script_id.operator_partner_id
+                != current_step.chatbot_script_id.operator_id
             ):
                 return None
             chatbot = current_step.chatbot_script_id
             domain = [
-                ("author_id", "!=", chatbot.operator_partner_id.id),
+                ("author_id", "!=", chatbot.operator_id.partner_id.id),
                 ("model", "=", "discuss.channel"),
                 ("res_id", "=", channel_id),
             ]
@@ -83,7 +83,7 @@ class LivechatChatbotScriptController(http.Controller):
                 "isLast": next_step._is_last_step(discuss_channel),
                 "message": posted_message.id,
                 "operatorFound": next_step.is_forward_operator
-                and discuss_channel.livechat_operator_id != chatbot.operator_partner_id,
+                and discuss_channel.livechat_operator_id != chatbot.operator_id,
                 "scriptStep": next_step.id,
             },
         )
@@ -116,7 +116,7 @@ class LivechatChatbotScriptController(http.Controller):
         # sudo: chatbot.script - visitor can access chatbot script of their channel
         chatbot = discuss_channel.sudo().chatbot_current_step_id.chatbot_script_id
         domain = [
-            ("author_id", "!=", chatbot.operator_partner_id.id),
+            ("author_id", "!=", chatbot.operator_id.partner_id.id),
             ("model", "=", "discuss.channel"),
             ("res_id", "=", channel_id),
         ]

@@ -42,7 +42,7 @@ test("Can invite a partner to a livechat channel", async () => {
             Command.create({ guest_id: guestId, last_interest_dt: "2021-01-03 12:00:00" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         livechat_active: true,
     });
     await start();
@@ -120,7 +120,7 @@ test("Partners invited most frequently by the current user come first", async ()
             }),
             Command.create({ guest_id: guestId_1, last_interest_dt: "2021-01-03 12:00:00" }),
         ],
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         livechat_active: true,
     });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor #2" });
@@ -134,7 +134,7 @@ test("Partners invited most frequently by the current user come first", async ()
             }),
             Command.create({ guest_id: guestId_2, last_interest_dt: "2021-01-03 11:00:00" }),
         ],
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await openDiscuss();

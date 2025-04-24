@@ -33,7 +33,7 @@
             <div style="font-size: 13px; padding: 10px 0;">
                 <span>Hello,</span><br />Here's a copy of your conversation with
                 <!-- sudo: res.users - visitor can access the name of the operator -->
-                <span t-esc="channel.livechat_operator_id.sudo().user_livechat_username or channel.livechat_operator_id.sudo().name"/>, on the
+                <span t-esc="channel.livechat_operator_id.sudo().livechat_username or channel.livechat_operator_id.sudo().name"/>, on the
                 <span t-field="channel.create_date"/>
             </div>
             <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse: collapse;">

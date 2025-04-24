@@ -96,11 +96,11 @@ class DiscussChannelMember(models.Model):
 
     def _to_store_defaults(self):
         # sudo: discuss.channel - reading livechat channel to check whether current member is a bot is allowed
-        bot = self.channel_id.sudo().livechat_channel_id.rule_ids.chatbot_script_id.operator_partner_id
+        bot = self.channel_id.sudo().livechat_channel_id.rule_ids.chatbot_script_id.operator_id
         return super()._to_store_defaults() + [
             Store.Attr(
                 "is_bot",
-                lambda member: member.partner_id in bot,
+                lambda member: member.partner_id in bot.partner_id,
                 predicate=lambda member: member.channel_id.channel_type == "livechat",
             )
         ]
@@ -125,7 +125,7 @@ class DiscussChannelMember(models.Model):
             domain = expression.AND(
                 [
                     domain,
-                    [("partner_id", "!=", chatbot.operator_partner_id.id)],
+                    [("partner_id", "!=", chatbot.operator_id.partner_id.id)],
                 ]
             )
         return domain

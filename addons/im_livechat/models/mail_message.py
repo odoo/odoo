@@ -39,8 +39,8 @@ class MailMessage(models.Model):
         ):
             channel = channel_by_message[message]
             # sudo: chatbot.script.step - checking whether the current message is from chatbot
-            chatbot = channel.chatbot_current_step_id.sudo().chatbot_script_id.operator_partner_id
-            if channel.chatbot_current_step_id and message.author_id == chatbot:
+            chatbot_operator_id = channel.chatbot_current_step_id.sudo().chatbot_script_id.operator_id
+            if channel.chatbot_current_step_id and message.author_id == chatbot_operator_id.partner_id:
                 chatbot_message = (
                     self.env["chatbot.message"]
                     .sudo()
@@ -52,7 +52,7 @@ class MailMessage(models.Model):
                         "message": message.id,
                         "scriptStep": step.id,
                         "operatorFound": step.is_forward_operator
-                        and channel.livechat_operator_id != chatbot,
+                        and channel.livechat_operator_id != chatbot_operator_id,
                     }
                     if answer := chatbot_message.user_script_answer_id:
                         step_data["selectedAnswer"] = answer.id

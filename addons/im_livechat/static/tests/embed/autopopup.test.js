@@ -22,7 +22,7 @@ test("persisted session", async () => {
         channel_type: "livechat",
         livechat_active: true,
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     setupChatHub({ opened: [channelId] });
     await start({

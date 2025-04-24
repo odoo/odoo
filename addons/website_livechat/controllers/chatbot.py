@@ -28,7 +28,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
             "channel_member_ids": [
                 Command.create(
                     {
-                        "partner_id": chatbot_script.operator_partner_id.id,
+                        "partner_id": chatbot_script.operator_id.partner_id.id,
                         # making sure the unpin_dt is always later than the last_interest_dt
                         # so that the channel is unpinned
                         "unpin_dt": fields.Datetime.now(),
@@ -38,7 +38,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
                 Command.create({"partner_id": request.env.user.partner_id.id}),
             ],
             'livechat_active': True,
-            'livechat_operator_id': chatbot_script.operator_partner_id.id,
+            'livechat_operator_id': chatbot_script.operator_id.id,
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id,
             'anonymous_name': False,
             'channel_type': 'livechat',

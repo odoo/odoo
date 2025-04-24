@@ -20,7 +20,7 @@ test("Do not open chat windows automatically when chat hub is compact", async ()
         ],
         channel_type: "livechat",
         livechat_active: true,
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         create_uid: serverState.publicUserId,
     });
     await start();

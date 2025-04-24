@@ -11,8 +11,8 @@ from odoo.tools.sql import column_exists, create_column
 class WebsiteVisitor(models.Model):
     _inherit = 'website.visitor'
 
-    livechat_operator_id = fields.Many2one('res.partner', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index='btree_not_null')
-    livechat_operator_name = fields.Char('Operator Name', related="livechat_operator_id.name")
+    livechat_operator_id = fields.Many2one('res.users', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index='btree_not_null')
+    livechat_operator_name = fields.Char('Operator Name', related="livechat_operator_id.partner_id.name")
     discuss_channel_ids = fields.One2many('discuss.channel', 'livechat_visitor_id',
                                        string="Visitor's livechat channels", readonly=True)
     session_count = fields.Integer('# Sessions', compute="_compute_session_count")
@@ -71,7 +71,7 @@ class WebsiteVisitor(models.Model):
                 'channel_partner_ids': members_to_add,
                 "is_pending_chat_request": True,
                 'livechat_channel_id': visitor.website_id.channel_id.id,
-                'livechat_operator_id': self.env.user.partner_id.id,
+                'livechat_operator_id': self.env.user.id,
                 'channel_type': 'livechat',
                 'country_id': country.id,
                 'anonymous_name': visitor_name,

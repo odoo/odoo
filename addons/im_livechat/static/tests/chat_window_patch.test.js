@@ -66,7 +66,7 @@ test("closing a chat window with no message from admin side unpins it", async ()
             Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -128,7 +128,7 @@ test("do not ask confirmation if other operators are present", async () => {
             Command.create({ guest_id: guestId }),
             Command.create({ partner_id: otherOperatorId }),
         ],
-        livechat_operator_id: serverState.partnerId,
+        livechat_operator_id: serverState.userId,
         channel_type: "livechat",
         livechat_active: true,
     });
