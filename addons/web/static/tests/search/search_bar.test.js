@@ -1361,7 +1361,7 @@ test("edit a filter with context: context is kept after edition", async () => {
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
     await contains(`.modal ${SELECTORS.addNewRule}`).click();
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Custom filter`]);
+    expect(getFacetTexts()).toEqual([`Foo`]);
     expect(searchBar.env.searchModel.context.specialKey).toBe("abc");
 });
 
