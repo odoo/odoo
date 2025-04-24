@@ -567,14 +567,22 @@ class StockQuant(models.Model):
     def _compute_display_name(self):
         """name that will be displayed in the detailed operation"""
         for record in self:
-            name = [record.location_id.display_name]
-            if record.lot_id:
-                name.append(record.lot_id.name)
-            if record.package_id:
-                name.append(record.package_id.name)
-            if record.owner_id:
-                name.append(record.owner_id.name)
-            record.display_name = ' - '.join(name)
+            if record.env.context.get('formatted_display_name'):
+                name = f"{record.location_id.name}"
+                if record.package_id:
+                    name += f"\t--{record.package_id.name}--"
+                if record.lot_id:
+                    name += (' ' if record.package_id else '\t') + f"--{record.lot_id.name}--"
+                record.display_name = name
+            else:
+                name = [record.location_id.display_name]
+                if record.lot_id:
+                    name.append(record.lot_id.name)
+                if record.package_id:
+                    name.append(record.package_id.name)
+                if record.owner_id:
+                    name.append(record.owner_id.name)
+                record.display_name = ' - '.join(name)
 
     @api.constrains('product_id')
     def check_product_id(self):
@@ -1556,6 +1564,18 @@ class StockQuantPackage(models.Model):
     shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
     valid_sscc = fields.Boolean('Package name is valid SSCC', compute='_compute_valid_sscc')
     pack_date = fields.Date('Pack Date', default=fields.Date.today)
+
+    @api.depends('name', 'package_type_id.packaging_length', 'package_type_id.width', 'package_type_id.height')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        packages_to_process_ids = []
+        for package in self:
+            if package.env.context.get('formatted_display_name') and package.package_type_id and package.package_type_id.packaging_length and package.package_type_id.width and package.package_type_id.height:
+                package.display_name = f"{package.name}\t--{package.package_type_id.packaging_length} x {package.package_type_id.width} x {package.package_type_id.height}--"
+            else:
+                packages_to_process_ids.append(package.id)
+        if packages_to_process_ids:
+            super(StockQuantPackage, self.env['stock.quant.package'].browse(packages_to_process_ids))._compute_display_name()
 
     @api.depends('quant_ids.location_id', 'quant_ids.company_id')
     def _compute_package_info(self):

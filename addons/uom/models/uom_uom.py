@@ -98,6 +98,18 @@ class UomUom(models.Model):
         digits = self.env['decimal.precision'].precision_get('Product Unit')
         return tools.float_is_zero(value, precision_digits=digits)
 
+    @api.depends('name', 'relative_factor', 'relative_uom_id')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        uom_to_process_ids = []
+        for uom in self:
+            if uom.env.context.get('formatted_display_name') and uom.relative_uom_id:
+                uom.display_name = f"{uom.name}\t--{uom.relative_factor} {uom.relative_uom_id.name}--"
+            else:
+                uom_to_process_ids.append(uom.id)
+        if uom_to_process_ids:
+            super(UomUom, self.env['uom.uom'].browse(uom_to_process_ids))._compute_display_name()
+
     def _compute_quantity(
         self,
         qty: float,

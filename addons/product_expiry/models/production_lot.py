@@ -21,6 +21,23 @@ class StockLot(models.Model):
     product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Expiration Date has been reached.")
     product_expiry_reminded = fields.Boolean(string="Expiry has been reminded")
 
+    @api.depends('use_expiration_date', 'expiration_date', 'alert_date')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        lots_to_process_ids = []
+        for lot in self:
+            if lot.env.context.get('formatted_display_name') and lot.use_expiration_date:
+                name = f"{lot.name}"
+                if fields.Datetime.now() >= lot.expiration_date:
+                    name += self.env._("\t--Expired--")
+                elif fields.Datetime.now() >= lot.alert_date:
+                    name += self.env._("\t--Expire on %(date)s--", date=fields.Datetime.to_string(lot.expiration_date))
+                lot.display_name = name
+            else:
+                lots_to_process_ids.append(lot.id)
+        if lots_to_process_ids:
+            super(StockLot, self.env['stock.lot'].browse(lots_to_process_ids))._compute_display_name()
+
     @api.depends('expiration_date')
     def _compute_product_expiry_alert(self):
         current_date = fields.Datetime.now()
