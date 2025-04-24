@@ -205,17 +205,28 @@ class MailFollowers(models.Model):
       JOIN sub_followers ON sub_followers.pid = partner.id
                         AND (sub_followers.internal IS NOT TRUE OR partner.partner_share IS NOT TRUE)
  LEFT JOIN LATERAL (
-        SELECT users.id AS uid,
-               users.share AS share,
-               users.notification_type AS notification_type,
-               ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups
-          FROM res_users users
-     LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
-         WHERE users.partner_id = partner.id AND users.active
-      GROUP BY users.id,
-               users.share,
-               users.notification_type
-      ORDER BY users.share ASC NULLS FIRST, users.id ASC
+        WITH RECURSIVE all_groups AS (
+            SELECT users.id AS uid,
+                   users.share AS share,
+                   users.notification_type AS notification_type,
+                   groups_rel.gid
+              FROM res_users users
+         LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+             WHERE users.partner_id = partner.id AND users.active
+          UNION
+            SELECT ag.uid, ag.share, ag.notification_type, implied.hid
+              FROM all_groups ag
+              JOIN res_groups_implied_rel implied ON ag.gid = implied.gid
+        )
+        SELECT uid,
+               share,
+               notification_type,
+               ARRAY_AGG(DISTINCT gid) AS groups
+          FROM all_groups
+      GROUP BY uid,
+               share,
+               notification_type
+      ORDER BY share ASC NULLS FIRST, uid ASC
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
 
@@ -244,17 +255,28 @@ class MailFollowers(models.Model):
                               AND fol.res_model = %s
                               AND fol.res_id IN %s
  LEFT JOIN LATERAL (
-        SELECT users.id AS uid,
-               users.share AS share,
-               users.notification_type AS notification_type,
-               ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups
-          FROM res_users users
-     LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
-         WHERE users.partner_id = partner.id AND users.active
-      GROUP BY users.id,
-               users.share,
-               users.notification_type
-      ORDER BY users.share ASC NULLS FIRST, users.id ASC
+        WITH RECURSIVE all_groups AS (
+            SELECT users.id AS uid,
+                   users.share AS share,
+                   users.notification_type AS notification_type,
+                   groups_rel.gid
+              FROM res_users users
+         LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+             WHERE users.partner_id = partner.id AND users.active
+          UNION
+            SELECT ag.uid, ag.share, ag.notification_type, implied.hid
+              FROM all_groups ag
+              JOIN res_groups_implied_rel implied ON ag.gid = implied.gid
+        )
+        SELECT uid,
+               share,
+               notification_type,
+               ARRAY_AGG(DISTINCT gid) AS groups
+          FROM all_groups
+      GROUP BY uid,
+               share,
+               notification_type
+      ORDER BY share ASC NULLS FIRST, uid ASC
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
 
@@ -296,17 +318,28 @@ class MailFollowers(models.Model):
            FALSE as is_follower
       FROM res_partner partner
  LEFT JOIN LATERAL (
-        SELECT users.id AS uid,
-               users.share AS share,
-               users.notification_type AS notification_type,
-               ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups
-          FROM res_users users
-     LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
-         WHERE users.partner_id = partner.id AND users.active
-      GROUP BY users.id,
-               users.share,
-               users.notification_type
-      ORDER BY users.share ASC NULLS FIRST, users.id ASC
+        WITH RECURSIVE all_groups AS (
+            SELECT users.id AS uid,
+                   users.share AS share,
+                   users.notification_type AS notification_type,
+                   groups_rel.gid
+              FROM res_users users
+         LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+             WHERE users.partner_id = partner.id AND users.active
+          UNION
+            SELECT ag.uid, ag.share, ag.notification_type, implied.hid
+              FROM all_groups ag
+              JOIN res_groups_implied_rel implied ON ag.gid = implied.gid
+        )
+        SELECT uid,
+               share,
+               notification_type,
+               ARRAY_AGG(DISTINCT gid) AS groups
+          FROM all_groups
+      GROUP BY uid,
+               share,
+               notification_type
+      ORDER BY share ASC NULLS FIRST, uid ASC
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
 
