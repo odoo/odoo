@@ -260,7 +260,10 @@ class StockLot(models.Model):
             # reverse the search, get all lots sent to partner so we can return all lots NOT sent
             domain &= Domain('picking_partner_id', 'not in', value)
         else:
-            domain &= Domain('picking_partner_id', operator, value)
+            domain &= Domain.OR([
+                Domain('picking_partner_id', operator, value),
+                Domain('move_partner_id', operator, value),
+            ])
         domain &= Domain(self._get_outgoing_domain())
         move_lines = self.env['stock.move.line'].search(domain)
 

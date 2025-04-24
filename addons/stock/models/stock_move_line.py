@@ -71,6 +71,7 @@ class StockMoveLine(models.Model):
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
     picking_partner_id = fields.Many2one(related='picking_id.partner_id', readonly=True)
+    move_partner_id = fields.Many2one(related='move_id.partner_id', readonly=True)
     picking_code = fields.Selection(related='picking_type_id.code', readonly=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation type', compute='_compute_picking_type_id', search='_search_picking_type_id')
