@@ -4,7 +4,7 @@
         <field name="name">account.analytic.line.list</field>
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
-            <list string="Analytic Items" multi_edit="1">
+            <list string="Analytic Items" multi_edit="1" js_class="analytic_list">
                 <field name="company_id" column_invisible="True"/>
                 <field name="date" optional="show"/>
                 <field name="name"/>
@@ -94,7 +94,7 @@
         <field name="name">account.analytic.line.graph</field>
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
-            <graph string="Analytic Items" sample="1">
+            <graph string="Analytic Items" sample="1" js_class="analytic_graph">
                 <field name="account_id"/>
                 <field name="unit_amount" type="measure" widget="float_time"/>
                 <field name="amount" type="measure"/>
@@ -106,7 +106,7 @@
         <field name="name">account.analytic.line.pivot</field>
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
-            <pivot string="Analytic Items" sample="1">
+            <pivot string="Analytic Items" sample="1" js_class="analytic_pivot">
                 <field name="account_id"/>
                 <field name="date" interval="month" type="col"/>
                 <field name="amount" type="measure"/>
@@ -118,7 +118,7 @@
         <field name="name">account.analytic.line.kanban</field>
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" js_class="analytic_kanban">
                 <field name="account_id"/>
                 <field name="currency_id"/>
                 <templates>
