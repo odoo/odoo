@@ -41,7 +41,7 @@ test("simple rendering with no filter", async () => {
     expect(".o_menu_item").toHaveCount(1);
     expect(".dropdown-divider").toHaveCount(0);
     expect(".dropdown-item").toHaveCount(1);
-    expect(`.dropdown-item`).toHaveText("Add Custom Filter");
+    expect(`.dropdown-item`).toHaveText("Custom Filter...");
 });
 
 test("simple rendering with a single filter", async () => {
@@ -60,7 +60,7 @@ test("simple rendering with a single filter", async () => {
     expect(`.o_menu_item[role=menuitemcheckbox]`).toHaveCount(1);
     expect(queryFirst`.o_menu_item`).toHaveProperty("ariaChecked", "false");
     expect(`.dropdown-divider`).toHaveCount(1);
-    expect(`.o_menu_item:nth-of-type(2)`).toHaveText("Add Custom Filter");
+    expect(`.o_menu_item:nth-of-type(2)`).toHaveText("Custom Filter...");
 });
 
 test(`toggle a "simple" filter in filter menu works`, async () => {
@@ -601,7 +601,7 @@ test("arch order of groups of filters preserved", async () => {
     );
 });
 
-test("Open 'Add Custom Filter' dialog", async () => {
+test("Open 'Custom Filter' dialog", async () => {
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
         searchMenuTypes: ["filter"],
@@ -609,18 +609,18 @@ test("Open 'Add Custom Filter' dialog", async () => {
         searchViewArch: `<search></search>`,
     });
     await toggleSearchBarMenu();
-    expect(queryAllTexts`.o_filter_menu .dropdown-item`).toEqual(["Add Custom Filter"]);
+    expect(queryAllTexts`.o_filter_menu .dropdown-item`).toEqual(["Custom Filter..."]);
     expect(".modal").toHaveCount(0);
 
     await openAddCustomFilterDialog();
     expect(".modal").toHaveCount(1);
-    expect(".modal header").toHaveText("Add Custom Filter");
+    expect(".modal header").toHaveText("Custom Filter");
     expect(".modal .o_domain_selector").toHaveCount(1);
     expect(".modal .o_domain_selector .o_tree_editor_condition").toHaveCount(1);
-    expect(queryAllTexts`.modal footer button`).toEqual(["Add", "Cancel"]);
+    expect(queryAllTexts`.modal footer button`).toEqual(["Search", "Discard"]);
 });
 
-test("Default leaf in 'Add Custom Filter' dialog is based on ID (if no special fields on model)", async () => {
+test("Default leaf in 'Custom Filter' dialog is based on ID (if no special fields on model)", async () => {
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
         searchMenuTypes: ["filter"],
@@ -634,7 +634,7 @@ test("Default leaf in 'Add Custom Filter' dialog is based on ID (if no special f
     expect(getCurrentPath()).toBe("Id");
 });
 
-test("Default leaf in 'Add Custom Filter' dialog is based on first special field (if any special fields on model)", async () => {
+test("Default leaf in 'Custom Filter' dialog is based on first special field (if any special fields on model)", async () => {
     defineModels([class Country extends models.Model {}]);
     Foo._fields.country_id = fields.Many2one({ string: "Country", relation: "country" });
     await mountWithSearch(SearchBarMenu, {

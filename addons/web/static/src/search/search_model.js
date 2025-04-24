@@ -926,9 +926,9 @@ export class SearchModel extends EventBus {
             context: this.globalContext,
             onConfirm: (domain) => this.splitAndAddDomain(domain),
             disableConfirmButton: (domain) => domain === `[]`,
-            title: _t("Add Custom Filter"),
-            confirmButtonText: _t("Add"),
-            discardButtonText: _t("Cancel"),
+            title: _t("Custom Filter"),
+            confirmButtonText: _t("Search"),
+            discardButtonText: _t("Discard"),
             isDebugMode: this.isDebugMode,
         });
     }
