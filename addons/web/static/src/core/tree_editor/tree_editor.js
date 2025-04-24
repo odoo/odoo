@@ -106,13 +106,19 @@ export class TreeEditor extends Component {
     }
 
     notifyChanges() {
-        this.previousTree = cloneTree(this.tree);
         this.props.update(this.tree);
     }
 
-    updateConnector(node, value) {
-        node.value = value;
+    updateConnector(node) {
+        const previousNode = cloneTree(node);
+        node.value = node.value === "&" ? "|" : "&";
         node.negate = false;
+        if (areEquivalentTrees(node, previousNode)) {
+            // no interesting changes for parent
+            // this means that parent might not render the domain selector
+            // but we need to udpate editors
+            this.render();
+        }
         this.notifyChanges();
     }
 
@@ -121,31 +127,29 @@ export class TreeEditor extends Component {
         this.notifyChanges();
     }
 
-    createNewLeaf() {
-        return cloneTree(this.defaultCondition);
+    makeCondition(parent, condition) {
+        condition ||= parent.children.findLast((c) => c.type === "condition");
+        return cloneTree(condition || this.defaultCondition);
     }
 
-    createNewBranch(value) {
-        return connector(value, [this.createNewLeaf(), this.createNewLeaf()]);
-    }
-
-    insertRootLeaf(parent) {
-        parent.children.push(this.createNewLeaf());
+    addNewCondition(parent, node) {
+        if (node) {
+            const index = parent.children.indexOf(node);
+            parent.children.splice(index + 1, 0, this.makeCondition(parent, node));
+        } else {
+            parent.children.push(this.makeCondition(parent));
+        }
         this.notifyChanges();
     }
 
-    insertLeaf(parent, node) {
-        const newNode = node.type !== "connector" ? cloneTree(node) : this.createNewLeaf();
+    addNewConnector(parent, node) {
         const index = parent.children.indexOf(node);
-        parent.children.splice(index + 1, 0, newNode);
-        this.notifyChanges();
-    }
-
-    insertBranch(parent, node) {
         const nextConnector = parent.value === "&" ? "|" : "&";
-        const newNode = this.createNewBranch(nextConnector);
-        const index = parent.children.indexOf(node);
-        parent.children.splice(index + 1, 0, newNode);
+        parent.children.splice(
+            index + 1,
+            0,
+            connector(nextConnector, [this.makeCondition(parent, node)])
+        );
         this.notifyChanges();
     }
 

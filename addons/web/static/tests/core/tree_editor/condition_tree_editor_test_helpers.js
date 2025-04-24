@@ -102,11 +102,13 @@ export const SELECTORS = {
     row: ".o_tree_editor_row",
     tree: ".o_tree_editor > .o_tree_editor_node",
     connector: ".o_tree_editor_connector",
+    connectorValue: ".o_tree_editor_connector .o_tree_editor_connector_value",
+    connectorToggler: ".o_tree_editor_connector .o_tree_editor_connector_value button.o-dropdown",
     condition: ".o_tree_editor_condition",
     addNewRule: ".o_tree_editor_row > a",
-    buttonAddNewRule: ".o_tree_editor_node_control_panel > button:nth-child(1)",
-    buttonAddBranch: ".o_tree_editor_node_control_panel > button:nth-child(2)",
-    buttonDeleteNode: ".o_tree_editor_node_control_panel > button:nth-child(3)",
+    buttonAddNewRule: ".o_tree_editor_node_control_panel > button[data-tooltip='Add rule']",
+    buttonAddBranch: ".o_tree_editor_node_control_panel > button[data-tooltip='Add nested rule']",
+    buttonDeleteNode: ".o_tree_editor_node_control_panel > button[data-tooltip='Delete rule']",
     pathEditor: ".o_tree_editor_condition > .o_tree_editor_editor:nth-child(1)",
     operatorEditor: ".o_tree_editor_condition > .o_tree_editor_editor:nth-child(2)",
     valueEditor: ".o_tree_editor_condition > .o_tree_editor_editor:nth-child(3)",
@@ -249,7 +251,7 @@ function getCurrentCondition(index, target) {
  */
 function getCurrentConnector(index, target) {
     const connectorText = queryAllTexts(
-        `${SELECTORS.connector} .dropdown-toggle, ${SELECTORS.connector} > span:nth-child(2), ${SELECTORS.connector} > span > strong`,
+        `${SELECTORS.connector} > div > span > strong, ${SELECTORS.connectorValue}`,
         { root: target }
     ).at(index);
     return connectorText.includes("all") ? "all" : connectorText;
@@ -285,6 +287,14 @@ export function isNotSupportedValue(index, target) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
+export async function toggleConnector(index, target) {
+    await contains(queryAt(SELECTORS.connectorToggler, index, target)).click();
+}
 
 /**
  * @param {any} operator
@@ -325,7 +335,7 @@ export async function editValue(value, options, index, target) {
  * @param {number} [index=0]
  * @param {Target} [target]
  */
-export async function clickOnButtonAddNewRule(index, target) {
+export async function clickOnButtonAddRule(index, target) {
     await contains(queryAt(SELECTORS.buttonAddNewRule, index, target)).click();
 }
 
@@ -353,8 +363,8 @@ export async function clearNotSupported(index, target) {
     await contains(queryAt(SELECTORS.clearNotSupported, index, target)).click();
 }
 
-export async function addNewRule() {
-    await contains(SELECTORS.addNewRule).click();
+export async function addNewRule(index, target) {
+    await contains(queryAt(SELECTORS.addNewRule, index, target)).click();
 }
 
 export async function toggleArchive() {

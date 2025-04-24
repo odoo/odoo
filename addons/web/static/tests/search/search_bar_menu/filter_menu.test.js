@@ -2,11 +2,14 @@ import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import {
+    addNewRule,
     clickOnButtonAddBranch,
-    clickOnButtonAddNewRule,
+    clickOnButtonAddRule,
     getCurrentPath,
     openModelFieldSelectorPopover,
     selectOperator,
+    SELECTORS,
+    toggleConnector,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
@@ -662,11 +665,11 @@ test("Default connector is '|' (any)", async () => {
     expect(".modal .o_domain_selector .o_tree_editor_condition").toHaveCount(1);
     expect(".o_tree_editor_condition .o_model_field_selector_chain_part").toHaveCount(1);
     expect(getCurrentPath()).toBe("Id");
-    expect(".o_domain_selector .o_tree_editor_connector").toHaveCount(1);
+    expect(SELECTORS.connectorValue).toHaveCount(1);
 
-    await clickOnButtonAddNewRule();
-    expect(".o_domain_selector .dropdown-toggle").toHaveCount(1);
-    expect(".o_domain_selector .dropdown-toggle").toHaveText("any");
+    await addNewRule();
+    expect(SELECTORS.connectorValue).toHaveCount(1);
+    expect(SELECTORS.connectorValue).toHaveText("any");
     expect(".modal .o_domain_selector .o_tree_editor_condition").toHaveCount(2);
 });
 
@@ -692,14 +695,12 @@ test("Add a custom filter", async () => {
     expect(".o_filter_menu .o_menu_item:not(.o_add_custom_filter)").toHaveCount(1);
 
     await openAddCustomFilterDialog();
-    await clickOnButtonAddNewRule();
-    await contains(".o_domain_selector .dropdown-toggle").click();
-    await contains(queryFirst(".dropdown-menu .dropdown-item")).click();
-
+    await addNewRule();
+    await toggleConnector();
     await clickOnButtonAddBranch(-1);
-    await clickOnButtonAddBranch(-1);
+    await clickOnButtonAddRule(-1);
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Filter", "Custom filter"]);
+    expect(getFacetTexts()).toEqual(["Filter", "Id"]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
         ["foo", "=", "abc"],
@@ -708,10 +709,6 @@ test("Add a custom filter", async () => {
         ["id", "=", 1],
         ["id", "=", 1],
         "|",
-        "|",
-        ["id", "=", 1],
-        ["id", "=", 1],
-        "&",
         ["id", "=", 1],
         ["id", "=", 1],
     ]);
@@ -785,7 +782,7 @@ test("consistent display of ! in debug mode", async () => {
     await contains(`.o_domain_selector_debug_container textarea`).edit(
         `["!", "|", ("foo", "=", 1 ), ("id", "=", 2)]`
     );
-    expect(".o_tree_editor_row .dropdown-toggle").toHaveText("none");
+    expect(SELECTORS.connectorValue).toHaveText("none");
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([`Custom filter`]);

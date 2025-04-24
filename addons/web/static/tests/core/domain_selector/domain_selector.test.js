@@ -14,7 +14,7 @@ import {
     addNewRule,
     clearNotSupported,
     clickOnButtonAddBranch,
-    clickOnButtonAddNewRule,
+    clickOnButtonAddRule,
     clickOnButtonDeleteNode,
     clickPrev,
     editValue,
@@ -32,6 +32,7 @@ import {
     selectOperator,
     selectValue,
     toggleArchive,
+    toggleConnector,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
@@ -123,8 +124,7 @@ test("creating a domain from scratch", async () => {
 
     // There should be a "+" button to add a domain part; clicking on it
     // should add the default "('id', '=', 1)" domain
-    expect(SELECTORS.buttonAddNewRule).toHaveCount(1);
-    await clickOnButtonAddNewRule();
+    await addNewRule();
     expect(SELECTORS.debugArea).toHaveValue(`["&", ("bar", "!=", False), ("bar", "!=", False)]`);
 
     // There should be two "Add branch" buttons to add a domain "branch"; clicking on
@@ -133,7 +133,13 @@ test("creating a domain from scratch", async () => {
     expect(SELECTORS.buttonAddBranch).toHaveCount(2);
     await clickOnButtonAddBranch();
     expect(SELECTORS.debugArea).toHaveValue(
-        `["&", "&", ("bar", "!=", False), "|", ("id", "=", 1), ("id", "=", 1), ("bar", "!=", False)]`
+        `["&", "&", ("bar", "!=", False), ("bar", "!=", False), ("bar", "!=", False)]`
+    );
+
+    expect(SELECTORS.buttonAddNewRule).toHaveCount(1);
+    await clickOnButtonAddRule();
+    expect(SELECTORS.debugArea).toHaveValue(
+        `["&", "&", ("bar", "!=", False), "|", ("bar", "!=", False), ("bar", "!=", False), ("bar", "!=", False)]`
     );
 
     // There should be five buttons to remove domain part; clicking on
@@ -142,7 +148,7 @@ test("creating a domain from scratch", async () => {
     expect(SELECTORS.buttonDeleteNode).toHaveCount(5);
     await clickOnButtonDeleteNode(-1);
     await clickOnButtonDeleteNode(-1);
-    expect(SELECTORS.debugArea).toHaveValue(`["&", ("bar", "!=", False), ("id", "=", 1)]`);
+    expect(SELECTORS.debugArea).toHaveValue(`["&", ("bar", "!=", False), ("bar", "!=", False)]`);
 });
 
 test("building a domain with a datetime", async () => {
@@ -566,7 +572,6 @@ test("default condition depends on available fields", async () => {
     });
     defineModels([class Users extends models.Model {}]);
     await makeDomainSelector({
-        domain: `[]`,
         update(domain) {
             expect.step(domain);
         },
@@ -1321,7 +1326,6 @@ test("display of a contextual value (readonly)", async () => {
 test("boolean field (readonly)", async () => {
     const parent = await makeDomainSelector({
         readonly: true,
-        domain: `[]`,
     });
     const toTest = [
         { domain: `[("bar", "=", True)]`, text: "Bar set" },
@@ -1338,7 +1342,6 @@ test("boolean field (readonly)", async () => {
 test("integer field (readonly)", async () => {
     const parent = await makeDomainSelector({
         readonly: true,
-        domain: `[]`,
     });
     const toTest = [
         { domain: `[("int", "=", True)]`, text: `Int is equal true` },
@@ -1370,7 +1373,6 @@ test("date field (readonly)", async () => {
     });
     const parent = await makeDomainSelector({
         readonly: true,
-        domain: `[]`,
     });
     const toTest = [
         { domain: `[("date", "=", False)]`, text: `Date is equal false` },
@@ -1400,7 +1402,6 @@ test("date field (readonly)", async () => {
 test("char field (readonly)", async () => {
     const parent = await makeDomainSelector({
         readonly: true,
-        domain: `[]`,
     });
     const toTest = [
         { domain: `[("foo", "=", False)]`, text: `Foo not set` },
@@ -1422,7 +1423,6 @@ test("char field (readonly)", async () => {
 test("selection field (readonly)", async () => {
     const parent = await makeDomainSelector({
         readonly: true,
-        domain: `[]`,
     });
     const toTest = [
         { domain: `[("state", "=", False)]`, text: `State not set` },
@@ -1469,7 +1469,6 @@ test("selection property (readonly)", async () => {
     ];
     const parent = await makeDomainSelector({
         readonly: true,
-        domain: `[]`,
     });
     const toTest = [
         {
@@ -1773,7 +1772,7 @@ test("many2many field: clone a set/not set condition", async () => {
     expect.verifySteps([`[("product_id", "=", False)]`]);
     expect(SELECTORS.condition).toHaveCount(1);
 
-    await clickOnButtonAddNewRule();
+    await addNewRule();
     expect(SELECTORS.condition).toHaveCount(2);
     expect(getCurrentOperator()).toBe("not set");
     expect(getCurrentOperator(1)).toBe("not set");
@@ -1952,8 +1951,7 @@ test("Include archived button basic use", async () => {
         '["&", "&", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
     ]);
 
-    await contains(".dropdown-toggle").click();
-    await contains(".dropdown-menu span:nth-child(2)").click();
+    await toggleConnector();
     expect(SELECTORS.condition).toHaveCount(2);
     expect.verifySteps([
         '["&", "|", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
@@ -2646,7 +2644,7 @@ test("Hierarchical operators", async () => {
 test("preserve virtual operators in sub domains", async () => {
     Team._fields.active = fields.Boolean();
     await makeDomainSelector({
-        domain: `[("product_id", "any", [("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)])])]`,
+        domain: `[("product_id", "any", ["&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1)])]`,
         update(domain) {
             expect.step(domain);
         },
@@ -2655,22 +2653,24 @@ test("preserve virtual operators in sub domains", async () => {
     expect(getCurrentOperator(1)).toBe("matches");
     expect(getCurrentOperator(2)).toBe("not set");
     expect(getCurrentOperator(3)).toBe("not set");
+    expect(getCurrentOperator(4)).toBe("is equal");
 
-    await contains(".o_tree_editor:eq(1) a:contains('New Rule'):eq(1)").click();
+    await addNewRule(1);
     expect(getCurrentOperator(2)).toBe("not set");
     expect(getCurrentOperator(3)).toBe("not set");
     expect(getCurrentOperator(4)).toBe("is equal");
+    expect(getCurrentOperator(5)).toBe("is equal");
     expect.verifySteps([
-        `[("product_id", "any", ["&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1)])]`,
+        `[("product_id", "any", ["&", "&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1), ("id", "=", 1)])]`,
     ]);
 
-    await clickOnButtonDeleteNode(4);
+    await clickOnButtonDeleteNode(5);
     expect(getCurrentOperator()).toBe("matches");
     expect(getCurrentOperator(1)).toBe("matches");
     expect(getCurrentOperator(2)).toBe("not set");
     expect(getCurrentOperator(3)).toBe("not set");
     expect.verifySteps([
-        `[("product_id", "any", [("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)])])]`,
+        `[("product_id", "any", ["&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1)])]`,
     ]);
 });
 

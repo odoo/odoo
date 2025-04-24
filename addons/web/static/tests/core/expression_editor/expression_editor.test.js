@@ -11,7 +11,7 @@ import {
     addNewRule,
     clearNotSupported,
     clickOnButtonAddBranch,
-    clickOnButtonAddNewRule,
+    clickOnButtonAddRule,
     clickOnButtonDeleteNode,
     editValue,
     getOperatorOptions,
@@ -20,6 +20,7 @@ import {
     isNotSupportedPath,
     openModelFieldSelectorPopover,
     selectOperator,
+    toggleConnector,
     SELECTORS as treeEditorSELECTORS,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
@@ -47,14 +48,6 @@ async function editExpression(value) {
 
     await edit(value);
     await animationFrame();
-}
-
-/**
- * @param {string} value
- */
-async function selectConnector(value) {
-    await contains(`${SELECTORS.connector} .dropdown-toggle`).click();
-    await contains(`.dropdown-menu .dropdown-item:contains(${value})`).click();
 }
 
 async function makeExpressionEditor(params = {}) {
@@ -169,11 +162,20 @@ test("copy a complex condition", async () => {
         { value: "all", level: 0 },
         { value: "expr", level: 1 },
     ]);
-    await clickOnButtonAddNewRule();
+    await clickOnButtonAddBranch();
     expect(getTreeEditorContent()).toEqual([
-        { value: "all", level: 0 },
-        { value: "expr", level: 1 },
-        { value: "expr", level: 1 },
+        { level: 0, value: "all" },
+        { level: 1, value: "expr" },
+        { level: 1, value: "any" },
+        { level: 2, value: "expr" },
+    ]);
+    await clickOnButtonAddRule();
+    expect(getTreeEditorContent()).toEqual([
+        { level: 0, value: "all" },
+        { level: 1, value: "expr" },
+        { level: 1, value: "any" },
+        { level: 2, value: "expr" },
+        { level: 2, value: "expr" },
     ]);
 });
 
@@ -206,8 +208,7 @@ test("create a new branch from a complex condition control panel", async () => {
         { level: 0, value: "all" },
         { level: 1, value: "expr" },
         { level: 1, value: "any" },
-        { level: 2, value: ["Id", "is equal", "1"] },
-        { level: 2, value: ["Id", "is equal", "1"] },
+        { level: 2, value: "expr" },
     ]);
 });
 
@@ -291,7 +292,7 @@ test("rendering of simple conditions", async () => {
 
 test("rendering of connectors", async () => {
     await makeExpressionEditor({ expression: `expr and foo == "abc" or not bar` });
-    expect(queryAllTexts(`${SELECTORS.connector} .dropdown-toggle`)).toEqual(["any", "all"]);
+    expect(queryAllTexts(SELECTORS.connectorValue)).toEqual(["any", "all"]);
     const tree = getTreeEditorContent();
     expect(tree).toEqual([
         { level: 0, value: "any" },
@@ -309,7 +310,7 @@ test("rendering of connectors (2)", async () => {
             expect.step(expression);
         },
     });
-    expect(`${SELECTORS.connector} .dropdown-toggle:only`).toHaveText("none");
+    expect(SELECTORS.connectorValue).toHaveText("none");
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "none" },
         { level: 1, value: "expr" },
@@ -318,8 +319,7 @@ test("rendering of connectors (2)", async () => {
     expect.verifySteps([]);
     expect(queryOne(SELECTORS.debugArea)).toHaveValue(`not (expr or foo == "abc")`);
 
-    await selectConnector("all");
-    expect(`${SELECTORS.connector} .dropdown-toggle:only`).toHaveText("all");
+    await toggleConnector();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
         { level: 1, value: "expr" },
@@ -406,23 +406,19 @@ test("no field of type properties in model field selector", async () => {
 test("no special fields in fields", async () => {
     patchWithCleanup(odoo, { debug: "" });
     await makeExpressionEditor({
-        expression: `bar`,
+        expression: `True`,
         fieldFilters: ["foo", "bar", "properties"],
         update(expression) {
             expect.step(expression);
         },
     });
-    expect(getTreeEditorContent()).toEqual([
-        { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "set"] },
-    ]);
+    expect(getTreeEditorContent()).toEqual([{ level: 0, value: "all" }]);
     await addNewRule();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "set"] },
         { level: 1, value: ["Foo", "is equal", ""] },
     ]);
-    expect.verifySteps([`bar and foo == ""`]);
+    expect.verifySteps([`foo == ""`]);
 });
 
 test("between operator", async () => {
