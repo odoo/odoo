@@ -242,8 +242,10 @@ class PurchaseOrder(models.Model):
 
     def _get_final_location_record(self):
         self.ensure_one()
-        if self.dest_address_id and self.picking_type_id.code == 'dropship':
-            return self.dest_address_id.property_stock_customer
+        if self.picking_type_id.code == 'dropship':
+            if self.dest_address_id:
+                return self.dest_address_id.property_stock_customer
+            return self.picking_type_id.default_location_dest_id
         return self.picking_type_id.warehouse_id.lot_stock_id
 
     @api.model
