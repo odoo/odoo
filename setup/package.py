@@ -414,7 +414,7 @@ class DockerWine(Docker):
         nsis_args = f'/DVERSION={winver} /DMAJOR_VERSION={version_info[0]} /DMINOR_VERSION={version_info[1]} /DSERVICENAME={self.nt_service_name} /DPYTHONVERSION=3.12.3'
         cmds = [
             rf'wine {container_python} -m pip list',
-            rf'wine "c:\nsis-3.10\makensis.exe" {nsis_args} "{self.nsi_filepath}"'
+            rf'wine "c:\nsis-3.11\makensis.exe" {nsis_args} "{self.nsi_filepath}"'
         ]
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-win-build-%s' % TSTAMP)
         logging.info('Finished building %s package', self.package_name)
