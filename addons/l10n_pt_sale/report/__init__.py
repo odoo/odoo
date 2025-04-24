@@ -1,0 +1,1 @@
+from . import l10n_pt_sale_hash_integrity_templates
