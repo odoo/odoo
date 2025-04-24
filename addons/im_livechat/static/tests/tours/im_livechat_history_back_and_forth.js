@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             run: "click",
         },
         {
-            trigger: ".o_data_cell:contains(Visitor operator)",
+            trigger: ".o_data_cell:contains(Visitor)",
             run: "click",
         },
         {
@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             },
         },
         {
-            trigger: ".o_data_cell:contains(Visitor operator)",
+            trigger: ".o_data_cell:contains(Visitor)",
             run() {
                 history.forward();
             },
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             },
         },
         {
-            trigger: ".o_data_cell:contains(Visitor operator)",
+            trigger: ".o_data_cell:contains(Visitor)",
         },
     ],
 });

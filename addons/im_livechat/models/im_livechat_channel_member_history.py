@@ -31,6 +31,7 @@ class ImLivechatChannelMemberHistory(models.Model):
     agent_expertise_ids = fields.Many2many(
         "im_livechat.expertise", compute="_compute_member_fields", store=True
     )
+    avatar_128 = fields.Binary(compute="_compute_avatar_128")
 
     _member_id_unique = models.Constraint(
         "UNIQUE(member_id)", "Members can only be linked to one history"
@@ -63,3 +64,15 @@ class ImLivechatChannelMemberHistory(models.Model):
             history.agent_expertise_ids = (
                 history.agent_expertise_ids or history.member_id.agent_expertise_ids
             )
+
+    @api.depends("partner_id.name", "guest_id.name")
+    def _compute_display_name(self):
+        for history in self:
+            history.display_name = (
+                history.partner_id.name or history.guest_id.name or self.env._("Unknown")
+            )
+
+    @api.depends("partner_id.avatar_128", "guest_id.avatar_128")
+    def _compute_avatar_128(self):
+        for history in self:
+            history.avatar_128 = history.partner_id.avatar_128 or history.guest_id.avatar_128

@@ -35,7 +35,7 @@ class DiscussChannel(models.Model):
     )
     livechat_customer_history_ids = fields.One2many(
         "im_livechat.channel.member.history",
-        string="Customers",
+        string="Customers (History)",
         compute="_compute_livechat_customer_history_ids",
     )
     livechat_agent_partner_ids = fields.Many2many(
