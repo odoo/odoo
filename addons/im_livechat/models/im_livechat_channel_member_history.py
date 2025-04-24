@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 class ImLivechatChannelMemberHistory(models.Model):
     _name = "im_livechat.channel.member.history"
     _description = "Keep the channel member history"
+    _rec_names_search = ["partner_id", "guest_id"]
 
     member_id = fields.Many2one("discuss.channel.member", index="btree_not_null")
     livechat_member_type = fields.Selection(
