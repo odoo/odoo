@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import urljoin
 from werkzeug.exceptions import NotFound
 
 from odoo.fields import Domain
 from odoo.http import Controller, request, route
+from odoo.tools.urls import urljoin as url_join
 
 
 class GoogleMerchantCenter(Controller):
@@ -59,7 +59,7 @@ class GoogleMerchantCenter(Controller):
         ]))
         gmc_data = {
             'title': website_homepage.website_meta_title or website.name,
-            'link': urljoin(website.get_base_url(), request.env['ir.http']._url_lang(homepage_url)),
+            'link': url_join(website.get_base_url(), request.env['ir.http']._url_lang(homepage_url)),
             'description': website_homepage.website_meta_description,
             'items': products._prepare_gmc_items(),
         }

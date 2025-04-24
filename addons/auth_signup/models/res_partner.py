@@ -81,7 +81,7 @@ class ResPartner(models.Model):
 
             signup_url = "/web/%s?%s" % (route, werkzeug.urls.url_encode(query))
             if not self.env.context.get('relative_url'):
-                signup_url = werkzeug.urls.url_join(base_url, signup_url)
+                signup_url = tools.urls.urljoin(base_url, signup_url)
             res[partner.id] = signup_url
         return res
 

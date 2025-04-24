@@ -14,7 +14,6 @@ import werkzeug.urls
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from werkzeug.urls import url_join
 from PIL import Image, UnidentifiedImageError
 
 from odoo import api, fields, models, modules, tools, _
@@ -1034,7 +1033,7 @@ class MailingMailing(models.Model):
         return [rid for rid in res_ids if rid not in done_res_ids]
 
     def _get_unsubscribe_oneclick_url(self, email_to, res_id):
-        url = werkzeug.urls.url_join(
+        url = tools.urls.urljoin(
             self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe_oneclick?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
@@ -1042,12 +1041,12 @@ class MailingMailing(models.Model):
                     'email': email_to,
                     'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
-            }
+            },
         )
         return url
 
     def _get_unsubscribe_url(self, email_to, res_id):
-        url = werkzeug.urls.url_join(
+        url = tools.urls.urljoin(
             self.get_base_url(), 'mailing/%(mailing_id)s/confirm_unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
@@ -1055,12 +1054,12 @@ class MailingMailing(models.Model):
                     'email': email_to,
                     'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
-            }
+            },
         )
         return url
 
     def _get_view_url(self, email_to, res_id):
-        url = werkzeug.urls.url_join(
+        url = tools.urls.urljoin(
             self.get_base_url(), 'mailing/%(mailing_id)s/view?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
@@ -1068,7 +1067,7 @@ class MailingMailing(models.Model):
                     'email': email_to,
                     'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
-            }
+            },
         )
         return url
 
@@ -1295,7 +1294,7 @@ class MailingMailing(models.Model):
                        mailing_name=self.subject
                        ),
             'top_button_label': _('More Info'),
-            'top_button_url': url_join(web_base_url, f'/odoo/mailing.mailing/{self.id}'),
+            'top_button_url': tools.urls.urljoin(web_base_url, f'/odoo/mailing.mailing/{self.id}'),
             'kpi_data': [
                 kpi,
                 {

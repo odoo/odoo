@@ -2,10 +2,11 @@
 
 import json
 
-from werkzeug.urls import url_encode, url_join, url_parse
+from werkzeug.urls import url_encode, url_parse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger

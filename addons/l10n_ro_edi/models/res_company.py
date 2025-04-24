@@ -4,11 +4,11 @@ import requests
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from werkzeug.urls import url_join
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
+from odoo.tools.urls import urljoin as url_join
 from odoo.tools.safe_eval import json
 
 

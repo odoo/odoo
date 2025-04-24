@@ -1261,7 +1261,7 @@ class Website(models.Model):
 
     def _get_plausible_share_url(self):
         embed_url = f'/share/{self.plausible_site}?auth={self.plausible_shared_key}&embed=true&theme=system'
-        return self.plausible_shared_key and urls.url_join(self._get_plausible_server(), embed_url) or ''
+        return self.plausible_shared_key and tools.urls.urljoin(self._get_plausible_server(), embed_url) or ''
 
     def get_unique_key(self, string, template_module=False):
         """ Given a string, return an unique key including module prefix.
@@ -1700,7 +1700,7 @@ class Website(models.Model):
         cdn_filters = (self.cdn_filters or '').splitlines()
         for flt in cdn_filters:
             if flt and re.match(flt, uri):
-                return urls.url_join(cdn_url, uri)
+                return tools.urls.urljoin(cdn_url, uri)
         return uri
 
     @api.model

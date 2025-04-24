@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import urls
-
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
+from odoo.tools import urls
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -88,7 +87,7 @@ class PaymentTransaction(models.Model):
             'reference': self.reference,
             'currency_code': const.CURRENCY_MAPPING[self.provider_id.available_currency_ids[0].name],
             'mps_mode': 'SCP',
-            'return_url': urls.url_join(base_url, AsiaPayController._return_url),
+            'return_url': urls.urljoin(base_url, AsiaPayController._return_url),
             'payment_type': 'N',
             'language': get_language_code(lang),
             'payment_method': const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, 'ALL'),

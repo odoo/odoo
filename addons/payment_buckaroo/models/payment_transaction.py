@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import urls
-
 from odoo import _, api, models
+from odoo.tools import urls
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_buckaroo import const
@@ -27,7 +26,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'buckaroo':
             return super()._get_specific_rendering_values(processing_values)
 
-        return_url = urls.url_join(self.provider_id.get_base_url(), BuckarooController._return_url)
+        return_url = urls.urljoin(self.provider_id.get_base_url(), BuckarooController._return_url)
         rendering_values = {
             'api_url': self.provider_id._buckaroo_get_api_url(),
             'Brq_websitekey': self.provider_id.buckaroo_website_key,

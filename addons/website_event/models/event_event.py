@@ -8,7 +8,7 @@ import werkzeug.urls
 from markupsafe import Markup
 from pytz import utc, timezone
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import get_lang, format_date
@@ -96,7 +96,7 @@ class EventEvent(models.Model):
     def _compute_event_share_url(self):
         """Fall back on the website_url to share the event."""
         for event in self:
-            event.event_share_url = event.event_url or werkzeug.urls.url_join(event.get_base_url(), event.website_url)
+            event.event_share_url = event.event_url or tools.urls.urljoin(event.get_base_url(), event.website_url)
  
     @api.depends('registration_ids')
     @api.depends_context('uid')
@@ -174,7 +174,7 @@ class EventEvent(models.Model):
     @api.depends('website_url')
     def _compute_event_register_url(self):
         for event in self:
-            event.event_register_url = werkzeug.urls.url_join(event.get_base_url(), f"{event.website_url}/register")
+            event.event_register_url = tools.urls.urljoin(event.get_base_url(), f"{event.website_url}/register")
 
     @api.depends('event_type_id')
     def _compute_website_menu(self):

@@ -1,11 +1,12 @@
 import binascii
 import requests
 
-from werkzeug.urls import url_encode, url_join
+from werkzeug.urls import url_encode
 
 from odoo import _, http
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
+from odoo.tools.urls import urljoin as url_join
 
 
 URL_ANAF_AUTHORIZE = 'https://logincert.anaf.ro/anaf-oauth2/v1/authorize'

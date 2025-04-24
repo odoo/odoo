@@ -21,7 +21,7 @@ from xml.etree import ElementTree as ET
 
 import odoo
 
-from odoo import http, models, fields, _
+from odoo import http, models, fields, tools, _
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request, SessionExpiredException
@@ -156,7 +156,10 @@ class Website(Home):
             domain_to = get_base_domain(website.domain)
             if domain_from != domain_to:
                 # redirect to correct domain for a correct routing map
-                url_to = werkzeug.urls.url_join(website.domain, '/website/force/%s?isredir=1&path=%s' % (website.id, path))
+                url_to = tools.urls.urljoin(
+                    website.domain,
+                    '/website/force/%s?isredir=1&path=%s' % (website.id, path),
+                )
                 return request.redirect(url_to)
         website._force()
         return request.redirect(path)
