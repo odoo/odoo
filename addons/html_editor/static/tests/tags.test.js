@@ -196,6 +196,21 @@ describe("to heading 1", () => {
             contentAfter: '<ul><li class="nav-item"><h1>[abcd]</h1></li></ul>',
         });
     });
+
+    test("should re-selects link correctly after changing font style", async () => {
+        const { editor, el } = await setupEditor(
+            `<div class="o-paragraph"><a href="http://test.com">te[]st.com</a></div>`
+        );
+        await press(["ctrl", "a"]);
+        expect(getContent(el)).toBe(
+            `<div class="o-paragraph">[\ufeff<a href="http://test.com" class="o_link_in_selection">\ufefftest.com\ufeff</a>\ufeff]</div>`
+        );
+
+        setTag("h1")(editor);
+        expect(getContent(el)).toBe(
+            `<h1>[\ufeff<a href="http://test.com">\ufefftest.com\ufeff</a>\ufeff]</h1>`
+        );
+    });
 });
 
 describe("to heading 2", () => {
