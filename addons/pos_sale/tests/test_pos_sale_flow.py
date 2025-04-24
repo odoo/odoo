@@ -1298,3 +1298,77 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.amount_to_invoice, 100.0, "Amount to invoice should be 100.0")
         self.env['pos.order'].sync_from_ui([order_data])
         self.assertEqual(sale_order.amount_to_invoice, 0.0, "Amount to invoice should be 0.0")
+
+    def test_payment_terms_with_early_discount(self):
+        """Make sure that orders invoiced in the pos do not use payment terms with early discount"""
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10.0,
+            'taxes_id': [],
+        })
+
+        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        payment_terms = self.env['account.payment.term'].create({
+            'name': "Test Payment Term",
+            'early_discount': True,
+            'line_ids': [(0, 0, {
+                'value': 'percent',
+                'value_amount': 100,
+                'nb_days': 45,
+            })]
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner_test.id,
+            'payment_term_id': payment_terms.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'product_uom': product_a.uom_id.id,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+
+        pos_order = {'amount_paid': 10,
+           'amount_return': 0,
+           'amount_tax': 0,
+           'amount_total': 10,
+           'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'to_invoice': True,
+           'partner_id': partner_test.id,
+           'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'pack_lot_ids': [],
+              'price_unit': 10,
+              'product_id': product_a.id,
+              'price_subtotal': 10,
+              'price_subtotal_incl': 10,
+              'sale_order_line_id': sale_order.order_line[0].id,
+              'sale_order_origin_id': sale_order.id,
+              'qty': 1,
+              'tax_ids': []}]],
+           'name': 'Order 00044-003-0014',
+           'session_id': current_session.id,
+           'sequence_number': self.main_pos_config.journal_id.id,
+           'payment_ids': [[0,
+             0,
+             {'amount': 10,
+              'name': fields.Datetime.now(),
+              'payment_method_id': self.main_pos_config.payment_method_ids[0].id}]],
+           'uuid': '00044-003-0014',
+           'user_id': self.env.uid}
+
+        pos_order_id = self.env['pos.order'].sync_from_ui([pos_order])['pos.order'][0]['id']
+        pos_order = self.env['pos.order'].browse(pos_order_id)
+        self.assertFalse(pos_order.account_move.invoice_payment_term_id)
