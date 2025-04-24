@@ -11,7 +11,7 @@ class AccountPaymentRegister(models.TransientModel):
         string='Checks',
     )
 
-    @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
+    @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_id.code')
     def _compute_amount(self):
         super()._compute_amount()
         for wizard in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')):
@@ -33,7 +33,7 @@ class AccountPaymentRegister(models.TransientModel):
             codes = ['new_third_party_checks', 'own_checks']
         else:
             codes = ['in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks', 'new_third_party_checks', 'own_checks']
-        return self.payment_method_code in codes
+        return self.payment_method_id.code in codes
 
     def _create_payment_vals_from_wizard(self, batch_result):
         vals = super()._create_payment_vals_from_wizard(batch_result)

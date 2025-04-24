@@ -30,7 +30,7 @@
                     <field name="show_partner_bank_account" invisible="1"/>
                     <field name="require_partner_bank_account" invisible="1"/>
                     <field name="available_journal_ids" invisible="1"/>
-                    <field name="available_payment_method_line_ids" invisible="1"/>
+                    <field name="available_payment_method_ids" invisible="1"/>
                     <field name="available_partner_bank_ids" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="hide_writeoff_section" invisible="1"/>
@@ -56,16 +56,32 @@
                     </div>
                     <group>
                         <group name="group1">
-                            <field name="journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
-                            <field name="payment_method_line_id"
-                                   context="{'hide_payment_journal_id': 1}"
-                                   required="1"  options="{'no_create': True, 'no_open': True}"/>
+                            <label for="amount"/>
+                            <div name="amount_div" class="o_row">
+                                <field name="amount"
+                                 force_save="1"
+                                 readonly="not can_edit_wizard or can_group_payments and not group_payment"/>
+                                <field name="currency_id"
+                                       required="1"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       invisible="not can_edit_wizard or can_group_payments and not group_payment"
+                                       groups="base.group_multi_currency"/>
+                            </div>
+                            <field
+                                name="installments_switch_html"
+                                string=""
+                                widget="account_payment_register_html"
+                                invisible="not installments_switch_html"
+                            />
+                            <field name="payment_date"/>
                             <field name="partner_bank_id"
                                    invisible="not show_partner_bank_account or not can_edit_wizard or (can_group_payments and not group_payment)"
                                    readonly="payment_type == 'inbound'"
                                    required="require_partner_bank_account and can_edit_wizard and (not can_group_payments or not group_payment)"
                                    placeholder="Account Number"
                                    context="{'display_account_trust': True, 'default_partner_id': partner_id}"/>
+                            <field name="communication"
+                                   invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
                             <field name="group_payment"
                                    invisible="not can_group_payments"/>
                             <label for="payment_difference" invisible="not show_payment_difference"/>
@@ -104,26 +120,11 @@
                             </div>
                         </group>
                         <group name="group2">
-                            <label for="amount"/>
-                            <div name="amount_div" class="o_row">
-                                <field name="amount"
-                                 force_save="1"
-                                 readonly="not can_edit_wizard or can_group_payments and not group_payment"/>
-                                <field name="currency_id"
-                                       required="1"
-                                       options="{'no_create': True, 'no_open': True}"
-                                       invisible="not can_edit_wizard or can_group_payments and not group_payment"
-                                       groups="base.group_multi_currency"/>
-                            </div>
-                            <field
-                                name="installments_switch_html"
-                                string=""
-                                widget="account_payment_register_html"
-                                invisible="not installments_switch_html"
-                            />
-                            <field name="payment_date"/>
-                            <field name="communication"
-                                   invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
+                            <field name="payment_method_id"
+                                   required="1"  options="{'no_create': True, 'no_open': True}"/>
+                            <field name="journal_id" 
+                                   options="{'no_open': True, 'no_create': True}" 
+                                   placeholder="Add a Journal to create entries"/>                        
                         </group>
                         <field name="qr_code" invisible="1"/>
                         <div invisible="not qr_code" colspan="2" class="text-center">
