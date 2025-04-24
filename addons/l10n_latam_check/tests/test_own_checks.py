@@ -2,11 +2,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.l10n_latam_check.tests.common import L10nLatamCheckTest
 from odoo.tests import Form, tagged
-from odoo import fields
+from odoo import fields, Command
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestOwnChecks(L10nLatamCheckTest):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.own_check_payment_method = cls.env['account.payment.method'].create({
+            'name': 'Test Own Check',
+            'code': 'own_checks',
+            'payment_type': 'inbound',
+        })
 
     def test_01_pay_with_own_checks(self):
         """ Create and post a manual checks with deferred date """
@@ -62,3 +72,30 @@ class TestOwnChecks(L10nLatamCheckTest):
                          "Canceled payment checks must not have issue state")
         self.assertEqual(len(payment.l10n_latam_new_check_ids.outstanding_line_id), 0,
                          "Canceled payment checks must not have split move")
+
+    def test_available_journals_for_own_checks(self):
+        '''When own check payment methods are chosen only bank journals should be available in the payment form,
+        and when other types of journals are chosen this payment method should not be available.'''
+
+        payment1 = self.env['account.payment'].with_company(self.ar_company).create({
+            'payment_method_id': self.own_check_payment_method.id,
+            'partner_id': self.partner_a.id,
+            'payment_type': 'outbound',
+            'journal_id': self.bank_journal.id,
+            'l10n_latam_new_check_ids': [
+                Command.create({'name': '00000001', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
+                Command.create({'name': '00000002', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
+            ],
+        })
+        self.assertEqual(set(payment1.available_journal_ids.mapped('type')), {'bank'})
+
+        payment2 = self.env['account.payment'].with_company(self.ar_company).create({
+            'partner_id': self.partner_a.id,
+            'payment_type': 'inbound',
+            'journal_id': self.third_party_check_journal.id,
+            'l10n_latam_new_check_ids': [
+                Command.create({'name': '00000003', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
+                Command.create({'name': '00000004', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
+            ],
+        })
+        self.assertFalse('own_check' in payment2.available_payment_method_ids.mapped('code'))
