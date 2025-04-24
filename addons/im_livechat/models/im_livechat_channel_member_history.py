@@ -69,7 +69,7 @@ class ImLivechatChannelMemberHistory(models.Model):
     def _compute_display_name(self):
         for history in self:
             history.display_name = (
-                history.partner_id.name or history.guest_id.name or self.env._("Unknown")
+                history.partner_id.name or history.guest_id.name or self.env._t("Unknown")
             )
 
     @api.depends("partner_id.avatar_128", "guest_id.avatar_128")
