@@ -260,8 +260,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this._submitForm({ previousPageId: parseInt(target.dataset['previousPageId']) });
         } else if (target.value === 'next_skipped') {
             this._submitForm({ nextSkipped: true });
-        } else if (target.value === 'finish') {
-            // Adding pop-up before the survey is submitted
+        } else if (target.value === 'finish' && !this.options.sessionInProgress) {
+            // Adding pop-up before the survey is submitted when not in live session
             this.call("dialog", "add", ConfirmationDialog, {
                 title: _t("Submit confirmation"),
                 body: _t("Are you sure you want to submit the survey?"),
@@ -271,6 +271,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 },
                 cancel: () => {},
             });
+        } else if (target.value === 'finish') {
+            this._submitForm({ isFinish: true });
         } else {
             this._submitForm({});
         }
