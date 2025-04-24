@@ -27,10 +27,10 @@ L10N_IT_PAYMENT_METHOD_SELECTION = [
 ]
 
 
-class AccountPaymentMethodLine(models.Model):
-    _inherit = "account.payment.method.line"
+class AccountPaymentMethod(models.Model):
+    _inherit = "account.payment.method"
 
-    l10n_it_payment_method = fields.Selection(
+    l10n_it_payment_method_code = fields.Selection(
         selection=L10N_IT_PAYMENT_METHOD_SELECTION,
         string="Italian Payment Method",
         default='MP05',

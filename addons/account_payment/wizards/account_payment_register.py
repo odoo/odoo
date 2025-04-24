@@ -26,13 +26,13 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_use_electronic_payment_method',
     )
     payment_method_code = fields.Char(
-        related='payment_method_line_id.code')
+        related='payment_method_id.code')
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('payment_method_line_id')
+    @api.depends('payment_method_id')
     def _compute_suitable_payment_token_ids(self):
         for wizard in self:
             if wizard.can_edit_wizard and wizard.use_electronic_payment_method:
@@ -40,12 +40,12 @@ class AccountPaymentRegister(models.TransientModel):
                     *self.env['payment.token']._check_company_domain(wizard.company_id),
                     ('provider_id.capture_manually', '=', False),
                     ('partner_id', '=', wizard.partner_id.id),
-                    ('provider_id', '=', wizard.payment_method_line_id.payment_provider_id.id),
+                    ('provider_id', 'in', wizard.payment_method_id.payment_provider_ids.ids),
                 ])
             else:
                 wizard.suitable_payment_token_ids = [Command.clear()]
 
-    @api.depends('payment_method_line_id')
+    @api.depends('payment_method_id')
     def _compute_use_electronic_payment_method(self):
         for wizard in self:
             # Get a list of all electronic payment method codes.
@@ -53,12 +53,12 @@ class AccountPaymentRegister(models.TransientModel):
             codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
             wizard.use_electronic_payment_method = wizard.payment_method_code in codes
 
-    @api.onchange('can_edit_wizard', 'payment_method_line_id', 'journal_id')
+    @api.onchange('can_edit_wizard', 'payment_method_id', 'journal_id')
     def _compute_payment_token_id(self):
         codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
         for wizard in self:
             if wizard.can_edit_wizard \
-                    and wizard.payment_method_line_id.code in codes \
+                    and wizard.payment_method_id.code in codes \
                     and wizard.journal_id \
                     and wizard.partner_id:
 
@@ -66,7 +66,7 @@ class AccountPaymentRegister(models.TransientModel):
                     *self.env['payment.token']._check_company_domain(wizard.company_id),
                     ('partner_id', '=', wizard.partner_id.id),
                     ('provider_id.capture_manually', '=', False),
-                    ('provider_id', '=', wizard.payment_method_line_id.payment_provider_id.id),
+                    ('provider_id', 'in', wizard.payment_method_id.payment_provider_ids.ids),
                  ], limit=1)
             else:
                 wizard.payment_token_id = False

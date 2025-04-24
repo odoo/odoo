@@ -308,7 +308,6 @@ class PaymentProvider(models.Model):
                     " capture: %s", ", ".join(incompatible_pms.mapped('name'))
                 ))
 
-
     #=== CRUD METHODS ===#
 
     @api.model_create_multi

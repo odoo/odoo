@@ -11,94 +11,43 @@ class PaymentProvider(models.Model):
         string="Payment Journal",
         help="The journal in which the successful transactions are posted.",
         comodel_name='account.journal',
-        compute='_compute_journal_id',
-        inverse='_inverse_journal_id',
         check_company=True,
         domain='[("type", "=", "bank")]',
         copy=False,
     )
 
+    account_payment_method_id = fields.Many2one(
+        comodel_name='account.payment.method',
+        compute='_compute_account_payment_method_id',
+        store=True,
+    )
+
     #=== COMPUTE METHODS ===#
-
-    def _ensure_payment_method_line(self, allow_create=True):
-        self.ensure_one()
-        if not self.id:
-            return
-
-        default_payment_method = self._get_provider_payment_method(self._get_code())
-        if not default_payment_method:
-            return
-
-        pay_method_line = self.env['account.payment.method.line'].search([
-            ('payment_provider_id', '=', self.id),
-            ('journal_id', '!=', False),
-        ], limit=1)
-
-        if not self.journal_id:
-            if pay_method_line:
-                pay_method_line.unlink()
-                return
-
-        if not pay_method_line:
-            pay_method_line = self.env['account.payment.method.line'].search(
-                [
-                    *self.env['account.payment.method.line']._check_company_domain(self.company_id),
-                    ('code', '=', self._get_code()),
-                    ('payment_provider_id', '=', False),
-                    ('journal_id', '!=', False),
-                ],
-                limit=1,
-            )
-        if pay_method_line:
-            pay_method_line.payment_provider_id = self
-            pay_method_line.journal_id = self.journal_id
-            pay_method_line.name = self.name
-        elif allow_create:
-            create_values = {
-                'name': self.name,
-                'payment_method_id': default_payment_method.id,
-                'journal_id': self.journal_id.id,
-                'payment_provider_id': self.id,
-            }
-            pay_method_line_same_code = self.env['account.payment.method.line'].search(
-                [
-                    *self.env['account.payment.method.line']._check_company_domain(self.company_id),
-                    ('code', '=', self._get_code()),
-                ],
-                limit=1,
-            )
-            if pay_method_line_same_code:
-                create_values['payment_account_id'] = pay_method_line_same_code.payment_account_id.id
-            self.env['account.payment.method.line'].create(create_values)
 
     @api.depends('code', 'state', 'company_id')
     def _compute_journal_id(self):
         for provider in self:
-            pay_method_line = self.env['account.payment.method.line'].search([
-                ('payment_provider_id', '=', provider._origin.id),
-                ('journal_id', '!=', False),
-            ], limit=1)
-
-            if pay_method_line:
-                provider.journal_id = pay_method_line.journal_id
-            elif provider.state in ('enabled', 'test'):
+            if not provider.journal_id:
                 provider.journal_id = self.env['account.journal'].search(
-                    [
-                        ('company_id', '=', provider.company_id.id),
-                        ('type', '=', 'bank'),
-                    ],
-                    limit=1,
-                )
-                if provider.id:
-                    provider._ensure_payment_method_line()
+                        [
+                            ('company_id', '=', provider.company_id.id),
+                            ('type', '=', 'bank'),
+                        ],
+                        limit=1,
+                    )
 
-    def _inverse_journal_id(self):
+    def _compute_account_payment_method_id(self):
+        payment_methods = self.env['account.payment.method'].search([('code', 'in', self.mapped('code'))])
         for provider in self:
-            provider._ensure_payment_method_line()
+            provider.account_payment_method_id = payment_methods.filtered(lambda m: m.code == provider.code)
 
-    @api.model
-    def _get_provider_payment_method(self, code):
-        return self.env['account.payment.method'].search([('code', '=', code)], limit=1)
+    #=== CRUD METHODS ===#
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        providers = super().create(vals_list)
+        providers._compute_account_payment_method_id()
+        return providers
 
     #=== BUSINESS METHODS ===#
 
@@ -110,13 +59,14 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _setup_payment_method(self, code):
-        if code not in ('none', 'custom') and not self._get_provider_payment_method(code):
+        if code not in ('none', 'custom'):
             providers_description = dict(self._fields['code']._description_selection(self.env))
             self.env['account.payment.method'].sudo().create({
                 'name': providers_description[code],
                 'code': code,
                 'payment_type': 'inbound',
             })
+            self.env['payment.provider'].search([('code', '=', code)])._compute_account_payment_method_id()
 
     def _check_existing_payment(self, payment_method):
         existing_payment_count = self.env['account.payment'].search_count([('payment_method_id', '=', payment_method.id)], limit=1)
@@ -125,9 +75,8 @@ class PaymentProvider(models.Model):
     @api.model
     def _remove_provider(self, code, **kwargs):
         """ Override of `payment` to delete the payment method of the provider. """
-        payment_method = self._get_provider_payment_method(code)
         # If the payment method is used by any payments, we block the uninstallation of the module.
-        if self._check_existing_payment(payment_method):
+        if self._check_existing_payment(self.account_payment_method_id):
             raise UserError(_("You cannot uninstall this module as payments using this payment method already exist."))
         super()._remove_provider(code, **kwargs)
-        payment_method.unlink()
+        self.account_payment_method_id.unlink()

@@ -69,7 +69,7 @@ class AccountPayment(models.Model):
             else:
                 payment.amount_available_for_refund = 0
 
-    @api.depends('payment_method_line_id')
+    @api.depends('payment_method_id')
     def _compute_suitable_payment_token_ids(self):
         for payment in self:
             if payment.use_electronic_payment_method:
@@ -77,12 +77,12 @@ class AccountPayment(models.Model):
                     *self.env['payment.token']._check_company_domain(payment.company_id),
                     ('provider_id.capture_manually', '=', False),
                     ('partner_id', '=', payment.partner_id.id),
-                    ('provider_id', '=', payment.payment_method_line_id.payment_provider_id.id),
+                    ('provider_id', 'in', payment.payment_method_id.payment_provider_ids.ids),
                 ])
             else:
                 payment.suitable_payment_token_ids = [Command.clear()]
 
-    @api.depends('payment_method_line_id')
+    @api.depends('payment_method_id')
     def _compute_use_electronic_payment_method(self):
         for payment in self:
             # Get a list of all electronic payment method codes.
@@ -105,7 +105,7 @@ class AccountPayment(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
-    @api.onchange('partner_id', 'payment_method_line_id', 'journal_id')
+    @api.onchange('partner_id', 'payment_method_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
         codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
         if not (self.payment_method_code in codes and self.partner_id and self.journal_id):
@@ -116,7 +116,7 @@ class AccountPayment(models.Model):
             *self.env['payment.token']._check_company_domain(self.company_id),
             ('partner_id', '=', self.partner_id.id),
             ('provider_id.capture_manually', '=', False),
-            ('provider_id', '=', self.payment_method_line_id.payment_provider_id.id),
+            ('provider_id', 'in', self.payment_method_id.payment_provider_ids.ids),
          ], limit=1)  # In sudo mode to read the provider fields.
 
     #=== ACTION METHODS ===#

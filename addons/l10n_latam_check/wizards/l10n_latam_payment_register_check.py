@@ -32,16 +32,16 @@ class L10n_LatamPaymentRegisterCheck(models.TransientModel):
         if self.name:
             self.name = self.name.zfill(8)
 
-    @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
+    @api.depends('payment_register_id.payment_method_id.code', 'payment_register_id.partner_id')
     def _compute_bank_id(self):
-        new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_line_id.code == 'new_third_party_checks')
+        new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_id.code == 'new_third_party_checks')
         for rec in new_third_party_checks:
             rec.bank_id = rec.payment_register_id.partner_id.bank_ids[:1].bank_id
         (self - new_third_party_checks).bank_id = False
 
-    @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
+    @api.depends('payment_register_id.payment_method_id.code', 'payment_register_id.partner_id')
     def _compute_issuer_vat(self):
-        new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_line_id.code == 'new_third_party_checks')
+        new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_id.code == 'new_third_party_checks')
         for rec in new_third_party_checks:
             rec.issuer_vat = rec.payment_register_id.partner_id.vat
         (self - new_third_party_checks).issuer_vat = False

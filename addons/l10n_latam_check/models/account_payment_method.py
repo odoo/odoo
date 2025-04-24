@@ -7,9 +7,9 @@ class AccountPaymentMethod(models.Model):
     @api.model
     def _get_payment_method_information(self):
         res = super()._get_payment_method_information()
-        res['new_third_party_checks'] = {'mode': 'multi', 'type': ('cash',)}
-        res['in_third_party_checks'] = {'mode': 'multi', 'type': ('cash',)}
-        res['out_third_party_checks'] = {'mode': 'multi', 'type': ('cash',)}
-        res['return_third_party_checks'] = {'mode': 'multi', 'type': ('bank',)}
-        res['own_checks'] = {'mode': 'multi', 'type': ('bank',)}
+        res['new_third_party_checks'] = {'type': ('cash',)}
+        res['in_third_party_checks'] = {'type': ('cash',)}
+        res['out_third_party_checks'] = {'type': ('cash',)}
+        res['return_third_party_checks'] = {'type': ('bank',)}
+        res['own_checks'] = {'type': ('bank',)}
         return res
