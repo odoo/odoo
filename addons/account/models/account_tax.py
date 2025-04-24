@@ -1652,7 +1652,7 @@ class AccountTax(models.Model):
                     tax_amounts['base_lines'].append(base_line)
 
                 if index == 0:
-                    base_rounding_key = (currency, base_line['is_refund'])
+                    base_rounding_key = (currency, base_line['is_refund'], computation_key)
                     base_amounts = total_per_base[base_rounding_key]
                     base_amounts['base_amount_currency'] += tax_data['base_amount_currency']
                     base_amounts['raw_base_amount_currency'] += tax_data['raw_base_amount_currency']
@@ -1663,7 +1663,7 @@ class AccountTax(models.Model):
 
             # If not, just account the base amounts.
             if not taxes_data:
-                tax_rounding_key = (None, currency, base_line['is_refund'], False, None)
+                tax_rounding_key = (None, currency, base_line['is_refund'], False, computation_key)
                 tax_amounts = total_per_tax[tax_rounding_key]
                 tax_amounts['base_amount_currency'] += tax_details['total_excluded_currency']
                 tax_amounts['raw_base_amount_currency'] += tax_details['raw_total_excluded_currency']
@@ -1672,7 +1672,7 @@ class AccountTax(models.Model):
                 if not base_line['special_type']:
                     tax_amounts['base_lines'].append(base_line)
 
-                base_rounding_key = (currency, base_line['is_refund'])
+                base_rounding_key = (currency, base_line['is_refund'], computation_key)
                 base_amounts = total_per_base[base_rounding_key]
                 base_amounts['base_amount_currency'] += tax_details['total_excluded_currency']
                 base_amounts['raw_base_amount_currency'] += tax_details['raw_total_excluded_currency']
@@ -1689,7 +1689,7 @@ class AccountTax(models.Model):
             tax_amounts['raw_base_amount'] = company.currency_id.round(tax_amounts['raw_base_amount'])
 
         # Round 'total_per_base'.
-        for (currency, _is_refund), base_amounts in total_per_base.items():
+        for (currency, _is_refund, _computation_key), base_amounts in total_per_base.items():
             base_amounts['raw_base_amount_currency'] = currency.round(base_amounts['raw_base_amount_currency'])
             base_amounts['raw_base_amount'] = company.currency_id.round(base_amounts['raw_base_amount'])
 
@@ -1836,7 +1836,7 @@ class AccountTax(models.Model):
                     else:
                         tax_details[f'delta_total_excluded{delta_currency_indicator}'] += amount_to_distribute
 
-                        base_rounding_key = (currency, base_line['is_refund'])
+                        base_rounding_key = (currency, base_line['is_refund'], base_line['computation_key'])
                         base_amounts = total_per_base[base_rounding_key]
                         base_amounts[f'base_amount{delta_currency_indicator}'] += amount_to_distribute
 
@@ -1851,7 +1851,7 @@ class AccountTax(models.Model):
         # 13%: base = 146.89, tax = 19.1
         # However, for the whole document, there is a delta in term of base amount: 293.79 - 146.89 - 146.89 = 0.01
         # This delta won't be there in any base but still has to be accounted.
-        for (currency, _is_refund), base_amounts in total_per_base.items():
+        for (currency, _is_refund, _computation_key), base_amounts in total_per_base.items():
             if not base_amounts['base_lines']:
                 continue
 
