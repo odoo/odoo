@@ -60,7 +60,12 @@ class Im_LivechatReportChannel(models.Model):
     )
     chatbot_script_id = fields.Many2one("chatbot.script", "Chatbot", readonly=True)
     chatbot_answers_path = fields.Char("Chatbot Answers", readonly=True)
+    chatbot_answers_path_str = fields.Char("Chatbot Answers (String)", readonly=True)
     session_expertises = fields.Char("Expertises used in this session", readonly=True)
+
+    @property
+    def _unknown_chatbot_answer_name(self):
+        return self.env._("Unknown")
 
     @property
     def _table_query(self):
@@ -103,10 +108,25 @@ class Im_LivechatReportChannel(models.Model):
               GROUP BY channel_id
             ),
             chatbot_answer_history AS (
-                SELECT discuss_channel_id AS channel_id,
-                    STRING_AGG(user_raw_script_answer_id::TEXT, ' - ' ORDER BY chatbot_message.id) AS answers_path
+                SELECT chatbot_message.discuss_channel_id AS channel_id,
+                       STRING_AGG(user_raw_script_answer_id::TEXT, ' - ' ORDER BY chatbot_message.id) AS answers_path,
+                       STRING_AGG(
+                           COALESCE(
+                               chatbot_script_answer.name->>%s,
+                               chatbot_script_answer.name->>'en_US',
+                               fallback.value,
+                               %s
+                           ),
+                           ' > ' ORDER BY chatbot_message.id
+                       ) AS answers_path_str
                   FROM chatbot_message
-                 WHERE user_raw_script_answer_id IS NOT NULL
+             LEFT JOIN chatbot_script_answer ON chatbot_message.user_script_answer_id = chatbot_script_answer.id
+     LEFT JOIN LATERAL (
+                      SELECT value
+                      FROM jsonb_each_text(chatbot_script_answer.name)
+                      LIMIT 1
+                    ) AS fallback ON TRUE
+                 WHERE chatbot_message.user_raw_script_answer_id IS NOT NULL
               GROUP BY chatbot_message.discuss_channel_id
             ),
             expertise_history AS (
@@ -130,6 +150,8 @@ class Im_LivechatReportChannel(models.Model):
               GROUP BY channel_id
             )
             """,
+            self.env.lang,
+            self._unknown_chatbot_answer_name,
             self.env.lang,
         )
 
@@ -182,6 +204,7 @@ class Im_LivechatReportChannel(models.Model):
                     END
                 ) AS call_duration_hour,
                 (ARRAY_AGG(chatbot_answer_history.answers_path))[1] as chatbot_answers_path,
+                (ARRAY_AGG(chatbot_answer_history.answers_path_str))[1] as chatbot_answers_path_str,
                 (ARRAY_AGG(expertise_history.expertises))[1] AS session_expertises
             """,
         )
@@ -245,6 +268,7 @@ class Im_LivechatReportChannel(models.Model):
                 continue
             id_list = [int(answer_id.strip()) for answer_id in path.split("-")]
             entry["chatbot_answers_path"] = " - ".join(
-                answer_name_by_id.get(answer_id, self.env._("Unknown")) for answer_id in id_list
+                answer_name_by_id.get(answer_id, self._unknown_chatbot_answer_name)
+                for answer_id in id_list
             )
         return result
