@@ -19,15 +19,11 @@ export const CustomerDisplayDataService = {
                                 Accept: "application/json",
                                 "Content-Type": "application/json",
                             },
-                            body: JSON.stringify({
-                                params: {
-                                    action: "get",
-                                },
-                            }),
+                            body: JSON.stringify({ params: {} }),
                         }
                     );
                     const payload = await response.json();
-                    Object.assign(data, payload.result.data);
+                    Object.assign(data, payload.result);
                 } catch (error) {
                     notification.add(
                         _t(

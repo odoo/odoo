@@ -133,12 +133,7 @@ export class Navbar extends Component {
     openCustomerDisplay() {
         const proxyIP = this.pos.getDisplayDeviceIP();
         if (proxyIP) {
-            openProxyCustomerDisplay(
-                proxyIP,
-                this.pos.config.access_token,
-                this.pos.config.id,
-                this.notification
-            );
+            openProxyCustomerDisplay(proxyIP, this.pos, this.notification);
         } else {
             const getDeviceUuid = () => {
                 if (!localStorage.getItem("device_uuid")) {

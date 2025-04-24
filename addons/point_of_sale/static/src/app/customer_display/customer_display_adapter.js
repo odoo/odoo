@@ -1,5 +1,4 @@
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
-import { deduceUrl } from "@point_of_sale/utils";
 
 /**
  * This module provides functions to format order and order line data for customer display.
@@ -19,20 +18,9 @@ export class CustomerDisplayPosAdapter {
     dispatch(pos) {
         const proxyIP = pos.getDisplayDeviceIP();
         if (proxyIP) {
-            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    params: {
-                        action: "set",
-                        data: this.data,
-                    },
-                }),
-            }).catch(() => {
-                console.log("Failed to send data to customer display");
+            pos.hardwareProxy.deviceControllers.customerDisplay.action({
+                action: "set",
+                data: this.data,
             });
         } else {
             this.channel.postMessage(JSON.parse(JSON.stringify(this.data)));

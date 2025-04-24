@@ -61,6 +61,7 @@ export class PosStore extends WithLazyGetterTrap {
         "action",
         "alert",
         "mail.sound_effects",
+        "iot_longpolling",
     ];
     constructor({ traps, env, deps }) {
         super({ traps });
@@ -84,6 +85,7 @@ export class PosStore extends WithLazyGetterTrap {
             pos_scale,
             action,
             alert,
+            iot_longpolling,
         }
     ) {
         this.env = env;
@@ -127,6 +129,7 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         this.hardwareProxy = hardware_proxy;
+        this.iotLongpolling = iot_longpolling;
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
@@ -563,11 +566,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.markReady();
         this.showScreen(this.firstScreen);
         await this.deviceSync.readDataFromServer();
-        openProxyCustomerDisplay(
-            this.getDisplayDeviceIP(),
-            this.config.access_token,
-            this.config.id
-        );
+        openProxyCustomerDisplay(this.getDisplayDeviceIP(), this);
     }
 
     get productListViewMode() {
