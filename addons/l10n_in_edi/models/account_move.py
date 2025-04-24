@@ -3,6 +3,8 @@
 
 import json
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -26,6 +28,20 @@ class AccountMove(models.Model):
                 lambda i: i.edi_format_id.code == "in_einvoice_1_03"
                 and i.state in ("sent", "to_cancel", "cancelled")
             ))
+
+    def action_retry_edi_documents_error(self):
+        for move in self:
+            if move.country_code == 'IN':
+                move.message_post(body=_(
+                    "Retrying EDI processing for the following documents: %(breakline)s %(edi_codes)s",
+                    breakline=Markup("<br/>"),
+                    edi_codes=Markup("<br/>").join(
+                        move.edi_document_ids
+                        .filtered(lambda doc: doc.blocking_level == "error")
+                        .mapped("edi_format_name")
+                    )
+                ))
+        return super().action_retry_edi_documents_error()
 
     def button_cancel_posted_moves(self):
         """Mark the edi.document related to this move to be canceled."""
