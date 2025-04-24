@@ -6,6 +6,7 @@ import werkzeug
 
 from ast import literal_eval
 from collections import Counter
+from datetime import datetime
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -14,7 +15,7 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import get_lang
 from odoo.tools import lazy
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 class WebsiteEventController(http.Controller):
 
@@ -161,6 +162,7 @@ class WebsiteEventController(http.Controller):
     def event_page(self, event, page, **post):
         values = {
             'event': event,
+            'event_page': True,
         }
 
         base_page_name = page
@@ -205,6 +207,15 @@ class WebsiteEventController(http.Controller):
         urls = lazy(event._get_event_resource_urls)
         return {
             'event': event,
+            'slots': event.event_slot_ids.filtered(
+                        lambda s: s.start_datetime > datetime.now()
+                        and any(
+                            availability is None or availability > 0
+                            for availability in event._get_seats_availability([
+                                (s, ticket) for ticket in event.event_ticket_ids or [False]
+                            ])
+                        )
+                    ).grouped('date'),
             'main_object': event,
             'range': range,
             'google_url': lazy(lambda: urls.get('google_url')),
@@ -243,15 +254,42 @@ class WebsiteEventController(http.Controller):
             'quantity': count,
         } for tid, count in ticket_order.items() if count]
 
+    @http.route(['/event/<model("event.event"):event>/registration/slot/<int:slot_id>/tickets'], type='jsonrpc', auth="public", methods=['POST'], website=True)
+    def registration_tickets(self, event, slot_id):
+        """ After slot selection, render ticket selection modal.
+        To restrict the selectable number of tickets, give the slot seats available and
+        each slot tickets seats available to the template.
+        """
+        slot = request.env['event.slot'].browse(slot_id)
+        slot_tickets = [
+            (slot, ticket)
+            for ticket in event.event_ticket_ids
+        ]
+        return request.env['ir.ui.view']._render_template("website_event.modal_ticket_registration", {
+            'event': event,
+            'event_slot': slot,
+            'seats_available_slot_tickets': {
+                ticket.id: availability
+                for (_, ticket), availability in zip(slot_tickets, event._get_seats_availability(slot_tickets))
+            }
+        })
+
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
+        """ After (slot and) tickets selection, render attendee(s) registration form.
+        Slot and tickets availability check already performed in the template. """
         tickets = self._process_tickets_form(event, post)
+        slot_id = post.get('event_slot_id', False)
+        # Availability check needed as the total number of tickets can exceed the event/slot available tickets
         availability_check = True
         if event.seats_limited:
             ordered_seats = 0
             for ticket in tickets:
                 ordered_seats += ticket['quantity']
-            if event.seats_available < ordered_seats:
+            seats_available = event.seats_available
+            if slot_id:
+                seats_available = request.env['event.slot'].browse(int(slot_id)).seats_available or 0
+            if seats_available < ordered_seats:
                 availability_check = False
         if not tickets:
             return False
@@ -272,6 +310,7 @@ class WebsiteEventController(http.Controller):
                 }
         return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
             'tickets': tickets,
+            'event_slot_id': slot_id,
             'event': event,
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
@@ -285,7 +324,7 @@ class WebsiteEventController(http.Controller):
         - For questions of type 'text_box', extracting the text answer of the attendee.
 
         :param form_details: posted data from frontend registration form, like
-            {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
+            {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_slot_id': '1', '1-event_ticket_id': '1'}
         """
         allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
@@ -390,9 +429,17 @@ class WebsiteEventController(http.Controller):
         except UserError:
             return request.redirect('/event/%s/register?registration_error_code=recaptcha_failed' % event.id)
         registrations_data = self._process_attendees_form(event, post)
-        registration_tickets = Counter(registration['event_ticket_id'] for registration in registrations_data)
-        event_tickets = request.env['event.event.ticket'].browse(list(registration_tickets.keys()))
-        if any(event_ticket.seats_limited and event_ticket.seats_available < registration_tickets.get(event_ticket.id) for event_ticket in event_tickets):
+        counter_per_combination = Counter((registration.get('event_slot_id', False), registration['event_ticket_id']) for registration in registrations_data)
+        slot_ids = {slot_id for slot_id, _ in counter_per_combination if slot_id}
+        ticket_ids = {ticket_id for _, ticket_id in counter_per_combination if ticket_id}
+        slots_per_id = {slot.id: slot for slot in self.env['event.slot'].browse(slot_ids)}
+        tickets_per_id = {ticket.id: ticket for ticket in self.env['event.event.ticket'].browse(ticket_ids)}
+        try:
+            event._verify_seats_availability(list({
+                (slots_per_id.get(slot_id, False), tickets_per_id.get(ticket_id, False), count)
+                for (slot_id, ticket_id), count in counter_per_combination.items()
+            }))
+        except ValidationError:
             return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
 
@@ -413,12 +460,14 @@ class WebsiteEventController(http.Controller):
             self._get_registration_confirm_values(event, attendees_sudo))
 
     def _get_registration_confirm_values(self, event, attendees_sudo):
-        urls = event._get_event_resource_urls()
+        slot = attendees_sudo.event_slot_id
+        urls = event._get_event_resource_urls(slot)
         return {
             'attendees': attendees_sudo,
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
+            'slot': slot,
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 

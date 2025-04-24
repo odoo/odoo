@@ -26,6 +26,12 @@
                     required="service_tracking == 'event'"
                     options="{'no_open': True, 'no_create': True}"/>
                 <field
+                    name="event_slot_id"
+                    domain="[('event_id','=', event_id)]"
+                    invisible="not is_multi_slots or service_tracking != 'event'"
+                    required="is_multi_slots and service_tracking == 'event'"
+                    options="{'no_open': True, 'no_create': True}"/>
+                <field
                     name="event_ticket_id"
                     domain="[
                         ('event_id', '=', event_id), ('product_id','=',product_id),
@@ -46,6 +52,12 @@
                     required="service_tracking == 'event'"
                     options="{'no_open': True, 'no_create': True}"
                     placeholder="All Events"/>
+                <field
+                    name="event_slot_id"
+                    column_invisible="True"
+                    domain="[('event_id','=', event_id)]"
+                    required="is_multi_slots and service_tracking == 'event'"
+                    options="{'no_open': True, 'no_create': True}"/>
                 <field name="event_ticket_id"
                     column_invisible="True"
                     domain="[

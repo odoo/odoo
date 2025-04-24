@@ -7,16 +7,16 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _cart_find_product_line(self, product_id, *, event_ticket_id=False, **kwargs):
+    def _cart_find_product_line(self, product_id, *, event_slot_id=False, event_ticket_id=False, **kwargs):
         lines = super()._cart_find_product_line(
-            product_id, event_ticket_id=event_ticket_id, **kwargs,
+            product_id, event_slot_id=event_slot_id, event_ticket_id=event_ticket_id, **kwargs,
         )
-        if not event_ticket_id:
+        if not event_slot_id and not event_ticket_id:
             return lines
 
-        return lines.filtered(lambda line: line.event_ticket_id.id == event_ticket_id)
+        return lines.filtered(lambda line: line.event_slot_id.id == event_slot_id and line.event_ticket_id.id == event_ticket_id)
 
-    def _verify_updated_quantity(self, order_line, product_id, new_qty, *, event_ticket_id=False, **kwargs):
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, *, event_slot_id=False, event_ticket_id=False, **kwargs):
         """Restrict quantity updates for event tickets according to available seats."""
         new_qty, warning = super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
 
@@ -30,6 +30,9 @@ class SaleOrder(models.Model):
         ticket = self.env['event.event.ticket'].browse(event_ticket_id).exists()
         if not ticket:
             raise UserError(_("The provided ticket doesn't exist"))
+        slot = self.env['event.slot'].browse(event_slot_id).exists()
+        if event_slot_id and not slot:
+            raise UserError(_("The provided ticket slot doesn't exist"))
 
         # TODO TDE consider full cart qty and not only added qty
         # if event seats are not auto confirmed.
@@ -39,7 +42,8 @@ class SaleOrder(models.Model):
         existing_qty = order_line.product_uom_qty if order_line else 0
         qty_added = new_qty - existing_qty
         warning = ''
-        if ticket.seats_limited and ticket.seats_available <= 0:
+        ticket_seats_available = ticket.event_id._get_seats_availability([(slot, ticket)])[0] if slot else ticket.seats_available
+        if ticket.seats_limited and ticket_seats_available <= 0:
             # Remove existing line if exists and do not add a new one
             # if no ticket is available anymore
             new_qty = existing_qty
@@ -48,18 +52,19 @@ class SaleOrder(models.Model):
                 ticket=ticket.name,
                 event=ticket.event_id.name,
             )
-        elif ticket.seats_limited and qty_added > ticket.seats_available:
-            new_qty = existing_qty + ticket.seats_available
+        elif ticket.seats_limited and qty_added > ticket_seats_available:
+            new_qty = existing_qty + ticket_seats_available
             warning = _(
-                'Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event.',
-                remaining_seats=ticket.seats_available,
+                'Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event%(slot)s.',
+                remaining_seats=ticket_seats_available,
+                slot=f' on {slot.name}' if slot else '',
                 ticket=ticket.name,
                 event=ticket.event_id.name,
             )
 
         return new_qty, warning
 
-    def _prepare_order_line_values(self, product_id, quantity, *, event_ticket_id=False, **kwargs):
+    def _prepare_order_line_values(self, product_id, quantity, *, event_slot_id=False, event_ticket_id=False, **kwargs):
         """Add corresponding event to the SOline creation values (if ticket is provided)."""
         values = super()._prepare_order_line_values(product_id, quantity, **kwargs)
 
@@ -73,6 +78,7 @@ class SaleOrder(models.Model):
 
         values['event_id'] = ticket.event_id.id
         values['event_ticket_id'] = ticket.id
+        values['event_slot_id'] = event_slot_id
 
         return values
 
@@ -91,6 +97,7 @@ class SaleOrder(models.Model):
                 domain=[
                     ('state', '!=', 'cancel'),
                     ('sale_order_id', '=', self.id),
+                    ('event_slot_id', '=', order_line.event_slot_id.id),
                     ('event_ticket_id', '=', order_line.event_ticket_id.id),
                 ],
                 offset=updated_line.product_uom_qty,

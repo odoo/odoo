@@ -46,6 +46,7 @@
                     <table class="table table-striped fs-4">
                         <tr t-if="registration.company_name"><td>Company</td><td><t t-out="registration.company_name"/></td></tr>
                         <tr><td>Event</td><td><t t-out="registration.event_display_name"/></td></tr>
+                        <tr t-if="registration.slot_name"><td>Slot</td><td><t t-out="registration.slot_name"/></td></tr>
                         <tr t-if="registration.ticket_name"><td>Ticket Type</td><td><t t-out="registration.ticket_name"/></td></tr>
                         <tr t-if="registration.registration_answers &amp;&amp; registration.registration_answers.length > 0">
                             <td class="d-flex">Answers</td>
