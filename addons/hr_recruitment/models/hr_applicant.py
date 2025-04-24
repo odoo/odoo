@@ -672,7 +672,7 @@ class HrApplicant(models.Model):
         res = super().write(vals)
 
         for applicant in self:
-            if applicant.pool_applicant_id and (not applicant.is_pool_applicant):
+            if applicant.pool_applicant_id and applicant != applicant.pool_applicant_id and (not applicant.is_pool_applicant):
                 if 'email_from' in vals:
                     applicant.pool_applicant_id.email_from = vals['email_from']
                 if 'partner_phone' in vals:
