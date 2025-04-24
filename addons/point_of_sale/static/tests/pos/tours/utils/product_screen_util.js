@@ -183,6 +183,21 @@ export function clickPartnerButton() {
 export function clickCustomer(name) {
     return [PartnerList.clickPartner(name), { ...back(), isActive: ["mobile"] }];
 }
+export function selectPreset(selectedPreset, presetToSelect) {
+    return [
+        clickReview(),
+        {
+            content: "click preset button",
+            trigger: `.product-screen button:contains("${selectedPreset}")`,
+            run: "click",
+        },
+        {
+            content: `click preset '${presetToSelect}' from preset modal`,
+            trigger: `.modal-body button:contains(${presetToSelect})`,
+            run: "click",
+        },
+    ];
+}
 export function customerIsSelected(name) {
     return [
         clickReview(),

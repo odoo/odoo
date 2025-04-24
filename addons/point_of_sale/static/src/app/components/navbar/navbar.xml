@@ -19,7 +19,7 @@
                     </div>
                     <div t-if="!ui.isSmall" class="navbar-separator"/>
                     <OrderTabs orders="getOrderTabs()" class="'h-50'"/>
-                    <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 ms-2 p-2" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
+                    <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 ms-2 p-2 preset-time-btn" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
                         <i class="fa fa-clock-o" aria-hidden="true"/>
                         <span class="fw-bolder lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
                     </button>
