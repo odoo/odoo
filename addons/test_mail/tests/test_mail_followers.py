@@ -624,7 +624,7 @@ class RecipientsNotificationTest(MailCommon):
                 self.assertEqual(partner_data['lang'], partner.lang)
                 self.assertEqual(partner_data['name'], partner.name)
                 if user:
-                    self.assertEqual(partner_data['groups'], set(user.group_ids.ids))
+                    self.assertEqual(partner_data['groups'], set(user.all_group_ids.ids))
                     self.assertEqual(partner_data['notif'], user.notification_type)
                     self.assertEqual(partner_data['uid'], user.id)
                 else:
