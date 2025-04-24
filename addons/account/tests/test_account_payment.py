@@ -652,6 +652,25 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         payment.action_post()
         self.assertEqual(payment.state, 'paid')
 
+    def test_payment_state_with_unreconciliable_outstanding_account(self):
+        unreconciliable_account = self.env['account.account'].create({
+            'code': '209.01.01',
+            'name': 'Bank Account',
+            'account_type': 'asset_cash',
+            'reconcile': False,
+        })
+        self.company_data['default_journal_bank'].outbound_payment_method_line_ids.payment_account_id = unreconciliable_account
+        invoice = self.init_invoice(move_type='out_invoice', amounts=[10], post=True)
+
+        payment = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'payment_method_line_id': self.company_data['default_journal_bank'].outbound_payment_method_line_ids[0].id,
+        })._create_payments()
+
+        self.assertEqual(payment.state, 'paid')
+
     def test_invoice_paid_hook_called_in_various_scenarios(self):
         def register_payment(invoice, payment_method_line, amount=None):
             return self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
