@@ -13,9 +13,7 @@ export class ForecastedDetails extends Component {
             this.props.docs.lines.length &&
             !this.props.docs.lines.some((line) => line.document_in || line.replenishment_filled);
 
-        this._formatFloat = (num) => {
-            return formatFloat(num, { digits: this.props.docs.precision });
-        };
+        this._formatFloat = (num) => formatFloat(num, { digits: [0, this.props.docs.precision] });
     }
 
     async _reserve(move_id){
