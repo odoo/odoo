@@ -5,6 +5,7 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
 
 export function firstProductIsFavorite(name) {
     return [
@@ -843,4 +844,21 @@ export function createProductFromFrontend(name, barcode, list_price, category) {
 
 export function editProductFromFrontend(name, barcode, list_price) {
     return productInputSteps(name, barcode, list_price);
+}
+
+export function longPressProduct(productName) {
+    return [
+        {
+            content: `Long pressing product "${productName}"...`,
+            trigger: `.product-name:contains("${productName}")`,
+            run: async () => {
+                const el = document.querySelector(".product-name");
+                const mouseDown = new MouseEvent("mousedown", { bubbles: true });
+                const mouseUp = new MouseEvent("mouseup", { bubbles: true });
+                el.dispatchEvent(mouseDown);
+                await new Promise((resolve) => setTimeout(resolve, LONG_PRESS_DURATION + 50));
+                el.dispatchEvent(mouseUp);
+            },
+        },
+    ];
 }
