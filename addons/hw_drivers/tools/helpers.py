@@ -203,13 +203,20 @@ def get_ip():
             if addr != '127.0.0.1':
                 return addr
 
-def get_mac_address():
-    interfaces = netifaces.interfaces()
-    for interface in interfaces:
-        if netifaces.ifaddresses(interface).get(netifaces.AF_INET):
-            addr = netifaces.ifaddresses(interface).get(netifaces.AF_LINK)[0]['addr']
-            if addr != '00:00:00:00:00:00':
-                return addr
+
+@cache
+def get_identifier():
+    if platform.system() == 'Linux':
+        return read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
+
+    # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
+    command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
+    p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
+    if p.returncode != 0:
+        _logger.error("Failed to get Windows IoT serial number")
+        return False
+
+    return p.stdout.decode().strip() or False
 
 
 def get_path_nginx():
@@ -287,7 +294,7 @@ def download_iot_handlers(auto=True, server_url=None):
     try:
         response = requests.post(
             server_url + '/iot/get_handlers',
-            data={'mac': get_mac_address(), 'auto': auto},
+            data={'identifier': get_identifier(), 'auto': auto},
             timeout=8,
             headers={'If-None-Match': etag} if etag else None,
         )

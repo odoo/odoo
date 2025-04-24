@@ -148,7 +148,7 @@ export class Homepage extends Component {
                 </t>
             </SingleData>
             <SingleData t-if="store.advanced" name="'IP address'" value="state.data.ip" icon="'fa-globe'" />
-            <SingleData t-if="store.advanced" name="'MAC address'" value="state.data.mac.toUpperCase()" icon="'fa-address-card'" />
+            <SingleData t-if="store.advanced" name="'Identifier'" value="state.data.identifier" icon="'fa-address-card'" />
             <SingleData t-if="store.isLinux" name="'Internet Status'" value="networkStatus" icon="'fa-wifi'">
                 <t t-set-slot="button">
                     <WifiDialog />

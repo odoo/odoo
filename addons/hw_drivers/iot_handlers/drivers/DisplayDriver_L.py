@@ -88,7 +88,7 @@ class DisplayDriver(Driver):
         :return: URL to display or None.
         """
         try:
-            response = requests.get(f"{server_url}/iot/box/{helpers.get_mac_address()}/display_url", timeout=5)
+            response = requests.get(f"{server_url}/iot/box/{helpers.get_identifier()}/display_url", timeout=5)
             response.raise_for_status()
             data = json.loads(response.content.decode())
             return data.get(self.device_identifier)

@@ -23,7 +23,6 @@ def send_to_controller(params, server_url=None):
     :param params: the parameters to send back to the server
     :param server_url: URL of the Odoo server (provided by decorator).
     """
-    params['iot_mac'] = helpers.get_mac_address()
     try:
         response = requests.post(server_url + "/iot/box/send_websocket", json={'params': params}, timeout=5)
         response.raise_for_status()
@@ -36,7 +35,7 @@ def on_message(ws, messages):
     for message in json.loads(messages):
         _logger.debug("websocket received a message: %s", pprint.pformat(message))
         payload = message['message']['payload']
-        if not helpers.get_mac_address() in payload.get('iot_identifiers', []):
+        if not helpers.get_identifier() in payload.get('iot_identifiers', []):
             continue
 
         match message['message']['type']:
@@ -68,9 +67,14 @@ class WebsocketClient(Thread):
         """
             When the client is setup, this function send a message to subscribe to the iot websocket channel
         """
-        ws.send(
-            json.dumps({'event_name': 'subscribe', 'data': {'channels': [self.channel], 'last': 0, 'mac_address': helpers.get_mac_address()}})
-        )
+        ws.send(json.dumps({
+            'event_name': 'subscribe',
+            'data': {
+                'channels': [self.channel],
+                'last': 0,
+                'identifier': helpers.get_identifier(),
+            }
+        }))
 
     def __init__(self, channel, server_url=None):
         """This class will not be instantiated if no db is connected.
