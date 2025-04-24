@@ -1013,7 +1013,11 @@ export class StaticList extends DataPoint {
         if (fieldName) {
             if (orderBy.length && orderBy[0].name === fieldName) {
                 if (!this._needsReordering) {
-                    orderBy[0] = { name: orderBy[0].name, asc: !orderBy[0].asc };
+                    if (orderBy[0].asc) {
+                        orderBy[0] = { name: orderBy[0].name, asc: false };
+                    } else {
+                        orderBy = [];
+                    }
                 }
             } else {
                 orderBy = orderBy.filter((o) => o.name !== fieldName);
