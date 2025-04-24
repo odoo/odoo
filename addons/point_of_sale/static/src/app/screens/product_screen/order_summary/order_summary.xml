@@ -5,7 +5,7 @@
           taxTotals="currentOrder.taxTotals"
           generalNote="currentOrder.general_note or ''">
           <t t-set="line" t-value="scope.line" />
-          <Orderline line="line.getDisplayData()"
+          <Orderline line="line.getDisplayData()" t-if="line.order_id"
               t-on-click="(event) => this.clickLine(event, line)"
               class="{ ...line.getDisplayClasses(), 'selected' : line.isSelected() }">
               <t t-set-slot="product-name">
