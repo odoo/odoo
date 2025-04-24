@@ -20,8 +20,10 @@ export class PosScaleService extends Reactive {
 
     start(errorCallback) {
         this.onError = errorCallback;
-        this.isMeasuring = true;
-        this._readWeightContinuously();
+        if (!this.isManualMeasurement) {
+            this.isMeasuring = true;
+            this._readWeightContinuously();
+        }
     }
 
     reset() {
@@ -78,11 +80,17 @@ export class PosScaleService extends Reactive {
 
     requestTare() {
         this.tareRequested = true;
-        if (!this.loading) {
+        if (this.isManualMeasurement && !this.loading) {
             this.readWeight();
         } else {
             setTimeout(() => this._setTareIfRequested(), TARE_TIMEOUT_MS);
         }
+    }
+
+    get isManualMeasurement() {
+        // In Community we don't know anything about the connected scale,
+        // so we assume automatic measurement.
+        return false;
     }
 
     get netWeight() {
