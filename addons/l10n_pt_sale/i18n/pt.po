@@ -1,0 +1,542 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_pt_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-09 20:52+0000\n"
+"PO-Revision-Date: 2025-08-09 20:52+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,help:l10n_pt_sale.field_l10n_pt_at_series_line__type
+msgid ""
+" * Invoice (FT): Series for Customer Invoices.\n"
+" * Simplified Invoice (FS): Series for Sales Receipts.\n"
+" * Invoice/Receipt (FR): Series for PoS Orders."
+msgstr ""
+" * Fatura (FT): Série para facturas de clientes.\n"
+" * Fatura Simplificada (FS): Série para recibos de vendas.\n"
+" * Fatura-Recibo (FR): Série para recibos de Ponto de Vendas.\n"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/res_company.py:0
+msgid "%(doc_type)s are correctly hashed"
+msgstr "%(doc_type)s estão com hash correto"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid "%s lines with an amount of 0 are not allowed."
+msgstr "Não são permitidas linhas de %s com valor 0."
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.report_saleorder_document_inherit_pt
+msgid "<span>-</span>"
+msgstr ""
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.report_saleorder_document_inherit_pt
+msgid "<span>Accumulated</span>"
+msgstr "<span>Acumulado</span>"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.report_saleorder_document_inherit_pt
+msgid "<strong>Internal Number</strong>"
+msgstr "<strong>Número Interno</strong>"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.report_saleorder_document_inherit_pt
+msgid "<strong>Motivos de isenção de IVA:</strong>"
+msgstr ""
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_at_series_id
+msgid "AT Series"
+msgstr "Série Documental"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.report_saleorder_document_inherit_pt
+msgid "ATCUD:"
+msgstr ""
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid "Add an AT Series"
+msgstr "Adicione uma série documental"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid "An inactive series cannot be used."
+msgstr "Uma série arquivada não pode ser utilizada."
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_cancel_reason
+msgid "Cancellation Reason"
+msgstr "Motivo do Cancelamento"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.sale_order_form_inherit_pt
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/res_company.py:0
+msgid "Corrupted data on %(doc_type)s with id %(id)s (%(name)s)."
+msgstr "Dados corrompidos na ordem de venda com id %(id)s (%(name)s)."
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.sale_order_form_inherit_pt
+msgid "Disc.%"
+msgstr "Desc.%"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid "Discount amounts should be between 0% and 100%."
+msgstr "Descontos devem situar-se no intervalo entre 0% e 100%."
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.sale_order_form_inherit_pt
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.sale_order_tree_inherit_pt
+msgid "Document Number"
+msgstr "Identificação do Documento"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_l10n_pt_at_series_line__type
+msgid "Document Type"
+msgstr "Tipo do Documento"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_at_series_line_id
+msgid "Document-specific AT Series"
+msgstr "Série específica ao documento"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_l10n_pt_at_series_line
+msgid "Document-specific Autoridade Tributária (AT) Series"
+msgstr "Série específica ao documento"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.res_config_settings_view_form_inherit_pt
+msgid "Download the Sale Data Inalterability Check Report"
+msgstr ""
+"Descarregar o relatório de verificação da inalterabilidade dos dados de "
+"venda"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_report_l10n_pt_sale_report_hash_integrity
+msgid "Get hash integrity result as PDF."
+msgstr "Obtenha o resultado da integridade do hash como PDF."
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_global_discount
+msgid "Global Discount %"
+msgstr "Desconto Global %"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.report_saleorder_document_inherit_pt
+msgid "Global Discount:"
+msgstr "Desconto Global:"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_hashed_on
+msgid "Hashed On"
+msgstr "Hash criado em"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_sale_inalterable_hash
+msgid "Inalterability Hash"
+msgstr "Hash de inalterabilidade"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,help:l10n_pt_sale.field_sale_order__l10n_pt_document_number
+msgid ""
+"Internal identifier for Portuguese documents, made up of the document type "
+"code, the series name, and the number of the document within the series."
+msgstr ""
+"Identificador interno dos documentos portugueses, constituído pelo código do"
+" tipo de documento, nome da série e número do documento dentro da série."
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_show_future_date_warning
+msgid "L10N Pt Show Future Date Warning"
+msgstr "Mostrar aviso de data futura"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order_line__l10n_pt_line_discount
+msgid "Line Discount"
+msgstr "Desconto de Linha"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_l10n_pt_at_series
+msgid ""
+"Mapping between Odoo Series and the Official Series for the Autoridade "
+"Tributária (AT)"
+msgstr ""
+"Mapeamento entre a Série Odoo e a Série Oficial para a Autoridade Tributária"
+" (AT)"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.report_saleorder_document_inherit_pt
+msgid "NE 2023/0001"
+msgstr ""
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/res_company.py:0
+msgid "No %(doc_type)s found for this AT series."
+msgstr "Não encontramos %(doc_type)s para esta série documental."
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields.selection,name:l10n_pt_sale.selection__sale_order__l10n_pt_print_version__original
+msgid "Original print"
+msgstr "Versão original"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid ""
+"Please ensure that there are AT series for the document types Quotation (OR)"
+" and Sales Order (NE) registered under the active series: %(series_names)s."
+msgstr ""
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.sale_order_form_inherit_pt
+msgid "Portugal"
+msgstr ""
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_atcud
+msgid "Portuguese ATCUD"
+msgstr "ATCUD"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_document_type
+msgid "Portuguese Document Type"
+msgstr "Tipo de Documento (PT)"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_qr_code_str
+msgid "Portuguese QR Code"
+msgstr "Código QR (PT)"
+
+#. module: l10n_pt_sale
+#: model:ir.actions.server,name:l10n_pt_sale.action_l10n_pt_sale_check_hash_integrity
+msgid "Portuguese Sale Inalterability Check"
+msgstr "Verificação de Inalterabilidade de Vendas (PT)"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_inalterable_hash_version
+msgid "Portuguese hash version"
+msgstr "Versão do hash (PT)"
+
+#. module: l10n_pt_sale
+#: model:ir.actions.report,name:l10n_pt_sale.action_l10n_pt_sale_report_hash_integrity
+msgid "Portuguese sale hash integrity result PDF"
+msgstr "PDF do resultado da integridade do hash de vendas (PT)"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.report_saleorder_document_inherit_pt
+msgid "Pro-Forma Invoice #"
+msgstr "Fatura pró-forma nº"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_product_template
+msgid "Product"
+msgstr "Artigo"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__quotation_id
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.sale_order_form_inherit_pt
+msgid "Quotation"
+msgstr "Orçamento"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields.selection,name:l10n_pt_sale.selection__l10n_pt_at_series_line__type__quotation
+#: model:ir.model.fields.selection,name:l10n_pt_sale.selection__sale_order__l10n_pt_document_type__quotation
+msgid "Quotation (OR)"
+msgstr "Orçamento (OR)"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/res_company.py:0
+msgid "Quotations"
+msgstr "Orçamentos"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,help:l10n_pt_sale.field_sale_order__l10n_pt_cancel_reason
+msgid "Reason given by the user for cancelling this move"
+msgstr "Motivo fornecido pelo utilizador para cancelar esta movimentação"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_ir_actions_report
+msgid "Report Action"
+msgstr "Relatar Ação"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.res_config_settings_view_form_inherit_pt
+msgid "Reporting"
+msgstr "A Reportar"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields.selection,name:l10n_pt_sale.selection__sale_order__l10n_pt_print_version__reprint
+msgid "Reprint"
+msgstr "Reimpressão"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid "Reprint Reason"
+msgstr "Motivo para Reimpressão"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_l10n_pt_reprint_reason
+msgid "Reprint Reason Wizard"
+msgstr "Assitente para definir Motivo para Reimpressão"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.report_saleorder_document_inherit_pt
+msgid "SO0000"
+msgstr ""
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__sales_order_ids
+msgid "Sale Order"
+msgstr "Ordem de Venda"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__sales_order_count
+msgid "Sale Order Count"
+msgstr "Número de Ordens de Venda"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.sale_order_form_inherit_pt
+msgid "Sale Orders"
+msgstr "Ordens de Venda"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,help:l10n_pt_sale.field_sale_order__sales_order_ids
+msgid "Sale orders created from this quotation."
+msgstr "Ordens de venda criadas a partir deste orçamento."
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Ordem de Venda"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields.selection,name:l10n_pt_sale.selection__l10n_pt_at_series_line__type__sales_order
+#: model:ir.model.fields.selection,name:l10n_pt_sale.selection__sale_order__l10n_pt_document_type__sales_order
+msgid "Sales Order (NE)"
+msgstr "Ordem de Venda (NE)"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linhas da Ordem de Venda"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/res_company.py:0
+msgid "Sales Orders"
+msgstr "Ordens de Venda"
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.sale_order_form_inherit_pt
+msgid ""
+"Setting the order date in the future will prevent new documents with an "
+"order date before"
+msgstr ""
+"Definir a data da ordem no futuro impedirá o lançamento de novos documentos "
+"com uma data de encomenda anterior a"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_inalterable_hash_short
+msgid "Short version of the Portuguese hash"
+msgstr "Versão curta do hash (PT)"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid ""
+"The document number (%s) is invalid. It must start with the internal code of"
+" the document type, a space, the name of the series followed by a slash and "
+"the number of the document within the series (e.g. NE 2025A/1). Please check"
+" if the series selected fulfill these requirements."
+msgstr ""
+"O identificador único do documento (%s) é inválido. Tem de começar com o "
+"tipo de documento interno, um espaço, o nome da série seguido de uma barra e"
+" o número do documento dentro da série (por exemplo, NE 2025A/1). Verifique "
+"se a série selecionada cumpre estes requisitos."
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,help:l10n_pt_sale.field_sale_order__quotation_id
+msgid "The quotation from which this sale order was created."
+msgstr "O orçamento a partir da qual esta ordem de venda foi criada."
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid ""
+"There exists secured sales orders with a lock date ahead of the present time"
+" in this AT series (%(name)s - %(prefix)s)."
+msgstr ""
+"Existem ordens de venda com hash e com data de bloqueio anterior à ordem "
+"atual nesta série documental(%(name)s - %(prefix)s)."
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid ""
+"There is no AT series for the document %(document_type)s registered under "
+"the series name %(series_name)s. Create a new series or view existing series"
+" via the Accounting Settings."
+msgstr ""
+"Não existe uma série documental para este tipo de documento %(move_type)s "
+"registada na série %(series_name)s. Crie uma nova série ou visualize as "
+"existentes por meio das Configurações de Contabilidade."
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/res_company.py:0
+msgid ""
+"This company has AT Series shared across branches, and other companies also "
+"have hashed documents under this series. To generate the report, please also"
+" select %s in the company selector."
+msgstr ""
+"Esta empresa possui a série documental partilhada entre filiais, e outras "
+"empresas também possuem documentos com hash nesta série. Para gerar o "
+"relatório, selecione também %s no seletor de empresas."
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid ""
+"This document is protected by a hash. Therefore, you cannot edit the "
+"following fields: %s."
+msgstr ""
+"Este documento está protegido por um hash. Portanto, não pode editar os "
+"seguintes campos: %s."
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/res_company.py:0
+msgid "This feature is only available for Portuguese companies."
+msgstr "Esta funcionalidade está apenas disponível para empresas portuguesas."
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_document_number
+msgid "Unique Document Number"
+msgstr "Identificação do Documento"
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,help:l10n_pt_sale.field_sale_order__l10n_pt_atcud
+msgid ""
+"Unique document code formed by the AT series validation code and the number "
+"of the document."
+msgstr ""
+"Código único do documento formado pelo código de validação da série "
+"documental e o número do documento dentro da série."
+
+#. module: l10n_pt_sale
+#: model:ir.model.fields,field_description:l10n_pt_sale.field_sale_order__l10n_pt_print_version
+msgid "Version of Printed Document"
+msgstr "Versão do Documento Impresso"
+
+#. module: l10n_pt_sale
+#: model:ir.model,name:l10n_pt_sale.model_l10n_pt_cancel
+msgid "Wizard to allow the cancellation of documents"
+msgstr "Assistente para permitir o cancelamento de documentos"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/res_partner.py:0
+msgid ""
+"You cannot change the VAT number of a partner that already has issued "
+"documents"
+msgstr ""
+"Não é possível alterar o número de IVA de um parceiro que já emitiu "
+"documentos"
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/l10n_pt_at_series.py:0
+msgid ""
+"You cannot change the name or training status of a series that has already "
+"been used."
+msgstr ""
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/l10n_pt_at_series.py:0
+msgid ""
+"You cannot change the type, prefix or AT code of a series that has already "
+"been used."
+msgstr ""
+"Não é possível alterar o nome ou o estado de formação de uma série que já "
+"tenha sido utilizada."
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid ""
+"You cannot create a %s with negative lines on it. To add a discount, add a "
+"Line Discount or a Global Discount."
+msgstr ""
+"Não é possível criar uma fatura com linhas negativas. Para adicionar um "
+"desconto, adicione um Desconto de Linha ou um Desconto Global."
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid "You cannot create a line without VAT tax."
+msgstr "Não é possível criar uma linha de movimentação sem imposto IVA."
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/sale_order.py:0
+msgid ""
+"You cannot create a quotation or sales order with a date earlier than the "
+"date of the last document issued in this AT series (%(name)s - %(prefix)s)."
+msgstr ""
+"Não se pode criar uma ordem de venda com uma data anterior à data da última "
+"orderm emitida nesta série documental (%(name)s - %(prefix)s)."
+
+#. module: l10n_pt_sale
+#. odoo-python
+#: code:addons/l10n_pt_sale/models/res_product.py:0
+msgid ""
+"You cannot modify the name of a product that has been used in a quotation or"
+" sales order."
+msgstr ""
+"Não é possível modificar o nome de um produto que foi utilizado numa ordem "
+"de venda."
+
+#. module: l10n_pt_sale
+#: model_terms:ir.ui.view,arch_db:l10n_pt_sale.sale_order_form_inherit_pt
+msgid "from being posted."
+msgstr "."
