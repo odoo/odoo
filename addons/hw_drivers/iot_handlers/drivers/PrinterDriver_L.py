@@ -127,7 +127,7 @@ class PrinterDriver(PrinterDriverBase):
 
     @classmethod
     def _get_iot_status(cls):
-        mac = helpers.get_mac_address()
+        identifier = helpers.get_identifier()
         pairing_code = connection_manager.pairing_code
         ssid = wifi.get_access_point_ssid() if wifi.is_access_point() else wifi.get_current()
 
@@ -139,7 +139,7 @@ class PrinterDriver(PrinterDriverBase):
                 if 'addr' in conf and conf['addr'] not in ['127.0.0.1', '10.11.12.1']:
                     ips.append(conf['addr'])
 
-        return { "mac": mac, "pairing_code": pairing_code, "ssid": ssid, "ips": ips }
+        return {"identifier": identifier, "pairing_code": pairing_code, "ssid": ssid, "ips": ips}
 
     def print_status(self, data=None):
         """Prints the status ticket of the IoT Box on the current printer.
@@ -179,8 +179,8 @@ class PrinterDriver(PrinterDriverBase):
         if iot_status["ssid"]:
             command += f"^FT35,{p} ^A0N,25 ^FDWi-Fi: {iot_status['ssid']}^FS"
             p += 35
-        if iot_status["mac"]:
-            command += f"^FT35,{p} ^A0N,25 ^FDMAC: {iot_status['mac']}^FS"
+        if iot_status["identifier"]:
+            command += f"^FT35,{p} ^A0N,25 ^FDIdentifier: {iot_status['identifier']}^FS"
             p += 35
         if iot_status["ips"]:
             command += f"^FT35,{p} ^A0N,25 ^FDIP: {', '.join(iot_status['ips'])}^FS"
@@ -196,7 +196,7 @@ class PrinterDriver(PrinterDriverBase):
         :rtype: tuple of bytes
         """
 
-        wlan = mac = homepage = pairing_code = ""
+        wlan = identifier = homepage = pairing_code = ""
         iot_status = self._get_iot_status()
 
         if iot_status["pairing_code"]:
@@ -221,11 +221,11 @@ class PrinterDriver(PrinterDriverBase):
             ip = '\nIoT Box IP Addresses:\n%s\n' % '\n'.join(ips)
 
         if len(ips) >= 1:
-            mac = '\nMAC Address:\n%s\n' % iot_status["mac"]
+            identifier = '\nIdentifier:\n%s\n' % iot_status["identifier"]
             homepage = '\nIoT Box Homepage:\nhttp://%s:8069\n\n' % ips[0]
 
         title = b'IoT Box Connected' if helpers.get_odoo_server_url() else b'IoT Box Status'
-        body = pairing_code + wlan + mac + ip + homepage
+        body = pairing_code + wlan + identifier + ip + homepage
 
         return title, body.encode()
 

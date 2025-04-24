@@ -69,7 +69,7 @@ class AsyncHTTPHandler(logging.Handler):
             return convert_to_byte(f"{log_level},{line_formatted}")
 
         def empty_queue():
-            yield convert_to_byte(f"mac {helpers.get_mac_address()}")
+            yield convert_to_byte(f"identifier {helpers.get_identifier()}")
             for _ in range(self._MAX_BATCH_SIZE):
                 # Use a limit to avoid having too heavy requests & infinite loop of the queue receiving new entries
                 try:

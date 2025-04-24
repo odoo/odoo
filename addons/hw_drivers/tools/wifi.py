@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 from functools import cache
 
-from .helpers import get_ip, get_mac_address, writable, get_conf
+from .helpers import get_ip, get_identifier, writable, get_conf
 
 _logger = logging.getLogger(__name__)
 
@@ -211,14 +211,13 @@ def _validate_configuration(ssid):
 @cache
 def get_access_point_ssid():
     """Generate a unique SSID for the access point.
-    Uses the MAC address of the device without the colons, or
-    a random token if mac was not found.
+    Uses the identifier of the device or a random token if the
+    identifier was not found.
 
     :return: Generated SSID
     :rtype: str
     """
-    mac = get_mac_address()
-    return "IoTBox-" + (''.join(mac.split(':')) if mac else secrets.token_hex(6))
+    return "IoTBox-" + get_identifier() or secrets.token_hex(8)
 
 
 def _configure_access_point(on=True):

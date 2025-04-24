@@ -4,7 +4,6 @@
 import logging
 import platform
 import requests
-import subprocess
 from threading import Thread
 import time
 
@@ -27,30 +26,7 @@ class ConnectionManager(Thread):
         self.iot_box_registered = False
         self.n_times_polled = -1
 
-        if platform.system() == 'Linux':
-            self.serial_number = helpers.read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
-        else:
-            self.serial_number = self._get_serial_number_windows()
-
         requests.packages.urllib3.disable_warnings()
-
-    def _get_serial_number_windows(self):
-        # Get motherboard's uuid (serial number isn't reliable as it's not always present)
-        command = [
-            'powershell',
-            '-Command',
-            "(Get-CimInstance Win32_ComputerSystemProduct).UUID"
-        ]
-
-        p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
-        if p.returncode == 0:
-            serial = p.stdout.decode().strip()
-            if serial:
-                return serial
-        else:
-            _logger.error("Failed to get Windows IoT serial number")
-
-        return False
 
     def _register_iot_box(self):
         """ This method is called to register the IoT Box on odoo.com and get a pairing code"""
@@ -90,7 +66,7 @@ class ConnectionManager(Thread):
             'params': {
                 'pairing_code': self.pairing_code,
                 'pairing_uuid': self.pairing_uuid,
-                'serial_number': self.serial_number,
+                'serial_number': helpers.get_identifier(),
             }
         }
 
