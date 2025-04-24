@@ -1756,7 +1756,7 @@ class TestQueries(TransactionCase):
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users"."active" IS TRUE
-            AND ("res_users"."id" IN %s AND "res_users__partner_id"."id" IN %s)
+            AND ("res_users"."id" IN %s AND "res_users"."partner_id" IN %s)
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
         ''']):
             Model.search([])
