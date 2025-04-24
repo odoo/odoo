@@ -11,7 +11,6 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { deduceUrl } from "@point_of_sale/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { PaymentMethodBreakdown } from "@point_of_sale/app/components/payment_method_breakdown/payment_method_breakdown";
 
@@ -194,16 +193,7 @@ export class ClosePosPopup extends Component {
         this.pos._resetConnectedCashier();
         const proxyIP = this.pos.getDisplayDeviceIP();
         if (proxyIP) {
-            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ params: { action: "close" } }),
-            }).catch(() => {
-                console.log("Failed to send data to customer display");
-            });
+            this.pos.hardwareProxy.deviceControllers.customerDisplay.action({ action: "close" });
         }
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.pos.pushOrdersWithClosingPopup();
