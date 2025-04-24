@@ -726,9 +726,16 @@ Contracts:
                     continue
                 if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
                     raise ValidationError(_("There is no valid allocation to cover that request."))
-        is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        if not is_leave_user and any(leave.has_mandatory_day for leave in self):
-            raise ValidationError(_('You are not allowed to request time off on a Mandatory Day'))
+        is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or all(
+            leave.employee_id.leave_manager_id
+            and leave.employee_id.leave_manager_id.id == self.env.uid
+            for leave in self
+        )
+        if (not is_leave_user
+            and any(leave.has_mandatory_day for leave in self)
+            and not self.env.context.get("skip_mandatory_days_check", False)
+        ):
+            raise ValidationError(_("You are not allowed to request time off on a Mandatory Day"))
 
     ####################################################
     # ORM Overrides methods
@@ -873,7 +880,10 @@ Contracts:
                 values['request_date_to'] = values['date_to']
         result = super().write(values)
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
-            self._check_validity()
+            context = {}
+            if values.get('state') == 'cancel':
+                context = {'skip_mandatory_days_check': True}
+            self.with_context(**context)._check_validity()
             self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
