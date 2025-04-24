@@ -1,3 +1,4 @@
+/* eslint no-restricted-syntax: 0 */
 import { after, describe, expect, test } from "@odoo/hoot";
 import {
     defineParams,
@@ -10,13 +11,25 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { _t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { session } from "@web/session";
+import { IndexedDB } from "@web/core/utils/indexed_db";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 
 import { Component, markup, xml } from "@odoo/owl";
 const { DateTime } = luxon;
 
+let id = 0;
+
 const frenchTerms = { Hello: "Bonjour" };
 class TestComponent extends Component {
-    static template = "";
+    // For performance reasons, HOOT caches the compiled templates
+    // (with the terms already translated).
+    // In this test suite, since the translations are being tested,
+    // we need that each template to be unique (to avoid using a cached template).
+    // To do this, we create a unique empty node in each template.
+    static get template() {
+        return xml`${this._template}<div id="${id++}"/>`;
+    }
+    static _template = "";
     static props = ["*"];
 }
 
@@ -32,7 +45,7 @@ async function mockLang(lang) {
 }
 
 test("lang is given by the user context", async () => {
-    onRpc("/web/webclient/translations/*", (request) => {
+    onRpc("/web/webclient/translations", (request) => {
         const urlParams = new URLSearchParams(new URL(request.url).search);
         expect.step(urlParams.get("lang"));
     });
@@ -42,7 +55,7 @@ test("lang is given by the user context", async () => {
 
 test("lang is given by an attribute on the DOM root node", async () => {
     serverState.lang = null;
-    onRpc("/web/webclient/translations/*", (request) => {
+    onRpc("/web/webclient/translations", (request) => {
         const urlParams = new URLSearchParams(new URL(request.url).search);
         expect.step(urlParams.get("lang"));
     });
@@ -60,10 +73,10 @@ test("url is given by the session", async () => {
         translationURL: "/get_translations",
     });
     onRpc(
-        "/get_translations/*",
+        "/get_translations",
         function (request) {
-            expect(request.url).toInclude("/get_translations/");
-            return this.loadTranslations();
+            expect(request.url).toInclude("/get_translations");
+            return this.loadTranslations(request);
         },
         { pure: true }
     );
@@ -71,7 +84,7 @@ test("url is given by the session", async () => {
 });
 
 test("can translate a text node", async () => {
-    TestComponent.template = xml`<div id="main">Hello</div>`;
+    TestComponent._template = `<div id="main">Hello</div>`;
     defineParams({
         translations: frenchTerms,
     });
@@ -79,10 +92,243 @@ test("can translate a text node", async () => {
     expect("#main").toHaveText("Bonjour");
 });
 
+test("[cache] write into the cache", async () => {
+    patchWithCleanup(IndexedDB.prototype, {
+        write(table, key, value) {
+            expect.step(`table: ${table}`);
+            expect.step(`key: ${key}`);
+            expect.step(`value: ${JSON.stringify(value)}`);
+        },
+    });
+    onRpc("/web/webclient/translations", (request) => {
+        expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
+    });
+    TestComponent._template = `<div id="main">Hello</div>`;
+    defineParams({
+        translations: frenchTerms,
+    });
+    await mountWithCleanup(TestComponent);
+    expect("#main").toHaveText("Bonjour");
+    const expectedValue = {
+        lang: "en",
+        lang_parameters: {
+            date_format: "%m/%d/%Y",
+            decimal_point: ".",
+            direction: "ltr",
+            grouping: "[3,0]",
+            time_format: "%H:%M:%S",
+            short_time_format: "%H:%M",
+            thousands_sep: ",",
+            week_start: 7,
+        },
+        modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } },
+        multi_lang: false,
+        hash: "5d62e6f31a2e19f1f128bd7f56d11088a746e001",
+    };
+    expect.verifySteps([
+        "hash: ",
+        "table: /web/webclient/translations",
+        'key: {"lang":"en"}',
+        `value: ${JSON.stringify(expectedValue)}`,
+    ]);
+});
+
+test("[cache] read from cache, and don't wait to render", async () => {
+    patchWithCleanup(IndexedDB.prototype, {
+        read() {
+            return {
+                lang: "en",
+                lang_parameters: {
+                    date_format: "%m/%d/%Y",
+                    decimal_point: ".",
+                    direction: "ltr",
+                    grouping: "[3,0]",
+                    time_format: "%H:%M:%S",
+                    short_time_format: "%H:%M",
+                    thousands_sep: ",",
+                    week_start: 7,
+                },
+                modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } },
+                multi_lang: false,
+                hash: "5d62e6f31a2e19f1f128bd7f56d11088a746e001",
+            };
+        },
+    });
+    const def = new Deferred();
+    onRpc("/web/webclient/translations", async (request) => {
+        await def;
+        expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
+    });
+    TestComponent._template = `<div id="main">Hello</div>`;
+    defineParams({
+        translations: frenchTerms,
+    });
+    await mountWithCleanup(TestComponent);
+    expect("#main").toHaveText("Bonjour"); //Don't wait the end of the fetch to render
+    def.resolve();
+    await animationFrame();
+    expect.verifySteps(["hash: 5d62e6f31a2e19f1f128bd7f56d11088a746e001"]); //Fetch with the hash of the translation in cache
+});
+
+test("[cache] update the cache if hash are different - template", async () => {
+    patchWithCleanup(IndexedDB.prototype, {
+        read() {
+            return {
+                lang: "en",
+                lang_parameters: {
+                    date_format: "%m/%d/%Y",
+                    decimal_point: ".",
+                    direction: "ltr",
+                    grouping: "[3,0]",
+                    time_format: "%H:%M:%S",
+                    short_time_format: "%H:%M",
+                    thousands_sep: ",",
+                    week_start: 7,
+                },
+                modules: { web: { messages: [{ id: "Hello", string: "Different Bonjour" }] } },
+                multi_lang: false,
+                hash: "5d62e6f31a2e",
+            };
+        },
+        write(table, key, value) {
+            expect.step(`table: ${table}`);
+            expect.step(`key: ${key}`);
+            expect.step(`value: ${JSON.stringify(value)}`);
+        },
+    });
+    const def = new Deferred();
+    onRpc("/web/webclient/translations", async (request) => {
+        await def;
+        expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
+    });
+    TestComponent._template = `<div id="main">Hello</div>`;
+    defineParams({
+        translations: frenchTerms,
+    });
+    const component = await mountWithCleanup(TestComponent);
+    expect("#main").toHaveText("Different Bonjour"); //Value came from the cache!
+    def.resolve();
+    await animationFrame();
+    const expectedValue = {
+        lang: "en",
+        lang_parameters: {
+            date_format: "%m/%d/%Y",
+            decimal_point: ".",
+            direction: "ltr",
+            grouping: "[3,0]",
+            time_format: "%H:%M:%S",
+            short_time_format: "%H:%M",
+            thousands_sep: ",",
+            week_start: 7,
+        },
+        modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } }, // value was updated in the cache
+        multi_lang: false,
+        hash: "5d62e6f31a2e19f1f128bd7f56d11088a746e001", // hash was updated in the cache
+    };
+    expect.verifySteps([
+        "hash: 5d62e6f31a2e", //Fetch with the hash of the translation in cache
+        "table: /web/webclient/translations",
+        'key: {"lang":"en"}',
+        `value: ${JSON.stringify(expectedValue)}`,
+    ]);
+
+    component.render();
+    await animationFrame();
+    // The value hasn't been updated with the new translation, this is because owl caches the translated templates for performance reasons.
+    // This is a known limitation.
+    expect("#main").toHaveText("Different Bonjour");
+});
+
+test("[cache] update the cache if hash are different - js", async () => {
+    patchWithCleanup(IndexedDB.prototype, {
+        read() {
+            return {
+                lang: "en",
+                lang_parameters: {
+                    date_format: "%m/%d/%Y",
+                    decimal_point: ".",
+                    direction: "ltr",
+                    grouping: "[3,0]",
+                    time_format: "%H:%M:%S",
+                    short_time_format: "%H:%M",
+                    thousands_sep: ",",
+                    week_start: 7,
+                },
+                modules: {
+                    web: {
+                        messages: [{ id: "Hi", string: "Different Salut" }],
+                    },
+                },
+                multi_lang: false,
+                hash: "5d62e6f31a2e",
+            };
+        },
+        write(table, key, value) {
+            expect.step(`table: ${table}`);
+            expect.step(`key: ${key}`);
+            expect.step(`value: ${JSON.stringify(value)}`);
+        },
+    });
+    const def = new Deferred();
+    onRpc("/web/webclient/translations", async (request) => {
+        await def;
+        expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
+    });
+    class MyTestComponent extends Component {
+        static template = xml`<div id="main"><t t-esc="otherText"/></div>`;
+        static props = ["*"];
+
+        get otherText() {
+            return _t("Hi");
+        }
+    }
+
+    defineParams({
+        translations: { Hi: "Salut" },
+    });
+    const component = await mountWithCleanup(MyTestComponent);
+    // The cached translated terms are used
+    expect("#main").toHaveText("Different Salut");
+
+    def.resolve();
+    await animationFrame();
+    const expectedValue = {
+        lang: "en",
+        lang_parameters: {
+            date_format: "%m/%d/%Y",
+            decimal_point: ".",
+            direction: "ltr",
+            grouping: "[3,0]",
+            time_format: "%H:%M:%S",
+            short_time_format: "%H:%M",
+            thousands_sep: ",",
+            week_start: 7,
+        },
+        modules: {
+            web: {
+                messages: [{ id: "Hi", string: "Salut" }],
+            },
+        }, // value was updated in the cache
+        multi_lang: false,
+        hash: "267b5f5848b78a58ff6f57530b5f6fcdc46ecad0", // hash was updated in the cache
+    };
+    expect.verifySteps([
+        "hash: 5d62e6f31a2e", //Fetch with the hash of the translation in cache
+        "table: /web/webclient/translations",
+        'key: {"lang":"en"}',
+        `value: ${JSON.stringify(expectedValue)}`,
+    ]);
+
+    component.render();
+    await animationFrame();
+    // Using the updated translated terms
+    expect("#main").toHaveText("Salut");
+});
+
 test("can lazy translate", async () => {
     // Can't use patchWithCleanup cause it doesn't support Symbol
     translatedTerms[translationLoaded] = false;
-    TestComponent.template = xml`<div id="main"><t t-esc="constructor.someLazyText" /></div>`;
+    TestComponent._template = `<div id="main"><t t-esc="constructor.someLazyText" /></div>`;
     TestComponent.someLazyText = _t("Hello");
     expect(() => TestComponent.someLazyText.toString()).toThrow();
     expect(() => TestComponent.someLazyText.valueOf()).toThrow();
@@ -158,7 +404,10 @@ test("_t fills the format specifiers in translated terms with formatted lists", 
     });
     await mockLang("fr_FR");
     const translatedStr1 = _t("Due in %s days", ["30", "60", "90"]);
-    const translatedStr2 = _t("Due in %(due_dates)s days for %(user)s", {due_dates: ["30", "60", "90"], user: "Mitchell"});
+    const translatedStr2 = _t("Due in %(due_dates)s days for %(user)s", {
+        due_dates: ["30", "60", "90"],
+        user: "Mitchell",
+    });
     expect(translatedStr1).toBe("Échéance dans 30, 60 et 90 jours");
     expect(translatedStr2).toBe("Échéance dans 30, 60 et 90 jours pour Mitchell");
 });

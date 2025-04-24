@@ -230,9 +230,6 @@ function cleanLoadedLanguages() {
 
 function patchSessionInfo() {
     patchWithCleanup(sessionInfo, {
-        cache_hashes: {
-            translations: "314159",
-        },
         qweb: "owl",
         // Commit: 3e847fc8f499c96b8f2d072ab19f35e105fd7749
         // to see what user_companies is
