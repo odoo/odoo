@@ -523,6 +523,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("GiftCardProgramTour1")
         # Check that gift cards are created
         self.assertEqual(len(gift_card_program.coupon_ids), 1)
+        # Check 50 points have been added to recently generated gift card
+        loyalty_history = self.env['loyalty.history'].search([('card_id', '=', gift_card_program.coupon_ids.id)], limit=1)
+        self.assertEqual(loyalty_history.issued, 50.0)
         # Change the code to 044123456 so that we can use it in the next tour.
         # Make sure it starts with 044 because it's the prefix of the loyalty cards.
         gift_card_program.coupon_ids.code = '044123456'
@@ -530,7 +533,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("GiftCardProgramTour2")
         # Check that gift cards are used (Whiteboard Pen price is 1.20)
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
-        loyalty_history = self.env['loyalty.history'].search([('card_id','=',gift_card_program.coupon_ids.id)])
+        # Check 3.2 points are used to pay the last order
+        loyalty_history = self.env['loyalty.history'].search([('card_id', '=', gift_card_program.coupon_ids.id)], limit=1)
         self.assertEqual(loyalty_history.used, 3.2)
 
     def test_ewallet_program(self):
@@ -2990,6 +2994,34 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_refund_does_not_decrease_points', login="pos_user")
         self.assertEqual(card.points, 30)
+
+    def test_sell_backend_generated_gift_card(self):
+        """
+        Test that a backend generated gift card can be sold in the POS
+        """
+        # Deactivate all existing loyalty programs to prevent interference
+        self.env['loyalty.program'].search([]).write({'pos_ok': False})
+
+        # Ensure the gift card product is active
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+
+        # Create a new gift card program and a backend-generated gift card
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        backend_gift_card = self.env['loyalty.card'].create({
+            'code': 'test-card-0002',
+            'program_id': gift_card_program.id,
+            'points': 100,
+        })
+        # Start the PoS tour to simulate selling the gift card through the PoS interface
+        self.start_pos_tour('test_sell_backend_generated_gift_card')
+
+        # Retrieve the most recent PoS order after completing the tour
+        pos_order = self.main_pos_config.current_session_id.order_ids[0]
+
+        # Validate that the backend-generated gift card is correctly linked to the latest PoS order, issued points are 100, and used points are 0
+        self.assertEqual(backend_gift_card.history_ids[0].order_id, pos_order.id, "The most recent PoS order should be linked to the backend-generated gift card")
+        self.assertEqual(backend_gift_card.history_ids[0].issued, 100.0, "The backend-generated gift card should have 100 issued points")
+        self.assertEqual(backend_gift_card.history_ids[0].used, 0.0, "The backend-generated gift card should have 0 used points")
 
     def test_loyalty_reward_with_variant(self):
         self.env['loyalty.program'].search([]).write({'active': False})

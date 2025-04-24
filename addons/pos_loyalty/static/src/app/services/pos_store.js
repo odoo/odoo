@@ -209,10 +209,14 @@ patch(PosStore.prototype, {
                     };
                     if (program && program.program_type === "gift_card") {
                         couponPointChange.product_id = order.getSelectedOrderline()?.product_id.id;
-                        couponPointChange.expiration_date = serializeDate(
-                            luxon.DateTime.now().plus({ year: 1 })
-                        );
+                        if (!pa.manual) {
+                            couponPointChange.expiration_date = serializeDate(
+                                luxon.DateTime.now().plus({ year: 1 })
+                            );
+                        }
                         couponPointChange.code = order.getSelectedOrderline()?.gift_code;
+                        couponPointChange.existing_gift_card_id =
+                            order.getSelectedOrderline()?._existing_gift_card_id;
                         couponPointChange.partner_id = order.getPartner()?.id;
                     }
 

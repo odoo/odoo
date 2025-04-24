@@ -38,6 +38,12 @@ patch(PosOrderline, {
             type: "many2one",
             local: true,
         },
+        _existing_gift_card_id: {
+            model: "pos.order.line",
+            name: "_existing_gift_card_id",
+            type: "int",
+            local: true,
+        },
     },
 });
 

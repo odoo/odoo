@@ -215,3 +215,38 @@ registry.category("web_tour.tours").add("EmptyProductScreenTour", {
             ProductScreen.loadSampleButtonIsThere(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_sell_backend_generated_gift_card", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            {
+                trigger: `a:contains("Sell physical gift card?")`,
+                run: "click",
+            },
+            {
+                content: `Enter the backend-generated gift card code.`,
+                trigger: `input[id="code"]`,
+                run: `edit test-card-0002`,
+            },
+            {
+                trigger: ".col .col-form-label:contains('Amount')",
+                run: "click",
+            },
+            {
+                content: "Ensure the gift card amount is set to 100.",
+                trigger: "input.gift-card-amount:value(100)",
+            },
+            {
+                trigger: `.btn-primary:contains("Add Balance")`,
+                run: "click",
+            },
+            PosLoyalty.orderTotalIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});

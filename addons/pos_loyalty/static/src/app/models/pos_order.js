@@ -890,7 +890,7 @@ patch(PosOrder.prototype, {
      * @param {String} newGiftCardCode gift card code as a string if new gift card to be created.
      * @param {number} points number of points to assign to the gift card.
      */
-    processGiftCard(newGiftCardCode, points, expirationDate) {
+    processGiftCard(newGiftCardCode, points, expirationDate, existingGiftCardId) {
         const partner_id = this.partner_id?.id || false;
         const product_id = this.getSelectedOrderline().product_id.id;
         const program =
@@ -903,6 +903,7 @@ patch(PosOrder.prototype, {
             points: points,
             manual: true,
             product_id: product_id,
+            existing_gift_card_id: existingGiftCardId,
         };
 
         // Fetch all coupon_ids for the specified points and not manually created, that are associated with the gift card program

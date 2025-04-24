@@ -44,3 +44,20 @@ class LoyaltyCard(models.Model):
         count_per_coupon = {coupon.id: count for coupon, count in read_group_res}
         for card in self:
             card.use_count += count_per_coupon.get(card.id, 0)
+
+    @api.model
+    def validate_gift_card(self, gift_code):
+        gift_card = self.search([('code', '=', gift_code)], limit=1)
+        if [i for i in gift_card.history_ids.mapped('order_id') if i]:
+            return {
+                'status': False,
+                'id': gift_card.id,
+            }
+        else:
+            return {
+                'status': True,
+                'id': gift_card.id,
+                'code': gift_card.code,
+                'points': gift_card.points,
+                'expiration_date': gift_card.expiration_date,
+            }
