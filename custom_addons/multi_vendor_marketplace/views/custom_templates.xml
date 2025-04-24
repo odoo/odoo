@@ -63,7 +63,7 @@
                 <h2>Edit Profile</h2>
                 <form method="post" action="/profile/save">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                    
+
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" class="form-control" t-att-value="user.name" />
@@ -76,20 +76,23 @@
                         <label for="phone">Phone</label>
                         <input type="text" id="phone" name="phone" class="form-control" t-att-value="user.phone" />
                     </div>
+
+                    <!-- Password Change Fields -->
+                    <div class="form-group">
+                        <label for="new_password">New Password</label>
+                        <input type="password" id="new_password" name="new_password" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm New Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" />
+                    </div>
+
                     <button type="submit" class="btn btn-success mt-3">Save</button>
                     <a href="/profile" class="btn btn-secondary mt-3">Cancel</a>
                 </form>
             </div>
         </t>
     </template>
-    <!-- вкладки (страницы) будут иконки вместо текста -->
-    <!-- <template id="customize_shop_icon" inherit_id="website.layout" name="Shop Icon Replace">
-        <xpath expr="//a[contains(@href, '/shop')]" position="replace">
-            <a href="/shop" role="menuitem">
-                <img src="/static/src/img/shop_icon.png" alt="Shop" style="height: 16px;"/>
-            </a>
-        </xpath>
-    </template> -->
     <template id="user_order_status" name="Order Status">
         <t t-call="website.layout">
             <div class="container mt-5">
@@ -159,6 +162,4 @@
             </div>
         </t>
     </template>
-
-
 </odoo>

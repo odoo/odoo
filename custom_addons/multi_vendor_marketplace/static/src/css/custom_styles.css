@@ -47,6 +47,9 @@ li.o_no_autohide_item {
     display: none !important;
 }
 
+li.o_wsale_my_cart {
+    display: none !important;
+}
 
 /* ############################################################################################################################################################## */
 /* МАГАЗ ОСНОВНОЙ */
@@ -89,13 +92,11 @@ li.o_no_autohide_item {
     padding: 15px;
 }
 
-/* Стили для названия товара */
-.oe_product_cart .product_name {
-    font-size: 16px !important; /* Размер шрифта */
-    color: black !important;
-    font-weight: bold !important;
+/* Заголовок товара */
+.o_wsale_product_information .o_wsale_products_item_title a {
+    color: black !important;  /* Черный цвет текста */
+    font-weight: 500 !important;  /* Жирное начертание */
 }
-
 
 /* Стили для цены */
 .oe_product_cart .product_price {
@@ -117,3 +118,64 @@ li.o_no_autohide_item {
 .oe_product_cart .oe_subdescription {
     display: none !important;
 }
+
+/* Иконка дома для /shop */
+.navbar-nav .nav-link[href="/shop"]:before {
+    content: "\f015"; /* fa-home */
+    font-family: 'FontAwesome';
+    font-size: 1.2rem;
+}
+
+/* Иконка корзины для /shop/cart */
+.navbar-nav .nav-link[href="/shop/cart"]:before {
+    content: "\f07a"; /* fa-shopping-cart */
+    font-family: 'FontAwesome';
+    font-size: 1.2rem;
+}
+
+/* Иконка пользователя для /profile */
+.navbar-nav .nav-link[href="/profile"]:before {
+    content: "\f007"; /* fa-user */
+    font-family: 'FontAwesome';
+    font-size: 1.2rem;
+}
+
+/* Убираем текст */
+.navbar-nav .nav-link[href="/shop"],
+.navbar-nav .nav-link[href="/shop/cart"],
+.navbar-nav .nav-link[href="/profile"] {
+    font-size: 0;
+}
+
+/* Общий стиль для иконок */
+.navbar-nav .nav-link:before {
+    display: inline-block;
+}
+
+/* Общие стили кнопок */
+.navbar-nav .nav-link {
+    position: relative;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+}
+
+/* Подсказки при наведении */
+.navbar-nav .nav-link[href="/shop"]:hover:after {
+    content: "Store";
+    /* ...остальные стили */
+}
+
+.navbar-nav .nav-link[href="/shop/cart"]:hover:after {
+    content: "Cart";
+    /* ...остальные стили */
+}
+
+.navbar-nav .nav-link[href="/profile"]:hover:after {
+    content: "Profile";
+    /* ...остальные стили */
+}
+
+
