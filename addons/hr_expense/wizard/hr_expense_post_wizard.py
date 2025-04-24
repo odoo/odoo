@@ -41,22 +41,28 @@ class HrExpensePostWizard(models.TransientModel):
         help="The journal used when the expense is paid by employee.",
     )
 
-    def action_post_entry(self):
+    def _get_bills_vals(self, expenses):
+        # Hook to modify the bills values before creating the moves
+        # This is used in l10n_ec_edi to add the reimbursement lines
+        return expenses._prepare_bills_vals()
+
+    def action_post_entry(self, post_moves=True):
         expenses = self.env['hr.expense'].browse(self.env.context['active_ids'])
         if not self.env['account.move'].has_access('create'):
             raise UserError(_("You don't have the rights to create accounting entries."))
-        expense_bill_vals_list  = [
+        expense_bill_vals_list = [
             {
                 **new_bill_vals,
                 'journal_id': self.employee_journal_id.id,
                 'invoice_date': self.accounting_date,
             }
-            for new_bill_vals in expenses._prepare_bills_vals()
+            for new_bill_vals in self._get_bills_vals(expenses)
         ]
         moves = self.env['account.move'].sudo().create(expense_bill_vals_list)
         for move in moves:
             move._message_set_main_attachment_id(move.attachment_ids, force=True, filter_xml=False)
-        moves.action_post()
+        if post_moves:
+            moves.action_post()
 
         if not self.company_id.expense_journal_id:  # Sets the default one if not specified
             self.sudo().company_id.expense_journal_id = self.employee_journal_id.id
