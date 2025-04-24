@@ -42,6 +42,9 @@
             'payment/static/src/scss/payment_provider.scss',
             'payment/static/src/js/payment_wizard_copy_clipboard_field.js',
         ],
+        'web.assets_unit_tests_setup': [
+            'payment/static/src/interactions/payment_button.js',
+        ],
         'web.assets_unit_tests': [
             'payment/static/tests/**/*.test.js',
         ],
