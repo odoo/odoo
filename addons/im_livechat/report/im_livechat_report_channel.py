@@ -32,10 +32,10 @@ class Im_LivechatReportChannel(models.Model):
         string="Day of the Week",
         readonly=True,
     )
-    time_to_answer = fields.Float('Time to answer (sec)', digits=(16, 2), readonly=True, aggregator="avg", help="Average time in seconds to give the first answer to the visitor")
+    time_to_answer = fields.Float("Response Time (sec)", digits=(16, 2), readonly=True, aggregator="avg", help="Average time in seconds to give the first answer to the visitor")
     start_date_hour = fields.Char('Hour of start Date of session', readonly=True)
-    duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
-    nbr_message = fields.Integer('Average message', readonly=True, aggregator="avg", help="Number of message in the conversation")
+    duration = fields.Float("Duration (min)", digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
+    nbr_message = fields.Integer("Messages per Session", readonly=True, aggregator="avg", help="Number of message in the conversation")
     country_id = fields.Many2one('res.country', 'Country of the visitor', readonly=True)
     rating = fields.Integer('Rating', aggregator="avg", readonly=True)
     # TODO DBE : Use Selection field - Need : Pie chart must show labels, not keys.
@@ -44,7 +44,7 @@ class Im_LivechatReportChannel(models.Model):
     handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
     handled_by_agent = fields.Integer("Handled by Agent", readonly=True, aggregator="sum")
     visitor_partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
-    call_duration_hour = fields.Float("Average call duration", digits=(16, 2), readonly=True, aggregator="avg")
+    call_duration_hour = fields.Float("Call Duration", digits=(16, 2), readonly=True, aggregator="avg")
     has_call = fields.Float("Whether the session had a call", readonly=True)
     number_of_calls = fields.Float("# of Sessions with calls", readonly=True, related="has_call", aggregator="sum")
     percentage_of_calls = fields.Float("Session with Calls (%)", readonly=True, related="has_call", aggregator="avg")
