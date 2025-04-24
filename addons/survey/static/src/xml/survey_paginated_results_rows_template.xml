@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="survey.paginated_results_rows">
+        <t t-foreach="records" t-as="input_line" t-key="input_line.id">
+            <tr>
+                <td>
+                    <a t-att-href="input_line.url">
+                        <t t-esc="input_line.index + 1"></t>
+                    </a>
+                </td>
+                <td>
+                    <!-- If answer already covered by filter or if there is only one line to display, do not allow filtering on it again -->
+                    <t t-if="hide_filter">
+                        <t t-esc="input_line.value"/>
+                    </t>
+                    <t t-else="">
+                        <div class="d-flex justify-content-between">
+                            <t t-esc="input_line.value"/>
+                            <a class="text-primary filter-add-answer d-print-none"
+                                data-model-short-key="L" t-att-data-record-id="input_line.id"
+                                role="button" aria-label="Filter surveys" title="Only show survey results having selected this answer">
+                                <i class="fa fa-filter"/>
+                            </a>
+                        </div>
+                    </t>
+                </td>
+            </tr>
+        </t>
+    </t>
+
+</templates>
