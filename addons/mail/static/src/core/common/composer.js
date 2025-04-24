@@ -10,8 +10,14 @@ import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+<<<<<<< f735b722dda69a1b178f247ca273ff38656d52ae
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
+||||||| 1e0d62ec32d1f53358590044fb48228a13c8f171
+import { isMobileOS } from "@web/core/browser/feature_detection";
+=======
+import { isMobileOS, hasTouch } from "@web/core/browser/feature_detection";
+>>>>>>> ba6bf234e6b21e0e5b7fcb4422d2a3a968de1601
 
 import {
     Component,
@@ -123,6 +129,13 @@ export class Composer extends Component {
         });
         this.suggestion = this.store.self.type === "partner" ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
+<<<<<<< f735b722dda69a1b178f247ca273ff38656d52ae
+||||||| 1e0d62ec32d1f53358590044fb48228a13c8f171
+        this.isMobileOS = isMobileOS;
+=======
+        this.isMobileOS = isMobileOS;
+        this.hasTouch = hasTouch;
+>>>>>>> ba6bf234e6b21e0e5b7fcb4422d2a3a968de1601
         this.onDropFile = this.onDropFile.bind(this);
         this.saveContentDebounced = useDebounced(this.saveContent, 5000, {
             execBeforeUnmount: true,

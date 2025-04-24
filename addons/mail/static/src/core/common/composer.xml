@@ -113,14 +113,32 @@
 </t>
 
 <t t-name="mail.Composer.sendButton">
+<<<<<<< f735b722dda69a1b178f247ca273ff38656d52ae
     <button class="o-mail-Composer-send btn"
         t-att-class="{'btn-primary': extended or (ui.isSmall and !isSendButtonDisabled), 'p-1 rounded-pill': !extended, 'btn-link': !extended and !(ui.isSmall and !isSendButtonDisabled), 'border-start-0 me-2': env.inDiscussApp}"
+||||||| 1e0d62ec32d1f53358590044fb48228a13c8f171
+    <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn o-last"
+        t-att-class="{'btn-primary': extended or (ui.isSmall and !isSendButtonDisabled), 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link': !extended and !(ui.isSmall and !isSendButtonDisabled), 'align-self-stretch': !extended, 'border-start-0 ms-2 me-3': env.inDiscussApp}"
+=======
+    <button t-if="!compact or hasTouch()" class="o-mail-Composer-send btn o-last"
+        t-att-class="{'btn-primary': extended or (hasTouch() and !isSendButtonDisabled), 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link': !extended and !(hasTouch() and !isSendButtonDisabled), 'align-self-stretch': !extended, 'border-start-0 ms-2 me-3': env.inDiscussApp}"
+>>>>>>> ba6bf234e6b21e0e5b7fcb4422d2a3a968de1601
         t-on-click="sendMessage"
         t-att-disabled="isSendButtonDisabled"
         t-att-aria-label="SEND_TEXT"
     >
+<<<<<<< f735b722dda69a1b178f247ca273ff38656d52ae
         <t t-if="thread and thread.model !== 'discuss.channel'" t-out="SEND_TEXT"/>
         <t t-else=""><i class="fa fa-fw fa-paper-plane-o"/></t>
+||||||| 1e0d62ec32d1f53358590044fb48228a13c8f171
+        <t t-if="thread and thread.type === 'chatter'" t-out="SEND_TEXT"/>
+        <t t-elif="ui.isSmall"><i class="fa fa-paper-plane-o"/></t>
+        <t t-else="">Send</t>
+=======
+        <t t-if="thread and thread.type === 'chatter'" t-out="SEND_TEXT"/>
+        <t t-elif="hasTouch()"><i class="fa fa-paper-plane-o"/></t>
+        <t t-else="">Send</t>
+>>>>>>> ba6bf234e6b21e0e5b7fcb4422d2a3a968de1601
     </button>
 </t>
 
