@@ -981,26 +981,37 @@ class ResPartner(models.Model):
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
     @api.depends_context(
-        'show_address', 'partner_display_name_hide_company', 'partner_show_db_id', 'address_inline',
+        'show_address', 'partner_show_db_id',
         'show_email', 'show_vat', 'lang', 'formatted_display_name'
     )
     def _compute_display_name(self):
         for partner in self:
-            name = partner.with_context(lang=self.env.lang)._get_complete_name()
-            if partner._context.get('show_address'):
-                name = name + "\n" + partner._display_address(without_company=True)
-            name = re.sub(r'\s+\n', '\n', name)
-            if partner._context.get('partner_show_db_id'):
-                name = f"{name} ({partner.id})"
-            if partner._context.get('address_inline'):
-                splitted_names = name.split("\n")
-                name = ", ".join([n for n in splitted_names if n.strip()])
-            if partner._context.get('show_email') and partner.email:
-                name = f"{name} <{partner.email}>"
-            if partner._context.get('show_vat') and partner.vat:
-                name = f"{name} ‒ {partner.vat}"
-            if partner._context.get("formatted_display_name") and (partner.parent_id or partner.company_name):
-                name = f"{partner.company_name or partner.parent_id.name}<tab>--{partner.name}--"
+            name = partner.name
+            if partner._context.get("formatted_display_name"):
+                if partner.parent_id or partner.company_name:
+                    name = f"{partner.company_name or partner.parent_id.name} \t --{partner.name}--"
+
+                if partner._context.get('show_email') and partner.email:
+                    name = f"{name} \t --{partner.email}--"
+                elif partner._context.get('show_vat') and partner.vat:
+                    name = f"{name} \t --{partner.vat}--"
+                elif partner._context.get('partner_show_db_id'):
+                    name = f"{name} \t --{partner.id}--"
+
+            else:
+                name = partner.with_context(lang=self.env.lang)._get_complete_name()
+                if partner._context.get('partner_show_db_id'):
+                    name = f"{name} ({partner.id})"
+                if partner._context.get('show_email') and partner.email:
+                    name = f"{name} <{partner.email}>"
+                if partner._context.get('show_address'):
+                    name = name + "\n" + partner._display_address(without_company=True)
+
+                if partner._context.get('show_vat') and partner.vat:
+                    if partner._context.get('show_address'):
+                        name = f"{name} \n {partner.vat}"
+                    else:
+                        name = f"{name} - {partner.vat}"
 
             partner.display_name = name.strip()
 
