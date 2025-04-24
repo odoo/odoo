@@ -1727,6 +1727,40 @@ def _optimize_any_with_rights(condition, model):
     return condition
 
 
+@field_type_optimization(['many2one'], level=OptimizationLevel.FULL)
+def _optimize_m2o_bypass_comodel_id_lookup(condition, model):
+    """Avoid comodel's subquery, if it can be compared with the field directly"""
+    operator = condition.operator
+    if (
+        operator in ('any!', 'not any!')
+        and isinstance(subdomain := condition.value, DomainCondition)
+        and subdomain.field_expr == 'id'
+        and (op := subdomain.operator) in ('in', 'not in', 'any!', 'not any!')
+    ):
+        # We are bypassing permissions, we can transform:
+        #  a ANY (id IN X)  =>  A IN X
+        #  a ANY (id ANY X)  => A ANY X  (if X is not a Domain)
+        val = subdomain.value
+        match operator, op:
+            case 'not any!', 'in' | 'not in':
+                # Since we're inverting the op, we need to toggle the presence of the Empty Set {False}.
+                op = _INVERSE_OPERATOR[op]
+                val = val ^ {False}
+            case _, 'any!':
+                # Use the initial operator
+                op = operator
+            case _, 'not any!':
+                # We need to inverse the initial operator and handle the presence of the Empty Set {False}.
+                # Build domain for operator='any!' and inverse if needed.
+                domain = DomainCondition(condition.field_expr, '!=', False) \
+                    & DomainCondition(condition.field_expr, 'not any!', val)
+                if operator == 'not any!':
+                    domain = ~domain
+                return domain
+        return DomainCondition(condition.field_expr, op, val)
+    return condition
+
+
 # --------------------------------------------------
 # Optimizations: nary
 # --------------------------------------------------
