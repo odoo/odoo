@@ -79,7 +79,7 @@ class TestStockLot(TestStockCommon):
         self.env['stock.lot']._alert_date_exceeded()
 
         # check a new activity has been created
-        activity_id = self.env.ref('product_expiry.mail_activity_type_alert_date_reached').id
+        activity_id = self.env.ref('mail.mail_activity_data_todo').id
         activity_count = self.env['mail.activity'].search_count([
             ('activity_type_id', '=', activity_id),
             ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
@@ -173,7 +173,7 @@ class TestStockLot(TestStockCommon):
         self.env['stock.lot']._alert_date_exceeded()
 
         # check a new activity has not been created
-        activity_id = self.env.ref('product_expiry.mail_activity_type_alert_date_reached').id
+        activity_id = self.env.ref('mail.mail_activity_data_todo').id
         activity_count = self.env['mail.activity'].search_count([
             ('activity_type_id', '=', activity_id),
             ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
@@ -221,7 +221,7 @@ class TestStockLot(TestStockCommon):
         self.env['stock.lot']._alert_date_exceeded()
 
         # check a new activity has not been created
-        activity_id = self.env.ref('product_expiry.mail_activity_type_alert_date_reached').id
+        activity_id = self.env.ref('mail.mail_activity_data_todo').id
         activity_count = self.env['mail.activity'].search_count([
             ('activity_type_id', '=', activity_id),
             ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
