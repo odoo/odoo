@@ -6,26 +6,24 @@ export const menuService = {
     dependencies: ["action", "orm"],
     async start(env, { orm }) {
         let currentAppId;
-        let menusData;
+        let menusData = {};
 
         const storedMenus = browser.localStorage.getItem("webclient_menus");
         const storedMenusVersion = browser.localStorage.getItem("webclient_menus_version");
 
-        if (storedMenus && storedMenusVersion === session.registry_hash) {
-            orm.call("ir.ui.menu", "load_web_menus", [!!odoo.debug]).then((res) => {
-                if (res) {
+        if (odoo.loadMenus) {
+            if (storedMenus && storedMenusVersion === session.registry_hash) {
+                orm.call("ir.ui.menu", "load_web_menus", [!!odoo.debug]).then((res) => {
                     const fetchedMenus = JSON.stringify(res);
                     if (fetchedMenus !== storedMenus) {
                         browser.localStorage.setItem("webclient_menus", fetchedMenus);
                         menusData = res;
                         env.bus.trigger("MENUS:APP-CHANGED");
                     }
-                }
-            });
-            menusData = JSON.parse(storedMenus);
-        } else {
-            menusData = await orm.call("ir.ui.menu", "load_web_menus", [!!odoo.debug]);
-            if (menusData) {
+                });
+                menusData = JSON.parse(storedMenus);
+            } else {
+                menusData = await orm.call("ir.ui.menu", "load_web_menus", [!!odoo.debug]);
                 browser.localStorage.setItem("webclient_menus_version", session.registry_hash);
                 browser.localStorage.setItem("webclient_menus", JSON.stringify(menusData));
             }
@@ -78,8 +76,12 @@ export const menuService = {
             },
             setCurrentMenu,
             async reload() {
-                menusData = await orm.call("ir.ui.menu", "load_web_menus", [!!odoo.debug]);
-                env.bus.trigger("MENUS:APP-CHANGED");
+                if (odoo.loadMenus) {
+                    menusData = await orm.call("ir.ui.menu", "load_web_menus", [!!odoo.debug]);
+                    browser.localStorage.setItem("webclient_menus_version", session.registry_hash);
+                    browser.localStorage.setItem("webclient_menus", JSON.stringify(menusData));
+                    env.bus.trigger("MENUS:APP-CHANGED");
+                }
             },
         };
     },

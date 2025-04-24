@@ -278,6 +278,7 @@
                     // Block to avoid leaking variables in the script scope
                     {
                         odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                        odoo.loadMenus = true;
                         const { user_context,  cache_hashes } = odoo.__session_info__;
                         // Prefetch translations to speedup webclient. This is done in JS because link rel="prefetch"
                         // is not yet supported on safari.
