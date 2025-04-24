@@ -843,6 +843,7 @@ test("should wait label promises for one2many search defaults", async () => {
         searchViewId: false,
         context: { search_default_company: 1 },
     });
+    await animationFrame();
     expect(`.o_cp_searchview`).toHaveCount(0);
 
     def.resolve();

@@ -442,6 +442,9 @@ class IrHttp(models.AbstractModel):
             'lang': lang,
             'multi_lang': len(self.env['res.lang'].sudo().get_installed()) > 1,
         }
+        if self.env.context.get('cache_translation_data'):
+            # put in the transactional cache
+            self.env.cr.cache['translation_data'] = translation_cache
         return hashlib.sha1(json.dumps(translation_cache, sort_keys=True, default=json_default).encode()).hexdigest()
 
     @classmethod

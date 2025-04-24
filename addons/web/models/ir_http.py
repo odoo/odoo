@@ -91,9 +91,6 @@ class IrHttp(models.AbstractModel):
             'web.max_file_upload_size',
             default=DEFAULT_MAX_CONTENT_LENGTH,
         ))
-        mods = odoo.tools.config['server_wide_modules']
-        if request.db:
-            mods = list(request.registry._init_modules) + mods
         is_internal_user = user._is_internal()
         session_info = {
             "uid": session_uid,
@@ -120,11 +117,6 @@ class IrHttp(models.AbstractModel):
             'profile_params': request.session.get('profile_params'),
             "max_file_upload_size": max_file_upload_size,
             "home_action_id": user.action_id.id,
-            "cache_hashes": {
-                "translations": self.env['ir.http'].sudo().get_web_translations_hash(
-                    mods, request.session.context['lang']
-                ) if session_uid else None,
-            },
             "currencies": self.env['res.currency'].get_all_currencies(),
             'bundle_params': {
                 'lang': request.session.context['lang'],
@@ -181,6 +173,7 @@ class IrHttp(models.AbstractModel):
             "is_internal_user": user._is_internal(),
             'is_website_user': user._is_public() if session_uid else False,
             'uid': session_uid,
+            "registry_hash": hmac(self.env(su=True), "webclient-cache", self.env.registry.registry_sequence),
             'is_frontend': True,
             'profile_session': request.session.get('profile_session'),
             'profile_collectors': request.session.get('profile_collectors'),

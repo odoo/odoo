@@ -420,7 +420,7 @@ export class MockServer {
         this._onRoute(["/web/webclient/load_menus"], this.loadMenus, {
             pure: true,
         });
-        this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations, {
+        this._onRoute(["/web/webclient/translations"], this.loadTranslations, {
             pure: true,
         });
 
@@ -1223,17 +1223,39 @@ export class MockServer {
     /**
      * @type {RouteCallback<"unique">}
      */
-    async loadTranslations() {
+    async loadTranslations(request) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
+        const digestMessage = async (message) => {
+            const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
+            // crypto.subtle is supposed to be undefined in insecure context
+            // https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts
+            const hashBuffer = await window.crypto.subtle.digest("SHA-1", msgUint8); // hash the message
+            const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
+            const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(""); // convert bytes to hex string
+            return hashHex;
+        };
+        const requestHash = new URL(request.url).searchParams.get("hash");
         const langParameters = { ...this.lang_parameters };
         if (typeof langParameters.grouping !== "string") {
             langParameters.grouping = JSON.stringify(langParameters.grouping);
         }
-        return {
+        const result = {
             lang: serverState.lang,
             lang_parameters: langParameters,
             modules: this.modules,
             multi_lang: serverState.multiLang,
         };
+
+        const currentHash = await digestMessage(JSON.stringify(result));
+        if (currentHash === requestHash) {
+            return {
+                lang: serverState.lang,
+                hash: currentHash,
+                no_change: true,
+            };
+        }
+        result.hash = currentHash;
+        return result;
     }
 }
 

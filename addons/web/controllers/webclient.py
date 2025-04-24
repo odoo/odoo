@@ -52,12 +52,12 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations/<string:unique>', type='http', auth='public', cors='*', readonly=True)
-    def translations(self, unique, mods=None, lang=None):
+    @http.route('/web/webclient/translations', type='http', auth='public', cors='*', readonly=True)
+    def translations(self, hash=None, mods=None, lang=None):
         """
         Load the translations for the specified language and modules
 
-        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :param hash: translations hash, which identifies a version of translations. This method only returns translations if their hash differs from the received one
         :param mods: the modules, a comma separated list
         :param lang: the language of the user
         :return:
@@ -70,19 +70,29 @@ class WebClient(http.Controller):
         if lang and lang not in {code for code, _ in request.env['res.lang'].sudo().get_installed()}:
             lang = None
 
-        translations_per_module, lang_params = request.env["ir.http"].get_translations_for_webclient(mods, lang)
+        current_hash = request.env["ir.http"].with_context(cache_translation_data=True).get_web_translations_hash(mods, lang)
 
         body = {
             'lang': lang,
-            'lang_parameters': lang_params,
-            'modules': translations_per_module,
-            'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
+            'hash': current_hash,
         }
+        if current_hash != hash:
+            if 'translation_data' in request.env.cr.cache:
+                # ormcache of get_web_translations_hash was cold and fill the translation_data cache
+                body.update(request.env.cr.cache.pop('translation_data'))
+            else:
+                # ormcache of get_web_translations_hash was hot
+                translations_per_module, lang_params = request.env["ir.http"].get_translations_for_webclient(mods, lang)
+                body.update({
+                    'lang_parameters': lang_params,
+                    'modules': translations_per_module,
+                    'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
+                })
+
         # The type of the route is set to HTTP, but the rpc is made with a get and expects JSON
-        response = request.make_json_response(body, [
+        return request.make_json_response(body, [
             ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}'),
         ])
-        return response
 
     @http.route('/web/webclient/version_info', type='jsonrpc', auth="none")
     def version_info(self):

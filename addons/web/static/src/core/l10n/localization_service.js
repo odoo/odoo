@@ -6,6 +6,8 @@ import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
 import { translatedTerms, translationLoaded, translationIsReady } from "./translation";
+import { objectToUrlEncodedString } from "../utils/urls";
+import { IndexedDB } from "../utils/indexed_db";
 
 const { Settings } = luxon;
 
@@ -24,36 +26,67 @@ const NUMBERING_SYSTEMS = [
 
 export const localizationService = {
     start: async () => {
-        const cacheHashes = session.cache_hashes || {};
-        const translationsHash = cacheHashes.translations || new Date().getTime().toString();
-        const lang = jsToPyLocale(user.lang || document.documentElement.getAttribute("lang"));
+        const localizationDB = new IndexedDB("localization", session.registry_hash);
         const translationURL = session.translationURL || "/web/webclient/translations";
-        let url = `${translationURL}/${translationsHash}`;
-        if (lang) {
-            url += `?lang=${lang}`;
-        }
+        const lang = jsToPyLocale(user.lang || document.documentElement.getAttribute("lang"));
 
-        const response = await browser.fetch(url);
-        if (!response.ok) {
-            throw new Error("Error while fetching translations");
-        }
-
-        const {
-            lang_parameters: userLocalization,
-            modules: modules,
-            multi_lang: multiLang,
-        } = await response.json();
-
-        // FIXME We flatten the result of the python route.
-        // Eventually, we want a new python route to return directly the good result.
-        const terms = {};
-        for (const addon of Object.keys(modules)) {
-            for (const message of modules[addon].messages) {
-                terms[message.id] = message.string;
+        const fetchTranslations = async (hash) => {
+            let queryString = objectToUrlEncodedString({ hash, lang });
+            queryString = queryString.length > 0 ? `?${queryString}` : queryString;
+            const response = await browser.fetch(`${translationURL}${queryString}`, {
+                cache: "no-store",
+            });
+            if (!response.ok) {
+                throw new Error("Error while fetching translations");
             }
+            const result = await response.json();
+            if (result.hash !== hash) {
+                localizationDB.write(translationURL, JSON.stringify({ lang }), result);
+                updateTranslations(result);
+            }
+        };
+
+        const updateTranslations = (result) => {
+            // FIXME We flatten the result of the python route.
+            // Eventually, we want a new python route to return directly the good result.
+            const terms = {};
+            for (const addon of Object.keys(result.modules)) {
+                for (const message of result.modules[addon].messages) {
+                    terms[message.id] = message.string;
+                }
+            }
+            Object.assign(translatedTerms, terms);
+
+            const userLocalization = result.lang_parameters;
+            const dateFormat = strftimeToLuxonFormat(userLocalization.date_format);
+            const timeFormat = strftimeToLuxonFormat(userLocalization.time_format);
+
+            Object.assign(localization, {
+                dateFormat,
+                timeFormat,
+                shortTimeFormat: strftimeToLuxonFormat(userLocalization.short_time_format),
+                dateTimeFormat: `${dateFormat} ${timeFormat}`,
+                decimalPoint: userLocalization.decimal_point,
+                direction: userLocalization.direction,
+                grouping: JSON.parse(userLocalization.grouping),
+                multiLang: result.multi_lang,
+                thousandsSep: userLocalization.thousands_sep,
+                weekStart: userLocalization.week_start,
+            });
+        };
+
+        const storedTranslations = await localizationDB.read(
+            translationURL,
+            JSON.stringify({ lang })
+        );
+
+        const translationProm = fetchTranslations(storedTranslations?.hash);
+        if (storedTranslations) {
+            updateTranslations(storedTranslations);
+        } else {
+            await translationProm;
         }
 
-        Object.assign(translatedTerms, terms);
         translatedTerms[translationLoaded] = true;
         translationIsReady.resolve(true);
 
@@ -65,26 +98,7 @@ export const localizationService = {
                 break;
             }
         }
-
-        const dateFormat = strftimeToLuxonFormat(userLocalization.date_format);
-        const timeFormat = strftimeToLuxonFormat(userLocalization.time_format);
-        const shortTimeFormat = strftimeToLuxonFormat(userLocalization.short_time_format);
-        const dateTimeFormat = `${dateFormat} ${timeFormat}`;
-        const grouping = JSON.parse(userLocalization.grouping);
-
-        Object.assign(localization, {
-            dateFormat,
-            timeFormat,
-            shortTimeFormat,
-            dateTimeFormat,
-            decimalPoint: userLocalization.decimal_point,
-            direction: userLocalization.direction,
-            grouping,
-            multiLang,
-            thousandsSep: userLocalization.thousands_sep,
-            weekStart: userLocalization.week_start,
-            code: jsToPyLocale(locale),
-        });
+        localization.code = jsToPyLocale(locale);
         return localization;
     },
 };
