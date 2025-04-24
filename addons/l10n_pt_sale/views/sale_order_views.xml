@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sale_order_form_inherit_pt" model="ir.ui.view">
+            <field name="name">sale.order.inherit.pt</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <!-- Future Date Warning -->
+                <xpath expr="//div[hasclass('alert')]" position="after">
+                    <div class="alert alert-warning mb-0" role="alert"
+                         invisible="not l10n_pt_show_future_date_warning">
+                        Setting the order date in the future will prevent new documents with an order date before
+                        <field name="date_order" readonly="1"/> from being posted.
+                    </div>
+                </xpath>
+                <!-- Smart Buttons -->
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button"
+                            name="action_view_sale_orders"
+                            type="object"
+                            icon="fa-pencil-square-o"
+                            invisible="not sales_order_ids or state == 'sale' or country_code != 'PT'">
+                        <field string="Sale Orders" name="sales_order_count" widget="statinfo"/>
+                    </button>
+                    <button class="oe_stat_button"
+                            name="action_view_origin_quotation"
+                            type="object"
+                            icon="fa-pencil-square-o"
+                            string="Quotation"
+                            invisible="not quotation_id or state not in ('sale', 'cancel') or country_code != 'PT'"/>
+                </xpath>
+                <!-- Buttons -->
+                <xpath expr="//button[@id='action_confirm']" position="replace">
+                    <button name="action_l10n_pt_create_sales_order" type="object" class="btn-primary" string="Confirm"
+                            data-hotkey="q" context="{'validate_analytic': True}" invisible="state != 'sent'"/>
+                </xpath>
+                <xpath expr="//button[@name='action_confirm'][@invisible=&quot;state != &apos;draft&apos;&quot;]" position="replace">
+                    <button name="action_l10n_pt_create_sales_order" type="object" string="Confirm" data-hotkey="q"
+                            context="{'validate_analytic': True}" invisible="state != 'draft'"/>
+                </xpath>
+                <xpath expr="//button[@name='action_unlock']" position="attributes">
+                    <attribute name="invisible">country_code == 'PT'</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="invisible">state not in ['draft', 'sent', 'sale'] or not id or (locked and country_code != 'PT')</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_draft']" position="attributes">
+                    <attribute name="invisible">state != 'cancel' or country_code == 'PT'</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_open_discount_wizard']" position="attributes">
+                    <attribute name="invisible">country_code == 'PT'</attribute>
+                </xpath>
+                <!-- PT fields in header -->
+                <xpath expr="//group[@name='partner_details']" position="inside">
+                    <field name="l10n_pt_document_number"
+                           string="Document Number"
+                           invisible="country_code != 'PT'"/>
+                </xpath>
+                <xpath expr="//field[@name='date_order']" position="attributes">
+                    <attribute name="readonly">locked</attribute>
+                </xpath>
+                <xpath expr="//group[@name='order_details']" position="inside">
+                    <field name="l10n_pt_global_discount"
+                           invisible="country_code != 'PT'"
+                           readonly="l10n_pt_sale_inalterable_hash"/>
+                </xpath>
+                <!-- Add line discount in sale order line -->
+                <xpath expr="//field[@name='order_line']//list//field[@name='discount']" position="attributes">
+                    <attribute name="column_invisible">parent.country_code == 'PT'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//list//field[@name='tax_id']" position="after">
+                    <field name="l10n_pt_line_discount" string="Disc.%" optional="hide" column_invisible="parent.country_code != 'PT'"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//form//field[@name='discount']" position="attributes">
+                    <attribute name="invisible">parent.country_code == 'PT'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//form//field[@name='tax_id']" position="after">
+                    <field name="l10n_pt_line_discount" string="Disc.%" invisible="parent.country_code != 'PT'"/>
+                </xpath>
+                <!-- Add PT info group inside Other Info tab -->
+                <xpath expr="//group[@name='sale_reporting']" position="after">
+                    <group string="Portugal" name="portuguese_info_group" invisible="country_code != 'PT'">
+                        <field name="l10n_pt_at_series_id"
+                               readonly="l10n_pt_document_number"
+                               required="country_code == 'PT'"
+                               domain="[('active', '=', True)]"/>
+                        <field name="l10n_pt_atcud"/>
+                        <field name="l10n_pt_sale_inalterable_hash" groups="base.group_no_one"/>
+                        <field name="l10n_pt_cancel_reason"
+                               invisible="state != 'cancel'"
+                               required="state == 'cancel' and l10n_pt_document_number"/>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="readonly">locked</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_order_tree_inherit_pt" model="ir.ui.view">
+            <field name="name">sale.order.list.inherit.pt</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                   <field name="l10n_pt_document_number" string="Document Number" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_l10n_pt_sale_report_hash_integrity" model="ir.actions.report">
+            <field name="name">Portuguese sale hash integrity result PDF</field>
+            <field name="model">res.company</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_pt_sale.report_hash_integrity</field>
+            <field name="report_file">l10n_pt_sale.report_hash_integrity</field>
+        </record>
+
+        <record model="ir.actions.server" id="action_l10n_pt_sale_check_hash_integrity">
+            <field name="name">Portuguese Sale Inalterability Check</field>
+            <field name="model_id" ref="l10n_pt_sale.model_res_company"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = env.company._l10n_pt_sale_action_check_hash_integrity()
+            </field>
+        </record>
+    </data>
+</odoo>
