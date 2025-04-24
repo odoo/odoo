@@ -36,22 +36,28 @@
 
     <BuilderRow label.translate="Transition">
         <BuilderSelect>
-            <BuilderSelectItem classAction="'slide'">Slide</BuilderSelectItem>
-            <BuilderSelectItem classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
+            <BuilderSelectItem id="'slide_opt'" classAction="'slide'">Slide</BuilderSelectItem>
+            <BuilderSelectItem id="'fade_opt'" classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
             <BuilderSelectItem classAction="''">None</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Speed">
-	    <BuilderNumberInput dataAttributeAction="'bsInterval'"
-            default="10"
-            unit="'s'"
-            saveUnit="'ms'"
-            step="0.1"
-            min="0"
-            preview="false"
-            applyWithUnit="false"/>
-    </BuilderRow>
+    <t t-if="isActiveItem('slide_opt') || isActiveItem('fade_opt')">
+        <BuilderRow label.translate="Speed" level="1">
+            <BuilderNumberInput dataAttributeAction="'bsInterval'"
+                default="10"
+                unit="'s'"
+                saveUnit="'ms'"
+                step="0.1"
+                min="0"
+                preview="false"
+                applyWithUnit="false"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Autoplay" level="1">
+            <BuilderCheckbox dataAttributeAction="'bsRide'" dataAttributeActionValue="'carousel'"/>
+        </BuilderRow>
+    </t>
 
 </t>
 
