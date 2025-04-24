@@ -618,6 +618,12 @@ class StockWarehouseOrderpoint(models.Model):
             This is appropriate for batch jobs only.
         """
         self = self.with_company(company_id)
+        total_task = len(self.ids)
+        task_done = 0
+
+        if total_task == 0:
+            _logger.info("No orderpoints found for procurement")
+            return
 
         for orderpoints_batch_ids in split_every(1000, self.ids):
             if use_new_cursor:
@@ -686,7 +692,11 @@ class StockWarehouseOrderpoint(models.Model):
             finally:
                 if use_new_cursor:
                     try:
-                        cr.commit()
+                        task_done += len(orderpoints_batch_ids)
+                        if self.env.context.get('ir_cron_progress_id'):
+                            self.env['ir.cron']._commit_progress(processed=task_done, remaining=total_task - task_done)
+                        else:
+                            cr.commit()
                     finally:
                         cr.close()
                     _logger.info("A batch of %d orderpoints is processed and committed", len(orderpoints_batch_ids))
