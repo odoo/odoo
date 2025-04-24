@@ -2346,6 +2346,14 @@ export class PosStore extends WithLazyGetterTrap {
         ].filter(Boolean);
     }
 
+    areAllProductsSpecial(products) {
+        const specialDisplayProductIds = this.session._pos_special_display_products_ids || [];
+        return (
+            specialDisplayProductIds.length >= products.length &&
+            products.every((product) => specialDisplayProductIds.includes(product.id))
+        );
+    }
+
     get productsToDisplay() {
         const searchWord = this.searchProductWord.trim();
         const allProducts = this.models["product.template"].getAll();
@@ -2377,6 +2385,10 @@ export class PosStore extends WithLazyGetterTrap {
         list = list
             .filter((product) => !excludedProductIds.includes(product.id) && product.canBeDisplayed)
             .slice(0, 100);
+
+        if (this.areAllProductsSpecial(list)) {
+            return [];
+        }
 
         return searchWord !== ""
             ? list.sort((a, b) => b.is_favorite - a.is_favorite)

@@ -174,3 +174,13 @@ registry.category("web_tour.tours").add("test_physical_gift_card_invoiced", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("EmptyProductScreenTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.isEmpty(),
+            ProductScreen.loadSampleButtonIsThere(),
+        ].flat(),
+});
