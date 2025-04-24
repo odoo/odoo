@@ -17,6 +17,7 @@ export class WifiDialog extends Component {
             waitRestart: false,
             status: "",
             availableWiFi: [],
+            isPasswordVisible: false,
         });
         this.form = useState({
             essid: "",
@@ -100,6 +101,10 @@ export class WifiDialog extends Component {
         }
     }
 
+    togglePasswordVisibility() {
+        this.state.isPasswordVisible = !this.state.isPasswordVisible;
+    }
+
     static template = xml`
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
@@ -151,8 +156,11 @@ export class WifiDialog extends Component {
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <input name="password" type="password" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-model="this.form.password" placeholder="Wi-Fi password"/>
+                    <div class="mb-3 d-flex gap-1">
+                        <input name="password" t-att-type="state.isPasswordVisible ? '' : 'password'" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-model="this.form.password" placeholder="Wi-Fi password"/>
+                        <button class="btn btn-secondary" type="button" t-on-click="togglePasswordVisibility">
+                            <i t-att-class="'fa fa-eye' + (state.isPasswordVisible ? '-slash' : '')"></i>
+                        </button>
                     </div>
                 </div>
             </t>
