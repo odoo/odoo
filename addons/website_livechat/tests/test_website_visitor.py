@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTestsCommon
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
+from odoo.exceptions import AccessError
 
 
 @tagged('website_visitor')
@@ -43,3 +44,10 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTestsCommon):
             })]
         })
         return values
+
+    def test_visitor_page_statistics_access(self):
+        operator = new_test_user(self.env, "operator", groups="im_livechat.im_livechat_group_user")
+        visitor = self._get_last_visitor()
+        visitor.with_user(operator).page_count
+        with self.assertRaises(AccessError):
+            visitor.with_user(operator).page_ids

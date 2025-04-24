@@ -133,7 +133,8 @@ class WebsiteVisitor(models.Model):
 
         for visitor in self:
             visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
-            visitor.page_ids = [(6, 0, visitor_info['page_ids'])]
+            # sudo - website.visitor: access to page_ids is restricted to group_website_designer
+            visitor.sudo().page_ids = [(6, 0, visitor_info['page_ids'])]
             visitor.visitor_page_count = visitor_info['visitor_page_count']
             visitor.page_count = visitor_info['page_count']
 
