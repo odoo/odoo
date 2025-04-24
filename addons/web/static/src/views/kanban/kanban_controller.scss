@@ -1,11 +1,13 @@
 // ------- Kanban Menu -------
 .o-dropdown--kanban-record-menu {
+    // Records colours
+    @include o-kanban-record-color;
+}
+
+.o-dropdown--kanban-record-menu {
     margin-top: -1px;
     margin-bottom: 0px;
     min-width: 9rem;
-
-    // Records colours
-    @include o-kanban-record-color;
 
     $o-kanban-manage-toggle-height: 35px;
 
@@ -70,7 +72,67 @@
             }
         }
     }
+}
 
+
+.o-bottom-sheet--kanban-record-menu:has(.o_kanban_card_manage_settings) {
+    .offcanvas-body {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding-right: var(--offcanvas-padding-x);
+        padding-left: var(--offcanvas-padding-x);
+    }
+
+    .oe_kanban_action {
+        padding: map-get($spacers, 2) 0;
+        display: inline-block;
+    }
+
+    .o_kanban_card_manage_settings {
+        order: -1;
+        padding-bottom: map-get($spacers, 2);
+        border-bottom: $border-width solid $border-color;
+        margin-bottom: map-get($spacers, 3);
+
+        .text-end, .text-center {
+            text-align: start !important;
+        }
+
+        div[class*="col-"] {
+            width: 100%;
+        }
+
+        .o_field_kanban_color_picker {
+            --fieldWidget-display: block;
+            --fieldWidget-margin-bottom: #{map-get($spacers, 3)};
+        }
+
+        .o_kanban_colorpicker {
+            max-width: none;
+            display: flex;
+            justify-content: space-between;
+            gap: map-get($spacers, 2);
+            margin: 0 calc(var(--offcanvas-padding-x) * -1) !important;
+            padding: map-get($spacers, 2) var(--offcanvas-padding-x);
+            overflow-x: auto;
+
+            > li {
+                margin: 0;
+            }
+
+            > li > a:after {
+                width: 12vw;
+                height: auto;
+                aspect-ratio: 4/3;
+            }
+        }
+    }
 }
 
 // ------- Kanban View -------

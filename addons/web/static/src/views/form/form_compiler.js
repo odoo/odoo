@@ -154,12 +154,22 @@ export class FormCompiler extends ViewCompiler {
                 isVisible: isVisibleExpr,
             });
             if (child.tagName === "button" || child.children.tagName === "button") {
-                child.classList.add(
+                const desktopClasses = [
                     "oe_stat_button",
-                    "btn",
                     "btn-outline-secondary",
                     "flex-grow-1",
                     "flex-lg-grow-0"
+                ];
+                const mobileClasses = [
+                    "oe_stat_button_mobile",
+                    "oe_stat_button",
+                    "list-group-item",
+                    "list-group-item-action",
+                    "text-start",
+                    "fs-5"
+                ];
+                child.setAttribute("t-attf-class",
+                    `{{ __comp__.env.isSmall ? '${mobileClasses.join(" ")}' : '${desktopClasses.join(" ")}' }}`
                 );
             }
             if (child.tagName === "field") {

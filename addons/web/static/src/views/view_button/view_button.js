@@ -151,7 +151,10 @@ export class ViewButton extends Component {
         }
         if (this.props.tag === "button") {
             const hasOtherClasses = classNames.length;
-            classNames.unshift("btn");
+            const isMobileStatButton = this.props.className && this.props.className.includes("oe_stat_button_mobile");
+            if (!isMobileStatButton) {
+                classNames.unshift("btn");
+            }
             if ((!hasExplicitRank && this.props.defaultRank) || !hasOtherClasses) {
                 classNames.push(this.props.defaultRank || "btn-secondary");
             }

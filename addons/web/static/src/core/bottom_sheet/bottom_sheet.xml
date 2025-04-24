@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BottomSheet">
+        <div
+            class="o_bottom_sheet"
+            t-att-class="{
+                'o_bottom_sheet_ready': state.isPositionedReady,
+                'o_bottom_sheet_extended': state.isExtended,
+                'o_bottom_sheet_dismissing': state.isDismissing,
+                'o_bottom_sheet_snapping': state.isSnappingEnabled,
+                'o_bottom_sheet_nested': props.isNestedSheet,
+            }"
+            t-attf-style="--BottomSheet-progress: {{state.progress}}"
+            t-att-data-sheet-id="props.id"
+            t-ref="container"
+            >
+            <!-- Scroll container that handles drag gestures -->
+            <div
+                class="o_bottom_sheet_rail"
+                t-att-class="{
+                        o_bottom_sheet_rail_prevent_overscroll : props.preventDismissOnContentScroll
+                    }"
+                t-ref="scrollRail"
+                >
+                <!-- Backdrop overlay -->
+                <div class="o_bottom_sheet_backdrop" t-on-click="slideOut"/>
+
+                <!-- Dismiss area - used for scroll snap -->
+                <div class="o_bottom_sheet_dismiss"/>
+
+                <!-- Spacer area - used for scroll snap -->
+                <div class="o_bottom_sheet_spacer"/>
+
+                <!-- Sheet container -->
+                <div
+                    class="o_bottom_sheet_sheet offcanvas position-relative overflow-hidden"
+                    t-attf-class="{{ props.sheetClasses || '' }}"
+                    role="dialog"
+                    t-ref="sheet"
+                    >
+
+                    <!-- Handle bar -->
+                    <div
+                        tabindex="-1"
+                        t-ref="sheetHandle"
+                        role="button"
+                        class="o_bottom_sheet_handle text-center d-flex align-items-center justify-content-center opacity-50 pt-2 pb-1"
+                        t-on-click.stop="state.isExtended ? collapseSheet : expandSheet"
+                        >
+                        <div class="o_bottom_sheet_handle_bar pt-1 mx-auto rounded-pill d-inline-block px-5 opacity-25"/>
+                    </div>
+
+                    <t t-if="props.slots &amp;&amp; props.slots.header &amp;&amp; !props.slots.header_right">
+                        <t t-slot="header"/>
+                    </t>
+                    <t t-elif="props.title || props.showBackBtn || props.showCloseBtn || (props.slots &amp;&amp; props.slots.header_right)">
+                        <div
+                            class="o_bottom_sheet_header offcanvas-header"
+                            t-att-class="{
+                                o_no_back: !props.showBackBtn,
+                                o_no_title: !props.title,
+                            }"
+                            >
+                            <button
+                                t-if="props.showBackBtn"
+                                type="button"
+                                class="btn p-0 me-auto fs-5"
+                                t-on-click="back"
+                                aria-label="Back">
+                                <i class="oi oi-arrow-left" role="img"/>
+                            </button>
+                            <div t-if="props.title" class="offcanvas-title fs-5" t-esc="props.title"/>
+                            <t t-if="props.slots &amp;&amp; props.slots.header_right">
+                                 <t t-slot="header_right"/>
+                            </t>
+                            <button
+                                t-elif="props.showCloseBtn"
+                                type="button"
+                                class="btn-close"
+                                t-on-click="slideOut"
+                                aria-label="Close"/>
+                        </div>
+                    </t>
+
+                    <!-- Body content -->
+                    <div
+                        class="o_bottom_sheet_body offcanvas-body"
+                        t-attf-class="{{ props.withBodyPadding !== false ? '' : 'p-0' }}"
+                        t-ref="sheetBody"
+                        >
+
+                        <!-- Render dynamic component if provided -->
+                        <t t-if="props.component">
+                            <t t-component="props.component" t-props="props.componentProps || {}"/>
+                        </t>
+
+                        <!-- Render slot content if provided -->
+                        <t t-else="">
+                            <t t-slot="default" close="close" back="back"/>
+                        </t>
+
+                        <t t-if="props.slots &amp;&amp; props.slots.footer">
+                            <div class="o_bottom_sheet_footer">
+                                <t t-slot="footer" close="close" back="back"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
