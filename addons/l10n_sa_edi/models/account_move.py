@@ -292,10 +292,10 @@ class AccountMove(models.Model):
             return self.with_context(l10n_sa_file_format=False).env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
         return super()._get_report_base_filename()
 
-    def _get_invoice_report_filename(self, extension='pdf'):
+    def _get_invoice_report_filename(self, extension='pdf', report=None):
         if self._is_l10n_sa_eligibile_invoice():
             return self.with_context(l10n_sa_file_format=extension).env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
-        return super()._get_invoice_report_filename(extension)
+        return super()._get_invoice_report_filename(extension, report)
 
     def _l10n_sa_is_in_chain(self):
         """
