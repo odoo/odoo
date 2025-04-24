@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
+from odoo.fields import Domain
 from odoo.tools import email_normalize, html2plaintext, plaintext2html
 
 from markupsafe import Markup
@@ -42,6 +43,7 @@ class DiscussChannel(models.Model):
         "res.partner",
         string="Agents",
         compute="_compute_livechat_agent_partner_ids",
+        search="_search_livechat_agent_partner_ids",
     )
     livechat_bot_partner_ids = fields.Many2many(
         "res.partner",
@@ -52,6 +54,7 @@ class DiscussChannel(models.Model):
         "res.partner",
         string="Customers (Partners)",
         compute="_compute_livechat_customer_partner_ids",
+        search="_search_livechat_customer_partner_ids",
     )
     livechat_customer_guest_ids = fields.Many2many(
         "mail.guest",
@@ -130,6 +133,14 @@ class DiscussChannel(models.Model):
                 channel.livechat_agent_history_ids.partner_id
             )
 
+    def _search_livechat_agent_partner_ids(self, operator, value):
+        if operator != "any":
+            return NotImplemented
+        agent_history_query = self.env["im_livechat.channel.member.history"]._search(
+            Domain.AND([[("livechat_member_type", "=", "agent")], value]),
+        )
+        return [("id", "in", agent_history_query.subselect("channel_id"))]
+
     # @api.depends("livechat_bot_history_ids.partner_id")
     def _compute_livechat_bot_partner_ids(self):
         for channel in self:
@@ -143,6 +154,14 @@ class DiscussChannel(models.Model):
             channel.livechat_customer_partner_ids = (
                 channel.livechat_customer_history_ids.partner_id
             )
+
+    def _search_livechat_customer_partner_ids(self, operator, value):
+        if operator != "any":
+            return NotImplemented
+        customer_history_query = self.env["im_livechat.channel.member.history"]._search(
+            Domain.AND([[("livechat_member_type", "=", "visitor")], value]),
+        )
+        return [("id", "in", customer_history_query.subselect("channel_id"))]
 
     # @api.depends("livechat_customer_history_ids.guest_id")
     def _compute_livechat_customer_guest_ids(self):
