@@ -603,7 +603,7 @@ registry.category("web_tour.tours").add("RestaurantPresetTakeoutTour", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
-            ProductScreen.selectPreset("Takeout"),
+            ProductScreen.selectPreset("Eat in", "Takeout"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Deco Addict"),
             ProductScreen.clickPayButton(),
