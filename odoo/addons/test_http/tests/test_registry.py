@@ -1,7 +1,7 @@
 import logging
 from contextlib import closing
 from unittest.mock import patch
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urlsplit
 
 import requests
 
@@ -10,6 +10,7 @@ from odoo.modules.registry import Registry
 from odoo.sql_db import close_db, db_connect
 from odoo.tests import HOST, BaseCase, Like, get_db_name, tagged
 from odoo.tools import mute_logger, reset_cached_properties, SQL
+from odoo.tools.urls import urljoin
 
 
 """

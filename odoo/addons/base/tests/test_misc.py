@@ -7,7 +7,7 @@ import os.path
 import pytz
 
 from odoo.tests.common import BaseCase, TransactionCase
-from odoo.tools import config, misc
+from odoo.tools import config, misc, urls
 from odoo.tools.mail import validate_url
 from odoo.tools.misc import file_open, file_path, merge_sequences, remove_accents
 
@@ -473,6 +473,113 @@ class TestUrlValidate(BaseCase):
         self.assertEqual(validate_url('/index.html'), 'http:///index.html')
         self.assertEqual(validate_url('?debug=1'), 'http://?debug=1')
         self.assertEqual(validate_url('#model=project.task&id=3603607'), 'http://#model=project.task&id=3603607')
+
+
+class TestUrlJoin(BaseCase):
+    # simple path joins
+    def test_basic_relative_path(self):
+        self.assertEqual(urls.urljoin('http://example.com/', 'c'), 'http://example.com/c')
+        self.assertEqual(urls.urljoin('http://example.com/b/', 'c'), 'http://example.com/b/c')
+
+    def test_path_normalization(self):
+        self.assertEqual(urls.urljoin('http://example.com/b/', '/c'), 'http://example.com/b/c')  # leading / normalized
+        self.assertEqual(urls.urljoin('http://example.com/b///', '///c'), 'http://example.com/b/c')
+        self.assertEqual(urls.urljoin('http://example.com/b/', 'c/'), 'http://example.com/b/c/')  # trailing / must be kept
+
+    def test_base_has_no_path(self):
+        self.assertEqual(urls.urljoin('http://example.com', 'c.com'), 'http://example.com/c.com')
+        self.assertEqual(urls.urljoin('http://example.com', '/c'), 'http://example.com/c')
+
+    def test_extra_trailing_slash(self):
+        self.assertEqual(urls.urljoin('http://example.com/b', ''), 'http://example.com/b')
+        self.assertEqual(urls.urljoin('http://example.com/b', ' '), 'http://example.com/b')
+        self.assertEqual(urls.urljoin('http://example.com/b', '/'), 'http://example.com/b/')
+
+    # Scheme/Netloc
+    def test_leading_and_trailing_slashes(self):
+        self.assertEqual(urls.urljoin('http://example.com/b//c/d/e/////f/g/', '/h/i/j/'), 'http://example.com/b/c/d/e/f/g/h/i/j/')
+        self.assertEqual(urls.urljoin('http://example.com/b//c/d/e/////f/g', '/h/i/j/'), 'http://example.com/b/c/d/e/f/g/h/i/j/')
+        self.assertEqual(urls.urljoin('http://example.com/b//c/d/e/////f/g', 'h/i/j/'), 'http://example.com/b/c/d/e/f/g/h/i/j/')
+        self.assertEqual(urls.urljoin('http://example.com/b//c/d/e/////f/g//', '/h/i/j'), 'http://example.com/b/c/d/e/f/g/h/i/j')
+        self.assertEqual(urls.urljoin('http://example.com//', '/b/c'), 'http://example.com/b/c')
+        self.assertEqual(urls.urljoin('/', '\\/example.com'), '/example.com')
+        self.assertEqual(urls.urljoin('/', '\\\x07/example.com'), '/example.com')
+        self.assertEqual(urls.urljoin('/', '\r\n\t\x00\\\r\n\t/example.com'), '/example.com')
+
+    def test_absolute_url_raises(self):
+        to_fail = [
+            ('http://example.com/b#f1', 'http://example.com/c#f2'),
+            ('http://test.example.com', 'https://test2.example.com'),
+            ('https://test.example.com', 'http://test.example.com'),
+            ('https://example.com/p?example=test', 'https://example.com/q?example=example'),
+        ]
+        for base, extra in to_fail:
+            with self.subTest(base=base, extra=extra):
+                with self.assertRaises(ValueError):
+                    urls.urljoin(base, extra)
+
+    def test_dot_segments_not_allowed(self):
+        urls_with_dot = [
+            ('http://example.com/b/', 'c/./d'),
+            ('http://example.com/b/', 'c/../d'),
+            ('http://example.com/b/', 'c/d/%2E%2E/e'),
+            ('http://example.com/b/', 'c/%2E/d'),
+            ('http://example.com/b/', 'c%2F%2E./d'),
+            ('http://example.com/b/', 'c%2F%2E%2Fd'),
+            ('http://example.com/./b/', 'c/d'),
+            ('http://example.com/b/../', 'c/d'),
+            ('http://example.com/%2E/b/', 'c/d'),
+            ('http://example.com/b%2F%2E%2E/d', 'c/d'),
+        ]
+        for base, extra in urls_with_dot:
+            with self.subTest(base=base, extra=extra):
+                with self.assertRaises(ValueError):
+                    urls.urljoin(base, extra)
+
+    # Query Handling
+    def test_query_keeps_base_by_default(self):
+        self.assertEqual(urls.urljoin('http://example.com/b?q1=1', 'c?q2=2'), 'http://example.com/b/c?q2=2')
+        self.assertEqual(urls.urljoin('http://example.com/b', 'c?q2=2'), 'http://example.com/b/c?q2=2')
+        self.assertEqual(urls.urljoin('http://example.com/b?q1=1', 'c'), 'http://example.com/b/c')
+
+    def test_allow_query_override(self):
+        self.assertEqual(urls.urljoin('http://example.com/b', 'c?q2=2'), 'http://example.com/b/c?q2=2')
+        self.assertEqual(urls.urljoin('http://example.com/b?q1=1', 'c'), 'http://example.com/b/c')
+        self.assertEqual(urls.urljoin('http://example.com/b?q1=1', 'c?q2=2'), 'http://example.com/b/c?q2=2')
+        self.assertEqual(urls.urljoin('http://example.com/b#c?q1=2&q2=3', 'c?q1=1&q2=2'), 'http://example.com/b/c?q1=1&q2=2')
+
+    # Fragment Handling
+    def test_only_extra_fragments(self):
+        self.assertEqual(urls.urljoin('http://example.com/b#f1', 'c#f2'), 'http://example.com/b/c#f2')
+        self.assertEqual(urls.urljoin('http://example.com/b', 'c#f2'), 'http://example.com/b/c#f2')
+        self.assertEqual(urls.urljoin('http://example.com/b#f1', 'c'), 'http://example.com/b/c')
+
+    # Input Validation
+    def test_not_string_fails(self):
+        with self.assertRaises(AssertionError):
+            urls.urljoin(None, 'c')
+        with self.assertRaises(AssertionError):
+            urls.urljoin('http://a', 123)
+
+    # Edge Cases
+    def test_whitespaces(self):
+        self.assertEqual(urls.urljoin('http://example.com/b', ' \ta '), 'http://example.com/b/a ')
+        self.assertEqual(urls.urljoin('http://example.com/b', '\t \x0a\x0b\n\r\t a\t \t'), 'http://example.com/b/a ')
+        self.assertEqual(urls.urljoin('http://example.com/b', ' a \n\t'), 'http://example.com/b/a ')
+
+    def test_empty_base_string(self):
+        self.assertEqual(urls.urljoin('', 'example.com'), '/example.com')
+        self.assertEqual(urls.urljoin('', '/c?q=1#f'), '/c?q=1#f')
+
+    def test_percent_encoding(self):
+        self.assertEqual(
+            urls.urljoin('http://host/space%20here/', 'x%2Fy'),
+            'http://host/space%20here/x%2Fy',
+        )
+        self.assertEqual(
+            urls.urljoin('http://host/a/', '%2Fhidden'),
+            'http://host/a/%2Fhidden',
+        )
 
 
 class TestMiscToken(TransactionCase):

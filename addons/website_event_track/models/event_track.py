@@ -707,7 +707,7 @@ class EventTrack(models.Model):
     def _get_track_calendar_description(self):
         self.ensure_one()
         return Markup("<a href='%(event_track_url)s'>%(name)s</a>\n%(short_description)s\n\n%(reminder_times_warning)s") % {
-            'event_track_url': werkzeug.urls.url_join(self.get_base_url(), self.website_url),
+            'event_track_url': tools.urls.urljoin(self.get_base_url(), self.website_url),
             'name': self.name,
             'short_description': shorten(html_to_inner_content(self.description), 1900),
             'reminder_times_warning': self._get_track_calendar_reminder_times_warning(),

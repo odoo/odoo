@@ -3,7 +3,6 @@
 
 import base64
 import urllib.parse
-import werkzeug
 
 from datetime import timedelta
 from markupsafe import Markup, escape
@@ -471,7 +470,7 @@ class MassMailController(http.Controller):
         else:  # when manually trying a /view on a mailing, not through email link
             html_markupsafe = html_markupsafe.replace(
                 '/unsubscribe_from_list',
-                werkzeug.urls.url_join(
+                tools.urls.urljoin(
                     mailing_sudo.get_base_url(),
                     f'/mailing/{mailing_sudo.id}/unsubscribe',
                 )

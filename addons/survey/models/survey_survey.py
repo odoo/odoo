@@ -10,6 +10,7 @@ from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
+from odoo.tools.urls import urljoin as url_join
 
 
 class SurveySurvey(models.Model):
@@ -333,11 +334,11 @@ class SurveySurvey(models.Model):
     def _compute_session_link(self):
         for survey in self:
             if survey.session_code:
-                survey.session_link = werkzeug.urls.url_join(
+                survey.session_link = url_join(
                     survey.get_base_url(),
                     '/s/%s' % survey.session_code)
             else:
-                survey.session_link = werkzeug.urls.url_join(
+                survey.session_link = url_join(
                     survey.get_base_url(),
                     survey.get_start_url())
 

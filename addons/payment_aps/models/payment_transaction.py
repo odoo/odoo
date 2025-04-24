@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import urls
-
 from odoo import _, api, models
+from odoo.tools import urls
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -62,7 +61,7 @@ class PaymentTransaction(models.Model):
             'currency': self.currency_id.name,
             'language': self.partner_lang[:2],
             'customer_email': self.partner_id.email_normalized,
-            'return_url': urls.url_join(base_url, APSController._return_url),
+            'return_url': urls.urljoin(base_url, APSController._return_url),
         }
         if payment_option:  # Not included if the payment method is 'card'.
             rendering_values['payment_option'] = payment_option

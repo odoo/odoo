@@ -2,10 +2,9 @@
 
 from unittest.mock import Mock, patch
 
-from werkzeug import urls
-
 from odoo.http import root
 from odoo.tests import HttpCase, tagged
+from odoo.tools import urls
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers.delivery import Delivery as WebsiteSaleDeliveryController
@@ -130,7 +129,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         root.session_store.save(session)
 
         self.make_jsonrpc_request(
-            urls.url_join(
+            urls.urljoin(
                 self.base_url(), WebsiteSale._express_checkout_route
             ), params={
                 'billing_address': dict(self.express_checkout_billing_values)
@@ -155,7 +154,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         root.session_store.save(session)
 
         self.make_jsonrpc_request(
-            urls.url_join(
+            urls.urljoin(
                 self.base_url(), WebsiteSale._express_checkout_route
             ), params={
                 'billing_address': {
@@ -203,7 +202,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         root.session_store.save(session)
 
         self.make_jsonrpc_request(
-            urls.url_join(
+            urls.urljoin(
                 self.base_url(), WebsiteSale._express_checkout_route
             ), params={
                 'billing_address': dict(self.express_checkout_billing_values)
@@ -224,7 +223,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         root.session_store.save(session)
 
         self.make_jsonrpc_request(
-            urls.url_join(
+            urls.urljoin(
                 self.base_url(), WebsiteSale._express_checkout_route
             ), params={
                 'billing_address': dict(self.express_checkout_billing_values)
@@ -251,7 +250,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             return_value=self.rate_shipment_result
         ):
             self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_delivery_route,
                 ),
@@ -282,7 +281,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             return_value=self.rate_shipment_result
         ):
             self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_delivery_route,
                 ),
@@ -294,7 +293,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             )
             new_partner = self.sale_order.partner_shipping_id
             self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_delivery_route,
                 ),
@@ -323,7 +322,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             return_value=self.rate_shipment_result
         ):
             self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_delivery_route,
                 ),
@@ -349,7 +348,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             return_value=self.rate_shipment_result
         ):
             self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_delivery_route,
                 ),
@@ -382,7 +381,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             return_value=self.rate_shipment_result
         ):
             self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_delivery_route,
                 ),
@@ -394,7 +393,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             )
             new_partner = self.sale_order.partner_shipping_id
             self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_delivery_route,
                 ),
@@ -441,7 +440,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             return_value=self.rate_shipment_result
         ):
             shipping_options = self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_delivery_route,
                 ),
@@ -454,7 +453,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
 
             self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_route,
                 ),
@@ -482,7 +481,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             # Won't create a new partner because the partial information are the same as an
             # exisiting partner linked to the SO
             shipping_options = self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_delivery_route,
                 ),
@@ -497,7 +496,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             # Will create a new partner because the complete shipping information differs from
             # the partner actually selected
             self.make_jsonrpc_request(
-                urls.url_join(
+                urls.urljoin(
                     self.base_url(),
                     WebsiteSaleDeliveryController._express_checkout_route
                 ),

@@ -3,10 +3,9 @@
 import json
 from datetime import timedelta
 
-from werkzeug import urls
-
 from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import urls
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paypal import const
@@ -79,7 +78,7 @@ class PaymentProvider(models.Model):
                 "PayPal: " + _("You must have an HTTPS connection to generate a webhook.")
             )
         data = {
-            'url': urls.url_join(base_url, PaypalController._webhook_url),
+            'url': urls.urljoin(base_url, PaypalController._webhook_url),
             'event_types': [{'name': event_type} for event_type in const.HANDLED_WEBHOOK_EVENTS]
         }
         webhook_data = self._send_api_request('POST', '/v1/notifications/webhooks', json=data)

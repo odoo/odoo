@@ -6,7 +6,6 @@ from markupsafe import Markup
 from requests import Session, PreparedRequest, Response
 
 import datetime
-import werkzeug
 
 from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -140,7 +139,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         ]:
             with self.subTest(test_user_id=test_user_id, test_token=test_token):
                 res = self.url_open(
-                    werkzeug.urls.url_join(
+                    tools.urls.urljoin(
                         test_mailing.get_base_url(),
                         f'mailing/report/unsubscribe?user_id={test_user_id}&token={test_token}',
                     )
@@ -153,7 +152,7 @@ class TestMailingControllers(TestMailingControllersCommon):
             'group_ids': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         res = self.url_open(
-            werkzeug.urls.url_join(
+            tools.urls.urljoin(
                 test_mailing.get_base_url(),
                 f'mailing/report/unsubscribe?user_id={self.user_marketing.id}&token={hash_token}',
             )
@@ -166,7 +165,7 @@ class TestMailingControllers(TestMailingControllersCommon):
             'group_ids': [(4, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         res = self.url_open(
-            werkzeug.urls.url_join(
+            tools.urls.urljoin(
                 test_mailing.get_base_url(),
                 f'mailing/report/unsubscribe?user_id={self.user_marketing.id}&token={hash_token}',
             )
@@ -277,7 +276,7 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         # no group -> no direct access to /unsubscribe
         res = self.url_open(
-            werkzeug.urls.url_join(
+            tools.urls.urljoin(
                 test_mailing.get_base_url(),
                 f'mailing/{test_mailing.id}/unsubscribe',
             )
@@ -600,7 +599,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         ]:
             with self.subTest(test_mid=test_mid, test_email=test_email, test_doc_id=test_doc_id, test_token=test_token):
                 res = self.url_open(
-                    werkzeug.urls.url_join(
+                    tools.urls.urljoin(
                         test_mailing.get_base_url(),
                         f'mailing/{test_mid}/view?email={test_email}&document_id={test_doc_id}&hash_token={test_token}',
                     )
@@ -609,7 +608,7 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         # TEST: valid call using credentials
         res = self.url_open(
-            werkzeug.urls.url_join(
+            tools.urls.urljoin(
                 test_mailing.get_base_url(),
                 f'mailing/{test_mailing.id}/view?email={email_normalized}&document_id={doc_id}&hash_token={hash_token}',
             )
@@ -621,7 +620,7 @@ class TestMailingControllers(TestMailingControllersCommon):
             'group_ids': [(4, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         res = self.url_open(
-            werkzeug.urls.url_join(
+            tools.urls.urljoin(
                 test_mailing.get_base_url(),
                 f'mailing/{test_mailing.id}/view',
             )
@@ -653,7 +652,7 @@ class TestMailingTracking(TestMailingControllersCommon):
         self.assertFalse(mailing_trace.open_datetime)
         self.assertEqual(mailing_trace.trace_status, 'sent')
 
-        short_link_url = werkzeug.urls.url_join(
+        short_link_url = tools.urls.urljoin(
             mail.get_base_url(),
             f'r/{link_tracker_code.code}/m/{mailing_trace.id}'
         )
@@ -691,7 +690,7 @@ class TestMailingTracking(TestMailingControllersCommon):
         self.assertEqual(mailing_trace.open_datetime, self._reference_now)
         self.assertEqual(mailing_trace.trace_status, 'open')
 
-        track_url = werkzeug.urls.url_join(
+        track_url = tools.urls.urljoin(
             mailing.get_base_url(),
             f'mail/track/{mail_id_int}/fake_token/blank.gif'
         )

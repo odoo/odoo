@@ -2,11 +2,12 @@
 
 from urllib.parse import quote as url_quote
 
-from werkzeug import urls
+from werkzeug.urls import url_decode, url_parse
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
+from odoo.tools.urls import urljoin
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mercado_pago import const
@@ -44,8 +45,8 @@ class PaymentTransaction(models.Model):
         ]
 
         # Extract the payment link URL and params and embed them in the redirect form.
-        parsed_url = urls.url_parse(api_url)
-        url_params = urls.url_decode(parsed_url.query)
+        parsed_url = url_parse(api_url)
+        url_params = url_decode(parsed_url.query)
         rendering_values = {
             'api_url': api_url,
             'url_params': url_params,  # Encore the params as inputs to preserve them.
@@ -59,9 +60,9 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         base_url = self.provider_id.get_base_url()
-        return_url = urls.url_join(base_url, MercadoPagoController._return_url)
+        return_url = urljoin(base_url, MercadoPagoController._return_url)
         sanitized_reference = url_quote(self.reference)
-        webhook_url = urls.url_join(
+        webhook_url = urljoin(
             base_url, f'{MercadoPagoController._webhook_url}/{sanitized_reference}'
         )  # Append the reference to identify the transaction from the webhook payment data.
 

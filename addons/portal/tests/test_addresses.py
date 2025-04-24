@@ -1,11 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import urls
-
 from odoo.http import Request
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import JsonRpcException
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, urls
 
 from odoo.addons.base.tests.common import BaseCommon
 
@@ -30,8 +28,8 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             'phone': '+323333333333333',
         }
         base_url = cls.base_url()
-        cls.submit_url = urls.url_join(base_url, '/my/address/submit')
-        cls.archive_url = urls.url_join(base_url, '/my/address/archive')
+        cls.submit_url = urls.urljoin(base_url, '/my/address/submit')
+        cls.archive_url = urls.urljoin(base_url, '/my/address/archive')
 
         # Company tree-like hierarchy
         #       Company

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import uuid
+
 from odoo import fields, models, api
 from odoo.fields import Domain
-
-import uuid
-from werkzeug.urls import url_join
+from odoo.tools.urls import urljoin as url_join
 
 
 class ResCompany(models.Model):

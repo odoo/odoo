@@ -3,9 +3,9 @@
 from contextlib import contextmanager
 
 from lxml import etree, objectify
-from werkzeug import urls
 
 from odoo.tests import HttpCase, JsonRpcException
+from odoo.tools import urls
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
@@ -21,7 +21,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
     ###########
 
     def _build_url(self, route):
-        return urls.url_join(self.base_url(), route)
+        return urls.urljoin(self.base_url(), route)
 
     def _make_http_get_request(self, url, params=None):
         """ Make an HTTP GET request to the provided URL.

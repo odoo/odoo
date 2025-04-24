@@ -2,6 +2,7 @@
 # ruff: noqa: F401
 
 from . import constants
+from . import urls
 from .parse_version import parse_version
 from .cache import ormcache, ormcache_context
 from .config import config

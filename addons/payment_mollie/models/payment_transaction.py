@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import urls
-
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
+from odoo.tools import urls
 
 from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment.logging import get_payment_logger
@@ -56,8 +55,8 @@ class PaymentTransaction(models.Model):
         """
         user_lang = self.env.context.get('lang')
         base_url = self.provider_id.get_base_url()
-        redirect_url = urls.url_join(base_url, MollieController._return_url)
-        webhook_url = urls.url_join(base_url, MollieController._webhook_url)
+        redirect_url = urls.urljoin(base_url, MollieController._return_url)
+        webhook_url = urls.urljoin(base_url, MollieController._webhook_url)
         decimal_places = CURRENCY_MINOR_UNITS.get(
             self.currency_id.name, self.currency_id.decimal_places
         )

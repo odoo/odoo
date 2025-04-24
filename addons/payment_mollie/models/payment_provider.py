@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import urls
-
 from odoo import _, fields, models, service
+from odoo.tools import urls
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mollie import const
@@ -50,7 +49,7 @@ class PaymentProvider(models.Model):
         """Override of `payment` to build the request URL."""
         if self.code != 'mollie':
             return super()._build_request_url(endpoint, **kwargs)
-        return urls.url_join('https://api.mollie.com/v2/', endpoint.strip('/'))
+        return urls.urljoin('https://api.mollie.com/v2/', endpoint.strip('/'))
 
     def _build_request_headers(self, *args, **kwargs):
         """Override of `payment` to build the request headers."""

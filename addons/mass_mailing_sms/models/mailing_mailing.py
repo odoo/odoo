@@ -3,12 +3,12 @@
 
 import logging
 
-from urllib.parse import urljoin
-
 from odoo import api, fields, models, _
-from odoo.addons.link_tracker.models.link_tracker import LINK_TRACKER_MIN_CODE_LENGTH
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.tools.urls import urljoin
+
+from odoo.addons.link_tracker.models.link_tracker import LINK_TRACKER_MIN_CODE_LENGTH
 
 _logger = logging.getLogger(__name__)
 
