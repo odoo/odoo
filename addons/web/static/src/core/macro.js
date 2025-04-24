@@ -4,7 +4,6 @@ import { validate } from "@odoo/owl";
 
 const macroSchema = {
     name: { type: String, optional: true },
-    checkDelay: { type: Number, optional: true }, //Delay before checking if element is in DOM.
     timeout: { type: Number, optional: true },
     steps: {
         type: Array,
