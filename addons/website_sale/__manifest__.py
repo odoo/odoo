@@ -99,7 +99,6 @@
             'website_sale/static/src/scss/product_configurator.scss',
 
             'website_sale/static/src/js/cart_service.js',
-            'website_sale/static/src/js/payment_button.js',
             'website_sale/static/src/js/payment_form.js',
             'website_sale/static/src/js/sale_variant_mixin.js',
             'website_sale/static/src/js/website_sale.js',

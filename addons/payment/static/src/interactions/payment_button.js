@@ -1,19 +1,21 @@
-import { Component } from "@odoo/owl";
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { registry } from '@web/core/registry';
+import { Interaction } from '@web/public/interaction';
 
-publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
-    selector: '[name="o_payment_submit_button"]',
+export class PaymentButton extends Interaction {
+    static selector = '[name="o_payment_submit_button"]';
 
-    async start() {
-        await this._super(...arguments);
+    setup() {
         this.paymentButton = this.el;
         this.iconClass = this.paymentButton.dataset.iconClass;
         this._enable();
-        Component.env.bus.addEventListener('enablePaymentButton', this._enable.bind(this));
-        Component.env.bus.addEventListener('disablePaymentButton',this._disable.bind(this));
-        Component.env.bus.addEventListener('hidePaymentButton', this._hide.bind(this));
-        Component.env.bus.addEventListener('showPaymentButton', this._show.bind(this));
-    },
+    }
+
+    start() {
+        this.env.bus.addEventListener('enablePaymentButton', this._enable.bind(this));
+        this.env.bus.addEventListener('disablePaymentButton',this._disable.bind(this));
+        this.env.bus.addEventListener('hidePaymentButton', this._hide.bind(this));
+        this.env.bus.addEventListener('showPaymentButton', this._show.bind(this));
+    }
 
     /**
      * Check if the payment button can be enabled and do it if so.
@@ -25,7 +27,7 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
         if (this._canSubmit()) {
             this._setEnabled();
         }
-    },
+    }
 
     /**
      * Check whether the payment form can be submitted, i.e. whether exactly one payment option is
@@ -43,7 +45,7 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
             return true; // Ignore the check.
         }
         return document.querySelectorAll('input[name="o_payment_radio"]:checked').length === 1;
-    },
+    }
 
     /**
      * Enable the payment button.
@@ -53,7 +55,7 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
      */
     _setEnabled() {
         this.paymentButton.disabled = false;
-    },
+    }
 
     /**
      * Disable the payment button.
@@ -63,7 +65,7 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
      */
     _disable() {
         this.paymentButton.disabled = true;
-    },
+    }
 
     /**
      * Hide the payment button.
@@ -73,7 +75,7 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
      */
     _hide() {
         this.paymentButton.classList.add('d-none');
-    },
+    }
 
     /**
      * Show the payment button.
@@ -83,7 +85,7 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
      */
     _show() {
         this.paymentButton.classList.remove('d-none');
-    },
+    }
+}
 
-});
-export default publicWidget.registry.PaymentButton;
+registry.category('public.interactions').add('payment.payment_button', PaymentButton);
