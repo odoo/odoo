@@ -3,10 +3,11 @@ import { parseDate, serializeDate } from "@web/core/l10n/dates";
 import { parseTime } from "@web/core/l10n/time";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
+import { ASTPattern } from "@web/core/tree_editor/ast_pattern";
 import { Hole, setHoleValues, upToHole } from "@web/core/tree_editor/hole";
 import { Just, Nothing } from "@web/core/tree_editor/maybe_monad";
 import { _Pattern, Pattern } from "@web/core/tree_editor/pattern";
-import { deepCopy, deepEqual, omit, pick } from "@web/core/utils/objects";
+import { omit, pick } from "@web/core/utils/objects";
 
 const { DateTime } = luxon;
 
@@ -87,70 +88,6 @@ const EXCHANGE = {
 };
 
 const COMPARATORS = ["<", "<=", ">", ">=", "in", "not in", "==", "is", "!=", "is not"];
-
-export const DATETIME_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
-export const DATETIME_END_OF_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
-export const DATE_TODAY_STRING_EXPRESSION = `context_today().strftime("%Y-%m-%d")`;
-const DELTA_DATE_AST = parseExpr(
-    `(context_today() + relativedelta(period=amount)).strftime('%Y-%m-%d')`
-);
-const DELTA_DATETIME_AST = parseExpr(
-    `datetime.datetime.combine(context_today() + relativedelta(period=amount), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-);
-
-function replaceKwargs(ast, fieldType, kwargs = {}) {
-    const astCopy = deepCopy(ast);
-    if (fieldType === "date") {
-        astCopy.fn.obj.right.kwargs = kwargs;
-    } else {
-        astCopy.fn.obj.fn.obj.args[0].right.kwargs = kwargs;
-    }
-    return astCopy;
-}
-
-function getDelta(ast, fieldType) {
-    const kwargs =
-        (fieldType === "date"
-            ? ast.fn?.obj?.right?.kwargs
-            : ast.fn?.obj?.fn?.obj?.args?.[0]?.right?.kwargs) || {};
-    if (Object.keys(kwargs).length !== 1) {
-        return null;
-    }
-    if (
-        !deepEqual(
-            replaceKwargs(ast, fieldType),
-            replaceKwargs(fieldType === "date" ? DELTA_DATE_AST : DELTA_DATETIME_AST, fieldType)
-        )
-    ) {
-        return null;
-    }
-    const [option, amountAST] = Object.entries(kwargs)[0];
-    return [toValue(amountAST), option];
-}
-
-function getProcessedDelta(val, fieldType) {
-    return getDelta(toAST(val), fieldType);
-}
-
-function getDeltaExpression(value, fieldType) {
-    const ast = replaceKwargs(
-        fieldType === "date" ? DELTA_DATE_AST : DELTA_DATETIME_AST,
-        fieldType,
-        { [value[1]]: toAST(value[0]) }
-    );
-    return expression(formatAST(ast));
-}
-
-export function isTodayExpr(val, type) {
-    return (
-        val._expr ===
-        (type === "date" ? DATE_TODAY_STRING_EXPRESSION : DATETIME_TODAY_STRING_EXPRESSION)
-    );
-}
-
-export function isEndOfTodayExpr(val) {
-    return val._expr === DATETIME_END_OF_TODAY_STRING_EXPRESSION;
-}
 
 export class Couple {
     constructor(x, y) {
@@ -1330,6 +1267,64 @@ function _removeDatetimeOption(c) {
 // set - not_set - starts_with - ends_with - next - not_next - last - not_last
 // today - not_today
 /////////////////////////////////////////////////////////////////////////////////
+
+export const DATETIME_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
+export const DATETIME_END_OF_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
+export const DATE_TODAY_STRING_EXPRESSION = `context_today().strftime("%Y-%m-%d")`;
+
+export function isTodayExpr(val, type) {
+    return type === "date"
+        ? val._expr === DATE_TODAY_STRING_EXPRESSION
+        : val._expr === DATETIME_TODAY_STRING_EXPRESSION;
+}
+
+export function isEndOfTodayExpr(val) {
+    return val._expr === DATETIME_END_OF_TODAY_STRING_EXPRESSION;
+}
+
+const DELTA_DATE_PATTERN = ASTPattern.of(
+    `(context_today() + relativedelta(period=amount)).strftime('%Y-%m-%d')`,
+    {
+        kwargs: ["fn.obj.right.kwargs"], // target in ast the kwargs with period=amount
+    }
+);
+
+const DELTA_DATETIME_PATTERN = ASTPattern.of(
+    `datetime.datetime.combine(context_today() + relativedelta(period=amount), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+    {
+        kwargs: ["fn.obj.fn.obj.args[0].right.kwargs"], // target in ast the kwargs with period=amount
+    }
+);
+
+function getProcessedDelta(expr, type) {
+    if (!(expr instanceof Expression)) {
+        return Nothing.of();
+    }
+    const ast = expr._ast;
+    const mv =
+        type === "date" ? DELTA_DATE_PATTERN.detect(ast) : DELTA_DATETIME_PATTERN.detect(ast);
+    if (mv instanceof Nothing) {
+        return null;
+    }
+    const { kwargs } = mv.value;
+    if (Object.keys(kwargs).length !== 1) {
+        return null;
+    }
+    const [option, amountAST] = Object.entries(kwargs)[0];
+    return [toValue(amountAST), option];
+}
+
+function getDeltaExpression(val, type) {
+    const [amount, option] = val;
+    const values = { kwargs: { [option]: toAST(amount) } };
+    const mv =
+        type === "date" ? DELTA_DATE_PATTERN.make(values) : DELTA_DATETIME_PATTERN.make(values);
+    if (mv instanceof Nothing) {
+        return null;
+    }
+    const ast = mv.value;
+    return expression(ast);
+}
 
 /**
  * @param {Condition} c
