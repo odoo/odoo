@@ -41,3 +41,12 @@ class InStoreDelivery(Delivery):
             in_store_dm = request.website.sudo().in_store_dm_id
             order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
         order_sudo._set_pickup_location(pickup_location_data)
+
+    def _get_additional_delivery_context(self):
+        """ Override of `website_sale` to include the default pickup location data for in-store
+        delivery methods with a single warehouse. """
+        res = super()._get_additional_delivery_context()
+        order_sudo = request.cart
+        if request.website.sudo().in_store_dm_id:
+            res.update(order_sudo._prepare_in_store_default_location_data())
+        return res

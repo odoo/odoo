@@ -104,6 +104,27 @@ class SaleOrder(models.Model):
 
     # === TOOLING ===#
 
+    def _prepare_in_store_default_location_data(self):
+        """ Prepare the default pickup location values for each in-store delivery method available
+        for the order. """
+        default_pickup_locations = {}
+        for dm in self._get_delivery_methods():
+            if (
+                dm.delivery_type == 'in_store'
+                and dm.id != self.carrier_id.id
+                and len(dm.warehouse_ids) == 1
+            ):
+                pickup_location_data = dm.warehouse_ids[0]._prepare_pickup_location_data()
+                if pickup_location_data:
+                    default_pickup_locations[dm.id] = {
+                        'pickup_location_data': pickup_location_data,
+                        'unavailable_order_lines': self._get_unavailable_order_lines(
+                            pickup_location_data['id']
+                        ),
+                    }
+
+        return {'default_pickup_locations': default_pickup_locations}
+
     def _is_in_stock(self, wh_id):
         """ Check whether all storable products of the cart are in stock in the given warehouse.
 
