@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby, starmap
@@ -9,6 +10,9 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, plaintext2html, split_every
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.osv.expression import AND
+
+
+_logger = logging.getLogger(__name__)
 
 
 class PosSession(models.Model):
@@ -1920,17 +1924,20 @@ class PosSession(models.Model):
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 
-
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
     @api.model
-    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
-        super()._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
-        self.env['pos.session']._alert_old_session()
+    def _run_scheduler_alert_old_sessions(self, use_new_cursor=False):
+        self._alert_old_session()
         if use_new_cursor:
             self.env['ir.cron']._commit_progress(1)
 
     @api.model
-    def _get_scheduler_tasks_to_do(self):
-        return super()._get_scheduler_tasks_to_do() + 1
+    def run_scheduler_alert_old_sessions(self, use_new_cursor=False):
+        """
+        This scheduler checks for POS sessions older than 7 days that are still open
+        and schedules a reminder to close them.
+        """
+        try:
+            self._run_scheduler_alert_old_sessions(use_new_cursor=use_new_cursor)
+        except Exception:
+            _logger.exception("Error during POS old session alert scheduler")
+            raise
