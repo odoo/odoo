@@ -15,6 +15,7 @@ import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -720,6 +721,12 @@ export class Rtc extends Record {
         if (!isActiveCall) {
             await this.joinCall(channel, { audio, camera });
         }
+    }
+
+    async toggleCameraFacingMode() {
+        this.store.settings.cameraFacingMode =
+            this.store.settings.cameraFacingMode === "user" ? "environment" : "user";
+        await this.toggleVideo("camera", { force: true, refreshStream: true });
     }
 
     async toggleDeafen() {
@@ -1863,6 +1870,14 @@ export class Rtc extends Record {
             outputTrack.addEventListener("ended", async () => {
                 await this.toggleVideo(type, { force: false });
             });
+            if (type === "camera" && isMobileOS()) {
+                const settings = outputTrack.getSettings();
+                if (settings?.facingMode) {
+                    this.store.settings.cameraFacingMode = settings.facingMode;
+                } else if (!this.store.settings.cameraFacingMode) {
+                    this.store.settings.cameraFacingMode = "user";
+                }
+            }
         }
         if (this.store.settings.useBlur && type === "camera") {
             try {
