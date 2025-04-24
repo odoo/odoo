@@ -719,6 +719,9 @@ class AccountJournal(models.Model):
             ('move_type', 'in', self.env['account.move'].get_invoice_types(include_receipts=True)),
         ])
 
+    def _get_to_pay_select(self):
+        return SQL("TRUE AS to_pay")
+
     def _get_open_sale_purchase_query(self, journal_type):
         assert journal_type in ('sale', 'purchase')
         query = self.env['account.move']._where_calc([
@@ -736,7 +739,7 @@ class AccountJournal(models.Model):
             SQL("SUM(amount_residual_signed) AS amount_total_company"),
             SQL("SUM((CASE WHEN move_type = 'in_invoice' THEN -1 ELSE 1 END) * amount_residual) AS amount_total"),
             SQL("COUNT(*)"),
-            SQL("TRUE AS to_pay")
+            self._get_to_pay_select(),
         ]
 
         return query, selects
