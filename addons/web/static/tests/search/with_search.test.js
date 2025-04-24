@@ -212,9 +212,9 @@ test("load view description with given id if it is not provided and loadSearchVi
     await toggleSearchBarMenu();
     expect(getMenuItemTexts()).toEqual([
         "True domain",
-        "Add Custom Filter",
+        "Custom Filter...",
         "Name",
-        "Add Custom Group\nCreated on\nDisplay name\nLast Modified on\nName",
+        "Custom Group\nCreated on\nDisplay name\nLast Modified on\nName",
         "Save current search",
     ]);
 });

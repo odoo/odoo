@@ -17,7 +17,7 @@ const checkKanbanGroupBy = [
         run: "click",
     },
     {
-        content: "Select 'Active' in the select of Add Custom Group",
+        content: "Select 'Active' in the select of Custom Group",
         trigger: "select.o_add_custom_group_menu",
         run: "select active",
     },
