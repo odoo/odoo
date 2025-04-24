@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class StockPackageType(models.Model):
@@ -48,6 +48,18 @@ class StockPackageType(models.Model):
         'CHECK(max_weight>=0.0)',
         'Max Weight must be positive',
     )
+
+    @api.depends('name', 'packaging_length', 'width', 'height')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        packages_to_process_ids = []
+        for package in self:
+            if package.env.context.get('formatted_display_name') and package.packaging_length and package.width and package.height:
+                package.display_name = f"{package.name}\t--{package.packaging_length} x {package.width} x {package.height}--"
+            else:
+                packages_to_process_ids.append(package.id)
+        if packages_to_process_ids:
+            super(StockPackageType, self.env['stock.package.type'].browse(packages_to_process_ids))._compute_display_name()
 
     def _compute_length_uom_name(self):
         for package_type in self:
