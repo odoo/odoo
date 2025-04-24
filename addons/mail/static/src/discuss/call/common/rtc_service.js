@@ -366,6 +366,18 @@ export class Rtc extends Record {
             cameraTrack: undefined,
             screenTrack: undefined,
             /**
+             * Specifies if the front-facing camera should be used.
+             * - On desktops, both `isFrontFacingMode` and `wasFrontFacingMode` are always true (uses front camera).
+             * - On mobiles, if `true`, uses the front camera ("user"); otherwise, uses the rear camera ("environment").
+             *
+             * Used with `wasFrontFacingMode` to decide if the camera stream needs to switch.
+             */
+            isFrontFacingMode: true,
+            /**
+             * `wasFrontFacingMode` stores the previous value of `isFrontFacingMode`.
+             */
+            wasFrontFacingMode: undefined,
+            /**
              * callback to properly end the audio monitoring.
              * If set it indicates that we are currently monitoring the local
              * micAudioTrack for the voice activation feature.
@@ -704,6 +716,11 @@ export class Rtc extends Record {
         if (!isActiveCall) {
             await this.joinCall(channel, { audio, camera });
         }
+    }
+
+    async toggleCameraFacingMode() {
+        this.state.isFrontFacingMode = !this.state.isFrontFacingMode;
+        await this.toggleVideo("camera", true);
     }
 
     async toggleDeafen() {
@@ -1766,12 +1783,22 @@ export class Rtc extends Record {
         let sourceStream;
         try {
             if (type === "camera") {
-                if (this.state.sourceCameraStream) {
+                if (
+                    this.state.sourceCameraStream &&
+                    this.state.wasFrontFacingMode === this.state.isFrontFacingMode
+                ) {
                     sourceStream = this.state.sourceCameraStream;
                 } else {
+                    if (this.state.sourceCameraStream) {
+                        closeStream(this.state.sourceCameraStream);
+                    }
                     sourceStream = await browser.navigator.mediaDevices.getUserMedia({
-                        video: CAMERA_CONFIG,
+                        video: {
+                            ...CAMERA_CONFIG,
+                            facingMode: this.state.isFrontFacingMode ? "user" : "environment",
+                        },
                     });
+                    this.state.wasFrontFacingMode = this.state.isFrontFacingMode;
                 }
             }
             if (type === "screen") {
