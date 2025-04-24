@@ -54,7 +54,7 @@ export class StockForecasted extends Component {
         });
         this.docs = {
             ...reportValues.docs,
-            ...reportValues.precision,
+            precision: reportValues.precision,
             lead_horizon_date: this.context.lead_horizon_date,
             qty_to_order: this.context.qty_to_order,
         };

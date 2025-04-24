@@ -14,9 +14,7 @@ export class ForecastedDetails extends Component {
         this._prepareData();
         this._mergeLines();
 
-        this._formatFloat = (num) => {
-            return formatFloat(num, { digits: this.props.docs.precision });
-        };
+        this._formatFloat = (num) => formatFloat(num, { digits: [0, this.props.docs.precision] });
     }
 
     async _reserve(move_id){
