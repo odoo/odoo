@@ -278,7 +278,7 @@ class ResPartner(models.Model):
         tin1 = self._check_tin1_ro_natural_persons.match(vat)
         if tin1:
             return True
-        tin2 = self._check_tin1_ro_natural_persons.match(vat)
+        tin2 = self._check_tin2_ro_natural_persons.match(vat)
         if tin2:
             return True
         # Check the vat number
