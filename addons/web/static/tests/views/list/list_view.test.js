@@ -6371,15 +6371,24 @@ test(`can sort records when clicking on header`, async () => {
         arch: `<list><field name="foo"/><field name="bar"/></list>`,
     });
     expect.verifySteps(["web_search_read"]);
+    expect(`.o_column_sortable.table-active`).toHaveCount(0);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
 
     await contains(`thead th:contains(Foo)`).click();
+    expect(`.o_column_sortable.table-active`).toHaveCount(1);
     expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["blip", "blip", "gnap", "yop"]);
 
     await contains(`thead th:contains(Foo)`).click();
+    expect(`.o_column_sortable.table-active`).toHaveCount(1);
     expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["yop", "gnap", "blip", "blip"]);
+
+    // Clicking on a header with a descending order resets the sort to the default from server
+    await contains(`thead th:contains(Foo)`).click();
+    expect(`.o_column_sortable.table-active`).toHaveCount(0);
+    expect.verifySteps(["web_search_read"]);
+    expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
 });
 
 test(`do not sort records when clicking on header with nolabel`, async () => {

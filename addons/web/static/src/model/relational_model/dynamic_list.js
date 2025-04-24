@@ -180,7 +180,11 @@ export class DynamicList extends DataPoint {
         return this.model.mutex.exec(() => {
             let orderBy = [...this.orderBy];
             if (orderBy.length && orderBy[0].name === fieldName) {
-                orderBy[0] = { name: orderBy[0].name, asc: !orderBy[0].asc };
+                if (orderBy[0].asc) {
+                    orderBy[0] = { name: orderBy[0].name, asc: false };
+                } else {
+                    orderBy = [];
+                }
             } else {
                 orderBy = orderBy.filter((o) => o.name !== fieldName);
                 orderBy.unshift({
