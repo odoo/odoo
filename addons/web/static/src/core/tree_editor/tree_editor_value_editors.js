@@ -1,18 +1,15 @@
+import { DateTimeInput } from "@web/core/datetime/datetime_input";
+import { Domain } from "@web/core/domain";
 import {
     deserializeDate,
     deserializeDateTime,
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
+import { parseTime } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import {
-    DomainSelectorAutocomplete,
-    DomainSelectorSingleAutocomplete,
-} from "@web/core/tree_editor/tree_editor_autocomplete";
-import { unique } from "@web/core/utils/arrays";
-import { Input, Select, List, Range, Within } from "@web/core/tree_editor/tree_editor_components";
+import { TimePicker } from "@web/core/time_picker/time_picker";
 import {
     connector,
     DATE_TODAY_STRING_EXPRESSION,
@@ -24,8 +21,18 @@ import {
     isTodayExpr,
     isTree,
 } from "@web/core/tree_editor/condition_tree";
-import { getResModel, disambiguate, isId } from "@web/core/tree_editor/utils";
-import { Domain } from "@web/core/domain";
+import {
+    DomainSelectorAutocomplete,
+    DomainSelectorSingleAutocomplete,
+} from "@web/core/tree_editor/tree_editor_autocomplete";
+import { Input, List, Range, Select, Within } from "@web/core/tree_editor/tree_editor_components";
+import {
+    get_OPTIONS_WITH_INPUT,
+    get_OPTIONS_WITH_SELECT,
+} from "@web/core/tree_editor/tree_editor_datetime_options";
+import { disambiguate, getResModel, isId } from "@web/core/tree_editor/utils";
+import { unique } from "@web/core/utils/arrays";
+import { pick } from "@web/core/utils/objects";
 
 const { DateTime } = luxon;
 
@@ -352,6 +359,46 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "selection": {
             const options = fieldDef.selection || [];
             return makeSelectEditor(options, params);
+        }
+        case "date_option":
+        case "datetime_option":
+        case "time_option": {
+            if (fieldDef.name in get_OPTIONS_WITH_SELECT()) {
+                const { options, defaultValue, isSupported } =
+                    get_OPTIONS_WITH_SELECT()[fieldDef.name];
+                return { ...makeSelectEditor(options, params), defaultValue, isSupported };
+            } else if (fieldDef.name === "__time") {
+                return {
+                    component: TimePicker,
+                    extractProps: ({ value, update }) => ({
+                        value: parseTime(value, true),
+                        onChange: (time) =>
+                            update(
+                                DateTime.fromObject(
+                                    pick(time, "hour", "minute", "second")
+                                ).toFormat("HH:mm:ss")
+                            ),
+                        showSeconds: true,
+                    }),
+                    isSupported: (value) =>
+                        typeof value === "string" && Boolean(parseTime(value, true)),
+                    defaultValue: () =>
+                        params.forBetween
+                            ? {
+                                  start: "00:00:00",
+                                  end: "23:59:59",
+                              }
+                            : DateTime.now().toFormat("HH:mm:ss"),
+                };
+            } else if (fieldDef.name === "__date") {
+                return getValueEditorInfo({ type: "date" }, operator, params);
+            }
+            const { defaultValue, isSupported } = get_OPTIONS_WITH_INPUT()[fieldDef.name];
+            return {
+                ...getValueEditorInfo({ type: "integer" }, operator, params),
+                defaultValue,
+                isSupported,
+            };
         }
         case undefined: {
             const options = [[1, "1"]];

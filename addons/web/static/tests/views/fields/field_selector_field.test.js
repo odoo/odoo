@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame, queryAllTexts } from "@odoo/hoot-dom";
+import { followRelation } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import { contains, defineModels, fields, models, mountView } from "../../web_test_helpers";
-import { animationFrame, click, queryAllTexts } from "@odoo/hoot-dom";
 
 class Contact extends models.Model {
     email = fields.Char();
@@ -117,12 +118,10 @@ test("model option", async () => {
         ["Contact", "Created on", "Display name", "Id", "Last Modified on", "Note", "Salesperson"],
         { message: "should display fields of the specified model" }
     );
-    expect(".o_model_field_selector_popover_item_relation").toHaveCount(2, {
+    expect(".o_model_field_selector_popover_item_relation").toHaveCount(4, {
         message: "following relations is supported by default",
     });
-    click(
-        ".o_model_field_selector_popover_item[data-name='salesperson_id'] .o_model_field_selector_popover_item_relation"
-    );
+    await followRelation();
     await animationFrame();
     expect(queryAllTexts(".o_model_field_selector_popover_item")).toEqual(
         ["Childs", "Created on", "Display name", "Email", "Id", "Last Modified on"],
