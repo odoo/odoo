@@ -377,7 +377,7 @@ QUnit.module('favorite filter widget', (hooks) => {
 
         // If domain is not set on mailing and no filter available, both drop-down and icon container are hidden
         
-        await testUtils.click(fixture.querySelector(".o_tree_editor_node_control_panel > button:nth-child(3)"));
+        await testUtils.click(fixture.querySelector(".o_tree_editor_node_control_panel > button:nth-child(2)"));
         assert.isNotVisible(fixture.querySelector('.o_field_mailing_filter .o_input_dropdown'),
             "should not display drop-down because there is still no filter available to select from");
         assert.isNotVisible(fixture.querySelector('.o_mass_mailing_filter_container'),
