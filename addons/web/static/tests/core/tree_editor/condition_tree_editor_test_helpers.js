@@ -388,9 +388,10 @@ export async function clickPrev() {
 
 /**
  * @param {number} [index=0]
+ * @param {Target} [target]
  */
-export async function followRelation(index = 0) {
-    await contains(`.o_model_field_selector_popover_item_relation:eq(${index})`).click();
+export async function followRelation(index, target) {
+    await contains(queryAt(".o_model_field_selector_popover_item_relation", index, target)).click();
 }
 
 export function getFocusedFieldName() {

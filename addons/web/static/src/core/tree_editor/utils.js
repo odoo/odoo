@@ -4,6 +4,7 @@ import {
     formatDate,
     formatDateTime,
 } from "@web/core/l10n/dates";
+import { parseTime } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
 import {
@@ -13,7 +14,9 @@ import {
     createVirtualOperators,
     isTree,
     normalizeValue,
+    splitPath,
 } from "@web/core/tree_editor/condition_tree";
+import { get_OPTIONS_WITH_SELECT } from "@web/core/tree_editor/tree_editor_datetime_options";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { unique, zip } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
@@ -41,6 +44,19 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         const [, label] = (fieldDef.selection || []).find(([v]) => v === val) || [];
         if (label !== undefined) {
             val = label;
+        }
+    }
+    if (["datetime_option", "date_option", "time_option"].includes(fieldDef?.type)) {
+        if (fieldDef.name in get_OPTIONS_WITH_SELECT()) {
+            const { options } = get_OPTIONS_WITH_SELECT()[fieldDef.name];
+            const [, label] = (options || []).find(([v]) => v === val) || [];
+            if (label !== undefined) {
+                val = label;
+            }
+        } else if (fieldDef.name === "__time" && typeof val === "string") {
+            return parseTime(val, true).toString(true);
+        } else if (fieldDef.name === "__date" && typeof val === "string") {
+            return formatDate(deserializeDate(val));
         }
     }
     if (typeof val === "string") {
@@ -264,10 +280,27 @@ function _extractIdsRecursive(tree, getFieldDef, idsByModel) {
     return idsByModel;
 }
 
+function addPaths(paths, path) {
+    const { initialPath, lastPart } = splitPath(path);
+    if (initialPath && lastPart) {
+        // these paths are used in _createSpecialPaths
+        paths.push(
+            initialPath,
+            [initialPath, "__date"].join("."),
+            [initialPath, "__time"].join("."),
+            [initialPath, "__date", lastPart].join("."),
+            [initialPath, "__time", lastPart].join(".")
+        );
+    }
+}
+
 export function getPathsInTree(tree, lookInSubTrees = false) {
     const paths = [];
     if (tree.type === "condition") {
         paths.push(tree.path);
+        if (typeof tree.path === "string") {
+            addPaths(paths, tree.path);
+        }
         if (lookInSubTrees && isTree(tree.value)) {
             const subTreePaths = getPathsInTree(tree.value, lookInSubTrees);
             for (const p of subTreePaths) {

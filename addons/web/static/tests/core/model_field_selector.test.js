@@ -112,13 +112,11 @@ test("creating a field chain from scratch", async () => {
     // fields. "Product" should be among them.
     expect(
         ".o_model_field_selector_popover .o_model_field_selector_popover_relation_icon"
-    ).toHaveCount(1, { message: "field selector popover should contain the 'Product' field" });
+    ).toHaveCount(3, { message: "field selector popover should contain the 'Product' field" });
 
     // Clicking on the "Product" field should update the popover to show
     // the product fields (so only "Product Name" and the default fields should be there)
-    await contains(
-        ".o_model_field_selector_popover .o_model_field_selector_popover_relation_icon"
-    ).click();
+    await followRelation(2);
     expect(".o_model_field_selector_popover_item_name").toHaveCount(5);
     expect(queryAllTexts(".o_model_field_selector_popover_item_name").at(-1)).toBe("Product Name", {
         message: "the name of the last suggestion should be 'Product Name'",
@@ -137,11 +135,9 @@ test("creating a field chain from scratch", async () => {
     await openModelFieldSelectorPopover();
     expect(
         ".o_model_field_selector_popover .o_model_field_selector_popover_relation_icon"
-    ).toHaveCount(1);
+    ).toHaveCount(3);
 
-    await contains(
-        ".o_model_field_selector_popover .o_model_field_selector_popover_relation_icon"
-    ).click();
+    await followRelation(2);
     await contains(".o_model_field_selector_popover_item_name:last").click();
     expect(".o_model_field_selector_popover").toHaveCount(0);
     expect(getValueFromDOM()).toBe("Product -> Product Name");
@@ -374,9 +370,9 @@ test("select a relational field does not follow relation", async () => {
         "Last Modified on",
         "Product",
     ]);
-    expect(".o_model_field_selector_popover_relation_icon").toHaveCount(1);
+    expect(".o_model_field_selector_popover_relation_icon").toHaveCount(3);
 
-    await contains(".o_model_field_selector_popover_relation_icon").click();
+    await followRelation(2);
     expect(getDisplayedFieldNames()).toEqual([
         "Created on",
         "Display name",
@@ -413,9 +409,9 @@ test("can follow relations", async () => {
         "Last Modified on",
         "Product",
     ]);
-    expect(".o_model_field_selector_popover_relation_icon").toHaveCount(1);
+    expect(".o_model_field_selector_popover_relation_icon").toHaveCount(3);
 
-    await contains(".o_model_field_selector_popover_relation_icon").click();
+    await followRelation(2);
     expect(getDisplayedFieldNames()).toEqual([
         "Created on",
         "Display name",
@@ -510,13 +506,13 @@ test("title on first four pages", async () => {
     await openModelFieldSelectorPopover();
     expect(getTitle()).toBe("Select a field");
 
-    await followRelation();
+    await followRelation(2);
     expect(getTitle()).toBe("Mother");
 
-    await followRelation();
+    await followRelation(2);
     expect(getTitle()).toBe("... > Mother");
 
-    await followRelation();
+    await followRelation(2);
     expect(getTitle()).toBe("... > Mother");
 });
 
@@ -550,7 +546,7 @@ test("start on complex path and click prev", async () => {
 
     // select Father on third page and go to next page
     // no selection on fourth page --> first item is focused
-    await followRelation();
+    await followRelation(1);
     expect(getTitle()).toBe("... > Father");
     expect(getFocusedFieldName()).toBe("Created on");
     expect(getModelFieldSelectorValues()).toEqual(["Mother", "Father", "Father"]);
@@ -942,4 +938,56 @@ test("showDebugInput = false", async () => {
 
     await openModelFieldSelectorPopover();
     expect(".o_model_field_selector_debug").toHaveCount(0);
+});
+
+test("show options for date field", async () => {
+    Partner._fields.date = fields.Date();
+    await mountWithCleanup(ModelFieldSelector, {
+        props: {
+            readonly: false,
+            path: "date",
+            resModel: "partner",
+        },
+    });
+
+    await openModelFieldSelectorPopover();
+    await followRelation(1);
+    expect(getDisplayedFieldNames()).toEqual([
+        "Weekday",
+        "Day of month",
+        "Day of year",
+        "Week number",
+        "Month",
+        "Quarter",
+        "Year",
+    ]);
+});
+
+test("show options for datetime field", async () => {
+    Partner._fields.datetime = fields.Datetime();
+    await mountWithCleanup(ModelFieldSelector, {
+        props: {
+            readonly: false,
+            path: "datetime",
+            resModel: "partner",
+        },
+    });
+
+    await openModelFieldSelectorPopover();
+    await followRelation(1);
+    expect(getDisplayedFieldNames()).toEqual(["Date", "Time"]);
+    await followRelation();
+    expect(getDisplayedFieldNames()).toEqual([
+        "Weekday",
+        "Day of month",
+        "Day of year",
+        "Week number",
+        "Month",
+        "Quarter",
+        "Year",
+    ]);
+    await clickPrev();
+    expect(getDisplayedFieldNames()).toEqual(["Date", "Time"]);
+    await followRelation(1);
+    expect(getDisplayedFieldNames()).toEqual(["Hour", "Minute", "Second"]);
 });
