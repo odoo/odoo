@@ -363,6 +363,10 @@ export class Rtc extends Record {
             cameraTrack: undefined,
             screenTrack: undefined,
             /**
+             * Specifies if the front-facing camera should be used.
+             */
+            isFrontFacingMode: true,
+            /**
              * callback to properly end the audio monitoring.
              * If set it indicates that we are currently monitoring the local
              * micAudioTrack for the voice activation feature.
@@ -718,6 +722,11 @@ export class Rtc extends Record {
         if (!isActiveCall) {
             await this.joinCall(channel, { audio, camera });
         }
+    }
+
+    async toggleCameraFacingMode() {
+        this.state.isFrontFacingMode = !this.state.isFrontFacingMode;
+        await this.toggleVideo("camera", { force: true, refreshStream: true });
     }
 
     async toggleDeafen() {
@@ -1822,7 +1831,10 @@ export class Rtc extends Record {
                 } else {
                     closeStream(this.state.sourceCameraStream);
                     sourceStream = await sourceWindow.navigator.mediaDevices.getUserMedia({
-                        video: this.store.settings.cameraConstraints,
+                        video: {
+                            ...this.store.settings.cameraConstraints,
+                            facingMode: this.state.isFrontFacingMode ? "user" : "environment",
+                        },
                     });
                 }
             }

@@ -48,6 +48,14 @@ callActionsRegistry
         select: (component) => component.rtc.toggleVideo("camera", { env: component.env }),
         sequence: 30,
     })
+    .add("switch-camera", {
+        condition: (component) => isMobileOS() && component.rtc.selfSession?.is_camera_on,
+        name: _t("Switch Camera"),
+        isActive: () => false,
+        icon: "fa-refresh",
+        select: (component) => component.rtc.toggleCameraFacingMode(),
+        sequence: 40,
+    })
     .add("raise-hand", {
         condition: (component) => component.rtc,
         name: (component) =>
