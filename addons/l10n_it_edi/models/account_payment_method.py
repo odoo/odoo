@@ -27,14 +27,22 @@ L10N_IT_PAYMENT_METHOD_SELECTION = [
 ]
 
 
-class AccountPaymentMethodLine(models.Model):
-    _inherit = "account.payment.method.line"
+class AccountPaymentMethod(models.Model):
+    _inherit = "account.payment.method"
 
     l10n_it_payment_method = fields.Selection(
         selection=L10N_IT_PAYMENT_METHOD_SELECTION,
-        string="Italian Payment Method",
+        string="Italian Payment Method Code",
         default='MP05',
+    )
+
+    is_italian_company = fields.Boolean(
+        compute='_compute_is_italian_company',
     )
 
     def _get_l10n_it_payment_method_selection_code(self):
         return [payment_method[0] for payment_method in L10N_IT_PAYMENT_METHOD_SELECTION]
+
+    def _compute_is_italian_company(self):
+        for method in self:
+            method.is_italian_company = self.env.company.country_code == 'IT'

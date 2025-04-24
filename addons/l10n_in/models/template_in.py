@@ -108,3 +108,6 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code == 'in':
             company = company or self.env.company
             company._update_l10n_in_is_gst_registered()
+
+            for bank_journal in self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', company.id)]):
+                bank_journal.outstanding_payment_account_id = self.env.ref(f'account.{company.id}_account_journal_outstanding_payment_account_id')

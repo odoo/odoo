@@ -218,18 +218,23 @@ class HrExpense(models.Model):
     # Account fields
     journal_id = fields.Many2one(
         comodel_name='account.journal',
-        related='payment_method_line_id.journal_id',
-        readonly=True,
+        compute='_compute_journal_id',
+        check_company=True,
+        domain="[('id', 'in', available_journal_ids)]",
     )
-    selectable_payment_method_line_ids = fields.Many2many(
-        comodel_name='account.payment.method.line',
-        compute='_compute_selectable_payment_method_line_ids',
+    available_journal_ids = fields.Many2many(
+        comodel_name='account.journal',
+        compute='_compute_available_journal_ids',
     )
-    payment_method_line_id = fields.Many2one(
-        comodel_name='account.payment.method.line',
+    selectable_payment_method_ids = fields.Many2many(
+        comodel_name='account.payment.method',
+        compute='_compute_selectable_payment_method_ids',
+    )
+    payment_method_id = fields.Many2one(
+        comodel_name='account.payment.method',
         string="Payment Method",
-        compute='_compute_payment_method_line_id', store=True, readonly=False,
-        domain="[('id', 'in', selectable_payment_method_line_ids)]",
+        compute='_compute_payment_method_id', store=True, readonly=False,
+        domain="[('id', 'in', selectable_payment_method_ids)]",
         help="The payment method used when the expense is paid by the company.",
     )
     account_move_id = fields.Many2one(
@@ -653,22 +658,21 @@ class HrExpense(models.Model):
             else:
                 expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
 
-    @api.depends('selectable_payment_method_line_ids')
-    def _compute_payment_method_line_id(self):
+    @api.depends('selectable_payment_method_ids')
+    def _compute_payment_method_id(self):
         for expense in self:
-            expense.payment_method_line_id = expense.selectable_payment_method_line_ids[:1]
+            expense.payment_method_id = expense.selectable_payment_method_ids[:1]
 
     @api.depends('company_id')
-    def _compute_selectable_payment_method_line_ids(self):
+    def _compute_selectable_payment_method_ids(self):
         for expense in self:
-            allowed_method_line_ids = expense.company_id.company_expense_allowed_payment_method_line_ids
-            if allowed_method_line_ids:
-                expense.selectable_payment_method_line_ids = allowed_method_line_ids
+            allowed_method_ids = expense.company_id.company_expense_allowed_payment_method_ids
+            if allowed_method_ids:
+                expense.selectable_payment_method_ids = allowed_method_ids
             else:
-                expense.selectable_payment_method_line_ids = self.env['account.payment.method.line'].search([
-                    # The journal is the source of the payment method line company
-                    *self.env['account.journal']._check_company_domain(expense.company_id),
+                expense.selectable_payment_method_ids = self.env['account.payment.method'].search([
                     ('payment_type', '=', 'outbound'),
+                    ('company_id', 'in', (self.env.company.id, None)),
                 ])
 
     @api.depends('product_id', 'company_id')
@@ -793,6 +797,21 @@ class HrExpense(models.Model):
         cannot_reason_per_record_id = self._get_cannot_approve_reason()
         for expense in self:
             expense.can_approve = not cannot_reason_per_record_id[expense.id]
+
+    @api.depends('payment_mode')
+    def _compute_journal_id(self):
+        for expense in self:
+            if not expense.journal_id:
+                if expense.payment_mode == 'company_account':
+                    expense.journal_id = (self.env.company.company_paid_expense_journal_id
+                        or self.env.company.parent_ids[::-1].company_paid_expense_journal_id[:1]
+                        or self.env['account.journal'].search([
+                            *self.env['account.journal']._check_company_domain(self.env.company.id),
+                            ('type', '=', 'bank'),
+                        ], limit=1)
+                    )
+                else:
+                    expense.journal_id = None
 
     # ----------------------------------------
     # ORM Overrides
@@ -1159,16 +1178,10 @@ class HrExpense(models.Model):
 
         company_expenses = self.filtered(lambda expense: expense.payment_mode == 'company_account')
         employee_expenses = self - company_expenses
-        if len(employee_expenses.company_id) > 1:
-            raise UserError(_("You can't post simultaneously employee-paid expenses belonging to different companies"))
+        if len(employee_expenses.company_id) > 1 or len(company_expenses.company_id) > 1:
+            raise UserError(_("You can't simultaneously post expenses belonging to different companies"))
 
-        if company_expenses:
-            company_expenses._create_company_paid_moves()
-            # Post the company-paid expense through the payment, to post both at the same time
-            company_expenses.account_move_id.origin_payment_id.action_post()
-
-        if employee_expenses:
-            return employee_expenses.with_context(company_paid_move_ids=company_expenses.account_move_id.ids)._post_wizard()
+        return self._post_wizard()
 
     def action_pay(self):
         """ Register payment shortcut on the expense form view """
@@ -1496,21 +1509,13 @@ class HrExpense(models.Model):
         return self.product_has_cost
 
     def _post_wizard(self):
-        if 'company_account' in set(self.mapped('payment_mode')):
-            raise UserError(_("Only expense paid by the employee can be posted with the wizard"))
-
-        wizard_name = (
-            _("Post expenses paid by the employee")
-            if self.env.context.get('company_paid_move_ids')
-            else _("Post expenses")
-        )
         return {
             'type': 'ir.actions.act_window',
-            'name': wizard_name,
+            'name': "Post expenses",
             'view_mode': 'form',
             'views': [(False, "form")],
             'res_model': 'hr.expense.post.wizard',
-            'res_id': self.env['hr.expense.post.wizard'].create({}).id,
+            'res_id': self.env['hr.expense.post.wizard'].with_context(default_expense_ids=self.ids).create({}).id,
             'target': 'new',
             'context': self.with_context(active_ids=self.ids).env.context,
         }
@@ -1526,7 +1531,7 @@ class HrExpense(models.Model):
             expenses = expenses.with_company(company)
             company_domain = self.env['account.journal']._check_company_domain(company)
             journal = (
-                    company.expense_journal_id
+                    company.employee_paid_expense_journal_id
                     or expenses.env['account.journal'].search([*company_domain, ('type', '=', 'purchase')], limit=1))
             expense_receipt_vals_list = [
                 {
@@ -1599,8 +1604,8 @@ class HrExpense(models.Model):
         self.ensure_one()
 
         journal = self.journal_id
-        payment_method_line = self.payment_method_line_id
-        if not payment_method_line:
+        payment_method = self.payment_method_id
+        if not payment_method:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
 
         AccountTax = self.env['account.tax']
@@ -1661,7 +1666,7 @@ class HrExpense(models.Model):
             'partner_type': 'supplier',
             'partner_id': self.vendor_id.id,
             'currency_id': self.currency_id.id,
-            'payment_method_line_id': payment_method_line.id,
+            'payment_method_id': payment_method.id,
             'company_id': self.company_id.id,
         }
         move_vals = {
@@ -1756,7 +1761,7 @@ class HrExpense(models.Model):
     def _get_expense_account_destination(self):
         self.ensure_one()
         if self.payment_mode == 'company_account':
-            account_dest = self.payment_method_line_id.payment_account_id or self._get_outstanding_account_id()
+            account_dest = self.journal_id.outstanding_payment_account_id or self._get_outstanding_account_id()
         else:
             if not self.employee_id.sudo().work_contact_id:
                 raise UserError(
@@ -1767,7 +1772,7 @@ class HrExpense(models.Model):
         return account_dest.id
 
     def _get_outstanding_account_id(self):
-        account_ref = 'account_journal_payment_debit_account_id' if self.payment_method_line_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
+        account_ref = 'account_journal_payment_debit_account_id' if self.payment_method_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
         chart_template = self.with_context(allowed_company_ids=self.company_id.root_id.ids).env['account.chart.template']
         outstanding_account = chart_template.ref(account_ref, raise_if_not_found=False)
         if not outstanding_account:

@@ -91,6 +91,10 @@
                                                required="type in ('bank', 'cash', 'credit')"
                                                options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
+                                        <field name="outstanding_payment_account_id"
+                                               invisible="type not in ('bank', 'cash', 'credit')"
+                                               options="{'no_quick_create': True}"
+                                               groups="account.group_account_readonly"/>
                                         <field name="non_deductible_account_id"
                                                invisible="type != 'purchase'"
                                                options="{'no_quick_create': True}"
@@ -116,44 +120,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page id="inbound_payment_settings" string="Incoming Payments" name="page_incoming_payments" invisible="type not in ['cash', 'bank', 'credit']">
-                                <field name="available_payment_method_ids" invisible="1"/>
-                                <field name="inbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'inbound'}">
-                                    <list string="Payment Methods" editable="bottom">
-                                        <field name="available_payment_method_ids" column_invisible="True"/>
-                                        <field name="payment_type" column_invisible="True"/>
-                                        <field name="company_id" column_invisible="True"/>
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
-                                        <field name="name"/>
-                                        <field name="payment_account_id"
-                                               placeholder="No payment journal entries"
-                                               string="Outstanding Receipts accounts"
-                                               options="{'no_quick_create': True}"
-                                               groups="account.group_account_readonly"/>
-                                    </list>
-                                </field>
-                            </page>
-                            <page id="outbound_payment_settings" string="Outgoing Payments" name="page_outgoing_payments" invisible="type not in ['cash', 'bank', 'credit']">
-                                    <field name="outbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'outbound'}">
-                                        <list string="Payment Methods" editable="bottom">
-                                            <field name="available_payment_method_ids" column_invisible="True"/>
-                                            <field name="payment_type" column_invisible="True"/>
-                                            <field name="company_id" column_invisible="True"/>
-                                            <field name="sequence" widget="handle"/>
-                                            <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
-                                            <field name="name"/>
-                                            <field name="payment_account_id"
-                                                   placeholder="No payment journal entries"
-                                                   string="Outstanding Payments accounts"
-                                                   options="{'no_quick_create': True}"
-                                                   groups="account.group_account_readonly"/>
-                                        </list>
-                                    </field>
-                                    <field name="selected_payment_method_codes" invisible="1"/>
-                                    <group name="outgoing_payment" />
-                            </page>
-                            <page name="advanced_settings" string="Advanced Settings" invisible="type in ['bank', 'cash']">
+                            <page id="advanced_settings" name="advanced_settings" string="Advanced Settings">
                                 <group>
                                     <group string="Automation" groups="account.group_account_manager">
                                         <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type not in ['sale', 'purchase', 'general']"

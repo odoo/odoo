@@ -879,3 +879,25 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             'amount_signed': -100,
             'amount_company_currency_signed': -50,
         }])
+
+    def test_payment_method_onchange_default_journal(self):
+        payment = self.env['account.payment'].create({
+            'amount': 100,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'partner_id': self.partner_a.id,
+            'payment_method_id': self.inbound_payment_method.id,
+        })
+        self.assertRecordValues(payment, [{'journal_id': None}])
+
+        other_payment_method = self.inbound_payment_method.copy()
+        other_payment_method.default_journal_id = self.bank_journal_2
+        payment.payment_method_id = other_payment_method
+        self.assertRecordValues(payment, [{'journal_id': self.bank_journal_2.id}])
+
+        payment.payment_method_id = self.inbound_payment_method
+        self.assertRecordValues(payment, [{'journal_id': None}])
+
+    def test_payment_method_default_outstanding_account(self):
+        '''Describe all the cases that need to be tested'''
+        pass

@@ -1487,15 +1487,15 @@
                                         <field name="incoterm_location" invisible="move_type in ('out_receipt', 'in_receipt')"/>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
                                         <field name="secured" groups="account.group_account_secured,base.group_no_one"/>
-                                        <field name="preferred_payment_method_line_id"
+                                        <field name="preferred_payment_method_id"
                                                string="Payment Method"
-                                               domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]"
-                                               invisible="move_type in ('in_invoice', 'in_refund', 'in_receipt')"
+                                               domain="[('payment_type', '=', 'inbound'), ('code', 'not in', ('online_payment_provider', 'sepa_direct_debit'))]"
+                                               invisible="move_type in ('in_invoice', 'in_refund')"
                                         />
-                                        <field name="preferred_payment_method_line_id"
+                                        <field name="preferred_payment_method_id"
                                                string="Payment Method"
-                                               domain="[('payment_type', '=', 'outbound'), ('company_id', '=', company_id)]"
-                                               invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt')"
+                                               domain="[('payment_type', '=', 'outbound'), ('code', 'not in', ('online_payment_provider', 'sepa_direct_debit'))]"
+                                               invisible="move_type in ('out_invoice', 'out_refund')"
                                         />
                                         <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding" readonly="state != 'draft'"/>
                                         <field name="invoice_source_email"
@@ -1604,7 +1604,7 @@
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Payment Method"
                                 name="preferred_payment_method"
-                                context="{'group_by': 'preferred_payment_method_line_id'}"
+                                context="{'group_by': 'preferred_payment_method_id'}"
                                 groups="account.group_account_invoice,account.group_account_readonly"
                         />
                         <filter string="Date" name="by_date" domain="[]" context="{'group_by': 'date'}" help="Journal Entries by Date"/>
@@ -1699,8 +1699,8 @@
                         <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
                         <filter string="Payment Method"
-                                name="preferred_payment_method_line"
-                                context="{'group_by': 'preferred_payment_method_line_id'}"
+                                name="preferred_payment_method"
+                                context="{'group_by': 'preferred_payment_method_id'}"
                                 groups="account.group_account_invoice,account.group_account_readonly"
                         />
                         <filter string="Journal" name="groupy_by_journal" domain="[]" context="{'group_by': 'journal_id'}"/>

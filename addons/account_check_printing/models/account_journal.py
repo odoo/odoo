@@ -9,12 +9,6 @@ from odoo.exceptions import ValidationError
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    def _default_outbound_payment_methods(self):
-        res = super()._default_outbound_payment_methods()
-        if self._is_payment_method_available('check_printing'):
-            res |= self.env.ref('account_check_printing.account_payment_method_check')
-        return res
-
     check_manual_sequencing = fields.Boolean(
         string='Manual Numbering',
         default=False,
@@ -87,14 +81,17 @@ class AccountJournal(models.Model):
     def _get_journal_dashboard_data_batched(self):
         dashboard_data = super()._get_journal_dashboard_data_batched()
         self._fill_dashboard_data_count(dashboard_data, 'account.payment', 'num_checks_to_print', [
-            ('payment_method_line_id.code', '=', 'check_printing'),
+            ('payment_method_id.code', '=', 'check_printing'),
             ('state', '=', 'in_process'),
             ('is_sent', '=', False),
         ])
         return dashboard_data
 
     def action_checks_to_print(self):
-        payment_method_line_id = self.outbound_payment_method_line_ids.filtered(lambda l: l.code == 'check_printing')[:1].id
+        payment_method = self.env['account.payment.method'].search([
+            ('code', '=', 'check_printing'),
+            ('company_id', '=', self.env.company.id),
+        ])
         return {
             'name': _('Checks to Print'),
             'type': 'ir.actions.act_window',
@@ -106,6 +103,6 @@ class AccountJournal(models.Model):
                 journal_id=self.id,
                 default_journal_id=self.id,
                 default_payment_type='outbound',
-                default_payment_method_line_id=payment_method_line_id,
+                default_payment_method_id=payment_method.id,
             ),
         }

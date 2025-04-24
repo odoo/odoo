@@ -1187,6 +1187,23 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
+    @template(model='account.payment.method')
+    def _get_manual_payment_methods(self, template_code):
+        return {
+            "manual_out": {
+                'name': 'Manual Payment',
+                'code': 'manual',
+                'payment_type': 'outbound',
+                'sequence': 1,
+            },
+            "manual_in": {
+                'name': 'Manual Payment',
+                'code': 'manual',
+                'payment_type': 'inbound',
+                'sequence': 1,
+            },
+        }
+
     # --------------------------------------------------------------------------------
     # Tooling
     # --------------------------------------------------------------------------------

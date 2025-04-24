@@ -1,47 +1,64 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.fields import Domain
 
 
 class AccountPaymentMethod(models.Model):
     _name = 'account.payment.method'
     _description = "Payment Methods"
+    _order = 'sequence, code, id'
 
     name = fields.Char(required=True, translate=True)
-    code = fields.Char(required=True)  # For internal identification
-    payment_type = fields.Selection(selection=[('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True)
-
-    _name_code_unique = models.Constraint(
-        'unique (code, payment_type)',
-        'The combination code/payment type already exists!',
+    code = fields.Selection(
+        selection=[('manual', 'manual')],
+        required=True,
+        ondelete={'manual': 'cascade'},
     )
+    sequence = fields.Integer(default=10)
+    available_payment_method_codes = fields.Char(
+        string="Available Payment Method Codes",
+        compute='_compute_available_payment_method_codes',
+        help="Technical field to enable a dynamic selection of the field code",
+    )
+    payment_type = fields.Selection(
+        selection=[
+            ('inbound', 'Inbound'),
+            ('outbound', 'Outbound')
+        ],
+        required=True
+    )
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company',
+        readonly=True,
+        index=True,
+        default=lambda self: self.env.company,
+    )
+    default_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Default Journal',
+        domain="[('id', 'in', available_journal_ids)]",
+    )
+    available_journal_ids = fields.Many2many(
+        comodel_name='account.journal',
+        compute='_compute_available_journal_ids'
+    )
+    default_outstanding_payment_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Default Outstanding Payment Account',
+    )
+    active = fields.Boolean(default=True)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        payment_methods = super().create(vals_list)
-        methods_info = self._get_payment_method_information()
-        return self._auto_link_payment_methods(payment_methods, methods_info)
-
-    def _auto_link_payment_methods(self, payment_methods, methods_info):
-        # This method was extracted from create so it can be overriden in the upgrade script.
-        # In said script we can then allow for a custom behavior for the payment.method.line on the journals.
-        for method in payment_methods:
-            information = methods_info.get(method.code, {})
-            if information.get('mode') == 'multi':
-                method_domain = method._get_payment_method_domain(method.code)
-                journals = self.env['account.journal'].search(method_domain)
-                self.env['account.payment.method.line'].create([{
-                    'name': method.name,
-                    'payment_method_id': method.id,
-                    'journal_id': journal.id
-                } for journal in journals])
-        return payment_methods
+    _name_code_payment_type_company_unique = models.Constraint(
+        'unique (name, code, payment_type, company_id)',
+        'The combination name/code/payment type/company already exists!',
+    )
 
     @api.model
     def _get_payment_method_domain(self, code, with_currency=True, with_country=True):
         """
-        :param code: string of the payment method line code to check.
+        :param code: string of the payment method code to check.
         :param with_currency: if False (default True), ignore the currency_id domain if it exists.
         :return: The domain specifying which journal can accommodate this payment method.
         """
@@ -67,16 +84,12 @@ class AccountPaymentMethod(models.Model):
         Contains details about how to initialize a payment method with the code x.
         The contained info are:
 
-        - ``mode``: One of the following:
-          "unique" if the method cannot be used twice on the same company,
-          "electronic" if the method cannot be used twice on the same company for the same 'payment_provider_id',
-          "multi" if the method can be duplicated on the same journal.
         - ``type``: Tuple containing one or both of these items: "bank" and "cash"
         - ``currency_ids``: The ids of the currency necessary on the journal (or company) for it to be eligible.
         - ``country_id``: The id of the country needed on the company for it to be eligible.
         """
         return {
-            'manual': {'mode': 'multi', 'type': ('bank', 'cash', 'credit')},
+            'manual': {'type': ('bank', 'cash', 'credit')},
         }
 
     @api.model
@@ -87,100 +100,71 @@ class AccountPaymentMethod(models.Model):
         """
         return []
 
-    def unlink(self):
-        self.env['account.payment.method.line'].search([('payment_method_id', 'in', self.ids)]).unlink()
-        return super().unlink()
+    @api.model
+    def _get_available(self, payment_type=None, country=None, currency=None, current_journal=None):
+        payment_methods = self.search([
+                '|', '|',
+                ('company_id', 'parent_of', self.env.company.id),
+                ('company_id', 'child_of', self.env.company.id),
+                ('company_id', '=', None),
+            ] + [('payment_type', '=', payment_type)] if payment_type else [])
 
+        if country or currency:
+            for method in payment_methods:
+                if information := self._get_payment_method_information().get(method.code):
+                    if information.get('country_id') and (information.get('country_id') != country.id):
+                        payment_methods -= method
+                    if information.get('currency_ids') and currency and (currency.id not in information.get('currency_ids')):
+                        payment_methods -= method
 
-class AccountPaymentMethodLine(models.Model):
-    _name = 'account.payment.method.line'
-    _description = "Payment Methods"
-    _order = 'sequence, id'
+        if current_journal:
+            payment_methods = payment_methods.filtered(lambda m: current_journal._is_payment_method_available(m.code))
+        return payment_methods
 
-    # == Business fields ==
-    name = fields.Char(compute='_compute_name', readonly=False, store=True)
-    sequence = fields.Integer(default=10)
-    payment_method_id = fields.Many2one(
-        string='Payment Method',
-        comodel_name='account.payment.method',
-        domain="[('payment_type', '=?', payment_type), ('id', 'in', available_payment_method_ids)]",
-        required=True,
-    )
-    payment_account_id = fields.Many2one(
-        comodel_name='account.account',
-        check_company=True,
-        copy=False,
-        ondelete='restrict',
-        domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', default_account_id)]"
-    )
-    journal_id = fields.Many2one(
-        comodel_name='account.journal',
-        check_company=True,
-        index='btree_not_null',
-    )
-    default_account_id = fields.Many2one(
-        related='journal_id.default_account_id'
-    )
-
-    # == Display purpose fields ==
-    code = fields.Char(related='payment_method_id.code')
-    payment_type = fields.Selection(related='payment_method_id.payment_type')
-    company_id = fields.Many2one(related='journal_id.company_id')
-    available_payment_method_ids = fields.Many2many(related='journal_id.available_payment_method_ids')
-
-    @api.depends('journal_id')
-    @api.depends_context('hide_payment_journal_id')
-    def _compute_display_name(self):
-        for method in self:
-            if self.env.context.get('hide_payment_journal_id'):
-                return super()._compute_display_name()
-            method.display_name = f"{method.name} ({method.journal_id.name})"
-
-    @api.depends('payment_method_id.name')
-    def _compute_name(self):
-        for method in self:
-            if not method.name:
-                method.name = method.payment_method_id.name
-
-    @api.constrains('name')
-    def _ensure_unique_name_for_journal(self):
-        self.journal_id._check_payment_method_line_ids_multiplicity()
-
-    def unlink(self):
+    @api.depends('payment_type')
+    def _compute_available_journal_ids(self):
         """
-        Payment method lines which are used in a payment should not be deleted from the database,
-        only the link betweend them and the journals must be broken.
+        Get all journals that fit the payment method domain.
         """
-        unused_payment_method_lines = self
-        for line in self:
-            payment_count = self.env['account.payment'].sudo().search_count([('payment_method_line_id', '=', line.id)])
-            if payment_count > 0:
-                unused_payment_method_lines -= line
-
-        (self - unused_payment_method_lines).write({'journal_id': False})
-
-        return super(AccountPaymentMethodLine, unused_payment_method_lines).unlink()
+        journals = self.env['account.journal'].search([
+            '|',
+            ('company_id', 'parent_of', self.env.company.id),
+            ('company_id', 'child_of', self.env.company.id),
+            ('type', 'in', ('bank', 'cash', 'credit')),
+        ])
+        for method in self:
+            method.available_journal_ids = journals.filtered(lambda j: j._is_payment_method_available(method.code))
 
     @api.model
-    def _auto_toggle_account_to_reconcile(self, account_id):
-        """ Automatically toggle the account to reconcile if allowed.
-
-        :param account_id: The id of an account.account.
+    def _compute_available_payment_method_codes(self):
         """
-        account = self.env['account.account'].browse(account_id)
-        if not account.reconcile and account.account_type not in ('asset_cash', 'liability_credit_card', 'off_balance'):
-            account.reconcile = True
+        TO OVERRIDE
+        For payment methods whose codes we don't want to show up in the selection field code.
+        """
+        available_method_codes = self._get_payment_method_information().keys()
+        for method in self:
+            method.available_payment_method_codes = ','.join(available_method_codes)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        # OVERRIDE
-        for vals in vals_list:
-            if vals.get('payment_account_id'):
-                self._auto_toggle_account_to_reconcile(vals['payment_account_id'])
-        return super().create(vals_list)
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default)
 
-    def write(self, vals):
-        # OVERRIDE
-        if vals.get('payment_account_id'):
-            self._auto_toggle_account_to_reconcile(vals['payment_account_id'])
-        return super().write(vals)
+        for payment_method, vals in zip(self, vals_list):
+            vals.update(
+                name=_("%s (copy)", payment_method.name or ''))
+        return vals_list
+
+    def unlink(self):
+        """
+        Payment methods which are used in a payment should not be deleted from the database,
+        they will just be archived.
+        """
+        unused_payment_methods = self
+        for method in self:
+            payment_count = self.env['account.payment'].sudo().search_count([('payment_method_id', '=', method.id)])
+            if payment_count > 0:
+                unused_payment_methods -= method
+
+        (self - unused_payment_methods).action_archive()
+
+        return super(AccountPaymentMethod, unused_payment_methods).unlink()
