@@ -67,7 +67,7 @@ export function isObject(value) {
  * @template T
  * @template {keyof T} K
  * @param {T} object
- * @param {K[]} properties
+ * @param {...(K)} properties
  */
 export function omit(object, ...properties) {
     /** @type {Omit<T, K>} */
@@ -85,7 +85,7 @@ export function omit(object, ...properties) {
  * @template T
  * @template {keyof T} K
  * @param {T} object
- * @param {K[]} properties
+ * @param {...(K)} properties
  * @returns {Pick<T, K>}
  */
 export function pick(object, ...properties) {
