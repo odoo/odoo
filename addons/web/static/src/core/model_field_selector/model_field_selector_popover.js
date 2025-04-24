@@ -15,12 +15,13 @@ class Page {
             selectedName = null,
             isDebugMode,
             readProperty = false,
+            sortFn = (fieldDefs) => sortBy(Object.keys(fieldDefs), (key) => fieldDefs[key].string),
         } = options;
         this.previousPage = previousPage;
         this.selectedName = selectedName;
         this.isDebugMode = isDebugMode;
         this.readProperty = readProperty;
-        this.sortedFieldNames = sortBy(Object.keys(fieldDefs), (key) => fieldDefs[key].string);
+        this.sortedFieldNames = sortFn(fieldDefs);
         this.fieldNames = this.sortedFieldNames;
         this.query = "";
         this.focusedFieldName = null;
@@ -108,6 +109,7 @@ export class ModelFieldSelectorPopover extends Component {
     static props = {
         close: Function,
         filter: { type: Function, optional: true },
+        sort: { type: Function, optional: true },
         followRelations: { type: Boolean, optional: true },
         showDebugInput: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
@@ -185,6 +187,7 @@ export class ModelFieldSelectorPopover extends Component {
                 previousPage: this.state.page,
                 isDebugMode: this.props.isDebugMode,
                 readProperty: this.props.readProperty,
+                sortFn: this.props.sort,
             })
         );
     }
@@ -205,6 +208,7 @@ export class ModelFieldSelectorPopover extends Component {
             return new Page(resModel, this.filter(fieldDefs, path), {
                 isDebugMode: this.props.isDebugMode,
                 readProperty: this.props.readProperty,
+                sortFn: this.props.sort,
             });
         }
         const { isInvalid, modelsInfo, names } = await this.fieldService.loadPath(resModel, path);
@@ -217,6 +221,7 @@ export class ModelFieldSelectorPopover extends Component {
                     selectedName: path,
                     isDebugMode: this.props.isDebugMode,
                     readProperty: this.props.readProperty,
+                    sortFn: this.props.sort,
                 });
             }
             default: {
@@ -229,6 +234,7 @@ export class ModelFieldSelectorPopover extends Component {
                         selectedName: name,
                         isDebugMode: this.props.isDebugMode,
                         readProperty: this.props.readProperty,
+                        sortFn: this.props.sort,
                     });
                 }
                 return page;

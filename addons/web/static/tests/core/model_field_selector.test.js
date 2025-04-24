@@ -184,6 +184,30 @@ test("use the filter option", async () => {
     expect(getDisplayedFieldNames()).toEqual(["Product"]);
 });
 
+test("use the sort option", async () => {
+    await mountWithCleanup(ModelFieldSelector, {
+        props: {
+            readonly: false,
+            path: "",
+            resModel: "partner",
+            sort: (fields) =>
+                Object.keys(fields).sort((a, b) =>
+                    fields[b].string.localeCompare(fields[a].string)
+                ),
+        },
+    });
+    await openModelFieldSelectorPopover();
+    expect(getDisplayedFieldNames()).toEqual([
+        "Product",
+        "Last Modified on",
+        "Id",
+        "Foo",
+        "Display name",
+        "Created on",
+        "Bar",
+    ]);
+});
+
 test("default `showSearchInput` option", async () => {
     await mountWithCleanup(ModelFieldSelector, {
         props: {

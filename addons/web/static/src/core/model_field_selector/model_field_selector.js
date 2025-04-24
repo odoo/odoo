@@ -19,6 +19,7 @@ export class ModelFieldSelector extends Component {
         isDebugMode: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
         filter: { type: Function, optional: true },
+        sort: { type: Function, optional: true },
         followRelations: { type: Boolean, optional: true },
         showDebugInput: { type: Boolean, optional: true },
     };
@@ -67,6 +68,7 @@ export class ModelFieldSelector extends Component {
             showSearchInput: this.props.showSearchInput,
             isDebugMode: this.props.isDebugMode,
             filter: this.props.filter,
+            sort: this.props.sort,
             followRelations: this.props.followRelations,
             showDebugInput: this.props.showDebugInput,
         });
