@@ -524,7 +524,7 @@ class SlideChannel(models.Model):
     @api.model
     def _compute_has_requested_access(self):
         requested_cids = self.sudo().activity_search(
-            ['mail.mail_activity_type_todo'],
+            ['mail.mail_activity_data_todo'],
             additional_domain=[('request_partner_id', '=', self.env.user.partner_id.id)],
             only_automated=False,
         ).mapped('res_id')
