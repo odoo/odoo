@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add("project_task_templates_tour", {
         },
         {
             trigger: 'div.o_last_breadcrumb_item span:contains("Project with Task Template")',
-            content: "Wit for the kanban view to load",
+            content: "Wait for the kanban view to load",
         },
         {
             trigger: "a.o-kanban-button-new",
