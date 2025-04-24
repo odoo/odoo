@@ -15966,7 +15966,7 @@ test(`sort on a non sortable field with allow_order option`, async () => {
     expect(queryAllProperties(`[name=bar] input`, "checked")).toEqual([false, true, true]);
     expect(`th[data-name=bar]`).toHaveClass("o_column_sortable");
     expect(`th[data-name=bar]`).toHaveClass("table-active");
-    expect(`th[data-name=bar] i`).toHaveClass("fa-angle-up");
+    expect(`th[data-name=bar] i`).toHaveClass("fa-sort-asc");
 });
 
 test(`sort rows in a grouped list view`, async () => {
@@ -15983,7 +15983,7 @@ test(`sort rows in a grouped list view`, async () => {
     await contains(`th[data-name=int_field]`).click();
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["9", "10", "17"]);
     expect(`th[data-name=int_field]`).toHaveClass("o_column_sortable");
-    expect(`th[data-name=int_field] i`).toHaveClass("fa-angle-up");
+    expect(`th[data-name=int_field] i`).toHaveClass("fa-sort-asc");
 });
 
 test.tags("desktop");

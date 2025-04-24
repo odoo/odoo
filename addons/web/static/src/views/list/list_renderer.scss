@@ -3,7 +3,6 @@
     --ListRenderer-table-padding-x: #{$table-cell-padding-x-sm};
     --ListRenderer-thead-padding-y: #{map-get($spacers, 4)};
     --ListRenderer-thead-bg-color: #{$o-webclient-background-color};
-    --ListRenderer-thead-bg-active-color: #{$o-gray-200};
     --ListRenderer-thead-border-end-color: #{$border-color};
     --ListRenderer-tfoot-bg-color: #{$o-list-footer-bg-color};
     --sticky-header-zindex: 1;
@@ -92,7 +91,6 @@
                 }
 
                 &.table-active {
-                    background: var(--ListRenderer-thead-bg-active-color);
                     box-shadow: none;
                 }
             }
@@ -104,15 +102,11 @@
 
             .o_column_sortable {
 
-                .o_list_sortable_caret {
+                .o_list_sortable_icon {
                     background: var(--ListRenderer-thead-bg-color);
                     position: absolute;
-                    right: .2rem;
+                    right: .5rem;
                     padding: 0 .2rem;
-                }
-
-                &.table-active .o_list_sortable_caret {
-                    background: var(--ListRenderer-thead-bg-active-color);
                 }
 
                 .o_list_header_label_spacer {
@@ -317,7 +311,7 @@
             // 'initial' as it will force them to 'inline', not 'table-cell'.
             display: table-cell !important;
         }
-        
+
         tbody .o_column_resizing {
             position: relative;
             &:after {
