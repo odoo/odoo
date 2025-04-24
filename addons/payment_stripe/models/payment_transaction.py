@@ -212,9 +212,10 @@ class PaymentTransaction(models.Model):
             f'{OPTION_PATH_PREFIX}[amount]': payment_utils.to_minor_currency_units(
                 mandate_values.get('amount', 15000), self.currency_id
             ),  # Use the specified amount, if any, or define the maximum amount of 15.000 INR.
-            f'{OPTION_PATH_PREFIX}[start_date]': int(round(
-                (mandate_values.get('start_datetime') or fields.Datetime.now()).timestamp()
-            )),
+            f'{OPTION_PATH_PREFIX}[start_date]': round(max(
+                mandate_values.get('start_datetime') or fields.Datetime.now(),
+                fields.Datetime.now(),
+            ).timestamp()),
             f'{OPTION_PATH_PREFIX}[interval]': 'sporadic',
             f'{OPTION_PATH_PREFIX}[supported_types][]': 'india',
         }
