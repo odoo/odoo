@@ -124,6 +124,15 @@ export function noFloatingOrder(name) {
 export function clickOrders() {
     return { trigger: ".pos-leftheader .orders-button", run: "click" };
 }
+export function clickPresetTimingSlot() {
+    return { trigger: ".pos-leftheader .preset-time-btn", run: "click" };
+}
+export function presetTimingSlotIs(hour) {
+    return { trigger: `.pos-leftheader .preset-time-btn:contains('${hour}')` };
+}
+export function selectPresetTimingSlotHour(hour) {
+    return { trigger: `.modal button:contains('${hour}')`, run: "click" };
+}
 export function clickRegister() {
     return { trigger: ".pos-leftheader .register-label", run: "click" };
 }
