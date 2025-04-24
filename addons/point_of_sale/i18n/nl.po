@@ -471,7 +471,7 @@ msgstr "<strong>Totaal</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "<sup title=\"Only works for online and self order\">?</sup>"
-msgstr ""
+msgstr "<sup title=\"Werkt alleen online en voor zelf bestellen\">?</sup>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2341,7 +2341,7 @@ msgstr "Product aanmaken"
 #. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Een klant aanmaken"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -2538,6 +2538,12 @@ msgstr "Klantenportaal URL"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Customer Required"
 msgstr "Klant vereist"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Customer address is required"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5085,7 +5091,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oops.."
-msgstr ""
+msgstr "Oeps ..."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8165,6 +8171,13 @@ msgstr "Het merk van de betaalkaart (bv. Visa, AMEX, ...)"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The default pricelist must be included in the available pricelists."
 msgstr ""
 "De standaard prijslist moet worden ingevoegd in de beschikbare prijslijsten."
@@ -9200,6 +9213,20 @@ msgstr "Stuks"
 #: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
 msgid "Unknown Barcode"
 msgstr "Onbekende Barcode"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
+msgid ""
+"This barcode is not compatible with the GS1 standard. Consider configuring a"
+" fallback barcode parser from the PoS settings."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
+msgid "Unsupported Barcode Format"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

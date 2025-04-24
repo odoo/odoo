@@ -63,7 +63,7 @@ msgstr "%(expense_name)s: Dit is je eigen declaratie"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: You are neither a Manager nor a HR Officer"
-msgstr ""
+msgstr "%(expense_name)s: Je bent noch Manager noch HR-verantwoordelijke"
 
 #. module: hr_expense
 #. odoo-python
@@ -72,6 +72,8 @@ msgid ""
 "%(expense_name)s: Your are neither a Manager nor a HR Officer of this "
 "expense's company"
 msgstr ""
+"%(expense_name)s: Je bent noch Manager noch HR-verantwoordelijke van het "
+"bedrijf van deze onkost"
 
 #. module: hr_expense
 #. odoo-python
@@ -88,6 +90,8 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'Onkost - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -121,7 +125,7 @@ msgstr "<i class=\"oi oi-arrow-right\"/> Stel je aliasdomein in"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Onkost</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -168,6 +172,9 @@ msgid ""
 "paid expenses. You can alternatively specify one in the Journal for the "
 "%(method)s payment method."
 msgstr ""
+"Er moet een standaardrekening voor openstaande bedragen worden ingesteld in "
+"de instellingen voor kosten die door het bedrijf worden betaald. Je kunt er "
+"ook een opgeven in het dagboek voor de betaalmethode %(method)s."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -183,12 +190,12 @@ msgstr "Boekhouding"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__accounting_date
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
 msgid "Accounting Date"
-msgstr "Boekhouddatum"
+msgstr "Boekingsdatum"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Accounting date"
-msgstr ""
+msgstr "Boekingsdatum"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
@@ -239,7 +246,7 @@ msgstr "Goedkeuren voor iedereen"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All Paid"
-msgstr ""
+msgstr "Alles Betaald"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -249,12 +256,12 @@ msgstr "Alle toegestane betaalmethodes"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Pay"
-msgstr ""
+msgstr "Alles te Betalen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Post"
-msgstr ""
+msgstr "Alles te Boeken"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
@@ -377,7 +384,7 @@ msgstr "Bijlagen"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Auto-validation"
-msgstr ""
+msgstr "Automatische validatie"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_base
@@ -475,7 +482,7 @@ msgstr "Kostprijs:"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 msgid "Create a new expense"
-msgstr ""
+msgstr "Een nieuwe onkost aanmaken"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -644,6 +651,8 @@ msgid ""
 "Each expense paid by the company must have a distinct and dedicated journal "
 "entry."
 msgstr ""
+"Elke onkost die door het bedrijf wordt betaald, moet een aparte en "
+"specifieke boeking hebben."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -700,7 +709,7 @@ msgstr "Declaratie"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_filtered
 msgid "Expense Analysis"
-msgstr ""
+msgstr "Onkostanalyse"
 
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
@@ -750,7 +759,7 @@ msgstr "Openstaande rekening declaraties"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_post_wizard
 msgid "Expense Posting Wizard"
-msgstr ""
+msgstr "Boekingswizard voor onkosten"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -785,7 +794,7 @@ msgstr "Declaraties Bevestigen Dupliceren"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "Onkost goedgekeurd"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -796,7 +805,7 @@ msgstr ""
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense paid"
-msgstr ""
+msgstr "Onkost betaald"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -806,12 +815,12 @@ msgstr "Reden van afwijzen van de declaratie"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "Onkost geweigerd"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense reset to Draft"
-msgstr ""
+msgstr "Onkost teruggezet naar concept"
 
 #. module: hr_expense
 #. odoo-python
@@ -822,7 +831,7 @@ msgstr "Declaratieverdeling"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_to_approve
 msgid "Expense to Approve"
-msgstr ""
+msgstr "Goed te keuren onkost"
 
 #. module: hr_expense
 #. odoo-python
@@ -859,7 +868,7 @@ msgstr "Declaratie"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses of %(employee)s"
-msgstr ""
+msgstr "Onkosten van %(employee)s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -869,7 +878,7 @@ msgstr "Declaraties van je teamleden"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expenses_to_approve_count
 msgid "Expenses to Approve"
-msgstr ""
+msgstr "Goed te keuren onkosten"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_to_process
@@ -890,6 +899,8 @@ msgid ""
 "Failed to send mails for submitted expenses. No valid email was found for "
 "the company"
 msgstr ""
+"Verzenden van e-mails voor ingediende onkosten is mislukt. Er werd geen "
+"geldig e-mailadres gevonden voor het bedrijf"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
@@ -921,7 +932,7 @@ msgstr "Font awesome icoon bijv. fa-tasks"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__former_sheet_id
 msgid "Former Report"
-msgstr ""
+msgstr "Voorgaand rapport"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -932,7 +943,7 @@ msgstr "Toekomstige activiteiten"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Generated Expense(s)"
-msgstr ""
+msgstr "Gegenereerde onkost(en)"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_gift_product_template
@@ -948,7 +959,7 @@ msgstr "Geschenken aan klanten of verkopers"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Go to employees"
-msgstr ""
+msgstr "Ga naar werknemers"
 
 #. module: hr_expense
 #. odoo-python
@@ -1112,13 +1123,13 @@ msgstr "Boekingsregel"
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from these expenses: %(links)s"
-msgstr ""
+msgstr "Boeking aangemaakt op basis van deze onkosten: %(links)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from this expense: %(link)s"
-msgstr ""
+msgstr "Boeking aangemaakt op basis van deze onkost: %(link)s"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
@@ -1201,6 +1212,8 @@ msgid ""
 "Managers can approve the expense here, then an accountant can post the "
 "accounting entries."
 msgstr ""
+"Managers kunnen de onkost hier goedkeuren, waarna een boekhouder de "
+"boekingen kan doorvoeren."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1271,7 +1284,7 @@ msgstr "Nieuw"
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "New expense entries"
-msgstr ""
+msgstr "Nieuwe kostenboekingen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -1279,12 +1292,14 @@ msgid ""
 "New expenses are awaiting your approval.\n"
 "                You can review them by following this link"
 msgstr ""
+"Nieuwe onkosten wachten op je goedkeuring.\n"
+"                Bekijk ze via deze link"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New expenses waiting for your approval"
-msgstr ""
+msgstr "Nieuwe onkosten wachten op je goedkeuring"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1398,6 +1413,8 @@ msgid ""
 "Once your <b>Expense</b> is ready, you can submit it to your manager and "
 "wait for approval."
 msgstr ""
+"Zodra je <b>onkost</b> is afgerond, kun je deze indienen bij je manager en "
+"wachten op goedkeuring."
 
 #. module: hr_expense
 #. odoo-python
@@ -1405,24 +1422,28 @@ msgstr ""
 msgid ""
 "Only HR Officers, accountants, or the concerned employee can reset to draft."
 msgstr ""
+"Alleen HR-verantwoordelijken, accountants of de betrokken werknemer kunnen "
+"terugzetten naar concept."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only draft expenses can have a total of 0."
-msgstr ""
+msgstr "Alleen conceptonkosten kunnen een totaal van 0 hebben."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only expense paid by the employee can be posted with the wizard"
 msgstr ""
+"Alleen onkosten die door de werknemer zijn betaald, kunnen met de wizard "
+"worden geboekt."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only one expense can be linked to a particular payment"
-msgstr ""
+msgstr "Er kan maar één onkost aan een specifieke betaling worden gekoppeld."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1455,12 +1476,12 @@ msgstr "Betaald door"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Company"
-msgstr ""
+msgstr "Betaald door het bedrijf"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Employee"
-msgstr ""
+msgstr "Betaald door de werknemer"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
@@ -1510,6 +1531,7 @@ msgstr "Telefoonrekeningen, portokosten, etc."
 msgid ""
 "Please specify if the expenses were paid by the company, or the employee."
 msgstr ""
+"Geef aan of de onkosten door het bedrijf of de werknemer zijn betaald."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1520,7 +1542,7 @@ msgstr "Boek inzendingen"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Post Expenses"
-msgstr ""
+msgstr "Onkosten boeken"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1531,13 +1553,13 @@ msgstr "Boeking maken"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses"
-msgstr ""
+msgstr "Onkosten boeken"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses paid by the employee"
-msgstr ""
+msgstr "Onkosten boeken die door de werknemer zijn betaald"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__posted
@@ -1981,6 +2003,8 @@ msgstr "De som van na split-shut blijft hetzelfde"
 msgid ""
 "The work email of some employees is missing. Please add it on their form."
 msgstr ""
+"Het werk-e-mailadres van sommige werknemers ontbreekt. Voeg dit toe op hun "
+"formulier."
 
 #. module: hr_expense
 #. odoo-python
@@ -2014,7 +2038,7 @@ msgstr "Tip: verstuur bewijs via e-mail"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Post"
-msgstr ""
+msgstr "Te boeken"
 
 #. module: hr_expense
 #. odoo-python
@@ -2056,7 +2080,7 @@ msgstr "Totaal btw"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Total Untaxed Amount"
-msgstr ""
+msgstr "Totaalbedrag excl. btw"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount_currency
@@ -2148,7 +2172,7 @@ msgstr "Bekijk declaratie"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "View expenses"
-msgstr ""
+msgstr "Bekijk onkosten"
 
 #. module: hr_expense
 #. odoo-python
@@ -2162,7 +2186,7 @@ msgstr "Wachtend op goedkeuring"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Waiting Reimbursement"
-msgstr ""
+msgstr "In afwachting van terugbetaling"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2216,7 +2240,7 @@ msgstr "Je bent niet gemachtigd om deze declaratie te bewerken."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can not submit an expense without a category."
-msgstr ""
+msgstr "Je kunt een onkost niet indienen zonder categorie."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2237,6 +2261,8 @@ msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
 msgstr ""
+"Je kunt geen onkosten gelijktijdig boeken die door de werknemer zijn betaald"
+" en die tot verschillende bedrijven behoren."
 
 #. module: hr_expense
 #. odoo-python
@@ -2253,6 +2279,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot cancel an expense linked to a posted journal entry"
 msgstr ""
+"Je kunt een onkost die aan een geboekte journaalpost is gekoppeld, niet "
+"annuleren."
 
 #. module: hr_expense
 #. odoo-python
@@ -2274,12 +2302,14 @@ msgstr ""
 msgid ""
 "You cannot do this modification since the payment is linked to an expense."
 msgstr ""
+"Je kunt deze wijziging niet doorvoeren omdat de betaling aan een onkost is "
+"gekoppeld."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot edit the security fields of an expense manually"
-msgstr ""
+msgstr "Je kunt de beveiligingsvelden van een onkost niet handmatig bewerken."
 
 #. module: hr_expense
 #. odoo-python
@@ -2296,30 +2326,32 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a posted journal entry."
 msgstr ""
+"Je kunt een onkost die gekoppeld is aan een geboekte journaalpost niet "
+"terugzetten naar concept."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
-msgstr ""
+msgstr "Je kunt een onkost die al geboekt is, niet splitsen."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the required permission to submit this expense."
-msgstr ""
+msgstr "Je hebt de benodigde toestemming niet om deze onkost in te dienen."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
-msgstr ""
+msgstr "Je hebt de rechten niet om deze onkost te bewerken."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the rights to create accounting entries."
-msgstr ""
+msgstr "Je hebt de rechten niet om boekingen te creëren."
 
 #. module: hr_expense
 #. odoo-python

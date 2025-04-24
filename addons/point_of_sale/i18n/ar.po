@@ -2492,6 +2492,12 @@ msgstr "العميل مطلوب"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Customer address is required"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
@@ -8059,6 +8065,13 @@ msgstr "العلامة التجارية للبطاقة المستخدمة للد
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The default pricelist must be included in the available pricelists."
 msgstr "يجب أن تتضمن قوائم الأسعار المتاحة قائمة الأسعار الافتراضية."
 
@@ -8590,6 +8603,8 @@ msgid ""
 "This journal is associated with payment method %(payment_method)s that is "
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
+"يرتبط دفتر اليومية هذا بطريقة الدفع %(payment_method)s المستخدمة من قِبَل "
+"الطلب %(pos_order)s في جلسة نقاط البيع النشطة %(pos_session)s "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9058,6 +9073,20 @@ msgstr "باركود غير معروف"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
+msgid ""
+"This barcode is not compatible with the GS1 standard. Consider configuring a"
+" fallback barcode parser from the PoS settings."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
+msgid "Unsupported Barcode Format"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/hooks/hooks.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Unknown Error"
@@ -9511,7 +9540,7 @@ msgstr "لا يمكنك فوترة الطلبات التي تنتمي لشركا
 msgid ""
 "You cannot delete a rounding method that is used in a Point of Sale "
 "configuration."
-msgstr ""
+msgstr "لا يمكنك حذف طريقة تقريب مستخدمة في تهيئة نقطة البيع. "
 
 #. module: point_of_sale
 #. odoo-python

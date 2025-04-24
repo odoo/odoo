@@ -1154,7 +1154,7 @@ msgstr "ID de credencial"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_bagel_product_template
 msgid "Bagel"
-msgstr ""
+msgstr "Bagel"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1795,7 +1795,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cinnamon_roll_product_template
 msgid "Cinnamon Roll"
-msgstr ""
+msgstr "Espiral de canyella"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_classic_brown_jacket_product_template
@@ -2475,6 +2475,12 @@ msgstr "L'URL del portal dels clients"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Customer Required"
 msgstr "Cal un client"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Customer address is required"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3242,7 +3248,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_flour_product_template
 msgid "Flour"
-msgstr ""
+msgstr "Farina"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_flour_product_template
@@ -4505,7 +4511,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_multigrain_bread_product_template
 msgid "Multigrain Bread"
-msgstr ""
+msgstr "Pa multicereal"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_invoice
@@ -5372,7 +5378,7 @@ msgstr "Pagat"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_pain_au_chocolat_product_template
 msgid "Pain au Chocolat"
-msgstr ""
+msgstr "Napolitana"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
@@ -8044,6 +8050,13 @@ msgstr "La marca de la targeta de pagament (per exemple Visa, AMEX, ...)"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The default pricelist must be included in the available pricelists."
 msgstr ""
 "La llista de preus per defecte s'ha d'incloure a les llistes de preus "
@@ -9028,6 +9041,20 @@ msgstr "Unitats"
 #: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
 msgid "Unknown Barcode"
 msgstr "Codi de barres desconegut"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
+msgid ""
+"This barcode is not compatible with the GS1 standard. Consider configuring a"
+" fallback barcode parser from the PoS settings."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
+msgid "Unsupported Barcode Format"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

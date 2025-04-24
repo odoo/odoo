@@ -11460,8 +11460,8 @@ msgid ""
 "object.partner_id.lang }}."
 msgstr ""
 "Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání "
-"e-mailu. Pokud není nastavena, bude použita anglická verze. To by měl být "
-"obvykle zástupný výraz, který poskytuje vhodný jazyk, např. "
+"e-mailu. Pokud není nastaven, bude použita anglická verze. Mělo by se jednat"
+" o zástupný výraz, který poskytuje vhodný jazyk, např. "
 "{{object.partner_id.lang}}."
 
 #. module: account
@@ -19225,14 +19225,13 @@ msgstr "{amount} ({debit_credit}) z {link}"
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Opravný daňový doklad (číslo {{ object.name or "
+"{{ object.company_id.name }} Opravný daňový doklad (č. {{ object.name or "
 "'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Faktura (číslo {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} Faktura (č. {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -19240,5 +19239,4 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
 "}})"
 msgstr ""
-"{{ object.company_id.name }} Platební doklad (číslo {{ object.name or 'n/a' "
-"}})"
+"{{ object.company_id.name }} Platební doklad (č. {{ object.name or 'n/a' }})"

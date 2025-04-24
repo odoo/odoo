@@ -218,6 +218,8 @@ msgstr "<span class=\"opacity-50 p-2\"> %</span>"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads assigned the last 30 days out of a maximum of </span>"
 msgstr ""
+"<span> leads toegewezen in de afgelopen 30 dagen, van een maximum van "
+"</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -247,6 +249,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Leads periodiek toewijzen op basis van prioriteiten en filters.</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    Deze instelling wordt standaard gebruikt door alle verkoopteams, tenzij\n"
+"                                    anders opgegeven.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -427,6 +434,8 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A lead in a Won stage cannot be lost. Move it to another stage first."
 msgstr ""
+"Een lead in de gewonnen fase kan niet verloren gaan. Verplaats deze eerst "
+"naar een andere fase."
 
 #. module: crm
 #. odoo-python
@@ -566,7 +575,7 @@ msgstr "Volgende %s toevoegen"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_followers_edit_action_from_lead
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Volgers toevoegen/verwijderen"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_domain
@@ -863,6 +872,9 @@ msgid ""
 "operations, as the probabilities of opportunities in this stage will be "
 "recomputed on saving."
 msgstr ""
+"Het wijzigen van de waarde van 'Is gewonnen fase' kan veel bewerkingen "
+"veroorzaken, omdat de kansen in deze fase opnieuw worden berekend bij het "
+"opslaan."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_tree
@@ -1127,7 +1139,7 @@ msgstr "Maak verkoopkans"
 #. module: crm
 #: model:ir.model,website_form_label:crm.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Een klant aanmaken"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
@@ -1393,7 +1405,7 @@ msgstr "Koppel niet aan een klant"
 #. odoo-python
 #: code:addons/crm/models/crm_stage.py:0
 msgid "Do you really want to update this stage?"
-msgstr ""
+msgstr "Wil je deze fase echt bijwerken?"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -2016,12 +2028,12 @@ msgstr "Lead toewijzen"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment"
-msgstr ""
+msgstr "Leadtoewijzing"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment Filter"
-msgstr ""
+msgstr "Filter voor leadtoewijzing"
 
 #. module: crm
 #. odoo-python
@@ -2057,7 +2069,7 @@ msgstr "Leadplannen"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Priority Filter"
-msgstr ""
+msgstr "Filter voor leadprioriteit"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
@@ -2469,6 +2481,8 @@ msgid ""
 "Member preferred assignment domain for user %(user)s and team %(team)s is "
 "incorrectly formatted"
 msgstr ""
+"Voorkeursdomein voor toewijzing van gebruiker %(user)s en team %(team)s is "
+"onjuist geformatteerd"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2721,7 +2735,7 @@ msgstr "Niet genoeg voorraad"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Not specified"
-msgstr ""
+msgstr "Niet gespecificeerd"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__description
@@ -3015,7 +3029,7 @@ msgstr "Partner staat op blacklist"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_optout
 msgid "Pause assignment"
-msgstr ""
+msgstr "Toewijzing pauzeren"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__pending
@@ -3129,7 +3143,7 @@ msgstr "Voorspellende leadscoring: herbereken geautomatiseerde kansen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain_preferred
 msgid "Preference assignment Domain"
-msgstr ""
+msgstr "Voorkeursdomein voor toewijzing"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3666,7 +3680,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "The lead %s cannot be won and lost at the same time."
-msgstr ""
+msgstr "De lead %s kan niet tegelijk gewonnen en verloren zijn."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
@@ -4169,7 +4183,7 @@ msgstr "Gewonnen aantal"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__won_status
 msgid "Won/Lost"
-msgstr ""
+msgstr "Gewonnen/Verloren"
 
 #. module: crm
 #. odoo-python
@@ -4296,7 +4310,7 @@ msgstr "verkoopkanse in je pijplijn genereren?<br>"
 #. odoo-python
 #: code:addons/crm/models/crm_lost_reason.py:0
 msgid "lost_reason_id"
-msgstr ""
+msgstr "lost_reason_id"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

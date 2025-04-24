@@ -3262,7 +3262,7 @@ msgstr "Priorita"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks_priority_widget_template
 msgid "Priority: {{'Important' if task.priority == '1' else 'Normal'}}"
-msgstr "Priorita: {{'Important' if task.priority == '1' else 'Normal'}}"
+msgstr "Priorita: {{'Urgentní' if task.priority == '1' else 'Normální}}"
 
 #. module: project
 #. odoo-javascript
@@ -5595,6 +5595,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: Anketa "
+"spokojenosti"
 
 #. module: project
 #. odoo-python

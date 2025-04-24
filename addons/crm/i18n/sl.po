@@ -211,6 +211,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads assigned the last 30 days out of a maximum of </span>"
 msgstr ""
+"<span> možnih strank, dodeljenih zadnjih 30 dni od največjega števila "
+"</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -218,6 +220,8 @@ msgid ""
 "<span> leads assigned this month\n"
 "                            on a maximum of </span>"
 msgstr ""
+"<span> dodeljene stranke v tem mesecu\n"
+"                            na največ </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -342,11 +346,11 @@ msgid ""
 " Click on the grey area of the progress bar to see all opportunities that "
 "have no next activity."
 msgstr ""
-"A great tip to boost sales efficiency is to always define a next step on "
-"each opportunity. To manage ongoing activities, click on any status of the "
-"progress bar to filter opportunities based on their next activities' status."
-" Click on the grey area of the progress bar to see all opportunities that "
-"have no next activity."
+"Odličen nasvet za povečanje učinkovitosti prodaje je, da vedno določite "
+"naslednji korak za vsako priložnost. Če želite upravljati tekoče dejavnosti,"
+" kliknite katero koli stanje v vrstici napredka, da filtrirate priložnosti "
+"glede na stanje njihovih naslednjih dejavnosti. Kliknite na sivo območje "
+"vrstice napredka, da vidite vse priložnosti, ki nimajo naslednje dejavnosti."
 
 #. module: crm
 #. odoo-python
@@ -361,6 +365,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A new lead has been created and is not assigned to any team."
 msgstr ""
+"Nova možna stranka je bila ustvarjena in ni bila dodeljena nobeni ekipi."
 
 #. module: crm
 #. odoo-python
@@ -483,7 +488,7 @@ msgstr "Dodajanje opisa..."
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before the creation of an opportunity"
-msgstr "Add a qualification step before the creation of an opportunity"
+msgstr "Dodajte korak kvalifikacije pred ustvarjanjem priložnosti"
 
 #. module: crm
 #. odoo-javascript
@@ -502,8 +507,8 @@ msgid ""
 "Additional filter domain when fetching unassigned leads to allocate to the "
 "team."
 msgstr ""
-"Additional filter domain when fetching unassigned leads to allocate to the "
-"team."
+"Dodaten filter domene pri pridobivanju nedodeljenih potencialnih strank za "
+"dodelitev ekipi."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -513,7 +518,7 @@ msgstr "Naslov"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Address:"
-msgstr "Address:"
+msgstr "Naslov:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
@@ -549,12 +554,12 @@ msgstr "Naziv vzdevka"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Vzdevek status"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Stanje vzdevka je ocenjeno pri zadnjem prejetem sporočilu."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -565,7 +570,7 @@ msgstr "Model vzdevka"
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "All set. Let’s <b>Schedule</b> it."
-msgstr "All set. Let’s <b>Schedule</b> it."
+msgstr "Vse je pripravljeno. Dajmo <b>v</b> urnik."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -596,8 +601,10 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
-"As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
-"                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
+"Ker niste član nobene prodajne ekipe, se vam prikaže cevovod <b>prva ekipa kot privzeto.\n"
+"</b>\n"
+"                                        Za delo s CRM bi morali <a name=\"%d\" type=\"action\" tabindex=\"-1\">pridruži se ekipi.\n"
+"</a>"
 
 #. module: crm
 #. odoo-python
@@ -606,13 +613,13 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
-"As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
-"                                        To work with the CRM, you should join a team."
+"Ker niste član nobene prodajne ekipe, se vam prikaže cevovod <b>prva ekipa privzeto.</b>\n"
+"                                        Za delo s CRM se morate pridružiti ekipi."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
-msgstr "Assign Leads"
+msgstr "Dodeljevanje možnih strank"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -622,7 +629,7 @@ msgstr "Priredi priložnosti"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign salespersons into multiple Sales Teams."
-msgstr "Assign salespersons into multiple Sales Teams."
+msgstr "Dodelite prodajalce v več prodajnih skupin."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -749,7 +756,7 @@ msgstr "CRM Stopnje"
 #. module: crm
 #: model:ir.actions.server,name:crm.ir_cron_crm_lead_assign_ir_actions_server
 msgid "CRM: Lead Assignment"
-msgstr "CRM: Lead Assignment"
+msgstr "CRM: Dodelitev vodje"
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
@@ -772,7 +779,7 @@ msgstr "Kampanja"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Campaign:"
-msgstr "Campaign:"
+msgstr "Kampanja"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -791,6 +798,9 @@ msgid ""
 "operations, as the probabilities of opportunities in this stage will be "
 "recomputed on saving."
 msgstr ""
+"Spreminjanje vrednosti 'Is Won Stage' lahko sproži veliko število operacij, "
+"saj bodo verjetnosti priložnosti v tej fazi ponovno izračunane pri "
+"shranjevanju."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_tree
@@ -803,6 +813,8 @@ msgid ""
 "Check the Stage Tracker of Leads to identify bottlenecks in your Sales "
 "process."
 msgstr ""
+"Preverite Stage Tracker of Leads, da prepoznate ozka grla v vašem prodajnem "
+"procesu."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_leads
@@ -810,13 +822,16 @@ msgid ""
 "Check this box to filter and qualify incoming requests as leads before "
 "converting them into opportunities and assigning them to a salesperson."
 msgstr ""
-"Check this box to filter and qualify incoming requests as leads before "
-"converting them into opportunities and assigning them to a salesperson."
+"Potrdite to polje, da filtrirate in kvalificirate dohodne zahteve kot "
+"potencialne stranke, preden jih pretvorite v priložnosti in jih dodelite "
+"prodajalcu."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_opportunities
 msgid "Check this box to manage a presales process with opportunities."
-msgstr "Check this box to manage a presales process with opportunities."
+msgstr ""
+"Označite to polje, če želite upravljati predprodajni postopek s "
+"priložnostmi."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__city
@@ -844,8 +859,8 @@ msgid ""
 "Click on the breadcrumb to go back to your Pipeline. Odoo will save all "
 "modifications as you navigate."
 msgstr ""
-"Click on the breadcrumb to go back to your Pipeline. Odoo will save all "
-"modifications as you navigate."
+"Kliknite na drobtinice, da se vrnete na svoj cevovod. Odoo bo med navigacijo"
+" shranil vse spremembe."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_closed
@@ -866,7 +881,7 @@ msgstr "Zaključeni/Opuščeni indici ne morejo biti pretvorjeni v priložnosti.
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
 msgid "Closing Note"
-msgstr "Closing Note"
+msgstr "Zaključna opomba"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
@@ -891,12 +906,12 @@ msgstr "Naziv družbe"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Company Name:"
-msgstr "Company Name:"
+msgstr "Ime podjetja:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Company:"
-msgstr "Company:"
+msgstr "Podjetje:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date
@@ -922,7 +937,7 @@ msgstr "Congrats, best of luck catching such big fish! :)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr "Consider leads created as of the:"
+msgstr "Upoštevajte potencialne stranke, ustvarjene od:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -934,7 +949,7 @@ msgstr "Stik"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Contact Details:"
-msgstr "Contact Details:"
+msgstr "Kontaktni podatki:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -949,7 +964,7 @@ msgstr "Ime stika"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Contact:"
-msgstr "Contact:"
+msgstr "Kontakt:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__name
@@ -1015,8 +1030,8 @@ msgid ""
 "Convert visitors of your website into leads and perform data enrichment "
 "based on their IP address"
 msgstr ""
-"Convert visitors of your website into leads and perform data enrichment "
-"based on their IP address"
+"Pretvorite obiskovalce vaše spletne strani v potencialne stranke in izvedite"
+" obogatitev podatkov glede na njihov IP naslov"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__correct
@@ -1057,27 +1072,29 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Create a Lead"
-msgstr "Create a Lead"
+msgstr "Ustvari potencialno stranko"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.mail_activity_plan_action_lead
 msgid "Create a Lead Activity Plan"
-msgstr ""
+msgstr "Ustvarite načrt aktivnosti za novo stranko"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Create a Lost Reason"
-msgstr "Create a Lost Reason"
+msgstr "Ustvarite izgubljeni razlog"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
 msgid "Create a Recurring Plan"
-msgstr "Create a Recurring Plan"
+msgstr "Ustvarite ponavljajoči se načrt"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
-msgstr "Create a lead mining request directly from the opportunity pipeline."
+msgstr ""
+"Ustvarite zahtevo za iskanje novih strank neposredno iz cevovoda "
+"priložnosti."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -1098,7 +1115,7 @@ msgstr "Ustvari nov indic"
 #: code:addons/crm/models/crm_team.py:0
 #: model:ir.model,website_form_label:crm.model_crm_lead
 msgid "Create an Opportunity"
-msgstr "Create an Opportunity"
+msgstr "Ustvarite priložnost"
 
 #. module: crm
 #. odoo-python
@@ -1154,7 +1171,7 @@ msgstr "Datum nastanka"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_opportunity_forecast
 msgid "Crm: Forecast"
-msgstr "Crm: Forecast"
+msgstr "Crm: Napoved"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
@@ -1169,7 +1186,7 @@ msgstr "Valuta"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Custom Bounced Message"
+msgstr "Zavrnjeno sporočilo po meri"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__partner_id
@@ -1221,7 +1238,7 @@ msgstr "Privzete vrednosti"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Define recurring plans and revenues on Opportunities"
-msgstr "Define recurring plans and revenues on Opportunities"
+msgstr "Določite ponavljajoče načrte in prihodke v možnostih"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1236,7 +1253,7 @@ msgstr "Opis"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Did you know emails sent to"
-msgstr "Did you know emails sent to"
+msgstr "Ali ste vedeli, da so e-poštna sporočila poslana na"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -1244,8 +1261,8 @@ msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
 msgstr ""
-"Did you know emails sent to a Sales Team alias generate opportunities in "
-"your pipeline?"
+"Ali ste vedeli, da e-poštna sporočila, poslana vzdevku prodajne ekipe, "
+"ustvarjajo priložnosti v vašem načrtu?"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
@@ -1254,9 +1271,10 @@ msgid ""
 "fill in all its data? Odoo autocompletes everything for you: logo, address, "
 "company size, business information, social media accounts, etc."
 msgstr ""
-"Did you know you can search a company by name or VAT number to instantly "
-"fill in all its data? Odoo autocompletes everything for you: logo, address, "
-"company size, business information, social media accounts, etc."
+"Ali ste vedeli, da lahko iščete podjetje po imenu ali številki DDV in takoj "
+"izpolnite vse njegove podatke? Odoo samodejno izpolni vse namesto vas: "
+"logotip, naslov, velikost podjetja, poslovne podatke, račune v družabnih "
+"medijih itd."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
@@ -1265,9 +1283,9 @@ msgid ""
 " top-right map icon? A lot of screens in Odoo can be turned into a map: "
 "tasks, contacts, delivery orders, etc."
 msgstr ""
-"Did you know you can turn a list of opportunities into a map view, using the"
-" top-right map icon? A lot of screens in Odoo can be turned into a map: "
-"tasks, contacts, delivery orders, etc."
+"Ali ste vedeli, da lahko seznam priložnosti spremenite v pogled zemljevida z"
+" uporabo zgornje desne ikone zemljevida? Veliko zaslonov v Odooju je mogoče "
+"spremeniti v zemljevid: opravila, kontakti, naročila za dostavo itd."
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
@@ -1316,7 +1334,7 @@ msgstr "Ne poveži s stranko"
 #. odoo-python
 #: code:addons/crm/models/crm_stage.py:0
 msgid "Do you really want to update this stage?"
-msgstr ""
+msgstr "Ali res želite posodobiti to stopnjo?"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -1328,17 +1346,20 @@ msgstr "Domena"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats!"
 msgstr ""
+"Povlecite svojo priložnost na <b>Zmaga</b> ko dobiš dogovor. Čestitke!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Duration: %s"
-msgstr ""
+msgstr "Trajanje: %s"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
-msgstr "Easily set expected closing dates and overview your revenue streams."
+msgstr ""
+"Enostavno nastavite pričakovane zaključne datume in si oglejte svoje "
+"prihodke."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1362,12 +1383,12 @@ msgstr "Email vzdevek"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_domain_criterion
 msgid "Email Domain Criterion"
-msgstr ""
+msgstr "Kriterij e-poštne domene"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
 msgid "Email Quality"
-msgstr "Email Quality"
+msgstr "Kakovost e-pošte"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
@@ -1397,17 +1418,17 @@ msgstr "Email: Welcome Demo"
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr "Enrich all leads automatically"
+msgstr "Samodejno obogati vse potencialne stranke"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr "Enrich lead automatically"
+msgstr "Samodejno obogatite podatke od strank"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
 msgid "Enrich leads on demand only"
-msgstr "Enrich leads on demand only"
+msgstr "Obogatite le na zahtevo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_enrich
@@ -1415,13 +1436,15 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
 msgstr ""
-"Enrich your leads automatically with company data based on their email "
-"address."
+"Samodejno obogatite svoje potencialne stranke s podatki o podjetju na "
+"podlagi njihovega e-poštnega naslova."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
-msgstr "Enrich your leads with company data based on their email addresses"
+msgstr ""
+"Obogatite svoje potencialne stranke s podatki o podjetju na podlagi njihovih"
+" e-poštnih naslovov"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1429,8 +1452,8 @@ msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
 "customer). It will appear as a tooltip over the stage's name."
 msgstr ""
-"Enter here the internal requirements for this stage (ex: Offer sent to "
-"customer). It will appear as a tooltip over the stage's name."
+"Tukaj vnesite interne zahteve za to stopnjo (npr. Ponudba poslana stranki). "
+"Prikazal se bo kot opis orodja nad imenom stopnje."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__date_deadline
@@ -1440,7 +1463,7 @@ msgstr "Ocena datuma, ko bo priložnost pridobljena"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
 msgid "Exceed monthly lead assignement"
-msgstr ""
+msgstr "Preseganje mesečne dodelitve vodilnih strank"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1456,13 +1479,13 @@ msgstr "Pričakovan zaključek"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Expected Closing:"
-msgstr "Expected Closing:"
+msgstr "Pričakovan zaključek:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected MRR"
-msgstr "Expected MRR"
+msgstr "Pričakovan MRR"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
@@ -1487,12 +1510,12 @@ msgstr "Dodatne informacije"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Extra Information"
-msgstr "Extra Information"
+msgstr "Dodatne informacije"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Extra fields..."
-msgstr "Extra fields..."
+msgstr "Dodatna polja..."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency_field__field_id
@@ -1510,8 +1533,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Field used to store sanitized phone number. Helps speeding up searches and "
-"comparisons."
+"Polje za shranjevanje prečiščene telefonske številke. Pomaga pospešiti "
+"iskanje in primerjave."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
@@ -1551,16 +1574,16 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
-"For a sales team, there is nothing worse than being dry on leads. "
-"Fortunately, in just a few clicks, you can generate leads specifically "
-"targeted to your needs: company size, industry, etc. To help you test the "
-"feature, we offer you 200 credits for free."
+"Za prodajno ekipo ni nič hujšega kot ostati na suhem. Na srečo lahko v samo "
+"nekaj klikih ustvarite potencialne stranke, ki so posebej usmerjene v vaše "
+"potrebe: velikost podjetja, panoga itd. Da bi vam pomagali preizkusiti "
+"funkcijo, vam ponujamo 200 kreditov brezplačno."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignment
 msgid "Force assignment"
-msgstr "Force assignment"
+msgstr "Dodelitev moči"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_forecast
@@ -1571,19 +1594,19 @@ msgstr "Napoved"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_pivot_forecast
 msgid "Forecast Analysis"
-msgstr "Forecast Analysis"
+msgstr "Analiza napovedi"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "From %(source_name)s"
-msgstr "From %(source_name)s"
+msgstr "Od %(source_name)s"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "From %(source_name)s: %(source_subject)s"
-msgstr ""
+msgstr "Od %(source_name)s: %(source_subject)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1595,12 +1618,16 @@ msgstr "Bodoče aktivnosti"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
 msgid "Generate new leads based on their country, industries, size, etc."
-msgstr "Generate new leads based on their country, industries, size, etc."
+msgstr ""
+"Ustvarite nove potencialne stranke glede na njihovo državo, panoge, velikost"
+" itd."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr "Generate new leads based on their country, industry, size, etc."
+msgstr ""
+"Ustvarite nove potencialne stranke na podlagi njihove države, industrije, "
+"velikosti itd."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1610,7 +1637,7 @@ msgstr "Pridobi razloge za neuspeh"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
-msgstr "Give your team the requirements to move an opportunity to this stage."
+msgstr "Dajte svoji ekipi zahteve za prehod na to stopnjo."
 
 #. module: crm
 #. odoo-python
@@ -1692,8 +1719,8 @@ msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
 msgstr ""
-"If checked, forces salesman to be updated on updated opportunities even if "
-"already set."
+"Če je označeno, prisili prodajalca, da je obveščen o posodobljenih "
+"priložnostih, tudi če je že nastavljeno."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1712,8 +1739,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"If set, this content will automatically be sent out to unauthorized users "
-"instead of the default message."
+"Če je nastavljeno, bo ta vsebina samodejno poslana nepooblaščenim "
+"uporabnikom namesto privzetega sporočila."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1731,8 +1758,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"Če je prečiščena telefonska številka na črnem seznamu, stik ne bo več "
+"prejemal množičnih sporočil SMS z nobenega seznama"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1763,9 +1790,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
-"distinguish which number is blacklisted             when there is both a "
-"mobile and phone field in a model."
+"Označuje, ali je prečiščena telefonska številka na črnem seznamu res "
+"telefonska številka. Pomaga pri razločevanju, katera številka je na črnem "
+"seznamu, ko je v modelu tako polje za mobilni kot telefon."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1776,7 +1803,7 @@ msgstr "Interne opombe"
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Interval type between each cron run (e.g. each 2 days or each 2 hours)"
 msgstr ""
-"Interval type between each cron run (e.g. each 2 days or each 2 hours)"
+"Vrsta intervala med vsakim zagonom krona (npr. vsaka 2 dni ali vsaki 2 uri)"
 
 #. module: crm
 #. odoo-python
@@ -1796,7 +1823,7 @@ msgstr "Je sledilec"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_partner_visible
 msgid "Is Partner Visible"
-msgstr "Is Partner Visible"
+msgstr "Je partner viden"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__won_status
@@ -1811,7 +1838,7 @@ msgstr "Je zmagovalna faza?"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_automated_probability
 msgid "Is automated probability?"
-msgstr "Is automated probability?"
+msgstr "Je avtomatizirana verjetnost?"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__duration_tracking
@@ -1826,7 +1853,7 @@ msgstr "Delovno mesto"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Job Position:"
-msgstr "Job Position:"
+msgstr "Delovno mesto:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
@@ -1851,7 +1878,7 @@ msgstr "Jezik"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Language:"
-msgstr "Language:"
+msgstr "Jezik:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_automation_last
@@ -1861,13 +1888,13 @@ msgstr "Zadnja aktivnost"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Last Automation:"
-msgstr ""
+msgstr "Zadnja avtomatizacija:"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Last Meeting"
-msgstr ""
+msgstr "Zadnji sestanek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_last_stage_update
@@ -1924,33 +1951,33 @@ msgstr "Indic"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_enabled
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_enabled
 msgid "Lead Assign"
-msgstr "Lead Assign"
+msgstr "Dodeli stranko"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment"
-msgstr ""
+msgstr "Dodelitev vodje"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment Filter"
-msgstr ""
+msgstr "Filter za dodelitev možnih strank"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "Lead Assignment requested by %(user_name)s"
-msgstr "Lead Assignment requested by %(user_name)s"
+msgstr "Nalogo vodilne stranke zahteva %(user_name)s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_max
 msgid "Lead Average Capacity"
-msgstr "Lead Average Capacity"
+msgstr "Povprečna zmogljivost stranke"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Enrichment"
-msgstr "Lead Enrichment"
+msgstr "Obogatitev podatkov na stranki"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form

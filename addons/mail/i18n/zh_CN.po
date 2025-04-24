@@ -2084,7 +2084,7 @@ msgstr "无法更改子频道的授权群组：%(channels)s。"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
-msgstr "无法更改初始消息或父频道：%(channels)s."
+msgstr "无法更改初始消息或母频道：%(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -2097,7 +2097,7 @@ msgstr "不能更改频道类型：%(channel_names)s"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel."
-msgstr "无法创建 %(channels)s: 初始消息应属于父级频道。"
+msgstr "无法创建 %(channels)s：初始消息应属于母级频道。"
 
 #. module: mail
 #. odoo-python
@@ -7674,7 +7674,7 @@ msgstr "上级"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__parent_channel_id
 msgid "Parent Channel"
-msgstr "父频道"
+msgstr "母频道"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__parent_id
@@ -7696,7 +7696,7 @@ msgstr "上级记录ID"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__parent_channel_id
 msgid "Parent channel"
-msgstr "父频道"
+msgstr "母频道"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -7705,8 +7705,8 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"父级模型拥有别名。拥有别名参考的模型不一定是alias_model_id给出的模型 (例如：project(parent_model) 和任务 "
-"(模型))"
+"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例如：project(parent_model) 和任务 "
+"(模型)）"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -7714,7 +7714,7 @@ msgid ""
 "Parent subtype, used for automatic subscription. This field is not correctly"
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
-msgstr "父类,用于自动订阅.这个字段没有正确的命名。例如在一个项目上，项目子类型的上一级ID指任务相关的子类型。"
+msgstr "母模型子类型（用于自动订阅）。该字段命名存在歧义，例如在项目中，project子类型的 parent_id 实际指向的是任务相关子类型。"
 
 #. module: mail
 #. odoo-javascript

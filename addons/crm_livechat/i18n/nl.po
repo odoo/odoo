@@ -29,7 +29,7 @@ msgstr "%s's Nieuwe lead"
 #. module: crm_livechat
 #: model_terms:ir.ui.view,arch_db:crm_livechat.crm_lead_view_form
 msgid "<span class=\"o_stat_text\">View chat</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Chat bekijken</span>"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script
@@ -100,7 +100,7 @@ msgstr "Aantal gegenereerde leads"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__has_crm_lead
 msgid "Has Crm Lead"
-msgstr ""
+msgstr "Heeft CRM-lead"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
@@ -139,7 +139,7 @@ msgstr "Leads"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__origin_channel_id
 msgid "Live chat from which the lead was created"
-msgstr ""
+msgstr "Livechat waaruit de lead is aangemaakt"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -160,6 +160,7 @@ msgstr "Dank je, je hoort snel van ons terug!"
 #: model:ir.model.fields,help:crm_livechat.field_discuss_channel__lead_ids
 msgid "The channel becomes accessible to sales users when leads are set."
 msgstr ""
+"Het kanaal wordt toegankelijk voor verkopers zodra leads zijn ingesteld."
 
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -182,6 +183,8 @@ msgstr ""
 #: code:addons/crm_livechat/models/crm_lead.py:0
 msgid "You cannot create leads linked to channels you don't have access to."
 msgstr ""
+"Je kunt geen leads aanmaken die gelinkt zijn aan kanalen waarvoor je geen "
+"toegang hebt."
 
 #. module: crm_livechat
 #. odoo-python
@@ -189,3 +192,5 @@ msgstr ""
 msgid ""
 "You cannot update a lead and link it to a channel you don't have access to."
 msgstr ""
+"Je kunt een lead niet bijwerken en linken aan een kanaal waarvoor je geen "
+"toegang hebt."

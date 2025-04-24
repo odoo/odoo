@@ -271,6 +271,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Dzień dobry,<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> udostępnił/a Ci <strong t-out=\"object.name or ''\">dokument</strong>!\n"
+"                        </p><div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px;                                 text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                Zobacz <strong t-out=\"object.name or ''\">Dokument</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -4466,7 +4486,7 @@ msgid ""
 msgstr ""
 "Opcjonalny język tłumaczenia (kod ISO) do wyboru podczas wysyłania "
 "wiadomości e-mail. Jeśli nie jest ustawiony, zostanie użyta wersja "
-"angielska. Powinno to być zazwyczaj wyrażenie placeholder, które zapewnia "
+"angielska. Powinno to być zazwyczaj wyrażenie zastępcze, które zapewnia "
 "odpowiedni język, np. {{ object.partner_id.lang }}."
 
 #. module: website_slides
@@ -6914,7 +6934,7 @@ msgstr "np. \"Które zwierzę nie potrafi latać?\"."
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 msgid "e.g. \"{{placeholder || \"another animal\"}}\""
-msgstr ""
+msgstr "np. \"{{placeholder || \"inne zwierzę\"}}\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
@@ -7092,12 +7112,12 @@ msgstr "your-friend@domain.com, your-friend2@domain.com"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_shared
 msgid "{{ user.name }} shared a Course"
-msgstr "{{ user.name }} udostępnił kurs"
+msgstr "{{ user.name }} udostępnił/a kurs"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_category }} with you!"
-msgstr "{{ user.name }} udostępnił ci {{ object.slide_category }}!"
+msgstr "{{ user.name }} udostępnił/a Ci {{ object.slide_category }}!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav

@@ -274,6 +274,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Dobrý den<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> sdílel/a s vámi <strong t-out=\"object.name or ''\">dokument</strong>!\n"
+"                        </p><div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px;                                 text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                Zobrazit <strong t-out=\"object.name or ''\">Dokument</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -4448,8 +4468,8 @@ msgid ""
 "object.partner_id.lang }}."
 msgstr ""
 "Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání "
-"e-mailu. Pokud není nastavena, bude použita anglická verze. To by měl být "
-"obvykle zástupný výraz, který poskytuje vhodný jazyk, např. "
+"e-mailu. Pokud není nastaven, bude použita anglická verze. Mělo by se jednat"
+" o zástupný výraz, který poskytuje vhodný jazyk, např. "
 "{{object.partner_id.lang}}."
 
 #. module: website_slides
@@ -6617,7 +6637,7 @@ msgstr "Už jste se k tomuto kanálu připojili"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
 msgid "You have been invited to check out {{ object.channel_id.name }}"
-msgstr ""
+msgstr "Byli jste pozvání, abyste si prohlédli {{ object.channel_id.name }}"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_enroll
@@ -6877,7 +6897,7 @@ msgstr "např. \"Které zvíře neumí létat?\""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 msgid "e.g. \"{{placeholder || \"another animal\"}}\""
-msgstr ""
+msgstr "např. \"{{placeholder || \"jiné zvíře\"}}\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
@@ -7055,12 +7075,12 @@ msgstr "vas-pritel@domena.com, vas-pritel2@domena.com"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_shared
 msgid "{{ user.name }} shared a Course"
-msgstr "{{ user.name }} sdílel kurz"
+msgstr "{{ user.name }} sdílel/a kurz"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_category }} with you!"
-msgstr "{{ user.name }} sdílel {{ object.slide_category }} s vámi!"
+msgstr "{{ user.name }} sdílel/a {{ object.slide_category }} s vámi!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav

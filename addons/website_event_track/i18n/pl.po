@@ -118,6 +118,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Dzień dobry, <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    Z przyjemnością informujemy, że Twoja propozycja <t t-out=\"object.name or ''\">O co chodzi w tym wydarzeniu</t> została zaakceptowana i potwierdzona dla wydarzenia <t t-out=\"object.event_id.name or ''\">Premiera kolekcji OpenWood online</t>.\n"
+"    <br/>\n"
+"    Więcej szczegółów znajdziesz tutaj:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Zobacz dyskusję\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Dziękujemy,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -537,7 +554,7 @@ msgstr "Ustawienia konfiguracji"
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of {{ object.name }}"
-msgstr "Potwierdzenie  {{ object.name }}"
+msgstr "Potwierdzenie {{ object.name }}"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
