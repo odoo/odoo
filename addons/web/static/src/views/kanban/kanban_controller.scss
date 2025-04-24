@@ -1,5 +1,7 @@
 // ------- Kanban Menu -------
 .o-dropdown--kanban-record-menu {
+    --ColorListField-padding: 3px #{($o-dropdown-hpadding - $o-kanban-inner-hmargin) 3px $o-dropdown-hpadding};
+
     // Records colours
     @include o-kanban-record-color;
 }
@@ -47,6 +49,9 @@
             > div:not(.o_kanban_card_manage_title) {
                 @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
             }
+            &:has(.o_field_kanban_color_picker) {
+                flex: 0 0 45%;
+            }
         }
 
         .row.o_kanban_card_manage_settings {
@@ -57,9 +62,10 @@
             }
 
             .o_kanban_colorpicker {
+                --ColorListField-columns: 4;
+
                 max-width: none;
                 padding: 0;
-                margin-left: 2px !important;
             }
 
             div[class*="col-"] + div[class*="col-"] {
@@ -89,9 +95,33 @@
         padding-left: var(--offcanvas-padding-x);
     }
 
-    .oe_kanban_action {
-        padding: map-get($spacers, 2) 0;
-        display: inline-block;
+    div[class*="col-"] {
+        width: 100%;
+        padding: 0;
+    }
+    // Targets any main column not in o_kanban_card_manage_settings and not last
+    .container > .row:where(:not(.o_kanban_card_manage_settings)) > div[class*="col-"]:where(:not(:last-child)) {
+        padding-bottom: map-get($spacers, 2);
+        border-bottom: $border-width solid $border-color;
+        margin-bottom: map-get($spacers, 3);
+    }
+
+    div[role="menuitem"] {
+        display: block !important;
+
+        > a {
+            display: block;
+            padding: #{map-get($spacers, 3)} var(--BottomSheet-Entry-paddingX);
+            font-size: $h5-font-size;
+            font-weight: $o-font-weight-medium;
+            color: inherit;
+        }
+    }
+
+    .o_kanban_card_manage_title {
+        padding: #{map-get($spacers, 3)} var(--BottomSheet-Entry-paddingX) 0;
+        font-size: small;
+        color: $text-muted;
     }
 
     .o_kanban_card_manage_settings {
@@ -104,32 +134,21 @@
             text-align: start !important;
         }
 
-        div[class*="col-"] {
-            width: 100%;
-        }
-
         .o_field_kanban_color_picker {
             --fieldWidget-display: block;
             --fieldWidget-margin-bottom: #{map-get($spacers, 3)};
-        }
 
-        .o_kanban_colorpicker {
-            max-width: none;
-            display: flex;
-            justify-content: space-between;
-            gap: map-get($spacers, 2);
-            margin: 0 calc(var(--offcanvas-padding-x) * -1) !important;
-            padding: map-get($spacers, 2) var(--offcanvas-padding-x);
-            overflow-x: auto;
+            --ColorListField-columns: 12;
+            --ColorListField-gap: #{map-get($spacers, 2)};
+            --ColorListField-padding: 0;
+            --ColorListField-Entry-minWidth: 2.5rem;
+            --ColorListField-Entry-aspectRatio: 1;
 
-            > li {
-                margin: 0;
-            }
-
-            > li > a:after {
-                width: 12vw;
-                height: auto;
-                aspect-ratio: 4/3;
+            .o_kanban_colorpicker {
+                overflow: auto;
+                padding: map-get($spacers, 1) var(--BottomSheet-Entry-paddingX);
+                scrollbar-width: none;
+                -ms-overflow-style: none;
             }
         }
     }

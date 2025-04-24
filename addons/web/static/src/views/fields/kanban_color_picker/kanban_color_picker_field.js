@@ -13,6 +13,10 @@ class KanbanColorPickerField extends Component {
         return ColorList.COLORS;
     }
 
+    isSelectedColor(color_index) {
+        return this.props.record.data?.color === color_index;
+    }
+
     selectColor(colorIndex) {
         return this.props.record.update({ [this.props.name]: colorIndex }, { save: true });
     }
