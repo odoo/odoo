@@ -1,7 +1,7 @@
-import paymentButton from '@payment/js/payment_button';
+import { patch } from '@web/core/utils/patch';
+import { PaymentButton } from '@payment/interactions/payment_button';
 
-paymentButton.include({
-
+patch(PaymentButton.prototype, {
     /**
      * Verify that the payment button is ready to be enabled.
      *
@@ -9,11 +9,11 @@ paymentButton.include({
      * - a delivery carrier is selected and ready (the price is computed) if deliveries are enabled;
      * - the "Terms and Conditions" checkbox is ticked if it is present.
      *
-     * @override from @payment/js/payment_button
+     * @override method from @payment/interactions/payment_button
      * @return {boolean}
      */
     _canSubmit() {
-        return this._super(...arguments) && this._isTCCheckboxReady();
+        return super._canSubmit() && this._isTcCheckboxReady();
     },
 
     /**
@@ -22,13 +22,12 @@ paymentButton.include({
      * @private
      * @return {boolean}
      */
-    _isTCCheckboxReady() {
+    _isTcCheckboxReady() {
         const checkbox = document.querySelector('#website_sale_tc_checkbox');
         if (!checkbox) { // The checkbox is not present.
-            return true;  // Ignore the check.
+            return true; // Ignore the check.
         }
 
         return checkbox.checked;
     },
-
 });
