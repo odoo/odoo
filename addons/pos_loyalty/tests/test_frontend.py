@@ -7,6 +7,7 @@ from odoo.tests import tagged
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
+from odoo.addons.point_of_sale.tests.common import archive_products
 
 
 @tagged("post_install", "-at_install")
@@ -2691,3 +2692,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(gift_card_program.coupon_ids), 1, "Gift card not generated")
         self.assertEqual(gift_card_program.coupon_ids[0].code, "test-card-1234", "Gift card code not correct")
         self.assertEqual(gift_card_program.coupon_ids[0].partner_id, partner, "Gift card partner id not correct")
+
+    def test_empty_product_screen_when_no_regular_products(self):
+        """
+        Verify that the product screen remains empty when no regular products are available,
+        ensuring that special products are hidden.
+        """
+        archive_products(self.env)
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+        self.create_programs([('Special Gift Card Program', 'gift_card')])
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("EmptyProductScreenTour")
