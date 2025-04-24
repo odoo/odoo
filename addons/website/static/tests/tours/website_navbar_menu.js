@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_navbar_menu", {
     url: "/",
-    checkDelay: 50,
     steps: () => [
         {
             content: "Ensure menus are in DOM",
