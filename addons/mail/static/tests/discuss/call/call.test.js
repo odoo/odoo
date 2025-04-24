@@ -228,6 +228,22 @@ test("can share user camera", async () => {
     await contains("video", { count: 0 });
 });
 
+test("switch front/back camera in mobile", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    // Switch camera action is only available for mobiles
+    mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
+    expect(isMobileOS()).toBe(true);
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='Turn camera on']");
+    await contains("video[data-facing-mode='user']");
+    await click("[title='Switch Camera']");
+    await contains("video[data-facing-mode='environment']");
+});
+
 test("Camera video stream stays in focus when on/off", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
