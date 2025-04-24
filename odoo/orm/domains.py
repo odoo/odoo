@@ -1287,6 +1287,31 @@ def _optimize_in_required(condition, model):
     return DomainCondition(condition.field_expr, condition.operator, value)
 
 
+@operator_optimization(['any!', 'not any!'])
+def _optimize_bypass_comodel_id_lookup(condition, model):
+    """Avoid comodel's subquery, if it can be compared with the field directly"""
+    field = condition._field(model)
+    if (
+        field.relational
+        and isinstance(subdomain := condition.value, DomainCondition)
+        and subdomain.field_expr == 'id'
+        and (op := subdomain.operator) in ('in', 'not in')
+    ):
+        value = subdomain.value
+        if condition.operator == 'not any':
+            if field.type in ('one2many', 'many2many'):
+                # For X2many fields, since they reference multiple records,
+                # the correct logical inversion of 'not any' is 'all',
+                # which isn't currently supported as a domain operator
+                return condition
+
+            op = _INVERSE_OPERATOR[op]
+            # Since we're inverting the op, we need to toggle the presence of the Empty Set {False}.
+            value = value ^ {False}
+        return DomainCondition(condition.field_expr, op, value)
+    return condition
+
+
 @operator_optimization(['any', 'not any', 'any!', 'not any!'])
 def _optimize_any_domain(condition, model):
     """Make sure the value is an optimized domain (or Query or SQL)"""
