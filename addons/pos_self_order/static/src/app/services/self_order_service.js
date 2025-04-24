@@ -702,10 +702,6 @@ export class SelfOrder extends Reactive {
         this.router.navigate("default");
     }
 
-    updateOrderFromServer(order) {
-        this.currentOrder.updateDataFromServer(order);
-    }
-
     isOrder() {
         if (!this.currentOrder || !this.currentOrder.lines.length) {
             this.router.navigate("default");
