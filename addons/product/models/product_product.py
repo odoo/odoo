@@ -520,11 +520,13 @@ class ProductProduct(models.Model):
         return super()._search(domain, offset, limit, order)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
-    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id')
+    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'formatted_display_name')
     def _compute_display_name(self):
 
         def get_display_name(name, code):
             if self._context.get('display_default_code', True) and code:
+                if self.env.context.get('formatted_display_name'):
+                    return f'{name}\t--{code}--'
                 return f'[{code}] {name}'
             return name
 
