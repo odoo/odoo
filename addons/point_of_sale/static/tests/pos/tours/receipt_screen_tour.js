@@ -119,18 +119,18 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Test Product", "1"),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
             ProductScreen.clickPriceList("special_pricelist"),
-            inLeftSide(Order.hasLine({ productName: "Test Product", price: "6.30" })),
+            inLeftSide(Order.hasLine({ productName: "Desk Organizer", price: "6.30" })),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             Order.hasLine({ price: "6.30" }),
 
             ReceiptScreen.clickNextOrder(),
-            ProductScreen.addOrderline("Test Product", "1"),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
             inLeftSide([
-                { ...ProductScreen.clickLine("Test Product")[0], isActive: ["mobile"] },
+                { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
                 Numpad.click("Price"),
                 Numpad.isActive("Price"),
                 Numpad.click("9"),
@@ -164,21 +164,6 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
             Dialog.confirm("Close Register"),
             Chrome.clickBtn("Backend"),
             ProductScreen.lastClosingCashIs("25.00"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
-    checkDelay: 50,
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLotNumber("123456789", "lot"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickValidate(),
-            ReceiptScreen.trackingMethodIsLot("123456789"),
         ].flat(),
 });
 

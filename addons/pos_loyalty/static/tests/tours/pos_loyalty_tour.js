@@ -238,7 +238,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour7", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
-            ProductScreen.addOrderline("Test Product", "1"),
+            ProductScreen.addOrderline("Test Product 3", "1"),
             PosLoyalty.orderTotalIs("100"),
             PosLoyalty.enterCode("abcda"),
             PosLoyalty.orderTotalIs("90"),

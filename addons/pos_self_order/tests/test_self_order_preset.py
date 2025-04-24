@@ -6,48 +6,25 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 class TestSelfOrderPreset(SelfOrderCommonTest):
     def setUp(self):
         super().setUp()
-        self.preset_eat_in = self.env['pos.preset'].create({
-            'name': 'Eat in',
-            'available_in_self': True,
-            'service_at': 'table',
-        })
-        self.preset_takeaway = self.env['pos.preset'].create({
-            'name': 'Takeaway',
-            'available_in_self': True,
-            'service_at': 'counter',
-            'identification': 'name',
-        })
-        self.preset_delivery = self.env['pos.preset'].create({
-            'name': 'Delivery',
-            'available_in_self': True,
-            'service_at': 'delivery',
-            'identification': 'address',
-        })
-        self.pos_config.write({
-            'self_ordering_mode': 'mobile',
-            'use_presets': True,
-            'default_preset_id': self.preset_eat_in.id,
-            'available_preset_ids': [(6, 0, [self.preset_takeaway.id, self.preset_delivery.id])],
-        })
+        self.setup_test_self_presets()
 
     def test_preset_eat_in_tour(self):
+        self.setup_self_floor_and_table()
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_order_preset_eat_in_tour")
+        self.start_pos_self_tour("self_order_preset_eat_in_tour")
 
     def test_preset_takeaway_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_order_preset_takeaway_tour")
+        self.start_pos_self_tour("self_order_preset_takeaway_tour")
         self.assertEqual("Dr Dre", self.env["pos.order"].search([], limit=1, order="id desc").floating_order_name)
 
     def test_preset_delivery_tour(self):
+        self.desk_pad.list_price = 0
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_order_preset_delivery_tour")
+        self.start_pos_self_tour("self_order_preset_delivery_tour")
 
         last_order = self.env["pos.order"].search([], limit=1, order="id desc")
         self.assertEqual(last_order.partner_id.name, 'Dr Dre')
@@ -67,14 +44,13 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
                 'day_period': 'morning',
             }) for day in range(0, 6)],
         })
-        self.preset_takeaway.write({
+        self.out_preset.write({
             'use_timing': True,
             'resource_calendar_id': resource_calendar
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_order_preset_slot_tour")
+        self.start_pos_self_tour("self_order_preset_slot_tour")
         last_order = self.env["pos.order"].search([], limit=1, order="id desc")
         self.assertEqual(last_order.floating_order_name, 'Dr Dre')
         self.assertNotEqual(last_order.preset_time, False)

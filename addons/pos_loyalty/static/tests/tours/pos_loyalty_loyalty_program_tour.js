@@ -264,7 +264,7 @@ registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product"),
+            ProductScreen.clickDisplayedProduct("Test Product 3"),
             ProductScreen.addOrderline("Desk Organizer", "1"),
             Order.hasLine({ productName: "10% on the cheapest product" }),
             PosLoyalty.orderTotalIs("6.00"),

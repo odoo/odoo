@@ -6,29 +6,33 @@ import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_
 registry.category("web_tour.tours").add("self_attribute_selector", {
     steps: () => [
         Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Desk Organizer"),
+        ProductPage.clickProduct("Configurable Chair"),
         ...ProductPage.setupAttribute([
-            { name: "Size", value: "M" },
-            { name: "Fabric", value: "Leather" },
+            { name: "Color", value: "Red" },
+            { name: "Chair Legs", value: "Wood" },
+            { name: "Fabrics", value: "Leather" },
         ]),
         Utils.clickBtn("Checkout"),
-        CartPage.checkAttribute("Desk Organizer", [
-            { name: "Size", value: "M" },
-            { name: "Fabric", value: "Leather" },
+        CartPage.checkAttribute("Configurable Chair", [
+            { name: "Color", value: "Red" },
+            { name: "Chair Legs", value: "Wood" },
+            { name: "Fabrics", value: "Leather" },
         ]),
-        CartPage.checkProduct("Desk Organizer", "7.02", "1"),
+        CartPage.checkProduct("Configurable Chair", "46.0", "1"),
         CartPage.clickBack(),
-        ProductPage.clickProduct("Desk Organizer"),
+        ProductPage.clickProduct("Configurable Chair"),
         ...ProductPage.setupAttribute([
-            { name: "Size", value: "L" },
-            { name: "Fabric", value: "Leather" },
+            { name: "Color", value: "Red" },
+            { name: "Chair Legs", value: "Metal" },
+            { name: "Fabrics", value: "Wool" },
         ]),
         Utils.clickBtn("Checkout"),
-        CartPage.checkAttribute("Desk Organizer", [
-            { name: "Size", value: "L" },
-            { name: "Fabric", value: "Leather" },
+        CartPage.checkAttribute("Configurable Chair", [
+            { name: "Color", value: "Red" },
+            { name: "Chair Legs", value: "Metal" },
+            { name: "Fabrics", value: "Wool" },
         ]),
-        CartPage.checkProduct("Desk Organizer", "8.17", "1"),
+        CartPage.checkProduct("Configurable Chair", "57.5", "1"),
         Utils.clickBtn("Pay"),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("My Order"),
@@ -41,30 +45,30 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
 registry.category("web_tour.tours").add("self_multi_attribute_selector", {
     steps: () => [
         Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Multi Check Attribute Product"),
+        ProductPage.clickProduct("Desk Organizer"),
         ...ProductPage.setupAttribute(
             [
-                { name: "Attribute 1", value: "Attribute Val 1" },
-                { name: "Attribute 1", value: "Attribute Val 2" },
+                { name: "Multi", value: "Value 1" },
+                { name: "Multi", value: "Value 2" },
             ],
             false
         ),
-        ProductPage.verifyIsCheckedAttribute("Attribute 1", ["Attribute Val 1", "Attribute Val 2"]),
+        ProductPage.verifyIsCheckedAttribute("Multi", ["Value 1", "Value 2"]),
     ],
 });
 
 registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
     steps: () => [
         Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Chair"),
+        ProductPage.clickProduct("Desk Organizer"),
+        ...ProductPage.setupAttribute([{ name: "Color", value: "Black" }]),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Desk Organizer (Black)", "11.5", "1"),
+        CartPage.clickBack(),
+        ProductPage.clickProduct("Desk Organizer"),
         ...ProductPage.setupAttribute([{ name: "Color", value: "White" }]),
         Utils.clickBtn("Checkout"),
-        CartPage.checkProduct("Chair (White)", "10", "1"),
-        CartPage.clickBack(),
-        ProductPage.clickProduct("Chair"),
-        ...ProductPage.setupAttribute([{ name: "Color", value: "Red" }]),
-        Utils.clickBtn("Checkout"),
-        CartPage.checkProduct("Chair (Red)", "15", "1"),
+        CartPage.checkProduct("Desk Organizer (White)", "17.25", "1"),
         Utils.clickBtn("Pay"),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("My Order"),
@@ -78,8 +82,7 @@ registry.category("web_tour.tours").add("self_order_product_info", {
     steps: () => [
         Utils.clickBtn("Order Now"),
         {
-            trigger:
-                ".self_order_product_card:contains('Product Info Test') .product-information-tag",
+            trigger: ".self_order_product_card:contains('Desk Organizer') .product-information-tag",
             run: "click",
         },
         {

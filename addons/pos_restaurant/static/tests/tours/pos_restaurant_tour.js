@@ -9,7 +9,6 @@ const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
-import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
@@ -77,7 +76,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.clickTable("5"),
             Chrome.isTabActive("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
-            inLeftSide(Order.hasLine({ productName: "Coca-Cola", run: "dblclick" })),
             ProductScreen.clickDisplayedProduct("Water", true),
             ProductScreen.orderlineIsToOrder("Water"),
             ProductScreen.orderlineIsToOrder("Coca-Cola"),
@@ -114,13 +112,13 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             // order on another table with a product variant
             FloorScreen.orderCountSyncedInTableIs("5", "0"),
             FloorScreen.clickTable("4"),
-            ProductScreen.clickDisplayedProduct("Desk Organizer", false),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
             {
                 ...Dialog.confirm(),
                 content: "validate the variant dialog (with default values)",
             },
-            ProductScreen.selectedOrderlineHas("Desk Organizer"),
-            checkOrderChanges([{ name: "Desk Organizer (S, Leather)", quantity: 1 }]),
+            ProductScreen.selectedOrderlineHas("Configurable Chair"),
+            checkOrderChanges([{ name: "Configurable Chair (Red, Metal, Leather)", quantity: 1 }]),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -130,7 +128,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.clickTable("4"),
             ProductScreen.orderlinesHaveNoChange(),
             checkOrderChanges([]),
-            ProductScreen.totalAmountIs("5.87"),
+            ProductScreen.totalAmountIs("6.10"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -381,7 +379,7 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
-            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
             Chrome.freezeDateTime(1739370000000),
             Dialog.confirm("Add"),
             ProductScreen.totalAmountIs("10"),
@@ -411,8 +409,8 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                         data: orderData,
                     });
 
-                    if (!rendered.innerHTML.includes("Value 1")) {
-                        throw new Error("Value 1 not found in printed receipt");
+                    if (!rendered.innerHTML.includes("Red")) {
+                        throw new Error("Red not found in printed receipt");
                     }
                     if (!rendered.innerHTML.includes("14:20")) {
                         throw new Error("14:20 not found in printed receipt");
@@ -495,9 +493,10 @@ registry.category("web_tour.tours").add("MultiPreparationPrinter", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
-            ProductScreen.clickDisplayedProduct("Product 1"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickOrderButton(),
-            Dialog.bodyIs("Failed in printing Printer 2 changes of the order"),
+            // Confirming that the Drinks Printer has been triggered
+            Dialog.bodyIs("Failed in printing Drinks Printer changes of the order"),
             Dialog.confirm(),
         ].flat(),
 });
@@ -542,10 +541,10 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
-            ProductScreen.clickDisplayedProduct("Product 1"),
-            ProductScreen.clickDisplayedProduct("Product 2"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Sandwich"),
             ProductScreen.clickOrderButton(),
-            Dialog.bodyIs("Failed in printing Printer 1, Printer 2 changes of the order"),
+            Dialog.bodyIs("Failed in printing Drinks Printer, Food Printer changes of the order"),
             Dialog.confirm(),
         ].flat(),
 });

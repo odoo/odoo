@@ -24,41 +24,37 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         })
 
         # User employee
-        cls.emp1 = cls.env['hr.employee'].create({
-            'name': 'Test Employee 1',
-            "company_id": cls.env.company.id,
-        })
-        emp1_user = new_test_user(
+        cls.emp1_user = new_test_user(
             cls.env,
             login="emp1_user",
             groups="base.group_user",
             name="Pos Employee1",
             email="emp1_user@pos.com",
         )
-        cls.emp1.write({"name": "Pos Employee1", "pin": "2580", "user_id": emp1_user.id})
+        cls.emp1 = cls.env["hr.employee"].create({
+            "name": "Pos Employee1",
+            "company_id": cls.env.company.id,
+            "pin": "2580",
+            "user_id": cls.emp1_user.id,
+        })
 
         # Non-user employee
-        cls.emp2 = cls.env['hr.employee'].create({
-            'name': 'Test Employee 2',
+        emp2 = cls.env["hr.employee"].create({
+            "name": "Pos Employee2",
             "company_id": cls.env.company.id,
+            "pin": "1234",
         })
-        cls.emp2.write({"name": "Pos Employee2", "pin": "1234"})
-        (cls.admin + cls.emp1 + cls.emp2).company_id = cls.env.company
-
-        cls.emp3 = cls.env['hr.employee'].create({
-            'name': 'Test Employee 3',
-            "user_id": cls.pos_user.id,
-            "company_id": cls.env.company.id,
-        })
+        (cls.admin + cls.emp1 + emp2).company_id = cls.env.company
 
         cls.main_pos_config.write({
-            'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)]
+            'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(emp2.id)]
         })
 
 
 @tagged("post_install", "-at_install")
 class TestUi(TestPosHrHttpCommon):
     def test_01_pos_hr_tour(self):
+        # merged test_basic_user_cannot_close_session
         self.pos_admin.write({
             "group_ids": [
                 (4, self.env.ref('account.group_account_invoice').id)
@@ -80,26 +76,10 @@ class TestUi(TestPosHrHttpCommon):
 
     def test_cashier_can_see_product_info(self):
         # open a session, the /pos/ui controller will redirect to it
-        self.product_a.available_in_pos = True
         self.main_pos_config.with_user(self.pos_admin).open_ui()
 
         self.start_tour(
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
             "CashierCanSeeProductInfo",
             login="pos_admin",
-        )
-
-    def test_basic_user_cannot_close_session(self):
-        # open a session, the /pos/ui controller will redirect to it
-        self.main_pos_config.advanced_employee_ids = []
-        self.main_pos_config.basic_employee_ids = [
-            Command.link(self.emp3.id),
-            Command.link(self.admin.id)
-        ]
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-
-        self.start_tour(
-            "/pos/ui?config_id=%d" % self.main_pos_config.id,
-            "CashierCannotClose",
-            login="pos_user",
         )

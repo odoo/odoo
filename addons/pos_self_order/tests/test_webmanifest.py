@@ -8,7 +8,7 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 class WebManifestRoutesTest(SelfOrderCommonTest):
 
     def test_webmanifest_scoped_icon_with_default(self):
-        self.authenticate('admin', 'admin')
+        self.authenticate('pos_admin', 'pos_admin')
         manifest_url = f'/web/manifest.scoped_app_manifest?app_id=pos_self_order&path=/pos-self/{self.pos_config.id}'
         response = self.url_open(manifest_url)
         response.raise_for_status()
@@ -20,7 +20,7 @@ class WebManifestRoutesTest(SelfOrderCommonTest):
 
     def test_webmanifest_scoped_icon_withoutdefault(self):
         self.env.company.uses_default_logo = False
-        self.authenticate('admin', 'admin')
+        self.authenticate('pos_admin', 'pos_admin')
         manifest_url = f'/web/manifest.scoped_app_manifest?app_id=pos_self_order&path=/pos-self/{self.pos_config.id}'
         response = self.url_open(manifest_url)
         response.raise_for_status()

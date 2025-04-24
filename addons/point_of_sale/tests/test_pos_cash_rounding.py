@@ -9,7 +9,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.partner_a.name = "AAAAAA"  # The POS only load the first 100 partners
+        cls.partner_full.name = "AAAAAA"  # The POS only load the first 100 partners
         cls.cash_rounding_add_invoice_line = cls.env['account.cash.rounding'].create({
             'name': "cash_rounding_add_invoice_line",
             'rounding': 0.05,

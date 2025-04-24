@@ -169,10 +169,10 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product Test"),
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickDisplayedProduct("Test Product 3"),
+            ProductScreen.totalAmountIs("450.00"),
             ProductScreen.clickFiscalPosition("No Tax"),
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.totalAmountIs("450.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
@@ -184,7 +184,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.totalAmountIs("450.00"),
         ].flat(),
 });
 
@@ -194,9 +194,9 @@ registry.category("web_tour.tours").add("LotRefundTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickDisplayedProduct("Test Product 3"),
             ProductScreen.enterLotNumber("123456789"),
-            ProductScreen.selectedOrderlineHas("Product A", "1"),
+            ProductScreen.selectedOrderlineHas("Test Product 3", "1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -219,12 +219,12 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Sugar"),
+            ProductScreen.clickDisplayedProduct("Test Product 3"),
             inLeftSide([
                 ...["0", "."].map(Numpad.click),
-                ...ProductScreen.selectedOrderlineHasDirect("Sugar", "0", "0.00"),
+                ...ProductScreen.selectedOrderlineHasDirect("Test Product 3", "0", "0.00"),
                 ...["0", "2"].map(Numpad.click),
-                ...ProductScreen.selectedOrderlineHasDirect("Sugar", "0.02", "0.06"),
+                ...ProductScreen.selectedOrderlineHasDirect("Test Product 3", "0.02", "0.06"),
             ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -238,7 +238,7 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
             TicketScreen.toRefundTextContains("To Refund: 0.02"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
-            Order.hasLine("Sugar", "-0.02", "-0.06"),
+            Order.hasLine("Test Product 3", "-0.02", "-0.06"),
         ].flat(),
 });
 
@@ -285,9 +285,16 @@ registry.category("web_tour.tours").add("LotTour", {
                 trigger: ".info-list:not(:contains('SN 3'))",
             }),
             // Check auto assign lot number if there is only one available option
+            Chrome.createFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Product B"),
             inLeftSide({
                 trigger: ".info-list:contains('Lot Number 1001')",
             }),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            // check tracking method on receipt
+            ReceiptScreen.trackingMethodIsLot("1001"),
         ].flat(),
 });

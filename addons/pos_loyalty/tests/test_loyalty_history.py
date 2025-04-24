@@ -10,7 +10,6 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
 
     def test_pos_loyalty_history(self):
-        partner_aaa = self.env['res.partner'].create({'name': 'AAA Test Partner'})
         self.whiteboard_pen.product_variant_ids.write({'lst_price': 10})
         self.main_pos_config.write({
             'tax_regime_selection': False,
@@ -35,6 +34,6 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
             })],
         })
         self.start_pos_tour("LoyaltyHistoryTour")
-        loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_aaa.id)
+        loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == self.partner1.id)
         self.assertEqual(len(loyalty_card.history_ids), 1,
                         "Loyalty History line should be created on pos oder confirmation")

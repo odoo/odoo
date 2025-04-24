@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
             Chrome.startPoS(),
             FloorScreen.clickTable("3"),
             ProductScreen.isShown(),
-            ProductScreen.addOrderline("Coca-Cola", "1", "3"),
+            ProductScreen.addOrderline("Desk Organizer", "1", "3"),
             Chrome.clickPlanButton(),
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(1, "Self-Order"),

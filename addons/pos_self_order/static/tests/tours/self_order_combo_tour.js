@@ -7,14 +7,17 @@ registry.category("web_tour.tours").add("self_combo_selector", {
     steps: () => [
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Office Combo"),
+        ProductPage.clickProduct("Configurable Chair"),
+        {
+            content: "Check 'Next' button is disabled",
+            trigger: `.page-buttons :disabled:contains("Next")`,
+        },
+        ...ProductPage.setupAttribute([
+            { name: "Color", value: "Red" },
+            { name: "Chair Legs", value: "Wood" },
+            { name: "Fabrics", value: "Leather" },
+        ]),
         ...ProductPage.setupCombo([
-            {
-                product: "Desk Organizer",
-                attributes: [
-                    { name: "Size", value: "M" },
-                    { name: "Fabric", value: "Leather" },
-                ],
-            },
             {
                 product: "Combo Product 5",
                 attributes: [],
@@ -31,10 +34,11 @@ registry.category("web_tour.tours").add("self_combo_selector", {
         },
         ...CartPage.checkCombo("Office Combo", [
             {
-                product: "Desk Organizer",
+                product: "Configurable Chair",
                 attributes: [
-                    { name: "Size", value: "M" },
-                    { name: "Fabric", value: "Leather" },
+                    { name: "Color", value: "Red" },
+                    { name: "Chair Legs", value: "Wood" },
+                    { name: "Fabrics", value: "Leather" },
                 ],
             },
             {
@@ -55,10 +59,18 @@ registry.category("web_tour.tours").add("self_combo_selector", {
 registry.category("web_tour.tours").add("self_combo_selector_category", {
     steps: () => [
         Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Test Combo"),
+        ProductPage.clickProduct("Office Combo"),
         ...ProductPage.setupCombo([
             {
-                product: "Combo Product 5",
+                product: "Combo Product 1",
+                attributes: [],
+            },
+            {
+                product: "Combo Product 4",
+                attributes: [],
+            },
+            {
+                product: "Combo Product 7",
                 attributes: [],
             },
         ]),

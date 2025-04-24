@@ -21,8 +21,8 @@ registry.category("web_tour.tours").add("test_optional_product", {
             ProductScreen.clickDisplayedProduct("Desk Pad", false),
             Dialog.is({ title: "Optional Products" }),
             // Add a specific optional product
-            OptionalProduct.addOptionalProduct("Small Shelf", 5),
-            ProductScreen.selectedOrderlineHas("Small Shelf", "5.0"),
+            OptionalProduct.addOptionalProduct("Small Shelf", 1),
+            ProductScreen.selectedOrderlineHas("Small Shelf", "1.0"),
 
             ProductScreen.clickDisplayedProduct("Letter Tray"),
             // Add an optional product with configurations

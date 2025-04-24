@@ -7,7 +7,8 @@ registry.category("web_tour.tours").add("self_order_is_close", {
     steps: () => [
         LandingPage.isClosed(),
         Utils.clickBtn("Order Now"),
-        ProductPage.clickKioskProduct("Coca-Cola"),
+        ProductPage.clickKioskCategory("Uncategorised"),
+        ProductPage.clickProduct("Desk Organizer"),
         Utils.checkIsNoBtn("Checkout"),
     ],
 });
@@ -16,7 +17,7 @@ registry.category("web_tour.tours").add("self_order_is_open_consultation", {
     steps: () => [
         Utils.clickBtn("Order Now"),
         LandingPage.isOpened(),
-        ProductPage.clickProduct("Coca-Cola"),
+        ProductPage.clickProduct("Desk Organizer"),
         Utils.checkIsNoBtn("Order"),
     ],
 });
@@ -26,14 +27,15 @@ registry.category("web_tour.tours").add("self_order_pos_closed", {
         LandingPage.isClosed(),
         // Normal product
         Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Coca-Cola"),
+        ProductPage.clickProduct("Desk Organizer"),
         Utils.checkIsNoBtn("Checkout"),
         // Product with attributes
-        ProductPage.clickProduct("Desk Organizer"),
+        ProductPage.clickProduct("Configurable Chair"),
         ...ProductPage.setupAttribute(
             [
-                { name: "Size", value: "M" },
-                { name: "Fabric", value: "Leather" },
+                { name: "Color", value: "Red" },
+                { name: "Chair Legs", value: "Wood" },
+                { name: "Fabrics", value: "Leather" },
             ],
             false
         ),
@@ -44,18 +46,15 @@ registry.category("web_tour.tours").add("self_order_pos_closed", {
         ...ProductPage.setupCombo(
             [
                 {
-                    product: "Desk Organizer",
-                    attributes: [
-                        { name: "Size", value: "M" },
-                        { name: "Fabric", value: "Leather" },
-                    ],
-                },
-                {
-                    product: "Combo Product 5",
+                    product: "Combo Product 1",
                     attributes: [],
                 },
                 {
-                    product: "Combo Product 8",
+                    product: "Combo Product 4",
+                    attributes: [],
+                },
+                {
+                    product: "Combo Product 7",
                     attributes: [],
                 },
             ],
@@ -69,40 +68,39 @@ registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
     steps: () => [
         LandingPage.isClosed(),
         Utils.clickBtn("Order Now"),
-        ProductPage.clickKioskCategory("Miscellaneous"),
+        ProductPage.clickKioskCategory("Desk test"),
 
-        ProductPage.clickKioskProduct("Coca-Cola"),
+        ProductPage.clickKioskProduct("Desk Pad"),
         Utils.checkIsNoBtn("Checkout"),
 
         // Product with attributes
-        ProductPage.clickKioskProduct("Desk Organizer"),
+        ProductPage.clickKioskCategory("uncategorised"),
+        ProductPage.clickKioskProduct("Configurable Chair"),
         ...ProductPage.setupKioskAttribute(
             [
-                { name: "Size", value: "M" },
-                { name: "Fabric", value: "Leather" },
+                { name: "Color", value: "Red" },
+                { name: "Chair Legs", value: "Wood" },
+                { name: "Fabrics", value: "Leather" },
             ],
             false
         ),
         Utils.checkIsNoBtn("Add to cart"),
         ProductPage.clickKioskComboDiscard(),
         // Combo product
-        ProductPage.clickKioskCategory("Category 2"),
+        ProductPage.clickKioskCategory("Chair test"),
         ProductPage.clickKioskProduct("Office Combo"),
         ...ProductPage.setupKioskCombo(
             [
                 {
-                    product: "Desk Organizer",
-                    attributes: [
-                        { name: "Size", value: "M" },
-                        { name: "Fabric", value: "Leather" },
-                    ],
-                },
-                {
-                    product: "Combo Product 5",
+                    product: "Combo Product 1",
                     attributes: [],
                 },
                 {
-                    product: "Combo Product 8",
+                    product: "Combo Product 4",
+                    attributes: [],
+                },
+                {
+                    product: "Combo Product 7",
                     attributes: [],
                 },
             ],

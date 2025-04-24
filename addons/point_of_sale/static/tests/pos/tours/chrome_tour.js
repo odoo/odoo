@@ -129,7 +129,7 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Test Product", true, "1"),
+            ProductScreen.clickDisplayedProduct("Test Product 3", true, "1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.clickValidate(),
@@ -142,7 +142,7 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
             ProductScreen.isShown(),
 
             // Allow order changes after the error
-            ProductScreen.clickDisplayedProduct("Test Product", true, "2"),
+            ProductScreen.clickDisplayedProduct("Test Product 3", true, "2"),
         ].flat(),
 });
 
@@ -205,5 +205,15 @@ registry.category("web_tour.tours").add("test_cash_in_out", {
             CashMoveList.deleteCashMove("10"),
             CashMoveList.checkNumberOfRows(1),
             CashMoveList.checkCashMoveShown("5"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("chrome_without_cash_move_permission", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuButton(),
+            Chrome.isCashMoveButtonHidden(),
         ].flat(),
 });
