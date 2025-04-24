@@ -341,7 +341,8 @@ export class ListRenderer extends Component {
             readonly:
                 this.props.readonly ||
                 this.isCellReadonly(column, record) ||
-                this.isRecordReadonly(record),
+                this.isRecordReadonly(record) ||
+                (column.widget === "handle" && !this.canResequenceRows),
         };
     }
 

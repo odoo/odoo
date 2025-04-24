@@ -10087,6 +10087,7 @@ test(`editable target, handle widget locks and unlocks on sort`, async () => {
             </list>
         `,
     });
+    expect(`.o_row_handle.o_disabled`).toHaveCount(0);
     expect(queryAllTexts(`tbody div[name=amount]`)).toEqual(
         ["1,200.00", "500.00", "300.00", "0.00"],
         {
@@ -10112,6 +10113,9 @@ test(`editable target, handle widget locks and unlocks on sort`, async () => {
             message: "should have been sorted by amount",
         }
     );
+    expect(`.o_row_handle.o_disabled`).toHaveCount(4, {
+        message: "handle fields should now be readonly and therefore disabled",
+    });
 
     // Drag and drop the fourth line in second position (not)
     await contains(`tbody tr:eq(3) .o_row_handle`).dragAndDrop(`tbody tr:eq(1)`);
@@ -10130,6 +10134,7 @@ test(`editable target, handle widget locks and unlocks on sort`, async () => {
             message: "records should be ordered as per the previous resequence",
         }
     );
+    expect(`.o_row_handle.o_disabled`).toHaveCount(0);
 
     // Drag and drop the fourth line in second position
     await contains(`tbody tr:eq(3) .o_row_handle`).dragAndDrop(`tbody tr:eq(1)`);
