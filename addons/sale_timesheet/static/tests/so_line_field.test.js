@@ -12,14 +12,14 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { asyncStep, onRpc, waitForSteps, defineModels } from "@web/../tests/web_test_helpers";
-import { AccountAnalyticLine } from "@analytic/../tests/mock_server/mock_models/account_analytic_line";
+import { analyticModels } from "@analytic/../tests/analytic_test_helpers";
 import { ProjectTask } from "@project/../tests/mock_server/mock_models/project_task";
 import { SaleOrderLine } from "@sale/../tests/mock_server/mock_models/sale_order_line";
 
 describe.current.tags("desktop");
 defineModels({
     ...mailModels,
-    AccountAnalyticLine,
+    ...analyticModels,
     ProjectTask,
     SaleOrderLine,
 });
