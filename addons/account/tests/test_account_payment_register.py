@@ -2054,3 +2054,35 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         self.env.company.parent_ids.invalidate_recordset()
         payment = wizard._create_payments()
         self.assertTrue(payment)
+
+    def test_available_payment_methods_in_wizard(self):
+        '''This test makes sure that the available payment methods on the account payment register wizard
+        change accordingly to what journal is chosen, the company country and the payment currency'''
+
+        ca_company = self.setup_other_company(country_id=self.env.ref('base.ca').id)
+        ca_cash_journal = self.env['account.journal'].with_company(ca_company).create({
+            'name': 'Super Canadian Cash Journal',
+            'code': 'SCCJ',
+            'type': 'cash',
+        })
+        ca_currency = self.env.ref("base.CAD")
+
+        # this context makes manual payment methods limited to Canadian companies, payments in CAD currency and cash journals
+        with self.mocked_get_payment_method_information():
+            payment_with_everything = self.env['account.payment.register'].with_company(ca_company).create({
+                'amount': 100,
+                'payment_type': 'inbound',
+                'partner_id': self.partner_a.id,
+                'journal_id': ca_cash_journal.id,
+                'currency_id': ca_currency.id,
+            })
+            self.assertTrue('manual' in payment_with_everything.available_payment_method_ids.mapped('code'))
+
+            payment_with_wrong_country = payment_with_everything.copy().company_id = self.env.company
+            self.assertFalse('manual' in payment_with_wrong_country.available_payment_method_ids.mapped('code'))
+
+            payment_with_wrong_currency = payment_with_everything.copy().currency_id = self.other_currency
+            self.assertFalse('manual' in payment_with_wrong_currency.available_payment_method_ids.mapped('code'))
+
+            payment_with_wrong_journal = payment_with_everything.copy().journal_id = self.bank_journal
+            self.assertFalse('manual' in payment_with_wrong_journal.available_payment_method_ids.mapped('code'))

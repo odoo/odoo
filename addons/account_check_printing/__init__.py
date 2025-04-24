@@ -5,7 +5,6 @@ from . import wizard
 
 
 def _post_init_hook(env):
-    env['account.journal'].search([('type', '=', 'bank')])._create_check_sequence()
 
     for company in env['res.company'].search([('parent_id', '=', False)]):
         ChartTemplate = env['account.chart.template'].with_company(company)

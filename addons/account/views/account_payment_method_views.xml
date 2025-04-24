@@ -65,7 +65,7 @@
         <field name="name">Payment Methods</field>
         <field name="res_model">account.payment.method</field>
         <field name="view_mode">list,kanban,form</field>
-        <field name="domain">[('code','not in',('online_payment_provider'))]</field>
+        <field name="domain">[('code','!=','online_payment_provider')]</field>
     </record>
 
     <record id="view_payment_method_search" model="ir.ui.view">

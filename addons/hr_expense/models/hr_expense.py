@@ -1772,7 +1772,7 @@ class HrExpense(models.Model):
         return account_dest.id
 
     def _get_outstanding_account_id(self):
-        account_ref = 'account_journal_payment_debit_account_id' if self.payment_method_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
+        account_ref = 'account_journal_outstanding_payment_account_id'
         chart_template = self.with_context(allowed_company_ids=self.company_id.root_id.ids).env['account.chart.template']
         outstanding_account = chart_template.ref(account_ref, raise_if_not_found=False)
         if not outstanding_account:

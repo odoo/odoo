@@ -28,7 +28,7 @@ class AccountPayment(models.Model):
                 payment.payment_method_code in ('own_checks', 'new_third_party_checks', 'in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks') and
                 not payment.outstanding_account_id
             ):
-                raise ValidationError(_("A payment with any Third Party Check or Own Check payment methods needs an outstanding account"))
+                raise ValidationError(_("A payment with any Third Party Check or Own Check payment methods needs a journal with an outstanding account"))
 
     @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_amount(self):

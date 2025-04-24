@@ -15,10 +15,10 @@ The check settings are located in the accounting journals configuration page.
     'data': [
         'security/ir.model.access.csv',
         'data/account_check_printing_data.xml',
-        'views/account_journal_views.xml',
         'views/account_payment_views.xml',
         'views/res_config_settings_views.xml',
         'wizard/print_prenumbered_checks_views.xml',
+        'views/account_payment_method_views.xml',
     ],
     'installable': True,
     'post_init_hook': '_post_init_hook',

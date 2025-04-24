@@ -25,7 +25,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         ''' Test the check generation for vendor bills. '''
         nb_invoices_to_test = INV_LINES_PER_STUB + 1
 
-        self.company_data['default_journal_bank'].write({
+        self.payment_method_check.write({
             'check_manual_sequencing': True,
             'check_next_number': '00042',
         })
@@ -71,7 +71,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         ''' Test the check generation for refunds. '''
         nb_invoices_to_test = INV_LINES_PER_STUB + 1
 
-        self.company_data['default_journal_bank'].write({
+        self.payment_method_check.write({
             'check_manual_sequencing': True,
             'check_next_number': '00042',
         })
@@ -154,7 +154,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         """
         nb_invoices_to_test = INV_LINES_PER_STUB + 1
 
-        self.company_data['default_journal_bank'].write({
+        self.payment_method_check.write({
             'check_manual_sequencing': True,
             'check_next_number': '11111',
         })
@@ -257,7 +257,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         if not accounting_installed:
             self.skipTest('Accounting not installed')  # There is an implicit outstanding account in this case, which makes it avoid the error
 
-        self.company_data['default_journal_bank'].write({
+        self.payment_method_check.write({
             'check_manual_sequencing': True,
             'check_next_number': '00042',
         })
@@ -292,8 +292,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         """Test that when multiple payments are created at once with check printing,
         each payment gets a unique check number when posted.
         """
-        # Configure the bank journal with manual check sequencing
-        self.company_data['default_journal_bank'].write({
+        self.payment_method_check.write({
             'check_manual_sequencing': True,
             'check_next_number': '10001',
         })

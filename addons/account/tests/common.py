@@ -17,6 +17,7 @@ from lxml import etree
 from unittest import SkipTest
 from unittest.mock import patch
 
+
 _logger = logging.getLogger(__name__)
 
 
@@ -752,6 +753,22 @@ class AccountTestInvoicingCommon(ProductCommon):
                 ('code', 'in', codes),
                 ('company_id', '=', company.id),
             ])
+
+    @contextmanager
+    def mocked_get_payment_method_information(self):
+        ''' Used to test behaviour in account payment and account payment register when payment method chosen
+        has specific journal '''
+        def _get_payment_method_information(*args, **kwargs):
+            res = self.env['account.payment.method']._get_payment_method_information
+            res['manual'] = {
+                "type": ("cash",),
+                "currency_ids": self.env.ref("base.CAD"),
+                "country_id": self.env.ref("base.ca").id,
+            }
+            return res
+
+        with patch.object(self.env.registry['account.payment.method'], '_get_payment_method_information', _get_payment_method_information):
+            yield
 
     ####################################################
     # Xml Comparison

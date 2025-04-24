@@ -9,6 +9,28 @@ from odoo import fields, Command
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestThirdChecks(L10nLatamCheckTest):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.new_third_party_check_payment_method = cls.env['account.payment.method'].create({
+            'name': 'Test New Third Party Check',
+            'code': 'new_third_party_checks',
+            'payment_type': 'inbound',
+        })
+
+        cls.in_third_party_check_payment_method = cls.env['account.payment.method'].create({
+            'name': 'Test New Third Party Check',
+            'code': 'in_third_party_checks',
+            'payment_type': 'inbound',
+        })
+
+        cls.out_third_party_check_payment_method = cls.env['account.payment.method'].create({
+            'name': 'Test New Third Party Check',
+            'code': 'out_third_party_checks',
+            'payment_type': 'outbound',
+        })
+
     def create_third_party_check(self, journal=False, check_numbers=['00000001', '00000002']):
         if not journal:
             journal = self.third_party_check_journal
@@ -139,3 +161,31 @@ class TestThirdChecks(L10nLatamCheckTest):
         check2 = payment2.l10n_latam_new_check_ids[0]
         self.env['l10n_latam.payment.mass.transfer'].with_context(
             active_model='l10n_latam.check', active_ids=[check.id, check2.id]).create({'destination_journal_id': self.third_party_check_journal.id})._create_payments()
+
+    def test_available_journals_for_third_party_checks(self):
+        '''When new/in/out third party check payment methods are chosen only cash journals should be available in the payment form,
+        and when a bank journal is chosen these same payment methods should not be available.'''
+
+        for method, payment_type in [('new_third_party_checks', 'inbound'), ('in_third_party_checks', 'inbound'), ('out_third_party_checks', 'outbound')]:
+            payment1 = self.env['account.payment'].with_company(self.ar_company).create({
+                'payment_method_id': self.get_payment_methods(method, self.ar_company).id,
+                'partner_id': self.partner_a.id,
+                'payment_type': payment_type,
+                'journal_id': self.third_party_check_journal.id,
+                'l10n_latam_new_check_ids': [
+                    Command.create({'name': '00000001', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
+                    Command.create({'name': '00000002', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
+                ],
+            })
+            self.assertEqual(set(payment1.available_journal_ids.mapped('type')), {'cash'})
+
+            payment2 = self.env['account.payment'].with_company(self.ar_company).create({
+                'partner_id': self.partner_a.id,
+                'payment_type': payment_type,
+                'journal_id': self.bank_journal.id,
+                'l10n_latam_new_check_ids': [
+                    Command.create({'name': '00000003', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
+                    Command.create({'name': '00000004', 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
+                ],
+            })
+            self.assertFalse(method in payment2.available_payment_method_ids.mapped('code'))

@@ -218,10 +218,6 @@ class AccountJournal(models.Model):
         check_company=True,
         string="Ledger Group")
 
-    # used to hide or show payment method options if needed
-    selected_payment_method_codes = fields.Char(
-        compute='_compute_selected_payment_method_codes',
-    )
     accounting_date = fields.Date(compute='_compute_accounting_date')
     display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
 
@@ -282,15 +278,6 @@ class AccountJournal(models.Model):
 
         for journal in self:
             journal.default_account_type = default_account_id_types.get(journal.type, '%')
-
-    def _compute_selected_payment_method_codes(self):
-        """
-        Set the selected payment method as a list of comma separated codes like: ,manual,check_printing,...
-        These will be then used to display or not payment method specific fields in the view.
-        """
-        for journal in self:
-            codes = [method.code for method in self.env['account.payment.method']._get_available() if method.code]
-            journal.selected_payment_method_codes = ',' + ','.join(codes) + ','
 
     @api.depends('company_id', 'type')
     def _compute_suspense_account_id(self):

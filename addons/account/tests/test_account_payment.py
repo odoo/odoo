@@ -261,6 +261,30 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             },
         ])
 
+    def test_attachments_send_multiple(self):
+        payments = self.env['account.payment'].create([{
+            'amount': 100.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': p.id,
+        } for p in (self.partner_a, self.partner_b)])
+
+        form = Form(self.env['mail.compose.message'].with_context({
+            'mailing_document_based': True,
+            'mail_post_autofollow': True,
+            'default_composition_mode': 'mass_mail',
+            'default_template_id': self.env.ref('account.mail_template_data_payment_receipt'),
+            'default_email_layout_xmlid': 'mail.mail_notification_light',
+            'default_model': 'account.payment',
+            'default_res_ids': payments.ids,
+        }))
+        saved_form = form.save()
+        with self.mock_mail_gateway():
+            saved_form._action_send_mail()
+
+        for p in payments:
+            self.assertTrue(p._get_mail_thread_data_attachments())
+
     def test_compute_currency_id(self):
         ''' When creating a new account.payment without specifying a currency, the default currency should be the one
         set on the journal.
@@ -809,3 +833,67 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
 
         pay_form.payment_method_id = other_payment_method
         self.assertEqual(pay_form.journal_id.id, self.bank_journal_2.id)
+
+    def test_available_payment_methods(self):
+        '''This test makes sure that the available payment methods on the account payment form
+        change accordingly to what journal is chosen, the company country and the payment currency'''
+
+        ca_company = self.setup_other_company(country_id=self.env.ref('base.ca').id)
+        ca_cash_journal = self.env['account.journal'].with_company(ca_company).create({
+            'name': 'Super Canadian Cash Journal',
+            'code': 'SCCJ',
+            'type': 'cash',
+        })
+        ca_currency = self.env.ref("base.CAD")
+
+        # this context makes manual payment methods limited to Canadian companies, payments in CAD currency and cash journals
+        with self.mocked_get_payment_method_information():
+            payment_with_everything = self.env['account.payment'].with_company(ca_company).create({
+                'amount': 100,
+                'payment_type': 'inbound',
+                'partner_id': self.partner_a.id,
+                'journal_id': ca_cash_journal.id,
+                'currency_id': ca_currency.id,
+            })
+            self.assertTrue('manual' in payment_with_everything.available_payment_method_ids.mapped('code'))
+
+            payment_with_wrong_country = payment_with_everything.copy().company_id = self.env.company
+            self.assertFalse('manual' in payment_with_wrong_country.available_payment_method_ids.mapped('code'))
+
+            payment_with_wrong_currency = payment_with_everything.copy().currency_id = self.other_currency
+            self.assertFalse('manual' in payment_with_wrong_currency.available_payment_method_ids.mapped('code'))
+
+            payment_with_wrong_journal = payment_with_everything.copy().journal_id = self.bank_journal
+            self.assertFalse('manual' in payment_with_wrong_journal.available_payment_method_ids.mapped('code'))
+
+    def test_available_journals(self):
+        pass
+
+    def test_partner_property_payment_methods(self):
+        other_inbound_payment_method = self.inbound_payment_method.copy()
+        self.partner_b.property_inbound_payment_method_id = other_inbound_payment_method
+
+        payment = self.env['account.payment'].create({
+            'amount': 100,
+            'payment_type': 'inbound',
+            'partner_id': self.partner_a.id,
+            'payment_method_id': self.inbound_payment_method.id,
+        })
+        self.assertRecordValues(payment, [{'payment_method_id': self.inbound_payment_method.id}])
+
+        payment.partner_id = self.partner_b
+        self.assertRecordValues(payment, [{'payment_method_id': other_inbound_payment_method.id}])
+
+        other_outbound_payment_method = self.outbound_payment_method.copy()
+        self.partner_b.property_outbound_payment_method_id = other_outbound_payment_method
+
+        payment_2 = self.env['account.payment'].create({
+            'amount': 100,
+            'payment_type': 'outbound',
+            'partner_id': self.partner_a.id,
+            'payment_method_id': self.outbound_payment_method.id,
+        })
+        self.assertRecordValues(payment_2, [{'payment_method_id': self.outbound_payment_method.id}])
+
+        payment_2.partner_id = self.partner_b
+        self.assertRecordValues(payment_2, [{'payment_method_id': other_outbound_payment_method.id}])
