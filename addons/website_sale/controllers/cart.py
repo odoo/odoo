@@ -132,6 +132,7 @@ class Cart(PaymentPortal):
         :rtype: dict
         """
         order_sudo = request.cart or request.website._create_cart()
+        quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         product = request.env['product.product'].browse(product_id).exists()
         if quantity and (not product or not product._is_add_to_cart_allowed()):
@@ -246,6 +247,7 @@ class Cart(PaymentPortal):
         :params dict kwargs: additional parameters given to _cart_update_line_quantity calls.
         """
         order_sudo = request.cart
+        quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         # This method must be only called from the cart page BUT in some advanced logic
         # eg. website_sale_loyalty, a cart line could be a temporary record without id.
