@@ -14,10 +14,12 @@ import {
     treeFromDomain,
     treeFromExpression,
 } from "@web/core/tree_editor/condition_tree";
+import { makeMockEnv } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
 
-test("domainFromTree", () => {
+test("domainFromTree", async () => {
+    await makeMockEnv();
     const toTest = [
         {
             tree: condition("foo", "=", false),
@@ -95,13 +97,43 @@ test("domainFromTree", () => {
             tree: condition("foo", "not_next", [1, "weeks", "date"], true),
             result: `["!", "|", ("foo", "<", context_today().strftime("%Y-%m-%d")), ("foo", ">", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
         },
+        {
+            tree: condition("date.__time", "=", false),
+            result: `["&", "&", ("date.hour_number", "=", False), ("date.minute_number", "=", False), ("date.second_number", "=", False)]`,
+        },
+        {
+            tree: condition("date.__time", "!=", false),
+            result: `["|", "|", ("date.hour_number", "!=", False), ("date.minute_number", "!=", False), ("date.second_number", "!=", False)]`,
+        },
+        {
+            tree: condition("date.__time", "=", "01:15:24"),
+            result: `["&", "&", ("date.hour_number", "=", 1), ("date.minute_number", "=", 15), ("date.second_number", "=", 24)]`,
+        },
+        {
+            tree: condition("date.__time", "!=", "01:15:24"),
+            result: `["|", "|", ("date.hour_number", "!=", 1), ("date.minute_number", "!=", 15), ("date.second_number", "!=", 24)]`,
+        },
+        {
+            tree: condition("date.__time", "between", ["01:15:24", "22:06:56"]),
+            result: `[
+                "&",
+                    "|", "|",
+                            ("date.hour_number", ">=", 1),
+                            "&", ("date.hour_number", "=", 1), ("date.minute_number", ">=", 15),
+                            "&", "&", ("date.hour_number", "=", 1), ("date.minute_number", "=", 15), ("date.second_number", ">=", 24),
+                    "|", "|",
+                            ("date.hour_number", "<=", 22),
+                            "&", ("date.hour_number", "=", 22), ("date.minute_number", "<=", 6),
+                            "&", "&", ("date.hour_number", "=", 22), ("date.minute_number", "=", 6), ("date.second_number", "<=", 56)]`,
+        },
     ];
     for (const { tree, result } of toTest) {
-        expect(domainFromTree(tree)).toBe(result);
+        expect(domainFromTree(tree).replace(/[\s\n]+/g, "")).toBe(result.replace(/[\s\n]+/g, ""));
     }
 });
 
-test("domainFromTree . treeFromDomain", () => {
+test("domainFromTree . treeFromDomain", async () => {
+    await makeMockEnv();
     const toTest = [
         {
             domain: `[("foo", "=", False)]`,
@@ -140,6 +172,21 @@ test("domainFromTree . treeFromDomain", () => {
         },
         {
             domain: `["!", "|", ("foo", "<", 1), ("foo", ">", uid)]`,
+        },
+        {
+            domain: `["&", "&", ("date.hour_number", "=", False), ("date.minute_number", "=", False), ("date.second_number", "=", False)]`,
+        },
+        {
+            domain: `["&", "&", ("date.hour_number", "!=", False), ("date.minute_number", "!=", False), ("date.second_number", "!=", False)]`,
+        },
+        {
+            domain: `["&", "&", ("date.hour_number", "=", 1), ("date.minute_number", "=", 15), ("date.second_number", "=", 24)]`,
+        },
+        {
+            domain: `["|", "|", ("date.hour_number", "!=", 1), ("date.minute_number", "!=", 15), ("date.second_number", "!=", 24)]`,
+        },
+        {
+            domain: `["&", "&", "&", "&", "&", ("date.hour_number", ">=", 1), ("date.minute_number", ">=", 15), ("date.second_number", ">=", 24), ("date.hour_number", "<=", 22), ("date.minute_number", "<=", 6), ("date.second_number", "<=", 56)]`,
         },
     ];
     for (const { domain, result } of toTest) {
