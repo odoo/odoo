@@ -74,7 +74,7 @@
                                 <t t-if="record.country_id.raw_value">
                                     <span class="fw-bold">Country: </span><field string="Country" name="country_id"/>
                                 </t>
-                                <field name="livechat_operator_id" widget="many2one_avatar_user" class="ms-auto me-1"/>
+                                <field name="livechat_agent_partner_ids" widget="many2many_avatar_user" class="ms-auto me-1"/>
                             </footer>
                         </t>
                     </templates>
