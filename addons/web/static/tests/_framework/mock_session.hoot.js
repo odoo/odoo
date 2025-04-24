@@ -26,9 +26,6 @@ const makeSession = ({
         debug: new URLSearchParams(location.search).get("debug"),
         lang,
     },
-    cache_hashes: {
-        translations: "f17c8e4bb0fd4d5db2615d28713486df97853a8f",
-    },
     can_insert_in_spreadsheet: true,
     db,
     registry_hash: "05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0",
