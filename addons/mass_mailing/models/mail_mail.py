@@ -16,7 +16,7 @@ class MailMail(models.Model):
 
     def _get_tracking_url(self):
         token = self._generate_mail_recipient_token(self.id)
-        return werkzeug.urls.url_join(
+        return tools.urls.urljoin(
             self.get_base_url(),
             f'mail/track/{self.id}/{token}/blank.gif'
         )

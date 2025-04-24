@@ -6,13 +6,14 @@ import pytz
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from werkzeug.urls import url_encode, url_join
+from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tools.float_utils import float_round
+from odoo.tools.urls import urljoin as url_join
 
 _logger = logging.getLogger(__name__)
 

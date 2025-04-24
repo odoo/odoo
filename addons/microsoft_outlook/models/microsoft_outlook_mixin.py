@@ -6,11 +6,12 @@ import logging
 import time
 import requests
 
-from werkzeug.urls import url_encode, url_join
+from werkzeug.urls import url_encode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
-from odoo.tools.misc import hmac
+from odoo.tools import hmac
+from odoo.tools.urls import urljoin as url_join
 
 _logger = logging.getLogger(__name__)
 

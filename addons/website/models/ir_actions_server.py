@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from werkzeug import urls
 
 from odoo import api, fields, models
 from odoo.http import request
+from odoo.tools import urls
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
 
@@ -30,7 +30,7 @@ class IrActionsServer(models.Model):
         link = website_path or xml_id or (self.id and '%d' % self.id) or ''
         if base_url and link:
             path = '%s/%s' % ('/website/action', link)
-            return urls.url_join(base_url, path)
+            return urls.urljoin(base_url, path)
         return ''
 
     @api.depends('state', 'website_published', 'website_path', 'xml_id')

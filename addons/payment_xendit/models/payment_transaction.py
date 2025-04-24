@@ -5,6 +5,7 @@ from werkzeug import urls
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
+from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -68,7 +69,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         base_url = self.provider_id.get_base_url()
-        redirect_url = urls.url_join(base_url, XenditController._return_url)
+        redirect_url = urljoin(base_url, XenditController._return_url)
         access_token = payment_utils.generate_access_token(self.reference, self.amount)
         success_url_params = urls.url_encode({
             'tx_ref': self.reference,

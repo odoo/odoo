@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import urljoin
-
 from odoo import _, api, fields, models
+from odoo.tools.urls import urljoin as url_join
 
 
 class ResConfigSettings(models.TransientModel):
@@ -127,7 +126,7 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             # Uses `config.get_base_url()` which fallbacks to `web․base․url` if `website_domain` is
             # not set.
-            config.gmc_xml_url = urljoin(config.get_base_url(), '/gmc.xml')
+            config.gmc_xml_url = url_join(config.get_base_url(), '/gmc.xml')
 
     def _inverse_account_on_checkout(self):
         for record in self:

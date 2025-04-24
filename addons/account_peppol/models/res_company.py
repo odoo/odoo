@@ -5,10 +5,10 @@ import re
 import requests
 from lxml import etree
 from stdnum import get_cc_module, ean
-from urllib.parse import urljoin
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools.urls import urljoin
 from odoo.addons.account.models.company import PEPPOL_LIST
 
 try:

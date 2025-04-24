@@ -6,13 +6,12 @@ import hashlib
 import hmac
 import pprint
 
-from werkzeug import urls
 from werkzeug.exceptions import Forbidden
 
 from odoo import _, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import py_to_js_locale
+from odoo.tools import py_to_js_locale, urls
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -112,12 +111,12 @@ class AdyenController(http.Controller):
             'channel': 'web',  # Required to support 3DS
             'origin': provider_sudo.get_base_url(),  # Required to support 3DS
             'browserInfo': browser_info,  # Required to support 3DS
-            'returnUrl': urls.url_join(
+            'returnUrl': urls.urljoin(
                 provider_sudo.get_base_url(),
                 # Include the reference in the return url to be able to match it after redirection.
                 # The key 'merchantReference' is chosen on purpose to be the same as that returned
                 # by the /payments endpoint of Adyen.
-                f'/payment/adyen/return?merchantReference={reference}'
+                f'/payment/adyen/return?merchantReference={reference}',
             ),
             **adyen_utils.include_partner_addresses(tx_sudo),
         }

@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import urls
-
 from odoo import fields, models
+from odoo.tools import urls
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mercado_pago import const
@@ -49,7 +48,7 @@ class PaymentProvider(models.Model):
         """Override of `payment` to build the request URL."""
         if self.code != 'mercado_pago':
             return super()._build_request_url(endpoint, **kwargs)
-        return urls.url_join('https://api.mercadopago.com', endpoint)
+        return urls.urljoin('https://api.mercadopago.com', endpoint)
 
     def _build_request_headers(self, *args, **kwargs):
         """Override of `payment` to build the request headers."""

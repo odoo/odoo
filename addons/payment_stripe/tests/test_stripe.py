@@ -3,10 +3,11 @@
 import unittest
 from unittest.mock import patch
 
-from werkzeug.urls import url_encode, url_join
+from werkzeug.urls import url_encode
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_stripe import const

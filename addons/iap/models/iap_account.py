@@ -10,6 +10,7 @@ from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError
 from odoo.modules import module
 from odoo.tools import get_lang
+from odoo.tools.urls import urljoin as url_join
 
 _logger = logging.getLogger(__name__)
 
@@ -65,7 +66,7 @@ class IapAccount(models.Model):
         ):
             route = '/iap/1/update-warning-email-alerts'
             endpoint = iap_tools.iap_get_endpoint(self.env)
-            url = werkzeug.urls.url_join(endpoint, route)
+            url = url_join(endpoint, route)
             for account in self:
                 data = {
                     'account_token': account.account_token,
@@ -87,7 +88,7 @@ class IapAccount(models.Model):
             return
         route = '/iap/1/get-accounts-information'
         endpoint = iap_tools.iap_get_endpoint(self.env)
-        url = werkzeug.urls.url_join(endpoint, route)
+        url = url_join(endpoint, route)
         params = {
             'iap_accounts': [{
                 'token': account.account_token,
@@ -198,7 +199,7 @@ class IapAccount(models.Model):
         if not base_url:
             endpoint = iap_tools.iap_get_endpoint(self.env)
             route = '/iap/1/credit'
-            base_url = werkzeug.urls.url_join(endpoint, route)
+            base_url = url_join(endpoint, route)
         if not account_token:
             account_token = self.get(service_name).account_token
         d = {
@@ -241,7 +242,7 @@ class IapAccount(models.Model):
         if account:
             route = '/iap/1/balance'
             endpoint = iap_tools.iap_get_endpoint(self.env)
-            url = werkzeug.urls.url_join(endpoint, route)
+            url = url_join(endpoint, route)
             params = {
                 'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
                 'account_token': account.account_token,

@@ -1,7 +1,6 @@
 import json
 from base64 import b64decode, b64encode
 from datetime import datetime
-from urllib.parse import urljoin
 
 import requests
 from lxml import etree
@@ -11,6 +10,7 @@ from requests.exceptions import HTTPError, RequestException
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import file_open
+from odoo.tools.urls import urljoin
 
 ZATCA_API_URLS = {
     "sandbox": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/",

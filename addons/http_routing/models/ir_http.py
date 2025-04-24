@@ -155,7 +155,7 @@ class IrHttp(models.AbstractModel):
 
         if canonical_domain:
             # canonical URLs should not have qs
-            return werkzeug.urls.url_join(canonical_domain, path)
+            return tools.urls.urljoin(canonical_domain, path)
 
         return path + sep + qs
 

@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import float_is_zero, float_round
+from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.website_sale import const, utils
 
@@ -234,7 +235,7 @@ class ProductProduct(models.Model):
 
         def format_product_link(url_):
             url_ = urlparse(url_)._replace(query=f'pricelist={request.pricelist.id}').geturl()
-            return urljoin(base_url, self.env['ir.http']._url_lang(url_))
+            return url_join(base_url, self.env['ir.http']._url_lang(url_))
 
         delivery_methods_sudo = self.env['delivery.carrier'].sudo().search(
             [('is_published', '=', True), ('website_id', 'in', (request.website.id, False))],
@@ -278,10 +279,10 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return {
             # Don't send any image link if there isn't. Google does not allow placeholder
-            'image_link': urljoin(base_url, self._get_image_1920_url()) if self.image_1920 else '',
+            'image_link': url_join(base_url, self._get_image_1920_url()) if self.image_1920 else '',
             # Supports up to 10 extra images
             'additional_image_link': [
-                urljoin(base_url, url) for url in self._get_extra_image_1920_urls()[:10]
+                url_join(base_url, url) for url in self._get_extra_image_1920_urls()[:10]
             ],
         }
 

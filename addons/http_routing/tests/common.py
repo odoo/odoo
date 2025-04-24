@@ -1,13 +1,13 @@
 import contextlib
 from unittest.mock import MagicMock, Mock, patch
 
-import werkzeug.urls
 from werkzeug.exceptions import NotFound
 from werkzeug.test import EnvironBuilder
 
 import odoo.http
 from odoo.tests import HOST, HttpCase
 from odoo.tools import DotDict, config, frozendict
+from odoo.tools.urls import urljoin as url_join
 
 
 @contextlib.contextmanager
@@ -68,7 +68,7 @@ def MockRequest(
         render=lambda *a, **kw: '<MockResponse>',
     )
     if url_root is not None:
-        request.httprequest.url = werkzeug.urls.url_join(url_root, path)
+        request.httprequest.url = url_join(url_root, path)
     if website:
         request.website_routing = website.id
     if country_code or city_name:

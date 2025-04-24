@@ -673,7 +673,7 @@ class MailGroup(models.Model):
             })
         )
         base_url = self.get_base_url()
-        confirm_action_url = urls.url_join(base_url, confirm_action_url)
+        confirm_action_url = tools.urls.urljoin(base_url, confirm_action_url)
         return confirm_action_url
 
     def _generate_action_token(self, email, action):
@@ -707,9 +707,9 @@ class MailGroup(models.Model):
             'email': email_to,
             'token': self._generate_email_access_token(email_to),
         })
-        return urls.url_join(
+        return tools.urls.urljoin(
             self.get_base_url(),
-            f'group/{self.id}/unsubscribe_oneclick?{params}'
+            f'group/{self.id}/unsubscribe_oneclick?{params}',
         )
 
     def _find_member(self, email, partner_id=None):

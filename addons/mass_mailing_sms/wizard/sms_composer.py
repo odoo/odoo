@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
-
-from odoo import _, api, Command, fields, models
+from odoo import _, api, Command, fields, models, tools
 
 
 class SmsComposer(models.TransientModel):
@@ -19,7 +17,7 @@ class SmsComposer(models.TransientModel):
     # ------------------------------------------------------------
 
     def _get_unsubscribe_url(self, mailing_id, trace_code):
-        return werkzeug.urls.url_join(
+        return tools.urls.urljoin(
             self.get_base_url(),
             '/sms/%s/%s' % (mailing_id, trace_code)
         )
