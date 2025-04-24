@@ -30,10 +30,9 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         check_company=True,
     )
-    company_expense_allowed_payment_method_line_ids = fields.Many2many(
-        comodel_name='account.payment.method.line',
-        check_company=True,
-        related='company_id.company_expense_allowed_payment_method_line_ids',
+    company_expense_allowed_payment_method_ids = fields.Many2many(
+        comodel_name='account.payment.method',
+        related='company_id.company_expense_allowed_payment_method_ids',
         readonly=False,
     )
 

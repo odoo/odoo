@@ -106,18 +106,14 @@ class AccountMove(models.Model):
                 move.l10n_jo_edi_invoice_type = False
 
     @api.depends('partner_id', 'company_id')
-    def _compute_preferred_payment_method_line_id(self):
-        super()._compute_preferred_payment_method_line_id()
+    def _compute_preferred_payment_method_id(self):
+        super()._compute_preferred_payment_method_id()
 
         for move in self.filtered(lambda m: m.partner_id and m.l10n_jo_edi_is_needed):
-            expected_type = 'bank' if move.partner_id.is_company or move.partner_id.parent_id else 'cash'
-            journal = self.env['account.journal'].search([
-                ('type', '=', expected_type),
+            move.preferred_payment_method_id = self.env['account.payment.method'].search([
+                ('payment_type', '=', 'inbound'),
                 ('company_id', '=', move.company_id.id),
-                ('inbound_payment_method_line_ids', '!=', False),
             ], limit=1)
-            if journal and (payment_method_line := journal.inbound_payment_method_line_ids[0]):
-                move.preferred_payment_method_line_id = payment_method_line
 
     def download_l10n_jo_edi_computed_xml(self):
         if error_message := self._l10n_jo_validate_config() or self._l10n_jo_validate_fields():
@@ -155,7 +151,7 @@ class AccountMove(models.Model):
         }.get(self.l10n_jo_edi_invoice_type, '0')
 
     def _get_invoice_payment_method_code(self):
-        return '1' if self.preferred_payment_method_line_id.journal_id.type == 'cash' else '2'
+        return '1' if self.preferred_payment_method_id.journal_id.type == 'cash' else '2'
 
     def _get_invoice_tax_payer_type_code(self):
         return {
@@ -264,7 +260,7 @@ class AccountMove(models.Model):
 
         error_msgs = []
 
-        if not self.preferred_payment_method_line_id:
+        if not self.preferred_payment_method_id:
             error_msgs.append(_("Please select a payment method before submission."))
         if not self.l10n_jo_edi_invoice_type:
             error_msgs.append(_("Please select an invoice type before submitting this invoice to JoFotara."))

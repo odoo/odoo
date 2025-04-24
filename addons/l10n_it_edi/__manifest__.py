@@ -25,8 +25,8 @@ E-invoice implementation
         'views/l10n_it_view.xml',
         'views/portal_address_templates.xml',
         'views/report_invoice.xml',
-        'views/account_payment_method.xml',
         'views/l10n_it_document_type.xml',
+        'views/account_payment_method_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [

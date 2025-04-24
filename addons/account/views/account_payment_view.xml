@@ -14,12 +14,12 @@
                     </header>
                     <field name="company_currency_id" column_invisible="True"/>
                     <!-- <field name="suitable_journal_ids" column_invisible="True"/> -->
-                    <field name="available_payment_method_line_ids" column_invisible="True"/>
+                    <field name="available_payment_method_ids" column_invisible="True"/>
                     <field name="date" readonly="state in ['cancel', 'in_process']"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
-                    <field name="payment_method_line_id" context="{'hide_payment_journal_id': 1}"/>
+                    <field name="payment_method_id"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="amount_signed" string="Amount in Currency" optional="hide" groups="!base.group_multi_currency"/>
                     <field name="amount_signed" string="Amount in Currency" optional="show" groups="base.group_multi_currency"/>
@@ -113,7 +113,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
-                    <filter string="Payment Method Line" name="paymentmethodline" domain="[]" context="{'group_by': 'payment_method_line_id'}"/>
+                    <filter string="Payment Method" name="paymentmethodline" domain="[]" context="{'group_by': 'payment_method_id'}"/>
                     <filter string="Status" name="state" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Payment Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                     <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
@@ -176,7 +176,7 @@
                         <field name="payment_method_code" invisible="1"/>
                         <field name="show_partner_bank_account" invisible="1"/>
                         <field name="require_partner_bank_account" invisible="1"/>
-                        <field name="available_payment_method_line_ids" invisible="1"/>
+                        <field name="available_payment_method_ids" invisible="1"/>
                         <field name="available_partner_bank_ids" invisible="1"/>
                         <!-- <field name="suitable_journal_ids" invisible="1"/> -->
                         <field name="country_code" invisible="1"/>
@@ -258,6 +258,22 @@
                                        options="{'no_quick_create': True}"
                                        invisible="partner_type != 'supplier'"
                                        readonly="state != 'draft'"/>
+
+                                <field name="partner_bank_id" string="Customer Bank Account"
+                                       context="{'default_partner_id': partner_id, 'display_account_trust': True}"
+                                       invisible="not show_partner_bank_account or partner_type != 'customer' or payment_type == 'inbound'"
+                                       required="require_partner_bank_account"/>
+                                <field name="partner_bank_id" string="Vendor Bank Account"
+                                       context="{'default_partner_id': partner_id, 'display_account_trust': True}"
+                                       invisible="not show_partner_bank_account or partner_type != 'supplier' or payment_type == 'inbound'"
+                                       required="require_partner_bank_account"/>
+                                <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
+                                fields readonly condition in the framework, preventing the modification of these fields -->
+                                <field name="partner_bank_id" string="Company Bank Account"
+                                        context="{'default_partner_id': partner_id, 'display_account_trust': True}"
+                                        invisible="not show_partner_bank_account or payment_type == 'outbound'"
+                                        required="require_partner_bank_account"/>
+
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
                                     <field name="amount"
@@ -273,31 +289,14 @@
                                 <field name="memo" string="Memo"/>
                             </group>
                             <group name="group2">
-                                <field name="journal_id"
-                                       domain="[('id', 'in', available_journal_ids)]"
-                                       readonly="state != 'draft'"/>
-                                <field name="payment_method_line_id"
-                                       context="{'hide_payment_journal_id': 1}"
+                                <field name="payment_method_id"
                                        options="{'no_create': True, 'no_open': True}"
                                        required="1"
                                        readonly="state != 'draft'"/>
-
-                                <field name="partner_bank_id" string="Customer Bank Account"
-                                      context="{'default_partner_id': partner_id, 'display_account_trust': True}"
-                                        invisible="not show_partner_bank_account or partner_type != 'customer' or payment_type == 'inbound'"
-                                        required="require_partner_bank_account"/>
-
-                                <field name="partner_bank_id" string="Vendor Bank Account"
-                                        context="{'default_partner_id': partner_id, 'display_account_trust': True}"
-                                        invisible="not show_partner_bank_account or partner_type != 'supplier' or payment_type == 'inbound'"
-                                        required="require_partner_bank_account"/>
-
-                                <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
-                                fields readonly condition in the framework, preventing the modification of these fields -->
-                                <field name="partner_bank_id" string="Company Bank Account"
-                                        context="{'default_partner_id': partner_id, 'display_account_trust': True}"
-                                        invisible="not show_partner_bank_account or payment_type == 'outbound'"
-                                        required="require_partner_bank_account"/>
+                                <field name="journal_id"
+                                       domain="[('id', 'in', available_journal_ids)]"
+                                       readonly="state != 'draft'"
+                                       placeholder="Add a Journal to create entries"/>
                             </group>
                             <group>
                                 <field name="qr_code" invisible="1"/>
