@@ -1,5 +1,5 @@
 from odoo import models, fields, api, Command, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -11,7 +11,7 @@ class AccountPaymentRegister(models.TransientModel):
         string='Checks',
     )
 
-    @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
+    @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_id.code')
     def _compute_amount(self):
         super()._compute_amount()
         for wizard in self.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')):
@@ -26,6 +26,13 @@ class AccountPaymentRegister(models.TransientModel):
             if wizard.l10n_latam_move_check_ids:
                 wizard.currency_id = wizard.l10n_latam_move_check_ids[0].currency_id
 
+    def _compute_outstanding_account_id(self):
+        super()._compute_outstanding_account_id()
+        for wizard in self:
+            payment_method = wizard.payment_method_id
+            if payment_method.code == 'own_checks' and payment_method.outstanding_payment_account_id:
+                wizard.outstanding_account_id = payment_method.outstanding_payment_account_id
+
     def _is_latam_check_payment(self, check_subtype=False):
         if check_subtype == 'move_check':
             codes = ['in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks']
@@ -33,7 +40,7 @@ class AccountPaymentRegister(models.TransientModel):
             codes = ['new_third_party_checks', 'own_checks']
         else:
             codes = ['in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks', 'new_third_party_checks', 'own_checks']
-        return self.payment_method_code in codes
+        return self.payment_method_id.code in codes
 
     def _create_payment_vals_from_wizard(self, batch_result):
         vals = super()._create_payment_vals_from_wizard(batch_result)
@@ -61,3 +68,15 @@ class AccountPaymentRegister(models.TransientModel):
                     "Please create separate payments for each currency."
                 ))
         return super().action_create_payments()
+
+    @api.constrains('payment_method_id')
+    def _check_journal_for_latam_check_payment_methods(self):
+        for wizard in self:
+            if wizard.payment_method_id.code in [
+                'in_third_party_checks',
+                'out_third_party_checks',
+                'return_third_party_checks',
+                'new_third_party_checks',
+                'own_checks'
+            ] and not wizard.journal_id:
+                raise UserError(_("You need to set a journal for a payment using %(payment_method)s.", payment_method=wizard.payment_method_id.name))

@@ -87,9 +87,7 @@ class AccountPaymentWithholdingLine(models.Model):
         """
         return (
             self.payment_id.journal_id.default_account_id |
-            self.payment_id.payment_method_line_id.payment_account_id |
-            self.payment_id.journal_id.inbound_payment_method_line_ids.payment_account_id |
-            self.payment_id.journal_id.outbound_payment_method_line_ids.payment_account_id |
+            self.payment_id.journal_id.outstanding_payment_account_id |
             self.payment_id.outstanding_account_id
         )
 

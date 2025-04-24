@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_method_tree" model="ir.ui.view">
+        <field name="name">account.payment.method.list</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <list editable="top" create="1" delete="1" multi_edit="1" open_form_view="True">
+                <field name="name" string="Payment Method Name"/>
+                <field name="available_payment_method_codes" column_invisible="1"/>
+                <field name="code" 
+                       readonly="id != False"
+                       widget="dynamic_selection"
+                       options="{'available_field': 'available_payment_method_codes'}"/>
+                <field name="payment_type" readonly="id != False"/>
+                <field name="company_id" optional="1"/>
+                <field name="default_journal_id" optional="1"/>
+                <field name="default_outstanding_payment_account_id" optional="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_payment_method_form" model="ir.ui.view">
+        <field name="name">account.payment.method.form</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <form string="Account Payment Method">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group id="payment_method_details">
+                        <group>
+                            <field name="available_payment_method_codes" invisible="1"/>
+                            <field name="code" 
+                                   readonly="id != False"
+                                   widget="dynamic_selection"
+                                   options="{'available_field': 'available_payment_method_codes'}"/>
+                            <field name="payment_type" readonly="id != False"/>
+                        </group>
+                        <group id="group2">
+                            <field name="default_journal_id"/>
+                            <field name="default_outstanding_payment_account_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_payment_method_kanban_mobile" model="ir.ui.view">
+        <field name="name">account.payment.method.kanban</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <t t-name="card">
+                    <field name="display_name"/>
+                </t>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_payment_method" model="ir.actions.act_window">
+        <field name="name">Payment Methods</field>
+        <field name="res_model">account.payment.method</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('code','not in',('online_payment_provider'))]</field>
+    </record>
+
+    <record id="view_payment_method_search" model="ir.ui.view">
+        <field name="name">account.payment.method.search</field>
+        <field name="model">account.payment.method</field>
+        <field name="arch" type="xml">
+            <search string="Payment Methods">
+                <filter string="Payment Type" name="payment_type" domain="[]" context="{'group_by': 'payment_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem action="action_payment_method"
+        name="Payment Methods"
+        id="account_payment_method_menu"
+        parent="root_payment_menu"
+        sequence="5"/>
+
+</odoo>

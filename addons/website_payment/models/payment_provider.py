@@ -16,6 +16,7 @@ class PaymentProvider(models.Model):
         "website",
         check_company=True,
         ondelete="restrict",
+        copy=False,
     )
 
     @api.model

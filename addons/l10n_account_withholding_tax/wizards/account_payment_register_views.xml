@@ -45,11 +45,6 @@
                         </group>
                         <group>
                             <group>
-                                <field name="withholding_outstanding_account_id"
-                                       required="should_withhold_tax and withholding_line_ids and not withholding_payment_account_id"
-                                       invisible="(not withholding_line_ids) or withholding_payment_account_id or not display_withholding"/>
-                            </group>
-                            <group>
                                 <field name="withholding_net_amount"/>
                             </group>
                         </group>

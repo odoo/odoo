@@ -65,3 +65,10 @@ class AccountChartTemplate(models.AbstractModel):
             }
             template_code = match.get(company.l10n_ar_afip_responsibility_type_id, template_code)
         return super().try_loading(template_code, company, install_demo, force_create)
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if template_code in ('ar_base', 'ar_ex', 'ar_ri'):
+            company = company or self.env.company
+            for bank_journal in self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', company.id)]):
+                bank_journal.outstanding_payment_account_id = self.env.ref(f'account.{company.id}_account_journal_outstanding_payment_account_id')

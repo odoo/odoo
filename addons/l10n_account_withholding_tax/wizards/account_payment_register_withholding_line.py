@@ -102,10 +102,7 @@ class AccountPaymentRegisterWithholdingLine(models.TransientModel):
         """
         return (
             self.payment_register_id.journal_id.default_account_id |
-            self.payment_register_id.payment_method_line_id.payment_account_id |
-            self.payment_register_id.journal_id.inbound_payment_method_line_ids.payment_account_id |
-            self.payment_register_id.journal_id.outbound_payment_method_line_ids.payment_account_id |
-            self.payment_register_id.withholding_outstanding_account_id
+            self.payment_register_id.journal_id.outstanding_payment_account_id
         )
 
     def _get_comodel_partner(self):

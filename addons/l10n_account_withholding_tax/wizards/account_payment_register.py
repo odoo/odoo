@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, api, fields, models
+from odoo import Command, api, fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -37,17 +37,6 @@ class AccountPaymentRegister(models.TransientModel):
     withholding_default_account_id = fields.Many2one(
         related='journal_id.default_account_id',
     )
-    withholding_outstanding_account_id = fields.Many2one(
-        comodel_name='account.account',
-        string="Outstanding Account",
-        copy=False,
-        domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', withholding_default_account_id)]",
-        check_company=True,
-        compute="_compute_withholding_outstanding_account_id",
-        store=True,
-        readonly=False,
-    )
-    withholding_payment_account_id = fields.Many2one(related="payment_method_line_id.payment_account_id")
     withholding_hide_tax_base_account = fields.Boolean(compute='_compute_withholding_hide_tax_base_account')
 
     # --------------------------------
@@ -65,35 +54,6 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.withholding_net_amount = wizard.amount - sum(wizard.withholding_line_ids.mapped('amount'))
             else:
                 wizard.withholding_net_amount = 0.0
-
-    @api.depends('withholding_payment_account_id', 'should_withhold_tax')
-    def _compute_withholding_outstanding_account_id(self):
-        """
-        We propose a default account by getting one from the latest payment which:
-         - Has the same payment method line id (and thus indirectly the same journal, and thus the same company)
-         - That payment method has no payment_account_id
-         - Yet the payment has an outstanding_account_id
-         """
-        for wizard in self:
-            if not wizard.should_withhold_tax:
-                wizard.withholding_outstanding_account_id = False
-                continue
-            if wizard.withholding_payment_account_id:
-                continue
-            latest_payment = self.env['account.payment'].search_read(
-                domain=[
-                    ('payment_method_line_id', '=', wizard.payment_method_line_id.id),
-                    ('payment_method_line_id.payment_account_id', '=', False),
-                    ('outstanding_account_id', '!=', False),
-                ],
-                fields=['outstanding_account_id'],
-                limit=1,
-                order='id desc',
-            )
-            if not latest_payment:
-                wizard.withholding_outstanding_account_id = wizard.withholding_outstanding_account_id
-            else:
-                wizard.withholding_outstanding_account_id = latest_payment[0]['outstanding_account_id'][0]
 
     @api.depends('company_id', 'can_edit_wizard', 'can_group_payments', 'group_payment')
     def _compute_display_withholding(self):
@@ -166,6 +126,15 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             wizard.withholding_hide_tax_base_account = bool(wizard.company_id.withholding_tax_base_account_id)
 
+    def _compute_available_journal_ids(self):
+        super()._compute_available_journal_ids()
+        '''Only journals with an outstanding payment account can be chosen in order to create entries.'''
+        for wizard in self:
+            if wizard.should_withhold_tax:
+                wizard.available_journal_ids = wizard.available_journal_ids.filtered('outstanding_payment_account_id')
+                if not wizard.journal_id:
+                    wizard.journal_id = wizard.available_journal_ids[:1]
+
     # ----------------------------
     # Onchange, Constraint methods
     # ----------------------------
@@ -186,6 +155,12 @@ class AccountPaymentRegister(models.TransientModel):
 
         self.withholding_line_ids._update_placeholders()
 
+    @api.constrains('should_withhold_tax')
+    def _check_should_withhold_tax(self):
+        for wizard in self:
+            if wizard.should_withhold_tax and not wizard.journal_id:
+                raise UserError(_("You need to set a journal for a payment with withholding tax."))
+
     # -----------------------
     # CRUD, inherited methods
     # -----------------------
@@ -205,7 +180,7 @@ class AccountPaymentRegister(models.TransientModel):
             raise UserError(self.env._("The withholding net amount cannot be negative."))
 
         # Prepare the withholding lines.
-        withholding_account = self.withholding_outstanding_account_id
+        withholding_account = self.journal_id.outstanding_payment_account_id
         if withholding_account:
             payment_vals['outstanding_account_id'] = withholding_account.id
             if not withholding_account.reconcile and withholding_account.account_type not in ('asset_cash', 'liability_credit_card', 'off_balance'):

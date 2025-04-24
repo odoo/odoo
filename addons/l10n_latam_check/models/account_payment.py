@@ -202,7 +202,7 @@ class AccountPayment(models.Model):
             check.outstanding_line_id.move_id.unlink()
 
     @api.depends(
-        'payment_method_line_id', 'state', 'date', 'amount', 'currency_id', 'company_id',
+        'payment_method_id', 'state', 'date', 'amount', 'currency_id', 'company_id',
         'l10n_latam_move_check_ids.issuer_vat', 'l10n_latam_move_check_ids.bank_id', 'l10n_latam_move_check_ids.payment_id.date',
         'l10n_latam_new_check_ids.amount', 'l10n_latam_new_check_ids.name',
     )
@@ -219,7 +219,7 @@ class AccountPayment(models.Model):
             if rec.payment_method_code == 'new_third_party_checks':
                 same_checks = self.env['l10n_latam.check']
                 for check in rec.l10n_latam_new_check_ids.filtered(
-                        lambda x: x.name and x.payment_method_line_id.code == 'new_third_party_checks' and
+                        lambda x: x.name and x.payment_method_id.code == 'new_third_party_checks' and
                         x.bank_id and x.issuer_vat):
                     same_checks += same_checks.search([
                         ('company_id', '=', rec.company_id.id),
@@ -278,3 +278,22 @@ class AccountPayment(models.Model):
     def _is_latam_check_transfer(self):
         self.ensure_one()
         return not self.partner_id and self.destination_account_id == self.company_id.transfer_account_id
+
+    def _compute_outstanding_account_id(self):
+        super()._compute_outstanding_account_id()
+        for pay in self:
+            payment_method = pay.payment_method_id
+            if payment_method.code == 'own_checks' and payment_method.outstanding_payment_account_id:
+                pay.outstanding_account_id = payment_method.outstanding_payment_account_id
+
+    @api.constrains('payment_method_id')
+    def _check_journal_for_latam_check_payment_methods(self):
+        for pay in self:
+            if pay.payment_method_id.code in [
+                'in_third_party_checks',
+                'out_third_party_checks',
+                'return_third_party_checks',
+                'new_third_party_checks',
+                'own_checks'
+            ] and not pay.journal_id:
+                raise UserError(_("You need to set a journal for a payment using %(payment_method)s.", payment_method=pay.payment_method_id.name))

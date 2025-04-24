@@ -125,18 +125,6 @@
             <field name="description">Invoice Created</field>
         </record>
 
-        <!-- Payment methods -->
-        <record id="account_payment_method_manual_in" model="account.payment.method">
-            <field name="name">Manual Payment</field>
-            <field name="code">manual</field>
-            <field name="payment_type">inbound</field>
-        </record>
-        <record id="account_payment_method_manual_out" model="account.payment.method">
-            <field name="name">Manual Payment</field>
-            <field name="code">manual</field>
-            <field name="payment_type">outbound</field>
-        </record>
-
         <!-- Partner Trust Property -->
         <function model="ir.default" name="set" eval="('res.partner', 'trust', 'normal')"/>
 

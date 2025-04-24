@@ -493,6 +493,12 @@ class ResPartner(models.Model):
         """ Show PDF template selection if there are more than 1 template available for invoices. """
         return len(self.available_invoice_template_pdf_report_ids) > 1
 
+    def _get_available_outbound_payment_methods(self):
+        return [('id', 'in', self.env['account.payment.method']._get_available('outbound').ids)]
+
+    def _get_available_inbound_payment_methods(self):
+        return [('id', 'in', self.env['account.payment.method']._get_available('inbound').ids)]
+
     name = fields.Char(tracking=True)
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.",
@@ -591,14 +597,14 @@ class ResPartner(models.Model):
         required=True,
     )
 
-    property_outbound_payment_method_line_id = fields.Many2one(
-        comodel_name='account.payment.method.line',
+    property_outbound_payment_method_id = fields.Many2one(
+        comodel_name='account.payment.method',
         company_dependent=True,
         domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
-    property_inbound_payment_method_line_id = fields.Many2one(
-        comodel_name='account.payment.method.line',
+    property_inbound_payment_method_id = fields.Many2one(
+        comodel_name='account.payment.method',
         company_dependent=True,
         domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
