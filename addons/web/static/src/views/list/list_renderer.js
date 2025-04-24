@@ -754,11 +754,11 @@ export class ListRenderer extends Component {
 
     getSortableIconClass(column) {
         const { orderBy } = this.props.list;
-        const classNames = this.isSortable(column) ? ["fa", "fa-lg"] : ["d-none"];
+        const classNames = this.isSortable(column) ? ["fa"] : ["d-none"];
         if (orderBy.length && orderBy[0].name === column.name) {
-            classNames.push(orderBy[0].asc ? "fa-angle-up" : "fa-angle-down");
+            classNames.push(orderBy[0].asc ? "fa-sort-asc" : "fa-sort-desc");
         } else {
-            classNames.push("fa-angle-down", "opacity-0", "opacity-100-hover");
+            classNames.push("fa-sort", "opacity-0", "opacity-100-hover");
         }
 
         return classNames.join(" ");

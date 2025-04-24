@@ -169,7 +169,7 @@
     }
 
     &, & .o_form_editable {
-        // FIXME: those specific rules shouldn't be necessary but require a more 
+        // FIXME: those specific rules shouldn't be necessary but require a more
         // global cleanup of the fields + .o_row styling to be removed in master.
         .o_field_reference .o_row > * {
             flex: 1 1 auto;
@@ -911,7 +911,6 @@
     // One2Many List views
     .o_field_widget .o_list_renderer {
         --ListRenderer-thead-bg-color: #{$o-view-background-color};
-        --ListRenderer-thead-bg-active-color: #{$o-form-lightsecondary};
         --ListRenderer-tfoot-bg-color: #{$o-view-background-color};
 
         margin-bottom: 10px;
