@@ -221,7 +221,7 @@ class AccountMoveSendWizard(models.TransientModel):
             if wizard.template_id:
                 wizard.body = self._get_default_mail_body(wizard.move_id, wizard.template_id, wizard.lang)
 
-    @api.depends('template_id', 'invoice_edi_format', 'extra_edis')
+    @api.depends('template_id', 'invoice_edi_format', 'extra_edis', 'pdf_report_id')
     def _compute_mail_attachments_widget(self):
         for wizard in self:
             manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
