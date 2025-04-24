@@ -143,10 +143,10 @@ class HrLeaveAccrualLevel(models.Model):
         for level in self:
             if level.frequency == 'weekly' and not level.week_day:
                 error_message = _("Weekday must be selected to use the frequency weekly")
-            elif level.frequency == 'bimonthly' and level.first_day >= level.second_day:
+            elif level.frequency == 'bimonthly' and int(level.first_day) >= int(level.second_day):
                 error_message = _("The first day must be lower than the second day.")
         if error_message:
-            raise error_message
+            raise ValidationError(error_message)
 
     @api.constrains('cap_accrued_time', 'maximum_leave')
     def _check_maximum_leave(self):
